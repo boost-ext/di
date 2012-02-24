@@ -8,8 +8,9 @@
 #define QDEPS_TEST_COMMON_CTORS_HPP
 
 #include <boost/shared_ptr.hpp>
+#include <boost/mpl/placeholders.hpp>
 #include "QDeps/Front/Ctor.hpp"
-#include "Test/Common/Interfaces.hpp"
+#include "QDeps/Utility/Attr.hpp"
 
 namespace QDeps
 {
@@ -18,93 +19,122 @@ namespace Test
 namespace Common
 {
 
-class SharedPtrI
+struct If0
 {
-public:
-    QDEPS_CTOR(SharedPtrI, boost::shared_ptr<I<> > p_i)
-        : m_i(p_i)
-    { }
-
-    int get() const { return m_i->get(); }
-
-private:
-    boost::shared_ptr<I<> > m_i;
+    virtual ~If0() { }
+    virtual void dummy() = 0;
 };
 
-class ConstRefI
+struct CIf0 : If0
 {
-public:
-    QDEPS_CTOR(ConstRefI, const I<>& p_i)
-        : m_i(p_i)
-    { }
-
-    int get() const { return m_i.get(); }
-
-private:
-    const I<>& m_i;
+    QDEPS_CTOR(CIf0) { }
+    virtual void dummy() { }
 };
 
-class RefI
+struct CIf01 : If0
 {
-public:
-    QDEPS_CTOR(RefI, I<>& p_i)
-        : m_i(p_i)
-    { }
-
-    int get() const { return m_i.get(); }
-
-private:
-    I<>& m_i;
+    QDEPS_CTOR(CIf01) { }
+    virtual void dummy() { }
 };
 
-class SharedPtrISharedPtrI
+struct CIf02 : If0
 {
-public:
-    QDEPS_CTOR(SharedPtrISharedPtrI, boost::shared_ptr<I<1> > p_1, boost::shared_ptr<I<2> > p_2)
-        : m_1(p_1), m_2(p_2)
-    { }
-
-    int get1() const { return m_1->get(); }
-    int get2() const { return m_2->get(); }
-
-private:
-    boost::shared_ptr<I<1> > m_1;
-    boost::shared_ptr<I<2> > m_2;
+    QDEPS_CTOR(CIf02) { }
+    virtual void dummy() { }
 };
 
-template<int Value>
-class C : public I<Value>
+struct C0
 {
-public:
-    virtual int get() const { return Value; }
+    //trivial ctor
 };
 
-template<int IValue, int LevelValue>
-class LevelSecond : public ILevel
+struct C1
 {
-public:
-    QDEPS_CTOR(LevelSecond, boost::shared_ptr<I<IValue> > p_arg)
-        : m_arg(p_arg)
-    { }
-
-    int get() const { return m_arg->get(); }
-    int getLevel() const { return LevelValue; }
-
-private:
-    boost::shared_ptr<I<IValue> > m_arg;
+    explicit C1(int = 0) { }
 };
 
-class LevelFirst
+struct C2
 {
-public:
-    QDEPS_CTOR(LevelFirst, boost::shared_ptr<ILevel> p_arg)
-        : m_arg(p_arg)
+    QDEPS_CTOR(C2, int i, double d, char c)
+        : i(i), d(d), c(c)
     { }
 
-    boost::shared_ptr<ILevel> level() const { return m_arg; }
+    int i;
+    double d;
+    char c;
+};
 
-private:
-    boost::shared_ptr<ILevel> m_arg;
+struct C3
+{
+    QDEPS_CTOR(explicit C3, int i = 0)
+        : i(i)
+    { }
+
+    int i;
+};
+
+struct C4
+{
+    QDEPS_CTOR(C4, boost::shared_ptr<C3> c3, Utility::Attr<int, boost::mpl::_1> i1, Utility::Attr<int, boost::mpl::_2> i2)
+        : c3(c3), i1(i1), i2(i2)
+    { }
+
+    boost::shared_ptr<C3> c3;
+    int i1;
+    int i2;
+};
+
+struct C5
+{
+    QDEPS_CTOR(C5, boost::shared_ptr<If0> if0, boost::shared_ptr<C2> c2, boost::shared_ptr<C1> c1)
+        : if0(if0), c2(c2), c1(c1)
+    { }
+
+    boost::shared_ptr<If0> if0;
+    boost::shared_ptr<C2> c2;
+    boost::shared_ptr<C1> c1;
+};
+
+struct C6
+{
+    QDEPS_CTOR(C6, boost::shared_ptr<C3> c3, const boost::shared_ptr<C4>& c4, C5 c5)
+        : c3(c3), c4(c4), c5(c5)
+    { }
+
+    boost::shared_ptr<C3> c3;
+    boost::shared_ptr<C4> c4;
+    C5 c5;
+};
+
+struct C7
+{
+    QDEPS_CTOR(C7, boost::shared_ptr<If0> if0, boost::shared_ptr<C6> c6)
+        : if0(if0), c6(c6)
+    { }
+
+    boost::shared_ptr<If0> if0;
+    boost::shared_ptr<C6> c6;
+};
+
+struct C8
+{
+    QDEPS_CTOR(C8, boost::shared_ptr<C7> c7, C0 c0, boost::shared_ptr<C1> c1, const int i)
+        : c7(c7), c0(c0), c1(c1), i(i)
+    { }
+
+    boost::shared_ptr<C7> c7;
+    C0 c0;
+    boost::shared_ptr<C1> c1;
+    int i;
+};
+
+struct C9 : C2
+{
+    QDEPS_CTOR(C9, int i, double d, char c, std::string s = "string")
+        : C2(i, d, c), s(s)
+    { }
+
+    std::string s;
 };
 
 } // namespace Common

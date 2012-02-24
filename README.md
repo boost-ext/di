@@ -1,4 +1,4 @@
-Quick Pool (QPool)
+QDeps (Dependency Injection)
 ================================
 
 QDeps is a dependency injection framework.
@@ -25,7 +25,7 @@ Usage
 ``` C++
 
     #include <QDeps/Front/Ctor.hpp>
-    #include <QDeps/Front/Binding/Module.hpp>
+    #include <QDeps/Front/Generic/Module.hpp>
     #include <QDeps/Utitlity/Injector.hpp>
 
     using namespace QDeps;
@@ -33,45 +33,49 @@ Usage
     class C1
     {
     public:
-        QDPES_CTOR(Ctor, boost::shared_ptr<I1> p1, boost::shared_ptr<I2> p2)
-            : m1(p1), m2(p2)
+        QDPES_CTOR(Ctor, boost::shared_ptr<I1> p1, int p_value, Attr<double, mpl::string<'Flag'> > p_flag)
+            : m1(p1)
         { }
 
     private:
         boost::shared_ptr<I1> m1;
-        boost::shared_ptr<I2> m2;
     };
 
-    class SimpleModule
+    struct SimpleModule : Front::Generic::Module
     {
     public:
         typedef boost::mpl::vector
         <
-            Impl<I1, Impl1>,                            //per request
-            Impl<I2, Impl2>,                            //create I2 using Impl2
+            Impl<I1, Impl1>,                                                    //per request
+            Impl<I2, Impl2>,                                                    //create I2 using Impl2
 
-            Scope<Singleton>::Bind                      //one instantion
+            Scope<Singleton>::Bind                                              //one instantion
             <
                 Impl<I3, Impl3>,
-                Inst<I4>,                               //external inst
-                Inst<Attr<int, 'Port' >, 5>,            //set to 5
-                Inst<Attr<std::string, 'Name' >, _1>    //external value
+                Inst<I4>,                                                       //external inst
+                Inst<Attr<int, mpl::string<'Port'> >, boost::mpl::int_<5> >,    //set to 5
+                Inst<Attr<std::string, mpl::string<'Name'> > >                  //external value
             >,
 
-            Impl<I1, ImplI11>::Bind<C1>                 //custom bind I1 to C1
+            Impl<I1, ImplI11>::Bind<C2>                                         //custom bind I1 to C2
+            Inst<int, boost::mpl::int_<42> >::Bind<C4, CallStack<C1, C2> >      //bind int=42 to C4 and C1->C2
         >
         Binding;
     };
 
-    //order of Ctor is not important
-    Utility::Injector< Binding::Module<SimpleModule> > injector(
-        boost::make_shared<Inst< Attr<std::string, 'Name'>, _1>(new int("MyString")),
-        boost::make_shared<Inst<I4> >(new ExternalImpl4())
+    //order in Ctor is not important
+    Utility::Injector<SimpleModule> injector(
+        boost::make_shared<Attr<std::string, mpl::string<'Name'> >(new std::string("MyString")),
+        boost::make_shared<I4>(new ExternalImpl4())
     );
 
     boost::shared_ptr<C2> l_sp = injector.create< boost::shared_ptr<C2> >();
     const C2& l_cref = injector.create<const C2&>();
 ```
+
+TODO
+------
+    * Xml front end
 
 Author
 ------

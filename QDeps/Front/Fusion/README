@@ -1,0 +1,16 @@
+BOOST_AUTO(module, ( Fusion::Module<>().
+    .bind<I>::to<Impl>()
+    .inst<int>(32)
+    .bind<I1>::to<Im1>::inScope<Singleton>::inCall<C1, C2>()
+));
+
+
+Injector< Fusion::Module< typeof(module) >, Generic::Module<MyModule> >
+inj
+    (
+        module
+        inst<int>(a32)
+    );
+
+inj.create<C32>();
+

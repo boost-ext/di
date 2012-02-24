@@ -7,6 +7,8 @@
 #ifndef QDEPS_UTILITY_ATTR_HPP
 #define QDEPS_UTILITY_ATTR_HPP
 
+#include "QDeps/Config.hpp"
+
 namespace QDeps
 {
 namespace Utility
@@ -16,10 +18,17 @@ namespace Utility
  * Example: Attr< int, mpl::string<'Port'> >
  */
 template<typename T, typename TName>
-struct Attr
+class Attr
 {
-    //TODO non explicit ctor
-    //TODO operator T()
+public:
+    Attr(T p_value = *Defaults<T, Specialized>::create()) // non explicit
+        : m_value(p_value)
+    { }
+
+    operator T() { return m_value; }
+
+private:
+    T m_value;
 };
 
 } // namespace Utility
