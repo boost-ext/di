@@ -18,7 +18,9 @@ namespace Detail
 namespace UT
 {
 
-template<typename T, typename TContext = boost::mpl::vector0<> > struct Dep
+using namespace boost::mpl;
+
+template<typename T, typename TContext = vector0<> > struct Dep
 {
     typedef T Dependency;
     typedef TContext Context;
@@ -32,14 +34,14 @@ class D { };
 TEST(Creator, Empty)
 {
     EXPECT_TRUE((
-        boost::mpl::equal
+        equal
         <
-            boost::mpl::vector0<>,
+            vector0<>,
             Creator
             <
                 int,
-                boost::mpl::vector0<>,
-                boost::mpl::vector0<>
+                vector0<>,
+                vector0<>
             >::type
         >::value
     ));
@@ -48,14 +50,14 @@ TEST(Creator, Empty)
 TEST(Creator, One)
 {
     EXPECT_TRUE((
-        boost::mpl::equal
+        equal
         <
-            boost::mpl::vector1< Dep<int> >,
+            vector1< Dep<int> >,
             Creator
             <
                 int,
-                boost::mpl::vector0<>,
-                boost::mpl::vector
+                vector0<>,
+                vector
                 <
                     Dep<int>
                 >
@@ -67,14 +69,14 @@ TEST(Creator, One)
 TEST(Creator, Found)
 {
     EXPECT_TRUE((
-        boost::mpl::equal
+        equal
         <
-            boost::mpl::vector< Dep<float> >,
+            vector< Dep<float> >,
             Creator
             <
                 float,
-                boost::mpl::vector0<>,
-                boost::mpl::vector
+                vector0<>,
+                vector
                 <
                     Dep<int>,
                     Dep<float>,
@@ -88,14 +90,14 @@ TEST(Creator, Found)
 TEST(Creator, FoundMany)
 {
     EXPECT_TRUE((
-        boost::mpl::equal
+        equal
         <
-            boost::mpl::vector< Dep<float>, Dep<float> >,
+            vector< Dep<float>, Dep<float> >,
             Creator
             <
                 float,
-                boost::mpl::vector0<>,
-                boost::mpl::vector
+                vector0<>,
+                vector
                 <
                     Dep<int>,
                     Dep<float>,
@@ -109,14 +111,14 @@ TEST(Creator, FoundMany)
 TEST(Creator, NotFound)
 {
     EXPECT_TRUE((
-        boost::mpl::equal
+        equal
         <
-            boost::mpl::vector0<>,
+            vector0<>,
             Creator
             <
                 double,
-                boost::mpl::vector0<>,
-                boost::mpl::vector
+                vector0<>,
+                vector
                 <
                     Dep<int>,
                     Dep<float>,
@@ -130,17 +132,17 @@ TEST(Creator, NotFound)
 TEST(Creator, Context)
 {
     EXPECT_TRUE((
-        boost::mpl::equal
+        equal
         <
-            boost::mpl::vector< Dep<int, boost::mpl::vector<A, B> > >,
+            vector< Dep<int, vector<A, B> > >,
             Creator
             <
                 int,
-                boost::mpl::vector<A, B>,
-                boost::mpl::vector
+                vector<A, B>,
+                vector
                 <
-                    Dep<int, boost::mpl::vector<A> >,
-                    Dep<int, boost::mpl::vector<A, B> >
+                    Dep<int, vector<A> >,
+                    Dep<int, vector<A, B> >
                 >
             >::type
         >::value
@@ -150,18 +152,18 @@ TEST(Creator, Context)
 TEST(Creator, ContextMany)
 {
     EXPECT_TRUE((
-        boost::mpl::equal
+        equal
         <
-            boost::mpl::vector< Dep<int, boost::mpl::vector<A, B> >, Dep<int> >,
+            vector< Dep<int, vector<A, B> >, Dep<int> >,
             Creator
             <
                 int,
-                boost::mpl::vector<A, B>,
-                boost::mpl::vector
+                vector<A, B>,
+                vector
                 <
                     Dep<int>,
-                    Dep<int, boost::mpl::vector<A> >,
-                    Dep<int, boost::mpl::vector<A, B> >
+                    Dep<int, vector<A> >,
+                    Dep<int, vector<A, B> >
                 >
             >::type
         >::value
@@ -171,23 +173,23 @@ TEST(Creator, ContextMany)
 TEST(Creator, ContextManyEnd)
 {
     EXPECT_TRUE((
-        boost::mpl::equal
+        equal
         <
-            boost::mpl::vector
+            vector
             <
-                Dep<int, boost::mpl::vector<A, B> >,
-                Dep<int, boost::mpl::vector<B> >,
+                Dep<int, vector<A, B> >,
+                Dep<int, vector<B> >,
                 Dep<int>
             >,
             Creator
             <
                 int,
-                boost::mpl::vector<A, B>,
-                boost::mpl::vector
+                vector<A, B>,
+                vector
                 <
                     Dep<int>,
-                    Dep<int, boost::mpl::vector<B> >,
-                    Dep<int, boost::mpl::vector<A, B> >
+                    Dep<int, vector<B> >,
+                    Dep<int, vector<A, B> >
                 >
             >::type
         >::value
@@ -197,17 +199,17 @@ TEST(Creator, ContextManyEnd)
 TEST(Creator, ContextNotFound)
 {
     EXPECT_TRUE((
-        boost::mpl::equal
+        equal
         <
-            boost::mpl::vector0<>,
+            vector0<>,
             Creator
             <
                 int,
-                boost::mpl::vector<A>,
-                boost::mpl::vector
+                vector<A>,
+                vector
                 <
-                    Dep<int, boost::mpl::vector<B> >,
-                    Dep<int, boost::mpl::vector<A, B> >
+                    Dep<int, vector<B> >,
+                    Dep<int, vector<A, B> >
                 >
             >::type
         >::value
@@ -217,18 +219,18 @@ TEST(Creator, ContextNotFound)
 TEST(Creator, ContextOtherTypes)
 {
     EXPECT_TRUE((
-        boost::mpl::equal
+        equal
         <
-            boost::mpl::vector< Dep<int, boost::mpl::vector<A, B> > >,
+            vector< Dep<int, vector<A, B> > >,
             Creator
             <
                 int,
-                boost::mpl::vector<A, B>,
-                boost::mpl::vector
+                vector<A, B>,
+                vector
                 <
-                    Dep<int, boost::mpl::vector<A> >,
-                    Dep<int, boost::mpl::vector<A, B> >,
-                    Dep<float, boost::mpl::vector<A, B> >,
+                    Dep<int, vector<A> >,
+                    Dep<int, vector<A, B> >,
+                    Dep<float, vector<A, B> >,
                     Dep<double>
                 >
             >::type
@@ -239,30 +241,30 @@ TEST(Creator, ContextOtherTypes)
 TEST(Creator, ContextLongWithOrder)
 {
     EXPECT_TRUE((
-        boost::mpl::equal
+        equal
         <
-            boost::mpl::vector
+            vector
             <
-                Dep<int, boost::mpl::vector<A, B, C> >,
-                Dep<int, boost::mpl::vector<B, C> >,
-                Dep<int, boost::mpl::vector<C> >,
+                Dep<int, vector<A, B, C> >,
+                Dep<int, vector<B, C> >,
+                Dep<int, vector<C> >,
                 Dep<int>
             >,
             Creator
             <
                 int,
-                boost::mpl::vector<A, B, C>,
-                boost::mpl::vector
+                vector<A, B, C>,
+                vector
                 <
-                    Dep<int, boost::mpl::vector<A, B, C> >,
-                    Dep<int, boost::mpl::vector<A> >,
-                    Dep<int, boost::mpl::vector<B> >,
+                    Dep<int, vector<A, B, C> >,
+                    Dep<int, vector<A> >,
+                    Dep<int, vector<B> >,
                     Dep<int>,
-                    Dep<int, boost::mpl::vector<B, C> >,
-                    Dep<int, boost::mpl::vector<B, A, C> >,
-                    Dep<int, boost::mpl::vector<B, C, C> >,
-                    Dep<int, boost::mpl::vector<A, A, A> >,
-                    Dep<int, boost::mpl::vector<C> >
+                    Dep<int, vector<B, C> >,
+                    Dep<int, vector<B, A, C> >,
+                    Dep<int, vector<B, C, C> >,
+                    Dep<int, vector<A, A, A> >,
+                    Dep<int, vector<C> >
                 >
             >::type
         >::value
@@ -272,27 +274,27 @@ TEST(Creator, ContextLongWithOrder)
 TEST(Creator, ContextLongWithOrderEmptyCallStack)
 {
     EXPECT_TRUE((
-        boost::mpl::equal
+        equal
         <
-            boost::mpl::vector
+            vector
             <
                 Dep<int>
             >,
             Creator
             <
                 int,
-                boost::mpl::vector<>,
-                boost::mpl::vector
+                vector<>,
+                vector
                 <
-                    Dep<int, boost::mpl::vector<A, B, C> >,
-                    Dep<int, boost::mpl::vector<A> >,
-                    Dep<int, boost::mpl::vector<B> >,
+                    Dep<int, vector<A, B, C> >,
+                    Dep<int, vector<A> >,
+                    Dep<int, vector<B> >,
                     Dep<int>,
-                    Dep<int, boost::mpl::vector<B, C> >,
-                    Dep<int, boost::mpl::vector<B, A, C> >,
-                    Dep<int, boost::mpl::vector<B, C, C> >,
-                    Dep<int, boost::mpl::vector<A, A, A> >,
-                    Dep<int, boost::mpl::vector<C> >
+                    Dep<int, vector<B, C> >,
+                    Dep<int, vector<B, A, C> >,
+                    Dep<int, vector<B, C, C> >,
+                    Dep<int, vector<A, A, A> >,
+                    Dep<int, vector<C> >
                 >
             >::type
         >::value
@@ -302,28 +304,28 @@ TEST(Creator, ContextLongWithOrderEmptyCallStack)
 TEST(Creator, ContextLongWithOrderDiffCallStack)
 {
     EXPECT_TRUE((
-        boost::mpl::equal
+        equal
         <
-            boost::mpl::vector
+            vector
             <
-                Dep<int, boost::mpl::vector<B> >,
+                Dep<int, vector<B> >,
                 Dep<int>
             >,
             Creator
             <
                 int,
-                boost::mpl::vector<C, A, B>,
-                boost::mpl::vector
+                vector<C, A, B>,
+                vector
                 <
-                    Dep<int, boost::mpl::vector<A, B, C> >,
-                    Dep<int, boost::mpl::vector<A> >,
-                    Dep<int, boost::mpl::vector<B> >,
+                    Dep<int, vector<A, B, C> >,
+                    Dep<int, vector<A> >,
+                    Dep<int, vector<B> >,
                     Dep<int>,
-                    Dep<int, boost::mpl::vector<B, C> >,
-                    Dep<int, boost::mpl::vector<B, A, C> >,
-                    Dep<int, boost::mpl::vector<B, C, C> >,
-                    Dep<int, boost::mpl::vector<A, A, A> >,
-                    Dep<int, boost::mpl::vector<C> >
+                    Dep<int, vector<B, C> >,
+                    Dep<int, vector<B, A, C> >,
+                    Dep<int, vector<B, C, C> >,
+                    Dep<int, vector<A, A, A> >,
+                    Dep<int, vector<C> >
                 >
             >::type
         >::value
@@ -333,28 +335,28 @@ TEST(Creator, ContextLongWithOrderDiffCallStack)
 TEST(Creator, ContextLongWithOrderShortCallStack)
 {
     EXPECT_TRUE((
-        boost::mpl::equal
+        equal
         <
-            boost::mpl::vector
+            vector
             <
-                Dep<int, boost::mpl::vector<C> >,
+                Dep<int, vector<C> >,
                 Dep<int>
             >,
             Creator
             <
                 int,
-                boost::mpl::vector<C>,
-                boost::mpl::vector
+                vector<C>,
+                vector
                 <
-                    Dep<int, boost::mpl::vector<A, B, C> >,
-                    Dep<int, boost::mpl::vector<A> >,
-                    Dep<int, boost::mpl::vector<B> >,
+                    Dep<int, vector<A, B, C> >,
+                    Dep<int, vector<A> >,
+                    Dep<int, vector<B> >,
                     Dep<int>,
-                    Dep<int, boost::mpl::vector<B, C> >,
-                    Dep<int, boost::mpl::vector<B, A, C> >,
-                    Dep<int, boost::mpl::vector<B, C, C> >,
-                    Dep<int, boost::mpl::vector<A, A, A> >,
-                    Dep<int, boost::mpl::vector<C> >
+                    Dep<int, vector<B, C> >,
+                    Dep<int, vector<B, A, C> >,
+                    Dep<int, vector<B, C, C> >,
+                    Dep<int, vector<A, A, A> >,
+                    Dep<int, vector<C> >
                 >
             >::type
         >::value
@@ -364,27 +366,27 @@ TEST(Creator, ContextLongWithOrderShortCallStack)
 TEST(Creator, ContextLongWithOrderToLongCallStack)
 {
     EXPECT_TRUE((
-        boost::mpl::equal
+        equal
         <
-            boost::mpl::vector
+            vector
             <
                 Dep<int>
             >,
             Creator
             <
                 int,
-                boost::mpl::vector<A, B, C, D>,
-                boost::mpl::vector
+                vector<A, B, C, D>,
+                vector
                 <
-                    Dep<int, boost::mpl::vector<A, B, C> >,
-                    Dep<int, boost::mpl::vector<A> >,
-                    Dep<int, boost::mpl::vector<B> >,
+                    Dep<int, vector<A, B, C> >,
+                    Dep<int, vector<A> >,
+                    Dep<int, vector<B> >,
                     Dep<int>,
-                    Dep<int, boost::mpl::vector<B, C> >,
-                    Dep<int, boost::mpl::vector<B, A, C> >,
-                    Dep<int, boost::mpl::vector<B, C, C> >,
-                    Dep<int, boost::mpl::vector<A, A, A> >,
-                    Dep<int, boost::mpl::vector<C> >
+                    Dep<int, vector<B, C> >,
+                    Dep<int, vector<B, A, C> >,
+                    Dep<int, vector<B, C, C> >,
+                    Dep<int, vector<A, A, A> >,
+                    Dep<int, vector<C> >
                 >
             >::type
         >::value
