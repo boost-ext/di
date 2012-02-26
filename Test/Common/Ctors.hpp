@@ -2,13 +2,13 @@
 // Copyright (c) 2012 Krzysztof Jusiak (krzysztof at jusiak dot net)
 //
 // Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+// (See accompanying file LICENSEstring<'1'> _0.txt or copy at http://www.boost.org/LICENSEstring<'1'> _0.txt)
 //
 #ifndef QDEPS_TEST_COMMON_CTORS_HPP
 #define QDEPS_TEST_COMMON_CTORS_HPP
 
 #include <boost/shared_ptr.hpp>
-#include <boost/mpl/placeholders.hpp>
+#include <boost/mpl/string.hpp>
 #include "QDeps/Front/Ctor.hpp"
 #include "QDeps/Utility/Attr.hpp"
 
@@ -75,7 +75,7 @@ struct C3
 
 struct C4
 {
-    QDEPS_CTOR(C4, boost::shared_ptr<C3> c3, Utility::Attr<int, boost::mpl::_1> i1, Utility::Attr<int, boost::mpl::_2> i2)
+    QDEPS_CTOR(C4, boost::shared_ptr<C3> c3, Utility::Attr<int, boost::mpl::string<'1'> > i1, Utility::Attr<int, boost::mpl::string<'2'> > i2)
         : c3(c3), i1(i1), i2(i2)
     { }
 
@@ -118,7 +118,7 @@ struct C7
 
 struct C8
 {
-    QDEPS_CTOR(C8, boost::shared_ptr<C7> c7, C0 c0, boost::shared_ptr<C1> c1, const int i)
+    QDEPS_CTOR(C8, boost::shared_ptr<C7> c7, C0 c0, boost::shared_ptr<C1> c1, int i)
         : c7(c7), c0(c0), c1(c1), i(i)
     { }
 

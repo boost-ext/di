@@ -1,4 +1,4 @@
-QDeps (Dependency Injection)
+QDeps (C++ Dependency Injection Framework)
 ================================
 
 QDeps is a dependency injection framework.
@@ -33,18 +33,20 @@ Usage
     class C1
     {
     public:
-        QDPES_CTOR(Ctor, boost::shared_ptr<I1> p1, int p_value, Attr<double, mpl::string<'Flag'> > p_flag)
-            : m1(p1)
+        QDPES_CTOR(Ctor, shared_ptr<I1> i1, int i, Attr<std::string, string<'test'> > s)
+            : i1(i1), i(i), s(s)
         { }
 
     private:
-        boost::shared_ptr<I1> m1;
+        shared_ptr<I1> i1;
+        int i;
+        std::string s;
     };
 
     struct SimpleModule : Front::Generic::Module
     {
     public:
-        typedef boost::mpl::vector
+        typedef vector
         <
             Impl<I1, Impl1>,                                                    //per request
             Impl<I2, Impl2>,                                                    //create I2 using Impl2
@@ -53,33 +55,36 @@ Usage
             <
                 Impl<I3, Impl3>,
                 Inst<I4>,                                                       //external inst
-                Inst<Attr<int, mpl::string<'Port'> >, boost::mpl::int_<5> >,    //set to 5
+                Inst<Attr<int, string<'Port'> >, int_<5> >,                     //set to 5
                 Inst<Attr<std::string, mpl::string<'Name'> > >                  //external value
             >,
 
             Impl<I1, ImplI11>::Bind<C2>                                         //custom bind I1 to C2
-            Inst<int, boost::mpl::int_<42> >::Bind<C4, CallStack<C1, C2> >      //bind int=42 to C4 and C1->C2
+            Inst<int, int_<42> >::Bind<C4, CallStack<C1, C2> >                  //bind int=42 to C4 and C1->C2
         >
         Binding;
     };
 
     //order in Ctor is not important
     Utility::Injector<SimpleModule> injector(
-        boost::make_shared<Attr<std::string, mpl::string<'Name'> >(new std::string("MyString")),
-        boost::make_shared<I4>(new ExternalImpl4())
+        make_shared<Attr<std::string, mpl::string<'Name'> >(new std::string("MyString")),
+        make_shared<I4>(new ExternalImpl4())
     );
 
-    boost::shared_ptr<C2> l_sp = injector.create< boost::shared_ptr<C2> >();
+    shared_ptr<C2> l_sp = injector.create< shared_ptr<C2> >();
     const C2& l_cref = injector.create<const C2&>();
 ```
-
-TODO
-------
-    * Xml front end
 
 Author
 ------
 Krzysztof Jusiak (krzysztof at jusiak dot net)
+
+Author
+------
+    * Method injector
+    * Providers
+    * Xml front end
+    * C++11 fork
 
 License
 -------

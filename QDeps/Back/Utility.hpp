@@ -7,15 +7,23 @@
 #ifndef QDEPS_BACK_UTILITY_HPP
 #define QDEPS_BACK_UTILITY_HPP
 
+#include <boost/shared_ptr.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/type_traits/remove_cv.hpp>
+#include <boost/utility/enable_if.hpp>
 #include <boost/mpl/size.hpp>
+#include <boost/mpl/has_xxx.hpp>
 
 namespace QDeps
 {
 namespace Back
 {
+
+namespace Detail
+{
+BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
+} // namespace Detail
 
 template<typename T> struct GetDependency
 {
@@ -40,6 +48,32 @@ template<typename T> struct HasValue
 template<typename T> struct RemoveAccessors
 {
     typedef typename boost::remove_pointer<typename boost::remove_cv<typename boost::remove_reference<T>::type>::type>::type type;
+};
+
+template<typename T, typename Enable = void> struct DerefShared
+{
+    typedef T type;
+};
+
+template<typename T> struct DerefShared<T, typename boost::enable_if< Detail::has_element_type<T> >::type>
+{
+    typedef typename T::element_type type;
+};
+
+template<typename T> struct MakePlain
+{
+    typedef typename RemoveAccessors<typename DerefShared<typename RemoveAccessors<T>::type>::type>::type type;
+};
+
+template<typename T, typename Enable = void> struct MakeShared
+{
+    typedef boost::shared_ptr<typename MakePlain<T>::type> type;
+};
+
+template<typename T>
+struct MakeShared<T, typename boost::enable_if< Detail::has_element_type<typename MakePlain<T>::type> >::type>
+{
+    typedef typename MakePlain<T>::type type;
 };
 
 } // namespace Back

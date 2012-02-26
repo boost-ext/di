@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef QDEPS_BACK_CREATOR_HPP
-#define QDEPS_BACK_CREATOR_HPP
+#ifndef QDEPS_BACK_BINDING_HPP
+#define QDEPS_BACK_BINDING_HPP
 
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/iterator_range.hpp>
@@ -54,7 +54,7 @@ struct LessContextSize : boost::mpl::bool_<(GetContextSize<T1>::value > GetConte
 } // namespace Detail
 
 template<typename T, typename TCallStack, typename TDeps>
-struct Creator : boost::mpl::sort
+struct Binding : boost::mpl::sort
     <
         typename boost::mpl::fold
         <

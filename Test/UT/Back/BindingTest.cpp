@@ -7,7 +7,7 @@
 #include <gtest/gtest.h>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
-#include "QDeps/Back/Creator.hpp"
+#include "QDeps/Back/Binding.hpp"
 
 namespace QDeps
 {
@@ -31,13 +31,13 @@ class B { };
 class C { };
 class D { };
 
-TEST(Creator, Empty)
+TEST(Binding, Empty)
 {
     EXPECT_TRUE((
         equal
         <
             vector0<>,
-            Creator
+            Binding
             <
                 int,
                 vector0<>,
@@ -47,13 +47,13 @@ TEST(Creator, Empty)
     ));
 }
 
-TEST(Creator, One)
+TEST(Binding, One)
 {
     EXPECT_TRUE((
         equal
         <
             vector1< Dep<int> >,
-            Creator
+            Binding
             <
                 int,
                 vector0<>,
@@ -66,13 +66,13 @@ TEST(Creator, One)
     ));
 }
 
-TEST(Creator, Found)
+TEST(Binding, Found)
 {
     EXPECT_TRUE((
         equal
         <
             vector< Dep<float> >,
-            Creator
+            Binding
             <
                 float,
                 vector0<>,
@@ -87,13 +87,13 @@ TEST(Creator, Found)
     ));
 }
 
-TEST(Creator, FoundMany)
+TEST(Binding, FoundMany)
 {
     EXPECT_TRUE((
         equal
         <
             vector< Dep<float>, Dep<float> >,
-            Creator
+            Binding
             <
                 float,
                 vector0<>,
@@ -108,13 +108,13 @@ TEST(Creator, FoundMany)
     ));
 }
 
-TEST(Creator, NotFound)
+TEST(Binding, NotFound)
 {
     EXPECT_TRUE((
         equal
         <
             vector0<>,
-            Creator
+            Binding
             <
                 double,
                 vector0<>,
@@ -129,13 +129,13 @@ TEST(Creator, NotFound)
     ));
 }
 
-TEST(Creator, Context)
+TEST(Binding, Context)
 {
     EXPECT_TRUE((
         equal
         <
             vector< Dep<int, vector<A, B> > >,
-            Creator
+            Binding
             <
                 int,
                 vector<A, B>,
@@ -149,13 +149,13 @@ TEST(Creator, Context)
     ));
 }
 
-TEST(Creator, ContextMany)
+TEST(Binding, ContextMany)
 {
     EXPECT_TRUE((
         equal
         <
             vector< Dep<int, vector<A, B> >, Dep<int> >,
-            Creator
+            Binding
             <
                 int,
                 vector<A, B>,
@@ -170,7 +170,7 @@ TEST(Creator, ContextMany)
     ));
 }
 
-TEST(Creator, ContextManyEnd)
+TEST(Binding, ContextManyEnd)
 {
     EXPECT_TRUE((
         equal
@@ -181,7 +181,7 @@ TEST(Creator, ContextManyEnd)
                 Dep<int, vector<B> >,
                 Dep<int>
             >,
-            Creator
+            Binding
             <
                 int,
                 vector<A, B>,
@@ -196,13 +196,13 @@ TEST(Creator, ContextManyEnd)
     ));
 }
 
-TEST(Creator, ContextNotFound)
+TEST(Binding, ContextNotFound)
 {
     EXPECT_TRUE((
         equal
         <
             vector0<>,
-            Creator
+            Binding
             <
                 int,
                 vector<A>,
@@ -216,13 +216,13 @@ TEST(Creator, ContextNotFound)
     ));
 }
 
-TEST(Creator, ContextOtherTypes)
+TEST(Binding, ContextOtherTypes)
 {
     EXPECT_TRUE((
         equal
         <
             vector< Dep<int, vector<A, B> > >,
-            Creator
+            Binding
             <
                 int,
                 vector<A, B>,
@@ -238,7 +238,7 @@ TEST(Creator, ContextOtherTypes)
     ));
 }
 
-TEST(Creator, ContextLongWithOrder)
+TEST(Binding, ContextLongWithOrder)
 {
     EXPECT_TRUE((
         equal
@@ -250,7 +250,7 @@ TEST(Creator, ContextLongWithOrder)
                 Dep<int, vector<C> >,
                 Dep<int>
             >,
-            Creator
+            Binding
             <
                 int,
                 vector<A, B, C>,
@@ -271,7 +271,7 @@ TEST(Creator, ContextLongWithOrder)
     ));
 }
 
-TEST(Creator, ContextLongWithOrderEmptyCallStack)
+TEST(Binding, ContextLongWithOrderEmptyCallStack)
 {
     EXPECT_TRUE((
         equal
@@ -280,7 +280,7 @@ TEST(Creator, ContextLongWithOrderEmptyCallStack)
             <
                 Dep<int>
             >,
-            Creator
+            Binding
             <
                 int,
                 vector<>,
@@ -301,7 +301,7 @@ TEST(Creator, ContextLongWithOrderEmptyCallStack)
     ));
 }
 
-TEST(Creator, ContextLongWithOrderDiffCallStack)
+TEST(Binding, ContextLongWithOrderDiffCallStack)
 {
     EXPECT_TRUE((
         equal
@@ -311,7 +311,7 @@ TEST(Creator, ContextLongWithOrderDiffCallStack)
                 Dep<int, vector<B> >,
                 Dep<int>
             >,
-            Creator
+            Binding
             <
                 int,
                 vector<C, A, B>,
@@ -332,7 +332,7 @@ TEST(Creator, ContextLongWithOrderDiffCallStack)
     ));
 }
 
-TEST(Creator, ContextLongWithOrderShortCallStack)
+TEST(Binding, ContextLongWithOrderShortCallStack)
 {
     EXPECT_TRUE((
         equal
@@ -342,7 +342,7 @@ TEST(Creator, ContextLongWithOrderShortCallStack)
                 Dep<int, vector<C> >,
                 Dep<int>
             >,
-            Creator
+            Binding
             <
                 int,
                 vector<C>,
@@ -363,7 +363,7 @@ TEST(Creator, ContextLongWithOrderShortCallStack)
     ));
 }
 
-TEST(Creator, ContextLongWithOrderToLongCallStack)
+TEST(Binding, ContextLongWithOrderToLongCallStack)
 {
     EXPECT_TRUE((
         equal
@@ -372,7 +372,7 @@ TEST(Creator, ContextLongWithOrderToLongCallStack)
             <
                 Dep<int>
             >,
-            Creator
+            Binding
             <
                 int,
                 vector<A, B, C, D>,

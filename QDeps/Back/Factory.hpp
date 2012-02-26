@@ -24,11 +24,12 @@
 #include <boost/mpl/deref.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/has_xxx.hpp>
+#include "QPool/Pool.hpp"
 #include "QDeps/Back/Aux/Inst.hpp"
 #include "QDeps/Back/Aux/Impl.hpp"
 #include "QDeps/Back/Utility.hpp"
-#include "QDeps/Back/Shared.hpp"
-#include "QDeps/Back/Creator.hpp"
+#include "QDeps/Back/Convert.hpp"
+#include "QDeps/Back/Binding.hpp"
 #include "QDeps/Utility/Scopes/PerRequest.hpp"
 #include "QDeps/Config.hpp"
 
@@ -40,23 +41,13 @@ namespace Back
 template
 <
     typename TDeps,
-    typename TPool = boost::none_t const,
-    typename TShared = Shared,
-    template<typename, typename, typename = TDeps> class TCreator = Creator
+    typename TPool = const QPool::Pool<>,
+    template<typename> class TConvert = Convert,
+    template<typename, typename, typename = TDeps> class TBinding = Binding
 >
 class Factory
 {
     BOOST_MPL_HAS_XXX_TRAIT_DEF(QDEPS_CTOR_UNIQUE_NAME)
-
-    template<typename T> struct MakePlain
-    {
-        typedef typename RemoveAccessors<typename TShared::template Deref<typename RemoveAccessors<T>::type>::type>::type type;
-    };
-
-    template<typename T> struct MakeShared
-    {
-        typedef typename TShared::template Make<typename MakePlain<T>::type>::type type;
-    };
 
     struct Entries : boost::mpl::inherit_linearly
         <
@@ -66,7 +57,7 @@ class Factory
     { };
 
 public:
-    explicit Factory(TPool& p_pool = boost::none)
+    explicit Factory(TPool& p_pool = TPool())
         : m_pool(p_pool)
     { }
 
@@ -74,30 +65,31 @@ public:
     {
         typedef boost::mpl::vector0<> EmptyCallStack;
         typedef typename MakePlain<T>::type PlainType;
-        return TShared::template Convert<T>::execute(createImpl<PlainType, EmptyCallStack>());
+        return Convert<T>::execute(createImpl<PlainType, EmptyCallStack>());
     }
 
 private:
     template<typename T, typename TCallStack> typename MakeShared<T>::type createImpl
     (
         typename boost::enable_if< BOOST_PP_CAT(has_, QDEPS_CTOR_UNIQUE_NAME)<T> >::type* = 0,
-        typename boost::enable_if< boost::mpl::empty<typename TCreator<T, TCallStack>::type> >::type* = 0
+        typename boost::enable_if< boost::mpl::empty<typename TBinding<T, TCallStack>::type> >::type* = 0
     )
     {
         typedef typename boost::function_types::parameter_types<typename T::QDEPS_CTOR_UNIQUE_NAME>::type Ctor;
         typedef typename boost::mpl::push_back<TCallStack, T>::type CallStack;
-        return createImpl<T, Ctor, CallStack>(Aux::Inst<Utility::Scopes::PerRequest, T>());
+        Aux::Inst<Utility::Scopes::PerRequest, T> l_onDemandInst;
+        return createImpl<T, Ctor, CallStack>(l_onDemandInst);
     }
 
     template<typename T, typename TCallStack> typename MakeShared<T>::type createImpl
     (
         typename boost::enable_if< BOOST_PP_CAT(has_, QDEPS_CTOR_UNIQUE_NAME)<T> >::type* = 0,
-        typename boost::disable_if< boost::mpl::empty<typename TCreator<T, TCallStack>::type> >::type* = 0
+        typename boost::disable_if< boost::mpl::empty<typename TBinding<T, TCallStack>::type> >::type* = 0
     )
     {
         typedef typename boost::function_types::parameter_types<typename T::QDEPS_CTOR_UNIQUE_NAME>::type Ctor;
-        typedef typename TCreator<T, TCallStack>::type Creator;
-        typedef typename boost::mpl::deref<typename boost::mpl::begin<Creator>::type>::type ToBeCreated;
+        typedef typename TBinding<T, TCallStack>::type Binding;
+        typedef typename boost::mpl::deref<typename boost::mpl::begin<Binding>::type>::type ToBeCreated;
         typedef typename boost::mpl::push_back<TCallStack, T>::type CallStack;
         return createImpl<T, Ctor, CallStack>(static_cast<ToBeCreated&>(m_entries));
     }
@@ -105,27 +97,28 @@ private:
     template<typename T, typename TCallStack> typename MakeShared<T>::type createImpl
     (
         typename boost::disable_if< BOOST_PP_CAT(has_, QDEPS_CTOR_UNIQUE_NAME)<T> >::type* = 0,
-        typename boost::enable_if< boost::mpl::empty<typename TCreator<T, TCallStack>::type> >::type* = 0
+        typename boost::enable_if< boost::mpl::empty<typename TBinding<T, TCallStack>::type> >::type* = 0
     )
     {
+        typedef typename TBinding<int, boost::mpl::vector0<> >::type Binding;
         return Defaults<T, Specialized>::create();
     }
 
     template<typename T, typename TCallStack> typename MakeShared<T>::type createImpl
     (
         typename boost::disable_if< BOOST_PP_CAT(has_, QDEPS_CTOR_UNIQUE_NAME)<T> >::type* = 0,
-        typename boost::disable_if< boost::mpl::empty<typename TCreator<T, TCallStack>::type> >::type* = 0
+        typename boost::disable_if< boost::mpl::empty<typename TBinding<T, TCallStack>::type> >::type* = 0
     )
     {
         typedef typename boost::mpl::vector0<> Ctor;
-        typedef typename TCreator<T, TCallStack>::type Creator;
-        typedef typename boost::mpl::deref<typename boost::mpl::begin<Creator>::type>::type ToBeCreated;
+        typedef typename TBinding<T, TCallStack>::type Binding;
+        typedef typename boost::mpl::deref<typename boost::mpl::begin<Binding>::type>::type ToBeCreated;
         typedef typename boost::mpl::push_back<TCallStack, T>::type CallStack;
         return createImpl<T, Ctor, CallStack>(static_cast<ToBeCreated&>(m_entries));
     }
 
     #define QDEPS_CREATE_IMPL_ARG(z, n, text) BOOST_PP_COMMA_IF(n)                                          \
-         TShared::template Convert<typename boost::mpl::at_c<Ctor, n>::type>::execute(                      \
+         Convert<typename boost::mpl::at_c<Ctor, n>::type>::execute(                                        \
              createImpl<typename MakePlain<typename boost::mpl::at_c<Ctor, n>::type>::type, TCallStack>()   \
          )
 
@@ -133,7 +126,7 @@ private:
         template<typename T, typename Ctor, typename TCallStack, typename TEntry>                           \
         typename MakeShared<T>::type createImpl                                                             \
         (                                                                                                   \
-            TEntry p_entry,                                                                                 \
+            TEntry& p_entry,                                                                                \
             typename boost::enable_if_c<boost::mpl::size<Ctor>::value == n>::type* = 0                      \
         )                                                                                                   \
         {                                                                                                   \

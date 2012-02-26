@@ -16,6 +16,7 @@
     #include <boost/mpl/placeholders.hpp>
     #include <boost/mpl/int.hpp>
     #include <boost/mpl/bool.hpp>
+    #include <boost/mpl/void.hpp>
     #include <boost/mpl/string.hpp>
     #include <boost/mpl/contains.hpp>
     #include <boost/preprocessor/iteration/iterate.hpp>
@@ -42,7 +43,7 @@
         }
 
         template<typename TAttr, typename TPool, typename TScope>
-        static boost::shared_ptr<TAttr> get(TPool& p_pool, TScope& p_scope, typename boost::disable_if< boost::mpl::contains<typename TPool::Seq, TAttr> >::type* = 0)
+        static boost::shared_ptr<TAttr> get(TPool&, TScope& p_scope, typename boost::disable_if< boost::mpl::contains<typename TPool::Seq, TAttr> >::type* = 0)
         {
             return p_scope.template create<TAttr>();
         }
@@ -72,7 +73,7 @@
     <
         typename TScope,
         typename TAttr,
-        typename TValue = boost::mpl::_1,
+        typename TValue = boost::mpl::void_,
         typename TContext = boost::mpl::vector0<>
     >
     class Inst
@@ -104,7 +105,7 @@
     template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
     boost::shared_ptr<Dependency> create(TPool&, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), Arg, p_arg))
     {
-         return m_scope.template create<Dependency>(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg));
+        return m_scope.template create<Dependency>(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg));
     }
 
 #endif
