@@ -79,10 +79,11 @@ Author
 ------
 Krzysztof Jusiak (krzysztof at jusiak dot net)
 
-Author
+TODO
 ------
     * Method injector
     * Providers
+    * Fusion fron end
     * Xml front end
     * C++11 fork
 
