@@ -66,19 +66,19 @@ Usage
     public:
         typedef vector
         <
-            Impl<I1, Impl1>,                                                    //per request
-            Impl<I2, Impl2>,                                                    //create I2 using Impl2
+            Impl<I1, Impl1>,                                        //per request
+            Impl<I2, Impl2>,                                        //create I2 using Impl2
 
-            Scope<Singleton>::Bind                                              //one instantion
+            Scope<Singleton>::Bind                                  //one instantion
             <
                 Impl<I3, Impl3>,
-                Inst<I4>,                                                       //external inst
-                Inst<Attr<int, string<'Port'> >, int_<5> >,                     //set to 5
-                Inst<Attr<std::string, mpl::string<'Name'> > >                  //external value
+                Inst<I4>,                                           //external inst
+                Inst<Attr<int, string<'Port'> >, int_<5> >,         //set to 5
+                Inst<Attr<std::string, mpl::string<'Name'> > >      //external value
             >,
 
-            Impl<I1, ImplI11>::Bind<C2>                                         //custom bind I1 to C2
-            Inst<int, int_<42> >::Bind<C4, CallStack<C1, C2> >                  //bind int=42 to C4 and C1->C2
+            Impl<I1, ImplI11>::Bind<C2>                             //custom bind I1 to C2
+            Inst<int, int_<42> >::Bind<C4, CallStack<C1, C2> >      //bind int=42 to C4 and C1->C2
         >
         Binding;
     };
