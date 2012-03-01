@@ -44,26 +44,6 @@ TEST(CtorBracket, ExplicitWithDefault)
     EXPECT_EQ(C::DEFAULT, c.i);
 }
 
-#if 0
-struct C
-{
-    QDEPS_CTOR(template<typename T> C, T i)
-        : i(i)
-    { }
-
-    int i;
-};
-
-TEST(CtorBracket, Template)
-{
-    const int i = 42;
-
-    C c(i);
-
-    EXPECT_EQ(i, c.i);
-}
-#endif
-
 TEST(CtorBracket, Params)
 {
     const int i = 1;

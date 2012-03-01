@@ -25,8 +25,8 @@ using namespace Test::Common;
 using namespace Aux;
 using namespace Utility;
 using namespace Utility::Scopes;
+using namespace boost::mpl;
 using namespace boost;
-using namespace mpl;
 
 TEST(Factory, CreateUsingCopy)
 {
@@ -276,8 +276,9 @@ TEST(Factory, CreatePerRequestSingletonPathMix)
             Inst<Singleton, C3>,
             Inst<PerRequest, int, int_<1> >,
             Inst<PerRequest, int, int_<2>, vector<C8> >,
-            Inst<PerRequest, int, int_<3>, vector<C7, C6, C4> >,
-            Inst<PerRequest, int, int_<4>, vector<C2> >
+            Inst<PerRequest, Attr<int, mpl::string<'1'> >, int_<3>, vector<C7, C6, C4> >,
+            Inst<PerRequest, Attr<int, mpl::string<'2'> >, int_<4>, vector<C7, C6, C4> >,
+            Inst<PerRequest, int, int_<5>, vector<C2> >
         >
     >
     l_factory;
@@ -292,10 +293,10 @@ TEST(Factory, CreatePerRequestSingletonPathMix)
     EXPECT_TRUE(dynamic_cast<CIf02*>(c8->c7->if0.get()));
 
     EXPECT_EQ(2, c8->i);
-/*    EXPECT_EQ(3, c8->c7->c6->c4->i1);*/
-    /*EXPECT_EQ(4, c8->c7->c6->c4->i2);*/
+    EXPECT_EQ(3, c8->c7->c6->c4->i1);
+    EXPECT_EQ(4, c8->c7->c6->c4->i2);
     EXPECT_EQ(1, c8->c7->c6->c3->i);
-    EXPECT_EQ(4, c8->c7->c6->c5.c2->i);
+    EXPECT_EQ(5, c8->c7->c6->c5.c2->i);
     EXPECT_EQ(0.0, c8->c7->c6->c5.c2->d);
     EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
 }

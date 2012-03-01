@@ -40,6 +40,16 @@ template<typename T> struct GetContextSize
     static const std::size_t value = boost::mpl::size<typename GetContext<T>::type>::value;
 };
 
+template<typename T> struct GetDeps
+{
+    typedef typename T::template Deps<typename T::Binding>::type type;
+};
+
+template<typename T> struct GetKeys
+{
+    typedef typename T::template Keys<typename T::Binding>::type type;
+};
+
 template<typename T> struct HasValue
 {
     typedef typename T::HasValue type;

@@ -19,7 +19,7 @@
  * QDEPS_CTOR(SimpleClass, int, double) { }
  */
 #   define QDEPS_CTOR(Type, ...)                            \
-        typedef void QDEPS_CTOR_UNIQUE_NAME(__VA_ARGS__);   \
+        typedef void QDEPS_CTOR_UNIQUE_NAME(__VA_ARGS__);           \
         Type(__VA_ARGS__)
 
 #elif defined(QDEPS_CTOR_CFG_BRACKET)
@@ -28,7 +28,7 @@
  * QDEPS_CTOR(SimpleClass, (int, double)) { }
  */
 #   define QDEPS_CTOR(Type, Params)                         \
-        typedef void QDEPS_CTOR_UNIQUE_NAME Params;         \
+        typedef void QDEPS_CTOR_UNIQUE_NAME Params;                 \
         Type Params
 
 #else

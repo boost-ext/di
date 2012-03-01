@@ -9,6 +9,7 @@
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
+#include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/vector.hpp>

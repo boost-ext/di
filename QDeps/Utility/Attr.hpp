@@ -21,7 +21,7 @@ template<typename T, typename TName>
 class Attr
 {
 public:
-    Attr(T p_value = *Defaults<T, Specialized>::create()) // non explicit
+    Attr(T p_value = T()/* = *Defaults<T, Specialized>::create()*/) // non explicit
         : m_value(p_value)
     { }
 

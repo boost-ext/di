@@ -18,6 +18,7 @@
 #include "QDeps/Front/Generic/Aux/Inst.hpp"
 #include "QDeps/Front/Generic/Aux/Scope.hpp"
 #include "QDeps/Front/Generic/Detail/Deps.hpp"
+#include "QDeps/Front/Generic/Detail/Keys.hpp"
 #include "QDeps/Utility/Injector.hpp"
 
 namespace QDeps
@@ -58,7 +59,11 @@ private:
     template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T)> friend class Utility::Injector;
 
     template<typename TBinding>
-    struct Deps : Detail::Deps<TBinding>::type
+    struct Deps : Detail::Deps<TBinding>
+    { };
+
+    template<typename TBinding>
+    struct Keys : Detail::Keys< Deps<TBinding> >
     { };
 };
 

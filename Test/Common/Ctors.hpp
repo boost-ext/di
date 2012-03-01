@@ -22,25 +22,21 @@ namespace Common
 struct If0
 {
     virtual ~If0() { }
-    virtual void dummy() = 0;
 };
 
 struct CIf0 : If0
 {
     QDEPS_CTOR(CIf0) { }
-    virtual void dummy() { }
 };
 
 struct CIf01 : If0
 {
     QDEPS_CTOR(CIf01) { }
-    virtual void dummy() { }
 };
 
 struct CIf02 : If0
 {
     QDEPS_CTOR(CIf02) { }
-    virtual void dummy() { }
 };
 
 struct C0

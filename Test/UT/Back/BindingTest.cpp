@@ -42,7 +42,7 @@ TEST(Binding, Empty)
                 int,
                 vector0<>,
                 vector0<>
-            >::type
+            >
         >::value
     ));
 }
@@ -61,7 +61,7 @@ TEST(Binding, One)
                 <
                     Dep<int>
                 >
-            >::type
+            >
         >::value
     ));
 }
@@ -82,7 +82,7 @@ TEST(Binding, Found)
                     Dep<float>,
                     Dep<double>
                 >
-            >::type
+            >
         >::value
     ));
 }
@@ -103,7 +103,7 @@ TEST(Binding, FoundMany)
                     Dep<float>,
                     Dep<float>
                 >
-            >::type
+            >
         >::value
     ));
 }
@@ -124,7 +124,7 @@ TEST(Binding, NotFound)
                     Dep<float>,
                     Dep<float>
                 >
-            >::type
+            >
         >::value
     ));
 }
@@ -144,7 +144,7 @@ TEST(Binding, Context)
                     Dep<int, vector<A> >,
                     Dep<int, vector<A, B> >
                 >
-            >::type
+            >
         >::value
     ));
 }
@@ -165,7 +165,7 @@ TEST(Binding, ContextMany)
                     Dep<int, vector<A> >,
                     Dep<int, vector<A, B> >
                 >
-            >::type
+            >
         >::value
     ));
 }
@@ -191,7 +191,7 @@ TEST(Binding, ContextManyEnd)
                     Dep<int, vector<B> >,
                     Dep<int, vector<A, B> >
                 >
-            >::type
+            >
         >::value
     ));
 }
@@ -211,7 +211,7 @@ TEST(Binding, ContextNotFound)
                     Dep<int, vector<B> >,
                     Dep<int, vector<A, B> >
                 >
-            >::type
+            >
         >::value
     ));
 }
@@ -233,7 +233,7 @@ TEST(Binding, ContextOtherTypes)
                     Dep<float, vector<A, B> >,
                     Dep<double>
                 >
-            >::type
+            >
         >::value
     ));
 }
@@ -266,7 +266,7 @@ TEST(Binding, ContextLongWithOrder)
                     Dep<int, vector<A, A, A> >,
                     Dep<int, vector<C> >
                 >
-            >::type
+            >
         >::value
     ));
 }
@@ -296,7 +296,7 @@ TEST(Binding, ContextLongWithOrderEmptyCallStack)
                     Dep<int, vector<A, A, A> >,
                     Dep<int, vector<C> >
                 >
-            >::type
+            >
         >::value
     ));
 }
@@ -327,7 +327,7 @@ TEST(Binding, ContextLongWithOrderDiffCallStack)
                     Dep<int, vector<A, A, A> >,
                     Dep<int, vector<C> >
                 >
-            >::type
+            >
         >::value
     ));
 }
@@ -358,7 +358,7 @@ TEST(Binding, ContextLongWithOrderShortCallStack)
                     Dep<int, vector<A, A, A> >,
                     Dep<int, vector<C> >
                 >
-            >::type
+            >
         >::value
     ));
 }
@@ -388,7 +388,7 @@ TEST(Binding, ContextLongWithOrderToLongCallStack)
                     Dep<int, vector<A, A, A> >,
                     Dep<int, vector<C> >
                 >
-            >::type
+            >
         >::value
     ));
 }

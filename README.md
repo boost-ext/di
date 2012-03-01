@@ -1,23 +1,33 @@
-QDeps (C++ Dependency Injection Framework)
+QDeps (C++ dependency injection framework)
 ================================
 
-QDeps is a dependency injection framework.
+QDeps is a C++ dependency injection framework (http://en.wikipedia.org/wiki/Dependency_injection)
 
 To get started: git clone --recursive git://github.com/QSrc/QDeps.git
 
 Requirements
 ------------
     Code:
-        * C++ 98 standard-compliant compiler (e.g. >= gcc 3.4)
+        * C++ 98 standard-compliant compiler  + typeof extension
         * Boost >= 1.43 (headers only libraries)
 
     Tests:
         * GNU-compatible Make >= 3.81
         * gtest >= 1.6.0 (UT, MT)
+        * [optional] lcov, cppcheck, scan-build, valgrind
 
-Tests
+Supported compilers (succesfully tested)
 ------------
-    cd Test/UT && make test
+    * gcc-3.4.6 - gcc-4.6.2
+    * clang3
+
+Tests & Analysis
+------------
+    cd Test && make         # test cov cppcheck scan-build valgrind
+    cd Test && make test    # compile and run only UT/MT
+
+Motiviation example
+------------
 
 Usage
 -----
@@ -43,6 +53,14 @@ Usage
         std::string s;
     };
 
+    //fusion front end
+    BOOST_AUTO(l_module, (Front::Fusion::Module<>().
+        .bind<I>::to<Impl>()
+        .inst<int>(32)
+        .bind<I1>::to<Im1>::inScope<Singleton>::inCall<C1, C2>()
+    ));
+
+    //generic front end
     struct SimpleModule : Front::Generic::Module
     {
     public:
@@ -65,8 +83,10 @@ Usage
         Binding;
     };
 
+    //injector
     //order in Ctor is not important
-    Utility::Injector<SimpleModule> injector(
+    Utility::Injector<SimpleModule, BOOST_TYPEOF(l_module)> injector(
+        l_module,
         make_shared<Attr<std::string, mpl::string<'Name'> >(new std::string("MyString")),
         make_shared<I4>(new ExternalImpl4())
     );

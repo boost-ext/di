@@ -11,9 +11,9 @@
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
 #include <boost/type_traits/is_base_of.hpp>
+#include <boost/mpl/identity.hpp>
 #include <boost/mpl/set.hpp>
 #include <boost/mpl/vector.hpp>
-#include <boost/mpl/limits/vector.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/insert.hpp>
@@ -57,17 +57,13 @@ class Injector
 
     struct Policy : Back::Policy::Detail::Parameter
         <
-            Modules,
+            typename Modules::type,
             typename Defaults<Detail::Policy>::type,
             boost::is_base_of<Detail::Policy, boost::mpl::_2>
         >
     { };
 
-    template<typename T> struct GetDeps
-    {
-        typedef typename T::template Deps<typename T::Binding>::type type;
-    };
-
+public:
     template<typename TSeq, typename TResult = boost::mpl::set0<> >
     struct DepsImpl : boost::mpl::fold
         <
@@ -76,7 +72,7 @@ class Injector
             boost::mpl::if_
             <
                 has_Binding<boost::mpl::_2>,
-                DepsImpl<GetDeps<boost::mpl::_2>, boost::mpl::_1>,
+                DepsImpl<Back::GetDeps<boost::mpl::_2>, boost::mpl::_1>,
                 boost::mpl::insert<boost::mpl::_1, boost::mpl::_2>
             >
         >
@@ -90,26 +86,39 @@ class Injector
         >
     { };
 
-    template<typename TDeps>
-    struct KeysImpl : boost::mpl::fold
+    typedef boost::mpl::vector0<> Keys;
+
+#if 0
+    template</*template<typename> class GetImpl, */typename TSeq, typename TResult = boost::mpl::set0<> >
+    struct BindingImpl : boost::mpl::fold
         <
-            typename boost::mpl::fold
+            TSeq,
+            TResult,
+            boost::mpl::if_
             <
-                TDeps,
-                boost::mpl::set0<>,
-                boost::mpl::if_
-                <
-                    Back::HasValue<boost::mpl::_2>,
-                    boost::mpl::_1,
-                    boost::mpl::insert<boost::mpl::_1, Back::GetDependency<boost::mpl::_2> >
-                >
-            >::type,
-            boost::mpl::vector0<>,
-            boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>
-        >
+                has_Binding<boost::mpl::_2>,
+                //BindingImpl<GetImpl, boost::mpl::identity<GetImpl<boost::mpl::_2> >, boost::mpl::_1>,
+                BindingImpl</*GetImpl, */Back::GetDeps<boost::mpl::_2>, boost::mpl::_1>,
+                boost::mpl::insert<boost::mpl::_1, boost::mpl::_2>
+            >
+        >::type
     { };
 
-    typedef typename KeysImpl<typename Deps::type>::type Keys;
+    //template<template<typename> class GetImpl>
+    struct Binding : boost::mpl::fold
+        <
+            BindingImpl</*GetImpl, */typename Modules::type>,
+            boost::mpl::vector0<>,
+            boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>
+        >/*::type*/
+    { };
+
+public:
+    typedef typename Binding::type/*<Back::GetDeps>*/ Deps;
+    typedef typename Binding::type/*<Back::GetKeys>*/ Keys;
+#endif
+
+private:
     typedef QPool::Pool<Keys> Pool;
     typedef Back::Factory<Deps, Pool> Factory;
 
