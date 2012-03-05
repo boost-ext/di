@@ -1,7 +1,7 @@
 QDeps (C++ dependency injection framework)
 ================================
 
-QDeps is a C++ dependency injection framework (http://en.wikipedia.org/wiki/Dependency_injection)
+QDeps is a C++ dependency injection framework (http://en.wikipedia.org/wiki/Dependency_injection).
 
 To get started: git clone --recursive git://github.com/QSrc/QDeps.git
 
@@ -56,7 +56,7 @@ Usage
     //fusion front end
     BOOST_AUTO(l_module, (Front::Fusion::Module<>().
         .bind<I>::to<Impl>()
-        .inst<int>(32)
+        .inst<int>(make_shared<int>(new int(32)))
         .bind<I1>::to<Im1>::inScope<Singleton>::inCall<C1, C2>()
     ));
 

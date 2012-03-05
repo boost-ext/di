@@ -10,6 +10,7 @@
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/cat.hpp>
+#include <boost/typeof/typeof.hpp>
 #include <boost/none.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/function_types/parameter_types.hpp>
@@ -56,6 +57,11 @@ class Factory
         >::type
     { };
 
+    template<typename T> struct Ctor
+    {
+        typedef BOOST_TYPEOF_TPL(T::QDEPS_CTOR_UNIQUE_NAME::ctor) type;
+    };
+
 public:
     explicit Factory(TPool& p_pool = TPool())
         : m_pool(p_pool)
@@ -75,7 +81,7 @@ private:
         typename boost::enable_if< boost::mpl::empty<typename TBinding<T, TCallStack>::type> >::type* = 0
     )
     {
-        typedef typename boost::function_types::parameter_types<typename T::QDEPS_CTOR_UNIQUE_NAME>::type Ctor;
+        typedef typename boost::function_types::parameter_types<typename Ctor<T>::type>::type Ctor;
         typedef typename boost::mpl::push_back<TCallStack, T>::type CallStack;
         Aux::Inst<Utility::Scopes::PerRequest, T> l_onDemandInst;
         return createImpl<T, Ctor, CallStack>(l_onDemandInst);
@@ -87,7 +93,7 @@ private:
         typename boost::disable_if< boost::mpl::empty<typename TBinding<T, TCallStack>::type> >::type* = 0
     )
     {
-        typedef typename boost::function_types::parameter_types<typename T::QDEPS_CTOR_UNIQUE_NAME>::type Ctor;
+        typedef typename boost::function_types::parameter_types<typename Ctor<T>::type>::type Ctor;
         typedef typename TBinding<T, TCallStack>::type Binding;
         typedef typename boost::mpl::deref<typename boost::mpl::begin<Binding>::type>::type ToBeCreated;
         typedef typename boost::mpl::push_back<TCallStack, T>::type CallStack;

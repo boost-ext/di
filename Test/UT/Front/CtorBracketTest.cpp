@@ -4,10 +4,12 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <gtest/gtest.h>
 
 #define QDEPS_CTOR_CFG_BRACKET
 #include "QDeps/Front/Ctor.hpp"
+
+#include <gtest/gtest.h>
+#include "QDeps/Config.hpp"
 
 namespace QDeps
 {
@@ -52,6 +54,29 @@ TEST(CtorBracket, Params)
     struct C
     {
         QDEPS_CTOR(C, (int i, double d))
+            : i(i), d(d)
+        { }
+
+        int i;
+        double d;
+    };
+
+    C c(i, d);
+
+    EXPECT_EQ(i, c.i);
+    EXPECT_EQ(d, c.d);
+}
+
+TEST(CtorBracket, Impl)
+{
+    const int i = 1;
+    const double d = 2.0;
+
+    struct C
+    {
+        QDEPS_CTOR_IMPL((int i, double d));
+
+        C(int i, double d)
             : i(i), d(d)
         { }
 
