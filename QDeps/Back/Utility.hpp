@@ -12,6 +12,7 @@
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/mpl/is_sequence.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/has_xxx.hpp>
 
@@ -50,9 +51,9 @@ template<typename T> struct GetKeys
     typedef typename T::template Keys<typename T::Binding>::type type;
 };
 
-template<typename T> struct HasValue
+template<typename T> struct HasExternalValue
 {
-    typedef typename T::HasValue type;
+    typedef typename T::HasExternalValue type;
 };
 
 template<typename T> struct RemoveAccessors
@@ -84,6 +85,18 @@ template<typename T>
 struct MakeShared<T, typename boost::enable_if< Detail::has_element_type<typename MakePlain<T>::type> >::type>
 {
     typedef typename MakePlain<T>::type type;
+};
+
+template<typename T, typename Enable = void>
+struct MakeVector
+{
+    typedef boost::mpl::vector<T> type;
+};
+
+template<typename T>
+struct MakeVector<T, typename boost::enable_if< boost::mpl::is_sequence<T> >::type>
+{
+    typedef T type;
 };
 
 } // namespace Back

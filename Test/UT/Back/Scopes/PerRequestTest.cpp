@@ -6,11 +6,11 @@
 //
 #include <gtest/gtest.h>
 #include "Test/Common/Ctors.hpp"
-#include "QDeps/Utility/Scopes/Singleton.hpp"
+#include "QDeps/Back/Scopes/PerRequest.hpp"
 
 namespace QDeps
 {
-namespace Utility
+namespace Back
 {
 namespace Scopes
 {
@@ -19,22 +19,22 @@ namespace UT
 
 using namespace Test::Common;
 
-TEST(Singleton, Create)
+TEST(PerRequest, Create)
 {
-    Singleton l_s;
+    PerRequest l_pr;
 
-    EXPECT_TRUE(l_s.create<int>() == l_s.create<int>());
+    EXPECT_TRUE(l_pr.create<int>() != l_pr.create<int>());
 }
 
-TEST(Singleton, CreateArgs)
+TEST(PerRequest, CreateArgs)
 {
-    Singleton l_s;
+    PerRequest l_pr;
 
-    EXPECT_TRUE((l_s.create<C2, int, double, char>(0, 0.0, '0') == l_s.create<C2, int, double, char>(0, 0.0, '0')));
+    EXPECT_TRUE((l_pr.create<C2, int, double, char>(0, 0.0, '0') != l_pr.create<C2, int, double, char>(0, 0.0, '0')));
 }
 
 } // namespace UT
 } // namespace Scopes
-} // namespace Utility
+} // namespace Back
 } // namespace QDeps
 

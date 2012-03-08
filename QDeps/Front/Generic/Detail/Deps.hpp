@@ -14,7 +14,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/push_back.hpp>
-#include "QDeps/Utility/Scopes/PerRequest.hpp"
+#include "QDeps/Back/Scopes/PerRequest.hpp"
 
 namespace QDeps
 {
@@ -30,7 +30,7 @@ namespace Detail
 
 template<typename TDep> struct CreateDependency
 {
-    typedef typename TDep::template Apply<Utility::Scopes::PerRequest>::type type;
+    typedef typename TDep::template Apply<Back::Scopes::PerRequest>::type type;
 };
 
 template<typename TBinding, typename TSeq = boost::mpl::set0<> >

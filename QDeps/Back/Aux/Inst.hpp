@@ -34,7 +34,7 @@
     {
 
     template<typename T>
-    struct Value : boost::mpl::false_
+    struct Value : boost::mpl::true_
     {
         template<typename TAttr, typename TPool, typename TScope>
         static boost::shared_ptr<TAttr> get(TPool& p_pool, TScope&, typename boost::enable_if< boost::mpl::contains<typename TPool::Seq, TAttr> >::type* = 0)
@@ -50,7 +50,7 @@
     };
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, int C)>
-    struct Value< boost::mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> > : boost::mpl::true_
+    struct Value< boost::mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> > : boost::mpl::false_
     {
         template<typename TAttr, typename TPool, typename TScope> static boost::shared_ptr<TAttr> get(TPool&, TScope&)
         {
@@ -61,7 +61,7 @@
     };
 
     template<int N>
-    struct Value<boost::mpl::int_<N> > : boost::mpl::true_
+    struct Value<boost::mpl::int_<N> > : boost::mpl::false_
     {
         template<typename TAttr, typename TPool, typename TScope> static boost::shared_ptr<TAttr> get(TPool&, TScope&)
         {
@@ -81,7 +81,7 @@
     public:
         typedef TAttr Dependency;
         typedef TContext Context;
-        typedef typename Value<TValue>::type HasValue;
+        typedef typename Value<TValue>::type HasExternalValue;
 
         template<typename TPool> boost::shared_ptr<Dependency> create(TPool& p_pool)
         {

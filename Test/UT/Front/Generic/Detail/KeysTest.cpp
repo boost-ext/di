@@ -25,13 +25,13 @@ using namespace boost::mpl;
 
 struct A
 {
-    typedef boost::mpl::false_ HasValue;
+    typedef boost::mpl::true_ HasExternalValue;
     typedef void Dependency;
 };
 
 struct B
 {
-    typedef boost::mpl::true_ HasValue;
+    typedef boost::mpl::false_ HasExternalValue;
     typedef int Dependency;
 };
 
@@ -49,7 +49,7 @@ TEST(Keys, Empty)
     ));
 }
 
-TEST(Keys, HasValue)
+TEST(Keys, HasExternalValue)
 {
     EXPECT_TRUE((
         equal

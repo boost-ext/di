@@ -65,6 +65,29 @@ TEST(CtorBracket, Params)
     EXPECT_EQ(d, c.d);
 }
 
+TEST(CtorBracket, Traits)
+{
+    const int i = 1;
+    const double d = 2.0;
+
+    struct C
+    {
+        QDEPS_TRAITS((int i, double d));
+
+        C(int i, double d)
+            : i(i), d(d)
+        { }
+
+        int i;
+        double d;
+    };
+
+    C c(i, d);
+
+    EXPECT_EQ(i, c.i);
+    EXPECT_EQ(d, c.d);
+}
+
 } // namespace UT
 } // namespace Scopes
 } // namespace Utility

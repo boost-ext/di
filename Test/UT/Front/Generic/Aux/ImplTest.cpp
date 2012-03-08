@@ -34,7 +34,7 @@ TEST(Impl, One)
         <
             vector
             <
-                Detail::ImplDependency<int, double, A>
+                Detail::ImplDependency<int, double, vector<A> >
             >,
             Impl<int, double>::Bind<A>
         >::value
@@ -48,10 +48,10 @@ TEST(Impl, Many)
         <
             vector
             <
-                Detail::ImplDependency<int, double, A>,
-                Detail::ImplDependency<int, double, B>,
-                Detail::ImplDependency<int, double, C>,
-                Detail::ImplDependency<int, double, D>
+                Detail::ImplDependency<int, double, vector<A> >,
+                Detail::ImplDependency<int, double, vector<B> >,
+                Detail::ImplDependency<int, double, vector<C> >,
+                Detail::ImplDependency<int, double, vector<D> >
             >,
             Impl<int, double>::Bind<A, B, C, D>
         >::value

@@ -20,9 +20,15 @@ namespace UT
 
 using namespace boost::mpl;
 
+class A { };
+class B { };
+class C { };
+
 class Module
 {
-
+    typedef vector0<> Binding;
+    template<typename T> struct Deps : boost::mpl::vector<A, B, C> { };
+    template<typename T> struct Keys : boost::mpl::vector<int> { };
 };
 
 TEST(Injector, CtorEmpty)
@@ -56,21 +62,21 @@ TEST(Injector, Module)
     Inj l_inj; //have to compile
     (void)l_inj;
 
-/*    EXPECT_TRUE((*/
-        //equal
-        //<
-            //vector0<>,
-            //Inj::Deps
-        //>::value
-    //));
+    EXPECT_TRUE((
+        equal
+        <
+            vector<C, B, A>,
+            Inj::Deps
+        >::value
+    ));
 
-    //EXPECT_TRUE((
-        //equal
-        //<
-            //vector0<>,
-            //Inj::Keys
-        //>::value
-    /*));*/
+    EXPECT_TRUE((
+        equal
+        <
+            vector<int>,
+            Inj::Keys
+        >::value
+    ));
 }
 
 } // namespace UT

@@ -15,10 +15,12 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/limits/vector.hpp>
 #include <boost/mpl/placeholders.hpp>
+#include <boost/mpl/is_sequence.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/void.hpp>
 #include <boost/mpl/vector.hpp>
+#include "QDeps/Back/Utility.hpp"
 #include "QDeps/Back/Aux/Inst.hpp"
 
 namespace QDeps
@@ -58,7 +60,7 @@ class Inst : public Detail::InstDependency<TAttr, TValue>
 {
     template<typename T> struct Inst_
     {
-        typedef Detail::InstDependency<TAttr, TValue, T> type;
+        typedef Detail::InstDependency<TAttr, TValue, typename Back::MakeVector<T>::type> type;
     };
 
     template<typename TSeq>

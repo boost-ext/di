@@ -16,19 +16,51 @@
 #   endif
 
 /**
- * QDEPS_CTOR(SimpleClass, int, double) { }
+ * class SimpleClass
+ * {
+ * public:
+ *      QDEPS_TRAITS(int);
+ *      SimpleClass(int) { }
+ * };
  */
-#   define QDEPS_CTOR(Type, ...)                            \
-        typedef void QDEPS_CTOR_UNIQUE_NAME(__VA_ARGS__);           \
+#define QDEPS_TRAITS(...)                                               \
+    struct QDEPS_CTOR_UNIQUE_NAME { static void ctor(__VA_ARGS__); }
+
+/**
+ * class SimpleClass
+ * {
+ * public:
+ *      QDEPS_CTOR(SimpleClass, int, double)
+ *      { }
+ * };
+ */
+#   define QDEPS_CTOR(Type, ...)                                        \
+        QDEPS_TRAITS(__VA_ARGS__);                                      \
         Type(__VA_ARGS__)
 
 #elif defined(QDEPS_CTOR_CFG_BRACKET)
 
 /**
- * QDEPS_CTOR(SimpleClass, (int, double)) { }
+ * class SimpleClass
+ * {
+ * public:
+ *      QDEPS_TRAITS((int));
+ *      SimpleClass(int) { }
+ * };
  */
-#   define QDEPS_CTOR(Type, Params)                         \
-        typedef void QDEPS_CTOR_UNIQUE_NAME Params;                 \
+#define QDEPS_TRAITS(Params)                                            \
+    struct QDEPS_CTOR_UNIQUE_NAME { static void ctor Params; }
+
+/**
+ * class SimpleClass
+ * {
+ * public:
+ *      QDEPS_CTOR(SimpleClass, (int, double))
+ *      { }
+ * };
+ */
+#   define QDEPS_CTOR(Type, Params)                                     \
+        QDEPS_TRAITS(Params);                                           \
         Type Params
 
 #else

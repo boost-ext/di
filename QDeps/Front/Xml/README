@@ -7,3 +7,7 @@
 <contract id="IOnlineBrokerageService" singleton="true">
     <implementation>NewYorkStockExchangeBrokerageServiceImpl</implementation>
 </contract>
+<contract id="int">
+    <value>32</value>
+</contract>
+

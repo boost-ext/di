@@ -63,7 +63,6 @@ class Injector
         >
     { };
 
-public:
     template<typename TSeq, typename TResult = boost::mpl::set0<> >
     struct DepsImpl : boost::mpl::fold
         <
@@ -78,49 +77,41 @@ public:
         >
     { };
 
-    struct Deps : boost::mpl::fold
-        <
-            typename DepsImpl<typename Modules::type>::type,
-            boost::mpl::vector0<>,
-            boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>
-        >
-    { };
-
-    typedef boost::mpl::vector0<> Keys;
-
-#if 0
-    template</*template<typename> class GetImpl, */typename TSeq, typename TResult = boost::mpl::set0<> >
-    struct BindingImpl : boost::mpl::fold
+    template<typename TSeq, typename TResult = boost::mpl::set0<> >
+    struct KeysImpl : boost::mpl::fold
         <
             TSeq,
             TResult,
             boost::mpl::if_
             <
                 has_Binding<boost::mpl::_2>,
-                //BindingImpl<GetImpl, boost::mpl::identity<GetImpl<boost::mpl::_2> >, boost::mpl::_1>,
-                BindingImpl</*GetImpl, */Back::GetDeps<boost::mpl::_2>, boost::mpl::_1>,
+                KeysImpl<Back::GetKeys<boost::mpl::_2>, boost::mpl::_1>,
                 boost::mpl::insert<boost::mpl::_1, boost::mpl::_2>
             >
-        >::type
-    { };
-
-    //template<template<typename> class GetImpl>
-    struct Binding : boost::mpl::fold
-        <
-            BindingImpl</*GetImpl, */typename Modules::type>,
-            boost::mpl::vector0<>,
-            boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>
-        >/*::type*/
+        >
     { };
 
 public:
-    typedef typename Binding::type/*<Back::GetDeps>*/ Deps;
-    typedef typename Binding::type/*<Back::GetKeys>*/ Keys;
-#endif
+    struct Deps : boost::mpl::fold
+        <
+            typename DepsImpl<typename Modules::type>::type,
+            boost::mpl::vector0<>,
+            boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>
+        >::type
+    { };
+
+
+    struct Keys : boost::mpl::fold
+        <
+            typename KeysImpl<typename Modules::type>::type,
+            boost::mpl::vector0<>,
+            boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>
+        >::type
+    { };
 
 private:
-    typedef QPool::Pool<Keys> Pool;
-    typedef Back::Factory<Deps, Pool> Factory;
+    typedef QPool::Pool<typename Keys::type> Pool;
+    typedef Back::Factory<typename Deps::type, Pool> Factory;
 
 public:
     QPOOL_CTOR(Injector,

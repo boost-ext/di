@@ -34,7 +34,7 @@ TEST(Inst, One)
         <
             vector
             <
-                Detail::InstDependency<int, double, A>
+                Detail::InstDependency<int, double, vector<A> >
             >,
             Inst<int, double>::Bind<A>
         >::value
@@ -48,10 +48,10 @@ TEST(Inst, Many)
         <
             vector
             <
-                Detail::InstDependency<int, double, A>,
-                Detail::InstDependency<int, double, B>,
-                Detail::InstDependency<int, double, C>,
-                Detail::InstDependency<int, double, D>
+                Detail::InstDependency<int, double, vector<A> >,
+                Detail::InstDependency<int, double, vector<B> >,
+                Detail::InstDependency<int, double, vector<C> >,
+                Detail::InstDependency<int, double, vector<D> >
             >,
             Inst<int, double>::Bind<A, B, C, D>
         >::value

@@ -8,8 +8,8 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
 #include <boost/mpl/pair.hpp>
-#include "QDeps/Utility/Scopes/PerRequest.hpp"
-#include "QDeps/Utility/Scopes/Singleton.hpp"
+#include "QDeps/Back/Scopes/PerRequest.hpp"
+#include "QDeps/Back/Scopes/Singleton.hpp"
 #include "QDeps/Front/Generic/Detail/Deps.hpp"
 
 namespace QDeps
@@ -24,7 +24,7 @@ namespace UT
 {
 
 using namespace boost::mpl;
-using namespace Utility::Scopes;
+using namespace Back::Scopes;
 
 struct A
 {

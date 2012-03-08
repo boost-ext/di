@@ -14,6 +14,8 @@
 #include <boost/mpl/limits/vector.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/void.hpp>
+#include "QDeps/Back/Scopes/PerRequest.hpp"
+#include "QDeps/Back/Scopes/Singleton.hpp"
 #include "QDeps/Front/Generic/Aux/Impl.hpp"
 #include "QDeps/Front/Generic/Aux/Inst.hpp"
 #include "QDeps/Front/Generic/Aux/Scope.hpp"
@@ -31,6 +33,9 @@ namespace Generic
 class Module
 {
 public:
+    typedef Back::Scopes::Singleton Singleton;
+    typedef Back::Scopes::PerRequest PerRequest;
+
     template
     <
         typename TIf,
