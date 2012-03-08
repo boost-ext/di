@@ -54,10 +54,10 @@ Usage
     };
 
     //fusion front end
-    BOOST_AUTO(l_module, (Front::Fusion::Module<>().
-        .bind<I>::to<Impl>()
-        .inst<int>(make_shared<int>(new int(32)))
-        .bind<I1>::to<Im1>::inScope<Singleton>::inCall<C1, C2>()
+    BOOST_AUTO(l_module, (make_shared<Front::Fusion::Module()(
+        Bind<I>::To<Impl>(),
+        Inst<int>(new int(32)),
+        Bind<I1>::To<Im1>::InScope<Singleton>::InCall<C1, C2>()
     ));
 
     //generic front end
@@ -68,6 +68,7 @@ Usage
         <
             Impl<I1, Impl1>,                                        //per request
             Impl<I2, Impl2>,                                        //create I2 using Impl2
+            Impl<vector<Q1, Q2>, ImplQ>,                            //assign ImplQ to Q1 and Q2
 
             Scope<Singleton>::Bind                                  //one instantion
             <
@@ -102,10 +103,8 @@ Krzysztof Jusiak (krzysztof at jusiak dot net)
 TODO
 ------
     * Method injector
-    * Providers
-    * Fusion fron end
-    * Xml front end
     * C++11 fork
+    * Xml front end ?
 
 License
 -------

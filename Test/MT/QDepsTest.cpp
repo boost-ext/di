@@ -7,10 +7,9 @@
 #include <gtest/gtest.h>
 #include "Test/Common/Ctors.hpp"
 #include "QDeps/Utility/Injector.hpp"
-#include "QDeps/Utility/Scopes/PerRequest.hpp"
-#include "QDeps/Utility/Scopes/Singleton.hpp"
 #include "QDeps/Front/Generic/Module.hpp"
 
+#include <cxxabi.h>
 namespace QDeps
 {
 namespace MT
@@ -18,7 +17,6 @@ namespace MT
 
 using namespace boost::mpl;
 using namespace Utility;
-using namespace Utility::Scopes;
 using namespace Test::Common;
 
 struct Module : Front::Generic::Module
@@ -43,9 +41,9 @@ struct Module : Front::Generic::Module
 
 TEST(QDeps, Modules)
 {
-    //Utility::Injector<Module> inj;
+    Utility::Injector<Module> inj;
 
-    //std::cout << abi::__cxa_demangle(typeid(Utility::Injector<Module>::Deps::type).name(), 0, 0, 0) << std::endl;
+    std::cout << abi::__cxa_demangle(typeid(Utility::Injector<Module>::Deps::type).name(), 0, 0, 0) << std::endl;
     //std::cout << "dupa\n";
     //std::cout << abi::__cxa_demangle(typeid(Utility::Injector<Module>::Keys::type).name(), 0, 0, 0) << std::endl;
    //boost::shared_ptr<C8> c8 = inj.create< boost::shared_ptr<C8> >();

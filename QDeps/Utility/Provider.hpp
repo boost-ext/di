@@ -4,31 +4,19 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef QDEPS_UTILITY_ATTR_HPP
-#define QDEPS_UTILITY_ATTR_HPP
-
-#include "QDeps/Config.hpp"
+#ifndef QDEPS_UTILITY_PROVIDER_HPP
+#define QDEPS_UTILITY_PROVIDER_HPP
 
 namespace QDeps
 {
 namespace Utility
 {
 
-/**
- * Example: Attr< int, mpl::string<'Port'> >
- */
-template<typename T, typename TName>
-class Attr
+template<typename T>
+class Provider
 {
 public:
-    Attr(T p_value = T()) // non explicit
-        : m_value(p_value)
-    { }
-
-    operator T() { return m_value; }
-
-private:
-    T m_value;
+    virtual T get() = 0;
 };
 
 } // namespace Utility

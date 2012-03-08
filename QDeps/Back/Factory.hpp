@@ -31,7 +31,7 @@
 #include "QDeps/Back/Utility.hpp"
 #include "QDeps/Back/Convert.hpp"
 #include "QDeps/Back/Binding.hpp"
-#include "QDeps/Utility/Scopes/PerRequest.hpp"
+#include "QDeps/Back/Scopes/PerRequest.hpp"
 #include "QDeps/Config.hpp"
 
 namespace QDeps
@@ -83,7 +83,7 @@ private:
     {
         typedef typename boost::function_types::parameter_types<typename Ctor<T>::type>::type Ctor;
         typedef typename boost::mpl::push_back<TCallStack, T>::type CallStack;
-        Aux::Inst<Utility::Scopes::PerRequest, T> l_onDemandInst;
+        Aux::Inst<Scopes::PerRequest, T> l_onDemandInst;
         return createImpl<T, Ctor, CallStack>(l_onDemandInst);
     }
 

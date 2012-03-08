@@ -10,8 +10,8 @@
 #include "Test/Common/Ctors.hpp"
 #include "QDeps/Back/Factory.hpp"
 #include "QDeps/Utility/Attr.hpp"
-#include "QDeps/Utility/Scopes/PerRequest.hpp"
-#include "QDeps/Utility/Scopes/Singleton.hpp"
+#include "QDeps/Back/Scopes/PerRequest.hpp"
+#include "QDeps/Back/Scopes/Singleton.hpp"
 #include "QPool/Pool.hpp"
 
 namespace QDeps
@@ -24,7 +24,7 @@ namespace UT
 using namespace Test::Common;
 using namespace Aux;
 using namespace Utility;
-using namespace Utility::Scopes;
+using namespace Back::Scopes;
 using namespace boost::mpl;
 using namespace boost;
 
