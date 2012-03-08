@@ -18,6 +18,11 @@ using namespace boost::mpl;
 using namespace Utility;
 using namespace Test::Common;
 
+
+//TODO add providers to module
+//TODO add external instances
+//TODO add attributes
+
 struct Module : Front::Generic::Module
 {
     typedef vector
@@ -38,7 +43,7 @@ struct Module : Front::Generic::Module
     Binding;
 };
 
-TEST(QDeps, Modules)
+TEST(QDeps, Module)
 {
     Utility::Injector<Module> inj;
 
@@ -58,6 +63,15 @@ TEST(QDeps, Modules)
     EXPECT_EQ(5, c8->c7->c6->c5.c2->i);
     EXPECT_EQ(0.0, c8->c7->c6->c5.c2->d);
     EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
+}
+
+TEST(QDeps, Modules)
+{
+}
+
+//TODO define BOOST_ASSERT<false> to make policy test possible
+TEST(QDeps, ModulesPolicies)
+{
 }
 
 } // namespace MT
