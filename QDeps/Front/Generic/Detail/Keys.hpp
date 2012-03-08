@@ -32,9 +32,9 @@ struct Keys : boost::mpl::fold
             boost::mpl::set0<>,
             boost::mpl::if_
             <
-                Back::HasValue<boost::mpl::_2>,
-                boost::mpl::_1,
-                boost::mpl::insert<boost::mpl::_1, Back::GetDependency<boost::mpl::_2> >
+                Back::HasExternalValue<boost::mpl::_2>,
+                boost::mpl::insert<boost::mpl::_1, Back::GetDependency<boost::mpl::_2> >,
+                boost::mpl::_1
             >
         >::type,
         boost::mpl::vector0<>,

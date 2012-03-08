@@ -19,6 +19,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/void.hpp>
+#include "QDeps/Back/Utility.hpp"
 #include "QDeps/Back/Aux/Impl.hpp"
 
 namespace QDeps
@@ -58,7 +59,7 @@ class Impl : public Detail::ImplDependency<TIf, TImpl>
 {
     template<typename T> struct Impl_
     {
-        typedef Detail::ImplDependency<TIf, TImpl, T> type;
+        typedef Detail::ImplDependency<TIf, TImpl, typename Back::MakeVector<T>::type> type;
     };
 
     template<typename TSeq>

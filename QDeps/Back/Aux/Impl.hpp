@@ -42,7 +42,7 @@
     public:
         typedef TIf Dependency;
         typedef TContext Context;
-        typedef boost::mpl::false_ HasValue;
+        typedef boost::mpl::false_ HasExternalValue;
 
         template<typename TPool> boost::shared_ptr<Dependency> create(TPool&)
         {
