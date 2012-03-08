@@ -25,13 +25,13 @@ using namespace boost::mpl;
 
 struct A
 {
-    typedef boost::mpl::false_ HasExternalValue;
+    typedef boost::mpl::true_ HasExternalValue;
     typedef void Dependency;
 };
 
 struct B
 {
-    typedef boost::mpl::true_ HasExternalValue;
+    typedef boost::mpl::false_ HasExternalValue;
     typedef int Dependency;
 };
 

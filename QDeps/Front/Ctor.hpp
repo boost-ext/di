@@ -19,11 +19,11 @@
  * class SimpleClass
  * {
  * public:
- *      QDEPS_CTOR_IMPL(int);
+ *      QDEPS_TRAITS(int);
  *      SimpleClass(int) { }
  * };
  */
-#define QDEPS_CTOR_IMPL(...)                                            \
+#define QDEPS_TRAITS(...)                                               \
     struct QDEPS_CTOR_UNIQUE_NAME { static void ctor(__VA_ARGS__); }
 
 /**
@@ -35,7 +35,7 @@
  * };
  */
 #   define QDEPS_CTOR(Type, ...)                                        \
-        QDEPS_CTOR_IMPL(__VA_ARGS__);                                   \
+        QDEPS_TRAITS(__VA_ARGS__);                                      \
         Type(__VA_ARGS__)
 
 #elif defined(QDEPS_CTOR_CFG_BRACKET)
@@ -44,11 +44,11 @@
  * class SimpleClass
  * {
  * public:
- *      QDEPS_CTOR_IMPL((int));
+ *      QDEPS_TRAITS((int));
  *      SimpleClass(int) { }
  * };
  */
-#define QDEPS_CTOR_IMPL(Params)                                         \
+#define QDEPS_TRAITS(Params)                                            \
     struct QDEPS_CTOR_UNIQUE_NAME { static void ctor Params; }
 
 /**
@@ -60,7 +60,7 @@
  * };
  */
 #   define QDEPS_CTOR(Type, Params)                                     \
-        QDEPS_CTOR_IMPL(Params);                                        \
+        QDEPS_TRAITS(Params);                                           \
         Type Params
 
 #else

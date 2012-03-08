@@ -65,14 +65,14 @@ TEST(CtorBracket, Params)
     EXPECT_EQ(d, c.d);
 }
 
-TEST(CtorBracket, Impl)
+TEST(CtorBracket, Traits)
 {
     const int i = 1;
     const double d = 2.0;
 
     struct C
     {
-        QDEPS_CTOR_IMPL((int i, double d));
+        QDEPS_TRAITS((int i, double d));
 
         C(int i, double d)
             : i(i), d(d)
