@@ -22,6 +22,9 @@ using namespace Test::Common;
 //TODO add providers to module
 //TODO add external instances
 //TODO add attributes
+//TODO attr -> named
+//TODO boost::function
+//TODO is_base_of
 
 struct Module : Front::Generic::Module
 {
