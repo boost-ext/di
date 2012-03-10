@@ -18,8 +18,10 @@ Requirements
 
 Supported compilers (succesfully tested)
 ------------
-    * gcc-3.4.6 - gcc-4.6.2
-    * clang3
+    * gcc   >= 3.4.6
+    * clang >= 3.0
+    * icc   >= 11.1
+    * msvc  ?
 
 Tests & Analysis
 ------------
