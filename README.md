@@ -26,82 +26,116 @@ Tests & Analysis
     cd Test && make         # test cov cppcheck scan-build valgrind
     cd Test && make test    # compile and run only UT/MT
 
-Motiviation example
-------------
-
 Usage
 -----
 
 ``` C++
-    class C1
-    {
-    public:
-        QDPES_CTOR(Ctor, shared_ptr<I1> i1, int i, Attr<std::string, string<'test'> > s)
-            : i1(i1), i(i), s(s)
-        { }
 
-    private:
-        shared_ptr<I1> i1;
-        int i;
-        std::string s;
+    struct IDummy {
+        virtual ~I() { }
+        virtual void dummy() = 0;
     };
 
-    //base front end
+    struct Dummy : IDummy {
+        virtual void dummy() { }
+    };
+
+    struct Smart : IDummy {
+        virtual void dummy() { }
+    };
+
+    struct C1 {
+        QDPES_CTOR(C1, shared_ptr<IDummy>, int, Named<int, mpl::string<'port'> >) { }
+    };
+
+    struct C2 {
+        QDPES_CTOR(C2, const IDummy*, shared_ptr<C1>)
+    };
+
+    struct C3 {
+        QDPES_CTOR(C3, C2) { }
+    };
+
+    // *** base front end *** ------------------------------------------------------------------
+
     struct BaseModule : Front::Base::Module
         <
-            Externals::Bind         < C1, Named<int, dupa>                                        >,
-            Scope<Singleton >::Bind < Impl1, Bind<Interface, Impl2>, Bind< InCall<C1, C2>, Impl2> >,
-            Scope<PerRequest>::Bind < int_<32>, mpl::string<'text'>                               >
+            Externals::Bind         < Named<int, mpl::string<'port'> >           >,
+            Scope<Singleton >::Bind < Dummy                                      >,
+            Scope<PerRequest>::Bind < int_<42>, Bind< InCall<C2, C1>, Smart>     >
         >
     { };
 
-    //fusion front end
+    //injector, order in constructor is not important
+    Utility::Injector<BaseModule> injector(make_shared< Named<int, mpl::string<'port'> >(new int(8080)));
+    shared_ptr<C3> l_sp = injector.create< shared_ptr<C3> >();
+    C3 l_value = injector.create<C3>();
+
+    // *** fusion front end *** ----------------------------------------------------------------
+
     BOOST_AUTO(fusionModule, (Front::Fusion::Module()(
-        bind<I>::to<Impl>(),
-        inst<int>(make_shared<int>(32)),
-        bind<I1>::to<Im1>::inScope<Singleton>::inCall<C1, C2>()
+        bind<IDummy>::to<Dummy>::inScope<Singleton>(),
+        bind<IDummy>::to<Smart>::InCall<C2, C1>(),
+        inst<int>(make_shared<int>(42)),
+        inst<Named<int, mpl::string<'port'> >(make_shared<int>(8080))
     ));
 
-    //generic front end
+    Utility::Injector<BOOST_TYPEOF(fusionModule)> injector(fusionModule);
+    shared_ptr<C3> l_sp = injector.create< shared_ptr<C3> >();
+    C3 l_value = injector.create<C3>();
+
+    // *** generic front end *** ---------------------------------------------------------------
+
     struct GenericModule : Front::Generic::Module
         <
-            Scope<Singleton>::Bind                                      //one instantion
+            Scope<Singleton>::Bind
             <
-                Impl<I3, Impl3>,
-                Inst<Attr<int, string<'Port'> >, int_<5> >,             //set to 5
+                Impl<IDummy, Dummy>
             >,
             Scope<PerRequest>::Bind
             <
-                Impl<I1, Impl1>,                                        //per request
-                Impl<I1, ImplI11>::Bind<C2>                             //custom bind I1 to C2
-                Inst<int, int_<42> >::Bind<C4, CallStack<C1, C2> >      //bind int=42 to C4 and C1->C2
+                Impl<IDummy, Smart>::Bind< InCall<C2, C1> >,
+                Inst<int, int_<42> >,
+                Inst<Named<int, mpl::string<'port'> >
             >
         >
     { };
 
-    //path front end
+    Utility::Injector<GenericModule> injector(make_shared< Named<int, mpl::string<'port'> >(new int(8080)));
+    shared_ptr<C3> l_sp = injector.create< shared_ptr<C3> >();
+    C3 l_value = injector.create<C3>();
+
+    // *** path front end *** ------------------------------------------------------------------
+
     struct PathModule : Front::Path::Module
         <
-            Singleton<I3, Impl3>,
-            PerRequest<int, int_<42> >
+            PerRequest<int, int_<42> >,
+            PerRequest<Named<int, mpl::string<'port'> >,
             Path
             <
-                PerRequest<I1, Impl1>,
-                C1
+                Singleton<IDummy, Dummy>,
+                Path
+                <
+                    PerRequest<IDummy, Smart>,
+                    C1
+                >
             >
         >
     { };
 
-    //injector
-    //order in Ctor is not important
-    Utility::Injector<BaseModule, BOOST_TYPEOF(fusionModule), GenericModule> injector(
-        l_module,
-        make_shared<Attr<std::string, mpl::string<'Name'> >(new std::string("MyString")),
-        make_shared<I4>(new ExternalImpl4())
-    );
+    Utility::Injector<GenericModule> injector(make_shared< Named<int, mpl::string<'port'> >(new int(8080)));
+    shared_ptr<C3> l_sp = injector.create< shared_ptr<C3> >();
+    C3 l_value = injector.create<C3>();
 
-    shared_ptr<C2> l_sp = injector.create< shared_ptr<C2> >();
-    C2 l_value = injector.create<C2>();
+    // *** many modules *** --------------------------------------------------------------------
+
+    Utility::Injector<BaseModule1, BaseModule2> injector;
+    C3 l_value = injector.create<C3>();
+
+    // *** mix modules *** ---------------------------------------------------------------------
+
+    Utility::Injector<BaseModule, GenericModule, PathModule> injector;
+
 ```
 
 Author
