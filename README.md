@@ -154,6 +154,7 @@ TODO
     * Method injector
     * Scopes: EagerSingleton, Session
     * Xml front end ?
+    * make install 
     * C++11 fork
 
 License
