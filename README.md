@@ -67,7 +67,7 @@ Usage
     { };
 
     //injector, order in constructor is not important
-    Injector<BaseModule> injector(make_shared< Named<int, mpl::string<'port'> >(new int(8080)));
+    Injector<BaseModule> injector(make_shared< Named<int, mpl::string<'port'> >(8080));
     shared_ptr<C3> l_sp = injector.create< shared_ptr<C3> >();
     C3 l_value = injector.create<C3>();
 
@@ -101,7 +101,7 @@ Usage
         >
     { };
 
-    Injector<GenericModule> injector(make_shared< Named<int, mpl::string<'port'> >(new int(8080)));
+    Injector<GenericModule> injector(make_shared< Named<int, mpl::string<'port'> >(8080));
     shared_ptr<C3> l_sp = injector.create< shared_ptr<C3> >();
     C3 l_value = injector.create<C3>();
 
@@ -123,7 +123,7 @@ Usage
         >
     { };
 
-    Injector<PathModule> injector(make_shared< Named<int, mpl::string<'port'> >(new int(8080)));
+    Injector<PathModule> injector(make_shared< Named<int, mpl::string<'port'> >(8080));
     shared_ptr<C3> l_sp = injector.create< shared_ptr<C3> >();
     C3 l_value = injector.create<C3>();
 
