@@ -1,7 +1,8 @@
 QDeps (C++ dependency injection framework)
 ================================
 
-QDeps is a C++ dependency injection framework:
+QDeps is a C++ dependency injection framework
+------------
     * http://en.wikipedia.org/wiki/Dependency_injection
     * http://www.youtube.com/v/RlfLCWKxHJ0
 
