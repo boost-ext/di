@@ -1,6 +1,3 @@
-[submodule "Externals/gtest"]
-	path = Externals/gtest
-	url = git://github.com/smarr/googletest.git
 [submodule "Externals/boost/mpl"]
 	path = Externals/boost/mpl
 	url = git://github.com/boost-lib/mpl.git
@@ -28,3 +25,6 @@
 [submodule "Externals/QPool"]
 	path = Externals/QPool
 	url = git://github.com/QSrc/QPool.git
+[submodule "Externals/gtest"]
+	path = Externals/gtest
+	url = git://github.com/smarr/googletest.git
