@@ -6,3 +6,4 @@ struct My : Front::Base::Module
     >
 { };
 
+Impl<PerRequest, CIf0, CIf0, vector0<>, boost::is_base_of<boost::mpl::_1, CIf0> >

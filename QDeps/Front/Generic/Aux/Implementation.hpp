@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef QDEPS_FRONT_GENERIC_AUX_IMPL_HPP
-#define QDEPS_FRONT_GENERIC_AUX_IMPL_HPP
+#ifndef QDEPS_FRONT_GENERIC_AUX_IMPLEMENTATION_HPP
+#define QDEPS_FRONT_GENERIC_AUX_IMPLEMENTATION_HPP
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
@@ -40,7 +40,7 @@ template
     typename TImpl,
     typename TContext = boost::mpl::vector0<>
 >
-struct ImplDependency
+struct ImplementationDependency
 {
     template<typename TScope> struct Apply
     {
@@ -55,15 +55,15 @@ template
     typename TIf,
     typename TImpl
 >
-class Impl : public Detail::ImplDependency<TIf, TImpl>
+class Implementation : public Detail::ImplementationDependency<TIf, TImpl>
 {
-    template<typename T> struct Impl_
+    template<typename T> struct Implementation_
     {
-        typedef Detail::ImplDependency<TIf, TImpl, typename Back::MakeVector<T>::type> type;
+        typedef Detail::ImplementationDependency<TIf, TImpl, typename Back::MakeVector<T>::type> type;
     };
 
     template<typename TSeq>
-    struct ImplImpl : boost::mpl::fold
+    struct ImplementationImpl : boost::mpl::fold
         <
             TSeq,
             boost::mpl::vector0<>,
@@ -71,14 +71,14 @@ class Impl : public Detail::ImplDependency<TIf, TImpl>
             <
                 boost::is_base_of<boost::mpl::void_, boost::mpl::_2>,
                 boost::mpl::_1,
-                boost::mpl::push_back<boost::mpl::_1, Impl_<boost::mpl::_2> >
+                boost::mpl::push_back<boost::mpl::_1, Implementation_<boost::mpl::_2> >
             >
         >
     { };
 
 public:
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, boost::mpl::void_)>
-    struct Bind : ImplImpl
+    struct Bind : ImplementationImpl
         <
             BOOST_PP_CAT(boost::mpl::vector, BOOST_MPL_LIMIT_VECTOR_SIZE)<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
         >::type

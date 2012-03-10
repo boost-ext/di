@@ -92,13 +92,13 @@ Usage
         <
             Scope<Singleton>::Bind
             <
-                Impl<IDummy, Dummy>
+                Implementation<IDummy, Dummy>
             >,
             Scope<PerRequest>::Bind
             <
-                Impl<IDummy, Smart>::Bind< InCall<C2, C1> >,
-                Inst<int, int_<42> >,
-                Inst<Named<int, mpl::string<'port'> >
+                Implementation<IDummy, Smart>::Bind< InCall<C2, C1> >,
+                Instance<int, int_<42> >,
+                Instance<Named<int, mpl::string<'port'> >
             >
         >
     { };

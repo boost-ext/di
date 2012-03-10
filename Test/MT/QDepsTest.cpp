@@ -26,7 +26,7 @@ using namespace Test::Common;
 //TODO boost::function
 //TODO is_base_of
 //TODO QDEPS_INJECT for method as well
-//TODO CallStack mpl_::na
+//TODO InCall mpl_::na
 
 
 struct GenericModule : Front::Generic::Module
@@ -35,16 +35,16 @@ struct GenericModule : Front::Generic::Module
     <
         Scope<Singleton>::Bind
         <
-            Inst<C3>
+            Instance<C3>
         >,
-        Impl<If0, CIf0>,
-        Impl<If0, CIf01>::Bind< CallStack<C6, C5> >,
-        Impl<If0, CIf02>::Bind<C7>,
-        Inst<int, int_<1> >,
-        Inst<int, int_<2> >::Bind<C8>,
-        Inst<Named<int, string<'1'> >, int_<3> >::Bind< CallStack<C7, C6, C4> >,
-        Inst<Named<int, string<'2'> >, int_<4> >::Bind< CallStack<C7, C6, C4> >,
-        Inst<int, int_<5> >::Bind<C2>
+        Implementation<If0, CIf0>,
+        Implementation<If0, CIf01>::Bind< InCall<C6, C5> >,
+        Implementation<If0, CIf02>::Bind<C7>,
+        Instance<int, int_<1> >,
+        Instance<int, int_<2> >::Bind<C8>,
+        Instance<Named<int, string<'1'> >, int_<3> >::Bind< InCall<C7, C6, C4> >,
+        Instance<Named<int, string<'2'> >, int_<4> >::Bind< InCall<C7, C6, C4> >,
+        Instance<int, int_<5> >::Bind<C2>
     >
     Binding;
 };

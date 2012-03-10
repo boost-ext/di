@@ -15,8 +15,8 @@
 #include <boost/mpl/placeholders.hpp>
 #include "QDeps/Back/Scopes/PerRequest.hpp"
 #include "QDeps/Back/Scopes/Singleton.hpp"
-#include "QDeps/Front/Generic/Aux/Impl.hpp"
-#include "QDeps/Front/Generic/Aux/Inst.hpp"
+#include "QDeps/Front/Generic/Aux/Implementation.hpp"
+#include "QDeps/Front/Generic/Aux/Instance.hpp"
 #include "QDeps/Front/Generic/Aux/Scope.hpp"
 #include "QDeps/Front/Generic/Detail/Deps.hpp"
 #include "QDeps/Front/Generic/Detail/Keys.hpp"
@@ -42,7 +42,7 @@ public:
         typename TIf,
         typename TImpl
     >
-    class Impl : public Aux::Impl<TIf, TImpl>
+    class Implementation : public Aux::Implementation<TIf, TImpl>
     { };
 
     template
@@ -50,7 +50,7 @@ public:
         typename TAttr,
         typename TValue = boost::mpl::_1
     >
-    class Inst : public Aux::Inst<TAttr, TValue>
+    class Instance : public Aux::Instance<TAttr, TValue>
     { };
 
     template<typename TScope>
@@ -58,7 +58,7 @@ public:
     { };
 
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    struct CallStack : BOOST_PP_CAT(boost::mpl::vector, BOOST_MPL_LIMIT_VECTOR_SIZE)<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
+    struct InCall : BOOST_PP_CAT(boost::mpl::vector, BOOST_MPL_LIMIT_VECTOR_SIZE)<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
     { };
 
     template<typename TBinding>

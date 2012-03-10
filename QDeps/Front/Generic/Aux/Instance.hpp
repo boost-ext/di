@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef QDEPS_FRONT_GENERIC_AUX_INST_HPP
-#define QDEPS_FRONT_GENERIC_AUX_INST_HPP
+#ifndef QDEPS_FRONT_GENERIC_AUX_INSTANCE_HPP
+#define QDEPS_FRONT_GENERIC_AUX_INSTANCE_HPP
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
@@ -41,7 +41,7 @@ template
     typename TValue,
     typename TContext = boost::mpl::vector0<>
 >
-struct InstDependency
+struct InstanceDependency
 {
     template<typename TScope> struct Apply
     {
@@ -56,15 +56,15 @@ template
     typename TAttr,
     typename TValue = boost::mpl::_1
 >
-class Inst : public Detail::InstDependency<TAttr, TValue>
+class Instance : public Detail::InstanceDependency<TAttr, TValue>
 {
-    template<typename T> struct Inst_
+    template<typename T> struct Instance_
     {
-        typedef Detail::InstDependency<TAttr, TValue, typename Back::MakeVector<T>::type> type;
+        typedef Detail::InstanceDependency<TAttr, TValue, typename Back::MakeVector<T>::type> type;
     };
 
     template<typename TSeq>
-    struct InstImpl : boost::mpl::fold
+    struct InstanceImpl : boost::mpl::fold
         <
             TSeq,
             boost::mpl::vector0<>,
@@ -72,14 +72,14 @@ class Inst : public Detail::InstDependency<TAttr, TValue>
             <
                 boost::is_base_of<boost::mpl::void_, boost::mpl::_2>,
                 boost::mpl::_1,
-                boost::mpl::push_back<boost::mpl::_1, Inst_<boost::mpl::_2> >
+                boost::mpl::push_back<boost::mpl::_1, Instance_<boost::mpl::_2> >
             >
         >
     { };
 
 public:
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, boost::mpl::void_)>
-    struct Bind : InstImpl
+    struct Bind : InstanceImpl
         <
             BOOST_PP_CAT(boost::mpl::vector, BOOST_MPL_LIMIT_VECTOR_SIZE)<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
         >::type

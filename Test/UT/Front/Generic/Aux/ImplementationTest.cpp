@@ -7,7 +7,7 @@
 #include <gtest/gtest.h>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
-#include "QDeps/Front/Generic/Aux/Inst.hpp"
+#include "QDeps/Front/Generic/Aux/Implementation.hpp"
 
 namespace QDeps
 {
@@ -27,33 +27,33 @@ class B { };
 class C { };
 class D { };
 
-TEST(Inst, One)
+TEST(Implementation, One)
 {
     EXPECT_TRUE((
         equal
         <
             vector
             <
-                Detail::InstDependency<int, double, vector<A> >
+                Detail::ImplementationDependency<int, double, vector<A> >
             >,
-            Inst<int, double>::Bind<A>
+            Implementation<int, double>::Bind<A>
         >::value
     ));
 }
 
-TEST(Inst, Many)
+TEST(Implementation, Many)
 {
     EXPECT_TRUE((
         equal
         <
             vector
             <
-                Detail::InstDependency<int, double, vector<A> >,
-                Detail::InstDependency<int, double, vector<B> >,
-                Detail::InstDependency<int, double, vector<C> >,
-                Detail::InstDependency<int, double, vector<D> >
+                Detail::ImplementationDependency<int, double, vector<A> >,
+                Detail::ImplementationDependency<int, double, vector<B> >,
+                Detail::ImplementationDependency<int, double, vector<C> >,
+                Detail::ImplementationDependency<int, double, vector<D> >
             >,
-            Inst<int, double>::Bind<A, B, C, D>
+            Implementation<int, double>::Bind<A, B, C, D>
         >::value
     ));
 }
