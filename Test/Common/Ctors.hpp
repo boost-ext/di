@@ -10,7 +10,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/mpl/string.hpp>
 #include "QDeps/Front/Ctor.hpp"
-#include "QDeps/Utility/Attr.hpp"
+#include "QDeps/Utility/Named.hpp"
 
 namespace QDeps
 {
@@ -27,19 +27,16 @@ struct If0
 
 struct CIf0 : If0
 {
-    QDEPS_CTOR(CIf0) { }
     virtual void dummy() { }
 };
 
 struct CIf01 : If0
 {
-    QDEPS_CTOR(CIf01) { }
     virtual void dummy() { }
 };
 
 struct CIf02 : If0
 {
-    QDEPS_CTOR(CIf02) { }
     virtual void dummy() { }
 };
 
@@ -75,7 +72,7 @@ struct C3
 
 struct C4
 {
-    QDEPS_CTOR(C4, boost::shared_ptr<C3> c3, Utility::Attr<int, boost::mpl::string<'1'> > i1, Utility::Attr<int, boost::mpl::string<'2'> > i2)
+    QDEPS_CTOR(C4, boost::shared_ptr<C3> c3, Utility::Named<int, boost::mpl::string<'1'> > i1, Utility::Named<int, boost::mpl::string<'2'> > i2)
         : c3(c3), i1(i1), i2(i2)
     { }
 

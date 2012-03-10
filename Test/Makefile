@@ -9,7 +9,7 @@ GTEST_LIB=$(GTEST)/libgtest.a
 BOOST=../Externals/boost
 QPOOL=../Externals/QPool
 INCLUDES=-I$(BOOST) -I$(QPOOL) -I$(GTEST)/include -I..
-CXXFLAGS=$(INCLUDES) -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar
+CXXFLAGS=$(INCLUDES) -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants
 OBJS=$(patsubst %.cpp,%.o,$(shell find . -iname "*.cpp"))
 
 all: test cov cppcheck scan-build valgrind

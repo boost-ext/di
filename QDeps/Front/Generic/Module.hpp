@@ -31,6 +31,8 @@ namespace Generic
 
 class Module
 {
+    template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T)> friend class Utility::Injector;
+
 public:
     typedef Back::Scopes::Singleton Singleton;
     typedef Back::Scopes::PerRequest PerRequest;
@@ -58,9 +60,6 @@ public:
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
     struct CallStack : BOOST_PP_CAT(boost::mpl::vector, BOOST_MPL_LIMIT_VECTOR_SIZE)<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
     { };
-
-private:
-    template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T)> friend class Utility::Injector;
 
     template<typename TBinding>
     struct Deps : Detail::Deps<TBinding>

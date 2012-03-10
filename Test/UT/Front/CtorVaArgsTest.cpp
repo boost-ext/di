@@ -20,9 +20,10 @@ namespace UT
 
 TEST(CtorVaArgs, Empty)
 {
-    class C
+    struct C
     {
-        QDEPS_CTOR(C) { }
+        QDEPS_TRAITS();
+        C() { }
     };
 }
 
@@ -41,7 +42,7 @@ TEST(CtorVaArgs, ExplicitWithDefault)
 
     C c;
 
-    EXPECT_EQ(C::DEFAULT, c.i);
+    EXPECT_EQ(static_cast<int>(C::DEFAULT), c.i);
 }
 
 TEST(CtorVaArgs, Params)

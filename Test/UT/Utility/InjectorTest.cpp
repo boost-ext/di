@@ -24,7 +24,7 @@ class A { };
 class B { };
 class C { };
 
-class Module
+struct Module
 {
     typedef vector0<> Binding;
     template<typename T> struct Deps : boost::mpl::vector<A, B, C> { };

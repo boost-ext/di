@@ -5,3 +5,4 @@ struct My : Front::Base::Module
         Scope<PerRequest>::Bind < int_<32>, mpl::string<'hej'>, Bind<Named<int, dupa>, int_<42> >       >
     >
 { };
+

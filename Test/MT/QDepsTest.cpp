@@ -7,6 +7,7 @@
 #include <gtest/gtest.h>
 #include "Test/Common/Ctors.hpp"
 #include "QDeps/Utility/Injector.hpp"
+#include "QDeps/Utility/Named.hpp"
 #include "QDeps/Front/Generic/Module.hpp"
 
 namespace QDeps
@@ -28,15 +29,7 @@ using namespace Test::Common;
 //TODO CallStack mpl_::na
 
 
-struct Module1 : Front::Generic::Module
-{
-    typedef vector
-    <
-    >
-    Binding;
-};
-
-struct Module : Front::Generic::Module
+struct GenericModule : Front::Generic::Module
 {
     typedef vector
     <
@@ -49,16 +42,25 @@ struct Module : Front::Generic::Module
         Impl<If0, CIf02>::Bind<C7>,
         Inst<int, int_<1> >,
         Inst<int, int_<2> >::Bind<C8>,
-        Inst<Attr<int, string<'1'> >, int_<3> >::Bind< CallStack<C7, C6, C4> >,
-        Inst<Attr<int, string<'2'> >, int_<4> >::Bind< CallStack<C7, C6, C4> >,
+        Inst<Named<int, string<'1'> >, int_<3> >::Bind< CallStack<C7, C6, C4> >,
+        Inst<Named<int, string<'2'> >, int_<4> >::Bind< CallStack<C7, C6, C4> >,
         Inst<int, int_<5> >::Bind<C2>
     >
     Binding;
 };
 
+struct GenericModule2 : Front::Generic::Module
+{
+    typedef vector
+    <
+    >
+    Binding;
+};
+
+
 TEST(QDeps, Module)
 {
-    Utility::Injector<Module> inj;
+    Utility::Injector<GenericModule> inj;
 
     boost::shared_ptr<C8> c8 = inj.create< boost::shared_ptr<C8> >();
 

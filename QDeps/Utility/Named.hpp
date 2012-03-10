@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef QDEPS_UTILITY_ATTR_HPP
-#define QDEPS_UTILITY_ATTR_HPP
+#ifndef QDEPS_UTILITY_NAMED_HPP
+#define QDEPS_UTILITY_NAMED_HPP
 
 #include "QDeps/Config.hpp"
 
@@ -15,13 +15,13 @@ namespace Utility
 {
 
 /**
- * Example: Attr< int, mpl::string<'Port'> >
+ * Example: Named< int, mpl::string<'Port'> >
  */
 template<typename T, typename TName>
-class Attr
+class Named
 {
 public:
-    Attr(T p_value = T()) // non explicit
+    Named(T p_value = T()) // non explicit
         : m_value(p_value)
     { }
 
@@ -29,15 +29,6 @@ public:
 
 private:
     T m_value;
-};
-
-template<typename T, typename TName>
-class Named : Attr<T, TName>
-{
-public:
-    Named(T p_value = T()) // non explicit
-        : Attr<T, TName>(p_value)
-    { }
 };
 
 } // namespace Utility

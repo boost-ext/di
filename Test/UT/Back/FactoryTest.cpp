@@ -10,7 +10,7 @@
 #include <boost/mpl/vector.hpp>
 #include "Test/Common/Ctors.hpp"
 #include "QDeps/Back/Factory.hpp"
-#include "QDeps/Utility/Attr.hpp"
+#include "QDeps/Utility/Named.hpp"
 #include "QDeps/Back/Scopes/PerRequest.hpp"
 #include "QDeps/Back/Scopes/Singleton.hpp"
 #include "QPool/Pool.hpp"
@@ -118,20 +118,20 @@ TEST(Factory, CreateWithAttributes)
     const int i1 = 42;
     const int i2 = 87;
 
-    typedef QPool::Pool< vector<Attr<int, string<'1'> >, Attr<int, string<'2'> > > > Pool;
+    typedef QPool::Pool< vector<Named<int, string<'1'> >, Named<int, string<'2'> > > > Pool;
 
     Pool l_pool
     (
-        make_shared<Attr<int, string<'1'> > >(i1),
-        make_shared<Attr<int, string<'2'> > >(i2)
+        make_shared<Named<int, string<'1'> > >(i1),
+        make_shared<Named<int, string<'2'> > >(i2)
     );
 
     Factory
     <
         vector
         <
-            Inst<PerRequest, Attr<int, string<'1'> > >,
-            Inst<PerRequest, Attr<int, string<'2'> > >
+            Inst<PerRequest, Named<int, string<'1'> > >,
+            Inst<PerRequest, Named<int, string<'2'> > >
         >,
         Pool
     >
@@ -277,8 +277,8 @@ TEST(Factory, CreatePerRequestSingletonPathMix)
             Inst<Singleton, C3>,
             Inst<PerRequest, int, int_<1> >,
             Inst<PerRequest, int, int_<2>, vector<C8> >,
-            Inst<PerRequest, Attr<int, mpl::string<'1'> >, int_<3>, vector<C7, C6, C4> >,
-            Inst<PerRequest, Attr<int, mpl::string<'2'> >, int_<4>, vector<C7, C6, C4> >,
+            Inst<PerRequest, Named<int, mpl::string<'1'> >, int_<3>, vector<C7, C6, C4> >,
+            Inst<PerRequest, Named<int, mpl::string<'2'> >, int_<4>, vector<C7, C6, C4> >,
             Inst<PerRequest, int, int_<5>, vector<C2> >
         >
     >

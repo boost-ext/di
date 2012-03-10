@@ -76,10 +76,10 @@ Usage
     // *** fusion front end *** ----------------------------------------------------------------
 
     BOOST_AUTO(fusionModule, (Front::Fusion::Module()(
-        bind<IDummy>::to<Dummy>::inScope<Singleton>(),
-        bind<IDummy>::to<Smart>::InCall<C2, C1>(),
-        inst<int>(make_shared<int>(42)),
-        inst<Named<int, mpl::string<'port'> >(make_shared<int>(8080))
+        Bind<IDummy>::To<Dummy>::InScope<Singleton>(),
+        Bind<IDummy>::To<Smart>::InCall<C2, C1>(),
+        Inst<int>(make_shared<int>(42)),
+        Inst<Named<int, mpl::string<'port'> >(make_shared<int>(8080))
     ));
 
     Injector<BOOST_TYPEOF(fusionModule)> injector(fusionModule);

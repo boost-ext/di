@@ -20,7 +20,7 @@ namespace UT
 
 TEST(CtorBracket, Empty)
 {
-    class C
+    struct C
     {
         QDEPS_CTOR(C, ()) { }
     };
@@ -41,7 +41,7 @@ TEST(CtorBracket, ExplicitWithDefault)
 
     C c;
 
-    EXPECT_EQ(C::DEFAULT, c.i);
+    EXPECT_EQ(static_cast<int>(C::DEFAULT), c.i);
 }
 
 TEST(CtorBracket, Params)
