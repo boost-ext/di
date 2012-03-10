@@ -60,9 +60,9 @@ Usage
 
     struct BaseModule : Front::Base::Module
         <
-            Externals::Bind         < Named<int, mpl::string<'port'> >           >,
-            Scope<Singleton >::Bind < Dummy                                      >,
-            Scope<PerRequest>::Bind < int_<42>, Bind< InCall<C2, C1>, Smart>     >
+            Externals::Bind         < Named<int, mpl::string<'port'> > >,
+            Scope<Singleton >::Bind < Dummy >,
+            Scope<PerRequest>::Bind < int_<42>, Bind< InCall<C2, C1>, Smart> >
         >
     { };
 
