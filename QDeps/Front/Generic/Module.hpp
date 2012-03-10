@@ -13,7 +13,6 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/limits/vector.hpp>
 #include <boost/mpl/placeholders.hpp>
-#include <boost/mpl/void.hpp>
 #include "QDeps/Back/Scopes/PerRequest.hpp"
 #include "QDeps/Back/Scopes/Singleton.hpp"
 #include "QDeps/Front/Generic/Aux/Impl.hpp"
@@ -56,7 +55,7 @@ public:
     class Scope : public Aux::Scope<TScope>
     { };
 
-    template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, boost::mpl::void_)>
+    template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
     struct CallStack : BOOST_PP_CAT(boost::mpl::vector, BOOST_MPL_LIMIT_VECTOR_SIZE)<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
     { };
 

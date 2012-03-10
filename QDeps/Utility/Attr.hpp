@@ -31,6 +31,15 @@ private:
     T m_value;
 };
 
+template<typename T, typename TName>
+class Named : Attr<T, TName>
+{
+public:
+    Named(T p_value = T()) // non explicit
+        : Attr<T, TName>(p_value)
+    { }
+};
+
 } // namespace Utility
 } // namespace QDeps
 

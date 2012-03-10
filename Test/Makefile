@@ -11,7 +11,6 @@ QPOOL=../Externals/QPool
 INCLUDES=-I$(BOOST) -I$(QPOOL) -I$(GTEST)/include -I..
 CXXFLAGS=$(INCLUDES) -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar
 OBJS=$(patsubst %.cpp,%.o,$(shell find . -iname "*.cpp"))
-#OBJS=MT/QDepsTest.o main.o
 
 all: test cov cppcheck scan-build valgrind
 

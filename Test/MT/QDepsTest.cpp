@@ -22,9 +22,19 @@ using namespace Test::Common;
 //TODO add providers to module
 //TODO add external instances
 //TODO add attributes
-//TODO attr -> named
 //TODO boost::function
 //TODO is_base_of
+//TODO QDEPS_INJECT for method as well
+//TODO CallStack mpl_::na
+
+
+struct Module1 : Front::Generic::Module
+{
+    typedef vector
+    <
+    >
+    Binding;
+};
 
 struct Module : Front::Generic::Module
 {

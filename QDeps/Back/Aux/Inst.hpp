@@ -12,6 +12,7 @@
     #include <boost/make_shared.hpp>
     #include <boost/shared_ptr.hpp>
     #include <boost/utility/enable_if.hpp>
+    #include <boost/type_traits/is_same.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/placeholders.hpp>
     #include <boost/mpl/int.hpp>
@@ -74,16 +75,17 @@
         typename TScope,
         typename TAttr,
         typename TValue = boost::mpl::void_,
-        typename TContext = boost::mpl::vector0<>
+        typename TContext = boost::mpl::vector0<>,
+        typename TDependency = boost::is_same<boost::mpl::_1, TAttr>
     >
     class Inst
     {
     public:
-        typedef TAttr Dependency;
         typedef TContext Context;
+        typedef TDependency Dependency;
         typedef typename Value<TValue>::type HasExternalValue;
 
-        template<typename TPool> boost::shared_ptr<Dependency> create(TPool& p_pool)
+        template<typename TPool> boost::shared_ptr<TAttr> create(TPool& p_pool)
         {
             return Value<TValue>::template get<TAttr>(p_pool, m_scope);
         }
@@ -103,9 +105,9 @@
 #else
 
     template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    boost::shared_ptr<Dependency> create(TPool&, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), Arg, p_arg))
+    boost::shared_ptr<TAttr> create(TPool&, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), Arg, p_arg))
     {
-        return m_scope.template create<Dependency>(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg));
+        return m_scope.template create<TAttr>(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg));
     }
 
 #endif
