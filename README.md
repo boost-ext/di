@@ -67,7 +67,7 @@ Usage
     { };
 
     //injector, order in constructor is not important
-    Utility::Injector<BaseModule> injector(make_shared< Named<int, mpl::string<'port'> >(new int(8080)));
+    Injector<BaseModule> injector(make_shared< Named<int, mpl::string<'port'> >(new int(8080)));
     shared_ptr<C3> l_sp = injector.create< shared_ptr<C3> >();
     C3 l_value = injector.create<C3>();
 
@@ -80,7 +80,7 @@ Usage
         inst<Named<int, mpl::string<'port'> >(make_shared<int>(8080))
     ));
 
-    Utility::Injector<BOOST_TYPEOF(fusionModule)> injector(fusionModule);
+    Injector<BOOST_TYPEOF(fusionModule)> injector(fusionModule);
     shared_ptr<C3> l_sp = injector.create< shared_ptr<C3> >();
     C3 l_value = injector.create<C3>();
 
@@ -101,7 +101,7 @@ Usage
         >
     { };
 
-    Utility::Injector<GenericModule> injector(make_shared< Named<int, mpl::string<'port'> >(new int(8080)));
+    Injector<GenericModule> injector(make_shared< Named<int, mpl::string<'port'> >(new int(8080)));
     shared_ptr<C3> l_sp = injector.create< shared_ptr<C3> >();
     C3 l_value = injector.create<C3>();
 
@@ -123,18 +123,18 @@ Usage
         >
     { };
 
-    Utility::Injector<GenericModule> injector(make_shared< Named<int, mpl::string<'port'> >(new int(8080)));
+    Injector<PathModule> injector(make_shared< Named<int, mpl::string<'port'> >(new int(8080)));
     shared_ptr<C3> l_sp = injector.create< shared_ptr<C3> >();
     C3 l_value = injector.create<C3>();
 
     // *** many modules *** --------------------------------------------------------------------
 
-    Utility::Injector<BaseModule1, BaseModule2> injector;
+    Injector<BaseModule1, BaseModule2> injector;
     C3 l_value = injector.create<C3>();
 
     // *** mix modules *** ---------------------------------------------------------------------
 
-    Utility::Injector<BaseModule, GenericModule, PathModule> injector;
+    Injector<BaseModule, GenericModule, PathModule> injector;
 
 ```
 
