@@ -7,10 +7,10 @@
 #ifndef QDEPS_FRONT_GENERIC_AUX_INSTANCE_HPP
 #define QDEPS_FRONT_GENERIC_AUX_INSTANCE_HPP
 
-#include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
 #include <boost/type_traits/is_base_of.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/limits/vector.hpp>
@@ -19,7 +19,6 @@
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/void.hpp>
-#include <boost/mpl/vector.hpp>
 #include "QDeps/Back/Utility.hpp"
 #include "QDeps/Back/Aux/Inst.hpp"
 
@@ -54,7 +53,7 @@ struct InstanceDependency
 template
 <
     typename TAttr,
-    typename TValue = boost::mpl::_1
+    typename TValue = boost::mpl::void_
 >
 class Instance : public Detail::InstanceDependency<TAttr, TValue>
 {
@@ -63,25 +62,13 @@ class Instance : public Detail::InstanceDependency<TAttr, TValue>
         typedef Detail::InstanceDependency<TAttr, TValue, typename Back::MakeVector<T>::type> type;
     };
 
-    template<typename TSeq>
-    struct InstanceImpl : boost::mpl::fold
-        <
-            TSeq,
-            boost::mpl::vector0<>,
-            boost::mpl::if_
-            <
-                boost::is_base_of<boost::mpl::void_, boost::mpl::_2>,
-                boost::mpl::_1,
-                boost::mpl::push_back<boost::mpl::_1, Instance_<boost::mpl::_2> >
-            >
-        >
-    { };
-
 public:
-    template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, boost::mpl::void_)>
-    struct Bind : InstanceImpl
+    template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
+    struct Bind : boost::mpl::fold
         <
-            BOOST_PP_CAT(boost::mpl::vector, BOOST_MPL_LIMIT_VECTOR_SIZE)<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
+            boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
+            boost::mpl::vector0<>,
+            boost::mpl::push_back<boost::mpl::_1, Instance_<boost::mpl::_2> >
         >::type
     { };
 };

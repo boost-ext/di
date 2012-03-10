@@ -19,15 +19,12 @@ using namespace boost::mpl;
 using namespace Utility;
 using namespace Test::Common;
 
-
 //TODO add providers to module
 //TODO add external instances
-//TODO add attributes
+//TODO add named
 //TODO boost::function
 //TODO is_base_of
 //TODO QDEPS_INJECT for method as well
-//TODO InCall mpl_::na
-
 
 struct GenericModule : Front::Generic::Module
 {
@@ -57,7 +54,6 @@ struct GenericModule2 : Front::Generic::Module
     Binding;
 };
 
-
 TEST(QDeps, Module)
 {
     Utility::Injector<GenericModule> inj;
@@ -68,12 +64,12 @@ TEST(QDeps, Module)
     EXPECT_EQ(c8->c7->c6->c4->c3, c8->c7->c6->c3);
     EXPECT_NE(c8->c7->if0, c8->c7->c6->c5.if0);
 
-    EXPECT_TRUE(dynamic_cast<CIf0/*1*/*>(c8->c7->c6->c5.if0.get()));
+    EXPECT_TRUE(dynamic_cast<CIf01*>(c8->c7->c6->c5.if0.get()));
     EXPECT_TRUE(dynamic_cast<CIf02*>(c8->c7->if0.get()));
 
     EXPECT_EQ(2, c8->i);
-    //EXPECT_EQ(3, c8->c7->c6->c4->i1);
-    //EXPECT_EQ(4, c8->c7->c6->c4->i2);
+    EXPECT_EQ(3, c8->c7->c6->c4->i1);
+    EXPECT_EQ(4, c8->c7->c6->c4->i2);
     EXPECT_EQ(1, c8->c7->c6->c3->i);
     EXPECT_EQ(5, c8->c7->c6->c5.c2->i);
     EXPECT_EQ(0.0, c8->c7->c6->c5.c2->d);

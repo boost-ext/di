@@ -7,7 +7,6 @@
 #ifndef QDEPS_UTILITY_INJECTOR_HPP
 #define QDEPS_UTILITY_INJECTOR_HPP
 
-#include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
 #include <boost/type_traits/is_base_of.hpp>
@@ -17,7 +16,6 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/insert.hpp>
-#include <boost/mpl/void.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/bool.hpp>
@@ -34,30 +32,14 @@ namespace QDeps
 namespace Utility
 {
 
-template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, boost::mpl::void_)>
+template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
 class Injector
 {
     BOOST_MPL_HAS_XXX_TRAIT_DEF(Binding)
 
-    struct Modules : boost::mpl::fold
-        <
-            BOOST_PP_CAT(boost::mpl::vector, BOOST_MPL_LIMIT_VECTOR_SIZE)
-            <
-                BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)
-            >,
-            boost::mpl::vector0<>,
-            boost::mpl::if_
-            <
-                boost::is_base_of<boost::mpl::void_, boost::mpl::_2>,
-                boost::mpl::_1,
-                boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>
-            >
-        >
-    { };
-
     struct Policy : Back::Policy::Detail::Parameter
         <
-            typename Modules::type,
+            boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
             typename Defaults<Detail::Policy>::type,
             boost::is_base_of<Detail::Policy, boost::mpl::_2>
         >
@@ -94,7 +76,7 @@ class Injector
 public:
     struct Deps : boost::mpl::fold
         <
-            typename DepsImpl<typename Modules::type>::type,
+            typename DepsImpl< boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >::type,
             boost::mpl::vector0<>,
             boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>
         >::type
@@ -103,7 +85,7 @@ public:
 
     struct Keys : boost::mpl::fold
         <
-            typename KeysImpl<typename Modules::type>::type,
+            typename KeysImpl< boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >::type,
             boost::mpl::vector0<>,
             boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>
         >::type

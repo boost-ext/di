@@ -7,7 +7,6 @@
 #ifndef QDEPS_FRONT_GENERIC_AUX_SCOPE_HPP
 #define QDEPS_FRONT_GENERIC_AUX_SCOPE_HPP
 
-#include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
 #include <boost/type_traits/is_base_of.hpp>
@@ -17,7 +16,6 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/if.hpp>
-#include <boost/mpl/void.hpp>
 #include <boost/mpl/is_sequence.hpp>
 
 namespace QDeps
@@ -62,24 +60,16 @@ class Scope
             TResult,
             boost::mpl::if_
             <
-                boost::is_base_of<boost::mpl::void_, boost::mpl::_2>,
-                boost::mpl::_1,
-                boost::mpl::if_
-                <
-                    boost::mpl::is_sequence<boost::mpl::_2>,
-                    ScopeImpl<boost::mpl::_2, boost::mpl::_1>,
-                    boost::mpl::push_back<boost::mpl::_1, Scope_<boost::mpl::_2> >
-                >
+                boost::mpl::is_sequence<boost::mpl::_2>,
+                ScopeImpl<boost::mpl::_2, boost::mpl::_1>,
+                boost::mpl::push_back<boost::mpl::_1, Scope_<boost::mpl::_2> >
             >
         >
     { };
 
 public:
-    template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T_, boost::mpl::void_)>
-    struct Bind : ScopeImpl
-        <
-            BOOST_PP_CAT(boost::mpl::vector, BOOST_MPL_LIMIT_VECTOR_SIZE)<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T_)>
-        >::type
+    template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T_, mpl_::na)>
+    struct Bind : ScopeImpl< boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T_)> >::type
     { };
 };
 

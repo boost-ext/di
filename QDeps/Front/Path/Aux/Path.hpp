@@ -21,9 +21,6 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/is_sequence.hpp>
 #include <boost/mpl/back_inserter.hpp>
-#include <cxxabi.h>
-#include <typeinfo>
-#include <iostream>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/for_each.hpp>
 #include <boost/mpl/fold.hpp>
@@ -73,7 +70,6 @@ class T7{};
 class T8{};
 
 class Path_{};
-//TODO T1, T2, ...
 template<typename T0, typename T1, typename T2 = boost::mpl::void_> class Path : Path_
 {
     typedef T0 t0;
@@ -317,20 +313,4 @@ struct Merge : fold
     >
 
 { };
-
-class Print
-{
-public:
-    template<typename T> void operator()(T)
-    {
-        std::cout << abi::__cxa_demangle(typeid(T).name(), 0, 0, 0) << std::endl;
-    }
-};
-
-int main()
-{
-    boost::mpl::for_each<Merge<types>::type>(Print());
-
-    return 0;
-}
 

@@ -16,7 +16,7 @@ Requirements
         * gtest >= 1.6.0 (UT, MT)
         * [optional] lcov, cppcheck, scan-build, valgrind
 
-Supported compilers (succesfully tested)
+Supported compilers (successfully tested)
 ------------
     * gcc   >= 3.4.6
     * clang >= 3.0
@@ -38,11 +38,11 @@ Usage
         virtual void dummy() = 0;
     };
 
-    struct Dummy : IDummy {
+    struct Dumb : IDummy {
         virtual void dummy() { }
     };
 
-    struct Smart : IDummy {
+    struct Dumber : IDummy {
         virtual void dummy() { }
     };
 
@@ -63,8 +63,8 @@ Usage
     struct BaseModule : Front::Base::Module
         <
             Externals::Bind         < Named<int, mpl::string<'port'> > >,
-            Scope<Singleton >::Bind < Dummy >,
-            Scope<PerRequest>::Bind < int_<42>, Bind< InCall<C2, C1>, Smart> >
+            Scope<Singleton >::Bind < Dumb >,
+            Scope<PerRequest>::Bind < int_<42>, Bind< InCall<C2, C1>, Dumber> >
         >
     { };
 
@@ -76,8 +76,8 @@ Usage
     // *** fusion front end *** ----------------------------------------------------------------
 
     BOOST_AUTO(fusionModule, (Front::Fusion::Module()(
-        Bind<IDummy>::To<Dummy>::InScope<Singleton>(),
-        Bind<IDummy>::To<Smart>::InCall<C2, C1>(),
+        Bind<IDummy>::To<Dumb>::InScope<Singleton>(),
+        Bind<IDummy>::To<Dumber>::InCall<C2, C1>(),
         Inst<int>(make_shared<int>(42)),
         Inst<Named<int, mpl::string<'port'> >(make_shared<int>(8080))
     ));
@@ -92,11 +92,11 @@ Usage
         <
             Scope<Singleton>::Bind
             <
-                Implementation<IDummy, Dummy>
+                Implementation<IDummy, Dumb>
             >,
             Scope<PerRequest>::Bind
             <
-                Implementation<IDummy, Smart>::Bind< InCall<C2, C1> >,
+                Implementation<IDummy, Dumber>::Bind< InCall<C2, C1> >,
                 Instance<int, int_<42> >,
                 Instance<Named<int, mpl::string<'port'> >
             >
@@ -115,10 +115,10 @@ Usage
             PerRequest<Named<int, mpl::string<'port'> >,
             Path
             <
-                Singleton<IDummy, Dummy>,
+                Singleton<IDummy, Dumb>,
                 Path
                 <
-                    PerRequest<IDummy, Smart>,
+                    PerRequest<IDummy, Dumber>,
                     C1
                 >
             >
@@ -146,8 +146,9 @@ Krzysztof Jusiak (krzysztof at jusiak dot net)
 TODO
 ------
     * Method injector
-    * C++11 fork
+    * Scopes: EagerSingleton, Session
     * Xml front end ?
+    * C++11 fork
 
 License
 -------

@@ -7,7 +7,6 @@
 #ifndef QDEPS_FRONT_GENERIC_MODULE_HPP
 #define QDEPS_FRONT_GENERIC_MODULE_HPP
 
-#include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/mpl/vector.hpp>
@@ -58,7 +57,7 @@ public:
     { };
 
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    struct InCall : BOOST_PP_CAT(boost::mpl::vector, BOOST_MPL_LIMIT_VECTOR_SIZE)<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
+    struct InCall : boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
     { };
 
     template<typename TBinding>
