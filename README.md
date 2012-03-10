@@ -1,9 +1,9 @@
-QDeps (C++ dependency injection framework)
+QDeps - C++ dependency injection framework
 ================================
 * http://en.wikipedia.org/wiki/Dependency_injection
 * http://www.youtube.com/v/RlfLCWKxHJ0
 
-To get started: git clone --recursive git://github.com/QSrc/QDeps.git
+git clone --recursive git://github.com/QSrc/QDeps.git
 
 Requirements
 ------------
@@ -146,7 +146,7 @@ Krzysztof Jusiak (krzysztof at jusiak dot net)
 TODO
 ------
     * Method injector
-    * Scopes: EagerSingleton, Session
+    * Scopes: EagerSingleton, Session, Singleton(threadsafe)
     * Xml front end ?
     * C++11 fork
 
