@@ -1,7 +1,7 @@
 QDeps - C++ dependency injection framework
 ================================
 * Dependency Injection (http://en.wikipedia.org/wiki/Dependency_injection)
-* The Clean Code Talks (Don't Look For Things!" - http://www.youtube.com/v/RlfLCWKxHJ0)
+* The Clean Code Talks Don't Look For Things! (http://www.youtube.com/v/RlfLCWKxHJ0)
 
 git clone --recursive git://github.com/QSrc/QDeps.git
 
