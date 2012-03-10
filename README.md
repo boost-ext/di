@@ -33,13 +33,6 @@ Usage
 -----
 
 ``` C++
-
-    #include <QDeps/Front/Ctor.hpp>
-    #include <QDeps/Front/Generic/Module.hpp>
-    #include <QDeps/Utitlity/Injector.hpp>
-
-    using namespace QDeps;
-
     class C1
     {
     public:
@@ -53,47 +46,62 @@ Usage
         std::string s;
     };
 
+    //base front end
+    struct BaseModule : Front::Base::Module
+        <
+            Externals::Bind         < C1, Named<int, dupa>                                        >,
+            Scope<Singleton >::Bind < Impl1, Bind<Interface, Impl2>, Bind< InCall<C1, C2>, Impl2> >,
+            Scope<PerRequest>::Bind < int_<32>, mpl::string<'text'>                               >
+        >
+    { };
+
     //fusion front end
-    BOOST_AUTO(l_module, (make_shared<Front::Fusion::Module()(
-        Bind<I>::To<Impl>(),
-        Inst<int>(new int(32)),
-        Bind<I1>::To<Im1>::InScope<Singleton>::InCall<C1, C2>()
+    BOOST_AUTO(fusionModule, (Front::Fusion::Module()(
+        bind<I>::to<Impl>(),
+        inst<int>(make_shared<int>(32)),
+        bind<I1>::to<Im1>::inScope<Singleton>::inCall<C1, C2>()
     ));
 
     //generic front end
-    struct SimpleModule : Front::Generic::Module
-    {
-    public:
-        typedef vector
+    struct GenericModule : Front::Generic::Module
         <
-            Impl<I1, Impl1>,                                        //per request
-            Impl<I2, Impl2>,                                        //create I2 using Impl2
-            Impl<vector<Q1, Q2>, ImplQ>,                            //assign ImplQ to Q1 and Q2
-
-            Scope<Singleton>::Bind                                  //one instantion
+            Scope<Singleton>::Bind                                      //one instantion
             <
                 Impl<I3, Impl3>,
-                Inst<I4>,                                           //external inst
-                Inst<Attr<int, string<'Port'> >, int_<5> >,         //set to 5
-                Inst<Attr<std::string, mpl::string<'Name'> > >      //external value
+                Inst<Attr<int, string<'Port'> >, int_<5> >,             //set to 5
             >,
-
-            Impl<I1, ImplI11>::Bind<C2>                             //custom bind I1 to C2
-            Inst<int, int_<42> >::Bind<C4, CallStack<C1, C2> >      //bind int=42 to C4 and C1->C2
+            Scope<PerRequest>::Bind
+            <
+                Impl<I1, Impl1>,                                        //per request
+                Impl<I1, ImplI11>::Bind<C2>                             //custom bind I1 to C2
+                Inst<int, int_<42> >::Bind<C4, CallStack<C1, C2> >      //bind int=42 to C4 and C1->C2
+            >
         >
-        Binding;
-    };
+    { };
+
+    //path front end
+    struct PathModule : Front::Path::Module
+        <
+            Singleton<I3, Impl3>,
+            PerRequest<int, int_<42> >
+            Path
+            <
+                PerRequest<I1, Impl1>,
+                C1
+            >
+        >
+    { };
 
     //injector
     //order in Ctor is not important
-    Utility::Injector<SimpleModule, BOOST_TYPEOF(l_module)> injector(
+    Utility::Injector<BaseModule, BOOST_TYPEOF(fusionModule), GenericModule> injector(
         l_module,
         make_shared<Attr<std::string, mpl::string<'Name'> >(new std::string("MyString")),
         make_shared<I4>(new ExternalImpl4())
     );
 
     shared_ptr<C2> l_sp = injector.create< shared_ptr<C2> >();
-    const C2& l_cref = injector.create<const C2&>();
+    C2 l_value = injector.create<C2>();
 ```
 
 Author
