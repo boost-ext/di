@@ -6,6 +6,7 @@
 //
 #include <gtest/gtest.h>
 #include <boost/make_shared.hpp>
+#include <boost/type_traits/is_base_of.hpp>
 #include <boost/mpl/vector.hpp>
 #include "Test/Common/Ctors.hpp"
 #include "QDeps/Back/Factory.hpp"
@@ -348,6 +349,35 @@ TEST(Factory, CreateSingletonMany)
     EXPECT_EQ(c8->c1, c8->c7->c6->c5.c1);
     EXPECT_EQ(c8->c7->c6->c4->c3, c8->c7->c6->c3);
     EXPECT_EQ(c8->c7->if0, c8->c7->c6->c5.if0);
+
+    EXPECT_TRUE(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
+    EXPECT_TRUE(dynamic_cast<CIf0*>(c8->c7->if0.get()));
+
+    EXPECT_EQ(0, c8->i);
+    EXPECT_EQ(0, c8->c7->c6->c4->i1);
+    EXPECT_EQ(0, c8->c7->c6->c4->i2);
+    EXPECT_EQ(0, c8->c7->c6->c3->i);
+    EXPECT_EQ(0, c8->c7->c6->c5.c2->i);
+    EXPECT_EQ(0.0, c8->c7->c6->c5.c2->d);
+    EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
+}
+
+TEST(Factory, BaseOf)
+{
+    Factory
+    <
+        vector
+        <
+            Impl<PerRequest, CIf0, CIf0, vector0<>, boost::is_base_of<boost::mpl::_1, CIf0> >
+        >
+    >
+    l_factory;
+
+    boost::shared_ptr<C8> c8 = l_factory.create< boost::shared_ptr<C8> >();
+
+    EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
+    EXPECT_NE(c8->c7->c6->c4->c3, c8->c7->c6->c3);
+    EXPECT_NE(c8->c7->if0, c8->c7->c6->c5.if0);
 
     EXPECT_TRUE(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
     EXPECT_TRUE(dynamic_cast<CIf0*>(c8->c7->if0.get()));

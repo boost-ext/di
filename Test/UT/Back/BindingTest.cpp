@@ -7,6 +7,7 @@
 #include <gtest/gtest.h>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
+#include <boost/type_traits/is_base_of.hpp>
 #include "QDeps/Back/Binding.hpp"
 
 namespace QDeps
@@ -18,11 +19,18 @@ namespace Detail
 namespace UT
 {
 
+using namespace boost;
 using namespace boost::mpl;
 
 template<typename T, typename TContext = vector0<> > struct Dep
 {
-    typedef T Dependency;
+    typedef is_same<_1, T> Dependency;
+    typedef TContext Context;
+};
+
+template<typename T, typename TContext = vector0<> > struct DepBaseOf
+{
+    typedef is_base_of<_1, T> Dependency;
     typedef TContext Context;
 };
 
@@ -30,6 +38,8 @@ class A { };
 class B { };
 class C { };
 class D { };
+class I { };
+class Impl : public I { };
 
 TEST(Binding, Empty)
 {
@@ -387,6 +397,47 @@ TEST(Binding, ContextLongWithOrderToLongCallStack)
                     Dep<int, vector<B, C, C> >,
                     Dep<int, vector<A, A, A> >,
                     Dep<int, vector<C> >
+                >
+            >
+        >::value
+    ));
+}
+
+TEST(Binding, BaseOfFail)
+{
+    EXPECT_TRUE((
+        equal
+        <
+            vector0<>,
+            Binding
+            <
+                I,
+                vector0<>,
+                vector
+                <
+                    DepBaseOf<A>
+                >
+            >
+        >::value
+    ));
+}
+
+TEST(Binding, BaseOfSuccessful)
+{
+    EXPECT_TRUE((
+        equal
+        <
+            vector
+            <
+                DepBaseOf<Impl>
+            >,
+            Binding
+            <
+                I,
+                vector0<>,
+                vector
+                <
+                    DepBaseOf<Impl>
                 >
             >
         >::value

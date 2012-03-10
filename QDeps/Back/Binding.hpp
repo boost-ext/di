@@ -21,6 +21,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/next.hpp>
 #include <boost/mpl/size.hpp>
+#include <boost/mpl/apply.hpp>
 #include "QDeps/Back/Utility.hpp"
 
 namespace QDeps
@@ -51,6 +52,10 @@ template<typename T1, typename T2>
 struct LessContextSize : boost::mpl::bool_<(GetContextSize<T1>::value > GetContextSize<T2>::value)>::type
 { };
 
+template<typename T1, typename TDependency>
+struct Compare : boost::mpl::apply<TDependency, T1>::type
+{ };
+
 } // namespace Detail
 
 template<typename T, typename TCallStack, typename TDeps>
@@ -64,7 +69,7 @@ struct Binding : boost::mpl::sort
             <
                 boost::mpl::and_
                 <
-                    boost::is_same<T, GetDependency<boost::mpl::_2> >,
+                    Detail::Compare<T, GetDependency<boost::mpl::_2> >,
                     Detail::EqualCallStack<TCallStack, GetContext<boost::mpl::_2> >
                 >,
                 boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>,
