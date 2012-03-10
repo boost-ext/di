@@ -1,7 +1,7 @@
 QDeps (C++ dependency injection framework)
 ================================
-    * http://en.wikipedia.org/wiki/Dependency_injection
-    * http://www.youtube.com/v/RlfLCWKxHJ0
+* http://en.wikipedia.org/wiki/Dependency_injection
+* http://www.youtube.com/v/RlfLCWKxHJ0
 
 To get started: git clone --recursive git://github.com/QSrc/QDeps.git
 
