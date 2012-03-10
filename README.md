@@ -146,7 +146,7 @@ Krzysztof Jusiak (krzysztof at jusiak dot net)
 TODO
 ------
     * Method injector
-    * Scopes: EagerSingleton, Session, Singleton(threadsafe)
+    * Scopes: EagerSingleton, Session
     * Xml front end ?
     * C++11 fork
 
