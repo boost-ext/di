@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <title>LCOV - QDeps - Test/UT/Front/Generic/Aux/InstanceTest.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../../../index.html">top level</a> - <a href="index.html">Test/UT/Front/Generic/Aux</a> - InstanceTest.cpp<span style="font-size: 80%;"> (source / <a href="InstanceTest.cpp.func.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">QDeps</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">7</td>
+            <td class="headerCovTableEntry">9</td>
+            <td class="headerCovTableEntryMed">77.8 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2012-03-11</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntry">36</td>
+            <td class="headerCovTableEntryLo">16.7 %</td>
+          </tr>
+          <tr><td><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">           Branch data     Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>                :            : //</a>
+<span class="lineNum">       2 </span>                :            : // Copyright (c) 2012 Krzysztof Jusiak (krzysztof at jusiak dot net)
+<span class="lineNum">       3 </span>                :            : //
+<span class="lineNum">       4 </span>                :            : // Distributed under the Boost Software License, Version 1.0.
+<span class="lineNum">       5 </span>                :            : // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+<span class="lineNum">       6 </span>                :            : //
+<span class="lineNum">       7 </span>                :            : #include &lt;gtest/gtest.h&gt;
+<span class="lineNum">       8 </span>                :            : #include &lt;boost/mpl/vector.hpp&gt;
+<span class="lineNum">       9 </span>                :            : #include &lt;boost/mpl/equal.hpp&gt;
+<span class="lineNum">      10 </span>                :            : #include &quot;QDeps/Front/Generic/Aux/Instance.hpp&quot;
+<span class="lineNum">      11 </span>                :            : 
+<span class="lineNum">      12 </span>                :            : namespace QDeps
+<span class="lineNum">      13 </span>                :            : {
+<span class="lineNum">      14 </span>                :            : namespace Front
+<span class="lineNum">      15 </span>                :            : {
+<span class="lineNum">      16 </span>                :            : namespace Generic
+<span class="lineNum">      17 </span>                :            : {
+<span class="lineNum">      18 </span>                :            : namespace Aux
+<span class="lineNum">      19 </span>                :            : {
+<span class="lineNum">      20 </span>                :            : namespace UT
+<span class="lineNum">      21 </span>                :            : {
+<span class="lineNum">      22 </span>                :            : 
+<span class="lineNum">      23 </span>                :            : using namespace boost::mpl;
+<span class="lineNum">      24 </span>                :            : 
+<span class="lineNum">      25 </span>                :            : class A { };
+<span class="lineNum">      26 </span>                :            : class B { };
+<span class="lineNum">      27 </span>                :            : class C { };
+<a name="28"><span class="lineNum">      28 </span>                :            : class D { };</a>
+<span class="lineNum">      29 </span>                :            : 
+<span class="lineNum">      30 </span>        [<span class="branchNoCov" title="Branch 7 was not taken"> - </span><span class="branchCov" title="Branch 8 was taken 1 time"> + </span>]:<span class="lineCov">          4 : TEST(Instance, One)</span>
+<span class="lineNum">      31 </span>                :            : {
+<span class="lineNum">      32 </span>[<span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 1 time"> + </span>][<span class="branchNoExec" title="Branch 4 was not executed"> # </span><span class="branchNoExec" title="Branch 5 was not executed"> # </span>]:<span class="lineCov">          1 :     EXPECT_TRUE((</span>
+<span class="lineNum">         </span>[<span class="branchNoExec" title="Branch 7 was not executed"> # </span><span class="branchNoExec" title="Branch 8 was not executed"> # </span>][<span class="branchNoExec" title="Branch 11 was not executed"> # </span><span class="branchNoExec" title="Branch 12 was not executed"> # </span>]
+<span class="lineNum">         </span>[<span class="branchNoExec" title="Branch 14 was not executed"> # </span><span class="branchNoExec" title="Branch 15 was not executed"> # </span>][<span class="branchNoExec" title="Branch 18 was not executed"> # </span><span class="branchNoExec" title="Branch 19 was not executed"> # </span>]
+<span class="lineNum">      33 </span>                :            :         equal
+<span class="lineNum">      34 </span>                :            :         &lt;
+<span class="lineNum">      35 </span>                :            :             vector
+<span class="lineNum">      36 </span>                :            :             &lt;
+<span class="lineNum">      37 </span>                :            :                 Detail::InstanceDependency&lt;int, double, vector&lt;A&gt; &gt;
+<span class="lineNum">      38 </span>                :            :             &gt;,
+<span class="lineNum">      39 </span>                :            :             Instance&lt;int, double&gt;::Bind&lt;A&gt;
+<span class="lineNum">      40 </span>                :            :         &gt;::value
+<span class="lineNum">      41 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     ));</span>
+<a name="42"><span class="lineNum">      42 </span>                :<span class="lineCov">          1 : }</span></a>
+<span class="lineNum">      43 </span>                :            : 
+<span class="lineNum">      44 </span>        [<span class="branchNoCov" title="Branch 7 was not taken"> - </span><span class="branchCov" title="Branch 8 was taken 1 time"> + </span>]:<span class="lineCov">          4 : TEST(Instance, Many)</span>
+<span class="lineNum">      45 </span>                :            : {
+<span class="lineNum">      46 </span>[<span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 1 time"> + </span>][<span class="branchNoExec" title="Branch 4 was not executed"> # </span><span class="branchNoExec" title="Branch 5 was not executed"> # </span>]:<span class="lineCov">          1 :     EXPECT_TRUE((</span>
+<span class="lineNum">         </span>[<span class="branchNoExec" title="Branch 7 was not executed"> # </span><span class="branchNoExec" title="Branch 8 was not executed"> # </span>][<span class="branchNoExec" title="Branch 11 was not executed"> # </span><span class="branchNoExec" title="Branch 12 was not executed"> # </span>]
+<span class="lineNum">         </span>[<span class="branchNoExec" title="Branch 14 was not executed"> # </span><span class="branchNoExec" title="Branch 15 was not executed"> # </span>][<span class="branchNoExec" title="Branch 18 was not executed"> # </span><span class="branchNoExec" title="Branch 19 was not executed"> # </span>]
+<span class="lineNum">      47 </span>                :            :         equal
+<span class="lineNum">      48 </span>                :            :         &lt;
+<span class="lineNum">      49 </span>                :            :             vector
+<span class="lineNum">      50 </span>                :            :             &lt;
+<span class="lineNum">      51 </span>                :            :                 Detail::InstanceDependency&lt;int, double, vector&lt;A&gt; &gt;,
+<span class="lineNum">      52 </span>                :            :                 Detail::InstanceDependency&lt;int, double, vector&lt;B&gt; &gt;,
+<span class="lineNum">      53 </span>                :            :                 Detail::InstanceDependency&lt;int, double, vector&lt;C&gt; &gt;,
+<span class="lineNum">      54 </span>                :            :                 Detail::InstanceDependency&lt;int, double, vector&lt;D&gt; &gt;
+<span class="lineNum">      55 </span>                :            :             &gt;,
+<span class="lineNum">      56 </span>                :            :             Instance&lt;int, double&gt;::Bind&lt;A, B, C, D&gt;
+<span class="lineNum">      57 </span>                :            :         &gt;::value
+<span class="lineNum">      58 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     ));</span>
+<span class="lineNum">      59 </span>                :<span class="lineCov">          1 : }</span>
+<span class="lineNum">      60 </span>                :            : 
+<span class="lineNum">      61 </span>                :            : } // namespace UT
+<span class="lineNum">      62 </span>                :            : } // namespace Aux
+<a name="63"><span class="lineNum">      63 </span>                :            : } // namespace Generic</a>
+<span class="lineNum">      64 </span>                :            : } // namespace Front
+<span class="lineNum">      65 </span>[<span class="branchCov" title="Branch 1 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span>][<span class="branchCov" title="Branch 3 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 4 was not taken"> - </span>]:<span class="lineCov">          3 : } // namespace QDeps</span>
+<span class="lineNum">      66 </span>                :            : 
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.9</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

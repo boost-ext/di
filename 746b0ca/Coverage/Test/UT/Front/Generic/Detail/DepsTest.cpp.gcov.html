@@ -1,0 +1,243 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <title>LCOV - QDeps - Test/UT/Front/Generic/Detail/DepsTest.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../../../index.html">top level</a> - <a href="index.html">Test/UT/Front/Generic/Detail</a> - DepsTest.cpp<span style="font-size: 80%;"> (source / <a href="DepsTest.cpp.func.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">QDeps</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">13</td>
+            <td class="headerCovTableEntry">17</td>
+            <td class="headerCovTableEntryMed">76.5 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2012-03-11</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">18</td>
+            <td class="headerCovTableEntry">18</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntry">68</td>
+            <td class="headerCovTableEntryLo">14.7 %</td>
+          </tr>
+          <tr><td><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">           Branch data     Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>                :            : //</a>
+<span class="lineNum">       2 </span>                :            : // Copyright (c) 2012 Krzysztof Jusiak (krzysztof at jusiak dot net)
+<span class="lineNum">       3 </span>                :            : //
+<span class="lineNum">       4 </span>                :            : // Distributed under the Boost Software License, Version 1.0.
+<span class="lineNum">       5 </span>                :            : // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+<span class="lineNum">       6 </span>                :            : //
+<span class="lineNum">       7 </span>                :            : #include &lt;gtest/gtest.h&gt;
+<span class="lineNum">       8 </span>                :            : #include &lt;boost/mpl/vector.hpp&gt;
+<span class="lineNum">       9 </span>                :            : #include &lt;boost/mpl/equal.hpp&gt;
+<span class="lineNum">      10 </span>                :            : #include &lt;boost/mpl/pair.hpp&gt;
+<span class="lineNum">      11 </span>                :            : #include &quot;QDeps/Back/Scopes/PerRequest.hpp&quot;
+<span class="lineNum">      12 </span>                :            : #include &quot;QDeps/Back/Scopes/Singleton.hpp&quot;
+<span class="lineNum">      13 </span>                :            : #include &quot;QDeps/Front/Generic/Detail/Deps.hpp&quot;
+<span class="lineNum">      14 </span>                :            : 
+<span class="lineNum">      15 </span>                :            : namespace QDeps
+<span class="lineNum">      16 </span>                :            : {
+<span class="lineNum">      17 </span>                :            : namespace Front
+<span class="lineNum">      18 </span>                :            : {
+<span class="lineNum">      19 </span>                :            : namespace Generic
+<span class="lineNum">      20 </span>                :            : {
+<span class="lineNum">      21 </span>                :            : namespace Detail
+<span class="lineNum">      22 </span>                :            : {
+<span class="lineNum">      23 </span>                :            : namespace UT
+<span class="lineNum">      24 </span>                :            : {
+<span class="lineNum">      25 </span>                :            : 
+<span class="lineNum">      26 </span>                :            : using namespace boost::mpl;
+<span class="lineNum">      27 </span>                :            : using namespace Back::Scopes;
+<span class="lineNum">      28 </span>                :            : 
+<span class="lineNum">      29 </span>                :            : struct A
+<span class="lineNum">      30 </span>                :            : {
+<span class="lineNum">      31 </span>                :            :     template&lt;typename T&gt; struct Apply
+<span class="lineNum">      32 </span>                :            :     {
+<span class="lineNum">      33 </span>                :            :         typedef pair&lt;A, T&gt; type;
+<span class="lineNum">      34 </span>                :            :     };
+<span class="lineNum">      35 </span>                :            : };
+<span class="lineNum">      36 </span>                :            : 
+<span class="lineNum">      37 </span>                :            : struct B
+<span class="lineNum">      38 </span>                :            : {
+<span class="lineNum">      39 </span>                :            :     template&lt;typename T&gt; struct Apply
+<span class="lineNum">      40 </span>                :            :     {
+<span class="lineNum">      41 </span>                :            :         typedef pair&lt;B, T&gt; type;
+<span class="lineNum">      42 </span>                :            :     };
+<span class="lineNum">      43 </span>                :            : };
+<span class="lineNum">      44 </span>                :            : 
+<span class="lineNum">      45 </span>                :            : struct C : boost::mpl::vector&lt;A, B&gt;
+<span class="lineNum">      46 </span>                :            : {
+<span class="lineNum">      47 </span>                :            :     template&lt;typename T&gt; struct Apply
+<span class="lineNum">      48 </span>                :            :     {
+<span class="lineNum">      49 </span>                :            :         typedef pair&lt;C, T&gt; type;
+<span class="lineNum">      50 </span>                :            :     };
+<span class="lineNum">      51 </span>                :            : };
+<span class="lineNum">      52 </span>                :            : 
+<span class="lineNum">      53 </span>                :            : struct D
+<span class="lineNum">      54 </span>                :            : {
+<span class="lineNum">      55 </span>                :            :     template&lt;typename T&gt; struct Apply
+<span class="lineNum">      56 </span>                :            :     {
+<span class="lineNum">      57 </span>                :            :         typedef pair&lt;D, T&gt; type;
+<span class="lineNum">      58 </span>                :            :     };
+<a name="59"><span class="lineNum">      59 </span>                :            : };</a>
+<span class="lineNum">      60 </span>                :            : 
+<span class="lineNum">      61 </span>        [<span class="branchNoCov" title="Branch 7 was not taken"> - </span><span class="branchCov" title="Branch 8 was taken 1 time"> + </span>]:<span class="lineCov">          4 : TEST(Deps, Empty)</span>
+<span class="lineNum">      62 </span>                :            : {
+<span class="lineNum">      63 </span>[<span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 1 time"> + </span>][<span class="branchNoExec" title="Branch 4 was not executed"> # </span><span class="branchNoExec" title="Branch 5 was not executed"> # </span>]:<span class="lineCov">          1 :     EXPECT_TRUE((</span>
+<span class="lineNum">         </span>[<span class="branchNoExec" title="Branch 7 was not executed"> # </span><span class="branchNoExec" title="Branch 8 was not executed"> # </span>][<span class="branchNoExec" title="Branch 11 was not executed"> # </span><span class="branchNoExec" title="Branch 12 was not executed"> # </span>]
+<span class="lineNum">         </span>[<span class="branchNoExec" title="Branch 14 was not executed"> # </span><span class="branchNoExec" title="Branch 15 was not executed"> # </span>][<span class="branchNoExec" title="Branch 18 was not executed"> # </span><span class="branchNoExec" title="Branch 19 was not executed"> # </span>]
+<span class="lineNum">      64 </span>                :            :         equal
+<span class="lineNum">      65 </span>                :            :         &lt;
+<span class="lineNum">      66 </span>                :            :             vector0&lt;&gt;,
+<span class="lineNum">      67 </span>                :            :             Deps
+<span class="lineNum">      68 </span>                :            :             &lt;
+<span class="lineNum">      69 </span>                :            :                 vector0&lt;&gt;
+<span class="lineNum">      70 </span>                :            :             &gt;
+<span class="lineNum">      71 </span>                :            :         &gt;::value
+<span class="lineNum">      72 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     ));</span>
+<a name="73"><span class="lineNum">      73 </span>                :<span class="lineCov">          1 : }</span></a>
+<span class="lineNum">      74 </span>                :            : 
+<span class="lineNum">      75 </span>        [<span class="branchNoCov" title="Branch 7 was not taken"> - </span><span class="branchCov" title="Branch 8 was taken 1 time"> + </span>]:<span class="lineCov">          4 : TEST(Deps, One)</span>
+<span class="lineNum">      76 </span>                :            : {
+<span class="lineNum">      77 </span>[<span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 1 time"> + </span>][<span class="branchNoExec" title="Branch 4 was not executed"> # </span><span class="branchNoExec" title="Branch 5 was not executed"> # </span>]:<span class="lineCov">          1 :     EXPECT_TRUE((</span>
+<span class="lineNum">         </span>[<span class="branchNoExec" title="Branch 7 was not executed"> # </span><span class="branchNoExec" title="Branch 8 was not executed"> # </span>][<span class="branchNoExec" title="Branch 11 was not executed"> # </span><span class="branchNoExec" title="Branch 12 was not executed"> # </span>]
+<span class="lineNum">         </span>[<span class="branchNoExec" title="Branch 14 was not executed"> # </span><span class="branchNoExec" title="Branch 15 was not executed"> # </span>][<span class="branchNoExec" title="Branch 18 was not executed"> # </span><span class="branchNoExec" title="Branch 19 was not executed"> # </span>]
+<span class="lineNum">      78 </span>                :            :         equal
+<span class="lineNum">      79 </span>                :            :         &lt;
+<span class="lineNum">      80 </span>                :            :             vector
+<span class="lineNum">      81 </span>                :            :             &lt;
+<span class="lineNum">      82 </span>                :            :                 pair&lt;A, PerRequest&gt;
+<span class="lineNum">      83 </span>                :            :             &gt;,
+<span class="lineNum">      84 </span>                :            :             Deps
+<span class="lineNum">      85 </span>                :            :             &lt;
+<span class="lineNum">      86 </span>                :            :                 vector
+<span class="lineNum">      87 </span>                :            :                 &lt;
+<span class="lineNum">      88 </span>                :            :                     A
+<span class="lineNum">      89 </span>                :            :                 &gt;
+<span class="lineNum">      90 </span>                :            :             &gt;
+<span class="lineNum">      91 </span>                :            :         &gt;::value
+<span class="lineNum">      92 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     ));</span>
+<a name="93"><span class="lineNum">      93 </span>                :<span class="lineCov">          1 : }</span></a>
+<span class="lineNum">      94 </span>                :            : 
+<span class="lineNum">      95 </span>        [<span class="branchNoCov" title="Branch 7 was not taken"> - </span><span class="branchCov" title="Branch 8 was taken 1 time"> + </span>]:<span class="lineCov">          4 : TEST(Deps, Many)</span>
+<span class="lineNum">      96 </span>                :            : {
+<span class="lineNum">      97 </span>[<span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 1 time"> + </span>][<span class="branchNoExec" title="Branch 4 was not executed"> # </span><span class="branchNoExec" title="Branch 5 was not executed"> # </span>]:<span class="lineCov">          1 :     EXPECT_TRUE((</span>
+<span class="lineNum">         </span>[<span class="branchNoExec" title="Branch 7 was not executed"> # </span><span class="branchNoExec" title="Branch 8 was not executed"> # </span>][<span class="branchNoExec" title="Branch 11 was not executed"> # </span><span class="branchNoExec" title="Branch 12 was not executed"> # </span>]
+<span class="lineNum">         </span>[<span class="branchNoExec" title="Branch 14 was not executed"> # </span><span class="branchNoExec" title="Branch 15 was not executed"> # </span>][<span class="branchNoExec" title="Branch 18 was not executed"> # </span><span class="branchNoExec" title="Branch 19 was not executed"> # </span>]
+<span class="lineNum">      98 </span>                :            :         equal
+<span class="lineNum">      99 </span>                :            :         &lt;
+<span class="lineNum">     100 </span>                :            :             vector
+<span class="lineNum">     101 </span>                :            :             &lt;
+<span class="lineNum">     102 </span>                :            :                 pair&lt;B, PerRequest&gt;,
+<span class="lineNum">     103 </span>                :            :                 pair&lt;A, PerRequest&gt;
+<span class="lineNum">     104 </span>                :            :             &gt;,
+<span class="lineNum">     105 </span>                :            :             Deps
+<span class="lineNum">     106 </span>                :            :             &lt;
+<span class="lineNum">     107 </span>                :            :                 vector
+<span class="lineNum">     108 </span>                :            :                 &lt;
+<span class="lineNum">     109 </span>                :            :                     A, B
+<span class="lineNum">     110 </span>                :            :                 &gt;
+<span class="lineNum">     111 </span>                :            :             &gt;
+<span class="lineNum">     112 </span>                :            :         &gt;::value
+<span class="lineNum">     113 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     ));</span>
+<a name="114"><span class="lineNum">     114 </span>                :<span class="lineCov">          1 : }</span></a>
+<span class="lineNum">     115 </span>                :            : 
+<span class="lineNum">     116 </span>        [<span class="branchNoCov" title="Branch 7 was not taken"> - </span><span class="branchCov" title="Branch 8 was taken 1 time"> + </span>]:<span class="lineCov">          4 : TEST(Deps, Seq)</span>
+<span class="lineNum">     117 </span>                :            : {
+<span class="lineNum">     118 </span>[<span class="branchNoCov" title="Branch 2 was not taken"> - </span><span class="branchCov" title="Branch 3 was taken 1 time"> + </span>][<span class="branchNoExec" title="Branch 4 was not executed"> # </span><span class="branchNoExec" title="Branch 5 was not executed"> # </span>]:<span class="lineCov">          1 :     EXPECT_TRUE((</span>
+<span class="lineNum">         </span>[<span class="branchNoExec" title="Branch 7 was not executed"> # </span><span class="branchNoExec" title="Branch 8 was not executed"> # </span>][<span class="branchNoExec" title="Branch 11 was not executed"> # </span><span class="branchNoExec" title="Branch 12 was not executed"> # </span>]
+<span class="lineNum">         </span>[<span class="branchNoExec" title="Branch 14 was not executed"> # </span><span class="branchNoExec" title="Branch 15 was not executed"> # </span>][<span class="branchNoExec" title="Branch 18 was not executed"> # </span><span class="branchNoExec" title="Branch 19 was not executed"> # </span>]
+<span class="lineNum">     119 </span>                :            :         equal
+<span class="lineNum">     120 </span>                :            :         &lt;
+<span class="lineNum">     121 </span>                :            :             vector
+<span class="lineNum">     122 </span>                :            :             &lt;
+<span class="lineNum">     123 </span>                :            :                 pair&lt;D, PerRequest&gt;,
+<span class="lineNum">     124 </span>                :            :                 pair&lt;B, PerRequest&gt;,
+<span class="lineNum">     125 </span>                :            :                 pair&lt;A, PerRequest&gt;
+<span class="lineNum">     126 </span>                :            :             &gt;,
+<span class="lineNum">     127 </span>                :            :             Deps
+<span class="lineNum">     128 </span>                :            :             &lt;
+<span class="lineNum">     129 </span>                :            :                 vector
+<span class="lineNum">     130 </span>                :            :                 &lt;
+<span class="lineNum">     131 </span>                :            :                     C, D
+<span class="lineNum">     132 </span>                :            :                 &gt;
+<span class="lineNum">     133 </span>                :            :             &gt;
+<span class="lineNum">     134 </span>                :            :         &gt;::value
+<span class="lineNum">     135 </span>        [<span class="branchNoExec" title="Branch 0 was not executed"> # </span><span class="branchNoExec" title="Branch 1 was not executed"> # </span>]:<span class="lineNoCov">          0 :     ));</span>
+<span class="lineNum">     136 </span>                :<span class="lineCov">          1 : }</span>
+<span class="lineNum">     137 </span>                :            : 
+<span class="lineNum">     138 </span>                :            : } // namespace UT
+<span class="lineNum">     139 </span>                :            : } // namespace Detail
+<a name="140"><span class="lineNum">     140 </span>                :            : } // namespace Generic</a>
+<span class="lineNum">     141 </span>                :            : } // namespace Front
+<span class="lineNum">     142 </span>[<span class="branchCov" title="Branch 1 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 2 was not taken"> - </span>][<span class="branchCov" title="Branch 3 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 4 was not taken"> - </span>]:<span class="lineCov">          3 : } // namespace QDeps</span>
+<span class="lineNum">     143 </span>                :            : 
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.9</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

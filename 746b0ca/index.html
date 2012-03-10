@@ -1,0 +1,1187 @@
+<pre>
+Sun Mar 11 00:16:04 CET 2012
+746b0ca Merge remote-tracking branch 'github/master'
+
+test: 
+g++ (Gentoo 4.6.2 p1.0, pie-0.4.5) 4.6.2
+Copyright (C) 2011 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+make[1]: Entering directory `/home/krzychoo/projects/QSrc/QDeps/Test'
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Back/BindingTest.o UT/Back/BindingTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Back/Scopes/PerRequestTest.o UT/Back/Scopes/PerRequestTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Back/Scopes/SingletonTest.o UT/Back/Scopes/SingletonTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Back/FactoryTest.o UT/Back/FactoryTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Utility/InjectorTest.o UT/Utility/InjectorTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/CtorBracketTest.o UT/Front/CtorBracketTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Fusion/Aux/BindTest.o UT/Front/Fusion/Aux/BindTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Fusion/Aux/InstTest.o UT/Front/Fusion/Aux/InstTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/CtorVaArgsTest.o UT/Front/CtorVaArgsTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Generic/Aux/ImplementationTest.o UT/Front/Generic/Aux/ImplementationTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Generic/Aux/ScopeTest.o UT/Front/Generic/Aux/ScopeTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Generic/Aux/InstanceTest.o UT/Front/Generic/Aux/InstanceTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Generic/Detail/DepsTest.o UT/Front/Generic/Detail/DepsTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Generic/Detail/KeysTest.o UT/Front/Generic/Detail/KeysTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o MT/QDepsTest.o MT/QDepsTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o main.o main.cpp
+[==========] Running 64 tests from 13 test cases.
+[----------] Global test environment set-up.
+[----------] 17 tests from Binding
+[ RUN      ] Binding.Empty
+[       OK ] Binding.Empty (0 ms)
+[ RUN      ] Binding.One
+[       OK ] Binding.One (0 ms)
+[ RUN      ] Binding.Found
+[       OK ] Binding.Found (0 ms)
+[ RUN      ] Binding.FoundMany
+[       OK ] Binding.FoundMany (0 ms)
+[ RUN      ] Binding.NotFound
+[       OK ] Binding.NotFound (0 ms)
+[ RUN      ] Binding.Context
+[       OK ] Binding.Context (0 ms)
+[ RUN      ] Binding.ContextMany
+[       OK ] Binding.ContextMany (0 ms)
+[ RUN      ] Binding.ContextManyEnd
+[       OK ] Binding.ContextManyEnd (0 ms)
+[ RUN      ] Binding.ContextNotFound
+[       OK ] Binding.ContextNotFound (0 ms)
+[ RUN      ] Binding.ContextOtherTypes
+[       OK ] Binding.ContextOtherTypes (0 ms)
+[ RUN      ] Binding.ContextLongWithOrder
+[       OK ] Binding.ContextLongWithOrder (0 ms)
+[ RUN      ] Binding.ContextLongWithOrderEmptyCallStack
+[       OK ] Binding.ContextLongWithOrderEmptyCallStack (0 ms)
+[ RUN      ] Binding.ContextLongWithOrderDiffCallStack
+[       OK ] Binding.ContextLongWithOrderDiffCallStack (0 ms)
+[ RUN      ] Binding.ContextLongWithOrderShortCallStack
+[       OK ] Binding.ContextLongWithOrderShortCallStack (0 ms)
+[ RUN      ] Binding.ContextLongWithOrderToLongCallStack
+[       OK ] Binding.ContextLongWithOrderToLongCallStack (0 ms)
+[ RUN      ] Binding.BaseOfFail
+[       OK ] Binding.BaseOfFail (0 ms)
+[ RUN      ] Binding.BaseOfSuccessful
+[       OK ] Binding.BaseOfSuccessful (0 ms)
+[----------] 17 tests from Binding (1 ms total)
+
+[----------] 2 tests from PerRequest
+[ RUN      ] PerRequest.Create
+[       OK ] PerRequest.Create (0 ms)
+[ RUN      ] PerRequest.CreateArgs
+[       OK ] PerRequest.CreateArgs (0 ms)
+[----------] 2 tests from PerRequest (0 ms total)
+
+[----------] 2 tests from Singleton
+[ RUN      ] Singleton.Create
+[       OK ] Singleton.Create (0 ms)
+[ RUN      ] Singleton.CreateArgs
+[       OK ] Singleton.CreateArgs (0 ms)
+[----------] 2 tests from Singleton (0 ms total)
+
+[----------] 17 tests from Factory
+[ RUN      ] Factory.CreateUsingCopy
+[       OK ] Factory.CreateUsingCopy (0 ms)
+[ RUN      ] Factory.CreateUsingRef
+[       OK ] Factory.CreateUsingRef (0 ms)
+[ RUN      ] Factory.CreateUsingConstRef
+[       OK ] Factory.CreateUsingConstRef (0 ms)
+[ RUN      ] Factory.CreateUsingPtr
+[       OK ] Factory.CreateUsingPtr (0 ms)
+[ RUN      ] Factory.CreateUsingConstPtr
+[       OK ] Factory.CreateUsingConstPtr (0 ms)
+[ RUN      ] Factory.CreateUsingSharedPtr
+[       OK ] Factory.CreateUsingSharedPtr (0 ms)
+[ RUN      ] Factory.CreateDefaultCtor
+[       OK ] Factory.CreateDefaultCtor (0 ms)
+[ RUN      ] Factory.CreateWithValues
+[       OK ] Factory.CreateWithValues (0 ms)
+[ RUN      ] Factory.CreateWithAttributes
+[       OK ] Factory.CreateWithAttributes (0 ms)
+[ RUN      ] Factory.CreatePerRequest
+[       OK ] Factory.CreatePerRequest (0 ms)
+[ RUN      ] Factory.CreatePerRequestSingleton
+[       OK ] Factory.CreatePerRequestSingleton (0 ms)
+[ RUN      ] Factory.CreatePerRequestSingletonPath
+[       OK ] Factory.CreatePerRequestSingletonPath (1 ms)
+[ RUN      ] Factory.CreatePerRequestSingletonPathOrder
+[       OK ] Factory.CreatePerRequestSingletonPathOrder (0 ms)
+[ RUN      ] Factory.CreatePerRequestSingletonPathMix
+[       OK ] Factory.CreatePerRequestSingletonPathMix (0 ms)
+[ RUN      ] Factory.CreateSingletonImpl
+[       OK ] Factory.CreateSingletonImpl (0 ms)
+[ RUN      ] Factory.CreateSingletonMany
+[       OK ] Factory.CreateSingletonMany (0 ms)
+[ RUN      ] Factory.BaseOf
+[       OK ] Factory.BaseOf (0 ms)
+[----------] 17 tests from Factory (1 ms total)
+
+[----------] 2 tests from Injector
+[ RUN      ] Injector.CtorEmpty
+[       OK ] Injector.CtorEmpty (0 ms)
+[ RUN      ] Injector.Module
+[       OK ] Injector.Module (0 ms)
+[----------] 2 tests from Injector (0 ms total)
+
+[----------] 4 tests from CtorBracket
+[ RUN      ] CtorBracket.Empty
+[       OK ] CtorBracket.Empty (0 ms)
+[ RUN      ] CtorBracket.ExplicitWithDefault
+[       OK ] CtorBracket.ExplicitWithDefault (0 ms)
+[ RUN      ] CtorBracket.Params
+[       OK ] CtorBracket.Params (0 ms)
+[ RUN      ] CtorBracket.Traits
+[       OK ] CtorBracket.Traits (0 ms)
+[----------] 4 tests from CtorBracket (0 ms total)
+
+[----------] 4 tests from CtorVaArgs
+[ RUN      ] CtorVaArgs.Empty
+[       OK ] CtorVaArgs.Empty (0 ms)
+[ RUN      ] CtorVaArgs.ExplicitWithDefault
+[       OK ] CtorVaArgs.ExplicitWithDefault (0 ms)
+[ RUN      ] CtorVaArgs.Params
+[       OK ] CtorVaArgs.Params (0 ms)
+[ RUN      ] CtorVaArgs.Traits
+[       OK ] CtorVaArgs.Traits (0 ms)
+[----------] 4 tests from CtorVaArgs (0 ms total)
+
+[----------] 2 tests from Implementation
+[ RUN      ] Implementation.One
+[       OK ] Implementation.One (0 ms)
+[ RUN      ] Implementation.Many
+[       OK ] Implementation.Many (0 ms)
+[----------] 2 tests from Implementation (0 ms total)
+
+[----------] 2 tests from Scope
+[ RUN      ] Scope.One
+[       OK ] Scope.One (0 ms)
+[ RUN      ] Scope.Many
+[       OK ] Scope.Many (0 ms)
+[----------] 2 tests from Scope (0 ms total)
+
+[----------] 2 tests from Instance
+[ RUN      ] Instance.One
+[       OK ] Instance.One (0 ms)
+[ RUN      ] Instance.Many
+[       OK ] Instance.Many (0 ms)
+[----------] 2 tests from Instance (0 ms total)
+
+[----------] 4 tests from Deps
+[ RUN      ] Deps.Empty
+[       OK ] Deps.Empty (0 ms)
+[ RUN      ] Deps.One
+[       OK ] Deps.One (0 ms)
+[ RUN      ] Deps.Many
+[       OK ] Deps.Many (0 ms)
+[ RUN      ] Deps.Seq
+[       OK ] Deps.Seq (0 ms)
+[----------] 4 tests from Deps (0 ms total)
+
+[----------] 3 tests from Keys
+[ RUN      ] Keys.Empty
+[       OK ] Keys.Empty (0 ms)
+[ RUN      ] Keys.HasExternalValue
+[       OK ] Keys.HasExternalValue (0 ms)
+[ RUN      ] Keys.Mix
+[       OK ] Keys.Mix (0 ms)
+[----------] 3 tests from Keys (0 ms total)
+
+[----------] 3 tests from QDeps
+[ RUN      ] QDeps.Module
+[       OK ] QDeps.Module (0 ms)
+[ RUN      ] QDeps.Modules
+[       OK ] QDeps.Modules (0 ms)
+[ RUN      ] QDeps.ModulesPolicies
+[       OK ] QDeps.ModulesPolicies (0 ms)
+[----------] 3 tests from QDeps (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 64 tests from 13 test cases ran. (3 ms total)
+[  PASSED  ] 64 tests.
+make[1]: Leaving directory `/home/krzychoo/projects/QSrc/QDeps/Test'
+
+valgrind: 
+make[1]: Entering directory `/home/krzychoo/projects/QSrc/QDeps/Test'
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Back/BindingTest.o UT/Back/BindingTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Back/Scopes/PerRequestTest.o UT/Back/Scopes/PerRequestTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Back/Scopes/SingletonTest.o UT/Back/Scopes/SingletonTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Back/FactoryTest.o UT/Back/FactoryTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Utility/InjectorTest.o UT/Utility/InjectorTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/CtorBracketTest.o UT/Front/CtorBracketTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Fusion/Aux/BindTest.o UT/Front/Fusion/Aux/BindTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Fusion/Aux/InstTest.o UT/Front/Fusion/Aux/InstTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/CtorVaArgsTest.o UT/Front/CtorVaArgsTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Generic/Aux/ImplementationTest.o UT/Front/Generic/Aux/ImplementationTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Generic/Aux/ScopeTest.o UT/Front/Generic/Aux/ScopeTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Generic/Aux/InstanceTest.o UT/Front/Generic/Aux/InstanceTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Generic/Detail/DepsTest.o UT/Front/Generic/Detail/DepsTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Generic/Detail/KeysTest.o UT/Front/Generic/Detail/KeysTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o MT/QDepsTest.o MT/QDepsTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o main.o main.cpp
+[==========] Running 64 tests from 13 test cases.
+[----------] Global test environment set-up.
+[----------] 17 tests from Binding
+[ RUN      ] Binding.Empty
+[       OK ] Binding.Empty (0 ms)
+[ RUN      ] Binding.One
+[       OK ] Binding.One (0 ms)
+[ RUN      ] Binding.Found
+[       OK ] Binding.Found (0 ms)
+[ RUN      ] Binding.FoundMany
+[       OK ] Binding.FoundMany (0 ms)
+[ RUN      ] Binding.NotFound
+[       OK ] Binding.NotFound (0 ms)
+[ RUN      ] Binding.Context
+[       OK ] Binding.Context (0 ms)
+[ RUN      ] Binding.ContextMany
+[       OK ] Binding.ContextMany (0 ms)
+[ RUN      ] Binding.ContextManyEnd
+[       OK ] Binding.ContextManyEnd (0 ms)
+[ RUN      ] Binding.ContextNotFound
+[       OK ] Binding.ContextNotFound (0 ms)
+[ RUN      ] Binding.ContextOtherTypes
+[       OK ] Binding.ContextOtherTypes (0 ms)
+[ RUN      ] Binding.ContextLongWithOrder
+[       OK ] Binding.ContextLongWithOrder (0 ms)
+[ RUN      ] Binding.ContextLongWithOrderEmptyCallStack
+[       OK ] Binding.ContextLongWithOrderEmptyCallStack (0 ms)
+[ RUN      ] Binding.ContextLongWithOrderDiffCallStack
+[       OK ] Binding.ContextLongWithOrderDiffCallStack (0 ms)
+[ RUN      ] Binding.ContextLongWithOrderShortCallStack
+[       OK ] Binding.ContextLongWithOrderShortCallStack (0 ms)
+[ RUN      ] Binding.ContextLongWithOrderToLongCallStack
+[       OK ] Binding.ContextLongWithOrderToLongCallStack (0 ms)
+[ RUN      ] Binding.BaseOfFail
+[       OK ] Binding.BaseOfFail (0 ms)
+[ RUN      ] Binding.BaseOfSuccessful
+[       OK ] Binding.BaseOfSuccessful (0 ms)
+[----------] 17 tests from Binding (0 ms total)
+
+[----------] 2 tests from PerRequest
+[ RUN      ] PerRequest.Create
+[       OK ] PerRequest.Create (0 ms)
+[ RUN      ] PerRequest.CreateArgs
+[       OK ] PerRequest.CreateArgs (0 ms)
+[----------] 2 tests from PerRequest (0 ms total)
+
+[----------] 2 tests from Singleton
+[ RUN      ] Singleton.Create
+[       OK ] Singleton.Create (0 ms)
+[ RUN      ] Singleton.CreateArgs
+[       OK ] Singleton.CreateArgs (0 ms)
+[----------] 2 tests from Singleton (0 ms total)
+
+[----------] 17 tests from Factory
+[ RUN      ] Factory.CreateUsingCopy
+[       OK ] Factory.CreateUsingCopy (1 ms)
+[ RUN      ] Factory.CreateUsingRef
+[       OK ] Factory.CreateUsingRef (0 ms)
+[ RUN      ] Factory.CreateUsingConstRef
+[       OK ] Factory.CreateUsingConstRef (0 ms)
+[ RUN      ] Factory.CreateUsingPtr
+[       OK ] Factory.CreateUsingPtr (0 ms)
+[ RUN      ] Factory.CreateUsingConstPtr
+[       OK ] Factory.CreateUsingConstPtr (0 ms)
+[ RUN      ] Factory.CreateUsingSharedPtr
+[       OK ] Factory.CreateUsingSharedPtr (0 ms)
+[ RUN      ] Factory.CreateDefaultCtor
+[       OK ] Factory.CreateDefaultCtor (0 ms)
+[ RUN      ] Factory.CreateWithValues
+[       OK ] Factory.CreateWithValues (0 ms)
+[ RUN      ] Factory.CreateWithAttributes
+[       OK ] Factory.CreateWithAttributes (0 ms)
+[ RUN      ] Factory.CreatePerRequest
+[       OK ] Factory.CreatePerRequest (0 ms)
+[ RUN      ] Factory.CreatePerRequestSingleton
+[       OK ] Factory.CreatePerRequestSingleton (0 ms)
+[ RUN      ] Factory.CreatePerRequestSingletonPath
+[       OK ] Factory.CreatePerRequestSingletonPath (0 ms)
+[ RUN      ] Factory.CreatePerRequestSingletonPathOrder
+[       OK ] Factory.CreatePerRequestSingletonPathOrder (0 ms)
+[ RUN      ] Factory.CreatePerRequestSingletonPathMix
+[       OK ] Factory.CreatePerRequestSingletonPathMix (0 ms)
+[ RUN      ] Factory.CreateSingletonImpl
+[       OK ] Factory.CreateSingletonImpl (1 ms)
+[ RUN      ] Factory.CreateSingletonMany
+[       OK ] Factory.CreateSingletonMany (0 ms)
+[ RUN      ] Factory.BaseOf
+[       OK ] Factory.BaseOf (0 ms)
+[----------] 17 tests from Factory (2 ms total)
+
+[----------] 2 tests from Injector
+[ RUN      ] Injector.CtorEmpty
+[       OK ] Injector.CtorEmpty (0 ms)
+[ RUN      ] Injector.Module
+[       OK ] Injector.Module (0 ms)
+[----------] 2 tests from Injector (0 ms total)
+
+[----------] 4 tests from CtorBracket
+[ RUN      ] CtorBracket.Empty
+[       OK ] CtorBracket.Empty (0 ms)
+[ RUN      ] CtorBracket.ExplicitWithDefault
+[       OK ] CtorBracket.ExplicitWithDefault (0 ms)
+[ RUN      ] CtorBracket.Params
+[       OK ] CtorBracket.Params (0 ms)
+[ RUN      ] CtorBracket.Traits
+[       OK ] CtorBracket.Traits (0 ms)
+[----------] 4 tests from CtorBracket (0 ms total)
+
+[----------] 4 tests from CtorVaArgs
+[ RUN      ] CtorVaArgs.Empty
+[       OK ] CtorVaArgs.Empty (0 ms)
+[ RUN      ] CtorVaArgs.ExplicitWithDefault
+[       OK ] CtorVaArgs.ExplicitWithDefault (0 ms)
+[ RUN      ] CtorVaArgs.Params
+[       OK ] CtorVaArgs.Params (0 ms)
+[ RUN      ] CtorVaArgs.Traits
+[       OK ] CtorVaArgs.Traits (0 ms)
+[----------] 4 tests from CtorVaArgs (0 ms total)
+
+[----------] 2 tests from Implementation
+[ RUN      ] Implementation.One
+[       OK ] Implementation.One (0 ms)
+[ RUN      ] Implementation.Many
+[       OK ] Implementation.Many (0 ms)
+[----------] 2 tests from Implementation (0 ms total)
+
+[----------] 2 tests from Scope
+[ RUN      ] Scope.One
+[       OK ] Scope.One (0 ms)
+[ RUN      ] Scope.Many
+[       OK ] Scope.Many (0 ms)
+[----------] 2 tests from Scope (0 ms total)
+
+[----------] 2 tests from Instance
+[ RUN      ] Instance.One
+[       OK ] Instance.One (0 ms)
+[ RUN      ] Instance.Many
+[       OK ] Instance.Many (0 ms)
+[----------] 2 tests from Instance (0 ms total)
+
+[----------] 4 tests from Deps
+[ RUN      ] Deps.Empty
+[       OK ] Deps.Empty (0 ms)
+[ RUN      ] Deps.One
+[       OK ] Deps.One (0 ms)
+[ RUN      ] Deps.Many
+[       OK ] Deps.Many (0 ms)
+[ RUN      ] Deps.Seq
+[       OK ] Deps.Seq (0 ms)
+[----------] 4 tests from Deps (0 ms total)
+
+[----------] 3 tests from Keys
+[ RUN      ] Keys.Empty
+[       OK ] Keys.Empty (0 ms)
+[ RUN      ] Keys.HasExternalValue
+[       OK ] Keys.HasExternalValue (0 ms)
+[ RUN      ] Keys.Mix
+[       OK ] Keys.Mix (0 ms)
+[----------] 3 tests from Keys (0 ms total)
+
+[----------] 3 tests from QDeps
+[ RUN      ] QDeps.Module
+[       OK ] QDeps.Module (0 ms)
+[ RUN      ] QDeps.Modules
+[       OK ] QDeps.Modules (0 ms)
+[ RUN      ] QDeps.ModulesPolicies
+[       OK ] QDeps.ModulesPolicies (0 ms)
+[----------] 3 tests from QDeps (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 64 tests from 13 test cases ran. (2 ms total)
+[  PASSED  ] 64 tests.
+LD_LIBRARY_PATH= valgrind --leak-check=full --track-origins=yes ./test
+==3318== Memcheck, a memory error detector
+==3318== Copyright (C) 2002-2011, and GNU GPL'd, by Julian Seward et al.
+==3318== Using Valgrind-3.7.0 and LibVEX; rerun with -h for copyright info
+==3318== Command: ./test
+==3318== 
+==3318== Conditional jump or move depends on uninitialised value(s)
+==3318==    at 0x4016B26: index (in /lib64/ld-2.14.1.so)
+==3318==    by 0x4007512: expand_dynamic_string_token (in /lib64/ld-2.14.1.so)
+==3318==    by 0x4007DD3: _dl_map_object (in /lib64/ld-2.14.1.so)
+==3318==    by 0x40016DD: map_doit (in /lib64/ld-2.14.1.so)
+==3318==    by 0x400DB55: _dl_catch_error (in /lib64/ld-2.14.1.so)
+==3318==    by 0x4000F8A: do_preload (in /lib64/ld-2.14.1.so)
+==3318==    by 0x4004096: dl_main (in /lib64/ld-2.14.1.so)
+==3318==    by 0x4013C06: _dl_sysdep_start (in /lib64/ld-2.14.1.so)
+==3318==    by 0x4004C62: _dl_start (in /lib64/ld-2.14.1.so)
+==3318==    by 0x4001487: ??? (in /lib64/ld-2.14.1.so)
+==3318==  Uninitialised value was created by a stack allocation
+==3318==    at 0x4004016: dl_main (in /lib64/ld-2.14.1.so)
+==3318== 
+==3318== Conditional jump or move depends on uninitialised value(s)
+==3318==    at 0x4016B2B: index (in /lib64/ld-2.14.1.so)
+==3318==    by 0x4007512: expand_dynamic_string_token (in /lib64/ld-2.14.1.so)
+==3318==    by 0x4007DD3: _dl_map_object (in /lib64/ld-2.14.1.so)
+==3318==    by 0x40016DD: map_doit (in /lib64/ld-2.14.1.so)
+==3318==    by 0x400DB55: _dl_catch_error (in /lib64/ld-2.14.1.so)
+==3318==    by 0x4000F8A: do_preload (in /lib64/ld-2.14.1.so)
+==3318==    by 0x4004096: dl_main (in /lib64/ld-2.14.1.so)
+==3318==    by 0x4013C06: _dl_sysdep_start (in /lib64/ld-2.14.1.so)
+==3318==    by 0x4004C62: _dl_start (in /lib64/ld-2.14.1.so)
+==3318==    by 0x4001487: ??? (in /lib64/ld-2.14.1.so)
+==3318==  Uninitialised value was created by a stack allocation
+==3318==    at 0x4004016: dl_main (in /lib64/ld-2.14.1.so)
+==3318== 
+[==========] Running 64 tests from 13 test cases.
+[----------] Global test environment set-up.
+[----------] 17 tests from Binding
+[ RUN      ] Binding.Empty
+[       OK ] Binding.Empty (42 ms)
+[ RUN      ] Binding.One
+[       OK ] Binding.One (5 ms)
+[ RUN      ] Binding.Found
+[       OK ] Binding.Found (6 ms)
+[ RUN      ] Binding.FoundMany
+[       OK ] Binding.FoundMany (6 ms)
+[ RUN      ] Binding.NotFound
+[       OK ] Binding.NotFound (5 ms)
+[ RUN      ] Binding.Context
+[       OK ] Binding.Context (5 ms)
+[ RUN      ] Binding.ContextMany
+[       OK ] Binding.ContextMany (6 ms)
+[ RUN      ] Binding.ContextManyEnd
+[       OK ] Binding.ContextManyEnd (5 ms)
+[ RUN      ] Binding.ContextNotFound
+[       OK ] Binding.ContextNotFound (5 ms)
+[ RUN      ] Binding.ContextOtherTypes
+[       OK ] Binding.ContextOtherTypes (5 ms)
+[ RUN      ] Binding.ContextLongWithOrder
+[       OK ] Binding.ContextLongWithOrder (5 ms)
+[ RUN      ] Binding.ContextLongWithOrderEmptyCallStack
+[       OK ] Binding.ContextLongWithOrderEmptyCallStack (5 ms)
+[ RUN      ] Binding.ContextLongWithOrderDiffCallStack
+[       OK ] Binding.ContextLongWithOrderDiffCallStack (5 ms)
+[ RUN      ] Binding.ContextLongWithOrderShortCallStack
+[       OK ] Binding.ContextLongWithOrderShortCallStack (5 ms)
+[ RUN      ] Binding.ContextLongWithOrderToLongCallStack
+[       OK ] Binding.ContextLongWithOrderToLongCallStack (5 ms)
+[ RUN      ] Binding.BaseOfFail
+[       OK ] Binding.BaseOfFail (5 ms)
+[ RUN      ] Binding.BaseOfSuccessful
+[       OK ] Binding.BaseOfSuccessful (5 ms)
+[----------] 17 tests from Binding (178 ms total)
+
+[----------] 2 tests from PerRequest
+[ RUN      ] PerRequest.Create
+[       OK ] PerRequest.Create (22 ms)
+[ RUN      ] PerRequest.CreateArgs
+[       OK ] PerRequest.CreateArgs (18 ms)
+[----------] 2 tests from PerRequest (42 ms total)
+
+[----------] 2 tests from Singleton
+[ RUN      ] Singleton.Create
+[       OK ] Singleton.Create (25 ms)
+[ RUN      ] Singleton.CreateArgs
+[       OK ] Singleton.CreateArgs (18 ms)
+[----------] 2 tests from Singleton (44 ms total)
+
+[----------] 17 tests from Factory
+[ RUN      ] Factory.CreateUsingCopy
+[       OK ] Factory.CreateUsingCopy (854 ms)
+[ RUN      ] Factory.CreateUsingRef
+[       OK ] Factory.CreateUsingRef (12 ms)
+[ RUN      ] Factory.CreateUsingConstRef
+[       OK ] Factory.CreateUsingConstRef (13 ms)
+[ RUN      ] Factory.CreateUsingPtr
+[       OK ] Factory.CreateUsingPtr (12 ms)
+[ RUN      ] Factory.CreateUsingConstPtr
+[       OK ] Factory.CreateUsingConstPtr (12 ms)
+[ RUN      ] Factory.CreateUsingSharedPtr
+[       OK ] Factory.CreateUsingSharedPtr (14 ms)
+[ RUN      ] Factory.CreateDefaultCtor
+[       OK ] Factory.CreateDefaultCtor (9 ms)
+[ RUN      ] Factory.CreateWithValues
+[       OK ] Factory.CreateWithValues (232 ms)
+[ RUN      ] Factory.CreateWithAttributes
+[       OK ] Factory.CreateWithAttributes (192 ms)
+[ RUN      ] Factory.CreatePerRequest
+[       OK ] Factory.CreatePerRequest (252 ms)
+[ RUN      ] Factory.CreatePerRequestSingleton
+[       OK ] Factory.CreatePerRequestSingleton (132 ms)
+[ RUN      ] Factory.CreatePerRequestSingletonPath
+[       OK ] Factory.CreatePerRequestSingletonPath (126 ms)
+[ RUN      ] Factory.CreatePerRequestSingletonPathOrder
+[       OK ] Factory.CreatePerRequestSingletonPathOrder (124 ms)
+[ RUN      ] Factory.CreatePerRequestSingletonPathMix
+[       OK ] Factory.CreatePerRequestSingletonPathMix (131 ms)
+[ RUN      ] Factory.CreateSingletonImpl
+[       OK ] Factory.CreateSingletonImpl (125 ms)
+[ RUN      ] Factory.CreateSingletonMany
+[       OK ] Factory.CreateSingletonMany (137 ms)
+[ RUN      ] Factory.BaseOf
+[       OK ] Factory.BaseOf (110 ms)
+[----------] 17 tests from Factory (2502 ms total)
+
+[----------] 2 tests from Injector
+[ RUN      ] Injector.CtorEmpty
+[       OK ] Injector.CtorEmpty (13 ms)
+[ RUN      ] Injector.Module
+[       OK ] Injector.Module (109 ms)
+[----------] 2 tests from Injector (124 ms total)
+
+[----------] 4 tests from CtorBracket
+[ RUN      ] CtorBracket.Empty
+[       OK ] CtorBracket.Empty (4 ms)
+[ RUN      ] CtorBracket.ExplicitWithDefault
+[       OK ] CtorBracket.ExplicitWithDefault (6 ms)
+[ RUN      ] CtorBracket.Params
+[       OK ] CtorBracket.Params (7 ms)
+[ RUN      ] CtorBracket.Traits
+[       OK ] CtorBracket.Traits (7 ms)
+[----------] 4 tests from CtorBracket (26 ms total)
+
+[----------] 4 tests from CtorVaArgs
+[ RUN      ] CtorVaArgs.Empty
+[       OK ] CtorVaArgs.Empty (4 ms)
+[ RUN      ] CtorVaArgs.ExplicitWithDefault
+[       OK ] CtorVaArgs.ExplicitWithDefault (6 ms)
+[ RUN      ] CtorVaArgs.Params
+[       OK ] CtorVaArgs.Params (7 ms)
+[ RUN      ] CtorVaArgs.Traits
+[       OK ] CtorVaArgs.Traits (7 ms)
+[----------] 4 tests from CtorVaArgs (27 ms total)
+
+[----------] 2 tests from Implementation
+[ RUN      ] Implementation.One
+[       OK ] Implementation.One (5 ms)
+[ RUN      ] Implementation.Many
+[       OK ] Implementation.Many (5 ms)
+[----------] 2 tests from Implementation (11 ms total)
+
+[----------] 2 tests from Scope
+[ RUN      ] Scope.One
+[       OK ] Scope.One (5 ms)
+[ RUN      ] Scope.Many
+[       OK ] Scope.Many (5 ms)
+[----------] 2 tests from Scope (11 ms total)
+
+[----------] 2 tests from Instance
+[ RUN      ] Instance.One
+[       OK ] Instance.One (5 ms)
+[ RUN      ] Instance.Many
+[       OK ] Instance.Many (5 ms)
+[----------] 2 tests from Instance (11 ms total)
+
+[----------] 4 tests from Deps
+[ RUN      ] Deps.Empty
+[       OK ] Deps.Empty (5 ms)
+[ RUN      ] Deps.One
+[       OK ] Deps.One (5 ms)
+[ RUN      ] Deps.Many
+[       OK ] Deps.Many (5 ms)
+[ RUN      ] Deps.Seq
+[       OK ] Deps.Seq (6 ms)
+[----------] 4 tests from Deps (25 ms total)
+
+[----------] 3 tests from Keys
+[ RUN      ] Keys.Empty
+[       OK ] Keys.Empty (5 ms)
+[ RUN      ] Keys.HasExternalValue
+[       OK ] Keys.HasExternalValue (5 ms)
+[ RUN      ] Keys.Mix
+[       OK ] Keys.Mix (5 ms)
+[----------] 3 tests from Keys (17 ms total)
+
+[----------] 3 tests from QDeps
+[ RUN      ] QDeps.Module
+[       OK ] QDeps.Module (260 ms)
+[ RUN      ] QDeps.Modules
+[       OK ] QDeps.Modules (4 ms)
+[ RUN      ] QDeps.ModulesPolicies
+[       OK ] QDeps.ModulesPolicies (4 ms)
+[----------] 3 tests from QDeps (270 ms total)
+
+[----------] Global test environment tear-down
+[==========] 64 tests from 13 test cases ran. (3456 ms total)
+[  PASSED  ] 64 tests.
+==3318== 
+==3318== HEAP SUMMARY:
+==3318==     in use at exit: 0 bytes in 0 blocks
+==3318==   total heap usage: 3,755 allocs, 3,755 frees, 247,042 bytes allocated
+==3318== 
+==3318== All heap blocks were freed -- no leaks are possible
+==3318== 
+==3318== For counts of detected and suppressed errors, rerun with: -v
+==3318== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 4 from 4)
+make[1]: Leaving directory `/home/krzychoo/projects/QSrc/QDeps/Test'
+
+cppcheck: 
+make[1]: Entering directory `/home/krzychoo/projects/QSrc/QDeps/Test'
+cppcheck -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. --check-config .
+Checking MT/QDepsTest.cpp...
+[../Externals/boost/config/include/boost/config/suffix.hpp:564]: (information) Include file: "boost/type.hpp" not found.
+[../Externals/boost/config/include/boost/config/suffix.hpp:565]: (information) Include file: "boost/non_type.hpp" not found.
+1/16 files checked 6% done
+Checking UT/Back/BindingTest.cpp...
+2/16 files checked 32% done
+Checking UT/Back/FactoryTest.cpp...
+3/16 files checked 60% done
+Checking UT/Back/Scopes/PerRequestTest.cpp...
+4/16 files checked 62% done
+Checking UT/Back/Scopes/SingletonTest.cpp...
+5/16 files checked 65% done
+Checking UT/Front/CtorBracketTest.cpp...
+6/16 files checked 69% done
+Checking UT/Front/CtorVaArgsTest.cpp...
+7/16 files checked 72% done
+Checking UT/Front/Fusion/Aux/BindTest.cpp...
+8/16 files checked 72% done
+Checking UT/Front/Fusion/Aux/InstTest.cpp...
+9/16 files checked 72% done
+Checking UT/Front/Generic/Aux/ImplementationTest.cpp...
+10/16 files checked 76% done
+Checking UT/Front/Generic/Aux/InstanceTest.cpp...
+11/16 files checked 80% done
+Checking UT/Front/Generic/Aux/ScopeTest.cpp...
+12/16 files checked 84% done
+Checking UT/Front/Generic/Detail/DepsTest.cpp...
+13/16 files checked 90% done
+Checking UT/Front/Generic/Detail/KeysTest.cpp...
+14/16 files checked 94% done
+Checking UT/Utility/InjectorTest.cpp...
+15/16 files checked 98% done
+Checking main.cpp...
+16/16 files checked 100% done
+make[1]: Leaving directory `/home/krzychoo/projects/QSrc/QDeps/Test'
+
+cov: 
+make[1]: Entering directory `/home/krzychoo/projects/QSrc/QDeps/Test'
+make[2]: Entering directory `/home/krzychoo/projects/QSrc/QDeps/Test'
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Back/BindingTest.o UT/Back/BindingTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Back/Scopes/PerRequestTest.o UT/Back/Scopes/PerRequestTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Back/Scopes/SingletonTest.o UT/Back/Scopes/SingletonTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Back/FactoryTest.o UT/Back/FactoryTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Utility/InjectorTest.o UT/Utility/InjectorTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/CtorBracketTest.o UT/Front/CtorBracketTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Fusion/Aux/BindTest.o UT/Front/Fusion/Aux/BindTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Fusion/Aux/InstTest.o UT/Front/Fusion/Aux/InstTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/CtorVaArgsTest.o UT/Front/CtorVaArgsTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Generic/Aux/ImplementationTest.o UT/Front/Generic/Aux/ImplementationTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Generic/Aux/ScopeTest.o UT/Front/Generic/Aux/ScopeTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Generic/Aux/InstanceTest.o UT/Front/Generic/Aux/InstanceTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Generic/Detail/DepsTest.o UT/Front/Generic/Detail/DepsTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Generic/Detail/KeysTest.o UT/Front/Generic/Detail/KeysTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o MT/QDepsTest.o MT/QDepsTest.cpp
+g++ -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o main.o main.cpp
+[==========] Running 64 tests from 13 test cases.
+[----------] Global test environment set-up.
+[----------] 17 tests from Binding
+[ RUN      ] Binding.Empty
+[       OK ] Binding.Empty (0 ms)
+[ RUN      ] Binding.One
+[       OK ] Binding.One (0 ms)
+[ RUN      ] Binding.Found
+[       OK ] Binding.Found (0 ms)
+[ RUN      ] Binding.FoundMany
+[       OK ] Binding.FoundMany (0 ms)
+[ RUN      ] Binding.NotFound
+[       OK ] Binding.NotFound (0 ms)
+[ RUN      ] Binding.Context
+[       OK ] Binding.Context (0 ms)
+[ RUN      ] Binding.ContextMany
+[       OK ] Binding.ContextMany (0 ms)
+[ RUN      ] Binding.ContextManyEnd
+[       OK ] Binding.ContextManyEnd (0 ms)
+[ RUN      ] Binding.ContextNotFound
+[       OK ] Binding.ContextNotFound (0 ms)
+[ RUN      ] Binding.ContextOtherTypes
+[       OK ] Binding.ContextOtherTypes (0 ms)
+[ RUN      ] Binding.ContextLongWithOrder
+[       OK ] Binding.ContextLongWithOrder (0 ms)
+[ RUN      ] Binding.ContextLongWithOrderEmptyCallStack
+[       OK ] Binding.ContextLongWithOrderEmptyCallStack (0 ms)
+[ RUN      ] Binding.ContextLongWithOrderDiffCallStack
+[       OK ] Binding.ContextLongWithOrderDiffCallStack (0 ms)
+[ RUN      ] Binding.ContextLongWithOrderShortCallStack
+[       OK ] Binding.ContextLongWithOrderShortCallStack (0 ms)
+[ RUN      ] Binding.ContextLongWithOrderToLongCallStack
+[       OK ] Binding.ContextLongWithOrderToLongCallStack (0 ms)
+[ RUN      ] Binding.BaseOfFail
+[       OK ] Binding.BaseOfFail (0 ms)
+[ RUN      ] Binding.BaseOfSuccessful
+[       OK ] Binding.BaseOfSuccessful (0 ms)
+[----------] 17 tests from Binding (1 ms total)
+
+[----------] 2 tests from PerRequest
+[ RUN      ] PerRequest.Create
+[       OK ] PerRequest.Create (0 ms)
+[ RUN      ] PerRequest.CreateArgs
+[       OK ] PerRequest.CreateArgs (0 ms)
+[----------] 2 tests from PerRequest (0 ms total)
+
+[----------] 2 tests from Singleton
+[ RUN      ] Singleton.Create
+[       OK ] Singleton.Create (0 ms)
+[ RUN      ] Singleton.CreateArgs
+[       OK ] Singleton.CreateArgs (0 ms)
+[----------] 2 tests from Singleton (0 ms total)
+
+[----------] 17 tests from Factory
+[ RUN      ] Factory.CreateUsingCopy
+[       OK ] Factory.CreateUsingCopy (0 ms)
+[ RUN      ] Factory.CreateUsingRef
+[       OK ] Factory.CreateUsingRef (0 ms)
+[ RUN      ] Factory.CreateUsingConstRef
+[       OK ] Factory.CreateUsingConstRef (0 ms)
+[ RUN      ] Factory.CreateUsingPtr
+[       OK ] Factory.CreateUsingPtr (0 ms)
+[ RUN      ] Factory.CreateUsingConstPtr
+[       OK ] Factory.CreateUsingConstPtr (0 ms)
+[ RUN      ] Factory.CreateUsingSharedPtr
+[       OK ] Factory.CreateUsingSharedPtr (0 ms)
+[ RUN      ] Factory.CreateDefaultCtor
+[       OK ] Factory.CreateDefaultCtor (0 ms)
+[ RUN      ] Factory.CreateWithValues
+[       OK ] Factory.CreateWithValues (0 ms)
+[ RUN      ] Factory.CreateWithAttributes
+[       OK ] Factory.CreateWithAttributes (0 ms)
+[ RUN      ] Factory.CreatePerRequest
+[       OK ] Factory.CreatePerRequest (0 ms)
+[ RUN      ] Factory.CreatePerRequestSingleton
+[       OK ] Factory.CreatePerRequestSingleton (1 ms)
+[ RUN      ] Factory.CreatePerRequestSingletonPath
+[       OK ] Factory.CreatePerRequestSingletonPath (0 ms)
+[ RUN      ] Factory.CreatePerRequestSingletonPathOrder
+[       OK ] Factory.CreatePerRequestSingletonPathOrder (0 ms)
+[ RUN      ] Factory.CreatePerRequestSingletonPathMix
+[       OK ] Factory.CreatePerRequestSingletonPathMix (0 ms)
+[ RUN      ] Factory.CreateSingletonImpl
+[       OK ] Factory.CreateSingletonImpl (0 ms)
+[ RUN      ] Factory.CreateSingletonMany
+[       OK ] Factory.CreateSingletonMany (0 ms)
+[ RUN      ] Factory.BaseOf
+[       OK ] Factory.BaseOf (0 ms)
+[----------] 17 tests from Factory (1 ms total)
+
+[----------] 2 tests from Injector
+[ RUN      ] Injector.CtorEmpty
+[       OK ] Injector.CtorEmpty (0 ms)
+[ RUN      ] Injector.Module
+[       OK ] Injector.Module (0 ms)
+[----------] 2 tests from Injector (0 ms total)
+
+[----------] 4 tests from CtorBracket
+[ RUN      ] CtorBracket.Empty
+[       OK ] CtorBracket.Empty (0 ms)
+[ RUN      ] CtorBracket.ExplicitWithDefault
+[       OK ] CtorBracket.ExplicitWithDefault (0 ms)
+[ RUN      ] CtorBracket.Params
+[       OK ] CtorBracket.Params (0 ms)
+[ RUN      ] CtorBracket.Traits
+[       OK ] CtorBracket.Traits (0 ms)
+[----------] 4 tests from CtorBracket (0 ms total)
+
+[----------] 4 tests from CtorVaArgs
+[ RUN      ] CtorVaArgs.Empty
+[       OK ] CtorVaArgs.Empty (0 ms)
+[ RUN      ] CtorVaArgs.ExplicitWithDefault
+[       OK ] CtorVaArgs.ExplicitWithDefault (0 ms)
+[ RUN      ] CtorVaArgs.Params
+[       OK ] CtorVaArgs.Params (0 ms)
+[ RUN      ] CtorVaArgs.Traits
+[       OK ] CtorVaArgs.Traits (0 ms)
+[----------] 4 tests from CtorVaArgs (0 ms total)
+
+[----------] 2 tests from Implementation
+[ RUN      ] Implementation.One
+[       OK ] Implementation.One (0 ms)
+[ RUN      ] Implementation.Many
+[       OK ] Implementation.Many (0 ms)
+[----------] 2 tests from Implementation (0 ms total)
+
+[----------] 2 tests from Scope
+[ RUN      ] Scope.One
+[       OK ] Scope.One (0 ms)
+[ RUN      ] Scope.Many
+[       OK ] Scope.Many (0 ms)
+[----------] 2 tests from Scope (0 ms total)
+
+[----------] 2 tests from Instance
+[ RUN      ] Instance.One
+[       OK ] Instance.One (0 ms)
+[ RUN      ] Instance.Many
+[       OK ] Instance.Many (0 ms)
+[----------] 2 tests from Instance (0 ms total)
+
+[----------] 4 tests from Deps
+[ RUN      ] Deps.Empty
+[       OK ] Deps.Empty (0 ms)
+[ RUN      ] Deps.One
+[       OK ] Deps.One (0 ms)
+[ RUN      ] Deps.Many
+[       OK ] Deps.Many (0 ms)
+[ RUN      ] Deps.Seq
+[       OK ] Deps.Seq (0 ms)
+[----------] 4 tests from Deps (1 ms total)
+
+[----------] 3 tests from Keys
+[ RUN      ] Keys.Empty
+[       OK ] Keys.Empty (0 ms)
+[ RUN      ] Keys.HasExternalValue
+[       OK ] Keys.HasExternalValue (0 ms)
+[ RUN      ] Keys.Mix
+[       OK ] Keys.Mix (0 ms)
+[----------] 3 tests from Keys (0 ms total)
+
+[----------] 3 tests from QDeps
+[ RUN      ] QDeps.Module
+[       OK ] QDeps.Module (0 ms)
+[ RUN      ] QDeps.Modules
+[       OK ] QDeps.Modules (0 ms)
+[ RUN      ] QDeps.ModulesPolicies
+[       OK ] QDeps.ModulesPolicies (0 ms)
+[----------] 3 tests from QDeps (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 64 tests from 13 test cases ran. (3 ms total)
+[  PASSED  ] 64 tests.
+make[2]: Leaving directory `/home/krzychoo/projects/QSrc/QDeps/Test'
+Capturing coverage data from .
+Found gcov version: 4.6.2
+Scanning . for .gcda files ...
+Found 14 data files in .
+Processing UT/Back/FactoryTest.gcda
+Processing UT/Back/Scopes/SingletonTest.gcda
+Processing UT/Back/Scopes/PerRequestTest.gcda
+Processing UT/Back/BindingTest.gcda
+Processing UT/Utility/InjectorTest.gcda
+Processing UT/Front/CtorBracketTest.gcda
+Processing UT/Front/CtorVaArgsTest.gcda
+Processing UT/Front/Generic/Aux/ImplementationTest.gcda
+Processing UT/Front/Generic/Aux/InstanceTest.gcda
+Processing UT/Front/Generic/Aux/ScopeTest.gcda
+Processing UT/Front/Generic/Detail/KeysTest.gcda
+Processing UT/Front/Generic/Detail/DepsTest.gcda
+Processing MT/QDepsTest.gcda
+Processing main.gcda
+Finished .info-file creation
+Reading tracefile test.info
+Removing /usr/include/boost/exception/exception.hpp
+Removing /usr/include/boost/non_type.hpp
+Removing /usr/lib/gcc/x86_64-pc-linux-gnu/4.6.2/include/g++-v4/bits/allocator.h
+Removing /usr/lib/gcc/x86_64-pc-linux-gnu/4.6.2/include/g++-v4/bits/basic_ios.h
+Removing /usr/lib/gcc/x86_64-pc-linux-gnu/4.6.2/include/g++-v4/bits/basic_string.h
+Removing /usr/lib/gcc/x86_64-pc-linux-gnu/4.6.2/include/g++-v4/bits/basic_string.tcc
+Removing /usr/lib/gcc/x86_64-pc-linux-gnu/4.6.2/include/g++-v4/bits/char_traits.h
+Removing /usr/lib/gcc/x86_64-pc-linux-gnu/4.6.2/include/g++-v4/bits/ios_base.h
+Removing /usr/lib/gcc/x86_64-pc-linux-gnu/4.6.2/include/g++-v4/bits/locale_facets.h
+Removing /usr/lib/gcc/x86_64-pc-linux-gnu/4.6.2/include/g++-v4/bits/move.h
+Removing /usr/lib/gcc/x86_64-pc-linux-gnu/4.6.2/include/g++-v4/bits/stl_bvector.h
+Removing /usr/lib/gcc/x86_64-pc-linux-gnu/4.6.2/include/g++-v4/bits/stl_iterator_base_funcs.h
+Removing /usr/lib/gcc/x86_64-pc-linux-gnu/4.6.2/include/g++-v4/bits/stl_iterator_base_types.h
+Removing /usr/lib/gcc/x86_64-pc-linux-gnu/4.6.2/include/g++-v4/exception
+Removing /usr/lib/gcc/x86_64-pc-linux-gnu/4.6.2/include/g++-v4/ext/atomicity.h
+Removing /usr/lib/gcc/x86_64-pc-linux-gnu/4.6.2/include/g++-v4/ext/new_allocator.h
+Removing /usr/lib/gcc/x86_64-pc-linux-gnu/4.6.2/include/g++-v4/ext/type_traits.h
+Removing /usr/lib/gcc/x86_64-pc-linux-gnu/4.6.2/include/g++-v4/iomanip
+Removing /usr/lib/gcc/x86_64-pc-linux-gnu/4.6.2/include/g++-v4/iostream
+Removing /usr/lib/gcc/x86_64-pc-linux-gnu/4.6.2/include/g++-v4/istream
+Removing /usr/lib/gcc/x86_64-pc-linux-gnu/4.6.2/include/g++-v4/new
+Removing /usr/lib/gcc/x86_64-pc-linux-gnu/4.6.2/include/g++-v4/ostream
+Removing /usr/lib/gcc/x86_64-pc-linux-gnu/4.6.2/include/g++-v4/sstream
+Removing /usr/lib/gcc/x86_64-pc-linux-gnu/4.6.2/include/g++-v4/streambuf
+Removing /usr/lib/gcc/x86_64-pc-linux-gnu/4.6.2/include/g++-v4/typeinfo
+Removing /usr/lib/gcc/x86_64-pc-linux-gnu/4.6.2/include/g++-v4/x86_64-pc-linux-gnu/bits/gthr-default.h
+Deleted 26 files
+Writing data to test.info
+Overall coverage rate:
+  lines......: 80.8% (718 of 889 lines)
+  functions..: 88.8% (2445 of 2754 functions)
+  branches...: 31.2% (2389 of 7650 branches)
+Reading tracefile test.info
+Removing /home/krzychoo/projects/QSrc/QDeps/Externals/QPool/QPool/Allocator/Heap.hpp
+Removing /home/krzychoo/projects/QSrc/QDeps/Externals/QPool/QPool/Pool.hpp
+Removing /home/krzychoo/projects/QSrc/QDeps/Externals/boost/mpl/include/boost/mpl/aux_/preprocessed/gcc/inherit.hpp
+Removing /home/krzychoo/projects/QSrc/QDeps/Externals/boost/smart_ptr/include/boost/smart_ptr/bad_weak_ptr.hpp
+Removing /home/krzychoo/projects/QSrc/QDeps/Externals/boost/smart_ptr/include/boost/smart_ptr/detail/operator_bool.hpp
+Removing /home/krzychoo/projects/QSrc/QDeps/Externals/boost/smart_ptr/include/boost/smart_ptr/detail/shared_count.hpp
+Removing /home/krzychoo/projects/QSrc/QDeps/Externals/boost/smart_ptr/include/boost/smart_ptr/detail/sp_counted_base_gcc_x86.hpp
+Removing /home/krzychoo/projects/QSrc/QDeps/Externals/boost/smart_ptr/include/boost/smart_ptr/detail/sp_counted_impl.hpp
+Removing /home/krzychoo/projects/QSrc/QDeps/Externals/boost/smart_ptr/include/boost/smart_ptr/make_shared.hpp
+Removing /home/krzychoo/projects/QSrc/QDeps/Externals/boost/smart_ptr/include/boost/smart_ptr/shared_ptr.hpp
+Removing /home/krzychoo/projects/QSrc/QDeps/Externals/boost/type_traits/include/boost/type_traits/is_same.hpp
+Removing /home/krzychoo/projects/QSrc/QDeps/Externals/boost/utility/include/boost/checked_delete.hpp
+Removing /home/krzychoo/projects/QSrc/QDeps/Externals/gtest/include/gtest/gtest-message.h
+Removing /home/krzychoo/projects/QSrc/QDeps/Externals/gtest/include/gtest/gtest-printers.h
+Removing /home/krzychoo/projects/QSrc/QDeps/Externals/gtest/include/gtest/gtest-test-part.h
+Removing /home/krzychoo/projects/QSrc/QDeps/Externals/gtest/include/gtest/gtest.h
+Removing /home/krzychoo/projects/QSrc/QDeps/Externals/gtest/include/gtest/internal/gtest-death-test-internal.h
+Removing /home/krzychoo/projects/QSrc/QDeps/Externals/gtest/include/gtest/internal/gtest-internal.h
+Removing /home/krzychoo/projects/QSrc/QDeps/Externals/gtest/include/gtest/internal/gtest-param-util.h
+Removing /home/krzychoo/projects/QSrc/QDeps/Externals/gtest/include/gtest/internal/gtest-port.h
+Removing /home/krzychoo/projects/QSrc/QDeps/Externals/gtest/include/gtest/internal/gtest-string.h
+Deleted 21 files
+Writing data to test.info
+Overall coverage rate:
+  lines......: 93.1% (499 of 536 lines)
+  functions..: 99.5% (827 of 831 functions)
+  branches...: 27.5% (1248 of 4533 branches)
+Reading data file test.info
+Found 24 entries.
+Found common filename prefix "/home/krzychoo/projects/QSrc/QDeps"
+Writing .css and .png files.
+Generating output.
+Processing file QDeps/Config.hpp
+Processing file QDeps/Back/Factory.hpp
+Processing file QDeps/Back/Convert.hpp
+Processing file QDeps/Back/Aux/Impl.hpp
+Processing file QDeps/Back/Aux/Inst.hpp
+Processing file QDeps/Back/Scopes/PerRequest.hpp
+Processing file QDeps/Back/Scopes/Singleton.hpp
+Processing file QDeps/Utility/Named.hpp
+Processing file QDeps/Utility/Injector.hpp
+Processing file Test/main.cpp
+Processing file Test/Common/Ctors.hpp
+Processing file Test/MT/QDepsTest.cpp
+Processing file Test/UT/Back/BindingTest.cpp
+Processing file Test/UT/Back/FactoryTest.cpp
+Processing file Test/UT/Back/Scopes/SingletonTest.cpp
+Processing file Test/UT/Back/Scopes/PerRequestTest.cpp
+Processing file Test/UT/Front/CtorBracketTest.cpp
+Processing file Test/UT/Front/CtorVaArgsTest.cpp
+Processing file Test/UT/Front/Generic/Aux/InstanceTest.cpp
+Processing file Test/UT/Front/Generic/Aux/ImplementationTest.cpp
+Processing file Test/UT/Front/Generic/Aux/ScopeTest.cpp
+Processing file Test/UT/Front/Generic/Detail/DepsTest.cpp
+Processing file Test/UT/Front/Generic/Detail/KeysTest.cpp
+Processing file Test/UT/Utility/InjectorTest.cpp
+Writing directory view page.
+Overall coverage rate:
+  lines......: 93.1% (499 of 536 lines)
+  functions..: 99.5% (827 of 831 functions)
+  branches...: 27.5% (1248 of 4533 branches)
+Reading data file test.info
+Found 24 entries.
+Found common filename prefix "/home/krzychoo/projects/QSrc/QDeps"
+Writing .css and .png files.
+Generating output.
+Processing file QDeps/Config.hpp
+Processing file QDeps/Back/Factory.hpp
+Processing file QDeps/Back/Convert.hpp
+Processing file QDeps/Back/Aux/Impl.hpp
+Processing file QDeps/Back/Aux/Inst.hpp
+Processing file QDeps/Back/Scopes/PerRequest.hpp
+Processing file QDeps/Back/Scopes/Singleton.hpp
+Processing file QDeps/Utility/Named.hpp
+Processing file QDeps/Utility/Injector.hpp
+Processing file Test/main.cpp
+Processing file Test/Common/Ctors.hpp
+Processing file Test/MT/QDepsTest.cpp
+Processing file Test/UT/Back/BindingTest.cpp
+Processing file Test/UT/Back/FactoryTest.cpp
+Processing file Test/UT/Back/Scopes/SingletonTest.cpp
+Processing file Test/UT/Back/Scopes/PerRequestTest.cpp
+Processing file Test/UT/Front/CtorBracketTest.cpp
+Processing file Test/UT/Front/CtorVaArgsTest.cpp
+Processing file Test/UT/Front/Generic/Aux/InstanceTest.cpp
+Processing file Test/UT/Front/Generic/Aux/ImplementationTest.cpp
+Processing file Test/UT/Front/Generic/Aux/ScopeTest.cpp
+Processing file Test/UT/Front/Generic/Detail/DepsTest.cpp
+Processing file Test/UT/Front/Generic/Detail/KeysTest.cpp
+Processing file Test/UT/Utility/InjectorTest.cpp
+Writing directory view page.
+Overall coverage rate:
+  lines......: 93.1% (499 of 536 lines)
+  functions..: 99.5% (827 of 831 functions)
+  branches...: 27.5% (1248 of 4533 branches)
+make[1]: Leaving directory `/home/krzychoo/projects/QSrc/QDeps/Test'
+
+scan-build: 
+make[1]: Entering directory `/home/krzychoo/projects/QSrc/QDeps/Test'
+scan-build make test
+scan-build: 'clang' executable not found in '/usr/bin/bin'.
+scan-build: Using 'clang' from path: /bin/clang
+make[2]: Entering directory `/home/krzychoo/projects/QSrc/QDeps/Test'
+/usr/bin/c++-analyzer -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Back/BindingTest.o UT/Back/BindingTest.cpp
+/usr/bin/c++-analyzer -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Back/Scopes/PerRequestTest.o UT/Back/Scopes/PerRequestTest.cpp
+/usr/bin/c++-analyzer -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Back/Scopes/SingletonTest.o UT/Back/Scopes/SingletonTest.cpp
+/usr/bin/c++-analyzer -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Back/FactoryTest.o UT/Back/FactoryTest.cpp
+/usr/bin/c++-analyzer -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Utility/InjectorTest.o UT/Utility/InjectorTest.cpp
+/usr/bin/c++-analyzer -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/CtorBracketTest.o UT/Front/CtorBracketTest.cpp
+/usr/bin/c++-analyzer -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Fusion/Aux/BindTest.o UT/Front/Fusion/Aux/BindTest.cpp
+/usr/bin/c++-analyzer -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Fusion/Aux/InstTest.o UT/Front/Fusion/Aux/InstTest.cpp
+/usr/bin/c++-analyzer -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/CtorVaArgsTest.o UT/Front/CtorVaArgsTest.cpp
+/usr/bin/c++-analyzer -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Generic/Aux/ImplementationTest.o UT/Front/Generic/Aux/ImplementationTest.cpp
+/usr/bin/c++-analyzer -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Generic/Aux/ScopeTest.o UT/Front/Generic/Aux/ScopeTest.cpp
+/usr/bin/c++-analyzer -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Generic/Aux/InstanceTest.o UT/Front/Generic/Aux/InstanceTest.cpp
+/usr/bin/c++-analyzer -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Generic/Detail/DepsTest.o UT/Front/Generic/Detail/DepsTest.cpp
+/usr/bin/c++-analyzer -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o UT/Front/Generic/Detail/KeysTest.o UT/Front/Generic/Detail/KeysTest.cpp
+/usr/bin/c++-analyzer -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o MT/QDepsTest.o MT/QDepsTest.cpp
+/usr/bin/c++-analyzer -I../Externals/boost/config/include -I../Externals/boost/function_types/include -I../Externals/boost/mpl/include -I../Externals/boost/preprocessor/include -I../Externals/boost/smart_ptr/include -I../Externals/boost/typeof/include -I../Externals/boost/type_traits/include -I../Externals/boost/utility/include -I../Externals/QPool -I../Externals/gtest/include -I.. -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants   -c -o main.o main.cpp
+[==========] Running 64 tests from 13 test cases.
+[----------] Global test environment set-up.
+[----------] 17 tests from Binding
+[ RUN      ] Binding.Empty
+[       OK ] Binding.Empty (0 ms)
+[ RUN      ] Binding.One
+[       OK ] Binding.One (0 ms)
+[ RUN      ] Binding.Found
+[       OK ] Binding.Found (0 ms)
+[ RUN      ] Binding.FoundMany
+[       OK ] Binding.FoundMany (0 ms)
+[ RUN      ] Binding.NotFound
+[       OK ] Binding.NotFound (0 ms)
+[ RUN      ] Binding.Context
+[       OK ] Binding.Context (0 ms)
+[ RUN      ] Binding.ContextMany
+[       OK ] Binding.ContextMany (0 ms)
+[ RUN      ] Binding.ContextManyEnd
+[       OK ] Binding.ContextManyEnd (0 ms)
+[ RUN      ] Binding.ContextNotFound
+[       OK ] Binding.ContextNotFound (0 ms)
+[ RUN      ] Binding.ContextOtherTypes
+[       OK ] Binding.ContextOtherTypes (0 ms)
+[ RUN      ] Binding.ContextLongWithOrder
+[       OK ] Binding.ContextLongWithOrder (0 ms)
+[ RUN      ] Binding.ContextLongWithOrderEmptyCallStack
+[       OK ] Binding.ContextLongWithOrderEmptyCallStack (0 ms)
+[ RUN      ] Binding.ContextLongWithOrderDiffCallStack
+[       OK ] Binding.ContextLongWithOrderDiffCallStack (0 ms)
+[ RUN      ] Binding.ContextLongWithOrderShortCallStack
+[       OK ] Binding.ContextLongWithOrderShortCallStack (0 ms)
+[ RUN      ] Binding.ContextLongWithOrderToLongCallStack
+[       OK ] Binding.ContextLongWithOrderToLongCallStack (0 ms)
+[ RUN      ] Binding.BaseOfFail
+[       OK ] Binding.BaseOfFail (0 ms)
+[ RUN      ] Binding.BaseOfSuccessful
+[       OK ] Binding.BaseOfSuccessful (0 ms)
+[----------] 17 tests from Binding (0 ms total)
+
+[----------] 2 tests from PerRequest
+[ RUN      ] PerRequest.Create
+[       OK ] PerRequest.Create (0 ms)
+[ RUN      ] PerRequest.CreateArgs
+[       OK ] PerRequest.CreateArgs (0 ms)
+[----------] 2 tests from PerRequest (0 ms total)
+
+[----------] 2 tests from Singleton
+[ RUN      ] Singleton.Create
+[       OK ] Singleton.Create (0 ms)
+[ RUN      ] Singleton.CreateArgs
+[       OK ] Singleton.CreateArgs (0 ms)
+[----------] 2 tests from Singleton (0 ms total)
+
+[----------] 17 tests from Factory
+[ RUN      ] Factory.CreateUsingCopy
+[       OK ] Factory.CreateUsingCopy (1 ms)
+[ RUN      ] Factory.CreateUsingRef
+[       OK ] Factory.CreateUsingRef (0 ms)
+[ RUN      ] Factory.CreateUsingConstRef
+[       OK ] Factory.CreateUsingConstRef (0 ms)
+[ RUN      ] Factory.CreateUsingPtr
+[       OK ] Factory.CreateUsingPtr (0 ms)
+[ RUN      ] Factory.CreateUsingConstPtr
+[       OK ] Factory.CreateUsingConstPtr (0 ms)
+[ RUN      ] Factory.CreateUsingSharedPtr
+[       OK ] Factory.CreateUsingSharedPtr (0 ms)
+[ RUN      ] Factory.CreateDefaultCtor
+[       OK ] Factory.CreateDefaultCtor (0 ms)
+[ RUN      ] Factory.CreateWithValues
+[       OK ] Factory.CreateWithValues (0 ms)
+[ RUN      ] Factory.CreateWithAttributes
+[       OK ] Factory.CreateWithAttributes (0 ms)
+[ RUN      ] Factory.CreatePerRequest
+[       OK ] Factory.CreatePerRequest (0 ms)
+[ RUN      ] Factory.CreatePerRequestSingleton
+[       OK ] Factory.CreatePerRequestSingleton (0 ms)
+[ RUN      ] Factory.CreatePerRequestSingletonPath
+[       OK ] Factory.CreatePerRequestSingletonPath (0 ms)
+[ RUN      ] Factory.CreatePerRequestSingletonPathOrder
+[       OK ] Factory.CreatePerRequestSingletonPathOrder (0 ms)
+[ RUN      ] Factory.CreatePerRequestSingletonPathMix
+[       OK ] Factory.CreatePerRequestSingletonPathMix (0 ms)
+[ RUN      ] Factory.CreateSingletonImpl
+[       OK ] Factory.CreateSingletonImpl (1 ms)
+[ RUN      ] Factory.CreateSingletonMany
+[       OK ] Factory.CreateSingletonMany (0 ms)
+[ RUN      ] Factory.BaseOf
+[       OK ] Factory.BaseOf (0 ms)
+[----------] 17 tests from Factory (2 ms total)
+
+[----------] 2 tests from Injector
+[ RUN      ] Injector.CtorEmpty
+[       OK ] Injector.CtorEmpty (0 ms)
+[ RUN      ] Injector.Module
+[       OK ] Injector.Module (0 ms)
+[----------] 2 tests from Injector (0 ms total)
+
+[----------] 4 tests from CtorBracket
+[ RUN      ] CtorBracket.Empty
+[       OK ] CtorBracket.Empty (0 ms)
+[ RUN      ] CtorBracket.ExplicitWithDefault
+[       OK ] CtorBracket.ExplicitWithDefault (0 ms)
+[ RUN      ] CtorBracket.Params
+[       OK ] CtorBracket.Params (0 ms)
+[ RUN      ] CtorBracket.Traits
+[       OK ] CtorBracket.Traits (0 ms)
+[----------] 4 tests from CtorBracket (0 ms total)
+
+[----------] 4 tests from CtorVaArgs
+[ RUN      ] CtorVaArgs.Empty
+[       OK ] CtorVaArgs.Empty (0 ms)
+[ RUN      ] CtorVaArgs.ExplicitWithDefault
+[       OK ] CtorVaArgs.ExplicitWithDefault (0 ms)
+[ RUN      ] CtorVaArgs.Params
+[       OK ] CtorVaArgs.Params (0 ms)
+[ RUN      ] CtorVaArgs.Traits
+[       OK ] CtorVaArgs.Traits (0 ms)
+[----------] 4 tests from CtorVaArgs (0 ms total)
+
+[----------] 2 tests from Implementation
+[ RUN      ] Implementation.One
+[       OK ] Implementation.One (0 ms)
+[ RUN      ] Implementation.Many
+[       OK ] Implementation.Many (0 ms)
+[----------] 2 tests from Implementation (0 ms total)
+
+[----------] 2 tests from Scope
+[ RUN      ] Scope.One
+[       OK ] Scope.One (0 ms)
+[ RUN      ] Scope.Many
+[       OK ] Scope.Many (0 ms)
+[----------] 2 tests from Scope (0 ms total)
+
+[----------] 2 tests from Instance
+[ RUN      ] Instance.One
+[       OK ] Instance.One (0 ms)
+[ RUN      ] Instance.Many
+[       OK ] Instance.Many (0 ms)
+[----------] 2 tests from Instance (0 ms total)
+
+[----------] 4 tests from Deps
+[ RUN      ] Deps.Empty
+[       OK ] Deps.Empty (0 ms)
+[ RUN      ] Deps.One
+[       OK ] Deps.One (0 ms)
+[ RUN      ] Deps.Many
+[       OK ] Deps.Many (0 ms)
+[ RUN      ] Deps.Seq
+[       OK ] Deps.Seq (0 ms)
+[----------] 4 tests from Deps (0 ms total)
+
+[----------] 3 tests from Keys
+[ RUN      ] Keys.Empty
+[       OK ] Keys.Empty (0 ms)
+[ RUN      ] Keys.HasExternalValue
+[       OK ] Keys.HasExternalValue (0 ms)
+[ RUN      ] Keys.Mix
+[       OK ] Keys.Mix (0 ms)
+[----------] 3 tests from Keys (0 ms total)
+
+[----------] 3 tests from QDeps
+[ RUN      ] QDeps.Module
+[       OK ] QDeps.Module (0 ms)
+[ RUN      ] QDeps.Modules
+[       OK ] QDeps.Modules (0 ms)
+[ RUN      ] QDeps.ModulesPolicies
+[       OK ] QDeps.ModulesPolicies (0 ms)
+[----------] 3 tests from QDeps (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 64 tests from 13 test cases ran. (2 ms total)
+[  PASSED  ] 64 tests.
+make[2]: Leaving directory `/home/krzychoo/projects/QSrc/QDeps/Test'
+scan-build: Removing directory '/tmp/scan-build-2012-03-11-1' because it contains no reports.
+make[1]: Leaving directory `/home/krzychoo/projects/QSrc/QDeps/Test'
+</pre>

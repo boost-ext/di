@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <title>LCOV - QDeps - QDeps/Back/Scopes/PerRequest.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">QDeps/Back/Scopes</a> - PerRequest.hpp<span style="font-size: 80%;"> (source / <a href="PerRequest.hpp.func.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">QDeps</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2012-03-11</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">12</td>
+            <td class="headerCovTableEntry">12</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntry">39</td>
+            <td class="headerCovTableEntry">124</td>
+            <td class="headerCovTableEntryLo">31.5 %</td>
+          </tr>
+          <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">           Branch data     Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>                :            : #if !BOOST_PP_IS_ITERATING</a>
+<span class="lineNum">       2 </span>                :            : 
+<span class="lineNum">       3 </span>                :            :     #ifndef QDEPS_BACK_SCOPES_PERREQUEST_HPP
+<span class="lineNum">       4 </span>                :            :     #define QDEPS_BACK_SCOPES_PERREQUEST_HPP
+<span class="lineNum">       5 </span>                :            : 
+<span class="lineNum">       6 </span>                :            :     #include &lt;boost/shared_ptr.hpp&gt;
+<span class="lineNum">       7 </span>                :            :     #include &lt;boost/make_shared.hpp&gt;
+<span class="lineNum">       8 </span>                :            :     #include &lt;boost/preprocessor/iteration/iterate.hpp&gt;
+<span class="lineNum">       9 </span>                :            :     #include &lt;boost/preprocessor/repetition/enum_params.hpp&gt;
+<span class="lineNum">      10 </span>                :            :     #include &lt;boost/preprocessor/repetition/enum_binary_params.hpp&gt;
+<span class="lineNum">      11 </span>                :            :     #include &lt;boost/preprocessor/punctuation/comma_if.hpp&gt;
+<span class="lineNum">      12 </span>                :            :     #include &quot;QDeps/Config.hpp&quot;
+<span class="lineNum">      13 </span>                :            : 
+<span class="lineNum">      14 </span>                :            :     #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, QDEPS_FUNC_ARITY, &quot;QDeps/Back/Scopes/PerRequest.hpp&quot;))
+<span class="lineNum">      15 </span>                :            : 
+<span class="lineNum">      16 </span>                :            :     namespace QDeps
+<span class="lineNum">      17 </span>                :            :     {
+<span class="lineNum">      18 </span>                :            :     namespace Back
+<span class="lineNum">      19 </span>                :            :     {
+<span class="lineNum">      20 </span>                :            :     namespace Scopes
+<span class="lineNum">      21 </span>                :            :     {
+<span class="lineNum">      22 </span>                :            : 
+<span class="lineNum">      23 </span>                :            :     class PerRequest
+<span class="lineNum">      24 </span>                :            :     {
+<span class="lineNum">      25 </span>                :            :     public:
+<span class="lineNum">      26 </span>                :            :         #include BOOST_PP_ITERATE()
+<span class="lineNum">      27 </span>                :            :     };
+<span class="lineNum">      28 </span>                :            : 
+<span class="lineNum">      29 </span>                :            :     } // namespace Scopes
+<span class="lineNum">      30 </span>                :            :     } // namespace Back
+<span class="lineNum">      31 </span>                :            :     } // namespace QDeps
+<span class="lineNum">      32 </span>                :            : 
+<span class="lineNum">      33 </span>                :            :     #endif
+<span class="lineNum">      34 </span>                :            : 
+<span class="lineNum">      35 </span>                :            : #else
+<a name="36"><span class="lineNum">      36 </span>                :            : </a>
+<span class="lineNum">      37 </span>                :            :     template&lt;typename T BOOST_PP_COMMA_IF(BOOST_PP_ITERATION()) BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)&gt;
+<span class="lineNum">      38 </span>                :<span class="lineCov">         81 :     boost::shared_ptr&lt;T&gt; create(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &amp;p_arg))</span>
+<span class="lineNum">      39 </span>                :            :     {
+<span class="lineNum">      40 </span>[<span class="branchCov" title="Branch 2 was taken 15 times"> + </span><span class="branchNoCov" title="Branch 3 was not taken"> - </span>][<span class="branchNoCov" title="Branch 7 was not taken"> - </span><span class="branchNoExec" title="Branch 8 was not executed"> # </span>]:<span class="lineCov">         81 :         boost::shared_ptr&lt;T&gt; l_instance(new T(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg)));</span>
+<span class="lineNum">         </span>[<span class="branchCov" title="Branch 11 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 12 was not taken"> - </span>][<span class="branchCov" title="Branch 14 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 15 was not taken"> - </span>]
+<span class="lineNum">         </span>[<span class="branchCov" title="Branch 17 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 18 was not taken"> - </span>][<span class="branchCov" title="Branch 20 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 21 was not taken"> - </span>]
+<span class="lineNum">         </span>[<span class="branchCov" title="Branch 23 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 24 was not taken"> - </span>][<span class="branchCov" title="Branch 26 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 27 was not taken"> - </span>]
+<span class="lineNum">         </span>[<span class="branchCov" title="Branch 29 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 30 was not taken"> - </span>][<span class="branchCov" title="Branch 32 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 33 was not taken"> - </span>]
+<span class="lineNum">         </span>[<span class="branchCov" title="Branch 46 was taken 3 times"> + </span><span class="branchNoCov" title="Branch 47 was not taken"> - </span>][<span class="branchCov" title="Branch 50 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 51 was not taken"> - </span>]
+<span class="lineNum">         </span>[<span class="branchCov" title="Branch 53 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 54 was not taken"> - </span>][<span class="branchCov" title="Branch 56 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 57 was not taken"> - </span>]
+<span class="lineNum">         </span>[<span class="branchCov" title="Branch 59 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 60 was not taken"> - </span>][<span class="branchCov" title="Branch 62 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 63 was not taken"> - </span>]
+<span class="lineNum">         </span>[<span class="branchCov" title="Branch 65 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 66 was not taken"> - </span>][<span class="branchCov" title="Branch 77 was taken 7 times"> + </span><span class="branchNoCov" title="Branch 78 was not taken"> - </span>]
+<span class="lineNum">         </span>[<span class="branchCov" title="Branch 81 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 82 was not taken"> - </span>][<span class="branchCov" title="Branch 84 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 85 was not taken"> - </span>]
+<span class="lineNum">         </span>[<span class="branchCov" title="Branch 87 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 88 was not taken"> - </span>][<span class="branchCov" title="Branch 90 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 91 was not taken"> - </span>]
+<span class="lineNum">         </span>[<span class="branchCov" title="Branch 93 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 94 was not taken"> - </span>][<span class="branchCov" title="Branch 96 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 97 was not taken"> - </span>]
+<span class="lineNum">         </span>[<span class="branchCov" title="Branch 108 was taken 7 times"> + </span><span class="branchNoCov" title="Branch 109 was not taken"> - </span>][<span class="branchCov" title="Branch 112 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 113 was not taken"> - </span>]
+<span class="lineNum">         </span>[<span class="branchCov" title="Branch 115 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 116 was not taken"> - </span>][<span class="branchCov" title="Branch 118 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 119 was not taken"> - </span>]
+<span class="lineNum">         </span>[<span class="branchCov" title="Branch 121 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 122 was not taken"> - </span>][<span class="branchCov" title="Branch 124 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 125 was not taken"> - </span>]
+<span class="lineNum">         </span>[<span class="branchCov" title="Branch 127 was taken 9 times"> + </span><span class="branchNoCov" title="Branch 128 was not taken"> - </span>][<span class="branchCov" title="Branch 138 was taken 10 times"> + </span><span class="branchNoCov" title="Branch 139 was not taken"> - </span>]
+<span class="lineNum">         </span>[<span class="branchCov" title="Branch 141 was taken 10 times"> + </span><span class="branchNoCov" title="Branch 142 was not taken"> - </span>][<span class="branchCov" title="Branch 144 was taken 10 times"> + </span><span class="branchNoCov" title="Branch 145 was not taken"> - </span>]
+<span class="lineNum">         </span>[<span class="branchCov" title="Branch 147 was taken 10 times"> + </span><span class="branchNoCov" title="Branch 148 was not taken"> - </span>][<span class="branchCov" title="Branch 156 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 157 was not taken"> - </span>]
+<span class="lineNum">         </span>[<span class="branchCov" title="Branch 159 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 160 was not taken"> - </span>][<span class="branchCov" title="Branch 162 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 163 was not taken"> - </span>]
+<span class="lineNum">         </span>   [<span class="branchCov" title="Branch 165 was taken 1 time"> + </span><span class="branchNoCov" title="Branch 166 was not taken"> - </span>][<span class="branchCov" title="Branch 6 was taken 2 times"> + </span>]
+<span class="lineNum">         </span>   [<span class="branchNoExec" title="Branch 45 was not executed"> # </span>][<span class="branchNoExec" title="Branch 48 was not executed"> # </span><span class="branchNoExec" title="Branch 49 was not executed"> # </span>]
+<span class="lineNum">         </span>[<span class="branchNoExec" title="Branch 51 was not executed"> # </span><span class="branchNoExec" title="Branch 52 was not executed"> # </span>][<span class="branchNoExec" title="Branch 54 was not executed"> # </span><span class="branchNoExec" title="Branch 55 was not executed"> # </span>]
+<span class="lineNum">         </span>[<span class="branchNoExec" title="Branch 63 was not executed"> # </span><span class="branchNoExec" title="Branch 64 was not executed"> # </span>][<span class="branchNoExec" title="Branch 66 was not executed"> # </span><span class="branchNoExec" title="Branch 67 was not executed"> # </span>]
+<span class="lineNum">         </span>[<span class="branchNoExec" title="Branch 69 was not executed"> # </span><span class="branchNoExec" title="Branch 70 was not executed"> # </span>][<span class="branchNoExec" title="Branch 72 was not executed"> # </span><span class="branchNoExec" title="Branch 73 was not executed"> # </span>]
+<span class="lineNum">         </span>[<span class="branchNoExec" title="Branch 75 was not executed"> # </span><span class="branchNoExec" title="Branch 76 was not executed"> # </span>][<span class="branchNoExec" title="Branch 78 was not executed"> # </span><span class="branchNoExec" title="Branch 79 was not executed"> # </span>]
+<span class="lineNum">         </span>[<span class="branchNoExec" title="Branch 90 was not executed"> # </span><span class="branchNoExec" title="Branch 91 was not executed"> # </span>][<span class="branchNoExec" title="Branch 94 was not executed"> # </span><span class="branchNoExec" title="Branch 95 was not executed"> # </span>]
+<span class="lineNum">         </span>[<span class="branchNoExec" title="Branch 97 was not executed"> # </span><span class="branchNoExec" title="Branch 98 was not executed"> # </span>][<span class="branchNoExec" title="Branch 100 was not executed"> # </span><span class="branchNoExec" title="Branch 101 was not executed"> # </span>]
+<span class="lineNum">         </span>[<span class="branchNoExec" title="Branch 103 was not executed"> # </span><span class="branchNoExec" title="Branch 104 was not executed"> # </span>][<span class="branchNoExec" title="Branch 106 was not executed"> # </span><span class="branchNoExec" title="Branch 107 was not executed"> # </span>]
+<span class="lineNum">         </span>[<span class="branchNoExec" title="Branch 109 was not executed"> # </span><span class="branchNoExec" title="Branch 110 was not executed"> # </span>][<span class="branchNoExec" title="Branch 120 was not executed"> # </span><span class="branchNoExec" title="Branch 121 was not executed"> # </span>]
+<span class="lineNum">         </span>[<span class="branchNoExec" title="Branch 123 was not executed"> # </span><span class="branchNoExec" title="Branch 124 was not executed"> # </span>][<span class="branchNoExec" title="Branch 126 was not executed"> # </span><span class="branchNoExec" title="Branch 127 was not executed"> # </span>]
+<span class="lineNum">         </span>[<span class="branchNoExec" title="Branch 129 was not executed"> # </span><span class="branchNoExec" title="Branch 130 was not executed"> # </span>][<span class="branchNoExec" title="Branch 132 was not executed"> # </span><span class="branchNoExec" title="Branch 133 was not executed"> # </span>]
+<span class="lineNum">         </span>        [<span class="branchNoExec" title="Branch 135 was not executed"> # </span><span class="branchNoExec" title="Branch 136 was not executed"> # </span>]
+<span class="lineNum">      41 </span>                :<span class="lineCov">         81 :         return l_instance;</span>
+<span class="lineNum">      42 </span>                :            :     }
+<span class="lineNum">      43 </span>                :            : 
+<span class="lineNum">      44 </span>                :            : #endif
+<span class="lineNum">      45 </span>                :            : 
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.9</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>
