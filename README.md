@@ -28,7 +28,7 @@ Tests & Analysis
     cd Test && make         # test cov cppcheck scan-build valgrind
     cd Test && make test    # compile and run only UT/MT
 
-    see: http://qsrc.github.com/qdeps
+    see: http://qsrc.github.com/QDeps
 
 Usage
 -----
