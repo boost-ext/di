@@ -130,11 +130,10 @@ Usage
     // *** many modules *** --------------------------------------------------------------------
 
     Injector<BaseModule1, BaseModule2> injector;
-    C3 l_value = injector.create<C3>();
 
     // *** mix modules *** ---------------------------------------------------------------------
 
-    Injector<BaseModule, GenericModule, PathModule> injector;
+    Injector<BaseModule, FusionModule, GenericModule, PathModule> injector;
 
 ```
 
