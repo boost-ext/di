@@ -25,3 +25,6 @@
 [submodule "Externals/boost/function_types"]
 	path = Externals/boost/function_types
 	url = git://github.com/boost-lib/function_types.git
+[submodule "Externals/QPool"]
+	path = Externals/QPool
+	url = git://github.com/QSrc/QPool.git
