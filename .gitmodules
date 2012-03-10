@@ -1,6 +1,3 @@
-[submodule "Externals/boost"]
-	path = Externals/boost
-	url = git://github.com/ryppl/boost-svn.git
 [submodule "Externals/gtest"]
 	path = Externals/gtest
 	url = git://github.com/smarr/googletest.git
