@@ -63,7 +63,7 @@ struct C3 {
         <
             Externals::Bind         < Named<int, mpl::string<'port'> > >,
             Scope<Singleton >::Bind < Dumb >,
-            Scope<PerRequest>::Bind < int_<42>, Bind< InCall<C2, C1>, Dumber> >
+            Scope<PerRequest>::Bind < int_<42>, Bind<Dumber>::InCall<C2, C1> >
         >
     { };
 
