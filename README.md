@@ -16,12 +16,11 @@ Requirements
         * gtest >= 1.6.0 (UT, MT)
         * [optional] lcov, cppcheck, scan-build, valgrind
 
-Supported compilers (successfully tested)
-------------
-    * gcc   >= 3.4.6
-    * clang >= 3.0
-    * icc   >= 11.1
-    * msvc  ?
+    Supported compilers (successfully tested):
+        * gcc   >= 3.4.6
+        * clang >= 3.0
+        * icc   >= 11.1
+        * msvc  ?
 
 Tests & Analysis
 ------------
