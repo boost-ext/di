@@ -9,7 +9,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/mpl/string.hpp>
-#include "QDeps/Front/Ctor.hpp"
+#include "QDeps/Front/Inject.hpp"
 #include "QDeps/Utility/Named.hpp"
 
 namespace QDeps
@@ -52,7 +52,7 @@ struct C1
 
 struct C2
 {
-    QDEPS_CTOR(C2, int i, double d, char c)
+    QDEPS_INJECT(C2, int i, double d, char c)
         : i(i), d(d), c(c)
     { }
 
@@ -63,7 +63,7 @@ struct C2
 
 struct C3
 {
-    QDEPS_CTOR(explicit C3, int i = 0)
+    QDEPS_INJECT(explicit C3, int i = 0)
         : i(i)
     { }
 
@@ -72,7 +72,7 @@ struct C3
 
 struct C4
 {
-    QDEPS_CTOR(C4, boost::shared_ptr<C3> c3, Utility::Named<int, boost::mpl::string<'1'> > i1, Utility::Named<int, boost::mpl::string<'2'> > i2)
+    QDEPS_INJECT(C4, boost::shared_ptr<C3> c3, Utility::Named<int, boost::mpl::string<'1'> > i1, Utility::Named<int, boost::mpl::string<'2'> > i2)
         : c3(c3), i1(i1), i2(i2)
     { }
 
@@ -83,7 +83,7 @@ struct C4
 
 struct C5
 {
-    QDEPS_CTOR(C5, boost::shared_ptr<If0> if0, boost::shared_ptr<C2> c2, boost::shared_ptr<C1> c1)
+    QDEPS_INJECT(C5, boost::shared_ptr<If0> if0, boost::shared_ptr<C2> c2, boost::shared_ptr<C1> c1)
         : if0(if0), c2(c2), c1(c1)
     { }
 
@@ -94,7 +94,7 @@ struct C5
 
 struct C6
 {
-    QDEPS_CTOR(C6, boost::shared_ptr<C3> c3, const boost::shared_ptr<C4>& c4, C5 c5)
+    QDEPS_INJECT(C6, boost::shared_ptr<C3> c3, const boost::shared_ptr<C4>& c4, C5 c5)
         : c3(c3), c4(c4), c5(c5)
     { }
 
@@ -105,7 +105,7 @@ struct C6
 
 struct C7
 {
-    QDEPS_CTOR(C7, boost::shared_ptr<If0> if0, boost::shared_ptr<C6> c6)
+    QDEPS_INJECT(C7, boost::shared_ptr<If0> if0, boost::shared_ptr<C6> c6)
         : if0(if0), c6(c6)
     { }
 
@@ -115,7 +115,7 @@ struct C7
 
 struct C8
 {
-    QDEPS_CTOR(C8, boost::shared_ptr<C7> c7, C0 c0, boost::shared_ptr<C1> c1, int i)
+    QDEPS_INJECT(C8, boost::shared_ptr<C7> c7, C0 c0, boost::shared_ptr<C1> c1, int i)
         : c7(c7), c0(c0), c1(c1), i(i)
     { }
 
@@ -127,7 +127,7 @@ struct C8
 
 struct C9 : C2
 {
-    QDEPS_CTOR(C9, int i, double d, char c, std::string s = "string")
+    QDEPS_INJECT(C9, int i, double d, char c, std::string s = "string")
         : C2(i, d, c), s(s)
     { }
 

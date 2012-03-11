@@ -32,6 +32,10 @@ Usage
 
 ``` C++
 
+#include <QDeps/Front/Inject.hpp>
+#include <QDeps/Utility/Named.hpp>
+#include <QDeps/Utility/Injector.hpp>
+
 struct IDummy {
     virtual ~I() { }
     virtual void dummy() = 0;
@@ -46,15 +50,15 @@ struct Dumber : IDummy {
 };
 
 struct C1 {
-    QDPES_CTOR(C1, shared_ptr<IDummy>, int, Named<int, mpl::string<'port'> >) { }
+    QDPES_INJECT(C1, shared_ptr<IDummy>, int, Named<int, mpl::string<'port'> >) { }
 };
 
 struct C2 {
-    QDPES_CTOR(C2, const IDummy*, shared_ptr<C1>)
+    QDPES_INJECT(C2, const IDummy*, shared_ptr<C1>)
 };
 
 struct C3 {
-    QDPES_CTOR(C3, C2) { }
+    QDPES_INJECT(C3, C2) { }
 };
 
 // *** base front end ***

@@ -6,8 +6,8 @@
 //
 #include <gtest/gtest.h>
 
-#define QDEPS_CTOR_CFG_VA_ARGS
-#include "QDeps/Front/Ctor.hpp"
+#define QDEPS_INJECT_CFG_VA_ARGS
+#include "QDeps/Front/Inject.hpp"
 
 namespace QDeps
 {
@@ -18,22 +18,22 @@ namespace Scopes
 namespace UT
 {
 
-TEST(CtorVaArgs, Empty)
+TEST(InjectVaArgs, Empty)
 {
     struct C
     {
-        QDEPS_TRAITS();
+        QDEPS_INJECT_TRAITS();
         C() { }
     };
 }
 
-TEST(CtorVaArgs, ExplicitWithDefault)
+TEST(InjectVaArgs, ExplicitWithDefault)
 {
     struct C
     {
         enum { DEFAULT = 42 };
 
-        QDEPS_CTOR(explicit C, int i = DEFAULT)
+        QDEPS_INJECT(explicit C, int i = DEFAULT)
             : i(i)
         { }
 
@@ -45,11 +45,11 @@ TEST(CtorVaArgs, ExplicitWithDefault)
     EXPECT_EQ(static_cast<int>(C::DEFAULT), c.i);
 }
 
-TEST(CtorVaArgs, Params)
+TEST(InjectVaArgs, Params)
 {
     struct C
     {
-        QDEPS_CTOR(C, int i, double d)
+        QDEPS_INJECT(C, int i, double d)
             : i(i), d(d)
         { }
 
@@ -66,14 +66,14 @@ TEST(CtorVaArgs, Params)
     EXPECT_EQ(d, c.d);
 }
 
-TEST(CtorVaArgs, Traits)
+TEST(InjectVaArgs, Traits)
 {
     const int i = 1;
     const double d = 2.0;
 
     struct C
     {
-        QDEPS_TRAITS(int i, double d);
+        QDEPS_INJECT_TRAITS(int i, double d);
 
         C(int i, double d)
             : i(i), d(d)

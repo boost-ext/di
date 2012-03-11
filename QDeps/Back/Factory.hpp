@@ -32,7 +32,6 @@
 #include "QDeps/Back/Convert.hpp"
 #include "QDeps/Back/Binding.hpp"
 #include "QDeps/Back/Scopes/PerRequest.hpp"
-#include "QDeps/Config.hpp"
 
 namespace QDeps
 {
@@ -48,6 +47,7 @@ template
 >
 class Factory
 {
+#define QDEPS_CTOR_UNIQUE_NAME inject__
     BOOST_MPL_HAS_XXX_TRAIT_DEF(QDEPS_CTOR_UNIQUE_NAME)
 
     struct Entries : boost::mpl::inherit_linearly
@@ -59,7 +59,7 @@ class Factory
 
     template<typename T> struct Ctor
     {
-        typedef BOOST_TYPEOF_TPL(T::QDEPS_CTOR_UNIQUE_NAME::ctor) type;
+        typedef BOOST_TYPEOF_TPL(T::QDEPS_CTOR_UNIQUE_NAME::inject) type;
     };
 
 public:

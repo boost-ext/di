@@ -10,16 +10,12 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 
-#if !defined(QDEPS_CTOR_CFG_VA_ARGS) && !defined(QDEPS_CTOR_CFG_BRACKET)
-# define QDEPS_CTOR_CFG_VA_ARGS
+#if !defined(QDEPS_INJECT_CFG_VA_ARGS) && !defined(QDEPS_INJECT_CFG_BRACKET)
+# define QDEPS_INJECT_CFG_VA_ARGS
 #endif
 
 #if !defined(QDEPS_FUNC_ARITY)
 # define QDEPS_FUNC_ARITY 10
-#endif
-
-#if !defined(QDEPS_CTOR_UNIQUE_TYPE)
-# define QDEPS_CTOR_UNIQUE_NAME ctor__
 #endif
 
 namespace QDeps
