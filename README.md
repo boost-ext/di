@@ -33,8 +33,8 @@ Usage
 ``` C++
 
 #include <QDeps/Front/Inject.hpp>
-#include <QDeps/Utility/Named.hpp>
 #include <QDeps/Utility/Injector.hpp>
+#include <QDeps/Utility/Named.hpp>
 
 struct IDummy {
     virtual ~I() { }
@@ -63,6 +63,8 @@ struct C3 {
 
 // *** base front end ***
 {
+    #include <QDeps/Front/Base/Module.hpp>
+
     struct BaseModule : Front::Base::Module
         <
             Externals::Bind         < Named<int, mpl::string<'port'> > >,
@@ -79,6 +81,8 @@ struct C3 {
 
 // *** fusion front end ***
 {
+    #include <QDeps/Front/Fusion/Module.hpp>
+
     BOOST_AUTO(fusionModule, (Front::Fusion::Module()(
         Bind<IDummy>::To<Dumb>::InScope<Singleton>(),
         Bind<IDummy>::To<Dumber>::InCall<C2, C1>(),
@@ -93,6 +97,8 @@ struct C3 {
 
 // *** generic front end ***
 {
+    #include <QDeps/Front/Generic/Module.hpp>
+
     struct GenericModule : Front::Generic::Module
         <
             Scope<Singleton>::Bind
@@ -115,6 +121,8 @@ struct C3 {
 
 // *** path front end ***
 {
+    #include <QDeps/Front/Path/Module.hpp>
+
     struct PathModule : Front::Path::Module
         <
             PerRequest<int, int_<42> >,
