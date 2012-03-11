@@ -52,7 +52,7 @@ struct Dumber : IDummy {
 struct C1 {
     QDPES_INJECT(C1, shared_ptr<IDummy> /*Dumber per request*/,
                      int /*42*/,
-                     Named<int, mpl::string<'port'> > /*8080 external*/
+                     Named<int, string<'port'> > /*8080 external*/
     ) { }
 };
 
@@ -70,14 +70,14 @@ struct C3 {
 
     struct BaseModule : Front::Base::Module
         <
-            Externals::Bind         < Named<int, mpl::string<'port'> > >,
+            Externals::Bind         < Named<int, string<'port'> > >,
             Scope<Singleton >::Bind < Dumb >,
             Scope<PerRequest>::Bind < int_<42>, Bind<Dumber>::InCall<C2, C1> >
         >
     { };
 
     //injector, order in constructor is not important
-    Injector<BaseModule> injector(make_shared< Named<int, mpl::string<'port'> >(8080));
+    Injector<BaseModule> injector(make_shared< Named<int, string<'port'> >(8080));
     shared_ptr<C3> l_sp = injector.create< shared_ptr<C3> >();
     C3 l_value = injector.create<C3>();
 }
@@ -90,7 +90,7 @@ struct C3 {
         Bind<IDummy>::To<Dumb>::InScope<Singleton>(),
         Bind<IDummy>::To<Dumber>::InCall<C2, C1>(),
         Inst<int>(make_shared<int>(42)),
-        Inst<Named<int, mpl::string<'port'> >(make_shared<int>(8080))
+        Inst<Named<int, string<'port'> >(make_shared<int>(8080))
     ));
 
     Injector<BOOST_TYPEOF(fusionModule)> injector(fusionModule);
@@ -112,12 +112,12 @@ struct C3 {
             <
                 Implementation<IDummy, Dumber>::Bind< InCall<C2, C1> >,
                 Instance<int, int_<42> >,
-                Instance<Named<int, mpl::string<'port'> >
+                Instance<Named<int, string<'port'> >
             >
         >
     { };
 
-    Injector<GenericModule> injector(make_shared< Named<int, mpl::string<'port'> >(8080));
+    Injector<GenericModule> injector(make_shared< Named<int, string<'port'> >(8080));
     shared_ptr<C3> l_sp = injector.create< shared_ptr<C3> >();
     C3 l_value = injector.create<C3>();
 }
@@ -129,7 +129,7 @@ struct C3 {
     struct PathModule : Front::Path::Module
         <
             PerRequest<int, int_<42> >,
-            PerRequest<Named<int, mpl::string<'port'> >,
+            PerRequest<Named<int, string<'port'> >,
             Path
             <
                 Singleton<IDummy, Dumb>,
@@ -142,7 +142,7 @@ struct C3 {
         >
     { };
 
-    Injector<PathModule> injector(make_shared< Named<int, mpl::string<'port'> >(8080));
+    Injector<PathModule> injector(make_shared< Named<int, string<'port'> >(8080));
     shared_ptr<C3> l_sp = injector.create< shared_ptr<C3> >();
     C3 l_value = injector.create<C3>();
 }
