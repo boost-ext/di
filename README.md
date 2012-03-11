@@ -52,7 +52,7 @@ struct Dumber : IDummy {
 struct C1 {
     QDPES_INJECT(C1, shared_ptr<IDummy> /*Dumber per request*/,
                      int /*42*/,
-                     Named<int, mpl::string<'port'> > /*8080*/
+                     Named<int, mpl::string<'port'> > /*8080 external*/
     ) { }
 };
 
