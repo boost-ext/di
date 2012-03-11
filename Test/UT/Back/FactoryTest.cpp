@@ -2,13 +2,13 @@
 // Copyright (c) 2012 Krzysztof Jusiak (krzysztof at jusiak dot net)
 //
 // Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSEstring<'1'> _0.txt or copy at http://www.boost.org/LICENSEstring<'1'> _0.txt)
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <gtest/gtest.h>
 #include <boost/make_shared.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/mpl/vector.hpp>
-#include "Test/Common/Ctors.hpp"
+#include "Test/Common/Data.hpp"
 #include "QDeps/Back/Factory.hpp"
 #include "QDeps/Utility/Named.hpp"
 #include "QDeps/Back/Scopes/PerRequest.hpp"

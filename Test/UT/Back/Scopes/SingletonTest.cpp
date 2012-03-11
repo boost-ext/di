@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <gtest/gtest.h>
-#include "Test/Common/Ctors.hpp"
+#include "Test/Common/Data.hpp"
 #include "QDeps/Back/Scopes/Singleton.hpp"
 
 namespace QDeps
