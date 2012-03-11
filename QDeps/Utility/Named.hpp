@@ -7,6 +7,7 @@
 #ifndef QDEPS_UTILITY_NAMED_HPP
 #define QDEPS_UTILITY_NAMED_HPP
 
+#include <boost/type_traits/is_base_of.hpp>
 #include "QDeps/Config.hpp"
 
 namespace QDeps
@@ -33,6 +34,18 @@ private:
 
 } // namespace Utility
 } // namespace QDeps
+
+namespace boost
+{
+template<typename TDerived, typename TBase, typename TName>
+struct is_base_of< QDeps::Utility::Named<TBase, TName>, TDerived> : is_base_of<TBase, TDerived>
+{ };
+
+template<typename TBase, typename TDerived, typename TName>
+struct is_base_of< TBase, QDeps::Utility::Named<TDerived, TName> > : is_base_of<TBase, TDerived>
+{ };
+
+} // namespace boost
 
 #endif
 
