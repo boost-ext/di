@@ -26,11 +26,10 @@
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/has_xxx.hpp>
 #include "QPool/Pool.hpp"
-#include "QDeps/Back/Aux/Inst.hpp"
-#include "QDeps/Back/Aux/Impl.hpp"
 #include "QDeps/Back/Utility.hpp"
 #include "QDeps/Back/Convert.hpp"
 #include "QDeps/Back/Binding.hpp"
+#include "QDeps/Back/Dependency.hpp"
 #include "QDeps/Back/Scopes/PerRequest.hpp"
 
 namespace QDeps
