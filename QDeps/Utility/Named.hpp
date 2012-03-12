@@ -37,6 +37,7 @@ private:
 
 namespace boost
 {
+
 template<typename TDerived, typename TBase, typename TName>
 struct is_base_of< QDeps::Utility::Named<TBase, TName>, TDerived> : is_base_of<TBase, TDerived>
 { };

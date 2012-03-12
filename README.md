@@ -98,55 +98,6 @@ struct C3 {
     C3 l_value = injector.create<C3>();
 }
 
-// *** generic front end ***
-{
-    #include <QDeps/Front/Generic/Module.hpp>
-
-    struct GenericModule : Front::Generic::Module
-        <
-            Scope<Singleton>::Bind
-            <
-                Implementation<IDummy, Dumb>
-            >,
-            Scope<PerRequest>::Bind
-            <
-                Implementation<IDummy, Dumber>::Bind< InCall<C2, C1> >,
-                Instance<int, int_<42> >,
-                Instance<Named<int, string<'port'> >
-            >
-        >
-    { };
-
-    Injector<GenericModule> injector(make_shared< Named<int, string<'port'> >(8080));
-    shared_ptr<C3> l_sp = injector.create< shared_ptr<C3> >();
-    C3 l_value = injector.create<C3>();
-}
-
-// *** path front end ***
-{
-    #include <QDeps/Front/Path/Module.hpp>
-
-    struct PathModule : Front::Path::Module
-        <
-            PerRequest<int, int_<42> >,
-            PerRequest<Named<int, string<'port'> >,
-            Path
-            <
-                Singleton<IDummy, Dumb>,
-                Path
-                <
-                    PerRequest<IDummy, Dumber>,
-                    C1
-                >
-            >
-        >
-    { };
-
-    Injector<PathModule> injector(make_shared< Named<int, string<'port'> >(8080));
-    shared_ptr<C3> l_sp = injector.create< shared_ptr<C3> >();
-    C3 l_value = injector.create<C3>();
-}
-
 // *** many modules ***
 {
     Injector<BaseModule1, BaseModule2> injector;
@@ -154,7 +105,7 @@ struct C3 {
 
 // *** mix modules ***
 {
-    Injector<BaseModule, FusionModule, GenericModule, PathModule> injector;
+    Injector<BaseModule, FusionModule> injector;
 }
 
 ```

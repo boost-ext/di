@@ -13,8 +13,6 @@ namespace QDeps
 {
 namespace Utility
 {
-namespace Scopes
-{
 namespace UT
 {
 
@@ -80,7 +78,6 @@ TEST(Injector, Module)
 }
 
 } // namespace UT
-} // namespace Scopes
 } // namespace Utility
 } // namespace QDeps
 
