@@ -51,11 +51,6 @@ template<typename T> struct GetKeys
     typedef typename T::template Keys<typename T::Binding>::type type;
 };
 
-template<typename T> struct HasExternalValue
-{
-    typedef typename T::HasExternalValue type;
-};
-
 template<typename T> struct RemoveAccessors
 {
     typedef typename boost::remove_pointer<typename boost::remove_cv<typename boost::remove_reference<T>::type>::type>::type type;

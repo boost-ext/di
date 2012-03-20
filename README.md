@@ -50,18 +50,18 @@ struct Dumber : IDummy {
 };
 
 struct C1 {
-    QDPES_INJECT(C1, shared_ptr<IDummy> /*Dumber per request*/,
-                     int /*42*/,
-                     Named<int, string<'port'> > /*8080 external*/
+    QDPES_CTOR(C1, shared_ptr<IDummy> /*Dumber per request*/,
+                   int /*42*/,
+                   Named<int, string<'port'> > /*8080 external*/
     ) { }
 };
 
 struct C2 {
-    QDPES_INJECT(C2, const IDummy*, shared_ptr<C1> /*Dumb singleton with C3*/)
+    QDPES_CTOR(C2, const IDummy*, shared_ptr<C1> /*Dumb singleton with C3*/)
 };
 
 struct C3 {
-    QDPES_INJECT(C3, C2, const shared_ptr<IDummy>& /*Dumb singleton with C2*/) { }
+    QDPES_CTOR(C3, C2, const shared_ptr<IDummy>& /*Dumb singleton with C2*/) { }
 };
 
 // *** base front end ***
@@ -112,10 +112,10 @@ struct C3 {
 
 TODO
 ------
-    * Method injector
-    * Scopes: EagerSingleton, Session
-    * Xml front end ?
     * make install
+    * Scopes: EagerSingleton, Session, TestScope
+    * Method injector ?
+    * Xml front end ?
     * C++11 fork
 
 Author

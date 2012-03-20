@@ -4,11 +4,17 @@ struct My : Front::Base::Module
         Scope<Singleton >::Bind < Impl1, Bind<Interface, Impl2>, Bind<Impl2>::InCall<C1, C2>           >,
         Scope<PerRequest>::Bind < int_<32>, mpl::string<'hej'>, Bind<Named<int, dupa>, int_<42> >       >,
 
-        External<MyClass>,
+        External(MyClass),
+        External(int),
+        Singleton(Impl1),
+        Singleton(Bind<Interface, Impl2>),
+        Singleton(Bind<int_<32> >::InCall<C1, C2>);
         Singleton<Impl>::InCall<C1>,
         Singleton<I, Impl>::InCall<C1>,
         Singleton<I, Impl>::InCall<C1>,
         PerRequest<Impl>
+
+        Singleton(I, Impl)::InCall<C1>
     >
 { };
 
@@ -22,3 +28,8 @@ Pool
     set<
 );
 
+template<typename T> class Singleton
+{
+    typedef Scope<Singleton>::Bind
+
+};

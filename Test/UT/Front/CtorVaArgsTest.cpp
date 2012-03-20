@@ -6,7 +6,7 @@
 //
 #include <gtest/gtest.h>
 
-#define QDEPS_INJECT_CFG_VA_ARGS
+#define QDEPS_CTOR_CFG_VA_ARGS
 #include "QDeps/Front/Inject.hpp"
 
 namespace QDeps
@@ -22,7 +22,7 @@ TEST(InjectVaArgs, Empty)
 {
     struct C
     {
-        QDEPS_INJECT_TRAITS();
+        QDEPS_CTOR_TRAITS();
         C() { }
     };
 }
@@ -33,7 +33,7 @@ TEST(InjectVaArgs, ExplicitWithDefault)
     {
         enum { DEFAULT = 42 };
 
-        QDEPS_INJECT(explicit C, int i = DEFAULT)
+        QDEPS_CTOR(explicit C, int i = DEFAULT)
             : i(i)
         { }
 
@@ -49,7 +49,7 @@ TEST(InjectVaArgs, Params)
 {
     struct C
     {
-        QDEPS_INJECT(C, int i, double d)
+        QDEPS_CTOR(C, int i, double d)
             : i(i), d(d)
         { }
 
@@ -73,7 +73,7 @@ TEST(InjectVaArgs, Traits)
 
     struct C
     {
-        QDEPS_INJECT_TRAITS(int i, double d);
+        QDEPS_CTOR_TRAITS(int i, double d);
 
         C(int i, double d)
             : i(i), d(d)

@@ -6,7 +6,7 @@
 //
 #include <gtest/gtest.h>
 
-#define QDEPS_INJECT_CFG_BRACKET
+#define QDEPS_CTOR_CFG_BRACKET
 #include "QDeps/Front/Inject.hpp"
 
 namespace QDeps
@@ -22,7 +22,7 @@ TEST(InjectBracket, Empty)
 {
     struct C
     {
-        QDEPS_INJECT(C, ()) { }
+        QDEPS_CTOR(C, ()) { }
     };
 }
 
@@ -32,7 +32,7 @@ TEST(InjectBracket, ExplicitWithDefault)
     {
         enum { DEFAULT = 42 };
 
-        QDEPS_INJECT(explicit C, (int i = DEFAULT))
+        QDEPS_CTOR(explicit C, (int i = DEFAULT))
             : i(i)
         { }
 
@@ -51,7 +51,7 @@ TEST(InjectBracket, Params)
 
     struct C
     {
-        QDEPS_INJECT(C, (int i, double d))
+        QDEPS_CTOR(C, (int i, double d))
             : i(i), d(d)
         { }
 
@@ -72,7 +72,7 @@ TEST(InjectBracket, Traits)
 
     struct C
     {
-        QDEPS_INJECT_TRAITS((int i, double d));
+        QDEPS_CTOR_TRAITS((int i, double d));
 
         C(int i, double d)
             : i(i), d(d)
