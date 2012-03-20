@@ -26,9 +26,9 @@ namespace Detail
 BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 } // namespace Detail
 
-template<typename T> struct GetDependency
+template<typename T> struct GetBind
 {
-    typedef typename T::Dependency type;
+    typedef typename T::Bind type;
 };
 
 template<typename T> struct GetContext

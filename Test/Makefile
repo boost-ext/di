@@ -14,7 +14,7 @@ BOOST=$(shell ls ../Externals/boost | xargs -i% echo -I../Externals/boost/%/incl
 QPOOL=../Externals/QPool
 INCLUDES=$(BOOST) -I$(QPOOL) -I$(GTEST)/include -I..
 CXXFLAGS=$(INCLUDES) -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants
-OBJS=$(patsubst %.cpp,%.o,$(shell find . -iname "*.cpp"))
+OBJS=$(patsubst %.cpp,%.o,$(shell find UT/Back -iname "*.cpp")) main.o
 REV:=$(shell git log --oneline | head -1 | cut -d ' ' -f1)
 
 all: test cov cppcheck scan-build valgrind

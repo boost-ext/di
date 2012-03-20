@@ -23,7 +23,6 @@ namespace UT
 {
 
 using namespace Test::Common;
-using namespace Aux;
 using namespace Utility;
 using namespace Back::Scopes;
 using namespace boost::mpl;
@@ -96,10 +95,10 @@ TEST(Factory, CreateWithValues)
     <
         vector
         <
-            Inst<PerRequest, int, int_<i> >,
-            Inst<PerRequest, double>,
-            Inst<PerRequest, char>,
-            Inst<PerRequest, std::string, string<'test'> >
+            Dependency<PerRequest, int, int_<i> >,
+            Dependency<PerRequest, double>,
+            Dependency<PerRequest, char>,
+            Dependency<PerRequest, std::string, string<'test'> >
         >,
         Pool
     >
@@ -111,6 +110,36 @@ TEST(Factory, CreateWithValues)
     EXPECT_EQ(d, l_obj.d);
     EXPECT_EQ(c, l_obj.c);
     EXPECT_EQ("test", l_obj.s);
+}
+
+TEST(Factory, CreateWithNonTrivialCtor)
+{
+    const int i = 42;
+    const double d = 21.0;
+    const char c = 'x';
+
+    typedef QPool::Pool< vector<C2> > Pool;
+
+    Pool l_pool
+    (
+        make_shared<C2>(i, d, c)
+    );
+
+    Factory
+    <
+        vector
+        <
+            Dependency<PerRequest, C2>
+        >,
+        Pool
+    >
+    l_factory(l_pool);
+
+    C2 l_obj = l_factory.create<C2>();
+
+    EXPECT_EQ(i, l_obj.i);
+    EXPECT_EQ(d, l_obj.d);
+    EXPECT_EQ(c, l_obj.c);
 }
 
 TEST(Factory, CreateWithAttributes)
@@ -130,8 +159,8 @@ TEST(Factory, CreateWithAttributes)
     <
         vector
         <
-            Inst<PerRequest, Named<int, string<'1'> > >,
-            Inst<PerRequest, Named<int, string<'2'> > >
+            Dependency<PerRequest, Named<int, string<'1'> > >,
+            Dependency<PerRequest, Named<int, string<'2'> > >
         >,
         Pool
     >
@@ -149,7 +178,7 @@ TEST(Factory, CreatePerRequest)
     <
         vector
         <
-            Impl<PerRequest, If0, CIf0>
+            Dependency<PerRequest, If0, CIf0>
         >
     >
     l_factory;
@@ -178,8 +207,8 @@ TEST(Factory, CreatePerRequestSingleton)
     <
         vector
         <
-            Impl<PerRequest, If0, CIf0>,
-            Inst<Singleton, C3>
+            Dependency<PerRequest, If0, CIf0>,
+            Dependency<Singleton, C3>
         >
     >
     l_factory;
@@ -208,9 +237,9 @@ TEST(Factory, CreatePerRequestSingletonPath)
     <
         vector
         <
-            Impl<PerRequest, If0, CIf0>,
-            Impl<PerRequest, If0, CIf01, vector<C6, C5> >,
-            Inst<Singleton, C3>
+            Dependency<PerRequest, If0, CIf0>,
+            Dependency<PerRequest, If0, CIf01, vector<C6, C5> >,
+            Dependency<Singleton, C3>
         >
     >
     l_factory;
@@ -239,10 +268,10 @@ TEST(Factory, CreatePerRequestSingletonPathOrder)
     <
         vector
         <
-            Impl<PerRequest, If0, CIf0>,
-            Impl<PerRequest, If0, CIf01, vector<C6, C5> >,
-            Impl<PerRequest, If0, CIf02, vector<C7> >,
-            Inst<Singleton, C3>
+            Dependency<PerRequest, If0, CIf0>,
+            Dependency<PerRequest, If0, CIf01, vector<C6, C5> >,
+            Dependency<PerRequest, If0, CIf02, vector<C7> >,
+            Dependency<Singleton, C3>
         >
     >
     l_factory;
@@ -271,15 +300,15 @@ TEST(Factory, CreatePerRequestSingletonPathMix)
     <
         vector
         <
-            Impl<PerRequest, If0, CIf0>,
-            Impl<PerRequest, If0, CIf01, vector<C6, C5> >,
-            Impl<PerRequest, If0, CIf02, vector<C7> >,
-            Inst<Singleton, C3>,
-            Inst<PerRequest, int, int_<1> >,
-            Inst<PerRequest, int, int_<2>, vector<C8> >,
-            Inst<PerRequest, Named<int, mpl::string<'1'> >, int_<3>, vector<C7, C6, C4> >,
-            Inst<PerRequest, Named<int, mpl::string<'2'> >, int_<4>, vector<C7, C6, C4> >,
-            Inst<PerRequest, int, int_<5>, vector<C2> >
+            Dependency<PerRequest, If0, CIf0>,
+            Dependency<PerRequest, If0, CIf01, vector<C6, C5> >,
+            Dependency<PerRequest, If0, CIf02, vector<C7> >,
+            Dependency<Singleton, C3>,
+            Dependency<PerRequest, int, int_<1> >,
+            Dependency<PerRequest, int, int_<2>, vector<C8> >,
+            Dependency<PerRequest, Named<int, mpl::string<'1'> >, int_<3>, vector<C7, C6, C4> >,
+            Dependency<PerRequest, Named<int, mpl::string<'2'> >, int_<4>, vector<C7, C6, C4> >,
+            Dependency<PerRequest, int, int_<5>, vector<C2> >
         >
     >
     l_factory;
@@ -308,7 +337,7 @@ TEST(Factory, CreateSingletonImpl)
     <
         vector
         <
-            Impl<Singleton, If0, CIf0>
+            Dependency<Singleton, If0, CIf0>
         >
     >
     l_factory;
@@ -337,9 +366,9 @@ TEST(Factory, CreateSingletonMany)
     <
         vector
         <
-            Impl<Singleton, If0, CIf0>,
-            Inst<Singleton, C3>,
-            Inst<Singleton, C1>
+            Dependency<Singleton, If0, CIf0>,
+            Dependency<Singleton, C3>,
+            Dependency<Singleton, C1>
         >
     >
     l_factory;
@@ -368,7 +397,7 @@ TEST(Factory, BaseOf)
     <
         vector
         <
-            Impl<PerRequest, CIf0, CIf0, vector0<>, boost::is_base_of<boost::mpl::_1, CIf0> >
+            Dependency<PerRequest, CIf0, CIf0, vector0<>, boost::is_base_of<boost::mpl::_1, CIf0> >
         >
     >
     l_factory;

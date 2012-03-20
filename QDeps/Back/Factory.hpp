@@ -82,7 +82,7 @@ private:
     {
         typedef typename boost::function_types::parameter_types<typename Ctor<T>::type>::type Ctor;
         typedef typename boost::mpl::push_back<TCallStack, T>::type CallStack;
-        Aux::Inst<Scopes::PerRequest, T> l_onDemandInst;
+        Dependency<Scopes::PerRequest, T> l_onDemandInst;
         return createImpl<T, Ctor, CallStack>(l_onDemandInst);
     }
 
