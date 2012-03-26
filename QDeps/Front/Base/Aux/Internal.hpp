@@ -16,7 +16,7 @@ namespace Base
 namespace Aux
 {
 
-class Internal { };
+namespace Detail { class Internal { }; } //namespace Detail
 
 } // namespace Aux
 } // namespace Base

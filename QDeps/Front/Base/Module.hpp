@@ -84,7 +84,7 @@ public:
                     boost::mpl::vector0<>,
                     boost::mpl::if_
                     <
-                        boost::is_base_of<Aux::Internal, boost::mpl::_2>,
+                        boost::is_base_of<Aux::Detail::Internal, boost::mpl::_2>,
                         boost::mpl::_2,
                         PerRequest<boost::mpl::_2>
                     >

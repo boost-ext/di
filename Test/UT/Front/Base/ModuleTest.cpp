@@ -37,13 +37,13 @@ TEST(Module, Empty)
             MyModule::Dependencies
         >::value
     ));
+
+    EXPECT_TRUE((equal<vector0<>, MyModule::Externals>::value));
 }
 
-TEST(Module, DefaultPerRequest)
+TEST(Module, DefaultScope)
 {
     struct MyModule : Module<C1> { };
-
-    std::cout << abi::__cxa_demangle(typeid(MyModule::Dependencies::type).name(), 0, 0, 0) << std::endl;
 
     EXPECT_TRUE((
         equal
@@ -55,6 +55,28 @@ TEST(Module, DefaultPerRequest)
             MyModule::Dependencies
         >::value
     ));
+
+    EXPECT_TRUE((equal<vector0<>, MyModule::Externals>::value));
+}
+
+TEST(Module, DefaultScopeMany)
+{
+    struct MyModule : Module<C1, C2, C3> { };
+
+    EXPECT_TRUE((
+        equal
+        <
+            vector
+            <
+                Dependency<Back::Scope::PerRequest, C1, C1, vector0<>, boost::is_base_of<_1, C1> >,
+                Dependency<Back::Scope::PerRequest, C2, C2, vector0<>, boost::is_base_of<_1, C2> >,
+                Dependency<Back::Scope::PerRequest, C3, C3, vector0<>, boost::is_base_of<_1, C3> >
+            >,
+            MyModule::Dependencies
+        >::value
+    ));
+
+    EXPECT_TRUE((equal<vector0<>, MyModule::Externals>::value));
 }
 
 TEST(Module, OneScope)
@@ -77,6 +99,8 @@ TEST(Module, OneScope)
             MyModule::Dependencies
         >::value
     ));
+
+    EXPECT_TRUE((equal<vector0<>, MyModule::Externals>::value));
 }
 
 TEST(Module, OneScopeAlias)
@@ -99,6 +123,8 @@ TEST(Module, OneScopeAlias)
             MyModule::Dependencies
         >::value
     ));
+
+    EXPECT_TRUE((equal<vector0<>, MyModule::Externals>::value));
 }
 
 TEST(Module, OneScopeDirect)
@@ -119,6 +145,8 @@ TEST(Module, OneScopeDirect)
             MyModule::Dependencies
         >::value
     ));
+
+    EXPECT_TRUE((equal<vector0<>, MyModule::Externals>::value));
 }
 
 TEST(Module, Many)
@@ -145,6 +173,8 @@ TEST(Module, Many)
             MyModule::Dependencies
         >::value
     ));
+
+    EXPECT_TRUE((equal<vector0<>, MyModule::Externals>::value));
 }
 
 TEST(Module, ManyScopes)
@@ -175,6 +205,8 @@ TEST(Module, ManyScopes)
             MyModule::Dependencies
         >::value
     ));
+
+    EXPECT_TRUE((equal<vector0<>, MyModule::Externals>::value));
 }
 
 TEST(Module, InCall)
@@ -195,6 +227,8 @@ TEST(Module, InCall)
             MyModule::Dependencies
         >::value
     ));
+
+    EXPECT_TRUE((equal<vector0<>, MyModule::Externals>::value));
 }
 
 TEST(Module, InName)
@@ -215,6 +249,8 @@ TEST(Module, InName)
             MyModule::Dependencies
         >::value
     ));
+
+    EXPECT_TRUE((equal<vector0<>, MyModule::Externals>::value));
 }
 
 TEST(Module, InNameInCall)
@@ -239,6 +275,8 @@ TEST(Module, InNameInCall)
             MyModule::Dependencies
         >::value
     ));
+
+    EXPECT_TRUE((equal<vector0<>, MyModule::Externals>::value));
 }
 
 TEST(Module, InCallInName)
@@ -263,6 +301,8 @@ TEST(Module, InCallInName)
             MyModule::Dependencies
         >::value
     ));
+
+    EXPECT_TRUE((equal<vector0<>, MyModule::Externals>::value));
 }
 
 TEST(Module, BindIf)
@@ -285,6 +325,8 @@ TEST(Module, BindIf)
             MyModule::Dependencies
         >::value
     ));
+
+    EXPECT_TRUE((equal<vector0<>, MyModule::Externals>::value));
 }
 
 TEST(Module, Mix)
@@ -317,6 +359,82 @@ TEST(Module, Mix)
                 Dependency<Back::Scope::Singleton, Named<C7, double>, C7, vector<C1>, boost::is_base_of<_1, Named<C7, double> > >
             >,
             MyModule::Dependencies
+        >::value
+    ));
+
+    EXPECT_TRUE((equal<vector0<>, MyModule::Externals>::value));
+}
+
+TEST(Module, Externals)
+{
+    struct MyModule : Module
+        <
+            Externals<
+                int
+            >
+        >
+    { };
+
+    EXPECT_TRUE((equal<vector0<>, MyModule::Dependencies>::value));
+
+    EXPECT_TRUE((
+        equal
+        <
+            vector
+            <
+                int
+            >,
+            MyModule::Externals
+        >::value
+    ));
+}
+
+TEST(Module, ExternalsMix)
+{
+    struct MyModule : Module
+        <
+            Externals<
+                int,
+                double
+            >,
+            External<float>
+        >
+    { };
+
+    EXPECT_TRUE((equal<vector0<>, MyModule::Dependencies>::value));
+
+    EXPECT_TRUE((
+        equal
+        <
+            vector
+            <
+                int, double, float
+            >,
+            MyModule::Externals
+        >::value
+    ));
+}
+
+TEST(Module, ExternalsBind)
+{
+    struct MyModule : Module
+        <
+            Externals<
+                Bind<C1>::InName<int>
+            >
+        >
+    { };
+
+    EXPECT_TRUE((equal<vector0<>, MyModule::Dependencies>::value));
+
+    EXPECT_TRUE((
+        equal
+        <
+            vector
+            <
+                Bind<C1>::InName<int>
+            >,
+            MyModule::Externals
         >::value
     ));
 }

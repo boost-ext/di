@@ -46,7 +46,7 @@ struct C3 { QDPES_CTOR(C3, C2, const shared_ptr<IDummy>& /*Dumb singleton with C
 {
     #include <QDeps/Front/Base/Module.hpp>
 
-    struct BaseModule : Front::Base::Module <
+    struct BaseModule : Module <
         Singletons <
             Dumb
         >,
@@ -71,14 +71,18 @@ struct C3 { QDPES_CTOR(C3, C2, const shared_ptr<IDummy>& /*Dumb singleton with C
 {
     #include <QDeps/Front/Fusion/Module.hpp>
 
-    BOOST_AUTO(fusionModule, (Front::Fusion::Module()(
-        Bind<Dumb>::InScope<Singleton>(),
-        Bind<Dumber>::InCall<C2, C1>(),
-        Bind<int>::To(42),
+    BOOST_AUTO(fusionModule, (Module()(
+        Singletons <
+            Dumb
+        >(),
+        PerRequests <
+            int_<42>,
+            Bind<Dumber>::InCall<C2, C1>
+        >(),
         Bind<int>::InName<string<'port'> >::To(8080)
     )));
-    Injector<BOOST_TYPEOF(fusionModule)> injector(fusionModule);
 
+    Injector<BOOST_TYPEOF(fusionModule)> injector(fusionModule);
     shared_ptr<C3> l_sp = injector.create< shared_ptr<C3> >();
     C3 l_value = injector.create<C3>();
 }
@@ -89,7 +93,6 @@ TODO
 ------
     * make install
     * visitor -> dump dot
-    * Fusion front end
     * C++11 fork
 
 Author
