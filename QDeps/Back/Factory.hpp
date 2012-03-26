@@ -10,9 +10,10 @@
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/cat.hpp>
-#include <boost/typeof/typeof.hpp>
 #include <boost/none.hpp>
+#include <boost/make_shared.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/typeof/typeof.hpp>
 #include <boost/function_types/parameter_types.hpp>
 #include <boost/mpl/inherit_linearly.hpp>
 #include <boost/mpl/inherit.hpp>
@@ -30,7 +31,7 @@
 #include "QDeps/Back/Convert.hpp"
 #include "QDeps/Back/Binding.hpp"
 #include "QDeps/Back/Dependency.hpp"
-#include "QDeps/Back/Scopes/PerRequest.hpp"
+#include "QDeps/Back/Scope/PerRequest.hpp"
 
 namespace QDeps
 {
@@ -81,7 +82,7 @@ private:
     {
         typedef typename boost::function_types::parameter_types<typename Ctor<T>::type>::type Ctor;
         typedef typename boost::mpl::push_back<TCallStack, T>::type CallStack;
-        Dependency<Scopes::PerRequest, T> l_onDemandInst;
+        Dependency<Scope::PerRequest, T> l_onDemandInst;
         return createImpl<T, Ctor, CallStack>(l_onDemandInst);
     }
 
@@ -104,8 +105,7 @@ private:
         typename boost::enable_if< boost::mpl::empty<typename TBinding<T, TCallStack>::type> >::type* = 0
     )
     {
-        typedef typename TBinding<int, boost::mpl::vector0<> >::type Binding;
-        return Defaults<T, Specialized>::create();
+        return boost::make_shared<T>();
     }
 
     template<typename T, typename TCallStack> typename MakeShared<T>::type createImpl

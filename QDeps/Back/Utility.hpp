@@ -94,6 +94,11 @@ struct MakeVector<T, typename boost::enable_if< boost::mpl::is_sequence<T> >::ty
     typedef T type;
 };
 
+template<typename T, typename TApplied> struct Apply
+{
+    typedef typename T::template Apply<TApplied>::type type;
+};
+
 } // namespace Back
 } // namespace QDeps
 

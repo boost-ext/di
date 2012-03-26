@@ -1,7 +1,7 @@
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef QDEPS_BACK_SCOPES_SINGLETON_HPP
-    #define QDEPS_BACK_SCOPES_SINGLETON_HPP
+    #ifndef QDEPS_BACK_SCOPE_SINGLETON_HPP
+    #define QDEPS_BACK_SCOPE_SINGLETON_HPP
 
     #include <boost/shared_ptr.hpp>
     #include <boost/make_shared.hpp>
@@ -11,13 +11,13 @@
     #include <boost/preprocessor/punctuation/comma_if.hpp>
     #include "QDeps/Config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, QDEPS_FUNC_ARITY, "QDeps/Back/Scopes/Singleton.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, QDEPS_FUNC_ARITY, "QDeps/Back/Scope/Singleton.hpp"))
 
     namespace QDeps
     {
     namespace Back
     {
-    namespace Scopes
+    namespace Scope
     {
 
     class Singleton
@@ -29,7 +29,7 @@
         boost::shared_ptr<void> m_instance;
     };
 
-    } // namespace Scopes
+    } // namespace Scope
     } // namespace Back
     } // namespace QDeps
 

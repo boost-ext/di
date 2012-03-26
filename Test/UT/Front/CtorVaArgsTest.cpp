@@ -7,7 +7,7 @@
 #include <gtest/gtest.h>
 
 #define QDEPS_CTOR_CFG_VA_ARGS
-#include "QDeps/Front/Inject.hpp"
+#include "QDeps/Front/Ctor.hpp"
 
 namespace QDeps
 {
@@ -18,7 +18,7 @@ namespace Scopes
 namespace UT
 {
 
-TEST(InjectVaArgs, Empty)
+TEST(CtorVaArgs, Empty)
 {
     struct C
     {
@@ -27,7 +27,7 @@ TEST(InjectVaArgs, Empty)
     };
 }
 
-TEST(InjectVaArgs, ExplicitWithDefault)
+TEST(CtorVaArgs, ExplicitWithDefault)
 {
     struct C
     {
@@ -45,7 +45,7 @@ TEST(InjectVaArgs, ExplicitWithDefault)
     EXPECT_EQ(static_cast<int>(C::DEFAULT), c.i);
 }
 
-TEST(InjectVaArgs, Params)
+TEST(CtorVaArgs, Params)
 {
     struct C
     {
@@ -66,7 +66,7 @@ TEST(InjectVaArgs, Params)
     EXPECT_EQ(d, c.d);
 }
 
-TEST(InjectVaArgs, Traits)
+TEST(CtorVaArgs, Traits)
 {
     const int i = 1;
     const double d = 2.0;

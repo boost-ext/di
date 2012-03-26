@@ -11,8 +11,8 @@
 #include "Test/Common/Data.hpp"
 #include "QDeps/Back/Factory.hpp"
 #include "QDeps/Utility/Named.hpp"
-#include "QDeps/Back/Scopes/PerRequest.hpp"
-#include "QDeps/Back/Scopes/Singleton.hpp"
+#include "QDeps/Back/Scope/PerRequest.hpp"
+#include "QDeps/Back/Scope/Singleton.hpp"
 #include "QPool/Pool.hpp"
 
 namespace QDeps
@@ -24,7 +24,7 @@ namespace UT
 
 using namespace Test::Common;
 using namespace Utility;
-using namespace Back::Scopes;
+using namespace Back::Scope;
 using namespace boost::mpl;
 using namespace boost;
 

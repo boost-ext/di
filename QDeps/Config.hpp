@@ -34,37 +34,18 @@ namespace QDeps
  * namespace QDeps
  * {
  * template<>
- * struct Defaults<int, QDeps::Specialized>
+ * struct Defaults<, QDeps::Specialized>
  * {
- *     static boost::shared_ptr<int> create() { return boost::make_shared<int>(42); }
  * };
  * } // namespace QDeps
  * @endcode
  */
 class Specialized { };
-
-template<typename T, typename TDefault = Specialized>
-struct Defaults
-{
-public:
-    static boost::shared_ptr<T> create() { return boost::make_shared<T>(); }
-};
-
-template<typename TDefault>
-class Defaults<int, TDefault>
-{
-public:
-    static boost::shared_ptr<int> create() { return boost::make_shared<int>(0); }
-};
-
-//Policies
+template<typename, typename = Specialized> class Defaults;
 
 namespace Back
 {
-namespace Policy
-{
 template<typename = void, typename = void, typename = void> class Policy;
-} // namespace Policy
 } // namespace Back
 
 namespace Detail
@@ -85,35 +66,15 @@ class AllowModulesDependeciesRepetitions { };
 class DisallowModulesDependeciesRepetitions { };
 
 template<typename TDefault>
-class Defaults<Detail::CircularDependencies, TDefault>
-{
-public:
-    typedef DisallowCircularDependencies type;
-};
-
-template<typename TDefault>
-class Defaults<Detail::BindingWithCtors, TDefault>
-{
-public:
-    typedef VerifyBindingWithCtors type;
-};
-
-template<typename TDefault>
-class Defaults<Detail::ModulesDependeciesRepetitions, TDefault>
-{
-public:
-    typedef DisallowModulesDependeciesRepetitions type;
-};
-
-template<typename TDefault>
 class Defaults<Detail::Policy, TDefault>
 {
 public:
-    typedef Back::Policy::Policy
+    typedef Back::Policy
     <
-        Defaults<Detail::CircularDependencies>::type,
-        Defaults<Detail::BindingWithCtors>::type,
-        Defaults<Detail::ModulesDependeciesRepetitions>::type
+        //DisallowCircularDependencies,
+        //VerifyCtorBinding,
+        //DisallowModuleDependencyRepetition,
+        //CheckForNotSharedSingletons
     >
     type;
 };

@@ -14,7 +14,8 @@ BOOST=$(shell ls ../Externals/boost | xargs -i% echo -I../Externals/boost/%/incl
 QPOOL=../Externals/QPool
 INCLUDES=$(BOOST) -I$(QPOOL) -I$(GTEST)/include -I..
 CXXFLAGS=$(INCLUDES) -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants
-OBJS=$(patsubst %.cpp,%.o,$(shell find UT/Back -iname "*.cpp")) main.o
+#OBJS=$(patsubst %.cpp,%.o,$(shell find . -iname "*.cpp"))
+OBJS=$(patsubst %.cpp,%.o,$(shell find UT/Front -iname "*.cpp")) main.o
 REV:=$(shell git log --oneline | head -1 | cut -d ' ' -f1)
 
 all: test cov cppcheck scan-build valgrind
@@ -52,24 +53,6 @@ cov:
 .PHONY: valgrind
 valgrind: test
 	LD_LIBRARY_PATH=$(dirname $(GTEST_LIBS)) $(VALGRIND) --leak-check=full --track-origins=yes ./$(TEST_TARGET)
-
-html: clean
-	@mkdir $(REV)
-	@echo "<pre>" >> $(REV)/index.html
-	@date >> $(REV)/index.html
-	@git log --oneline  | head -1 >> $(REV)/index.html
-	@echo -e "\ntest: " >> $(REV)/index.html
-	@g++ --version >> $(REV)/index.html
-	@CXX=g++ make test 2>>$(REV)/index.html >> $(REV)/index.html
-	@echo -e "\nvalgrind: " >> $(REV)/index.html
-	@make valgrind 2>>$(REV)/index.html >> $(REV)/index.html
-	@echo -e "\ncppcheck: " >> $(REV)/index.html
-	@make cppcheck 2>>$(REV)/index.html >> $(REV)/index.html
-	@echo -e "\ncov: " >> $(REV)/index.html
-	@make cov COVERAGE_DIR="$(REV)/Coverage" 2>>$(REV)/index.html >> $(REV)/index.html
-	@echo -e "\nscan-build: " >> $(REV)/index.html
-	@make scan-build 2>>$(REV)/index.html >> $(REV)/index.html
-	@echo "</pre>" >> $(REV)/index.html
 
 .PHONY: clean
 clean:

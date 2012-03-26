@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef QDEPS_BACK_POLICY_POLICY_HPP
-#define QDEPS_BACK_POLICY_POLICY_HPP
+#ifndef QDEPS_BACK_POLICY_HPP
+#define QDEPS_BACK_POLICY_HPP
 
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/if.hpp>
@@ -16,8 +16,6 @@
 namespace QDeps
 {
 namespace Back
-{
-namespace Policy
 {
 
 namespace Detail
@@ -55,7 +53,6 @@ public:
     typedef typename ParameterImpl<QDeps::Detail::ModulesDependeciesRepetitions>::type ModulesDependeciesRepetitions;
 };
 
-} // namespace Policy
 } // namespace Back
 } // namespace QDeps
 

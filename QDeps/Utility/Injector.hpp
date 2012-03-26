@@ -24,7 +24,7 @@
 #include "QPool/Utility/Ctor.hpp"
 #include "QDeps/Back/Utility.hpp"
 #include "QDeps/Back/Factory.hpp"
-#include "QDeps/Back/Policy/Policy.hpp"
+#include "QDeps/Back/Policy.hpp"
 #include "QDeps/Config.hpp"
 
 namespace QDeps
@@ -37,7 +37,7 @@ class Injector
 {
     BOOST_MPL_HAS_XXX_TRAIT_DEF(Binding)
 
-    struct Policy : Back::Policy::Detail::Parameter
+    struct Policy : Back::Detail::Parameter
         <
             boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
             typename Defaults<Detail::Policy>::type,
@@ -105,6 +105,14 @@ public:
     {
         return m_factory.create<T>();
     }
+
+    template<typename TVisitor> void visit(const TVisitor&)
+    {
+    }
+
+/*    template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, typename M)> Injector<M...> install(T...)*/
+    //{
+    /*}*/
 
 private:
     Pool m_pool;

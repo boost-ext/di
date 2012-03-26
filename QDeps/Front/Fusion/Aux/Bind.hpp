@@ -14,20 +14,36 @@ namespace Front
 namespace Fusion
 {
 
-template<typename T> struct Bind
+template<typename T, typename = void> struct Bind
 {
+    template<typename TName> struct InName
+    { };
+
+    template<typename TCall> struct InCall
+    { };
+
+    template<typename TScope> struct InScope
+    {
+        template<typename TCall> struct InCall
+        { };
+
+        template<typename TCall> struct InCall
+        { };
+    };
+
     template<typename TImpl> struct To
     {
+        template<typename TName> struct InName
+        { };
+
         template<typename TScope> struct InScope
         {
             template<typename TCall> struct InCall
-            {
-            };
+            { };
         };
 
         template<typename TCall> struct InCall
-        {
-        };
+        { };
     };
 };
 

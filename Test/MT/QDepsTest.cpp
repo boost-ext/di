@@ -8,7 +8,7 @@
 #include "Test/Common/Data.hpp"
 #include "QDeps/Utility/Injector.hpp"
 #include "QDeps/Utility/Named.hpp"
-#include "QDeps/Front/Generic/Module.hpp"
+//#include "QDeps/Front/Generic/Module.hpp"
 
 namespace QDeps
 {
@@ -26,6 +26,7 @@ using namespace Test::Common;
 //TODO is_base_of
 //TODO QDEPS_INJECT for method as well
 
+#if 0
 struct GenericModule : Front::Generic::Module
 {
     typedef vector
@@ -84,6 +85,7 @@ TEST(QDeps, Modules)
 TEST(QDeps, ModulesPolicies)
 {
 }
+#endif
 
 } // namespace MT
 } // namespace QDeps

@@ -7,7 +7,7 @@
 #include <gtest/gtest.h>
 
 #define QDEPS_CTOR_CFG_BRACKET
-#include "QDeps/Front/Inject.hpp"
+#include "QDeps/Front/Ctor.hpp"
 
 namespace QDeps
 {
@@ -18,7 +18,7 @@ namespace Scopes
 namespace UT
 {
 
-TEST(InjectBracket, Empty)
+TEST(CtorBracket, Empty)
 {
     struct C
     {
@@ -26,7 +26,7 @@ TEST(InjectBracket, Empty)
     };
 }
 
-TEST(InjectBracket, ExplicitWithDefault)
+TEST(CtorBracket, ExplicitWithDefault)
 {
     struct C
     {
@@ -44,7 +44,7 @@ TEST(InjectBracket, ExplicitWithDefault)
     EXPECT_EQ(static_cast<int>(C::DEFAULT), c.i);
 }
 
-TEST(InjectBracket, Params)
+TEST(CtorBracket, Params)
 {
     const int i = 1;
     const double d = 2.0;
@@ -65,7 +65,7 @@ TEST(InjectBracket, Params)
     EXPECT_EQ(d, c.d);
 }
 
-TEST(InjectBracket, Traits)
+TEST(CtorBracket, Traits)
 {
     const int i = 1;
     const double d = 2.0;

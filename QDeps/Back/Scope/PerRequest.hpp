@@ -1,7 +1,7 @@
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef QDEPS_BACK_SCOPES_PERREQUEST_HPP
-    #define QDEPS_BACK_SCOPES_PERREQUEST_HPP
+    #ifndef QDEPS_BACK_SCOPE_PERREQUEST_HPP
+    #define QDEPS_BACK_SCOPE_PERREQUEST_HPP
 
     #include <boost/shared_ptr.hpp>
     #include <boost/make_shared.hpp>
@@ -11,13 +11,13 @@
     #include <boost/preprocessor/punctuation/comma_if.hpp>
     #include "QDeps/Config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, QDEPS_FUNC_ARITY, "QDeps/Back/Scopes/PerRequest.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, QDEPS_FUNC_ARITY, "QDeps/Back/Scope/PerRequest.hpp"))
 
     namespace QDeps
     {
     namespace Back
     {
-    namespace Scopes
+    namespace Scope
     {
 
     class PerRequest
@@ -26,7 +26,7 @@
         #include BOOST_PP_ITERATE()
     };
 
-    } // namespace Scopes
+    } // namespace Scope
     } // namespace Back
     } // namespace QDeps
 
