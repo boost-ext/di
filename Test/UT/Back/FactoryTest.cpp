@@ -183,7 +183,7 @@ TEST(Factory, CreatePerRequest)
     >
     l_factory;
 
-    boost::shared_ptr<C8> c8 = l_factory.create< boost::shared_ptr<C8> >();
+    shared_ptr<C8> c8 = l_factory.create< shared_ptr<C8> >();
 
     EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
     EXPECT_NE(c8->c7->c6->c4->c3, c8->c7->c6->c3);
@@ -213,7 +213,7 @@ TEST(Factory, CreatePerRequestSingleton)
     >
     l_factory;
 
-    boost::shared_ptr<C8> c8 = l_factory.create< boost::shared_ptr<C8> >();
+    shared_ptr<C8> c8 = l_factory.create< shared_ptr<C8> >();
 
     EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
     EXPECT_EQ(c8->c7->c6->c4->c3, c8->c7->c6->c3);
@@ -244,7 +244,7 @@ TEST(Factory, CreatePerRequestSingletonPath)
     >
     l_factory;
 
-    boost::shared_ptr<C8> c8 = l_factory.create< boost::shared_ptr<C8> >();
+    shared_ptr<C8> c8 = l_factory.create< shared_ptr<C8> >();
 
     EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
     EXPECT_EQ(c8->c7->c6->c4->c3, c8->c7->c6->c3);
@@ -276,7 +276,7 @@ TEST(Factory, CreatePerRequestSingletonPathOrder)
     >
     l_factory;
 
-    boost::shared_ptr<C8> c8 = l_factory.create< boost::shared_ptr<C8> >();
+    shared_ptr<C8> c8 = l_factory.create< shared_ptr<C8> >();
 
     EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
     EXPECT_EQ(c8->c7->c6->c4->c3, c8->c7->c6->c3);
@@ -306,14 +306,14 @@ TEST(Factory, CreatePerRequestSingletonPathMix)
             Dependency<Singleton, C3>,
             Dependency<PerRequest, int, int_<1> >,
             Dependency<PerRequest, int, int_<2>, vector<C8> >,
-            Dependency<PerRequest, Named<int, mpl::string<'1'> >, int_<3>, vector<C7, C6, C4> >,
-            Dependency<PerRequest, Named<int, mpl::string<'2'> >, int_<4>, vector<C7, C6, C4> >,
+            Dependency<PerRequest, Named<int, string<'1'> >, int_<3>, vector<C7, C6, C4> >,
+            Dependency<PerRequest, Named<int, string<'2'> >, int_<4>, vector<C7, C6, C4> >,
             Dependency<PerRequest, int, int_<5>, vector<C2> >
         >
     >
     l_factory;
 
-    boost::shared_ptr<C8> c8 = l_factory.create< boost::shared_ptr<C8> >();
+    shared_ptr<C8> c8 = l_factory.create< shared_ptr<C8> >();
 
     EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
     EXPECT_EQ(c8->c7->c6->c4->c3, c8->c7->c6->c3);
@@ -342,7 +342,7 @@ TEST(Factory, CreateSingletonImpl)
     >
     l_factory;
 
-    boost::shared_ptr<C8> c8 = l_factory.create< boost::shared_ptr<C8> >();
+    shared_ptr<C8> c8 = l_factory.create< shared_ptr<C8> >();
 
     EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
     EXPECT_NE(c8->c7->c6->c4->c3, c8->c7->c6->c3);
@@ -373,7 +373,7 @@ TEST(Factory, CreateSingletonMany)
     >
     l_factory;
 
-    boost::shared_ptr<C8> c8 = l_factory.create< boost::shared_ptr<C8> >();
+    shared_ptr<C8> c8 = l_factory.create< shared_ptr<C8> >();
 
     EXPECT_EQ(c8->c1, c8->c7->c6->c5.c1);
     EXPECT_EQ(c8->c7->c6->c4->c3, c8->c7->c6->c3);
@@ -397,13 +397,16 @@ TEST(Factory, BaseOf)
     <
         vector
         <
-            Dependency<PerRequest, CIf0, CIf0, vector0<>, boost::is_base_of<boost::mpl::_1, CIf0> >,
-            Dependency<PerRequest, Named<int, mpl::string<'1'> >, int_<3>, vector<C7, C6, C4>, boost::is_same<boost::mpl::_1, Named<int, mpl::string<'1'> > > >
+            Dependency<Back::Scope::PerRequest, int, int_<1>, vector0<>, is_base_of<_1, int> >,
+            Dependency<Back::Scope::PerRequest, Named<int, string<'2'> >, int_<4>, vector<C7, C6, C4>, is_base_of<_1, Named<int, string<'2'> > > >,
+            Dependency<Back::Scope::PerRequest, int, int_<5>, vector<C2>, is_base_of<_1, int> >,
+            Dependency<PerRequest, CIf0, CIf0, vector0<>, is_base_of<_1, CIf0> >,
+            Dependency<PerRequest, Named<int, string<'1'> >, int_<3>, vector<C7, C6, C4>, is_base_of<_1, Named<int, string<'1'> > > >
         >
     >
     l_factory;
 
-    boost::shared_ptr<C8> c8 = l_factory.create< boost::shared_ptr<C8> >();
+    shared_ptr<C8> c8 = l_factory.create< shared_ptr<C8> >();
 
     EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
     EXPECT_NE(c8->c7->c6->c4->c3, c8->c7->c6->c3);
@@ -412,11 +415,11 @@ TEST(Factory, BaseOf)
     EXPECT_TRUE(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
     EXPECT_TRUE(dynamic_cast<CIf0*>(c8->c7->if0.get()));
 
-    EXPECT_EQ(0, c8->i);
+    EXPECT_EQ(1, c8->i);
     EXPECT_EQ(3, c8->c7->c6->c4->i1);
-    EXPECT_EQ(0, c8->c7->c6->c4->i2);
+    EXPECT_EQ(4, c8->c7->c6->c4->i2);
     EXPECT_EQ(0, c8->c7->c6->c3->i);
-    EXPECT_EQ(0, c8->c7->c6->c5.c2->i);
+    EXPECT_EQ(5, c8->c7->c6->c5.c2->i);
     EXPECT_EQ(0.0, c8->c7->c6->c5.c2->d);
     EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
 }

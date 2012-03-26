@@ -33,13 +33,13 @@ namespace Base
 {
 
 template<typename TScope> struct Scope : Aux::Scope<TScope> { };
-template<typename TExpected, typename TGiven = void> struct Bind : Aux::Bind<TExpected, TGiven> { };
+template<typename TExpected, typename TGiven = TExpected> struct Bind : Aux::Bind<TExpected, TGiven> { };
 
-template<typename TExpected, typename TGiven = void> struct Singleton : Scope<Back::Scope::Singleton>::Bind< Bind<TExpected, TGiven> > { };
-template<typename T> struct Singleton<T, void> : Scope<Back::Scope::Singleton>::Bind<T> { };
+template<typename TExpected, typename TGiven = TExpected> struct Singleton : Scope<Back::Scope::Singleton>::Bind< Bind<TExpected, TGiven> > { };
+template<typename T> struct Singleton<T, T> : Scope<Back::Scope::Singleton>::Bind<T> { };
 
-template<typename TExpected, typename TGiven = void> struct PerRequest : Scope<Back::Scope::PerRequest>::Bind< Bind<TExpected, TGiven> > { };
-template<typename T> struct PerRequest<T, void> : Scope<Back::Scope::PerRequest>::Bind<T> { };
+template<typename TExpected, typename TGiven = TExpected> struct PerRequest : Scope<Back::Scope::PerRequest>::Bind< Bind<TExpected, TGiven> > { };
+template<typename T> struct PerRequest<T, T> : Scope<Back::Scope::PerRequest>::Bind<T> { };
 
 template<typename T> struct External : Aux::Externals<T> { };
 

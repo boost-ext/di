@@ -22,14 +22,16 @@ Requirements
         * icc   >= 11.1
         * msvc  ?
 
-Tests & Examples & Analysis
+Tests & Examples & Doc & Analysis
 ------------
-    make all    # test cov cppcheck scan-build valgrind doc
-    make test   # compile and run only UT/MT
+    make                # test cov cppcheck scan-build valgrind doc examples
+    make test           # compile and run only UT/MT
+    make doc            # generate documentation
+    make examples       # build examples
 
 Install
 ------------
-    sudo make install
+    sudo make install   # copy QDeps to /usr/include
 
 Usage
 -----
@@ -95,8 +97,6 @@ struct C3 { QDPES_CTOR(C3, C2, const shared_ptr<IDummy>& /*Dumb singleton with C
 
 TODO
 ------
-    * make install
-    * thread safety
     * visitor -> dump dot
     * C++11 fork
 

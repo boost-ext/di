@@ -20,6 +20,8 @@ class Impl : I { };
 
 TEST(Named, BaseOf)
 {
+    EXPECT_TRUE((boost::is_base_of<Named<I, Name>, Named<I, Name> >::value));
+
     EXPECT_TRUE((boost::is_base_of<I, Named<Impl, Name> >::value));
     EXPECT_FALSE((boost::is_base_of<I, Named<int, Name> >::value));
     EXPECT_FALSE((boost::is_base_of<int, Named<Impl, Name> >::value));

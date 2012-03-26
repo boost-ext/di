@@ -41,13 +41,13 @@ private:
 namespace boost
 {
 
-//template<typename TDerived, typename TBase, typename TName>
-//struct is_base_of< QDeps::Utility::Named<TBase, TName>, TDerived> : is_base_of<TBase, TDerived>
+//template<typename TBase, typename TDerived, typename TName>
+//struct is_base_of< QDeps::Utility::Named<TBase, TName>, QDeps::Utility::Named<TDerived, TName> > : is_base_of<TBase, TDerived>
 //{ };
 
-template<typename TBase, typename TDerived, typename TName>
-struct is_base_of< TBase, QDeps::Utility::Named<TDerived, TName> > : is_base_of<TBase, TDerived>
-{ };
+//template<typename TBase, typename TDerived, typename TName>
+//struct is_base_of< TBase, QDeps::Utility::Named<TDerived, TName> > : is_base_of<TBase, TDerived>
+//{ };
 
 } // namespace boost
 

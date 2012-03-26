@@ -90,7 +90,8 @@ struct Scope
                 >
             >::type
         {
-            template<typename TName> struct InName : Detail::Internal, boost::mpl::fold
+            template<typename TName>
+            struct InName : Detail::Internal, boost::mpl::fold
                 <
                     boost::mpl::vector1<TExpected>,
                     boost::mpl::vector0<>,
@@ -104,7 +105,8 @@ struct Scope
             { };
         };
 
-        template<typename TName> struct InName : Detail::Internal, boost::mpl::fold
+        template<typename TName>
+        struct InName : Detail::Internal, boost::mpl::fold
             <
                 boost::mpl::vector1<TExpected>,
                 boost::mpl::vector0<>,

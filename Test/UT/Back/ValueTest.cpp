@@ -19,7 +19,7 @@ namespace UT
 {
 
 using namespace boost;
-using namespace boost::mpl;
+using namespace mpl;
 
 TEST(Value, Generic)
 {
@@ -29,15 +29,15 @@ TEST(Value, Generic)
 TEST(Value, mpl_int)
 {
     const int i = 42;
-    EXPECT_TRUE((Value<boost::mpl::int_<0> >::value));
-    EXPECT_EQ(i, *Value<boost::mpl::int_<i> >::create<int>());
+    EXPECT_TRUE((Value<int_<0> >::value));
+    EXPECT_EQ(i, *Value<int_<i> >::create<int>());
 }
 
 TEST(Value, mpl_string)
 {
     const std::string s = "s";
-    EXPECT_TRUE((Value<boost::mpl::string<'s'> >::value));
-    EXPECT_EQ(s, *Value<boost::mpl::string<'s'> >::create<std::string>());
+    EXPECT_TRUE((Value<string<'s'> >::value));
+    EXPECT_EQ(s, *Value<string<'s'> >::create<std::string>());
 }
 
 } // namespace UT
