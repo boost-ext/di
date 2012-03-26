@@ -16,7 +16,7 @@ template<typename T>
 class Provider
 {
 public:
-    virtual T get() = 0;
+    virtual T get() const = 0;
 };
 
 } // namespace Utility

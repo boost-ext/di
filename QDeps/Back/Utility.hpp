@@ -26,9 +26,9 @@ namespace Detail
 BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 } // namespace Detail
 
-template<typename T> struct GetDependency
+template<typename T> struct GetBind
 {
-    typedef typename T::Dependency type;
+    typedef typename T::Bind type;
 };
 
 template<typename T> struct GetContext
@@ -41,19 +41,14 @@ template<typename T> struct GetContextSize
     static const std::size_t value = boost::mpl::size<typename GetContext<T>::type>::value;
 };
 
-template<typename T> struct GetDeps
+template<typename T> struct GetDependencies
 {
-    typedef typename T::template Deps<typename T::Binding>::type type;
+    typedef typename T::Dependencies type;
 };
 
-template<typename T> struct GetKeys
+template<typename T> struct GetExternals
 {
-    typedef typename T::template Keys<typename T::Binding>::type type;
-};
-
-template<typename T> struct HasExternalValue
-{
-    typedef typename T::HasExternalValue type;
+    typedef typename T::Externals type;
 };
 
 template<typename T> struct RemoveAccessors
@@ -87,16 +82,9 @@ struct MakeShared<T, typename boost::enable_if< Detail::has_element_type<typenam
     typedef typename MakePlain<T>::type type;
 };
 
-template<typename T, typename Enable = void>
-struct MakeVector
+template<typename T, typename TApplied> struct Apply
 {
-    typedef boost::mpl::vector<T> type;
-};
-
-template<typename T>
-struct MakeVector<T, typename boost::enable_if< boost::mpl::is_sequence<T> >::type>
-{
-    typedef T type;
+    typedef typename T::template Apply<TApplied>::type type;
 };
 
 } // namespace Back

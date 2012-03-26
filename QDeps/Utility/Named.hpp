@@ -27,6 +27,9 @@ public:
     { }
 
     operator T() { return m_value; }
+    T* operator->() const { return m_value; }
+    T& operator*() const { return m_value; }
+    T* get() const { return m_value; }
 
 private:
     T m_value;
@@ -37,10 +40,6 @@ private:
 
 namespace boost
 {
-
-template<typename TDerived, typename TBase, typename TName>
-struct is_base_of< QDeps::Utility::Named<TBase, TName>, TDerived> : is_base_of<TBase, TDerived>
-{ };
 
 template<typename TBase, typename TDerived, typename TName>
 struct is_base_of< TBase, QDeps::Utility::Named<TDerived, TName> > : is_base_of<TBase, TDerived>

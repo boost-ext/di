@@ -7,6 +7,7 @@
 #include <gtest/gtest.h>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
+#include "QDeps/Back/Module.hpp"
 #include "QDeps/Utility/Injector.hpp"
 
 namespace QDeps
@@ -22,11 +23,10 @@ class A { };
 class B { };
 class C { };
 
-struct Module
+struct Module : Back::Module
 {
-    typedef vector0<> Binding;
-    template<typename T> struct Deps : boost::mpl::vector<A, B, C> { };
-    template<typename T> struct Keys : boost::mpl::vector<int> { };
+    struct Dependencies : boost::mpl::vector<A, B, C> { };
+    struct Externals : boost::mpl::vector<int> { };
 };
 
 TEST(Injector, CtorEmpty)
@@ -40,7 +40,7 @@ TEST(Injector, CtorEmpty)
         equal
         <
             vector0<>,
-            Inj::Deps
+            Inj::Dependencies
         >::value
     ));
 
@@ -48,7 +48,7 @@ TEST(Injector, CtorEmpty)
         equal
         <
             vector0<>,
-            Inj::Keys
+            Inj::Externals
         >::value
     ));
 }
@@ -64,15 +64,18 @@ TEST(Injector, Module)
         equal
         <
             vector<C, B, A>,
-            Inj::Deps
+            Inj::Dependencies
         >::value
     ));
+
+    std::cout << abi::__cxa_demangle(typeid(Inj::Dependencies::type).name(), 0, 0, 0) << std::endl;
+
 
     EXPECT_TRUE((
         equal
         <
             vector<int>,
-            Inj::Keys
+            Inj::Externals
         >::value
     ));
 }

@@ -14,23 +14,6 @@ namespace Front
 namespace Fusion
 {
 
-template<typename T> struct Bind
-{
-    template<typename TImpl> struct To
-    {
-        template<typename TScope> struct InScope
-        {
-            template<typename TCall> struct InCall
-            {
-            };
-        };
-
-        template<typename TCall> struct InCall
-        {
-        };
-    };
-};
-
 } // namespace Fusion
 } // namespace Front
 } // namespace QDeps

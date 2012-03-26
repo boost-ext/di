@@ -19,12 +19,12 @@
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/bool.hpp>
-#include <boost/mpl/has_xxx.hpp>
 #include "QPool/Pool.hpp"
-#include "QPool/Utility/Ctor.hpp"
+#include "QDeps/Back/Module.hpp"
 #include "QDeps/Back/Utility.hpp"
 #include "QDeps/Back/Factory.hpp"
-#include "QDeps/Back/Policy/Policy.hpp"
+#include "QDeps/Back/Policy.hpp"
+#include "QPool/Utility/Ctor.hpp"
 #include "QDeps/Config.hpp"
 
 namespace QDeps
@@ -35,65 +35,65 @@ namespace Utility
 template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
 class Injector
 {
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(Binding)
-
-    struct Policy : Back::Policy::Detail::Parameter
+#if 0
+    struct Policy : Back::Detail::Parameter
         <
             boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
             typename Defaults<Detail::Policy>::type,
             boost::is_base_of<Detail::Policy, boost::mpl::_2>
         >
     { };
+#endif
 
     template<typename TSeq, typename TResult = boost::mpl::set0<> >
-    struct DepsImpl : boost::mpl::fold
+    struct DependenciesImpl : boost::mpl::fold
         <
             TSeq,
             TResult,
             boost::mpl::if_
             <
-                has_Binding<boost::mpl::_2>,
-                DepsImpl<Back::GetDeps<boost::mpl::_2>, boost::mpl::_1>,
+                boost::is_base_of<Back::Module, boost::mpl::_2>,
+                DependenciesImpl<Back::GetDependencies<boost::mpl::_2>, boost::mpl::_1>,
                 boost::mpl::insert<boost::mpl::_1, boost::mpl::_2>
             >
         >
     { };
 
     template<typename TSeq, typename TResult = boost::mpl::set0<> >
-    struct KeysImpl : boost::mpl::fold
+    struct ExternalsImpl : boost::mpl::fold
         <
             TSeq,
             TResult,
             boost::mpl::if_
             <
-                has_Binding<boost::mpl::_2>,
-                KeysImpl<Back::GetKeys<boost::mpl::_2>, boost::mpl::_1>,
+                boost::is_base_of<Back::Module, boost::mpl::_2>,
+                ExternalsImpl<Back::GetExternals<boost::mpl::_2>, boost::mpl::_1>,
                 boost::mpl::insert<boost::mpl::_1, boost::mpl::_2>
             >
         >
     { };
 
 public:
-    struct Deps : boost::mpl::fold
+    struct Dependencies : boost::mpl::fold
         <
-            typename DepsImpl< boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >::type,
+            typename DependenciesImpl< boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >::type,
             boost::mpl::vector0<>,
             boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>
         >::type
     { };
 
 
-    struct Keys : boost::mpl::fold
+    struct Externals : boost::mpl::fold
         <
-            typename KeysImpl< boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >::type,
+            typename ExternalsImpl< boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >::type,
             boost::mpl::vector0<>,
             boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>
         >::type
     { };
 
 private:
-    typedef QPool::Pool<typename Keys::type> Pool;
-    typedef Back::Factory<typename Deps::type, Pool> Factory;
+    typedef QPool::Pool<typename Externals::type> Pool;
+    typedef Back::Factory<typename Dependencies::type, Pool> Factory;
 
 public:
     QPOOL_CTOR(Injector,
@@ -105,6 +105,14 @@ public:
     {
         return m_factory.create<T>();
     }
+
+    template<typename TVisitor> void visit(const TVisitor&)
+    {
+    }
+
+/*    template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, typename M)> Injector<M...> install(T...)*/
+    //{
+    /*}*/
 
 private:
     Pool m_pool;

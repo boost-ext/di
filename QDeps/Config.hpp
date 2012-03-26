@@ -10,12 +10,16 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 
-#if !defined(QDEPS_INJECT_CFG_VA_ARGS) && !defined(QDEPS_INJECT_CFG_BRACKET)
-# define QDEPS_INJECT_CFG_VA_ARGS
+#if !defined(QDEPS_CTOR_CFG_VA_ARGS) && !defined(QDEPS_CTOR_CFG_BRACKET)
+# define QDEPS_CTOR_CFG_VA_ARGS
 #endif
 
 #if !defined(QDEPS_FUNC_ARITY)
 # define QDEPS_FUNC_ARITY 10
+#endif
+
+#if !defined(QDEPS_CTOR_UNIQUE_NAME)
+# define QDEPS_CTOR_UNIQUE_NAME ctor__
 #endif
 
 namespace QDeps
@@ -30,37 +34,19 @@ namespace QDeps
  * namespace QDeps
  * {
  * template<>
- * struct Defaults<int, QDeps::Specialized>
+ * struct Defaults<, QDeps::Specialized>
  * {
- *     static boost::shared_ptr<int> create() { return boost::make_shared<int>(42); }
  * };
  * } // namespace QDeps
  * @endcode
  */
 class Specialized { };
+template<typename, typename = Specialized> class Defaults;
 
-template<typename T, typename TDefault = Specialized>
-struct Defaults
-{
-public:
-    static boost::shared_ptr<T> create() { return boost::make_shared<T>(); }
-};
-
-template<typename TDefault>
-class Defaults<int, TDefault>
-{
-public:
-    static boost::shared_ptr<int> create() { return boost::make_shared<int>(0); }
-};
-
-//Policies
-
+#if 0
 namespace Back
 {
-namespace Policy
-{
 template<typename = void, typename = void, typename = void> class Policy;
-} // namespace Policy
 } // namespace Back
 
 namespace Detail
@@ -81,38 +67,19 @@ class AllowModulesDependeciesRepetitions { };
 class DisallowModulesDependeciesRepetitions { };
 
 template<typename TDefault>
-class Defaults<Detail::CircularDependencies, TDefault>
-{
-public:
-    typedef DisallowCircularDependencies type;
-};
-
-template<typename TDefault>
-class Defaults<Detail::BindingWithCtors, TDefault>
-{
-public:
-    typedef VerifyBindingWithCtors type;
-};
-
-template<typename TDefault>
-class Defaults<Detail::ModulesDependeciesRepetitions, TDefault>
-{
-public:
-    typedef DisallowModulesDependeciesRepetitions type;
-};
-
-template<typename TDefault>
 class Defaults<Detail::Policy, TDefault>
 {
 public:
-    typedef Back::Policy::Policy
+    typedef Back::Policy
     <
-        Defaults<Detail::CircularDependencies>::type,
-        Defaults<Detail::BindingWithCtors>::type,
-        Defaults<Detail::ModulesDependeciesRepetitions>::type
+        DisallowCircularDependencies,
+        VerifyCtorBinding,
+        DisallowModuleDependencyRepetition,
+        CheckForNotSharedSingletons
     >
     type;
 };
+#endif
 
 } // namespace QDeps
 

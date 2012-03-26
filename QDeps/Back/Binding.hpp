@@ -52,8 +52,8 @@ template<typename T1, typename T2>
 struct LessContextSize : boost::mpl::bool_<(GetContextSize<T1>::value > GetContextSize<T2>::value)>::type
 { };
 
-template<typename T1, typename TDependency>
-struct Compare : boost::mpl::apply<TDependency, T1>::type
+template<typename T, typename TBind>
+struct Compare : boost::mpl::apply<TBind, T>::type
 { };
 
 } // namespace Detail
@@ -69,7 +69,7 @@ struct Binding : boost::mpl::sort
             <
                 boost::mpl::and_
                 <
-                    Detail::Compare<T, GetDependency<boost::mpl::_2> >,
+                    Detail::Compare<T, GetBind<boost::mpl::_2> >,
                     Detail::EqualCallStack<TCallStack, GetContext<boost::mpl::_2> >
                 >,
                 boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>,

@@ -22,15 +22,15 @@ namespace UT
 using namespace boost;
 using namespace boost::mpl;
 
-template<typename T, typename TContext = vector0<> > struct Dep
+template<typename T, typename TContext = vector0<> > struct Dependency
 {
-    typedef is_same<_1, T> Dependency;
+    typedef is_same<_1, T> Bind;
     typedef TContext Context;
 };
 
-template<typename T, typename TContext = vector0<> > struct DepBaseOf
+template<typename T, typename TContext = vector0<> > struct DependencyBaseOf
 {
-    typedef is_base_of<_1, T> Dependency;
+    typedef is_base_of<_1, T> Bind;
     typedef TContext Context;
 };
 
@@ -62,14 +62,14 @@ TEST(Binding, One)
     EXPECT_TRUE((
         equal
         <
-            vector1< Dep<int> >,
+            vector1< Dependency<int> >,
             Binding
             <
                 int,
                 vector0<>,
                 vector
                 <
-                    Dep<int>
+                    Dependency<int>
                 >
             >
         >::value
@@ -81,16 +81,16 @@ TEST(Binding, Found)
     EXPECT_TRUE((
         equal
         <
-            vector< Dep<float> >,
+            vector< Dependency<float> >,
             Binding
             <
                 float,
                 vector0<>,
                 vector
                 <
-                    Dep<int>,
-                    Dep<float>,
-                    Dep<double>
+                    Dependency<int>,
+                    Dependency<float>,
+                    Dependency<double>
                 >
             >
         >::value
@@ -102,16 +102,16 @@ TEST(Binding, FoundMany)
     EXPECT_TRUE((
         equal
         <
-            vector< Dep<float>, Dep<float> >,
+            vector< Dependency<float>, Dependency<float> >,
             Binding
             <
                 float,
                 vector0<>,
                 vector
                 <
-                    Dep<int>,
-                    Dep<float>,
-                    Dep<float>
+                    Dependency<int>,
+                    Dependency<float>,
+                    Dependency<float>
                 >
             >
         >::value
@@ -130,9 +130,9 @@ TEST(Binding, NotFound)
                 vector0<>,
                 vector
                 <
-                    Dep<int>,
-                    Dep<float>,
-                    Dep<float>
+                    Dependency<int>,
+                    Dependency<float>,
+                    Dependency<float>
                 >
             >
         >::value
@@ -144,15 +144,15 @@ TEST(Binding, Context)
     EXPECT_TRUE((
         equal
         <
-            vector< Dep<int, vector<A, B> > >,
+            vector< Dependency<int, vector<A, B> > >,
             Binding
             <
                 int,
                 vector<A, B>,
                 vector
                 <
-                    Dep<int, vector<A> >,
-                    Dep<int, vector<A, B> >
+                    Dependency<int, vector<A> >,
+                    Dependency<int, vector<A, B> >
                 >
             >
         >::value
@@ -164,16 +164,16 @@ TEST(Binding, ContextMany)
     EXPECT_TRUE((
         equal
         <
-            vector< Dep<int, vector<A, B> >, Dep<int> >,
+            vector< Dependency<int, vector<A, B> >, Dependency<int> >,
             Binding
             <
                 int,
                 vector<A, B>,
                 vector
                 <
-                    Dep<int>,
-                    Dep<int, vector<A> >,
-                    Dep<int, vector<A, B> >
+                    Dependency<int>,
+                    Dependency<int, vector<A> >,
+                    Dependency<int, vector<A, B> >
                 >
             >
         >::value
@@ -187,9 +187,9 @@ TEST(Binding, ContextManyEnd)
         <
             vector
             <
-                Dep<int, vector<A, B> >,
-                Dep<int, vector<B> >,
-                Dep<int>
+                Dependency<int, vector<A, B> >,
+                Dependency<int, vector<B> >,
+                Dependency<int>
             >,
             Binding
             <
@@ -197,9 +197,9 @@ TEST(Binding, ContextManyEnd)
                 vector<A, B>,
                 vector
                 <
-                    Dep<int>,
-                    Dep<int, vector<B> >,
-                    Dep<int, vector<A, B> >
+                    Dependency<int>,
+                    Dependency<int, vector<B> >,
+                    Dependency<int, vector<A, B> >
                 >
             >
         >::value
@@ -218,8 +218,8 @@ TEST(Binding, ContextNotFound)
                 vector<A>,
                 vector
                 <
-                    Dep<int, vector<B> >,
-                    Dep<int, vector<A, B> >
+                    Dependency<int, vector<B> >,
+                    Dependency<int, vector<A, B> >
                 >
             >
         >::value
@@ -231,17 +231,17 @@ TEST(Binding, ContextOtherTypes)
     EXPECT_TRUE((
         equal
         <
-            vector< Dep<int, vector<A, B> > >,
+            vector< Dependency<int, vector<A, B> > >,
             Binding
             <
                 int,
                 vector<A, B>,
                 vector
                 <
-                    Dep<int, vector<A> >,
-                    Dep<int, vector<A, B> >,
-                    Dep<float, vector<A, B> >,
-                    Dep<double>
+                    Dependency<int, vector<A> >,
+                    Dependency<int, vector<A, B> >,
+                    Dependency<float, vector<A, B> >,
+                    Dependency<double>
                 >
             >
         >::value
@@ -255,10 +255,10 @@ TEST(Binding, ContextLongWithOrder)
         <
             vector
             <
-                Dep<int, vector<A, B, C> >,
-                Dep<int, vector<B, C> >,
-                Dep<int, vector<C> >,
-                Dep<int>
+                Dependency<int, vector<A, B, C> >,
+                Dependency<int, vector<B, C> >,
+                Dependency<int, vector<C> >,
+                Dependency<int>
             >,
             Binding
             <
@@ -266,15 +266,15 @@ TEST(Binding, ContextLongWithOrder)
                 vector<A, B, C>,
                 vector
                 <
-                    Dep<int, vector<A, B, C> >,
-                    Dep<int, vector<A> >,
-                    Dep<int, vector<B> >,
-                    Dep<int>,
-                    Dep<int, vector<B, C> >,
-                    Dep<int, vector<B, A, C> >,
-                    Dep<int, vector<B, C, C> >,
-                    Dep<int, vector<A, A, A> >,
-                    Dep<int, vector<C> >
+                    Dependency<int, vector<A, B, C> >,
+                    Dependency<int, vector<A> >,
+                    Dependency<int, vector<B> >,
+                    Dependency<int>,
+                    Dependency<int, vector<B, C> >,
+                    Dependency<int, vector<B, A, C> >,
+                    Dependency<int, vector<B, C, C> >,
+                    Dependency<int, vector<A, A, A> >,
+                    Dependency<int, vector<C> >
                 >
             >
         >::value
@@ -288,7 +288,7 @@ TEST(Binding, ContextLongWithOrderEmptyCallStack)
         <
             vector
             <
-                Dep<int>
+                Dependency<int>
             >,
             Binding
             <
@@ -296,15 +296,15 @@ TEST(Binding, ContextLongWithOrderEmptyCallStack)
                 vector<>,
                 vector
                 <
-                    Dep<int, vector<A, B, C> >,
-                    Dep<int, vector<A> >,
-                    Dep<int, vector<B> >,
-                    Dep<int>,
-                    Dep<int, vector<B, C> >,
-                    Dep<int, vector<B, A, C> >,
-                    Dep<int, vector<B, C, C> >,
-                    Dep<int, vector<A, A, A> >,
-                    Dep<int, vector<C> >
+                    Dependency<int, vector<A, B, C> >,
+                    Dependency<int, vector<A> >,
+                    Dependency<int, vector<B> >,
+                    Dependency<int>,
+                    Dependency<int, vector<B, C> >,
+                    Dependency<int, vector<B, A, C> >,
+                    Dependency<int, vector<B, C, C> >,
+                    Dependency<int, vector<A, A, A> >,
+                    Dependency<int, vector<C> >
                 >
             >
         >::value
@@ -318,8 +318,8 @@ TEST(Binding, ContextLongWithOrderDiffCallStack)
         <
             vector
             <
-                Dep<int, vector<B> >,
-                Dep<int>
+                Dependency<int, vector<B> >,
+                Dependency<int>
             >,
             Binding
             <
@@ -327,15 +327,15 @@ TEST(Binding, ContextLongWithOrderDiffCallStack)
                 vector<C, A, B>,
                 vector
                 <
-                    Dep<int, vector<A, B, C> >,
-                    Dep<int, vector<A> >,
-                    Dep<int, vector<B> >,
-                    Dep<int>,
-                    Dep<int, vector<B, C> >,
-                    Dep<int, vector<B, A, C> >,
-                    Dep<int, vector<B, C, C> >,
-                    Dep<int, vector<A, A, A> >,
-                    Dep<int, vector<C> >
+                    Dependency<int, vector<A, B, C> >,
+                    Dependency<int, vector<A> >,
+                    Dependency<int, vector<B> >,
+                    Dependency<int>,
+                    Dependency<int, vector<B, C> >,
+                    Dependency<int, vector<B, A, C> >,
+                    Dependency<int, vector<B, C, C> >,
+                    Dependency<int, vector<A, A, A> >,
+                    Dependency<int, vector<C> >
                 >
             >
         >::value
@@ -349,8 +349,8 @@ TEST(Binding, ContextLongWithOrderShortCallStack)
         <
             vector
             <
-                Dep<int, vector<C> >,
-                Dep<int>
+                Dependency<int, vector<C> >,
+                Dependency<int>
             >,
             Binding
             <
@@ -358,15 +358,15 @@ TEST(Binding, ContextLongWithOrderShortCallStack)
                 vector<C>,
                 vector
                 <
-                    Dep<int, vector<A, B, C> >,
-                    Dep<int, vector<A> >,
-                    Dep<int, vector<B> >,
-                    Dep<int>,
-                    Dep<int, vector<B, C> >,
-                    Dep<int, vector<B, A, C> >,
-                    Dep<int, vector<B, C, C> >,
-                    Dep<int, vector<A, A, A> >,
-                    Dep<int, vector<C> >
+                    Dependency<int, vector<A, B, C> >,
+                    Dependency<int, vector<A> >,
+                    Dependency<int, vector<B> >,
+                    Dependency<int>,
+                    Dependency<int, vector<B, C> >,
+                    Dependency<int, vector<B, A, C> >,
+                    Dependency<int, vector<B, C, C> >,
+                    Dependency<int, vector<A, A, A> >,
+                    Dependency<int, vector<C> >
                 >
             >
         >::value
@@ -380,7 +380,7 @@ TEST(Binding, ContextLongWithOrderToLongCallStack)
         <
             vector
             <
-                Dep<int>
+                Dependency<int>
             >,
             Binding
             <
@@ -388,15 +388,15 @@ TEST(Binding, ContextLongWithOrderToLongCallStack)
                 vector<A, B, C, D>,
                 vector
                 <
-                    Dep<int, vector<A, B, C> >,
-                    Dep<int, vector<A> >,
-                    Dep<int, vector<B> >,
-                    Dep<int>,
-                    Dep<int, vector<B, C> >,
-                    Dep<int, vector<B, A, C> >,
-                    Dep<int, vector<B, C, C> >,
-                    Dep<int, vector<A, A, A> >,
-                    Dep<int, vector<C> >
+                    Dependency<int, vector<A, B, C> >,
+                    Dependency<int, vector<A> >,
+                    Dependency<int, vector<B> >,
+                    Dependency<int>,
+                    Dependency<int, vector<B, C> >,
+                    Dependency<int, vector<B, A, C> >,
+                    Dependency<int, vector<B, C, C> >,
+                    Dependency<int, vector<A, A, A> >,
+                    Dependency<int, vector<C> >
                 >
             >
         >::value
@@ -415,7 +415,7 @@ TEST(Binding, BaseOfFail)
                 vector0<>,
                 vector
                 <
-                    DepBaseOf<A>
+                    DependencyBaseOf<A>
                 >
             >
         >::value
@@ -429,7 +429,7 @@ TEST(Binding, BaseOfSuccessful)
         <
             vector
             <
-                DepBaseOf<Impl>
+                DependencyBaseOf<Impl>
             >,
             Binding
             <
@@ -437,7 +437,7 @@ TEST(Binding, BaseOfSuccessful)
                 vector0<>,
                 vector
                 <
-                    DepBaseOf<Impl>
+                    DependencyBaseOf<Impl>
                 >
             >
         >::value

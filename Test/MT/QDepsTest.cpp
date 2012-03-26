@@ -8,7 +8,7 @@
 #include "Test/Common/Data.hpp"
 #include "QDeps/Utility/Injector.hpp"
 #include "QDeps/Utility/Named.hpp"
-#include "QDeps/Front/Generic/Module.hpp"
+#include "QDeps/Front/Base/Module.hpp"
 
 namespace QDeps
 {
@@ -16,47 +16,36 @@ namespace MT
 {
 
 using namespace boost::mpl;
-using namespace Utility;
 using namespace Test::Common;
+using namespace Utility;
+using namespace Front::Base;
 
 //TODO add providers to module
 //TODO add external instances
 //TODO add named
 //TODO boost::function
-//TODO is_base_of
-//TODO QDEPS_INJECT for method as well
 
-struct GenericModule : Front::Generic::Module
-{
-    typedef vector
+struct BaseModule : Front::Base::Module
     <
-        Scope<Singleton>::Bind
-        <
-            Instance<C3>
+        Singletons <
+            C3
         >,
-        Implementation<If0, CIf0>,
-        Implementation<If0, CIf01>::Bind< InCall<C6, C5> >,
-        Implementation<If0, CIf02>::Bind<C7>,
-        Instance<int, int_<1> >,
-        Instance<int, int_<2> >::Bind<C8>,
-        Instance<Named<int, string<'1'> >, int_<3> >::Bind< InCall<C7, C6, C4> >,
-        Instance<Named<int, string<'2'> >, int_<4> >::Bind< InCall<C7, C6, C4> >,
-        Instance<int, int_<5> >::Bind<C2>
+        PerRequests <
+            CIf0,
+            Bind<CIf01>::InCall<C6, C5>,
+            Bind<CIf02>::InCall<C7>,
+            Bind<int, int_<1> >,
+            Bind<int, int_<2> >::InCall<C8>,
+            Bind<int, int_<3> >::InName< string<'1'> >::InCall<C7, C6, C4>,
+            Bind<int, int_<4> >::InName< string<'2'> >::InCall<C7, C6, C4>,
+            Bind<int, int_<5> >::InCall<C2>
+        >
     >
-    Binding;
-};
-
-struct GenericModule2 : Front::Generic::Module
-{
-    typedef vector
-    <
-    >
-    Binding;
-};
+{ };
 
 TEST(QDeps, Module)
 {
-    Utility::Injector<GenericModule> inj;
+    Utility::Injector<BaseModule> inj;
 
     boost::shared_ptr<C8> c8 = inj.create< boost::shared_ptr<C8> >();
 

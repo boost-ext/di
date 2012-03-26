@@ -10,9 +10,10 @@
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/cat.hpp>
-#include <boost/typeof/typeof.hpp>
 #include <boost/none.hpp>
+#include <boost/make_shared.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/typeof/typeof.hpp>
 #include <boost/function_types/parameter_types.hpp>
 #include <boost/mpl/inherit_linearly.hpp>
 #include <boost/mpl/inherit.hpp>
@@ -26,12 +27,11 @@
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/has_xxx.hpp>
 #include "QPool/Pool.hpp"
-#include "QDeps/Back/Aux/Inst.hpp"
-#include "QDeps/Back/Aux/Impl.hpp"
 #include "QDeps/Back/Utility.hpp"
 #include "QDeps/Back/Convert.hpp"
 #include "QDeps/Back/Binding.hpp"
-#include "QDeps/Back/Scopes/PerRequest.hpp"
+#include "QDeps/Back/Dependency.hpp"
+#include "QDeps/Back/Scope/PerRequest.hpp"
 
 namespace QDeps
 {
@@ -47,7 +47,6 @@ template
 >
 class Factory
 {
-#define QDEPS_CTOR_UNIQUE_NAME inject__
     BOOST_MPL_HAS_XXX_TRAIT_DEF(QDEPS_CTOR_UNIQUE_NAME)
 
     struct Entries : boost::mpl::inherit_linearly
@@ -59,7 +58,7 @@ class Factory
 
     template<typename T> struct Ctor
     {
-        typedef BOOST_TYPEOF_TPL(T::QDEPS_CTOR_UNIQUE_NAME::inject) type;
+        typedef BOOST_TYPEOF_TPL(T::QDEPS_CTOR_UNIQUE_NAME::ctor) type;
     };
 
 public:
@@ -83,7 +82,7 @@ private:
     {
         typedef typename boost::function_types::parameter_types<typename Ctor<T>::type>::type Ctor;
         typedef typename boost::mpl::push_back<TCallStack, T>::type CallStack;
-        Aux::Inst<Scopes::PerRequest, T> l_onDemandInst;
+        Dependency<Scope::PerRequest, T> l_onDemandInst;
         return createImpl<T, Ctor, CallStack>(l_onDemandInst);
     }
 
@@ -106,8 +105,7 @@ private:
         typename boost::enable_if< boost::mpl::empty<typename TBinding<T, TCallStack>::type> >::type* = 0
     )
     {
-        typedef typename TBinding<int, boost::mpl::vector0<> >::type Binding;
-        return Defaults<T, Specialized>::create();
+        return boost::make_shared<T>();
     }
 
     template<typename T, typename TCallStack> typename MakeShared<T>::type createImpl
