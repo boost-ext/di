@@ -7,7 +7,9 @@
 #include <gtest/gtest.h>
 #include <boost/make_shared.hpp>
 #include <boost/type_traits/is_base_of.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/vector.hpp>
+#include <boost/mpl/or.hpp>
 #include "Test/Common/Data.hpp"
 #include "QDeps/Back/Factory.hpp"
 #include "QDeps/Utility/Named.hpp"
@@ -397,11 +399,11 @@ TEST(Factory, BaseOf)
     <
         vector
         <
-            Dependency<Back::Scope::PerRequest, int, int_<1>, vector0<>, is_base_of<_1, int> >,
-            Dependency<Back::Scope::PerRequest, Named<int, string<'2'> >, int_<4>, vector<C7, C6, C4>, is_base_of<_1, Named<int, string<'2'> > > >,
-            Dependency<Back::Scope::PerRequest, int, int_<5>, vector<C2>, is_base_of<_1, int> >,
-            Dependency<PerRequest, CIf0, CIf0, vector0<>, is_base_of<_1, CIf0> >,
-            Dependency<PerRequest, Named<int, string<'1'> >, int_<3>, vector<C7, C6, C4>, is_base_of<_1, Named<int, string<'1'> > > >
+            Dependency<Back::Scope::PerRequest, int, int_<1>, vector0<>, or_< is_base_of<_1, int>, is_same<_1, int> > >,
+            Dependency<Back::Scope::PerRequest, Named<int, string<'2'> >, int_<4>, vector<C7, C6, C4>, or_< is_base_of<_1, Named<int, string<'2'> > >, is_same<_1, Named<int, string<'2'> > > > >,
+            Dependency<Back::Scope::PerRequest, int, int_<5>, vector<C2>, or_< is_base_of<_1, int>, is_same<_1, int> > >,
+            Dependency<PerRequest, CIf0, CIf0, vector0<>, or_< is_base_of<_1, CIf0>, is_same<_1, CIf0> > >,
+            Dependency<PerRequest, Named<int, string<'1'> >, int_<3>, vector<C7, C6, C4>, or_< is_base_of<_1, Named<int, string<'1'> > >, is_same<_1, Named<int, string<'1'> > > > >
         >
     >
     l_factory;
@@ -418,7 +420,7 @@ TEST(Factory, BaseOf)
     EXPECT_EQ(1, c8->i);
     EXPECT_EQ(3, c8->c7->c6->c4->i1);
     EXPECT_EQ(4, c8->c7->c6->c4->i2);
-    EXPECT_EQ(0, c8->c7->c6->c3->i);
+    EXPECT_EQ(1, c8->c7->c6->c3->i);
     EXPECT_EQ(5, c8->c7->c6->c5.c2->i);
     EXPECT_EQ(0.0, c8->c7->c6->c5.c2->d);
     EXPECT_EQ(0, c8->c7->c6->c5.c2->c);

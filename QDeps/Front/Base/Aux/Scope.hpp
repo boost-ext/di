@@ -12,10 +12,12 @@
 #include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/preprocessor/arithmetic/sub.hpp>
 #include <boost/type_traits/is_base_of.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/limits/vector.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/or.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/push_back.hpp>
@@ -46,7 +48,7 @@ struct Scope
             TExpected,
             TGiven,
             TContext,
-            boost::is_base_of<boost::mpl::_1, TExpected>
+            boost::mpl::or_< boost::is_base_of<boost::mpl::_1, TExpected>, boost::is_same<boost::mpl::_1, TExpected> >
         >
     { };
 

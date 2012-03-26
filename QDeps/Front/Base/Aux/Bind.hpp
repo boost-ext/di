@@ -85,7 +85,7 @@ struct Bind<TExpected, TGiven, typename boost::enable_if< boost::mpl::or_<Back::
         TExpected,
         TGiven,
         boost::mpl::vector0<>,
-        boost::is_base_of<boost::mpl::_1, TExpected>
+        boost::mpl::or_< boost::is_base_of<boost::mpl::_1, TExpected>, boost::is_same<boost::mpl::_1, TExpected> >
     >
 {
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
@@ -95,7 +95,7 @@ struct Bind<TExpected, TGiven, typename boost::enable_if< boost::mpl::or_<Back::
             TExpected,
             TGiven,
             boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
-            boost::is_base_of<boost::mpl::_1, TExpected>
+            boost::mpl::or_< boost::is_base_of<boost::mpl::_1, TExpected>, boost::is_same<boost::mpl::_1, TExpected> >
         >
     {
         template<typename TName>
@@ -105,7 +105,7 @@ struct Bind<TExpected, TGiven, typename boost::enable_if< boost::mpl::or_<Back::
                 Utility::Named<TExpected, TName>,
                 TGiven,
                 boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
-                boost::is_base_of<boost::mpl::_1, Utility::Named<TExpected, TName> >
+                boost::mpl::or_< boost::is_base_of<boost::mpl::_1, Utility::Named<TExpected, TName> >, boost::is_same<boost::mpl::_1, Utility::Named<TExpected, TName> > >
             >
         { };
     };
@@ -117,7 +117,7 @@ struct Bind<TExpected, TGiven, typename boost::enable_if< boost::mpl::or_<Back::
             Utility::Named<TExpected, TName>,
             TGiven,
             boost::mpl::vector0<>,
-            boost::is_base_of<boost::mpl::_1, Utility::Named<TExpected, TName> >
+            boost::mpl::or_< boost::is_base_of<boost::mpl::_1, Utility::Named<TExpected, TName> >, boost::is_same<boost::mpl::_1, Utility::Named<TExpected, TName> > >
         >
     {
         template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
@@ -127,7 +127,7 @@ struct Bind<TExpected, TGiven, typename boost::enable_if< boost::mpl::or_<Back::
                 Utility::Named<TExpected, TName>,
                 TGiven,
                 boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
-                boost::is_base_of<boost::mpl::_1, Utility::Named<TExpected, TName> >
+                boost::mpl::or_< boost::is_base_of<boost::mpl::_1, Utility::Named<TExpected, TName> >, boost::is_same<boost::mpl::_1, Utility::Named<TExpected, TName> > >
             >
         { };
     };

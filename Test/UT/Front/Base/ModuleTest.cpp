@@ -5,8 +5,11 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <gtest/gtest.h>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/type_traits/is_base_of.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
+#include <boost/mpl/or.hpp>
 #include "Test/Common/Data.hpp"
 #include "QDeps/Back/Dependency.hpp"
 #include "QDeps/Front/Base/Module.hpp"
@@ -51,7 +54,7 @@ TEST(Module, DefaultScope)
         <
             vector
             <
-                Dependency<Back::Scope::PerRequest, C1, C1, vector0<>, is_base_of<_1, C1> >
+                Dependency<Back::Scope::PerRequest, C1, C1, vector0<>, or_< is_base_of<_1, C1>, is_same<_1, C1> > >
             >,
             TestModule::Dependencies
         >::value
@@ -69,9 +72,9 @@ TEST(Module, DefaultScopeMany)
         <
             vector
             <
-                Dependency<Back::Scope::PerRequest, C1, C1, vector0<>, is_base_of<_1, C1> >,
-                Dependency<Back::Scope::PerRequest, C2, C2, vector0<>, is_base_of<_1, C2> >,
-                Dependency<Back::Scope::PerRequest, C3, C3, vector0<>, is_base_of<_1, C3> >
+                Dependency<Back::Scope::PerRequest, C1, C1, vector0<>, or_< is_base_of<_1, C1>, is_same<_1, C1> > >,
+                Dependency<Back::Scope::PerRequest, C2, C2, vector0<>, or_< is_base_of<_1, C2>, is_same<_1, C2> > >,
+                Dependency<Back::Scope::PerRequest, C3, C3, vector0<>, or_< is_base_of<_1, C3>, is_same<_1, C3> > >
             >,
             TestModule::Dependencies
         >::value
@@ -126,7 +129,7 @@ TEST(Module, OneScope)
         <
             vector
             <
-                Dependency<Back::Scope::Singleton, CIf0, CIf0, vector0<>, is_base_of<_1, CIf0> >
+                Dependency<Back::Scope::Singleton, CIf0, CIf0, vector0<>, or_< is_base_of<_1, CIf0>, is_same<_1, CIf0> > >
             >,
             TestModule::Dependencies
         >::value
@@ -150,7 +153,7 @@ TEST(Module, OneScopeAlias)
         <
             vector
             <
-                Dependency<Back::Scope::Singleton, CIf0, CIf0, vector0<>, is_base_of<_1, CIf0> >
+                Dependency<Back::Scope::Singleton, CIf0, CIf0, vector0<>, or_< is_base_of<_1, CIf0>, is_same<_1, CIf0> > >
             >,
             TestModule::Dependencies
         >::value
@@ -172,7 +175,7 @@ TEST(Module, OneScopeDirect)
         <
             vector
             <
-                Dependency<Back::Scope::Singleton, CIf0, CIf0, vector0<>, is_base_of<_1, CIf0> >
+                Dependency<Back::Scope::Singleton, CIf0, CIf0, vector0<>, or_< is_base_of<_1, CIf0>, is_same<_1, CIf0> > >
             >,
             TestModule::Dependencies
         >::value
@@ -198,9 +201,9 @@ TEST(Module, Many)
         <
             vector
             <
-                Dependency<Back::Scope::Singleton, C1, C1, vector0<>, is_base_of<_1, C1> >,
-                Dependency<Back::Scope::Singleton, C2, C2, vector0<>, is_base_of<_1, C2> >,
-                Dependency<Back::Scope::Singleton, C3, C3, vector0<>, is_base_of<_1, C3> >
+                Dependency<Back::Scope::Singleton, C1, C1, vector0<>, or_< is_base_of<_1, C1>, is_same<_1, C1> > >,
+                Dependency<Back::Scope::Singleton, C2, C2, vector0<>, or_< is_base_of<_1, C2>, is_same<_1, C2> > >,
+                Dependency<Back::Scope::Singleton, C3, C3, vector0<>, or_< is_base_of<_1, C3>, is_same<_1, C3> > >
             >,
             TestModule::Dependencies
         >::value
@@ -229,10 +232,10 @@ TEST(Module, ManyScopes)
         <
             vector
             <
-                Dependency<Back::Scope::Singleton, C1, C1, vector0<>, is_base_of<_1, C1> >,
-                Dependency<Back::Scope::Singleton, C2, C2, vector0<>, is_base_of<_1, C2> >,
-                Dependency<Back::Scope::PerRequest, C3, C3, vector0<>, is_base_of<_1, C3> >,
-                Dependency<Back::Scope::PerRequest, C4, C4, vector0<>, is_base_of<_1, C4> >
+                Dependency<Back::Scope::Singleton, C1, C1, vector0<>, or_< is_base_of<_1, C1>, is_same<_1, C1> > >,
+                Dependency<Back::Scope::Singleton, C2, C2, vector0<>, or_< is_base_of<_1, C2>, is_same<_1, C2> > >,
+                Dependency<Back::Scope::PerRequest, C3, C3, vector0<>, or_< is_base_of<_1, C3>, is_same<_1, C3> > >,
+                Dependency<Back::Scope::PerRequest, C4, C4, vector0<>, or_< is_base_of<_1, C4>, is_same<_1, C4> > >
             >,
             TestModule::Dependencies
         >::value
@@ -254,7 +257,7 @@ TEST(Module, InCall)
         <
             vector
             <
-                Dependency<Back::Scope::PerRequest, C1, C1, vector<C2>, is_base_of<_1, C1> >
+                Dependency<Back::Scope::PerRequest, C1, C1, vector<C2>, or_< is_base_of<_1, C1>, is_same<_1, C1> > >
             >,
             TestModule::Dependencies
         >::value
@@ -276,7 +279,7 @@ TEST(Module, InName)
         <
             vector
             <
-                Dependency<Back::Scope::Singleton, Named<C1, int>, C1, vector0<>, is_base_of<_1, Named<C1, int> > >
+                Dependency<Back::Scope::Singleton, Named<C1, int>, C1, vector0<>, or_< is_base_of<_1, Named<C1, int> >, is_same<_1, Named<C1, int> > > >
             >,
             TestModule::Dependencies
         >::value
@@ -301,8 +304,8 @@ TEST(Module, InNameInCall)
         <
             vector
             <
-                Dependency<Back::Scope::Singleton, Named<C1, int>, C1, vector<double>, is_base_of<_1, Named<C1, int> > >,
-                Dependency<Back::Scope::Singleton, Named<C2, double>, C2, vector<int>, is_base_of<_1,  Named<C2, double> > >
+                Dependency<Back::Scope::Singleton, Named<C1, int>, C1, vector<double>, or_< is_base_of<_1, Named<C1, int> >, is_same<_1, Named<C1, int> > > >,
+                Dependency<Back::Scope::Singleton, Named<C2, double>, C2, vector<int>, or_< is_base_of<_1,  Named<C2, double> >, is_same<_1,  Named<C2, double> > > >
             >,
             TestModule::Dependencies
         >::value
@@ -327,8 +330,8 @@ TEST(Module, InCallInName)
         <
             vector
             <
-                Dependency<Back::Scope::Singleton, Named<C1, int>, C1, vector<double>, is_base_of<_1, Named<C1, int> > >,
-                Dependency<Back::Scope::Singleton, Named<C2, double>, C2, vector<int>, is_base_of<_1,  Named<C2, double> > >
+                Dependency<Back::Scope::Singleton, Named<C1, int>, C1, vector<double>, or_< is_base_of<_1, Named<C1, int> >, is_same<_1, Named<C1, int> > > >,
+                Dependency<Back::Scope::Singleton, Named<C2, double>, C2, vector<int>, or_< is_base_of<_1,  Named<C2, double> >, is_same<_1,  Named<C2, double> > > >
             >,
             TestModule::Dependencies
         >::value
@@ -384,11 +387,11 @@ TEST(Module, Mix)
             vector
             <
                 Dependency<Back::Scope::Singleton, If0, CIf0, vector0<>, is_same<_1, If0> >,
-                Dependency<Back::Scope::Singleton, C1, C1, vector0<>, is_base_of<_1, C1> >,
-                Dependency<Back::Scope::Singleton, Named<C2, int>, C2, vector0<>, is_base_of<_1, Named<C2, int> > >,
-                Dependency<Back::Scope::Singleton, C3, C3, vector<C4, C5>, is_base_of<_1, C3> >,
-                Dependency<Back::Scope::PerRequest, C6, C6, vector0<>, is_base_of<_1, C6> >,
-                Dependency<Back::Scope::Singleton, Named<C7, double>, C7, vector<C1>, is_base_of<_1, Named<C7, double> > >
+                Dependency<Back::Scope::Singleton, C1, C1, vector0<>, or_< is_base_of<_1, C1>, is_same<_1, C1> > >,
+                Dependency<Back::Scope::Singleton, Named<C2, int>, C2, vector0<>, or_< is_base_of<_1, Named<C2, int> >, is_same<_1, Named<C2, int> > > >,
+                Dependency<Back::Scope::Singleton, C3, C3, vector<C4, C5>, or_< is_base_of<_1, C3>, is_same<_1, C3> > >,
+                Dependency<Back::Scope::PerRequest, C6, C6, vector0<>, or_< is_base_of<_1, C6>, is_same<_1, C6> > >,
+                Dependency<Back::Scope::Singleton, Named<C7, double>, C7, vector<C1>, or_< is_base_of<_1, Named<C7, double> >, is_same<_1, Named<C7, double> > > >
             >,
             TestModule::Dependencies
         >::value
@@ -490,9 +493,9 @@ TEST(Module, NamedInCall)
         <
             vector
             <
-                Dependency<Back::Scope::PerRequest, int, int_<1>, vector0<>, is_base_of<_1, int> >,
-                Dependency<Back::Scope::PerRequest, Named<int, string<'2'> >, int_<4>, vector<C7, C6, C4>, is_base_of<_1, Named<int, string<'2'> > > >,
-                Dependency<Back::Scope::PerRequest, int, int_<5>, vector<C2>, is_base_of<_1, int> >
+                Dependency<Back::Scope::PerRequest, int, int_<1>, vector0<>, or_< is_base_of<_1, int>, is_same<_1, int> > >,
+                Dependency<Back::Scope::PerRequest, Named<int, string<'2'> >, int_<4>, vector<C7, C6, C4>, or_< is_base_of<_1, Named<int, string<'2'> > >, is_same<_1, Named<int, string<'2'> > > > >,
+                Dependency<Back::Scope::PerRequest, int, int_<5>, vector<C2>, or_< is_base_of<_1, int>, is_same<_1, int> > >
             >,
             TestModule::Dependencies
         >::value

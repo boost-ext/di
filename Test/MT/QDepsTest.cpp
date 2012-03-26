@@ -47,8 +47,6 @@ TEST(QDeps, Module)
 {
     Utility::Injector<BaseModule> inj;
 
-    std::cout << abi::__cxa_demangle(typeid(Utility::Injector<BaseModule>::Dependencies::type).name(), 0, 0, 0) << std::endl;
-
     boost::shared_ptr<C8> c8 = inj.create< boost::shared_ptr<C8> >();
 
     EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
