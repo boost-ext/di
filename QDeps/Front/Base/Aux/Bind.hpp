@@ -13,6 +13,8 @@
 #include <boost/mpl/limits/vector.hpp>
 #include <boost/mpl/vector.hpp>
 #include "QDeps/Back/Dependency.hpp"
+#include "QDeps/Utility/Named.hpp"
+#include "QDeps/Front/Base/Aux/Internal.hpp"
 
 namespace QDeps
 {
@@ -23,7 +25,7 @@ namespace Base
 namespace Aux
 {
 
-template<typename TExpected, typename TGiven = void> struct Bind : Back::Dependency
+template<typename TExpected, typename TGiven = void> struct Bind : Internal, Back::Dependency
     <
         boost::mpl::_1,
         TExpected,
@@ -32,20 +34,44 @@ template<typename TExpected, typename TGiven = void> struct Bind : Back::Depende
     >
 {
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    struct InCall : Back::Dependency
+    struct InCall : Internal, Back::Dependency
         <
             boost::mpl::_1,
             TExpected,
             TGiven,
             boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
         >
-    { };
+    {
+        template<typename TName> struct InName : Internal, Back::Dependency
+            <
+                boost::mpl::_1,
+                Utility::Named<TExpected, TName>,
+                TGiven,
+                boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
+            >
+        { };
+    };
 
-    //struct InName : Back::Dependency
-    //{}
+    template<typename TName> struct InName : Internal, Back::Dependency
+        <
+            boost::mpl::_1,
+            Utility::Named<TExpected, TName>,
+            TGiven
+        >
+    {
+        template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
+        struct InCall : Back::Dependency
+            <
+                boost::mpl::_1,
+                Utility::Named<TExpected, TName>,
+                TGiven,
+                boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
+            >
+        { };
+    };
 };
 
-template<typename TExpected> struct Bind<TExpected, void> : Back::Dependency
+template<typename TExpected> struct Bind<TExpected, void> : Internal, Back::Dependency
     <
         boost::mpl::_1,
         TExpected,
@@ -55,7 +81,7 @@ template<typename TExpected> struct Bind<TExpected, void> : Back::Dependency
     >
 {
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    struct InCall : Back::Dependency
+    struct InCall : Internal, Back::Dependency
         <
             boost::mpl::_1,
             TExpected,
@@ -63,10 +89,38 @@ template<typename TExpected> struct Bind<TExpected, void> : Back::Dependency
             boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
             boost::is_base_of<boost::mpl::_1, TExpected>
         >
-    { };
+    {
+        template<typename TName> struct InName : Internal, Back::Dependency
+            <
+                boost::mpl::_1,
+                Utility::Named<TExpected, TName>,
+                TExpected,
+                boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
+                boost::is_base_of<boost::mpl::_1, Utility::Named<TExpected, TName> >
+            >
+        { };
+    };
 
-    //struct InName : Back::Dependency
-    //{}
+    template<typename TName> struct InName : Internal, Back::Dependency
+        <
+            boost::mpl::_1,
+            Utility::Named<TExpected, TName>,
+            TExpected,
+            boost::mpl::vector0<>,
+            boost::is_base_of<boost::mpl::_1, Utility::Named<TExpected, TName> >
+        >
+    {
+        template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
+        struct InCall : Internal, Back::Dependency
+            <
+                boost::mpl::_1,
+                Utility::Named<TExpected, TName>,
+                TExpected,
+                boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
+                boost::is_base_of<boost::mpl::_1, Utility::Named<TExpected, TName> >
+            >
+        { };
+    };
 };
 
 } // namespace Aux

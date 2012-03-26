@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef QDEPS_QDEPS_FRONT_BASE_ANNOTATE_HPP
-#define QDEPS_QDEPS_FRONT_BASE_ANNOTATE_HPP
+#ifndef QDEPS_FRONT_BASE_INTERNAL_HPP
+#define QDEPS_FRONT_BASE_INTERNAL_HPP
 
 namespace QDeps
 {
@@ -16,11 +16,7 @@ namespace Base
 namespace Aux
 {
 
-template<typename T>
-struct Annotate
-{
-    template<typename TName> struct With { };
-};
+class Internal { };
 
 } // namespace Aux
 } // namespace Base

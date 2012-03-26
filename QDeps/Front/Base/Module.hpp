@@ -19,6 +19,7 @@
 #include "QDeps/Back/Utility.hpp"
 #include "QDeps/Back/Scope/Singleton.hpp"
 #include "QDeps/Back/Scope/PerRequest.hpp"
+#include "QDeps/Front/Base/Aux/Internal.hpp"
 #include "QDeps/Front/Base/Aux/Scope.hpp"
 #include "QDeps/Front/Base/Aux/Bind.hpp"
 #include "QDeps/Front/Base/Aux/Externals.hpp"
@@ -81,7 +82,12 @@ public:
                 <
                     boost::is_base_of<Aux::Detail::Externals, boost::mpl::_2>,
                     boost::mpl::vector0<>,
-                    Back::MakeVector<boost::mpl::_2>
+                    boost::mpl::if_
+                    <
+                        boost::is_base_of<Aux::Internal, boost::mpl::_2>,
+                        boost::mpl::_2,
+                        PerRequest<boost::mpl::_2>
+                    >
                 >,
                 boost::mpl::back_inserter<boost::mpl::_1>
             >

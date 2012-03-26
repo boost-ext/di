@@ -36,8 +36,8 @@
         typename TExpected,
         typename TGiven = TExpected,
         typename TContext = boost::mpl::vector0<>,
-        typename TBind = boost::is_same<boost::mpl::_1, TExpected>
-        //template<typename> class TValue = Value
+        typename TBind = boost::is_same<boost::mpl::_1, TExpected>,
+        template<typename> class TValue = Value
     >
     class Dependency
     {
@@ -67,7 +67,7 @@
             typename boost::disable_if< boost::mpl::contains<typename TPool::Seq, TExpected> >::type* = 0
         )
         {
-            return createImpl(HasValue</*T*/Value<TGiven>::value>());
+            return createImpl(HasValue<TValue<TGiven>::value>());
         }
 
         #include BOOST_PP_ITERATE()
@@ -75,7 +75,7 @@
     private:
         boost::shared_ptr<TExpected> createImpl(const HasValue<true>&)
         {
-            return /*T*/Value<TGiven>::template create<TExpected>();
+            return TValue<TGiven>::template create<TExpected>();
         }
 
         boost::shared_ptr<TExpected> createImpl(const HasValue<false>&)

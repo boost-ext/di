@@ -82,18 +82,6 @@ struct MakeShared<T, typename boost::enable_if< Detail::has_element_type<typenam
     typedef typename MakePlain<T>::type type;
 };
 
-template<typename T, typename Enable = void>
-struct MakeVector
-{
-    typedef boost::mpl::vector<T> type;
-};
-
-template<typename T>
-struct MakeVector<T, typename boost::enable_if< boost::mpl::is_sequence<T> >::type>
-{
-    typedef T type;
-};
-
 template<typename T, typename TApplied> struct Apply
 {
     typedef typename T::template Apply<TApplied>::type type;
