@@ -35,6 +35,7 @@ namespace Utility
 template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
 class Injector
 {
+#if 0
     struct Policy : Back::Detail::Parameter
         <
             boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
@@ -42,6 +43,7 @@ class Injector
             boost::is_base_of<Detail::Policy, boost::mpl::_2>
         >
     { };
+#endif
 
     template<typename TSeq, typename TResult = boost::mpl::set0<> >
     struct DependenciesImpl : boost::mpl::fold

@@ -16,16 +16,6 @@ namespace Front
 namespace Fusion
 {
 
-class Module
-{
-public:
-    template<typename T1, typename T2, typename T3>
-    QPool::Pool< boost::mpl::vector<T1, T2, T3> > operator()(T1, T2, T3)
-    {
-        return QPool::Pool< boost::mpl::vector<T1, T2, T3> >();
-    }
-};
-
 } // namespace Fusion
 } // namespace Front
 } // namespace QDeps

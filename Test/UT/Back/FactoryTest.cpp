@@ -398,7 +398,7 @@ TEST(Factory, BaseOf)
         vector
         <
             Dependency<PerRequest, CIf0, CIf0, vector0<>, boost::is_base_of<boost::mpl::_1, CIf0> >,
-            Dependency<PerRequest, Named<int, mpl::string<'1'> >, int_<3>, vector<C7, C6, C4>, boost::is_base_of<boost::mpl::_1, Named<int, mpl::string<'1'> > > >
+            Dependency<PerRequest, Named<int, mpl::string<'1'> >, int_<3>, vector<C7, C6, C4>, boost::is_same<boost::mpl::_1, Named<int, mpl::string<'1'> > > >
         >
     >
     l_factory;

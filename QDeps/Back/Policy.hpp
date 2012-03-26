@@ -18,6 +18,7 @@ namespace QDeps
 namespace Back
 {
 
+#if 0
 namespace Detail
 {
 template<typename TParameters, typename TDefault, typename TLambda>
@@ -52,6 +53,7 @@ public:
     typedef typename ParameterImpl<QDeps::Detail::BindingWithCtors>::type BindingWithCtors;
     typedef typename ParameterImpl<QDeps::Detail::ModulesDependeciesRepetitions>::type ModulesDependeciesRepetitions;
 };
+#endif
 
 } // namespace Back
 } // namespace QDeps

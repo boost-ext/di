@@ -43,6 +43,7 @@ namespace QDeps
 class Specialized { };
 template<typename, typename = Specialized> class Defaults;
 
+#if 0
 namespace Back
 {
 template<typename = void, typename = void, typename = void> class Policy;
@@ -71,13 +72,14 @@ class Defaults<Detail::Policy, TDefault>
 public:
     typedef Back::Policy
     <
-        //DisallowCircularDependencies,
-        //VerifyCtorBinding,
-        //DisallowModuleDependencyRepetition,
-        //CheckForNotSharedSingletons
+        DisallowCircularDependencies,
+        VerifyCtorBinding,
+        DisallowModuleDependencyRepetition,
+        CheckForNotSharedSingletons
     >
     type;
 };
+#endif
 
 } // namespace QDeps
 

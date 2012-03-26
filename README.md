@@ -22,10 +22,14 @@ Requirements
         * icc   >= 11.1
         * msvc  ?
 
-Tests & Analysis
+Tests & Examples & Analysis
 ------------
-    cd Test && make         # test cov cppcheck scan-build valgrind
-    cd Test && make test    # compile and run only UT/MT
+    make all    # test cov cppcheck scan-build valgrind doc
+    make test   # compile and run only UT/MT
+
+Install
+------------
+    sudo make install
 
 Usage
 -----
@@ -55,7 +59,7 @@ struct C3 { QDPES_CTOR(C3, C2, const shared_ptr<IDummy>& /*Dumb singleton with C
             Bind<Dumber>::InCall<C2, C1>
         >,
         Externals <
-            Annotate<Bind<int>::InName<Port> >, string<'port'> >
+            Annotate<Bind<int>::InName<Port> >::With<string<'port'> >
         >
     > { };
 
@@ -92,6 +96,7 @@ struct C3 { QDPES_CTOR(C3, C2, const shared_ptr<IDummy>& /*Dumb singleton with C
 TODO
 ------
     * make install
+    * thread safety
     * visitor -> dump dot
     * C++11 fork
 
