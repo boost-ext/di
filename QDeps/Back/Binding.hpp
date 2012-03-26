@@ -52,8 +52,8 @@ template<typename T1, typename T2>
 struct LessContextSize : boost::mpl::bool_<(GetContextSize<T1>::value > GetContextSize<T2>::value)>::type
 { };
 
-template<typename T1, typename TBind>
-struct Compare : boost::mpl::apply<TBind, T1>::type
+template<typename T, typename TBind>
+struct Compare : boost::mpl::apply<TBind, T>::type
 { };
 
 } // namespace Detail

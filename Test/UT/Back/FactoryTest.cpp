@@ -397,7 +397,8 @@ TEST(Factory, BaseOf)
     <
         vector
         <
-            Dependency<PerRequest, CIf0, CIf0, vector0<>, boost::is_base_of<boost::mpl::_1, CIf0> >
+            Dependency<PerRequest, CIf0, CIf0, vector0<>, boost::is_base_of<boost::mpl::_1, CIf0> >,
+            Dependency<PerRequest, Named<int, mpl::string<'1'> >, int_<3>, vector<C7, C6, C4>, boost::is_base_of<boost::mpl::_1, Named<int, mpl::string<'1'> > > >
         >
     >
     l_factory;
@@ -412,7 +413,7 @@ TEST(Factory, BaseOf)
     EXPECT_TRUE(dynamic_cast<CIf0*>(c8->c7->if0.get()));
 
     EXPECT_EQ(0, c8->i);
-    EXPECT_EQ(0, c8->c7->c6->c4->i1);
+    EXPECT_EQ(3, c8->c7->c6->c4->i1);
     EXPECT_EQ(0, c8->c7->c6->c4->i2);
     EXPECT_EQ(0, c8->c7->c6->c3->i);
     EXPECT_EQ(0, c8->c7->c6->c5.c2->i);

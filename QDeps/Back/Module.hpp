@@ -4,22 +4,17 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef QDEPS_UTILITY_PROVIDER_HPP
-#define QDEPS_UTILITY_PROVIDER_HPP
+#ifndef QDEPS_BACK_MODULE_HPP
+#define QDEPS_BACK_MODULE_HPP
 
 namespace QDeps
 {
-namespace Utility
+namespace Back
 {
 
-template<typename T>
-class Provider
-{
-public:
-    virtual T get() const = 0;
-};
+class Module { };
 
-} // namespace Utility
+} // namespace Back
 } // namespace QDeps
 
 #endif

@@ -41,14 +41,14 @@ template<typename T> struct GetContextSize
     static const std::size_t value = boost::mpl::size<typename GetContext<T>::type>::value;
 };
 
-template<typename T> struct GetDeps
+template<typename T> struct GetDependencies
 {
-    typedef typename T::template Deps<typename T::Binding>::type type;
+    typedef typename T::Dependencies type;
 };
 
-template<typename T> struct GetKeys
+template<typename T> struct GetExternals
 {
-    typedef typename T::template Keys<typename T::Binding>::type type;
+    typedef typename T::Externals type;
 };
 
 template<typename T> struct RemoveAccessors

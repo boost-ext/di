@@ -22,7 +22,6 @@
 #include "QDeps/Back/Dependency.hpp"
 #include "QDeps/Front/Base/Aux/Internal.hpp"
 
-
 namespace QDeps
 {
 namespace Front

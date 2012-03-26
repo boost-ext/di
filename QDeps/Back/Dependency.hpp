@@ -49,7 +49,7 @@
 
         template<typename Scope> struct Apply
         {
-            typedef Dependency<Scope, TExpected, TGiven, TContext, TBind> type;
+            typedef Dependency<Scope, TExpected, TGiven, TContext, TBind, TValue> type;
         };
 
         template<typename TPool> boost::shared_ptr<TExpected> create

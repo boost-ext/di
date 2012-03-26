@@ -17,6 +17,7 @@
 #include <boost/mpl/copy.hpp>
 #include <boost/mpl/is_sequence.hpp>
 #include "QDeps/Back/Utility.hpp"
+#include "QDeps/Back/Module.hpp"
 #include "QDeps/Back/Scope/Singleton.hpp"
 #include "QDeps/Back/Scope/PerRequest.hpp"
 #include "QDeps/Front/Base/Aux/Internal.hpp"
@@ -52,7 +53,7 @@ template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typena
 struct Externals : Aux::Externals<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
 
 template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-class Module
+class Module : Back::Module
 {
 public:
     struct Externals : boost::mpl::fold
