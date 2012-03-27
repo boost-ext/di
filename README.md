@@ -31,7 +31,11 @@ struct BaseModule : Base::Module <                              // base module :
     Singletons <
         Bind<CapacityLimit>::InName<Down>,                      // bind using Named parameter
         Bind<CapacityLimit>::InName<Up>,
-        Calculator
+    >,
+    Singleton<Calculator>,                                      // one line notation - Singleton
+    PerRequest<Setup>,                                          // one line notation - PerRequest
+    Scope<CustomScope>::Bind <                                  // custom scope
+        Stack
     >,
     Externals <                                                 // outside objects
         IConfig,
