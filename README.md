@@ -1,8 +1,8 @@
 QDeps - C++ dependency injection framework (headers only library)
 ================================
 * [Dependency Injection](http://en.wikipedia.org/wiki/Dependency_injection)
-* [The Clean Code Talks - Don't Look For Things!](http://www.youtube.com/watch?v=RlfLCWKxHJ0&feature=BFa&list=PLED6CA927B41FF5BD)
 * [Goolge Guice - dependency injection framework for Java ](http://code.google.com/p/google-guice/)
+* [The Clean Code Talks - Don't Look For Things!](http://www.youtube.com/watch?v=RlfLCWKxHJ0&feature=BFa&list=PLED6CA927B41FF5BD)
 
 To get started
 -----
@@ -17,7 +17,7 @@ Usage
 struct NumOfLimits { };
 struct Allocator { QDEPS_CTOR(Allocator, int, double) { } };
 struct Measurements { QDEPS_CTOR(Named<CapacityLimit, Down>, Named<CapacityLimit, Up>) { } };
-struct Storage { QDEPS_CTOR_TRAITS(Named<int, Up>., shared_ptr<Selector>); Storage(int, shared_ptr<Selector>) { } };
+struct Storage { QDEPS_CTOR_TRAITS(Named<int, Up>, shared_ptr<Load>); Storage(int, shared_ptr<Load>) { } };
 struct App { QDEPS_CTOR(Storage, const shared_ptr<LimitChecker>&) { } };
 ...
 
