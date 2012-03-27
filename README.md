@@ -43,12 +43,12 @@ struct BaseModule : Base::Module <                              // base module :
     >
 > { };
 
-BOOST_AUTO(fusionModule, Fusion::Module()(                      // fusion module : object 
+BOOST_AUTO(fusionModule, Fusion::Module()(                      // fusion module : object
     Singletons <
         Storage
     >(),
     PerRequests <
-        Bind<Limit>::InName<On>::InCall<Storage, Load>,         // bind (in name) only when Storage and 
+        Bind<Limit>::InName<On>::InCall<Storage, Load>,         // bind (in name) only when Storage and
         PriorityQueue                                           // Load were created in given order
     >(),
     Bind<int>::InCall<Selector>::To(87)                         // bind external value
@@ -60,22 +60,24 @@ BOOST_AUTO(fusionModule, Fusion::Module()(                      // fusion module
             Set<IConfig>(Config),                               // initialize IConfig by Config
             Set<UpInt>(42)
         ),
-        l_fusionModule                                          // fusion module is already created
+        fusionModule                                            // fusion module is already created
     );
 
-    shared_ptr<App> sp = injector.create< shared_ptr<App> >();  // create App as shared_ptr
+    shared_ptr<App> app = injector.create< shared_ptr<App> >(); // create App as shared_ptr
 }
 
 {
-    Injector<> l_injector;                                      // default empty injector
+    Injector<> emptyInjector;                                   // default empty injector
 
-    App lvalue = l_injector.install(                            // install 2 modules
-        BaseModule(                                             // and create App as lvalue
+    BOOST_AUTO(emptyInjector.install(                           // install 2 modules
+        BaseModule(
             Set<IConfig>(Config),
             Set<UpInt>(42)
         ),
-        l_fusionModule
-    ).create<App>();
+        fusionModule
+    );
+
+    App app = injector.create<App>();                           // and create App as lvalue
 }
 
 ```
