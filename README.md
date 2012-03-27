@@ -65,9 +65,10 @@ struct C3 { QDPES_CTOR(C3, C2, const shared_ptr<IDummy>& /*Dumb singleton with C
         >
     > { };
 
-    typedef Injector<BaseModule> Injector;
-    Injector injector(
-        Injector::Set<string<'port'> >(8080)
+    Injector<BaseModule> injector(
+        BaseModule(
+            Set<string<'port'> >(8080)
+        )
     );
     shared_ptr<C3> l_sp = injector.create< shared_ptr<C3> >();
     C3 l_value = injector.create<C3>();

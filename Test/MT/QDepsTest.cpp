@@ -65,7 +65,7 @@ TEST(QDeps, Module)
     EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
 }
 
-TEST(QDeps, Modules)
+TEST(QDeps, ManyModules)
 {
 }
 
