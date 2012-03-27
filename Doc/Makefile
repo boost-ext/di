@@ -11,7 +11,7 @@ all doc: clean
 	@touch $(VIMWIKI)/syntax/syntax.vim
 	@VIMRUNTIME="$(VIMWIKI)" vim -n --noplugins -u NONE\
 		-c "set nocompatible | filetype plugin on | syntax on"\
-		-c "let g:vimwiki_list = [{'path': '$(TMP)/$(WIKI)', 'path_html': '$(DOC)/html/wiki', 'template_path': '$(TMP)/$(WIKI)/templates/', 'template_default': 'wiki', 'template_ext': '.tpl'}]"\
+		-c "let g:vimwiki_list = [{'path': '$(TMP)/$(WIKI)', 'path_html': '$(DOC)/html', 'template_path': '$(TMP)/$(WIKI)/templates/', 'template_default': 'wiki', 'template_ext': '.tpl'}]"\
 		-c "source $(VIMWIKI)/plugin/vimwiki.vim"\
 		-c "source $(VIMWIKI)/ftplugin/vimwiki.vim"\
 		-c "source $(VIMWIKI)/syntax/vimwiki.vim"\
