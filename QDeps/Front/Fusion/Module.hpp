@@ -23,6 +23,7 @@
     #include <boost/mpl/if.hpp>
     #include <QPool/Utility/Ctor.hpp>
     #include <QPool/Pool.hpp>
+    #include "QDeps/Back/Module.hpp"
     #include "QDeps/Back/Scope/Singleton.hpp"
     #include "QDeps/Back/Scope/PerRequest.hpp"
     #include "QDeps/Front/Base/Aux/Bind.hpp"
@@ -56,13 +57,9 @@
     <
         typename TSeq = boost::mpl::vector0<>
     >
-    class Module
+    class Module : Back::Module
     {
     public:
-        QPOOL_CTOR(Module,
-            (m_pool),
-        { })
-
         struct Dependencies : boost::mpl::fold
             <
                 TSeq,
@@ -80,7 +77,15 @@
             >::type
         { };
 
+        struct Externals : boost::mpl::vector0<> { };
+
+        QPOOL_CTOR(Module,
+            (m_pool),
+        { })
+
         #include BOOST_PP_ITERATE()
+
+        const QPool::Pool<TSeq, QPool::Allocator::Stack>& pool() const { return m_pool; }
 
     private:
         QPool::Pool<TSeq, QPool::Allocator::Stack> m_pool;

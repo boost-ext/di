@@ -15,6 +15,8 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/back_inserter.hpp>
 #include <boost/mpl/copy.hpp>
+#include <QPool/Utility/Ctor.hpp>
+#include <QPool/Pool.hpp>
 #include "QDeps/Back/Utility.hpp"
 #include "QDeps/Back/Module.hpp"
 #include "QDeps/Back/Scope/Singleton.hpp"
@@ -55,23 +57,6 @@ template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typena
 class Module : Back::Module
 {
 public:
-    struct Externals : boost::mpl::fold
-        <
-            boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
-            boost::mpl::vector0<>,
-            boost::mpl::copy
-            <
-                boost::mpl::if_
-                <
-                    boost::is_base_of<Aux::Detail::Externals, boost::mpl::_2>,
-                    boost::mpl::_2,
-                    boost::mpl::vector0<>
-                >,
-                boost::mpl::back_inserter<boost::mpl::_1>
-            >
-        >::type
-    { };
-
     struct Dependencies : boost::mpl::fold
         <
             boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
@@ -93,6 +78,32 @@ public:
             >
         >::type
     { };
+
+    struct Externals : boost::mpl::fold
+        <
+            boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
+            boost::mpl::vector0<>,
+            boost::mpl::copy
+            <
+                boost::mpl::if_
+                <
+                    boost::is_base_of<Aux::Detail::Externals, boost::mpl::_2>,
+                    boost::mpl::_2,
+                    boost::mpl::vector0<>
+                >,
+                boost::mpl::back_inserter<boost::mpl::_1>
+            >
+        >::type
+    { };
+
+    QPOOL_CTOR(Module,
+        (m_pool),
+    { })
+
+    const QPool::Pool<Externals, QPool::Allocator::Stack>& pool() const { return m_pool; }
+
+private:
+    QPool::Pool<Externals, QPool::Allocator::Stack> m_pool;
 };
 
 } // namespace Base

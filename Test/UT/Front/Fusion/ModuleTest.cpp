@@ -62,6 +62,8 @@ TEST(FusionModule, Mix)
             TestModule::Dependencies
         >::value
     ));
+
+    EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
 } // namespace UT
