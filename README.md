@@ -78,7 +78,7 @@ BOOST_AUTO(fusionModule, Fusion::Module()(                      // fusion module
 Requirements
 ------------
     Code:
-        * c++ 98 standard-compliant compiler  + typeof extension
+        * c++ 98 standard-compliant compiler + typeof extension
         * boost >= 1.43 (headers only libraries)
 
     Tests:
