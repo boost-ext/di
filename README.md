@@ -69,7 +69,7 @@ BOOST_AUTO(fusionModule, Fusion::Module()(                      // fusion module
 {
     Injector<> emptyInjector;                                   // default empty injector
 
-    BOOST_AUTO(emptyInjector.install(                           // install 2 modules
+    BOOST_AUTO(injector, emptyInjector.install(                 // install 2 modules
         BaseModule(
             Set<IConfig>(Config),
             Set<UpInt>(42)
