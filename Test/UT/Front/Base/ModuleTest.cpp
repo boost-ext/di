@@ -30,7 +30,7 @@ using namespace Utility;
 using namespace boost::mpl;
 using namespace boost;
 
-TEST(Module, Empty)
+TEST(BaseModule, Empty)
 {
     struct TestModule : Module<> { };
 
@@ -45,7 +45,7 @@ TEST(Module, Empty)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(Module, DefaultScope)
+TEST(BaseModule, DefaultScope)
 {
     struct TestModule : Module<C1> { };
 
@@ -63,7 +63,7 @@ TEST(Module, DefaultScope)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(Module, DefaultScopeMany)
+TEST(BaseModule, DefaultScopeMany)
 {
     struct TestModule : Module<C1, C2, C3> { };
 
@@ -83,7 +83,7 @@ TEST(Module, DefaultScopeMany)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(Module, DefaultScopeBind)
+TEST(BaseModule, DefaultScopeBind)
 {
     struct TestModule : Module
         <
@@ -114,7 +114,7 @@ TEST(Module, DefaultScopeBind)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(Module, OneScope)
+TEST(BaseModule, OneScope)
 {
     struct TestModule : Module
         <
@@ -138,7 +138,7 @@ TEST(Module, OneScope)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(Module, OneScopeAlias)
+TEST(BaseModule, OneScopeAlias)
 {
     struct TestModule : Module
         <
@@ -162,7 +162,7 @@ TEST(Module, OneScopeAlias)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(Module, OneScopeDirect)
+TEST(BaseModule, OneScopeDirect)
 {
     struct TestModule : Module
         <
@@ -184,7 +184,7 @@ TEST(Module, OneScopeDirect)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(Module, Many)
+TEST(BaseModule, Many)
 {
     struct TestModule : Module
         <
@@ -212,7 +212,7 @@ TEST(Module, Many)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(Module, ManyScopes)
+TEST(BaseModule, ManyScopes)
 {
     struct TestModule : Module
         <
@@ -244,7 +244,7 @@ TEST(Module, ManyScopes)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(Module, InCall)
+TEST(BaseModule, InCall)
 {
     struct TestModule : Module
         <
@@ -266,7 +266,7 @@ TEST(Module, InCall)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(Module, InName)
+TEST(BaseModule, InName)
 {
     struct TestModule : Module
         <
@@ -288,7 +288,7 @@ TEST(Module, InName)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(Module, InNameInCall)
+TEST(BaseModule, InNameInCall)
 {
     struct TestModule : Module
         <
@@ -314,7 +314,7 @@ TEST(Module, InNameInCall)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(Module, InCallInName)
+TEST(BaseModule, InCallInName)
 {
     struct TestModule : Module
         <
@@ -340,7 +340,7 @@ TEST(Module, InCallInName)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(Module, BindIf)
+TEST(BaseModule, BindIf)
 {
     struct TestModule : Module
         <
@@ -364,7 +364,7 @@ TEST(Module, BindIf)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(Module, Mix)
+TEST(BaseModule, Mix)
 {
     struct TestModule : Module
         <
@@ -400,7 +400,7 @@ TEST(Module, Mix)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(Module, Externals)
+TEST(BaseModule, Externals)
 {
     struct TestModule : Module
         <
@@ -424,7 +424,7 @@ TEST(Module, Externals)
     ));
 }
 
-TEST(Module, ExternalsMix)
+TEST(BaseModule, ExternalsMix)
 {
     struct TestModule : Module
         <
@@ -450,7 +450,7 @@ TEST(Module, ExternalsMix)
     ));
 }
 
-TEST(Module, ExternalsBind)
+TEST(BaseModule, ExternalsBind)
 {
     struct TestModule : Module
         <
@@ -474,7 +474,7 @@ TEST(Module, ExternalsBind)
     ));
 }
 
-TEST(Module, NamedInCall)
+TEST(BaseModule, NamedInCall)
 {
     struct TestModule : Front::Base::Module
         <

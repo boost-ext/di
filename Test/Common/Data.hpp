@@ -134,6 +134,18 @@ struct C9 : C2
     std::string s;
 };
 
+struct C10
+{
+    QDEPS_CTOR_TRAITS(Utility::Named<int, boost::mpl::string<'1'> >, Utility::Named<int, boost::mpl::string<'2'> >);
+
+    C10(int i1, int i2)
+        : i1(i1), i2(i2)
+    { }
+
+    int i1;
+    int i2;
+};
+
 } // namespace Common
 } // namespace Test
 } // namespace QDeps

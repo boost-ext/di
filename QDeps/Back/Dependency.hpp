@@ -23,7 +23,7 @@
     #include "QDeps/Back/Value.hpp"
     #include "QDeps/Config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, QDEPS_FUNC_ARITY, "QDeps/Back/Dependency.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, QDEPS_FUNCTION_ARITY_LIMIT_SIZE, "QDeps/Back/Dependency.hpp"))
 
     namespace QDeps
     {

@@ -14,8 +14,8 @@
 # define QDEPS_CTOR_CFG_VA_ARGS
 #endif
 
-#if !defined(QDEPS_FUNC_ARITY)
-# define QDEPS_FUNC_ARITY 10
+#if !defined(QDEPS_FUNCTION_ARITY_LIMIT_SIZE)
+# define QDEPS_FUNCTION_ARITY_LIMIT_SIZE 10
 #endif
 
 #if !defined(QDEPS_CTOR_UNIQUE_NAME)
