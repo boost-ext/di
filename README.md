@@ -29,12 +29,11 @@ struct BaseModule : Base::Module <                              // base module :
     Singletons <
         Bind<CapacityLimit>::InName<Down>,                      // bind using Named parameter
         Bind<CapacityLimit>::InName<Up>,
-        Bind<NumOfCapacityLimit>::InName<Limit>,
-        ResourceCalculator
+        Calculator
     >,
     Externals <                                                 // outside objects
         IConfig,
-        Annotate<Bind<int>::InName<Up> >::With<UpInt>           // bind to annotation to simplify setting
+        Annotate<Bind<int>::InName<Up> >::With<UpInt>           // bind to annotation - simplify setting
     >
 > { };
 
@@ -43,9 +42,8 @@ BOOST_AUTO(fusionModule, Fusion::Module()(                      // fusion module
         Storage
     >(),
     PerRequests <
-        Bind<Limit>::InName<On>::InCall<Storage, LoadTracker>,  // bind (in name) only when Storage and 
-        PriorityQueue,                                          // LoadTracker were created in given order
-        LoadTracker
+        Bind<Limit>::InName<On>::InCall<Storage, Load>,         // bind (in name) only when Storage and 
+        PriorityQueue                                           // Load were created in given order
     >(),
     Bind<int>::InCall<Selector>::To(87)                         // bind external value
 ));
