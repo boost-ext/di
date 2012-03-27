@@ -12,7 +12,7 @@
 #include <boost/mpl/or.hpp>
 #include "Test/Common/Data.hpp"
 #include "QDeps/Back/Dependency.hpp"
-#include "QDeps/Front/Base/Module.hpp"
+#include "QDeps/Front/Fusion/Module.hpp"
 #include "QDeps/Utility/Named.hpp"
 
 namespace QDeps
@@ -30,8 +30,40 @@ using namespace Utility;
 using namespace boost::mpl;
 using namespace boost;
 
-TEST(FusionModule, Empty)
+TEST(FusionModule, Mix)
 {
+    BOOST_AUTO(fusionModule, Module<>()(
+        Singletons<
+            Bind<If0, CIf0>,
+            C1,
+            Bind<C2>::InName<int>,
+            Bind<C3>::InCall<C4, C5>
+        >(),
+        PerRequests <
+            C6
+        >(),
+        Singleton<C7>::InName<double>::InCall<C1>()
+    ));
+
+    typedef BOOST_TYPEOF(fusionModule) TestModule;
+
+    EXPECT_TRUE((
+        equal
+        <
+            vector
+            <
+                Dependency<Back::Scope::Singleton, If0, CIf0, vector0<>, is_same<_1, If0> >,
+                Dependency<Back::Scope::Singleton, C1, C1, vector0<>, or_< is_base_of<_1, C1>, is_same<_1, C1> > >,
+                Dependency<Back::Scope::Singleton, Named<C2, int>, C2, vector0<>, or_< is_base_of<_1, Named<C2, int> >, is_same<_1, Named<C2, int> > > >,
+                Dependency<Back::Scope::Singleton, C3, C3, vector<C4, C5>, or_< is_base_of<_1, C3>, is_same<_1, C3> > >,
+                Dependency<Back::Scope::PerRequest, C6, C6, vector0<>, or_< is_base_of<_1, C6>, is_same<_1, C6> > >,
+                Dependency<Back::Scope::Singleton, Named<C7, double>, C7, vector<C1>, or_< is_base_of<_1, Named<C7, double> >, is_same<_1, Named<C7, double> > > >
+            >,
+            TestModule::Dependencies
+        >::value
+    ));
+
+    EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
 } // namespace UT

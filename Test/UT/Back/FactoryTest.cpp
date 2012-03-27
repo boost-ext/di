@@ -447,6 +447,24 @@ TEST(Factory, CtorTraits)
     EXPECT_EQ(i2, obj.i2);
 }
 
+TEST(Factory, NamedIfBaseOf)
+{
+    Factory
+    <
+        vector
+        <
+            Dependency<PerRequest, Named<If0, string<'1'> >, If0, vector0<>, or_< is_base_of<_1, Named<If0, string<'1'> > >, is_same<_1, Named<If0, string<'1'> > > > >
+            //Dependency<PerRequest, Named<int, string<'1'> >, If0, vector0<>, or_< is_base_of<_1, Named<If0, string<'1'> > >, is_same<_1, Named<If0, string<'1'> > > > >
+        >
+    >
+    factory;
+
+    //C11 obj = factory.create<C11>();
+
+    //EXPECT_EQ(i1, obj.i1);
+    //EXPECT_EQ(i2, obj.i2);
+}
+
 } // namespace UT
 } // namespace Back
 } // namespace QDeps

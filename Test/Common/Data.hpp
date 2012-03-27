@@ -146,6 +146,16 @@ struct C10
     int i2;
 };
 
+struct C11
+{
+    QDEPS_CTOR(C11, Utility::Named<const If0&, boost::mpl::string<'1'> > if0, Utility::Named< boost::shared_ptr<int>, boost::mpl::string<'2'> > i)
+        : if0(if0), i(i)
+    { }
+
+    const If0& if0;
+    boost::shared_ptr<int> i;
+};
+
 } // namespace Common
 } // namespace Test
 } // namespace QDeps

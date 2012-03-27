@@ -7,6 +7,8 @@
 #ifndef QDEPS_UTILITY_NAMED_HPP
 #define QDEPS_UTILITY_NAMED_HPP
 
+#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include "QDeps/Config.hpp"
 
@@ -27,12 +29,35 @@ public:
     { }
 
     operator T() const { return m_value; }
-    T* operator->() const { return m_value; }
-    T& operator*() const { return m_value; }
-    T* get() const { return m_value; }
 
 private:
     T m_value;
+};
+
+template<typename T, typename TName>
+class Named< boost::shared_ptr<T>, TName>
+{
+public:
+    Named(boost::shared_ptr<T> p_value = boost::make_shared<T>()) // non explicit
+        : m_value(p_value)
+    { }
+
+    operator boost::shared_ptr<T>() const { return m_value; }
+    T* operator->() const { return m_value.get(); }
+    T& operator*() const { return *m_value; }
+    T* get() const { return m_value.get(); }
+
+private:
+    boost::shared_ptr<T> m_value;
+};
+
+template<typename T, typename TName>
+class Named< const boost::shared_ptr<T>&, TName> : Named< boost::shared_ptr<T>, TName>
+{
+public:
+    Named(const boost::shared_ptr<T>& p_value) // non explicit
+        : Named< boost::shared_ptr<T>, TName>(p_value)
+    { }
 };
 
 } // namespace Utility

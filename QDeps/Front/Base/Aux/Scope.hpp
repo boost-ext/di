@@ -21,8 +21,9 @@
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/push_back.hpp>
-#include "QDeps/Utility/Named.hpp"
 #include "QDeps/Back/Dependency.hpp"
+#include "QDeps/Back/Utility.hpp"
+#include "QDeps/Utility/Named.hpp"
 #include "QDeps/Front/Base/Aux/Internal.hpp"
 
 namespace QDeps

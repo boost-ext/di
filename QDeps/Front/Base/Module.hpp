@@ -15,7 +15,6 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/back_inserter.hpp>
 #include <boost/mpl/copy.hpp>
-#include <boost/mpl/is_sequence.hpp>
 #include "QDeps/Back/Utility.hpp"
 #include "QDeps/Back/Module.hpp"
 #include "QDeps/Back/Scope/Singleton.hpp"
