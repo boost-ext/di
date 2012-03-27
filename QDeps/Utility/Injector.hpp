@@ -96,10 +96,23 @@ private:
     typedef Back::Factory<typename Dependencies::type, Pool> Factory;
 
 public:
-    QPOOL_CTOR(Injector,
-        (m_pool)
-        (m_factory(m_pool)),
-    { })
+/*    QPOOL_CTOR(Injector,*/
+        //(m_pool)
+        //(m_factory(m_pool)),
+    /*{ })*/
+    Injector()
+        : m_factory(m_pool)
+    { }
+
+    template<typename M0> Injector(const M0& p0)
+        : m_pool(p0.pool()),
+          m_factory(m_pool)
+    { }
+
+    template<typename M0, typename M1> Injector(const M0& p0, const M1& p1)
+        : m_pool(p0.pool(), p1.pool()),
+          m_factory(m_pool)
+    { }
 
     template<typename T> T create()
     {

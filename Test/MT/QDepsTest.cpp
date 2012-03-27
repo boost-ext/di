@@ -24,8 +24,15 @@ using namespace Front::Base;
 //TODO add external instances
 //TODO add named
 //TODO boost::function
+struct BaseModule1 : Front::Base::Module
+    <
+        Singletons <
+            CIf0
+        >
+    >
+{ };
 
-struct BaseModule : Front::Base::Module
+struct BaseModule2 : Front::Base::Module
     <
         Singletons <
             C3
@@ -45,9 +52,9 @@ struct BaseModule : Front::Base::Module
 
 TEST(QDeps, Module)
 {
-    Utility::Injector<BaseModule> inj;
+    Utility::Injector<BaseModule2> injector;
 
-    boost::shared_ptr<C8> c8 = inj.create< boost::shared_ptr<C8> >();
+    boost::shared_ptr<C8> c8 = injector.create< boost::shared_ptr<C8> >();
 
     EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
     EXPECT_EQ(c8->c7->c6->c4->c3, c8->c7->c6->c3);
@@ -67,6 +74,7 @@ TEST(QDeps, Module)
 
 TEST(QDeps, ManyModules)
 {
+    Injector<BaseModule1, BaseModule2> injector(BaseModule1(), BaseModule2());
 }
 
 //TODO define BOOST_ASSERT<false> to make policy test possible
