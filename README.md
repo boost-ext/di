@@ -25,6 +25,7 @@ struct BaseModule : Base::Module <
         ResourceCalculator
     >,
     PerRequests <
+        Bind<IMap, Map>,
         Measurements,
         Allocator,
         CapacityLimit,
