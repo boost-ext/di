@@ -26,7 +26,7 @@ public:
         : m_value(p_value)
     { }
 
-    operator T() { return m_value; }
+    operator T() const { return m_value; }
     T* operator->() const { return m_value; }
     T& operator*() const { return m_value; }
     T* get() const { return m_value; }

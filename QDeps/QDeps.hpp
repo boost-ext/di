@@ -8,6 +8,7 @@
 #define QDEPS_QDEPS_HPP
 
 #include <QDeps/Version.hpp>
+#include <QDeps/Config.hpp>
 #include <QDeps/Front/Ctor.hpp>
 #include <QDeps/Front/Base/Module.hpp>
 #include <QDeps/Front/Fusion/Module.hpp>
