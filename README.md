@@ -15,9 +15,9 @@ Usage
 #include <QDeps/QDeps.hpp>
 
 struct NumOfLimits { };
-struct Allocator { QDEPS_CTOR(Allocator, int, double) { } };
+struct Allocator { QDEPS_CTOR(Allocator, int, shared_ptr<Load>) { } };
 struct Measurements { QDEPS_CTOR(Named<CapacityLimit, Down>, Named<CapacityLimit, Up>) { } };
-struct Storage { QDEPS_CTOR_TRAITS(Named<int, Up>, shared_ptr<Load>); Storage(int, shared_ptr<Load>) { } };
+struct Storage { QDEPS_CTOR_TRAITS(Named<int, Up>, float); Storage(int, float) { } };
 struct App { QDEPS_CTOR(Storage, const shared_ptr<LimitChecker>&) { } };
 ...
 
