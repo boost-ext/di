@@ -52,5 +52,6 @@ valgrind: test
 
 clean:
 	@find . -iname "*.o" -or -iname "*.gcda" -or -iname "*.gcno" | xargs --no-run-if-empty rm -f
+	@rm -f $(TEST_TARGET)
 	@rm -rf $(COVERAGE_DIR)
 

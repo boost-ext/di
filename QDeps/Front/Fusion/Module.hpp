@@ -17,7 +17,7 @@
     #include <boost/mpl/vector.hpp>
     #include <QPool/Pool.hpp>
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "Module.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "QDeps/Front/Fusion/Module.hpp"))
 
     namespace QDeps
     {
