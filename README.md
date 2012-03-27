@@ -105,7 +105,6 @@ Tests & Examples & Doc & Analysis
 ------------
     make                # test cov cppcheck scan-build valgrind doc examples
     make test           # compile and run only UT/MT
-    make doc            # generate documentation
     make examples       # build examples
 
 Install

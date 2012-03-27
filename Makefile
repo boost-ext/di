@@ -3,10 +3,10 @@ PREFIX:=/usr/include
 
 .PHONY: all test examples doc install clean
 
-all:
-	@cd Test && make test cov cppcheck scan-build valgrind
-	@cd Examples && make examples
-	@cd Doc && make doc
+all: verify examples doc
+
+verify:
+	@cd Test && make test valgrind cppcheck scan-build cov
 
 test:
 	@cd Test && make test
