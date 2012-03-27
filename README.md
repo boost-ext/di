@@ -78,13 +78,16 @@ BOOST_AUTO(fusionModule, Fusion::Module()(                      // fusion module
 Requirements
 ------------
     Code:
-        * C++ 98 standard-compliant compiler  + typeof extension
-        * Boost >= 1.43 (headers only libraries)
+        * c++ 98 standard-compliant compiler  + typeof extension
+        * boost >= 1.43 (headers only libraries)
 
     Tests:
-        * GNU-compatible Make >= 3.81
+        * gnu-compatible Make >= 3.81
         * gtest >= 1.6.0 (UT, MT)
         * [optional] lcov, cppcheck, scan-build, valgrind
+
+    Documentation:
+        * vim >= 7.3
 
     Supported compilers (successfully tested):
         * gcc   >= 3.4.6
