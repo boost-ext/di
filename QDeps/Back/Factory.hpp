@@ -140,7 +140,7 @@ private:
             );                                                                                              \
         }
 
-    BOOST_PP_REPEAT(QDEPS_FUNC_ARITY, QDEPS_CREATE_IMPL, ~)
+    BOOST_PP_REPEAT(QDEPS_FUNCTION_ARITY_LIMIT_SIZE, QDEPS_CREATE_IMPL, ~)
 
     #undef QDEPS_CREATE_IMPL_ARG
     #undef QDEPS_CREATE_IMPL

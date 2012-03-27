@@ -32,51 +32,51 @@ using namespace boost;
 
 TEST(Factory, CreateUsingCopy)
 {
-    Factory< vector0<> > l_factory;
-    C0 l_obj = l_factory.create<C0>();
-    (void)(l_obj);
+    Factory< vector0<> > factory;
+    C0 obj = factory.create<C0>();
+    (void)(obj);
 }
 
 TEST(Factory, CreateUsingRef)
 {
-    Factory< vector0<> > l_factory;
-    C0& l_obj = l_factory.create<C0&>();
-    EXPECT_TRUE(&l_obj);
+    Factory< vector0<> > factory;
+    C0& obj = factory.create<C0&>();
+    EXPECT_TRUE(&obj);
 }
 
 TEST(Factory, CreateUsingConstRef)
 {
-    Factory< vector0<> > l_factory;
-    const C0& l_obj = l_factory.create<const C0&>();
-    EXPECT_TRUE(&l_obj);
+    Factory< vector0<> > factory;
+    const C0& obj = factory.create<const C0&>();
+    EXPECT_TRUE(&obj);
 }
 
 TEST(Factory, CreateUsingPtr)
 {
-    Factory< vector0<> > l_factory;
-    C0* l_obj = l_factory.create<C0*>();
-    EXPECT_TRUE(l_obj);
+    Factory< vector0<> > factory;
+    C0* obj = factory.create<C0*>();
+    EXPECT_TRUE(obj);
 }
 
 TEST(Factory, CreateUsingConstPtr)
 {
-    Factory< vector0<> > l_factory;
-    const C0* l_obj = l_factory.create<const C0*>();
-    EXPECT_TRUE(l_obj);
+    Factory< vector0<> > factory;
+    const C0* obj = factory.create<const C0*>();
+    EXPECT_TRUE(obj);
 }
 
 TEST(Factory, CreateUsingSharedPtr)
 {
-    Factory< vector0<> > l_factory;
-    shared_ptr<C0> l_obj = l_factory.create< shared_ptr<C0> >();
-    EXPECT_TRUE(l_obj);
+    Factory< vector0<> > factory;
+    shared_ptr<C0> obj = factory.create< shared_ptr<C0> >();
+    EXPECT_TRUE(obj);
 }
 
 TEST(Factory, CreateDefaultCtor)
 {
-    Factory< vector0<> > l_factory;
-    C0 l_obj = l_factory.create<C0>();
-    (void)(l_obj);
+    Factory< vector0<> > factory;
+    C0 obj = factory.create<C0>();
+    (void)(obj);
 }
 
 TEST(Factory, CreateWithValues)
@@ -87,7 +87,7 @@ TEST(Factory, CreateWithValues)
 
     typedef QPool::Pool< vector<double, char> > Pool;
 
-    Pool l_pool
+    Pool pool
     (
         make_shared<double>(d),
         make_shared<char>(c)
@@ -104,14 +104,14 @@ TEST(Factory, CreateWithValues)
         >,
         Pool
     >
-    l_factory(l_pool);
+    factory(pool);
 
-    C9 l_obj = l_factory.create<C9>();
+    C9 obj = factory.create<C9>();
 
-    EXPECT_EQ(i, l_obj.i);
-    EXPECT_EQ(d, l_obj.d);
-    EXPECT_EQ(c, l_obj.c);
-    EXPECT_EQ("test", l_obj.s);
+    EXPECT_EQ(i, obj.i);
+    EXPECT_EQ(d, obj.d);
+    EXPECT_EQ(c, obj.c);
+    EXPECT_EQ("test", obj.s);
 }
 
 TEST(Factory, CreateWithNonTrivialCtor)
@@ -122,7 +122,7 @@ TEST(Factory, CreateWithNonTrivialCtor)
 
     typedef QPool::Pool< vector<C2> > Pool;
 
-    Pool l_pool
+    Pool pool
     (
         make_shared<C2>(i, d, c)
     );
@@ -135,13 +135,13 @@ TEST(Factory, CreateWithNonTrivialCtor)
         >,
         Pool
     >
-    l_factory(l_pool);
+    factory(pool);
 
-    C2 l_obj = l_factory.create<C2>();
+    C2 obj = factory.create<C2>();
 
-    EXPECT_EQ(i, l_obj.i);
-    EXPECT_EQ(d, l_obj.d);
-    EXPECT_EQ(c, l_obj.c);
+    EXPECT_EQ(i, obj.i);
+    EXPECT_EQ(d, obj.d);
+    EXPECT_EQ(c, obj.c);
 }
 
 TEST(Factory, CreateWithAttributes)
@@ -151,7 +151,7 @@ TEST(Factory, CreateWithAttributes)
 
     typedef QPool::Pool< vector<Named<int, string<'1'> >, Named<int, string<'2'> > > > Pool;
 
-    Pool l_pool
+    Pool pool
     (
         make_shared<Named<int, string<'1'> > >(i1),
         make_shared<Named<int, string<'2'> > >(i2)
@@ -166,12 +166,12 @@ TEST(Factory, CreateWithAttributes)
         >,
         Pool
     >
-    l_factory(l_pool);
+    factory(pool);
 
-    C4 l_obj = l_factory.create<C4>();
+    C4 obj = factory.create<C4>();
 
-    EXPECT_EQ(i1, l_obj.i1);
-    EXPECT_EQ(i2, l_obj.i2);
+    EXPECT_EQ(i1, obj.i1);
+    EXPECT_EQ(i2, obj.i2);
 }
 
 TEST(Factory, CreatePerRequest)
@@ -183,9 +183,9 @@ TEST(Factory, CreatePerRequest)
             Dependency<PerRequest, If0, CIf0>
         >
     >
-    l_factory;
+    factory;
 
-    shared_ptr<C8> c8 = l_factory.create< shared_ptr<C8> >();
+    shared_ptr<C8> c8 = factory.create< shared_ptr<C8> >();
 
     EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
     EXPECT_NE(c8->c7->c6->c4->c3, c8->c7->c6->c3);
@@ -213,9 +213,9 @@ TEST(Factory, CreatePerRequestSingleton)
             Dependency<Singleton, C3>
         >
     >
-    l_factory;
+    factory;
 
-    shared_ptr<C8> c8 = l_factory.create< shared_ptr<C8> >();
+    shared_ptr<C8> c8 = factory.create< shared_ptr<C8> >();
 
     EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
     EXPECT_EQ(c8->c7->c6->c4->c3, c8->c7->c6->c3);
@@ -244,9 +244,9 @@ TEST(Factory, CreatePerRequestSingletonPath)
             Dependency<Singleton, C3>
         >
     >
-    l_factory;
+    factory;
 
-    shared_ptr<C8> c8 = l_factory.create< shared_ptr<C8> >();
+    shared_ptr<C8> c8 = factory.create< shared_ptr<C8> >();
 
     EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
     EXPECT_EQ(c8->c7->c6->c4->c3, c8->c7->c6->c3);
@@ -276,9 +276,9 @@ TEST(Factory, CreatePerRequestSingletonPathOrder)
             Dependency<Singleton, C3>
         >
     >
-    l_factory;
+    factory;
 
-    shared_ptr<C8> c8 = l_factory.create< shared_ptr<C8> >();
+    shared_ptr<C8> c8 = factory.create< shared_ptr<C8> >();
 
     EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
     EXPECT_EQ(c8->c7->c6->c4->c3, c8->c7->c6->c3);
@@ -313,9 +313,9 @@ TEST(Factory, CreatePerRequestSingletonPathMix)
             Dependency<PerRequest, int, int_<5>, vector<C2> >
         >
     >
-    l_factory;
+    factory;
 
-    shared_ptr<C8> c8 = l_factory.create< shared_ptr<C8> >();
+    shared_ptr<C8> c8 = factory.create< shared_ptr<C8> >();
 
     EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
     EXPECT_EQ(c8->c7->c6->c4->c3, c8->c7->c6->c3);
@@ -342,9 +342,9 @@ TEST(Factory, CreateSingletonImpl)
             Dependency<Singleton, If0, CIf0>
         >
     >
-    l_factory;
+    factory;
 
-    shared_ptr<C8> c8 = l_factory.create< shared_ptr<C8> >();
+    shared_ptr<C8> c8 = factory.create< shared_ptr<C8> >();
 
     EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
     EXPECT_NE(c8->c7->c6->c4->c3, c8->c7->c6->c3);
@@ -373,9 +373,9 @@ TEST(Factory, CreateSingletonMany)
             Dependency<Singleton, C1>
         >
     >
-    l_factory;
+    factory;
 
-    shared_ptr<C8> c8 = l_factory.create< shared_ptr<C8> >();
+    shared_ptr<C8> c8 = factory.create< shared_ptr<C8> >();
 
     EXPECT_EQ(c8->c1, c8->c7->c6->c5.c1);
     EXPECT_EQ(c8->c7->c6->c4->c3, c8->c7->c6->c3);
@@ -406,9 +406,9 @@ TEST(Factory, BaseOf)
             Dependency<PerRequest, Named<int, string<'1'> >, int_<3>, vector<C7, C6, C4>, or_< is_base_of<_1, Named<int, string<'1'> > >, is_same<_1, Named<int, string<'1'> > > > >
         >
     >
-    l_factory;
+    factory;
 
-    shared_ptr<C8> c8 = l_factory.create< shared_ptr<C8> >();
+    shared_ptr<C8> c8 = factory.create< shared_ptr<C8> >();
 
     EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
     EXPECT_NE(c8->c7->c6->c4->c3, c8->c7->c6->c3);
@@ -424,6 +424,27 @@ TEST(Factory, BaseOf)
     EXPECT_EQ(5, c8->c7->c6->c5.c2->i);
     EXPECT_EQ(0.0, c8->c7->c6->c5.c2->d);
     EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
+}
+
+TEST(Factory, CtorTraits)
+{
+    const int i1 = 42;
+    const int i2 = 87;
+
+    Factory
+    <
+        vector
+        <
+            Dependency<PerRequest, Named<int, string<'1'> >, int_<i1> >,
+            Dependency<PerRequest, Named<int, string<'2'> >, int_<i2> >
+        >
+    >
+    factory;
+
+    C10 obj = factory.create<C10>();
+
+    EXPECT_EQ(i1, obj.i1);
+    EXPECT_EQ(i2, obj.i2);
 }
 
 } // namespace UT
