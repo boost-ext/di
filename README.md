@@ -63,15 +63,13 @@ BOOST_AUTO(fusionModule, Fusion::Module()(                      // fusion module
 {
     Injector<> l_injector;                                      // default empty injector
 
-    l_injector.install(                                         // install 2 modules
-        BaseModule(
+    App lvalue = l_injector.install(                            // install 2 modules
+        BaseModule(                                             // and create App as lvalue
             Set<IConfig>(Config),
             Set<UpInt>(42)
         ),
         l_fusionModule
-    );
-
-    App lvalue = injector.create<App>();                        // create App as lvalue
+    ).create<App>();
 }
 
 ```
