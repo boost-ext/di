@@ -14,61 +14,62 @@ Usage
 
 struct NumOfLimits { };
 struct Allocator { QDEPS_CTOR(Allocator, int, double) { } };
-struct Measurements { QDEPS_CTOR(Named<CapacityLimit, Down> p_down, Named<CapacityLimit, Up> p_up) { } };
-struct Storage { QDEPS_CTOR_TRAITS(Named<int, Up>); Storage(int p_i) { } };
+struct Measurements { QDEPS_CTOR(Named<CapacityLimit, Down>, Named<CapacityLimit, Up>) { } };
+struct Storage { QDEPS_CTOR_TRAITS(Named<int, Up>); Storage(int, shared_ptr<Selector>) { } };
+struct App { QDEPS_CTOR(Storage, const shared_ptr<LimitChecker>&) { } };
 ...
 
-struct BaseModule : Base::Module <
+struct BaseModule : Base::Module <                              // base module : type
+    PerRequests <                                               // always new instance
+        Bind<IMap, Map>,                                        // bind interface IMap to Map implementation
+        Measurements,                                           // bind implementation Measurements to
+        Allocator,                                              // interface from which Measurements is inhereting
+        CapacityLimit,
+        NumOfLimits,
+        Bind<LimitChecker>::InCall<Capacity>                    // bind implementation LimitChecker
+    >,                                                          // only when Capacity class is created
     Singletons <
-        Bind<CapacityLimit>::InName<Down>,
+        Bind<CapacityLimit>::InName<Down>,                      // bind using Named parameter
         Bind<CapacityLimit>::InName<Up>,
         Bind<NumOfCapacityLimit>::InName<Limit>,
         ResourceCalculator
     >,
-    PerRequests <
-        Bind<IMap, Map>,
-        Measurements,
-        Allocator,
-        CapacityLimit,
-        NumOfLimits,
-        Bind<LimitChecker>::InCall<Capacity>
-    >,
-    Externals <
+    Externals <                                                 // outside objects
         IConfig,
-        Annotate<Bind<int>::InName<Up> >::With<UpInt>
+        Annotate<Bind<int>::InName<Up> >::With<UpInt>           // bind to annotation to simplify setting
     >
 > { };
 
-BOOST_AUTO(l_fusionModule, Fusion::Module()(
+BOOST_AUTO(fusionModule, Fusion::Module()(                      // fusion module : object 
     Singletons <
         Storage
     >(),
     PerRequests <
-        Bind<ServicesLimit>::InName<Limits>::InCall<Selector, LoadTracker>,
-        PriorityQueue,
+        Bind<Limit>::InName<On>::InCall<Storage, LoadTracker>,  // bind to name only when Storage and LoadTracker
+        PriorityQueue,                                          // were created (call stack order)
         PriorityMultiqueue,
         Selector,
         LoadTracker
     >(),
-    Bind<int>::InCall<Selector>::To(87)
+    Bind<int>::InCall<Selector>::To(87)                         // bind external value
 ));
 
 {
-    Injector<BaseModule, BOOST_TYPEOF(l_fusionModule)> injector(
-        BaseModule(
-            Set<IConfig>(Config),
+    Injector<BaseModule, BOOST_TYPEOF(fusionModule)> injector(  // create injector from 2 modules
+        BaseModule(                                             // initialize BaseModule externals
+            Set<IConfig>(Config),                               // initialize IConfig by Config
             Set<UpInt>(42)
         ),
-        l_fusionModule
+        l_fusionModule                                          // fusion module is already created
     );
 
-    shared_ptr<App> sp = injector.create< shared_ptr<App> >();
+    shared_ptr<App> sp = injector.create< shared_ptr<App> >();  // create App as shared_ptr
 }
 
 {
-    Injector<> l_injector;
+    Injector<> l_injector;                                      // default empty injector
 
-    l_injector.install(
+    l_injector.install(                                         // install 2 modules
         BaseModule(
             Set<IConfig>(Config),
             Set<UpInt>(42)
@@ -76,7 +77,7 @@ BOOST_AUTO(l_fusionModule, Fusion::Module()(
         l_fusionModule
     );
 
-    App lvalue = injector.create<App>();
+    App lvalue = injector.create<App>();                        // create App as lvalue
 }
 
 ```
