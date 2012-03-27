@@ -68,9 +68,6 @@ TEST(Injector, Module)
         >::value
     ));
 
-    std::cout << abi::__cxa_demangle(typeid(Inj::Dependencies::type).name(), 0, 0, 0) << std::endl;
-
-
     EXPECT_TRUE((
         equal
         <

@@ -80,12 +80,10 @@
             >::type
         { };
 
-        struct Externals : boost::mpl::vector0<> { };
-
         #include BOOST_PP_ITERATE()
 
     private:
-        QPool::Pool< boost::mpl::vector0<> > m_pool;
+        QPool::Pool<TSeq, QPool::Allocator::Stack> m_pool;
     };
 
     } // namespace Fusion
@@ -97,10 +95,10 @@
 #else
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)> Module<boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), Arg)> >
-    //operator()(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg))
-    operator()(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), Arg, BOOST_PP_INTERCEPT))
+    operator()(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg))
     {
-        return Module< boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), Arg)> >();
+        return Module< boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), Arg)> >(
+            BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg));
     }
 
 #endif
