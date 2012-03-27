@@ -21,11 +21,9 @@ struct App { QDEPS_CTOR(Storage, const shared_ptr<LimitChecker>&) { } };
 
 struct BaseModule : Base::Module <                              // base module : type
     PerRequests <                                               // always new instance
-        Bind<IMap, Map>,                                        // bind interface IMap to Map implementation
-        Measurements,                                           // bind implementation Measurements to
-        Allocator,                                              // interface from which Measurements is inhereting
-        CapacityLimit,
-        NumOfLimits,
+        Bind<IMap, Map>,                                        // bind IMap to Map implementation
+        Measurements,                                           // bind Measurements to interface
+        Allocator,                                              // from which Measurements is inhereting
         Bind<LimitChecker>::InCall<Capacity>                    // bind implementation LimitChecker
     >,                                                          // only when Capacity class is created
     Singletons <
@@ -45,10 +43,8 @@ BOOST_AUTO(fusionModule, Fusion::Module()(                      // fusion module
         Storage
     >(),
     PerRequests <
-        Bind<Limit>::InName<On>::InCall<Storage, LoadTracker>,  // bind to name only when Storage and LoadTracker
-        PriorityQueue,                                          // were created (call stack order)
-        PriorityMultiqueue,
-        Selector,
+        Bind<Limit>::InName<On>::InCall<Storage, LoadTracker>,  // bind (in name) only when Storage and 
+        PriorityQueue,                                          // LoadTracker were created in given order
         LoadTracker
     >(),
     Bind<int>::InCall<Selector>::To(87)                         // bind external value
