@@ -5,6 +5,79 @@ QDeps - C++ dependency injection framework (headers only library)
 
         git clone --recursive git://github.com/QSrc/QDeps.git
 
+Usage
+-----
+
+``` C++
+#include <QDeps/QDeps.hpp>
+
+struct NumOfLimits { };
+struct Allocator { QDEPS_CTOR(Allocator, int, double) { } };
+struct Measurements { QDEPS_CTOR(Named<CapacityLimit, Down> p_down, Named<CapacityLimit, Up> p_up) { } };
+struct Storage { QDEPS_CTOR_TRAITS(Named<int, Up>); Storage(int p_i) { } };
+...
+
+struct BaseModule : Base::Module <
+    Singletons <
+        Bind<CapacityLimit>::InName<Down>,
+        Bind<CapacityLimit>::InName<Up>,
+        Bind<NumOfCapacityLimit>::InName<Limit>,
+        ResourceCalculator
+    >,
+    PerRequests <
+        Measurements,
+        Allocator,
+        CapacityLimit,
+        NumOfLimits,
+        Bind<LimitChecker>::InCall<Capacity>
+    >,
+    Externals <
+        IConfig,
+        Annotate<Bind<int>::InName<Up> >::With<UpInt>
+    >
+> { };
+
+BOOST_AUTO(l_fusionModule, Fusion::Module()(
+    Singletons <
+        Storage
+    >(),
+    PerRequests <
+        Bind<ServicesLimit>::InName<Limits>::InCall<Selector, LoadTracker>,
+        PriorityQueue,
+        PriorityMultiqueue,
+        Selector,
+        LoadTracker
+    >(),
+    Bind<int>::InCall<Selector>::To(87)
+));
+
+{
+    Injector<BaseModule, BOOST_TYPEOF(l_fusionModule)> injector(
+        BaseModule(
+            Set<IConfig>(Config),
+            Set<UpInt>(42)
+        ),
+        l_fusionModule
+    );
+
+    shared_ptr<App> sp = injector.create< shared_ptr<App> >();
+}
+
+{
+    Injector<> l_injector;
+
+    l_injector.install(
+        BaseModule(
+            Set<IConfig>(Config),
+            Set<UpInt>(42)
+        ),
+        l_fusionModule
+    );
+
+    App lvalue = injector.create<App>();
+}
+
+```
 Requirements
 ------------
     Code:
@@ -32,69 +105,6 @@ Tests & Examples & Doc & Analysis
 Install
 ------------
     sudo make install   # copy QDeps to /usr/include
-
-Usage
------
-
-``` C++
-#include <QDeps/Front/Ctor.hpp>
-#include <QDeps/Utility/Injector.hpp>
-#include <QDeps/Utility/Named.hpp>
-
-struct IDummy { virtual ~I() { } virtual void dummy() = 0; };
-struct Dumb : IDummy { virtual void dummy() { } };
-struct Dumber : IDummy { virtual void dummy() { } };
-struct C1 { QDPES_CTOR(C1, shared_ptr<IDummy> /*Dumber per request*/, int /*42*/, Named<int, string<'port'> > /*8080 external*/) { } };
-struct C2 { QDPES_CTOR(C2, const IDummy*, shared_ptr<C1> /*Dumb singleton with C3*/) };
-struct C3 { QDPES_CTOR(C3, C2, const shared_ptr<IDummy>& /*Dumb singleton with C2*/) { } };
-
-// *** base front end ***
-{
-    #include <QDeps/Front/Base/Module.hpp>
-
-    struct BaseModule : Module <
-        Singletons <
-            Dumb
-        >,
-        PerRequests <
-            int_<42>,
-            Bind<Dumber>::InCall<C2, C1>
-        >,
-        Externals <
-            Annotate<Bind<int>::InName<Port> >::With<string<'port'> >
-        >
-    > { };
-
-    Injector<BaseModule> injector(
-        BaseModule(
-            Set<string<'port'> >(8080)
-        )
-    );
-    shared_ptr<C3> l_sp = injector.create< shared_ptr<C3> >();
-    C3 l_value = injector.create<C3>();
-}
-
-// *** fusion front end ***
-{
-    #include <QDeps/Front/Fusion/Module.hpp>
-
-    BOOST_AUTO(fusionModule, (Module()(
-        Singletons <
-            Dumb
-        >(),
-        PerRequests <
-            int_<42>,
-            Bind<Dumber>::InCall<C2, C1>
-        >(),
-        Bind<int>::InName<string<'port'> >::To(8080)
-    )));
-
-    Injector<BOOST_TYPEOF(fusionModule)> injector(fusionModule);
-    shared_ptr<C3> l_sp = injector.create< shared_ptr<C3> >();
-    C3 l_value = injector.create<C3>();
-}
-
-```
 
 TODO
 ------
