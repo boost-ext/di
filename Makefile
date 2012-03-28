@@ -1,4 +1,4 @@
-QDEPS:=QDeps
+TARGET:=QDeps
 PREFIX:=/usr/include
 
 .PHONY: all test examples doc install clean
@@ -18,7 +18,8 @@ doc:
 	@cd Doc && make doc
 
 install:
-	@cp -r $(QDEPS) $(PREFIX)
+	@cd Externals/QPool && make install
+	@cp -r $(TARGET) $(PREFIX)
 
 clean:
 	@cd Test && make clean
