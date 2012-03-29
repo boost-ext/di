@@ -19,7 +19,10 @@ namespace QDeps
 namespace Back
 {
 
-template<typename> struct Value : boost::mpl::false_ { };
+template<typename> struct Value : boost::mpl::false_
+{
+    template<typename T> static T create();
+};
 
 template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, int C)>
 struct Value< boost::mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> > : boost::mpl::true_

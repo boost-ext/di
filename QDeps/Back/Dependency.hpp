@@ -20,6 +20,7 @@
     #include <boost/preprocessor/repetition/enum_params.hpp>
     #include <boost/preprocessor/repetition/enum_binary_params.hpp>
     #include <boost/preprocessor/facilities/intercept.hpp>
+    #include "QDeps/Back/Utility.hpp"
     #include "QDeps/Back/Value.hpp"
     #include "QDeps/Config.hpp"
 
@@ -52,7 +53,22 @@
             typedef Dependency<Scope, TExpected, TGiven, TContext, TBind, TValue> type;
         };
 
-        template<typename TPool> boost::shared_ptr<TExpected> create
+        template<typename, typename = void> struct ResultType
+        {
+            typedef boost::shared_ptr<TExpected> type;
+        };
+
+        template<typename TPool> struct ResultType<TPool, typename boost::enable_if< boost::mpl::contains<typename TPool::Seq, TExpected> >::type>
+        {
+            typedef typename TPool::template ResultType<TExpected>::type type;
+        };
+
+        template<typename TPool> struct ResultType<TPool, typename boost::disable_if< boost::mpl::contains<typename TPool::Seq, TExpected> >::type>
+        {
+            typedef typename TScope::template ResultType<TExpected>::type type;
+        };
+
+        template<typename TPool> typename TPool::template ResultType<TExpected>::type create
         (
             TPool& p_pool,
             typename boost::enable_if< boost::mpl::contains<typename TPool::Seq, TExpected> >::type* = 0
@@ -93,7 +109,7 @@
 
 #else
     template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    boost::shared_ptr<TExpected> create
+    typename TScope::template ResultType<TExpected>::type create
     (
         TPool&,
         BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg),
@@ -104,7 +120,7 @@
     }
 
     template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    boost::shared_ptr<TExpected> create
+    typename TPool::template ResultType<TExpected>::type create
     (
         TPool& p_pool,
         BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, & BOOST_PP_INTERCEPT),

@@ -4,7 +4,6 @@
     #define QDEPS_BACK_SCOPE_SINGLETON_HPP
 
     #include <boost/shared_ptr.hpp>
-    #include <boost/make_shared.hpp>
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/enum_params.hpp>
     #include <boost/preprocessor/repetition/enum_binary_params.hpp>
@@ -23,6 +22,13 @@
     class Singleton
     {
     public:
+        template<typename T>
+        struct ResultType
+        {
+            typedef boost::shared_ptr<T> type;
+        };
+
+
         #include BOOST_PP_ITERATE()
 
     private:
