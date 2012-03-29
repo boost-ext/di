@@ -28,6 +28,12 @@ template<typename T> struct FakeValue { };
 template<typename TSeq, int Value = 0> struct FakePool
 {
     typedef TSeq Seq;
+
+    template<typename T> struct ResultType
+    {
+        typedef shared_ptr<T> type;
+    };
+
     template<typename T> shared_ptr<T> get() { return make_shared<T>(Value); }
 };
 
@@ -49,40 +55,38 @@ TEST(Dependency, Default)
 
 TEST(Dependency, Apply)
 {
-    //TODO
-/*    EXPECT_TRUE((*/
-        //is_same
-        //<
-            //Dependency
-            //<
-                //OtherFakeScope,
-                //int,
-                //int,
-                //vector0<>,
-                //is_same<_1, int>,
-                //FakeValue
-            //>,
-            //Dependency
-            //<
-                //FakeScope<>,
-                //int,
-                //int,
-                //vector0<>,
-                //is_same<_1, int>,
-                //FakeValue
-            //>::Apply<OtherFakeScope>::type
-        //>::value
-    /*));*/
+    EXPECT_TRUE((
+        is_same
+        <
+            Dependency
+            <
+                OtherFakeScope,
+                int,
+                int,
+                vector0<>,
+                is_same<_1, int>,
+                FakeValue
+            >,
+            Dependency
+            <
+                _1,
+                int,
+                int,
+                vector0<>,
+                is_same<_1, int>,
+                FakeValue
+            >::Apply<OtherFakeScope>::type
+        >::value
+    ));
 }
 
 TEST(Dependency, createByPool)
 {
-    //const int i = 42;
-    //Dependency< FakeScope<>, int > dep;
-    //FakePool< vector<int>, i > pool;
+    const int i = 42;
+    Dependency< FakeScope<>, int > dep;
+    FakePool< vector<int>, i > pool;
 
-    //TODO
-    //EXPECT_EQ(i, *dep.create(pool));
+    EXPECT_EQ(i, *dep.create(pool));
 }
 
 TEST(Dependency, createByValue)

@@ -216,7 +216,7 @@ public:
 
 } // namespace Detail
 
-//TODO try inheritance
+//TODO Inheritance
 template
 <
     typename TDeps,
