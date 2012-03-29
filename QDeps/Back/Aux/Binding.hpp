@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef QDEPS_BACK_BINDING_HPP
-#define QDEPS_BACK_BINDING_HPP
+#ifndef QDEPS_BACK_AUX_BINDING_HPP
+#define QDEPS_BACK_AUX_BINDING_HPP
 
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/iterator_range.hpp>
@@ -22,11 +22,13 @@
 #include <boost/mpl/next.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/apply.hpp>
-#include "QDeps/Back/Utility.hpp"
+#include "QDeps/Back/Aux/Utility.hpp"
 
 namespace QDeps
 {
 namespace Back
+{
+namespace Aux
 {
 
 namespace Detail
@@ -80,6 +82,7 @@ struct Binding : boost::mpl::sort
     >::type
 { };
 
+} // namespace Aux
 } // namespace Back
 } // namespace QDeps
 

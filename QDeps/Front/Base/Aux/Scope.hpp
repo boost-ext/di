@@ -21,8 +21,8 @@
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/push_back.hpp>
-#include "QDeps/Back/Dependency.hpp"
-#include "QDeps/Back/Utility.hpp"
+#include "QDeps/Back/Aux/Dependency.hpp"
+#include "QDeps/Back/Aux/Utility.hpp"
 #include "QDeps/Utility/Named.hpp"
 #include "QDeps/Front/Base/Aux/Internal.hpp"
 
@@ -44,7 +44,7 @@ struct Scope
         typename TGiven,
         typename TContext = boost::mpl::vector0<>
     >
-    struct Dependency : Detail::Internal, Back::Dependency
+    struct Dependency : Detail::Internal, Back::Aux::Dependency
         <
             boost::mpl::_1,
             TExpected,
@@ -62,8 +62,8 @@ struct Scope
             boost::mpl::if_
             <
                 boost::is_base_of<Detail::Internal, boost::mpl::_2>,
-                boost::mpl::push_back<boost::mpl::_1, Back::Apply<boost::mpl::_2, TScope> >,
-                boost::mpl::push_back<boost::mpl::_1, Back::Apply<Dependency<boost::mpl::_2, boost::mpl::_2>, TScope> >
+                boost::mpl::push_back<boost::mpl::_1, Back::Aux::Apply<boost::mpl::_2, TScope> >,
+                boost::mpl::push_back<boost::mpl::_1, Back::Aux::Apply<Dependency<boost::mpl::_2, boost::mpl::_2>, TScope> >
             >
         >::type
     { };
@@ -76,8 +76,8 @@ struct Scope
             boost::mpl::if_
             <
                 boost::is_base_of<Detail::Internal, boost::mpl::_2>,
-                boost::mpl::push_back<boost::mpl::_1, Back::Apply<boost::mpl::_2, TScope> >,
-                boost::mpl::push_back<boost::mpl::_1, Back::Apply< Dependency<boost::mpl::_2, boost::mpl::_2>, TScope> >
+                boost::mpl::push_back<boost::mpl::_1, Back::Aux::Apply<boost::mpl::_2, TScope> >,
+                boost::mpl::push_back<boost::mpl::_1, Back::Aux::Apply< Dependency<boost::mpl::_2, boost::mpl::_2>, TScope> >
             >
         >::type
     {
@@ -89,8 +89,8 @@ struct Scope
                 boost::mpl::if_
                 <
                     boost::is_base_of<Detail::Internal, boost::mpl::_2>,
-                    boost::mpl::push_back<boost::mpl::_1, Back::Apply<boost::mpl::_2, TScope> >,
-                    boost::mpl::push_back<boost::mpl::_1, Back::Apply< Dependency<boost::mpl::_2, boost::mpl::_2, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >, TScope> >
+                    boost::mpl::push_back<boost::mpl::_1, Back::Aux::Apply<boost::mpl::_2, TScope> >,
+                    boost::mpl::push_back<boost::mpl::_1, Back::Aux::Apply< Dependency<boost::mpl::_2, boost::mpl::_2, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >, TScope> >
                 >
             >::type
         {
@@ -102,8 +102,8 @@ struct Scope
                     boost::mpl::if_
                     <
                         boost::is_base_of<Detail::Internal, boost::mpl::_2>,
-                        boost::mpl::push_back<boost::mpl::_1, Back::Apply<boost::mpl::_2, TScope> >,
-                        boost::mpl::push_back<boost::mpl::_1, Back::Apply< Dependency<Utility::Named<boost::mpl::_2, TName>, boost::mpl::_2, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >, TScope> >
+                        boost::mpl::push_back<boost::mpl::_1, Back::Aux::Apply<boost::mpl::_2, TScope> >,
+                        boost::mpl::push_back<boost::mpl::_1, Back::Aux::Apply< Dependency<Utility::Named<boost::mpl::_2, TName>, boost::mpl::_2, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >, TScope> >
                     >
                 >::type
             { };
@@ -117,8 +117,8 @@ struct Scope
                 boost::mpl::if_
                 <
                     boost::is_base_of<Detail::Internal, boost::mpl::_2>,
-                    boost::mpl::push_back<boost::mpl::_1, Back::Apply<boost::mpl::_2, TScope> >,
-                    boost::mpl::push_back<boost::mpl::_1, Back::Apply< Dependency<Utility::Named<boost::mpl::_2, TName>, boost::mpl::_2>, TScope> >
+                    boost::mpl::push_back<boost::mpl::_1, Back::Aux::Apply<boost::mpl::_2, TScope> >,
+                    boost::mpl::push_back<boost::mpl::_1, Back::Aux::Apply< Dependency<Utility::Named<boost::mpl::_2, TName>, boost::mpl::_2>, TScope> >
                 >
             >::type
         {
@@ -130,8 +130,8 @@ struct Scope
                     boost::mpl::if_
                     <
                         boost::is_base_of<Detail::Internal, boost::mpl::_2>,
-                        boost::mpl::push_back<boost::mpl::_1, Back::Apply<boost::mpl::_2, TScope> >,
-                        boost::mpl::push_back<boost::mpl::_1, Back::Apply< Dependency<Utility::Named<boost::mpl::_2, TName>, boost::mpl::_2, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >, TScope> >
+                        boost::mpl::push_back<boost::mpl::_1, Back::Aux::Apply<boost::mpl::_2, TScope> >,
+                        boost::mpl::push_back<boost::mpl::_1, Back::Aux::Apply< Dependency<Utility::Named<boost::mpl::_2, TName>, boost::mpl::_2, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >, TScope> >
                     >
                 >::type
             { };

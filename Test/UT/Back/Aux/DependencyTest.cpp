@@ -8,13 +8,14 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include "QDeps/Back/Dependency.hpp"
+#include "QDeps/Back/Scope.hpp"
+#include "QDeps/Back/Aux/Dependency.hpp"
 
 namespace QDeps
 {
 namespace Back
 {
-namespace Detail
+namespace Aux
 {
 namespace UT
 {
@@ -27,11 +28,17 @@ template<typename T> struct FakeValue { };
 template<typename TSeq, int Value = 0> struct FakePool
 {
     typedef TSeq Seq;
+
+    template<typename T> struct ResultType
+    {
+        typedef shared_ptr<T> type;
+    };
+
     template<typename T> shared_ptr<T> get() { return make_shared<T>(Value); }
 };
 
 template<int Value = 0>
-struct FakeScope
+struct FakeScope : Scope< boost::shared_ptr<boost::mpl::_1> >
 {
     template<typename T> shared_ptr<T> create() { return make_shared<T>(Value); }
 };
@@ -62,7 +69,7 @@ TEST(Dependency, Apply)
             >,
             Dependency
             <
-                FakeScope<>,
+                _1,
                 int,
                 int,
                 vector0<>,
@@ -101,7 +108,7 @@ TEST(Dependency, createByScope)
 }
 
 } // namespace UT
-} // namespace Detail
+} // namespace Aux
 } // namespace Back
 } // namespace QDeps
 

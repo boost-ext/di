@@ -20,14 +20,17 @@
     #include <boost/preprocessor/repetition/enum_params.hpp>
     #include <boost/preprocessor/repetition/enum_binary_params.hpp>
     #include <boost/preprocessor/facilities/intercept.hpp>
-    #include "QDeps/Back/Value.hpp"
+    #include "QDeps/Back/Aux/Utility.hpp"
+    #include "QDeps/Back/Aux/Value.hpp"
     #include "QDeps/Config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, QDEPS_FUNCTION_ARITY_LIMIT_SIZE, "QDeps/Back/Dependency.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, QDEPS_FUNCTION_ARITY_LIMIT_SIZE, "QDeps/Back/Aux/Dependency.hpp"))
 
     namespace QDeps
     {
     namespace Back
+    {
+    namespace Aux
     {
 
     template
@@ -47,12 +50,22 @@
         typedef TContext Context;
         typedef TBind Bind;
 
-        template<typename Scope> struct Apply
+        template<typename, typename = void> struct ResultType
         {
-            typedef Dependency<Scope, TExpected, TGiven, TContext, TBind, TValue> type;
+            typedef boost::shared_ptr<TExpected> type;
         };
 
-        template<typename TPool> boost::shared_ptr<TExpected> create
+        template<typename TPool> struct ResultType<TPool, typename boost::enable_if< boost::mpl::contains<typename TPool::Seq, TExpected> >::type>
+        {
+            typedef typename TPool::template ResultType<TExpected>::type type;
+        };
+
+        template<typename TPool> struct ResultType<TPool, typename boost::disable_if< boost::mpl::contains<typename TPool::Seq, TExpected> >::type>
+        {
+            typedef typename TScope::template ResultType<TExpected>::type type;
+        };
+
+        template<typename TPool> typename TPool::template ResultType<TExpected>::type create
         (
             TPool& p_pool,
             typename boost::enable_if< boost::mpl::contains<typename TPool::Seq, TExpected> >::type* = 0
@@ -86,6 +99,24 @@
         TScope m_scope;
     };
 
+    template
+    <
+        typename TExpected,
+        typename TGiven,
+        typename TContext,
+        typename TBind,
+        template<typename> class TValue
+    >
+    class Dependency<boost::mpl::_1, TExpected, TGiven, TContext, TBind, TValue>
+    {
+    public:
+        template<typename Scope> struct Apply
+        {
+            typedef Dependency<Scope, TExpected, TGiven, TContext, TBind, TValue> type;
+        };
+    };
+
+    } // namespace Aux
     } // namespace Back
     } // namespace QDeps
 
@@ -93,7 +124,7 @@
 
 #else
     template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    boost::shared_ptr<TExpected> create
+    typename TScope::template ResultType<TExpected>::type create
     (
         TPool&,
         BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg),
@@ -104,7 +135,7 @@
     }
 
     template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    boost::shared_ptr<TExpected> create
+    typename TPool::template ResultType<TExpected>::type create
     (
         TPool& p_pool,
         BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, & BOOST_PP_INTERCEPT),

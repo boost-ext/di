@@ -11,7 +11,7 @@
 #include <boost/mpl/equal.hpp>
 #include <boost/mpl/or.hpp>
 #include "Test/Common/Data.hpp"
-#include "QDeps/Back/Dependency.hpp"
+#include "QDeps/Back/Aux/Dependency.hpp"
 #include "QDeps/Front/Fusion/Module.hpp"
 #include "QDeps/Utility/Named.hpp"
 
@@ -26,6 +26,7 @@ namespace UT
 
 using namespace Test::Common;
 using namespace Back;
+using namespace Back::Aux;
 using namespace Utility;
 using namespace boost::mpl;
 using namespace boost;
@@ -52,12 +53,12 @@ TEST(FusionModule, Mix)
         <
             vector
             <
-                Dependency<Back::Scope::Singleton, If0, CIf0, vector0<>, is_same<_1, If0> >,
-                Dependency<Back::Scope::Singleton, C1, C1, vector0<>, or_< is_base_of<_1, C1>, is_same<_1, C1> > >,
-                Dependency<Back::Scope::Singleton, Named<C2, int>, C2, vector0<>, or_< is_base_of<_1, Named<C2, int> >, is_same<_1, Named<C2, int> > > >,
-                Dependency<Back::Scope::Singleton, C3, C3, vector<C4, C5>, or_< is_base_of<_1, C3>, is_same<_1, C3> > >,
-                Dependency<Back::Scope::PerRequest, C6, C6, vector0<>, or_< is_base_of<_1, C6>, is_same<_1, C6> > >,
-                Dependency<Back::Scope::Singleton, Named<C7, double>, C7, vector<C1>, or_< is_base_of<_1, Named<C7, double> >, is_same<_1, Named<C7, double> > > >
+                Dependency<Back::Scopes::Singleton, If0, CIf0, vector0<>, is_same<_1, If0> >,
+                Dependency<Back::Scopes::Singleton, C1, C1, vector0<>, or_< is_base_of<_1, C1>, is_same<_1, C1> > >,
+                Dependency<Back::Scopes::Singleton, Named<C2, int>, C2, vector0<>, or_< is_base_of<_1, Named<C2, int> >, is_same<_1, Named<C2, int> > > >,
+                Dependency<Back::Scopes::Singleton, C3, C3, vector<C4, C5>, or_< is_base_of<_1, C3>, is_same<_1, C3> > >,
+                Dependency<Back::Scopes::PerRequest, C6, C6, vector0<>, or_< is_base_of<_1, C6>, is_same<_1, C6> > >,
+                Dependency<Back::Scopes::Singleton, Named<C7, double>, C7, vector<C1>, or_< is_base_of<_1, Named<C7, double> >, is_same<_1, Named<C7, double> > > >
             >,
             TestModule::Dependencies
         >::value

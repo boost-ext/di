@@ -8,13 +8,13 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
 #include <boost/type_traits/is_base_of.hpp>
-#include "QDeps/Back/Binding.hpp"
+#include "QDeps/Back/Aux/Binding.hpp"
 
 namespace QDeps
 {
 namespace Back
 {
-namespace Detail
+namespace Aux
 {
 namespace UT
 {
@@ -445,7 +445,7 @@ TEST(Binding, BaseOfSuccessful)
 }
 
 } // namespace UT
-} // namespace Detail
+} // namespace Aux
 } // namespace Back
 } // namespace QDeps
 

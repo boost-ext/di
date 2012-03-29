@@ -4,27 +4,36 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef QDEPS_BACK_UTILITY_HPP
-#define QDEPS_BACK_UTILITY_HPP
+#ifndef QDEPS_BACK_AUX_UTILITY_HPP
+#define QDEPS_BACK_AUX_UTILITY_HPP
 
 #include <boost/shared_ptr.hpp>
+#include <boost/typeof/typeof.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/mpl/is_sequence.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/has_xxx.hpp>
+#include "QDeps/Config.hpp"
 
 namespace QDeps
 {
 namespace Back
 {
+namespace Aux
+{
 
 namespace Detail
 {
 BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
+BOOST_MPL_HAS_XXX_TRAIT_DEF(QDEPS_CTOR_UNIQUE_NAME)
 } // namespace Detail
+
+template<typename T> struct GetCtor
+{
+    typedef BOOST_TYPEOF_TPL(T::QDEPS_CTOR_UNIQUE_NAME::ctor) type;
+};
 
 template<typename T> struct GetBind
 {
@@ -87,6 +96,7 @@ template<typename T, typename TApplied> struct Apply
     typedef typename T::template Apply<TApplied>::type type;
 };
 
+} // namespace Aux
 } // namespace Back
 } // namespace QDeps
 

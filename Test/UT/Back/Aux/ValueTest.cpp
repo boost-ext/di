@@ -7,13 +7,13 @@
 #include <gtest/gtest.h>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
-#include "QDeps/Back/Value.hpp"
+#include "QDeps/Back/Aux/Value.hpp"
 
 namespace QDeps
 {
 namespace Back
 {
-namespace Detail
+namespace Aux
 {
 namespace UT
 {
@@ -41,7 +41,7 @@ TEST(Value, mpl_string)
 }
 
 } // namespace UT
-} // namespace Detail
+} // namespace Aux
 } // namespace Back
 } // namespace QDeps
 

@@ -20,8 +20,8 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/bool.hpp>
 #include "QPool/Pool.hpp"
+#include "QDeps/Back/Aux/Utility.hpp"
 #include "QDeps/Back/Module.hpp"
-#include "QDeps/Back/Utility.hpp"
 #include "QDeps/Back/Factory.hpp"
 #include "QDeps/Back/Policy.hpp"
 #include "QPool/Utility/Ctor.hpp"
@@ -53,7 +53,7 @@ class Injector
             boost::mpl::if_
             <
                 boost::is_base_of<Back::Module, boost::mpl::_2>,
-                DependenciesImpl<Back::GetDependencies<boost::mpl::_2>, boost::mpl::_1>,
+                DependenciesImpl<Back::Aux::GetDependencies<boost::mpl::_2>, boost::mpl::_1>,
                 boost::mpl::insert<boost::mpl::_1, boost::mpl::_2>
             >
         >
@@ -67,7 +67,7 @@ class Injector
             boost::mpl::if_
             <
                 boost::is_base_of<Back::Module, boost::mpl::_2>,
-                ExternalsImpl<Back::GetExternals<boost::mpl::_2>, boost::mpl::_1>,
+                ExternalsImpl<Back::Aux::GetExternals<boost::mpl::_2>, boost::mpl::_1>,
                 boost::mpl::insert<boost::mpl::_1, boost::mpl::_2>
             >
         >
