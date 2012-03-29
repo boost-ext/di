@@ -63,11 +63,11 @@ class Create
         typedef typename boost::function_types::parameter_types<typename GetCtor<T>::type>::type Ctor;
         typedef typename boost::mpl::push_back<TCallStack, T>::type CallStack;
         typedef typename TBinding<T, TCallStack>::type Binding;
-        typedef typename Dependency<Scope::PerRequest, T>::template ResultType<TPool>::type ResultOf;
+        typedef typename Dependency<Scopes::PerRequest, T>::template ResultType<TPool>::type ResultOf;
 
         static ResultOf execute(TEntries& p_entries, TPool& p_pool)
         {
-            Dependency<Scope::PerRequest, T> l_onDemandInst;
+            Dependency<Scopes::PerRequest, T> l_onDemandInst;
             return Create::template execute<T, Ctor, CallStack>(p_entries, l_onDemandInst, p_pool);
         }
     };

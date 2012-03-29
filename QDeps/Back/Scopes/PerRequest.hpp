@@ -8,7 +8,8 @@
     #include <boost/preprocessor/repetition/enum_params.hpp>
     #include <boost/preprocessor/repetition/enum_binary_params.hpp>
     #include <boost/preprocessor/punctuation/comma_if.hpp>
-    //#include "QDeps/Back/Scope.hpp"
+    #include <boost/mpl/placeholders.hpp>
+    #include "QDeps/Back/Scope.hpp"
     #include "QDeps/Config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, QDEPS_FUNCTION_ARITY_LIMIT_SIZE, "QDeps/Back/Scopes/PerRequest.hpp"))
@@ -17,18 +18,12 @@
     {
     namespace Back
     {
-    namespace Scope
+    namespace Scopes
     {
 
-    class PerRequest
+    class PerRequest : public Scope< boost::shared_ptr<boost::mpl::_1> >
     {
     public:
-        template<typename T>
-        struct ResultType
-        {
-            typedef boost::shared_ptr<T> type;
-        };
-
         #include BOOST_PP_ITERATE()
     };
 

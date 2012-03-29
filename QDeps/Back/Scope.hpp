@@ -7,18 +7,20 @@
 #ifndef QDEPS_BACK_SCOPE_HPP
 #define QDEPS_BACK_SCOPE_HPP
 
+#include <boost/mpl/apply.hpp>
+
 namespace QDeps
 {
 namespace Back
 {
 
-template<template<typename> class TAllocator>
+template<typename TAllocator>
 class Scope
 {
 public:
     template<typename T> struct ResultType
     {
-        typedef TAllocator<T> type;
+        typedef typename boost::mpl::apply<TAllocator, T>::type type;
     };
 };
 

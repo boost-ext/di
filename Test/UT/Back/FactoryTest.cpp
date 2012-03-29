@@ -26,7 +26,7 @@ namespace UT
 
 using namespace Test::Common;
 using namespace Utility;
-using namespace Back::Scope;
+using namespace Back::Scopes;
 using namespace Back::Aux;
 using namespace boost::mpl;
 using namespace boost;
@@ -400,9 +400,9 @@ TEST(Factory, BaseOf)
     <
         vector
         <
-            Dependency<Back::Scope::PerRequest, int, int_<1>, vector0<>, or_< is_base_of<_1, int>, is_same<_1, int> > >,
-            Dependency<Back::Scope::PerRequest, Named<int, string<'2'> >, int_<4>, vector<C7, C6, C4>, or_< is_base_of<_1, Named<int, string<'2'> > >, is_same<_1, Named<int, string<'2'> > > > >,
-            Dependency<Back::Scope::PerRequest, int, int_<5>, vector<C2>, or_< is_base_of<_1, int>, is_same<_1, int> > >,
+            Dependency<PerRequest, int, int_<1>, vector0<>, or_< is_base_of<_1, int>, is_same<_1, int> > >,
+            Dependency<PerRequest, Named<int, string<'2'> >, int_<4>, vector<C7, C6, C4>, or_< is_base_of<_1, Named<int, string<'2'> > >, is_same<_1, Named<int, string<'2'> > > > >,
+            Dependency<PerRequest, int, int_<5>, vector<C2>, or_< is_base_of<_1, int>, is_same<_1, int> > >,
             Dependency<PerRequest, CIf0, CIf0, vector0<>, or_< is_base_of<_1, CIf0>, is_same<_1, CIf0> > >,
             Dependency<PerRequest, Named<int, string<'1'> >, int_<3>, vector<C7, C6, C4>, or_< is_base_of<_1, Named<int, string<'1'> > >, is_same<_1, Named<int, string<'1'> > > > >
         >
