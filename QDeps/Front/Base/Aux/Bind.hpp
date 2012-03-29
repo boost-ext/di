@@ -15,8 +15,8 @@
 #include <boost/mpl/limits/vector.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/or.hpp>
-#include "QDeps/Back/Dependency.hpp"
-#include "QDeps/Back/Value.hpp"
+#include "QDeps/Back/Aux/Dependency.hpp"
+#include "QDeps/Back/Aux/Value.hpp"
 #include "QDeps/Utility/Named.hpp"
 #include "QDeps/Front/Base/Aux/Internal.hpp"
 
@@ -30,7 +30,7 @@ namespace Aux
 {
 
 template<typename TExpected, typename TGiven = TExpected, typename Enable = void>
-struct Bind : Detail::Internal, Back::Dependency
+struct Bind : Detail::Internal, Back::Aux::Dependency
     <
         boost::mpl::_1,
         TExpected,
@@ -39,7 +39,7 @@ struct Bind : Detail::Internal, Back::Dependency
     >
 {
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    struct InCall : Detail::Internal, Back::Dependency
+    struct InCall : Detail::Internal, Back::Aux::Dependency
         <
             boost::mpl::_1,
             TExpected,
@@ -48,7 +48,7 @@ struct Bind : Detail::Internal, Back::Dependency
         >
     {
         template<typename TName>
-        struct InName : Detail::Internal, Back::Dependency
+        struct InName : Detail::Internal, Back::Aux::Dependency
             <
                 boost::mpl::_1,
                 Utility::Named<TExpected, TName>,
@@ -59,7 +59,7 @@ struct Bind : Detail::Internal, Back::Dependency
     };
 
     template<typename TName>
-    struct InName : Detail::Internal, Back::Dependency
+    struct InName : Detail::Internal, Back::Aux::Dependency
         <
             boost::mpl::_1,
             Utility::Named<TExpected, TName>,
@@ -67,7 +67,7 @@ struct Bind : Detail::Internal, Back::Dependency
         >
     {
         template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-        struct InCall : Detail::Internal, Back::Dependency
+        struct InCall : Detail::Internal, Back::Aux::Dependency
             <
                 boost::mpl::_1,
                 Utility::Named<TExpected, TName>,
@@ -79,7 +79,7 @@ struct Bind : Detail::Internal, Back::Dependency
 };
 
 template<typename TExpected, typename TGiven>
-struct Bind<TExpected, TGiven, typename boost::enable_if< boost::mpl::or_<Back::Value<TGiven>, boost::is_same<TExpected, TGiven> > >::type> : Detail::Internal, Back::Dependency
+struct Bind<TExpected, TGiven, typename boost::enable_if< boost::mpl::or_<Back::Aux::Value<TGiven>, boost::is_same<TExpected, TGiven> > >::type> : Detail::Internal, Back::Aux::Dependency
     <
         boost::mpl::_1,
         TExpected,
@@ -89,7 +89,7 @@ struct Bind<TExpected, TGiven, typename boost::enable_if< boost::mpl::or_<Back::
     >
 {
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    struct InCall : Detail::Internal, Back::Dependency
+    struct InCall : Detail::Internal, Back::Aux::Dependency
         <
             boost::mpl::_1,
             TExpected,
@@ -99,7 +99,7 @@ struct Bind<TExpected, TGiven, typename boost::enable_if< boost::mpl::or_<Back::
         >
     {
         template<typename TName>
-        struct InName : Detail::Internal, Back::Dependency
+        struct InName : Detail::Internal, Back::Aux::Dependency
             <
                 boost::mpl::_1,
                 Utility::Named<TExpected, TName>,
@@ -111,7 +111,7 @@ struct Bind<TExpected, TGiven, typename boost::enable_if< boost::mpl::or_<Back::
     };
 
     template<typename TName>
-    struct InName : Detail::Internal, Back::Dependency
+    struct InName : Detail::Internal, Back::Aux::Dependency
         <
             boost::mpl::_1,
             Utility::Named<TExpected, TName>,
@@ -121,7 +121,7 @@ struct Bind<TExpected, TGiven, typename boost::enable_if< boost::mpl::or_<Back::
         >
     {
         template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-        struct InCall : Detail::Internal, Back::Dependency
+        struct InCall : Detail::Internal, Back::Aux::Dependency
             <
                 boost::mpl::_1,
                 Utility::Named<TExpected, TName>,

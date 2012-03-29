@@ -6,13 +6,13 @@
 //
 #include <gtest/gtest.h>
 #include "Test/Common/Data.hpp"
-#include "QDeps/Back/Scope/Singleton.hpp"
+#include "QDeps/Back/Scopes/Singleton.hpp"
 
 namespace QDeps
 {
 namespace Back
 {
-namespace Scope
+namespace Scopes
 {
 namespace UT
 {

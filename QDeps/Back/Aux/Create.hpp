@@ -182,7 +182,7 @@ public:
 
     #define QDEPS_CREATE_IMPL_ARG(z, n, text) BOOST_PP_COMMA_IF(n)                                                      \
          Convert<typename boost::mpl::at_c<TCtor, n>::type>::execute(                                                   \
-            execute<typename MakePlain<typename boost::mpl::at_c<TCtor, n>::type>::type, TCallStack>(p_e, p_pool) \
+            execute<typename MakePlain<typename boost::mpl::at_c<TCtor, n>::type>::type, TCallStack>(p_e, p_pool)       \
          )
 
     #define QDEPS_CREATE_IMPL(z, n, text)                                                                               \
@@ -196,7 +196,7 @@ public:
         >                                                                                                               \
         static typename TEntries::template ResultType<TPool>::type execute                                              \
         (                                                                                                               \
-            TE& BOOST_PP_EXPR_IF(n, p_e),                                                                                                    \
+            TE& BOOST_PP_EXPR_IF(n, p_e),                                                                               \
             TEntries& p_entries,                                                                                        \
             TPool& p_pool,                                                                                              \
             typename boost::enable_if_c<boost::mpl::size<TCtor>::value == n>::type* = 0                                 \

@@ -50,11 +50,6 @@
         typedef TContext Context;
         typedef TBind Bind;
 
-        template<typename Scope> struct Apply
-        {
-            typedef Dependency<Scope, TExpected, TGiven, TContext, TBind, TValue> type;
-        };
-
         template<typename, typename = void> struct ResultType
         {
             typedef boost::shared_ptr<TExpected> type;
@@ -102,6 +97,23 @@
         }
 
         TScope m_scope;
+    };
+
+    template
+    <
+        typename TExpected,
+        typename TGiven,
+        typename TContext,
+        typename TBind,
+        template<typename> class TValue
+    >
+    class Dependency<boost::mpl::_1, TExpected, TGiven, TContext, TBind, TValue>
+    {
+    public:
+        template<typename Scope> struct Apply
+        {
+            typedef Dependency<Scope, TExpected, TGiven, TContext, TBind, TValue> type;
+        };
     };
 
     } // namespace Aux
