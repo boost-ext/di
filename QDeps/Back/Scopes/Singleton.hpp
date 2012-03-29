@@ -10,7 +10,7 @@
     #include <boost/preprocessor/punctuation/comma_if.hpp>
     #include "QDeps/Config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, QDEPS_FUNCTION_ARITY_LIMIT_SIZE, "QDeps/Back/Scope/Singleton.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, QDEPS_FUNCTION_ARITY_LIMIT_SIZE, "QDeps/Back/Scopes/Singleton.hpp"))
 
     namespace QDeps
     {

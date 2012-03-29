@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef QDEPS_BACK_CREATE_HPP
-#define QDEPS_BACK_CREATE_HPP
+#ifndef QDEPS_BACK_AUX_CREATE_HPP
+#define QDEPS_BACK_AUX_CREATE_HPP
 
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
@@ -24,16 +24,18 @@
 #include <boost/mpl/deref.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/has_xxx.hpp>
-#include "QDeps/Back/Utility.hpp"
-#include "QDeps/Back/Dependency.hpp"
-#include "QDeps/Back/Binding.hpp"
-#include "QDeps/Back/Scope/PerRequest.hpp"
+#include "QDeps/Back/Aux/Utility.hpp"
+#include "QDeps/Back/Aux/Dependency.hpp"
+#include "QDeps/Back/Aux/Binding.hpp"
+#include "QDeps/Back/Scopes/PerRequest.hpp"
 
 //TODO iterate
 
 namespace QDeps
 {
 namespace Back
+{
+namespace Aux
 {
 
 namespace Detail
@@ -61,7 +63,6 @@ class Create
         typedef typename boost::function_types::parameter_types<typename GetCtor<T>::type>::type Ctor;
         typedef typename boost::mpl::push_back<TCallStack, T>::type CallStack;
         typedef typename TBinding<T, TCallStack>::type Binding;
-
         typedef typename Dependency<Scope::PerRequest, T>::template ResultType<TPool>::type ResultOf;
 
         static ResultOf execute(TEntries& p_entries, TPool& p_pool)
@@ -215,6 +216,7 @@ public:
 
 } // namespace Detail
 
+//TODO try inheritance
 template
 <
     typename TDeps,
@@ -225,6 +227,7 @@ struct Create
     typedef typename Detail::Create<TDeps, TPool> type;
 };
 
+} // namespace Aux
 } // namespace Back
 } // namespace QDeps
 

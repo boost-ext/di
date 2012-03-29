@@ -20,15 +20,17 @@
     #include <boost/preprocessor/repetition/enum_params.hpp>
     #include <boost/preprocessor/repetition/enum_binary_params.hpp>
     #include <boost/preprocessor/facilities/intercept.hpp>
-    #include "QDeps/Back/Utility.hpp"
-    #include "QDeps/Back/Value.hpp"
+    #include "QDeps/Back/Aux/Utility.hpp"
+    #include "QDeps/Back/Aux/Value.hpp"
     #include "QDeps/Config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, QDEPS_FUNCTION_ARITY_LIMIT_SIZE, "QDeps/Back/Dependency.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, QDEPS_FUNCTION_ARITY_LIMIT_SIZE, "QDeps/Back/Aux/Dependency.hpp"))
 
     namespace QDeps
     {
     namespace Back
+    {
+    namespace Aux
     {
 
     template
@@ -102,6 +104,7 @@
         TScope m_scope;
     };
 
+    } // namespace Aux
     } // namespace Back
     } // namespace QDeps
 

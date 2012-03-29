@@ -8,9 +8,10 @@
     #include <boost/preprocessor/repetition/enum_params.hpp>
     #include <boost/preprocessor/repetition/enum_binary_params.hpp>
     #include <boost/preprocessor/punctuation/comma_if.hpp>
+    //#include "QDeps/Back/Scope.hpp"
     #include "QDeps/Config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, QDEPS_FUNCTION_ARITY_LIMIT_SIZE, "QDeps/Back/Scope/PerRequest.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, QDEPS_FUNCTION_ARITY_LIMIT_SIZE, "QDeps/Back/Scopes/PerRequest.hpp"))
 
     namespace QDeps
     {

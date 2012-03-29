@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef QDEPS_QDEPS_BACK_VALUE_HPP
-#define QDEPS_QDEPS_BACK_VALUE_HPP
+#ifndef QDEPS_BACK_AUX_VALUE_HPP
+#define QDEPS_BACK_AUX_VALUE_HPP
 
 #include <string>
 #include <boost/make_shared.hpp>
@@ -17,6 +17,8 @@
 namespace QDeps
 {
 namespace Back
+{
+namespace Aux
 {
 
 template<typename> struct Value : boost::mpl::false_
@@ -44,6 +46,7 @@ struct Value< boost::mpl::int_<N> > : boost::mpl::true_
     }
 };
 
+} // namespace Aux
 } // namespace Back
 } // namespace QDeps
 

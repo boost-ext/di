@@ -11,10 +11,10 @@
 #include <boost/mpl/inherit.hpp>
 #include <boost/mpl/vector.hpp>
 #include "QPool/Pool.hpp"
-#include "QDeps/Back/Utility.hpp"
-#include "QDeps/Back/Convert.hpp"
-#include "QDeps/Back/Create.hpp"
-#include "QDeps/Back/Dependency.hpp"
+#include "QDeps/Back/Aux/Utility.hpp"
+#include "QDeps/Back/Aux/Convert.hpp"
+#include "QDeps/Back/Aux/Create.hpp"
+#include "QDeps/Back/Aux/Dependency.hpp"
 
 namespace QDeps
 {
@@ -25,8 +25,8 @@ template
 <
     typename TDeps,
     typename TPool = const QPool::Pool<>,
-    template<typename> class TConvert = Convert,
-    template<typename = TDeps, typename = TPool> class TCreate = Create
+    template<typename> class TConvert = Aux::Convert,
+    template<typename = TDeps, typename = TPool> class TCreate = Aux::Create
 >
 class Factory
 {
@@ -45,7 +45,7 @@ public:
     template<typename T> T create()
     {
         typedef boost::mpl::vector0<> EmptyCallStack;
-        typedef typename MakePlain<T>::type PlainType;
+        typedef typename Aux::MakePlain<T>::type PlainType;
         typedef typename TCreate<>::type Create;
 
         return TConvert<T>::execute(Create::template execute<PlainType, EmptyCallStack>(m_entries, m_pool));

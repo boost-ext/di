@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef QDEPS_BACK_UTILITY_HPP
-#define QDEPS_BACK_UTILITY_HPP
+#ifndef QDEPS_BACK_AUX_UTILITY_HPP
+#define QDEPS_BACK_AUX_UTILITY_HPP
 
 #include <boost/shared_ptr.hpp>
 #include <boost/typeof/typeof.hpp>
@@ -26,6 +26,8 @@
 namespace QDeps
 {
 namespace Back
+{
+namespace Aux
 {
 
 namespace Detail
@@ -100,6 +102,7 @@ template<typename T, typename TApplied> struct Apply
     typedef typename T::template Apply<TApplied>::type type;
 };
 
+} // namespace Aux
 } // namespace Back
 } // namespace QDeps
 
