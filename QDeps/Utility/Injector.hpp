@@ -119,8 +119,9 @@ public:
         return m_factory.create<T>();
     }
 
-    template<typename TVisitor> void visit(const TVisitor&)
+    template<typename T, typename TVisitor> void visit(const TVisitor& p_visitor)
     {
+        return m_factory.visit<T>(p_visitor);
     }
 
 /*    template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, typename M)> Injector<M...> install(T...)*/

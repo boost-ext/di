@@ -12,22 +12,19 @@
 #include <boost/preprocessor/control/expr_if.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/make_shared.hpp>
-#include <boost/typeof/typeof.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/function_types/parameter_types.hpp>
-#include <boost/function_types/result_type.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/at.hpp>
-#include <boost/mpl/if.hpp>
 #include <boost/mpl/empty.hpp>
 #include <boost/mpl/begin_end.hpp>
 #include <boost/mpl/deref.hpp>
 #include <boost/mpl/push_back.hpp>
-#include <boost/mpl/has_xxx.hpp>
 #include "QDeps/Back/Aux/Utility.hpp"
 #include "QDeps/Back/Aux/Dependency.hpp"
 #include "QDeps/Back/Aux/Binding.hpp"
 #include "QDeps/Back/Scopes/PerRequest.hpp"
+#include "QDeps/Config.hpp"
 
 //TODO iterate
 
