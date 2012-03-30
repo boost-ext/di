@@ -10,8 +10,6 @@
     #define QDEPS_BACK_AUX_VISIT_HPP
 
     #include <boost/preprocessor/repetition/repeat.hpp>
-    #include <boost/preprocessor/punctuation/comma_if.hpp>
-    #include <boost/preprocessor/control/expr_if.hpp>
     #include <boost/preprocessor/cat.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/function_types/parameter_types.hpp>
@@ -27,7 +25,7 @@
     #include "QDeps/Back/Scopes/PerRequest.hpp"
     #include "QDeps/Config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, QDEPS_FUNCTION_ARITY_LIMIT_SIZE, "QDeps/Back/Aux/Visit.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, QDEPS_FUNCTION_ARITY_LIMIT_SIZE, "QDeps/Back/Aux/Visit.hpp"))
 
     namespace QDeps
     {
@@ -35,6 +33,8 @@
     {
     namespace Aux
     {
+
+    //TODO whole types boost::shared<C0>
 
     template
     <
@@ -122,9 +122,12 @@
     {
         p_visitor.template operator()<T, TCallStack, TScope>();
 
-/*        typedef typename MakePlain<typename boost::mpl::at_c<TCtor, n>::type>::type, TCallStack>*/
+        #define QDEPS_EXECUTE(z, n, text)\
+            execute<typename MakePlain<typename boost::mpl::at_c<TCtor, n>::type>::type, TCallStack>(p_visitor);
 
-        /*execute<typename MakePlain<typename boost::mpl::at_c<Ctor, n>::type>::type, TCallStack>(*/
+        BOOST_PP_REPEAT(BOOST_PP_ITERATION(), QDEPS_EXECUTE, ~);
+
+        #undef QDEPS_EXECUTE
     }
 
 #endif
