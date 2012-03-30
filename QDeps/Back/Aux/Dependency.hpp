@@ -47,6 +47,7 @@
         template<bool> class HasValue { };
 
     public:
+        typedef TScope Scope;
         typedef TContext Context;
         typedef TBind Bind;
 
