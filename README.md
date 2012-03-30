@@ -109,7 +109,7 @@ Tests & Examples & Doc & Analysis
 
 Install
 ------------
-    sudo make install   # copy QDeps to /usr/include
+    [sudo] make install   # copy QDeps to /usr/include
 
 Author
 ------
