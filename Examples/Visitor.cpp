@@ -6,6 +6,7 @@
 //
 #include <iostream>
 #include <string>
+#include <boost/mpl/size.hpp>
 #include <QDeps/QDeps.hpp>
 #include "../QDeps/Test/Common/Data.hpp"
 #include <cxxabi.h>
@@ -29,7 +30,10 @@ public:
     //template<typename TIf, typename TImpl, typename TCallStack, typename TScope> void operator()() const
     template<typename TImpl, typename TCallStack, typename TScope> void operator()() const
     {
-        //tabs according to stack size
+        int size = boost::mpl::size<TCallStack>::value;
+        while(--size) {
+            std::cout << "\t";
+        }
         std::cout << demangle(typeid(TImpl).name()) << std::endl;
     }
 };

@@ -179,7 +179,7 @@ public:
 
     #define QDEPS_CREATE_IMPL_ARG(z, n, text) BOOST_PP_COMMA_IF(n)                                                      \
          Convert<typename boost::mpl::at_c<TCtor, n>::type>::execute(                                                   \
-            execute<typename MakePlain<typename boost::mpl::at_c<TCtor, n>::type>::type, TCallStack>(p_e, p_pool)       \
+            execute<typename MakePlain<typename boost::mpl::at_c<TCtor, n>::type>::type, TCallStack>(p_entries, p_pool) \
          )
 
     #define QDEPS_CREATE_IMPL(z, n, text)                                                                               \
@@ -189,17 +189,17 @@ public:
             typename TCtor,                                                                                             \
             typename TCallStack,                                                                                        \
             typename TEntries,                                                                                          \
-            typename TE                                                                                                 \
+            typename TDependency                                                                                        \
         >                                                                                                               \
-        static typename TEntries::template ResultType<TPool>::type execute                                              \
+        static typename TDependency::template ResultType<TPool>::type execute                                           \
         (                                                                                                               \
-            TE& BOOST_PP_EXPR_IF(n, p_e),                                                                               \
-            TEntries& p_entries,                                                                                        \
+            TEntries& BOOST_PP_EXPR_IF(n, p_entries),                                                                   \
+            TDependency& p_dependency,                                                                                  \
             TPool& p_pool,                                                                                              \
             typename boost::enable_if_c<boost::mpl::size<TCtor>::value == n>::type* = 0                                 \
         )                                                                                                               \
         {                                                                                                               \
-            return p_entries.create(                                                                                    \
+            return p_dependency.create(                                                                                 \
                 p_pool BOOST_PP_COMMA_IF(n)                                                                             \
                 BOOST_PP_REPEAT(n, QDEPS_CREATE_IMPL_ARG, ~)                                                            \
             );                                                                                                          \

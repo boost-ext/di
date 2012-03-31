@@ -57,7 +57,7 @@ public:
         typedef boost::mpl::vector0<> EmptyCallStack;
         typedef typename Aux::MakePlain<T>::type PlainType;
 
-        TVisit<>::template execute<PlainType, EmptyCallStack>(p_visitor);
+        TVisit<>::template execute<PlainType, T, EmptyCallStack>(p_visitor);
     }
 
 private:

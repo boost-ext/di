@@ -20,6 +20,7 @@
     #include <boost/mpl/deref.hpp>
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/placeholders.hpp>
+    #include <boost/mpl/is_sequence.hpp>
     #include "QDeps/Back/Aux/Utility.hpp"
     #include "QDeps/Back/Aux/Binding.hpp"
     #include "QDeps/Back/Scopes/PerRequest.hpp"
@@ -44,7 +45,7 @@
     class Visit
     {
     public:
-        template<typename T, typename TCallStack, typename TVisitor> static void execute
+        template<typename T, typename TGiven, typename TCallStack, typename TVisitor> static void execute
         (
             const TVisitor& p_visitor,
             typename boost::enable_if< BOOST_PP_CAT(Detail::has_, QDEPS_CTOR_UNIQUE_NAME)<T> >::type* = 0,
@@ -53,10 +54,10 @@
         {
             typedef typename boost::function_types::parameter_types<typename GetCtor<T>::type>::type Ctor;
             typedef typename boost::mpl::push_back<TCallStack, T>::type CallStack;
-            execute<T, Ctor, CallStack, Scopes::PerRequest>(p_visitor);
+            execute<T, TGiven, Ctor, CallStack, Scopes::PerRequest>(p_visitor);
         }
 
-        template<typename T, typename TCallStack, typename TVisitor> static void execute
+        template<typename T, typename TGiven, typename TCallStack, typename TVisitor> static void execute
         (
             const TVisitor& p_visitor,
             typename boost::enable_if< BOOST_PP_CAT(Detail::has_, QDEPS_CTOR_UNIQUE_NAME)<T> >::type* = 0,
@@ -67,20 +68,20 @@
             typedef typename TBinding<T, TCallStack>::type Binding;
             typedef typename boost::mpl::deref<typename boost::mpl::begin<Binding>::type>::type ToBeCreated;
             typedef typename boost::mpl::push_back<TCallStack, T>::type CallStack;
-            execute<T, Ctor, CallStack, typename ToBeCreated::Scope>(p_visitor);
+            execute<T, TGiven, Ctor, CallStack, typename ToBeCreated::Scope>(p_visitor);
         }
 
-        template<typename T, typename TCallStack, typename TVisitor> static void execute
+        template<typename T, typename TGiven, typename TCallStack, typename TVisitor> static void execute
         (
             const TVisitor& p_visitor,
             typename boost::disable_if< BOOST_PP_CAT(Detail::has_, QDEPS_CTOR_UNIQUE_NAME)<T> >::type* = 0,
             typename boost::enable_if< boost::mpl::empty<typename TBinding<T, TCallStack>::type> >::type* = 0
         )
         {
-            p_visitor.template operator()<T, TCallStack, boost::mpl::_1>();
+            p_visitor.template operator()<TGiven, typename boost::mpl::push_back<TCallStack, T>::type, boost::mpl::_1>();
         }
 
-        template<typename T, typename TCallStack, typename TVisitor> static void execute
+        template<typename T, typename TGiven, typename TCallStack, typename TVisitor> static void execute
         (
             const TVisitor& p_visitor,
             typename boost::disable_if< BOOST_PP_CAT(Detail::has_, QDEPS_CTOR_UNIQUE_NAME)<T> >::type* = 0,
@@ -91,7 +92,7 @@
             typedef typename TBinding<T, TCallStack>::type Binding;
             typedef typename boost::mpl::deref<typename boost::mpl::begin<Binding>::type>::type ToBeCreated;
             typedef typename boost::mpl::push_back<TCallStack, T>::type CallStack;
-            execute<T, Ctor, CallStack, typename ToBeCreated::Scope>(p_visitor);
+            execute<T, TGiven, Ctor, CallStack, typename ToBeCreated::Scope>(p_visitor);
         }
 
         #include BOOST_PP_ITERATE()
@@ -111,16 +112,17 @@
 
 #else
 
-    template<typename T, typename TCtor, typename TCallStack, typename TScope, typename TVisitor> static void execute
+    template<typename T, typename TGiven, typename TCtor, typename TCallStack, typename TScope, typename TVisitor> static
+    typename boost::enable_if<boost::mpl::is_sequence<TCtor>, void>::type execute
     (
         const TVisitor& p_visitor,
         typename boost::enable_if_c<boost::mpl::size<TCtor>::value == BOOST_PP_ITERATION()>::type* = 0
     )
     {
-        p_visitor.template operator()<T, TCallStack, TScope>();
+        p_visitor.template operator()<TGiven, TCallStack, TScope>();
 
         #define QDEPS_EXECUTE(z, n, text)\
-            execute<typename MakePlain<typename boost::mpl::at_c<TCtor, n>::type>::type, TCallStack>(p_visitor);
+            execute<typename MakePlain<typename boost::mpl::at_c<TCtor, n>::type>::type, typename boost::mpl::at_c<TCtor, n>::type, TCallStack>(p_visitor);
 
         BOOST_PP_REPEAT(BOOST_PP_ITERATION(), QDEPS_EXECUTE, ~);
 
