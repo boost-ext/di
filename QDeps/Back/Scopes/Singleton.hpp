@@ -4,7 +4,47 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#if !BOOST_PP_IS_ITERATING
+#if defined(BOOST_HAS_RVALUE_REFS) && defined(BOOST_HAS_VARIADIC_TMPL)
+
+    #ifndef QDEPS_BACK_SCOPE_SINGLETON_HPP
+    #define QDEPS_BACK_SCOPE_SINGLETON_HPP
+
+    #include <memory>
+    #include <boost/mpl/placeholders.hpp>
+    #include "QDeps/Back/Scope.hpp"
+
+    namespace QDeps
+    {
+    namespace Back
+    {
+    namespace Scopes
+    {
+
+    class Singleton : public Scope< std::shared_ptr<boost::mpl::_1> >
+    {
+    public:
+        template<typename T, typename... Args>
+        std::shared_ptr<T> create(Args&&... p_args)
+        {
+            if (!m_instance)
+            {
+                m_instance = std::make_shared(std::forward<Args>(p_args)...);
+            }
+
+            return m_instance;
+        }
+
+    private:
+        boost::shared_ptr<void> m_instance;
+    };
+
+    } // namespace Scope
+    } // namespace Back
+    } // namespace QDeps
+
+    #endif
+
+#elif !BOOST_PP_IS_ITERATING
 
     #ifndef QDEPS_BACK_SCOPE_SINGLETON_HPP
     #define QDEPS_BACK_SCOPE_SINGLETON_HPP

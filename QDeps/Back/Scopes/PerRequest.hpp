@@ -4,7 +4,39 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#if !BOOST_PP_IS_ITERATING
+#if defined(BOOST_HAS_RVALUE_REFS) && defined(BOOST_HAS_VARIADIC_TMPL)
+
+    #ifndef QDEPS_BACK_SCOPE_PERREQUEST_HPP
+    #define QDEPS_BACK_SCOPE_PERREQUEST_HPP
+
+    #include <memory>
+    #include <boost/mpl/placeholders.hpp>
+    #include "QDeps/Back/Scope.hpp"
+
+    namespace QDeps
+    {
+    namespace Back
+    {
+    namespace Scopes
+    {
+
+    class PerRequest : public Scope< std::unique_ptr<boost::mpl::_1> >
+    {
+    public:
+        template<typename T, typename... Args>
+        std::unique_ptr<T> create(Args&&... p_args)
+        {
+            return std::make_unique<T>(std::forward<Args>(p_args)...);
+        }
+    };
+
+    } // namespace Scope
+    } // namespace Back
+    } // namespace QDeps
+
+    #endif
+
+#elif !BOOST_PP_IS_ITERATING
 
     #ifndef QDEPS_BACK_SCOPE_PERREQUEST_HPP
     #define QDEPS_BACK_SCOPE_PERREQUEST_HPP
