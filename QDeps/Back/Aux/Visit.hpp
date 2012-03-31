@@ -33,8 +33,8 @@
     {
     namespace Aux
     {
-
-    //TODO whole types boost::shared<C0>
+    namespace Detail
+    {
 
     template
     <
@@ -97,14 +97,11 @@
         #include BOOST_PP_ITERATE()
     };
 
-    template
-    <
-        typename TDeps
-    >
-    struct Visit2
-    {
-        typedef Visit<TDeps> type;
-    };
+    } // namespace Detail
+
+    template<typename TDeps>
+    struct Visit : Detail::Visit<TDeps>
+    { };
 
     } // namespace Aux
     } // namespace Back

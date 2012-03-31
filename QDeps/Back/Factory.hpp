@@ -28,7 +28,7 @@ template
     typename TPool = const QPool::Pool<>,
     template<typename> class TConvert = Aux::Convert,
     template<typename = TDeps, typename = TPool> class TCreate = Aux::Create,
-    template<typename = TDeps> class TVisit = Aux::Visit2
+    template<typename = TDeps> class TVisit = Aux::Visit
 >
 class Factory
 {
@@ -48,18 +48,16 @@ public:
     {
         typedef boost::mpl::vector0<> EmptyCallStack;
         typedef typename Aux::MakePlain<T>::type PlainType;
-        typedef typename TCreate<>::type Create;
 
-        return TConvert<T>::execute(Create::template execute<PlainType, EmptyCallStack>(m_entries, m_pool));
+        return TConvert<T>::execute(TCreate<>::template execute<PlainType, EmptyCallStack>(m_entries, m_pool));
     }
 
     template<typename T, typename TVisitor> void visit(const TVisitor& p_visitor)
     {
         typedef boost::mpl::vector0<> EmptyCallStack;
         typedef typename Aux::MakePlain<T>::type PlainType;
-        typedef typename TVisit<>::type Visit;
 
-        Visit::template execute<PlainType, EmptyCallStack>(p_visitor);
+        TVisit<>::template execute<PlainType, EmptyCallStack>(p_visitor);
     }
 
 private:

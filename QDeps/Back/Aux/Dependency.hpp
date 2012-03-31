@@ -48,6 +48,8 @@
 
     public:
         typedef TScope Scope;
+        typedef TExpected Expected;
+        typedef TGiven Given;
         typedef TContext Context;
         typedef TBind Bind;
 

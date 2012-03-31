@@ -213,16 +213,9 @@ public:
 
 } // namespace Detail
 
-//TODO Inheritance
-template
-<
-    typename TDeps,
-    typename TPool
->
-struct Create
-{
-    typedef typename Detail::Create<TDeps, TPool> type;
-};
+template<typename TDeps, typename TPool>
+struct Create : Detail::Create<TDeps, TPool>
+{ };
 
 } // namespace Aux
 } // namespace Back
