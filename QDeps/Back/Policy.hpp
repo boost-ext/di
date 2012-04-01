@@ -11,8 +11,12 @@
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/mpl/limits/vector.hpp>
 #include <boost/mpl/vector.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/filter_view.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/void.hpp>
+#include <boost/mpl/for_each.hpp>
+#include "QDeps/Back/Aux/Utility.hpp"
 
 namespace QDeps
 {
@@ -29,28 +33,43 @@ class Policy : Detail::Policy
 {
     typedef boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> Seq;
 
-    template<typename TDeps, typename TPolicy> struct InitImpl
+    template<typename TDeps, typename TPolicy> struct VerifyImpl
     {
-        typedef typename TPolicy::template Init<TDeps> type;
+        typedef typename TPolicy::template Verify<TDeps> type;
     };
 
-    template<typename TDeps, typename T, typename TPolicy> struct CreateImpl
+    template<typename TVisit, typename TPlainType, typename T, typename TCallStack>
+    class VisitImpl
     {
-        typedef typename TPolicy::template Init<TDeps, T> type;
+    public:
+        template<typename TPolicy> void operator()(const TPolicy&) const
+        {
+            TVisit::template execute<TPlainType, T, TCallStack>(TPolicy());
+        }
     };
 
 public:
-    template<typename TDeps> struct Init
-        : boost::mpl::fold<Seq, boost::mpl::void_, InitImpl<TDeps, boost::mpl::_2> >::type
+    template<typename TDeps> struct Verify : boost::mpl::fold
+        <
+            Seq,
+            boost::mpl::void_,
+            boost::mpl::if_
+            <
+                Aux::Detail::HasCallOperator<boost::mpl::_2>,
+                boost::mpl::void_,
+                VerifyImpl<TDeps, boost::mpl::_2>
+            >
+        >::type
     {
         typedef void type;
     };
 
-    template<typename TDeps, typename T> struct Create
-        : boost::mpl::fold<Seq, boost::mpl::void_, CreateImpl<TDeps, T, boost::mpl::_2> >::type
+    template<typename TVisit, typename TPlainType, typename T, typename TCallStack>
+    static void verify()
     {
-        typedef void type;
-    };
+        typedef typename boost::mpl::filter_view<Seq, Aux::Detail::HasCallOperator<boost::mpl::_> >::type Visitors;
+        boost::mpl::for_each<Visitors>(VisitImpl<TVisit, TPlainType, T, TCallStack>());
+    }
 };
 
 } // namespace Back

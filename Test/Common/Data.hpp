@@ -156,6 +156,18 @@ struct C11
     boost::shared_ptr<int> i;
 };
 
+struct CD2;
+
+struct CD1
+{
+    QDEPS_CTOR(CD1, CD2*) { };
+};
+
+struct CD2
+{
+    QDEPS_CTOR(CD2, CD1*) { };
+};
+
 } // namespace Common
 } // namespace Test
 } // namespace QDeps

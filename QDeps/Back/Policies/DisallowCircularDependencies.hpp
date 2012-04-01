@@ -7,7 +7,12 @@
 #ifndef QDEPS_BACK_POLICIES_DISALLOWCIRCULARDEPENDENCIES_HPP
 #define QDEPS_BACK_POLICIES_DISALLOWCIRCULARDEPENDENCIES_HPP
 
+#include <boost/type_traits/is_same.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/assert.hpp>
+#include <boost/mpl/unique.hpp>
+#include <boost/mpl/equal.hpp>
 
 namespace QDeps
 {
@@ -16,18 +21,25 @@ namespace Back
 namespace Policies
 {
 
-struct DisallowCircularDependencies
+class DisallowCircularDependencies
 {
-    template<typename TDeps> struct Init
+    template<typename TSeq> struct IsUnique
+        : boost::mpl::equal<TSeq, typename boost::mpl::unique<TSeq, boost::is_same<boost::mpl::_1, boost::mpl::_2> >::type>
+    { };
+
+public:
+    template<typename, typename TCallStack, typename>
+    void operator()(typename boost::enable_if<IsUnique<TCallStack> >::type* = 0) const { }
+
+    template<typename T, typename TCallStack, typename>
+    void operator()(typename boost::disable_if<IsUnique<TCallStack> >::type* = 0) const
     {
         BOOST_MPL_ASSERT_MSG(
-            true,
-            _,
-            (TDeps)
+            false,
+            CIRCULAR_DEPENDENCIES_DISALLOWED,
+            (T, TCallStack)
         );
-    };
-
-    template<typename TDeps, typename T> struct Create { };
+    }
 };
 
 } // namespace Policies

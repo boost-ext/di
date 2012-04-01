@@ -8,12 +8,14 @@
 #define QDEPS_BACK_AUX_UTILITY_HPP
 
 #include <boost/shared_ptr.hpp>
+#include <boost/non_type.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/size.hpp>
+#include <boost/mpl/aux_/yes_no.hpp>
 #include <boost/mpl/has_xxx.hpp>
 #include "QDeps/Config.hpp"
 
@@ -28,6 +30,21 @@ namespace Detail
 {
 BOOST_MPL_HAS_XXX_TRAIT_DEF(QDEPS_CTOR_UNIQUE_NAME)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
+
+template<typename TDerived>
+class HasCallOperator
+{
+    struct BaseMixin { void operator()() { } };
+    struct Base : TDerived, BaseMixin { };
+
+    template<typename T>
+    static boost::mpl::aux::no_tag  deduce(T*, boost::non_type<void (BaseMixin::*)(), &T::operator()>* = 0);
+    static boost::mpl::aux::yes_tag deduce(...);
+
+public:
+    static const bool value = sizeof(boost::mpl::aux::yes_tag) == sizeof(deduce((Base*)(0)));
+};
+
 } // namespace Detail
 
 template<typename T> struct GetCtor

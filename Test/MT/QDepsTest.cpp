@@ -13,7 +13,8 @@ namespace QDeps
 namespace MT
 {
 
-using namespace boost::mpl;
+using namespace boost;
+using namespace mpl;
 using namespace Test::Common;
 using namespace Utility;
 using namespace Front::Base;
@@ -98,10 +99,10 @@ BOOST_AUTO(fusionModule3, Front::Fusion::Module<>()(
 ));
 
 TEST_T(QDeps, OneModule,
-    Utility::Injector<BaseModule1>,
-    Utility::Injector<BOOST_TYPEOF(fusionModule1)>)
+    Injector<BaseModule1>,
+    Injector<BOOST_TYPEOF(fusionModule1)>)
 {
-    boost::shared_ptr<C8> c8 = this->injector.template create< boost::shared_ptr<C8> >();
+    shared_ptr<C8> c8 = this->injector.template create< shared_ptr<C8> >();
 
     EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
     EXPECT_EQ(c8->c7->c6->c4->c3, c8->c7->c6->c3);
@@ -120,12 +121,12 @@ TEST_T(QDeps, OneModule,
 }
 
 TEST_T(QDeps, ManyModules,
-    Utility::Injector<BaseModule2, BaseModule3>,
-    Utility::Injector<BaseModule3, BaseModule2>,
-    Utility::Injector<BOOST_TYPEOF(fusionModule2), BOOST_TYPEOF(fusionModule3)>,
-    Utility::Injector<BOOST_TYPEOF(fusionModule3), BOOST_TYPEOF(fusionModule2)>)
+    Injector<BaseModule2, BaseModule3>,
+    Injector<BaseModule3, BaseModule2>,
+    Injector<BOOST_TYPEOF(fusionModule2), BOOST_TYPEOF(fusionModule3)>,
+    Injector<BOOST_TYPEOF(fusionModule3), BOOST_TYPEOF(fusionModule2)>)
 {
-    boost::shared_ptr<C8> c8 = this->injector.template create< boost::shared_ptr<C8> >();
+    shared_ptr<C8> c8 = this->injector.template create< shared_ptr<C8> >();
 
     EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
     EXPECT_EQ(c8->c7->c6->c4->c3, c8->c7->c6->c3);
@@ -144,10 +145,10 @@ TEST_T(QDeps, ManyModules,
 }
 
 TEST_T(QDeps, MixModules,
-    Utility::Injector<BaseModule2, BOOST_TYPEOF(fusionModule2)>,
-    Utility::Injector<BOOST_TYPEOF(fusionModule2), BaseModule2>)
+    Injector<BaseModule2, BOOST_TYPEOF(fusionModule2)>,
+    Injector<BOOST_TYPEOF(fusionModule2), BaseModule2>)
 {
-    boost::shared_ptr<C8> c8 = this->injector.template create< boost::shared_ptr<C8> >();
+    shared_ptr<C8> c8 = this->injector.template create< shared_ptr<C8> >();
 
     EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
     EXPECT_EQ(c8->c7->c6->c4->c3, c8->c7->c6->c3);
@@ -168,7 +169,8 @@ TEST_T(QDeps, MixModules,
 //TODO define BOOST_ASSERT<false> to make policy test possible
 TEST(QDeps, ModulesPolicies)
 {
-    Injector<BaseModule1, Policy<Policies::DisallowCircularDependencies> > injector;
+    Injector< Policy<Policies::DisallowCircularDependencies> > injector;
+    //injector.create<CD1>();
 }
 
 } // namespace MT
