@@ -95,7 +95,7 @@ TEST(Dependency, createByValue)
     Dependency< FakeScope<>, int, int_<i> > dep;
     FakePool< vector0<> > pool;
 
-    EXPECT_EQ(i, *dep.create(pool));
+    EXPECT_EQ(i, dep.create(pool));
 }
 
 TEST(Dependency, createByScope)

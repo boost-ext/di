@@ -9,10 +9,11 @@
     #ifndef QDEPS_BACK_AUX_DEPENDENCY_HPP
     #define QDEPS_BACK_AUX_DEPENDENCY_HPP
 
-    #include <boost/shared_ptr.hpp>
     #include <boost/type_traits/is_same.hpp>
     #include <boost/utility/enable_if.hpp>
-    #include <boost/mpl/if.hpp>
+    #include <boost/mpl/and.hpp>
+    #include <boost/mpl/or.hpp>
+    #include <boost/mpl/not.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/contains.hpp>
     #include <boost/mpl/placeholders.hpp>
@@ -53,22 +54,27 @@
         typedef TContext Context;
         typedef TBind Bind;
 
-        template<typename, typename = void> struct ResultType
-        {
-            typedef boost::shared_ptr<TExpected> type;
-        };
+        template<typename, typename = void> struct ResultType;
 
-        template<typename TPool> struct ResultType<TPool, typename boost::enable_if< boost::mpl::contains<typename TPool::Seq, TExpected> >::type>
+        template<typename TPool>
+        struct ResultType<TPool, typename boost::enable_if< boost::mpl::contains<typename TPool::Seq, TExpected> >::type>
         {
             typedef typename TPool::template ResultType<TExpected>::type type;
         };
 
-        template<typename TPool> struct ResultType<TPool, typename boost::disable_if< boost::mpl::contains<typename TPool::Seq, TExpected> >::type>
+        template<typename TPool>
+        struct ResultType<TPool, typename boost::enable_if< boost::mpl::and_< TValue<TGiven>, boost::mpl::not_<boost::mpl::contains<typename TPool::Seq, TExpected> > > >::type>
+        {
+            typedef typename TValue<TGiven>::template ResultType<TExpected>::type type;
+        };
+
+        template<typename TPool>
+        struct ResultType<TPool, typename boost::disable_if< boost::mpl::or_< TValue<TGiven>, boost::mpl::contains<typename TPool::Seq, TExpected> > >::type>
         {
             typedef typename TScope::template ResultType<TExpected>::type type;
         };
 
-        template<typename TPool> typename TPool::template ResultType<TExpected>::type create
+        template<typename TPool> typename ResultType<TPool>::type create
         (
             TPool& p_pool,
             typename boost::enable_if< boost::mpl::contains<typename TPool::Seq, TExpected> >::type* = 0
@@ -77,24 +83,24 @@
             return p_pool.template get<TExpected>();
         }
 
-        template<typename TPool> boost::shared_ptr<TExpected> create
+        template<typename TPool> typename ResultType<TPool>::type create
         (
             TPool&,
             typename boost::disable_if< boost::mpl::contains<typename TPool::Seq, TExpected> >::type* = 0
         )
         {
-            return createImpl(HasValue<TValue<TGiven>::value>());
+            return createImpl<TPool>(HasValue<TValue<TGiven>::value>());
         }
 
         #include BOOST_PP_ITERATE()
 
     private:
-        boost::shared_ptr<TExpected> createImpl(const HasValue<true>&)
+        template<typename TPool> typename ResultType<TPool>::type createImpl(const HasValue<true>&)
         {
             return TValue<TGiven>::template create<TExpected>();
         }
 
-        boost::shared_ptr<TExpected> createImpl(const HasValue<false>&)
+        template<typename TPool> typename ResultType<TPool>::type createImpl(const HasValue<false>&)
         {
             return m_scope.template create<TGiven>();
         }
@@ -127,7 +133,7 @@
 
 #else
     template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    typename TScope::template ResultType<TExpected>::type create
+    typename ResultType<TPool>::type create
     (
         TPool&,
         BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg),
@@ -138,7 +144,7 @@
     }
 
     template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    typename TPool::template ResultType<TExpected>::type create
+    typename ResultType<TPool>::type create
     (
         TPool& p_pool,
         BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, & BOOST_PP_INTERCEPT),

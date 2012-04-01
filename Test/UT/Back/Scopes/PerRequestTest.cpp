@@ -23,14 +23,14 @@ TEST(PerRequest, Create)
 {
     PerRequest l_pr;
 
-    EXPECT_TRUE(l_pr.create<int>() != l_pr.create<int>());
+    EXPECT_TRUE(l_pr.create<int>().get() != l_pr.create<int>().get());
 }
 
 TEST(PerRequest, CreateArgs)
 {
     PerRequest l_pr;
 
-    EXPECT_TRUE((l_pr.create<C2, int, double, char>(0, 0.0, '0') != l_pr.create<C2, int, double, char>(0, 0.0, '0')));
+    EXPECT_TRUE((l_pr.create<C2, int, double, char>(0, 0.0, '0').get() != l_pr.create<C2, int, double, char>(0, 0.0, '0').get()));
 }
 
 } // namespace UT
