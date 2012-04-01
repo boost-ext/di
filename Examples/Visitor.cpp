@@ -9,10 +9,14 @@
 #include <boost/mpl/size.hpp>
 #include <QDeps/QDeps.hpp>
 #include "../QDeps/Test/Common/Data.hpp"
-#include <cxxabi.h>
 
-std::string demangle(const std::string & p_mangled)
+#ifndef __llvm__
+# include <cxxabi.h>
+#endif
+
+std::string demangle(const std::string& p_mangled)
 {
+#ifndef __llvm__
     char* l_demangled = abi::__cxa_demangle(p_mangled.c_str(), 0, 0, 0);
 
     if (l_demangled)
@@ -20,6 +24,7 @@ std::string demangle(const std::string & p_mangled)
         boost::shared_ptr<char> l_result(l_demangled, std::free);
         return std::string(l_demangled);
     }
+#endif
 
     return p_mangled;
 }

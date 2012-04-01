@@ -21,28 +21,35 @@ namespace Back
 namespace Aux
 {
 
-template<typename> struct Value : boost::mpl::false_
-{
-    template<typename T> static T create();
-};
+template<typename> class Value : public boost::mpl::false_ { };
 
 template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, int C)>
-struct Value< boost::mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> > : boost::mpl::true_
+class Value< boost::mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> > : public boost::mpl::true_
 {
-    template<typename T> static boost::shared_ptr<T> create()
+public:
+    template<typename T> struct ResultType
     {
-        return boost::make_shared<T>(
-            boost::mpl::c_str< boost::mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> >::value
-        );
+        typedef T type;
+    };
+
+    template<typename T> static T create()
+    {
+        return boost::mpl::c_str< boost::mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> >::value;
     }
 };
 
 template<int N>
-struct Value< boost::mpl::int_<N> > : boost::mpl::true_
+class Value< boost::mpl::int_<N> > : public boost::mpl::true_
 {
-    template<typename T> static boost::shared_ptr<T> create()
+public:
+    template<typename T> struct ResultType
     {
-        return boost::make_shared<T>(N);
+        typedef T type;
+    };
+
+    template<typename T> static T create()
+    {
+        return N;
     }
 };
 

@@ -35,7 +35,7 @@
         }
 
     private:
-        boost::shared_ptr<void> m_instance;
+        std::shared_ptr<void> m_instance;
     };
 
     } // namespace Scope
