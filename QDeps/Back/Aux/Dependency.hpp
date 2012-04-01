@@ -45,8 +45,6 @@
     >
     class Dependency
     {
-        template<bool> class HasValue { };
-
     public:
         typedef TScope Scope;
         typedef TExpected Expected;
@@ -86,25 +84,24 @@
         template<typename TPool> typename ResultType<TPool>::type create
         (
             TPool&,
-            typename boost::disable_if< boost::mpl::contains<typename TPool::Seq, TExpected> >::type* = 0
+            typename boost::enable_if< boost::mpl::and_< Value<TGiven>, boost::mpl::not_< boost::mpl::contains<typename TPool::Seq, TExpected> > > >::type* = 0
         )
         {
-            return createImpl<TPool>(HasValue<TValue<TGiven>::value>());
+            return TValue<TGiven>::template create<TExpected>();
+        }
+
+        template<typename TPool> typename ResultType<TPool>::type create
+        (
+            TPool&,
+            typename boost::disable_if< boost::mpl::or_< TValue<TGiven>, boost::mpl::contains<typename TPool::Seq, TExpected> > >::type* = 0
+        )
+        {
+            return m_scope.template create<TGiven>();
         }
 
         #include BOOST_PP_ITERATE()
 
     private:
-        template<typename TPool> typename ResultType<TPool>::type createImpl(const HasValue<true>&)
-        {
-            return TValue<TGiven>::template create<TExpected>();
-        }
-
-        template<typename TPool> typename ResultType<TPool>::type createImpl(const HasValue<false>&)
-        {
-            return m_scope.template create<TGiven>();
-        }
-
         TScope m_scope;
     };
 
