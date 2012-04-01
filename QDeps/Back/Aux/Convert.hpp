@@ -23,7 +23,6 @@ template<typename TDest> class Convert
 public:
     template<typename TSrc> static TDest execute(TSrc p_src) { return p_src; }
     template<typename TSrc> static TDest execute(const boost::shared_ptr<TSrc>& p_src) { return *p_src; }
-    template<typename TSrc> static TDest execute(std::auto_ptr<TSrc> p_src) { return *p_src.release(); }
 };
 
 template<typename TDest> class Convert<TDest&>
@@ -31,7 +30,6 @@ template<typename TDest> class Convert<TDest&>
 public:
     template<typename TSrc> static TDest& execute(TSrc p_src) { return p_src; }
     template<typename TSrc> static TDest& execute(const boost::shared_ptr<TSrc>& p_src) { return *p_src; }
-    template<typename TSrc> static TDest& execute(std::auto_ptr<TSrc> p_src) { return *p_src.release(); }
 };
 
 template<typename TDest> class Convert<const TDest&>
@@ -39,7 +37,6 @@ template<typename TDest> class Convert<const TDest&>
 public:
     template<typename TSrc> static const TDest& execute(TSrc p_src) { return p_src; }
     template<typename TSrc> static const TDest& execute(const boost::shared_ptr<TSrc>& p_src) { return *p_src; }
-    template<typename TSrc> static const TDest& execute(std::auto_ptr<TSrc> p_src) { return *p_src.release(); }
 };
 
 template<typename TDest> class Convert<TDest*>
@@ -47,7 +44,6 @@ template<typename TDest> class Convert<TDest*>
 public:
     template<typename TSrc> static TDest* execute(TSrc p_src) { return &p_src; }
     template<typename TSrc> static TDest* execute(const boost::shared_ptr<TSrc>& p_src) { return p_src.get(); }
-    template<typename TSrc> static TDest* execute(std::auto_ptr<TSrc> p_src) { return p_src.release(); }
 };
 
 template<typename TDest> class Convert<const TDest*>
@@ -55,7 +51,6 @@ template<typename TDest> class Convert<const TDest*>
 public:
     template<typename TSrc> static TDest* execute(TSrc p_src) { return &p_src; }
     template<typename TSrc> static const TDest* execute(const boost::shared_ptr<TSrc>& p_src) { return p_src.get(); }
-    template<typename TSrc> static const TDest* execute(std::auto_ptr<TSrc> p_src) { return p_src.release(); }
 };
 
 template<typename TDest> class Convert< boost::shared_ptr<TDest> >
@@ -63,7 +58,6 @@ template<typename TDest> class Convert< boost::shared_ptr<TDest> >
 public:
     template<typename TSrc> static boost::shared_ptr<TDest> execute(TSrc p_src) { return boost::make_shared<TDest>(p_src); }
     template<typename TSrc> static boost::shared_ptr<TDest> execute(const boost::shared_ptr<TSrc>& p_src) { return p_src; }
-    template<typename TSrc> static boost::shared_ptr<TDest> execute(std::auto_ptr<TSrc> p_src) { return boost::shared_ptr<TSrc>(p_src.release()); }
 };
 
 template<typename TDest> class Convert<const boost::shared_ptr<TDest>&>
@@ -71,7 +65,6 @@ template<typename TDest> class Convert<const boost::shared_ptr<TDest>&>
 public:
     template<typename TSrc> static const boost::shared_ptr<TDest>& execute(TSrc p_src) { return boost::make_shared<TDest>(p_src); }
     template<typename TSrc> static const boost::shared_ptr<TDest>& execute(const boost::shared_ptr<TSrc>& p_src) { return p_src; }
-    template<typename TSrc> static boost::shared_ptr<TDest> execute(std::auto_ptr<TSrc> p_src) { return boost::shared_ptr<TSrc>(p_src.release()); }
 };
 
 } // namespace Aux
