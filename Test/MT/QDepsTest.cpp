@@ -6,10 +6,7 @@
 //
 #include "Test/Common/Utility.hpp"
 #include "Test/Common/Data.hpp"
-#include "QDeps/Utility/Injector.hpp"
-#include "QDeps/Utility/Named.hpp"
-#include "QDeps/Front/Base/Module.hpp"
-#include "QDeps/Front/Fusion/Module.hpp"
+#include "QDeps/QDeps.hpp"
 
 namespace QDeps
 {
@@ -20,6 +17,7 @@ using namespace boost::mpl;
 using namespace Test::Common;
 using namespace Utility;
 using namespace Front::Base;
+using namespace Back;
 
 struct BaseModule1 : Front::Base::Module
     <
@@ -121,7 +119,7 @@ TEST_T(QDeps, OneModule,
     EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
 }
 
-TEST_T(QDeps, ModulesMany,
+TEST_T(QDeps, ManyModules,
     Utility::Injector<BaseModule2, BaseModule3>,
     Utility::Injector<BaseModule3, BaseModule2>,
     Utility::Injector<BOOST_TYPEOF(fusionModule2), BOOST_TYPEOF(fusionModule3)>,
@@ -145,7 +143,7 @@ TEST_T(QDeps, ModulesMany,
     EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
 }
 
-TEST_T(QDeps, BaseFusionModuleMix,
+TEST_T(QDeps, MixModules,
     Utility::Injector<BaseModule2, BOOST_TYPEOF(fusionModule2)>,
     Utility::Injector<BOOST_TYPEOF(fusionModule2), BaseModule2>)
 {
@@ -170,6 +168,7 @@ TEST_T(QDeps, BaseFusionModuleMix,
 //TODO define BOOST_ASSERT<false> to make policy test possible
 TEST(QDeps, ModulesPolicies)
 {
+    Injector<BaseModule1, Policy<Policies::DisallowCircularDependencies> > injector;
 }
 
 } // namespace MT

@@ -14,7 +14,8 @@ GTEST:=../Externals/gtest
 GTEST_LIB:=$(GTEST)/libgtest.a
 INCLUDES:=$(BOOST) -I$(QPOOL) -I$(GTEST)/include -I..
 CXXFLAGS:=$(INCLUDES) -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants
-OBJS:=$(patsubst %.cpp, %.o, $(shell find . -iname "*.cpp"))
+#OBJS:=$(patsubst %.cpp, %.o, $(shell find . -iname "*.cpp"))
+OBJS:=MT/QDepsTest.o main.o
 
 .PHONY: all gtest compress test cov cppcheck scan-build valgrind clean
 

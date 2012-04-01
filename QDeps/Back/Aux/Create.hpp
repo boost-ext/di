@@ -99,11 +99,10 @@ class Create
     public:
         typedef typename boost::mpl::push_back<TCallStack, T>::type CallStack;
         typedef typename TBinding<T, TCallStack>::type Binding;
-        typedef boost::shared_ptr<T>/*T*/ ResultOf;
+        typedef boost::shared_ptr<T> ResultOf;
 
         static ResultOf execute(TEntries&, TPool&)
         {
-            //return T();
             return boost::make_shared<T>();
         }
     };

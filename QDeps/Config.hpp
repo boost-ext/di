@@ -43,44 +43,6 @@ namespace QDeps
 class Specialized { };
 template<typename, typename = Specialized> class Defaults;
 
-#if 0
-namespace Back
-{
-template<typename = void, typename = void, typename = void> class Policy;
-} // namespace Back
-
-namespace Detail
-{
-class Policy { };
-class CircularDependencies { };
-class BindingWithCtors { };
-class ModulesDependeciesRepetitions { };
-} // namespace Detail
-
-class AllowCircularDependencies { };
-class DisallowCircularDependencies { };
-
-class VerifyBindingWithCtors { };
-class DontVerifyBindingWithCtors { };
-
-class AllowModulesDependeciesRepetitions { };
-class DisallowModulesDependeciesRepetitions { };
-
-template<typename TDefault>
-class Defaults<Detail::Policy, TDefault>
-{
-public:
-    typedef Back::Policy
-    <
-        DisallowCircularDependencies,
-        VerifyCtorBinding,
-        DisallowModuleDependencyRepetition,
-        CheckForNotSharedSingletons
-    >
-    type;
-};
-#endif
-
 } // namespace QDeps
 
 #endif

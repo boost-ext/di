@@ -10,15 +10,17 @@
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
 #include <boost/type_traits/is_base_of.hpp>
-#include <boost/mpl/identity.hpp>
-#include <boost/mpl/set.hpp>
 #include <boost/mpl/vector.hpp>
-#include <boost/mpl/placeholders.hpp>
+#include <boost/mpl/set.hpp>
+#include <boost/mpl/remove_if.hpp>
+#include <boost/mpl/filter_view.hpp>
+#include <boost/mpl/joint_view.hpp>
+#include <boost/mpl/begin_end.hpp>
+#include <boost/mpl/deref.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/insert.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/if.hpp>
-#include <boost/mpl/bool.hpp>
 #include "QPool/Pool.hpp"
 #include "QDeps/Back/Aux/Utility.hpp"
 #include "QDeps/Back/Module.hpp"
@@ -35,15 +37,15 @@ namespace Utility
 template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
 class Injector
 {
-#if 0
-    struct Policy : Back::Detail::Parameter
+    typedef boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> Seq;
+
+    struct Modules : boost::mpl::remove_if<Seq, boost::is_base_of<Back::Detail::Policy, boost::mpl::_> >::type { };
+    struct Polices : boost::mpl::joint_view
         <
-            boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
-            typename Defaults<Detail::Policy>::type,
-            boost::is_base_of<Detail::Policy, boost::mpl::_2>
-        >
+            boost::mpl::filter_view<Seq, boost::is_base_of<Back::Detail::Policy, boost::mpl::_> >,
+            boost::mpl::vector1< Back::Policy<> >
+        >::type
     { };
-#endif
 
     template<typename TSeq, typename TResult = boost::mpl::set0<> >
     struct DependenciesImpl : boost::mpl::fold
@@ -76,7 +78,7 @@ class Injector
 public:
     struct Dependencies : boost::mpl::fold
         <
-            typename DependenciesImpl< boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >::type,
+            typename DependenciesImpl<Modules>::type,
             boost::mpl::vector0<>,
             boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>
         >::type
@@ -85,7 +87,7 @@ public:
 
     struct Externals : boost::mpl::fold
         <
-            typename ExternalsImpl< boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >::type,
+            typename ExternalsImpl<Modules>::type,
             boost::mpl::vector0<>,
             boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>
         >::type
@@ -93,7 +95,8 @@ public:
 
 private:
     typedef QPool::Pool<typename Externals::type> Pool;
-    typedef Back::Factory<typename Dependencies::type, Pool> Factory;
+    typedef typename boost::mpl::deref<typename boost::mpl::begin<Polices>::type>::type Policy;
+    typedef Back::Factory<typename Dependencies::type, Pool, Policy> Factory;
 
 public:
 /*    QPOOL_CTOR(Injector,*/

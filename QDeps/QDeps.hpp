@@ -9,12 +9,16 @@
 
 #include <QDeps/Version.hpp>
 #include <QDeps/Config.hpp>
+
 #include <QDeps/Front/Ctor.hpp>
 #include <QDeps/Front/Base/Module.hpp>
 #include <QDeps/Front/Fusion/Module.hpp>
+
 #include <QDeps/Utility/Injector.hpp>
 #include <QDeps/Utility/Named.hpp>
 #include <QDeps/Utility/Provider.hpp>
+
+#include <QDeps/Back/Policies/DisallowCircularDependencies.hpp>
 
 #endif
 
