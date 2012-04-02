@@ -23,7 +23,6 @@
     #include <boost/mpl/begin_end.hpp>
     #include <boost/mpl/deref.hpp>
     #include <boost/mpl/push_back.hpp>
-    #include <boost/mpl/assert.hpp>
     #include "QDeps/Back/Aux/Utility.hpp"
     #include "QDeps/Back/Aux/Dependency.hpp"
     #include "QDeps/Back/Detail/Binder.hpp"
@@ -192,9 +191,13 @@
             typename TEntries,
             typename TDependency
         >
-        static typename boost::disable_if<Aux::IsUniqueCallStack<TCallStack> >::type execute(TEntries&, TDependency&, TPool&)
+        static typename TDependency::template ResultType<TPool>::type execute
+        (
+            TEntries&, TDependency&, TPool&,
+            typename boost::disable_if<Aux::IsUniqueCallStack<TCallStack> >::type* = 0
+        )
         {
-            BOOST_MPL_ASSERT_MSG(
+            QDEPS_STATIC_ASSERT(
                 false,
                 CIRCULAR_DEPENDENCIES_NOT_ALLOWED,
                 (T, TCallStack)

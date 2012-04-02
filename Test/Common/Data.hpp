@@ -157,6 +157,7 @@ struct C11
 };
 
 struct CD2;
+struct CD5;
 
 struct CD1
 {
@@ -166,6 +167,21 @@ struct CD1
 struct CD2
 {
     QDEPS_CTOR(CD2, CD1*) { };
+};
+
+struct CD3
+{
+    QDEPS_CTOR(CD3, CD5*) { };
+};
+
+struct CD4
+{
+    QDEPS_CTOR(CD4, CD3*) { };
+};
+
+struct CD5
+{
+    QDEPS_CTOR(CD5, CD4*) { };
 };
 
 } // namespace Common

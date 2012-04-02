@@ -14,7 +14,6 @@
     #include <boost/preprocessor/cat.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/function_types/parameter_types.hpp>
-    #include <boost/mpl/assert.hpp>
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/empty.hpp>
@@ -103,7 +102,7 @@
         template<typename T, typename TGiven, typename TCtor, typename TCallStack, typename TScope, typename TVisitor>
         static typename boost::disable_if<Aux::IsUniqueCallStack<TCallStack> >::type execute(const TVisitor&)
         {
-            BOOST_MPL_ASSERT_MSG(
+            QDEPS_STATIC_ASSERT(
                 false,
                 CIRCULAR_DEPENDENCIES_NOT_ALLOWED,
                 (T, TCallStack)
@@ -126,7 +125,7 @@
 #else
 
     template<typename T, typename TGiven, typename TCtor, typename TCallStack, typename TScope, typename TVisitor>
-    static typename boost::enable_if<boost::mpl::is_sequence<TCtor>, void>::type execute
+    static typename boost::enable_if<boost::mpl::is_sequence<TCtor> >::type execute
     (
         const TVisitor& p_visitor,
         typename boost::enable_if_c<boost::mpl::size<TCtor>::value == BOOST_PP_ITERATION()>::type* = 0,

@@ -9,17 +9,29 @@
 
 #include <gtest/gtest.h>
 
-using namespace ::testing;
+#define QDEPS_STATIC_ASSERT(cond, expr, types)              \
+    throw ::QDeps::Test::Common::StaticAssertCompileError()
 
-#define TEST_T(name, test, ...)                 \
-    template<typename TInjector>                \
-    struct name##test : public ::testing::Test  \
-    {                                           \
-        TInjector injector;                     \
-    };                                          \
-    typedef Types<__VA_ARGS__> Types##test;     \
-    TYPED_TEST_CASE(name##test, Types##test);   \
+#define TEST_T(name, test, ...)                             \
+    template<typename TInjector>                            \
+    struct name##test : public ::testing::Test              \
+    {                                                       \
+        TInjector injector;                                 \
+    };                                                      \
+    typedef ::testing::Types<__VA_ARGS__> Types##test;      \
+    TYPED_TEST_CASE(name##test, Types##test);               \
     TYPED_TEST(name##test, test)
+
+namespace QDeps
+{
+namespace Test
+{
+namespace Common
+{
+class StaticAssertCompileError { };
+} // namespace Common
+} // namespace Test
+} // namespace QDeps
 
 #endif
 

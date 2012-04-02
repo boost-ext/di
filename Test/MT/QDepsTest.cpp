@@ -169,7 +169,13 @@ TEST_T(QDeps, MixModules,
 TEST(QDeps, CircularDependencies)
 {
     Injector<> injector;
-    injector.create<CD1>(); // compile error
+    EXPECT_THROW(injector.create<CD1>(), StaticAssertCompileError);
+}
+
+TEST(QDeps, CircularDependenciesNotDirect)
+{
+    Injector<> injector;
+    EXPECT_THROW(injector.create<CD5>(), StaticAssertCompileError);
 }
 
 } // namespace MT

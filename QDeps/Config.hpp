@@ -9,6 +9,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
+#include <boost/mpl/assert.hpp>
 
 #if !defined(QDEPS_CTOR_CFG_VA_ARGS) && !defined(QDEPS_CTOR_CFG_BRACKET)
 # define QDEPS_CTOR_CFG_VA_ARGS
@@ -20,6 +21,10 @@
 
 #if !defined(QDEPS_CTOR_UNIQUE_NAME)
 # define QDEPS_CTOR_UNIQUE_NAME ctor__
+#endif
+
+#ifndef QDEPS_STATIC_ASSERT
+# define QDEPS_STATIC_ASSERT(cond, expr, types) BOOST_MPL_ASSERT_MSG(cond, expr, types)
 #endif
 
 namespace QDeps
