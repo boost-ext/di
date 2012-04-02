@@ -83,7 +83,7 @@
             (m_pool),
         { })
 
-        Module<> operator()() { return Module<>(); }
+        Module<> operator()() const { return Module<>(); }
 
         #include BOOST_PP_ITERATE()
 
@@ -102,7 +102,7 @@
 #else
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)> Module<boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), Arg)> >
-    operator()(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg))
+    operator()(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg)) const
     {
         return Module< boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), Arg)> >(
             BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg));

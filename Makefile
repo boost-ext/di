@@ -6,7 +6,7 @@ PREFIX:=/usr/include
 all: verify examples doc
 
 verify:
-	@cd Test && make test valgrind cppcheck scan-build cov
+	@cd Test && make all
 
 test:
 	@cd Test && make test
