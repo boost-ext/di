@@ -5,7 +5,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <gtest/gtest.h>
+#include <boost/mpl/vector.hpp>
 #include "QDeps/Back/Aux/Utility.hpp"
+#include "Test/Common/Data.hpp"
 
 namespace QDeps
 {
@@ -16,24 +18,16 @@ namespace Aux
 namespace UT
 {
 
-struct C0 { };
+using namespace Test::Common;
+using namespace boost::mpl;
 
-struct C1
+TEST(Utility, IsUnique)
 {
-    void operator()() { }
-};
-
-struct C2
-{
-    template<typename T, typename T2, typename T3> void operator()() const { }
-};
-
-TEST(Utility, HasCallOperator)
-{
-    EXPECT_FALSE(Detail::HasCallOperator<C0>::value);
-    EXPECT_TRUE(Detail::HasCallOperator<C1>::value);
-    EXPECT_TRUE(Detail::HasCallOperator<C2>::value);
-
+    EXPECT_TRUE((IsUnique< vector<> >::value));
+    EXPECT_TRUE((IsUnique< vector<C1, C2, C3> >::value));
+    EXPECT_FALSE((IsUnique< vector<C1, C1> >::value));
+    EXPECT_FALSE((IsUnique< vector<C1, C2, C1> >::value));
+    EXPECT_FALSE((IsUnique< vector<C1, C2, C2> >::value));
 }
 
 } // namespace UT

@@ -116,7 +116,8 @@
     typename boost::enable_if<boost::mpl::is_sequence<TCtor>, void>::type execute
     (
         const TVisitor& p_visitor,
-        typename boost::enable_if_c<boost::mpl::size<TCtor>::value == BOOST_PP_ITERATION()>::type* = 0
+        typename boost::enable_if_c<boost::mpl::size<TCtor>::value == BOOST_PP_ITERATION()>::type* = 0,
+        typename boost::enable_if<IsUnique<TCallStack> >::type* = 0
     )
     {
         p_visitor.template operator()<TGiven, TCallStack, TScope>();

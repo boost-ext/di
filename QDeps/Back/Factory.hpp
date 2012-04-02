@@ -35,7 +35,7 @@ template
 >
 class Factory
 {
-    typedef typename TPolices::template Verify<TDeps>::type PolicyType;
+    typedef typename TPolices::template Assert<TDeps>::type PolicyType;
 
     struct Entries
         : boost::mpl::inherit_linearly<TDeps, boost::mpl::inherit<boost::mpl::_1, boost::mpl::_2> >::type
@@ -50,7 +50,6 @@ public:
     {
         typedef boost::mpl::vector0<> EmptyCallStack;
         typedef typename Aux::MakePlain<T>::type PlainType;
-        TPolices::template verify<TVisit<>, PlainType, T, EmptyCallStack>();
         return TConvert<T>::execute(TCreate<>::template execute<PlainType, EmptyCallStack>(m_entries, m_pool));
     }
 

@@ -167,10 +167,10 @@ TEST_T(QDeps, MixModules,
 }
 
 //TODO define BOOST_ASSERT<false> to make policy test possible
-TEST(QDeps, ModulesPolicies)
+TEST(QDeps, CircularDependencies)
 {
-    Injector< Policy<Policies::DisallowCircularDependencies> > injector;
-    //injector.create<CD1>();
+    Injector<> injector;
+    injector.create<CD1>();
 }
 
 } // namespace MT

@@ -20,6 +20,7 @@
 #include <boost/mpl/begin_end.hpp>
 #include <boost/mpl/deref.hpp>
 #include <boost/mpl/push_back.hpp>
+#include <boost/mpl/assert.hpp>
 #include "QDeps/Back/Aux/Utility.hpp"
 #include "QDeps/Back/Aux/Dependency.hpp"
 #include "QDeps/Back/Aux/Binding.hpp"
@@ -195,7 +196,8 @@ public:
             TEntries& BOOST_PP_EXPR_IF(n, p_entries),                                                                   \
             TDependency& p_dependency,                                                                                  \
             TPool& p_pool,                                                                                              \
-            typename boost::enable_if_c<boost::mpl::size<TCtor>::value == n>::type* = 0                                 \
+            typename boost::enable_if_c<boost::mpl::size<TCtor>::value == n>::type* = 0,                                \
+            typename boost::enable_if<IsUnique<TCallStack> >::type* = 0                                                 \
         )                                                                                                               \
         {                                                                                                               \
             return p_dependency.create(                                                                                 \

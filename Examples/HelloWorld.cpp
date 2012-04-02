@@ -24,11 +24,9 @@ public:
     { }
 };
 
-struct Module : QDeps::Front::Base::Module<> { };
-
 int main()
 {
-    QDeps::Utility::Injector<Module> injector;
+    QDeps::Utility::Injector<> injector;
     injector.create<LValue>();
     injector.create<SharedPtr>();
 
