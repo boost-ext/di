@@ -20,7 +20,7 @@ Usage
 
 struct NumOfLimits { };
 struct Allocator { QDEPS_CTOR(Allocator, int, shared_ptr<Load>) { } };
-struct Measurements { QDEPS_CTOR(Named<CapacityLimit, Down>, Named<CapacityLimit, Up>) { } };
+struct Data { QDEPS_CTOR(Named<CapacityLimit, Down>, Named<CapacityLimit, Up>) { } };
 struct Storage { QDEPS_CTOR_TRAITS(Named<int, Up>, float); Storage(int, float) { } };
 struct App { QDEPS_CTOR(Storage, const shared_ptr<LimitChecker>&) { } };
 ...
@@ -28,8 +28,8 @@ struct App { QDEPS_CTOR(Storage, const shared_ptr<LimitChecker>&) { } };
 struct BaseModule : Base::Module <                              // base module : type
     PerRequests <                                               // always new instance
         Bind<IMap, Map>,                                        // bind IMap to Map implementation
-        Measurements,                                           // bind Measurements to interface
-        Allocator,                                              // from which Measurements is inhereting
+        Data,                                                   // bind Data to interface
+        Allocator,                                              // from which Data is inhereting
         Bind<LimitChecker>::InCall<Capacity>                    // bind implementation LimitChecker
     >,                                                          // only when Capacity class is created
     Singletons <
