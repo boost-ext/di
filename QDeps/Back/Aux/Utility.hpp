@@ -36,7 +36,7 @@ BOOST_MPL_HAS_XXX_TRAIT_DEF(QDEPS_CTOR_UNIQUE_NAME)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 } // namespace Detail
 
-template<typename TSeq> struct IsUnique : boost::mpl::bool_
+template<typename TSeq> struct IsUniqueCallStack : boost::mpl::bool_
     <
         boost::mpl::size<TSeq>::value == boost::mpl::accumulate
         <

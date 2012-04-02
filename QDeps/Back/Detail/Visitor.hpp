@@ -9,6 +9,7 @@
     #ifndef QDEPS_BACK_DETAIL_VISITOR_HPP
     #define QDEPS_BACK_DETAIL_VISITOR_HPP
 
+    #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/preprocessor/cat.hpp>
     #include <boost/utility/enable_if.hpp>
@@ -118,7 +119,7 @@
     (
         const TVisitor& p_visitor,
         typename boost::enable_if_c<boost::mpl::size<TCtor>::value == BOOST_PP_ITERATION()>::type* = 0,
-        typename boost::enable_if<Aux::IsUnique<TCallStack> >::type* = 0
+        typename boost::enable_if<Aux::IsUniqueCallStack<TCallStack> >::type* = 0
     )
     {
         p_visitor.template operator()<TGiven, TCallStack, TScope>();

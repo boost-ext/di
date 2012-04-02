@@ -21,13 +21,13 @@ namespace UT
 using namespace Test::Common;
 using namespace boost::mpl;
 
-TEST(Utility, IsUnique)
+TEST(Utility, IsUniqueCallStack)
 {
-    EXPECT_TRUE((IsUnique< vector<> >::value));
-    EXPECT_TRUE((IsUnique< vector<C1, C2, C3> >::value));
-    EXPECT_FALSE((IsUnique< vector<C1, C1> >::value));
-    EXPECT_FALSE((IsUnique< vector<C1, C2, C1> >::value));
-    EXPECT_FALSE((IsUnique< vector<C1, C2, C2> >::value));
+    EXPECT_TRUE((IsUniqueCallStack< vector<> >::value));
+    EXPECT_TRUE((IsUniqueCallStack< vector<C1, C2, C3> >::value));
+    EXPECT_FALSE((IsUniqueCallStack< vector<C1, C1> >::value));
+    EXPECT_FALSE((IsUniqueCallStack< vector<C1, C2, C1> >::value));
+    EXPECT_FALSE((IsUniqueCallStack< vector<C1, C2, C2> >::value));
 }
 
 } // namespace UT

@@ -9,6 +9,10 @@
     #ifndef QDEPS_BACK_AUX_DEPENDENCY_HPP
     #define QDEPS_BACK_AUX_DEPENDENCY_HPP
 
+    #include <boost/preprocessor/iteration/iterate.hpp>
+    #include <boost/preprocessor/repetition/enum_params.hpp>
+    #include <boost/preprocessor/repetition/enum_binary_params.hpp>
+    #include <boost/preprocessor/facilities/intercept.hpp>
     #include <boost/type_traits/is_same.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/and.hpp>
@@ -17,10 +21,6 @@
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/contains.hpp>
     #include <boost/mpl/placeholders.hpp>
-    #include <boost/preprocessor/iteration/iterate.hpp>
-    #include <boost/preprocessor/repetition/enum_params.hpp>
-    #include <boost/preprocessor/repetition/enum_binary_params.hpp>
-    #include <boost/preprocessor/facilities/intercept.hpp>
     #include "QDeps/Back/Aux/Utility.hpp"
     #include "QDeps/Back/Aux/Value.hpp"
     #include "QDeps/Config.hpp"

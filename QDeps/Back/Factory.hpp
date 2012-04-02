@@ -35,7 +35,7 @@ template
 >
 class Factory
 {
-    typedef typename TPolices::template Assert<TDeps>::type PolicyType;
+    typedef typename TPolices::template Assert<TDeps>::type Polices;
 
     struct Entries
         : boost::mpl::inherit_linearly<TDeps, boost::mpl::inherit<boost::mpl::_1, boost::mpl::_2> >::type
