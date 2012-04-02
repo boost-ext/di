@@ -7,7 +7,7 @@ EXAMPLES:=$(patsubst %.cpp, %.o, $(shell find . -iname "*.cpp"))
 
 .PHONY: examples clean
 
-examples: clean $(EXAMPLES)
+examples: $(EXAMPLES)
 
 %.o:
 	@echo "Example: $*"
