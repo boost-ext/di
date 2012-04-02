@@ -7,9 +7,6 @@
 #ifndef QDEPS_BACK_AUX_VALUE_HPP
 #define QDEPS_BACK_AUX_VALUE_HPP
 
-#include <string>
-#include <boost/make_shared.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/string.hpp>
