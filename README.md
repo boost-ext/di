@@ -6,8 +6,8 @@ QDeps - C++ dependency injection framework (headers only library)
 
 To get started
 -----
-        git clone --recursive git://github.com/QSrc/QDeps.git
-        [Wiki](http://qsrc.github.com/QDeps)
+* git clone --recursive git://github.com/QSrc/QDeps.git
+* [Wiki](http://qsrc.github.com/QDeps)
 
 Usage
 -----
