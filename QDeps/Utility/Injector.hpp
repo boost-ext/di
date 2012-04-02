@@ -122,7 +122,7 @@ public:
         return m_factory.create<T>();
     }
 
-    template<typename T, typename TVisitor> void visit(const TVisitor& p_visitor)
+    template<typename T, typename Visitor> void visit(const Visitor& p_visitor)
     {
         return m_factory.visit<T>(p_visitor);
     }

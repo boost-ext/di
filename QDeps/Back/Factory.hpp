@@ -15,9 +15,9 @@
 #include "QDeps/Back/Policy.hpp"
 #include "QDeps/Back/Aux/Utility.hpp"
 #include "QDeps/Back/Aux/Dependency.hpp"
-#include "QDeps/Back/Aux/Convert.hpp"
-#include "QDeps/Back/Aux/Create.hpp"
-#include "QDeps/Back/Aux/Visit.hpp"
+#include "QDeps/Back/Detail/Converter.hpp"
+#include "QDeps/Back/Detail/Creator.hpp"
+#include "QDeps/Back/Detail/Visitor.hpp"
 
 namespace QDeps
 {
@@ -29,9 +29,9 @@ template
     typename TDeps,
     typename TPool = const QPool::Pool<>,
     typename TPolices = Policy<>,
-    template<typename> class TConvert = Aux::Convert,
-    template<typename = TDeps, typename = TPool> class TCreate = Aux::Create,
-    template<typename = TDeps> class TVisit = Aux::Visit
+    template<typename> class TConverter = Detail::Converter,
+    template<typename = TDeps, typename = TPool> class TCreator = Detail::Creator,
+    template<typename = TDeps> class TVisitor = Detail::Visitor
 >
 class Factory
 {
@@ -50,14 +50,14 @@ public:
     {
         typedef boost::mpl::vector0<> EmptyCallStack;
         typedef typename Aux::MakePlain<T>::type PlainType;
-        return TConvert<T>::execute(TCreate<>::template execute<PlainType, EmptyCallStack>(m_entries, m_pool));
+        return TConverter<T>::execute(TCreator<>::template execute<PlainType, EmptyCallStack>(m_entries, m_pool));
     }
 
-    template<typename T, typename TVisitor> void visit(const TVisitor& p_visitor)
+    template<typename T, typename Visitor> void visit(const Visitor& p_visitor)
     {
         typedef boost::mpl::vector0<> EmptyCallStack;
         typedef typename Aux::MakePlain<T>::type PlainType;
-        TVisit<>::template execute<PlainType, T, EmptyCallStack>(p_visitor);
+        TVisitor<>::template execute<PlainType, T, EmptyCallStack>(p_visitor);
     }
 
 private:

@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef QDEPS_BACK_AUX_BINDING_HPP
-#define QDEPS_BACK_AUX_BINDING_HPP
+#ifndef QDEPS_BACK_DETAIL_BINDER_HPP
+#define QDEPS_BACK_DETAIL_BINDER_HPP
 
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/iterator_range.hpp>
@@ -28,7 +28,7 @@ namespace QDeps
 {
 namespace Back
 {
-namespace Aux
+namespace Detail
 {
 
 namespace Detail
@@ -51,17 +51,17 @@ struct EqualCallStack : boost::mpl::equal
 { };
 
 template<typename T1, typename T2>
-struct LessContextSize : boost::mpl::bool_<(GetContextSize<T1>::value > GetContextSize<T2>::value)>::type
+struct LessContextSize : boost::mpl::bool_<(Aux::GetContextSize<T1>::value > Aux::GetContextSize<T2>::value)>::type
 { };
 
 template<typename T, typename TBind>
-struct Compare : boost::mpl::apply<TBind, T>::type
+struct Comparator : boost::mpl::apply<TBind, T>::type
 { };
 
 } // namespace Detail
 
 template<typename T, typename TCallStack, typename TDeps>
-struct Binding : boost::mpl::sort
+struct Binder : boost::mpl::sort
     <
         typename boost::mpl::fold
         <
@@ -71,8 +71,8 @@ struct Binding : boost::mpl::sort
             <
                 boost::mpl::and_
                 <
-                    Detail::Compare<T, GetBind<boost::mpl::_2> >,
-                    Detail::EqualCallStack<TCallStack, GetContext<boost::mpl::_2> >
+                    Detail::Comparator<T, Aux::GetBind<boost::mpl::_2> >,
+                    Detail::EqualCallStack<TCallStack, Aux::GetContext<boost::mpl::_2> >
                 >,
                 boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>,
                 boost::mpl::_1
@@ -82,7 +82,7 @@ struct Binding : boost::mpl::sort
     >::type
 { };
 
-} // namespace Aux
+} // namespace Detail
 } // namespace Back
 } // namespace QDeps
 

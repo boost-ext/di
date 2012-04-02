@@ -8,13 +8,13 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
 #include <boost/type_traits/is_base_of.hpp>
-#include "QDeps/Back/Aux/Binding.hpp"
+#include "QDeps/Back/Detail/Binder.hpp"
 
 namespace QDeps
 {
 namespace Back
 {
-namespace Aux
+namespace Detail
 {
 namespace UT
 {
@@ -41,13 +41,13 @@ class D { };
 class I { };
 class Impl : public I { };
 
-TEST(Binding, Empty)
+TEST(Binder, Empty)
 {
     EXPECT_TRUE((
         equal
         <
             vector0<>,
-            Binding
+            Binder
             <
                 int,
                 vector0<>,
@@ -57,13 +57,13 @@ TEST(Binding, Empty)
     ));
 }
 
-TEST(Binding, One)
+TEST(Binder, One)
 {
     EXPECT_TRUE((
         equal
         <
             vector1< Dependency<int> >,
-            Binding
+            Binder
             <
                 int,
                 vector0<>,
@@ -76,13 +76,13 @@ TEST(Binding, One)
     ));
 }
 
-TEST(Binding, Found)
+TEST(Binder, Found)
 {
     EXPECT_TRUE((
         equal
         <
             vector< Dependency<float> >,
-            Binding
+            Binder
             <
                 float,
                 vector0<>,
@@ -97,13 +97,13 @@ TEST(Binding, Found)
     ));
 }
 
-TEST(Binding, FoundMany)
+TEST(Binder, FoundMany)
 {
     EXPECT_TRUE((
         equal
         <
             vector< Dependency<float>, Dependency<float> >,
-            Binding
+            Binder
             <
                 float,
                 vector0<>,
@@ -118,13 +118,13 @@ TEST(Binding, FoundMany)
     ));
 }
 
-TEST(Binding, NotFound)
+TEST(Binder, NotFound)
 {
     EXPECT_TRUE((
         equal
         <
             vector0<>,
-            Binding
+            Binder
             <
                 double,
                 vector0<>,
@@ -139,13 +139,13 @@ TEST(Binding, NotFound)
     ));
 }
 
-TEST(Binding, Context)
+TEST(Binder, Context)
 {
     EXPECT_TRUE((
         equal
         <
             vector< Dependency<int, vector<A, B> > >,
-            Binding
+            Binder
             <
                 int,
                 vector<A, B>,
@@ -159,13 +159,13 @@ TEST(Binding, Context)
     ));
 }
 
-TEST(Binding, ContextMany)
+TEST(Binder, ContextMany)
 {
     EXPECT_TRUE((
         equal
         <
             vector< Dependency<int, vector<A, B> >, Dependency<int> >,
-            Binding
+            Binder
             <
                 int,
                 vector<A, B>,
@@ -180,7 +180,7 @@ TEST(Binding, ContextMany)
     ));
 }
 
-TEST(Binding, ContextManyEnd)
+TEST(Binder, ContextManyEnd)
 {
     EXPECT_TRUE((
         equal
@@ -191,7 +191,7 @@ TEST(Binding, ContextManyEnd)
                 Dependency<int, vector<B> >,
                 Dependency<int>
             >,
-            Binding
+            Binder
             <
                 int,
                 vector<A, B>,
@@ -206,13 +206,13 @@ TEST(Binding, ContextManyEnd)
     ));
 }
 
-TEST(Binding, ContextNotFound)
+TEST(Binder, ContextNotFound)
 {
     EXPECT_TRUE((
         equal
         <
             vector0<>,
-            Binding
+            Binder
             <
                 int,
                 vector<A>,
@@ -226,13 +226,13 @@ TEST(Binding, ContextNotFound)
     ));
 }
 
-TEST(Binding, ContextOtherTypes)
+TEST(Binder, ContextOtherTypes)
 {
     EXPECT_TRUE((
         equal
         <
             vector< Dependency<int, vector<A, B> > >,
-            Binding
+            Binder
             <
                 int,
                 vector<A, B>,
@@ -248,7 +248,7 @@ TEST(Binding, ContextOtherTypes)
     ));
 }
 
-TEST(Binding, ContextLongWithOrder)
+TEST(Binder, ContextLongWithOrder)
 {
     EXPECT_TRUE((
         equal
@@ -260,7 +260,7 @@ TEST(Binding, ContextLongWithOrder)
                 Dependency<int, vector<C> >,
                 Dependency<int>
             >,
-            Binding
+            Binder
             <
                 int,
                 vector<A, B, C>,
@@ -281,7 +281,7 @@ TEST(Binding, ContextLongWithOrder)
     ));
 }
 
-TEST(Binding, ContextLongWithOrderEmptyCallStack)
+TEST(Binder, ContextLongWithOrderEmptyCallStack)
 {
     EXPECT_TRUE((
         equal
@@ -290,7 +290,7 @@ TEST(Binding, ContextLongWithOrderEmptyCallStack)
             <
                 Dependency<int>
             >,
-            Binding
+            Binder
             <
                 int,
                 vector<>,
@@ -311,7 +311,7 @@ TEST(Binding, ContextLongWithOrderEmptyCallStack)
     ));
 }
 
-TEST(Binding, ContextLongWithOrderDiffCallStack)
+TEST(Binder, ContextLongWithOrderDiffCallStack)
 {
     EXPECT_TRUE((
         equal
@@ -321,7 +321,7 @@ TEST(Binding, ContextLongWithOrderDiffCallStack)
                 Dependency<int, vector<B> >,
                 Dependency<int>
             >,
-            Binding
+            Binder
             <
                 int,
                 vector<C, A, B>,
@@ -342,7 +342,7 @@ TEST(Binding, ContextLongWithOrderDiffCallStack)
     ));
 }
 
-TEST(Binding, ContextLongWithOrderShortCallStack)
+TEST(Binder, ContextLongWithOrderShortCallStack)
 {
     EXPECT_TRUE((
         equal
@@ -352,7 +352,7 @@ TEST(Binding, ContextLongWithOrderShortCallStack)
                 Dependency<int, vector<C> >,
                 Dependency<int>
             >,
-            Binding
+            Binder
             <
                 int,
                 vector<C>,
@@ -373,7 +373,7 @@ TEST(Binding, ContextLongWithOrderShortCallStack)
     ));
 }
 
-TEST(Binding, ContextLongWithOrderToLongCallStack)
+TEST(Binder, ContextLongWithOrderToLongCallStack)
 {
     EXPECT_TRUE((
         equal
@@ -382,7 +382,7 @@ TEST(Binding, ContextLongWithOrderToLongCallStack)
             <
                 Dependency<int>
             >,
-            Binding
+            Binder
             <
                 int,
                 vector<A, B, C, D>,
@@ -403,13 +403,13 @@ TEST(Binding, ContextLongWithOrderToLongCallStack)
     ));
 }
 
-TEST(Binding, BaseOfFail)
+TEST(Binder, BaseOfFail)
 {
     EXPECT_TRUE((
         equal
         <
             vector0<>,
-            Binding
+            Binder
             <
                 I,
                 vector0<>,
@@ -422,7 +422,7 @@ TEST(Binding, BaseOfFail)
     ));
 }
 
-TEST(Binding, BaseOfSuccessful)
+TEST(Binder, BaseOfSuccessful)
 {
     EXPECT_TRUE((
         equal
@@ -431,7 +431,7 @@ TEST(Binding, BaseOfSuccessful)
             <
                 DependencyBaseOf<Impl>
             >,
-            Binding
+            Binder
             <
                 I,
                 vector0<>,
@@ -445,7 +445,7 @@ TEST(Binding, BaseOfSuccessful)
 }
 
 } // namespace UT
-} // namespace Aux
+} // namespace Detail
 } // namespace Back
 } // namespace QDeps
 
