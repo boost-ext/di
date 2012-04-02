@@ -1,5 +1,6 @@
 QDeps - C++ dependency injection framework (headers only library)
 ================================
+* [Wiki](http://qsrc.github.com/QDeps)
 * [Dependency Injection](http://en.wikipedia.org/wiki/Dependency_injection)
 * [The Clean Code Talks - Don't Look For Things!](http://www.youtube.com/watch?v=RlfLCWKxHJ0&feature=BFa&list=PLED6CA927B41FF5BD)
 * [Goolge Guice - dependency injection framework for Java ](http://code.google.com/p/google-guice/)
@@ -7,10 +8,6 @@ QDeps - C++ dependency injection framework (headers only library)
 To get started
 -----
         git clone --recursive git://github.com/QSrc/QDeps.git
-
-Wiki
------
-        http://qsrc.github.com/QDeps
 
 Usage
 -----
