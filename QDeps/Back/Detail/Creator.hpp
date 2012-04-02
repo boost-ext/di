@@ -183,6 +183,23 @@
         }
 
         #include BOOST_PP_ITERATE()
+
+        template
+        <
+            typename T,
+            typename TCtor,
+            typename TCallStack,
+            typename TEntries,
+            typename TDependency
+        >
+        static typename boost::disable_if<Aux::IsUniqueCallStack<TCallStack> >::type execute(TEntries&, TDependency&, TPool&)
+        {
+            BOOST_MPL_ASSERT_MSG(
+                false,
+                CIRCULAR_DEPENDENCIES_NOT_ALLOWED,
+                (T, TCallStack)
+            );
+        }
     };
 
     } // namespace Detail

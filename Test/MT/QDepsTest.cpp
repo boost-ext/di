@@ -168,8 +168,8 @@ TEST_T(QDeps, MixModules,
 
 TEST(QDeps, CircularDependencies)
 {
-/*    Injector<> injector;*/
-    /*injector.create<CD1>();*/
+    Injector<> injector;
+    injector.create<CD1>(); // compile error
 }
 
 } // namespace MT
