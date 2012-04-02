@@ -83,6 +83,8 @@
             (m_pool),
         { })
 
+        Module<> operator()() { return Module<>(); }
+
         #include BOOST_PP_ITERATE()
 
         const QPool::Pool<TSeq, QPool::Allocator::Stack>& pool() const { return m_pool; }

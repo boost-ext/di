@@ -31,6 +31,22 @@ using namespace Utility;
 using namespace boost::mpl;
 using namespace boost;
 
+TEST(FusionModule, Empty)
+{
+    BOOST_AUTO(fusionModule, Module<>()());
+    typedef BOOST_TYPEOF(fusionModule) TestModule;
+
+    EXPECT_TRUE((
+        equal
+        <
+            vector0<>,
+            TestModule::Dependencies
+        >::value
+    ));
+
+    EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
+}
+
 TEST(FusionModule, Mix)
 {
     BOOST_AUTO(fusionModule, Module<>()(
