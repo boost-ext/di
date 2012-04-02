@@ -1,34 +1,33 @@
-ifndef COVERAGE_DIR
-	COVERAGE_DIR=Coverage
-endif
+.SECONDEXPANSION:
 
-TARGET:=test
-COVERAGE_DIR:=Coverage
 CPPCHECK:=cppcheck
 SCAN_BUILD:=scan-build
 VALGRIND:=valgrind
-OBJCOPY:=objcopy
 BOOST:=$(shell ls ../Externals/boost | xargs -i% echo -I../Externals/boost/%/include | xargs)
 QPOOL:=../Externals/QPool
 GTEST:=../Externals/gtest
 GTEST_LIB:=$(GTEST)/libgtest.a
 INCLUDES:=$(BOOST) -I$(QPOOL) -I$(GTEST)/include -I..
 CXXFLAGS:=$(INCLUDES) -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants
-OBJS:=$(patsubst %.cpp, %.o, $(shell find . -iname "*.cpp"))
 
-.PHONY: all gtest compress test cov cppcheck scan-build valgrind clean
+mt:=$(patsubst %.cpp, %.o, $(shell find MT -iname "*.cpp")) main.o
+ut_back:=$(patsubst %.cpp, %.o, $(shell find UT/Back -iname "*.cpp")) main.o
+ut_front:=$(patsubst %.cpp, %.o, $(shell find UT/Front -iname "*.cpp")) main.o
+ut_utility:=$(patsubst %.cpp, %.o, $(shell find UT/Utility -iname "*.cpp")) main.o
+
+.PHONY: all gtest test cov cppcheck scan-build valgrind clean
 
 all: test cov cppcheck scan-build valgrind
+test: gtest ut_back ut_front ut_utility mt
+valgrind: valgrind_ut_back valgrind_ut_front valgrind_ut_utility valgrind_mt
+cov: cov_ut_back cov_ut_front cov_ut_utility cov_mt
 
 gtest:
 	@[ -e $(GTEST_LIB) ] || (cd $(GTEST) && cmake . && make)
 
-test: gtest clean $(OBJS)
-	@$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS) $(GTEST_LIB) -lpthread
-	@LD_LIBRARY_PATH=$(dirname $(GTEST_LIBS)) ./$(TARGET)
-
-compress:
-	@$(OBJCOPY) --compress-debug-sections $(TARGET)
+%: $$($$@)
+	@$(CXX) $(CXXFLAGS) -o $@.exe $? $(GTEST_LIB) -lpthread
+	@LD_LIBRARY_PATH=$(dirname $(GTEST_LIBS)) ./$@.exe
 
 cppcheck:
 	$(CPPCHECK) $(INCLUDES) --check-config .
@@ -36,22 +35,23 @@ cppcheck:
 scan-build:
 	$(SCAN_BUILD) make test
 
-cov:
+cov_%:
 	@lcov --base-directory . --directory . --zerocounters -q
-	@make test
-	@lcov --base-directory . --directory . -c -o $(TARGET).info
-	@lcov --remove $(TARGET).info "/usr*" -o $(TARGET).info
-	@lcov --remove $(TARGET).info "*Externals*" -o $(TARGET).info
-	@rm -rf $(COVERAGE_DIR)
-	@genhtml -o $(COVERAGE_DIR) -t "QDeps" --num-spaces 4 --highlight --legend $(TARGET).info
-	@genhtml -o $(COVERAGE_DIR) -t "QDeps" --num-spaces 4 --highlight --legend $(TARGET).info
-	@rm -f $(TARGET) $(TARGET).info
+	@make $*
+	@lcov --base-directory . --directory . -c -o $*.info
+	@lcov --remove $*.info "/usr*" -o $*.info
+	@lcov --remove $*.info "*Externals*" -o $*.info
+	@rm -rf $@
+	@genhtml -o $@ -t "QDeps" --num-spaces 4 --highlight --legend $*.info
+	@genhtml -o $@ -t "QDeps" --num-spaces 4 --highlight --legend $*.info
+	@rm -f $* $*.info
 
-valgrind: test
-	LD_LIBRARY_PATH=$(dirname $(GTEST_LIBS)) $(VALGRIND) --leak-check=full --track-origins=yes ./$(TARGET)
+valgrind_%:
+	@make $*
+	LD_LIBRARY_PATH=$(dirname $(GTEST_LIBS)) $(VALGRIND) --leak-check=full --track-origins=yes ./$*.exe
 
 clean:
 	@find . -iname "*.o" -or -iname "*.gcda" -or -iname "*.gcno" | xargs --no-run-if-empty rm -f
-	@rm -f $(TARGET)
-	@rm -rf $(COVERAGE_DIR)
+	@rm -f *.exe
+	@rm -rf cov_*
 
