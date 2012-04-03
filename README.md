@@ -96,6 +96,7 @@ Features
     * Providers
     * Scopes (including custom scopes)
     * Modules
+    * Visitors (graphviz dot generation)
     * Circular dependencies detection
     * Diagnostic policies
 
