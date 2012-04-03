@@ -6,7 +6,7 @@ QDeps - C++ Dependency Injection Framework
 
 To get started
 -----
-        git clone --recursive git://github.com/QSrc/QDeps.git
+        git clone --recurse-submodules git://github.com/QSrc/QDeps.git
 
 Documentation
 -----
