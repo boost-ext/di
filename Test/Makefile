@@ -8,11 +8,11 @@ ifndef BOOST
 	BOOST:=$(shell ls ../Externals/boost | xargs -i% echo -I../Externals/boost/%/include | xargs)
 endif
 
-ifndef BOOST
+ifndef QPOOL
 	QPOOL:=../Externals/QPool
 endif
 
-ifndef BOOST
+ifndef GTEST
 	GTEST:=../Externals/gtest
 endif
 
