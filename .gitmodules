@@ -1,0 +1,9 @@
+[submodule "Externals/gtest"]
+	path = Externals/gtest
+	url = git://github.com/smarr/googletest.git
+[submodule "Externals/vimwiki"]
+	path = Externals/vimwiki
+	url = git://github.com/vim-scripts/vimwiki.git
+[submodule "Externals/QPool"]
+	path = Externals/QPool
+	url = git://github.com/QSrc/QPool.git
