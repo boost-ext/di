@@ -134,12 +134,12 @@ Install
 C++ Dependency Injection Frameworks
 ------------
 * https://github.com/QSrc/QDeps
-* https://bitbucket.org/cheez/dicpp
 * https://github.com/phs/sauce
-* http://code.google.com/p/ffead-cpp/wiki/DependencyInjection
-* http://sourceforge.net/projects/qtioccontainer/
+* https://bitbucket.org/cheez/dicpp
 * http://code.google.com/p/spring-cpp/
 * http://code.google.com/p/autumnframework/
+* http://code.google.com/p/ffead-cpp/wiki/DependencyInjection
+* http://sourceforge.net/projects/qtioccontainer/
 * http://sourceforge.net/projects/cpp-resolver/
 
 Author
