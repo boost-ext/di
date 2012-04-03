@@ -5,7 +5,7 @@ SCAN_BUILD:=scan-build
 VALGRIND:=valgrind
 
 ifndef BOOST
-	BOOST:=../Externals/boost
+	BOOST:=$(shell ls ../Externals/boost | xargs -i% echo -I../Externals/boost/%/include | xargs echo .)
 endif
 
 ifndef QPOOL
