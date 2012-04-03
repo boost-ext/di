@@ -5,7 +5,7 @@ SCAN_BUILD:=scan-build
 VALGRIND:=valgrind
 
 ifndef BOOST
-	BOOST:=$(shell ls ../Externals/boost | xargs -i% echo -I../Externals/boost/%/include | xargs)
+	BOOST:=../Externals/boost
 endif
 
 ifndef QPOOL
@@ -17,7 +17,7 @@ ifndef GTEST
 endif
 
 GTEST_LIB:=$(GTEST)/libgtest.a
-INCLUDES:=$(BOOST) -I$(QPOOL) -I$(GTEST)/include -I..
+INCLUDES:=-I$(BOOST) -I$(QPOOL) -I$(GTEST)/include -I..
 CXXFLAGS:=$(INCLUDES) -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants
 
 mt:=$(patsubst %.cpp, %.o, $(shell find MT -iname "*.cpp")) main.o
