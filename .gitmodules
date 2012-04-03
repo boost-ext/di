@@ -1,0 +1,54 @@
+[submodule "Externals/boost/mpl"]
+	path = Externals/boost/mpl
+	url = git://github.com/boost-lib/mpl.git
+[submodule "Externals/boost/smart_ptr"]
+	path = Externals/boost/smart_ptr
+	url = git://github.com/boost-lib/smart_ptr.git
+[submodule "Externals/boost/type_traits"]
+	path = Externals/boost/type_traits
+	url = git://github.com/boost-lib/type_traits.git
+[submodule "Externals/boost/config"]
+	path = Externals/boost/config
+	url = git://github.com/boost-lib/config.git
+[submodule "Externals/boost/utility"]
+	path = Externals/boost/utility
+	url = git://github.com/boost-lib/utility.git
+[submodule "Externals/boost/typeof"]
+	path = Externals/boost/typeof
+	url = git://github.com/boost-lib/typeof.git
+[submodule "Externals/boost/preprocessor"]
+	path = Externals/boost/preprocessor
+	url = git://github.com/boost-lib/preprocessor.git
+[submodule "Externals/boost/function_types"]
+	path = Externals/boost/function_types
+	url = git://github.com/boost-lib/function_types.git
+[submodule "Externals/boost/exception"]
+	path = Externals/boost/exception
+	url = git://github.com/boost-lib/exception.git
+[submodule "Externals/QPool"]
+	path = Externals/QPool
+	url = git://github.com/QSrc/QPool.git
+[submodule "Externals/gtest"]
+	path = Externals/gtest
+	url = git://github.com/smarr/googletest.git
+[submodule "Externals/vimwiki"]
+	path = Externals/vimwiki
+	url = git://github.com/vim-scripts/vimwiki.git
+[submodule "Externals/boost/core"]
+	path = Externals/boost/core
+	url = git://github.com/boost-lib/core.git
+[submodule "Externals/boost/static_assert"]
+	path = Externals/boost/static_assert
+	url = git://github.com/boost-lib/static_assert.git
+[submodule "Externals/boost/variant"]
+	path = Externals/boost/variant
+	url = git://github.com/boost-lib/variant.git
+[submodule "Externals/boost/functional"]
+	path = Externals/boost/functional
+	url = git://github.com/boost-lib/functional.git
+[submodule "Externals/boost/math"]
+	path = Externals/boost/math
+	url = git://github.com/boost-lib/math.git
+[submodule "Externals/boost/integer"]
+	path = Externals/boost/integer
+	url = git://github.com/boost-lib/integer.git
