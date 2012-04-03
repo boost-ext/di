@@ -10,13 +10,13 @@
 #include <QDeps/QDeps.hpp>
 #include "../QDeps/Test/Common/Data.hpp"
 
-#ifndef __llvm__
+#if defined(__GNUC__) && !defined(__llvm__)
 # include <cxxabi.h>
 #endif
 
 std::string demangle(const std::string& p_mangled)
 {
-#ifndef __llvm__
+#if defined(__GNUC__) && !defined(__llvm__)
     char* l_demangled = abi::__cxa_demangle(p_mangled.c_str(), 0, 0, 0);
 
     if (l_demangled)

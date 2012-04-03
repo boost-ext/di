@@ -85,6 +85,20 @@ BOOST_AUTO(fusionModule, Fusion::Module()(                      // fusion module
 }
 
 ```
+Features
+-----
+    * Injection via constructor 
+    * Binding configuration via front ends
+    * Smart binding via base_of
+    * Path binding via call stack
+    * External binding via objects
+    * Named parameters binding
+    * Providers
+    * Scopes (including custom scopes)
+    * Modules
+    * Circular dependencies detection
+    * Diagnostic policies
+
 Requirements
 ------------
     Code:
@@ -105,7 +119,7 @@ Requirements
         * icc   >= 11.1
         * msvc  ?
 
-Tests & Examples & Doc & Analysis
+Tests & Examples & Doc & Diagnostics
 ------------
     make                # test cov cppcheck scan-build valgrind doc examples
     make test           # compile and run only UT/MT
