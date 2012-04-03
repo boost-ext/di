@@ -103,7 +103,7 @@ Features
 Requirements
 ------------
     Code:
-        * c++ 98 standard-compliant compiler + typeof extension
+        * c++ 98 standard-compliant compiler supporting BOOST_TYPEOF
         * boost >= 1.43 (headers only libraries)
 
     Tests:
