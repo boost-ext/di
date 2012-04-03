@@ -88,11 +88,12 @@ BOOST_AUTO(fusionModule, Fusion::Module()(                      // fusion module
 Features
 -----
     * Injection via constructor 
-    * Configuration via front ends
-    * Binding expectations via is_base_of (smart binding)
-    * Binding expectations via call_stack (path binding)
-    * Binding expectations via external objects
-    * Binding expectations via named parameters 
+    * Configuration via front ends (base, fusion)
+    * Expectations binding via interface/implementation
+    * Expectations binding via is_base_of (smart binding)
+    * Expectations binding via call_stack (path binding)
+    * Expectations binding via external objects
+    * Expectations binding via named parameters
     * Providers
     * Scopes (PerRequest, Singleton, Custom Scopes)
     * Modules
