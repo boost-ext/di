@@ -39,7 +39,7 @@ struct BaseModule : Base::Module <                              // base module :
         Bind<CapacityLimit>::InName<Up>
     >,
     Singleton<Calculator>,                                      // one line notation - Singleton
-    PerRequest<Setup>,                                          // one line notation - PerRequest
+    PerRequest<ISetup, Setup>,                                  // one line notation - PerRequest
     Scope<CustomScope>::Bind <                                  // custom scope
         Stack
     >,
