@@ -24,7 +24,9 @@ struct Data { QDEPS_CTOR(Named<CapacityLimit, Down>, Named<CapacityLimit, Up>) {
 struct Storage { QDEPS_CTOR_TRAITS(Named<int, Up>, float); Storage(int, float) { } };
 struct App { QDEPS_CTOR(Storage, const shared_ptr<LimitChecker>&) { } };
 ...
+```
 
+``` C++
 struct BaseModule : Base::Module <                              // base module : type
     PerRequests <                                               // always new instance
         Bind<IMap, Map>,                                        // bind IMap to Map implementation
@@ -47,6 +49,17 @@ struct BaseModule : Base::Module <                              // base module :
     >
 > { };
 
+Injector<BaseModule> injector(                                  // create injector from 2 modules
+    BaseModule(                                                 // initialize BaseModule externals
+        Set<IConfig>(Config),                                   // initialize IConfig by Config
+        Set<UpInt>(42)
+    )
+);
+
+shared_ptr<App> app = injector.create< shared_ptr<App> >();     // create App as shared_ptr
+```
+
+``` C++
 BOOST_AUTO(fusionModule, Fusion::Module()(                      // fusion module : object
     Singletons <
         Storage
@@ -58,33 +71,25 @@ BOOST_AUTO(fusionModule, Fusion::Module()(                      // fusion module
     Bind<int>::InCall<Selector>::To(87)                         // bind external value
 ));
 
-{
-    Injector<BaseModule, BOOST_TYPEOF(fusionModule)> injector(  // create injector from 2 modules
-        BaseModule(                                             // initialize BaseModule externals
-            Set<IConfig>(Config),                               // initialize IConfig by Config
-            Set<UpInt>(42)
-        ),
-        fusionModule                                            // fusion module is already created
-    );
+Injector<BOOST_TYPEOF(fusionModule)> injector(fusionModule);    // install fusion module
 
-    shared_ptr<App> app = injector.create< shared_ptr<App> >(); // create App as shared_ptr
-}
-
-{
-    Injector<> emptyInjector;                                   // default empty injector
-
-    BOOST_AUTO(injector, emptyInjector.install(                 // install 2 modules
-        BaseModule(
-            Set<IConfig>(Config),
-            Set<UpInt>(42)
-        ),
-        fusionModule
-    );
-
-    App app = injector.create<App>();                           // and create App as lvalue
-}
-
+shared_ptr<App> app = injector.create< shared_ptr<App> >();     // create App as shared_ptr
 ```
+
+``` C++
+Injector<> emptyInjector;                                       // default empty injector
+
+BOOST_AUTO(injector, emptyInjector.install(                     // install 2 modules
+    BaseModule(
+        Set<IConfig>(Config),
+        Set<UpInt>(42)
+    ),
+    fusionModule
+);
+
+App app = injector.create<App>();                               // and create App as lvalue
+```
+
 Features
 -----
     * Injection via constructor 
