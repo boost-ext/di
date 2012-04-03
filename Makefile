@@ -18,7 +18,7 @@ doc:
 	@cd Doc && make doc
 
 install:
-	@cd Externals/QPool && make install
+	@[ -e Externals/QPool ] || (cd Externals/QPool && make install)
 	@cp -r $(TARGET) $(PREFIX)
 
 clean:
