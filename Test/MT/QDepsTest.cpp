@@ -169,13 +169,13 @@ TEST_T(QDeps, MixModules,
 TEST(QDeps, CircularDependencies)
 {
     Injector<> injector;
-    EXPECT_THROW(injector.create<CD1>(), StaticAssertCompileError);
+    EXPECT_STATIC_ASSERT(injector.create<CD1>(), CIRCULAR_DEPENDENCIES_NOT_ALLOWED);
 }
 
 TEST(QDeps, CircularDependenciesNotDirect)
 {
     Injector<> injector;
-    EXPECT_THROW(injector.create<CD5>(), StaticAssertCompileError);
+    EXPECT_STATIC_ASSERT(injector.create<CD5>(), CIRCULAR_DEPENDENCIES_NOT_ALLOWED);
 }
 
 } // namespace MT

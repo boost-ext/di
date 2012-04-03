@@ -10,7 +10,19 @@
 #include <gtest/gtest.h>
 
 #define QDEPS_STATIC_ASSERT(cond, expr, types)              \
-    throw ::QDeps::Test::Common::StaticAssertCompileError()
+    throw ::QDeps::Test::Common::StaticAssert(cond, #expr)
+
+#define EXPECT_STATIC_ASSERT(code, msg)                     \
+    try                                                     \
+    {                                                       \
+        code;                                               \
+        ASSERT_TRUE(false);                                 \
+    }                                                       \
+    catch(const ::QDeps::Test::Common::StaticAssert& e)     \
+    {                                                       \
+        EXPECT_FALSE(e.cond);                               \
+        EXPECT_EQ(#msg, e.expr);                            \
+    }
 
 #define TEST_T(name, test, ...)                             \
     template<typename TInjector>                            \
@@ -28,7 +40,17 @@ namespace Test
 {
 namespace Common
 {
-class StaticAssertCompileError { };
+
+struct StaticAssert
+{
+    StaticAssert(bool cond, const std::string& expr)
+        : cond(cond), expr(expr)
+    { }
+
+    bool cond;
+    std::string expr;
+};
+
 } // namespace Common
 } // namespace Test
 } // namespace QDeps
