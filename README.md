@@ -111,6 +111,7 @@ Requirements
     Code:
         * c++ 98 standard-compliant compiler supporting BOOST_TYPEOF
         * boost >= 1.43 (headers only libraries)
+        * qpool >= 1.0
 
     Tests:
         * gnu-compatible Make >= 3.81
