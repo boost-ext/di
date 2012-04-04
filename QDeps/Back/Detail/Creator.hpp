@@ -12,6 +12,7 @@
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/preprocessor/punctuation/comma_if.hpp>
+    #include <boost/type_traits/is_base_of.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/at.hpp>
@@ -44,6 +45,18 @@
     >
     class Creator
     {
+        template<typename TDependency, typename TEntries>
+        static typename boost::enable_if<boost::is_base_of<TDependency, TEntries>, TDependency&>::type acquire(TEntries& p_entries)
+        {
+            return static_cast<TDependency&>(p_entries);
+        }
+
+        template<typename TDependency, typename TEntries>
+        static typename boost::disable_if<boost::is_base_of<TDependency, TEntries>, TDependency>::type acquire(TEntries&)
+        {
+            return TDependency();
+        }
+
     public:
         template<typename T, typename TCallStack, typename TEntries>
         static typename TBinder<T, TCallStack>::type::template ResultType<TPool>::type execute(TEntries& p_entries, TPool& p_pool)
@@ -102,7 +115,7 @@
                 (p_entries, p_pool)                                                                                 \
              )
 
-        return static_cast<TDependency&>(p_entries).create(
+        return acquire<TDependency>(p_entries).create(
             p_pool BOOST_PP_COMMA_IF(BOOST_PP_ITERATION()) BOOST_PP_REPEAT(BOOST_PP_ITERATION(), QDEPS_CREATOR_IMPL_ARG, ~));
 
         #undef QDEPS_CREATOR_IMPL_ARG

@@ -53,6 +53,7 @@ TEST(Dependency, Default)
     EXPECT_TRUE((is_same<is_same<_1, int>, Dep::Bind>::value));
 }
 
+#if 0
 TEST(Dependency, Apply)
 {
     EXPECT_TRUE((
@@ -79,6 +80,7 @@ TEST(Dependency, Apply)
         >::value
     ));
 }
+#endif
 
 TEST(Dependency, createByPool)
 {

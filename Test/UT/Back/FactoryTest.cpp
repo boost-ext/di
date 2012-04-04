@@ -11,7 +11,7 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/or.hpp>
 #include "QDeps/Utility/Named.hpp"
-#include "QDeps/Back/Detail/Dependency.hpp"
+#include "QDeps/Back/Aux/Dependency.hpp"
 #include "QDeps/Back/Scopes/PerRequest.hpp"
 #include "QDeps/Back/Scopes/Singleton.hpp"
 #include "QPool/Pool.hpp"

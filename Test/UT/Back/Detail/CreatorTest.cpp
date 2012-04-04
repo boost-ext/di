@@ -26,7 +26,8 @@ using namespace boost::mpl;
 
 class FakePool { };
 
-template<typename T, T Value> struct Dependency
+template<typename T, T Value>
+struct Dependency
 {
     typedef T Given;
     typedef T Expected;

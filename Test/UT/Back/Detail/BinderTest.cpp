@@ -21,7 +21,6 @@ namespace UT
 
 using namespace boost;
 using namespace boost::mpl;
-using namespace Scopes;
 using namespace Aux;
 
 template<typename T, typename TContext = vector0<> > struct Dependency
