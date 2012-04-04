@@ -171,29 +171,21 @@ TEST_T(QDeps, MixModules,
     EXPECT_EQ(0.0, c8->c7->c6->c5.c2->d);
     EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
 }
-class PrintVisitor
-{
-public:
-    //template<typename TIf, typename TImpl, typename TCallStack, typename TScope> void operator()() const
-    template<typename TImpl, typename TCallStack, typename TScope> void operator()() const
-    {
-        int size = boost::mpl::size<TCallStack>::value;
-        while(--size) {
-            std::cout << "DUPA \t";
-        }
-        std::cout << "DUPA " << typeid(TImpl).name() << std::endl;
-    }
-};
+
 TEST(QDeps, Provider)
 {
     Injector<ProviderModule> injector;
-    //TransactionUsage obj = injector.create<TransactionUsage>();
+    TransactionUsage obj = injector.create<TransactionUsage>();
 
-    injector.visit<TransactionUsage>(PrintVisitor());
+    injector.create<TransactionUsage>();
 
-    //EXPECT_EQ(0, obj.getId());
-    //EXPECT_EQ(1, obj.getId());
-    //EXPECT_EQ(2, obj.getId());
+    EXPECT_EQ(0, obj.getId());
+    EXPECT_EQ(1, obj.getId());
+    EXPECT_EQ(2, obj.getId());
+}
+
+TEST(QDeps, Visitor)
+{
 }
 
 TEST(QDeps, CircularDependencies)

@@ -202,11 +202,10 @@ struct CD5
 
 struct Transaction
 {
-    static int& inc()
+    static int inc()
     {
         static int counter = 0;
-        counter++;
-        return counter;
+        return counter++;
     }
 
     Transaction(int i)
