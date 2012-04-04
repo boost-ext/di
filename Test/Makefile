@@ -22,7 +22,7 @@ CXXFLAGS:=$(INCLUDES) -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall
 
 mt:=$(patsubst %.cpp, %.o, $(shell find MT -iname "*.cpp")) main.o
 #ut_back:=$(patsubst %.cpp, %.o, $(shell find UT/Back -iname "*.cpp")) main.o
-ut_back:=UT/Back/Detail/VisitorTest.o main.o
+ut_back:=UT/Back/Detail/CreatorTest.o main.o
 ut_front:=$(patsubst %.cpp, %.o, $(shell find UT/Front -iname "*.cpp")) main.o
 ut_utility:=$(patsubst %.cpp, %.o, $(shell find UT/Utility -iname "*.cpp")) main.o
 

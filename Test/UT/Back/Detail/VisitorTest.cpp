@@ -12,8 +12,10 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/pop_front.hpp>
 #include <boost/mpl/front.hpp>
+#include "QDeps/Back/Aux/Dependency.hpp"
 #include "QDeps/Back/Detail/Visitor.hpp"
 #include "QDeps/Back/Scopes/PerRequest.hpp"
+#include "QDeps/Back/Scopes/Singleton.hpp"
 #include "Test/Common/Data.hpp"
 
 namespace QDeps
