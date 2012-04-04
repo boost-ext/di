@@ -32,14 +32,13 @@ std::string demangle(const std::string& p_mangled)
 class PrintVisitor
 {
 public:
-    //template<typename TIf, typename TImpl, typename TCallStack, typename TScope> void operator()() const
-    template<typename TImpl, typename TCallStack, typename TScope> void operator()() const
+    template<typename T, typename TCallStack, typename TScope> void operator()() const
     {
         int size = boost::mpl::size<TCallStack>::value;
         while(--size) {
             std::cout << "\t";
         }
-        std::cout << demangle(typeid(TImpl).name()) << std::endl;
+        std::cout << demangle(typeid(T).name()) << std::endl;
     }
 };
 

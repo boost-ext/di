@@ -8,7 +8,6 @@
 #define QDEPS_BACK_AUX_UTILITY_HPP
 
 #include <boost/shared_ptr.hpp>
-#include <boost/typeof/typeof.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/type_traits/remove_cv.hpp>
@@ -46,11 +45,6 @@ template<typename TSeq> struct IsUniqueCallStack : boost::mpl::bool_
         >::type::value
     >
 { };
-
-template<typename T> struct GetCtor
-{
-    typedef BOOST_TYPEOF_TPL(T::QDEPS_CTOR_UNIQUE_NAME::ctor) type;
-};
 
 template<typename T> struct GetBind
 {

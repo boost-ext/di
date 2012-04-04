@@ -14,7 +14,7 @@ namespace MT
 {
 
 using namespace boost;
-using namespace mpl;
+using namespace boost::mpl;
 using namespace Test::Common;
 using namespace Utility;
 using namespace Front::Base;
@@ -31,8 +31,8 @@ struct BaseModule1 : Front::Base::Module
             Bind<CIf02>::InCall<C7>,
             Bind<int, int_<1> >,
             Bind<int, int_<2> >::InCall<C8>,
-            Bind<int, int_<3> >::InName< string<'1'> >::InCall<C7, C6, C4>,
-            Bind<int, int_<4> >::InName< string<'2'> >::InCall<C7, C6, C4>,
+            Bind<int, int_<3> >::InName< mpl::string<'1'> >::InCall<C7, C6, C4>,
+            Bind<int, int_<4> >::InName< mpl::string<'2'> >::InCall<C7, C6, C4>,
             Bind<int, int_<5> >::InCall<C2>
         >
     >
@@ -44,7 +44,7 @@ struct BaseModule2 : Front::Base::Module
             C3
         >,
         PerRequests <
-            Bind<int, int_<0> >::InName< string<'1'> >,
+            Bind<int, int_<0> >::InName< mpl::string<'1'> >,
             Bind<int, int_<1> >
         >
     >
@@ -57,10 +57,16 @@ struct BaseModule3 : Front::Base::Module
         >,
         PerRequests <
             Bind<int, int_<2> >::InCall<C8>,
-            Bind<int, int_<3> >::InName< string<'2'> >
+            Bind<int, int_<3> >::InName< mpl::string<'2'> >
         >
     >
 { };
+
+struct ProviderModule : Front::Base::Module <
+    PerRequests <
+        TransactionProvider, int_<0>
+    >
+> { };
 
 BOOST_AUTO(fusionModule1, Front::Fusion::Module<>()(
     Singletons <
@@ -72,8 +78,8 @@ BOOST_AUTO(fusionModule1, Front::Fusion::Module<>()(
         Bind<CIf02>::InCall<C7>,
         Bind<int, int_<1> >,
         Bind<int, int_<2> >::InCall<C8>,
-        Bind<int, int_<3> >::InName< string<'1'> >::InCall<C7, C6, C4>,
-        Bind<int, int_<4> >::InName< string<'2'> >::InCall<C7, C6, C4>,
+        Bind<int, int_<3> >::InName< mpl::string<'1'> >::InCall<C7, C6, C4>,
+        Bind<int, int_<4> >::InName< mpl::string<'2'> >::InCall<C7, C6, C4>,
         Bind<int, int_<5> >::InCall<C2>
     >()
 ));
@@ -84,7 +90,7 @@ BOOST_AUTO(fusionModule2, Front::Fusion::Module<>()(
     >(),
     PerRequests <
         Bind<int, int_<2> >::InCall<C8>,
-        Bind<int, int_<3> >::InName< string<'2'> >
+        Bind<int, int_<3> >::InName< mpl::string<'2'> >
     >()
 ));
 
@@ -93,7 +99,7 @@ BOOST_AUTO(fusionModule3, Front::Fusion::Module<>()(
         C3
     >(),
     PerRequests <
-        Bind<int, int_<0> >::InName< string<'1'> >,
+        Bind<int, int_<0> >::InName< mpl::string<'1'> >,
         Bind<int, int_<1> >
     >()
 ));
@@ -164,6 +170,22 @@ TEST_T(QDeps, MixModules,
     EXPECT_EQ(1, c8->c7->c6->c5.c2->i);
     EXPECT_EQ(0.0, c8->c7->c6->c5.c2->d);
     EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
+}
+
+TEST(QDeps, Provider)
+{
+    Injector<ProviderModule> injector;
+    TransactionUsage obj = injector.create<TransactionUsage>();
+
+    injector.create<TransactionUsage>();
+
+    EXPECT_EQ(0, obj.getId());
+    EXPECT_EQ(1, obj.getId());
+    EXPECT_EQ(2, obj.getId());
+}
+
+TEST(QDeps, Visitor)
+{
 }
 
 TEST(QDeps, CircularDependencies)

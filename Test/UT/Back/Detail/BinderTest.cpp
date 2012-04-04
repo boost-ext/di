@@ -6,7 +6,7 @@
 //
 #include <gtest/gtest.h>
 #include <boost/mpl/vector.hpp>
-#include <boost/mpl/equal.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include "QDeps/Back/Detail/Binder.hpp"
 
@@ -21,6 +21,7 @@ namespace UT
 
 using namespace boost;
 using namespace boost::mpl;
+using namespace Aux;
 
 template<typename T, typename TContext = vector0<> > struct Dependency
 {
@@ -44,15 +45,16 @@ class Impl : public I { };
 TEST(Binder, Empty)
 {
     EXPECT_TRUE((
-        equal
+        is_same
         <
-            vector0<>,
+            Dependency<void, int>,
             Binder
             <
                 int,
                 vector0<>,
-                vector0<>
-            >
+                vector0<>,
+                Dependency<void, _1>
+            >::type
         >::value
     ));
 }
@@ -60,9 +62,9 @@ TEST(Binder, Empty)
 TEST(Binder, One)
 {
     EXPECT_TRUE((
-        equal
+        is_same
         <
-            vector1< Dependency<int> >,
+            Dependency<int>,
             Binder
             <
                 int,
@@ -70,8 +72,9 @@ TEST(Binder, One)
                 vector
                 <
                     Dependency<int>
-                >
-            >
+                >,
+                Dependency<void, _1>
+            >::type
         >::value
     ));
 }
@@ -79,9 +82,9 @@ TEST(Binder, One)
 TEST(Binder, Found)
 {
     EXPECT_TRUE((
-        equal
+        is_same
         <
-            vector< Dependency<float> >,
+            Dependency<float>,
             Binder
             <
                 float,
@@ -91,8 +94,9 @@ TEST(Binder, Found)
                     Dependency<int>,
                     Dependency<float>,
                     Dependency<double>
-                >
-            >
+                >,
+                Dependency<void, _1>
+            >::type
         >::value
     ));
 }
@@ -100,9 +104,9 @@ TEST(Binder, Found)
 TEST(Binder, FoundMany)
 {
     EXPECT_TRUE((
-        equal
+        is_same
         <
-            vector< Dependency<float>, Dependency<float> >,
+            Dependency<float>,
             Binder
             <
                 float,
@@ -112,8 +116,9 @@ TEST(Binder, FoundMany)
                     Dependency<int>,
                     Dependency<float>,
                     Dependency<float>
-                >
-            >
+                >,
+                Dependency<void, _1>
+            >::type
         >::value
     ));
 }
@@ -121,9 +126,9 @@ TEST(Binder, FoundMany)
 TEST(Binder, NotFound)
 {
     EXPECT_TRUE((
-        equal
+        is_same
         <
-            vector0<>,
+            Dependency<void, double>,
             Binder
             <
                 double,
@@ -133,8 +138,9 @@ TEST(Binder, NotFound)
                     Dependency<int>,
                     Dependency<float>,
                     Dependency<float>
-                >
-            >
+                >,
+                Dependency<void, _1>
+            >::type
         >::value
     ));
 }
@@ -142,9 +148,9 @@ TEST(Binder, NotFound)
 TEST(Binder, Context)
 {
     EXPECT_TRUE((
-        equal
+        is_same
         <
-            vector< Dependency<int, vector<A, B> > >,
+            Dependency<int, vector<A, B> >,
             Binder
             <
                 int,
@@ -153,8 +159,9 @@ TEST(Binder, Context)
                 <
                     Dependency<int, vector<A> >,
                     Dependency<int, vector<A, B> >
-                >
-            >
+                >,
+                Dependency<void, _1>
+            >::type
         >::value
     ));
 }
@@ -162,9 +169,9 @@ TEST(Binder, Context)
 TEST(Binder, ContextMany)
 {
     EXPECT_TRUE((
-        equal
+        is_same
         <
-            vector< Dependency<int, vector<A, B> >, Dependency<int> >,
+            Dependency<int, vector<A, B> >,
             Binder
             <
                 int,
@@ -174,8 +181,9 @@ TEST(Binder, ContextMany)
                     Dependency<int>,
                     Dependency<int, vector<A> >,
                     Dependency<int, vector<A, B> >
-                >
-            >
+                >,
+                Dependency<void, _1>
+            >::type
         >::value
     ));
 }
@@ -183,14 +191,9 @@ TEST(Binder, ContextMany)
 TEST(Binder, ContextManyEnd)
 {
     EXPECT_TRUE((
-        equal
+        is_same
         <
-            vector
-            <
-                Dependency<int, vector<A, B> >,
-                Dependency<int, vector<B> >,
-                Dependency<int>
-            >,
+            Dependency<int, vector<A, B> >,
             Binder
             <
                 int,
@@ -200,8 +203,9 @@ TEST(Binder, ContextManyEnd)
                     Dependency<int>,
                     Dependency<int, vector<B> >,
                     Dependency<int, vector<A, B> >
-                >
-            >
+                >,
+                Dependency<void, _1>
+            >::type
         >::value
     ));
 }
@@ -209,9 +213,9 @@ TEST(Binder, ContextManyEnd)
 TEST(Binder, ContextNotFound)
 {
     EXPECT_TRUE((
-        equal
+        is_same
         <
-            vector0<>,
+            Dependency<void, int>,
             Binder
             <
                 int,
@@ -220,8 +224,9 @@ TEST(Binder, ContextNotFound)
                 <
                     Dependency<int, vector<B> >,
                     Dependency<int, vector<A, B> >
-                >
-            >
+                >,
+                Dependency<void, _1>
+            >::type
         >::value
     ));
 }
@@ -229,9 +234,9 @@ TEST(Binder, ContextNotFound)
 TEST(Binder, ContextOtherTypes)
 {
     EXPECT_TRUE((
-        equal
+        is_same
         <
-            vector< Dependency<int, vector<A, B> > >,
+            Dependency<int, vector<A, B> >,
             Binder
             <
                 int,
@@ -242,8 +247,9 @@ TEST(Binder, ContextOtherTypes)
                     Dependency<int, vector<A, B> >,
                     Dependency<float, vector<A, B> >,
                     Dependency<double>
-                >
-            >
+                >,
+                Dependency<void, _1>
+            >::type
         >::value
     ));
 }
@@ -251,15 +257,9 @@ TEST(Binder, ContextOtherTypes)
 TEST(Binder, ContextLongWithOrder)
 {
     EXPECT_TRUE((
-        equal
+        is_same
         <
-            vector
-            <
-                Dependency<int, vector<A, B, C> >,
-                Dependency<int, vector<B, C> >,
-                Dependency<int, vector<C> >,
-                Dependency<int>
-            >,
+            Dependency<int, vector<A, B, C> >,
             Binder
             <
                 int,
@@ -275,8 +275,9 @@ TEST(Binder, ContextLongWithOrder)
                     Dependency<int, vector<B, C, C> >,
                     Dependency<int, vector<A, A, A> >,
                     Dependency<int, vector<C> >
-                >
-            >
+                >,
+                Dependency<void, _1>
+            >::type
         >::value
     ));
 }
@@ -284,12 +285,9 @@ TEST(Binder, ContextLongWithOrder)
 TEST(Binder, ContextLongWithOrderEmptyCallStack)
 {
     EXPECT_TRUE((
-        equal
+        is_same
         <
-            vector
-            <
-                Dependency<int>
-            >,
+            Dependency<int>,
             Binder
             <
                 int,
@@ -305,8 +303,9 @@ TEST(Binder, ContextLongWithOrderEmptyCallStack)
                     Dependency<int, vector<B, C, C> >,
                     Dependency<int, vector<A, A, A> >,
                     Dependency<int, vector<C> >
-                >
-            >
+                >,
+                Dependency<void, _1>
+            >::type
         >::value
     ));
 }
@@ -314,13 +313,9 @@ TEST(Binder, ContextLongWithOrderEmptyCallStack)
 TEST(Binder, ContextLongWithOrderDiffCallStack)
 {
     EXPECT_TRUE((
-        equal
+        is_same
         <
-            vector
-            <
-                Dependency<int, vector<B> >,
-                Dependency<int>
-            >,
+            Dependency<int, vector<B> >,
             Binder
             <
                 int,
@@ -336,8 +331,9 @@ TEST(Binder, ContextLongWithOrderDiffCallStack)
                     Dependency<int, vector<B, C, C> >,
                     Dependency<int, vector<A, A, A> >,
                     Dependency<int, vector<C> >
-                >
-            >
+                >,
+                Dependency<void, _1>
+            >::type
         >::value
     ));
 }
@@ -345,13 +341,9 @@ TEST(Binder, ContextLongWithOrderDiffCallStack)
 TEST(Binder, ContextLongWithOrderShortCallStack)
 {
     EXPECT_TRUE((
-        equal
+        is_same
         <
-            vector
-            <
-                Dependency<int, vector<C> >,
-                Dependency<int>
-            >,
+            Dependency<int, vector<C> >,
             Binder
             <
                 int,
@@ -367,8 +359,9 @@ TEST(Binder, ContextLongWithOrderShortCallStack)
                     Dependency<int, vector<B, C, C> >,
                     Dependency<int, vector<A, A, A> >,
                     Dependency<int, vector<C> >
-                >
-            >
+                >,
+                Dependency<void, _1>
+            >::type
         >::value
     ));
 }
@@ -376,12 +369,9 @@ TEST(Binder, ContextLongWithOrderShortCallStack)
 TEST(Binder, ContextLongWithOrderToLongCallStack)
 {
     EXPECT_TRUE((
-        equal
+        is_same
         <
-            vector
-            <
-                Dependency<int>
-            >,
+            Dependency<int>,
             Binder
             <
                 int,
@@ -397,8 +387,9 @@ TEST(Binder, ContextLongWithOrderToLongCallStack)
                     Dependency<int, vector<B, C, C> >,
                     Dependency<int, vector<A, A, A> >,
                     Dependency<int, vector<C> >
-                >
-            >
+                >,
+                Dependency<void, _1>
+            >::type
         >::value
     ));
 }
@@ -406,9 +397,9 @@ TEST(Binder, ContextLongWithOrderToLongCallStack)
 TEST(Binder, BaseOfFail)
 {
     EXPECT_TRUE((
-        equal
+        is_same
         <
-            vector0<>,
+            Dependency<void, I>,
             Binder
             <
                 I,
@@ -416,8 +407,9 @@ TEST(Binder, BaseOfFail)
                 vector
                 <
                     DependencyBaseOf<A>
-                >
-            >
+                >,
+                Dependency<void, _1>
+            >::type
         >::value
     ));
 }
@@ -425,12 +417,9 @@ TEST(Binder, BaseOfFail)
 TEST(Binder, BaseOfSuccessful)
 {
     EXPECT_TRUE((
-        equal
+        is_same
         <
-            vector
-            <
-                DependencyBaseOf<Impl>
-            >,
+            DependencyBaseOf<Impl>,
             Binder
             <
                 I,
@@ -438,8 +427,9 @@ TEST(Binder, BaseOfSuccessful)
                 vector
                 <
                     DependencyBaseOf<Impl>
-                >
-            >
+                >,
+                Dependency<void, _1>
+            >::type
         >::value
     ));
 }

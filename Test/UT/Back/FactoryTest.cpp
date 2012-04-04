@@ -10,12 +10,13 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/or.hpp>
-#include "Test/Common/Data.hpp"
-#include "QDeps/Back/Factory.hpp"
 #include "QDeps/Utility/Named.hpp"
+#include "QDeps/Back/Aux/Dependency.hpp"
 #include "QDeps/Back/Scopes/PerRequest.hpp"
 #include "QDeps/Back/Scopes/Singleton.hpp"
 #include "QPool/Pool.hpp"
+#include "QDeps/Back/Factory.hpp"
+#include "Test/Common/Data.hpp"
 
 namespace QDeps
 {
