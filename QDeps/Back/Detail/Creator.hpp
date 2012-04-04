@@ -13,15 +13,10 @@
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/preprocessor/punctuation/comma_if.hpp>
     #include <boost/preprocessor/control/expr_if.hpp>
-    #include <boost/preprocessor/cat.hpp>
     #include <boost/make_shared.hpp>
     #include <boost/utility/enable_if.hpp>
-    #include <boost/function_types/parameter_types.hpp>
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/at.hpp>
-    #include <boost/mpl/empty.hpp>
-    #include <boost/mpl/begin_end.hpp>
-    #include <boost/mpl/deref.hpp>
     #include <boost/mpl/push_back.hpp>
     #include "QDeps/Back/Aux/Utility.hpp"
     #include "QDeps/Back/Aux/Dependency.hpp"
@@ -46,19 +41,17 @@
     <
         typename TDeps,
         typename TPool,
-        template<typename, typename, typename = TDeps> class TBinder = Binder,
+        template<typename, typename, typename = TDeps, typename = Aux::Dependency<Scopes::PerRequest, boost::mpl::_1> > class TBinder = Binder
         template<typename> class TConverter = Converter
-        //TODO Aux::Dependency
     >
     class Creator
     {
-        template<typename, typename, typename, typename = void, typename = void> class CreatorImpl;
+        template<typename, typename, typename, typename = void> class CreatorImpl;
 
         template<typename T, typename TCallStack, typename TEntries> class CreatorImpl
         <
             T, TCallStack, TEntries,
-            typename boost::enable_if< BOOST_PP_CAT(Aux::Detail::has_, QDEPS_CTOR_UNIQUE_NAME)<T> >::type,
-            typename boost::enable_if< boost::mpl::empty<typename TBinder<T, TCallStack>::type> >::type
+            typename boost::enable_if< Aux::HasCtor< TBinder<T, TCallStack> > >::type
         >
         {
         public:

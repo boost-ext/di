@@ -7,8 +7,8 @@
 #ifndef QDEPS_BACK_DETAIL_BINDER_HPP
 #define QDEPS_BACK_DETAIL_BINDER_HPP
 
-#include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/iterator_range.hpp>
+#include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/advance.hpp>
 #include <boost/mpl/equal.hpp>
 #include <boost/mpl/sort.hpp>
@@ -18,10 +18,10 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/and.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/mpl/next.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/apply.hpp>
+#include <boost/mpl/deref.hpp>
+#include <boost/mpl/begin_end.hpp>
 #include "QDeps/Back/Aux/Utility.hpp"
 
 namespace QDeps
@@ -60,25 +60,41 @@ struct Comparator : boost::mpl::apply<TBind, T>::type
 
 } // namespace Detail
 
-template<typename T, typename TCallStack, typename TDeps>
-struct Binder : boost::mpl::sort
+template
+<
+    typename T,
+    typename TCallStack,
+    typename TDeps,
+    typename TDefault
+>
+struct Binder : boost::mpl::deref
     <
-        typename boost::mpl::fold
+        boost::mpl::begin
         <
-            TDeps,
-            boost::mpl::vector0<>,
-            boost::mpl::if_
+            typename boost::mpl::push_back
             <
-                boost::mpl::and_
+                typename boost::mpl::sort
                 <
-                    Detail::Comparator<T, Aux::GetBind<boost::mpl::_2> >,
-                    Detail::EqualCallStack<TCallStack, Aux::GetContext<boost::mpl::_2> >
-                >,
-                boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>,
-                boost::mpl::_1
-            >
-        >::type,
-        Detail::LessContextSize<boost::mpl::_1, boost::mpl::_2>
+                    typename boost::mpl::fold
+                    <
+                        TDeps,
+                        boost::mpl::vector0<>,
+                        boost::mpl::if_
+                        <
+                            boost::mpl::and_
+                            <
+                                Detail::Comparator<T, Aux::GetBind<boost::mpl::_2> >,
+                                Detail::EqualCallStack<TCallStack, Aux::GetContext<boost::mpl::_2> >
+                            >,
+                            boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>,
+                            boost::mpl::_1
+                        >
+                    >::type,
+                    Detail::LessContextSize<boost::mpl::_1, boost::mpl::_2>
+                >::type,
+                typename boost::mpl::apply<TDefault, T>::type
+            >::type
+        >
     >::type
 { };
 

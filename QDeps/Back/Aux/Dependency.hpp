@@ -13,8 +13,12 @@
     #include <boost/preprocessor/repetition/enum_params.hpp>
     #include <boost/preprocessor/repetition/enum_binary_params.hpp>
     #include <boost/preprocessor/facilities/intercept.hpp>
+    #include <boost/preprocessor/cat.hpp>
+    #include <boost/typeof/typeof.hpp>
+    #include <boost/function_types/parameter_types.hpp>
     #include <boost/type_traits/is_same.hpp>
     #include <boost/utility/enable_if.hpp>
+    #include <boost/mpl/if.hpp>
     #include <boost/mpl/and.hpp>
     #include <boost/mpl/or.hpp>
     #include <boost/mpl/not.hpp>
@@ -40,17 +44,30 @@
         typename TExpected,
         typename TGiven = TExpected,
         typename TContext = boost::mpl::vector0<>,
-        typename TBind = boost::is_same<boost::mpl::_1, TExpected>,
-        template<typename> class TValue = Value
+        typename TBind = boost::is_same<boost::mpl::_1, TExpected>
+        //template<typename> class /*T*/Value = Value
     >
     class Dependency
     {
+        template<bool, typename = void> struct CtorImpl
+            : boost::mpl::vector0<>
+        { };
+
+        template<typename Dummy>
+        struct CtorImpl<true, Dummy>
+            : boost::function_types::parameter_types<BOOST_TYPEOF_TPL(TGiven::QDEPS_CTOR_UNIQUE_NAME::ctor)>::type
+        { };
+
     public:
         typedef TScope Scope;
         typedef TExpected Expected;
         typedef TGiven Given;
         typedef TContext Context;
         typedef TBind Bind;
+
+        struct Ctor
+            : CtorImpl<BOOST_PP_CAT(Detail::has_, QDEPS_CTOR_UNIQUE_NAME)<Given>::value>::type
+        { };
 
         template<typename, typename = void> struct ResultType;
 
@@ -61,13 +78,13 @@
         };
 
         template<typename TPool>
-        struct ResultType<TPool, typename boost::enable_if< boost::mpl::and_< TValue<TGiven>, boost::mpl::not_<boost::mpl::contains<typename TPool::Seq, TExpected> > > >::type>
+        struct ResultType<TPool, typename boost::enable_if< boost::mpl::and_< /*T*/Value<TGiven>, boost::mpl::not_<boost::mpl::contains<typename TPool::Seq, TExpected> > > >::type>
         {
-            typedef typename TValue<TGiven>::template ResultType<TExpected>::type type;
+            typedef typename /*T*/Value<TGiven>::template ResultType<TExpected>::type type;
         };
 
         template<typename TPool>
-        struct ResultType<TPool, typename boost::disable_if< boost::mpl::or_< TValue<TGiven>, boost::mpl::contains<typename TPool::Seq, TExpected> > >::type>
+        struct ResultType<TPool, typename boost::disable_if< boost::mpl::or_< /*T*/Value<TGiven>, boost::mpl::contains<typename TPool::Seq, TExpected> > >::type>
         {
             typedef typename TScope::template ResultType<TExpected>::type type;
         };
@@ -87,13 +104,13 @@
             typename boost::enable_if< boost::mpl::and_< Value<TGiven>, boost::mpl::not_< boost::mpl::contains<typename TPool::Seq, TExpected> > > >::type* = 0
         )
         {
-            return TValue<TGiven>::template create<TExpected>();
+            return /*T*/Value<TGiven>::template create<TExpected>();
         }
 
         template<typename TPool> typename ResultType<TPool>::type create
         (
             TPool&,
-            typename boost::disable_if< boost::mpl::or_< TValue<TGiven>, boost::mpl::contains<typename TPool::Seq, TExpected> > >::type* = 0
+            typename boost::disable_if< boost::mpl::or_< /*T*/Value<TGiven>, boost::mpl::contains<typename TPool::Seq, TExpected> > >::type* = 0
         )
         {
             return m_scope.template create<TGiven>();
@@ -110,15 +127,15 @@
         typename TExpected,
         typename TGiven,
         typename TContext,
-        typename TBind,
-        template<typename> class TValue
+        typename TBind
+        //template<typename> class [>T<]Value
     >
-    class Dependency<boost::mpl::_1, TExpected, TGiven, TContext, TBind, TValue>
+    class Dependency<boost::mpl::_1, TExpected, TGiven, TContext, TBind/*, [>T<]Value*/>
     {
     public:
         template<typename Scope> struct Apply
         {
-            typedef Dependency<Scope, TExpected, TGiven, TContext, TBind, TValue> type;
+            typedef Dependency<Scope, TExpected, TGiven, TContext, TBind/*, [>T<]Value*/> type;
         };
     };
 
