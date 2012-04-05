@@ -18,7 +18,7 @@
 #include <QDeps/Utility/Named.hpp>
 #include <QDeps/Utility/Provider.hpp>
 
-//#include <QDeps/Back/Policies/.hpp>
+#include <QDeps/Back/Policies/CircularDependencies.hpp>
 
 #endif
 

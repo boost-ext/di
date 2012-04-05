@@ -8,6 +8,7 @@
 #define QDEPS_TEST_COMMON_DATA_HPP
 
 #include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 #include <boost/mpl/string.hpp>
 #include "QDeps/Front/Ctor.hpp"
 #include "QDeps/Utility/Named.hpp"
@@ -21,6 +22,7 @@ namespace Common
 {
 
 using namespace boost;
+using namespace boost::mpl;
 using namespace Utility;
 
 struct If0
@@ -172,6 +174,16 @@ struct C11
     shared_ptr<int> i;
 };
 
+struct C12
+{
+    QDEPS_CTOR(C12, Named< shared_ptr<If0>, _1> if01, Named< shared_ptr<If0>, _1> if02)
+        : if01(if01), if02(if02)
+    { }
+
+    shared_ptr<If0> if01;
+    shared_ptr<If0> if02;
+};
+
 struct CD2;
 struct CD5;
 
@@ -202,28 +214,22 @@ struct CD5
 
 struct Transaction
 {
-    static int inc()
-    {
-        static int counter = 0;
-        return counter++;
-    }
-
     Transaction(int i)
-        : i(i + inc())
+        : i(i)
     { }
 
     int i;
 };
 
-struct TransactionProvider : Provider<Transaction>
+struct TransactionProvider : Provider< shared_ptr<Transaction> >
 {
     QDEPS_CTOR(TransactionProvider, shared_ptr<C3> c3)
         : c3(c3)
     { }
 
-    virtual Transaction get() const
+    virtual shared_ptr<Transaction> get() const
     {
-        return Transaction(c3->i);
+        return boost::make_shared<Transaction>(c3->i);
     }
 
     shared_ptr<C3> c3;
@@ -231,16 +237,11 @@ struct TransactionProvider : Provider<Transaction>
 
 struct TransactionUsage
 {
-    QDEPS_CTOR(TransactionUsage, shared_ptr< Provider<Transaction> > p)
+    QDEPS_CTOR(TransactionUsage, shared_ptr< Provider< shared_ptr<Transaction> > > p)
         : p(p)
     { }
 
-    int getId() const
-    {
-        return p->get().i;
-    }
-
-    shared_ptr< Provider<Transaction> > p;
+    shared_ptr< Provider< shared_ptr<Transaction> > > p;
 };
 
 } // namespace Common

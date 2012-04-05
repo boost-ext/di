@@ -44,8 +44,8 @@
         typename TExpected,
         typename TGiven = TExpected,
         typename TContext = boost::mpl::vector0<>,
-        typename TBind = boost::is_same<boost::mpl::_1, TExpected>
-        //template<typename> class /*T*/Value = Value
+        typename TBind = boost::is_same<boost::mpl::_1, TExpected>,
+        template<typename> class TValue = Value
     >
     class Dependency
     {
@@ -65,6 +65,11 @@
         typedef TContext Context;
         typedef TBind Bind;
 
+        template<typename T> struct apply
+        {
+            typedef Dependency<TScope, T, T, TContext, TBind, TValue> type;
+        };
+
         struct Ctor
             : CtorImpl<BOOST_PP_CAT(Detail::has_, QDEPS_CTOR_UNIQUE_NAME)<Given>::value>::type
         { };
@@ -78,13 +83,13 @@
         };
 
         template<typename TPool>
-        struct ResultType<TPool, typename boost::enable_if< boost::mpl::and_< /*T*/Value<TGiven>, boost::mpl::not_<boost::mpl::contains<typename TPool::Seq, TExpected> > > >::type>
+        struct ResultType<TPool, typename boost::enable_if< boost::mpl::and_< TValue<TGiven>, boost::mpl::not_<boost::mpl::contains<typename TPool::Seq, TExpected> > > >::type>
         {
-            typedef typename /*T*/Value<TGiven>::template ResultType<TExpected>::type type;
+            typedef typename TValue<TGiven>::template ResultType<TExpected>::type type;
         };
 
         template<typename TPool>
-        struct ResultType<TPool, typename boost::disable_if< boost::mpl::or_< /*T*/Value<TGiven>, boost::mpl::contains<typename TPool::Seq, TExpected> > >::type>
+        struct ResultType<TPool, typename boost::disable_if< boost::mpl::or_< TValue<TGiven>, boost::mpl::contains<typename TPool::Seq, TExpected> > >::type>
         {
             typedef typename TScope::template ResultType<TExpected>::type type;
         };
@@ -101,16 +106,16 @@
         template<typename TPool> typename ResultType<TPool>::type create
         (
             TPool&,
-            typename boost::enable_if< boost::mpl::and_< Value<TGiven>, boost::mpl::not_< boost::mpl::contains<typename TPool::Seq, TExpected> > > >::type* = 0
+            typename boost::enable_if< boost::mpl::and_< TValue<TGiven>, boost::mpl::not_< boost::mpl::contains<typename TPool::Seq, TExpected> > > >::type* = 0
         )
         {
-            return /*T*/Value<TGiven>::template create<TExpected>();
+            return TValue<TGiven>::template create<TExpected>();
         }
 
         template<typename TPool> typename ResultType<TPool>::type create
         (
             TPool&,
-            typename boost::disable_if< boost::mpl::or_< /*T*/Value<TGiven>, boost::mpl::contains<typename TPool::Seq, TExpected> > >::type* = 0
+            typename boost::disable_if< boost::mpl::or_< TValue<TGiven>, boost::mpl::contains<typename TPool::Seq, TExpected> > >::type* = 0
         )
         {
             return m_scope.template create<TGiven>();
@@ -127,15 +132,15 @@
         typename TExpected,
         typename TGiven,
         typename TContext,
-        typename TBind
-        //template<typename> class [>T<]Value
+        typename TBind,
+        template<typename> class TValue
     >
-    class Dependency<boost::mpl::_1, TExpected, TGiven, TContext, TBind/*, [>T<]Value*/>
+    class Dependency<boost::mpl::_1, TExpected, TGiven, TContext, TBind, TValue>
     {
     public:
         template<typename Scope> struct Apply
         {
-            typedef Dependency<Scope, TExpected, TGiven, TContext, TBind/*, [>T<]Value*/> type;
+            typedef Dependency<Scope, TExpected, TGiven, TContext, TBind, TValue> type;
         };
     };
 
