@@ -39,6 +39,8 @@ class CircularDependencies
     { };
 
 public:
+    //TODO T and check it with struct in compile time
+
     template<typename TCallStack>
     static void execute(typename boost::enable_if<IsUniqueCallStack<TCallStack> >::type* = 0) { }
 
