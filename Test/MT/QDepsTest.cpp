@@ -104,6 +104,12 @@ BOOST_AUTO(fusionModule3, Front::Fusion::Module<>()(
     >()
 ));
 
+BOOST_AUTO(providerModule, Front::Fusion::Module<>()(
+    PerRequests <
+        TransactionProvider, int_<0>
+    >()
+));
+
 TEST_T(QDeps, OneModule,
     Injector<BaseModule1>,
     Injector<BOOST_TYPEOF(fusionModule1)>)
@@ -172,22 +178,34 @@ TEST_T(QDeps, MixModules,
     EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
 }
 
-TEST(QDeps, Provider)
+TEST_T(QDeps, Provider,
+    Injector<ProviderModule>,
+    Injector<BOOST_TYPEOF(providerModule)>)
 {
-    Injector<ProviderModule> injector;
-    TransactionUsage obj = injector.create<TransactionUsage>();
-
-    injector.create<TransactionUsage>();
-
-    EXPECT_EQ(0, obj.getId());
-    EXPECT_EQ(1, obj.getId());
-    EXPECT_EQ(2, obj.getId());
+    TransactionUsage obj = this->injector.template create<TransactionUsage>();
+    EXPECT_TRUE(obj.p->get().get() != obj.p->get().get());
 }
 
-TEST(QDeps, Visitor)
+TEST_T(QDeps, Visitor,
+    Injector<ProviderModule>,
+    Injector<BOOST_TYPEOF(providerModule)>)
 {
+    Visitor
+    <
+        vector
+        <
+            TransactionUsage,
+            shared_ptr< Provider< shared_ptr<Transaction> > >,
+            shared_ptr<C3>,
+            int
+        >
+    >
+    visitorVerifier;
+
+    this->injector.template visit<TransactionUsage>(visitorVerifier);
 }
 
+#if 0
 TEST(QDeps, CircularDependencies)
 {
     Injector<> injector;
@@ -196,9 +214,10 @@ TEST(QDeps, CircularDependencies)
 
 TEST(QDeps, CircularDependenciesNotDirect)
 {
-    Injector<> injector;
-    EXPECT_STATIC_ASSERT(injector.create<CD5>(), CIRCULAR_DEPENDENCIES_NOT_ALLOWED);
+    //Injector<> injector;
+    //EXPECT_STATIC_ASSERT(injector.create<CD5>(), CIRCULAR_DEPENDENCIES_NOT_ALLOWED);
 }
+#endif
 
 } // namespace MT
 } // namespace QDeps

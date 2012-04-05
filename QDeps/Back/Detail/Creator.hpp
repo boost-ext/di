@@ -33,9 +33,6 @@
     namespace Detail
     {
 
-    namespace Detail
-    {
-
     template
     <
         typename TDeps,
@@ -43,7 +40,7 @@
         template<typename, typename, typename = TDeps, typename = Aux::Dependency<Scopes::PerRequest, boost::mpl::_1> > class TBinder = Binder,
         template<typename> class TConverter = Converter
     >
-    class Creator
+    class CreatorImpl
     {
         template<typename TDependency, typename TEntries>
         static typename boost::enable_if<boost::is_base_of<TDependency, TEntries>, TDependency&>::type acquire(TEntries& p_entries)
@@ -66,28 +63,10 @@
             return execute<T, CallStack, ToBeCreated, TEntries>(p_entries, p_pool);
         }
 
-        template<typename T, typename TCallStack, typename TDependency, typename TEntries>
-        static typename TDependency::template ResultType<TPool>::type execute
-        (
-            TEntries&, TPool&,
-            typename boost::disable_if<Aux::IsUniqueCallStack<TCallStack> >::type* = 0
-        )
-        {
-            QDEPS_STATIC_ASSERT(
-                false,
-                CIRCULAR_DEPENDENCIES_NOT_ALLOWED,
-                (T, TCallStack)
-            );
-        }
-
         #include BOOST_PP_ITERATE()
     };
 
-    } // namespace Detail
-
-    template<typename TDeps, typename TPool>
-    struct Creator : Detail::Creator<TDeps, TPool>
-    { };
+    template<typename TDeps, typename TPool> struct Creator : CreatorImpl<TDeps, TPool> { };
 
     } // namespace Detail
     } // namespace Back
@@ -101,8 +80,7 @@
     static typename TDependency::template ResultType<TPool>::type execute
     (
         TEntries& p_entries, TPool& p_pool,
-        typename boost::enable_if_c<boost::mpl::size<typename TDependency::Ctor>::value == BOOST_PP_ITERATION()>::type* = 0,
-        typename boost::enable_if<Aux::IsUniqueCallStack<TCallStack> >::type* = 0
+        typename boost::enable_if_c<boost::mpl::size<typename TDependency::Ctor>::value == BOOST_PP_ITERATION()>::type* = 0
     )
     {
         #define QDEPS_CREATOR_IMPL_ARG(z, n, text) BOOST_PP_COMMA_IF(n)                                             \

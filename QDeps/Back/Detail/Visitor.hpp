@@ -31,15 +31,12 @@
     namespace Detail
     {
 
-    namespace Detail
-    {
-
     template
     <
         typename TDeps,
         template<typename, typename, typename = TDeps, typename = Aux::Dependency<Scopes::PerRequest, boost::mpl::_1> > class TBinder = Binder
     >
-    class Visitor
+    class VisitorImpl
     {
     public:
         template<typename T, typename TGiven, typename TCallStack, typename TVisitor>
@@ -50,24 +47,10 @@
             execute<T, TGiven, CallStack, ToBeCreated>(p_visitor);
         }
 
-        template<typename T, typename TGiven, typename TCallStack, typename TDependency, typename TVisitor>
-        static typename boost::disable_if<Aux::IsUniqueCallStack<TCallStack> >::type execute(const TVisitor&)
-        {
-            QDEPS_STATIC_ASSERT(
-                false,
-                CIRCULAR_DEPENDENCIES_NOT_ALLOWED,
-                (T, TCallStack)
-            );
-        }
-
         #include BOOST_PP_ITERATE()
     };
 
-    } // namespace Detail
-
-    template<typename TDeps>
-    struct Visitor : Detail::Visitor<TDeps>
-    { };
+    template<typename TDeps> struct Visitor : VisitorImpl<TDeps> { };
 
     } // namespace Detail
     } // namespace Back
@@ -81,8 +64,7 @@
     static void execute
     (
         const TVisitor& p_visitor,
-        typename boost::enable_if_c<boost::mpl::size<typename TDependency::Ctor>::value == BOOST_PP_ITERATION()>::type* = 0,
-        typename boost::enable_if<Aux::IsUniqueCallStack<TCallStack> >::type* = 0
+        typename boost::enable_if_c<boost::mpl::size<typename TDependency::Ctor>::value == BOOST_PP_ITERATION()>::type* = 0
     )
     {
         p_visitor.template operator()<TGiven, TCallStack, typename TDependency::Scope>();

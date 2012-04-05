@@ -13,12 +13,6 @@
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/size.hpp>
-#include <boost/mpl/transform.hpp>
-#include <boost/mpl/count.hpp>
-#include <boost/mpl/int.hpp>
-#include <boost/mpl/plus.hpp>
-#include <boost/mpl/accumulate.hpp>
-#include <boost/mpl/size.hpp>
 #include <boost/mpl/has_xxx.hpp>
 #include "QDeps/Config.hpp"
 
@@ -34,17 +28,6 @@ namespace Detail
 BOOST_MPL_HAS_XXX_TRAIT_DEF(QDEPS_CTOR_UNIQUE_NAME)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 } // namespace Detail
-
-template<typename TSeq> struct IsUniqueCallStack : boost::mpl::bool_
-    <
-        boost::mpl::size<TSeq>::value == boost::mpl::accumulate
-        <
-            typename boost::mpl::transform<TSeq, boost::mpl::count<TSeq, boost::mpl::_> >::type,
-            boost::mpl::int_<0>,
-            boost::mpl::plus< boost::mpl::_1, boost::mpl::_2>
-        >::type::value
-    >
-{ };
 
 template<typename T> struct GetBind
 {

@@ -92,7 +92,7 @@ App app = injector.create<App>();                               // and create Ap
 
 Features
 -----
-    * Injection via constructor 
+    * Injection via constructor
     * Configuration via front ends (base, fusion)
     * Expectations binding via interface/implementation
     * Expectations binding via is_base_of (smart binding)
