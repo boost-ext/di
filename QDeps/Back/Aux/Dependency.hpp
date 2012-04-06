@@ -48,15 +48,15 @@
     >
     class Dependency
     {
-        template<typename TPool> struct IsPool
+        template<typename TPool> struct IsPoolType
             : boost::mpl::contains<typename TPool::Seq, TExpected>
         { };
 
-        template<typename TPool> struct IsValue
+        template<typename TPool> struct IsValueType
             : boost::mpl::and_< TValue<TGiven>, boost::mpl::not_<boost::mpl::contains<typename TPool::Seq, TExpected> > >
         { };
 
-        template<typename TPool> struct IsScope
+        template<typename TPool> struct IsScopeType
             : boost::mpl::and_< boost::mpl::not_<TValue<TGiven> >, boost::mpl::not_<boost::mpl::contains<typename TPool::Seq, TExpected> > >
         { };
 
@@ -83,34 +83,34 @@
         template<typename, typename = void> struct ResultType;
 
         template<typename TPool>
-        struct ResultType<TPool, typename boost::enable_if< IsPool<TPool> >::type>
+        struct ResultType<TPool, typename boost::enable_if< IsPoolType<TPool> >::type>
             : TPool::template ResultType<TExpected>
         { };
 
         template<typename TPool>
-        struct ResultType<TPool, typename boost::enable_if< IsValue<TPool> >::type>
+        struct ResultType<TPool, typename boost::enable_if< IsValueType<TPool> >::type>
             : TValue<TGiven>::template ResultType<TExpected>
         { };
 
         template<typename TPool>
-        struct ResultType<TPool, typename boost::enable_if< IsScope<TPool> >::type>
+        struct ResultType<TPool, typename boost::enable_if< IsScopeType<TPool> >::type>
             : TScope::template ResultType<TExpected>
         { };
 
         template<typename TPool>
-        typename boost::enable_if<IsPool<TPool>, typename ResultType<TPool>::type>::type create(TPool& p_pool)
+        typename boost::enable_if<IsPoolType<TPool>, typename ResultType<TPool>::type>::type create(TPool& p_pool)
         {
             return p_pool.template get<TExpected>();
         }
 
         template<typename TPool>
-        typename boost::enable_if<IsValue<TPool>, typename ResultType<TPool>::type>::type create(TPool&)
+        typename boost::enable_if<IsValueType<TPool>, typename ResultType<TPool>::type>::type create(TPool&)
         {
             return TValue<TGiven>::template create<TExpected>();
         }
 
         template<typename TPool>
-        typename boost::enable_if<IsScope<TPool>, typename ResultType<TPool>::type>::type create(TPool&)
+        typename boost::enable_if<IsScopeType<TPool>, typename ResultType<TPool>::type>::type create(TPool&)
         {
             return m_scope.template create<TGiven>();
         }
@@ -148,9 +148,9 @@
     class Dependency<TScope, boost::mpl::_1, boost::mpl::_1, TContext, TBind, TValue>
     {
     public:
-        template<typename TExpected> struct Rebind
+        template<typename Expected> struct Rebind
         {
-            typedef Dependency<TScope, TExpected, TExpected, TContext, TBind, TValue> type;
+            typedef Dependency<TScope, Expected, Expected, TContext, TBind, TValue> type;
         };
     };
 
@@ -162,13 +162,13 @@
 
 #else
     template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    typename boost::enable_if<IsScope<TPool>, typename ResultType<TPool>::type>::type create(TPool&, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg))
+    typename boost::enable_if<IsScopeType<TPool>, typename ResultType<TPool>::type>::type create(TPool&, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg))
     {
         return m_scope.template create<TGiven>(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg));
     }
 
     template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    typename boost::enable_if<IsPool<TPool>, typename ResultType<TPool>::type>::type create(TPool& p_pool, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, & BOOST_PP_INTERCEPT))
+    typename boost::enable_if<IsPoolType<TPool>, typename ResultType<TPool>::type>::type create(TPool& p_pool, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, & BOOST_PP_INTERCEPT))
     {
         return p_pool.template get<TExpected>();
     }

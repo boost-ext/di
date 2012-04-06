@@ -10,6 +10,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/type_traits/is_base_of.hpp>
+#include "QDeps/Back/Aux/Utility.hpp"
 #include "QDeps/Config.hpp"
 
 namespace QDeps
@@ -67,7 +68,10 @@ namespace boost
 {
 
 template<typename TBase, typename TDerived, typename TName>
-struct is_base_of< TBase, QDeps::Utility::Named<TDerived, TName> > : is_base_of<TBase, TDerived>
+struct is_base_of<TBase, QDeps::Utility::Named<TDerived, TName> > : is_base_of
+    <
+        TBase, typename QDeps::Back::Aux::MakePlain<TDerived>::type
+    >
 { };
 
 } // namespace boost
