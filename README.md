@@ -104,7 +104,7 @@ Features
     * Modules
     * Visitors (graphviz dot generation)
     * Policies (Circular dependencies detection)
-    * Compile time approach
+    * Compile time approach (supports C++98, C++11)
 
 Requirements
 ------------

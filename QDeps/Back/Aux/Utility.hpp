@@ -14,6 +14,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/push_back.hpp>
+#include <boost/mpl/at.hpp>
 #include <boost/mpl/has_xxx.hpp>
 #include "QDeps/Config.hpp"
 
@@ -32,6 +33,10 @@ BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
 template<typename TDependency, int N, typename TResult = void> struct EnableIfCtorSize
     : boost::enable_if_c<boost::mpl::size<typename TDependency::Ctor>::value == N, TResult>
+{ };
+
+template<typename TDependency, int N> struct AtCtor
+    : boost::mpl::at_c<typename TDependency::Ctor, N>
 { };
 
 template<typename TCallStack, typename TDependency> struct UpdateCallStack

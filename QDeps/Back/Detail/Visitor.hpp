@@ -76,7 +76,7 @@
         p_visitor.template operator()< Dependency<T, TDependency> >();
 
         #define QDEPS_EXECUTE(z, n, text)\
-            execute<typename boost::mpl::at_c<typename TDependency::Ctor, n>::type, TCallStack>(p_visitor);
+            execute<typename Aux::AtCtor<TDependency, n>::type, TCallStack>(p_visitor);
 
         BOOST_PP_REPEAT(BOOST_PP_ITERATION(), QDEPS_EXECUTE, ~);
 
