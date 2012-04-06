@@ -35,7 +35,6 @@ template
 >
 class Factory
 {
-
     struct Entries
         : boost::mpl::inherit_linearly<TDeps, boost::mpl::inherit<boost::mpl::_1, boost::mpl::_2> >::type
     { };

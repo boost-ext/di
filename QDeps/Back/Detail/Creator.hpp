@@ -81,14 +81,14 @@
     static typename Aux::EnableIfCtorSize<TDependency, BOOST_PP_ITERATION(), typename TDependency::template ResultType<TPool>::type>::type
     executeImpl(TEntries& p_entries, TPool& p_pool)
     {
-        #define QDEPS_CREATOR_IMPL_ARG(z, n, _) BOOST_PP_COMMA_IF(n)                                \
-             TConverter<typename Aux::AtCtor<TDependency, n>::type>::execute(                       \
+        #define QDEPS_CREATOR_EXECUTE(z, n, _) BOOST_PP_COMMA_IF(n)                                \
+             TConverter<typename Aux::AtCtor<TDependency, n>::type>::execute(                      \
                 execute<typename Aux::AtCtor<TDependency, n>::type, TCallStack>(p_entries, p_pool))
 
         return acquire<TDependency>(p_entries).create(
-            p_pool BOOST_PP_COMMA_IF(BOOST_PP_ITERATION()) BOOST_PP_REPEAT(BOOST_PP_ITERATION(), QDEPS_CREATOR_IMPL_ARG, ~));
+            p_pool BOOST_PP_COMMA_IF(BOOST_PP_ITERATION()) BOOST_PP_REPEAT(BOOST_PP_ITERATION(), QDEPS_CREATOR_EXECUTE, ~));
 
-        #undef QDEPS_CREATOR_IMPL_ARG
+        #undef QDEPS_CREATOR_EXECUTE
     }
 
 #endif

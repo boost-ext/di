@@ -32,7 +32,7 @@ class Policy : Detail::Policy
 
     template<typename TDeps, typename T, typename TPolicy> struct AssertImpl
     {
-        typedef typename TPolicy::template Assert<TDeps, typename Aux::MakePlain<T>::type> type;
+        typedef typename TPolicy::template Assert<TDeps, typename Aux::MakePlain<T>::type>::type type;
     };
 
 public:
