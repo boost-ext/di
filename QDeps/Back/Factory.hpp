@@ -15,6 +15,7 @@
 #include "QDeps/Back/Policy.hpp"
 #include "QDeps/Back/Aux/Utility.hpp"
 #include "QDeps/Back/Aux/Dependency.hpp"
+#include "QDeps/Back/Scopes/PerRequest.hpp"
 #include "QDeps/Back/Detail/Converter.hpp"
 #include "QDeps/Back/Detail/Creator.hpp"
 #include "QDeps/Back/Detail/Visitor.hpp"
@@ -29,7 +30,7 @@ template
     typename TDeps,
     typename TPool = const QPool::Pool<>,
     typename TPolices = Policy<>,
-    template<typename> class TConverter = Detail::Converter,
+    template<typename, typename> class TConverter = Detail::Converter,
     template<typename = TDeps, typename = TPool> class TCreator = Detail::Creator,
     template<typename = TDeps> class TVisitor = Detail::Visitor
 >
@@ -48,7 +49,7 @@ public:
     {
         typedef boost::mpl::vector0<> EmptyCallStack;
         typedef typename TPolices::template Assert<TDeps, T>::type Polices;
-        return TConverter<T>::execute(TCreator<>::template execute<T, EmptyCallStack>(m_entries, m_pool));
+        return TConverter<Scopes::PerRequest, T>::execute(TCreator<>::template execute<T, EmptyCallStack>(m_entries, m_pool));
     }
 
     template<typename T, typename Visitor> void visit(const Visitor& p_visitor)

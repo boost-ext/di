@@ -9,7 +9,7 @@
 #include <gtest/gtest.h>
 #include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_base_of.hpp>
-#include "QDeps/Back/Policies/CircularDependencies.hpp"
+#include "QDeps/Back/Policies/CheckForCircularDependencies.hpp"
 #include "Test/Common/Data.hpp"
 
 namespace QDeps
@@ -24,13 +24,13 @@ namespace UT
 using namespace Test::Common;
 using namespace boost::mpl;
 
-TEST(CircularDependencies, NoCircularDependencies)
+TEST(CheckForCircularDependencies, NoCircularDependencies)
 {
     EXPECT_FALSE((
         boost::is_base_of
         <
             boost::mpl::false_,
-            CircularDependencies::Assert
+            CheckForCircularDependencies::Assert
             <
                 vector0<>,
                 C8
@@ -39,13 +39,13 @@ TEST(CircularDependencies, NoCircularDependencies)
     ));
 }
 
-TEST(CircularDependencies, Direct)
+TEST(CheckForCircularDependencies, Direct)
 {
     EXPECT_TRUE((
         boost::is_base_of
         <
             boost::mpl::false_,
-            CircularDependencies::Assert
+            CheckForCircularDependencies::Assert
             <
                 vector0<>,
                 CD1
@@ -54,13 +54,13 @@ TEST(CircularDependencies, Direct)
     ));
 }
 
-TEST(CircularDependencies, InDirect)
+TEST(CheckForCircularDependencies, InDirect)
 {
     EXPECT_TRUE((
         boost::is_base_of
         <
             boost::mpl::false_,
-            CircularDependencies::Assert
+            CheckForCircularDependencies::Assert
             <
                 vector0<>,
                 CD5
