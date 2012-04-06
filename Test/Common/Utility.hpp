@@ -57,6 +57,34 @@ public:
         verify<TSeq>(0);
     }
 
+    template<typename T, typename TCallStack, typename TScope> void operator()() const
+    {
+        visits.push_back(typeid(T).name());
+    }
+
+private:
+    template<typename Seq> void verify(int, typename boost::enable_if< boost::mpl::empty<Seq> >::type* = 0) { }
+    template<typename Seq> void verify(int i, typename boost::disable_if< boost::mpl::empty<Seq> >::type* = 0)
+    {
+        EXPECT_EQ(typeid(typename boost::mpl::front<Seq>::type).name(), visits.at(i));
+        verify<typename boost::mpl::pop_front<Seq>::type>(i + 1);
+    }
+
+    mutable Visits visits;
+};
+
+template<typename TSeq>
+class Visitor
+{
+    typedef std::vector<std::string> Visits;
+
+public:
+
+    ~Visitor()
+    {
+        verify<TSeq>(0);
+    }
+
     template<typename T> void operator()() const
     {
         visits.push_back(typeid(typename T::Type).name());
