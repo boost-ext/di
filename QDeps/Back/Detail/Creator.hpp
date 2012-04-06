@@ -42,6 +42,18 @@
     >
     class CreatorImpl
     {
+    public:
+        template<typename T, typename TCallStack, typename TEntries>
+        static typename TBinder<T, TCallStack>::type::template ResultType<TPool>::type execute(TEntries& p_entries, TPool& p_pool)
+        {
+            typedef typename TBinder<T, TCallStack>::type ToBeCreated;
+            typedef typename Aux::UpdateCallStack<TCallStack, ToBeCreated>::type CallStack;
+            return executeImpl<ToBeCreated, CallStack, TEntries>(p_entries, p_pool);
+        }
+
+    private:
+        #include BOOST_PP_ITERATE()
+
         template<typename TDependency, typename TEntries>
         static typename boost::enable_if<boost::is_base_of<TDependency, TEntries>, TDependency&>::type acquire(TEntries& p_entries)
         {
@@ -53,17 +65,6 @@
         {
             return TDependency();
         }
-
-    public:
-        template<typename T, typename TCallStack, typename TEntries>
-        static typename TBinder<T, TCallStack>::type::template ResultType<TPool>::type execute(TEntries& p_entries, TPool& p_pool)
-        {
-            typedef typename TBinder<T, TCallStack>::type ToBeCreated;
-            typedef typename boost::mpl::push_back<TCallStack, typename ToBeCreated::Given>::type CallStack;
-            return execute<T, CallStack, ToBeCreated, TEntries>(p_entries, p_pool);
-        }
-
-        #include BOOST_PP_ITERATE()
     };
 
     template<typename TDeps, typename TPool> struct Creator : CreatorImpl<TDeps, TPool> { };
@@ -76,12 +77,9 @@
 
 #else
 
-    template<typename T, typename TCallStack, typename TDependency, typename TEntries>
-    static typename TDependency::template ResultType<TPool>::type execute
-    (
-        TEntries& p_entries, TPool& p_pool,
-        typename boost::enable_if_c<boost::mpl::size<typename TDependency::Ctor>::value == BOOST_PP_ITERATION()>::type* = 0
-    )
+    template<typename TDependency, typename TCallStack, typename TEntries>
+    static typename Aux::EnableIfCtorSize<TDependency, BOOST_PP_ITERATION(), typename TDependency::template ResultType<TPool>::type>::type
+    executeImpl(TEntries& p_entries, TPool& p_pool)
     {
         #define QDEPS_CREATOR_IMPL_ARG(z, n, text) BOOST_PP_COMMA_IF(n)                                             \
              TConverter<typename boost::mpl::at_c<typename TDependency::Ctor, n>::type>::execute(                   \

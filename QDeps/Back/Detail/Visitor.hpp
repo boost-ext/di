@@ -39,14 +39,15 @@
     class VisitorImpl
     {
     public:
-        template<typename T, typename TGiven, typename TCallStack, typename TVisitor>
+        template<typename T, typename TCallStack, typename TVisitor>
         static void execute(const TVisitor& p_visitor)
         {
             typedef typename TBinder<T, TCallStack>::type ToBeCreated;
-            typedef typename boost::mpl::push_back<TCallStack, typename ToBeCreated::Given>::type CallStack;
-            execute<T, TGiven, CallStack, ToBeCreated>(p_visitor);
+            typedef typename Aux::UpdateCallStack<TCallStack, ToBeCreated>::type CallStack;
+            executeImpl<ToBeCreated, CallStack>(p_visitor);
         }
 
+    private:
         #include BOOST_PP_ITERATE()
     };
 
@@ -60,19 +61,14 @@
 
 #else
 
-    template<typename T, typename TGiven, typename TCallStack, typename TDependency, typename TVisitor>
-    static void execute
-    (
-        const TVisitor& p_visitor,
-        typename boost::enable_if_c<boost::mpl::size<typename TDependency::Ctor>::value == BOOST_PP_ITERATION()>::type* = 0
-    )
+    template<typename TDependency, typename TCallStack, typename TVisitor>
+    static typename Aux::EnableIfCtorSize<TDependency, BOOST_PP_ITERATION()>::type executeImpl(const TVisitor& p_visitor)
     {
-        p_visitor.template operator()<TGiven, TCallStack, typename TDependency::Scope>();
+        p_visitor.template operator()<TDependency, TCallStack>();
 
         #define QDEPS_EXECUTE(z, n, text)                                                                       \
             execute                                                                                             \
             <                                                                                                   \
-                typename Aux::MakePlain<typename boost::mpl::at_c<typename TDependency::Ctor, n>::type>::type,  \
                 typename boost::mpl::at_c<typename TDependency::Ctor, n>::type, TCallStack                      \
             >                                                                                                   \
             (p_visitor);

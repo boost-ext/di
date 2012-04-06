@@ -186,6 +186,7 @@ TEST_T(QDeps, Provider,
     EXPECT_TRUE(obj.p->get().get() != obj.p->get().get());
 }
 
+#if 0
 TEST_T(QDeps, Visitor,
     Injector<ProviderModule>,
     Injector<BOOST_TYPEOF(providerModule)>)
@@ -203,19 +204,6 @@ TEST_T(QDeps, Visitor,
     visitorVerifier;
 
     this->injector.template visit<TransactionUsage>(visitorVerifier);
-}
-
-#if 0
-TEST(QDeps, CircularDependencies)
-{
-    Injector<> injector;
-    EXPECT_STATIC_ASSERT(injector.create<CD1>(), CIRCULAR_DEPENDENCIES_NOT_ALLOWED);
-}
-
-TEST(QDeps, CircularDependenciesNotDirect)
-{
-    //Injector<> injector;
-    //EXPECT_STATIC_ASSERT(injector.create<CD5>(), CIRCULAR_DEPENDENCIES_NOT_ALLOWED);
 }
 #endif
 

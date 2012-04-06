@@ -39,20 +39,14 @@ class CircularDependencies
     { };
 
 public:
-    //TODO T and check it with struct in compile time
-
-    template<typename TCallStack>
-    static void execute(typename boost::enable_if<IsUniqueCallStack<TCallStack> >::type* = 0) { }
-
-    template<typename TCallStack>
-    static void execute(typename boost::disable_if<IsUniqueCallStack<TCallStack> >::type* = 0)
+    template<typename TDeps, typename T> struct Assert
     {
-        QDEPS_STATIC_ASSERT(
-            false,
-            CIRCULAR_DEPENDENCIES_NOT_ALLOWED,
-            (TCallStack)
-        );
-    }
+        //QDEPS_STATIC_ASSERT(
+            //false,
+            //CIRCULAR_DEPENDENCIES_NOT_ALLOWED,
+            //(TCallStack)
+        //);
+    };
 };
 
 } // namespace Policies

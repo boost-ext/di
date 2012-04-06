@@ -16,9 +16,6 @@
 #include <boost/mpl/pop_front.hpp>
 #include <boost/mpl/front.hpp>
 
-#define QDEPS_STATIC_ASSERT(cond, expr, types)              \
-    throw ::QDeps::Test::Common::StaticAssert(cond, #expr)
-
 #define EXPECT_STATIC_ASSERT(code, msg)                     \
     try                                                     \
     {                                                       \
@@ -60,7 +57,7 @@ public:
         verify<TSeq>(0);
     }
 
-    template<typename T, typename TCallStack, typename TScope> void operator()() const
+    template<typename T, typename TCallStack> void operator()() const
     {
         visits.push_back(typeid(T).name());
     }
@@ -74,16 +71,6 @@ private:
     }
 
     mutable Visits visits;
-};
-
-struct StaticAssert
-{
-    StaticAssert(bool cond, const std::string& expr)
-        : cond(cond), expr(expr)
-    { }
-
-    bool cond;
-    std::string expr;
 };
 
 } // namespace Common
