@@ -11,7 +11,6 @@
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
-    #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/push_back.hpp>
@@ -75,12 +74,12 @@
     {
         p_visitor.template operator()< Dependency<T, TDependency> >();
 
-        #define QDEPS_EXECUTE(z, n, _)\
+        #define QDEPS_VISITOR_EXECUTE(z, n, _)\
             execute<typename Aux::AtCtor<TDependency, n>::type, TCallStack>(p_visitor);
 
-        BOOST_PP_REPEAT(BOOST_PP_ITERATION(), QDEPS_EXECUTE, ~);
+        BOOST_PP_REPEAT(BOOST_PP_ITERATION(), QDEPS_VISITOR_EXECUTE, ~);
 
-        #undef QDEPS_EXECUTE
+        #undef QDEPS_VISITOR_EXECUTE
     }
 
 #endif
