@@ -465,26 +465,6 @@ TEST(Binder, ComplexType)
     ));
 }
 
-TEST(Binder, ComplexType)
-{
-    EXPECT_TRUE((
-        is_same
-        <
-            Dependency<int>,
-            Binder
-            <
-                shared_ptr<int>,
-                vector0<>,
-                vector
-                <
-                    Dependency<int>
-                >,
-                Dependency<void, _1>
-            >::type
-        >::value
-    ));
-}
-
 } // namespace UT
 } // namespace Detail
 } // namespace Back
