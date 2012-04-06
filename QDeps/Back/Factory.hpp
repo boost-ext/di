@@ -35,7 +35,6 @@ template
 >
 class Factory
 {
-    typedef typename TPolices::template Assert<TDeps>::type Polices;
 
     struct Entries
         : boost::mpl::inherit_linearly<TDeps, boost::mpl::inherit<boost::mpl::_1, boost::mpl::_2> >::type
@@ -49,15 +48,15 @@ public:
     template<typename T> T create()
     {
         typedef boost::mpl::vector0<> EmptyCallStack;
-        typedef typename Aux::MakePlain<T>::type PlainType;
-        return TConverter<T>::execute(TCreator<>::template execute<PlainType, EmptyCallStack>(m_entries, m_pool));
+        typedef typename TPolices::template Assert<TDeps, T>::type Polices;
+        return TConverter<T>::execute(TCreator<>::template execute<T, EmptyCallStack>(m_entries, m_pool));
     }
 
     template<typename T, typename Visitor> void visit(const Visitor& p_visitor)
     {
         typedef boost::mpl::vector0<> EmptyCallStack;
-        typedef typename Aux::MakePlain<T>::type PlainType;
-        TVisitor<>::template execute<PlainType, T, EmptyCallStack>(p_visitor);
+        typedef typename TPolices::template Assert<TDeps, T>::type Polices;
+        TVisitor<>::template execute<T, EmptyCallStack>(p_visitor);
     }
 
 private:

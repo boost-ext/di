@@ -13,6 +13,8 @@
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/size.hpp>
+#include <boost/mpl/push_back.hpp>
+#include <boost/mpl/at.hpp>
 #include <boost/mpl/has_xxx.hpp>
 #include "QDeps/Config.hpp"
 
@@ -28,6 +30,18 @@ namespace Detail
 BOOST_MPL_HAS_XXX_TRAIT_DEF(QDEPS_CTOR_UNIQUE_NAME)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 } // namespace Detail
+
+template<typename TDependency, int N, typename TResult = void> struct EnableIfCtorSize
+    : boost::enable_if_c<boost::mpl::size<typename TDependency::Ctor>::value == N, TResult>
+{ };
+
+template<typename TDependency, int N> struct AtCtor
+    : boost::mpl::at_c<typename TDependency::Ctor, N>
+{ };
+
+template<typename TCallStack, typename TDependency> struct UpdateCallStack
+    : boost::mpl::push_back<TCallStack, typename TDependency::Given>
+{ };
 
 template<typename T> struct GetBind
 {

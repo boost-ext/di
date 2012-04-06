@@ -103,8 +103,8 @@ Features
     * Scopes (PerRequest, Singleton, Custom Scopes)
     * Modules
     * Visitors (graphviz dot generation)
-    * Circular dependencies detection
-    * Diagnostic policies
+    * Policies (Circular dependencies detection)
+    * Compile time approach (supports C++98, C++11)
 
 Requirements
 ------------

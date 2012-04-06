@@ -83,7 +83,7 @@ struct Binder : boost::mpl::deref
                         <
                             boost::mpl::and_
                             <
-                                Detail::Comparator<T, Aux::GetBind<boost::mpl::_2> >,
+                                Detail::Comparator<typename Aux::MakePlain<T>::type, Aux::GetBind<boost::mpl::_2> >,
                                 Detail::EqualCallStack<TCallStack, Aux::GetContext<boost::mpl::_2> >
                             >,
                             boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>,
@@ -92,7 +92,7 @@ struct Binder : boost::mpl::deref
                     >::type,
                     Detail::LessContextSize<boost::mpl::_1, boost::mpl::_2>
                 >::type,
-                typename boost::mpl::apply<TDefault, T>::type
+                typename boost::mpl::apply<TDefault, typename Aux::MakePlain<T>::type>::type
             >::type
         >
     >::type
