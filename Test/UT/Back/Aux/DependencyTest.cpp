@@ -53,7 +53,7 @@ TEST(Dependency, Default)
     EXPECT_TRUE((is_same<is_same<_1, int>, Dep::Bind>::value));
 }
 
-TEST(Dependency, Apply)
+TEST(Dependency, RebindScope)
 {
     EXPECT_TRUE((
         is_same
@@ -75,7 +75,34 @@ TEST(Dependency, Apply)
                 vector0<>,
                 is_same<_1, int>,
                 FakeValue
-            >::Apply<OtherFakeScope>::type
+            >::Rebind<OtherFakeScope>::type
+        >::value
+    ));
+}
+
+TEST(Dependency, RebindType)
+{
+    EXPECT_TRUE((
+        is_same
+        <
+            Dependency
+            <
+                void,
+                double,
+                double,
+                vector0<>,
+                is_same<_1, int>,
+                FakeValue
+            >,
+            Dependency
+            <
+                void,
+                _1,
+                _1,
+                vector0<>,
+                is_same<_1, int>,
+                FakeValue
+            >::Rebind<double>::type
         >::value
     ));
 }

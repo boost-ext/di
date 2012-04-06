@@ -92,7 +92,7 @@ struct Binder : boost::mpl::deref
                     >::type,
                     Detail::LessContextSize<boost::mpl::_1, boost::mpl::_2>
                 >::type,
-                typename boost::mpl::apply<TDefault, typename Aux::MakePlain<T>::type>::type
+                typename Aux::Rebind<TDefault, typename Aux::MakePlain<T>::type>::type
             >::type
         >
     >::type

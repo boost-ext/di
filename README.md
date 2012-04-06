@@ -142,11 +142,11 @@ C++ Dependency Injection Frameworks
 * https://github.com/QSrc/QDeps
 * https://github.com/phs/sauce
 * https://bitbucket.org/cheez/dicpp
-* http://code.google.com/p/spring-cpp/
-* http://code.google.com/p/autumnframework/
-* http://code.google.com/p/ffead-cpp/wiki/DependencyInjection
-* http://sourceforge.net/projects/qtioccontainer/
-* http://sourceforge.net/projects/cpp-resolver/
+* http://code.google.com/p/spring-cpp
+* http://code.google.com/p/autumnframework
+* http://code.google.com/p/ffead-cpp
+* http://sourceforge.net/projects/qtioccontainer
+* http://sourceforge.net/projects/cpp-resolver
 
 Author
 ------
