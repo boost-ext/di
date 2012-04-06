@@ -38,13 +38,22 @@
     >
     class VisitorImpl
     {
+        template<typename T, typename TDependency>
+        struct Dependency
+        {
+            typedef T Type;
+            typedef typename TDependency::Given Given;
+            typedef typename TDependency::Expected Expected;
+            typedef typename TDependency::Context Context;
+        };
+
     public:
         template<typename T, typename TCallStack, typename TVisitor>
         static void execute(const TVisitor& p_visitor)
         {
             typedef typename TBinder<T, TCallStack>::type ToBeCreated;
             typedef typename Aux::UpdateCallStack<TCallStack, ToBeCreated>::type CallStack;
-            executeImpl<ToBeCreated, CallStack>(p_visitor);
+            executeImpl<T, ToBeCreated, CallStack>(p_visitor);
         }
 
     private:
@@ -61,17 +70,13 @@
 
 #else
 
-    template<typename TDependency, typename TCallStack, typename TVisitor>
+    template<typename T, typename TDependency, typename TCallStack, typename TVisitor>
     static typename Aux::EnableIfCtorSize<TDependency, BOOST_PP_ITERATION()>::type executeImpl(const TVisitor& p_visitor)
     {
-        p_visitor.template operator()<TDependency, TCallStack>();
+        p_visitor.template operator()< Dependency<T, TDependency> >();
 
-        #define QDEPS_EXECUTE(z, n, text)                                                                       \
-            execute                                                                                             \
-            <                                                                                                   \
-                typename boost::mpl::at_c<typename TDependency::Ctor, n>::type, TCallStack                      \
-            >                                                                                                   \
-            (p_visitor);
+        #define QDEPS_EXECUTE(z, n, text)\
+            execute<typename boost::mpl::at_c<typename TDependency::Ctor, n>::type, TCallStack>(p_visitor);
 
         BOOST_PP_REPEAT(BOOST_PP_ITERATION(), QDEPS_EXECUTE, ~);
 

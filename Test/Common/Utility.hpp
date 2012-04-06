@@ -57,9 +57,9 @@ public:
         verify<TSeq>(0);
     }
 
-    template<typename T, typename TCallStack> void operator()() const
+    template<typename T> void operator()() const
     {
-        visits.push_back(typeid(T).name());
+        visits.push_back(typeid(typename T::Type).name());
     }
 
 private:

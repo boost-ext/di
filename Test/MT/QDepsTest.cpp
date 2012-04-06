@@ -186,7 +186,6 @@ TEST_T(QDeps, Provider,
     EXPECT_TRUE(obj.p->get().get() != obj.p->get().get());
 }
 
-#if 0
 TEST_T(QDeps, Visitor,
     Injector<ProviderModule>,
     Injector<BOOST_TYPEOF(providerModule)>)
@@ -205,7 +204,6 @@ TEST_T(QDeps, Visitor,
 
     this->injector.template visit<TransactionUsage>(visitorVerifier);
 }
-#endif
 
 } // namespace MT
 } // namespace QDeps
