@@ -99,9 +99,9 @@ struct MakeShared<T, typename boost::enable_if< Detail::has_element_type<typenam
     typedef typename MakePlain<T>::type type;
 };
 
-template<typename T, typename TApplied> struct Apply
+template<typename TRebind, typename T> struct Rebind
 {
-    typedef typename T::template Apply<TApplied>::type type;
+    typedef typename TRebind::template Rebind<T>::type type;
 };
 
 } // namespace Aux
