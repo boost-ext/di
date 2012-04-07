@@ -21,7 +21,7 @@ namespace UT
 {
 
 using namespace boost;
-using namespace mpl;
+using namespace boost::mpl;
 
 template<typename T> struct FakeValue { };
 

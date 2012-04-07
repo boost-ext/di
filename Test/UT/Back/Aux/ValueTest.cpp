@@ -19,7 +19,7 @@ namespace UT
 {
 
 using namespace boost;
-using namespace mpl;
+using namespace boost::mpl;
 
 TEST(Value, Generic)
 {

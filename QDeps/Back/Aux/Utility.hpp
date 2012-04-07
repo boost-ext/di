@@ -15,8 +15,8 @@
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/at.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/mpl/has_xxx.hpp>
-#include "QDeps/Utility/Named.hpp"
 #include "QDeps/Config.hpp"
 
 namespace QDeps
@@ -71,7 +71,7 @@ template<typename T> struct GetExternals
 
 template<typename T> struct RemoveAccessors
 {
-    typedef typename boost::remove_pointer<typename boost::remove_cv<typename boost::remove_reference<T>::type>::type>::type type;
+    typedef typename boost::remove_cv<typename boost::remove_pointer<typename boost::remove_reference<T>::type>::type>::type type;
 };
 
 template<typename T, typename Enable = void> struct RemoveSmartPtr
@@ -84,17 +84,13 @@ template<typename T> struct RemoveSmartPtr<T, typename boost::enable_if< Detail:
     typedef typename T::element_type type;
 };
 
-template<typename T, typename TName> struct RemoveSmartPtr< Utility::Named<T, TName>, typename boost::enable_if< Detail::has_element_type<T> >::type>
-{
-    //TODO
-    typedef Utility::Named<typename T::element_type, TName> type;
-};
-
-template<typename T> struct MakePlain
-{
-    //TODO recursive
-    typedef typename RemoveAccessors<typename RemoveSmartPtr<typename RemoveAccessors<T>::type>::type>::type type;
-};
+template<typename T> struct MakePlain : boost::mpl::if_
+    <
+        Detail::has_element_type<typename RemoveAccessors<T>::type>,
+        MakePlain<typename RemoveSmartPtr<typename RemoveAccessors<T>::type>::type>,
+        RemoveAccessors<T>
+    >::type
+{ };
 
 template<typename TRebind, typename T> struct Rebind
 {

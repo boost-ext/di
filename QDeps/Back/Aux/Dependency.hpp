@@ -26,6 +26,7 @@
     #include <boost/mpl/placeholders.hpp>
     #include "QDeps/Back/Aux/Utility.hpp"
     #include "QDeps/Back/Aux/Value.hpp"
+    #include "QDeps/Utility/Named.hpp"
     #include "QDeps/Config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, QDEPS_FUNCTION_ARITY_LIMIT_SIZE, "QDeps/Back/Aux/Dependency.hpp"))

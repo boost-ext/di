@@ -24,6 +24,8 @@ template<typename T, typename TName>
 class Named
 {
 public:
+    typedef T element_type;
+
     Named(T p_value = T()) // non explicit
         : m_value(p_value)
     { }
@@ -38,7 +40,8 @@ template<typename T, typename TName>
 class Named< boost::shared_ptr<T>, TName>
 {
 public:
-    //element_type
+    typedef boost::shared_ptr<T> element_type;
+
     Named(boost::shared_ptr<T> p_value = boost::make_shared<T>()) // non explicit
         : m_value(p_value)
     { }
@@ -61,6 +64,8 @@ template<typename T, typename TName>
 class Named< const boost::shared_ptr<T>&, TName> : Named< boost::shared_ptr<T>, TName>
 {
 public:
+    typedef const boost::shared_ptr<T>& element_type;
+
     Named(const boost::shared_ptr<T>& p_value) // non explicit
         : Named< boost::shared_ptr<T>, TName>(p_value)
     { }
