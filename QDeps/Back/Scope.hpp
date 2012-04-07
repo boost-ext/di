@@ -8,7 +8,6 @@
 #define QDEPS_BACK_SCOPE_HPP
 
 #include <boost/mpl/apply.hpp>
-#include "QDeps/Utility/Named.hpp"
 
 namespace QDeps
 {
@@ -23,12 +22,6 @@ public:
     {
         typedef typename boost::mpl::apply<TAllocator, T>::type type;
     };
-
-    //TODO has_element_type
-    //template<typename T, typename TName> struct ResultType<Utility::Named<T, TName> >
-    //{
-        //typedef typename boost::mpl::apply<TAllocator, T>::type type;
-    //};
 };
 
 } // namespace Back

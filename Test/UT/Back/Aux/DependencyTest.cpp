@@ -89,7 +89,7 @@ TEST(Dependency, RebindType)
             <
                 void,
                 double,
-                double,
+                int,
                 vector0<>,
                 is_same<_1, int>,
                 FakeValue
@@ -98,11 +98,11 @@ TEST(Dependency, RebindType)
             <
                 void,
                 _1,
-                _1,
+                _2,
                 vector0<>,
                 is_same<_1, int>,
                 FakeValue
-            >::Rebind<double>::type
+            >::Rebind<double, int>::type
         >::value
     ));
 }

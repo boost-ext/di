@@ -7,6 +7,7 @@
 #ifndef QDEPS_BACK_DETAIL_BINDER_HPP
 #define QDEPS_BACK_DETAIL_BINDER_HPP
 
+#include <boost/utility/enable_if.hpp>
 #include <boost/mpl/iterator_range.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/advance.hpp>
@@ -58,6 +59,16 @@ template<typename T, typename TBind>
 struct Comparator : boost::mpl::apply<TBind, T>::type
 { };
 
+template<typename T, typename TDefault, typename = void>
+struct MakeDefaultDependency
+    : Aux::Rebind<TDefault, typename Aux::MakePlain<T>::type, typename Aux::MakePlain<T>::type>
+{ };
+
+template<typename T, typename TDefault>
+struct MakeDefaultDependency<T, TDefault, typename boost::enable_if<Aux::Detail::has_element_type<T> >::type>
+    : Aux::Rebind<TDefault, typename Aux::MakePlain<T>::type, typename Aux::MakePlain<typename T::value_type>::type>
+{ };
+
 } // namespace Detail
 
 template
@@ -92,7 +103,7 @@ struct Binder : boost::mpl::deref
                     >::type,
                     Detail::LessContextSize<boost::mpl::_1, boost::mpl::_2>
                 >::type,
-                typename Aux::Rebind<TDefault, typename Aux::MakePlain<T>::type>::type
+                typename Detail::MakeDefaultDependency<T, TDefault>::type
             >::type
         >
     >::type

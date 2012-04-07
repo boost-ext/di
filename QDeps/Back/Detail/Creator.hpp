@@ -37,7 +37,7 @@
     <
         typename TDeps,
         typename TPool,
-        template<typename, typename, typename = TDeps, typename = Aux::Dependency<Scopes::PerRequest, boost::mpl::_1> > class TBinder = Binder,
+        template<typename, typename, typename = TDeps, typename = Aux::Dependency<Scopes::PerRequest, boost::mpl::_1, boost::mpl::_2> > class TBinder = Binder,
         template<typename, typename> class TConverter = Converter
     >
     class CreatorImpl

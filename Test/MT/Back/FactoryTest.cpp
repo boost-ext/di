@@ -163,8 +163,8 @@ TEST(Factory, CreateWithAttributes)
     <
         vector
         <
-            Dependency<PerRequest, Named<int, string<'1'> > >,
-            Dependency<PerRequest, Named<int, string<'2'> > >
+            Dependency<PerRequest, Named<int, string<'1'> >, int>,
+            Dependency<PerRequest, Named<int, string<'2'> >, int>
         >,
         Pool
     >

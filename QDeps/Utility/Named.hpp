@@ -10,6 +10,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/type_traits/is_base_of.hpp>
+#include "QDeps/Back/Aux/Utility.hpp"
 #include "QDeps/Config.hpp"
 
 namespace QDeps
@@ -24,7 +25,8 @@ template<typename T, typename TName>
 class Named
 {
 public:
-    typedef T element_type;
+    typedef Named<typename Back::Aux::MakePlain<T>::type, TName> element_type;
+    typedef typename Back::Aux::MakePlain<T>::type value_type;
 
     Named(T p_value = T()) // non explicit
         : m_value(p_value)
@@ -40,7 +42,8 @@ template<typename T, typename TName>
 class Named< boost::shared_ptr<T>, TName>
 {
 public:
-    typedef boost::shared_ptr<T> element_type;
+    typedef Named<typename Back::Aux::MakePlain<T>::type, TName> element_type;
+    typedef typename Back::Aux::MakePlain<T>::type value_type;
 
     Named(boost::shared_ptr<T> p_value = boost::make_shared<T>()) // non explicit
         : m_value(p_value)
@@ -61,10 +64,11 @@ private:
 };
 
 template<typename T, typename TName>
-class Named< const boost::shared_ptr<T>&, TName> : Named< boost::shared_ptr<T>, TName>
+class Named< const boost::shared_ptr<T>&, TName>// : Named< boost::shared_ptr<T>, TName>
 {
 public:
-    typedef const boost::shared_ptr<T>& element_type;
+    typedef Named<typename Back::Aux::MakePlain<T>::type, TName> element_type;
+    typedef typename Back::Aux::MakePlain<T>::type value_type;
 
     Named(const boost::shared_ptr<T>& p_value) // non explicit
         : Named< boost::shared_ptr<T>, TName>(p_value)
@@ -74,6 +78,7 @@ public:
 } // namespace Utility
 } // namespace QDeps
 
+#if 0
 namespace boost
 {
 
@@ -82,6 +87,7 @@ struct is_base_of<TBase, QDeps::Utility::Named<TDerived, TName> > : is_base_of<T
 { };
 
 } // namespace boost
+#endif
 
 #endif
 

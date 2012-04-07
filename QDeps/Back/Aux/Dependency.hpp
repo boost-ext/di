@@ -26,7 +26,6 @@
     #include <boost/mpl/placeholders.hpp>
     #include "QDeps/Back/Aux/Utility.hpp"
     #include "QDeps/Back/Aux/Value.hpp"
-    #include "QDeps/Utility/Named.hpp"
     #include "QDeps/Config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, QDEPS_FUNCTION_ARITY_LIMIT_SIZE, "QDeps/Back/Aux/Dependency.hpp"))
@@ -49,21 +48,11 @@
     >
     class Dependency
     {
-
-        //TODO
-        template<typename T>
-        struct Namedd
-        {
-            typedef T type;
-        };
-
-        template<typename T, typename TN>
-        struct Namedd<Utility::Named<T, TN> >
-        {
-            typedef T type;
-        };
-        typedef typename Namedd<TExpected>::type ElementType;
-
+       QDEPS_STATIC_ASSERT(
+            !Aux::Detail::has_element_type<TGiven>::value,
+            GIVEN_TYPE_WITH_ELEMENT_TYPE,
+            (TGiven)
+        );
 
         template<typename TPool> struct IsPoolType
             : boost::mpl::contains<typename TPool::Seq, TExpected>
@@ -93,7 +82,6 @@
         typedef TContext Context;
         typedef TBind Bind;
 
-        //instead of given given::element_type
         struct Ctor
             : CtorImpl<BOOST_PP_CAT(Detail::has_, QDEPS_CTOR_UNIQUE_NAME)<Given>::value>::type
         { };
@@ -112,28 +100,24 @@
 
         template<typename TPool>
         struct ResultType<TPool, typename boost::enable_if< IsScopeType<TPool> >::type>
-            : TScope::template ResultType<TExpected>
+            : TScope::template ResultType<TGiven>
         { };
 
         template<typename TPool>
         typename boost::enable_if<IsPoolType<TPool>, typename ResultType<TPool>::type>::type create(TPool& p_pool)
         {
-            std::cout << "DUPA0" << std::endl;
             return p_pool.template get<TExpected>();
         }
 
         template<typename TPool>
         typename boost::enable_if<IsValueType<TPool>, typename ResultType<TPool>::type>::type create(TPool&)
         {
-            std::cout << "DUPA1" << std::endl;
             return TValue<TGiven>::create();
         }
 
         template<typename TPool>
         typename boost::enable_if<IsScopeType<TPool>, typename ResultType<TPool>::type>::type create(TPool&)
         {
-            std::cout << "DUPA2" << std::endl;
-            //if has_element_type make_plain
             return m_scope.template create<TGiven>();
         }
 
@@ -167,12 +151,12 @@
         typename TBind,
         template<typename> class TValue
     >
-    class Dependency<TScope, boost::mpl::_1, boost::mpl::_1, TContext, TBind, TValue>
+    class Dependency<TScope, boost::mpl::_1, boost::mpl::_2, TContext, TBind, TValue>
     {
     public:
-        template<typename Expected> struct Rebind
+        template<typename Expected, typename Given> struct Rebind
         {
-            typedef Dependency<TScope, Expected, Expected, TContext, TBind, TValue> type;
+            typedef Dependency<TScope, Expected, Given, TContext, TBind, TValue> type;
         };
     };
 
@@ -186,7 +170,7 @@
     template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
     typename boost::enable_if<IsScopeType<TPool>, typename ResultType<TPool>::type>::type create(TPool&, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg))
     {
-        return m_scope.template create<ElementType>(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg));
+        return m_scope.template create<TGiven>(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg));
     }
 
     template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>

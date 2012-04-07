@@ -39,7 +39,7 @@
     class CheckForCircularDependencies
     {
     public:
-        template<typename TDeps, typename TGiven, template<typename, typename, typename = TDeps, typename = Aux::Dependency<Scopes::PerRequest, boost::mpl::_1> > class TBinder = Detail::Binder>
+        template<typename TDeps, typename TGiven, template<typename, typename, typename = TDeps, typename = Aux::Dependency<Scopes::PerRequest, boost::mpl::_1, boost::mpl::_2> > class TBinder = Detail::Binder>
         class Assert
         {
             template<typename TCallStack>
