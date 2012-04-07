@@ -166,22 +166,21 @@ struct C10
 
 struct C11
 {
-    QDEPS_CTOR(C11, Named<const If0&, mpl::string<'1'> > if0, Named< shared_ptr<int>, mpl::string<'2'> > i)
-        : if0(if0), i(i)
+    QDEPS_CTOR(C11, Named< shared_ptr<int>, mpl::string<'1'> > i)
+        : i(i)
     { }
 
-    const If0& if0;
     shared_ptr<int> i;
 };
 
 struct C12
 {
-    QDEPS_CTOR(C12, Named< shared_ptr<If0>, _1> if01, Named< shared_ptr<If0>, _1> if02)
-        : if01(if01), if02(if02)
+    QDEPS_CTOR(C12, Named< shared_ptr<If0>, _1> if0, Named< shared_ptr<C2>, _2> c2)
+        : if0(if0), c2(c2)
     { }
 
-    shared_ptr<If0> if01;
-    shared_ptr<If0> if02;
+    shared_ptr<If0> if0;
+    shared_ptr<C2> c2;
 };
 
 struct CD2;

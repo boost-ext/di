@@ -43,7 +43,7 @@ class Injector
     struct Polices : boost::mpl::joint_view
         <
             boost::mpl::filter_view<Seq, boost::is_base_of<Back::Detail::Policy, boost::mpl::_> >,
-            boost::mpl::vector1< Back::Policy<> >
+            boost::mpl::vector1<typename Defaults<Back::Detail::Policy, Specialized>::type>
         >::type
     { };
 

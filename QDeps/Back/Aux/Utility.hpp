@@ -16,6 +16,7 @@
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/has_xxx.hpp>
+#include "QDeps/Utility/Named.hpp"
 #include "QDeps/Config.hpp"
 
 namespace QDeps
@@ -73,30 +74,26 @@ template<typename T> struct RemoveAccessors
     typedef typename boost::remove_pointer<typename boost::remove_cv<typename boost::remove_reference<T>::type>::type>::type type;
 };
 
-template<typename T, typename Enable = void> struct DerefShared
+template<typename T, typename Enable = void> struct RemoveSmartPtr
 {
     typedef T type;
 };
 
-template<typename T> struct DerefShared<T, typename boost::enable_if< Detail::has_element_type<T> >::type>
+template<typename T> struct RemoveSmartPtr<T, typename boost::enable_if< Detail::has_element_type<T> >::type>
 {
     typedef typename T::element_type type;
 };
 
+template<typename T, typename TName> struct RemoveSmartPtr< Utility::Named<T, TName>, typename boost::enable_if< Detail::has_element_type<T> >::type>
+{
+    //TODO
+    typedef Utility::Named<typename T::element_type, TName> type;
+};
+
 template<typename T> struct MakePlain
 {
-    typedef typename RemoveAccessors<typename DerefShared<typename RemoveAccessors<T>::type>::type>::type type;
-};
-
-template<typename T, typename Enable = void> struct MakeShared
-{
-    typedef boost::shared_ptr<typename MakePlain<T>::type> type;
-};
-
-template<typename T>
-struct MakeShared<T, typename boost::enable_if< Detail::has_element_type<typename MakePlain<T>::type> >::type>
-{
-    typedef typename MakePlain<T>::type type;
+    //TODO recursive
+    typedef typename RemoveAccessors<typename RemoveSmartPtr<typename RemoveAccessors<T>::type>::type>::type type;
 };
 
 template<typename TRebind, typename T> struct Rebind

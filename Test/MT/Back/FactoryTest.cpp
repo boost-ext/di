@@ -395,6 +395,27 @@ TEST(Factory, CreateSingletonMany)
     EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
 }
 
+TEST(Factory, CtorTraits)
+{
+    const int i1 = 42;
+    const int i2 = 87;
+
+    Factory
+    <
+        vector
+        <
+            Dependency<PerRequest, Named<int, string<'1'> >, int_<i1> >,
+            Dependency<PerRequest, Named<int, string<'2'> >, int_<i2> >
+        >
+    >
+    factory;
+
+    C10 obj = factory.create<C10>();
+
+    EXPECT_EQ(i1, obj.i1);
+    EXPECT_EQ(i2, obj.i2);
+}
+
 TEST(Factory, BaseOf)
 {
     Factory
@@ -428,45 +449,6 @@ TEST(Factory, BaseOf)
     EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
 }
 
-TEST(Factory, CtorTraits)
-{
-    const int i1 = 42;
-    const int i2 = 87;
-
-    Factory
-    <
-        vector
-        <
-            Dependency<PerRequest, Named<int, string<'1'> >, int_<i1> >,
-            Dependency<PerRequest, Named<int, string<'2'> >, int_<i2> >
-        >
-    >
-    factory;
-
-    C10 obj = factory.create<C10>();
-
-    EXPECT_EQ(i1, obj.i1);
-    EXPECT_EQ(i2, obj.i2);
-}
-
-TEST(Factory, NamedIfBaseOf)
-{
-    Factory
-    <
-        vector
-        <
-            Dependency<PerRequest, Named<If0, string<'1'> >, If0, vector0<>, or_< is_base_of<_1, Named<If0, string<'1'> > >, is_same<_1, Named<If0, string<'1'> > > > >
-            //Dependency<PerRequest, Named<int, string<'1'> >, If0, vector0<>, or_< is_base_of<_1, Named<If0, string<'1'> > >, is_same<_1, Named<If0, string<'1'> > > > >
-        >
-    >
-    factory;
-
-    //C11 obj = factory.create<C11>();
-
-    //EXPECT_EQ(i1, obj.i1);
-    //EXPECT_EQ(i2, obj.i2);
-}
-
 TEST(Factory, BaseOfInterfaceNotTrivialCtor)
 {
     Factory
@@ -482,6 +464,64 @@ TEST(Factory, BaseOfInterfaceNotTrivialCtor)
 
     EXPECT_TRUE(obj.p->get().get() != obj.p->get().get());
 }
+
+#if 0
+TEST(Factory, NamedSharedPtr)
+{
+    const int i = 42;
+
+    Factory
+    <
+        vector
+        <
+            Dependency<PerRequest, Named< shared_ptr<int>, string<'1'> >, shared_ptr<int>, vector0<>, or_< is_base_of<_1, Named< shared_ptr<int>, string<'1'> > >, is_same<_1, Named< shared_ptr<int>, string<'1'> > > > >
+        >
+    >
+    factory;
+
+    C11 obj = factory.create<C11>();
+
+    EXPECT_EQ(i, *obj.i);
+}
+#endif
+
+TEST(Factory, NamedSharedPtrBaseOf)
+{
+    const int i = 42;
+
+    Factory
+    <
+        vector
+        <
+            Dependency<PerRequest, Named<int, string<'1'> >, boost::mpl::int_<i>, vector0<>, or_< is_base_of<_1, Named<int, string<'1'> > >, is_same<_1, Named<int, string<'1'> > > > >
+        >
+    >
+    factory;
+
+    C11 obj = factory.create<C11>();
+
+    EXPECT_EQ(i, *obj.i);
+}
+
+/*TEST(Factory, NamedSharedPtrConcreteTypeWithNotTrivialCtor)*/
+
+/*TEST(Factory, NamedSharedPtrIf)*/
+//{
+    //Factory
+    //<
+        //vector
+        //<
+            //Dependency<PerRequest, Named<If0, string<'1'> >, If0, vector0<>, or_< is_base_of<_1, Named<If0, string<'1'> > >, is_same<_1, Named<If0, string<'1'> > > > >
+            ////Dependency<PerRequest, Named<int, string<'1'> >, If0, vector0<>, or_< is_base_of<_1, Named<If0, string<'1'> > >, is_same<_1, Named<If0, string<'1'> > > > >
+        //>
+    //>
+    //factory;
+
+    ////C11 obj = factory.create<C11>();
+
+    ////EXPECT_EQ(i1, obj.i1);
+    ////EXPECT_EQ(i2, obj.i2);
+/*}*/
 
 } // namespace MT
 } // namespace Back

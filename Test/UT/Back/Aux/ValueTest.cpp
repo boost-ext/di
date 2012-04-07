@@ -30,14 +30,14 @@ TEST(Value, mpl_int)
 {
     const int i = 42;
     EXPECT_TRUE((Value<int_<0> >::value));
-    EXPECT_EQ(i, Value<int_<i> >::create<int>());
+    EXPECT_EQ(i, Value<int_<i> >::create());
 }
 
 TEST(Value, mpl_string)
 {
     const std::string s = "s";
     EXPECT_TRUE((Value<string<'s'> >::value));
-    EXPECT_EQ(s, Value<string<'s'> >::create<std::string>());
+    EXPECT_EQ(s, Value<string<'s'> >::create());
 }
 
 } // namespace UT

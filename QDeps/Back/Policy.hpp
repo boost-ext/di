@@ -14,6 +14,7 @@
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/void.hpp>
 #include "QDeps/Back/Aux/Utility.hpp"
+#include "QDeps/Back/Policies/CheckForCircularDependencies.hpp"
 
 namespace QDeps
 {
@@ -44,6 +45,13 @@ public:
 };
 
 } // namespace Back
+
+template<typename TDefault>
+struct Defaults<Back::Detail::Policy, TDefault>
+{
+    typedef Back::Policy<Back::Policies::CheckForCircularDependencies> type;
+};
+
 } // namespace QDeps
 
 #endif

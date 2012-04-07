@@ -10,7 +10,6 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/type_traits/is_base_of.hpp>
-#include "QDeps/Back/Aux/Utility.hpp"
 #include "QDeps/Config.hpp"
 
 namespace QDeps
@@ -39,8 +38,14 @@ template<typename T, typename TName>
 class Named< boost::shared_ptr<T>, TName>
 {
 public:
+    //element_type
     Named(boost::shared_ptr<T> p_value = boost::make_shared<T>()) // non explicit
         : m_value(p_value)
+    { }
+
+    //TODO
+    Named(int p_value) // non explicit
+       : m_value(boost::make_shared<int>(p_value))
     { }
 
     operator boost::shared_ptr<T>() const { return m_value; }
@@ -68,10 +73,7 @@ namespace boost
 {
 
 template<typename TBase, typename TDerived, typename TName>
-struct is_base_of<TBase, QDeps::Utility::Named<TDerived, TName> > : is_base_of
-    <
-        TBase, typename QDeps::Back::Aux::MakePlain<TDerived>::type
-    >
+struct is_base_of<TBase, QDeps::Utility::Named<TDerived, TName> > : is_base_of<TBase, TDerived>
 { };
 
 } // namespace boost

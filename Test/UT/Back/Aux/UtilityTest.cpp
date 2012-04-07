@@ -6,29 +6,26 @@
 //
 #include <gtest/gtest.h>
 #include <boost/shared_ptr.hpp>
-#include "QDeps/Utility/Named.hpp"
+#include "QDeps/Back/Aux/Utility.hpp"
 
 namespace QDeps
 {
-namespace Utility
+namespace Back
+{
+namespace Aux
 {
 namespace UT
 {
 
 using namespace boost;
+using namespace mpl;
 
-class Name { };
-class I { };
-class Impl : I { };
-
-TEST(Named, BaseOf)
+TEST(Utility, MakePlain)
 {
-    EXPECT_TRUE((boost::is_base_of<I, Named<Impl, Name> >::value));
-    EXPECT_FALSE((boost::is_base_of<I, Named<int, Name> >::value));
-    EXPECT_FALSE((boost::is_base_of<int, Named<Impl, Name> >::value));
 }
 
 } // namespace UT
-} // namespace Utility
+} // namespace Aux
+} // namespace Back
 } // namespace QDeps
 
