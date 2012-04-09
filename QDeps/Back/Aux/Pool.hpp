@@ -17,7 +17,6 @@
 #include <boost/preprocessor/comparison/equal.hpp>
 #include <boost/preprocessor/control/if.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
-#include <boost/preprocessor/punctuation/comma.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/limits/vector.hpp>
 #include <boost/mpl/vector.hpp>
@@ -86,6 +85,17 @@ public:
     { }
 
     BOOST_PP_REPEAT_FROM_TO(1, BOOST_MPL_LIMIT_VECTOR_SIZE, QDEPS_CTOR_IMPL, ~)
+
+    template<typename T> struct ResultType
+    {
+        typedef typename T::type type;
+    };
+
+    template<typename T>
+    typename ResultType<T>::type get()
+    {
+        return T::get();
+    }
 };
 
 } // namespace Aux

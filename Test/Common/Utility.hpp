@@ -17,18 +17,6 @@
 #include <boost/mpl/pop_front.hpp>
 #include <boost/mpl/front.hpp>
 
-#define EXPECT_STATIC_ASSERT(code, msg)                     \
-    try                                                     \
-    {                                                       \
-        code;                                               \
-        ASSERT_TRUE(false);                                 \
-    }                                                       \
-    catch(const ::QDeps::Test::Common::StaticAssert& e)     \
-    {                                                       \
-        EXPECT_FALSE(e.cond);                               \
-        EXPECT_EQ(#msg, e.expr);                            \
-    }
-
 #define TEST_T(name, test, ...)                             \
     template<typename TInjector>                            \
     struct name##test : public ::testing::Test              \

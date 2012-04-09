@@ -9,8 +9,6 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
-#include <boost/type_traits/is_base_of.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include "QDeps/Back/Aux/Utility.hpp"
 #include "QDeps/Config.hpp"
 
@@ -82,23 +80,6 @@ public:
 
 } // namespace Utility
 } // namespace QDeps
-
-//namespace boost
-//{
-
-//template<typename TBase, typename TDerived, typename TName>
-//struct is_same<TBase, QDeps::Utility::Named<TDerived, TName> > : is_same<TBase, TDerived>
-//{ };
-
-//template<typename TBase, typename TDerived, typename TName>
-//struct is_same<QDeps::Utility::Named<TBase, TName>, QDeps::Utility::Named<TDerived, TName> > : is_same<TBase, TDerived>
-//{ };
-
-//template<typename TBase, typename TDerived, typename TName>
-//struct is_base_of<TBase, QDeps::Utility::Named<TDerived, TName> > : is_base_of<TBase, TDerived>
-//{ };
-
-//} // namespace boost
 
 #endif
 
