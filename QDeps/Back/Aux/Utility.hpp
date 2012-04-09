@@ -15,6 +15,7 @@
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/at.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/mpl/has_xxx.hpp>
 #include "QDeps/Config.hpp"
 
@@ -68,40 +69,35 @@ template<typename T> struct GetExternals
     typedef typename T::Externals type;
 };
 
-template<typename T> struct RemoveAccessors
+template<typename TRebind, typename T0 = void, typename T1 = void> struct Rebind
 {
-    typedef typename boost::remove_pointer<typename boost::remove_cv<typename boost::remove_reference<T>::type>::type>::type type;
+    typedef typename TRebind::template Rebind<T0, T1>::type type;
 };
 
-template<typename T, typename Enable = void> struct DerefShared
+template<typename TRebind, typename T0> struct Rebind<TRebind, T0, void>
 {
-    typedef T type;
+    typedef typename TRebind::template Rebind<T0>::type type;
 };
 
-template<typename T> struct DerefShared<T, typename boost::enable_if< Detail::has_element_type<T> >::type>
+template<typename TElement> class MakePlain
 {
-    typedef typename T::element_type type;
-};
+    template<typename T> struct RemoveAccessors
+    {
+        typedef typename boost::remove_cv<typename boost::remove_pointer<typename boost::remove_reference<T>::type>::type>::type type;
+    };
 
-template<typename T> struct MakePlain
-{
-    typedef typename RemoveAccessors<typename DerefShared<typename RemoveAccessors<T>::type>::type>::type type;
-};
+    template<typename T, typename Enable = void> struct DerefElementType
+    {
+        typedef T type;
+    };
 
-template<typename T, typename Enable = void> struct MakeShared
-{
-    typedef boost::shared_ptr<typename MakePlain<T>::type> type;
-};
+    template<typename T> struct DerefElementType<T, typename boost::enable_if< Detail::has_element_type<T> >::type>
+    {
+        typedef typename T::element_type type;
+    };
 
-template<typename T>
-struct MakeShared<T, typename boost::enable_if< Detail::has_element_type<typename MakePlain<T>::type> >::type>
-{
-    typedef typename MakePlain<T>::type type;
-};
-
-template<typename TRebind, typename T> struct Rebind
-{
-    typedef typename TRebind::template Rebind<T>::type type;
+public:
+    typedef typename DerefElementType<typename RemoveAccessors<typename DerefElementType<typename RemoveAccessors<TElement>::type>::type>::type>::type type;
 };
 
 } // namespace Aux

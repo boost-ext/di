@@ -21,8 +21,7 @@
     #include <boost/mpl/back_inserter.hpp>
     #include <boost/mpl/copy.hpp>
     #include <boost/mpl/if.hpp>
-    #include <QPool/Utility/Ctor.hpp>
-    #include <QPool/Pool.hpp>
+    #include "QDeps/Back/Aux/Pool.hpp"
     #include "QDeps/Back/Module.hpp"
     #include "QDeps/Back/Scopes/Singleton.hpp"
     #include "QDeps/Back/Scopes/PerRequest.hpp"
@@ -79,7 +78,7 @@
 
         struct Externals : boost::mpl::vector0<> { };
 
-        QPOOL_CTOR(Module,
+        QDEPS_CTOR(Module,
             (m_pool),
         { })
 
@@ -87,10 +86,10 @@
 
         #include BOOST_PP_ITERATE()
 
-        const QPool::Pool<TSeq, QPool::Allocator::Stack>& pool() const { return m_pool; }
+        const Back::Aux::Pool<TSeq>& pool() const { return m_pool; }
 
     private:
-        QPool::Pool<TSeq, QPool::Allocator::Stack> m_pool;
+        Back::Aux::Pool<TSeq> m_pool;
     };
 
     } // namespace Fusion

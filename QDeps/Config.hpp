@@ -52,8 +52,9 @@ namespace QDeps
  * namespace QDeps
  * {
  * template<>
- * struct Defaults<, QDeps::Specialized>
+ * struct Defaults<Back::Detail::Policy, QDeps::Specialized>
  * {
+ *     typedef Back::Policy<...> type;
  * };
  * } // namespace QDeps
  * @endcode

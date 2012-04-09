@@ -33,7 +33,7 @@
     template
     <
         typename TDeps,
-        template<typename, typename, typename = TDeps, typename = Aux::Dependency<Scopes::PerRequest, boost::mpl::_1> > class TBinder = Binder
+        template<typename, typename, typename = TDeps, typename = Aux::Dependency<Scopes::PerRequest, boost::mpl::_1, boost::mpl::_2> > class TBinder = Binder
     >
     class VisitorImpl
     {

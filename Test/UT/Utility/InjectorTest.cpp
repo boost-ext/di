@@ -22,11 +22,12 @@ using namespace boost::mpl;
 class A { };
 class B { };
 class C { };
+class E { };
 
 struct Module : Back::Module
 {
     struct Dependencies : boost::mpl::vector<A, B, C> { };
-    struct Externals : boost::mpl::vector<int> { };
+    struct Externals : boost::mpl::vector<E> { };
 };
 
 TEST(Injector, CtorEmpty)
@@ -71,7 +72,7 @@ TEST(Injector, Module)
     EXPECT_TRUE((
         equal
         <
-            vector<int>,
+            vector<E>,
             Inj::Externals
         >::value
     ));

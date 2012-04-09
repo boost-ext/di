@@ -10,6 +10,7 @@
 #include <memory>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
+#include "QDeps/Utility/Named.hpp"
 
 namespace QDeps
 {
@@ -23,6 +24,12 @@ template<typename TScope, typename TDest> class Converter
 public:
     template<typename TSrc> static TDest execute(TSrc p_src) { return p_src; }
     template<typename TSrc> static TDest execute(const boost::shared_ptr<TSrc>& p_src) { return *p_src; }
+};
+
+template<typename TScope, typename TDest, typename TName> class Converter<TScope, Utility::Named<TDest, TName> >
+{
+public:
+    template<typename TSrc> static Utility::Named<TDest, TName> execute(TSrc p_src) { return Utility::Named<TDest, TName>(p_src); }
 };
 
 template<typename TScope, typename TDest> class Converter<TScope, TDest&>

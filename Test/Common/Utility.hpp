@@ -12,6 +12,7 @@
 #include <vector>
 #include <string>
 #include <boost/utility/enable_if.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/mpl/empty.hpp>
 #include <boost/mpl/pop_front.hpp>
 #include <boost/mpl/front.hpp>
@@ -45,13 +46,15 @@ namespace Test
 namespace Common
 {
 
-template<typename TSeq>
+using namespace boost;
+using namespace boost::mpl;
+
+template<typename TSeq = vector0<> >
 class Visitor
 {
     typedef std::vector<std::string> Visits;
 
 public:
-
     ~Visitor()
     {
         verify<TSeq>(0);
@@ -63,11 +66,11 @@ public:
     }
 
 private:
-    template<typename Seq> void verify(int, typename boost::enable_if< boost::mpl::empty<Seq> >::type* = 0) { }
-    template<typename Seq> void verify(int i, typename boost::disable_if< boost::mpl::empty<Seq> >::type* = 0)
+    template<typename Seq> void verify(int, typename enable_if< empty<Seq> >::type* = 0) { }
+    template<typename Seq> void verify(int i, typename disable_if< empty<Seq> >::type* = 0)
     {
-        EXPECT_EQ(typeid(typename boost::mpl::front<Seq>::type).name(), visits.at(i));
-        verify<typename boost::mpl::pop_front<Seq>::type>(i + 1);
+        EXPECT_EQ(typeid(typename front<Seq>::type).name(), visits.at(i));
+        verify<typename pop_front<Seq>::type>(i + 1);
     }
 
     mutable Visits visits;

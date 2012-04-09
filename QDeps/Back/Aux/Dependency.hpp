@@ -48,6 +48,12 @@
     >
     class Dependency
     {
+       QDEPS_STATIC_ASSERT(
+            !Aux::Detail::has_element_type<TGiven>::value,
+            GIVEN_TYPE_WITH_ELEMENT_TYPE,
+            (TGiven)
+        );
+
         template<typename TPool> struct IsPoolType
             : boost::mpl::contains<typename TPool::Seq, TExpected>
         { };
@@ -89,12 +95,12 @@
 
         template<typename TPool>
         struct ResultType<TPool, typename boost::enable_if< IsValueType<TPool> >::type>
-            : TValue<TGiven>::template ResultType<TExpected>
+            : TValue<TGiven>::ResultType
         { };
 
         template<typename TPool>
         struct ResultType<TPool, typename boost::enable_if< IsScopeType<TPool> >::type>
-            : TScope::template ResultType<TExpected>
+            : TScope::template ResultType<TGiven>
         { };
 
         template<typename TPool>
@@ -106,7 +112,7 @@
         template<typename TPool>
         typename boost::enable_if<IsValueType<TPool>, typename ResultType<TPool>::type>::type create(TPool&)
         {
-            return TValue<TGiven>::template create<TExpected>();
+            return TValue<TGiven>::create();
         }
 
         template<typename TPool>
@@ -145,12 +151,12 @@
         typename TBind,
         template<typename> class TValue
     >
-    class Dependency<TScope, boost::mpl::_1, boost::mpl::_1, TContext, TBind, TValue>
+    class Dependency<TScope, boost::mpl::_1, boost::mpl::_2, TContext, TBind, TValue>
     {
     public:
-        template<typename Expected> struct Rebind
+        template<typename Expected, typename Given> struct Rebind
         {
-            typedef Dependency<TScope, Expected, Expected, TContext, TBind, TValue> type;
+            typedef Dependency<TScope, Expected, Given, TContext, TBind, TValue> type;
         };
     };
 
