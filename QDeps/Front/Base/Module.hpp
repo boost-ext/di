@@ -95,11 +95,11 @@ public:
         >::type
     { };
 
-#if 0
-    QPOOL_CTOR(Module,
+    QDEPS_CTOR(Module,
         (m_pool),
     { })
 
+#if 0
     template<typename T>
     inline T& Set(T& p_obj)
     {
@@ -119,10 +119,10 @@ public:
     }
 #endif
 
-    //const Back::Aux::Pool<Externals>& pool() const { return m_pool; }
+    const Back::Aux::Pool<Externals>& pool() const { return m_pool; }
 
 private:
-    //Back::Aux::Pool<Externals> m_pool;
+    Back::Aux::Pool<Externals> m_pool;
 };
 
 } // namespace Base

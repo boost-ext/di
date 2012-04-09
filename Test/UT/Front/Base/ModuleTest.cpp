@@ -407,7 +407,7 @@ TEST(BaseModule, Externals)
     struct TestModule : Module
         <
             Externals<
-                int
+                C1
             >
         >
     { };
@@ -419,7 +419,7 @@ TEST(BaseModule, Externals)
         <
             vector
             <
-                int
+                C1
             >,
             TestModule::Externals
         >::value
@@ -431,10 +431,10 @@ TEST(BaseModule, ExternalsMix)
     struct TestModule : Module
         <
             Externals<
-                int,
-                double
+                C1,
+                C2
             >,
-            External<float>
+            External<C3>
         >
     { };
 
@@ -445,7 +445,7 @@ TEST(BaseModule, ExternalsMix)
         <
             vector
             <
-                int, double, float
+                C1, C2, C3
             >,
             TestModule::Externals
         >::value

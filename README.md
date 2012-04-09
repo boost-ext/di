@@ -81,13 +81,55 @@ Injector<> emptyInjector;                                       // default empty
 
 BOOST_AUTO(injector, emptyInjector.install(                     // install 2 modules
     BaseModule(
-        Set<IConfig>(Config),
-        Set<UpInt>(42)
+        BaseModule::Set<IConfig>(Config),
+        BaseModule::Set<UpInt>(42)
     ),
     fusionModule
 );
 
 App app = injector.create<App>();                               // and create App as lvalue
+```
+
+``` C++
+class TextVisitor
+{
+    template<typename T> void operator()() const
+    {
+        std::cout << typeid(T::Type)                            // ex: boost::shared_ptr<I>
+                  << typeid(T::Expected)                        // ex: I
+                  << typeid(T::Given)                           // ex: Impl
+                  << typeid(T::Context);                        // ex: vector<C1, C2>
+    }
+};
+
+injector.visit<C3>(TextVisitor());                              // apply TextVisitor for construction of C3
+```
+
+``` C++
+struct Action {
+    QDEPS_CTOR(Action, shared_ptr<Data>, shared_ptr<MsgSender>);
+    template<typename Event> void operator()(const Event&) { }
+};
+
+struct Guard {
+    QDEPS_CTOR(Guard, shared_ptr<Common>)
+    template<typename Event> bool operator()(const Event&) { return false; }
+};
+
+class Fsm : public QFsm::Fsm
+{
+    class S1 { };
+    class S2 { };
+
+public:
+    typedef QFsm::TransitionTable
+    <
+        Transition < S1 , e1 , S2 , Action , Guard >
+    >
+    TransitionTable;
+};
+
+Fsm fsm = injector.create<Fsm>();                               // create fsm with actions and guards
 ```
 
 Features
