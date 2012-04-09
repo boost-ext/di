@@ -9,6 +9,7 @@
 
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/repeat.hpp>
+#include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/seq/elem.hpp>
@@ -19,16 +20,11 @@
 #include <boost/preprocessor/punctuation/comma.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/limits/vector.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/non_type.hpp>
 
-#if defined(BOOST_HAS_VARIADIC_TMPL)
-
-#   define QDEPS_CTOR(Class, Base, ...)                                                                             \
-        Class() __VA_ARGS__                                                                                         \
-        template<typename... Args> Class(Args... p_args) : Base(p_args...) __VA_ARGS__
-#else
 #   ifdef __GNUC__
 #       pragma GCC system_header
 #   endif
@@ -52,7 +48,6 @@
 #   define QDEPS_CTOR(Class, Seq, ...)                                                                              \
         Class() : BOOST_PP_SEQ_FOR_EACH(QDEPS_CTOR_ARGS, 0, Seq) __VA_ARGS__                                                                                         \
         BOOST_PP_REPEAT_FROM_TO(1, BOOST_MPL_LIMIT_VECTOR_SIZE, QDEPS_CTOR_DEF_IMPL, (Class)(Seq)(__VA_ARGS__))
-#endif
 
 namespace QDeps
 {
@@ -76,21 +71,24 @@ struct Parameter<TSeq, Value, typename boost::enable_if_c<(Value >= boost::mpl::
 };
 } // namespace Detail
 
-#define QDEPS_MEMBER_IMPL(_, n, externals) BOOST_PP_COMMA_IF(n) Parameter<externals, n>::type
+#define QDEPS_MEMBER_IMPL(_, n, seq) BOOST_PP_COMMA_IF(n) Detail::Parameter<seq, n>::type
 
-template<typename TExternals>
-struct Pool : BOOST_PP_REPEAT(BOOST_MPL_LIMIT_VECTOR_SIZE, QDEPS_MEMBER_IMPL, TExternals)
+template<typename TSeq = boost::mpl::vector0<> >
+struct Pool : BOOST_PP_REPEAT(BOOST_MPL_LIMIT_VECTOR_SIZE, QDEPS_MEMBER_IMPL, TSeq)
 {
 public:
+    typedef TSeq Seq;
+
+    Pool() { }
+
 #   define QDEPS_CTOR_INITLIST_IMPL(_, n, na)                                                                       \
         BOOST_PP_COMMA_IF(n) T##n(p##n)
 
-#define QDEPS_CTOR_IMPL(_, n, externals)\
+#define QDEPS_CTOR_IMPL(_, n, na)\
     template<BOOST_PP_ENUM_PARAMS(n, typename T)> Pool(BOOST_PP_ENUM_BINARY_PARAMS(n, const T, &p))             \
-            : BOOST_PP_REPEAT(n, QDEPS_CTOR_INITLIST_IMPL, ~)\
-        { }
+        : BOOST_PP_REPEAT(n, QDEPS_CTOR_INITLIST_IMPL, ~)\
+    { }
 
-    Pool() { }
     BOOST_PP_REPEAT_FROM_TO(1, BOOST_MPL_LIMIT_VECTOR_SIZE, QDEPS_CTOR_IMPL, ~)
 };
 

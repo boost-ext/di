@@ -11,7 +11,7 @@
 #include <boost/mpl/inherit.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/transform.hpp>
-#include "QPool/Pool.hpp"
+#include "QDeps/Back/Aux/Pool.hpp"
 #include "QDeps/Back/Policy.hpp"
 #include "QDeps/Back/Aux/Utility.hpp"
 #include "QDeps/Back/Aux/Dependency.hpp"
@@ -28,7 +28,7 @@ namespace Back
 template
 <
     typename TDeps,
-    typename TPool = const QPool::Pool<>,
+    typename TPool = const Aux::Pool<>,
     typename TPolices = Policy<>,
     template<typename, typename> class TConverter = Detail::Converter,
     template<typename = TDeps, typename = TPool> class TCreator = Detail::Creator,

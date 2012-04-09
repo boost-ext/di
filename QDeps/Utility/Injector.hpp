@@ -21,12 +21,11 @@
 #include <boost/mpl/insert.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/if.hpp>
-#include "QPool/Pool.hpp"
+#include "QDeps/Back/Aux/Pool.hpp"
 #include "QDeps/Back/Aux/Utility.hpp"
 #include "QDeps/Back/Module.hpp"
 #include "QDeps/Back/Factory.hpp"
 #include "QDeps/Back/Policy.hpp"
-#include "QPool/Utility/Ctor.hpp"
 #include "QDeps/Config.hpp"
 
 namespace QDeps
@@ -94,7 +93,7 @@ public:
     { };
 
 private:
-    typedef QPool::Pool<typename Externals::type> Pool;
+    typedef Back::Aux::Pool<typename Externals::type> Pool;
     typedef typename boost::mpl::deref<typename boost::mpl::begin<Polices>::type>::type Policy;
     typedef Back::Factory<typename Dependencies::type, Pool, Policy> Factory;
 
@@ -107,6 +106,7 @@ public:
         : m_factory(m_pool)
     { }
 
+#if 0
     template<typename M0> Injector(const M0& p0)
         : m_pool(p0.pool()),
           m_factory(m_pool)
@@ -116,8 +116,8 @@ public:
         : m_pool(p0.pool(), p1.pool()),
           m_factory(m_pool)
     {
-        for_each<Externals>(PushBack(m_pool));
     }
+#endif
 
     template<typename T> T create()
     {

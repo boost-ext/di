@@ -14,7 +14,7 @@
 #include "QDeps/Back/Aux/Dependency.hpp"
 #include "QDeps/Back/Scopes/PerRequest.hpp"
 #include "QDeps/Back/Scopes/Singleton.hpp"
-#include "QPool/Pool.hpp"
+#include "QDeps/Back/Aux/Pool.hpp"
 #include "QDeps/Back/Factory.hpp"
 #include "Test/Common/Data.hpp"
 
@@ -434,6 +434,7 @@ TEST(Factory, NamedSharedPtrConcreteTypeWithNotTrivialCtor)
 }
 #endif
 
+#if 0
 TEST(Factory, CreateWithValues)
 {
     const int i = 42;
@@ -499,7 +500,6 @@ TEST(Factory, CreateWithNonTrivialCtor)
     EXPECT_EQ(c, obj.c);
 }
 
-#if 0
 TEST(Factory, CreateWithAttributes)
 {
     const int i1 = 42;

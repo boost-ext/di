@@ -15,8 +15,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/back_inserter.hpp>
 #include <boost/mpl/copy.hpp>
-#include <QPool/Utility/Ctor.hpp>
-#include <QPool/Pool.hpp>
+#include "QDeps/Back/Aux/Pool.hpp"
 #include "QDeps/Back/Aux/Utility.hpp"
 #include "QDeps/Back/Module.hpp"
 #include "QDeps/Back/Scopes/Singleton.hpp"
@@ -96,6 +95,7 @@ public:
         >::type
     { };
 
+#if 0
     QPOOL_CTOR(Module,
         (m_pool),
     { })
@@ -117,11 +117,12 @@ public:
     {
         return p_obj;
     }
+#endif
 
-    const QPool::Pool<Externals, QPool::Allocator::Stack>& pool() const { return m_pool; }
+    //const Back::Aux::Pool<Externals>& pool() const { return m_pool; }
 
 private:
-    QPool::Pool<Externals, QPool::Allocator::Stack> m_pool;
+    //Back::Aux::Pool<Externals> m_pool;
 };
 
 } // namespace Base
