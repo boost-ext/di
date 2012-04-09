@@ -137,16 +137,16 @@ Features
 -----
     * Injection via constructor
     * Configuration via front ends (base, fusion)
-    * Expectations binding via interface/implementation
-    * Expectations binding via is_base_of (smart binding)
-    * Expectations binding via call_stack (path binding)
-    * Expectations binding via external objects
-    * Expectations binding via named parameters
+    * Binding via interface/implementation
+    * Binding via is_base_of (smart binding)
+    * Binding via call_stack (path binding)
+    * Binding via external objects
+    * Binding via named parameters
     * Providers
     * Scopes (PerRequest, Singleton, Custom Scopes)
     * Modules
     * Visitors (graphviz dot generation)
-    * Policies (Circular dependencies detection)
+    * Policies (circular dependencies detection)
     * Compile time approach (supports C++98, C++11)
 
 Requirements
