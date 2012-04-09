@@ -5,11 +5,7 @@ SCAN_BUILD:=scan-build
 VALGRIND:=valgrind
 
 ifndef BOOST
-	BOOST:=$(shell ls ../Externals/boost | xargs -i% echo -I../Externals/boost/%/include | xargs echo .)
-endif
-
-ifndef QPOOL
-	QPOOL:=../Externals/QPool
+	BOOST:=$(shell ls ../Externals/boost | xargs -i% echo -I../Externals/boost/%/include | xargs echo . )
 endif
 
 ifndef GTEST
@@ -17,8 +13,8 @@ ifndef GTEST
 endif
 
 GTEST_LIB:=$(GTEST)/libgtest.a
-INCLUDES:=-I$(BOOST) -I$(QPOOL) -I$(GTEST)/include -I..
-CXXFLAGS:=$(INCLUDES) -DQDEPS_FUNCTION_ARITY_LIMIT_SIZE=5 -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants
+INCLUDES:=-I$(BOOST) -I$(GTEST)/include -I.. -I/usr/include
+CXXFLAGS:=$(INCLUDES) -DQDEPS_FUNCTION_ARITY_LIMIT_SIZE=4 -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants
 
 mt:=$(patsubst %.cpp, %.o, $(shell find MT -iname "*.cpp")) main.o
 ut_back:=$(patsubst %.cpp, %.o, $(shell find UT/Back -iname "*.cpp")) main.o

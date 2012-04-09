@@ -1,13 +1,9 @@
 ifndef BOOST
-	BOOST:=$(shell ls ../Externals/boost | xargs -i% echo -I../Externals/boost/%/include | xargs echo .)
-endif
-
-ifndef QPOOL
-	QPOOL:=../Externals/QPool
+	BOOST:=$(shell ls ../Externals/boost | xargs -i% echo -I../Externals/boost/%/include | xargs echo . )
 endif
 
 QDEPS:=..
-INCLUDES:=-I$(BOOST) -I$(QPOOL) -I$(QDEPS)
+INCLUDES:=-I$(BOOST) -I$(QDEPS) -I/usr/include
 CXXFLAGS:=$(INCLUDES) -O2 -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-multichar -Wno-four-char-constants
 EXAMPLES:=$(patsubst %.cpp, %.o, $(shell find . -iname "*.cpp"))
 
