@@ -88,7 +88,7 @@ public:
 
     template<typename T> struct ResultType
     {
-        typedef typename T::type type;
+        typedef typename T::ResultType type;
     };
 
     template<typename T>

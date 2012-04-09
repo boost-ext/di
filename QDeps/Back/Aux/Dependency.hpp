@@ -24,6 +24,7 @@
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/contains.hpp>
     #include <boost/mpl/placeholders.hpp>
+    #include "QDeps/Back/Aux/Instance.hpp"
     #include "QDeps/Back/Aux/Utility.hpp"
     #include "QDeps/Back/Aux/Value.hpp"
     #include "QDeps/Config.hpp"
@@ -90,7 +91,7 @@
 
         template<typename TPool>
         struct ResultType<TPool, typename boost::enable_if< IsPoolType<TPool> >::type>
-            : TPool::template ResultType<TExpected>
+            : TPool::template ResultType< Instance<TExpected, TContext> >
         { };
 
         template<typename TPool>
@@ -106,7 +107,7 @@
         template<typename TPool>
         typename boost::enable_if<IsPoolType<TPool>, typename ResultType<TPool>::type>::type create(TPool& p_pool)
         {
-            return p_pool.template get<TExpected>();
+            return p_pool.template get< Instance<TExpected, TContext> >();
         }
 
         template<typename TPool>

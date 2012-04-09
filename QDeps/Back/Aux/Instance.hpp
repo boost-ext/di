@@ -26,13 +26,12 @@ template
 <
     typename T,
     typename TContext = boost::mpl::vector0<>,
-    typename TName = void,
     typename Enable = void
 >
 class Instance
 {
 public:
-    typedef boost::variant<const T&, T&, boost::shared_ptr<T> > type;
+    typedef boost::variant<const T&, T&, boost::shared_ptr<T> > ResultType;
 
     explicit Instance(const T& p_member)
         : m_member(p_member)
@@ -46,24 +45,23 @@ public:
         : m_member(p_member)
     { }
 
-    type get()
+    ResultType get()
     {
         return m_member;
     }
 
 private:
-    type m_member;
+    ResultType m_member;
 };
 
 template
 <
     typename T,
-    typename TContext,
-    typename TName
+    typename TContext
 >
 class Instance
     <
-        T, TContext, TName,
+        T, TContext,
         typename boost::enable_if
         <
             boost::mpl::or_
@@ -75,23 +73,19 @@ class Instance
     >
 {
 public:
-    typedef boost::variant<T, boost::shared_ptr<T> > type;
+    typedef T ResultType;
 
-    explicit Instance(T p_member)
+    explicit Instance(ResultType p_member)
         : m_member(p_member)
     { }
 
-    explicit Instance(boost::shared_ptr<T> p_member)
-        : m_member(p_member)
-    { }
-
-    type get()
+    ResultType get()
     {
         return m_member;
     }
 
 private:
-    type m_member;
+    ResultType m_member;
 };
 
 } // namespace Aux
