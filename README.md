@@ -6,7 +6,11 @@ QDeps - C++ Dependency Injection Framework
 
 To get started
 -----
-        git clone --recurse-submodules git://github.com/QSrc/QDeps.git
+`git clone --recurse-submodules git://github.com/QSrc/QDeps.git`
+
+or if you have boost and gtest:
+
+`git clone git://github.com/QSrc/QDeps.git`
 
 Documentation
 -----
@@ -130,7 +134,7 @@ public:
 };
 
 Front::Fsm<Example> fsm =
-    injector.create<Front::Fsm<Example> >();                    // create fsm with actions and guards
+    Injector<>().create<Front::Fsm<Example> >();                // create fsm with actions and guards
 ```
 
 Features
