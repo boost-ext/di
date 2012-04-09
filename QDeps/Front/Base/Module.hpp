@@ -17,6 +17,7 @@
 #include <boost/mpl/copy.hpp>
 #include "QDeps/Back/Aux/Pool.hpp"
 #include "QDeps/Back/Aux/Utility.hpp"
+#include "QDeps/Back/Aux/Instance.hpp"
 #include "QDeps/Back/Module.hpp"
 #include "QDeps/Back/Scopes/Singleton.hpp"
 #include "QDeps/Back/Scopes/PerRequest.hpp"
@@ -95,27 +96,15 @@ public:
         >::type
     { };
 
-    QDEPS_CTOR(Module,
+    QDEPS_VARIADIC_CTOR(Module,
         (m_pool),
     { })
 
 #if 0
-    template<typename T>
-    inline T& Set(T& p_obj)
+    template<typename TName, typename T>
+    inline Instance Set(const T& p_obj)
     {
-        return p_obj;
-    }
-
-    template<typename T>
-    inline const T& Set(const T& p_obj)
-    {
-        return p_obj;
-    }
-
-    template<typename T>
-    inline const boost::shared_ptr<T>& Set(const boost::shared_ptr<T>& p_obj)
-    {
-        return p_obj;
+        return Instance;
     }
 #endif
 

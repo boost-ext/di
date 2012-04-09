@@ -11,10 +11,6 @@
 
 #if defined(QDEPS_CTOR_CFG_VA_ARGS)
 
-#ifdef __GNUC__
-# pragma GCC system_header
-#endif
-
 /**
  * class SimpleClass
  * {

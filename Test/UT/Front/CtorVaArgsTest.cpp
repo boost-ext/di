@@ -22,7 +22,7 @@ TEST(CtorVaArgs, Empty)
 {
     struct C
     {
-        QDEPS_CTOR_TRAITS();
+        QDEPS_CTOR_TRAITS(void);
         C() { }
     };
 }

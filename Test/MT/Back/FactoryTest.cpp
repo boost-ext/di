@@ -18,9 +18,6 @@
 #include "QDeps/Back/Factory.hpp"
 #include "Test/Common/Data.hpp"
 
-
-#include "Test/Common/Utility.hpp"
-
 namespace QDeps
 {
 namespace Back

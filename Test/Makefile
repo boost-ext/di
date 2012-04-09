@@ -13,7 +13,7 @@ ifndef GTEST
 endif
 
 GTEST_LIB:=$(GTEST)/libgtest.a
-INCLUDES:=-I$(BOOST) -I$(GTEST)/include -I.. -I/usr/include
+INCLUDES:=-I$(BOOST) -I$(GTEST)/include -I..
 CXXFLAGS:=$(INCLUDES) -DQDEPS_FUNCTION_ARITY_LIMIT_SIZE=4 -DGTEST_HAS_TR1_TUPLE=0 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants
 
 mt:=$(patsubst %.cpp, %.o, $(shell find MT -iname "*.cpp")) main.o

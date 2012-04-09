@@ -25,29 +25,25 @@
 #include <boost/mpl/size.hpp>
 #include <boost/non_type.hpp>
 
-#   ifdef __GNUC__
-#       pragma GCC system_header
-#   endif
+#define QDEPS_SEQ_VARIADIC_ELEM(seq) QDEPS_SEQ_ELEM_0 seq
+#define QDEPS_SEQ_ELEM_0(...) QDEPS_SEQ_ELEM_1
+#define QDEPS_SEQ_ELEM_1(...) QDEPS_SEQ_ELEM_2
+#define QDEPS_SEQ_ELEM_2(...) __VA_ARGS__
+#define QDEPS_PARAMS_IMPL(z, n, param) BOOST_PP_COMMA_IF(n) const param##n& p_##n
+#define QDEPS_BASE_PARAMS_IMPL(z, n, param) BOOST_PP_COMMA_IF(n) p_##n
+#define QDEPS_CTOR_ARGS(r, n, elem)                                                                              \
+    BOOST_PP_IF(BOOST_PP_EQUAL(r, 2), BOOST_PP_EMPTY, BOOST_PP_COMMA)()                                         \
+    BOOST_PP_IF(BOOST_PP_EQUAL(r, 2), elem(BOOST_PP_REPEAT(n, QDEPS_BASE_PARAMS_IMPL, TCtor)), elem)
 
-#   define QDEPS_SEQ_VARIADIC_ELEM(seq) QDEPS_SEQ_ELEM_0 seq
-#   define QDEPS_SEQ_ELEM_0(...) QDEPS_SEQ_ELEM_1
-#   define QDEPS_SEQ_ELEM_1(...) QDEPS_SEQ_ELEM_2
-#   define QDEPS_SEQ_ELEM_2(...) __VA_ARGS__
-#   define QDEPS_PARAMS_IMPL(z, n, param) BOOST_PP_COMMA_IF(n) const param##n& p_##n
-#   define QDEPS_BASE_PARAMS_IMPL(z, n, param) BOOST_PP_COMMA_IF(n) p_##n
-#   define QDEPS_CTOR_ARGS(r, n, elem)                                                                              \
-        BOOST_PP_IF(BOOST_PP_EQUAL(r, 2), BOOST_PP_EMPTY, BOOST_PP_COMMA)()                                         \
-        BOOST_PP_IF(BOOST_PP_EQUAL(r, 2), elem(BOOST_PP_REPEAT(n, QDEPS_BASE_PARAMS_IMPL, TCtor)), elem)
+#define QDEPS_CTOR_DEF_IMPL(z, n, ctor)                                                                              \
+    template<BOOST_PP_ENUM_PARAMS(n, typename TCtor)> BOOST_PP_SEQ_ELEM(0, ctor)                                \
+    (BOOST_PP_REPEAT(n, QDEPS_PARAMS_IMPL, TCtor))                                                              \
+        : BOOST_PP_SEQ_FOR_EACH(QDEPS_CTOR_ARGS, n, BOOST_PP_SEQ_ELEM(1, ctor))                                 \
+    QDEPS_SEQ_VARIADIC_ELEM(ctor)
 
-#   define QDEPS_CTOR_DEF_IMPL(z, n, ctor)                                                                              \
-        template<BOOST_PP_ENUM_PARAMS(n, typename TCtor)> BOOST_PP_SEQ_ELEM(0, ctor)                                \
-        (BOOST_PP_REPEAT(n, QDEPS_PARAMS_IMPL, TCtor))                                                              \
-            : BOOST_PP_SEQ_FOR_EACH(QDEPS_CTOR_ARGS, n, BOOST_PP_SEQ_ELEM(1, ctor))                                 \
-        QDEPS_SEQ_VARIADIC_ELEM(ctor)
-
-#   define QDEPS_CTOR(Class, Seq, ...)                                                                              \
-        Class() : BOOST_PP_SEQ_FOR_EACH(QDEPS_CTOR_ARGS, 0, Seq) __VA_ARGS__                                                                                         \
-        BOOST_PP_REPEAT_FROM_TO(1, BOOST_MPL_LIMIT_VECTOR_SIZE, QDEPS_CTOR_DEF_IMPL, (Class)(Seq)(__VA_ARGS__))
+#define QDEPS_VARIADIC_CTOR(Class, Seq, ...)                                                                              \
+    Class() : BOOST_PP_SEQ_FOR_EACH(QDEPS_CTOR_ARGS, 0, Seq) __VA_ARGS__                                                                                         \
+    BOOST_PP_REPEAT_FROM_TO(1, BOOST_MPL_LIMIT_VECTOR_SIZE, QDEPS_CTOR_DEF_IMPL, (Class)(Seq)(__VA_ARGS__))
 
 namespace QDeps
 {

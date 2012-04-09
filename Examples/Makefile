@@ -3,7 +3,7 @@ ifndef BOOST
 endif
 
 QDEPS:=..
-INCLUDES:=-I$(BOOST) -I$(QDEPS) -I/usr/include
+INCLUDES:=-I$(BOOST) -I$(QDEPS)
 CXXFLAGS:=$(INCLUDES) -O2 -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-multichar -Wno-four-char-constants
 EXAMPLES:=$(patsubst %.cpp, %.o, $(shell find . -iname "*.cpp"))
 

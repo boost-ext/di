@@ -78,7 +78,7 @@
 
         struct Externals : boost::mpl::vector0<> { };
 
-        QDEPS_CTOR(Module,
+        QDEPS_VARIADIC_CTOR(Module,
             (m_pool),
         { })
 
