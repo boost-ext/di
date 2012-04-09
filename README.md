@@ -95,10 +95,10 @@ class TextVisitor
 {
     template<typename T> void operator()() const
     {
-        std::cout << typeid(typename T::Type)                   // ex: boost::shared_ptr<I>
-                  << typeid(typename T::Expected)               // ex: I
-                  << typeid(typename T::Given)                  // ex: Impl
-                  << typeid(typename T::Context);               // ex: vector<C1, C2>
+        std::cout << typeid(typename T::Type).name()            // ex: boost::shared_ptr<I>
+          << ", " << typeid(typename T::Expected).name()        // ex: I
+          << ", " << typeid(typename T::Given).name()           // ex: Impl
+          << ", " << typeid(typename T::Context).name();        // ex: vector<C1, C2>
     }
 };
 
