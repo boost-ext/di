@@ -8,9 +8,9 @@ To get started
 -----
 `git clone --recurse-submodules git://github.com/QSrc/QDeps.git`
 
-or if you have boost and gtest:
+`or`
 
-`git clone git://github.com/QSrc/QDeps.git`
+`git clone git://github.com/QSrc/QDeps.git` `// if you have boost and gtest`
 
 Documentation
 -----
