@@ -473,17 +473,6 @@ TEST(Binder, ComplexType)
 
 TEST(Binder, NamedType)
 {
-    std::cout << "DUPA: " << abi::__cxa_demangle(typeid(
-            Binder
-            <
-                Utility::Named< shared_ptr<int>, _1>,
-                vector0<>,
-                vector0<>,
-                Dependency<_1, _2>
-            >::type
-                ).name(), 0, 0, 0) << std::endl;
-
-
     EXPECT_TRUE((
         is_same
         <

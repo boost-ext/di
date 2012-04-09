@@ -115,7 +115,9 @@ public:
     template<typename M0, typename M1> Injector(const M0& p0, const M1& p1)
         : m_pool(p0.pool(), p1.pool()),
           m_factory(m_pool)
-    { }
+    {
+        for_each<Externals>(PushBack(m_pool));
+    }
 
     template<typename T> T create()
     {

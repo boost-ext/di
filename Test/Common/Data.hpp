@@ -175,7 +175,7 @@ struct C11
 
 struct C12
 {
-    QDEPS_CTOR(C12, Named< shared_ptr<If0>, _1> if0, Named< shared_ptr<C2>, _2> c2)
+    QDEPS_CTOR(C12, Named< shared_ptr<If0>, mpl::string<'1'> > if0, Named< shared_ptr<C2>, _2> c2)
         : if0(if0), c2(c2)
     { }
 

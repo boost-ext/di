@@ -18,6 +18,9 @@
 #include "QDeps/Back/Factory.hpp"
 #include "Test/Common/Data.hpp"
 
+
+#include "Test/Common/Utility.hpp"
+
 namespace QDeps
 {
 namespace Back
@@ -79,101 +82,6 @@ TEST(Factory, CreateDefaultCtor)
     Factory< vector0<> > factory;
     C0 obj = factory.create<C0>();
     (void)(obj);
-}
-
-TEST(Factory, CreateWithValues)
-{
-    const int i = 42;
-    const double d = 21.0;
-    const char c = 'x';
-
-    typedef QPool::Pool< vector<double, char> > Pool;
-
-    Pool pool
-    (
-        make_shared<double>(d),
-        make_shared<char>(c)
-    );
-
-    Factory
-    <
-        vector
-        <
-            Dependency<PerRequest, int, int_<i> >,
-            Dependency<PerRequest, double>,
-            Dependency<PerRequest, char>,
-            Dependency<PerRequest, std::string, string<'test'> >
-        >,
-        Pool
-    >
-    factory(pool);
-
-    C9 obj = factory.create<C9>();
-
-    EXPECT_EQ(i, obj.i);
-    EXPECT_EQ(d, obj.d);
-    EXPECT_EQ(c, obj.c);
-    EXPECT_EQ("test", obj.s);
-}
-
-TEST(Factory, CreateWithNonTrivialCtor)
-{
-    const int i = 42;
-    const double d = 21.0;
-    const char c = 'x';
-
-    typedef QPool::Pool< vector<C2> > Pool;
-
-    Pool pool
-    (
-        make_shared<C2>(i, d, c)
-    );
-
-    Factory
-    <
-        vector
-        <
-            Dependency<PerRequest, C2>
-        >,
-        Pool
-    >
-    factory(pool);
-
-    C2 obj = factory.create<C2>();
-
-    EXPECT_EQ(i, obj.i);
-    EXPECT_EQ(d, obj.d);
-    EXPECT_EQ(c, obj.c);
-}
-
-TEST(Factory, CreateWithAttributes)
-{
-    const int i1 = 42;
-    const int i2 = 87;
-
-    typedef QPool::Pool< vector<Named<int, string<'1'> >, Named<int, string<'2'> > > > Pool;
-
-    Pool pool
-    (
-        make_shared<Named<int, string<'1'> > >(i1),
-        make_shared<Named<int, string<'2'> > >(i2)
-    );
-
-    Factory
-    <
-        vector
-        <
-            Dependency<PerRequest, Named<int, string<'1'> >, int>,
-            Dependency<PerRequest, Named<int, string<'2'> >, int>
-        >,
-        Pool
-    >
-    factory(pool);
-
-    C4 obj = factory.create<C4>();
-
-    EXPECT_EQ(i1, obj.i1);
-    EXPECT_EQ(i2, obj.i2);
 }
 
 TEST(Factory, CreatePerRequest)
@@ -465,8 +373,7 @@ TEST(Factory, BaseOfInterfaceNotTrivialCtor)
     EXPECT_TRUE(obj.p->get().get() != obj.p->get().get());
 }
 
-#if 0
-TEST(Factory, NamedSharedPtr)
+TEST(Factory, NamedSharedPtrBaseOf)
 {
     const int i = 42;
 
@@ -474,7 +381,7 @@ TEST(Factory, NamedSharedPtr)
     <
         vector
         <
-            Dependency<PerRequest, Named< shared_ptr<int>, string<'1'> >, shared_ptr<int>, vector0<>, or_< is_base_of<_1, Named< shared_ptr<int>, string<'1'> > >, is_same<_1, Named< shared_ptr<int>, string<'1'> > > > >
+            Dependency<PerRequest, Named<int, string<'1'> >, boost::mpl::int_<i>, vector0<> >
         >
     >
     factory;
@@ -483,9 +390,8 @@ TEST(Factory, NamedSharedPtr)
 
     EXPECT_EQ(i, *obj.i);
 }
-#endif
 
-TEST(Factory, NamedSharedPtrBaseOf)
+TEST(Factory, NamedSharedPtr)
 {
     const int i = 42;
 
@@ -503,28 +409,129 @@ TEST(Factory, NamedSharedPtrBaseOf)
     EXPECT_EQ(i, *obj.i);
 }
 
-/*TEST(Factory, NamedSharedPtrConcreteTypeWithNotTrivialCtor)*/
+TEST(Factory, NamedSharedPtrIf)
+{
+    Factory
+    <
+        vector
+        <
+            Dependency<PerRequest, Named<If0, string<'1'> >, CIf0, vector0<>, or_< is_base_of<_1, Named<If0, string<'1'> > >, is_same<_1, Named<If0, string<'1'> > > > >
+        >
+    >
+    factory;
 
-/*TEST(Factory, NamedSharedPtrIf)*/
-//{
-    //Factory
-    //<
-        //vector
-        //<
-            //Dependency<PerRequest, Named<If0, string<'1'> >, If0, vector0<>, or_< is_base_of<_1, Named<If0, string<'1'> > >, is_same<_1, Named<If0, string<'1'> > > > >
-            ////Dependency<PerRequest, Named<int, string<'1'> >, If0, vector0<>, or_< is_base_of<_1, Named<If0, string<'1'> > >, is_same<_1, Named<If0, string<'1'> > > > >
-        //>
-    //>
-    //factory;
+    C12 obj = factory.create<C12>();
 
-    ////C11 obj = factory.create<C11>();
+    EXPECT_TRUE(dynamic_cast<CIf0*>(obj.if0.get()));
+    EXPECT_EQ(0, obj.c2->i);
+    EXPECT_EQ(0.0, obj.c2->d);
+    EXPECT_EQ(0, obj.c2->c);
+}
 
-    ////EXPECT_EQ(i1, obj.i1);
-    ////EXPECT_EQ(i2, obj.i2);
-/*}*/
+#if 0
+TEST(Factory, NamedSharedPtrConcreteTypeWithNotTrivialCtor)
+{
+}
+#endif
+
+TEST(Factory, CreateWithValues)
+{
+    const int i = 42;
+    const double d = 21.0;
+    const char c = 'x';
+
+    typedef QPool::Pool< vector<double, char> > Pool;
+
+    Pool pool
+    (
+        make_shared<double>(d),
+        make_shared<char>(c)
+    );
+
+    Factory
+    <
+        vector
+        <
+            Dependency<PerRequest, int, int_<i> >,
+            Dependency<PerRequest, double>,
+            Dependency<PerRequest, char>,
+            Dependency<PerRequest, std::string, string<'test'> >
+        >,
+        Pool
+    >
+    factory(pool);
+
+    C9 obj = factory.create<C9>();
+
+    EXPECT_EQ(i, obj.i);
+    EXPECT_EQ(d, obj.d);
+    EXPECT_EQ(c, obj.c);
+    EXPECT_EQ("test", obj.s);
+}
+
+TEST(Factory, CreateWithNonTrivialCtor)
+{
+    const int i = 42;
+    const double d = 21.0;
+    const char c = 'x';
+
+    typedef QPool::Pool< vector<C2> > Pool;
+
+    Pool pool
+    (
+        make_shared<C2>(i, d, c)
+    );
+
+    Factory
+    <
+        vector
+        <
+            Dependency<PerRequest, C2>
+        >,
+        Pool
+    >
+    factory(pool);
+
+    C2 obj = factory.create<C2>();
+
+    EXPECT_EQ(i, obj.i);
+    EXPECT_EQ(d, obj.d);
+    EXPECT_EQ(c, obj.c);
+}
+
+#if 0
+TEST(Factory, CreateWithAttributes)
+{
+    const int i1 = 42;
+    const int i2 = 87;
+
+    typedef QPool::Pool< vector<Named<int, string<'1'> >, Named<int, string<'2'> > > > Pool;
+
+    Pool pool
+    (
+        make_shared<Named<int, string<'1'> > >(i1),
+        make_shared<Named<int, string<'2'> > >(i2)
+    );
+
+    Factory
+    <
+        vector
+        <
+            Dependency<PerRequest, Named<int, string<'1'> >, int>,
+            Dependency<PerRequest, Named<int, string<'2'> >, int>
+        >,
+        Pool
+    >
+    factory(pool);
+
+    C4 obj = factory.create<C4>();
+
+    EXPECT_EQ(i1, obj.i1);
+    EXPECT_EQ(i2, obj.i2);
+}
+#endif
 
 } // namespace MT
 } // namespace Back
 } // namespace QDeps
-
 

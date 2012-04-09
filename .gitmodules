@@ -25,9 +25,6 @@
 [submodule "Externals/boost/exception"]
 	path = Externals/boost/exception
 	url = git://github.com/boost-lib/exception.git
-[submodule "Externals/QPool"]
-	path = Externals/QPool
-	url = git://github.com/QSrc/QPool.git
 [submodule "Externals/gtest"]
 	path = Externals/gtest
 	url = git://github.com/smarr/googletest.git

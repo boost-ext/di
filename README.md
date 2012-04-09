@@ -51,8 +51,8 @@ struct BaseModule : Base::Module <                              // base module :
 
 Injector<BaseModule> injector(                                  // create injector from 2 modules
     BaseModule(                                                 // initialize BaseModule externals
-        Set<IConfig>(Config),                                   // initialize IConfig by Config
-        Set<UpInt>(42)
+        BaseModule::Set<IConfig>(config),                       // initialize IConfig by Config
+        BaseModule::Set<UpInt>(42)
     )
 );
 
@@ -111,7 +111,6 @@ Requirements
     Code:
         * c++ 98 standard-compliant compiler supporting BOOST_TYPEOF
         * boost >= 1.43 (headers only libraries)
-        * qpool >= 1.0
 
     Tests:
         * gnu-compatible Make >= 3.81

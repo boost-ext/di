@@ -100,6 +100,24 @@ public:
         (m_pool),
     { })
 
+    template<typename T>
+    inline T& Set(T& p_obj)
+    {
+        return p_obj;
+    }
+
+    template<typename T>
+    inline const T& Set(const T& p_obj)
+    {
+        return p_obj;
+    }
+
+    template<typename T>
+    inline const boost::shared_ptr<T>& Set(const boost::shared_ptr<T>& p_obj)
+    {
+        return p_obj;
+    }
+
     const QPool::Pool<Externals, QPool::Allocator::Stack>& pool() const { return m_pool; }
 
 private:
