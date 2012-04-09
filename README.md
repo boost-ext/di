@@ -95,28 +95,28 @@ class TextVisitor
 {
     template<typename T> void operator()() const
     {
-        std::cout << typeid(T::Type)                            // ex: boost::shared_ptr<I>
-                  << typeid(T::Expected)                        // ex: I
-                  << typeid(T::Given)                           // ex: Impl
-                  << typeid(T::Context);                        // ex: vector<C1, C2>
+        std::cout << typeid(typename T::Type)                   // ex: boost::shared_ptr<I>
+                  << typeid(typename T::Expected)               // ex: I
+                  << typeid(typename T::Given)                  // ex: Impl
+                  << typeid(typename T::Context);               // ex: vector<C1, C2>
     }
 };
 
-injector.visit<C3>(TextVisitor());                              // apply TextVisitor for construction of C3
+injector.visit<C3>(TextVisitor());                              // apply TextVisitor for C3
 ```
 
 ``` C++
 struct Action {
-    QDEPS_CTOR(Action, shared_ptr<Data>, shared_ptr<MsgSender>);
+    QDEPS_CTOR(Action, shared_ptr<Data>, shared_ptr<MsgSender>) { ... }
     template<typename Event> void operator()(const Event&) { }
 };
 
 struct Guard {
-    QDEPS_CTOR(Guard, shared_ptr<Common>)
+    QDEPS_CTOR(Guard, shared_ptr<Common>) { ... }
     template<typename Event> bool operator()(const Event&) { return false; }
 };
 
-class Fsm : public QFsm::Fsm
+class Example : public QFsm::Fsm
 {
     class S1 { };
     class S2 { };
@@ -129,7 +129,8 @@ public:
     TransitionTable;
 };
 
-Fsm fsm = injector.create<Fsm>();                               // create fsm with actions and guards
+Front::Fsm<Example> fsm =
+    injector.create<Front::Fsm<Example> >();                    // create fsm with actions and guards
 ```
 
 Features
