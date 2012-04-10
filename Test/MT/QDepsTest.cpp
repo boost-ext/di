@@ -4,9 +4,15 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "Test/Common/Utility.hpp"
+#include <boost/test/unit_test.hpp>
+#include <boost/test/test_case_template.hpp>
+#include <boost/mpl/vector.hpp>
 #include "Test/Common/Data.hpp"
+#include "Test/Common/Visitor.hpp"
 #include "QDeps/QDeps.hpp"
+
+#define BOOST_AUTO_TEST_CASE_VARIADIC(test, type, ...) \
+    typedef boost::mpl::vector<__VA_ARGS__> test##types; BOOST_AUTO_TEST_CASE_TEMPLATE(test, type, test##types)
 
 namespace QDeps
 {
@@ -110,86 +116,94 @@ BOOST_AUTO(providerModule, Front::Fusion::Module<>()(
     >()
 ));
 
-TEST_T(QDeps, OneModule,
+BOOST_AUTO_TEST_CASE_VARIADIC(OneModule, Injector,
     Injector<BaseModule1>,
     Injector<BOOST_TYPEOF(fusionModule1)>)
 {
-    shared_ptr<C8> c8 = this->injector.template create< shared_ptr<C8> >();
+    Injector injector;
 
-    EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
-    EXPECT_EQ(c8->c7->c6->c4->c3, c8->c7->c6->c3);
-    EXPECT_NE(c8->c7->if0, c8->c7->c6->c5.if0);
+    shared_ptr<C8> c8 = injector.template create< shared_ptr<C8> >();
 
-    EXPECT_TRUE(dynamic_cast<CIf01*>(c8->c7->c6->c5.if0.get()));
-    EXPECT_TRUE(dynamic_cast<CIf02*>(c8->c7->if0.get()));
+    BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
+    BOOST_CHECK(c8->c7->c6->c4->c3 == c8->c7->c6->c3);
+    BOOST_CHECK(c8->c7->if0 != c8->c7->c6->c5.if0);
 
-    EXPECT_EQ(2, c8->i);
-    EXPECT_EQ(3, c8->c7->c6->c4->i1);
-    EXPECT_EQ(4, c8->c7->c6->c4->i2);
-    EXPECT_EQ(1, c8->c7->c6->c3->i);
-    EXPECT_EQ(5, c8->c7->c6->c5.c2->i);
-    EXPECT_EQ(0.0, c8->c7->c6->c5.c2->d);
-    EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
+    BOOST_CHECK(dynamic_cast<CIf01*>(c8->c7->c6->c5.if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf02*>(c8->c7->if0.get()));
+
+    BOOST_CHECK_EQUAL(2, c8->i);
+    BOOST_CHECK_EQUAL(3, c8->c7->c6->c4->i1);
+    BOOST_CHECK_EQUAL(4, c8->c7->c6->c4->i2);
+    BOOST_CHECK_EQUAL(1, c8->c7->c6->c3->i);
+    BOOST_CHECK_EQUAL(5, c8->c7->c6->c5.c2->i);
+    BOOST_CHECK_EQUAL(0.0, c8->c7->c6->c5.c2->d);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c5.c2->c);
 }
 
-TEST_T(QDeps, ManyModules,
+BOOST_AUTO_TEST_CASE_VARIADIC(ManyModules, Injector,
     Injector<BaseModule2, BaseModule3>,
     Injector<BaseModule3, BaseModule2>,
     Injector<BOOST_TYPEOF(fusionModule2), BOOST_TYPEOF(fusionModule3)>,
     Injector<BOOST_TYPEOF(fusionModule3), BOOST_TYPEOF(fusionModule2)>)
 {
-    shared_ptr<C8> c8 = this->injector.template create< shared_ptr<C8> >();
+    Injector injector;
 
-    EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
-    EXPECT_EQ(c8->c7->c6->c4->c3, c8->c7->c6->c3);
-    EXPECT_EQ(c8->c7->if0, c8->c7->c6->c5.if0);
+    shared_ptr<C8> c8 = injector.template create< shared_ptr<C8> >();
 
-    EXPECT_TRUE(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
-    EXPECT_TRUE(dynamic_cast<CIf0*>(c8->c7->if0.get()));
+    BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
+    BOOST_CHECK(c8->c7->c6->c4->c3 == c8->c7->c6->c3);
+    BOOST_CHECK(c8->c7->if0 == c8->c7->c6->c5.if0);
 
-    EXPECT_EQ(2, c8->i);
-    EXPECT_EQ(0, c8->c7->c6->c4->i1);
-    EXPECT_EQ(3, c8->c7->c6->c4->i2);
-    EXPECT_EQ(1, c8->c7->c6->c3->i);
-    EXPECT_EQ(1, c8->c7->c6->c5.c2->i);
-    EXPECT_EQ(0.0, c8->c7->c6->c5.c2->d);
-    EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->if0.get()));
+
+    BOOST_CHECK_EQUAL(2, c8->i);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c4->i1);
+    BOOST_CHECK_EQUAL(3, c8->c7->c6->c4->i2);
+    BOOST_CHECK_EQUAL(1, c8->c7->c6->c3->i);
+    BOOST_CHECK_EQUAL(1, c8->c7->c6->c5.c2->i);
+    BOOST_CHECK_EQUAL(0.0, c8->c7->c6->c5.c2->d);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c5.c2->c);
 }
 
-TEST_T(QDeps, MixModules,
+BOOST_AUTO_TEST_CASE_VARIADIC(MixModules, Injector,
     Injector<BaseModule2, BOOST_TYPEOF(fusionModule2)>,
     Injector<BOOST_TYPEOF(fusionModule2), BaseModule2>)
 {
-    shared_ptr<C8> c8 = this->injector.template create< shared_ptr<C8> >();
+    Injector injector;
 
-    EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
-    EXPECT_EQ(c8->c7->c6->c4->c3, c8->c7->c6->c3);
-    EXPECT_EQ(c8->c7->if0, c8->c7->c6->c5.if0);
+    shared_ptr<C8> c8 = injector.template create< shared_ptr<C8> >();
 
-    EXPECT_TRUE(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
-    EXPECT_TRUE(dynamic_cast<CIf0*>(c8->c7->if0.get()));
+    BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
+    BOOST_CHECK(c8->c7->c6->c4->c3 == c8->c7->c6->c3);
+    BOOST_CHECK(c8->c7->if0 == c8->c7->c6->c5.if0);
 
-    EXPECT_EQ(2, c8->i);
-    EXPECT_EQ(0, c8->c7->c6->c4->i1);
-    EXPECT_EQ(3, c8->c7->c6->c4->i2);
-    EXPECT_EQ(1, c8->c7->c6->c3->i);
-    EXPECT_EQ(1, c8->c7->c6->c5.c2->i);
-    EXPECT_EQ(0.0, c8->c7->c6->c5.c2->d);
-    EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->if0.get()));
+
+    BOOST_CHECK_EQUAL(2, c8->i);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c4->i1);
+    BOOST_CHECK_EQUAL(3, c8->c7->c6->c4->i2);
+    BOOST_CHECK_EQUAL(1, c8->c7->c6->c3->i);
+    BOOST_CHECK_EQUAL(1, c8->c7->c6->c5.c2->i);
+    BOOST_CHECK_EQUAL(0.0, c8->c7->c6->c5.c2->d);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c5.c2->c);
 }
 
-TEST_T(QDeps, Provider,
+BOOST_AUTO_TEST_CASE_VARIADIC(BasicProvider, Injector,
     Injector<ProviderModule>,
     Injector<BOOST_TYPEOF(providerModule)>)
 {
-    TransactionUsage obj = this->injector.template create<TransactionUsage>();
-    EXPECT_TRUE(obj.p->get().get() != obj.p->get().get());
+    Injector injector;
+    TransactionUsage obj = injector.template create<TransactionUsage>();
+    BOOST_CHECK(obj.p->get().get() != obj.p->get().get());
 }
 
-TEST_T(QDeps, Visitor,
+BOOST_AUTO_TEST_CASE_VARIADIC(BasicVisitor, Injector,
     Injector<ProviderModule>,
     Injector<BOOST_TYPEOF(providerModule)>)
 {
+    Injector injector;
     Visitor
     <
         vector
@@ -200,9 +214,9 @@ TEST_T(QDeps, Visitor,
             int
         >
     >
-    visitorVerifier;
+    visitor;
 
-    this->injector.template visit<TransactionUsage>(visitorVerifier);
+    injector.template visit<TransactionUsage>(visitor);
 }
 
 } // namespace MT

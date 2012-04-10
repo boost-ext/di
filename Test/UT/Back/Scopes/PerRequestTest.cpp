@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <gtest/gtest.h>
+#include <boost/test/unit_test.hpp>
 #include "Test/Common/Data.hpp"
 #include "QDeps/Back/Scopes/PerRequest.hpp"
 
@@ -19,18 +19,18 @@ namespace UT
 
 using namespace Test::Common;
 
-TEST(PerRequest, Create)
+BOOST_AUTO_TEST_CASE(PerRequestCreate)
 {
     PerRequest l_pr;
 
-    EXPECT_TRUE(l_pr.create<int>().get() != l_pr.create<int>().get());
+    BOOST_CHECK((l_pr.create<int>().get() != l_pr.create<int>().get()));
 }
 
-TEST(PerRequest, CreateArgs)
+BOOST_AUTO_TEST_CASE(PerRequestCreateArgs)
 {
     PerRequest l_pr;
 
-    EXPECT_TRUE((l_pr.create<C2, int, double, char>(0, 0.0, '0').get() != l_pr.create<C2, int, double, char>(0, 0.0, '0').get()));
+    BOOST_CHECK((l_pr.create<C2, int, double, char>(0, 0.0, '0').get() != l_pr.create<C2, int, double, char>(0, 0.0, '0').get()));
 }
 
 } // namespace UT

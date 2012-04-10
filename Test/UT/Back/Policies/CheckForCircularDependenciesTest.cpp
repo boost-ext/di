@@ -6,7 +6,7 @@
 //
 #define QDEPS_STATIC_ASSERT(cond, expr, types) typedef void type
 
-#include <gtest/gtest.h>
+#include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include "QDeps/Back/Policies/CheckForCircularDependencies.hpp"
@@ -24,10 +24,10 @@ namespace UT
 using namespace Test::Common;
 using namespace boost::mpl;
 
-TEST(CheckForCircularDependencies, NoCircularDependencies)
+BOOST_AUTO_TEST_CASE(NoCircularDependencies)
 {
-    EXPECT_FALSE((
-        boost::is_base_of
+    BOOST_CHECK((
+        !boost::is_base_of
         <
             boost::mpl::false_,
             CheckForCircularDependencies::Assert
@@ -39,9 +39,9 @@ TEST(CheckForCircularDependencies, NoCircularDependencies)
     ));
 }
 
-TEST(CheckForCircularDependencies, Direct)
+BOOST_AUTO_TEST_CASE(Direct)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         boost::is_base_of
         <
             boost::mpl::false_,
@@ -54,9 +54,9 @@ TEST(CheckForCircularDependencies, Direct)
     ));
 }
 
-TEST(CheckForCircularDependencies, InDirect)
+BOOST_AUTO_TEST_CASE(InDirect)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         boost::is_base_of
         <
             boost::mpl::false_,

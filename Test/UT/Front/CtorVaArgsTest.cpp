@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <gtest/gtest.h>
+#include <boost/test/unit_test.hpp>
 
 #define QDEPS_CTOR_CFG_VA_ARGS
 #include "QDeps/Front/Ctor.hpp"
@@ -18,7 +18,7 @@ namespace Scopes
 namespace UT
 {
 
-TEST(CtorVaArgs, Empty)
+BOOST_AUTO_TEST_CASE(VaArgsCtorEmpty)
 {
     struct C
     {
@@ -27,7 +27,7 @@ TEST(CtorVaArgs, Empty)
     };
 }
 
-TEST(CtorVaArgs, ExplicitWithDefault)
+BOOST_AUTO_TEST_CASE(VaArgsCtorExplicitWithDefault)
 {
     struct C
     {
@@ -42,10 +42,10 @@ TEST(CtorVaArgs, ExplicitWithDefault)
 
     C c;
 
-    EXPECT_EQ(static_cast<int>(C::DEFAULT), c.i);
+    BOOST_CHECK_EQUAL(static_cast<int>(C::DEFAULT), c.i);
 }
 
-TEST(CtorVaArgs, Params)
+BOOST_AUTO_TEST_CASE(VaArgsCtorParams)
 {
     struct C
     {
@@ -62,11 +62,11 @@ TEST(CtorVaArgs, Params)
 
     C c(i, d);
 
-    EXPECT_EQ(i, c.i);
-    EXPECT_EQ(d, c.d);
+    BOOST_CHECK_EQUAL(i, c.i);
+    BOOST_CHECK_EQUAL(d, c.d);
 }
 
-TEST(CtorVaArgs, Traits)
+BOOST_AUTO_TEST_CASE(VaArgsCtorTraits)
 {
     const int i = 1;
     const double d = 2.0;
@@ -85,8 +85,8 @@ TEST(CtorVaArgs, Traits)
 
     C c(i, d);
 
-    EXPECT_EQ(i, c.i);
-    EXPECT_EQ(d, c.d);
+    BOOST_CHECK_EQUAL(i, c.i);
+    BOOST_CHECK_EQUAL(d, c.d);
 }
 
 } // namespace UT

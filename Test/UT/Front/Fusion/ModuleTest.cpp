@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <gtest/gtest.h>
+#include <boost/test/unit_test.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/mpl/vector.hpp>
@@ -31,12 +31,12 @@ using namespace Utility;
 using namespace boost::mpl;
 using namespace boost;
 
-TEST(FusionModule, Empty)
+BOOST_AUTO_TEST_CASE(FusionEmpty)
 {
     BOOST_AUTO(fusionModule, Module<>()());
     typedef BOOST_TYPEOF(fusionModule) TestModule;
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector0<>,
@@ -44,10 +44,10 @@ TEST(FusionModule, Empty)
         >::value
     ));
 
-    EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(FusionModule, Mix)
+BOOST_AUTO_TEST_CASE(FusionMix)
 {
     BOOST_AUTO(fusionModule, Module<>()(
         Singletons<
@@ -64,7 +64,7 @@ TEST(FusionModule, Mix)
 
     typedef BOOST_TYPEOF(fusionModule) TestModule;
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector
@@ -80,7 +80,7 @@ TEST(FusionModule, Mix)
         >::value
     ));
 
-    EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
 }
 
 } // namespace UT

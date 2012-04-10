@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <gtest/gtest.h>
+#include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include "QDeps/Back/Aux/Dependency.hpp"
@@ -46,14 +46,14 @@ struct Dependency
 
 template<typename T> struct Entries : T { };
 
-TEST(Creator, Basic)
+BOOST_AUTO_TEST_CASE(Basic)
 {
     const int i = 42;
     typedef Dependency<int, i> Dep;
     FakePool pool;
     Entries<Dep> entries;
 
-    EXPECT_EQ(i, (Creator
+    BOOST_CHECK_EQUAL(i, (Creator
         <
             vector
             <

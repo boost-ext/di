@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <gtest/gtest.h>
+#include <boost/test/unit_test.hpp>
 #include <boost/shared_ptr.hpp>
 #include "QDeps/Utility/Named.hpp"
 
@@ -21,11 +21,8 @@ class Name { };
 class I { };
 class Impl : I { };
 
-TEST(Named, BaseOf)
+BOOST_AUTO_TEST_CASE(BaseOf)
 {
-    //EXPECT_TRUE((boost::is_base_of<I, Named<Impl, Name> >::value));
-    //EXPECT_FALSE((boost::is_base_of<I, Named<int, Name> >::value));
-    //EXPECT_FALSE((boost::is_base_of<int, Named<Impl, Name> >::value));
 }
 
 } // namespace UT

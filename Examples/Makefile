@@ -1,10 +1,9 @@
 ifndef BOOST
-	BOOST:=$(shell ls ../Externals/boost | xargs -i% echo -I../Externals/boost/%/include | xargs echo . )
+	BOOST:=../Externals/boost
 endif
 
 QDEPS:=..
-INCLUDES:=-I$(BOOST) -I$(QDEPS)
-CXXFLAGS:=$(INCLUDES) -O2 -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-multichar -Wno-four-char-constants
+CXXFLAGS:=-I$(BOOST) -I$(QDEPS) -O2 -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-multichar -Wno-four-char-constants $(EXTRA_CXXFLAGS)
 EXAMPLES:=$(patsubst %.cpp, %.o, $(shell find . -iname "*.cpp"))
 
 .PHONY: examples clean

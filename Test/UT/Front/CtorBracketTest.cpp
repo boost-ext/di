@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <gtest/gtest.h>
+#include <boost/test/unit_test.hpp>
 
 #define QDEPS_CTOR_CFG_BRACKET
 #include "QDeps/Front/Ctor.hpp"
@@ -18,7 +18,7 @@ namespace Scopes
 namespace UT
 {
 
-TEST(CtorBracket, Empty)
+BOOST_AUTO_TEST_CASE(BracketCtorEmpty)
 {
     struct C
     {
@@ -26,7 +26,7 @@ TEST(CtorBracket, Empty)
     };
 }
 
-TEST(CtorBracket, ExplicitWithDefault)
+BOOST_AUTO_TEST_CASE(BracketCtorExplicitWithDefault)
 {
     struct C
     {
@@ -41,10 +41,10 @@ TEST(CtorBracket, ExplicitWithDefault)
 
     C c;
 
-    EXPECT_EQ(static_cast<int>(C::DEFAULT), c.i);
+    BOOST_CHECK_EQUAL(static_cast<int>(C::DEFAULT), c.i);
 }
 
-TEST(CtorBracket, Params)
+BOOST_AUTO_TEST_CASE(BracketCtorParams)
 {
     const int i = 1;
     const double d = 2.0;
@@ -61,11 +61,11 @@ TEST(CtorBracket, Params)
 
     C c(i, d);
 
-    EXPECT_EQ(i, c.i);
-    EXPECT_EQ(d, c.d);
+    BOOST_CHECK_EQUAL(i, c.i);
+    BOOST_CHECK_EQUAL(d, c.d);
 }
 
-TEST(CtorBracket, Traits)
+BOOST_AUTO_TEST_CASE(BracketCtorTraits)
 {
     const int i = 1;
     const double d = 2.0;
@@ -84,8 +84,8 @@ TEST(CtorBracket, Traits)
 
     C c(i, d);
 
-    EXPECT_EQ(i, c.i);
-    EXPECT_EQ(d, c.d);
+    BOOST_CHECK_EQUAL(i, c.i);
+    BOOST_CHECK_EQUAL(d, c.d);
 }
 
 } // namespace UT

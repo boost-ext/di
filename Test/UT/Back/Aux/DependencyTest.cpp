@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <gtest/gtest.h>
+#include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -48,17 +48,17 @@ struct FakeScope : Scope< boost::shared_ptr<boost::mpl::_1> >
 
 struct OtherFakeScope { };
 
-TEST(Dependency, Default)
+BOOST_AUTO_TEST_CASE(Default)
 {
     typedef Dependency<FakeScope<>, int> Dep;
 
-    EXPECT_TRUE((is_same<vector0<>, Dep::Context>::value));
-    EXPECT_TRUE((is_same<is_same<_1, int>, Dep::Bind>::value));
+    BOOST_CHECK((is_same<vector0<>, Dep::Context>::value));
+    BOOST_CHECK((is_same<is_same<_1, int>, Dep::Bind>::value));
 }
 
-TEST(Dependency, RebindScope)
+BOOST_AUTO_TEST_CASE(RebindScope)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         is_same
         <
             Dependency
@@ -83,9 +83,9 @@ TEST(Dependency, RebindScope)
     ));
 }
 
-TEST(Dependency, RebindType)
+BOOST_AUTO_TEST_CASE(RebindType)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         is_same
         <
             Dependency
@@ -110,31 +110,31 @@ TEST(Dependency, RebindType)
     ));
 }
 
-TEST(Dependency, createByPool)
+BOOST_AUTO_TEST_CASE(createByPool)
 {
     const int i = 42;
     Dependency< FakeScope<>, int > dep;
     FakePool< vector<int>, i > pool;
 
-    EXPECT_EQ(i, *dep.create(pool));
+    BOOST_CHECK_EQUAL(i, *dep.create(pool));
 }
 
-TEST(Dependency, createByValue)
+BOOST_AUTO_TEST_CASE(createByValue)
 {
     const int i = 42;
     Dependency< FakeScope<>, int, int_<i> > dep;
     FakePool< vector0<> > pool;
 
-    EXPECT_EQ(i, dep.create(pool));
+    BOOST_CHECK_EQUAL(i, dep.create(pool));
 }
 
-TEST(Dependency, createByScope)
+BOOST_AUTO_TEST_CASE(createByScope)
 {
     const int i = 42;
     Dependency<FakeScope<i>, int> dep;
     FakePool< vector0<> > pool;
 
-    EXPECT_EQ(i, *dep.create(pool));
+    BOOST_CHECK_EQUAL(i, *dep.create(pool));
 }
 
 } // namespace UT

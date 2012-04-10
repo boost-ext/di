@@ -4,19 +4,19 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <gtest/gtest.h>
+#include <boost/test/unit_test.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/or.hpp>
+#include "Test/Common/Data.hpp"
 #include "QDeps/Utility/Named.hpp"
 #include "QDeps/Back/Aux/Dependency.hpp"
 #include "QDeps/Back/Scopes/PerRequest.hpp"
 #include "QDeps/Back/Scopes/Singleton.hpp"
 #include "QDeps/Back/Aux/Pool.hpp"
 #include "QDeps/Back/Factory.hpp"
-#include "Test/Common/Data.hpp"
 
 namespace QDeps
 {
@@ -32,56 +32,56 @@ using namespace Aux;
 using namespace boost::mpl;
 using namespace boost;
 
-TEST(Factory, CreateUsingCopy)
+BOOST_AUTO_TEST_CASE(CreateUsingCopy)
 {
     Factory< vector0<> > factory;
     C0 obj = factory.create<C0>();
     (void)(obj);
 }
 
-TEST(Factory, CreateUsingRef)
+BOOST_AUTO_TEST_CASE(CreateUsingRef)
 {
     Factory< vector0<> > factory;
     C0& obj = factory.create<C0&>();
-    EXPECT_TRUE(&obj);
+    BOOST_CHECK(&obj);
 }
 
-TEST(Factory, CreateUsingConstRef)
+BOOST_AUTO_TEST_CASE(CreateUsingConstRef)
 {
     Factory< vector0<> > factory;
     const C0& obj = factory.create<const C0&>();
-    EXPECT_TRUE(&obj);
+    BOOST_CHECK(&obj);
 }
 
-TEST(Factory, CreateUsingPtr)
+BOOST_AUTO_TEST_CASE(CreateUsingPtr)
 {
     Factory< vector0<> > factory;
     C0* obj = factory.create<C0*>();
-    EXPECT_TRUE(obj);
+    BOOST_CHECK(obj);
 }
 
-TEST(Factory, CreateUsingConstPtr)
+BOOST_AUTO_TEST_CASE(CreateUsingConstPtr)
 {
     Factory< vector0<> > factory;
     const C0* obj = factory.create<const C0*>();
-    EXPECT_TRUE(obj);
+    BOOST_CHECK(obj);
 }
 
-TEST(Factory, CreateUsingSharedPtr)
+BOOST_AUTO_TEST_CASE(CreateUsingSharedPtr)
 {
     Factory< vector0<> > factory;
     shared_ptr<C0> obj = factory.create< shared_ptr<C0> >();
-    EXPECT_TRUE(obj);
+    BOOST_CHECK(obj);
 }
 
-TEST(Factory, CreateDefaultCtor)
+BOOST_AUTO_TEST_CASE(CreateDefaultCtor)
 {
     Factory< vector0<> > factory;
     C0 obj = factory.create<C0>();
     (void)(obj);
 }
 
-TEST(Factory, CreatePerRequest)
+BOOST_AUTO_TEST_CASE(CreatePerRequest)
 {
     Factory
     <
@@ -94,23 +94,23 @@ TEST(Factory, CreatePerRequest)
 
     shared_ptr<C8> c8 = factory.create< shared_ptr<C8> >();
 
-    EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
-    EXPECT_NE(c8->c7->c6->c4->c3, c8->c7->c6->c3);
-    EXPECT_NE(c8->c7->if0, c8->c7->c6->c5.if0);
+    BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
+    BOOST_CHECK(c8->c7->c6->c4->c3 != c8->c7->c6->c3);
+    BOOST_CHECK(c8->c7->if0 != c8->c7->c6->c5.if0);
 
-    EXPECT_TRUE(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
-    EXPECT_TRUE(dynamic_cast<CIf0*>(c8->c7->if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->if0.get()));
 
-    EXPECT_EQ(0, c8->i);
-    EXPECT_EQ(0, c8->c7->c6->c4->i1);
-    EXPECT_EQ(0, c8->c7->c6->c4->i2);
-    EXPECT_EQ(0, c8->c7->c6->c3->i);
-    EXPECT_EQ(0, c8->c7->c6->c5.c2->i);
-    EXPECT_EQ(0.0, c8->c7->c6->c5.c2->d);
-    EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
+    BOOST_CHECK_EQUAL(0, c8->i);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c4->i1);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c4->i2);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c3->i);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c5.c2->i);
+    BOOST_CHECK_EQUAL(0.0, c8->c7->c6->c5.c2->d);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c5.c2->c);
 }
 
-TEST(Factory, CreatePerRequestSingleton)
+BOOST_AUTO_TEST_CASE(CreatePerRequestSingleton)
 {
     Factory
     <
@@ -124,23 +124,23 @@ TEST(Factory, CreatePerRequestSingleton)
 
     shared_ptr<C8> c8 = factory.create< shared_ptr<C8> >();
 
-    EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
-    EXPECT_EQ(c8->c7->c6->c4->c3, c8->c7->c6->c3);
-    EXPECT_NE(c8->c7->if0, c8->c7->c6->c5.if0);
+    BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
+    BOOST_CHECK(c8->c7->c6->c4->c3 == c8->c7->c6->c3);
+    BOOST_CHECK(c8->c7->if0 != c8->c7->c6->c5.if0);
 
-    EXPECT_TRUE(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
-    EXPECT_TRUE(dynamic_cast<CIf0*>(c8->c7->if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->if0.get()));
 
-    EXPECT_EQ(0, c8->i);
-    EXPECT_EQ(0, c8->c7->c6->c4->i1);
-    EXPECT_EQ(0, c8->c7->c6->c4->i2);
-    EXPECT_EQ(0, c8->c7->c6->c3->i);
-    EXPECT_EQ(0, c8->c7->c6->c5.c2->i);
-    EXPECT_EQ(0.0, c8->c7->c6->c5.c2->d);
-    EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
+    BOOST_CHECK_EQUAL(0, c8->i);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c4->i1);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c4->i2);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c3->i);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c5.c2->i);
+    BOOST_CHECK_EQUAL(0.0, c8->c7->c6->c5.c2->d);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c5.c2->c);
 }
 
-TEST(Factory, CreatePerRequestSingletonPath)
+BOOST_AUTO_TEST_CASE(CreatePerRequestSingletonPath)
 {
     Factory
     <
@@ -155,23 +155,23 @@ TEST(Factory, CreatePerRequestSingletonPath)
 
     shared_ptr<C8> c8 = factory.create< shared_ptr<C8> >();
 
-    EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
-    EXPECT_EQ(c8->c7->c6->c4->c3, c8->c7->c6->c3);
-    EXPECT_NE(c8->c7->if0, c8->c7->c6->c5.if0);
+    BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
+    BOOST_CHECK(c8->c7->c6->c4->c3 == c8->c7->c6->c3);
+    BOOST_CHECK(c8->c7->if0 != c8->c7->c6->c5.if0);
 
-    EXPECT_TRUE(dynamic_cast<CIf01*>(c8->c7->c6->c5.if0.get()));
-    EXPECT_TRUE(dynamic_cast<CIf0*>(c8->c7->if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf01*>(c8->c7->c6->c5.if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->if0.get()));
 
-    EXPECT_EQ(0, c8->i);
-    EXPECT_EQ(0, c8->c7->c6->c4->i1);
-    EXPECT_EQ(0, c8->c7->c6->c4->i2);
-    EXPECT_EQ(0, c8->c7->c6->c3->i);
-    EXPECT_EQ(0, c8->c7->c6->c5.c2->i);
-    EXPECT_EQ(0.0, c8->c7->c6->c5.c2->d);
-    EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
+    BOOST_CHECK_EQUAL(0, c8->i);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c4->i1);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c4->i2);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c3->i);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c5.c2->i);
+    BOOST_CHECK_EQUAL(0.0, c8->c7->c6->c5.c2->d);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c5.c2->c);
 }
 
-TEST(Factory, CreatePerRequestSingletonPathOrder)
+BOOST_AUTO_TEST_CASE(CreatePerRequestSingletonPathOrder)
 {
     Factory
     <
@@ -187,23 +187,23 @@ TEST(Factory, CreatePerRequestSingletonPathOrder)
 
     shared_ptr<C8> c8 = factory.create< shared_ptr<C8> >();
 
-    EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
-    EXPECT_EQ(c8->c7->c6->c4->c3, c8->c7->c6->c3);
-    EXPECT_NE(c8->c7->if0, c8->c7->c6->c5.if0);
+    BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
+    BOOST_CHECK(c8->c7->c6->c4->c3 == c8->c7->c6->c3);
+    BOOST_CHECK(c8->c7->if0 != c8->c7->c6->c5.if0);
 
-    EXPECT_TRUE(dynamic_cast<CIf01*>(c8->c7->c6->c5.if0.get()));
-    EXPECT_TRUE(dynamic_cast<CIf02*>(c8->c7->if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf01*>(c8->c7->c6->c5.if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf02*>(c8->c7->if0.get()));
 
-    EXPECT_EQ(0, c8->i);
-    EXPECT_EQ(0, c8->c7->c6->c4->i1);
-    EXPECT_EQ(0, c8->c7->c6->c4->i2);
-    EXPECT_EQ(0, c8->c7->c6->c3->i);
-    EXPECT_EQ(0, c8->c7->c6->c5.c2->i);
-    EXPECT_EQ(0.0, c8->c7->c6->c5.c2->d);
-    EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
+    BOOST_CHECK_EQUAL(0, c8->i);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c4->i1);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c4->i2);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c3->i);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c5.c2->i);
+    BOOST_CHECK_EQUAL(0.0, c8->c7->c6->c5.c2->d);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c5.c2->c);
 }
 
-TEST(Factory, CreatePerRequestSingletonPathMix)
+BOOST_AUTO_TEST_CASE(CreatePerRequestSingletonPathMix)
 {
     Factory
     <
@@ -224,23 +224,23 @@ TEST(Factory, CreatePerRequestSingletonPathMix)
 
     shared_ptr<C8> c8 = factory.create< shared_ptr<C8> >();
 
-    EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
-    EXPECT_EQ(c8->c7->c6->c4->c3, c8->c7->c6->c3);
-    EXPECT_NE(c8->c7->if0, c8->c7->c6->c5.if0);
+    BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
+    BOOST_CHECK(c8->c7->c6->c4->c3 == c8->c7->c6->c3);
+    BOOST_CHECK(c8->c7->if0 != c8->c7->c6->c5.if0);
 
-    EXPECT_TRUE(dynamic_cast<CIf01*>(c8->c7->c6->c5.if0.get()));
-    EXPECT_TRUE(dynamic_cast<CIf02*>(c8->c7->if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf01*>(c8->c7->c6->c5.if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf02*>(c8->c7->if0.get()));
 
-    EXPECT_EQ(2, c8->i);
-    EXPECT_EQ(3, c8->c7->c6->c4->i1);
-    EXPECT_EQ(4, c8->c7->c6->c4->i2);
-    EXPECT_EQ(1, c8->c7->c6->c3->i);
-    EXPECT_EQ(5, c8->c7->c6->c5.c2->i);
-    EXPECT_EQ(0.0, c8->c7->c6->c5.c2->d);
-    EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
+    BOOST_CHECK_EQUAL(2, c8->i);
+    BOOST_CHECK_EQUAL(3, c8->c7->c6->c4->i1);
+    BOOST_CHECK_EQUAL(4, c8->c7->c6->c4->i2);
+    BOOST_CHECK_EQUAL(1, c8->c7->c6->c3->i);
+    BOOST_CHECK_EQUAL(5, c8->c7->c6->c5.c2->i);
+    BOOST_CHECK_EQUAL(0.0, c8->c7->c6->c5.c2->d);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c5.c2->c);
 }
 
-TEST(Factory, CreateSingletonImpl)
+BOOST_AUTO_TEST_CASE(CreateSingletonImpl)
 {
     Factory
     <
@@ -253,23 +253,23 @@ TEST(Factory, CreateSingletonImpl)
 
     shared_ptr<C8> c8 = factory.create< shared_ptr<C8> >();
 
-    EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
-    EXPECT_NE(c8->c7->c6->c4->c3, c8->c7->c6->c3);
-    EXPECT_EQ(c8->c7->if0, c8->c7->c6->c5.if0);
+    BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
+    BOOST_CHECK(c8->c7->c6->c4->c3 != c8->c7->c6->c3);
+    BOOST_CHECK(c8->c7->if0 == c8->c7->c6->c5.if0);
 
-    EXPECT_TRUE(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
-    EXPECT_TRUE(dynamic_cast<CIf0*>(c8->c7->if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->if0.get()));
 
-    EXPECT_EQ(0, c8->i);
-    EXPECT_EQ(0, c8->c7->c6->c4->i1);
-    EXPECT_EQ(0, c8->c7->c6->c4->i2);
-    EXPECT_EQ(0, c8->c7->c6->c3->i);
-    EXPECT_EQ(0, c8->c7->c6->c5.c2->i);
-    EXPECT_EQ(0.0, c8->c7->c6->c5.c2->d);
-    EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
+    BOOST_CHECK_EQUAL(0, c8->i);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c4->i1);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c4->i2);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c3->i);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c5.c2->i);
+    BOOST_CHECK_EQUAL(0.0, c8->c7->c6->c5.c2->d);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c5.c2->c);
 }
 
-TEST(Factory, CreateSingletonMany)
+BOOST_AUTO_TEST_CASE(CreateSingletonMany)
 {
     Factory
     <
@@ -284,23 +284,23 @@ TEST(Factory, CreateSingletonMany)
 
     shared_ptr<C8> c8 = factory.create< shared_ptr<C8> >();
 
-    EXPECT_EQ(c8->c1, c8->c7->c6->c5.c1);
-    EXPECT_EQ(c8->c7->c6->c4->c3, c8->c7->c6->c3);
-    EXPECT_EQ(c8->c7->if0, c8->c7->c6->c5.if0);
+    BOOST_CHECK(c8->c1 == c8->c7->c6->c5.c1);
+    BOOST_CHECK(c8->c7->c6->c4->c3 == c8->c7->c6->c3);
+    BOOST_CHECK(c8->c7->if0 == c8->c7->c6->c5.if0);
 
-    EXPECT_TRUE(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
-    EXPECT_TRUE(dynamic_cast<CIf0*>(c8->c7->if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->if0.get()));
 
-    EXPECT_EQ(0, c8->i);
-    EXPECT_EQ(0, c8->c7->c6->c4->i1);
-    EXPECT_EQ(0, c8->c7->c6->c4->i2);
-    EXPECT_EQ(0, c8->c7->c6->c3->i);
-    EXPECT_EQ(0, c8->c7->c6->c5.c2->i);
-    EXPECT_EQ(0.0, c8->c7->c6->c5.c2->d);
-    EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
+    BOOST_CHECK_EQUAL(0, c8->i);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c4->i1);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c4->i2);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c3->i);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c5.c2->i);
+    BOOST_CHECK_EQUAL(0.0, c8->c7->c6->c5.c2->d);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c5.c2->c);
 }
 
-TEST(Factory, CtorTraits)
+BOOST_AUTO_TEST_CASE(CtorTraits)
 {
     const int i1 = 42;
     const int i2 = 87;
@@ -317,11 +317,11 @@ TEST(Factory, CtorTraits)
 
     C10 obj = factory.create<C10>();
 
-    EXPECT_EQ(i1, obj.i1);
-    EXPECT_EQ(i2, obj.i2);
+    BOOST_CHECK_EQUAL(i1, obj.i1);
+    BOOST_CHECK_EQUAL(i2, obj.i2);
 }
 
-TEST(Factory, BaseOf)
+BOOST_AUTO_TEST_CASE(BaseOf)
 {
     Factory
     <
@@ -338,23 +338,23 @@ TEST(Factory, BaseOf)
 
     shared_ptr<C8> c8 = factory.create< shared_ptr<C8> >();
 
-    EXPECT_NE(c8->c1, c8->c7->c6->c5.c1);
-    EXPECT_NE(c8->c7->c6->c4->c3, c8->c7->c6->c3);
-    EXPECT_NE(c8->c7->if0, c8->c7->c6->c5.if0);
+    BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
+    BOOST_CHECK(c8->c7->c6->c4->c3 != c8->c7->c6->c3);
+    BOOST_CHECK(c8->c7->if0 != c8->c7->c6->c5.if0);
 
-    EXPECT_TRUE(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
-    EXPECT_TRUE(dynamic_cast<CIf0*>(c8->c7->if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->if0.get()));
 
-    EXPECT_EQ(1, c8->i);
-    EXPECT_EQ(3, c8->c7->c6->c4->i1);
-    EXPECT_EQ(4, c8->c7->c6->c4->i2);
-    EXPECT_EQ(1, c8->c7->c6->c3->i);
-    EXPECT_EQ(5, c8->c7->c6->c5.c2->i);
-    EXPECT_EQ(0.0, c8->c7->c6->c5.c2->d);
-    EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
+    BOOST_CHECK_EQUAL(1, c8->i);
+    BOOST_CHECK_EQUAL(3, c8->c7->c6->c4->i1);
+    BOOST_CHECK_EQUAL(4, c8->c7->c6->c4->i2);
+    BOOST_CHECK_EQUAL(1, c8->c7->c6->c3->i);
+    BOOST_CHECK_EQUAL(5, c8->c7->c6->c5.c2->i);
+    BOOST_CHECK_EQUAL(0.0, c8->c7->c6->c5.c2->d);
+    BOOST_CHECK_EQUAL(0, c8->c7->c6->c5.c2->c);
 }
 
-TEST(Factory, BaseOfInterfaceNotTrivialCtor)
+BOOST_AUTO_TEST_CASE(BaseOfInterfaceNotTrivialCtor)
 {
     Factory
     <
@@ -367,10 +367,10 @@ TEST(Factory, BaseOfInterfaceNotTrivialCtor)
 
     TransactionUsage obj = factory.create<TransactionUsage>();
 
-    EXPECT_TRUE(obj.p->get().get() != obj.p->get().get());
+    BOOST_CHECK(obj.p->get().get() != obj.p->get().get());
 }
 
-TEST(Factory, NamedSharedPtrBaseOf)
+BOOST_AUTO_TEST_CASE(NamedSharedPtrBaseOf)
 {
     const int i = 42;
 
@@ -385,10 +385,10 @@ TEST(Factory, NamedSharedPtrBaseOf)
 
     C11 obj = factory.create<C11>();
 
-    EXPECT_EQ(i, *obj.i);
+    BOOST_CHECK_EQUAL(i, *obj.i);
 }
 
-TEST(Factory, NamedSharedPtr)
+BOOST_AUTO_TEST_CASE(NamedSharedPtr)
 {
     const int i = 42;
 
@@ -403,10 +403,10 @@ TEST(Factory, NamedSharedPtr)
 
     C11 obj = factory.create<C11>();
 
-    EXPECT_EQ(i, *obj.i);
+    BOOST_CHECK_EQUAL(i, *obj.i);
 }
 
-TEST(Factory, NamedSharedPtrIf)
+BOOST_AUTO_TEST_CASE(NamedSharedPtrIf)
 {
     Factory
     <
@@ -419,20 +419,20 @@ TEST(Factory, NamedSharedPtrIf)
 
     C12 obj = factory.create<C12>();
 
-    EXPECT_TRUE(dynamic_cast<CIf0*>(obj.if0.get()));
-    EXPECT_EQ(0, obj.c2->i);
-    EXPECT_EQ(0.0, obj.c2->d);
-    EXPECT_EQ(0, obj.c2->c);
+    BOOST_CHECK(dynamic_cast<CIf0*>(obj.if0.get()));
+    BOOST_CHECK_EQUAL(0, obj.c2->i);
+    BOOST_CHECK_EQUAL(0.0, obj.c2->d);
+    BOOST_CHECK_EQUAL(0, obj.c2->c);
 }
 
 #if 0
-TEST(Factory, NamedSharedPtrConcreteTypeWithNotTrivialCtor)
+BOOST_AUTO_TEST_CASE(NamedSharedPtrConcreteTypeWithNotTrivialCtor)
 {
 }
 #endif
 
 #if 0
-TEST(Factory, CreateWithValues)
+BOOST_AUTO_TEST_CASE(CreateWithValues)
 {
     const int i = 42;
     const double d = 21.0;
@@ -461,13 +461,13 @@ TEST(Factory, CreateWithValues)
 
     C9 obj = factory.create<C9>();
 
-    EXPECT_EQ(i, obj.i);
-    EXPECT_EQ(d, obj.d);
-    EXPECT_EQ(c, obj.c);
-    EXPECT_EQ("test", obj.s);
+    BOOST_CHECK_EQUAL(i, obj.i);
+    BOOST_CHECK_EQUAL(d, obj.d);
+    BOOST_CHECK_EQUAL(c, obj.c);
+    BOOST_CHECK_EQUAL("test", obj.s);
 }
 
-TEST(Factory, CreateWithNonTrivialCtor)
+BOOST_AUTO_TEST_CASE(CreateWithNonTrivialCtor)
 {
     const int i = 42;
     const double d = 21.0;
@@ -492,12 +492,12 @@ TEST(Factory, CreateWithNonTrivialCtor)
 
     C2 obj = factory.create<C2>();
 
-    EXPECT_EQ(i, obj.i);
-    EXPECT_EQ(d, obj.d);
-    EXPECT_EQ(c, obj.c);
+    BOOST_CHECK_EQUAL(i, obj.i);
+    BOOST_CHECK_EQUAL(d, obj.d);
+    BOOST_CHECK_EQUAL(c, obj.c);
 }
 
-TEST(Factory, CreateWithAttributes)
+BOOST_AUTO_TEST_CASE(CreateWithAttributes)
 {
     const int i1 = 42;
     const int i2 = 87;
@@ -523,8 +523,8 @@ TEST(Factory, CreateWithAttributes)
 
     C4 obj = factory.create<C4>();
 
-    EXPECT_EQ(i1, obj.i1);
-    EXPECT_EQ(i2, obj.i2);
+    BOOST_CHECK_EQUAL(i1, obj.i1);
+    BOOST_CHECK_EQUAL(i2, obj.i2);
 }
 #endif
 
