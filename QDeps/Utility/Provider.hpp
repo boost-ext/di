@@ -16,6 +16,7 @@ template<typename T>
 class Provider
 {
 public:
+    virtual ~Provider() { }
     virtual T get() const = 0;
 };
 

@@ -54,7 +54,7 @@ valgrind_%:
 	$(VALGRIND) --leak-check=full --track-origins=yes ./$*.exe
 
 clean:
-	@find . -iname "*.o" -or -iname "*.gcda" -or -iname "*.gcno" | xargs --no-run-if-empty rm -f
-	@rm -f *.exe
+	@find . $(BOOST) -iname "*.o" -or -iname "*.gcda" -or -iname "*.gcno" | xargs --no-run-if-empty rm -f
+	@rm -f *.exe $(LIB_BOOST_UNIT_TEST_FRAMEWORK).a
 	@rm -rf cov_*
 

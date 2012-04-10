@@ -60,7 +60,7 @@ namespace QDeps
  * @endcode
  */
 class Specialized { };
-template<typename, typename = Specialized> class Defaults;
+template<typename, typename = Specialized> struct Defaults;
 
 } // namespace QDeps
 
