@@ -6,8 +6,8 @@ QDeps - C++ Dependency Injection Framework
 
 To get started
 -----
-`if you don't have boost and gtest:` `git clone --recurse-submodules git://github.com/QSrc/QDeps.git`
-`if you have boost and gtest: ` `git clone git://github.com/QSrc/QDeps.git`
+`git clone --recurse-submodules git://github.com/QSrc/QDeps.git` `(if you don't have boost)`
+`git clone git://github.com/QSrc/QDeps.git` `(if you have boost)`
 
 Documentation
 -----
@@ -157,7 +157,6 @@ Requirements
 
     Tests:
         * gnu-compatible Make >= 3.81
-        * gtest >= 1.6.0 (UT, MT)
         * [optional] lcov, cppcheck, scan-build, valgrind
 
     Documentation:
