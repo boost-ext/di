@@ -226,7 +226,7 @@ BOOST_AUTO_TEST_CASE(CreatePerRequestSingletonPathMix)
 
     BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
     BOOST_CHECK(c8->c7->c6->c4->c3 == c8->c7->c6->c3);
-    BOOST_CHECK(c8->c7->if0 == c8->c7->c6->c5.if0);
+    BOOST_CHECK(c8->c7->if0 != c8->c7->c6->c5.if0);
 
     BOOST_CHECK(dynamic_cast<CIf01*>(c8->c7->c6->c5.if0.get()));
     BOOST_CHECK(dynamic_cast<CIf02*>(c8->c7->if0.get()));

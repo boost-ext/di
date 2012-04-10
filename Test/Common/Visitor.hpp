@@ -7,6 +7,7 @@
 #ifndef QDEPS_TEST_COMMON_VISITOR_HPP
 #define QDEPS_TEST_COMMON_VISITOR_HPP
 
+#include <boost/test/unit_test.hpp>
 #include <typeinfo>
 #include <vector>
 #include <string>

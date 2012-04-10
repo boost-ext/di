@@ -18,7 +18,7 @@ ut_back:=$(patsubst %.cpp, %.o, $(shell find UT/Back -iname "*.cpp")) main.o
 ut_front:=$(patsubst %.cpp, %.o, $(shell find UT/Front -iname "*.cpp")) main.o
 ut_utility:=$(patsubst %.cpp, %.o, $(shell find UT/Utility -iname "*.cpp")) main.o
 
-.PHONY: all btest test cov cppcheck scan-build valgrind clean
+.PHONY: all $(LIB_BOOST_UNIT_TEST_FRAMEWORK) test cov cppcheck scan-build valgrind clean
 
 all: test cov cppcheck scan-build valgrind
 test: $(LIB_BOOST_UNIT_TEST_FRAMEWORK) ut_back ut_front ut_utility mt
@@ -29,7 +29,7 @@ $(LIB_BOOST_UNIT_TEST_FRAMEWORK): $(BOOST_UNIT_TEST_FRAMEWORK_OBJS)
 	@ar rcs $(LIB_BOOST_UNIT_TEST_FRAMEWORK).a $(BOOST_UNIT_TEST_FRAMEWORK_OBJS)
 
 %: $$($$@)
-	@$(CXX) $(CXXFLAGS) -o $@.exe $? $(LIB_BOOST_UNIT_TEST_FRAMEWORK)
+	@$(CXX) $(CXXFLAGS) -DBOOST_TEST_MODULE=$@ -o $@.exe $? $(LIB_BOOST_UNIT_TEST_FRAMEWORK).a
 	./$@.exe
 
 cppcheck:

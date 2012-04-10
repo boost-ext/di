@@ -116,13 +116,13 @@ BOOST_AUTO(providerModule, Front::Fusion::Module<>()(
     >()
 ));
 
-BOOST_AUTO_TEST_CASE_VARIADIC(OneModule, Injector, 
+BOOST_AUTO_TEST_CASE_VARIADIC(OneModule, Injector,
     Injector<BaseModule1>,
-    Injector<BOOST_TYPEOF(fusionModule1)
+    Injector<BOOST_TYPEOF(fusionModule1)>)
 {
     Injector injector;
 
-    shared_ptr<C8> c8 = injector.create< shared_ptr<C8> >();
+    shared_ptr<C8> c8 = injector.template create< shared_ptr<C8> >();
 
     BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
     BOOST_CHECK(c8->c7->c6->c4->c3 == c8->c7->c6->c3);
@@ -140,7 +140,7 @@ BOOST_AUTO_TEST_CASE_VARIADIC(OneModule, Injector,
     BOOST_CHECK_EQUAL(0, c8->c7->c6->c5.c2->c);
 }
 
-BOOST_AUTO_TEST_CASE_VARIADIC(ManyModules, Injector, 
+BOOST_AUTO_TEST_CASE_VARIADIC(ManyModules, Injector,
     Injector<BaseModule2, BaseModule3>,
     Injector<BaseModule3, BaseModule2>,
     Injector<BOOST_TYPEOF(fusionModule2), BOOST_TYPEOF(fusionModule3)>,
@@ -148,7 +148,7 @@ BOOST_AUTO_TEST_CASE_VARIADIC(ManyModules, Injector,
 {
     Injector injector;
 
-    shared_ptr<C8> c8 = injector.create< shared_ptr<C8> >();
+    shared_ptr<C8> c8 = injector.template create< shared_ptr<C8> >();
 
     BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
     BOOST_CHECK(c8->c7->c6->c4->c3 == c8->c7->c6->c3);
@@ -166,13 +166,13 @@ BOOST_AUTO_TEST_CASE_VARIADIC(ManyModules, Injector,
     BOOST_CHECK_EQUAL(0, c8->c7->c6->c5.c2->c);
 }
 
-BOOST_AUTO_TEST_CASE_VARIADIC(MixModules, Injector, 
+BOOST_AUTO_TEST_CASE_VARIADIC(MixModules, Injector,
     Injector<BaseModule2, BOOST_TYPEOF(fusionModule2)>,
     Injector<BOOST_TYPEOF(fusionModule2), BaseModule2>)
 {
     Injector injector;
 
-    shared_ptr<C8> c8 = injector.create< shared_ptr<C8> >();
+    shared_ptr<C8> c8 = injector.template create< shared_ptr<C8> >();
 
     BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
     BOOST_CHECK(c8->c7->c6->c4->c3 == c8->c7->c6->c3);
@@ -190,31 +190,33 @@ BOOST_AUTO_TEST_CASE_VARIADIC(MixModules, Injector,
     BOOST_CHECK_EQUAL(0, c8->c7->c6->c5.c2->c);
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(Provider, Injector, 
+BOOST_AUTO_TEST_CASE_VARIADIC(BasicProvider, Injector,
     Injector<ProviderModule>,
     Injector<BOOST_TYPEOF(providerModule)>)
 {
     Injector injector;
-    TransactionUsage obj = injector.create<TransactionUsage>();
+    TransactionUsage obj = injector.template create<TransactionUsage>();
     BOOST_CHECK(obj.p->get().get() != obj.p->get().get());
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(Visitor, Injector,
+BOOST_AUTO_TEST_CASE_VARIADIC(BasicVisitor, Injector,
     Injector<ProviderModule>,
     Injector<BOOST_TYPEOF(providerModule)>)
 {
-    injector.visit<TransactionUsage>(
-        Visitor
+    Injector injector;
+    Visitor
+    <
+        vector
         <
-            vector
-            <
-                TransactionUsage,
-                shared_ptr< Provider< shared_ptr<Transaction> > >,
-                shared_ptr<C3>,
-                int
-            >
-        >()
-    );
+            TransactionUsage,
+            shared_ptr< Provider< shared_ptr<Transaction> > >,
+            shared_ptr<C3>,
+            int
+        >
+    >
+    visitor;
+
+    injector.template visit<TransactionUsage>(visitor);
 }
 
 } // namespace MT

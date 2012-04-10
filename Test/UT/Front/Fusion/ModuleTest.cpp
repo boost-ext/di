@@ -31,7 +31,7 @@ using namespace Utility;
 using namespace boost::mpl;
 using namespace boost;
 
-BOOST_AUTO_TEST_CASE(Empty)
+BOOST_AUTO_TEST_CASE(FusionEmpty)
 {
     BOOST_AUTO(fusionModule, Module<>()());
     typedef BOOST_TYPEOF(fusionModule) TestModule;
@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE(Empty)
     BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
 }
 
-BOOST_AUTO_TEST_CASE(Mix)
+BOOST_AUTO_TEST_CASE(FusionMix)
 {
     BOOST_AUTO(fusionModule, Module<>()(
         Singletons<

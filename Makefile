@@ -5,11 +5,11 @@ COMPILERS:=g++ clang++
 
 .PHONY: all test examples doc install release clean
 
-define EXTERNAL_template =
-	$(1): $(1)_external
-endef
+#define EXTERNAL_template =
+	#$(1): $(1)_external
+#endef
 
-$(foreach compiler, $(COMPILERS), $(eval $(call EXTERNAL_template, $(compiler))))
+#$(foreach compiler, $(COMPILERS), $(eval $(call EXTERNAL_template, $(compiler))))
 
 all: verify examples doc
 
@@ -28,12 +28,12 @@ doc:
 install:
 	@cp -r $(TARGET) $(PREFIX)
 
-externals_boost:
-	@cd Test && make CXX='g++' EXTRA_CXXFLAGS='-H' test 2>&1 >/dev/null | grep boost | sed "s/.*\/\(boost.*\)/\1/" | xargs -i% sh -c "[ -e $(EXTERNALS)/% ] || (cd $(PREFIX) && cp --parents % $(EXTERNALS)/boost)"
-	@cd Test && make CXX='clang++' EXTRA_CXXFLAGS='-H' test 2>&1 >/dev/null | grep boost | sed "s/.*\/\(boost.*\)/\1/" | xargs -i% sh -c "[ -e $(EXTERNALS)/% ] || (cd $(PREFIX) && cp --parents % $(EXTERNALS)/boost)"
-	@cd Test && make CXX='icc' EXTRA_CXXFLAGS='-H' test 2>&1 >/dev/null | grep boost | sed "s/.*\/\(boost.*\)/\1/" | xargs -i% sh -c "[ -e $(EXTERNALS)/% ] || (cd $(PREFIX) && cp --parents % $(EXTERNALS)/boost)"
+#externals_boost:
+	#@cd Test && make CXX='g++' EXTRA_CXXFLAGS='-H' test 2>&1 >/dev/null | grep boost | sed "s/.*\/\(boost.*\)/\1/" | xargs -i% sh -c "[ -e $(EXTERNALS)/% ] || (cd $(PREFIX) && cp --parents % $(EXTERNALS)/boost)"
+	#@cd Test && make CXX='clang++' EXTRA_CXXFLAGS='-H' test 2>&1 >/dev/null | grep boost | sed "s/.*\/\(boost.*\)/\1/" | xargs -i% sh -c "[ -e $(EXTERNALS)/% ] || (cd $(PREFIX) && cp --parents % $(EXTERNALS)/boost)"
+	#@cd Test && make CXX='icc' EXTRA_CXXFLAGS='-H' test 2>&1 >/dev/null | grep boost | sed "s/.*\/\(boost.*\)/\1/" | xargs -i% sh -c "[ -e $(EXTERNALS)/% ] || (cd $(PREFIX) && cp --parents % $(EXTERNALS)/boost)"
 
-release: externals_boost
+#release: externals_boost
 	# test, diagnostics, ...
 	# update externals
 	# generate doc

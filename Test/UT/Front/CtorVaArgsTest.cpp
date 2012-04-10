@@ -18,7 +18,7 @@ namespace Scopes
 namespace UT
 {
 
-BOOST_AUTO_TEST_CASE(Empty)
+BOOST_AUTO_TEST_CASE(VaArgsCtorEmpty)
 {
     struct C
     {
@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_CASE(Empty)
     };
 }
 
-BOOST_AUTO_TEST_CASE(ExplicitWithDefault)
+BOOST_AUTO_TEST_CASE(VaArgsCtorExplicitWithDefault)
 {
     struct C
     {
@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(ExplicitWithDefault)
     BOOST_CHECK_EQUAL(static_cast<int>(C::DEFAULT), c.i);
 }
 
-BOOST_AUTO_TEST_CASE(Params)
+BOOST_AUTO_TEST_CASE(VaArgsCtorParams)
 {
     struct C
     {
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE(Params)
     BOOST_CHECK_EQUAL(d, c.d);
 }
 
-BOOST_AUTO_TEST_CASE(Traits)
+BOOST_AUTO_TEST_CASE(VaArgsCtorTraits)
 {
     const int i = 1;
     const double d = 2.0;

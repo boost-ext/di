@@ -402,7 +402,7 @@ BOOST_AUTO_TEST_CASE(Mix)
     BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
 }
 
-BOOST_AUTO_TEST_CASE(Externals)
+BOOST_AUTO_TEST_CASE(ExternalsBase)
 {
     struct TestModule : Module
         <
