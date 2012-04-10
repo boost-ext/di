@@ -6,8 +6,7 @@ QDeps - C++ Dependency Injection Framework
 
 To get started
 -----
-`git clone --recurse-submodules git://github.com/QSrc/QDeps.git` `(if you don't have boost)`
-`git clone git://github.com/QSrc/QDeps.git` `(if you have boost)`
+git clone git://github.com/QSrc/QDeps.git
 
 Documentation
 -----
@@ -153,7 +152,7 @@ Requirements
 ------------
     Code:
         * c++ 98 standard-compliant compiler supporting BOOST_TYPEOF
-        * boost >= 1.43 (headers only libraries)
+        * boost >= 1.43 (needed files from boost_1_49 are in Externals/boost)
 
     Tests:
         * gnu-compatible Make >= 3.81
@@ -161,6 +160,7 @@ Requirements
 
     Documentation:
         * vim >= 7.3
+        * vimwiki >= 1.2 (vimwiki 1.2 is in Externals/vimwiki)
 
     Supported compilers (successfully tested):
         * gcc   >= 3.4.6

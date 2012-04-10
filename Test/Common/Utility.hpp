@@ -7,7 +7,7 @@
 #ifndef QDEPS_TEST_COMMON_UTILITY_HPP
 #define QDEPS_TEST_COMMON_UTILITY_HPP
 
-#include <gtest/gtest.h>
+#include <boost/test/unit_test.hpp>
 #include <typeinfo>
 #include <vector>
 #include <string>
@@ -16,16 +16,6 @@
 #include <boost/mpl/empty.hpp>
 #include <boost/mpl/pop_front.hpp>
 #include <boost/mpl/front.hpp>
-
-#define TEST_T(name, test, ...)                             \
-    template<typename TInjector>                            \
-    struct name##test : public ::testing::Test              \
-    {                                                       \
-        TInjector injector;                                 \
-    };                                                      \
-    typedef ::testing::Types<__VA_ARGS__> Types##test;      \
-    TYPED_TEST_CASE(name##test, Types##test);               \
-    TYPED_TEST(name##test, test)
 
 namespace QDeps
 {

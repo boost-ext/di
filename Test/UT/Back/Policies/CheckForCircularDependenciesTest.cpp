@@ -6,7 +6,7 @@
 //
 #define QDEPS_STATIC_ASSERT(cond, expr, types) typedef void type
 
-#include <gtest/gtest.h>
+#include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include "QDeps/Back/Policies/CheckForCircularDependencies.hpp"
