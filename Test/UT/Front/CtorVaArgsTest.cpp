@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE(ExplicitWithDefault)
 
     C c;
 
-    EXPECT_EQ(static_cast<int>(C::DEFAULT), c.i);
+    BOOST_CHECK_EQUAL(static_cast<int>(C::DEFAULT), c.i);
 }
 
 BOOST_AUTO_TEST_CASE(Params)
@@ -62,8 +62,8 @@ BOOST_AUTO_TEST_CASE(Params)
 
     C c(i, d);
 
-    EXPECT_EQ(i, c.i);
-    EXPECT_EQ(d, c.d);
+    BOOST_CHECK_EQUAL(i, c.i);
+    BOOST_CHECK_EQUAL(d, c.d);
 }
 
 BOOST_AUTO_TEST_CASE(Traits)
@@ -85,8 +85,8 @@ BOOST_AUTO_TEST_CASE(Traits)
 
     C c(i, d);
 
-    EXPECT_EQ(i, c.i);
-    EXPECT_EQ(d, c.d);
+    BOOST_CHECK_EQUAL(i, c.i);
+    BOOST_CHECK_EQUAL(d, c.d);
 }
 
 } // namespace UT

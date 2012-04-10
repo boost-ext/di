@@ -61,7 +61,7 @@ class Impl : public I { };
 
 BOOST_AUTO_TEST_CASE(Empty)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         is_same
         <
             Dependency<int>,
@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(Empty)
 
 BOOST_AUTO_TEST_CASE(One)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         is_same
         <
             Dependency<int>,
@@ -98,7 +98,7 @@ BOOST_AUTO_TEST_CASE(One)
 
 BOOST_AUTO_TEST_CASE(Found)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         is_same
         <
             Dependency<float>,
@@ -120,7 +120,7 @@ BOOST_AUTO_TEST_CASE(Found)
 
 BOOST_AUTO_TEST_CASE(FoundMany)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         is_same
         <
             Dependency<float>,
@@ -142,7 +142,7 @@ BOOST_AUTO_TEST_CASE(FoundMany)
 
 BOOST_AUTO_TEST_CASE(NotFound)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         is_same
         <
             Dependency<double>,
@@ -164,7 +164,7 @@ BOOST_AUTO_TEST_CASE(NotFound)
 
 BOOST_AUTO_TEST_CASE(Context)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         is_same
         <
             Dependency<int, int, vector<A, B> >,
@@ -185,7 +185,7 @@ BOOST_AUTO_TEST_CASE(Context)
 
 BOOST_AUTO_TEST_CASE(ContextMany)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         is_same
         <
             Dependency<int, int, vector<A, B> >,
@@ -207,7 +207,7 @@ BOOST_AUTO_TEST_CASE(ContextMany)
 
 BOOST_AUTO_TEST_CASE(ContextManyEnd)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         is_same
         <
             Dependency<int, int, vector<A, B> >,
@@ -229,7 +229,7 @@ BOOST_AUTO_TEST_CASE(ContextManyEnd)
 
 BOOST_AUTO_TEST_CASE(ContextNotFound)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         is_same
         <
             Dependency<int>,
@@ -250,7 +250,7 @@ BOOST_AUTO_TEST_CASE(ContextNotFound)
 
 BOOST_AUTO_TEST_CASE(ContextOtherTypes)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         is_same
         <
             Dependency<int, int, vector<A, B> >,
@@ -273,7 +273,7 @@ BOOST_AUTO_TEST_CASE(ContextOtherTypes)
 
 BOOST_AUTO_TEST_CASE(ContextLongWithOrder)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         is_same
         <
             Dependency<int, int, vector<A, B, C> >,
@@ -301,7 +301,7 @@ BOOST_AUTO_TEST_CASE(ContextLongWithOrder)
 
 BOOST_AUTO_TEST_CASE(ContextLongWithOrderEmptyCallStack)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         is_same
         <
             Dependency<int>,
@@ -329,7 +329,7 @@ BOOST_AUTO_TEST_CASE(ContextLongWithOrderEmptyCallStack)
 
 BOOST_AUTO_TEST_CASE(ContextLongWithOrderDiffCallStack)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         is_same
         <
             Dependency<int, int, vector<B> >,
@@ -357,7 +357,7 @@ BOOST_AUTO_TEST_CASE(ContextLongWithOrderDiffCallStack)
 
 BOOST_AUTO_TEST_CASE(ContextLongWithOrderShortCallStack)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         is_same
         <
             Dependency<int, int, vector<C> >,
@@ -385,7 +385,7 @@ BOOST_AUTO_TEST_CASE(ContextLongWithOrderShortCallStack)
 
 BOOST_AUTO_TEST_CASE(ContextLongWithOrderToLongCallStack)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         is_same
         <
             Dependency<int>,
@@ -413,7 +413,7 @@ BOOST_AUTO_TEST_CASE(ContextLongWithOrderToLongCallStack)
 
 BOOST_AUTO_TEST_CASE(BaseOfFail)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         is_same
         <
             Dependency<I>,
@@ -433,7 +433,7 @@ BOOST_AUTO_TEST_CASE(BaseOfFail)
 
 BOOST_AUTO_TEST_CASE(BaseOfSuccessful)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         is_same
         <
             DependencyBaseOf<Impl>,
@@ -453,7 +453,7 @@ BOOST_AUTO_TEST_CASE(BaseOfSuccessful)
 
 BOOST_AUTO_TEST_CASE(ComplexType)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         is_same
         <
             Dependency<int>,
@@ -473,7 +473,7 @@ BOOST_AUTO_TEST_CASE(ComplexType)
 
 BOOST_AUTO_TEST_CASE(NamedType)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         is_same
         <
             Dependency< Named<int, _1>, int>,

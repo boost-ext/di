@@ -4,10 +4,9 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef QDEPS_TEST_COMMON_UTILITY_HPP
-#define QDEPS_TEST_COMMON_UTILITY_HPP
+#ifndef QDEPS_TEST_COMMON_VISITOR_HPP
+#define QDEPS_TEST_COMMON_VISITOR_HPP
 
-#include <boost/test/unit_test.hpp>
 #include <typeinfo>
 #include <vector>
 #include <string>
@@ -47,7 +46,7 @@ private:
     template<typename Seq> void verify(int, typename enable_if< empty<Seq> >::type* = 0) { }
     template<typename Seq> void verify(int i, typename disable_if< empty<Seq> >::type* = 0)
     {
-        EXPECT_EQ(typeid(typename front<Seq>::type).name(), visits.at(i));
+        BOOST_CHECK_EQUAL(typeid(typename front<Seq>::type).name(), visits.at(i));
         verify<typename pop_front<Seq>::type>(i + 1);
     }
 

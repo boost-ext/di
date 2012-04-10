@@ -28,21 +28,21 @@ class A { };
 
 template<typename T> void MakePlainTest()
 {
-    EXPECT_TRUE((boost::is_same<T, typename MakePlain<T>::type>::value));
-    EXPECT_TRUE((boost::is_same<T, typename MakePlain<T*>::type>::value));
-    EXPECT_TRUE((boost::is_same<T, typename MakePlain<const T*>::type>::value));
-    EXPECT_TRUE((boost::is_same<T, typename MakePlain<const T>::type>::value));
-    EXPECT_TRUE((boost::is_same<T, typename MakePlain<const T&>::type>::value));
-    EXPECT_TRUE((boost::is_same<T, typename MakePlain<T&>::type>::value));
-    EXPECT_TRUE((boost::is_same<T, typename MakePlain<shared_ptr<T> >::type>::value));
-    EXPECT_TRUE((boost::is_same<T, typename MakePlain<const shared_ptr<T>&>::type>::value));
-    EXPECT_TRUE((boost::is_same<T, typename MakePlain<shared_ptr<T>&>::type>::value));
-    EXPECT_TRUE((boost::is_same<T, typename MakePlain<volatile T>::type>::value));
-    EXPECT_TRUE((boost::is_same<Named<T, _1>, typename MakePlain<Named<T, _1> >::type>::value));
-    EXPECT_TRUE((boost::is_same<Named<T, _1>, typename MakePlain<Named<shared_ptr<T>, _1> >::type>::value));
-    EXPECT_TRUE((boost::is_same<Named<T, _1>, typename MakePlain<Named<const shared_ptr<T>&, _1> >::type>::value));
-    EXPECT_TRUE((boost::is_same<Named<T, _1>, typename MakePlain<shared_ptr< Named<const shared_ptr<T>&, _1> > >::type>::value));
-    EXPECT_TRUE((boost::is_same<Named<T, _1>, typename MakePlain<const shared_ptr< Named<const shared_ptr<T>&, _1> >&>::type>::value));
+    BOOST_CHECK((boost::is_same<T, typename MakePlain<T>::type>::value));
+    BOOST_CHECK((boost::is_same<T, typename MakePlain<T*>::type>::value));
+    BOOST_CHECK((boost::is_same<T, typename MakePlain<const T*>::type>::value));
+    BOOST_CHECK((boost::is_same<T, typename MakePlain<const T>::type>::value));
+    BOOST_CHECK((boost::is_same<T, typename MakePlain<const T&>::type>::value));
+    BOOST_CHECK((boost::is_same<T, typename MakePlain<T&>::type>::value));
+    BOOST_CHECK((boost::is_same<T, typename MakePlain<shared_ptr<T> >::type>::value));
+    BOOST_CHECK((boost::is_same<T, typename MakePlain<const shared_ptr<T>&>::type>::value));
+    BOOST_CHECK((boost::is_same<T, typename MakePlain<shared_ptr<T>&>::type>::value));
+    BOOST_CHECK((boost::is_same<T, typename MakePlain<volatile T>::type>::value));
+    BOOST_CHECK((boost::is_same<Named<T, _1>, typename MakePlain<Named<T, _1> >::type>::value));
+    BOOST_CHECK((boost::is_same<Named<T, _1>, typename MakePlain<Named<shared_ptr<T>, _1> >::type>::value));
+    BOOST_CHECK((boost::is_same<Named<T, _1>, typename MakePlain<Named<const shared_ptr<T>&, _1> >::type>::value));
+    BOOST_CHECK((boost::is_same<Named<T, _1>, typename MakePlain<shared_ptr< Named<const shared_ptr<T>&, _1> > >::type>::value));
+    BOOST_CHECK((boost::is_same<Named<T, _1>, typename MakePlain<const shared_ptr< Named<const shared_ptr<T>&, _1> >&>::type>::value));
 }
 
 BOOST_AUTO_TEST_CASE(MakePlain)

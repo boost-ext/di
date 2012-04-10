@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE(Basic)
     FakePool pool;
     Entries<Dep> entries;
 
-    EXPECT_EQ(i, (Creator
+    BOOST_CHECK_EQUAL(i, (Creator
         <
             vector
             <

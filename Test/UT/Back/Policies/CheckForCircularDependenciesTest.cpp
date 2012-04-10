@@ -26,8 +26,8 @@ using namespace boost::mpl;
 
 BOOST_AUTO_TEST_CASE(NoCircularDependencies)
 {
-    EXPECT_FALSE((
-        boost::is_base_of
+    BOOST_CHECK((
+        !boost::is_base_of
         <
             boost::mpl::false_,
             CheckForCircularDependencies::Assert
@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE(NoCircularDependencies)
 
 BOOST_AUTO_TEST_CASE(Direct)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         boost::is_base_of
         <
             boost::mpl::false_,
@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE(Direct)
 
 BOOST_AUTO_TEST_CASE(InDirect)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         boost::is_base_of
         <
             boost::mpl::false_,

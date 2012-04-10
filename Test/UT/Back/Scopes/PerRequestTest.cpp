@@ -23,14 +23,14 @@ BOOST_AUTO_TEST_CASE(Create)
 {
     PerRequest l_pr;
 
-    EXPECT_TRUE(l_pr.create<int>().get() != l_pr.create<int>().get());
+    BOOST_CHECK((l_pr.create<int>().get() != l_pr.create<int>().get()));
 }
 
 BOOST_AUTO_TEST_CASE(CreateArgs)
 {
     PerRequest l_pr;
 
-    EXPECT_TRUE((l_pr.create<C2, int, double, char>(0, 0.0, '0').get() != l_pr.create<C2, int, double, char>(0, 0.0, '0').get()));
+    BOOST_CHECK((l_pr.create<C2, int, double, char>(0, 0.0, '0').get() != l_pr.create<C2, int, double, char>(0, 0.0, '0').get()));
 }
 
 } // namespace UT

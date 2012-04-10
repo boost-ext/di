@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE(CtorEmpty)
     Inj l_inj; //have to compile
     (void)l_inj;
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector0<>,
@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(CtorEmpty)
         >::value
     ));
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector0<>,
@@ -61,7 +61,7 @@ BOOST_AUTO_TEST_CASE(Module)
     Inj l_inj; //have to compile
     (void)l_inj;
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector<C, B, A>,
@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE(Module)
         >::value
     ));
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector<E>,

@@ -23,14 +23,14 @@ BOOST_AUTO_TEST_CASE(Create)
 {
     Singleton l_s;
 
-    EXPECT_TRUE(l_s.create<int>() == l_s.create<int>());
+    BOOST_CHECK((l_s.create<int>() == l_s.create<int>()));
 }
 
 BOOST_AUTO_TEST_CASE(CreateArgs)
 {
     Singleton l_s;
 
-    EXPECT_TRUE((l_s.create<C2, int, double, char>(0, 0.0, '0') == l_s.create<C2, int, double, char>(0, 0.0, '0')));
+    BOOST_CHECK((l_s.create<C2, int, double, char>(0, 0.0, '0') == l_s.create<C2, int, double, char>(0, 0.0, '0')));
 }
 
 } // namespace UT

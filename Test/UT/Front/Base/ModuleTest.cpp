@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE(Empty)
 {
     struct TestModule : Module<> { };
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector0<>,
@@ -44,14 +44,14 @@ BOOST_AUTO_TEST_CASE(Empty)
         >::value
     ));
 
-    EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
 }
 
 BOOST_AUTO_TEST_CASE(DefaultScope)
 {
     struct TestModule : Module<C1> { };
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector
@@ -62,14 +62,14 @@ BOOST_AUTO_TEST_CASE(DefaultScope)
         >::value
     ));
 
-    EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
 }
 
 BOOST_AUTO_TEST_CASE(DefaultScopeMany)
 {
     struct TestModule : Module<C1, C2, C3> { };
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector
@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE(DefaultScopeMany)
         >::value
     ));
 
-    EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
 }
 
 BOOST_AUTO_TEST_CASE(DefaultScopeBind)
@@ -98,7 +98,7 @@ BOOST_AUTO_TEST_CASE(DefaultScopeBind)
 
 //TODO
 #if 0
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector
@@ -113,7 +113,7 @@ BOOST_AUTO_TEST_CASE(DefaultScopeBind)
     ));
 #endif
 
-    EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
 }
 
 BOOST_AUTO_TEST_CASE(OneScope)
@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE(OneScope)
         >
     { };
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector
@@ -137,7 +137,7 @@ BOOST_AUTO_TEST_CASE(OneScope)
         >::value
     ));
 
-    EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
 }
 
 BOOST_AUTO_TEST_CASE(OneScopeAlias)
@@ -150,7 +150,7 @@ BOOST_AUTO_TEST_CASE(OneScopeAlias)
         >
     { };
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector
@@ -161,7 +161,7 @@ BOOST_AUTO_TEST_CASE(OneScopeAlias)
         >::value
     ));
 
-    EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
 }
 
 BOOST_AUTO_TEST_CASE(OneScopeDirect)
@@ -172,7 +172,7 @@ BOOST_AUTO_TEST_CASE(OneScopeDirect)
         >
     { };
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector
@@ -183,7 +183,7 @@ BOOST_AUTO_TEST_CASE(OneScopeDirect)
         >::value
     ));
 
-    EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
 }
 
 BOOST_AUTO_TEST_CASE(Many)
@@ -198,7 +198,7 @@ BOOST_AUTO_TEST_CASE(Many)
         >
     { };
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector
@@ -211,7 +211,7 @@ BOOST_AUTO_TEST_CASE(Many)
         >::value
     ));
 
-    EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
 }
 
 BOOST_AUTO_TEST_CASE(ManyScopes)
@@ -229,7 +229,7 @@ BOOST_AUTO_TEST_CASE(ManyScopes)
         >
     { };
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector
@@ -243,7 +243,7 @@ BOOST_AUTO_TEST_CASE(ManyScopes)
         >::value
     ));
 
-    EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
 }
 
 BOOST_AUTO_TEST_CASE(InCall)
@@ -254,7 +254,7 @@ BOOST_AUTO_TEST_CASE(InCall)
         >
     { };
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector
@@ -265,7 +265,7 @@ BOOST_AUTO_TEST_CASE(InCall)
         >::value
     ));
 
-    EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
 }
 
 BOOST_AUTO_TEST_CASE(InName)
@@ -276,7 +276,7 @@ BOOST_AUTO_TEST_CASE(InName)
         >
     { };
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector
@@ -287,7 +287,7 @@ BOOST_AUTO_TEST_CASE(InName)
         >::value
     ));
 
-    EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
 }
 
 BOOST_AUTO_TEST_CASE(InNameInCall)
@@ -301,7 +301,7 @@ BOOST_AUTO_TEST_CASE(InNameInCall)
         >
     { };
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector
@@ -313,7 +313,7 @@ BOOST_AUTO_TEST_CASE(InNameInCall)
         >::value
     ));
 
-    EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
 }
 
 BOOST_AUTO_TEST_CASE(InCallInName)
@@ -327,7 +327,7 @@ BOOST_AUTO_TEST_CASE(InCallInName)
         >
     { };
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector
@@ -339,7 +339,7 @@ BOOST_AUTO_TEST_CASE(InCallInName)
         >::value
     ));
 
-    EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
 }
 
 BOOST_AUTO_TEST_CASE(BindIf)
@@ -352,7 +352,7 @@ BOOST_AUTO_TEST_CASE(BindIf)
         >
     { };
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector
@@ -363,7 +363,7 @@ BOOST_AUTO_TEST_CASE(BindIf)
         >::value
     ));
 
-    EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
 }
 
 BOOST_AUTO_TEST_CASE(Mix)
@@ -383,7 +383,7 @@ BOOST_AUTO_TEST_CASE(Mix)
         >
     { };
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector
@@ -399,7 +399,7 @@ BOOST_AUTO_TEST_CASE(Mix)
         >::value
     ));
 
-    EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
 }
 
 BOOST_AUTO_TEST_CASE(Externals)
@@ -412,9 +412,9 @@ BOOST_AUTO_TEST_CASE(Externals)
         >
     { };
 
-    EXPECT_TRUE((equal<vector0<>, TestModule::Dependencies>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Dependencies>::value));
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector
@@ -438,9 +438,9 @@ BOOST_AUTO_TEST_CASE(ExternalsMix)
         >
     { };
 
-    EXPECT_TRUE((equal<vector0<>, TestModule::Dependencies>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Dependencies>::value));
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector
@@ -462,9 +462,9 @@ BOOST_AUTO_TEST_CASE(ExternalsBind)
         >
     { };
 
-    EXPECT_TRUE((equal<vector0<>, TestModule::Dependencies>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Dependencies>::value));
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector
@@ -488,9 +488,9 @@ BOOST_AUTO_TEST_CASE(NamedInCall)
         >
     { };
 
-    EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector

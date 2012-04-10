@@ -52,13 +52,13 @@ BOOST_AUTO_TEST_CASE(Default)
 {
     typedef Dependency<FakeScope<>, int> Dep;
 
-    EXPECT_TRUE((is_same<vector0<>, Dep::Context>::value));
-    EXPECT_TRUE((is_same<is_same<_1, int>, Dep::Bind>::value));
+    BOOST_CHECK((is_same<vector0<>, Dep::Context>::value));
+    BOOST_CHECK((is_same<is_same<_1, int>, Dep::Bind>::value));
 }
 
 BOOST_AUTO_TEST_CASE(RebindScope)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         is_same
         <
             Dependency
@@ -85,7 +85,7 @@ BOOST_AUTO_TEST_CASE(RebindScope)
 
 BOOST_AUTO_TEST_CASE(RebindType)
 {
-    EXPECT_TRUE((
+    BOOST_CHECK((
         is_same
         <
             Dependency
@@ -116,7 +116,7 @@ BOOST_AUTO_TEST_CASE(createByPool)
     Dependency< FakeScope<>, int > dep;
     FakePool< vector<int>, i > pool;
 
-    EXPECT_EQ(i, *dep.create(pool));
+    BOOST_CHECK_EQUAL(i, *dep.create(pool));
 }
 
 BOOST_AUTO_TEST_CASE(createByValue)
@@ -125,7 +125,7 @@ BOOST_AUTO_TEST_CASE(createByValue)
     Dependency< FakeScope<>, int, int_<i> > dep;
     FakePool< vector0<> > pool;
 
-    EXPECT_EQ(i, dep.create(pool));
+    BOOST_CHECK_EQUAL(i, dep.create(pool));
 }
 
 BOOST_AUTO_TEST_CASE(createByScope)
@@ -134,7 +134,7 @@ BOOST_AUTO_TEST_CASE(createByScope)
     Dependency<FakeScope<i>, int> dep;
     FakePool< vector0<> > pool;
 
-    EXPECT_EQ(i, *dep.create(pool));
+    BOOST_CHECK_EQUAL(i, *dep.create(pool));
 }
 
 } // namespace UT

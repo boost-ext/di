@@ -23,9 +23,6 @@ class Impl : I { };
 
 BOOST_AUTO_TEST_CASE(BaseOf)
 {
-    //EXPECT_TRUE((boost::is_base_of<I, Named<Impl, Name> >::value));
-    //EXPECT_FALSE((boost::is_base_of<I, Named<int, Name> >::value));
-    //EXPECT_FALSE((boost::is_base_of<int, Named<Impl, Name> >::value));
 }
 
 } // namespace UT

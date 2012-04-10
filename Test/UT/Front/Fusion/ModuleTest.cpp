@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE(Empty)
     BOOST_AUTO(fusionModule, Module<>()());
     typedef BOOST_TYPEOF(fusionModule) TestModule;
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector0<>,
@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(Empty)
         >::value
     ));
 
-    EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
 }
 
 BOOST_AUTO_TEST_CASE(Mix)
@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE(Mix)
 
     typedef BOOST_TYPEOF(fusionModule) TestModule;
 
-    EXPECT_TRUE((
+    BOOST_CHECK((
         equal
         <
             vector
@@ -80,7 +80,7 @@ BOOST_AUTO_TEST_CASE(Mix)
         >::value
     ));
 
-    EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
 }
 
 } // namespace UT
