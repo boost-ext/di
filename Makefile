@@ -1,7 +1,7 @@
 TARGET:=QDeps
-PREFIX:=/usr/include
+HEADERS:=/usr/include
 EXTERNALS:=$(PWD)/Externals
-COMPILERS:=g++ clang++
+COMPILERS:=g++ clang++ icc
 
 .PHONY: all test examples doc install release clean
 
@@ -26,12 +26,12 @@ doc:
 	@cd Doc && make doc
 
 install:
-	@cp -r $(TARGET) $(PREFIX)
+	@cp -r $(TARGET) $(HEADERS)
 
-#externals_boost:
-	#@cd Test && make CXX='g++' EXTRA_CXXFLAGS='-H' test 2>&1 >/dev/null | grep boost | sed "s/.*\/\(boost.*\)/\1/" | xargs -i% sh -c "[ -e $(EXTERNALS)/% ] || (cd $(PREFIX) && cp --parents % $(EXTERNALS)/boost)"
-	#@cd Test && make CXX='clang++' EXTRA_CXXFLAGS='-H' test 2>&1 >/dev/null | grep boost | sed "s/.*\/\(boost.*\)/\1/" | xargs -i% sh -c "[ -e $(EXTERNALS)/% ] || (cd $(PREFIX) && cp --parents % $(EXTERNALS)/boost)"
-	#@cd Test && make CXX='icc' EXTRA_CXXFLAGS='-H' test 2>&1 >/dev/null | grep boost | sed "s/.*\/\(boost.*\)/\1/" | xargs -i% sh -c "[ -e $(EXTERNALS)/% ] || (cd $(PREFIX) && cp --parents % $(EXTERNALS)/boost)"
+externals_boost:
+	@cd Test && make CXX='g++' EXTRA_CXXFLAGS='-H' test 2>&1 >/dev/null | grep boost | sed "s/.*\/\(boost.*\)/\1/" | xargs -i% sh -c "[ -e $(EXTERNALS)/% ] || (cd $(HEADERS) && cp --parents % $(EXTERNALS)/boost)"
+	#@cd Test && make CXX='clang++' EXTRA_CXXFLAGS='-H' test 2>&1 >/dev/null | grep boost | sed "s/.*\/\(boost.*\)/\1/" | xargs -i% sh -c "[ -e $(EXTERNALS)/% ] || (cd $(HEADERS) && cp --parents % $(EXTERNALS)/boost)"
+	#@cd Test && make CXX='icc' EXTRA_CXXFLAGS='-H' test 2>&1 >/dev/null | grep boost | sed "s/.*\/\(boost.*\)/\1/" | xargs -i% sh -c "[ -e $(EXTERNALS)/% ] || (cd $(HEADERS) && cp --parents % $(EXTERNALS)/boost)"
 
 #release: externals_boost
 	# test, diagnostics, ...
