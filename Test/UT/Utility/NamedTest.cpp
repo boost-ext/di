@@ -21,7 +21,7 @@ class Name { };
 class I { };
 class Impl : I { };
 
-TEST(Named, BaseOf)
+BOOST_AUTO_TEST_CASE(BaseOf)
 {
     //EXPECT_TRUE((boost::is_base_of<I, Named<Impl, Name> >::value));
     //EXPECT_FALSE((boost::is_base_of<I, Named<int, Name> >::value));

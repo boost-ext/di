@@ -46,7 +46,7 @@ struct Dependency
 
 template<typename T> struct Entries : T { };
 
-TEST(Creator, Basic)
+BOOST_AUTO_TEST_CASE(Basic)
 {
     const int i = 42;
     typedef Dependency<int, i> Dep;

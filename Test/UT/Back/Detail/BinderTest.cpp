@@ -59,7 +59,7 @@ class D { };
 class I { };
 class Impl : public I { };
 
-TEST(Binder, Empty)
+BOOST_AUTO_TEST_CASE(Empty)
 {
     EXPECT_TRUE((
         is_same
@@ -76,7 +76,7 @@ TEST(Binder, Empty)
     ));
 }
 
-TEST(Binder, One)
+BOOST_AUTO_TEST_CASE(One)
 {
     EXPECT_TRUE((
         is_same
@@ -96,7 +96,7 @@ TEST(Binder, One)
     ));
 }
 
-TEST(Binder, Found)
+BOOST_AUTO_TEST_CASE(Found)
 {
     EXPECT_TRUE((
         is_same
@@ -118,7 +118,7 @@ TEST(Binder, Found)
     ));
 }
 
-TEST(Binder, FoundMany)
+BOOST_AUTO_TEST_CASE(FoundMany)
 {
     EXPECT_TRUE((
         is_same
@@ -140,7 +140,7 @@ TEST(Binder, FoundMany)
     ));
 }
 
-TEST(Binder, NotFound)
+BOOST_AUTO_TEST_CASE(NotFound)
 {
     EXPECT_TRUE((
         is_same
@@ -162,7 +162,7 @@ TEST(Binder, NotFound)
     ));
 }
 
-TEST(Binder, Context)
+BOOST_AUTO_TEST_CASE(Context)
 {
     EXPECT_TRUE((
         is_same
@@ -183,7 +183,7 @@ TEST(Binder, Context)
     ));
 }
 
-TEST(Binder, ContextMany)
+BOOST_AUTO_TEST_CASE(ContextMany)
 {
     EXPECT_TRUE((
         is_same
@@ -205,7 +205,7 @@ TEST(Binder, ContextMany)
     ));
 }
 
-TEST(Binder, ContextManyEnd)
+BOOST_AUTO_TEST_CASE(ContextManyEnd)
 {
     EXPECT_TRUE((
         is_same
@@ -227,7 +227,7 @@ TEST(Binder, ContextManyEnd)
     ));
 }
 
-TEST(Binder, ContextNotFound)
+BOOST_AUTO_TEST_CASE(ContextNotFound)
 {
     EXPECT_TRUE((
         is_same
@@ -248,7 +248,7 @@ TEST(Binder, ContextNotFound)
     ));
 }
 
-TEST(Binder, ContextOtherTypes)
+BOOST_AUTO_TEST_CASE(ContextOtherTypes)
 {
     EXPECT_TRUE((
         is_same
@@ -271,7 +271,7 @@ TEST(Binder, ContextOtherTypes)
     ));
 }
 
-TEST(Binder, ContextLongWithOrder)
+BOOST_AUTO_TEST_CASE(ContextLongWithOrder)
 {
     EXPECT_TRUE((
         is_same
@@ -299,7 +299,7 @@ TEST(Binder, ContextLongWithOrder)
     ));
 }
 
-TEST(Binder, ContextLongWithOrderEmptyCallStack)
+BOOST_AUTO_TEST_CASE(ContextLongWithOrderEmptyCallStack)
 {
     EXPECT_TRUE((
         is_same
@@ -327,7 +327,7 @@ TEST(Binder, ContextLongWithOrderEmptyCallStack)
     ));
 }
 
-TEST(Binder, ContextLongWithOrderDiffCallStack)
+BOOST_AUTO_TEST_CASE(ContextLongWithOrderDiffCallStack)
 {
     EXPECT_TRUE((
         is_same
@@ -355,7 +355,7 @@ TEST(Binder, ContextLongWithOrderDiffCallStack)
     ));
 }
 
-TEST(Binder, ContextLongWithOrderShortCallStack)
+BOOST_AUTO_TEST_CASE(ContextLongWithOrderShortCallStack)
 {
     EXPECT_TRUE((
         is_same
@@ -383,7 +383,7 @@ TEST(Binder, ContextLongWithOrderShortCallStack)
     ));
 }
 
-TEST(Binder, ContextLongWithOrderToLongCallStack)
+BOOST_AUTO_TEST_CASE(ContextLongWithOrderToLongCallStack)
 {
     EXPECT_TRUE((
         is_same
@@ -411,7 +411,7 @@ TEST(Binder, ContextLongWithOrderToLongCallStack)
     ));
 }
 
-TEST(Binder, BaseOfFail)
+BOOST_AUTO_TEST_CASE(BaseOfFail)
 {
     EXPECT_TRUE((
         is_same
@@ -431,7 +431,7 @@ TEST(Binder, BaseOfFail)
     ));
 }
 
-TEST(Binder, BaseOfSuccessful)
+BOOST_AUTO_TEST_CASE(BaseOfSuccessful)
 {
     EXPECT_TRUE((
         is_same
@@ -451,7 +451,7 @@ TEST(Binder, BaseOfSuccessful)
     ));
 }
 
-TEST(Binder, ComplexType)
+BOOST_AUTO_TEST_CASE(ComplexType)
 {
     EXPECT_TRUE((
         is_same
@@ -471,7 +471,7 @@ TEST(Binder, ComplexType)
     ));
 }
 
-TEST(Binder, NamedType)
+BOOST_AUTO_TEST_CASE(NamedType)
 {
     EXPECT_TRUE((
         is_same

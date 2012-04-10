@@ -45,7 +45,7 @@ template<typename T> void MakePlainTest()
     EXPECT_TRUE((boost::is_same<Named<T, _1>, typename MakePlain<const shared_ptr< Named<const shared_ptr<T>&, _1> >&>::type>::value));
 }
 
-TEST(Utility, MakePlain)
+BOOST_AUTO_TEST_CASE(MakePlain)
 {
     MakePlainTest<int>();
     MakePlainTest<A>();

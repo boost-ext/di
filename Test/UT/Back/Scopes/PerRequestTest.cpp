@@ -19,14 +19,14 @@ namespace UT
 
 using namespace Test::Common;
 
-TEST(PerRequest, Create)
+BOOST_AUTO_TEST_CASE(Create)
 {
     PerRequest l_pr;
 
     EXPECT_TRUE(l_pr.create<int>().get() != l_pr.create<int>().get());
 }
 
-TEST(PerRequest, CreateArgs)
+BOOST_AUTO_TEST_CASE(CreateArgs)
 {
     PerRequest l_pr;
 

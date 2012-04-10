@@ -21,19 +21,19 @@ namespace UT
 using namespace boost;
 using namespace boost::mpl;
 
-TEST(Value, Generic)
+BOOST_AUTO_TEST_CASE(Generic)
 {
     EXPECT_FALSE((Value<int>::value));
 }
 
-TEST(Value, mpl_int)
+BOOST_AUTO_TEST_CASE(mpl_int)
 {
     const int i = 42;
     EXPECT_TRUE((Value<int_<0> >::value));
     EXPECT_EQ(i, Value<int_<i> >::create());
 }
 
-TEST(Value, mpl_string)
+BOOST_AUTO_TEST_CASE(mpl_string)
 {
     const std::string s = "s";
     EXPECT_TRUE((Value<string<'s'> >::value));

@@ -19,14 +19,14 @@ namespace UT
 
 using namespace Test::Common;
 
-TEST(Singleton, Create)
+BOOST_AUTO_TEST_CASE(Create)
 {
     Singleton l_s;
 
     EXPECT_TRUE(l_s.create<int>() == l_s.create<int>());
 }
 
-TEST(Singleton, CreateArgs)
+BOOST_AUTO_TEST_CASE(CreateArgs)
 {
     Singleton l_s;
 

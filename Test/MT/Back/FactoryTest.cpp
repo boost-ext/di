@@ -32,56 +32,56 @@ using namespace Aux;
 using namespace boost::mpl;
 using namespace boost;
 
-TEST(Factory, CreateUsingCopy)
+BOOST_AUTO_TEST_CASE(CreateUsingCopy)
 {
     Factory< vector0<> > factory;
     C0 obj = factory.create<C0>();
     (void)(obj);
 }
 
-TEST(Factory, CreateUsingRef)
+BOOST_AUTO_TEST_CASE(CreateUsingRef)
 {
     Factory< vector0<> > factory;
     C0& obj = factory.create<C0&>();
     EXPECT_TRUE(&obj);
 }
 
-TEST(Factory, CreateUsingConstRef)
+BOOST_AUTO_TEST_CASE(CreateUsingConstRef)
 {
     Factory< vector0<> > factory;
     const C0& obj = factory.create<const C0&>();
     EXPECT_TRUE(&obj);
 }
 
-TEST(Factory, CreateUsingPtr)
+BOOST_AUTO_TEST_CASE(CreateUsingPtr)
 {
     Factory< vector0<> > factory;
     C0* obj = factory.create<C0*>();
     EXPECT_TRUE(obj);
 }
 
-TEST(Factory, CreateUsingConstPtr)
+BOOST_AUTO_TEST_CASE(CreateUsingConstPtr)
 {
     Factory< vector0<> > factory;
     const C0* obj = factory.create<const C0*>();
     EXPECT_TRUE(obj);
 }
 
-TEST(Factory, CreateUsingSharedPtr)
+BOOST_AUTO_TEST_CASE(CreateUsingSharedPtr)
 {
     Factory< vector0<> > factory;
     shared_ptr<C0> obj = factory.create< shared_ptr<C0> >();
     EXPECT_TRUE(obj);
 }
 
-TEST(Factory, CreateDefaultCtor)
+BOOST_AUTO_TEST_CASE(CreateDefaultCtor)
 {
     Factory< vector0<> > factory;
     C0 obj = factory.create<C0>();
     (void)(obj);
 }
 
-TEST(Factory, CreatePerRequest)
+BOOST_AUTO_TEST_CASE(CreatePerRequest)
 {
     Factory
     <
@@ -110,7 +110,7 @@ TEST(Factory, CreatePerRequest)
     EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
 }
 
-TEST(Factory, CreatePerRequestSingleton)
+BOOST_AUTO_TEST_CASE(CreatePerRequestSingleton)
 {
     Factory
     <
@@ -140,7 +140,7 @@ TEST(Factory, CreatePerRequestSingleton)
     EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
 }
 
-TEST(Factory, CreatePerRequestSingletonPath)
+BOOST_AUTO_TEST_CASE(CreatePerRequestSingletonPath)
 {
     Factory
     <
@@ -171,7 +171,7 @@ TEST(Factory, CreatePerRequestSingletonPath)
     EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
 }
 
-TEST(Factory, CreatePerRequestSingletonPathOrder)
+BOOST_AUTO_TEST_CASE(CreatePerRequestSingletonPathOrder)
 {
     Factory
     <
@@ -203,7 +203,7 @@ TEST(Factory, CreatePerRequestSingletonPathOrder)
     EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
 }
 
-TEST(Factory, CreatePerRequestSingletonPathMix)
+BOOST_AUTO_TEST_CASE(CreatePerRequestSingletonPathMix)
 {
     Factory
     <
@@ -240,7 +240,7 @@ TEST(Factory, CreatePerRequestSingletonPathMix)
     EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
 }
 
-TEST(Factory, CreateSingletonImpl)
+BOOST_AUTO_TEST_CASE(CreateSingletonImpl)
 {
     Factory
     <
@@ -269,7 +269,7 @@ TEST(Factory, CreateSingletonImpl)
     EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
 }
 
-TEST(Factory, CreateSingletonMany)
+BOOST_AUTO_TEST_CASE(CreateSingletonMany)
 {
     Factory
     <
@@ -300,7 +300,7 @@ TEST(Factory, CreateSingletonMany)
     EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
 }
 
-TEST(Factory, CtorTraits)
+BOOST_AUTO_TEST_CASE(CtorTraits)
 {
     const int i1 = 42;
     const int i2 = 87;
@@ -321,7 +321,7 @@ TEST(Factory, CtorTraits)
     EXPECT_EQ(i2, obj.i2);
 }
 
-TEST(Factory, BaseOf)
+BOOST_AUTO_TEST_CASE(BaseOf)
 {
     Factory
     <
@@ -354,7 +354,7 @@ TEST(Factory, BaseOf)
     EXPECT_EQ(0, c8->c7->c6->c5.c2->c);
 }
 
-TEST(Factory, BaseOfInterfaceNotTrivialCtor)
+BOOST_AUTO_TEST_CASE(BaseOfInterfaceNotTrivialCtor)
 {
     Factory
     <
@@ -370,7 +370,7 @@ TEST(Factory, BaseOfInterfaceNotTrivialCtor)
     EXPECT_TRUE(obj.p->get().get() != obj.p->get().get());
 }
 
-TEST(Factory, NamedSharedPtrBaseOf)
+BOOST_AUTO_TEST_CASE(NamedSharedPtrBaseOf)
 {
     const int i = 42;
 
@@ -388,7 +388,7 @@ TEST(Factory, NamedSharedPtrBaseOf)
     EXPECT_EQ(i, *obj.i);
 }
 
-TEST(Factory, NamedSharedPtr)
+BOOST_AUTO_TEST_CASE(NamedSharedPtr)
 {
     const int i = 42;
 
@@ -406,7 +406,7 @@ TEST(Factory, NamedSharedPtr)
     EXPECT_EQ(i, *obj.i);
 }
 
-TEST(Factory, NamedSharedPtrIf)
+BOOST_AUTO_TEST_CASE(NamedSharedPtrIf)
 {
     Factory
     <
@@ -426,13 +426,13 @@ TEST(Factory, NamedSharedPtrIf)
 }
 
 #if 0
-TEST(Factory, NamedSharedPtrConcreteTypeWithNotTrivialCtor)
+BOOST_AUTO_TEST_CASE(NamedSharedPtrConcreteTypeWithNotTrivialCtor)
 {
 }
 #endif
 
 #if 0
-TEST(Factory, CreateWithValues)
+BOOST_AUTO_TEST_CASE(CreateWithValues)
 {
     const int i = 42;
     const double d = 21.0;
@@ -467,7 +467,7 @@ TEST(Factory, CreateWithValues)
     EXPECT_EQ("test", obj.s);
 }
 
-TEST(Factory, CreateWithNonTrivialCtor)
+BOOST_AUTO_TEST_CASE(CreateWithNonTrivialCtor)
 {
     const int i = 42;
     const double d = 21.0;
@@ -497,7 +497,7 @@ TEST(Factory, CreateWithNonTrivialCtor)
     EXPECT_EQ(c, obj.c);
 }
 
-TEST(Factory, CreateWithAttributes)
+BOOST_AUTO_TEST_CASE(CreateWithAttributes)
 {
     const int i1 = 42;
     const int i2 = 87;

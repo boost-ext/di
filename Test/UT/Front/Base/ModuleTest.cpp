@@ -32,7 +32,7 @@ using namespace Utility;
 using namespace boost::mpl;
 using namespace boost;
 
-TEST(BaseModule, Empty)
+BOOST_AUTO_TEST_CASE(Empty)
 {
     struct TestModule : Module<> { };
 
@@ -47,7 +47,7 @@ TEST(BaseModule, Empty)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(BaseModule, DefaultScope)
+BOOST_AUTO_TEST_CASE(DefaultScope)
 {
     struct TestModule : Module<C1> { };
 
@@ -65,7 +65,7 @@ TEST(BaseModule, DefaultScope)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(BaseModule, DefaultScopeMany)
+BOOST_AUTO_TEST_CASE(DefaultScopeMany)
 {
     struct TestModule : Module<C1, C2, C3> { };
 
@@ -85,7 +85,7 @@ TEST(BaseModule, DefaultScopeMany)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(BaseModule, DefaultScopeBind)
+BOOST_AUTO_TEST_CASE(DefaultScopeBind)
 {
     struct TestModule : Module
         <
@@ -116,7 +116,7 @@ TEST(BaseModule, DefaultScopeBind)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(BaseModule, OneScope)
+BOOST_AUTO_TEST_CASE(OneScope)
 {
     struct TestModule : Module
         <
@@ -140,7 +140,7 @@ TEST(BaseModule, OneScope)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(BaseModule, OneScopeAlias)
+BOOST_AUTO_TEST_CASE(OneScopeAlias)
 {
     struct TestModule : Module
         <
@@ -164,7 +164,7 @@ TEST(BaseModule, OneScopeAlias)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(BaseModule, OneScopeDirect)
+BOOST_AUTO_TEST_CASE(OneScopeDirect)
 {
     struct TestModule : Module
         <
@@ -186,7 +186,7 @@ TEST(BaseModule, OneScopeDirect)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(BaseModule, Many)
+BOOST_AUTO_TEST_CASE(Many)
 {
     struct TestModule : Module
         <
@@ -214,7 +214,7 @@ TEST(BaseModule, Many)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(BaseModule, ManyScopes)
+BOOST_AUTO_TEST_CASE(ManyScopes)
 {
     struct TestModule : Module
         <
@@ -246,7 +246,7 @@ TEST(BaseModule, ManyScopes)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(BaseModule, InCall)
+BOOST_AUTO_TEST_CASE(InCall)
 {
     struct TestModule : Module
         <
@@ -268,7 +268,7 @@ TEST(BaseModule, InCall)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(BaseModule, InName)
+BOOST_AUTO_TEST_CASE(InName)
 {
     struct TestModule : Module
         <
@@ -290,7 +290,7 @@ TEST(BaseModule, InName)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(BaseModule, InNameInCall)
+BOOST_AUTO_TEST_CASE(InNameInCall)
 {
     struct TestModule : Module
         <
@@ -316,7 +316,7 @@ TEST(BaseModule, InNameInCall)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(BaseModule, InCallInName)
+BOOST_AUTO_TEST_CASE(InCallInName)
 {
     struct TestModule : Module
         <
@@ -342,7 +342,7 @@ TEST(BaseModule, InCallInName)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(BaseModule, BindIf)
+BOOST_AUTO_TEST_CASE(BindIf)
 {
     struct TestModule : Module
         <
@@ -366,7 +366,7 @@ TEST(BaseModule, BindIf)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(BaseModule, Mix)
+BOOST_AUTO_TEST_CASE(Mix)
 {
     struct TestModule : Module
         <
@@ -402,7 +402,7 @@ TEST(BaseModule, Mix)
     EXPECT_TRUE((equal<vector0<>, TestModule::Externals>::value));
 }
 
-TEST(BaseModule, Externals)
+BOOST_AUTO_TEST_CASE(Externals)
 {
     struct TestModule : Module
         <
@@ -426,7 +426,7 @@ TEST(BaseModule, Externals)
     ));
 }
 
-TEST(BaseModule, ExternalsMix)
+BOOST_AUTO_TEST_CASE(ExternalsMix)
 {
     struct TestModule : Module
         <
@@ -452,7 +452,7 @@ TEST(BaseModule, ExternalsMix)
     ));
 }
 
-TEST(BaseModule, ExternalsBind)
+BOOST_AUTO_TEST_CASE(ExternalsBind)
 {
     struct TestModule : Module
         <
@@ -476,7 +476,7 @@ TEST(BaseModule, ExternalsBind)
     ));
 }
 
-TEST(BaseModule, NamedInCall)
+BOOST_AUTO_TEST_CASE(NamedInCall)
 {
     struct TestModule : Front::Base::Module
         <

@@ -24,7 +24,7 @@ namespace UT
 using namespace Test::Common;
 using namespace boost::mpl;
 
-TEST(CheckForCircularDependencies, NoCircularDependencies)
+BOOST_AUTO_TEST_CASE(NoCircularDependencies)
 {
     EXPECT_FALSE((
         boost::is_base_of
@@ -39,7 +39,7 @@ TEST(CheckForCircularDependencies, NoCircularDependencies)
     ));
 }
 
-TEST(CheckForCircularDependencies, Direct)
+BOOST_AUTO_TEST_CASE(Direct)
 {
     EXPECT_TRUE((
         boost::is_base_of
@@ -54,7 +54,7 @@ TEST(CheckForCircularDependencies, Direct)
     ));
 }
 
-TEST(CheckForCircularDependencies, InDirect)
+BOOST_AUTO_TEST_CASE(InDirect)
 {
     EXPECT_TRUE((
         boost::is_base_of

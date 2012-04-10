@@ -48,7 +48,7 @@ struct FakeScope : Scope< boost::shared_ptr<boost::mpl::_1> >
 
 struct OtherFakeScope { };
 
-TEST(Dependency, Default)
+BOOST_AUTO_TEST_CASE(Default)
 {
     typedef Dependency<FakeScope<>, int> Dep;
 
@@ -56,7 +56,7 @@ TEST(Dependency, Default)
     EXPECT_TRUE((is_same<is_same<_1, int>, Dep::Bind>::value));
 }
 
-TEST(Dependency, RebindScope)
+BOOST_AUTO_TEST_CASE(RebindScope)
 {
     EXPECT_TRUE((
         is_same
@@ -83,7 +83,7 @@ TEST(Dependency, RebindScope)
     ));
 }
 
-TEST(Dependency, RebindType)
+BOOST_AUTO_TEST_CASE(RebindType)
 {
     EXPECT_TRUE((
         is_same
@@ -110,7 +110,7 @@ TEST(Dependency, RebindType)
     ));
 }
 
-TEST(Dependency, createByPool)
+BOOST_AUTO_TEST_CASE(createByPool)
 {
     const int i = 42;
     Dependency< FakeScope<>, int > dep;
@@ -119,7 +119,7 @@ TEST(Dependency, createByPool)
     EXPECT_EQ(i, *dep.create(pool));
 }
 
-TEST(Dependency, createByValue)
+BOOST_AUTO_TEST_CASE(createByValue)
 {
     const int i = 42;
     Dependency< FakeScope<>, int, int_<i> > dep;
@@ -128,7 +128,7 @@ TEST(Dependency, createByValue)
     EXPECT_EQ(i, dep.create(pool));
 }
 
-TEST(Dependency, createByScope)
+BOOST_AUTO_TEST_CASE(createByScope)
 {
     const int i = 42;
     Dependency<FakeScope<i>, int> dep;

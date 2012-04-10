@@ -30,7 +30,7 @@ struct Module : Back::Module
     struct Externals : boost::mpl::vector<E> { };
 };
 
-TEST(Injector, CtorEmpty)
+BOOST_AUTO_TEST_CASE(CtorEmpty)
 {
     typedef Injector<> Inj;
 
@@ -54,7 +54,7 @@ TEST(Injector, CtorEmpty)
     ));
 }
 
-TEST(Injector, Module)
+BOOST_AUTO_TEST_CASE(Module)
 {
     typedef Injector<Module> Inj;
 
