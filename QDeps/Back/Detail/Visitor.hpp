@@ -37,13 +37,13 @@
     >
     class VisitorImpl
     {
-        template<typename T, typename TDependency>
+        template<typename T, typename TCallStack, typename TDependency>
         struct Dependency
         {
             typedef T Type;
+            typedef TCallStack Context;
             typedef typename TDependency::Given Given;
             typedef typename TDependency::Expected Expected;
-            typedef typename TDependency::Context Context;
         };
 
     public:
@@ -72,7 +72,7 @@
     template<typename T, typename TDependency, typename TCallStack, typename TVisitor>
     static typename Aux::EnableIfCtorSize<TDependency, BOOST_PP_ITERATION()>::type executeImpl(const TVisitor& p_visitor)
     {
-        p_visitor.template operator()< Dependency<T, TDependency> >();
+        p_visitor.template operator()< Dependency<T, TCallStack, TDependency> >();
 
         #define QDEPS_VISITOR_EXECUTE(z, n, _)\
             execute<typename Aux::AtCtor<TDependency, n>::type, TCallStack>(p_visitor);
