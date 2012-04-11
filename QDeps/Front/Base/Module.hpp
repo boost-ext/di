@@ -16,6 +16,7 @@
 #include <boost/mpl/back_inserter.hpp>
 #include <boost/mpl/copy.hpp>
 #include "QDeps/Back/Aux/Pool.hpp"
+#include "QDeps/Back/Aux/VCtor.hpp"
 #include "QDeps/Back/Aux/Utility.hpp"
 #include "QDeps/Back/Aux/Instance.hpp"
 #include "QDeps/Back/Module.hpp"
@@ -96,7 +97,7 @@ public:
         >::type
     { };
 
-    QDEPS_VARIADIC_CTOR(Module,
+    QDEPS_VCTOR(Module,
         (m_pool),
     { })
 

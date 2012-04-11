@@ -5,7 +5,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <boost/test/unit_test.hpp>
+#include <boost/test/test_case_template.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include "QDeps/Utility/Named.hpp"
@@ -26,7 +28,9 @@ using namespace Utility;
 
 class A { };
 
-template<typename T> void MakePlainTest()
+typedef boost::mpl::vector<int, A> MakePlainTypes;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(MakePlainType, T, MakePlainTypes)
 {
     BOOST_CHECK((boost::is_same<T, typename MakePlain<T>::type>::value));
     BOOST_CHECK((boost::is_same<T, typename MakePlain<T*>::type>::value));
@@ -43,12 +47,6 @@ template<typename T> void MakePlainTest()
     BOOST_CHECK((boost::is_same<Named<T, _1>, typename MakePlain<Named<const shared_ptr<T>&, _1> >::type>::value));
     BOOST_CHECK((boost::is_same<Named<T, _1>, typename MakePlain<shared_ptr< Named<const shared_ptr<T>&, _1> > >::type>::value));
     BOOST_CHECK((boost::is_same<Named<T, _1>, typename MakePlain<const shared_ptr< Named<const shared_ptr<T>&, _1> >&>::type>::value));
-}
-
-BOOST_AUTO_TEST_CASE(MakePlain)
-{
-    MakePlainTest<int>();
-    MakePlainTest<A>();
 }
 
 } // namespace UT

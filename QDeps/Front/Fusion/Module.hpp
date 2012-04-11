@@ -22,6 +22,7 @@
     #include <boost/mpl/copy.hpp>
     #include <boost/mpl/if.hpp>
     #include "QDeps/Back/Aux/Pool.hpp"
+    #include "QDeps/Back/Aux/VCtor.hpp"
     #include "QDeps/Back/Module.hpp"
     #include "QDeps/Back/Scopes/Singleton.hpp"
     #include "QDeps/Back/Scopes/PerRequest.hpp"
@@ -78,7 +79,7 @@
 
         struct Externals : boost::mpl::vector0<> { };
 
-        QDEPS_VARIADIC_CTOR(Module,
+        QDEPS_VCTOR(Module,
             (m_pool),
         { })
 

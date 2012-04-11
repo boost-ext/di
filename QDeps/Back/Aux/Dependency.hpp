@@ -168,6 +168,7 @@
     #endif
 
 #else
+
     template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
     typename boost::enable_if<IsScopeType<TPool>, typename ResultType<TPool>::type>::type create(TPool&, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg))
     {

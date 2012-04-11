@@ -28,6 +28,7 @@
     #include <boost/mpl/fold.hpp>
     #include <boost/mpl/if.hpp>
     #include "QDeps/Back/Aux/Pool.hpp"
+    #include "QDeps/Back/Aux/VCtor.hpp"
     #include "QDeps/Back/Aux/Utility.hpp"
     #include "QDeps/Back/Module.hpp"
     #include "QDeps/Back/Factory.hpp"
@@ -106,7 +107,7 @@
         typedef Back::Factory<typename Dependencies::type, Pool, Policy> Factory;
 
     public:
-       QDEPS_VARIADIC_CTOR(Injector,
+       QDEPS_VCTOR(Injector,
             (m_pool)
             (m_factory(m_pool)),
         { })
