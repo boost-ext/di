@@ -1,4 +1,3 @@
-#if 0
 //
 // Copyright (c) 2012 Krzysztof Jusiak (krzysztof at jusiak dot net)
 //
@@ -28,58 +27,13 @@ class T2 { };
 class T3 { };
 class T4 { };
 
-class TrivialCtor { };
-
-class DefaultCtor
+BOOST_AUTO_TEST_CASE(PoolEmpty)
 {
-public:
-    explicit DefaultCtor(int = 0) { }
-};
-
-class CustomCtor
-{
-public:
-    explicit CustomCtor(int) { }
-};
-
-class Base { };
-class Derived : Base { };
-
-struct Basic
-{
-    QDEPS_CTOR(Basic,
-        (pool),
-    { })
-
-    Pool< vector<int, std::string> > pool;
-};
-
-struct Complex
-{
-    QPOOL_CTOR(Complex,
-        (pool)
-        (i(42))
-        (s("s"))
-    ,
-        {
-            d = 42.0;
-        }
-    )
-
-    Pool< vector<int, std::string> > pool;
-    int i;
-    std::string s;
-    double d;
-};
-
-BOOST_AUTO_TEST_CASE(Pool, Empty)
-{
-    typedef Pool< vector0<> > PoolType;
-
-    PoolType l_pool;
-    (void)l_pool;
+    Pool< vector0<> > pool;
+    (void)pool;
 }
 
+#if 0
 BOOST_AUTO_TEST_CASE(Pool, BasicWithDefaultCtor)
 {
     typedef Pool< vector<TrivialCtor, DefaultCtor> > PoolType;
@@ -244,10 +198,10 @@ BOOST_AUTO_TEST_CASE(Ctor, Complex)
     BOOST_CHECK_EQUAL("s", l_pool.s);
     BOOST_CHECK_EQUAL(42.0, l_pool.d);
 }
+#endif
 
 } // namespace UT
 } // namespace Aux
 } // namespace Back
 } // namespace QDeps
 
-#endif
