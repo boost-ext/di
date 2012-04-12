@@ -19,61 +19,119 @@ namespace Back
 namespace Detail
 {
 
-//TODO boost::get
-
 template<typename TScope, typename TDest> class Converter
 {
 public:
-    template<typename TSrc> static TDest execute(TSrc p_src) { return p_src; }
-    template<typename TSrc> static TDest execute(const boost::shared_ptr<TSrc>& p_src) { return *p_src; }
+    template<typename TSrc> static TDest execute(TSrc p_src)
+    {
+        return p_src;
+    }
+
+    template<typename TSrc> static TDest execute(const boost::shared_ptr<TSrc>& p_src)
+    {
+        return *p_src;
+    }
 };
 
-template<typename TScope, typename TDest, typename TName> class Converter<TScope, Utility::Named<TDest, TName> >
+template<typename TScope, typename TDest, typename TName>
+class Converter<TScope, Utility::Named<TDest, TName> >
 {
 public:
-    template<typename TSrc> static Utility::Named<TDest, TName> execute(TSrc p_src) { return Utility::Named<TDest, TName>(p_src); }
+    template<typename TSrc> static Utility::Named<TDest, TName> execute(TSrc p_src)
+    {
+        //TODO boost::get
+        return Utility::Named<TDest, TName>(p_src);
+    }
 };
 
-template<typename TScope, typename TDest> class Converter<TScope, TDest&>
+template<typename TScope, typename TDest>
+class Converter<TScope, TDest&>
 {
 public:
-    template<typename TSrc> static TDest& execute(TSrc p_src) { return p_src; }
-    template<typename TSrc> static TDest& execute(const boost::shared_ptr<TSrc>& p_src) { return *p_src; }
+    template<typename TSrc> static TDest& execute(TSrc p_src)
+    {
+        return p_src;
+    }
+
+    template<typename TSrc> static TDest& execute(const boost::shared_ptr<TSrc>& p_src)
+    {
+        return *p_src;
+    }
 };
 
-template<typename TScope, typename TDest> class Converter<TScope, const TDest&>
+template<typename TScope, typename TDest>
+class Converter<TScope, const TDest&>
 {
 public:
-    template<typename TSrc> static const TDest& execute(TSrc p_src) { return p_src; }
-    template<typename TSrc> static const TDest& execute(const boost::shared_ptr<TSrc>& p_src) { return *p_src; }
+    template<typename TSrc> static const TDest& execute(TSrc p_src)
+    {
+        return p_src;
+    }
+
+    template<typename TSrc> static const TDest& execute(const boost::shared_ptr<TSrc>& p_src)
+    {
+        return *p_src;
+    }
 };
 
-template<typename TScope, typename TDest> class Converter<TScope, TDest*>
+template<typename TScope, typename TDest>
+class Converter<TScope, TDest*>
 {
 public:
-    template<typename TSrc> static TDest* execute(TSrc p_src) { return &p_src; }
-    template<typename TSrc> static TDest* execute(const boost::shared_ptr<TSrc>& p_src) { return p_src.get(); }
+    template<typename TSrc> static TDest* execute(TSrc p_src)
+    {
+        return &p_src;
+    }
+
+    template<typename TSrc> static TDest* execute(const boost::shared_ptr<TSrc>& p_src)
+    {
+        return p_src.get();
+    }
 };
 
-template<typename TScope, typename TDest> class Converter<TScope, const TDest*>
+template<typename TScope, typename TDest>
+class Converter<TScope, const TDest*>
 {
 public:
-    template<typename TSrc> static TDest* execute(TSrc p_src) { return &p_src; }
-    template<typename TSrc> static const TDest* execute(const boost::shared_ptr<TSrc>& p_src) { return p_src.get(); }
+    template<typename TSrc> static TDest* execute(TSrc p_src)
+    {
+        return &p_src;
+    }
+
+    template<typename TSrc> static const TDest* execute(const boost::shared_ptr<TSrc>& p_src)
+    {
+        return p_src.get();
+    }
 };
 
-template<typename TScope, typename TDest> class Converter<TScope,  boost::shared_ptr<TDest> >
+template<typename TScope, typename TDest>
+class Converter<TScope,  boost::shared_ptr<TDest> >
 {
 public:
-    template<typename TSrc> static boost::shared_ptr<TDest> execute(TSrc p_src) { return boost::make_shared<TDest>(p_src); }
-    template<typename TSrc> static boost::shared_ptr<TDest> execute(const boost::shared_ptr<TSrc>& p_src) { return p_src; }
+    template<typename TSrc> static boost::shared_ptr<TDest> execute(TSrc p_src)
+    {
+        return boost::make_shared<TDest>(p_src);
+    }
+
+    template<typename TSrc> static boost::shared_ptr<TDest> execute(const boost::shared_ptr<TSrc>& p_src)
+    {
+        return p_src;
+    }
 };
 
-template<typename TScope, typename TDest> class Converter<TScope, const boost::shared_ptr<TDest>&>
+template<typename TScope, typename TDest>
+class Converter<TScope, const boost::shared_ptr<TDest>&>
 {
 public:
-    template<typename TSrc> static const boost::shared_ptr<TDest>& execute(TSrc p_src) { return boost::make_shared<TDest>(p_src); }
-    template<typename TSrc> static const boost::shared_ptr<TDest>& execute(const boost::shared_ptr<TSrc>& p_src) { return p_src; }
+    template<typename TSrc> static const boost::shared_ptr<TDest>& execute(TSrc p_src)
+    {
+        return boost::make_shared<TDest>(p_src);
+    }
+
+    template<typename TSrc> static const boost::shared_ptr<TDest>& execute(const boost::shared_ptr<TSrc>& p_src)
+    {
+        return p_src;
+    }
 };
 
 } // namespace Detail
