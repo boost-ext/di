@@ -247,7 +247,7 @@ public:
         MO_OP_IMPL( (), "0-arity function-call", prototype() );
     }
     template<typename T1>
-    self_type const&    operator ()( T1 const& arg1 ) const
+    self_type const&    operator ()( T1 const&  ) const
     {
         MO_OP_IMPL( (), "1-arity function-call", prototype() );
     }

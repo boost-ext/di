@@ -57,8 +57,9 @@ BOOST_AUTO_TEST_CASE(CtorEmpty)
 BOOST_AUTO_TEST_CASE(SimpleModule)
 {
     typedef Injector<Module> Inj;
+    E e;
 
-    Inj l_inj(E()); //have to compile
+    Inj l_inj(e); //have to compile
     (void)l_inj;
 
     BOOST_CHECK((

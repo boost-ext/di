@@ -247,9 +247,9 @@ struct BOOST_TEST_DECL check_is_close_t {
     }
 };
 
-namespace {
-check_is_close_t const& check_is_close = unit_test::ut_detail::static_constant<check_is_close_t>::value;
-}
+//namespace {
+//check_is_close_t const& check_is_close = unit_test::ut_detail::static_constant<check_is_close_t>::value;
+//}
 
 //____________________________________________________________________________//
 
@@ -269,9 +269,9 @@ struct BOOST_TEST_DECL check_is_small_t {
     }
 };
 
-namespace {
-check_is_small_t const& check_is_small = unit_test::ut_detail::static_constant<check_is_small_t>::value;
-}
+//namespace {
+//check_is_small_t const& check_is_small = unit_test::ut_detail::static_constant<check_is_small_t>::value;
+//}
 
 //____________________________________________________________________________//
 

@@ -15,7 +15,7 @@
 #include <typeinfo>
 #include <string>
 
-#if defined(__GLIBCXX__) || defined(__GLIBCPP__)
+#if (defined(__GLIBCXX__) || defined(__GLIBCPP__)) && !defined(__llvm__)
 #define BOOST_UNITS_USE_DEMANGLING
 #include <cxxabi.h>
 #endif // __GNUC__
