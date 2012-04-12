@@ -62,7 +62,26 @@
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
     class Module : Back::Module
     {
+        struct Externals : boost::mpl::fold
+            <
+                boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
+                boost::mpl::vector0<>,
+                boost::mpl::copy
+                <
+                    boost::mpl::if_
+                    <
+                        boost::is_base_of<Aux::Detail::Externals, boost::mpl::_2>,
+                        boost::mpl::_2,
+                        boost::mpl::vector0<>
+                    >,
+                    boost::mpl::back_inserter<boost::mpl::_1>
+                >
+            >::type
+        { };
+
     public:
+        typedef Back::Aux::Pool<Externals> Pool;
+
         struct Dependencies : boost::mpl::fold
             <
                 boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
@@ -85,23 +104,6 @@
             >::type
         { };
 
-        struct Externals : boost::mpl::fold
-            <
-                boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
-                boost::mpl::vector0<>,
-                boost::mpl::copy
-                <
-                    boost::mpl::if_
-                    <
-                        boost::is_base_of<Aux::Detail::Externals, boost::mpl::_2>,
-                        boost::mpl::_2,
-                        boost::mpl::vector0<>
-                    >,
-                    boost::mpl::back_inserter<boost::mpl::_1>
-                >
-            >::type
-        { };
-
         Module() { }
 
         #include BOOST_PP_ITERATE()
@@ -114,10 +116,10 @@
         }
     #endif
 
-        const Back::Aux::Pool<Externals>& pool() const { return m_pool; }
+        const Pool& pool() const { return m_pool; }
 
     private:
-        Back::Aux::Pool<Externals> m_pool;
+        Pool m_pool;
     };
 
     } // namespace Base

@@ -14,6 +14,7 @@
     #include <boost/preprocessor/repetition/enum_params.hpp>
     #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
     #include <boost/preprocessor/punctuation/comma_if.hpp>
+    #include <boost/preprocessor/facilities/intercept.hpp>
     #include <boost/type_traits/is_base_of.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/limits/vector.hpp>
@@ -68,33 +69,18 @@
             >
         { };
 
-        template<typename TSeq, typename TResult = boost::mpl::set0<> >
-        struct ExternalsImpl : boost::mpl::fold
+        struct Externals : boost::mpl::fold
             <
-                TSeq,
-                TResult,
-                boost::mpl::if_
-                <
-                    boost::is_base_of<Back::Module, boost::mpl::_2>,
-                    ExternalsImpl<Back::Aux::GetExternals<boost::mpl::_2>, boost::mpl::_1>,
-                    boost::mpl::insert<boost::mpl::_1, boost::mpl::_2>
-                >
-            >
+                Modules,
+                boost::mpl::vector0<>,
+                boost::mpl::push_back< boost::mpl::_1, Back::Aux::GetPool<boost::mpl::_2> >
+            >::type
         { };
 
     public:
         struct Dependencies : boost::mpl::fold
             <
                 typename DependenciesImpl<Modules>::type,
-                boost::mpl::vector0<>,
-                boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>
-            >::type
-        { };
-
-
-        struct Externals : boost::mpl::fold
-            <
-                typename ExternalsImpl<Modules>::type,
                 boost::mpl::vector0<>,
                 boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>
             >::type
@@ -134,9 +120,9 @@
 
 #else
 
-    template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    Injector(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg))
-        : m_pool(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg)),
+    template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename M)>
+    Injector(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const M, &p_module))
+        : m_pool(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), p_module, .pool() BOOST_PP_INTERCEPT)),
           m_factory(m_pool)
     { }
 

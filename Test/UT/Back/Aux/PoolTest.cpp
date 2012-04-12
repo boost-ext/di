@@ -93,6 +93,26 @@ BOOST_AUTO_TEST_CASE(PoolGet)
     BOOST_CHECK_EQUAL(defaultCtor.get(), pool.get<DefaultCtorType>());
 }
 
+BOOST_AUTO_TEST_CASE(PoolOfPools)
+{
+    typedef Allocator<TrivialCtor> TrivialCtorType;
+    typedef Allocator<DefaultCtor> DefaultCtorType;
+
+    DefaultCtorType defaultCtor(new DefaultCtor);
+    TrivialCtorType trivialCtor(new TrivialCtor);
+
+    typedef Pool< vector<DefaultCtorType> > Pool1;
+    Pool1 pool1(defaultCtor);
+
+    typedef Pool< vector<TrivialCtorType> > Pool2;
+    Pool2 pool2(trivialCtor);
+
+    Pool< vector<Pool1, Pool2> > pool(pool1, pool2);
+
+    BOOST_CHECK_EQUAL(trivialCtor.get(), pool.get<TrivialCtorType>());
+    BOOST_CHECK_EQUAL(defaultCtor.get(), pool.get<DefaultCtorType>());
+}
+
 } // namespace UT
 } // namespace Aux
 } // namespace Back

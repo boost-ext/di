@@ -49,6 +49,11 @@ template<typename T> struct GetBind
     typedef typename T::Bind type;
 };
 
+template<typename T> struct GetPool
+{
+    typedef typename T::Pool type;
+};
+
 template<typename T> struct GetContext
 {
     typedef typename T::Context type;

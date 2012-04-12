@@ -22,12 +22,16 @@ using namespace boost::mpl;
 class A { };
 class B { };
 class C { };
-class E { };
+
+struct FakePool { };
 
 struct Module : Back::Module
 {
-    struct Dependencies : boost::mpl::vector<A, B, C> { };
-    struct Externals : boost::mpl::vector<E> { };
+    typedef FakePool Pool;
+    typedef boost::mpl::vector<A, B, C> Dependencies;
+
+    const Pool& pool() const { return pool_; }
+    Pool pool_;
 };
 
 BOOST_AUTO_TEST_CASE(CtorEmpty)
@@ -57,9 +61,9 @@ BOOST_AUTO_TEST_CASE(CtorEmpty)
 BOOST_AUTO_TEST_CASE(SimpleModule)
 {
     typedef Injector<Module> Inj;
-    E e;
+    Module module;
 
-    Inj l_inj(e); //have to compile
+    Inj l_inj(module); //have to compile
     (void)l_inj;
 
     BOOST_CHECK((
@@ -67,14 +71,6 @@ BOOST_AUTO_TEST_CASE(SimpleModule)
         <
             vector<C, B, A>,
             Inj::Dependencies
-        >::value
-    ));
-
-    BOOST_CHECK((
-        equal
-        <
-            vector<E>,
-            Inj::Externals
         >::value
     ));
 }

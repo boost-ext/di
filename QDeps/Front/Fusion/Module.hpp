@@ -59,7 +59,11 @@
     >
     class Module : Back::Module
     {
+        struct Externals : boost::mpl::vector0<> { };
+
     public:
+        typedef Back::Aux::Pool<TSeq> Pool;
+
         struct Dependencies : boost::mpl::fold
             <
                 TSeq,
@@ -77,18 +81,16 @@
             >::type
         { };
 
-        struct Externals : boost::mpl::vector0<> { };
-
         Module() { }
 
         #include BOOST_PP_ITERATE()
 
         Module<> operator()() const { return Module<>(); }
 
-        const Back::Aux::Pool<TSeq>& pool() const { return m_pool; }
+        const Pool& pool() const { return m_pool; }
 
     private:
-        Back::Aux::Pool<TSeq> m_pool;
+        Pool m_pool;
     };
 
     } // namespace Fusion
