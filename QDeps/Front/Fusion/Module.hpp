@@ -14,6 +14,7 @@
     #include <boost/preprocessor/repetition/enum_binary_params.hpp>
     #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
     #include <boost/typeof/typeof.hpp>
+    #include <boost/utility/enable_if.hpp>
     #include <boost/type_traits/is_base_of.hpp>
     #include <boost/mpl/limits/vector.hpp>
     #include <boost/mpl/vector.hpp>
@@ -22,7 +23,6 @@
     #include <boost/mpl/copy.hpp>
     #include <boost/mpl/if.hpp>
     #include "QDeps/Back/Aux/Pool.hpp"
-    #include "QDeps/Back/Aux/VCtor.hpp"
     #include "QDeps/Back/Module.hpp"
     #include "QDeps/Back/Scopes/Singleton.hpp"
     #include "QDeps/Back/Scopes/PerRequest.hpp"
@@ -79,13 +79,11 @@
 
         struct Externals : boost::mpl::vector0<> { };
 
-        QDEPS_VCTOR(Module,
-            (m_pool),
-        { })
-
-        Module<> operator()() const { return Module<>(); }
+        Module() { }
 
         #include BOOST_PP_ITERATE()
+
+        Module<> operator()() const { return Module<>(); }
 
         const Back::Aux::Pool<TSeq>& pool() const { return m_pool; }
 
@@ -100,6 +98,11 @@
     #endif
 
 #else
+
+    template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
+    Module(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg))
+        : m_pool(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg))
+    { }
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)> Module<boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), Arg)> >
     operator()(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg)) const

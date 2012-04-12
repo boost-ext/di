@@ -1,7 +1,7 @@
 .SECONDEXPANSION:
 .SECONDARY:
 
-MAKEFLAGS+=-j4 -l
+MAKEFLAGS+=-j$(shell grep -c '^processor' /proc/cpuinfo) -l
 CPPCHECK:=cppcheck
 SCAN_BUILD:=scan-build
 VALGRIND:=valgrind
@@ -53,6 +53,6 @@ valgrind_%: $$*
 	$(VALGRIND) --leak-check=full --track-origins=yes ./$*.exe
 
 clean:
-	@find . $(BOOST) -iname "*.o" -or -iname "*.a" -or -iname "*.exe" -or -iname "*.gcda" -or -iname "*.gcno" | xargs --no-run-if-empty rm -f
+	@find . $(BOOST) -iname "*.o" -or -iname "*.a" -or -iname "*.exe" -or -iname "*.gcda" -or -iname "*.gcno" -or -iname "*.info" | xargs --no-run-if-empty rm -f
 	@rm -rf cov_*
 
