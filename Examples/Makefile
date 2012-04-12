@@ -1,3 +1,5 @@
+MAKEFLAGS+=-j$(shell grep -c '^processor' /proc/cpuinfo) -l
+
 ifndef BOOST
 	BOOST:=../Externals/boost
 endif
@@ -16,6 +18,5 @@ examples: $(EXAMPLES)
 	@./$*.exe
 
 clean:
-	@find . -iname "*.o" | xargs --no-run-if-empty rm -f
-	@rm -f *.exe
+	@find . -iname "*.o" -or -iname "*.exe" | xargs --no-run-if-empty rm -f
 

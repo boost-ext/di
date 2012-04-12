@@ -28,7 +28,6 @@
     #include <boost/mpl/fold.hpp>
     #include <boost/mpl/if.hpp>
     #include "QDeps/Back/Aux/Pool.hpp"
-    #include "QDeps/Back/Aux/VCtor.hpp"
     #include "QDeps/Back/Aux/Utility.hpp"
     #include "QDeps/Back/Module.hpp"
     #include "QDeps/Back/Factory.hpp"
@@ -107,10 +106,11 @@
         typedef Back::Factory<typename Dependencies::type, Pool, Policy> Factory;
 
     public:
-       QDEPS_VCTOR(Injector,
-            (m_pool)
-            (m_factory(m_pool)),
-        { })
+        Injector()
+            : m_pool(), m_factory(m_pool)
+        { }
+
+        #include BOOST_PP_ITERATE()
 
         template<typename T> T create()
         {
@@ -121,8 +121,6 @@
         {
             return m_factory.visit<T>(p_visitor);
         }
-
-        #include BOOST_PP_ITERATE()
 
     private:
         Pool m_pool;
@@ -135,6 +133,12 @@
     #endif
 
 #else
+
+    template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
+    Injector(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg))
+        : m_pool(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg)),
+          m_factory(m_pool)
+    { }
 
     #define QDEPS_MODULE_ARG(_, n, module) BOOST_PP_COMMA_IF(n) const module##n& p_module##n = module##n()
 
