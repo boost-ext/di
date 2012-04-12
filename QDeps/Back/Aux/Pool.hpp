@@ -75,7 +75,6 @@
         #   pragma GCC diagnostic ignored "-Wreorder"
         #endif
 
-        //TODO
         Pool() { }
 
         template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename T)>

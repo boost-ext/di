@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(FusionEmpty)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Pool::Seq>::value));
 }
 
 BOOST_AUTO_TEST_CASE(FusionMix)
@@ -79,8 +79,6 @@ BOOST_AUTO_TEST_CASE(FusionMix)
             TestModule::Dependencies
         >::value
     ));
-
-    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
 }
 
 } // namespace UT

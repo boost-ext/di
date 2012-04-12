@@ -59,8 +59,6 @@
     >
     class Module : Back::Module
     {
-        struct Externals : boost::mpl::vector0<> { };
-
     public:
         typedef Back::Aux::Pool<TSeq> Pool;
 

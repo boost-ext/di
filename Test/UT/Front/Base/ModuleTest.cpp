@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(Empty)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Pool::Seq>::value));
 }
 
 BOOST_AUTO_TEST_CASE(DefaultScope)
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(DefaultScope)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Pool::Seq>::value));
 }
 
 BOOST_AUTO_TEST_CASE(DefaultScopeMany)
@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE(DefaultScopeMany)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Pool::Seq>::value));
 }
 
 BOOST_AUTO_TEST_CASE(DefaultScopeBind)
@@ -113,7 +113,7 @@ BOOST_AUTO_TEST_CASE(DefaultScopeBind)
     ));
 #endif
 
-    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Pool::Seq>::value));
 }
 
 BOOST_AUTO_TEST_CASE(OneScope)
@@ -137,7 +137,7 @@ BOOST_AUTO_TEST_CASE(OneScope)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Pool::Seq>::value));
 }
 
 BOOST_AUTO_TEST_CASE(OneScopeAlias)
@@ -161,7 +161,7 @@ BOOST_AUTO_TEST_CASE(OneScopeAlias)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Pool::Seq>::value));
 }
 
 BOOST_AUTO_TEST_CASE(OneScopeDirect)
@@ -183,7 +183,7 @@ BOOST_AUTO_TEST_CASE(OneScopeDirect)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Pool::Seq>::value));
 }
 
 BOOST_AUTO_TEST_CASE(Many)
@@ -211,7 +211,7 @@ BOOST_AUTO_TEST_CASE(Many)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Pool::Seq>::value));
 }
 
 BOOST_AUTO_TEST_CASE(ManyScopes)
@@ -243,7 +243,7 @@ BOOST_AUTO_TEST_CASE(ManyScopes)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Pool::Seq>::value));
 }
 
 BOOST_AUTO_TEST_CASE(InCall)
@@ -265,7 +265,7 @@ BOOST_AUTO_TEST_CASE(InCall)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Pool::Seq>::value));
 }
 
 BOOST_AUTO_TEST_CASE(InName)
@@ -287,7 +287,7 @@ BOOST_AUTO_TEST_CASE(InName)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Pool::Seq>::value));
 }
 
 BOOST_AUTO_TEST_CASE(InNameInCall)
@@ -313,7 +313,7 @@ BOOST_AUTO_TEST_CASE(InNameInCall)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Pool::Seq>::value));
 }
 
 BOOST_AUTO_TEST_CASE(InCallInName)
@@ -339,7 +339,7 @@ BOOST_AUTO_TEST_CASE(InCallInName)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Pool::Seq>::value));
 }
 
 BOOST_AUTO_TEST_CASE(BindIf)
@@ -363,7 +363,7 @@ BOOST_AUTO_TEST_CASE(BindIf)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Pool::Seq>::value));
 }
 
 BOOST_AUTO_TEST_CASE(Mix)
@@ -399,7 +399,7 @@ BOOST_AUTO_TEST_CASE(Mix)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Pool::Seq>::value));
 }
 
 BOOST_AUTO_TEST_CASE(ExternalsBase)
@@ -421,7 +421,7 @@ BOOST_AUTO_TEST_CASE(ExternalsBase)
             <
                 C1
             >,
-            TestModule::Externals
+            TestModule::Pool::Seq
         >::value
     ));
 }
@@ -447,7 +447,7 @@ BOOST_AUTO_TEST_CASE(ExternalsMix)
             <
                 C1, C2, C3
             >,
-            TestModule::Externals
+            TestModule::Pool::Seq
         >::value
     ));
 }
@@ -471,7 +471,7 @@ BOOST_AUTO_TEST_CASE(ExternalsBind)
             <
                 Bind<C1>::InName<int>
             >,
-            TestModule::Externals
+            TestModule::Pool::Seq
         >::value
     ));
 }
@@ -488,7 +488,7 @@ BOOST_AUTO_TEST_CASE(NamedInCall)
         >
     { };
 
-    BOOST_CHECK((equal<vector0<>, TestModule::Externals>::value));
+    BOOST_CHECK((equal<vector0<>, TestModule::Pool::Seq>::value));
 
     BOOST_CHECK((
         equal
