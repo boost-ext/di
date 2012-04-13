@@ -5,6 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <boost/test/unit_test.hpp>
+#include <boost/scoped_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -12,9 +13,10 @@
 #include <boost/mpl/or.hpp>
 #include "Test/Common/Data.hpp"
 #include "QDeps/Utility/Named.hpp"
-#include "QDeps/Back/Aux/Dependency.hpp"
 #include "QDeps/Back/Scopes/PerRequest.hpp"
 #include "QDeps/Back/Scopes/Singleton.hpp"
+#include "QDeps/Back/Aux/Dependency.hpp"
+#include "QDeps/Back/Aux/Instance.hpp"
 #include "QDeps/Back/Aux/Pool.hpp"
 #include "QDeps/Back/Factory.hpp"
 
@@ -451,36 +453,33 @@ BOOST_AUTO_TEST_CASE(NamedSharedPtrIfWithNotTrivialCtor)
     BOOST_CHECK_EQUAL(i, obj.c3.i);
     BOOST_CHECK_EQUAL(i, if0->i);
     BOOST_CHECK_EQUAL(0.0, if0->d);
-
 }
 
-#if 0
-BOOST_AUTO_TEST_CASE(CreateWithValues)
+BOOST_AUTO_TEST_CASE(ExternalsCreatedByValues)
 {
     const int i = 42;
     const double d = 21.0;
     const char c = 'x';
 
-    typedef QPool::Pool< vector<double, char> > Pool;
+    typedef Pool< vector<Instance<int>, Instance<double>, Instance<char> > > Externals;
 
-    Pool pool
-    (
-        make_shared<double>(d),
-        make_shared<char>(c)
+    boost::scoped_ptr<Externals> pool(
+        new Externals(
+            Instance<int>(i),
+            Instance<double>(d),
+            Instance<char>(c)
+        )
     );
 
     Factory
     <
         vector
         <
-            Dependency<PerRequest, int, int_<i> >,
-            Dependency<PerRequest, double>,
-            Dependency<PerRequest, char>,
             Dependency<PerRequest, std::string, string<'test'> >
         >,
-        Pool
+        Externals
     >
-    factory(pool);
+    factory(*pool);
 
     C9 obj = factory.create<C9>();
 
@@ -490,6 +489,7 @@ BOOST_AUTO_TEST_CASE(CreateWithValues)
     BOOST_CHECK_EQUAL("test", obj.s);
 }
 
+#if 0
 BOOST_AUTO_TEST_CASE(CreateWithNonTrivialCtor)
 {
     const int i = 42;
