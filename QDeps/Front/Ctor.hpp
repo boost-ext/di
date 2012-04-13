@@ -9,6 +9,27 @@
 
 #include "QDeps/Config.hpp"
 
+namespace QDeps
+{
+
+/**
+ * @code
+ * struct C { C(int, double); };
+ *
+ * template<>
+ * struct CtorTraits<C>
+ * {
+ *     static void ctor(int, double);
+ * };
+ * @endcode
+ */
+template<typename T> struct CtorTraits
+{
+    static void ctor(); //trivial ctor
+};
+
+} // namespace QDeps
+
 #if defined(QDEPS_CTOR_CFG_VA_ARGS)
 
 /**

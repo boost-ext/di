@@ -28,7 +28,6 @@ namespace Aux
 
 namespace Detail
 {
-BOOST_MPL_HAS_XXX_TRAIT_DEF(QDEPS_CTOR_UNIQUE_NAME)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 } // namespace Detail
 

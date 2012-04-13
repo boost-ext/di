@@ -24,9 +24,11 @@
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/contains.hpp>
     #include <boost/mpl/placeholders.hpp>
-    #include "QDeps/Back/Aux/Instance.hpp"
+    #include <boost/mpl/has_xxx.hpp>
     #include "QDeps/Back/Aux/Utility.hpp"
+    #include "QDeps/Back/Aux/Instance.hpp"
     #include "QDeps/Back/Aux/Value.hpp"
+    #include "QDeps/Front/Ctor.hpp"
     #include "QDeps/Config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, QDEPS_FUNCTION_ARITY_LIMIT_SIZE, "QDeps/Back/Aux/Dependency.hpp"))
@@ -49,8 +51,10 @@
     >
     class Dependency
     {
-       QDEPS_STATIC_ASSERT(
-            !Aux::Detail::has_element_type<TGiven>::value,
+        BOOST_MPL_HAS_XXX_TRAIT_DEF(QDEPS_CTOR_UNIQUE_NAME)
+
+        QDEPS_STATIC_ASSERT(
+            !Detail::has_element_type<TGiven>::value,
             GIVEN_TYPE_WITH_ELEMENT_TYPE,
             (TGiven)
         );
@@ -68,7 +72,7 @@
         { };
 
         template<bool, typename = void> struct CtorImpl
-            : boost::mpl::vector0<>
+            : boost::function_types::parameter_types<BOOST_TYPEOF_TPL(CtorTraits<TGiven>::ctor)>::type
         { };
 
         template<typename Dummy>
@@ -84,7 +88,7 @@
         typedef TBind Bind;
 
         struct Ctor
-            : CtorImpl<BOOST_PP_CAT(Detail::has_, QDEPS_CTOR_UNIQUE_NAME)<Given>::value>::type
+            : CtorImpl<BOOST_PP_CAT(has_, QDEPS_CTOR_UNIQUE_NAME)<Given>::value>::type
         { };
 
         template<typename, typename = void> struct ResultType;
