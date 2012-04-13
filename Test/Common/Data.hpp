@@ -183,6 +183,25 @@ struct C12
     shared_ptr<C2> c2;
 };
 
+struct C13
+{
+    QDEPS_CTOR(C13, Named<C2> c2)
+        : c2(c2)
+    { }
+
+    C2 c2;
+};
+
+struct C14
+{
+    C14(int i, double d)
+        : i(i), d(d)
+    { }
+
+    int i;
+    double d;
+};
+
 struct CD2;
 struct CD5;
 
@@ -245,6 +264,13 @@ struct TransactionUsage
 
 } // namespace Common
 } // namespace Test
+
+template<>
+struct CtorTraits<Test::Common::C14>
+{
+    static void ctor(int, double);
+};
+
 } // namespace QDeps
 
 #endif

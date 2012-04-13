@@ -45,12 +45,13 @@
             template<typename TCallStack>
             struct IsUniqueCallStack : boost::mpl::bool_
                 <
-                    boost::mpl::size<TCallStack>::value == boost::mpl::accumulate
-                    <
-                        typename boost::mpl::transform<TCallStack, boost::mpl::count<TCallStack, boost::mpl::_> >::type,
-                        boost::mpl::int_<0>,
-                        boost::mpl::plus< boost::mpl::_1, boost::mpl::_2>
-                    >::type::value
+                    static_cast<long>(boost::mpl::accumulate
+                        <
+                            typename boost::mpl::transform<TCallStack, boost::mpl::count<TCallStack, boost::mpl::_> >::type,
+                            boost::mpl::int_<0>,
+                            boost::mpl::plus< boost::mpl::_1, boost::mpl::_2>
+                        >::type::value
+                    ) == boost::mpl::size<TCallStack>::value
                 >
             { };
 
@@ -107,7 +108,7 @@
     {
        QDEPS_STATIC_ASSERT(
             false,
-            CIRCULAR_DEPENDENCIES_NOT_ALLOWED,
+            CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED,
             (typename TDependency::Given, TCallStack)
         );
     };

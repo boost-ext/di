@@ -11,6 +11,7 @@
 #include <boost/mpl/equal.hpp>
 #include <boost/mpl/or.hpp>
 #include "Test/Common/Data.hpp"
+#include "QDeps/Back/Aux/Instance.hpp"
 #include "QDeps/Back/Aux/Dependency.hpp"
 #include "QDeps/Front/Base/Module.hpp"
 #include "QDeps/Utility/Named.hpp"
@@ -96,22 +97,19 @@ BOOST_AUTO_TEST_CASE(DefaultScopeBind)
         >
     { };
 
-//TODO
-#if 0
     BOOST_CHECK((
         equal
         <
             vector
             <
                 Dependency<Back::Scopes::PerRequest, If0, CIf0, vector0<>, is_same<_1, If0> >,
-                Dependency<Back::Scopes::PerRequest, C1, C1, vector0<>, is_base_of<_1, C1> >,
-                Dependency<Back::Scopes::PerRequest, Named<C2, int>, C2, vector0<>, is_base_of<_1, Named<C2, int> > >,
-                Dependency<Back::Scopes::PerRequest, C3, C3, vector<C4, C5>, is_base_of<_1, C3> >
+                Dependency<Back::Scopes::PerRequest, C1, C1, vector0<>, or_< is_base_of<_1, C1>, is_same<_1, C1> > >,
+                Dependency<Back::Scopes::PerRequest, Named<C2, int>, C2, vector0<>, or_< is_base_of<_1, Named<C2, int> >, is_same<_1, Named<C2, int> > > >,
+                Dependency<Back::Scopes::PerRequest, C3, C3, vector<C4, C5>, or_< is_base_of<_1, C3>, is_same<_1, C3> > >
             >,
             TestModule::Dependencies
         >::value
     ));
-#endif
 
     BOOST_CHECK((equal<vector0<>, TestModule::Pool::Seq>::value));
 }
@@ -402,80 +400,6 @@ BOOST_AUTO_TEST_CASE(Mix)
     BOOST_CHECK((equal<vector0<>, TestModule::Pool::Seq>::value));
 }
 
-BOOST_AUTO_TEST_CASE(ExternalsBase)
-{
-    struct TestModule : Module
-        <
-            Externals<
-                C1
-            >
-        >
-    { };
-
-    BOOST_CHECK((equal<vector0<>, TestModule::Dependencies>::value));
-
-    BOOST_CHECK((
-        equal
-        <
-            vector
-            <
-                C1
-            >,
-            TestModule::Pool::Seq
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(ExternalsMix)
-{
-    struct TestModule : Module
-        <
-            Externals<
-                C1,
-                C2
-            >,
-            External<C3>
-        >
-    { };
-
-    BOOST_CHECK((equal<vector0<>, TestModule::Dependencies>::value));
-
-    BOOST_CHECK((
-        equal
-        <
-            vector
-            <
-                C1, C2, C3
-            >,
-            TestModule::Pool::Seq
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(ExternalsBind)
-{
-    struct TestModule : Module
-        <
-            Externals<
-                Bind<C1>::InName<int>
-            >
-        >
-    { };
-
-    BOOST_CHECK((equal<vector0<>, TestModule::Dependencies>::value));
-
-    BOOST_CHECK((
-        equal
-        <
-            vector
-            <
-                Bind<C1>::InName<int>
-            >,
-            TestModule::Pool::Seq
-        >::value
-    ));
-}
-
 BOOST_AUTO_TEST_CASE(NamedInCall)
 {
     struct TestModule : Front::Base::Module
@@ -503,6 +427,87 @@ BOOST_AUTO_TEST_CASE(NamedInCall)
         >::value
     ));
 }
+
+BOOST_AUTO_TEST_CASE(ExternalsBase)
+{
+    struct TestModule : Module
+        <
+            Externals<
+                C1
+            >
+        >
+    { };
+
+    BOOST_CHECK((equal<vector0<>, TestModule::Dependencies>::value));
+
+    BOOST_CHECK((
+        equal
+        <
+            vector
+            <
+                Instance<C1>
+            >,
+            TestModule::Pool::Seq
+        >::value
+    ));
+}
+
+BOOST_AUTO_TEST_CASE(ExternalsMix)
+{
+    struct TestModule : Module
+        <
+            Externals<
+                C1,
+                C2
+            >,
+            External<C3>
+        >
+    { };
+
+    BOOST_CHECK((equal<vector0<>, TestModule::Dependencies>::value));
+
+    BOOST_CHECK((
+        equal
+        <
+            vector
+            <
+                Instance<C1>,
+                Instance<C2>,
+                Instance<C3>
+            >,
+            TestModule::Pool::Seq
+        >::value
+    ));
+}
+
+//TODO
+#if 0
+BOOST_AUTO_TEST_CASE(ExternalsBind)
+{
+    struct TestModule : Module
+        <
+            Externals<
+                Bind<C1>::InName<int>
+            >
+        >
+    { };
+
+    BOOST_CHECK((equal<vector0<>, TestModule::Dependencies>::value));
+
+    BOOST_CHECK((
+        equal
+        <
+            vector
+            <
+                Instance< Named<C1, int> >
+            >,
+            TestModule::Pool::Seq
+        >::value
+    ));
+
+    std::cout << "DUPA:" << abi::__cxa_demangle(typeid(TestModule::Pool::Seq::type).name(), 0, 0, 0) << std::endl;
+}
+#endif
 
 } // namespace UT
 } // namespace Base

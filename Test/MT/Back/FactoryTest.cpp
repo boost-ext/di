@@ -39,20 +39,6 @@ BOOST_AUTO_TEST_CASE(CreateUsingCopy)
     (void)(obj);
 }
 
-BOOST_AUTO_TEST_CASE(CreateUsingRef)
-{
-    Factory< vector0<> > factory;
-    C0& obj = factory.create<C0&>();
-    BOOST_CHECK(&obj);
-}
-
-BOOST_AUTO_TEST_CASE(CreateUsingConstRef)
-{
-    Factory< vector0<> > factory;
-    const C0& obj = factory.create<const C0&>();
-    BOOST_CHECK(&obj);
-}
-
 BOOST_AUTO_TEST_CASE(CreateUsingPtr)
 {
     Factory< vector0<> > factory;
@@ -302,6 +288,25 @@ BOOST_AUTO_TEST_CASE(CreateSingletonMany)
 
 BOOST_AUTO_TEST_CASE(CtorTraits)
 {
+    const int i = 42;
+
+    Factory
+    <
+        vector
+        <
+            Dependency<PerRequest, int, int_<i>, vector0<>, or_< is_base_of<_1, int>, is_same<_1, int> > >
+        >
+    >
+    factory;
+
+    C14 obj = factory.create<C14>();
+
+    BOOST_CHECK_EQUAL(i, obj.i);
+    BOOST_CHECK_EQUAL(0.0, obj.d);
+}
+
+BOOST_AUTO_TEST_CASE(ClassCtorTraits)
+{
     const int i1 = 42;
     const int i2 = 87;
 
@@ -378,7 +383,7 @@ BOOST_AUTO_TEST_CASE(NamedSharedPtrBaseOf)
     <
         vector
         <
-            Dependency<PerRequest, Named<int, string<'1'> >, boost::mpl::int_<i>, vector0<> >
+            Dependency<PerRequest, Named<int, string<'1'> >, int_<i>, vector0<> >
         >
     >
     factory;
@@ -396,7 +401,7 @@ BOOST_AUTO_TEST_CASE(NamedSharedPtr)
     <
         vector
         <
-            Dependency<PerRequest, Named<int, string<'1'> >, boost::mpl::int_<i>, vector0<>, or_< is_base_of<_1, Named<int, string<'1'> > >, is_same<_1, Named<int, string<'1'> > > > >
+            Dependency<PerRequest, Named<int, string<'1'> >, int_<i>, vector0<>, or_< is_base_of<_1, Named<int, string<'1'> > >, is_same<_1, Named<int, string<'1'> > > > >
         >
     >
     factory;

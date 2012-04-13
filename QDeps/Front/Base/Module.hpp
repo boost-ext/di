@@ -18,7 +18,7 @@
     #include <boost/mpl/if.hpp>
     #include <boost/mpl/back_inserter.hpp>
     #include <boost/mpl/copy.hpp>
-    #include <boost/mpl/size.hpp>
+    #include <boost/mpl/transform.hpp>
     #include "QDeps/Back/Aux/Pool.hpp"
     #include "QDeps/Back/Aux/Utility.hpp"
     #include "QDeps/Back/Aux/Instance.hpp"
@@ -62,20 +62,36 @@
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
     class Module : Back::Module
     {
-        struct Externals : boost::mpl::fold
+        template<typename T, typename Enable = void>
+        struct Instance
+        {
+            typedef Back::Aux::Instance<T> type;
+        };
+
+        template<typename T>
+        struct Instance<T, typename boost::enable_if<boost::is_base_of<Base::Aux::Detail::Internal, T> >::type>
+        {
+            typedef Back::Aux::Instance<T> type;
+        };
+
+        struct Externals : boost::mpl::transform
             <
-                boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
-                boost::mpl::vector0<>,
-                boost::mpl::copy
+                typename boost::mpl::fold
                 <
-                    boost::mpl::if_
+                    boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
+                    boost::mpl::vector0<>,
+                    boost::mpl::copy
                     <
-                        boost::is_base_of<Aux::Detail::Externals, boost::mpl::_2>,
-                        boost::mpl::_2,
-                        boost::mpl::vector0<>
-                    >,
-                    boost::mpl::back_inserter<boost::mpl::_1>
-                >
+                        boost::mpl::if_
+                        <
+                            boost::is_base_of<Aux::Detail::Externals, boost::mpl::_2>,
+                            boost::mpl::_2,
+                            boost::mpl::vector0<>
+                        >,
+                        boost::mpl::back_inserter<boost::mpl::_1>
+                    >
+                >::type,
+                Instance<boost::mpl::_1>
             >::type
         { };
 
@@ -94,7 +110,7 @@
                         boost::mpl::vector0<>,
                         boost::mpl::if_
                         <
-                            boost::is_base_of<Aux::Detail::Internal, boost::mpl::_2>,
+                            boost::mpl::is_sequence<boost::mpl::_2>,
                             boost::mpl::_2,
                             PerRequest<boost::mpl::_2>
                         >
@@ -131,8 +147,7 @@
 #else
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    Module(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg),
-           typename boost::enable_if_c< boost::mpl::size<Externals>::value == boost::mpl::size<boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), Arg)> >::value>::type* = 0)
+    Module(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg))
         : m_pool(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg))
     { }
 

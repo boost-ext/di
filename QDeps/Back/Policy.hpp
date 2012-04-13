@@ -15,6 +15,7 @@
 #include <boost/mpl/void.hpp>
 #include "QDeps/Back/Aux/Utility.hpp"
 #include "QDeps/Back/Policies/CheckForCircularDependencies.hpp"
+#include "QDeps/Back/Policies/CheckForCreationOwnership.hpp"
 
 namespace QDeps
 {
@@ -49,7 +50,12 @@ public:
 template<typename TDefault>
 struct Defaults<Back::Detail::Policy, TDefault>
 {
-    typedef Back::Policy<Back::Policies::CheckForCircularDependencies> type;
+    typedef Back::Policy
+    <
+        Back::Policies::CheckForCircularDependencies,
+        Back::Policies::CheckForCreationOwnership
+    >
+    type;
 };
 
 } // namespace QDeps

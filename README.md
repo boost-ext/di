@@ -142,7 +142,7 @@ Features
     * Binding via external objects
     * Binding via named parameters
     * Providers
-    * Scopes (PerRequest, Singleton, Custom Scopes)
+    * Scopes (PerRequest, Singleton, Session, Custom Scopes)
     * Modules
     * Visitors (graphviz dot generation)
     * Policies (circular dependencies detection)
@@ -163,10 +163,8 @@ Requirements
         * vimwiki >= 1.2 (vimwiki 1.2 is in Externals/vimwiki)
 
     Supported compilers (successfully tested):
-        * gcc   >= 3.4.6
+        * gcc   >= 4.3
         * clang >= 3.0
-        * icc   >= 11.1
-        * msvc  ?
 
 Tests & Examples & Doc & Diagnostics
 ------------

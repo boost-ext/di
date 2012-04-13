@@ -14,7 +14,6 @@
     #include <boost/preprocessor/repetition/enum_binary_params.hpp>
     #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
     #include <boost/typeof/typeof.hpp>
-    #include <boost/utility/enable_if.hpp>
     #include <boost/type_traits/is_base_of.hpp>
     #include <boost/mpl/limits/vector.hpp>
     #include <boost/mpl/vector.hpp>
