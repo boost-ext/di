@@ -144,8 +144,8 @@ Features
     * Providers
     * Scopes (PerRequest, Singleton, Session, Custom Scopes)
     * Modules
-    * Visitors (graphviz dot generation)
-    * Policies (circular dependencies detection)
+    * Visitors
+    * Policies (ex. circular dependencies detection)
     * Compile time approach (supports C++98, C++11)
 
 Requirements

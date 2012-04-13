@@ -16,7 +16,6 @@
 #include "QDeps/Front/Base/Module.hpp"
 #include "QDeps/Utility/Named.hpp"
 
-#include <cxxabi.h> //TODO
 namespace QDeps
 {
 namespace Front
@@ -481,13 +480,15 @@ BOOST_AUTO_TEST_CASE(ExternalsMix)
     ));
 }
 
-#if 0
 BOOST_AUTO_TEST_CASE(ExternalsBind)
 {
     struct TestModule : Module
         <
             Externals<
-                Bind<C1>::InName<int>
+                int,
+                Bind<C1>::InName<int>,
+                Bind<C2>::InCall<C1>,
+                Bind<C3>::InName<double>::InCall<C4, C5>
             >
         >
     { };
@@ -499,15 +500,15 @@ BOOST_AUTO_TEST_CASE(ExternalsBind)
         <
             vector
             <
-                Instance< Named<C1, int> >
+                Instance<int>,
+                Instance<Named<C1, int> >,
+                Instance<C2, vector<C1> >,
+                Instance<Named<C3, double>, vector<C4, C5> >
             >,
             TestModule::Pool::Seq
         >::value
     ));
-
-    std::cout << "DUPA:" << abi::__cxa_demangle(typeid(TestModule::Pool::Seq::type).name(), 0, 0, 0) << std::endl;
 }
-#endif
 
 } // namespace UT
 } // namespace Base
