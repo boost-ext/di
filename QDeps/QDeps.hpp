@@ -22,6 +22,7 @@
 
 //Policies
 #include <QDeps/Back/Policies/CheckForCircularDependencies.hpp>
+#include <QDeps/Back/Policies/CheckForCreationOwnership.hpp>
 
 #endif
 

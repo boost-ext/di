@@ -74,16 +74,6 @@ template<typename T> struct GetExternals
     typedef typename T::Externals type;
 };
 
-template<typename TRebind, typename T0 = void, typename T1 = void> struct Rebind
-{
-    typedef typename TRebind::template Rebind<T0, T1>::type type;
-};
-
-template<typename TRebind, typename T0> struct Rebind<TRebind, T0, void>
-{
-    typedef typename TRebind::template Rebind<T0>::type type;
-};
-
 template<typename TElement> class MakePlain
 {
     template<typename T> struct RemoveAccessors

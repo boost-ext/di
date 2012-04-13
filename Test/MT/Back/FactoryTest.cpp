@@ -39,20 +39,6 @@ BOOST_AUTO_TEST_CASE(CreateUsingCopy)
     (void)(obj);
 }
 
-BOOST_AUTO_TEST_CASE(CreateUsingRef)
-{
-    Factory< vector0<> > factory;
-    C0& obj = factory.create<C0&>();
-    BOOST_CHECK(&obj);
-}
-
-BOOST_AUTO_TEST_CASE(CreateUsingConstRef)
-{
-    Factory< vector0<> > factory;
-    const C0& obj = factory.create<const C0&>();
-    BOOST_CHECK(&obj);
-}
-
 BOOST_AUTO_TEST_CASE(CreateUsingPtr)
 {
     Factory< vector0<> > factory;

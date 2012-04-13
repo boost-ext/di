@@ -61,12 +61,12 @@ struct Comparator : boost::mpl::apply<TBind, T>::type
 
 template<typename T, typename TDefault, typename = void>
 struct MakeDefaultDependency
-    : Aux::Rebind<TDefault, typename Aux::MakePlain<T>::type, typename Aux::MakePlain<T>::type>
+    : TDefault::template Rebind<typename Aux::MakePlain<T>::type, typename Aux::MakePlain<T>::type>
 { };
 
 template<typename T, typename TDefault>
 struct MakeDefaultDependency<T, TDefault, typename boost::enable_if<Aux::Detail::has_element_type<T> >::type>
-    : Aux::Rebind<TDefault, typename Aux::MakePlain<T>::type, typename Aux::MakePlain<typename T::value_type>::type>
+    : TDefault::template Rebind<typename Aux::MakePlain<T>::type, typename Aux::MakePlain<typename T::value_type>::type>
 { };
 
 } // namespace Detail
