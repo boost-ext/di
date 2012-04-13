@@ -430,11 +430,29 @@ BOOST_AUTO_TEST_CASE(NamedSharedPtrIf)
     BOOST_CHECK_EQUAL(0, obj.c2->c);
 }
 
-#if 0
-BOOST_AUTO_TEST_CASE(NamedSharedPtrConcreteTypeWithNotTrivialCtor)
+BOOST_AUTO_TEST_CASE(NamedSharedPtrIfWithNotTrivialCtor)
 {
+    const int i = 42;
+
+    Factory
+    <
+        vector
+        <
+            Dependency<PerRequest, Named<If0>, CIf03, vector0<>, or_< is_base_of<_1, Named<If0> >, is_same<_1, Named<If0> > > >,
+            Dependency<PerRequest, int, int_<i>, vector0<>, or_< is_base_of<_1, int>, is_same<_1, int> > >
+        >
+    >
+    factory;
+
+    C13 obj = factory.create<C13>();
+
+    CIf03* if0 = dynamic_cast<CIf03*>(obj.if0.get());
+    BOOST_CHECK(if0);
+    BOOST_CHECK_EQUAL(i, obj.c3.i);
+    BOOST_CHECK_EQUAL(i, if0->i);
+    BOOST_CHECK_EQUAL(0.0, if0->d);
+
 }
-#endif
 
 #if 0
 BOOST_AUTO_TEST_CASE(CreateWithValues)

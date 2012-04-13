@@ -9,7 +9,6 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
-#include <boost/mpl/placeholders.hpp>
 #include "QDeps/Back/Aux/Utility.hpp"
 #include "QDeps/Config.hpp"
 
@@ -21,7 +20,7 @@ namespace Utility
 /**
  * Example: Named< int, mpl::string<'Port'> >
  */
-template<typename T, typename TName = boost::mpl::_1>
+template<typename T, typename TName = void>
 class Named
 {
 public:

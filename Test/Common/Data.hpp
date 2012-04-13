@@ -185,11 +185,12 @@ struct C12
 
 struct C13
 {
-    QDEPS_CTOR(C13, Named<C2> c2)
-        : c2(c2)
+    QDEPS_CTOR(C13, Named< shared_ptr<If0> > if0, C3 c3)
+        : if0(if0), c3(c3)
     { }
 
-    C2 c2;
+    shared_ptr<If0> if0;
+    C3 c3;
 };
 
 struct C14
