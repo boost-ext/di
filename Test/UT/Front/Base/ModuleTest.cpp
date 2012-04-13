@@ -97,22 +97,19 @@ BOOST_AUTO_TEST_CASE(DefaultScopeBind)
         >
     { };
 
-//TODO
-#if 0
     BOOST_CHECK((
         equal
         <
             vector
             <
                 Dependency<Back::Scopes::PerRequest, If0, CIf0, vector0<>, is_same<_1, If0> >,
-                Dependency<Back::Scopes::PerRequest, C1, C1, vector0<>, is_base_of<_1, C1> >,
-                Dependency<Back::Scopes::PerRequest, Named<C2, int>, C2, vector0<>, is_base_of<_1, Named<C2, int> > >,
-                Dependency<Back::Scopes::PerRequest, C3, C3, vector<C4, C5>, is_base_of<_1, C3> >
+                Dependency<Back::Scopes::PerRequest, C1, C1, vector0<>, or_< is_base_of<_1, C1>, is_same<_1, C1> > >,
+                Dependency<Back::Scopes::PerRequest, Named<C2, int>, C2, vector0<>, or_< is_base_of<_1, Named<C2, int> >, is_same<_1, Named<C2, int> > > >,
+                Dependency<Back::Scopes::PerRequest, C3, C3, vector<C4, C5>, or_< is_base_of<_1, C3>, is_same<_1, C3> > >
             >,
             TestModule::Dependencies
         >::value
     ));
-#endif
 
     BOOST_CHECK((equal<vector0<>, TestModule::Pool::Seq>::value));
 }
