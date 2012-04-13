@@ -24,16 +24,24 @@ template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, int C)>
 class Value< boost::mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> > : public boost::mpl::true_
 {
 public:
-    struct ResultType { typedef std::string type; };
-    inline static typename ResultType::type create() { return boost::mpl::c_str< boost::mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> >::value; }
+    typedef std::string ResultType;
+
+    inline static ResultType create()
+    {
+        return boost::mpl::c_str< boost::mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> >::value;
+    }
 };
 
 template<int N>
 class Value< boost::mpl::int_<N> > : public boost::mpl::true_
 {
 public:
-    struct ResultType { typedef int type; };
-    inline static typename ResultType::type create() { return N; }
+    typedef int ResultType;
+
+    inline static ResultType create()
+    {
+        return N;
+    }
 };
 
 } // namespace Aux

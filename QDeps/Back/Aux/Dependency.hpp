@@ -24,6 +24,7 @@
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/contains.hpp>
     #include <boost/mpl/placeholders.hpp>
+    #include <boost/mpl/identity.hpp>
     #include <boost/mpl/has_xxx.hpp>
     #include "QDeps/Back/Aux/Utility.hpp"
     #include "QDeps/Back/Aux/Instance.hpp"
@@ -100,12 +101,12 @@
 
         template<typename TPool>
         struct ResultType<TPool, typename boost::enable_if< IsValueType<TPool> >::type>
-            : TValue<TGiven>::ResultType
+            : boost::mpl::identity<typename TValue<TGiven>::ResultType>
         { };
 
         template<typename TPool>
         struct ResultType<TPool, typename boost::enable_if< IsScopeType<TPool> >::type>
-            : TScope::template ResultType<TGiven>
+            : boost::mpl::identity<typename TScope::template Scope<TGiven>::ResultType>
         { };
 
         template<typename TPool>
@@ -123,13 +124,13 @@
         template<typename TPool>
         typename boost::enable_if<IsScopeType<TPool>, typename ResultType<TPool>::type>::type create(TPool&)
         {
-            return m_scope.template create<TGiven>();
+            return m_scope.create();
         }
 
         #include BOOST_PP_ITERATE()
 
     private:
-        TScope m_scope;
+        typename TScope::template Scope<TGiven> m_scope;
     };
 
     template
@@ -176,7 +177,7 @@
     template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
     typename boost::enable_if<IsScopeType<TPool>, typename ResultType<TPool>::type>::type create(TPool&, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg))
     {
-        return m_scope.template create<TGiven>(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg));
+        return m_scope.create(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg));
     }
 
     template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>

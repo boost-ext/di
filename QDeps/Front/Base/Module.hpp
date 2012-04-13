@@ -63,13 +63,13 @@
     class Module : Back::Module
     {
         template<typename T, typename Enable = void>
-        struct Instance
+        struct MakeInstance
         {
             typedef Back::Aux::Instance<T> type;
         };
 
         template<typename T>
-        struct Instance<T, typename boost::enable_if<boost::is_base_of<Base::Aux::Detail::Internal, T> >::type>
+        struct MakeInstance<T, typename boost::enable_if<boost::is_base_of<Base::Aux::Detail::Internal, T> >::type>
         {
             typedef Back::Aux::Instance<T> type;
         };
@@ -91,7 +91,7 @@
                         boost::mpl::back_inserter<boost::mpl::_1>
                     >
                 >::type,
-                Instance<boost::mpl::_1>
+                MakeInstance<boost::mpl::_1>
             >::type
         { };
 

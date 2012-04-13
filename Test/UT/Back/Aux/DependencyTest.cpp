@@ -8,7 +8,6 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include "QDeps/Back/Scope.hpp"
 #include "QDeps/Back/Aux/Dependency.hpp"
 
 namespace QDeps
@@ -41,9 +40,14 @@ template<typename TSeq, int Value = 0> struct FakePool
 };
 
 template<int Value = 0>
-struct FakeScope : Scope< boost::shared_ptr<boost::mpl::_1> >
+struct FakeScope
 {
-    template<typename T> shared_ptr<T> create() { return make_shared<T>(Value); }
+    template<typename T>
+    struct Scope
+    {
+        typedef shared_ptr<T> ResultType;
+        ResultType create() { return make_shared<T>(Value); }
+    };
 };
 
 struct OtherFakeScope { };

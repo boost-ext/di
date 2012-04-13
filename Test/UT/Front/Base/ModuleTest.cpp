@@ -16,6 +16,7 @@
 #include "QDeps/Front/Base/Module.hpp"
 #include "QDeps/Utility/Named.hpp"
 
+#include <cxxabi.h> //TODO
 namespace QDeps
 {
 namespace Front
@@ -480,7 +481,6 @@ BOOST_AUTO_TEST_CASE(ExternalsMix)
     ));
 }
 
-//TODO
 #if 0
 BOOST_AUTO_TEST_CASE(ExternalsBind)
 {

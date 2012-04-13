@@ -21,16 +21,16 @@ using namespace Test::Common;
 
 BOOST_AUTO_TEST_CASE(PerRequestCreate)
 {
-    PerRequest l_pr;
+    PerRequest::Scope<int> l_pr;
 
-    BOOST_CHECK((l_pr.create<int>().get() != l_pr.create<int>().get()));
+    BOOST_CHECK((l_pr.create().get() != l_pr.create().get()));
 }
 
 BOOST_AUTO_TEST_CASE(PerRequestCreateArgs)
 {
-    PerRequest l_pr;
+    PerRequest::Scope<C2> l_pr;
 
-    BOOST_CHECK((l_pr.create<C2, int, double, char>(0, 0.0, '0').get() != l_pr.create<C2, int, double, char>(0, 0.0, '0').get()));
+    BOOST_CHECK((l_pr.create<int, double, char>(0, 0.0, '0').get() != l_pr.create<int, double, char>(0, 0.0, '0').get()));
 }
 
 } // namespace UT
