@@ -110,7 +110,7 @@ BOOST_AUTO_TEST_CASE(RebindType)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(createByPool)
+BOOST_AUTO_TEST_CASE(CreateByPool)
 {
     const int i = 42;
     Dependency< FakeScope<>, int > dep;
@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_CASE(createByPool)
     BOOST_CHECK_EQUAL(i, *dep.create(pool));
 }
 
-BOOST_AUTO_TEST_CASE(createByValue)
+BOOST_AUTO_TEST_CASE(CreateByValue)
 {
     const int i = 42;
     Dependency< FakeScope<>, int, int_<i> > dep;
@@ -128,7 +128,7 @@ BOOST_AUTO_TEST_CASE(createByValue)
     BOOST_CHECK_EQUAL(i, dep.create(pool));
 }
 
-BOOST_AUTO_TEST_CASE(createByScope)
+BOOST_AUTO_TEST_CASE(CreateByScope)
 {
     const int i = 42;
     Dependency<FakeScope<i>, int> dep;
