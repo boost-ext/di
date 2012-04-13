@@ -7,10 +7,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include "QDeps/Back/Aux/Dependency.hpp"
 #include "QDeps/Back/Detail/Creator.hpp"
-#include "QDeps/Back/Scopes/PerRequest.hpp"
-#include "QDeps/Back/Scopes/Singleton.hpp"
 
 namespace QDeps
 {
@@ -46,7 +43,7 @@ struct Dependency
 
 template<typename T> struct Entries : T { };
 
-BOOST_AUTO_TEST_CASE(Basic)
+BOOST_AUTO_TEST_CASE(CreateSimple)
 {
     const int i = 42;
     typedef Dependency<int, i> Dep;
@@ -55,10 +52,7 @@ BOOST_AUTO_TEST_CASE(Basic)
 
     BOOST_CHECK_EQUAL(i, (Creator
         <
-            vector
-            <
-                Dependency<int, i>
-            >,
+            vector<Dep>,
             FakePool
         >::execute<int, vector0<> >(entries, pool)
     ));

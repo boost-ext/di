@@ -48,14 +48,6 @@ BOOST_AUTO_TEST_CASE(CtorEmpty)
             Inj::Dependencies
         >::value
     ));
-
-    BOOST_CHECK((
-        equal
-        <
-            vector0<>,
-            Inj::Externals
-        >::value
-    ));
 }
 
 BOOST_AUTO_TEST_CASE(SimpleModule)

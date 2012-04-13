@@ -107,7 +107,7 @@
     {
        QDEPS_STATIC_ASSERT(
             false,
-            CIRCULAR_DEPENDENCIES_NOT_ALLOWED,
+            CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED,
             (typename TDependency::Given, TCallStack)
         );
     };
