@@ -54,4 +54,3 @@ BOOST_AUTO_TEST_CASE(VisitSimple)
 } // namespace Back
 } // namespace QDeps
 
-
