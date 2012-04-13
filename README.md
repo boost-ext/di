@@ -163,10 +163,8 @@ Requirements
         * vimwiki >= 1.2 (vimwiki 1.2 is in Externals/vimwiki)
 
     Supported compilers (successfully tested):
-        * gcc   >= 3.4.6
+        * gcc   >= 4.3
         * clang >= 3.0
-        * icc   ?
-        * msvc  ?
 
 Tests & Examples & Doc & Diagnostics
 ------------

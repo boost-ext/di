@@ -11,7 +11,8 @@ ifndef BOOST
 endif
 
 QDEPS:=..
-CXXFLAGS:=-I$(BOOST) -I$(QDEPS) -DQDEPS_FUNCTION_ARITY_LIMIT_SIZE=4 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants $(EXTRA_CXXFLAGS)
+#CXXFLAGS:=-I$(BOOST) -I$(QDEPS) -DQDEPS_FUNCTION_ARITY_LIMIT_SIZE=4 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants $(EXTRA_CXXFLAGS)
+CXXFLAGS:=-I$(BOOST) -I$(QDEPS) -DQDEPS_FUNCTION_ARITY_LIMIT_SIZE=4 -g -O0 -std=c++98 -Wall
 
 lib_boost_unit_test_framework:=$(patsubst %.cpp, %.o, $(shell find $(BOOST)/libs/test/src -iname "*.cpp"))
 mt_all:=$(patsubst %.cpp, %.o, $(shell find MT -iname "*.cpp")) main.o
