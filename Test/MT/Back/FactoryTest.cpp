@@ -5,6 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <boost/test/unit_test.hpp>
+#include <boost/scoped_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -12,9 +13,10 @@
 #include <boost/mpl/or.hpp>
 #include "Test/Common/Data.hpp"
 #include "QDeps/Utility/Named.hpp"
-#include "QDeps/Back/Aux/Dependency.hpp"
 #include "QDeps/Back/Scopes/PerRequest.hpp"
 #include "QDeps/Back/Scopes/Singleton.hpp"
+#include "QDeps/Back/Aux/Dependency.hpp"
+#include "QDeps/Back/Aux/Instance.hpp"
 #include "QDeps/Back/Aux/Pool.hpp"
 #include "QDeps/Back/Factory.hpp"
 
@@ -451,36 +453,33 @@ BOOST_AUTO_TEST_CASE(NamedSharedPtrIfWithNotTrivialCtor)
     BOOST_CHECK_EQUAL(i, obj.c3.i);
     BOOST_CHECK_EQUAL(i, if0->i);
     BOOST_CHECK_EQUAL(0.0, if0->d);
-
 }
 
-#if 0
-BOOST_AUTO_TEST_CASE(CreateWithValues)
+BOOST_AUTO_TEST_CASE(ExternalsCreateByValues)
 {
     const int i = 42;
     const double d = 21.0;
     const char c = 'x';
 
-    typedef QPool::Pool< vector<double, char> > Pool;
+    typedef Pool< vector<Instance<int>, Instance<double>, Instance<char> > > Pool;
 
-    Pool pool
-    (
-        make_shared<double>(d),
-        make_shared<char>(c)
+    boost::scoped_ptr<Pool> pool(
+        new Pool(
+            Instance<int>(i),
+            Instance<double>(d),
+            Instance<char>(c)
+        )
     );
 
     Factory
     <
         vector
         <
-            Dependency<PerRequest, int, int_<i> >,
-            Dependency<PerRequest, double>,
-            Dependency<PerRequest, char>,
             Dependency<PerRequest, std::string, string<'test'> >
         >,
         Pool
     >
-    factory(pool);
+    factory(*pool);
 
     C9 obj = factory.create<C9>();
 
@@ -490,17 +489,18 @@ BOOST_AUTO_TEST_CASE(CreateWithValues)
     BOOST_CHECK_EQUAL("test", obj.s);
 }
 
-BOOST_AUTO_TEST_CASE(CreateWithNonTrivialCtor)
+BOOST_AUTO_TEST_CASE(ExternalsCreateWithNonTrivialCtor)
 {
     const int i = 42;
     const double d = 21.0;
     const char c = 'x';
 
-    typedef QPool::Pool< vector<C2> > Pool;
+    typedef Pool< vector<Instance<C2> > > Pool;
 
-    Pool pool
-    (
-        make_shared<C2>(i, d, c)
+    boost::scoped_ptr<Pool> pool(
+        new Pool(
+            Instance<C2>(make_shared<C2>(i, d, c))
+        )
     );
 
     Factory
@@ -511,7 +511,7 @@ BOOST_AUTO_TEST_CASE(CreateWithNonTrivialCtor)
         >,
         Pool
     >
-    factory(pool);
+    factory(*pool);
 
     C2 obj = factory.create<C2>();
 
@@ -520,29 +520,33 @@ BOOST_AUTO_TEST_CASE(CreateWithNonTrivialCtor)
     BOOST_CHECK_EQUAL(c, obj.c);
 }
 
-BOOST_AUTO_TEST_CASE(CreateWithAttributes)
+#if 0
+BOOST_AUTO_TEST_CASE(ExternalsCreateWithAttributes)
 {
     const int i1 = 42;
     const int i2 = 87;
 
-    typedef QPool::Pool< vector<Named<int, string<'1'> >, Named<int, string<'2'> > > > Pool;
+    typedef Named<int, string<'1'> > Named1;
+    typedef Named<int, string<'2'> > Named2;
+    typedef Pool< vector<Instance<Named1>, Instance<Named2> > > Pool;
 
-    Pool pool
-    (
-        make_shared<Named<int, string<'1'> > >(i1),
-        make_shared<Named<int, string<'2'> > >(i2)
+    boost::scoped_ptr<Pool> pool(
+        new Pool(
+            Instance<Named1>(make_shared<Named1>(i1)),
+            Instance<Named2>(make_shared<Named2>(i2))
+        )
     );
 
     Factory
     <
         vector
         <
-            Dependency<PerRequest, Named<int, string<'1'> >, int>,
-            Dependency<PerRequest, Named<int, string<'2'> >, int>
+            Dependency<PerRequest, Named1, int>,
+            Dependency<PerRequest, Named2, int>
         >,
         Pool
     >
-    factory(pool);
+    factory(*pool);
 
     C4 obj = factory.create<C4>();
 

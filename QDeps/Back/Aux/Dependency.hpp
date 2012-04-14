@@ -48,7 +48,8 @@
         typename TGiven = TExpected,
         typename TContext = boost::mpl::vector0<>,
         typename TBind = boost::is_same<boost::mpl::_1, TExpected>,
-        template<typename> class TValue = Value
+        template<typename> class TValue = Value,
+        template<typename = TExpected, typename = TContext, typename = void> class TInstance = Instance
     >
     class Dependency
     {
@@ -61,15 +62,15 @@
         );
 
         template<typename TPool> struct IsPoolType
-            : boost::mpl::contains<typename TPool::Seq, TExpected>
+            : boost::mpl::contains<typename TPool::Seq, TInstance<> >
         { };
 
         template<typename TPool> struct IsValueType
-            : boost::mpl::and_< TValue<TGiven>, boost::mpl::not_<boost::mpl::contains<typename TPool::Seq, TExpected> > >
+            : boost::mpl::and_< TValue<TGiven>, boost::mpl::not_<boost::mpl::contains<typename TPool::Seq, TInstance<> > > >
         { };
 
         template<typename TPool> struct IsScopeType
-            : boost::mpl::and_< boost::mpl::not_<TValue<TGiven> >, boost::mpl::not_<boost::mpl::contains<typename TPool::Seq, TExpected> > >
+            : boost::mpl::and_< boost::mpl::not_<TValue<TGiven> >, boost::mpl::not_<boost::mpl::contains<typename TPool::Seq, TInstance<> > > >
         { };
 
         template<bool, typename = void> struct CtorImpl
@@ -96,7 +97,7 @@
 
         template<typename TPool>
         struct ResultType<TPool, typename boost::enable_if< IsPoolType<TPool> >::type>
-            : TPool::template ResultType< Instance<TExpected, TContext> >
+            : TPool::template ResultType<TInstance<> >
         { };
 
         template<typename TPool>
@@ -112,7 +113,7 @@
         template<typename TPool>
         typename boost::enable_if<IsPoolType<TPool>, typename ResultType<TPool>::type>::type create(TPool& p_pool)
         {
-            return p_pool.template get< Instance<TExpected, TContext> >();
+            return p_pool.template get<TInstance<> >();
         }
 
         template<typename TPool>
@@ -139,14 +140,15 @@
         typename TGiven,
         typename TContext,
         typename TBind,
-        template<typename> class TValue
+        template<typename> class TValue,
+        template<typename, typename, typename> class TInstance
     >
-    class Dependency<boost::mpl::_1, TExpected, TGiven, TContext, TBind, TValue>
+    class Dependency<boost::mpl::_1, TExpected, TGiven, TContext, TBind, TValue, TInstance>
     {
     public:
         template<typename Scope> struct Rebind
         {
-            typedef Dependency<Scope, TExpected, TGiven, TContext, TBind, TValue> type;
+            typedef Dependency<Scope, TExpected, TGiven, TContext, TBind, TValue, TInstance> type;
         };
     };
 
@@ -155,14 +157,15 @@
         typename TScope,
         typename TContext,
         typename TBind,
-        template<typename> class TValue
+        template<typename> class TValue,
+        template<typename, typename, typename> class TInstance
     >
-    class Dependency<TScope, boost::mpl::_1, boost::mpl::_2, TContext, TBind, TValue>
+    class Dependency<TScope, boost::mpl::_1, boost::mpl::_2, TContext, TBind, TValue, TInstance>
     {
     public:
         template<typename Expected, typename Given> struct Rebind
         {
-            typedef Dependency<TScope, Expected, Given, TContext, TBind, TValue> type;
+            typedef Dependency<TScope, Expected, Given, TContext, TBind, TValue, TInstance> type;
         };
     };
 
@@ -183,7 +186,7 @@
     template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
     typename boost::enable_if<IsPoolType<TPool>, typename ResultType<TPool>::type>::type create(TPool& p_pool, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, & BOOST_PP_INTERCEPT))
     {
-        return p_pool.template get<TExpected>();
+        return p_pool.template get<TInstance<> >();
     }
 
 #endif

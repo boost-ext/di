@@ -31,7 +31,7 @@ public:
         : m_value(new T(p_value))
     { }
 
-    Named(boost::shared_ptr<T> p_value) // non explicit
+    Named(const boost::shared_ptr<T>& p_value) // non explicit
         : m_value(p_value)
     { }
 

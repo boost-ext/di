@@ -8,6 +8,7 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/type_traits/is_same.hpp>
+#include "QDeps/Back/Aux/Instance.hpp"
 #include "QDeps/Back/Aux/Dependency.hpp"
 
 namespace QDeps
@@ -118,7 +119,7 @@ BOOST_AUTO_TEST_CASE(CreateByPool)
 {
     const int i = 42;
     Dependency< FakeScope<>, int > dep;
-    FakePool< vector<int>, i > pool;
+    FakePool< vector<Instance<int> >, i > pool;
 
     BOOST_CHECK_EQUAL(i, *dep.create(pool));
 }
