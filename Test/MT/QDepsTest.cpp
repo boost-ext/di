@@ -73,24 +73,24 @@ typedef Front::Base::Module <
         CIf0
     >,
     Externals <
-        int
+        int,
+        double
     >
 > ExternalsModule;
 
-struct ExternalsModule2 : Front::Base::Module <
+struct ExternalsModuleCtor : Front::Base::Module <
     Singletons <
         CIf0
     >,
     Externals <
-        int
+        int,
+        double
     >
 >
 {
-#if 0
-    ExternalsModule2(int p_i)
-        : Module(Set<int>(p_i))
+    ExternalsModuleCtor(int i, double d)
+        : Module(Set<int>(i), Set<double>(d))
     { }
-#endif
 };
 
 BOOST_AUTO(fusionModule1, Front::Fusion::Module<>()(
@@ -242,12 +242,29 @@ BOOST_AUTO_TEST_CASE_VARIADIC(BasicExternals, Injector,
     Injector<ExternalsModule>)
 {
     Injector injector(
-        ExternalsModule(Back::Aux::Instance<int>(42))
+        ExternalsModule(
+            ExternalsModule::Set<int>(42),
+            ExternalsModule::Set<double>(87.0)
+        )
     );
 
     shared_ptr<C9> c9 = injector.template create< shared_ptr<C9> >();
 
     BOOST_CHECK_EQUAL(42, c9->i);
+    BOOST_CHECK_EQUAL(87.0, c9->d);
+}
+
+BOOST_AUTO_TEST_CASE_VARIADIC(BasicExternalsCtor, Injector,
+    Injector<ExternalsModuleCtor>)
+{
+    Injector injector(
+        ExternalsModuleCtor(42, 87.0)
+    );
+
+    shared_ptr<C9> c9 = injector.template create< shared_ptr<C9> >();
+
+    BOOST_CHECK_EQUAL(42, c9->i);
+    BOOST_CHECK_EQUAL(87.0, c9->d);
 }
 
 } // namespace MT

@@ -11,14 +11,18 @@
 
     #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
     #include <boost/preprocessor/repetition/enum_params.hpp>
+    #include <boost/type_traits/is_same.hpp>
     #include <boost/type_traits/is_base_of.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/limits/vector.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/if.hpp>
+    #include <boost/mpl/not.hpp>
+    #include <boost/mpl/find_if.hpp>
     #include <boost/mpl/back_inserter.hpp>
     #include <boost/mpl/copy.hpp>
     #include <boost/mpl/transform.hpp>
+    #include <boost/mpl/begin_end.hpp>
     #include "QDeps/Back/Aux/Pool.hpp"
     #include "QDeps/Back/Aux/Utility.hpp"
     #include "QDeps/Back/Aux/Instance.hpp"
@@ -62,6 +66,14 @@
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
     class Module : Back::Module
     {
+        template<typename TInst, typename T> struct IsSameValueType
+            : boost::is_same<typename TInst::ValueType, T>
+        { };
+
+        template<typename TSeq, typename T> struct FindInstanceType
+            : boost::mpl::find_if<TSeq, IsSameValueType<boost::mpl::_1, T> >::type
+        { };
+
         template<typename T, typename Enable = void>
         struct MakeInstance
         {
@@ -125,13 +137,19 @@
 
         #include BOOST_PP_ITERATE()
 
-    #if 0
-        template<typename TName, typename T>
-        inline Instance Set(const T& p_obj)
+        template<typename T>
+        inline static typename boost::disable_if
+        <
+            boost::is_same
+            <
+                FindInstanceType<Externals, T>,
+                boost::mpl::end<Externals>
+            >,
+            typename FindInstanceType<Externals, T>::type
+        >::type Set(T p_value)
         {
-            return Instance;
+            return typename FindInstanceType<Externals, T>::type(p_value);
         }
-    #endif
 
         const Pool& pool() const { return m_pool; }
 

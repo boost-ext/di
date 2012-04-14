@@ -510,6 +510,10 @@ BOOST_AUTO_TEST_CASE(ExternalsBind)
     ));
 }
 
+BOOST_AUTO_TEST_CASE(SetInstance)
+{
+}
+
 } // namespace UT
 } // namespace Base
 } // namespace Front
