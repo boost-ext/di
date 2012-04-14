@@ -27,7 +27,7 @@ struct App { QDEPS_CTOR(Storage, const shared_ptr<LimitChecker>&) { } };
 ```
 
 ``` C++
-struct BaseModule : Base::Module <                              // base module : type
+typedef Base::Module <                                          // base module : type
     PerRequests <                                               // always new instance
         Bind<IMap, Map>,                                        // bind IMap to Map implementation
         Data,                                                   // bind Data to interface
@@ -47,7 +47,7 @@ struct BaseModule : Base::Module <                              // base module :
         IConfig,
         Annotate<Bind<int>::InName<Up> >::With<UpInt>           // bind to annotation - simplify setting
     >
-> { };
+> BaseModule;
 
 Injector<BaseModule> injector(                                  // create injector from 2 modules
     BaseModule(                                                 // initialize BaseModule externals

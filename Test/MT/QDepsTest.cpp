@@ -26,53 +26,72 @@ using namespace Utility;
 using namespace Front::Base;
 using namespace Back;
 
-struct BaseModule1 : Front::Base::Module
-    <
-        Singletons <
-            C3
-        >,
-        PerRequests <
-            CIf0,
-            Bind<CIf01>::InCall<C6, C5>,
-            Bind<CIf02>::InCall<C7>,
-            Bind<int, int_<1> >,
-            Bind<int, int_<2> >::InCall<C8>,
-            Bind<int, int_<3> >::InName< mpl::string<'1'> >::InCall<C7, C6, C4>,
-            Bind<int, int_<4> >::InName< mpl::string<'2'> >::InCall<C7, C6, C4>,
-            Bind<int, int_<5> >::InCall<C2>
-        >
+typedef Front::Base::Module <
+    Singletons <
+        C3
+    >,
+    PerRequests <
+        CIf0,
+        Bind<CIf01>::InCall<C6, C5>,
+        Bind<CIf02>::InCall<C7>,
+        Bind<int, int_<1> >,
+        Bind<int, int_<2> >::InCall<C8>,
+        Bind<int, int_<3> >::InName< mpl::string<'1'> >::InCall<C7, C6, C4>,
+        Bind<int, int_<4> >::InName< mpl::string<'2'> >::InCall<C7, C6, C4>,
+        Bind<int, int_<5> >::InCall<C2>
     >
-{ };
+> BaseModule1;
 
-struct BaseModule2 : Front::Base::Module
-    <
-        Singletons <
-            C3
-        >,
-        PerRequests <
-            Bind<int, int_<0> >::InName< mpl::string<'1'> >,
-            Bind<int, int_<1> >
-        >
+typedef Front::Base::Module <
+    Singletons <
+        C3
+    >,
+    PerRequests <
+        Bind<int, int_<0> >::InName< mpl::string<'1'> >,
+        Bind<int, int_<1> >
     >
-{ };
+> BaseModule2;
 
-struct BaseModule3 : Front::Base::Module
-    <
-        Singletons <
-            CIf0
-        >,
-        PerRequests <
-            Bind<int, int_<2> >::InCall<C8>,
-            Bind<int, int_<3> >::InName< mpl::string<'2'> >
-        >
+typedef Front::Base::Module <
+    Singletons <
+        CIf0
+    >,
+    PerRequests <
+        Bind<int, int_<2> >::InCall<C8>,
+        Bind<int, int_<3> >::InName< mpl::string<'2'> >
     >
-{ };
+> BaseModule3;
 
-struct ProviderModule : Front::Base::Module <
+typedef Front::Base::Module <
     PerRequests <
         TransactionProvider, int_<0>
     >
-> { };
+> ProviderModule;
+
+typedef Front::Base::Module <
+    Singletons <
+        CIf0
+    >,
+    Externals <
+        int
+    >
+> ExternalsModule;
+
+struct ExternalsModule2 : Front::Base::Module <
+    Singletons <
+        CIf0
+    >,
+    Externals <
+        int
+    >
+>
+{
+#if 0
+    ExternalsModule2(int p_i)
+        : Module(Set<int>(p_i))
+    { }
+#endif
+};
 
 BOOST_AUTO(fusionModule1, Front::Fusion::Module<>()(
     Singletons <
@@ -217,6 +236,18 @@ BOOST_AUTO_TEST_CASE_VARIADIC(BasicVisitor, Injector,
     visitor;
 
     injector.template visit<TransactionUsage>(visitor);
+}
+
+BOOST_AUTO_TEST_CASE_VARIADIC(BasicExternals, Injector,
+    Injector<ExternalsModule>)
+{
+    Injector injector(
+        ExternalsModule(Back::Aux::Instance<int>(42))
+    );
+
+    shared_ptr<C9> c9 = injector.template create< shared_ptr<C9> >();
+
+    BOOST_CHECK_EQUAL(42, c9->i);
 }
 
 } // namespace MT

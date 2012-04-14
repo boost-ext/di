@@ -16,9 +16,14 @@
     #include <boost/preprocessor/punctuation/comma_if.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/limits/vector.hpp>
+    #include <boost/mpl/fold.hpp>
+    #include <boost/mpl/copy.hpp>
+    #include <boost/mpl/if.hpp>
+    #include <boost/mpl/back_inserter.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/size.hpp>
+    #include <boost/mpl/has_xxx.hpp>
 
     #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "QDeps/Back/Aux/Pool.hpp"))
 
@@ -61,15 +66,37 @@
     #endif
 
 #else
-    #define QDEPS_DERIVES_IMPL(_, n, seq) BOOST_PP_COMMA_IF(n) boost::mpl::at_c<seq, n>::type
+    #define QDEPS_DERIVES_IMPL(_, n, seq) BOOST_PP_COMMA_IF(n) public boost::mpl::at_c<seq, n>::type
     #define QDEPS_CTOR_INITLIST_IMPL(_, n, na) BOOST_PP_COMMA_IF(n) T##n(p_arg##n)
 
     template<typename TSeq>
-    struct Pool<TSeq, typename boost::enable_if_c< boost::mpl::size<TSeq>::value == BOOST_PP_ITERATION()>::type>
+    class Pool<TSeq, typename boost::enable_if_c< boost::mpl::size<TSeq>::value == BOOST_PP_ITERATION()>::type>
         : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), QDEPS_DERIVES_IMPL, TSeq)
     {
+        BOOST_MPL_HAS_XXX_TRAIT_DEF(Seq)
+
+        template<typename T> struct GetSeq
+        {
+            typedef typename T::Seq type;
+        };
+
     public:
-        typedef TSeq Seq;
+        struct Seq : boost::mpl::fold
+            <
+                TSeq,
+                boost::mpl::vector0<>,
+                boost::mpl::copy
+                <
+                    boost::mpl::if_
+                    <
+                        has_Seq<boost::mpl::_2>,
+                        GetSeq<boost::mpl::_2>,
+                        typename boost::mpl::vector<boost::mpl::_2>::type
+                    >,
+                    boost::mpl::back_inserter<boost::mpl::_1>
+                >
+            >::type
+        { };
 
         #if __GNUC__ >= 4
         #   pragma GCC diagnostic ignored "-Wreorder"

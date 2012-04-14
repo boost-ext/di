@@ -40,14 +40,6 @@ BOOST_AUTO_TEST_CASE(CtorEmpty)
 
     Inj l_inj; //have to compile
     (void)l_inj;
-
-    BOOST_CHECK((
-        equal
-        <
-            vector0<>,
-            Inj::Dependencies
-        >::value
-    ));
 }
 
 BOOST_AUTO_TEST_CASE(SimpleModule)
@@ -57,14 +49,6 @@ BOOST_AUTO_TEST_CASE(SimpleModule)
 
     Inj l_inj(module); //have to compile
     (void)l_inj;
-
-    BOOST_CHECK((
-        equal
-        <
-            vector<C, B, A>,
-            Inj::Dependencies
-        >::value
-    ));
 }
 
 } // namespace UT

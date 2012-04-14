@@ -6,6 +6,7 @@
 //
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
+#include <boost/mpl/equal.hpp>
 #include "QDeps/Back/Aux/Pool.hpp"
 
 namespace QDeps
@@ -56,24 +57,55 @@ struct CustomCtor
 
 BOOST_AUTO_TEST_CASE(PoolEmpty)
 {
-    Pool< vector0<> > pool;
+    typedef Pool< vector0<> > Pool;
+
+    Pool pool;
+
+    BOOST_CHECK((equal<vector0<>, Pool::Seq>::value));
     (void)pool;
 }
 
 BOOST_AUTO_TEST_CASE(PoolCtorOrder)
 {
+    typedef Pool< vector<TrivialCtor, DefaultCtor> > Pool;
     DefaultCtor defaultCtor;
     TrivialCtor trivialCtor;
-    Pool< vector<TrivialCtor, DefaultCtor> > pool(defaultCtor, trivialCtor);
+
+    Pool pool(defaultCtor, trivialCtor);
+
+    BOOST_CHECK((equal<vector<TrivialCtor, DefaultCtor>, Pool::Seq>::value));
     (void)pool;
 }
 
 BOOST_AUTO_TEST_CASE(PoolCtorOrderReverse)
 {
+    typedef Pool< vector<TrivialCtor, DefaultCtor> > Pool;
     DefaultCtor defaultCtor;
     TrivialCtor trivialCtor;
-    Pool< vector<TrivialCtor, DefaultCtor> > pool(trivialCtor, defaultCtor);
+
+    Pool pool(trivialCtor, defaultCtor);
+
+    BOOST_CHECK((equal<vector<TrivialCtor, DefaultCtor>, Pool::Seq>::value));
     (void)pool;
+}
+
+BOOST_AUTO_TEST_CASE(PoolOfPools)
+{
+    typedef Allocator<TrivialCtor> TrivialCtorType;
+    typedef Allocator<DefaultCtor> DefaultCtorType;
+    typedef Pool< vector<DefaultCtorType> > Pool1;
+    typedef Pool< vector<TrivialCtorType> > Pool2;
+    typedef Pool< vector<Pool1, Pool2> > Pool;
+    DefaultCtorType defaultCtor(new DefaultCtor);
+    TrivialCtorType trivialCtor(new TrivialCtor);
+
+    Pool1 pool1(defaultCtor);
+    Pool2 pool2(trivialCtor);
+    Pool pool(pool1, pool2);
+
+    BOOST_CHECK_EQUAL(trivialCtor.get(), pool.get<TrivialCtorType>());
+    BOOST_CHECK_EQUAL(defaultCtor.get(), pool.get<DefaultCtorType>());
+    BOOST_CHECK((equal<vector<DefaultCtorType, TrivialCtorType>, Pool::Seq>::value));
 }
 
 BOOST_AUTO_TEST_CASE(PoolGet)
@@ -90,26 +122,6 @@ BOOST_AUTO_TEST_CASE(PoolGet)
 
     BOOST_CHECK_EQUAL(trivialCtor.get(), pool.get<TrivialCtorType>());
     BOOST_CHECK_EQUAL(customCtor.get(), pool.get<CustomCtorType>());
-    BOOST_CHECK_EQUAL(defaultCtor.get(), pool.get<DefaultCtorType>());
-}
-
-BOOST_AUTO_TEST_CASE(PoolOfPools)
-{
-    typedef Allocator<TrivialCtor> TrivialCtorType;
-    typedef Allocator<DefaultCtor> DefaultCtorType;
-
-    DefaultCtorType defaultCtor(new DefaultCtor);
-    TrivialCtorType trivialCtor(new TrivialCtor);
-
-    typedef Pool< vector<DefaultCtorType> > Pool1;
-    Pool1 pool1(defaultCtor);
-
-    typedef Pool< vector<TrivialCtorType> > Pool2;
-    Pool2 pool2(trivialCtor);
-
-    Pool< vector<Pool1, Pool2> > pool(pool1, pool2);
-
-    BOOST_CHECK_EQUAL(trivialCtor.get(), pool.get<TrivialCtorType>());
     BOOST_CHECK_EQUAL(defaultCtor.get(), pool.get<DefaultCtorType>());
 }
 

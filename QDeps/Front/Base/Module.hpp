@@ -97,7 +97,7 @@
         { };
 
     public:
-        typedef Back::Aux::Pool<Externals> Pool;
+        typedef Back::Aux::Pool<typename Externals::type> Pool;
 
         struct Dependencies : boost::mpl::fold
             <

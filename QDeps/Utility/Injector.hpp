@@ -16,9 +16,10 @@
     #include <boost/preprocessor/punctuation/comma_if.hpp>
     #include <boost/preprocessor/facilities/intercept.hpp>
     #include <boost/type_traits/is_base_of.hpp>
-    #include <boost/mpl/vector.hpp>
     #include <boost/mpl/limits/vector.hpp>
+    #include <boost/mpl/vector.hpp>
     #include <boost/mpl/set.hpp>
+    #include <boost/mpl/insert.hpp>
     #include <boost/mpl/remove_if.hpp>
     #include <boost/mpl/filter_view.hpp>
     #include <boost/mpl/joint_view.hpp>
@@ -71,13 +72,17 @@
 
         struct Externals : boost::mpl::fold
             <
-                Modules,
+                typename boost::mpl::fold
+                <
+                    Modules,
+                    boost::mpl::set<>,
+                    boost::mpl::insert< boost::mpl::_1, Back::Aux::GetPool<boost::mpl::_2> >
+                >::type,
                 boost::mpl::vector0<>,
-                boost::mpl::push_back< boost::mpl::_1, Back::Aux::GetPool<boost::mpl::_2> >
+                boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>
             >::type
         { };
 
-    public:
         struct Dependencies : boost::mpl::fold
             <
                 typename DependenciesImpl<Modules>::type,
@@ -86,7 +91,6 @@
             >::type
         { };
 
-    private:
         typedef Back::Aux::Pool<typename Externals::type> Pool;
         typedef typename boost::mpl::deref<typename boost::mpl::begin<Polices>::type>::type Policy;
         typedef Back::Factory<typename Dependencies::type, Pool, Policy> Factory;
