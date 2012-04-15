@@ -7,28 +7,20 @@ SCAN_BUILD:=scan-build
 VALGRIND:=valgrind
 GENHTML:=genhtml
 LCOV:=lcov
-
-ifndef BOOST
-	BOOST:=../Externals/boost
-endif
-
+BOOST:=../Externals/boost
 QDEPS:=..
 CXXFLAGS:=-I$(BOOST) -I$(QDEPS) -DQDEPS_FUNCTION_ARITY_LIMIT_SIZE=4 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants $(EXTRA_CXXFLAGS)
 
-lib_boost_unit_test_framework_OBJS:=$(patsubst %.cpp, %.o, $(shell find $(BOOST)/libs/test/src -iname "*.cpp"))
-test_OBJS:=$(patsubst %.cpp, %.o, $(shell find . -iname "*.cpp"))
-
-DEPENDENCIES:=$(patsubst %.dep,.deps/%.dep,$($(lastword $(MAKECMDGOALS))_OBJS:.o=.dep))
--include $(DEPENDENCIES)
+-include $(patsubst %.dep,.deps/%.dep,$(patsubst %.cpp,%.dep,$(shell find . -iname "*.cpp")))
 
 all: test cov cppcheck scan-build valgrind
 
-test: lib_boost_unit_test_framework.a $$($$@_OBJS)
-	$(CXX) $(CXXFLAGS) -DBOOST_TEST_MODULE=$@ -o $@ $($@_OBJS) lib_boost_unit_test_framework.a
-	./$@
-
-%.a: $$($$*_OBJS)
+lib_boost_unit_test_framework.a: $(patsubst %.cpp,%.o,$(shell find $(BOOST)/libs/test/src -iname "*.cpp"))
 	ar rcs $@ $?
+
+test: lib_boost_unit_test_framework.a $(patsubst %.cpp,%.o,$(shell find . -iname "*.cpp"))
+	$(CXX) $(CXXFLAGS) -DBOOST_TEST_MODULE=$@ -o $@ $(patsubst %.cpp,%.o,$(shell find . -iname "*.cpp")) lib_boost_unit_test_framework.a
+	./$@
 
 cppcheck:
 	$(CPPCHECK) -I$(BOOST) -I$(QDEPS) --check-config .
@@ -50,12 +42,14 @@ cov: test
 	@rm -f $? $?.info
 
 clean:
-	@find . $(BOOST) -iname "*.o" -or -iname "*.a" -or -or -iname "*.gcda" -or -iname "*.gcno" -or -iname "*.info" | xargs --no-run-if-empty rm -f
+	@find . $(BOOST) -iname "*.o" -or -iname "*.a" -or -iname "*.gcda" -or -iname "*.gcno" -or -iname "*.info" | xargs --no-run-if-empty rm -f
 	@rm -rf test cov .deps
 
 .deps:
 	@mkdir $@
 
 .deps/%.dep: %.cpp .deps
-	mkdir -p $(shell dirname $@) 2>/dev/null; (echo $@ \\; $(lastword $(CXX)) $(CXXFLAGS) -MM $<) > $@ || (rm $@; false)
+	@mkdir -p $(shell dirname $@) 2>/dev/null
+	@$(lastword $(CXX)) $(CXXFLAGS) -MM $< > $@
+	@sed -i".bak" -e 's|.*:|$*.o:|' $@
 

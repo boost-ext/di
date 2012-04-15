@@ -33,6 +33,7 @@
     #include "QDeps/Front/Base/Aux/Scope.hpp"
     #include "QDeps/Front/Base/Aux/Bind.hpp"
     #include "QDeps/Front/Base/Aux/Externals.hpp"
+    #include "QDeps/Front/Base/Aux/Annotate.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "QDeps/Front/Base/Module.hpp"))
 
@@ -63,6 +64,8 @@
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
     struct Externals : Aux::Externals<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
 
+    template<typename T> struct Annotate : Aux::Annotate<T> { };
+
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
     class Module : Back::Module
     {
@@ -83,8 +86,7 @@
         template<typename T>
         struct MakeInstance<T, typename boost::enable_if<boost::is_base_of<Base::Aux::Detail::Internal, T> >::type>
         {
-            typedef typename T::template Rebind<Back::Scopes::Singleton>::type Dependency;
-            typedef Back::Aux::Instance<typename Dependency::Expected, typename Dependency::Context> type;
+            typedef Back::Aux::Instance<typename T::template Rebind<Back::Scopes::Singleton>::type::Expected> type;
         };
 
         struct Externals : boost::mpl::transform

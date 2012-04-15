@@ -505,8 +505,8 @@ BOOST_AUTO_TEST_CASE(ExternalsBind)
             <
                 Instance<int>,
                 Instance<Named<C1, int> >,
-                Instance<C2, vector<C1> >,
-                Instance<Named<C3, double>, vector<C4, C5> >
+                Instance<C2>,
+                Instance<Named<C3, double> >
             >,
             TestModule::Pool::Seq
         >::value
@@ -530,17 +530,18 @@ BOOST_AUTO_TEST_CASE(SetInstanceInt)
 
 BOOST_AUTO_TEST_CASE(SetInstanceInCallStack)
 {
-    const int i = 42;
+    //const int i = 42;
 
     struct TestModule : Module
         <
             Externals<
-                Bind<int>::InCallStack<C1>
+                Annotate< Bind<int>::InCallStack<C1, C2> >::With<A>,
+                Annotate< Bind<int>::InCallStack<C3, C4> >::With<B>
             >
         >
     { };
 
-    BOOST_CHECK_EQUAL(i, TestModule::Set<int>(i).get());
+    //BOOST_CHECK_EQUAL(i, TestModule::Set<int>(i).get());
 }
 
 BOOST_AUTO_TEST_CASE(SetInstanceInName)
@@ -548,14 +549,14 @@ BOOST_AUTO_TEST_CASE(SetInstanceInName)
     //const int i1 = 42;
     //const int i2 = 43;
 
-    //struct TestModule : Module
-        //<
-            //Externals<
-                //Bind<int>::InName<A>,
-                //Bind<int>::InName<B>
-            //>
-        //>
-    //{ };
+    struct TestModule : Module
+        <
+            Externals<
+                Annotate< Bind<int>::InName<float> >::With<A>,
+                Annotate< Bind<int>::InName<double> >::With<B>
+            >
+        >
+    { };
 
     //BOOST_CHECK_EQUAL(i1, TestModule::Set<A>(i1).get());
     //BOOST_CHECK_EQUAL(i2, TestModule::Set<B>(i2).get());
@@ -563,9 +564,21 @@ BOOST_AUTO_TEST_CASE(SetInstanceInName)
 
 BOOST_AUTO_TEST_CASE(SetInstanceInNameInCallStack)
 {
+    struct TestModule : Module
+        <
+            Externals<
+                Annotate< Bind<int>::InCallStack<C1, C2>::InName<float> >::With<A>,
+                Annotate< Bind<int>::InName<double>::InCallStack<C3, C4> >::With<B>
+            >
+        >
+    { };
 }
 
 BOOST_AUTO_TEST_CASE(SetInstanceAnnotation)
+{
+}
+
+BOOST_AUTO_TEST_CASE(ModuleCtorWithExternals)
 {
 }
 

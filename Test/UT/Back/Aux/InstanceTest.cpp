@@ -27,6 +27,16 @@ class C
     int dummy;
 };
 
+template<typename T, typename TName>
+struct Named
+{
+    explicit Named(T i)
+        : i(i)
+    { }
+
+    T i;
+};
+
 BOOST_AUTO_TEST_CASE(InstancePodValue)
 {
     const int i = 42;
@@ -59,13 +69,15 @@ BOOST_AUTO_TEST_CASE(InstanceVariantSharedPtr)
     BOOST_CHECK_EQUAL(c, boost::get<shared_ptr<C> >(Instance<C>(c).get()));
 }
 
-BOOST_AUTO_TEST_CASE(InstanceContext)
+BOOST_AUTO_TEST_CASE(InstanceNamed)
 {
-    shared_ptr<C> c1(new C);
-    shared_ptr<C> c2(new C);
+    typedef Named<int, A> C1;
+    typedef Named<int, B> C2;
 
-    BOOST_CHECK((Instance<int, A>(87).get() != Instance<int, B>(42).get()));
-    BOOST_CHECK((boost::get<shared_ptr<C> >(Instance<C, A>(c1).get()) != boost::get<shared_ptr<C> >(Instance<C, B>(c2).get())));
+    shared_ptr<C1> c1(new C1(42));
+    shared_ptr<C2> c2(new C2(87));
+
+    BOOST_CHECK((boost::get<shared_ptr<C1> >(Instance<C1>(c1).get())->i != boost::get<shared_ptr<C2> >(Instance<C2>(c2).get())->i));
 }
 
 } // namespace UT
