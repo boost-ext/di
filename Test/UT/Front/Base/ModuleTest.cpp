@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE(DefaultScopeBind)
             Bind<If0, CIf0>,
             C1,
             Bind<C2>::InName<int>,
-            Bind<C3>::InCall<C4, C5>
+            Bind<C3>::InCallStack<C4, C5>
         >
     { };
 
@@ -247,11 +247,11 @@ BOOST_AUTO_TEST_CASE(ManyScopes)
     BOOST_CHECK((equal<vector0<>, TestModule::Pool::Seq>::value));
 }
 
-BOOST_AUTO_TEST_CASE(InCall)
+BOOST_AUTO_TEST_CASE(InCallStack)
 {
     struct TestModule : Module
         <
-            PerRequest<C1>::InCall<C2>
+            PerRequest<C1>::InCallStack<C2>
         >
     { };
 
@@ -291,13 +291,13 @@ BOOST_AUTO_TEST_CASE(InName)
     BOOST_CHECK((equal<vector0<>, TestModule::Pool::Seq>::value));
 }
 
-BOOST_AUTO_TEST_CASE(InNameInCall)
+BOOST_AUTO_TEST_CASE(InNameInCallStack)
 {
     struct TestModule : Module
         <
             Singletons<
-                Bind<C1>::InName<int>::InCall<double>,
-                Bind<C2>::InName<double>::InCall<int>
+                Bind<C1>::InName<int>::InCallStack<double>,
+                Bind<C2>::InName<double>::InCallStack<int>
             >
         >
     { };
@@ -317,13 +317,13 @@ BOOST_AUTO_TEST_CASE(InNameInCall)
     BOOST_CHECK((equal<vector0<>, TestModule::Pool::Seq>::value));
 }
 
-BOOST_AUTO_TEST_CASE(InCallInName)
+BOOST_AUTO_TEST_CASE(InCallStackInName)
 {
     struct TestModule : Module
         <
             Singletons<
-                Bind<C1>::InCall<double>::InName<int>,
-                Bind<C2>::InCall<int>::InName<double>
+                Bind<C1>::InCallStack<double>::InName<int>,
+                Bind<C2>::InCallStack<int>::InName<double>
             >
         >
     { };
@@ -375,12 +375,12 @@ BOOST_AUTO_TEST_CASE(Mix)
                 Bind<If0, CIf0>,
                 C1,
                 Bind<C2>::InName<int>,
-                Bind<C3>::InCall<C4, C5>
+                Bind<C3>::InCallStack<C4, C5>
             >,
             PerRequests <
                 C6
             >,
-            Singleton<C7>::InName<double>::InCall<C1>
+            Singleton<C7>::InName<double>::InCallStack<C1>
         >
     { };
 
@@ -403,14 +403,14 @@ BOOST_AUTO_TEST_CASE(Mix)
     BOOST_CHECK((equal<vector0<>, TestModule::Pool::Seq>::value));
 }
 
-BOOST_AUTO_TEST_CASE(NamedInCall)
+BOOST_AUTO_TEST_CASE(NamedInCallStack)
 {
     struct TestModule : Front::Base::Module
         <
             PerRequests <
                 Bind<int, int_<1> >,
-                Bind<int, int_<4> >::InName< string<'2'> >::InCall<C7, C6, C4>,
-                Bind<int, int_<5> >::InCall<C2>
+                Bind<int, int_<4> >::InName< string<'2'> >::InCallStack<C7, C6, C4>,
+                Bind<int, int_<5> >::InCallStack<C2>
             >
         >
     { };
@@ -490,8 +490,8 @@ BOOST_AUTO_TEST_CASE(ExternalsBind)
             Externals<
                 int,
                 Bind<C1>::InName<int>,
-                Bind<C2>::InCall<C1>,
-                Bind<C3>::InName<double>::InCall<C4, C5>
+                Bind<C2>::InCallStack<C1>,
+                Bind<C3>::InName<double>::InCallStack<C4, C5>
             >
         >
     { };
@@ -528,14 +528,14 @@ BOOST_AUTO_TEST_CASE(SetInstanceInt)
     BOOST_CHECK_EQUAL(i, TestModule::Set<int>(i).get());
 }
 
-BOOST_AUTO_TEST_CASE(SetInstanceInCall)
+BOOST_AUTO_TEST_CASE(SetInstanceInCallStack)
 {
     const int i = 42;
 
     struct TestModule : Module
         <
             Externals<
-                Bind<int>::InCall<C1>
+                Bind<int>::InCallStack<C1>
             >
         >
     { };
@@ -561,7 +561,7 @@ BOOST_AUTO_TEST_CASE(SetInstanceInName)
     //BOOST_CHECK_EQUAL(i2, TestModule::Set<B>(i2).get());
 }
 
-BOOST_AUTO_TEST_CASE(SetInstanceInNameInCall)
+BOOST_AUTO_TEST_CASE(SetInstanceInNameInCallStack)
 {
 }
 

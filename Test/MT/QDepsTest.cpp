@@ -32,13 +32,13 @@ typedef Front::Base::Module <
     >,
     PerRequests <
         CIf0,
-        Bind<CIf01>::InCall<C6, C5>,
-        Bind<CIf02>::InCall<C7>,
+        Bind<CIf01>::InCallStack<C6, C5>,
+        Bind<CIf02>::InCallStack<C7>,
         Bind<int, int_<1> >,
-        Bind<int, int_<2> >::InCall<C8>,
-        Bind<int, int_<3> >::InName< mpl::string<'1'> >::InCall<C7, C6, C4>,
-        Bind<int, int_<4> >::InName< mpl::string<'2'> >::InCall<C7, C6, C4>,
-        Bind<int, int_<5> >::InCall<C2>
+        Bind<int, int_<2> >::InCallStack<C8>,
+        Bind<int, int_<3> >::InName< mpl::string<'1'> >::InCallStack<C7, C6, C4>,
+        Bind<int, int_<4> >::InName< mpl::string<'2'> >::InCallStack<C7, C6, C4>,
+        Bind<int, int_<5> >::InCallStack<C2>
     >
 > BaseModule1;
 
@@ -57,7 +57,7 @@ typedef Front::Base::Module <
         CIf0
     >,
     PerRequests <
-        Bind<int, int_<2> >::InCall<C8>,
+        Bind<int, int_<2> >::InCallStack<C8>,
         Bind<int, int_<3> >::InName< mpl::string<'2'> >
     >
 > BaseModule3;
@@ -99,13 +99,13 @@ BOOST_AUTO(fusionModule1, Front::Fusion::Module<>()(
     >(),
     PerRequests <
         CIf0,
-        Bind<CIf01>::InCall<C6, C5>,
-        Bind<CIf02>::InCall<C7>,
+        Bind<CIf01>::InCallStack<C6, C5>,
+        Bind<CIf02>::InCallStack<C7>,
         Bind<int, int_<1> >,
-        Bind<int, int_<2> >::InCall<C8>,
-        Bind<int, int_<3> >::InName< mpl::string<'1'> >::InCall<C7, C6, C4>,
-        Bind<int, int_<4> >::InName< mpl::string<'2'> >::InCall<C7, C6, C4>,
-        Bind<int, int_<5> >::InCall<C2>
+        Bind<int, int_<2> >::InCallStack<C8>,
+        Bind<int, int_<3> >::InName< mpl::string<'1'> >::InCallStack<C7, C6, C4>,
+        Bind<int, int_<4> >::InName< mpl::string<'2'> >::InCallStack<C7, C6, C4>,
+        Bind<int, int_<5> >::InCallStack<C2>
     >()
 ));
 
@@ -114,7 +114,7 @@ BOOST_AUTO(fusionModule2, Front::Fusion::Module<>()(
         CIf0
     >(),
     PerRequests <
-        Bind<int, int_<2> >::InCall<C8>,
+        Bind<int, int_<2> >::InCallStack<C8>,
         Bind<int, int_<3> >::InName< mpl::string<'2'> >
     >()
 ));

@@ -86,7 +86,7 @@ public:
         >::type
     {
         template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-        struct InCall : Detail::Internal, boost::mpl::fold
+        struct InCallStack : Detail::Internal, boost::mpl::fold
             <
                 boost::mpl::vector1<TExpected>,
                 boost::mpl::vector0<>,
@@ -127,7 +127,7 @@ public:
             >::type
         {
             template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-            struct InCall : Detail::Internal, boost::mpl::fold
+            struct InCallStack : Detail::Internal, boost::mpl::fold
                 <
                     boost::mpl::vector1<TExpected>,
                     boost::mpl::vector0<>,

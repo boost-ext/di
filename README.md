@@ -32,7 +32,7 @@ typedef Base::Module <                                          // base module :
         Bind<IMap, Map>,                                        // bind IMap to Map implementation
         Data,                                                   // bind Data to interface
         Allocator,                                              // from which Data is inhereting
-        Bind<LimitChecker>::InCall<Capacity>                    // bind implementation LimitChecker
+        Bind<LimitChecker>::InCallStack<Capacity>               // bind implementation LimitChecker
     >,                                                          // only when Capacity class is created
     Singletons <
         Bind<CapacityLimit>::InName<Down>,                      // bind using Named parameter
@@ -45,7 +45,7 @@ typedef Base::Module <                                          // base module :
     >,
     Externals <                                                 // outside objects
         IConfig,
-        Annotate<Bind<int>::InName<Up>::InCall<C>>::With<UpInt> // bind to annotation - simplify setting
+        Annotate<Bind<int>::InCallStack<C> >::With<UpInt>       // bind to annotation - simplify setting
     >
 > BaseModule;
 
@@ -65,10 +65,10 @@ BOOST_AUTO(fusionModule, Fusion::Module()(                      // fusion module
         Storage
     >(),
     PerRequests <
-        Bind<Limit>::InName<On>::InCall<Storage, Load>,         // bind (in name) only when Storage and
+        Bind<Limit>::InName<On>::InCallStack<Storage, Load>,    // bind (in name) only when Storage and
         PriorityQueue                                           // Load were created in given order
     >(),
-    Bind<int>::InCall<Selector>::To(87)                         // bind external value
+    Bind<int>::InCallStack<Selector>::To(87)                    // bind external value
 ));
 
 Injector<BOOST_TYPEOF(fusionModule)> injector(fusionModule);    // install fusion module
