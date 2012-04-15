@@ -48,7 +48,7 @@
         typename TContext = boost::mpl::vector0<>,
         typename TBind = boost::is_same<boost::mpl::_1, TExpected>,
         template<typename, typename = void> class TValue = Value,
-        template<typename = TExpected, typename = TContext, typename = void> class TInstance = Instance
+        template<typename = TExpected, typename = void> class TInstance = Instance
     >
     class Dependency
     {
@@ -141,7 +141,7 @@
         typename TContext,
         typename TBind,
         template<typename, typename> class TValue,
-        template<typename, typename, typename> class TInstance
+        template<typename, typename> class TInstance
     >
     class Dependency<boost::mpl::_1, TExpected, TGiven, TContext, TBind, TValue, TInstance>
     {
@@ -158,7 +158,7 @@
         typename TContext,
         typename TBind,
         template<typename, typename> class TValue,
-        template<typename, typename, typename> class TInstance
+        template<typename, typename> class TInstance
     >
     class Dependency<TScope, boost::mpl::_1, boost::mpl::_2, TContext, TBind, TValue, TInstance>
     {

@@ -19,20 +19,50 @@ Usage
 #include <QDeps/QDeps.hpp>
 
 struct NumOfLimits { };
-struct Allocator { QDEPS_CTOR(Allocator, int, shared_ptr<Load>) { } };
-struct Data { QDEPS_CTOR(Named<CapacityLimit, Down>, Named<CapacityLimit, Up>) { } };
+struct Allocator : IAllocator { QDEPS_CTOR(Allocator, int, shared_ptr<Load>) { } };
+struct Data : IData { QDEPS_CTOR(Named<CapacityLimit, Down>, Named<CapacityLimit, Up>) { } };
 struct Storage { QDEPS_CTOR_TRAITS(Named<int, Up>, float); Storage(int, float) { } };
 struct App { QDEPS_CTOR(Storage, const shared_ptr<LimitChecker>&) { } };
 ...
 ```
 
 ``` C++
-typedef Base::Module <                                          // base module : type
+struct SimpleModule : Base::Module <                            // simple module
+    PerRequests <                                               // new instance each time
+        Allocator                                               // of IAllocator -> Allocator
+    >,
+    Singletons <                                                // the same instance
+        Data, Storage                                           // of IData->Data, Storage
+    >
+> { };
+
+App app = Injector<SimpleModule>().create<App>();               // create App and all dependencies
+```
+
+``` C++
+BOOST_AUTO(fusionModule, Fusion::Module()(                      // simple fusion module
+    Singletons <
+        Storage
+    >(),
+    PerRequests <
+        Bind<Limit>::InName<On>::InCallStack<Storage, Load>,    // bind (in name) only when Storage and
+        PriorityQueue                                           // Load were created in given order
+    >(),
+    Bind<int>::InCallStack<Selector>::To(87)                    // bind external value
+));
+
+Injector<BOOST_TYPEOF(fusionModule)> injector(fusionModule);    // install fusion module
+
+shared_ptr<App> app = injector.create< shared_ptr<App> >();     // create App as shared_ptr
+```
+
+``` C++
+typedef Base::Module <                                          // complex base module
     PerRequests <                                               // always new instance
         Bind<IMap, Map>,                                        // bind IMap to Map implementation
         Data,                                                   // bind Data to interface
         Allocator,                                              // from which Data is inhereting
-        Bind<LimitChecker>::InCall<Capacity>                    // bind implementation LimitChecker
+        Bind<LimitChecker>::InCallStack<Capacity>               // bind implementation LimitChecker
     >,                                                          // only when Capacity class is created
     Singletons <
         Bind<CapacityLimit>::InName<Down>,                      // bind using Named parameter
@@ -45,7 +75,7 @@ typedef Base::Module <                                          // base module :
     >,
     Externals <                                                 // outside objects
         IConfig,
-        Annotate<Bind<int>::InName<Up>::InCall<C>>::With<UpInt> // bind to annotation - simplify setting
+        Annotate< Bind<int>::InCallStack<C> >::With<UpInt>      // bind to annotation - simplify setting
     >
 > BaseModule;
 
@@ -55,23 +85,6 @@ Injector<BaseModule> injector(                                  // create inject
         BaseModule::Set<UpInt>(42)
     )
 );
-
-shared_ptr<App> app = injector.create< shared_ptr<App> >();     // create App as shared_ptr
-```
-
-``` C++
-BOOST_AUTO(fusionModule, Fusion::Module()(                      // fusion module : object
-    Singletons <
-        Storage
-    >(),
-    PerRequests <
-        Bind<Limit>::InName<On>::InCall<Storage, Load>,         // bind (in name) only when Storage and
-        PriorityQueue                                           // Load were created in given order
-    >(),
-    Bind<int>::InCall<Selector>::To(87)                         // bind external value
-));
-
-Injector<BOOST_TYPEOF(fusionModule)> injector(fusionModule);    // install fusion module
 
 shared_ptr<App> app = injector.create< shared_ptr<App> >();     // create App as shared_ptr
 ```

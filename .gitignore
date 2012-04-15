@@ -2,4 +2,5 @@
 *.gcda
 *.gcno
 *.gch
-*.exe
+.deps
+test

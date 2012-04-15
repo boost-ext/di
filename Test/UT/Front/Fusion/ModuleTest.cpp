@@ -54,12 +54,12 @@ BOOST_AUTO_TEST_CASE(FusionMix)
             Bind<If0, CIf0>,
             C1,
             Bind<C2>::InName<int>,
-            Bind<C3>::InCall<C4, C5>
+            Bind<C3>::InCallStack<C4, C5>
         >(),
         PerRequests <
             C6
         >(),
-        Singleton<C7>::InName<double>::InCall<C1>()
+        Singleton<C7>::InName<double>::InCallStack<C1>()
     ));
 
     typedef BOOST_TYPEOF(fusionModule) TestModule;
