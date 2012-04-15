@@ -10,9 +10,11 @@
 #include <boost/typeof/typeof.hpp>
 #include <boost/type_traits/is_arithmetic.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/mpl/aux_/yes_no.hpp>
 #include <boost/non_type.hpp>
+#include <boost/mpl/aux_/yes_no.hpp>
 #include <boost/mpl/bool.hpp>
+#include <boost/mpl/void.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/mpl/string.hpp>
 
 namespace QDeps
@@ -28,7 +30,7 @@ namespace Detail
 template<typename Derived, typename = void> class HasValue
 {
     struct Helper { static int value; };
-    struct Base : Derived, Helper { };
+    struct Base : boost::mpl::if_<boost::is_arithmetic<Derived>, boost::mpl::void_, Derived>::type, Helper { };
 
     template<typename T> static boost::mpl::aux::no_tag  deduce(boost::non_type<const int*, &T::value>*);
     template<typename T> static boost::mpl::aux::yes_tag deduce(...);
@@ -36,10 +38,6 @@ template<typename Derived, typename = void> class HasValue
 public:
     static const bool value = sizeof(deduce<Base>(0)) == sizeof(boost::mpl::aux::yes_tag);
 };
-
-template<typename Derived>
-class HasValue<Derived, typename boost::enable_if< boost::is_arithmetic<Derived> >::type> : public boost::mpl::false_
-{ };
 
 }// namespace Detail
 

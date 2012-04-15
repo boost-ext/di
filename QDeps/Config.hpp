@@ -7,8 +7,6 @@
 #ifndef QDEPS_CONFIG_HPP
 #define QDEPS_CONFIG_HPP
 
-#include <boost/shared_ptr.hpp>
-#include <boost/make_shared.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/config.hpp>
 
@@ -28,16 +26,9 @@
 # define QDEPS_STATIC_ASSERT(cond, expr, types) BOOST_MPL_ASSERT_MSG(cond, expr, types)
 #endif
 
+#if 0
 #if defined(BOOST_HAS_RVALUE_REFS) && defined(BOOST_HAS_VARIADIC_TMPL)
-# define QDEPS_ITERATION(begin, file)
-# define QDEPS_VARIADIC_TYPENAME_ARGS typename... Arg
-# define QDEPS_VARIADIC_ARGS Args&&... p_args
-# define QDEPS_VARIADIC_FORWARD_ARGS std::forward<Args>(p_args)...
-#else
-# define QDEPS_ITERATION(begin, file) BOOST_PP_ITERATION_PARAMS_1 (3, (begin, QDEPS_FUNCTION_ARITY_LIMIT_SIZE, file))
-# define QDEPS_VARIADIC_TYPENAME_ARGS BOOST_PP_COMMA_IF(BOOST_PP_ITERATION()) BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)
-# define QDEPS_VARIADIC_ARGS BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg)
-# define QDEPS_VARIADIC_FORWARD_ARGS BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg)
+#endif
 #endif
 
 namespace QDeps
