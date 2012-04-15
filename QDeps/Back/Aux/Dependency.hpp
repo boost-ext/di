@@ -26,7 +26,6 @@
     #include <boost/mpl/placeholders.hpp>
     #include <boost/mpl/identity.hpp>
     #include <boost/mpl/has_xxx.hpp>
-    #include "QDeps/Back/Aux/Utility.hpp"
     #include "QDeps/Back/Aux/Instance.hpp"
     #include "QDeps/Back/Aux/Value.hpp"
     #include "QDeps/Front/Ctor.hpp"
@@ -48,15 +47,16 @@
         typename TGiven = TExpected,
         typename TContext = boost::mpl::vector0<>,
         typename TBind = boost::is_same<boost::mpl::_1, TExpected>,
-        template<typename> class TValue = Value,
+        template<typename, typename = void> class TValue = Value,
         template<typename = TExpected, typename = TContext, typename = void> class TInstance = Instance
     >
     class Dependency
     {
         BOOST_MPL_HAS_XXX_TRAIT_DEF(QDEPS_CTOR_UNIQUE_NAME)
+        BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
         QDEPS_STATIC_ASSERT(
-            !Detail::has_element_type<TGiven>::value,
+            !has_element_type<TGiven>::value,
             GIVEN_TYPE_WITH_ELEMENT_TYPE,
             (TGiven)
         );
@@ -140,7 +140,7 @@
         typename TGiven,
         typename TContext,
         typename TBind,
-        template<typename> class TValue,
+        template<typename, typename> class TValue,
         template<typename, typename, typename> class TInstance
     >
     class Dependency<boost::mpl::_1, TExpected, TGiven, TContext, TBind, TValue, TInstance>
@@ -157,7 +157,7 @@
         typename TScope,
         typename TContext,
         typename TBind,
-        template<typename> class TValue,
+        template<typename, typename> class TValue,
         template<typename, typename, typename> class TInstance
     >
     class Dependency<TScope, boost::mpl::_1, boost::mpl::_2, TContext, TBind, TValue, TInstance>

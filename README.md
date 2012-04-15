@@ -45,7 +45,7 @@ typedef Base::Module <                                          // base module :
     >,
     Externals <                                                 // outside objects
         IConfig,
-        Annotate<Bind<int>::InName<Up> >::With<UpInt>           // bind to annotation - simplify setting
+        Annotate<Bind<int>::InName<Up>::InCall<C>>::With<UpInt> // bind to annotation - simplify setting
     >
 > BaseModule;
 

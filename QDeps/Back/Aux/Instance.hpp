@@ -31,6 +31,7 @@ template
 class Instance
 {
 public:
+    typedef T ValueType;
     typedef boost::variant<const T&, T&, boost::shared_ptr<T> > ResultType;
 
     explicit Instance(const T& p_member)
@@ -73,6 +74,7 @@ class Instance
     >
 {
 public:
+    typedef T ValueType;
     typedef T ResultType;
 
     explicit Instance(ResultType p_member)

@@ -16,7 +16,6 @@
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/if.hpp>
-#include <boost/mpl/has_xxx.hpp>
 #include "QDeps/Config.hpp"
 
 namespace QDeps
@@ -25,23 +24,6 @@ namespace Back
 {
 namespace Aux
 {
-
-namespace Detail
-{
-BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
-} // namespace Detail
-
-template<typename TDependency, int N, typename TResult = void> struct EnableIfCtorSize
-    : boost::enable_if_c<boost::mpl::size<typename TDependency::Ctor>::value == N, TResult>
-{ };
-
-template<typename TDependency, int N> struct AtCtor
-    : boost::mpl::at_c<typename TDependency::Ctor, N>
-{ };
-
-template<typename TCallStack, typename TDependency> struct UpdateCallStack
-    : boost::mpl::push_back<TCallStack, typename TDependency::Given>
-{ };
 
 template<typename T> struct GetBind
 {
@@ -73,8 +55,27 @@ template<typename T> struct GetExternals
     typedef typename T::Externals type;
 };
 
+template<typename T> struct GetSeq
+{
+    typedef typename T::Seq type;
+};
+
+template<typename TDependency, int N, typename TResult = void> struct EnableIfCtorSize
+    : boost::enable_if_c<boost::mpl::size<typename TDependency::Ctor>::value == N, TResult>
+{ };
+
+template<typename TDependency, int N> struct AtCtor
+    : boost::mpl::at_c<typename TDependency::Ctor, N>
+{ };
+
+template<typename TCallStack, typename TDependency> struct UpdateCallStack
+    : boost::mpl::push_back<TCallStack, typename TDependency::Given>
+{ };
+
 template<typename TElement> class MakePlain
 {
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
+
     template<typename T> struct RemoveAccessors
     {
         typedef typename boost::remove_cv<typename boost::remove_pointer<typename boost::remove_reference<T>::type>::type>::type type;
@@ -85,7 +86,7 @@ template<typename TElement> class MakePlain
         typedef T type;
     };
 
-    template<typename T> struct DerefElementType<T, typename boost::enable_if< Detail::has_element_type<T> >::type>
+    template<typename T> struct DerefElementType<T, typename boost::enable_if< has_element_type<T> >::type>
     {
         typedef typename T::element_type type;
     };

@@ -23,7 +23,7 @@ namespace UT
 using namespace boost;
 using namespace boost::mpl;
 
-template<typename T> struct FakeValue { };
+template<typename T, typename> struct FakeValue { };
 
 template<typename TSeq, int Value = 0> struct FakePool
 {
