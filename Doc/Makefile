@@ -1,6 +1,8 @@
 DOC=$(PWD)
 TMP=/tmp
 WIKI=wiki
+DATA=data
+HTML=html
 VIMWIKI=$(PWD)/../Externals/vimwiki
 
 all doc: clean
@@ -9,7 +11,7 @@ all doc: clean
 	@touch $(VIMWIKI)/syntax/syntax.vim
 	@VIMRUNTIME="$(VIMWIKI)" vim -n --noplugins -u NONE\
 		-c "set nocompatible | filetype plugin on | syntax on"\
-		-c "let g:vimwiki_list = [{'path': '$(TMP)/$(WIKI)', 'path_html': '$(DOC)/html', 'template_path': '$(TMP)/$(WIKI)/templates/', 'template_default': 'wiki', 'template_ext': '.tpl'}]"\
+		-c "let g:vimwiki_list = [{'path': '$(TMP)/$(WIKI)', 'path_html': '$(DOC)/$(HTML)', 'template_path': '$(TMP)/$(WIKI)/$(DATA)', 'template_default': 'wiki', 'template_ext': '.tpl'}]"\
 		-c "source $(VIMWIKI)/plugin/vimwiki.vim"\
 		-c "source $(VIMWIKI)/ftplugin/vimwiki.vim"\
 		-c "source $(VIMWIKI)/syntax/vimwiki.vim"\
@@ -17,7 +19,8 @@ all doc: clean
 		-c "quit"\
 		$(TMP)/$(WIKI)/index.wiki
 	@rm -f $(VIMWIKI)/syntax/syntax.vim
+	@cp -r $(DOC)/$(WIKI)/$(DATA)/* $(DOC)/$(HTML)
 
 clean:
-	@rm -rf $(TMP)/$(WIKI)
+	@rm -rf $(TMP)/$(WIKI) $(DOC)/$(HTML)
 
