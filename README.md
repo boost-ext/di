@@ -22,6 +22,7 @@ struct NumOfLimits { };
 struct Allocator : IAllocator { QDEPS_CTOR(Allocator, int, shared_ptr<Load>) { } };
 struct Data : IData { QDEPS_CTOR(Named<CapacityLimit, Down>, Named<CapacityLimit, Up>) { } };
 struct Storage { QDEPS_CTOR_TRAITS(Named<int, Up>, float); Storage(int, float) { } };
+template<> struct CtorTraits<Load> { static void ctor(shared_ptr<Storage>); };
 struct App { QDEPS_CTOR(Storage, const shared_ptr<LimitChecker>&) { } };
 ...
 ```

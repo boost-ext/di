@@ -3,8 +3,6 @@ TMP=/tmp
 WIKI=wiki
 VIMWIKI=$(PWD)/../Externals/vimwiki
 
-.PHONY: all doc clean
-
 all doc: clean
 	@cp -r $(DOC)/$(WIKI) $(TMP)/$(WIKI)
 	@find $(TMP)/$(WIKI) -type f -iname "*.wiki" | xargs -i@ sh -c "cat @ | grep \"?include\" | sed \"s/[^\\\"]*\\\"\(.*\)\\\".*/\1/\" | xargs -i% sed -i\".bak\" -e\"/<?include\s*=\s*".*"/r $(DOC)/%\" -e\"/<?include\s*=\s*".*"/d\" @"
