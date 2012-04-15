@@ -23,6 +23,7 @@
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/deref.hpp>
 #include <boost/mpl/begin_end.hpp>
+#include <boost/mpl/has_xxx.hpp>
 #include "QDeps/Back/Aux/Utility.hpp"
 
 namespace QDeps
@@ -34,6 +35,8 @@ namespace Detail
 
 namespace Detail
 {
+
+BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
 template<typename TCallStack, typename TContext>
 struct EqualCallStack : boost::mpl::equal
@@ -65,7 +68,7 @@ struct MakeDefaultDependency
 { };
 
 template<typename T, typename TDefault>
-struct MakeDefaultDependency<T, TDefault, typename boost::enable_if<Aux::Detail::has_element_type<T> >::type>
+struct MakeDefaultDependency<T, TDefault, typename boost::enable_if<has_element_type<T> >::type>
     : TDefault::template Rebind<typename Aux::MakePlain<T>::type, typename Aux::MakePlain<typename T::value_type>::type>
 { };
 

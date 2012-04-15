@@ -24,6 +24,7 @@
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/has_xxx.hpp>
+    #include "QDeps/Back/Aux/Utility.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "QDeps/Back/Aux/Pool.hpp"))
 
@@ -74,11 +75,6 @@
         : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), QDEPS_DERIVES_IMPL, TSeq)
     {
         BOOST_MPL_HAS_XXX_TRAIT_DEF(Seq)
-
-        template<typename T> struct GetSeq
-        {
-            typedef typename T::Seq type;
-        };
 
     public:
         struct Seq : boost::mpl::fold

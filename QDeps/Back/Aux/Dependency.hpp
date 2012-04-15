@@ -26,7 +26,6 @@
     #include <boost/mpl/placeholders.hpp>
     #include <boost/mpl/identity.hpp>
     #include <boost/mpl/has_xxx.hpp>
-    #include "QDeps/Back/Aux/Utility.hpp"
     #include "QDeps/Back/Aux/Instance.hpp"
     #include "QDeps/Back/Aux/Value.hpp"
     #include "QDeps/Front/Ctor.hpp"
@@ -54,9 +53,10 @@
     class Dependency
     {
         BOOST_MPL_HAS_XXX_TRAIT_DEF(QDEPS_CTOR_UNIQUE_NAME)
+        BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
         QDEPS_STATIC_ASSERT(
-            !Detail::has_element_type<TGiven>::value,
+            !has_element_type<TGiven>::value,
             GIVEN_TYPE_WITH_ELEMENT_TYPE,
             (TGiven)
         );
