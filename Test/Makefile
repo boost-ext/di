@@ -19,6 +19,9 @@ ut_back:=$(patsubst %.cpp, %.o, $(shell find UT/Back -iname "*.cpp")) main.o
 ut_front:=$(patsubst %.cpp, %.o, $(shell find UT/Front -iname "*.cpp")) main.o
 ut_utility:=$(patsubst %.cpp, %.o, $(shell find UT/Utility -iname "*.cpp")) main.o
 
+DEPENDENCIES := $(patsubst %.dep,.deps/%.dep,$($(lastword $(MAKECMDGOALS)):.o=.dep))
+-include $(DEPENDENCIES)
+
 all: test cov cppcheck scan-build valgrind
 test: ut_back ut_front ut_utility mt
 ut: ut_back ut_front ut_utility
@@ -54,5 +57,11 @@ valgrind_%: $$*
 
 clean:
 	@find . $(BOOST) -iname "*.o" -or -iname "*.a" -or -iname "*.exe" -or -iname "*.gcda" -or -iname "*.gcno" -or -iname "*.info" | xargs --no-run-if-empty rm -f
-	@rm -rf cov_*
+	@rm -rf cov_* .deps
+
+.deps:
+	@mkdir $@
+
+.deps/%.dep: %.cpp .deps
+	mkdir -p $(shell dirname $@) 2>/dev/null; (echo $@ \\; $(lastword $(CXX)) $(CXXFLAGS) -MM $<) > $@ || (rm $@; false)
 

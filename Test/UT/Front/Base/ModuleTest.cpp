@@ -510,7 +510,34 @@ BOOST_AUTO_TEST_CASE(ExternalsBind)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(SetInstance)
+BOOST_AUTO_TEST_CASE(SetInstanceInt)
+{
+    const int i = 42;
+
+    struct TestModule : Module
+        <
+            Externals<
+                int
+            >
+        >
+    { };
+
+    BOOST_CHECK_EQUAL(i, TestModule::Set<int>(i).get());
+}
+
+BOOST_AUTO_TEST_CASE(SetInstanceInCall)
+{
+}
+
+BOOST_AUTO_TEST_CASE(SetInstanceInName)
+{
+}
+
+BOOST_AUTO_TEST_CASE(SetInstanceInNameInCall)
+{
+}
+
+BOOST_AUTO_TEST_CASE(SetInstanceAnnotation)
 {
 }
 

@@ -138,15 +138,8 @@
         #include BOOST_PP_ITERATE()
 
         template<typename T>
-        inline static typename boost::disable_if
-        <
-            boost::is_same
-            <
-                FindInstanceType<Externals, T>,
-                boost::mpl::end<Externals>
-            >,
-            typename FindInstanceType<Externals, T>::type
-        >::type Set(T p_value)
+        inline static typename boost::disable_if<boost::is_same<FindInstanceType<Externals, T>, boost::mpl::end<Externals> >, typename FindInstanceType<Externals, T>::type >::type
+        Set(T p_value)
         {
             return typename FindInstanceType<Externals, T>::type(p_value);
         }
