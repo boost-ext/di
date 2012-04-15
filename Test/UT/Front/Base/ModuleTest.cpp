@@ -33,6 +33,9 @@ using namespace Utility;
 using namespace boost::mpl;
 using namespace boost;
 
+class A { };
+class B { };
+
 BOOST_AUTO_TEST_CASE(Empty)
 {
     struct TestModule : Module<> { };
@@ -527,10 +530,35 @@ BOOST_AUTO_TEST_CASE(SetInstanceInt)
 
 BOOST_AUTO_TEST_CASE(SetInstanceInCall)
 {
+    const int i = 42;
+
+    struct TestModule : Module
+        <
+            Externals<
+                Bind<int>::InCall<C1>
+            >
+        >
+    { };
+
+    BOOST_CHECK_EQUAL(i, TestModule::Set<int>(i).get());
 }
 
 BOOST_AUTO_TEST_CASE(SetInstanceInName)
 {
+    //const int i1 = 42;
+    //const int i2 = 43;
+
+    //struct TestModule : Module
+        //<
+            //Externals<
+                //Bind<int>::InName<A>,
+                //Bind<int>::InName<B>
+            //>
+        //>
+    //{ };
+
+    //BOOST_CHECK_EQUAL(i1, TestModule::Set<A>(i1).get());
+    //BOOST_CHECK_EQUAL(i2, TestModule::Set<B>(i2).get());
 }
 
 BOOST_AUTO_TEST_CASE(SetInstanceInNameInCall)
