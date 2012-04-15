@@ -505,8 +505,8 @@ BOOST_AUTO_TEST_CASE(ExternalsBind)
             <
                 Instance<int>,
                 Instance<Named<C1, int> >,
-                Instance<C2>,
-                Instance<Named<C3, double> >
+                Instance<C2, vector<C1> >,
+                Instance<Named<C3, double>, vector<C4, C5> >
             >,
             TestModule::Pool::Seq
         >::value

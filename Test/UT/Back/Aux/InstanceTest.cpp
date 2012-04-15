@@ -80,6 +80,15 @@ BOOST_AUTO_TEST_CASE(InstanceNamed)
     BOOST_CHECK((boost::get<shared_ptr<C1> >(Instance<C1>(c1).get())->i != boost::get<shared_ptr<C2> >(Instance<C2>(c2).get())->i));
 }
 
+BOOST_AUTO_TEST_CASE(InstanceContext)
+{
+    shared_ptr<C> c1(new C);
+    shared_ptr<C> c2(new C);
+
+    BOOST_CHECK((Instance<int, A>(87).get() != Instance<int, B>(42).get()));
+    BOOST_CHECK((boost::get<shared_ptr<C> >(Instance<C, A>(c1).get()) != boost::get<shared_ptr<C> >(Instance<C, B>(c2).get())));
+}
+
 } // namespace UT
 } // namespace Aux
 } // namespace Back

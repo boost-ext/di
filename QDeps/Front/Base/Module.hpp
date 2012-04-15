@@ -86,7 +86,8 @@
         template<typename T>
         struct MakeInstance<T, typename boost::enable_if<boost::is_base_of<Base::Aux::Detail::Internal, T> >::type>
         {
-            typedef Back::Aux::Instance<typename T::template Rebind<Back::Scopes::Singleton>::type::Expected> type;
+            typedef typename T::template Rebind<Back::Scopes::Singleton>::type Dependency;
+            typedef Back::Aux::Instance<typename Dependency::Expected, typename Dependency::Context> type;
         };
 
         struct Externals : boost::mpl::transform

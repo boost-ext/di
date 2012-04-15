@@ -25,6 +25,7 @@ namespace Aux
 template
 <
     typename T,
+    typename TContext = boost::mpl::vector0<>,
     typename Enable = void
 >
 class Instance
@@ -56,11 +57,12 @@ private:
 
 template
 <
-    typename T
+    typename T,
+    typename TContext
 >
 class Instance
     <
-        T,
+        T, TContext,
         typename boost::enable_if
         <
             boost::mpl::or_
