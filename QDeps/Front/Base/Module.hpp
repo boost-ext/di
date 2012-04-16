@@ -67,7 +67,7 @@
     template<typename T> struct Annotate : Aux::Annotate<T> { };
 
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    class Module : Back::Module
+    class Module : public Back::Module
     {
         template<typename TInst, typename T> struct IsSameValueType
             : boost::is_same<typename TInst::ValueType, T>

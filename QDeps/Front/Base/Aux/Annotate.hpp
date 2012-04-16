@@ -19,8 +19,10 @@ namespace Aux
 template<typename T>
 struct Annotate
 {
-    template<typename TName> struct With
+    template<typename TName>
+    struct With : T
     {
+        typedef TName ValueType;
     };
 };
 

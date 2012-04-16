@@ -56,7 +56,7 @@
     <
         typename TSeq = boost::mpl::vector0<>
     >
-    class Module : Back::Module
+    class Module : public Back::Module
     {
     public:
         typedef Back::Aux::Pool<TSeq> Pool;
