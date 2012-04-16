@@ -9,11 +9,12 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/variant.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/or.hpp>
 #include <boost/type_traits/is_pod.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/or.hpp>
+#include <boost/mpl/has_xxx.hpp>
 
 namespace QDeps
 {
@@ -21,6 +22,31 @@ namespace Back
 {
 namespace Aux
 {
+
+namespace Detail
+{
+
+BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
+
+template<typename T, typename = void>
+struct GetValueType
+{
+    typedef T type;
+};
+
+template<>
+struct GetValueType<std::string, void>
+{
+    typedef std::string type;
+};
+
+template<typename T>
+struct GetValueType<T, typename boost::enable_if<has_value_type<T> >::type>
+{
+    typedef typename T::value_type type;
+};
+
+} // namespace Detail
 
 template
 <
@@ -67,15 +93,15 @@ class Instance
         <
             boost::mpl::or_
             <
-                boost::is_same<T, std::string>,
-                boost::is_pod<T>
+                boost::is_same<typename Detail::GetValueType<T>::type, std::string>,
+                boost::is_pod<typename Detail::GetValueType<T>::type>
             >
         >::type
     >
 {
 public:
     typedef T ValueType;
-    typedef T ResultType;
+    typedef typename Detail::GetValueType<T>::type ResultType;
 
     explicit Instance(ResultType p_member)
         : m_member(p_member)

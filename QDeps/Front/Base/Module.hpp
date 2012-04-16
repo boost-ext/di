@@ -95,7 +95,6 @@
             typedef typename Annotate<Instance>::template With<typename T::Name> type;
         };
 
-public:
         struct Externals : boost::mpl::transform
             <
                 typename boost::mpl::fold
@@ -117,16 +116,10 @@ public:
             >::type
         { };
 
-        template<typename T>
-        struct GetDerived
-        {
-            typedef typename T::Derived type;
-        };
-
         struct Instances : boost::mpl::transform
             <
                 Externals,
-                GetDerived<boost::mpl::_1>
+                Back::Aux::GetDerived<boost::mpl::_1>
             >::type
         { };
 
@@ -159,9 +152,9 @@ public:
 
         #include BOOST_PP_ITERATE()
 
-        template<typename T>
+        template<typename T, typename TValue>
         inline static typename boost::disable_if<boost::is_same<FindInstanceType<Externals, T>, boost::mpl::end<Externals> >, typename FindInstanceType<Externals, T>::type::Derived>::type
-        Set(T p_value)
+        Set(TValue p_value)
         {
             typedef typename FindInstanceType<Externals, T>::type Annotation;
             return typename Annotation::Derived(p_value);

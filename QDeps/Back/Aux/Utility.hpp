@@ -55,6 +55,11 @@ template<typename T> struct GetExternals
     typedef typename T::Externals type;
 };
 
+template<typename T> struct GetDerived
+{
+    typedef typename T::Derived type;
+};
+
 template<typename T> struct GetSeq
 {
     typedef typename T::Seq type;

@@ -16,7 +16,6 @@
 #include "QDeps/Front/Base/Module.hpp"
 #include "QDeps/Utility/Named.hpp"
 
-#include <cxxabi.h>
 namespace QDeps
 {
 namespace Front
@@ -529,9 +528,10 @@ BOOST_AUTO_TEST_CASE(SetInstanceInt)
     BOOST_CHECK_EQUAL(i, TestModule::Set<int>(i).get());
 }
 
-BOOST_AUTO_TEST_CASE(SetInstanceInCallStack)
+BOOST_AUTO_TEST_CASE(SetInstanceAnnotateInCallStack)
 {
-    //const int i = 42;
+    const int i1 = 42;
+    const int i2 = 43;
 
     struct TestModule : Module
         <
@@ -542,13 +542,14 @@ BOOST_AUTO_TEST_CASE(SetInstanceInCallStack)
         >
     { };
 
-    //BOOST_CHECK_EQUAL(i, TestModule::Set<int>(i).get());
+    BOOST_CHECK_EQUAL(i1, TestModule::Set<A>(i1).get());
+    BOOST_CHECK_EQUAL(i2, TestModule::Set<A>(i2).get());
 }
 
-BOOST_AUTO_TEST_CASE(SetInstanceInName)
+BOOST_AUTO_TEST_CASE(SetInstanceAnnotateInName)
 {
-    //const int i1 = 42;
-    //const int i2 = 43;
+    const int i1 = 42;
+    const int i2 = 43;
 
     struct TestModule : Module
         <
@@ -559,16 +560,15 @@ BOOST_AUTO_TEST_CASE(SetInstanceInName)
         >
     { };
 
-    std::cout << "DUPA1: " << abi::__cxa_demangle(typeid(TestModule::Pool::Seq).name(), 0, 0, 0) << std::endl;
-    std::cout << "DUPA2: " << abi::__cxa_demangle(typeid(TestModule::Externals::type).name(), 0, 0, 0) << std::endl;
-
-
-    //BOOST_CHECK_EQUAL(i1, TestModule::Set<A>(i1).get());
-    //BOOST_CHECK_EQUAL(i2, TestModule::Set<B>(i2).get());
+    BOOST_CHECK_EQUAL(i1, TestModule::Set<A>(i1).get());
+    BOOST_CHECK_EQUAL(i2, TestModule::Set<B>(i2).get());
 }
 
-BOOST_AUTO_TEST_CASE(SetInstanceInNameInCallStack)
+BOOST_AUTO_TEST_CASE(SetInstanceAnnotateInNameInCallStack)
 {
+    const int i1 = 42;
+    const int i2 = 43;
+
     struct TestModule : Module
         <
             Externals<
@@ -577,15 +577,76 @@ BOOST_AUTO_TEST_CASE(SetInstanceInNameInCallStack)
             >
         >
     { };
+
+    BOOST_CHECK_EQUAL(i1, TestModule::Set<A>(i1).get());
+    BOOST_CHECK_EQUAL(i2, TestModule::Set<B>(i2).get());
 }
 
-BOOST_AUTO_TEST_CASE(SetInstanceAnnotation)
+BOOST_AUTO_TEST_CASE(SetInstanceMix)
 {
+    const int i1 = 42;
+    const int i2 = 43;
+    const int i3 = 44;
+
+    struct TestModule : Module
+        <
+            Externals<
+                int,
+                Annotate< Bind<int>::InName<float> >::With<A>,
+                Annotate< Bind<int>::InCallStack<C1, C2>::InName<float> >::With<B>
+            >
+        >
+    { };
+
+    BOOST_CHECK_EQUAL(i1, TestModule::Set<int>(i1).get());
+    BOOST_CHECK_EQUAL(i2, TestModule::Set<A>(i2).get());
+    BOOST_CHECK_EQUAL(i3, TestModule::Set<B>(i3).get());
 }
 
+#if 0
 BOOST_AUTO_TEST_CASE(ModuleCtorWithExternals)
 {
+    const int i = 42;
+    const double d = 87.0;
+
+    typedef Module
+    <
+        Externals<
+            int,
+            double
+        >
+    >
+    TestModule;
+
+    TestModule module(
+        TestModule::Set<int>(i), 
+        TestModule::Set<double>(d) 
+    );
+
+    BOOST_CHECK_EQUAL(i, module.pool().get< Instance<int> >());
+    BOOST_CHECK_EQUAL(d, module.pool().get< Instance<double> >());
 }
+
+BOOST_AUTO_TEST_CASE(ModuleCtorWithExternalsSharedPtr)
+{
+    const int i = 42;
+    const double d = 87.0;
+
+    typedef Module
+    <
+        Externals<
+            int,
+            double
+        >
+    >
+    TestModule;
+
+    TestModule module(
+        TestModule::Set<int>(i), 
+        TestModule::Set<double>(d) 
+    );
+}
+#endif
 
 } // namespace UT
 } // namespace Base

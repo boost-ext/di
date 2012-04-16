@@ -22,6 +22,8 @@ test: lib_boost_unit_test_framework.a $(patsubst %.cpp,%.o,$(shell find . -iname
 	$(CXX) $(CXXFLAGS) -DBOOST_TEST_MODULE=$@ -o $@ $(patsubst %.cpp,%.o,$(shell find . -iname "*.cpp")) lib_boost_unit_test_framework.a
 	./$@
 
+run_test:
+
 cppcheck:
 	$(CPPCHECK) -I$(BOOST) -I$(QDEPS) --check-config .
 
