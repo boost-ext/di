@@ -10,17 +10,17 @@
 #include "QDeps/Version.hpp"
 #include "QDeps/Config.hpp"
 
-//Front ends
+// Front ends
 #include "QDeps/Front/Ctor.hpp"
 #include "QDeps/Front/Base/Module.hpp"
 #include "QDeps/Front/Fusion/Module.hpp"
 
-//Utility
+// Utility
 #include "QDeps/Utility/Injector.hpp"
 #include "QDeps/Utility/Named.hpp"
 #include "QDeps/Utility/Provider.hpp"
 
-//Policies
+// Policies
 #include "QDeps/Back/Policies/CheckForBindingCorrectness.hpp"
 #include "QDeps/Back/Policies/CheckForCircularDependencies.hpp"
 #include "QDeps/Back/Policies/CheckForCreationOwnership.hpp"

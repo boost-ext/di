@@ -26,7 +26,6 @@
     #include <boost/mpl/begin_end.hpp>
     #include <boost/mpl/deref.hpp>
     #include <boost/mpl/push_back.hpp>
-    #include <boost/mpl/insert.hpp>
     #include <boost/mpl/fold.hpp>
     #include <boost/mpl/if.hpp>
     #include "QDeps/Back/Aux/Pool.hpp"

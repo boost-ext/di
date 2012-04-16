@@ -45,7 +45,7 @@
             template<typename TCallStack>
             struct IsUniqueCallStack : boost::mpl::bool_
                 <
-                    static_cast<long>(boost::mpl::accumulate
+                    static_cast<std::size_t>(boost::mpl::accumulate
                         <
                             typename boost::mpl::transform<TCallStack, boost::mpl::count<TCallStack, boost::mpl::_> >::type,
                             boost::mpl::int_<0>,
