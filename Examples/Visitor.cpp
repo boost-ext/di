@@ -10,6 +10,9 @@
 #include "Common/Utility.hpp"
 #include "Common/Data.hpp"
 
+namespace Base    = QDeps::Front::Base;
+namespace Utility = QDeps::Utility;
+
 class PrintVisitor
 {
 public:
@@ -23,11 +26,9 @@ public:
     }
 };
 
-using namespace QDeps::Front::Base;
-
-struct VisitorModule : Module
+struct VisitorModule : Base::Module
     <
-        Singletons <
+        Base::Singletons <
             CIf0
         >
     >
@@ -35,7 +36,7 @@ struct VisitorModule : Module
 
 int main()
 {
-    QDeps::Utility::Injector<VisitorModule> injector;
+    Utility::Injector<VisitorModule> injector;
     injector.visit<C8>(PrintVisitor());
 
     return 0;
