@@ -26,7 +26,7 @@ cppcheck:
 	$(CPPCHECK) -I$(BOOST) -I$(QDEPS) --check-config .
 
 scan-build:
-	$(SCAN_BUILD) make test
+	$(SCAN_BUILD) -v make test
 
 valgrind: test
 	$(VALGRIND) --leak-check=full --track-origins=yes ./$?
