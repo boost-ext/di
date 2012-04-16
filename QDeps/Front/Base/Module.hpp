@@ -18,6 +18,7 @@
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/if.hpp>
     #include <boost/mpl/not.hpp>
+    #include <boost/mpl/or.hpp>
     #include <boost/mpl/find_if.hpp>
     #include <boost/mpl/back_inserter.hpp>
     #include <boost/mpl/copy.hpp>
@@ -67,29 +68,34 @@
     template<typename T> struct Annotate : Aux::Annotate<T> { };
 
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    class Module : Back::Module
+    class Module : public Back::Module
     {
-        template<typename TInst, typename T> struct IsSameValueType
-            : boost::is_same<typename TInst::ValueType, T>
+        template<typename TInstance, typename T> struct IsSameInstance : boost::mpl::or_
+            <
+                boost::is_same<typename TInstance::Name, T>,
+                boost::is_same<typename TInstance::ValueType, T>
+            >
         { };
 
         template<typename TSeq, typename T> struct FindInstanceType
-            : boost::mpl::find_if<TSeq, IsSameValueType<boost::mpl::_1, T> >::type
+            : boost::mpl::find_if<TSeq, IsSameInstance<boost::mpl::_1, T> >::type
         { };
 
         template<typename T, typename Enable = void>
-        struct MakeInstance
+        struct MakeAnnotation
         {
-            typedef Back::Aux::Instance<T> type;
+            typedef typename Annotate<Back::Aux::Instance<T> >::template With<> type;
         };
 
         template<typename T>
-        struct MakeInstance<T, typename boost::enable_if<boost::is_base_of<Base::Aux::Detail::Internal, T> >::type>
+        struct MakeAnnotation<T, typename boost::enable_if<boost::is_base_of<Base::Aux::Internal, T> >::type>
         {
             typedef typename T::template Rebind<Back::Scopes::Singleton>::type Dependency;
-            typedef Back::Aux::Instance<typename Dependency::Expected, typename Dependency::Context> type;
+            typedef Back::Aux::Instance<typename Dependency::Expected, typename Dependency::Context> Instance;
+            typedef typename Annotate<Instance>::template With<typename T::Name> type;
         };
 
+public:
         struct Externals : boost::mpl::transform
             <
                 typename boost::mpl::fold
@@ -107,12 +113,25 @@
                         boost::mpl::back_inserter<boost::mpl::_1>
                     >
                 >::type,
-                MakeInstance<boost::mpl::_1>
+                MakeAnnotation<boost::mpl::_1>
+            >::type
+        { };
+
+        template<typename T>
+        struct GetDerived
+        {
+            typedef typename T::Derived type;
+        };
+
+        struct Instances : boost::mpl::transform
+            <
+                Externals,
+                GetDerived<boost::mpl::_1>
             >::type
         { };
 
     public:
-        typedef Back::Aux::Pool<typename Externals::type> Pool;
+        typedef Back::Aux::Pool<typename Instances::type> Pool;
 
         struct Dependencies : boost::mpl::fold
             <
@@ -141,10 +160,11 @@
         #include BOOST_PP_ITERATE()
 
         template<typename T>
-        inline static typename boost::disable_if<boost::is_same<FindInstanceType<Externals, T>, boost::mpl::end<Externals> >, typename FindInstanceType<Externals, T>::type >::type
+        inline static typename boost::disable_if<boost::is_same<FindInstanceType<Externals, T>, boost::mpl::end<Externals> >, typename FindInstanceType<Externals, T>::type::Derived>::type
         Set(T p_value)
         {
-            return typename FindInstanceType<Externals, T>::type(p_value);
+            typedef typename FindInstanceType<Externals, T>::type Annotation;
+            return typename Annotation::Derived(p_value);
         }
 
         const Pool& pool() const { return m_pool; }
