@@ -16,13 +16,14 @@ namespace Base
 namespace Aux
 {
 
-template<typename T>
+template<typename TDerived>
 struct Annotate
 {
-    template<typename TName>
-    struct With : T
+    template<typename TName = void>
+    struct With : TDerived
     {
-        typedef TName ValueType;
+        typedef TDerived Derived;
+        typedef TName Name;
     };
 };
 

@@ -16,7 +16,10 @@ namespace Base
 namespace Aux
 {
 
-namespace Detail { class Internal { }; } //namespace Detail
+struct Internal
+{
+    typedef void Name;
+};
 
 } // namespace Aux
 } // namespace Base

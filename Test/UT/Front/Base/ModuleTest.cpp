@@ -16,6 +16,7 @@
 #include "QDeps/Front/Base/Module.hpp"
 #include "QDeps/Utility/Named.hpp"
 
+#include <cxxabi.h>
 namespace QDeps
 {
 namespace Front
@@ -557,6 +558,10 @@ BOOST_AUTO_TEST_CASE(SetInstanceInName)
             >
         >
     { };
+
+    std::cout << "DUPA1: " << abi::__cxa_demangle(typeid(TestModule::Pool::Seq).name(), 0, 0, 0) << std::endl;
+    std::cout << "DUPA2: " << abi::__cxa_demangle(typeid(TestModule::Externals::type).name(), 0, 0, 0) << std::endl;
+
 
     //BOOST_CHECK_EQUAL(i1, TestModule::Set<A>(i1).get());
     //BOOST_CHECK_EQUAL(i2, TestModule::Set<B>(i2).get());
