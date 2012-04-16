@@ -52,7 +52,7 @@
             typedef typename T::ResultType type;
         };
 
-        template<typename T> typename ResultType<T>::type get()
+        template<typename T> typename ResultType<T>::type get() const
         {
             return T::get();
         }
@@ -111,7 +111,7 @@
         };
 
         template<typename T>
-        typename ResultType<T>::type get()
+        typename ResultType<T>::type get() const
         {
             return T::get();
         }

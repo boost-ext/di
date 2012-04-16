@@ -35,7 +35,7 @@ template<typename TSeq, int Value = 0> struct FakePool
         typedef shared_ptr<int> type;
     };
 
-    template<typename T> typename ResultType<int>::type get()
+    template<typename T> typename ResultType<int>::type get() const
     {
        return make_shared<int>(Value);
     }

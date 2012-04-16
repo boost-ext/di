@@ -36,6 +36,15 @@ using namespace boost;
 class A { };
 class B { };
 
+struct Value
+{
+    explicit Value(int i)
+        : i(i)
+    { }
+
+    int i;
+};
+
 BOOST_AUTO_TEST_CASE(Empty)
 {
     struct TestModule : Module<> { };
@@ -603,7 +612,6 @@ BOOST_AUTO_TEST_CASE(SetInstanceMix)
     BOOST_CHECK_EQUAL(i3, TestModule::Set<B>(i3).get());
 }
 
-#if 0
 BOOST_AUTO_TEST_CASE(ModuleCtorWithExternals)
 {
     const int i = 42;
@@ -630,23 +638,22 @@ BOOST_AUTO_TEST_CASE(ModuleCtorWithExternals)
 BOOST_AUTO_TEST_CASE(ModuleCtorWithExternalsSharedPtr)
 {
     const int i = 42;
-    const double d = 87.0;
+    shared_ptr<Value> v(new Value(i));
 
     typedef Module
     <
         Externals<
-            int,
-            double
+            Value
         >
     >
     TestModule;
 
     TestModule module(
-        TestModule::Set<int>(i), 
-        TestModule::Set<double>(d) 
+        TestModule::Set<Value>(v)
     );
+
+    BOOST_CHECK_EQUAL(i, boost::get<shared_ptr<Value> >(module.pool().get< Instance<Value> >())->i);
 }
-#endif
 
 } // namespace UT
 } // namespace Base

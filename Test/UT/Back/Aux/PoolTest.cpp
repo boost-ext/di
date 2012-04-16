@@ -30,7 +30,7 @@ struct Allocator
         : object(p_object)
     { }
 
-    ResultType get()
+    ResultType get() const
     {
         return object;
     }

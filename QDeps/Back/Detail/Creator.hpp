@@ -44,7 +44,7 @@
     {
     public:
         template<typename T, typename TCallStack, typename TEntries>
-        static typename TBinder<T, TCallStack>::type::template ResultType<TPool>::type execute(TEntries& p_entries, TPool& p_pool)
+        static typename TBinder<T, TCallStack>::type::template ResultType<TPool>::type execute(TEntries& p_entries, const TPool& p_pool)
         {
             typedef typename TBinder<T, TCallStack>::type ToBeCreated;
             typedef typename Aux::UpdateCallStack<TCallStack, ToBeCreated>::type CallStack;
@@ -79,7 +79,7 @@
 
     template<typename TDependency, typename TCallStack, typename TEntries>
     static typename Aux::EnableIfCtorSize<TDependency, BOOST_PP_ITERATION(), typename TDependency::template ResultType<TPool>::type>::type
-    executeImpl(TEntries& p_entries, TPool& p_pool)
+    executeImpl(TEntries& p_entries, const TPool& p_pool)
     {
         #define QDEPS_CREATOR_EXECUTE(z, n, _) BOOST_PP_COMMA_IF(n)                                         \
              TConverter<typename TDependency::Scope, typename Aux::AtCtor<TDependency, n>::type>::execute(  \

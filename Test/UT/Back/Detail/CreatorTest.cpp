@@ -38,7 +38,7 @@ struct Dependency
         typedef T type;
     };
 
-    T create(FakePool&) { return Value; }
+    T create(const FakePool&) { return Value; }
 };
 
 template<typename T> struct Entries : T { };

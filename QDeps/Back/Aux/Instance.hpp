@@ -72,7 +72,7 @@ public:
         : m_member(p_member)
     { }
 
-    ResultType get()
+    ResultType get() const
     {
         return m_member;
     }
@@ -107,7 +107,7 @@ public:
         : m_member(p_member)
     { }
 
-    ResultType get()
+    ResultType get() const
     {
         return m_member;
     }

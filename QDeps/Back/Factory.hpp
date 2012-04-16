@@ -28,7 +28,7 @@ namespace Back
 template
 <
     typename TDeps,
-    typename TPool = const Aux::Pool<>,
+    typename TPool = Aux::Pool<>,
     typename TPolices = Policy<>,
     template<typename, typename> class TConverter = Detail::Converter,
     template<typename = TDeps, typename = TPool> class TCreator = Detail::Creator,
@@ -41,7 +41,7 @@ class Factory
     { };
 
 public:
-    explicit Factory(TPool& p_pool = TPool())
+    explicit Factory(const TPool& p_pool = TPool())
         : m_pool(p_pool)
     { }
 
@@ -60,7 +60,7 @@ public:
     }
 
 private:
-    TPool& m_pool;
+    const TPool& m_pool;
     Entries m_entries;
 };
 
