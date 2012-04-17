@@ -3,7 +3,7 @@ TMP=/tmp
 WIKI=wiki
 DATA=data
 HTML=html
-VIMWIKI=$(PWD)/../Externals/vimwiki
+VIMWIKI=$(PWD)/../externals/vimwiki
 
 all doc: clean
 	@cp -r $(DOC)/$(WIKI) $(TMP)/$(WIKI)

@@ -1,5 +1,5 @@
 MAKEFLAGS+=-j$(shell grep -c '^processor' /proc/cpuinfo) -l
-BOOST:=../Externals/boost
+BOOST:=../externals/boost
 DI:=..
 DI_PCH:=.di.hpp
 CXXFLAGS:=-I. -I$(BOOST) -I$(DI) -O2 -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-multichar -Wno-four-char-constants $(EXTRA_CXXFLAGS)

@@ -1,6 +1,6 @@
 TARGET:=di
 HEADERS:=/usr/include
-EXTERNALS:=$(PWD)/Externals
+EXTERNALS:=$(PWD)/externals
 COMPILERS:=g++ clang++ icc
 
 .PHONY: all test examples doc install release clean
