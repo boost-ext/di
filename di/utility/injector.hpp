@@ -106,9 +106,9 @@
             return m_factory.create<T>();
         }
 
-        template<typename T, typename Visitor> void visit(const Visitor& p_visitor)
+        template<typename T, typename Visitor> void visit(const Visitor& visitor)
         {
-            return m_factory.visit<T>(p_visitor);
+            return m_factory.visit<T>(visitor);
         }
 
     private:
@@ -124,18 +124,18 @@
 #else
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename M)>
-    injector(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const M, &p_module))
-        : m_pool(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), p_module, .get_pool() BOOST_PP_INTERCEPT)),
+    injector(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const M, &module))
+        : m_pool(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), module, .get_pool() BOOST_PP_INTERCEPT)),
           m_factory(m_pool)
     { }
 
-    #define DI_MODULE_ARG(_, n, module) BOOST_PP_COMMA_IF(n) const module##n& p_module##n = module##n()
+    #define DI_MODULE_ARG(_, n, M) BOOST_PP_COMMA_IF(n) const M##n& module##n = M##n()
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename M)>
     injector<typename boost::mpl::joint_view<modules, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), M)> >::type> install(BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_MODULE_ARG, M))
     {
-        typedef injector<typename boost::mpl::joint_view<modules, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), M)> >::type> injectorType;
-        return injectorType(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_module));
+        typedef injector<typename boost::mpl::joint_view<modules, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), M)> >::type> injector_t;
+        return injector_t(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), module));
     }
 
     #undef DI_MODULE_ARG

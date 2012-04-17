@@ -26,8 +26,8 @@ struct Allocator
 {
     typedef shared_ptr<T> result_type;
 
-    Allocator(T* p_object) // non explicit
-        : object(p_object)
+    Allocator(T* object) // non explicit
+        : object(object)
     { }
 
     result_type get() const

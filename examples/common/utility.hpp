@@ -12,10 +12,10 @@
 # include <boost/shared_ptr.hpp>
 #endif
 
-inline std::string demangle(const std::string& p_mangled)
+inline std::string demangle(const std::string& mangled)
 {
 #if defined(__GNUC__) && !defined(__llvm__)
-    char* l_demangled = abi::__cxa_demangle(p_mangled.c_str(), 0, 0, 0);
+    char* l_demangled = abi::__cxa_demangle(mangled.c_str(), 0, 0, 0);
 
     if (l_demangled)
     {
@@ -24,7 +24,7 @@ inline std::string demangle(const std::string& p_mangled)
     }
 #endif
 
-    return p_mangled;
+    return mangled;
 }
 
 #endif

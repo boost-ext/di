@@ -44,20 +44,20 @@
     {
     public:
         template<typename T, typename TCallStack, typename TEntries>
-        static typename TBinder<T, TCallStack>::type::template result_type<TPool>::type execute(TEntries& p_entries, const TPool& p_pool)
+        static typename TBinder<T, TCallStack>::type::template result_type<TPool>::type execute(TEntries& entries, const TPool& pool)
         {
             typedef typename TBinder<T, TCallStack>::type ToBeCreated;
             typedef typename aux::update_call_stack<TCallStack, ToBeCreated>::type CallStack;
-            return execute_impl<ToBeCreated, CallStack, TEntries>(p_entries, p_pool);
+            return execute_impl<ToBeCreated, CallStack, TEntries>(entries, pool);
         }
 
     private:
         #include BOOST_PP_ITERATE()
 
         template<typename TDependency, typename TEntries>
-        static typename boost::enable_if<boost::is_base_of<TDependency, TEntries>, TDependency&>::type acquire(TEntries& p_entries)
+        static typename boost::enable_if<boost::is_base_of<TDependency, TEntries>, TDependency&>::type acquire(TEntries& entries)
         {
-            return static_cast<TDependency&>(p_entries);
+            return static_cast<TDependency&>(entries);
         }
 
         template<typename TDependency, typename TEntries>
@@ -79,14 +79,14 @@
 
     template<typename TDependency, typename TCallStack, typename TEntries>
     static typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION(), typename TDependency::template result_type<TPool>::type>::type
-    execute_impl(TEntries& p_entries, const TPool& p_pool)
+    execute_impl(TEntries& entries, const TPool& pool)
     {
         #define DI_CREATOR_EXECUTE(z, n, _) BOOST_PP_COMMA_IF(n)                                         \
              TConverter<typename TDependency::scope, typename aux::at_ctor<TDependency, n>::type>::execute(  \
-                execute<typename aux::at_ctor<TDependency, n>::type, TCallStack>(p_entries, p_pool))
+                execute<typename aux::at_ctor<TDependency, n>::type, TCallStack>(entries, pool))
 
-        return acquire<TDependency>(p_entries).create(
-            p_pool BOOST_PP_COMMA_IF(BOOST_PP_ITERATION()) BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_CREATOR_EXECUTE, ~));
+        return acquire<TDependency>(entries).create(
+            pool BOOST_PP_COMMA_IF(BOOST_PP_ITERATION()) BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_CREATOR_EXECUTE, ~));
 
         #undef DI_CREATOR_EXECUTE
     }

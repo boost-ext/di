@@ -60,16 +60,16 @@ public:
     typedef T value_type;
     typedef boost::variant<const T&, T&, boost::shared_ptr<T> > result_type;
 
-    explicit instance(const T& p_member)
-        : m_member(p_member)
+    explicit instance(const T& member)
+        : m_member(member)
     { }
 
-    explicit instance(T& p_member)
-        : m_member(p_member)
+    explicit instance(T& member)
+        : m_member(member)
     { }
 
-    explicit instance(boost::shared_ptr<T> p_member)
-        : m_member(p_member)
+    explicit instance(boost::shared_ptr<T> member)
+        : m_member(member)
     { }
 
     result_type get() const
@@ -103,8 +103,8 @@ public:
     typedef T value_type;
     typedef typename detail::get_value_type<T>::type result_type;
 
-    explicit instance(result_type p_member)
-        : m_member(p_member)
+    explicit instance(result_type member)
+        : m_member(member)
     { }
 
     result_type get() const

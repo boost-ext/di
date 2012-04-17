@@ -27,12 +27,12 @@ public:
     typedef typename back::aux::make_plain<T>::type value_type;
     typedef named<value_type, TName> element_type;
 
-    named(T p_value = T()) // non explicit
-        : m_value(new T(p_value))
+    named(T value = T()) // non explicit
+        : m_value(new T(value))
     { }
 
-    named(const boost::shared_ptr<T>& p_value) // non explicit
-        : m_value(p_value)
+    named(const boost::shared_ptr<T>& value) // non explicit
+        : m_value(value)
     { }
 
     operator T() const { return *m_value; }
@@ -48,12 +48,12 @@ public:
     typedef named<typename back::aux::make_plain<T>::type, TName> element_type;
     typedef typename back::aux::make_plain<T>::type value_type;
 
-    named(boost::shared_ptr<T> p_value = boost::make_shared<T>()) // non explicit
-        : m_value(p_value)
+    named(boost::shared_ptr<T> value = boost::make_shared<T>()) // non explicit
+        : m_value(value)
     { }
 
-    named(value_type p_value) // non explicit
-       : m_value(boost::make_shared<value_type>(p_value))
+    named(value_type value) // non explicit
+       : m_value(boost::make_shared<value_type>(value))
     { }
 
     operator boost::shared_ptr<T>() const { return m_value; }
@@ -73,8 +73,8 @@ public:
     typedef named<typename back::aux::make_plain<T>::type, TName> element_type;
     typedef typename back::aux::make_plain<T>::type value_type;
 
-    named(const boost::shared_ptr<T>& p_value) // non explicit
-        : named< boost::shared_ptr<T>, TName>(p_value)
+    named(const boost::shared_ptr<T>& value) // non explicit
+        : named< boost::shared_ptr<T>, TName>(value)
     { }
 };
 

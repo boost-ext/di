@@ -154,10 +154,10 @@
 
         template<typename T, typename Tvalue>
         inline static typename boost::disable_if<boost::is_same<find_instance_type<externals, T>, boost::mpl::end<externals> >, typename find_instance_type<externals, T>::type::derived>::type
-        set(Tvalue p_value)
+        set(Tvalue value)
         {
             typedef typename find_instance_type<externals, T>::type annotation;
-            return typename annotation::derived(p_value);
+            return typename annotation::derived(value);
         }
 
         const pool& get_pool() const { return m_pool; }
@@ -175,8 +175,8 @@
 #else
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    module(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg))
-        : m_pool(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg))
+    module(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg))
+        : m_pool(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg))
     { }
 
 #endif
