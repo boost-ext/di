@@ -16,7 +16,7 @@ namespace base
 namespace aux
 {
 
-struct Internal
+struct internal
 {
     typedef void name;
 };

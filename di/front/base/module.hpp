@@ -46,21 +46,21 @@
     {
 
     template<typename TScope> struct scope : aux::scope<TScope> { };
-    template<typename TExpected, typename TGiven = TExpected> struct Bind : aux::Bind<TExpected, TGiven> { };
+    template<typename TExpected, typename TGiven = TExpected> struct bind : aux::bind<TExpected, TGiven> { };
 
-    template<typename TExpected, typename TGiven = TExpected> struct singleton : scope<back::scopes::singleton>::Bind< Bind<TExpected, TGiven> > { };
-    template<typename T> struct singleton<T, T> : scope<back::scopes::singleton>::Bind<T> { };
+    template<typename TExpected, typename TGiven = TExpected> struct singleton : scope<back::scopes::singleton>::bind< bind<TExpected, TGiven> > { };
+    template<typename T> struct singleton<T, T> : scope<back::scopes::singleton>::bind<T> { };
 
-    template<typename TExpected, typename TGiven = TExpected> struct per_request : scope<back::scopes::per_request>::Bind< Bind<TExpected, TGiven> > { };
-    template<typename T> struct per_request<T, T> : scope<back::scopes::per_request>::Bind<T> { };
+    template<typename TExpected, typename TGiven = TExpected> struct per_request : scope<back::scopes::per_request>::bind< bind<TExpected, TGiven> > { };
+    template<typename T> struct per_request<T, T> : scope<back::scopes::per_request>::bind<T> { };
 
     template<typename T> struct External : aux::Externals<T> { };
 
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    struct singletons : scope<back::scopes::singleton>::Bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
+    struct singletons : scope<back::scopes::singleton>::bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
 
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    struct per_requests : scope<back::scopes::per_request>::Bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
+    struct per_requests : scope<back::scopes::per_request>::bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
 
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
     struct Externals : aux::Externals<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
@@ -88,7 +88,7 @@
         };
 
         template<typename T>
-        struct MakeAnnotation<T, typename boost::enable_if<boost::is_base_of<base::aux::Internal, T> >::type>
+        struct MakeAnnotation<T, typename boost::enable_if<boost::is_base_of<base::aux::internal, T> >::type>
         {
             typedef typename T::template rebind<back::scopes::singleton>::type dependency;
             typedef back::aux::instance<typename dependency::expected, typename dependency::context> instance;

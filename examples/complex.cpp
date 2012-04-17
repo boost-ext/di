@@ -22,13 +22,13 @@ struct basemodule : base::module <
     >,
     base::per_requests <
         CIf0,
-        base::Bind<CIf01>::InCallStack<C6, C5>,
-        base::Bind<CIf02>::InCallStack<C7>,
-        base::Bind<int, int_<1> >,
-        base::Bind<int, int_<2> >::InCallStack<C8>,
-        base::Bind<int, int_<3> >::Inname< string<'1'> >::InCallStack<C7, C6, C4>,
-        base::Bind<int, int_<4> >::Inname< string<'2'> >::InCallStack<C7, C6, C4>,
-        base::Bind<int, int_<5> >::InCallStack<C2>
+        base::bind<CIf01>::in_call_stack<C6, C5>,
+        base::bind<CIf02>::in_call_stack<C7>,
+        base::bind<int, int_<1> >,
+        base::bind<int, int_<2> >::in_call_stack<C8>,
+        base::bind<int, int_<3> >::in_name< string<'1'> >::in_call_stack<C7, C6, C4>,
+        base::bind<int, int_<4> >::in_name< string<'2'> >::in_call_stack<C7, C6, C4>,
+        base::bind<int, int_<5> >::in_call_stack<C2>
     >
 > { };
 

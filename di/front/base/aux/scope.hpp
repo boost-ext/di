@@ -48,7 +48,7 @@ public:
         typename TGiven,
         typename TContext = boost::mpl::vector0<>
     >
-    struct dependency : Internal, back::aux::dependency
+    struct dependency : internal, back::aux::dependency
         <
             boost::mpl::_1,
             TExpected,
@@ -59,13 +59,13 @@ public:
     { };
 
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    struct Bind : Internal, boost::mpl::fold
+    struct bind : internal, boost::mpl::fold
         <
             boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
             boost::mpl::vector0<>,
             boost::mpl::if_
             <
-                boost::is_base_of<Internal, boost::mpl::_2>,
+                boost::is_base_of<internal, boost::mpl::_2>,
                 boost::mpl::push_back<boost::mpl::_1, rebind<boost::mpl::_2, TScope> >,
                 boost::mpl::push_back<boost::mpl::_1, rebind<dependency<boost::mpl::_2, boost::mpl::_2>, TScope> >
             >
@@ -73,39 +73,39 @@ public:
     { };
 
     template<typename TExpected>
-    struct Bind<TExpected, BOOST_PP_ENUM_PARAMS(BOOST_PP_SUB(BOOST_MPL_LIMIT_VECTOR_SIZE, 1), mpl_::na BOOST_PP_INTERCEPT)> : Internal, boost::mpl::fold
+    struct bind<TExpected, BOOST_PP_ENUM_PARAMS(BOOST_PP_SUB(BOOST_MPL_LIMIT_VECTOR_SIZE, 1), mpl_::na BOOST_PP_INTERCEPT)> : internal, boost::mpl::fold
         <
             boost::mpl::vector1<TExpected>,
             boost::mpl::vector0<>,
             boost::mpl::if_
             <
-                boost::is_base_of<Internal, boost::mpl::_2>,
+                boost::is_base_of<internal, boost::mpl::_2>,
                 boost::mpl::push_back<boost::mpl::_1, rebind<boost::mpl::_2, TScope> >,
                 boost::mpl::push_back<boost::mpl::_1, rebind< dependency<boost::mpl::_2, boost::mpl::_2>, TScope> >
             >
         >::type
     {
         template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-        struct InCallStack : Internal, boost::mpl::fold
+        struct in_call_stack : internal, boost::mpl::fold
             <
                 boost::mpl::vector1<TExpected>,
                 boost::mpl::vector0<>,
                 boost::mpl::if_
                 <
-                    boost::is_base_of<Internal, boost::mpl::_2>,
+                    boost::is_base_of<internal, boost::mpl::_2>,
                     boost::mpl::push_back<boost::mpl::_1, rebind<boost::mpl::_2, TScope> >,
                     boost::mpl::push_back<boost::mpl::_1, rebind< dependency<boost::mpl::_2, boost::mpl::_2, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >, TScope> >
                 >
             >::type
         {
             template<typename TName>
-            struct Inname : Internal, boost::mpl::fold
+            struct in_name : internal, boost::mpl::fold
                 <
                     boost::mpl::vector1<TExpected>,
                     boost::mpl::vector0<>,
                     boost::mpl::if_
                     <
-                        boost::is_base_of<Internal, boost::mpl::_2>,
+                        boost::is_base_of<internal, boost::mpl::_2>,
                         boost::mpl::push_back<boost::mpl::_1, rebind<boost::mpl::_2, TScope> >,
                         boost::mpl::push_back<boost::mpl::_1, rebind< dependency<utility::named<boost::mpl::_2, TName>, boost::mpl::_2, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >, TScope> >
                     >
@@ -114,26 +114,26 @@ public:
         };
 
         template<typename TName>
-        struct Inname : Internal, boost::mpl::fold
+        struct in_name : internal, boost::mpl::fold
             <
                 boost::mpl::vector1<TExpected>,
                 boost::mpl::vector0<>,
                 boost::mpl::if_
                 <
-                    boost::is_base_of<Internal, boost::mpl::_2>,
+                    boost::is_base_of<internal, boost::mpl::_2>,
                     boost::mpl::push_back<boost::mpl::_1, rebind<boost::mpl::_2, TScope> >,
                     boost::mpl::push_back<boost::mpl::_1, rebind< dependency<utility::named<boost::mpl::_2, TName>, boost::mpl::_2>, TScope> >
                 >
             >::type
         {
             template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-            struct InCallStack : Internal, boost::mpl::fold
+            struct in_call_stack : internal, boost::mpl::fold
                 <
                     boost::mpl::vector1<TExpected>,
                     boost::mpl::vector0<>,
                     boost::mpl::if_
                     <
-                        boost::is_base_of<Internal, boost::mpl::_2>,
+                        boost::is_base_of<internal, boost::mpl::_2>,
                         boost::mpl::push_back<boost::mpl::_1, rebind<boost::mpl::_2, TScope> >,
                         boost::mpl::push_back<boost::mpl::_1, rebind< dependency<utility::named<boost::mpl::_2, TName>, boost::mpl::_2, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >, TScope> >
                     >

@@ -30,7 +30,7 @@ namespace aux
 {
 
 template<typename TExpected, typename TGiven = TExpected, typename Enable = void>
-struct Bind : Internal, back::aux::dependency
+struct bind : internal, back::aux::dependency
     <
         boost::mpl::_1,
         TExpected,
@@ -39,7 +39,7 @@ struct Bind : Internal, back::aux::dependency
     >
 {
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    struct InCallStack : Internal, back::aux::dependency
+    struct in_call_stack : internal, back::aux::dependency
         <
             boost::mpl::_1,
             TExpected,
@@ -48,7 +48,7 @@ struct Bind : Internal, back::aux::dependency
         >
     {
         template<typename TName>
-        struct Inname : Internal, back::aux::dependency
+        struct in_name : internal, back::aux::dependency
             <
                 boost::mpl::_1,
                 utility::named<TExpected, TName>,
@@ -59,7 +59,7 @@ struct Bind : Internal, back::aux::dependency
     };
 
     template<typename TName>
-    struct Inname : Internal, back::aux::dependency
+    struct in_name : internal, back::aux::dependency
         <
             boost::mpl::_1,
             utility::named<TExpected, TName>,
@@ -67,7 +67,7 @@ struct Bind : Internal, back::aux::dependency
         >
     {
         template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-        struct InCallStack : Internal, back::aux::dependency
+        struct in_call_stack : internal, back::aux::dependency
             <
                 boost::mpl::_1,
                 utility::named<TExpected, TName>,
@@ -79,7 +79,7 @@ struct Bind : Internal, back::aux::dependency
 };
 
 template<typename TExpected, typename TGiven>
-struct Bind<TExpected, TGiven, typename boost::enable_if< boost::mpl::or_<back::aux::result<TGiven>, boost::is_same<TExpected, TGiven> > >::type> : Internal, back::aux::dependency
+struct bind<TExpected, TGiven, typename boost::enable_if< boost::mpl::or_<back::aux::result<TGiven>, boost::is_same<TExpected, TGiven> > >::type> : internal, back::aux::dependency
     <
         boost::mpl::_1,
         TExpected,
@@ -89,7 +89,7 @@ struct Bind<TExpected, TGiven, typename boost::enable_if< boost::mpl::or_<back::
     >
 {
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    struct InCallStack : Internal, back::aux::dependency
+    struct in_call_stack : internal, back::aux::dependency
         <
             boost::mpl::_1,
             TExpected,
@@ -99,7 +99,7 @@ struct Bind<TExpected, TGiven, typename boost::enable_if< boost::mpl::or_<back::
         >
     {
         template<typename TName>
-        struct Inname : Internal, back::aux::dependency
+        struct in_name : internal, back::aux::dependency
             <
                 boost::mpl::_1,
                 utility::named<TExpected, TName>,
@@ -111,7 +111,7 @@ struct Bind<TExpected, TGiven, typename boost::enable_if< boost::mpl::or_<back::
     };
 
     template<typename TName>
-    struct Inname : Internal, back::aux::dependency
+    struct in_name : internal, back::aux::dependency
         <
             boost::mpl::_1,
             utility::named<TExpected, TName>,
@@ -121,7 +121,7 @@ struct Bind<TExpected, TGiven, typename boost::enable_if< boost::mpl::or_<back::
         >
     {
         template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-        struct InCallStack : Internal, back::aux::dependency
+        struct in_call_stack : internal, back::aux::dependency
             <
                 boost::mpl::_1,
                 utility::named<TExpected, TName>,

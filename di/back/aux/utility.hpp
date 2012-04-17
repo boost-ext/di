@@ -27,7 +27,7 @@ namespace aux
 
 template<typename T> struct get_bind
 {
-    typedef typename T::Bind type;
+    typedef typename T::bind type;
 };
 
 template<typename T> struct get_pool
