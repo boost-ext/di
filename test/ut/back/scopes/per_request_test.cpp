@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE(per_requestCreate)
 
 BOOST_AUTO_TEST_CASE(per_requestCreateArgs)
 {
-    per_request::scope<c2> l_pr;
+    per_request::scope<C2> l_pr;
 
     BOOST_CHECK((l_pr.create<int, double, char>(0, 0.0, '0').get() != l_pr.create<int, double, char>(0, 0.0, '0').get()));
 }

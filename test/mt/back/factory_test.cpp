@@ -37,35 +37,35 @@ using namespace boost;
 BOOST_AUTO_TEST_CASE(CreateUsingCopy)
 {
     factory< vector0<> > factory;
-    c0 obj = factory.create<c0>();
+    C0 obj = factory.create<C0>();
     (void)(obj);
 }
 
 BOOST_AUTO_TEST_CASE(CreateUsingPtr)
 {
     factory< vector0<> > factory;
-    c0* obj = factory.create<c0*>();
+    C0* obj = factory.create<C0*>();
     BOOST_CHECK(obj);
 }
 
 BOOST_AUTO_TEST_CASE(CreateUsingConstPtr)
 {
     factory< vector0<> > factory;
-    const c0* obj = factory.create<const c0*>();
+    const C0* obj = factory.create<const C0*>();
     BOOST_CHECK(obj);
 }
 
 BOOST_AUTO_TEST_CASE(CreateUsingSharedPtr)
 {
     factory< vector0<> > factory;
-    shared_ptr<c0> obj = factory.create< shared_ptr<c0> >();
+    shared_ptr<C0> obj = factory.create< shared_ptr<C0> >();
     BOOST_CHECK(obj);
 }
 
 BOOST_AUTO_TEST_CASE(CreateDefaultctor)
 {
     factory< vector0<> > factory;
-    c0 obj = factory.create<c0>();
+    C0 obj = factory.create<C0>();
     (void)(obj);
 }
 
@@ -75,19 +75,19 @@ BOOST_AUTO_TEST_CASE(Createper_request)
     <
         vector
         <
-            dependency<per_request, if0, cif0>
+            dependency<per_request, If0, CIf0>
         >
     >
     factory;
 
-    shared_ptr<c8> c8 = factory.create< shared_ptr<c8> >();
+    shared_ptr<C8> c8 = factory.create< shared_ptr<C8> >();
 
     BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
     BOOST_CHECK(c8->c7->c6->c4->c3 != c8->c7->c6->c3);
     BOOST_CHECK(c8->c7->if0 != c8->c7->c6->c5.if0);
 
-    BOOST_CHECK(dynamic_cast<cif0*>(c8->c7->c6->c5.if0.get()));
-    BOOST_CHECK(dynamic_cast<cif0*>(c8->c7->if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->if0.get()));
 
     BOOST_CHECK_EQUAL(0, c8->i);
     BOOST_CHECK_EQUAL(0, c8->c7->c6->c4->i1);
@@ -104,20 +104,20 @@ BOOST_AUTO_TEST_CASE(Createper_requestsingleton)
     <
         vector
         <
-            dependency<per_request, if0, cif0>,
-            dependency<singleton, c3>
+            dependency<per_request, If0, CIf0>,
+            dependency<singleton, C3>
         >
     >
     factory;
 
-    shared_ptr<c8> c8 = factory.create< shared_ptr<c8> >();
+    shared_ptr<C8> c8 = factory.create< shared_ptr<C8> >();
 
     BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
     BOOST_CHECK(c8->c7->c6->c4->c3 == c8->c7->c6->c3);
     BOOST_CHECK(c8->c7->if0 != c8->c7->c6->c5.if0);
 
-    BOOST_CHECK(dynamic_cast<cif0*>(c8->c7->c6->c5.if0.get()));
-    BOOST_CHECK(dynamic_cast<cif0*>(c8->c7->if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->if0.get()));
 
     BOOST_CHECK_EQUAL(0, c8->i);
     BOOST_CHECK_EQUAL(0, c8->c7->c6->c4->i1);
@@ -134,21 +134,21 @@ BOOST_AUTO_TEST_CASE(Createper_requestsingletonPath)
     <
         vector
         <
-            dependency<per_request, if0, cif0>,
-            dependency<per_request, if0, cif01, vector<c6, c5> >,
-            dependency<singleton, c3>
+            dependency<per_request, If0, CIf0>,
+            dependency<per_request, If0, CIf01, vector<C6, C5> >,
+            dependency<singleton, C3>
         >
     >
     factory;
 
-    shared_ptr<c8> c8 = factory.create< shared_ptr<c8> >();
+    shared_ptr<C8> c8 = factory.create< shared_ptr<C8> >();
 
     BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
     BOOST_CHECK(c8->c7->c6->c4->c3 == c8->c7->c6->c3);
     BOOST_CHECK(c8->c7->if0 != c8->c7->c6->c5.if0);
 
-    BOOST_CHECK(dynamic_cast<cif01*>(c8->c7->c6->c5.if0.get()));
-    BOOST_CHECK(dynamic_cast<cif0*>(c8->c7->if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf01*>(c8->c7->c6->c5.if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->if0.get()));
 
     BOOST_CHECK_EQUAL(0, c8->i);
     BOOST_CHECK_EQUAL(0, c8->c7->c6->c4->i1);
@@ -165,22 +165,22 @@ BOOST_AUTO_TEST_CASE(Createper_requestsingletonPathOrder)
     <
         vector
         <
-            dependency<per_request, if0, cif0>,
-            dependency<per_request, if0, cif01, vector<c6, c5> >,
-            dependency<per_request, if0, cif02, vector<c7> >,
-            dependency<singleton, c3>
+            dependency<per_request, If0, CIf0>,
+            dependency<per_request, If0, CIf01, vector<C6, C5> >,
+            dependency<per_request, If0, CIf02, vector<C7> >,
+            dependency<singleton, C3>
         >
     >
     factory;
 
-    shared_ptr<c8> c8 = factory.create< shared_ptr<c8> >();
+    shared_ptr<C8> c8 = factory.create< shared_ptr<C8> >();
 
     BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
     BOOST_CHECK(c8->c7->c6->c4->c3 == c8->c7->c6->c3);
     BOOST_CHECK(c8->c7->if0 != c8->c7->c6->c5.if0);
 
-    BOOST_CHECK(dynamic_cast<cif01*>(c8->c7->c6->c5.if0.get()));
-    BOOST_CHECK(dynamic_cast<cif02*>(c8->c7->if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf01*>(c8->c7->c6->c5.if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf02*>(c8->c7->if0.get()));
 
     BOOST_CHECK_EQUAL(0, c8->i);
     BOOST_CHECK_EQUAL(0, c8->c7->c6->c4->i1);
@@ -197,27 +197,27 @@ BOOST_AUTO_TEST_CASE(Createper_requestsingletonPathMix)
     <
         vector
         <
-            dependency<per_request, if0, cif0>,
-            dependency<per_request, if0, cif01, vector<c6, c5> >,
-            dependency<per_request, if0, cif02, vector<c7> >,
-            dependency<singleton, c3>,
+            dependency<per_request, If0, CIf0>,
+            dependency<per_request, If0, CIf01, vector<C6, C5> >,
+            dependency<per_request, If0, CIf02, vector<C7> >,
+            dependency<singleton, C3>,
             dependency<per_request, int, int_<1> >,
-            dependency<per_request, int, int_<2>, vector<c8> >,
-            dependency<per_request, named<int, string<'1'> >, int_<3>, vector<c7, c6, c4> >,
-            dependency<per_request, named<int, string<'2'> >, int_<4>, vector<c7, c6, c4> >,
-            dependency<per_request, int, int_<5>, vector<c2> >
+            dependency<per_request, int, int_<2>, vector<C8> >,
+            dependency<per_request, named<int, string<'1'> >, int_<3>, vector<C7, C6, C4> >,
+            dependency<per_request, named<int, string<'2'> >, int_<4>, vector<C7, C6, C4> >,
+            dependency<per_request, int, int_<5>, vector<C2> >
         >
     >
     factory;
 
-    shared_ptr<c8> c8 = factory.create< shared_ptr<c8> >();
+    shared_ptr<C8> c8 = factory.create< shared_ptr<C8> >();
 
     BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
     BOOST_CHECK(c8->c7->c6->c4->c3 == c8->c7->c6->c3);
     BOOST_CHECK(c8->c7->if0 != c8->c7->c6->c5.if0);
 
-    BOOST_CHECK(dynamic_cast<cif01*>(c8->c7->c6->c5.if0.get()));
-    BOOST_CHECK(dynamic_cast<cif02*>(c8->c7->if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf01*>(c8->c7->c6->c5.if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf02*>(c8->c7->if0.get()));
 
     BOOST_CHECK_EQUAL(2, c8->i);
     BOOST_CHECK_EQUAL(3, c8->c7->c6->c4->i1);
@@ -234,19 +234,19 @@ BOOST_AUTO_TEST_CASE(CreatesingletonImpl)
     <
         vector
         <
-            dependency<singleton, if0, cif0>
+            dependency<singleton, If0, CIf0>
         >
     >
     factory;
 
-    shared_ptr<c8> c8 = factory.create< shared_ptr<c8> >();
+    shared_ptr<C8> c8 = factory.create< shared_ptr<C8> >();
 
     BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
     BOOST_CHECK(c8->c7->c6->c4->c3 != c8->c7->c6->c3);
     BOOST_CHECK(c8->c7->if0 == c8->c7->c6->c5.if0);
 
-    BOOST_CHECK(dynamic_cast<cif0*>(c8->c7->c6->c5.if0.get()));
-    BOOST_CHECK(dynamic_cast<cif0*>(c8->c7->if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->if0.get()));
 
     BOOST_CHECK_EQUAL(0, c8->i);
     BOOST_CHECK_EQUAL(0, c8->c7->c6->c4->i1);
@@ -263,21 +263,21 @@ BOOST_AUTO_TEST_CASE(CreatesingletonMany)
     <
         vector
         <
-            dependency<singleton, if0, cif0>,
-            dependency<singleton, c3>,
-            dependency<singleton, c1>
+            dependency<singleton, If0, CIf0>,
+            dependency<singleton, C3>,
+            dependency<singleton, C1>
         >
     >
     factory;
 
-    shared_ptr<c8> c8 = factory.create< shared_ptr<c8> >();
+    shared_ptr<C8> c8 = factory.create< shared_ptr<C8> >();
 
     BOOST_CHECK(c8->c1 == c8->c7->c6->c5.c1);
     BOOST_CHECK(c8->c7->c6->c4->c3 == c8->c7->c6->c3);
     BOOST_CHECK(c8->c7->if0 == c8->c7->c6->c5.if0);
 
-    BOOST_CHECK(dynamic_cast<cif0*>(c8->c7->c6->c5.if0.get()));
-    BOOST_CHECK(dynamic_cast<cif0*>(c8->c7->if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->if0.get()));
 
     BOOST_CHECK_EQUAL(0, c8->i);
     BOOST_CHECK_EQUAL(0, c8->c7->c6->c4->i1);
@@ -301,7 +301,7 @@ BOOST_AUTO_TEST_CASE(ctor_traits)
     >
     factory;
 
-    c14 obj = factory.create<c14>();
+    C14 obj = factory.create<C14>();
 
     BOOST_CHECK_EQUAL(i, obj.i);
     BOOST_CHECK_EQUAL(0.0, obj.d);
@@ -322,7 +322,7 @@ BOOST_AUTO_TEST_CASE(Classctor_traits)
     >
     factory;
 
-    c10 obj = factory.create<c10>();
+    C10 obj = factory.create<C10>();
 
     BOOST_CHECK_EQUAL(i1, obj.i1);
     BOOST_CHECK_EQUAL(i2, obj.i2);
@@ -335,22 +335,22 @@ BOOST_AUTO_TEST_CASE(baseOf)
         vector
         <
             dependency<per_request, int, int_<1>, vector0<>, or_< is_base_of<_1, int>, is_same<_1, int> > >,
-            dependency<per_request, named<int, string<'2'> >, int_<4>, vector<c7, c6, c4>, or_< is_base_of<_1, named<int, string<'2'> > >, is_same<_1, named<int, string<'2'> > > > >,
-            dependency<per_request, int, int_<5>, vector<c2>, or_< is_base_of<_1, int>, is_same<_1, int> > >,
-            dependency<per_request, cif0, cif0, vector0<>, or_< is_base_of<_1, cif0>, is_same<_1, cif0> > >,
-            dependency<per_request, named<int, string<'1'> >, int_<3>, vector<c7, c6, c4>, or_< is_base_of<_1, named<int, string<'1'> > >, is_same<_1, named<int, string<'1'> > > > >
+            dependency<per_request, named<int, string<'2'> >, int_<4>, vector<C7, C6, C4>, or_< is_base_of<_1, named<int, string<'2'> > >, is_same<_1, named<int, string<'2'> > > > >,
+            dependency<per_request, int, int_<5>, vector<C2>, or_< is_base_of<_1, int>, is_same<_1, int> > >,
+            dependency<per_request, CIf0, CIf0, vector0<>, or_< is_base_of<_1, CIf0>, is_same<_1, CIf0> > >,
+            dependency<per_request, named<int, string<'1'> >, int_<3>, vector<C7, C6, C4>, or_< is_base_of<_1, named<int, string<'1'> > >, is_same<_1, named<int, string<'1'> > > > >
         >
     >
     factory;
 
-    shared_ptr<c8> c8 = factory.create< shared_ptr<c8> >();
+    shared_ptr<C8> c8 = factory.create< shared_ptr<C8> >();
 
     BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
     BOOST_CHECK(c8->c7->c6->c4->c3 != c8->c7->c6->c3);
     BOOST_CHECK(c8->c7->if0 != c8->c7->c6->c5.if0);
 
-    BOOST_CHECK(dynamic_cast<cif0*>(c8->c7->c6->c5.if0.get()));
-    BOOST_CHECK(dynamic_cast<cif0*>(c8->c7->if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->if0.get()));
 
     BOOST_CHECK_EQUAL(1, c8->i);
     BOOST_CHECK_EQUAL(3, c8->c7->c6->c4->i1);
@@ -367,12 +367,12 @@ BOOST_AUTO_TEST_CASE(baseOfInterfaceNotTrivialctor)
     <
         vector
         <
-            dependency<per_request, transaction_provider, transaction_provider, vector0<>, or_< is_base_of<_1, transaction_provider>, is_same<_1, transaction_provider> > >
+            dependency<per_request, Transactionprovider, Transactionprovider, vector0<>, or_< is_base_of<_1, Transactionprovider>, is_same<_1, Transactionprovider> > >
         >
     >
     factory;
 
-    transaction_usage obj = factory.create<transaction_usage>();
+    TransactionUsage obj = factory.create<TransactionUsage>();
 
     BOOST_CHECK(obj.p->get().get() != obj.p->get().get());
 }
@@ -390,7 +390,7 @@ BOOST_AUTO_TEST_CASE(namedSharedPtrbaseOf)
     >
     factory;
 
-    c11 obj = factory.create<c11>();
+    C11 obj = factory.create<C11>();
 
     BOOST_CHECK_EQUAL(i, *obj.i);
 }
@@ -408,7 +408,7 @@ BOOST_AUTO_TEST_CASE(namedSharedPtr)
     >
     factory;
 
-    c11 obj = factory.create<c11>();
+    C11 obj = factory.create<C11>();
 
     BOOST_CHECK_EQUAL(i, *obj.i);
 }
@@ -419,14 +419,14 @@ BOOST_AUTO_TEST_CASE(namedSharedPtrIf)
     <
         vector
         <
-            dependency<per_request, named<if0, string<'1'> >, cif0, vector0<>, or_< is_base_of<_1, named<if0, string<'1'> > >, is_same<_1, named<if0, string<'1'> > > > >
+            dependency<per_request, named<If0, string<'1'> >, CIf0, vector0<>, or_< is_base_of<_1, named<If0, string<'1'> > >, is_same<_1, named<If0, string<'1'> > > > >
         >
     >
     factory;
 
-    c12 obj = factory.create<c12>();
+    C12 obj = factory.create<C12>();
 
-    BOOST_CHECK(dynamic_cast<cif0*>(obj.if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(obj.if0.get()));
     BOOST_CHECK_EQUAL(0, obj.c2->i);
     BOOST_CHECK_EQUAL(0.0, obj.c2->d);
     BOOST_CHECK_EQUAL(0, obj.c2->c);
@@ -440,15 +440,15 @@ BOOST_AUTO_TEST_CASE(namedSharedPtrIfwithNotTrivialctor)
     <
         vector
         <
-            dependency<per_request, named<if0>, cif03, vector0<>, or_< is_base_of<_1, named<if0> >, is_same<_1, named<if0> > > >,
+            dependency<per_request, named<If0>, CIf03, vector0<>, or_< is_base_of<_1, named<If0> >, is_same<_1, named<If0> > > >,
             dependency<per_request, int, int_<i>, vector0<>, or_< is_base_of<_1, int>, is_same<_1, int> > >
         >
     >
     factory;
 
-    c13 obj = factory.create<c13>();
+    C13 obj = factory.create<C13>();
 
-    cif03* if0 = dynamic_cast<cif03*>(obj.if0.get());
+    CIf03* if0 = dynamic_cast<CIf03*>(obj.if0.get());
     BOOST_CHECK(if0);
     BOOST_CHECK_EQUAL(i, obj.c3.i);
     BOOST_CHECK_EQUAL(i, if0->i);
@@ -481,7 +481,7 @@ BOOST_AUTO_TEST_CASE(externalsCreateByvalues)
     >
     factory(*test_pool);
 
-    c9 obj = factory.create<c9>();
+    C9 obj = factory.create<C9>();
 
     BOOST_CHECK_EQUAL(i, obj.i);
     BOOST_CHECK_EQUAL(d, obj.d);
@@ -495,11 +495,11 @@ BOOST_AUTO_TEST_CASE(externalsCreatewithNonTrivialctor)
     const double d = 21.0;
     const char c = 'x';
 
-    typedef pool< vector<instance<c2> > > pool;
+    typedef pool< vector<instance<C2> > > pool;
 
     boost::scoped_ptr<pool> test_pool(
         new pool(
-            instance<c2>(make_shared<c2>(i, d, c))
+            instance<C2>(make_shared<C2>(i, d, c))
         )
     );
 
@@ -507,13 +507,13 @@ BOOST_AUTO_TEST_CASE(externalsCreatewithNonTrivialctor)
     <
         vector
         <
-            dependency<per_request, c2>
+            dependency<per_request, C2>
         >,
         pool
     >
     factory(*test_pool);
 
-    c2 obj = factory.create<c2>();
+    C2 obj = factory.create<C2>();
 
     BOOST_CHECK_EQUAL(i, obj.i);
     BOOST_CHECK_EQUAL(d, obj.d);
@@ -548,7 +548,7 @@ BOOST_AUTO_TEST_CASE(externalsCreatewithAttributes)
     >
     factory(*test_pool);
 
-    c4 obj = factory.create<c4>();
+    C4 obj = factory.create<C4>();
 
     BOOST_CHECK_EQUAL(i1, obj.i1);
     BOOST_CHECK_EQUAL(i2, obj.i2);

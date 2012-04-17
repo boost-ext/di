@@ -154,7 +154,7 @@
 
         template<typename T, typename Tvalue>
         inline static typename boost::disable_if<boost::is_same<FindinstanceType<externals, T>, boost::mpl::end<externals> >, typename FindinstanceType<externals, T>::type::derived>::type
-        Set(Tvalue p_value)
+        set(Tvalue p_value)
         {
             typedef typename FindinstanceType<externals, T>::type Annotation;
             return typename Annotation::derived(p_value);

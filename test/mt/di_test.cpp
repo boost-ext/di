@@ -28,23 +28,23 @@ using namespace back;
 
 typedef front::base::module <
     singletons <
-        c3
+        C3
     >,
     per_requests <
-        cif0,
-        bind<cif01>::in_call_stack<c6, c5>,
-        bind<cif02>::in_call_stack<c7>,
+        CIf0,
+        bind<CIf01>::in_call_stack<C6, C5>,
+        bind<CIf02>::in_call_stack<C7>,
         bind<int, int_<1> >,
-        bind<int, int_<2> >::in_call_stack<c8>,
-        bind<int, int_<3> >::in_name< mpl::string<'1'> >::in_call_stack<c7, c6, c4>,
-        bind<int, int_<4> >::in_name< mpl::string<'2'> >::in_call_stack<c7, c6, c4>,
-        bind<int, int_<5> >::in_call_stack<c2>
+        bind<int, int_<2> >::in_call_stack<C8>,
+        bind<int, int_<3> >::in_name< mpl::string<'1'> >::in_call_stack<C7, C6, C4>,
+        bind<int, int_<4> >::in_name< mpl::string<'2'> >::in_call_stack<C7, C6, C4>,
+        bind<int, int_<5> >::in_call_stack<C2>
     >
 > basemodule1;
 
 typedef front::base::module <
     singletons <
-        c3
+        C3
     >,
     per_requests <
         bind<int, int_<0> >::in_name< mpl::string<'1'> >,
@@ -54,23 +54,23 @@ typedef front::base::module <
 
 typedef front::base::module <
     singletons <
-        cif0
+        CIf0
     >,
     per_requests <
-        bind<int, int_<2> >::in_call_stack<c8>,
+        bind<int, int_<2> >::in_call_stack<C8>,
         bind<int, int_<3> >::in_name< mpl::string<'2'> >
     >
 > basemodule3;
 
 typedef front::base::module <
     per_requests <
-        transaction_provider, int_<0>
+        Transactionprovider, int_<0>
     >
 > provider_module;
 
 typedef front::base::module <
     singletons <
-        cif0
+        CIf0
     >,
     externals <
         int,
@@ -80,7 +80,7 @@ typedef front::base::module <
 
 struct externalsmodulector : front::base::module <
     singletons <
-        cif0
+        CIf0
     >,
     externals <
         int,
@@ -89,39 +89,39 @@ struct externalsmodulector : front::base::module <
 >
 {
     externalsmodulector(int i, double d)
-        : module(Set<int>(i), Set<double>(d))
+        : module(set<int>(i), set<double>(d))
     { }
 };
 
 BOOST_AUTO(fusionmodule1, front::fusion::module<>()(
     singletons <
-        c3
+        C3
     >(),
     per_requests <
-        cif0,
-        bind<cif01>::in_call_stack<c6, c5>,
-        bind<cif02>::in_call_stack<c7>,
+        CIf0,
+        bind<CIf01>::in_call_stack<C6, C5>,
+        bind<CIf02>::in_call_stack<C7>,
         bind<int, int_<1> >,
-        bind<int, int_<2> >::in_call_stack<c8>,
-        bind<int, int_<3> >::in_name< mpl::string<'1'> >::in_call_stack<c7, c6, c4>,
-        bind<int, int_<4> >::in_name< mpl::string<'2'> >::in_call_stack<c7, c6, c4>,
-        bind<int, int_<5> >::in_call_stack<c2>
+        bind<int, int_<2> >::in_call_stack<C8>,
+        bind<int, int_<3> >::in_name< mpl::string<'1'> >::in_call_stack<C7, C6, C4>,
+        bind<int, int_<4> >::in_name< mpl::string<'2'> >::in_call_stack<C7, C6, C4>,
+        bind<int, int_<5> >::in_call_stack<C2>
     >()
 ));
 
 BOOST_AUTO(fusionmodule2, front::fusion::module<>()(
     singletons <
-        cif0
+        CIf0
     >(),
     per_requests <
-        bind<int, int_<2> >::in_call_stack<c8>,
+        bind<int, int_<2> >::in_call_stack<C8>,
         bind<int, int_<3> >::in_name< mpl::string<'2'> >
     >()
 ));
 
 BOOST_AUTO(fusionmodule3, front::fusion::module<>()(
     singletons <
-        c3
+        C3
     >(),
     per_requests <
         bind<int, int_<0> >::in_name< mpl::string<'1'> >,
@@ -131,7 +131,7 @@ BOOST_AUTO(fusionmodule3, front::fusion::module<>()(
 
 BOOST_AUTO(fusion_provider_module, front::fusion::module<>()(
     per_requests <
-        transaction_provider, int_<0>
+        Transactionprovider, int_<0>
     >()
 ));
 
@@ -141,14 +141,14 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Onemodule, injector,
 {
     injector inj;
 
-    shared_ptr<c8> c8 = inj.template create< shared_ptr<c8> >();
+    shared_ptr<C8> c8 = inj.template create< shared_ptr<C8> >();
 
     BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
     BOOST_CHECK(c8->c7->c6->c4->c3 == c8->c7->c6->c3);
     BOOST_CHECK(c8->c7->if0 != c8->c7->c6->c5.if0);
 
-    BOOST_CHECK(dynamic_cast<cif01*>(c8->c7->c6->c5.if0.get()));
-    BOOST_CHECK(dynamic_cast<cif02*>(c8->c7->if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf01*>(c8->c7->c6->c5.if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf02*>(c8->c7->if0.get()));
 
     BOOST_CHECK_EQUAL(2, c8->i);
     BOOST_CHECK_EQUAL(3, c8->c7->c6->c4->i1);
@@ -167,14 +167,14 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Manymodules, injector,
 {
     injector inj;
 
-    shared_ptr<c8> c8 = inj.template create< shared_ptr<c8> >();
+    shared_ptr<C8> c8 = inj.template create< shared_ptr<C8> >();
 
     BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
     BOOST_CHECK(c8->c7->c6->c4->c3 == c8->c7->c6->c3);
     BOOST_CHECK(c8->c7->if0 == c8->c7->c6->c5.if0);
 
-    BOOST_CHECK(dynamic_cast<cif0*>(c8->c7->c6->c5.if0.get()));
-    BOOST_CHECK(dynamic_cast<cif0*>(c8->c7->if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->if0.get()));
 
     BOOST_CHECK_EQUAL(2, c8->i);
     BOOST_CHECK_EQUAL(0, c8->c7->c6->c4->i1);
@@ -191,14 +191,14 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Mixmodules, injector,
 {
     injector inj;
 
-    shared_ptr<c8> c8 = inj.template create< shared_ptr<c8> >();
+    shared_ptr<C8> c8 = inj.template create< shared_ptr<C8> >();
 
     BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
     BOOST_CHECK(c8->c7->c6->c4->c3 == c8->c7->c6->c3);
     BOOST_CHECK(c8->c7->if0 == c8->c7->c6->c5.if0);
 
-    BOOST_CHECK(dynamic_cast<cif0*>(c8->c7->c6->c5.if0.get()));
-    BOOST_CHECK(dynamic_cast<cif0*>(c8->c7->if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
+    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->if0.get()));
 
     BOOST_CHECK_EQUAL(2, c8->i);
     BOOST_CHECK_EQUAL(0, c8->c7->c6->c4->i1);
@@ -214,7 +214,7 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Basicprovider, injector,
     injector<BOOST_TYPEOF(fusion_provider_module)>)
 {
     injector inj;
-    transaction_usage obj = inj.template create<transaction_usage>();
+    TransactionUsage obj = inj.template create<TransactionUsage>();
     BOOST_CHECK(obj.p->get().get() != obj.p->get().get());
 }
 
@@ -227,15 +227,15 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Basicvisitor, injector,
     <
         vector
         <
-            transaction_usage,
-            shared_ptr< provider< shared_ptr<transaction> > >,
-            shared_ptr<c3>,
+            TransactionUsage,
+            shared_ptr< provider< shared_ptr<Transaction> > >,
+            shared_ptr<C3>,
             int
         >
     >
     visitor;
 
-    inj.template visit<transaction_usage>(visitor);
+    inj.template visit<TransactionUsage>(visitor);
 }
 
 BOOST_AUTO_TEST_CASE_VARIADIC(Basicexternals, injector,
@@ -243,12 +243,12 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Basicexternals, injector,
 {
     injector inj(
         externalsmodule(
-            externalsmodule::Set<int>(42),
-            externalsmodule::Set<double>(87.0)
+            externalsmodule::set<int>(42),
+            externalsmodule::set<double>(87.0)
         )
     );
 
-    shared_ptr<c9> c9 = inj.template create< shared_ptr<c9> >();
+    shared_ptr<C9> c9 = inj.template create< shared_ptr<C9> >();
 
     BOOST_CHECK_EQUAL(42, c9->i);
     BOOST_CHECK_EQUAL(87.0, c9->d);
@@ -261,7 +261,7 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Basicexternalsctor, injector,
         externalsmodulector(42, 87.0)
     );
 
-    shared_ptr<c9> c9 = inj.template create< shared_ptr<c9> >();
+    shared_ptr<C9> c9 = inj.template create< shared_ptr<C9> >();
 
     BOOST_CHECK_EQUAL(42, c9->i);
     BOOST_CHECK_EQUAL(87.0, c9->d);

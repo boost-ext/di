@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE(singletonCreate)
 
 BOOST_AUTO_TEST_CASE(singletonCreateArgs)
 {
-    singleton::scope<c2> l_s;
+    singleton::scope<C2> l_s;
 
     BOOST_CHECK((l_s.create<int, double, char>(0, 0.0, '0') == l_s.create<int, double, char>(0, 0.0, '0')));
 }

@@ -33,7 +33,7 @@
     template
     <
         typename TDeps,
-        template<typename, typename, typename = TDeps, typename = aux::dependency<scopes::per_request, boost::mpl::_1, boost::mpl::_2> > class Tbinder = binder
+        template<typename, typename, typename = TDeps, typename = aux::dependency<scopes::per_request, boost::mpl::_1, boost::mpl::_2> > class TBinder = binder
     >
     class visitorImpl
     {
@@ -50,7 +50,7 @@
         template<typename T, typename TCallStack, typename Tvisitor>
         static void execute(const Tvisitor& p_visitor)
         {
-            typedef typename Tbinder<T, TCallStack>::type ToBeCreated;
+            typedef typename TBinder<T, TCallStack>::type ToBeCreated;
             typedef typename aux::update_call_stack<TCallStack, ToBeCreated>::type CallStack;
             execute_impl<T, ToBeCreated, CallStack>(p_visitor);
         }

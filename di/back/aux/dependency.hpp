@@ -46,7 +46,7 @@
         typename TExpected,
         typename TGiven = TExpected,
         typename TContext = boost::mpl::vector0<>,
-        typename Tbind = boost::is_same<boost::mpl::_1, TExpected>,
+        typename TBind = boost::is_same<boost::mpl::_1, TExpected>,
         template<typename, typename = void> class TResult = result,
         template<typename = TExpected, typename = TContext, typename = void> class TInstance = instance
     >
@@ -87,7 +87,7 @@
         typedef TExpected expected;
         typedef TGiven given;
         typedef TContext context;
-        typedef Tbind bind;
+        typedef TBind bind;
 
         struct ctor
             : ctor_impl<BOOST_PP_CAT(has_, DI_CTOR_UNIQUE_NAME)<given>::value>::type
@@ -139,16 +139,16 @@
         typename TExpected,
         typename TGiven,
         typename TContext,
-        typename Tbind,
+        typename TBind,
         template<typename, typename> class TResult,
         template<typename, typename, typename> class TInstance
     >
-    class dependency<boost::mpl::_1, TExpected, TGiven, TContext, Tbind, TResult, TInstance>
+    class dependency<boost::mpl::_1, TExpected, TGiven, TContext, TBind, TResult, TInstance>
     {
     public:
         template<typename scope> struct rebind
         {
-            typedef dependency<scope, TExpected, TGiven, TContext, Tbind, TResult, TInstance> type;
+            typedef dependency<scope, TExpected, TGiven, TContext, TBind, TResult, TInstance> type;
         };
     };
 
@@ -156,16 +156,16 @@
     <
         typename TScope,
         typename TContext,
-        typename Tbind,
+        typename TBind,
         template<typename, typename> class TResult,
         template<typename, typename, typename> class TInstance
     >
-    class dependency<TScope, boost::mpl::_1, boost::mpl::_2, TContext, Tbind, TResult, TInstance>
+    class dependency<TScope, boost::mpl::_1, boost::mpl::_2, TContext, TBind, TResult, TInstance>
     {
     public:
         template<typename expected, typename given> struct rebind
         {
-            typedef dependency<TScope, expected, given, TContext, Tbind, TResult, TInstance> type;
+            typedef dependency<TScope, expected, given, TContext, TBind, TResult, TInstance> type;
         };
     };
 

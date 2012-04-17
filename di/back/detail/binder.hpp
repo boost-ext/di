@@ -58,8 +58,8 @@ template<typename T1, typename T2>
 struct less_context_size : boost::mpl::bool_<(aux::get_context_size<T1>::value > aux::get_context_size<T2>::value)>::type
 { };
 
-template<typename T, typename Tbind>
-struct comparator : boost::mpl::apply<Tbind, T>::type
+template<typename T, typename TBind>
+struct comparator : boost::mpl::apply<TBind, T>::type
 { };
 
 template<typename T, typename TDefault, typename = void>

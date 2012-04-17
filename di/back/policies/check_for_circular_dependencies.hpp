@@ -39,7 +39,7 @@
     class check_for_circular_dependencies
     {
     public:
-        template<typename TDeps, typename TGiven, template<typename, typename, typename = TDeps, typename = aux::dependency<scopes::per_request, boost::mpl::_1, boost::mpl::_2> > class Tbinder = detail::binder>
+        template<typename TDeps, typename TGiven, template<typename, typename, typename = TDeps, typename = aux::dependency<scopes::per_request, boost::mpl::_1, boost::mpl::_2> > class TBinder = detail::binder>
         class verify
         {
             template<typename TCallStack>
@@ -60,8 +60,8 @@
             template<typename T, typename TCallStack, typename = void, typename = void>
             struct circular_dependencies : circular_dependencies_impl
                 <
-                    typename Tbinder<T, TCallStack>::type,
-                    typename aux::update_call_stack<TCallStack, typename Tbinder<T, TCallStack>::type>::type
+                    typename TBinder<T, TCallStack>::type,
+                    typename aux::update_call_stack<TCallStack, typename TBinder<T, TCallStack>::type>::type
                 >
             { };
 

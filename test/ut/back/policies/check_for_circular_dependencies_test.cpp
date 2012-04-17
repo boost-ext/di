@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE(Nocircular_dependencies)
             check_for_circular_dependencies::verify
             <
                 vector0<>,
-                c8
+                C8
             >::type
         >::value
     ));
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(Direct)
             check_for_circular_dependencies::verify
             <
                 vector0<>,
-                cd1
+                CD1
             >::type
         >::value
     ));
@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_CASE(InDirect)
             check_for_circular_dependencies::verify
             <
                 vector0<>,
-                cd5
+                CD5
             >::type
         >::value
     ));
