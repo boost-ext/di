@@ -7,7 +7,7 @@
 #ifndef QDEPS_BACK_MODULE_HPP
 #define QDEPS_BACK_MODULE_HPP
 
-namespace QDeps
+namespace di
 {
 namespace Back
 {
@@ -15,7 +15,7 @@ namespace Back
 class Module { };
 
 } // namespace Back
-} // namespace QDeps
+} // namespace di
 
 #endif
 

@@ -7,7 +7,7 @@
 #ifndef QDEPS_UTILITY_PROVIDER_HPP
 #define QDEPS_UTILITY_PROVIDER_HPP
 
-namespace QDeps
+namespace di
 {
 namespace Utility
 {
@@ -21,7 +21,7 @@ public:
 };
 
 } // namespace Utility
-} // namespace QDeps
+} // namespace di
 
 #endif
 

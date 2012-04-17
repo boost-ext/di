@@ -7,14 +7,14 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/string.hpp>
-#include <QDeps/QDeps.hpp>
+#include <di/di.hpp>
 #include "Common/Data.hpp"
 
 using namespace boost::mpl;
 
-namespace Base    = QDeps::Front::Base;
-namespace Fusion  = QDeps::Front::Fusion;
-namespace Utility = QDeps::Utility;
+namespace Base    = di::Front::Base;
+namespace Fusion  = di::Front::Fusion;
+namespace Utility = di::Utility;
 
 struct BaseModule : Base::Module <
     Base::Singletons <

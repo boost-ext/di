@@ -26,14 +26,14 @@
     #include <boost/mpl/placeholders.hpp>
     #include <boost/mpl/identity.hpp>
     #include <boost/mpl/has_xxx.hpp>
-    #include "QDeps/Back/Aux/Instance.hpp"
-    #include "QDeps/Back/Aux/Value.hpp"
-    #include "QDeps/Front/Ctor.hpp"
-    #include "QDeps/Config.hpp"
+    #include "di/Back/Aux/Instance.hpp"
+    #include "di/Back/Aux/Value.hpp"
+    #include "di/Front/Ctor.hpp"
+    #include "di/Config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, QDEPS_FUNCTION_ARITY_LIMIT_SIZE, "QDeps/Back/Aux/Dependency.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, QDEPS_FUNCTION_ARITY_LIMIT_SIZE, "di/Back/Aux/Dependency.hpp"))
 
-    namespace QDeps
+    namespace di
     {
     namespace Back
     {
@@ -171,7 +171,7 @@
 
     } // namespace Aux
     } // namespace Back
-    } // namespace QDeps
+    } // namespace di
 
     #endif
 

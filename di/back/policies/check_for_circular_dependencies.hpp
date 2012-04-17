@@ -21,15 +21,15 @@
     #include <boost/mpl/accumulate.hpp>
     #include <boost/mpl/transform.hpp>
     #include <boost/mpl/size.hpp>
-    #include "QDeps/Back/Aux/Utility.hpp"
-    #include "QDeps/Back/Aux/Dependency.hpp"
-    #include "QDeps/Back/Detail/Binder.hpp"
-    #include "QDeps/Back/Scopes/PerRequest.hpp"
-    #include "QDeps/Config.hpp"
+    #include "di/Back/Aux/Utility.hpp"
+    #include "di/Back/Aux/Dependency.hpp"
+    #include "di/Back/Detail/Binder.hpp"
+    #include "di/Back/Scopes/PerRequest.hpp"
+    #include "di/Config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, QDEPS_FUNCTION_ARITY_LIMIT_SIZE, "QDeps/Back/Policies/CheckForCircularDependencies.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, QDEPS_FUNCTION_ARITY_LIMIT_SIZE, "di/Back/Policies/CheckForCircularDependencies.hpp"))
 
-    namespace QDeps
+    namespace di
     {
     namespace Back
     {
@@ -74,7 +74,7 @@
 
     } // namespace Policies
     } // namespace Back
-    } // namespace QDeps
+    } // namespace di
 
     #endif
 

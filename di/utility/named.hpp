@@ -9,10 +9,10 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
-#include "QDeps/Back/Aux/Utility.hpp"
-#include "QDeps/Config.hpp"
+#include "di/Back/Aux/Utility.hpp"
+#include "di/Config.hpp"
 
-namespace QDeps
+namespace di
 {
 namespace Utility
 {
@@ -79,7 +79,7 @@ public:
 };
 
 } // namespace Utility
-} // namespace QDeps
+} // namespace di
 
 #endif
 

@@ -7,7 +7,7 @@
 #ifndef QDEPS_QDEPS_FRONT_BASE_ANNOTATE_HPP
 #define QDEPS_QDEPS_FRONT_BASE_ANNOTATE_HPP
 
-namespace QDeps
+namespace di
 {
 namespace Front
 {
@@ -30,7 +30,7 @@ struct Annotate
 } // namespace Aux
 } // namespace Base
 } // namespace Front
-} // namespace QDeps
+} // namespace di
 
 #endif
 

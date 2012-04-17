@@ -21,7 +21,7 @@
     </head>
 
     <body>
-        <h3 id="toc_0.0.1"><strong>QDeps</strong></h3>
+        <h3 id="toc_0.0.1"><strong>di</strong></h3>
         %content%
     </body>
 </html>

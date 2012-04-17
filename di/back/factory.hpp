@@ -11,16 +11,16 @@
 #include <boost/mpl/inherit.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/transform.hpp>
-#include "QDeps/Back/Aux/Pool.hpp"
-#include "QDeps/Back/Policy.hpp"
-#include "QDeps/Back/Aux/Utility.hpp"
-#include "QDeps/Back/Aux/Dependency.hpp"
-#include "QDeps/Back/Scopes/PerRequest.hpp"
-#include "QDeps/Back/Detail/Converter.hpp"
-#include "QDeps/Back/Detail/Creator.hpp"
-#include "QDeps/Back/Detail/Visitor.hpp"
+#include "di/Back/Aux/Pool.hpp"
+#include "di/Back/Policy.hpp"
+#include "di/Back/Aux/Utility.hpp"
+#include "di/Back/Aux/Dependency.hpp"
+#include "di/Back/Scopes/PerRequest.hpp"
+#include "di/Back/Detail/Converter.hpp"
+#include "di/Back/Detail/Creator.hpp"
+#include "di/Back/Detail/Visitor.hpp"
 
-namespace QDeps
+namespace di
 {
 namespace Back
 {
@@ -65,7 +65,7 @@ private:
 };
 
 } // namespace Back
-} // namespace QDeps
+} // namespace di
 
 #endif
 

@@ -7,7 +7,7 @@
 #ifndef QDEPS_FRONT_BASE_INTERNAL_HPP
 #define QDEPS_FRONT_BASE_INTERNAL_HPP
 
-namespace QDeps
+namespace di
 {
 namespace Front
 {
@@ -24,7 +24,7 @@ struct Internal
 } // namespace Aux
 } // namespace Base
 } // namespace Front
-} // namespace QDeps
+} // namespace di
 
 #endif
 

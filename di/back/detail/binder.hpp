@@ -24,9 +24,9 @@
 #include <boost/mpl/deref.hpp>
 #include <boost/mpl/begin_end.hpp>
 #include <boost/mpl/has_xxx.hpp>
-#include "QDeps/Back/Aux/Utility.hpp"
+#include "di/Back/Aux/Utility.hpp"
 
-namespace QDeps
+namespace di
 {
 namespace Back
 {
@@ -114,7 +114,7 @@ struct Binder : boost::mpl::deref
 
 } // namespace Detail
 } // namespace Back
-} // namespace QDeps
+} // namespace di
 
 #endif
 

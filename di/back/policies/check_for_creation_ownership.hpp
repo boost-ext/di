@@ -10,9 +10,9 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_reference.hpp>
-#include "QDeps/Config.hpp"
+#include "di/Config.hpp"
 
-namespace QDeps
+namespace di
 {
 namespace Back
 {
@@ -39,7 +39,7 @@ public:
 
 } // namespace Policies
 } // namespace Back
-} // namespace QDeps
+} // namespace di
 
 #endif
 

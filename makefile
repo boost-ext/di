@@ -1,4 +1,4 @@
-TARGET:=QDeps
+TARGET:=di
 HEADERS:=/usr/include
 EXTERNALS:=$(PWD)/Externals
 COMPILERS:=g++ clang++ icc

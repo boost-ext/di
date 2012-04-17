@@ -16,7 +16,7 @@
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/has_xxx.hpp>
 
-namespace QDeps
+namespace di
 {
 namespace Back
 {
@@ -118,7 +118,7 @@ private:
 
 } // namespace Aux
 } // namespace Back
-} // namespace QDeps
+} // namespace di
 
 #endif
 

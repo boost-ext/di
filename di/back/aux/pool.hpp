@@ -24,11 +24,11 @@
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/has_xxx.hpp>
-    #include "QDeps/Back/Aux/Utility.hpp"
+    #include "di/Back/Aux/Utility.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "QDeps/Back/Aux/Pool.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "di/Back/Aux/Pool.hpp"))
 
-    namespace QDeps
+    namespace di
     {
     namespace Back
     {
@@ -62,7 +62,7 @@
 
     } // namespace Aux
     } // namespace Back
-    } // namespace QDeps
+    } // namespace di
 
     #endif
 

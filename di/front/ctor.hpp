@@ -7,9 +7,9 @@
 #ifndef QDEPS_FRONT_CTOR_HPP
 #define QDEPS_FRONT_CTOR_HPP
 
-#include "QDeps/Config.hpp"
+#include "di/Config.hpp"
 
-namespace QDeps
+namespace di
 {
 
 /**
@@ -28,7 +28,7 @@ template<typename T> struct CtorTraits
     static void ctor(); //trivial ctor
 };
 
-} // namespace QDeps
+} // namespace di
 
 #if defined(QDEPS_CTOR_CFG_VA_ARGS)
 

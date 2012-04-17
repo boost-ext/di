@@ -24,21 +24,21 @@
     #include <boost/mpl/copy.hpp>
     #include <boost/mpl/transform.hpp>
     #include <boost/mpl/begin_end.hpp>
-    #include "QDeps/Back/Aux/Pool.hpp"
-    #include "QDeps/Back/Aux/Utility.hpp"
-    #include "QDeps/Back/Aux/Instance.hpp"
-    #include "QDeps/Back/Module.hpp"
-    #include "QDeps/Back/Scopes/Singleton.hpp"
-    #include "QDeps/Back/Scopes/PerRequest.hpp"
-    #include "QDeps/Front/Base/Aux/Internal.hpp"
-    #include "QDeps/Front/Base/Aux/Scope.hpp"
-    #include "QDeps/Front/Base/Aux/Bind.hpp"
-    #include "QDeps/Front/Base/Aux/Externals.hpp"
-    #include "QDeps/Front/Base/Aux/Annotate.hpp"
+    #include "di/Back/Aux/Pool.hpp"
+    #include "di/Back/Aux/Utility.hpp"
+    #include "di/Back/Aux/Instance.hpp"
+    #include "di/Back/Module.hpp"
+    #include "di/Back/Scopes/Singleton.hpp"
+    #include "di/Back/Scopes/PerRequest.hpp"
+    #include "di/Front/Base/Aux/Internal.hpp"
+    #include "di/Front/Base/Aux/Scope.hpp"
+    #include "di/Front/Base/Aux/Bind.hpp"
+    #include "di/Front/Base/Aux/Externals.hpp"
+    #include "di/Front/Base/Aux/Annotate.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "QDeps/Front/Base/Module.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "di/Front/Base/Module.hpp"))
 
-    namespace QDeps
+    namespace di
     {
     namespace Front
     {
@@ -168,7 +168,7 @@
 
     } // namespace Base
     } // namespace Front
-    } // namespace QDeps
+    } // namespace di
 
     #endif
 

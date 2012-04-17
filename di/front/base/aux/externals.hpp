@@ -12,7 +12,7 @@
 #include <boost/mpl/limits/vector.hpp>
 #include <boost/mpl/vector.hpp>
 
-namespace QDeps
+namespace di
 {
 namespace Front
 {
@@ -30,7 +30,7 @@ struct Externals : Detail::Externals, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BO
 } // namespace Aux
 } // namespace Base
 } // namespace Front
-} // namespace QDeps
+} // namespace di
 
 #endif
 

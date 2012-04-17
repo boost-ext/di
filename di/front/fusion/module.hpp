@@ -21,16 +21,16 @@
     #include <boost/mpl/back_inserter.hpp>
     #include <boost/mpl/copy.hpp>
     #include <boost/mpl/if.hpp>
-    #include "QDeps/Back/Aux/Pool.hpp"
-    #include "QDeps/Back/Module.hpp"
-    #include "QDeps/Back/Scopes/Singleton.hpp"
-    #include "QDeps/Back/Scopes/PerRequest.hpp"
-    #include "QDeps/Front/Base/Aux/Bind.hpp"
-    #include "QDeps/Front/Base/Aux/Scope.hpp"
+    #include "di/Back/Aux/Pool.hpp"
+    #include "di/Back/Module.hpp"
+    #include "di/Back/Scopes/Singleton.hpp"
+    #include "di/Back/Scopes/PerRequest.hpp"
+    #include "di/Front/Base/Aux/Bind.hpp"
+    #include "di/Front/Base/Aux/Scope.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "QDeps/Front/Fusion/Module.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "di/Front/Fusion/Module.hpp"))
 
-    namespace QDeps
+    namespace di
     {
     namespace Front
     {
@@ -92,7 +92,7 @@
 
     } // namespace Fusion
     } // namespace Front
-    } // namespace QDeps
+    } // namespace di
 
     #endif
 

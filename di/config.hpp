@@ -31,7 +31,7 @@
 #endif
 #endif
 
-namespace QDeps
+namespace di
 {
 
 /**
@@ -40,20 +40,20 @@ namespace QDeps
  * @code
  * #include <QDesp/Config.hpp>
  *
- * namespace QDeps
+ * namespace di
  * {
  * template<>
- * struct Defaults<Back::Detail::Policy, QDeps::Specialized>
+ * struct Defaults<Back::Detail::Policy, di::Specialized>
  * {
  *     typedef Back::Policy<...> type;
  * };
- * } // namespace QDeps
+ * } // namespace di
  * @endcode
  */
 class Specialized { };
 template<typename, typename = Specialized> struct Defaults;
 
-} // namespace QDeps
+} // namespace di
 
 #endif
 

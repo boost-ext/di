@@ -20,12 +20,12 @@
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/push_back.hpp>
-#include "QDeps/Back/Aux/Dependency.hpp"
-#include "QDeps/Back/Aux/Utility.hpp"
-#include "QDeps/Utility/Named.hpp"
-#include "QDeps/Front/Base/Aux/Internal.hpp"
+#include "di/Back/Aux/Dependency.hpp"
+#include "di/Back/Aux/Utility.hpp"
+#include "di/Utility/Named.hpp"
+#include "di/Front/Base/Aux/Internal.hpp"
 
-namespace QDeps
+namespace di
 {
 namespace Front
 {
@@ -146,7 +146,7 @@ public:
 } // namespace Aux
 } // namespace Base
 } // namespace Front
-} // namespace QDeps
+} // namespace di
 
 #endif
 

@@ -13,11 +13,11 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/void.hpp>
-#include "QDeps/Back/Aux/Utility.hpp"
-#include "QDeps/Back/Policies/CheckForCircularDependencies.hpp"
-#include "QDeps/Back/Policies/CheckForCreationOwnership.hpp"
+#include "di/Back/Aux/Utility.hpp"
+#include "di/Back/Policies/CheckForCircularDependencies.hpp"
+#include "di/Back/Policies/CheckForCreationOwnership.hpp"
 
-namespace QDeps
+namespace di
 {
 namespace Back
 {
@@ -55,7 +55,7 @@ struct Defaults<Back::Detail::Policy, TDefault>
     type;
 };
 
-} // namespace QDeps
+} // namespace di
 
 #endif
 

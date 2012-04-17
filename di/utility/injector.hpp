@@ -28,16 +28,16 @@
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/fold.hpp>
     #include <boost/mpl/if.hpp>
-    #include "QDeps/Back/Aux/Pool.hpp"
-    #include "QDeps/Back/Aux/Utility.hpp"
-    #include "QDeps/Back/Module.hpp"
-    #include "QDeps/Back/Factory.hpp"
-    #include "QDeps/Back/Policy.hpp"
-    #include "QDeps/Config.hpp"
+    #include "di/Back/Aux/Pool.hpp"
+    #include "di/Back/Aux/Utility.hpp"
+    #include "di/Back/Module.hpp"
+    #include "di/Back/Factory.hpp"
+    #include "di/Back/Policy.hpp"
+    #include "di/Config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "QDeps/Utility/Injector.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "di/Utility/Injector.hpp"))
 
-    namespace QDeps
+    namespace di
     {
     namespace Utility
     {
@@ -117,7 +117,7 @@
     };
 
     } // namespace Utility
-    } // namespace QDeps
+    } // namespace di
 
     #endif
 

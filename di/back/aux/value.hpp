@@ -17,7 +17,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/string.hpp>
 
-namespace QDeps
+namespace di
 {
 namespace Back
 {
@@ -69,7 +69,7 @@ public:
 
 } // namespace Aux
 } // namespace Back
-} // namespace QDeps
+} // namespace di
 
 #endif
 

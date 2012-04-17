@@ -15,12 +15,12 @@
 #include <boost/mpl/limits/vector.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/or.hpp>
-#include "QDeps/Back/Aux/Dependency.hpp"
-#include "QDeps/Back/Aux/Value.hpp"
-#include "QDeps/Utility/Named.hpp"
-#include "QDeps/Front/Base/Aux/Internal.hpp"
+#include "di/Back/Aux/Dependency.hpp"
+#include "di/Back/Aux/Value.hpp"
+#include "di/Utility/Named.hpp"
+#include "di/Front/Base/Aux/Internal.hpp"
 
-namespace QDeps
+namespace di
 {
 namespace Front
 {
@@ -136,7 +136,7 @@ struct Bind<TExpected, TGiven, typename boost::enable_if< boost::mpl::or_<Back::
 } // namespace Aux
 } // namespace Base
 } // namespace Front
-} // namespace QDeps
+} // namespace di
 
 #endif
 

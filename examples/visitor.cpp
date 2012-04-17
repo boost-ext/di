@@ -6,12 +6,12 @@
 //
 #include <iostream>
 #include <boost/mpl/size.hpp>
-#include <QDeps/QDeps.hpp>
+#include <di/di.hpp>
 #include "Common/Utility.hpp"
 #include "Common/Data.hpp"
 
-namespace Base    = QDeps::Front::Base;
-namespace Utility = QDeps::Utility;
+namespace Base    = di::Front::Base;
+namespace Utility = di::Utility;
 
 class PrintVisitor
 {

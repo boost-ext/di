@@ -10,7 +10,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/mpl/string.hpp>
-#include <QDeps/QDeps.hpp>
+#include <di/di.hpp>
 
 struct If0
 {
@@ -77,7 +77,7 @@ struct C3
 
 struct C4
 {
-    QDEPS_CTOR(C4, boost::shared_ptr<C3> c3, QDeps::Utility::Named<int, boost::mpl::string<'1'> > i1, QDeps::Utility::Named<int, boost::mpl::string<'2'> > i2)
+    QDEPS_CTOR(C4, boost::shared_ptr<C3> c3, di::Utility::Named<int, boost::mpl::string<'1'> > i1, di::Utility::Named<int, boost::mpl::string<'2'> > i2)
         : c3(c3), i1(i1), i2(i2)
     { }
 
@@ -139,7 +139,7 @@ struct Transaction
     int i;
 };
 
-struct TransactionProvider : QDeps::Utility::Provider< boost::shared_ptr<Transaction> >
+struct TransactionProvider : di::Utility::Provider< boost::shared_ptr<Transaction> >
 {
     QDEPS_CTOR(TransactionProvider, boost::shared_ptr<C3> c3)
         : c3(c3)
@@ -155,11 +155,11 @@ struct TransactionProvider : QDeps::Utility::Provider< boost::shared_ptr<Transac
 
 struct TransactionUsage
 {
-    QDEPS_CTOR(TransactionUsage, boost::shared_ptr< QDeps::Utility::Provider< boost::shared_ptr<Transaction> > > p)
+    QDEPS_CTOR(TransactionUsage, boost::shared_ptr< di::Utility::Provider< boost::shared_ptr<Transaction> > > p)
         : p(p)
     { }
 
-    boost::shared_ptr< QDeps::Utility::Provider< boost::shared_ptr<Transaction> > > p;
+    boost::shared_ptr< di::Utility::Provider< boost::shared_ptr<Transaction> > > p;
 };
 
 

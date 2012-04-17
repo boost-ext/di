@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <boost/shared_ptr.hpp>
-#include <QDeps/QDeps.hpp>
+#include <di/di.hpp>
 
 class C1 { };
 class C2 { };
@@ -26,7 +26,7 @@ public:
 
 int main()
 {
-    QDeps::Utility::Injector<> injector;
+    di::Utility::Injector<> injector;
     injector.create<LValue>();
     injector.create<SharedPtr>();
 

@@ -7,24 +7,24 @@
 #ifndef QDEPS_QDEPS_HPP
 #define QDEPS_QDEPS_HPP
 
-#include "QDeps/Version.hpp"
-#include "QDeps/Config.hpp"
+#include "di/Version.hpp"
+#include "di/Config.hpp"
 
 // Front ends
-#include "QDeps/Front/Ctor.hpp"
-#include "QDeps/Front/Base/Module.hpp"
-#include "QDeps/Front/Fusion/Module.hpp"
+#include "di/Front/Ctor.hpp"
+#include "di/Front/Base/Module.hpp"
+#include "di/Front/Fusion/Module.hpp"
 
 // Utility
-#include "QDeps/Utility/Injector.hpp"
-#include "QDeps/Utility/Named.hpp"
-#include "QDeps/Utility/Provider.hpp"
+#include "di/Utility/Injector.hpp"
+#include "di/Utility/Named.hpp"
+#include "di/Utility/Provider.hpp"
 
 // Policies
-#include "QDeps/Back/Policies/CheckForBindingCorrectness.hpp"
-#include "QDeps/Back/Policies/CheckForCircularDependencies.hpp"
-#include "QDeps/Back/Policies/CheckForCreationOwnership.hpp"
-#include "QDeps/Back/Policies/CheckForReferencesWithoutOwnership.hpp"
+#include "di/Back/Policies/CheckForBindingCorrectness.hpp"
+#include "di/Back/Policies/CheckForCircularDependencies.hpp"
+#include "di/Back/Policies/CheckForCreationOwnership.hpp"
+#include "di/Back/Policies/CheckForReferencesWithoutOwnership.hpp"
 
 #endif
 

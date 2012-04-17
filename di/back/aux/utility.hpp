@@ -16,9 +16,9 @@
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/if.hpp>
-#include "QDeps/Config.hpp"
+#include "di/Config.hpp"
 
-namespace QDeps
+namespace di
 {
 namespace Back
 {
@@ -102,7 +102,7 @@ public:
 
 } // namespace Aux
 } // namespace Back
-} // namespace QDeps
+} // namespace di
 
 #endif
 
