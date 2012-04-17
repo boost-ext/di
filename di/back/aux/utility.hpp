@@ -25,55 +25,55 @@ namespace back
 namespace aux
 {
 
-template<typename T> struct GetBind
+template<typename T> struct get_bind
 {
     typedef typename T::Bind type;
 };
 
-template<typename T> struct GetPool
+template<typename T> struct get_pool
 {
     typedef typename T::Pool type;
 };
 
-template<typename T> struct GetContext
+template<typename T> struct get_context
 {
     typedef typename T::Context type;
 };
 
-template<typename T> struct GetContextSize
+template<typename T> struct get_context_size
 {
-    static const std::size_t value = boost::mpl::size<typename GetContext<T>::type>::value;
+    static const std::size_t value = boost::mpl::size<typename get_context<T>::type>::value;
 };
 
-template<typename T> struct GetDependencies
+template<typename T> struct get_dependencies
 {
     typedef typename T::Dependencies type;
 };
 
-template<typename T> struct GetExternals
+template<typename T> struct get_externals
 {
     typedef typename T::Externals type;
 };
 
-template<typename T> struct GetDerived
+template<typename T> struct get_derived
 {
     typedef typename T::Derived type;
 };
 
-template<typename T> struct GetSeq
+template<typename T> struct get_seq
 {
     typedef typename T::Seq type;
 };
 
-template<typename TDependency, int N, typename TResult = void> struct EnableIfCtorSize
+template<typename TDependency, int N, typename TResult = void> struct enable_if_ctor_size
     : boost::enable_if_c<boost::mpl::size<typename TDependency::Ctor>::value == N, TResult>
 { };
 
-template<typename TDependency, int N> struct AtCtor
+template<typename TDependency, int N> struct at_ctor
     : boost::mpl::at_c<typename TDependency::Ctor, N>
 { };
 
-template<typename TCallStack, typename TDependency> struct UpdateCallStack
+template<typename TCallStack, typename TDependency> struct update_call_stack
     : boost::mpl::push_back<TCallStack, typename TDependency::Given>
 { };
 
@@ -81,23 +81,23 @@ template<typename TElement> class make_plain
 {
     BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
-    template<typename T> struct RemoveAccessors
+    template<typename T> struct remove_accessors
     {
         typedef typename boost::remove_cv<typename boost::remove_pointer<typename boost::remove_reference<T>::type>::type>::type type;
     };
 
-    template<typename T, typename Enable = void> struct DerefElementType
+    template<typename T, typename Enable = void> struct deref_element_type
     {
         typedef T type;
     };
 
-    template<typename T> struct DerefElementType<T, typename boost::enable_if< has_element_type<T> >::type>
+    template<typename T> struct deref_element_type<T, typename boost::enable_if< has_element_type<T> >::type>
     {
         typedef typename T::element_type type;
     };
 
 public:
-    typedef typename DerefElementType<typename RemoveAccessors<typename DerefElementType<typename RemoveAccessors<TElement>::type>::type>::type>::type type;
+    typedef typename deref_element_type<typename remove_accessors<typename deref_element_type<typename remove_accessors<TElement>::type>::type>::type>::type type;
 };
 
 } // namespace aux

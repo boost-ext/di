@@ -63,7 +63,7 @@
                 boost::mpl::if_
                 <
                     boost::is_base_of<back::Module, boost::mpl::_2>,
-                    DependenciesImpl<back::aux::GetDependencies<boost::mpl::_2>, boost::mpl::_1>,
+                    DependenciesImpl<back::aux::get_dependencies<boost::mpl::_2>, boost::mpl::_1>,
                     boost::mpl::insert<boost::mpl::_1, boost::mpl::_2>
                 >
             >
@@ -75,7 +75,7 @@
                 <
                     Modules,
                     boost::mpl::set<>,
-                    boost::mpl::insert< boost::mpl::_1, back::aux::GetPool<boost::mpl::_2> >
+                    boost::mpl::insert< boost::mpl::_1, back::aux::get_pool<boost::mpl::_2> >
                 >::type,
                 boost::mpl::vector0<>,
                 boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>

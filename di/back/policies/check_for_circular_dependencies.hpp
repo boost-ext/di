@@ -62,7 +62,7 @@
             struct CircularDependencies : CircularDependenciesImpl
                 <
                     typename TBinder<T, TCallStack>::type,
-                    typename aux::UpdateCallStack<TCallStack, typename TBinder<T, TCallStack>::type>::type
+                    typename aux::update_call_stack<TCallStack, typename TBinder<T, TCallStack>::type>::type
                 >
             { };
 
@@ -82,14 +82,14 @@
 #else
 
     #define DI_CHECK_FOR_CIRCULAR_DEPENDENCIES_IMPL(z, n, _) BOOST_PP_COMMA_IF(n)\
-        CircularDependencies<typename aux::AtCtor<TDependency, n>::type, TCallStack>
+        CircularDependencies<typename aux::at_ctor<TDependency, n>::type, TCallStack>
 
     template<typename TDependency, typename TCallStack>
     struct CircularDependenciesImpl
         <
             TDependency,
             TCallStack,
-            typename aux::EnableIfCtorSize<TDependency, BOOST_PP_ITERATION()>::type,
+            typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION()>::type,
             typename boost::enable_if< IsUniqueCallStack<TCallStack> >::type
         >
     BOOST_PP_EXPR_IF(BOOST_PP_ITERATION(), :)
@@ -101,7 +101,7 @@
         <
             TDependency,
             TCallStack,
-            typename aux::EnableIfCtorSize<TDependency, BOOST_PP_ITERATION()>::type,
+            typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION()>::type,
             typename boost::disable_if< IsUniqueCallStack<TCallStack> >::type
         >
     :

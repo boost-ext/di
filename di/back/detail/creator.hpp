@@ -47,7 +47,7 @@
         static typename TBinder<T, TCallStack>::type::template result_type<TPool>::type execute(TEntries& p_entries, const TPool& p_pool)
         {
             typedef typename TBinder<T, TCallStack>::type ToBeCreated;
-            typedef typename aux::UpdateCallStack<TCallStack, ToBeCreated>::type CallStack;
+            typedef typename aux::update_call_stack<TCallStack, ToBeCreated>::type CallStack;
             return executeImpl<ToBeCreated, CallStack, TEntries>(p_entries, p_pool);
         }
 
@@ -78,12 +78,12 @@
 #else
 
     template<typename TDependency, typename TCallStack, typename TEntries>
-    static typename aux::EnableIfCtorSize<TDependency, BOOST_PP_ITERATION(), typename TDependency::template result_type<TPool>::type>::type
+    static typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION(), typename TDependency::template result_type<TPool>::type>::type
     executeImpl(TEntries& p_entries, const TPool& p_pool)
     {
         #define DI_CREATOR_EXECUTE(z, n, _) BOOST_PP_COMMA_IF(n)                                         \
-             TConverter<typename TDependency::Scope, typename aux::AtCtor<TDependency, n>::type>::execute(  \
-                execute<typename aux::AtCtor<TDependency, n>::type, TCallStack>(p_entries, p_pool))
+             TConverter<typename TDependency::Scope, typename aux::at_ctor<TDependency, n>::type>::execute(  \
+                execute<typename aux::at_ctor<TDependency, n>::type, TCallStack>(p_entries, p_pool))
 
         return acquire<TDependency>(p_entries).create(
             p_pool BOOST_PP_COMMA_IF(BOOST_PP_ITERATION()) BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_CREATOR_EXECUTE, ~));

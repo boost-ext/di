@@ -51,7 +51,7 @@
         static void execute(const TVisitor& p_visitor)
         {
             typedef typename TBinder<T, TCallStack>::type ToBeCreated;
-            typedef typename aux::UpdateCallStack<TCallStack, ToBeCreated>::type CallStack;
+            typedef typename aux::update_call_stack<TCallStack, ToBeCreated>::type CallStack;
             executeImpl<T, ToBeCreated, CallStack>(p_visitor);
         }
 
@@ -70,12 +70,12 @@
 #else
 
     template<typename T, typename TDependency, typename TCallStack, typename TVisitor>
-    static typename aux::EnableIfCtorSize<TDependency, BOOST_PP_ITERATION()>::type executeImpl(const TVisitor& p_visitor)
+    static typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION()>::type executeImpl(const TVisitor& p_visitor)
     {
         p_visitor.template operator()< Dependency<T, TCallStack, TDependency> >();
 
         #define DI_VISITOR_EXECUTE(z, n, _)\
-            execute<typename aux::AtCtor<TDependency, n>::type, TCallStack>(p_visitor);
+            execute<typename aux::at_ctor<TDependency, n>::type, TCallStack>(p_visitor);
 
         BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_VISITOR_EXECUTE, ~);
 

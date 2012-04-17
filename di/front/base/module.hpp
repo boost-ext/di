@@ -119,7 +119,7 @@
         struct Instances : boost::mpl::transform
             <
                 Externals,
-                back::aux::GetDerived<boost::mpl::_1>
+                back::aux::get_derived<boost::mpl::_1>
             >::type
         { };
 

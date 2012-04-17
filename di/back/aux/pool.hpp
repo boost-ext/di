@@ -86,7 +86,7 @@
                     boost::mpl::if_
                     <
                         has_Seq<boost::mpl::_2>,
-                        GetSeq<boost::mpl::_2>,
+                        get_seq<boost::mpl::_2>,
                         typename boost::mpl::vector<boost::mpl::_2>::type
                     >,
                     boost::mpl::back_inserter<boost::mpl::_1>

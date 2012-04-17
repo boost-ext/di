@@ -55,7 +55,7 @@ struct EqualCallStack : boost::mpl::equal
 { };
 
 template<typename T1, typename T2>
-struct LessContextSize : boost::mpl::bool_<(aux::GetContextSize<T1>::value > aux::GetContextSize<T2>::value)>::type
+struct LessContextSize : boost::mpl::bool_<(aux::get_context_size<T1>::value > aux::get_context_size<T2>::value)>::type
 { };
 
 template<typename T, typename TBind>
@@ -97,8 +97,8 @@ struct Binder : boost::mpl::deref
                         <
                             boost::mpl::and_
                             <
-                                detail::Comparator<typename aux::make_plain<T>::type, aux::GetBind<boost::mpl::_2> >,
-                                detail::EqualCallStack<TCallStack, aux::GetContext<boost::mpl::_2> >
+                                detail::Comparator<typename aux::make_plain<T>::type, aux::get_bind<boost::mpl::_2> >,
+                                detail::EqualCallStack<TCallStack, aux::get_context<boost::mpl::_2> >
                             >,
                             boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>,
                             boost::mpl::_1
