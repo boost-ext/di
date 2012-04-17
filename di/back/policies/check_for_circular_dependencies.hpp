@@ -40,7 +40,7 @@
     class CheckForCircularDependencies
     {
     public:
-        template<typename TDeps, typename TGiven, template<typename, typename, typename = TDeps, typename = aux::Dependency<Scopes::PerRequest, boost::mpl::_1, boost::mpl::_2> > class TBinder = detail::Binder>
+        template<typename TDeps, typename TGiven, template<typename, typename, typename = TDeps, typename = aux::dependency<scopes::per_request, boost::mpl::_1, boost::mpl::_2> > class TBinder = detail::binder>
         class Assert
         {
             template<typename TCallStack>
@@ -110,7 +110,7 @@
        DI_STATIC_ASSERT(
             false,
             CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED,
-            (typename TDependency::Given, TCallStack)
+            (typename TDependency::given, TCallStack)
         );
     };
 

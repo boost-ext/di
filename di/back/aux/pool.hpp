@@ -43,7 +43,7 @@
     class Pool
     {
     public:
-        typedef TSeq Seq;
+        typedef TSeq seq;
 
         Pool() { }
 
@@ -74,10 +74,10 @@
     class Pool<TSeq, typename boost::enable_if_c< boost::mpl::size<TSeq>::value == BOOST_PP_ITERATION()>::type>
         : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_DERIVES_IMPL, TSeq)
     {
-        BOOST_MPL_HAS_XXX_TRAIT_DEF(Seq)
+        BOOST_MPL_HAS_XXX_TRAIT_DEF(seq)
 
     public:
-        struct Seq : boost::mpl::fold
+        struct seq : boost::mpl::fold
             <
                 TSeq,
                 boost::mpl::vector0<>,
@@ -85,7 +85,7 @@
                 <
                     boost::mpl::if_
                     <
-                        has_Seq<boost::mpl::_2>,
+                        has_seq<boost::mpl::_2>,
                         get_seq<boost::mpl::_2>,
                         typename boost::mpl::vector<boost::mpl::_2>::type
                     >,

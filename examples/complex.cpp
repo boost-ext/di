@@ -17,10 +17,10 @@ namespace fusion  = di::front::fusion;
 namespace Utility = di::Utility;
 
 struct baseModule : base::Module <
-    base::Singletons <
+    base::singletons <
         C1, C2, C3, C4
     >,
-    base::PerRequests <
+    base::per_requests <
         CIf0,
         base::Bind<CIf01>::InCallStack<C6, C5>,
         base::Bind<CIf02>::InCallStack<C7>,
@@ -33,7 +33,7 @@ struct baseModule : base::Module <
 > { };
 
 BOOST_AUTO(fusionModule, fusion::Module<>()(
-    fusion::PerRequests <
+    fusion::per_requests <
         TransactionProvider
     >()
 ));

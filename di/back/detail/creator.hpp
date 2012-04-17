@@ -37,10 +37,10 @@
     <
         typename TDeps,
         typename TPool,
-        template<typename, typename, typename = TDeps, typename = aux::Dependency<Scopes::PerRequest, boost::mpl::_1, boost::mpl::_2> > class TBinder = Binder,
-        template<typename, typename> class TConverter = Converter
+        template<typename, typename, typename = TDeps, typename = aux::dependency<scopes::per_request, boost::mpl::_1, boost::mpl::_2> > class TBinder = binder,
+        template<typename, typename> class Tconverter = converter
     >
-    class CreatorImpl
+    class creator_impl
     {
     public:
         template<typename T, typename TCallStack, typename TEntries>
@@ -48,7 +48,7 @@
         {
             typedef typename TBinder<T, TCallStack>::type ToBeCreated;
             typedef typename aux::update_call_stack<TCallStack, ToBeCreated>::type CallStack;
-            return executeImpl<ToBeCreated, CallStack, TEntries>(p_entries, p_pool);
+            return execute_impl<ToBeCreated, CallStack, TEntries>(p_entries, p_pool);
         }
 
     private:
@@ -67,7 +67,7 @@
         }
     };
 
-    template<typename TDeps, typename TPool> struct Creator : CreatorImpl<TDeps, TPool> { };
+    template<typename TDeps, typename TPool> struct creator : creator_impl<TDeps, TPool> { };
 
     } // namespace detail
     } // namespace back
@@ -79,10 +79,10 @@
 
     template<typename TDependency, typename TCallStack, typename TEntries>
     static typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION(), typename TDependency::template result_type<TPool>::type>::type
-    executeImpl(TEntries& p_entries, const TPool& p_pool)
+    execute_impl(TEntries& p_entries, const TPool& p_pool)
     {
         #define DI_CREATOR_EXECUTE(z, n, _) BOOST_PP_COMMA_IF(n)                                         \
-             TConverter<typename TDependency::Scope, typename aux::at_ctor<TDependency, n>::type>::execute(  \
+             Tconverter<typename TDependency::scope, typename aux::at_ctor<TDependency, n>::type>::execute(  \
                 execute<typename aux::at_ctor<TDependency, n>::type, TCallStack>(p_entries, p_pool))
 
         return acquire<TDependency>(p_entries).create(

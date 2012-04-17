@@ -37,7 +37,7 @@ template<typename T> struct get_pool
 
 template<typename T> struct get_context
 {
-    typedef typename T::Context type;
+    typedef typename T::context type;
 };
 
 template<typename T> struct get_context_size
@@ -62,7 +62,7 @@ template<typename T> struct get_derived
 
 template<typename T> struct get_seq
 {
-    typedef typename T::Seq type;
+    typedef typename T::seq type;
 };
 
 template<typename TDependency, int N, typename TResult = void> struct enable_if_ctor_size
@@ -74,7 +74,7 @@ template<typename TDependency, int N> struct at_ctor
 { };
 
 template<typename TCallStack, typename TDependency> struct update_call_stack
-    : boost::mpl::push_back<TCallStack, typename TDependency::Given>
+    : boost::mpl::push_back<TCallStack, typename TDependency::given>
 { };
 
 template<typename TElement> class make_plain

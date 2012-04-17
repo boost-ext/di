@@ -37,20 +37,20 @@
     namespace fusion
     {
 
-    template<typename TScope> struct Scope : base::aux::Scope<TScope> { };
+    template<typename TScope> struct scope : base::aux::scope<TScope> { };
     template<typename TExpected, typename TGiven = TExpected> struct Bind : base::aux::Bind<TExpected, TGiven> { };
 
-    template<typename TExpected, typename TGiven = TExpected> struct Singleton : Scope<back::Scopes::Singleton>::Bind< Bind<TExpected, TGiven> > { };
-    template<typename T> struct Singleton<T, T> : Scope<back::Scopes::Singleton>::Bind<T> { };
+    template<typename TExpected, typename TGiven = TExpected> struct singleton : scope<back::scopes::singleton>::Bind< Bind<TExpected, TGiven> > { };
+    template<typename T> struct singleton<T, T> : scope<back::scopes::singleton>::Bind<T> { };
 
-    template<typename TExpected, typename TGiven = TExpected> struct PerRequest : Scope<back::Scopes::PerRequest>::Bind< Bind<TExpected, TGiven> > { };
-    template<typename T> struct PerRequest<T, T> : Scope<back::Scopes::PerRequest>::Bind<T> { };
-
-    template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    struct Singletons : Scope<back::Scopes::Singleton>::Bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
+    template<typename TExpected, typename TGiven = TExpected> struct per_request : scope<back::scopes::per_request>::Bind< Bind<TExpected, TGiven> > { };
+    template<typename T> struct per_request<T, T> : scope<back::scopes::per_request>::Bind<T> { };
 
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    struct PerRequests : Scope<back::Scopes::PerRequest>::Bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
+    struct singletons : scope<back::scopes::singleton>::Bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
+
+    template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
+    struct per_requests : scope<back::scopes::per_request>::Bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
 
     template
     <
@@ -71,7 +71,7 @@
                     <
                         boost::is_base_of<base::aux::Internal, boost::mpl::_2>,
                         boost::mpl::_2,
-                        PerRequest<boost::mpl::_2>
+                        per_request<boost::mpl::_2>
                     >,
                     boost::mpl::back_inserter<boost::mpl::_1>
                 >

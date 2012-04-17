@@ -27,7 +27,7 @@ namespace detail { class Policy { }; } // namespace detail
 template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
 class Policy : detail::Policy
 {
-    typedef boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> Seq;
+    typedef boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> seq;
 
     template<typename TDeps, typename T, typename TPolicy> struct AssertImpl
     {
@@ -36,7 +36,7 @@ class Policy : detail::Policy
 
 public:
     template<typename TDeps, typename T> struct Assert
-        : boost::mpl::fold<Seq, boost::mpl::void_, AssertImpl<TDeps, T, boost::mpl::_2> >::type
+        : boost::mpl::fold<seq, boost::mpl::void_, AssertImpl<TDeps, T, boost::mpl::_2> >::type
     {
         typedef void type;
     };

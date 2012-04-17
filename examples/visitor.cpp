@@ -13,22 +13,22 @@
 namespace base    = di::front::base;
 namespace Utility = di::Utility;
 
-class PrintVisitor
+class Printvisitor
 {
 public:
     template<typename T> void operator()() const
     {
-        int size = boost::mpl::size<typename T::Context>::value;
+        int size = boost::mpl::size<typename T::context>::value;
         while(--size) {
             std::cout << "\t";
         }
-        std::cout << demangle(typeid(typename T::Type).name()) << std::endl;
+        std::cout << demangle(typeid(typename T::type).name()) << std::endl;
     }
 };
 
-struct VisitorModule : base::Module
+struct visitorModule : base::Module
     <
-        base::Singletons <
+        base::singletons <
             CIf0
         >
     >
@@ -36,8 +36,8 @@ struct VisitorModule : base::Module
 
 int main()
 {
-    Utility::Injector<VisitorModule> injector;
-    injector.visit<C8>(PrintVisitor());
+    Utility::Injector<visitorModule> injector;
+    injector.visit<C8>(Printvisitor());
 
     return 0;
 }

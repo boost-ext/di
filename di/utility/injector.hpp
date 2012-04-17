@@ -45,12 +45,12 @@
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
     class Injector
     {
-        typedef boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> Seq;
+        typedef boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> seq;
 
-        struct Modules : boost::mpl::remove_if<Seq, boost::is_base_of<back::detail::Policy, boost::mpl::_> >::type { };
+        struct Modules : boost::mpl::remove_if<seq, boost::is_base_of<back::detail::Policy, boost::mpl::_> >::type { };
         struct Polices : boost::mpl::joint_view
             <
-                boost::mpl::filter_view<Seq, boost::is_base_of<back::detail::Policy, boost::mpl::_> >,
+                boost::mpl::filter_view<seq, boost::is_base_of<back::detail::Policy, boost::mpl::_> >,
                 boost::mpl::vector1<typename Defaults<back::detail::Policy, Specialized>::type>
             >::type
         { };
@@ -106,7 +106,7 @@
             return m_factory.create<T>();
         }
 
-        template<typename T, typename Visitor> void visit(const Visitor& p_visitor)
+        template<typename T, typename visitor> void visit(const visitor& p_visitor)
         {
             return m_factory.visit<T>(p_visitor);
         }

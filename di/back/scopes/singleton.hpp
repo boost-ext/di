@@ -21,13 +21,13 @@
     {
     namespace back
     {
-    namespace Scopes
+    namespace scopes
     {
 
-    class Singleton
+    class singleton
     {
     public:
-        template<typename T> class Scope
+        template<typename T> class scope
         {
         public:
             typedef boost::shared_ptr<T> result_type;
@@ -49,7 +49,7 @@
         };
     };
 
-    } // namespace Scope
+    } // namespace scope
     } // namespace back
     } // namespace di
 

@@ -30,9 +30,9 @@ template
     typename TDeps,
     typename TPool = aux::Pool<>,
     typename TPolices = Policy<>,
-    template<typename, typename> class TConverter = detail::Converter,
-    template<typename = TDeps, typename = TPool> class TCreator = detail::Creator,
-    template<typename = TDeps> class TVisitor = detail::Visitor
+    template<typename, typename> class Tconverter = detail::converter,
+    template<typename = TDeps, typename = TPool> class Tcreator = detail::creator,
+    template<typename = TDeps> class Tvisitor = detail::visitor
 >
 class Factory
 {
@@ -49,14 +49,14 @@ public:
     {
         typedef boost::mpl::vector0<> EmptyCallStack;
         typedef typename TPolices::template Assert<TDeps, T>::type Polices;
-        return TConverter<Scopes::PerRequest, T>::execute(TCreator<>::template execute<T, EmptyCallStack>(m_entries, m_pool));
+        return Tconverter<scopes::per_request, T>::execute(Tcreator<>::template execute<T, EmptyCallStack>(m_entries, m_pool));
     }
 
-    template<typename T, typename Visitor> void visit(const Visitor& p_visitor)
+    template<typename T, typename visitor> void visit(const visitor& p_visitor)
     {
         typedef boost::mpl::vector0<> EmptyCallStack;
         typedef typename TPolices::template Assert<TDeps, T>::type Polices;
-        TVisitor<>::template execute<T, EmptyCallStack>(p_visitor);
+        Tvisitor<>::template execute<T, EmptyCallStack>(p_visitor);
     }
 
 private:
