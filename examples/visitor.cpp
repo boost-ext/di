@@ -36,7 +36,7 @@ struct visitormodule : base::module
 
 int main()
 {
-    utility::Injector<visitormodule> injector;
+    utility::injector<visitormodule> injector;
     injector.visit<C8>(Printvisitor());
 
     return 0;

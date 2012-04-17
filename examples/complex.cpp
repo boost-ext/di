@@ -26,21 +26,21 @@ struct basemodule : base::module <
         base::Bind<CIf02>::InCallStack<C7>,
         base::Bind<int, int_<1> >,
         base::Bind<int, int_<2> >::InCallStack<C8>,
-        base::Bind<int, int_<3> >::InName< string<'1'> >::InCallStack<C7, C6, C4>,
-        base::Bind<int, int_<4> >::InName< string<'2'> >::InCallStack<C7, C6, C4>,
+        base::Bind<int, int_<3> >::Inname< string<'1'> >::InCallStack<C7, C6, C4>,
+        base::Bind<int, int_<4> >::Inname< string<'2'> >::InCallStack<C7, C6, C4>,
         base::Bind<int, int_<5> >::InCallStack<C2>
     >
 > { };
 
 BOOST_AUTO(fusionmodule, fusion::module<>()(
     fusion::per_requests <
-        TransactionProvider
+        Transactionprovider
     >()
 ));
 
 int main()
 {
-    utility::Injector
+    utility::injector
     <
         basemodule, BOOST_TYPEOF(fusionmodule)
     >

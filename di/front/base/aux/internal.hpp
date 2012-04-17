@@ -18,7 +18,7 @@ namespace aux
 
 struct Internal
 {
-    typedef void Name;
+    typedef void name;
 };
 
 } // namespace aux

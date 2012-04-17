@@ -65,14 +65,14 @@
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
     struct Externals : aux::Externals<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
 
-    template<typename T> struct Annotate : aux::Annotate<T> { };
+    template<typename T> struct annotate : aux::annotate<T> { };
 
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
     class module : public back::module
     {
         template<typename TInstance, typename T> struct IsSameinstance : boost::mpl::or_
             <
-                boost::is_same<typename TInstance::Name, T>,
+                boost::is_same<typename TInstance::name, T>,
                 boost::is_same<typename TInstance::value_type, T>
             >
         { };
@@ -84,7 +84,7 @@
         template<typename T, typename Enable = void>
         struct MakeAnnotation
         {
-            typedef typename Annotate<back::aux::instance<T> >::template With<> type;
+            typedef typename annotate<back::aux::instance<T> >::template with<> type;
         };
 
         template<typename T>
@@ -92,7 +92,7 @@
         {
             typedef typename T::template rebind<back::scopes::singleton>::type dependency;
             typedef back::aux::instance<typename dependency::expected, typename dependency::context> instance;
-            typedef typename Annotate<instance>::template With<typename T::Name> type;
+            typedef typename annotate<instance>::template with<typename T::name> type;
         };
 
         struct Externals : boost::mpl::transform
@@ -153,11 +153,11 @@
         #include BOOST_PP_ITERATE()
 
         template<typename T, typename Tvalue>
-        inline static typename boost::disable_if<boost::is_same<FindinstanceType<Externals, T>, boost::mpl::end<Externals> >, typename FindinstanceType<Externals, T>::type::Derived>::type
+        inline static typename boost::disable_if<boost::is_same<FindinstanceType<Externals, T>, boost::mpl::end<Externals> >, typename FindinstanceType<Externals, T>::type::derived>::type
         Set(Tvalue p_value)
         {
             typedef typename FindinstanceType<Externals, T>::type Annotation;
-            return typename Annotation::Derived(p_value);
+            return typename Annotation::derived(p_value);
         }
 
         const Pool& pool() const { return m_pool; }

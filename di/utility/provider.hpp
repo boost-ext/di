@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef DI_UTILITY_PROVIDER_HPP
-#define DI_UTILITY_PROVIDER_HPP
+#ifndef DI_utILITY_PROVIDER_HPP
+#define DI_utILITY_PROVIDER_HPP
 
 namespace di
 {
@@ -13,10 +13,10 @@ namespace utility
 {
 
 template<typename T>
-class Provider
+class provider
 {
 public:
-    virtual ~Provider() { }
+    virtual ~provider() { }
     virtual T get() const = 0;
 };
 

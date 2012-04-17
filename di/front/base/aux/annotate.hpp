@@ -17,13 +17,13 @@ namespace aux
 {
 
 template<typename TDerived>
-struct Annotate
+struct annotate
 {
     template<typename TName = void>
-    struct With : TDerived
+    struct with : TDerived
     {
-        typedef TDerived Derived;
-        typedef TName Name;
+        typedef TDerived derived;
+        typedef TName name;
     };
 };
 

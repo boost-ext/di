@@ -74,7 +74,7 @@
         { };
 
         template<bool, typename = void> struct ctor_impl
-            : boost::function_types::parameter_types<BOOST_TYPEOF_TPL(ctorTraits<TGiven>::ctor)>::type
+            : boost::function_types::parameter_types<BOOST_TYPEOF_TPL(ctor_traits<TGiven>::ctor)>::type
         { };
 
         template<typename Dummy>

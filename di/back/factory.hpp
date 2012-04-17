@@ -29,7 +29,7 @@ template
 <
     typename TDeps,
     typename TPool = aux::Pool<>,
-    typename TPolices = policy<>,
+    typename Tpolicies = policy<>,
     template<typename, typename> class TConverter = detail::converter,
     template<typename = TDeps, typename = TPool> class TCreator = detail::creator,
     template<typename = TDeps> class TVisitor = detail::visitor
@@ -48,14 +48,14 @@ public:
     template<typename T> T create()
     {
         typedef boost::mpl::vector0<> empty_call_stack;
-        typedef typename TPolices::template verify<TDeps, T>::type polices;
+        typedef typename Tpolicies::template verify<TDeps, T>::type polices;
         return TConverter<scopes::per_request, T>::execute(TCreator<>::template execute<T, empty_call_stack>(m_entries, m_pool));
     }
 
     template<typename T, typename Visitor> void visit(const Visitor& p_visitor)
     {
         typedef boost::mpl::vector0<> empty_call_stack;
-        typedef typename TPolices::template verify<TDeps, T>::type polices;
+        typedef typename Tpolicies::template verify<TDeps, T>::type polices;
         TVisitor<>::template execute<T, empty_call_stack>(p_visitor);
     }
 

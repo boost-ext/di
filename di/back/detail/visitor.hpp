@@ -74,12 +74,12 @@
     {
         p_visitor.template operator()< dependency<T, TCallStack, TDependency> >();
 
-        #define DI_VISITOR_EXECUTE(z, n, _)\
+        #define DI_VISITOR_EXECutE(z, n, _)\
             execute<typename aux::at_ctor<TDependency, n>::type, TCallStack>(p_visitor);
 
-        BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_VISITOR_EXECUTE, ~);
+        BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_VISITOR_EXECutE, ~);
 
-        #undef DI_VISITOR_EXECUTE
+        #undef DI_VISITOR_EXECutE
     }
 
 #endif

@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef DI_UTILITY_INJECTOR_HPP
-    #define DI_UTILITY_INJECTOR_HPP
+    #ifndef DI_utILITY_INJECTOR_HPP
+    #define DI_utILITY_INJECTOR_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
@@ -43,12 +43,12 @@
     {
 
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    class Injector
+    class injector
     {
         typedef boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> seq;
 
         struct modules : boost::mpl::remove_if<seq, boost::is_base_of<back::detail::policy, boost::mpl::_> >::type { };
-        struct Polices : boost::mpl::joint_view
+        struct policies : boost::mpl::joint_view
             <
                 boost::mpl::filter_view<seq, boost::is_base_of<back::detail::policy, boost::mpl::_> >,
                 boost::mpl::vector1<typename defaults<back::detail::policy, specialized>::type>
@@ -91,11 +91,11 @@
         { };
 
         typedef back::aux::Pool<typename Externals::type> Pool;
-        typedef typename boost::mpl::deref<typename boost::mpl::begin<Polices>::type>::type policy;
+        typedef typename boost::mpl::deref<typename boost::mpl::begin<policies>::type>::type policy;
         typedef back::factory<typename Dependencies::type, Pool, policy> factory;
 
     public:
-        Injector()
+        injector()
             : m_pool(), m_factory(m_pool)
         { }
 
@@ -124,7 +124,7 @@
 #else
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename M)>
-    Injector(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const M, &p_module))
+    injector(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const M, &p_module))
         : m_pool(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), p_module, .pool() BOOST_PP_INTERCEPT)),
           m_factory(m_pool)
     { }
@@ -132,10 +132,10 @@
     #define DI_MODULE_ARG(_, n, module) BOOST_PP_COMMA_IF(n) const module##n& p_module##n = module##n()
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename M)>
-    Injector<typename boost::mpl::joint_view<modules, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), M)> >::type> install(BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_MODULE_ARG, M))
+    injector<typename boost::mpl::joint_view<modules, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), M)> >::type> install(BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_MODULE_ARG, M))
     {
-        typedef Injector<typename boost::mpl::joint_view<modules, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), M)> >::type> InjectorType;
-        return InjectorType(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_module));
+        typedef injector<typename boost::mpl::joint_view<modules, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), M)> >::type> injectorType;
+        return injectorType(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_module));
     }
 
     #undef DI_MODULE_ARG

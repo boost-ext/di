@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef DI_EXAMPLES_UTILITY_HPP
-#define DI_EXAMPLES_UTILITY_HPP
+#ifndef DI_EXAMPLES_utILITY_HPP
+#define DI_EXAMPLES_utILITY_HPP
 
 #if defined(__GNUC__) && !defined(__llvm__)
 # include <cxxabi.h>

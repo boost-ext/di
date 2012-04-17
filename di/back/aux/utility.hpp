@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef DI_BACK_AUX_UTILITY_HPP
-#define DI_BACK_AUX_UTILITY_HPP
+#ifndef DI_BACK_AUX_utILITY_HPP
+#define DI_BACK_AUX_utILITY_HPP
 
 #include <boost/shared_ptr.hpp>
 #include <boost/type_traits/remove_reference.hpp>
@@ -57,7 +57,7 @@ template<typename T> struct get_externals
 
 template<typename T> struct get_derived
 {
-    typedef typename T::Derived type;
+    typedef typename T::derived type;
 };
 
 template<typename T> struct get_seq
