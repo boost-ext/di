@@ -19,27 +19,27 @@
 
 namespace di
 {
-namespace Back
+namespace back
 {
-namespace Aux
+namespace aux
 {
 
-namespace Detail
+namespace detail
 {
 
 template<typename Derived, typename = void> class HasValue
 {
     struct Helper { static int value; };
-    struct Base : boost::mpl::if_<boost::is_arithmetic<Derived>, boost::mpl::void_, Derived>::type, Helper { };
+    struct base : boost::mpl::if_<boost::is_arithmetic<Derived>, boost::mpl::void_, Derived>::type, Helper { };
 
     template<typename T> static boost::mpl::aux::no_tag  deduce(boost::non_type<const int*, &T::value>*);
     template<typename T> static boost::mpl::aux::yes_tag deduce(...);
 
 public:
-    static const bool value = sizeof(deduce<Base>(0)) == sizeof(boost::mpl::aux::yes_tag);
+    static const bool value = sizeof(deduce<base>(0)) == sizeof(boost::mpl::aux::yes_tag);
 };
 
-}// namespace Detail
+}// namespace detail
 
 template<typename, typename = void> class Value : public boost::mpl::false_ { };
 
@@ -47,28 +47,28 @@ template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, int C)>
 class Value< boost::mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> > : public boost::mpl::true_
 {
 public:
-    typedef std::string ResultType;
+    typedef std::string result_type;
 
-    inline static ResultType create()
+    inline static result_type create()
     {
         return boost::mpl::c_str< boost::mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> >::value;
     }
 };
 
 template<typename T>
-class Value<T, typename boost::enable_if< Detail::HasValue<T> >::type> : public boost::mpl::true_
+class Value<T, typename boost::enable_if< detail::HasValue<T> >::type> : public boost::mpl::true_
 {
 public:
-    typedef BOOST_TYPEOF_TPL(T::value) ResultType;
+    typedef BOOST_TYPEOF_TPL(T::value) result_type;
 
-    inline static ResultType create()
+    inline static result_type create()
     {
         return T::value;
     }
 };
 
-} // namespace Aux
-} // namespace Back
+} // namespace aux
+} // namespace back
 } // namespace di
 
 #endif

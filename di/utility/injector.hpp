@@ -47,11 +47,11 @@
     {
         typedef boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> Seq;
 
-        struct Modules : boost::mpl::remove_if<Seq, boost::is_base_of<Back::Detail::Policy, boost::mpl::_> >::type { };
+        struct Modules : boost::mpl::remove_if<Seq, boost::is_base_of<back::detail::Policy, boost::mpl::_> >::type { };
         struct Polices : boost::mpl::joint_view
             <
-                boost::mpl::filter_view<Seq, boost::is_base_of<Back::Detail::Policy, boost::mpl::_> >,
-                boost::mpl::vector1<typename Defaults<Back::Detail::Policy, Specialized>::type>
+                boost::mpl::filter_view<Seq, boost::is_base_of<back::detail::Policy, boost::mpl::_> >,
+                boost::mpl::vector1<typename Defaults<back::detail::Policy, Specialized>::type>
             >::type
         { };
 
@@ -62,8 +62,8 @@
                 TResult,
                 boost::mpl::if_
                 <
-                    boost::is_base_of<Back::Module, boost::mpl::_2>,
-                    DependenciesImpl<Back::Aux::GetDependencies<boost::mpl::_2>, boost::mpl::_1>,
+                    boost::is_base_of<back::Module, boost::mpl::_2>,
+                    DependenciesImpl<back::aux::GetDependencies<boost::mpl::_2>, boost::mpl::_1>,
                     boost::mpl::insert<boost::mpl::_1, boost::mpl::_2>
                 >
             >
@@ -75,7 +75,7 @@
                 <
                     Modules,
                     boost::mpl::set<>,
-                    boost::mpl::insert< boost::mpl::_1, Back::Aux::GetPool<boost::mpl::_2> >
+                    boost::mpl::insert< boost::mpl::_1, back::aux::GetPool<boost::mpl::_2> >
                 >::type,
                 boost::mpl::vector0<>,
                 boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>
@@ -90,9 +90,9 @@
             >::type
         { };
 
-        typedef Back::Aux::Pool<typename Externals::type> Pool;
+        typedef back::aux::Pool<typename Externals::type> Pool;
         typedef typename boost::mpl::deref<typename boost::mpl::begin<Polices>::type>::type Policy;
-        typedef Back::Factory<typename Dependencies::type, Pool, Policy> Factory;
+        typedef back::Factory<typename Dependencies::type, Pool, Policy> Factory;
 
     public:
         Injector()

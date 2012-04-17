@@ -27,11 +27,11 @@
 
 namespace di
 {
-namespace Front
+namespace front
 {
-namespace Base
+namespace base
 {
-namespace Aux
+namespace aux
 {
 
 template<typename TScope>
@@ -48,7 +48,7 @@ public:
         typename TGiven,
         typename TContext = boost::mpl::vector0<>
     >
-    struct Dependency : Internal, Back::Aux::Dependency
+    struct Dependency : Internal, back::aux::Dependency
         <
             boost::mpl::_1,
             TExpected,
@@ -143,9 +143,9 @@ public:
     };
 };
 
-} // namespace Aux
-} // namespace Base
-} // namespace Front
+} // namespace aux
+} // namespace base
+} // namespace front
 } // namespace di
 
 #endif

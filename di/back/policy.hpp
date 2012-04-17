@@ -19,19 +19,19 @@
 
 namespace di
 {
-namespace Back
+namespace back
 {
 
-namespace Detail { class Policy { }; } // namespace Detail
+namespace detail { class Policy { }; } // namespace detail
 
 template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-class Policy : Detail::Policy
+class Policy : detail::Policy
 {
     typedef boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> Seq;
 
     template<typename TDeps, typename T, typename TPolicy> struct AssertImpl
     {
-        typedef typename TPolicy::template Assert<TDeps, typename Aux::MakePlain<T>::type>::type type;
+        typedef typename TPolicy::template Assert<TDeps, typename aux::make_plain<T>::type>::type type;
     };
 
 public:
@@ -42,15 +42,15 @@ public:
     };
 };
 
-} // namespace Back
+} // namespace back
 
 template<typename TDefault>
-struct Defaults<Back::Detail::Policy, TDefault>
+struct Defaults<back::detail::Policy, TDefault>
 {
-    typedef Back::Policy
+    typedef back::Policy
     <
-        Back::Policies::CheckForCircularDependencies,
-        Back::Policies::CheckForCreationOwnership
+        back::Policies::CheckForCircularDependencies,
+        back::Policies::CheckForCreationOwnership
     >
     type;
 };

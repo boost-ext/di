@@ -32,7 +32,7 @@
 
     namespace di
     {
-    namespace Back
+    namespace back
     {
     namespace Policies
     {
@@ -40,7 +40,7 @@
     class CheckForCircularDependencies
     {
     public:
-        template<typename TDeps, typename TGiven, template<typename, typename, typename = TDeps, typename = Aux::Dependency<Scopes::PerRequest, boost::mpl::_1, boost::mpl::_2> > class TBinder = Detail::Binder>
+        template<typename TDeps, typename TGiven, template<typename, typename, typename = TDeps, typename = aux::Dependency<Scopes::PerRequest, boost::mpl::_1, boost::mpl::_2> > class TBinder = detail::Binder>
         class Assert
         {
             template<typename TCallStack>
@@ -62,7 +62,7 @@
             struct CircularDependencies : CircularDependenciesImpl
                 <
                     typename TBinder<T, TCallStack>::type,
-                    typename Aux::UpdateCallStack<TCallStack, typename TBinder<T, TCallStack>::type>::type
+                    typename aux::UpdateCallStack<TCallStack, typename TBinder<T, TCallStack>::type>::type
                 >
             { };
 
@@ -74,7 +74,7 @@
     };
 
     } // namespace Policies
-    } // namespace Back
+    } // namespace back
     } // namespace di
 
     #endif
@@ -82,14 +82,14 @@
 #else
 
     #define DI_CHECK_FOR_CIRCULAR_DEPENDENCIES_IMPL(z, n, _) BOOST_PP_COMMA_IF(n)\
-        CircularDependencies<typename Aux::AtCtor<TDependency, n>::type, TCallStack>
+        CircularDependencies<typename aux::AtCtor<TDependency, n>::type, TCallStack>
 
     template<typename TDependency, typename TCallStack>
     struct CircularDependenciesImpl
         <
             TDependency,
             TCallStack,
-            typename Aux::EnableIfCtorSize<TDependency, BOOST_PP_ITERATION()>::type,
+            typename aux::EnableIfCtorSize<TDependency, BOOST_PP_ITERATION()>::type,
             typename boost::enable_if< IsUniqueCallStack<TCallStack> >::type
         >
     BOOST_PP_EXPR_IF(BOOST_PP_ITERATION(), :)
@@ -101,7 +101,7 @@
         <
             TDependency,
             TCallStack,
-            typename Aux::EnableIfCtorSize<TDependency, BOOST_PP_ITERATION()>::type,
+            typename aux::EnableIfCtorSize<TDependency, BOOST_PP_ITERATION()>::type,
             typename boost::disable_if< IsUniqueCallStack<TCallStack> >::type
         >
     :

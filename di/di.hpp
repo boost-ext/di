@@ -10,7 +10,7 @@
 #include "di/version.hpp"
 #include "di/config.hpp"
 
-// Front ends
+// front ends
 #include "di/front/ctor.hpp"
 #include "di/front/base/module.hpp"
 #include "di/front/fusion/module.hpp"

@@ -14,9 +14,9 @@
 
 namespace di
 {
-namespace Back
+namespace back
 {
-namespace Detail
+namespace detail
 {
 
 template<typename, typename> class Converter;
@@ -176,8 +176,8 @@ public:
     }
 };
 
-} // namespace Detail
-} // namespace Back
+} // namespace detail
+} // namespace back
 } // namespace di
 
 #endif

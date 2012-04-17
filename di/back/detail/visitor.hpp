@@ -25,15 +25,15 @@
 
     namespace di
     {
-    namespace Back
+    namespace back
     {
-    namespace Detail
+    namespace detail
     {
 
     template
     <
         typename TDeps,
-        template<typename, typename, typename = TDeps, typename = Aux::Dependency<Scopes::PerRequest, boost::mpl::_1, boost::mpl::_2> > class TBinder = Binder
+        template<typename, typename, typename = TDeps, typename = aux::Dependency<Scopes::PerRequest, boost::mpl::_1, boost::mpl::_2> > class TBinder = Binder
     >
     class VisitorImpl
     {
@@ -51,7 +51,7 @@
         static void execute(const TVisitor& p_visitor)
         {
             typedef typename TBinder<T, TCallStack>::type ToBeCreated;
-            typedef typename Aux::UpdateCallStack<TCallStack, ToBeCreated>::type CallStack;
+            typedef typename aux::UpdateCallStack<TCallStack, ToBeCreated>::type CallStack;
             executeImpl<T, ToBeCreated, CallStack>(p_visitor);
         }
 
@@ -61,8 +61,8 @@
 
     template<typename TDeps> struct Visitor : VisitorImpl<TDeps> { };
 
-    } // namespace Detail
-    } // namespace Back
+    } // namespace detail
+    } // namespace back
     } // namespace di
 
     #endif
@@ -70,12 +70,12 @@
 #else
 
     template<typename T, typename TDependency, typename TCallStack, typename TVisitor>
-    static typename Aux::EnableIfCtorSize<TDependency, BOOST_PP_ITERATION()>::type executeImpl(const TVisitor& p_visitor)
+    static typename aux::EnableIfCtorSize<TDependency, BOOST_PP_ITERATION()>::type executeImpl(const TVisitor& p_visitor)
     {
         p_visitor.template operator()< Dependency<T, TCallStack, TDependency> >();
 
         #define DI_VISITOR_EXECUTE(z, n, _)\
-            execute<typename Aux::AtCtor<TDependency, n>::type, TCallStack>(p_visitor);
+            execute<typename aux::AtCtor<TDependency, n>::type, TCallStack>(p_visitor);
 
         BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_VISITOR_EXECUTE, ~);
 

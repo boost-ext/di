@@ -30,9 +30,9 @@
 
     namespace di
     {
-    namespace Back
+    namespace back
     {
-    namespace Aux
+    namespace aux
     {
 
     template
@@ -47,12 +47,12 @@
 
         Pool() { }
 
-        template<typename T> struct ResultType
+        template<typename T> struct result_type
         {
-            typedef typename T::ResultType type;
+            typedef typename T::result_type type;
         };
 
-        template<typename T> typename ResultType<T>::type get() const
+        template<typename T> typename result_type<T>::type get() const
         {
             return T::get();
         }
@@ -60,8 +60,8 @@
 
     #include BOOST_PP_ITERATE()
 
-    } // namespace Aux
-    } // namespace Back
+    } // namespace aux
+    } // namespace back
     } // namespace di
 
     #endif
@@ -105,13 +105,13 @@
             : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_CTOR_INITLIST_IMPL, ~)
         { }
 
-        template<typename T> struct ResultType
+        template<typename T> struct result_type
         {
-            typedef typename T::ResultType type;
+            typedef typename T::result_type type;
         };
 
         template<typename T>
-        typename ResultType<T>::type get() const
+        typename result_type<T>::type get() const
         {
             return T::get();
         }

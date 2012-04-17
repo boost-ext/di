@@ -22,17 +22,17 @@
 
 namespace di
 {
-namespace Back
+namespace back
 {
 
 template
 <
     typename TDeps,
-    typename TPool = Aux::Pool<>,
+    typename TPool = aux::Pool<>,
     typename TPolices = Policy<>,
-    template<typename, typename> class TConverter = Detail::Converter,
-    template<typename = TDeps, typename = TPool> class TCreator = Detail::Creator,
-    template<typename = TDeps> class TVisitor = Detail::Visitor
+    template<typename, typename> class TConverter = detail::Converter,
+    template<typename = TDeps, typename = TPool> class TCreator = detail::Creator,
+    template<typename = TDeps> class TVisitor = detail::Visitor
 >
 class Factory
 {
@@ -64,7 +64,7 @@ private:
     Entries m_entries;
 };
 
-} // namespace Back
+} // namespace back
 } // namespace di
 
 #endif

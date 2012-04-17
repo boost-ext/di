@@ -20,9 +20,9 @@
 
 namespace di
 {
-namespace Back
+namespace back
 {
-namespace Aux
+namespace aux
 {
 
 template<typename T> struct GetBind
@@ -77,7 +77,7 @@ template<typename TCallStack, typename TDependency> struct UpdateCallStack
     : boost::mpl::push_back<TCallStack, typename TDependency::Given>
 { };
 
-template<typename TElement> class MakePlain
+template<typename TElement> class make_plain
 {
     BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
@@ -100,8 +100,8 @@ public:
     typedef typename DerefElementType<typename RemoveAccessors<typename DerefElementType<typename RemoveAccessors<TElement>::type>::type>::type>::type type;
 };
 
-} // namespace Aux
-} // namespace Back
+} // namespace aux
+} // namespace back
 } // namespace di
 
 #endif

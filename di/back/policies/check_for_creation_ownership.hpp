@@ -15,7 +15,7 @@
 
 namespace di
 {
-namespace Back
+namespace back
 {
 namespace Policies
 {
@@ -39,7 +39,7 @@ public:
 };
 
 } // namespace Policies
-} // namespace Back
+} // namespace back
 } // namespace di
 
 #endif

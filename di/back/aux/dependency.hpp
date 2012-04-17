@@ -35,9 +35,9 @@
 
     namespace di
     {
-    namespace Back
+    namespace back
     {
-    namespace Aux
+    namespace aux
     {
 
     template
@@ -93,37 +93,37 @@
             : CtorImpl<BOOST_PP_CAT(has_, DI_CTOR_UNIQUE_NAME)<Given>::value>::type
         { };
 
-        template<typename, typename = void> struct ResultType;
+        template<typename, typename = void> struct result_type;
 
         template<typename TPool>
-        struct ResultType<TPool, typename boost::enable_if< IsPoolType<TPool> >::type>
-            : TPool::template ResultType<TInstance<> >
+        struct result_type<TPool, typename boost::enable_if< IsPoolType<TPool> >::type>
+            : TPool::template result_type<TInstance<> >
         { };
 
         template<typename TPool>
-        struct ResultType<TPool, typename boost::enable_if< IsValueType<TPool> >::type>
-            : boost::mpl::identity<typename TValue<TGiven>::ResultType>
+        struct result_type<TPool, typename boost::enable_if< IsValueType<TPool> >::type>
+            : boost::mpl::identity<typename TValue<TGiven>::result_type>
         { };
 
         template<typename TPool>
-        struct ResultType<TPool, typename boost::enable_if< IsScopeType<TPool> >::type>
-            : boost::mpl::identity<typename TScope::template Scope<TGiven>::ResultType>
+        struct result_type<TPool, typename boost::enable_if< IsScopeType<TPool> >::type>
+            : boost::mpl::identity<typename TScope::template Scope<TGiven>::result_type>
         { };
 
         template<typename TPool>
-        typename boost::enable_if<IsPoolType<TPool>, typename ResultType<TPool>::type>::type create(const TPool& p_pool)
+        typename boost::enable_if<IsPoolType<TPool>, typename result_type<TPool>::type>::type create(const TPool& p_pool)
         {
             return p_pool.template get<TInstance<> >();
         }
 
         template<typename TPool>
-        typename boost::enable_if<IsValueType<TPool>, typename ResultType<TPool>::type>::type create(const TPool&)
+        typename boost::enable_if<IsValueType<TPool>, typename result_type<TPool>::type>::type create(const TPool&)
         {
             return TValue<TGiven>::create();
         }
 
         template<typename TPool>
-        typename boost::enable_if<IsScopeType<TPool>, typename ResultType<TPool>::type>::type create(const TPool&)
+        typename boost::enable_if<IsScopeType<TPool>, typename result_type<TPool>::type>::type create(const TPool&)
         {
             return m_scope.create();
         }
@@ -169,8 +169,8 @@
         };
     };
 
-    } // namespace Aux
-    } // namespace Back
+    } // namespace aux
+    } // namespace back
     } // namespace di
 
     #endif
@@ -178,13 +178,13 @@
 #else
 
     template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    typename boost::enable_if<IsScopeType<TPool>, typename ResultType<TPool>::type>::type create(const TPool&, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg))
+    typename boost::enable_if<IsScopeType<TPool>, typename result_type<TPool>::type>::type create(const TPool&, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg))
     {
         return m_scope.create(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg));
     }
 
     template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    typename boost::enable_if<IsPoolType<TPool>, typename ResultType<TPool>::type>::type create(const TPool& p_pool, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, & BOOST_PP_INTERCEPT))
+    typename boost::enable_if<IsPoolType<TPool>, typename result_type<TPool>::type>::type create(const TPool& p_pool, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, & BOOST_PP_INTERCEPT))
     {
         return p_pool.template get<TInstance<> >();
     }

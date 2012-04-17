@@ -18,12 +18,12 @@
 
 namespace di
 {
-namespace Back
+namespace back
 {
-namespace Aux
+namespace aux
 {
 
-namespace Detail
+namespace detail
 {
 
 BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
@@ -46,7 +46,7 @@ struct GetValueType<T, typename boost::enable_if<has_value_type<T> >::type>
     typedef typename T::value_type type;
 };
 
-} // namespace Detail
+} // namespace detail
 
 template
 <
@@ -58,7 +58,7 @@ class Instance
 {
 public:
     typedef T ValueType;
-    typedef boost::variant<const T&, T&, boost::shared_ptr<T> > ResultType;
+    typedef boost::variant<const T&, T&, boost::shared_ptr<T> > result_type;
 
     explicit Instance(const T& p_member)
         : m_member(p_member)
@@ -72,13 +72,13 @@ public:
         : m_member(p_member)
     { }
 
-    ResultType get() const
+    result_type get() const
     {
         return m_member;
     }
 
 private:
-    ResultType m_member;
+    result_type m_member;
 };
 
 template
@@ -93,31 +93,31 @@ class Instance
         <
             boost::mpl::or_
             <
-                boost::is_same<typename Detail::GetValueType<T>::type, std::string>,
-                boost::is_pod<typename Detail::GetValueType<T>::type>
+                boost::is_same<typename detail::GetValueType<T>::type, std::string>,
+                boost::is_pod<typename detail::GetValueType<T>::type>
             >
         >::type
     >
 {
 public:
     typedef T ValueType;
-    typedef typename Detail::GetValueType<T>::type ResultType;
+    typedef typename detail::GetValueType<T>::type result_type;
 
-    explicit Instance(ResultType p_member)
+    explicit Instance(result_type p_member)
         : m_member(p_member)
     { }
 
-    ResultType get() const
+    result_type get() const
     {
         return m_member;
     }
 
 private:
-    ResultType m_member;
+    result_type m_member;
 };
 
-} // namespace Aux
-} // namespace Back
+} // namespace aux
+} // namespace back
 } // namespace di
 
 #endif

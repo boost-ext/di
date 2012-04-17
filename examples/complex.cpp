@@ -12,28 +12,28 @@
 
 using namespace boost::mpl;
 
-namespace Base    = di::Front::Base;
-namespace Fusion  = di::Front::Fusion;
+namespace base    = di::front::base;
+namespace fusion  = di::front::fusion;
 namespace Utility = di::Utility;
 
-struct BaseModule : Base::Module <
-    Base::Singletons <
+struct baseModule : base::Module <
+    base::Singletons <
         C1, C2, C3, C4
     >,
-    Base::PerRequests <
+    base::PerRequests <
         CIf0,
-        Base::Bind<CIf01>::InCallStack<C6, C5>,
-        Base::Bind<CIf02>::InCallStack<C7>,
-        Base::Bind<int, int_<1> >,
-        Base::Bind<int, int_<2> >::InCallStack<C8>,
-        Base::Bind<int, int_<3> >::InName< string<'1'> >::InCallStack<C7, C6, C4>,
-        Base::Bind<int, int_<4> >::InName< string<'2'> >::InCallStack<C7, C6, C4>,
-        Base::Bind<int, int_<5> >::InCallStack<C2>
+        base::Bind<CIf01>::InCallStack<C6, C5>,
+        base::Bind<CIf02>::InCallStack<C7>,
+        base::Bind<int, int_<1> >,
+        base::Bind<int, int_<2> >::InCallStack<C8>,
+        base::Bind<int, int_<3> >::InName< string<'1'> >::InCallStack<C7, C6, C4>,
+        base::Bind<int, int_<4> >::InName< string<'2'> >::InCallStack<C7, C6, C4>,
+        base::Bind<int, int_<5> >::InCallStack<C2>
     >
 > { };
 
-BOOST_AUTO(fusionModule, Fusion::Module<>()(
-    Fusion::PerRequests <
+BOOST_AUTO(fusionModule, fusion::Module<>()(
+    fusion::PerRequests <
         TransactionProvider
     >()
 ));
@@ -42,7 +42,7 @@ int main()
 {
     Utility::Injector
     <
-        BaseModule, BOOST_TYPEOF(fusionModule)
+        baseModule, BOOST_TYPEOF(fusionModule)
     >
     injector;
 

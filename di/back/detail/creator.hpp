@@ -28,26 +28,26 @@
 
     namespace di
     {
-    namespace Back
+    namespace back
     {
-    namespace Detail
+    namespace detail
     {
 
     template
     <
         typename TDeps,
         typename TPool,
-        template<typename, typename, typename = TDeps, typename = Aux::Dependency<Scopes::PerRequest, boost::mpl::_1, boost::mpl::_2> > class TBinder = Binder,
+        template<typename, typename, typename = TDeps, typename = aux::Dependency<Scopes::PerRequest, boost::mpl::_1, boost::mpl::_2> > class TBinder = Binder,
         template<typename, typename> class TConverter = Converter
     >
     class CreatorImpl
     {
     public:
         template<typename T, typename TCallStack, typename TEntries>
-        static typename TBinder<T, TCallStack>::type::template ResultType<TPool>::type execute(TEntries& p_entries, const TPool& p_pool)
+        static typename TBinder<T, TCallStack>::type::template result_type<TPool>::type execute(TEntries& p_entries, const TPool& p_pool)
         {
             typedef typename TBinder<T, TCallStack>::type ToBeCreated;
-            typedef typename Aux::UpdateCallStack<TCallStack, ToBeCreated>::type CallStack;
+            typedef typename aux::UpdateCallStack<TCallStack, ToBeCreated>::type CallStack;
             return executeImpl<ToBeCreated, CallStack, TEntries>(p_entries, p_pool);
         }
 
@@ -69,8 +69,8 @@
 
     template<typename TDeps, typename TPool> struct Creator : CreatorImpl<TDeps, TPool> { };
 
-    } // namespace Detail
-    } // namespace Back
+    } // namespace detail
+    } // namespace back
     } // namespace di
 
     #endif
@@ -78,12 +78,12 @@
 #else
 
     template<typename TDependency, typename TCallStack, typename TEntries>
-    static typename Aux::EnableIfCtorSize<TDependency, BOOST_PP_ITERATION(), typename TDependency::template ResultType<TPool>::type>::type
+    static typename aux::EnableIfCtorSize<TDependency, BOOST_PP_ITERATION(), typename TDependency::template result_type<TPool>::type>::type
     executeImpl(TEntries& p_entries, const TPool& p_pool)
     {
         #define DI_CREATOR_EXECUTE(z, n, _) BOOST_PP_COMMA_IF(n)                                         \
-             TConverter<typename TDependency::Scope, typename Aux::AtCtor<TDependency, n>::type>::execute(  \
-                execute<typename Aux::AtCtor<TDependency, n>::type, TCallStack>(p_entries, p_pool))
+             TConverter<typename TDependency::Scope, typename aux::AtCtor<TDependency, n>::type>::execute(  \
+                execute<typename aux::AtCtor<TDependency, n>::type, TCallStack>(p_entries, p_pool))
 
         return acquire<TDependency>(p_entries).create(
             p_pool BOOST_PP_COMMA_IF(BOOST_PP_ITERATION()) BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_CREATOR_EXECUTE, ~));

@@ -10,7 +10,7 @@
 #include "common/utility.hpp"
 #include "common/data.hpp"
 
-namespace Base    = di::Front::Base;
+namespace base    = di::front::base;
 namespace Utility = di::Utility;
 
 class PrintVisitor
@@ -26,9 +26,9 @@ public:
     }
 };
 
-struct VisitorModule : Base::Module
+struct VisitorModule : base::Module
     <
-        Base::Singletons <
+        base::Singletons <
             CIf0
         >
     >

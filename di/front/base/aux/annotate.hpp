@@ -9,11 +9,11 @@
 
 namespace di
 {
-namespace Front
+namespace front
 {
-namespace Base
+namespace base
 {
-namespace Aux
+namespace aux
 {
 
 template<typename TDerived>
@@ -27,9 +27,9 @@ struct Annotate
     };
 };
 
-} // namespace Aux
-} // namespace Base
-} // namespace Front
+} // namespace aux
+} // namespace base
+} // namespace front
 } // namespace di
 
 #endif

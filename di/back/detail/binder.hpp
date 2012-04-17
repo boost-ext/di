@@ -28,12 +28,12 @@
 
 namespace di
 {
-namespace Back
+namespace back
 {
-namespace Detail
+namespace detail
 {
 
-namespace Detail
+namespace detail
 {
 
 BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
@@ -55,7 +55,7 @@ struct EqualCallStack : boost::mpl::equal
 { };
 
 template<typename T1, typename T2>
-struct LessContextSize : boost::mpl::bool_<(Aux::GetContextSize<T1>::value > Aux::GetContextSize<T2>::value)>::type
+struct LessContextSize : boost::mpl::bool_<(aux::GetContextSize<T1>::value > aux::GetContextSize<T2>::value)>::type
 { };
 
 template<typename T, typename TBind>
@@ -64,15 +64,15 @@ struct Comparator : boost::mpl::apply<TBind, T>::type
 
 template<typename T, typename TDefault, typename = void>
 struct MakeDefaultDependency
-    : TDefault::template Rebind<typename Aux::MakePlain<T>::type, typename Aux::MakePlain<T>::type>
+    : TDefault::template Rebind<typename aux::make_plain<T>::type, typename aux::make_plain<T>::type>
 { };
 
 template<typename T, typename TDefault>
 struct MakeDefaultDependency<T, TDefault, typename boost::enable_if<has_element_type<T> >::type>
-    : TDefault::template Rebind<typename Aux::MakePlain<T>::type, typename Aux::MakePlain<typename T::value_type>::type>
+    : TDefault::template Rebind<typename aux::make_plain<T>::type, typename aux::make_plain<typename T::value_type>::type>
 { };
 
-} // namespace Detail
+} // namespace detail
 
 template
 <
@@ -97,23 +97,23 @@ struct Binder : boost::mpl::deref
                         <
                             boost::mpl::and_
                             <
-                                Detail::Comparator<typename Aux::MakePlain<T>::type, Aux::GetBind<boost::mpl::_2> >,
-                                Detail::EqualCallStack<TCallStack, Aux::GetContext<boost::mpl::_2> >
+                                detail::Comparator<typename aux::make_plain<T>::type, aux::GetBind<boost::mpl::_2> >,
+                                detail::EqualCallStack<TCallStack, aux::GetContext<boost::mpl::_2> >
                             >,
                             boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>,
                             boost::mpl::_1
                         >
                     >::type,
-                    Detail::LessContextSize<boost::mpl::_1, boost::mpl::_2>
+                    detail::LessContextSize<boost::mpl::_1, boost::mpl::_2>
                 >::type,
-                typename Detail::MakeDefaultDependency<T, TDefault>::type
+                typename detail::MakeDefaultDependency<T, TDefault>::type
             >::type
         >
     >::type
 { };
 
-} // namespace Detail
-} // namespace Back
+} // namespace detail
+} // namespace back
 } // namespace di
 
 #endif

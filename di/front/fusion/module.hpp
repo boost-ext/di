@@ -32,34 +32,34 @@
 
     namespace di
     {
-    namespace Front
+    namespace front
     {
-    namespace Fusion
+    namespace fusion
     {
 
-    template<typename TScope> struct Scope : Base::Aux::Scope<TScope> { };
-    template<typename TExpected, typename TGiven = TExpected> struct Bind : Base::Aux::Bind<TExpected, TGiven> { };
+    template<typename TScope> struct Scope : base::aux::Scope<TScope> { };
+    template<typename TExpected, typename TGiven = TExpected> struct Bind : base::aux::Bind<TExpected, TGiven> { };
 
-    template<typename TExpected, typename TGiven = TExpected> struct Singleton : Scope<Back::Scopes::Singleton>::Bind< Bind<TExpected, TGiven> > { };
-    template<typename T> struct Singleton<T, T> : Scope<Back::Scopes::Singleton>::Bind<T> { };
+    template<typename TExpected, typename TGiven = TExpected> struct Singleton : Scope<back::Scopes::Singleton>::Bind< Bind<TExpected, TGiven> > { };
+    template<typename T> struct Singleton<T, T> : Scope<back::Scopes::Singleton>::Bind<T> { };
 
-    template<typename TExpected, typename TGiven = TExpected> struct PerRequest : Scope<Back::Scopes::PerRequest>::Bind< Bind<TExpected, TGiven> > { };
-    template<typename T> struct PerRequest<T, T> : Scope<Back::Scopes::PerRequest>::Bind<T> { };
+    template<typename TExpected, typename TGiven = TExpected> struct PerRequest : Scope<back::Scopes::PerRequest>::Bind< Bind<TExpected, TGiven> > { };
+    template<typename T> struct PerRequest<T, T> : Scope<back::Scopes::PerRequest>::Bind<T> { };
 
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    struct Singletons : Scope<Back::Scopes::Singleton>::Bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
+    struct Singletons : Scope<back::Scopes::Singleton>::Bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
 
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    struct PerRequests : Scope<Back::Scopes::PerRequest>::Bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
+    struct PerRequests : Scope<back::Scopes::PerRequest>::Bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
 
     template
     <
         typename TSeq = boost::mpl::vector0<>
     >
-    class Module : public Back::Module
+    class Module : public back::Module
     {
     public:
-        typedef Back::Aux::Pool<TSeq> Pool;
+        typedef back::aux::Pool<TSeq> Pool;
 
         struct Dependencies : boost::mpl::fold
             <
@@ -69,7 +69,7 @@
                 <
                     boost::mpl::if_
                     <
-                        boost::is_base_of<Base::Aux::Internal, boost::mpl::_2>,
+                        boost::is_base_of<base::aux::Internal, boost::mpl::_2>,
                         boost::mpl::_2,
                         PerRequest<boost::mpl::_2>
                     >,
@@ -90,8 +90,8 @@
         Pool m_pool;
     };
 
-    } // namespace Fusion
-    } // namespace Front
+    } // namespace fusion
+    } // namespace front
     } // namespace di
 
     #endif
