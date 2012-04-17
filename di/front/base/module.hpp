@@ -70,25 +70,25 @@
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
     class module : public back::module
     {
-        template<typename TInstance, typename T> struct IsSameinstance : boost::mpl::or_
+        template<typename TInstance, typename T> struct is_same_instance : boost::mpl::or_
             <
                 boost::is_same<typename TInstance::name, T>,
                 boost::is_same<typename TInstance::value_type, T>
             >
         { };
 
-        template<typename TSeq, typename T> struct FindinstanceType
-            : boost::mpl::find_if<TSeq, IsSameinstance<boost::mpl::_1, T> >::type
+        template<typename TSeq, typename T> struct find_instance_type
+            : boost::mpl::find_if<TSeq, is_same_instance<boost::mpl::_1, T> >::type
         { };
 
         template<typename T, typename Enable = void>
-        struct MakeAnnotation
+        struct make_annotation
         {
             typedef typename annotate<back::aux::instance<T> >::template with<> type;
         };
 
         template<typename T>
-        struct MakeAnnotation<T, typename boost::enable_if<boost::is_base_of<base::aux::internal, T> >::type>
+        struct make_annotation<T, typename boost::enable_if<boost::is_base_of<base::aux::internal, T> >::type>
         {
             typedef typename T::template rebind<back::scopes::singleton>::type dependency;
             typedef back::aux::instance<typename dependency::expected, typename dependency::context> instance;
@@ -112,7 +112,7 @@
                         boost::mpl::back_inserter<boost::mpl::_1>
                     >
                 >::type,
-                MakeAnnotation<boost::mpl::_1>
+                make_annotation<boost::mpl::_1>
             >::type
         { };
 
@@ -153,11 +153,11 @@
         #include BOOST_PP_ITERATE()
 
         template<typename T, typename Tvalue>
-        inline static typename boost::disable_if<boost::is_same<FindinstanceType<externals, T>, boost::mpl::end<externals> >, typename FindinstanceType<externals, T>::type::derived>::type
+        inline static typename boost::disable_if<boost::is_same<find_instance_type<externals, T>, boost::mpl::end<externals> >, typename find_instance_type<externals, T>::type::derived>::type
         set(Tvalue p_value)
         {
-            typedef typename FindinstanceType<externals, T>::type Annotation;
-            return typename Annotation::derived(p_value);
+            typedef typename find_instance_type<externals, T>::type annotation;
+            return typename annotation::derived(p_value);
         }
 
         const pool& get_pool() const { return m_pool; }

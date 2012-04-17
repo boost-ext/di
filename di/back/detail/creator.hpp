@@ -81,14 +81,14 @@
     static typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION(), typename TDependency::template result_type<TPool>::type>::type
     execute_impl(TEntries& p_entries, const TPool& p_pool)
     {
-        #define DI_CREATOR_EXECutE(z, n, _) BOOST_PP_COMMA_IF(n)                                         \
+        #define DI_CREATOR_EXECUTE(z, n, _) BOOST_PP_COMMA_IF(n)                                         \
              TConverter<typename TDependency::scope, typename aux::at_ctor<TDependency, n>::type>::execute(  \
                 execute<typename aux::at_ctor<TDependency, n>::type, TCallStack>(p_entries, p_pool))
 
         return acquire<TDependency>(p_entries).create(
-            p_pool BOOST_PP_COMMA_IF(BOOST_PP_ITERATION()) BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_CREATOR_EXECutE, ~));
+            p_pool BOOST_PP_COMMA_IF(BOOST_PP_ITERATION()) BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_CREATOR_EXECUTE, ~));
 
-        #undef DI_CREATOR_EXECutE
+        #undef DI_CREATOR_EXECUTE
     }
 
 #endif

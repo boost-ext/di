@@ -47,8 +47,8 @@
         };
 
     public:
-        template<typename T, typename TCallStack, typename Tvisitor>
-        static void execute(const Tvisitor& p_visitor)
+        template<typename T, typename TCallStack, typename TVisitor>
+        static void execute(const TVisitor& p_visitor)
         {
             typedef typename TBinder<T, TCallStack>::type ToBeCreated;
             typedef typename aux::update_call_stack<TCallStack, ToBeCreated>::type CallStack;
@@ -74,12 +74,12 @@
     {
         p_visitor.template operator()< dependency<T, TCallStack, TDependency> >();
 
-        #define DI_VISITOR_EXECutE(z, n, _)\
+        #define DI_VISITOR_EXECUTE(z, n, _)\
             execute<typename aux::at_ctor<TDependency, n>::type, TCallStack>(p_visitor);
 
-        BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_VISITOR_EXECutE, ~);
+        BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_VISITOR_EXECUTE, ~);
 
-        #undef DI_VISITOR_EXECutE
+        #undef DI_VISITOR_EXECUTE
     }
 
 #endif
