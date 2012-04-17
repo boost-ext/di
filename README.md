@@ -1,4 +1,4 @@
-QDeps - C++ Dependency Injection Framework
+C++ Dependency Injection Framework
 ================================
 * [Dependency Injection](http://en.wikipedia.org/wiki/Dependency_injection)
 * [The Clean Code Talks - Don't Look For Things!](http://www.youtube.com/watch?v=RlfLCWKxHJ0&feature=BFa&list=PLED6CA927B41FF5BD)
@@ -6,177 +6,177 @@ QDeps - C++ Dependency Injection Framework
 
 To get started
 -----
-`git clone git://github.com/QSrc/QDeps.git`
+`git clone git://github.com/qsrc/di.git`
 
 Documentation
 -----
-* [Wiki](http://qsrc.github.com/QDeps)
+* [Wiki](http://qsrc.github.com/di)
 
 Usage
 -----
 
 ``` C++
-#include <QDeps/QDeps.hpp>
+#include <di/di.hpp>
 
-struct NumOfLimits { };
-struct Allocator : IAllocator { QDEPS_CTOR(Allocator, int, shared_ptr<Load>) { } };
-struct Data : IData { QDEPS_CTOR(Named<CapacityLimit, Down>, Named<CapacityLimit, Up>) { } };
-struct Storage { QDEPS_CTOR_TRAITS(Named<int, Up>, float); Storage(int, float) { } };
-template<> struct CtorTraits<Load> { static void ctor(shared_ptr<Storage>); };
-struct App { QDEPS_CTOR(Storage, const shared_ptr<LimitChecker>&) { } };
+struct num_of_limits { };
+struct allocator : iallocator { DI_CTOR(allocator, int, shared_ptr<load>) { } };
+struct data : idata { DI_CTOR(named<capacity_limit, down>, named<capacity_limit, up>) { } };
+struct storage { DI_CTOR_TRAITS(named<int, up>, float); storage(int, float) { } };
+template<> struct ctor_traits<load> { static void ctor(shared_ptr<storage>); };
+struct app { DI_CTOR(storage, const shared_ptr<limit_checker>&) { } };
 ...
 ```
 
 ``` C++
-struct SimpleModule : Base::Module <                            // simple module
-    PerRequests <                                               // new instance each time
-        Allocator                                               // of IAllocator -> Allocator
+struct simple_module : base::module <                           // simple module
+    per_requests <                                              // new instance each time
+        allocator                                               // of iallocator -> allocator
     >,
-    Singletons <                                                // the same instance
-        Data, Storage                                           // of IData->Data, Storage
+    singletons <                                                // the same instance
+        data, storage                                           // of idata->data, storage
     >
 > { };
 
-App app = Injector<SimpleModule>().create<App>();               // create App and all dependencies
+app obj = injector<simple_module>().create<app>();              // create app and all dependencies
 ```
 
 ``` C++
-BOOST_AUTO(fusionModule, Fusion::Module()(                      // simple fusion module
-    Singletons <
-        Storage
+BOOST_AUTO(fusion_module, fusion::module()(                     // simple fusion module
+    singletons <
+        storage
     >(),
-    PerRequests <
-        Bind<Limit>::InName<On>::InCallStack<Storage, Load>,    // bind (in name) only when Storage and
-        PriorityQueue                                           // Load were created in given order
+    per_requests <
+        bind<Limit>::in_name<on>::in_call_stack<storage, load>, // bind (in name) only when storage and
+        priority_queue                                          // load were created in given order
     >(),
-    Bind<int>::InCallStack<Selector>::To(87)                    // bind external value
+    bind<int>::in_call_stack<selector>::to(87)                  // bind external value
 ));
 
-Injector<BOOST_TYPEOF(fusionModule)> injector(fusionModule);    // install fusion module
+injector<BOOST_TYPEOF(fusion_module)> inj(fusion_module);       // install fusion module
 
-shared_ptr<App> app = injector.create< shared_ptr<App> >();     // create App as shared_ptr
+shared_ptr<app> obj = injector.create< shared_ptr<app> >();     // create app as shared_ptr
 ```
 
 ``` C++
-typedef Base::Module <                                          // complex base module
-    PerRequests <                                               // always new instance
-        Bind<IMap, Map>,                                        // bind IMap to Map implementation
-        Data,                                                   // bind Data to interface
-        Allocator,                                              // from which Data is inhereting
-        Bind<LimitChecker>::InCallStack<Capacity>               // bind implementation LimitChecker
-    >,                                                          // only when Capacity class is created
-    Singletons <
-        Bind<CapacityLimit>::InName<Down>,                      // bind using Named parameter
-        Bind<CapacityLimit>::InName<Up>
+typedef base::module <                                          // complex base module
+    per_requests <                                              // always new instance
+        bind<imap, map>,                                        // bind imap to map implementation
+        data,                                                   // bind data to interface
+        allocator,                                              // from which data is inhereting
+        bind<limit_checker>::in_call_stack<capacity>            // bind implementation limit_checker
+    >,                                                          // only when capacity class is created
+    singletons <
+        bind<capacity_limit>::in_name<down>,                    // bind using named parameter
+        bind<capacity_limit>::in_name<up>
     >,
-    Singleton<Calculator>,                                      // one line notation - Singleton
-    PerRequest<ISetup, Setup>,                                  // one line notation - PerRequest
-    Scope<CustomScope>::Bind <                                  // custom scope
-        Stack
+    singleton<calculator>,                                      // one line notation - singleton
+    per_request<isetup, setup>,                                 // one line notation - per_request
+    scope<custom_scope>::bind <                                 // custom scope
+        stack
     >,
-    Externals <                                                 // outside objects
-        IConfig,
-        Annotate< Bind<int>::InCallStack<C> >::With<UpInt>      // bind to annotation - simplify setting
+    externals <                                                 // outside objects
+        iconfig,
+        annotate< bind<int>::in_call_stack<C> >::with<up_int>   // bind to annotation - simplify setting
     >
-> BaseModule;
+> base_module;
 
-Injector<BaseModule> injector(                                  // create injector from 2 modules
-    BaseModule(                                                 // initialize BaseModule externals
-        BaseModule::Set<IConfig>(config),                       // initialize IConfig by Config
-        BaseModule::Set<UpInt>(42)
+injector<base_module> injector(                                 // create injector from 2 modules
+    base_module(                                                // initialize base_module externals
+        base_module::set<iconfig>(config),                      // initialize iconfig by Config
+        base_module::set<up_int>(42)
     )
 );
 
-shared_ptr<App> app = injector.create< shared_ptr<App> >();     // create App as shared_ptr
+shared_ptr<app> obj = injector.create< shared_ptr<app> >();     // create app as shared_ptr
 ```
 
 ``` C++
-Injector<> emptyInjector;                                       // default empty injector
+injector<> empty_injector;                                      // default empty injector
 
-BOOST_AUTO(injector, emptyInjector.install(                     // install 2 modules
-    BaseModule(
-        BaseModule::Set<IConfig>(Config),
-        BaseModule::Set<UpInt>(42)
+BOOST_AUTO(injector, empty_injector.install(                    // install 2 modules
+    base_module(
+        base_module::set<iconfig>(config),
+        base_module::set<up_int>(42)
     ),
-    fusionModule
+    fusion_module
 );
 
-App app = injector.create<App>();                               // and create App as lvalue
+app obj = injector.create<app>();                               // and create App as lvalue
 ```
 
 ``` C++
-class TextVisitor
+class text_visitor
 {
     template<typename T> void operator()() const
     {
-        std::cout << typeid(typename T::Type).name()            // ex: boost::shared_ptr<I>
-          << ", " << typeid(typename T::Expected).name()        // ex: I
-          << ", " << typeid(typename T::Given).name()           // ex: Impl
-          << ", " << typeid(typename T::Context).name();        // ex: vector<C1, C2>
+        std::cout << typeid(typename T::type).name()            // ex: boost::shared_ptr<I>
+          << ", " << typeid(typename T::expected).name()        // ex: I
+          << ", " << typeid(typename T::given).name()           // ex: Impl
+          << ", " << typeid(typename T::context).name();        // ex: vector<C1, C2>
     }
 };
 
-injector.visit<C3>(TextVisitor());                              // apply TextVisitor for C3
+injector.visit<C3>(text_visitor());                             // apply text_visitor for C3
 ```
 
 ``` C++
-struct Action {
-    QDEPS_CTOR(Action, shared_ptr<Data>, shared_ptr<MsgSender>) { ... }
-    template<typename Event> void operator()(const Event&) { }
+struct action {
+    DI_CTOR(action, shared_ptr<data>, shared_ptr<msg_sender>) { ... }
+    template<typename Event> void operator()(const event&) { }
 };
 
-struct Guard {
-    QDEPS_CTOR(Guard, shared_ptr<Common>) { ... }
-    template<typename Event> bool operator()(const Event&) { return false; }
+struct guard {
+    DI_CTOR(guard, shared_ptr<common>) { ... }
+    template<typename Event> bool operator()(const event&) { return false; }
 };
 
-class Example : public QFsm::Fsm
+class example : public qfsm::fsm
 {
-    class S1 { };
-    class S2 { };
+    class s1 { };
+    class s2 { };
 
 public:
-    typedef QFsm::TransitionTable
+    typedef qfsm::transition_table
     <
-        Transition < S1 , e1 , S2 , Action , Guard >
+        transition < s1 , e1 , s2 , action , guard >
     >
-    TransitionTable;
+    transition_table;
 };
 
-Front::Fsm<Example> fsm =
-    Injector<>().create<Front::Fsm<Example> >();                // create fsm with actions and guards
+qfsm::front::fsm<example> fsm =
+    injector<>().create<front::fsm<example> >();                // create fsm with actions and guards
 ```
 Features
 -----
-    * Injection via constructor
-    * Configuration via front ends (base, fusion)
-    * Binding via interface/implementation
-    * Binding via is_base_of (smart binding)
-    * Binding via call_stack (path binding)
-    * Binding via external objects
-    * Binding via named parameters
-    * Providers
-    * Scopes (PerRequest, Singleton, Session, Custom Scopes)
-    * Modules
-    * Visitors
-    * Policies (ex. circular dependencies detection)
-    * Compile time approach (supports C++98, C++11)
+    * injection via constructor
+    * configuration via front ends (base, fusion)
+    * binding via interface/implementation
+    * binding via is_base_of (smart binding)
+    * binding via call_stack (path binding)
+    * binding via external objects
+    * binding via named parameters
+    * providers
+    * scopes (per_request, singleton, session, custom scope)
+    * modules
+    * visitors
+    * policies (ex. circular dependencies detection)
+    * compile time approach (supports C++98, C++11)
 
 Requirements
 ------------
-    Code:
+    code:
         * c++ 98 standard-compliant compiler supporting BOOST_TYPEOF
         * boost >= 1.43 (needed files from boost_1_49 are in Externals/boost)
 
-    Tests:
+    test:
         * gnu-compatible Make >= 3.81
         * [optional] lcov, cppcheck, scan-build, valgrind
 
-    Documentation:
+    documentation:
         * vim >= 7.3
         * vimwiki >= 1.2 (vimwiki 1.2 is in Externals/vimwiki)
 
-    Supported compilers (successfully tested):
+    supported compilers (successfully tested):
         * gcc   >= 4.3
         * clang >= 3.0
 
@@ -188,11 +188,11 @@ Tests & Examples & Doc & Diagnostics
 
 Install
 ------------
-    [sudo] make install   # copy QDeps to /usr/include
+    [sudo] make install   # copy di to /usr/include
 
 C++ Dependency Injection Frameworks
 ------------
-* https://github.com/QSrc/QDeps
+* https://github.com/qsrc/di
 * https://github.com/phs/sauce
 * https://bitbucket.org/cheez/dicpp
 * http://code.google.com/p/spring-cpp
