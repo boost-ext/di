@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef QDEPS_BACK_FACTORY_HPP
-#define QDEPS_BACK_FACTORY_HPP
+#ifndef DI_BACK_FACTORY_HPP
+#define DI_BACK_FACTORY_HPP
 
 #include <boost/mpl/inherit_linearly.hpp>
 #include <boost/mpl/inherit.hpp>

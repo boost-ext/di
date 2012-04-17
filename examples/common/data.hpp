@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef QDEPS_EXAMPLES_COMMON_DATA_HPP
-#define QDEPS_EXAMPLES_COMMON_DATA_HPP
+#ifndef DI_EXAMPLES_COMMON_DATA_HPP
+#define DI_EXAMPLES_COMMON_DATA_HPP
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
@@ -35,7 +35,7 @@ struct CIf02 : If0
 
 struct CIf03 : If0
 {
-    QDEPS_CTOR(CIf03, int i, double d)
+    DI_CTOR(CIf03, int i, double d)
         : i(i), d(d)
     { }
 
@@ -57,7 +57,7 @@ struct C1
 
 struct C2
 {
-    QDEPS_CTOR(C2, int i, double d, char c)
+    DI_CTOR(C2, int i, double d, char c)
         : i(i), d(d), c(c)
     { }
 
@@ -68,7 +68,7 @@ struct C2
 
 struct C3
 {
-    QDEPS_CTOR(explicit C3, int i = 0)
+    DI_CTOR(explicit C3, int i = 0)
         : i(i)
     { }
 
@@ -77,7 +77,7 @@ struct C3
 
 struct C4
 {
-    QDEPS_CTOR(C4, boost::shared_ptr<C3> c3, di::Utility::Named<int, boost::mpl::string<'1'> > i1, di::Utility::Named<int, boost::mpl::string<'2'> > i2)
+    DI_CTOR(C4, boost::shared_ptr<C3> c3, di::Utility::Named<int, boost::mpl::string<'1'> > i1, di::Utility::Named<int, boost::mpl::string<'2'> > i2)
         : c3(c3), i1(i1), i2(i2)
     { }
 
@@ -88,7 +88,7 @@ struct C4
 
 struct C5
 {
-    QDEPS_CTOR(C5, boost::shared_ptr<If0> if0, boost::shared_ptr<C2> c2, boost::shared_ptr<C1> c1)
+    DI_CTOR(C5, boost::shared_ptr<If0> if0, boost::shared_ptr<C2> c2, boost::shared_ptr<C1> c1)
         : if0(if0), c2(c2), c1(c1)
     { }
 
@@ -99,7 +99,7 @@ struct C5
 
 struct C6
 {
-    QDEPS_CTOR(C6, boost::shared_ptr<C3> c3, const boost::shared_ptr<C4>& c4, C5 c5)
+    DI_CTOR(C6, boost::shared_ptr<C3> c3, const boost::shared_ptr<C4>& c4, C5 c5)
         : c3(c3), c4(c4), c5(c5)
     { }
 
@@ -110,7 +110,7 @@ struct C6
 
 struct C7
 {
-    QDEPS_CTOR(C7, boost::shared_ptr<If0> if0, boost::shared_ptr<C6> c6)
+    DI_CTOR(C7, boost::shared_ptr<If0> if0, boost::shared_ptr<C6> c6)
         : if0(if0), c6(c6)
     { }
 
@@ -120,7 +120,7 @@ struct C7
 
 struct C8
 {
-    QDEPS_CTOR(C8, boost::shared_ptr<C7> c7, C0 c0, boost::shared_ptr<C1> c1, int i)
+    DI_CTOR(C8, boost::shared_ptr<C7> c7, C0 c0, boost::shared_ptr<C1> c1, int i)
         : c7(c7), c0(c0), c1(c1), i(i)
     { }
 
@@ -141,7 +141,7 @@ struct Transaction
 
 struct TransactionProvider : di::Utility::Provider< boost::shared_ptr<Transaction> >
 {
-    QDEPS_CTOR(TransactionProvider, boost::shared_ptr<C3> c3)
+    DI_CTOR(TransactionProvider, boost::shared_ptr<C3> c3)
         : c3(c3)
     { }
 
@@ -155,7 +155,7 @@ struct TransactionProvider : di::Utility::Provider< boost::shared_ptr<Transactio
 
 struct TransactionUsage
 {
-    QDEPS_CTOR(TransactionUsage, boost::shared_ptr< di::Utility::Provider< boost::shared_ptr<Transaction> > > p)
+    DI_CTOR(TransactionUsage, boost::shared_ptr< di::Utility::Provider< boost::shared_ptr<Transaction> > > p)
         : p(p)
     { }
 

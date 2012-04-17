@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef QDEPS_BACK_SCOPE_PERREQUEST_HPP
-    #define QDEPS_BACK_SCOPE_PERREQUEST_HPP
+    #ifndef DI_BACK_SCOPE_PERREQUEST_HPP
+    #define DI_BACK_SCOPE_PERREQUEST_HPP
 
     #include <boost/shared_ptr.hpp>
     #include <boost/make_shared.hpp>
@@ -16,7 +16,7 @@
     #include <boost/preprocessor/repetition/enum_binary_params.hpp>
     #include "di/Config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, QDEPS_FUNCTION_ARITY_LIMIT_SIZE, "di/Back/Scopes/PerRequest.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, DI_FUNCTION_ARITY_LIMIT_SIZE, "di/Back/Scopes/PerRequest.hpp"))
 
     namespace di
     {

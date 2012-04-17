@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef QDEPS_BACK_POLICY_HPP
-#define QDEPS_BACK_POLICY_HPP
+#ifndef DI_BACK_POLICY_HPP
+#define DI_BACK_POLICY_HPP
 
 #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>

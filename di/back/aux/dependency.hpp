@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef QDEPS_BACK_AUX_DEPENDENCY_HPP
-    #define QDEPS_BACK_AUX_DEPENDENCY_HPP
+    #ifndef DI_BACK_AUX_DEPENDENCY_HPP
+    #define DI_BACK_AUX_DEPENDENCY_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/enum_params.hpp>
@@ -31,7 +31,7 @@
     #include "di/Front/Ctor.hpp"
     #include "di/Config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, QDEPS_FUNCTION_ARITY_LIMIT_SIZE, "di/Back/Aux/Dependency.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, DI_FUNCTION_ARITY_LIMIT_SIZE, "di/Back/Aux/Dependency.hpp"))
 
     namespace di
     {
@@ -52,10 +52,10 @@
     >
     class Dependency
     {
-        BOOST_MPL_HAS_XXX_TRAIT_DEF(QDEPS_CTOR_UNIQUE_NAME)
+        BOOST_MPL_HAS_XXX_TRAIT_DEF(DI_CTOR_UNIQUE_NAME)
         BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
-        QDEPS_STATIC_ASSERT(
+        DI_STATIC_ASSERT(
             !has_element_type<TGiven>::value,
             GIVEN_TYPE_WITH_ELEMENT_TYPE,
             (TGiven)
@@ -79,7 +79,7 @@
 
         template<typename Dummy>
         struct CtorImpl<true, Dummy>
-            : boost::function_types::parameter_types<BOOST_TYPEOF_TPL(TGiven::QDEPS_CTOR_UNIQUE_NAME::ctor)>::type
+            : boost::function_types::parameter_types<BOOST_TYPEOF_TPL(TGiven::DI_CTOR_UNIQUE_NAME::ctor)>::type
         { };
 
     public:
@@ -90,7 +90,7 @@
         typedef TBind Bind;
 
         struct Ctor
-            : CtorImpl<BOOST_PP_CAT(has_, QDEPS_CTOR_UNIQUE_NAME)<Given>::value>::type
+            : CtorImpl<BOOST_PP_CAT(has_, DI_CTOR_UNIQUE_NAME)<Given>::value>::type
         { };
 
         template<typename, typename = void> struct ResultType;

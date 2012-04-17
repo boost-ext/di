@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef QDEPS_BACK_POLICIES_CHECKFORCREATIONOWNERSHIP_HPP
-#define QDEPS_BACK_POLICIES_CHECKFORCREATIONOWNERSHIP_HPP
+#ifndef DI_BACK_POLICIES_CHECKFORCREATIONOWNERSHIP_HPP
+#define DI_BACK_POLICIES_CHECKFORCREATIONOWNERSHIP_HPP
 
 #include <boost/mpl/bool.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -29,7 +29,7 @@ public:
     template<typename TDeps, typename TGiven>
     class Assert<TDeps, TGiven, typename boost::enable_if< boost::is_reference<TGiven> >::type> : public boost::mpl::false_
     {
-       QDEPS_STATIC_ASSERT(
+       DI_STATIC_ASSERT(
             false,
             CREATION_OWNERSHIP_IS_NOT_CLEAR,
             (TGiven)

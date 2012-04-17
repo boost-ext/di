@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef QDEPS_FRONT_BASE_SCOPE_HPP
-#define QDEPS_FRONT_BASE_SCOPE_HPP
+#ifndef DI_FRONT_BASE_SCOPE_HPP
+#define DI_FRONT_BASE_SCOPE_HPP
 
 #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>

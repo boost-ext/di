@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef QDEPS_BACK_AUX_POOL_HPP
-    #define QDEPS_BACK_AUX_POOL_HPP
+    #ifndef DI_BACK_AUX_POOL_HPP
+    #define DI_BACK_AUX_POOL_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/enum_params.hpp>
@@ -67,12 +67,12 @@
     #endif
 
 #else
-    #define QDEPS_DERIVES_IMPL(_, n, seq) BOOST_PP_COMMA_IF(n) public boost::mpl::at_c<seq, n>::type
-    #define QDEPS_CTOR_INITLIST_IMPL(_, n, na) BOOST_PP_COMMA_IF(n) T##n(p_arg##n)
+    #define DI_DERIVES_IMPL(_, n, seq) BOOST_PP_COMMA_IF(n) public boost::mpl::at_c<seq, n>::type
+    #define DI_CTOR_INITLIST_IMPL(_, n, na) BOOST_PP_COMMA_IF(n) T##n(p_arg##n)
 
     template<typename TSeq>
     class Pool<TSeq, typename boost::enable_if_c< boost::mpl::size<TSeq>::value == BOOST_PP_ITERATION()>::type>
-        : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), QDEPS_DERIVES_IMPL, TSeq)
+        : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_DERIVES_IMPL, TSeq)
     {
         BOOST_MPL_HAS_XXX_TRAIT_DEF(Seq)
 
@@ -102,7 +102,7 @@
 
         template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename T)>
         Pool(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const T, &p_arg))
-            : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), QDEPS_CTOR_INITLIST_IMPL, ~)
+            : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_CTOR_INITLIST_IMPL, ~)
         { }
 
         template<typename T> struct ResultType
@@ -117,8 +117,8 @@
         }
     };
 
-    #undef QDEPS_DERIVES_IMPL
-    #undef QDEPS_CTOR_INITLIST_IMPL
+    #undef DI_DERIVES_IMPL
+    #undef DI_CTOR_INITLIST_IMPL
 
 #endif
 

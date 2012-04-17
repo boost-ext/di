@@ -4,26 +4,26 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef QDEPS_CONFIG_HPP
-#define QDEPS_CONFIG_HPP
+#ifndef DI_CONFIG_HPP
+#define DI_CONFIG_HPP
 
 #include <boost/mpl/assert.hpp>
 #include <boost/config.hpp>
 
-#if !defined(QDEPS_CTOR_CFG_VA_ARGS) && !defined(QDEPS_CTOR_CFG_BRACKET)
-# define QDEPS_CTOR_CFG_VA_ARGS
+#if !defined(DI_CTOR_CFG_VA_ARGS) && !defined(DI_CTOR_CFG_BRACKET)
+# define DI_CTOR_CFG_VA_ARGS
 #endif
 
-#if !defined(QDEPS_FUNCTION_ARITY_LIMIT_SIZE)
-# define QDEPS_FUNCTION_ARITY_LIMIT_SIZE 10
+#if !defined(DI_FUNCTION_ARITY_LIMIT_SIZE)
+# define DI_FUNCTION_ARITY_LIMIT_SIZE 10
 #endif
 
-#if !defined(QDEPS_CTOR_UNIQUE_NAME)
-# define QDEPS_CTOR_UNIQUE_NAME ctor__
+#if !defined(DI_CTOR_UNIQUE_NAME)
+# define DI_CTOR_UNIQUE_NAME ctor__
 #endif
 
-#ifndef QDEPS_STATIC_ASSERT
-# define QDEPS_STATIC_ASSERT(cond, expr, types) BOOST_MPL_ASSERT_MSG(cond, expr, types)
+#ifndef DI_STATIC_ASSERT
+# define DI_STATIC_ASSERT(cond, expr, types) BOOST_MPL_ASSERT_MSG(cond, expr, types)
 #endif
 
 #if 0

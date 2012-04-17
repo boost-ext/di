@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef QDEPS_BACK_POLICIES_CHECKFORCIRCULARDEPENDENCIES_HPP
-    #define QDEPS_BACK_POLICIES_CHECKFORCIRCULARDEPENDENCIES_HPP
+    #ifndef DI_BACK_POLICIES_CHECKFORCIRCULARDEPENDENCIES_HPP
+    #define DI_BACK_POLICIES_CHECKFORCIRCULARDEPENDENCIES_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
@@ -27,7 +27,7 @@
     #include "di/Back/Scopes/PerRequest.hpp"
     #include "di/Config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, QDEPS_FUNCTION_ARITY_LIMIT_SIZE, "di/Back/Policies/CheckForCircularDependencies.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, DI_FUNCTION_ARITY_LIMIT_SIZE, "di/Back/Policies/CheckForCircularDependencies.hpp"))
 
     namespace di
     {
@@ -80,7 +80,7 @@
 
 #else
 
-    #define QDEPS_CHECK_FOR_CIRCULAR_DEPENDENCIES_IMPL(z, n, _) BOOST_PP_COMMA_IF(n)\
+    #define DI_CHECK_FOR_CIRCULAR_DEPENDENCIES_IMPL(z, n, _) BOOST_PP_COMMA_IF(n)\
         CircularDependencies<typename Aux::AtCtor<TDependency, n>::type, TCallStack>
 
     template<typename TDependency, typename TCallStack>
@@ -92,7 +92,7 @@
             typename boost::enable_if< IsUniqueCallStack<TCallStack> >::type
         >
     BOOST_PP_EXPR_IF(BOOST_PP_ITERATION(), :)
-        BOOST_PP_REPEAT(BOOST_PP_ITERATION(), QDEPS_CHECK_FOR_CIRCULAR_DEPENDENCIES_IMPL, ~)
+        BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_CHECK_FOR_CIRCULAR_DEPENDENCIES_IMPL, ~)
     { };
 
     template<typename TDependency, typename TCallStack>
@@ -106,14 +106,14 @@
     :
         boost::mpl::false_
     {
-       QDEPS_STATIC_ASSERT(
+       DI_STATIC_ASSERT(
             false,
             CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED,
             (typename TDependency::Given, TCallStack)
         );
     };
 
-    #undef QDEPS_CHECK_FOR_CIRCULAR_DEPENDENCIES_IMPL
+    #undef DI_CHECK_FOR_CIRCULAR_DEPENDENCIES_IMPL
 
 #endif
 

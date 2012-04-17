@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef QDEPS_FRONT_BASE_MODULE_HPP
-    #define QDEPS_FRONT_BASE_MODULE_HPP
+    #ifndef DI_FRONT_BASE_MODULE_HPP
+    #define DI_FRONT_BASE_MODULE_HPP
 
     #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
     #include <boost/preprocessor/repetition/enum_params.hpp>

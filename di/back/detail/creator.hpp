@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef QDEPS_BACK_DETAIL_CREATOR_HPP
-    #define QDEPS_BACK_DETAIL_CREATOR_HPP
+    #ifndef DI_BACK_DETAIL_CREATOR_HPP
+    #define DI_BACK_DETAIL_CREATOR_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
@@ -24,7 +24,7 @@
     #include "di/Back/Scopes/PerRequest.hpp"
     #include "di/Config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, QDEPS_FUNCTION_ARITY_LIMIT_SIZE, "di/Back/Detail/Creator.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, DI_FUNCTION_ARITY_LIMIT_SIZE, "di/Back/Detail/Creator.hpp"))
 
     namespace di
     {
@@ -81,14 +81,14 @@
     static typename Aux::EnableIfCtorSize<TDependency, BOOST_PP_ITERATION(), typename TDependency::template ResultType<TPool>::type>::type
     executeImpl(TEntries& p_entries, const TPool& p_pool)
     {
-        #define QDEPS_CREATOR_EXECUTE(z, n, _) BOOST_PP_COMMA_IF(n)                                         \
+        #define DI_CREATOR_EXECUTE(z, n, _) BOOST_PP_COMMA_IF(n)                                         \
              TConverter<typename TDependency::Scope, typename Aux::AtCtor<TDependency, n>::type>::execute(  \
                 execute<typename Aux::AtCtor<TDependency, n>::type, TCallStack>(p_entries, p_pool))
 
         return acquire<TDependency>(p_entries).create(
-            p_pool BOOST_PP_COMMA_IF(BOOST_PP_ITERATION()) BOOST_PP_REPEAT(BOOST_PP_ITERATION(), QDEPS_CREATOR_EXECUTE, ~));
+            p_pool BOOST_PP_COMMA_IF(BOOST_PP_ITERATION()) BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_CREATOR_EXECUTE, ~));
 
-        #undef QDEPS_CREATOR_EXECUTE
+        #undef DI_CREATOR_EXECUTE
     }
 
 #endif

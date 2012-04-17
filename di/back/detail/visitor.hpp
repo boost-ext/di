@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef QDEPS_BACK_DETAIL_VISITOR_HPP
-    #define QDEPS_BACK_DETAIL_VISITOR_HPP
+    #ifndef DI_BACK_DETAIL_VISITOR_HPP
+    #define DI_BACK_DETAIL_VISITOR_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
@@ -21,7 +21,7 @@
     #include "di/Back/Scopes/PerRequest.hpp"
     #include "di/Config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, QDEPS_FUNCTION_ARITY_LIMIT_SIZE, "di/Back/Detail/Visitor.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, DI_FUNCTION_ARITY_LIMIT_SIZE, "di/Back/Detail/Visitor.hpp"))
 
     namespace di
     {
@@ -74,12 +74,12 @@
     {
         p_visitor.template operator()< Dependency<T, TCallStack, TDependency> >();
 
-        #define QDEPS_VISITOR_EXECUTE(z, n, _)\
+        #define DI_VISITOR_EXECUTE(z, n, _)\
             execute<typename Aux::AtCtor<TDependency, n>::type, TCallStack>(p_visitor);
 
-        BOOST_PP_REPEAT(BOOST_PP_ITERATION(), QDEPS_VISITOR_EXECUTE, ~);
+        BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_VISITOR_EXECUTE, ~);
 
-        #undef QDEPS_VISITOR_EXECUTE
+        #undef DI_VISITOR_EXECUTE
     }
 
 #endif

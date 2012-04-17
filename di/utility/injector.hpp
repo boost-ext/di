@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef QDEPS_UTILITY_INJECTOR_HPP
-    #define QDEPS_UTILITY_INJECTOR_HPP
+    #ifndef DI_UTILITY_INJECTOR_HPP
+    #define DI_UTILITY_INJECTOR_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
@@ -129,16 +129,16 @@
           m_factory(m_pool)
     { }
 
-    #define QDEPS_MODULE_ARG(_, n, module) BOOST_PP_COMMA_IF(n) const module##n& p_module##n = module##n()
+    #define DI_MODULE_ARG(_, n, module) BOOST_PP_COMMA_IF(n) const module##n& p_module##n = module##n()
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename M)>
-    Injector<typename boost::mpl::joint_view<Modules, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), M)> >::type> install(BOOST_PP_REPEAT(BOOST_PP_ITERATION(), QDEPS_MODULE_ARG, M))
+    Injector<typename boost::mpl::joint_view<Modules, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), M)> >::type> install(BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_MODULE_ARG, M))
     {
         typedef Injector<typename boost::mpl::joint_view<Modules, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), M)> >::type> InjectorType;
         return InjectorType(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_module));
     }
 
-    #undef QDEPS_MODULE_ARG
+    #undef DI_MODULE_ARG
 
 #endif
 

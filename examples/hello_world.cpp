@@ -13,14 +13,14 @@ class C2 { };
 class LValue
 {
 public:
-    QDEPS_CTOR(LValue, C1, C2)
+    DI_CTOR(LValue, C1, C2)
     { }
 };
 
 class SharedPtr
 {
 public:
-    QDEPS_CTOR(SharedPtr, boost::shared_ptr<C1>, boost::shared_ptr<C2>)
+    DI_CTOR(SharedPtr, boost::shared_ptr<C1>, boost::shared_ptr<C2>)
     { }
 };
 
