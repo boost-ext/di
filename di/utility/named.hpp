@@ -14,7 +14,7 @@
 
 namespace di
 {
-namespace Utility
+namespace utility
 {
 
 /**
@@ -78,7 +78,7 @@ public:
     { }
 };
 
-} // namespace Utility
+} // namespace utility
 } // namespace di
 
 #endif

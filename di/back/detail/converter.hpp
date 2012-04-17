@@ -52,17 +52,17 @@ public:
 };
 
 template<typename TScope, typename TDest, typename TName>
-class converter<TScope, Utility::Named<TDest, TName> >
+class converter<TScope, utility::Named<TDest, TName> >
 {
 public:
-    template<typename TSrc> static Utility::Named<TDest, TName> execute(const TSrc& p_src)
+    template<typename TSrc> static utility::Named<TDest, TName> execute(const TSrc& p_src)
     {
-        return Utility::Named<TDest, TName>(p_src);
+        return utility::Named<TDest, TName>(p_src);
     }
 
-    template<BOOST_VARIANT_ENUM_PARAMS(typename T)> static Utility::Named<TDest, TName> execute(const boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>& p_src)
+    template<BOOST_VARIANT_ENUM_PARAMS(typename T)> static utility::Named<TDest, TName> execute(const boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>& p_src)
     {
-        return boost::apply_visitor(converterImpl<TScope, Utility::Named<TDest, TName> >(), p_src);
+        return boost::apply_visitor(converterImpl<TScope, utility::Named<TDest, TName> >(), p_src);
     }
 };
 

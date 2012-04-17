@@ -11,7 +11,7 @@
 #include "common/data.hpp"
 
 namespace base    = di::front::base;
-namespace Utility = di::Utility;
+namespace utility = di::utility;
 
 class Printvisitor
 {
@@ -26,7 +26,7 @@ public:
     }
 };
 
-struct visitorModule : base::Module
+struct visitormodule : base::module
     <
         base::singletons <
             CIf0
@@ -36,7 +36,7 @@ struct visitorModule : base::Module
 
 int main()
 {
-    Utility::Injector<visitorModule> injector;
+    utility::Injector<visitormodule> injector;
     injector.visit<C8>(Printvisitor());
 
     return 0;

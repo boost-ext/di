@@ -14,9 +14,9 @@ using namespace boost::mpl;
 
 namespace base    = di::front::base;
 namespace fusion  = di::front::fusion;
-namespace Utility = di::Utility;
+namespace utility = di::utility;
 
-struct baseModule : base::Module <
+struct basemodule : base::module <
     base::singletons <
         C1, C2, C3, C4
     >,
@@ -32,7 +32,7 @@ struct baseModule : base::Module <
     >
 > { };
 
-BOOST_AUTO(fusionModule, fusion::Module<>()(
+BOOST_AUTO(fusionmodule, fusion::module<>()(
     fusion::per_requests <
         TransactionProvider
     >()
@@ -40,9 +40,9 @@ BOOST_AUTO(fusionModule, fusion::Module<>()(
 
 int main()
 {
-    Utility::Injector
+    utility::Injector
     <
-        baseModule, BOOST_TYPEOF(fusionModule)
+        basemodule, BOOST_TYPEOF(fusionmodule)
     >
     injector;
 

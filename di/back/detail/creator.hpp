@@ -38,7 +38,7 @@
         typename TDeps,
         typename TPool,
         template<typename, typename, typename = TDeps, typename = aux::dependency<scopes::per_request, boost::mpl::_1, boost::mpl::_2> > class TBinder = binder,
-        template<typename, typename> class Tconverter = converter
+        template<typename, typename> class TConverter = converter
     >
     class creator_impl
     {
@@ -82,7 +82,7 @@
     execute_impl(TEntries& p_entries, const TPool& p_pool)
     {
         #define DI_CREATOR_EXECUTE(z, n, _) BOOST_PP_COMMA_IF(n)                                         \
-             Tconverter<typename TDependency::scope, typename aux::at_ctor<TDependency, n>::type>::execute(  \
+             TConverter<typename TDependency::scope, typename aux::at_ctor<TDependency, n>::type>::execute(  \
                 execute<typename aux::at_ctor<TDependency, n>::type, TCallStack>(p_entries, p_pool))
 
         return acquire<TDependency>(p_entries).create(

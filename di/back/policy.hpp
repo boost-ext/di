@@ -22,21 +22,21 @@ namespace di
 namespace back
 {
 
-namespace detail { class Policy { }; } // namespace detail
+namespace detail { class policy { }; } // namespace detail
 
 template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-class Policy : detail::Policy
+class policy : detail::policy
 {
     typedef boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> seq;
 
-    template<typename TDeps, typename T, typename TPolicy> struct AssertImpl
+    template<typename TDeps, typename T, typename Tpolicy> struct verify_impl
     {
-        typedef typename TPolicy::template Assert<TDeps, typename aux::make_plain<T>::type>::type type;
+        typedef typename Tpolicy::template verify<TDeps, typename aux::make_plain<T>::type>::type type;
     };
 
 public:
-    template<typename TDeps, typename T> struct Assert
-        : boost::mpl::fold<seq, boost::mpl::void_, AssertImpl<TDeps, T, boost::mpl::_2> >::type
+    template<typename TDeps, typename T> struct verify
+        : boost::mpl::fold<seq, boost::mpl::void_, verify_impl<TDeps, T, boost::mpl::_2> >::type
     {
         typedef void type;
     };
@@ -45,12 +45,12 @@ public:
 } // namespace back
 
 template<typename TDefault>
-struct Defaults<back::detail::Policy, TDefault>
+struct defaults<back::detail::policy, TDefault>
 {
-    typedef back::Policy
+    typedef back::policy
     <
-        back::Policies::CheckForCircularDependencies,
-        back::Policies::CheckForCreationOwnership
+        back::policies::check_for_circular_dependencies,
+        back::policies::check_for_creation_ownership
     >
     type;
 };

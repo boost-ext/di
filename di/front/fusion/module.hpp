@@ -56,7 +56,7 @@
     <
         typename TSeq = boost::mpl::vector0<>
     >
-    class Module : public back::Module
+    class module : public back::module
     {
     public:
         typedef back::aux::Pool<TSeq> Pool;
@@ -78,11 +78,11 @@
             >::type
         { };
 
-        Module() { }
+        module() { }
 
         #include BOOST_PP_ITERATE()
 
-        Module<> operator()() const { return Module<>(); }
+        module<> operator()() const { return module<>(); }
 
         const Pool& pool() const { return m_pool; }
 
@@ -99,14 +99,14 @@
 #else
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    Module(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg))
+    module(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg))
         : m_pool(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg))
     { }
 
-    template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)> Module<boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), Arg)> >
+    template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)> module<boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), Arg)> >
     operator()(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg)) const
     {
-        return Module< boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), Arg)> >(
+        return module< boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), Arg)> >(
             BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg));
     }
 

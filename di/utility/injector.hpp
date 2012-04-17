@@ -39,7 +39,7 @@
 
     namespace di
     {
-    namespace Utility
+    namespace utility
     {
 
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
@@ -47,11 +47,11 @@
     {
         typedef boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> seq;
 
-        struct Modules : boost::mpl::remove_if<seq, boost::is_base_of<back::detail::Policy, boost::mpl::_> >::type { };
+        struct modules : boost::mpl::remove_if<seq, boost::is_base_of<back::detail::policy, boost::mpl::_> >::type { };
         struct Polices : boost::mpl::joint_view
             <
-                boost::mpl::filter_view<seq, boost::is_base_of<back::detail::Policy, boost::mpl::_> >,
-                boost::mpl::vector1<typename Defaults<back::detail::Policy, Specialized>::type>
+                boost::mpl::filter_view<seq, boost::is_base_of<back::detail::policy, boost::mpl::_> >,
+                boost::mpl::vector1<typename defaults<back::detail::policy, specialized>::type>
             >::type
         { };
 
@@ -62,7 +62,7 @@
                 TResult,
                 boost::mpl::if_
                 <
-                    boost::is_base_of<back::Module, boost::mpl::_2>,
+                    boost::is_base_of<back::module, boost::mpl::_2>,
                     DependenciesImpl<back::aux::get_dependencies<boost::mpl::_2>, boost::mpl::_1>,
                     boost::mpl::insert<boost::mpl::_1, boost::mpl::_2>
                 >
@@ -73,7 +73,7 @@
             <
                 typename boost::mpl::fold
                 <
-                    Modules,
+                    modules,
                     boost::mpl::set<>,
                     boost::mpl::insert< boost::mpl::_1, back::aux::get_pool<boost::mpl::_2> >
                 >::type,
@@ -84,15 +84,15 @@
 
         struct Dependencies : boost::mpl::fold
             <
-                typename DependenciesImpl<Modules>::type,
+                typename DependenciesImpl<modules>::type,
                 boost::mpl::vector0<>,
                 boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>
             >::type
         { };
 
         typedef back::aux::Pool<typename Externals::type> Pool;
-        typedef typename boost::mpl::deref<typename boost::mpl::begin<Polices>::type>::type Policy;
-        typedef back::Factory<typename Dependencies::type, Pool, Policy> Factory;
+        typedef typename boost::mpl::deref<typename boost::mpl::begin<Polices>::type>::type policy;
+        typedef back::factory<typename Dependencies::type, Pool, policy> factory;
 
     public:
         Injector()
@@ -113,10 +113,10 @@
 
     private:
         Pool m_pool;
-        Factory m_factory;
+        factory m_factory;
     };
 
-    } // namespace Utility
+    } // namespace utility
     } // namespace di
 
     #endif
@@ -132,9 +132,9 @@
     #define DI_MODULE_ARG(_, n, module) BOOST_PP_COMMA_IF(n) const module##n& p_module##n = module##n()
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename M)>
-    Injector<typename boost::mpl::joint_view<Modules, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), M)> >::type> install(BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_MODULE_ARG, M))
+    Injector<typename boost::mpl::joint_view<modules, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), M)> >::type> install(BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_MODULE_ARG, M))
     {
-        typedef Injector<typename boost::mpl::joint_view<Modules, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), M)> >::type> InjectorType;
+        typedef Injector<typename boost::mpl::joint_view<modules, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), M)> >::type> InjectorType;
         return InjectorType(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_module));
     }
 

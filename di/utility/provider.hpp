@@ -9,7 +9,7 @@
 
 namespace di
 {
-namespace Utility
+namespace utility
 {
 
 template<typename T>
@@ -20,7 +20,7 @@ public:
     virtual T get() const = 0;
 };
 
-} // namespace Utility
+} // namespace utility
 } // namespace di
 
 #endif

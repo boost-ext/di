@@ -29,39 +29,39 @@ template
 <
     typename TDeps,
     typename TPool = aux::Pool<>,
-    typename TPolices = Policy<>,
-    template<typename, typename> class Tconverter = detail::converter,
-    template<typename = TDeps, typename = TPool> class Tcreator = detail::creator,
-    template<typename = TDeps> class Tvisitor = detail::visitor
+    typename TPolices = policy<>,
+    template<typename, typename> class TConverter = detail::converter,
+    template<typename = TDeps, typename = TPool> class TCreator = detail::creator,
+    template<typename = TDeps> class TVisitor = detail::visitor
 >
-class Factory
+class factory
 {
-    struct Entries
+    struct entries
         : boost::mpl::inherit_linearly<TDeps, boost::mpl::inherit<boost::mpl::_1, boost::mpl::_2> >::type
     { };
 
 public:
-    explicit Factory(const TPool& p_pool = TPool())
+    explicit factory(const TPool& p_pool = TPool())
         : m_pool(p_pool)
     { }
 
     template<typename T> T create()
     {
-        typedef boost::mpl::vector0<> EmptyCallStack;
-        typedef typename TPolices::template Assert<TDeps, T>::type Polices;
-        return Tconverter<scopes::per_request, T>::execute(Tcreator<>::template execute<T, EmptyCallStack>(m_entries, m_pool));
+        typedef boost::mpl::vector0<> empty_call_stack;
+        typedef typename TPolices::template verify<TDeps, T>::type polices;
+        return TConverter<scopes::per_request, T>::execute(TCreator<>::template execute<T, empty_call_stack>(m_entries, m_pool));
     }
 
-    template<typename T, typename visitor> void visit(const visitor& p_visitor)
+    template<typename T, typename Visitor> void visit(const Visitor& p_visitor)
     {
-        typedef boost::mpl::vector0<> EmptyCallStack;
-        typedef typename TPolices::template Assert<TDeps, T>::type Polices;
-        Tvisitor<>::template execute<T, EmptyCallStack>(p_visitor);
+        typedef boost::mpl::vector0<> empty_call_stack;
+        typedef typename TPolices::template verify<TDeps, T>::type polices;
+        TVisitor<>::template execute<T, empty_call_stack>(p_visitor);
     }
 
 private:
     const TPool& m_pool;
-    Entries m_entries;
+    entries m_entries;
 };
 
 } // namespace back

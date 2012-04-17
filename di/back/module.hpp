@@ -12,7 +12,7 @@ namespace di
 namespace back
 {
 
-class Module { };
+class module { };
 
 } // namespace back
 } // namespace di

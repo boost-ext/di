@@ -26,7 +26,7 @@ public:
 
 int main()
 {
-    di::Utility::Injector<> injector;
+    di::utility::Injector<> injector;
     injector.create<Lvalue>();
     injector.create<SharedPtr>();
 

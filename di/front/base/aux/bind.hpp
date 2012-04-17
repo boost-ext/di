@@ -51,7 +51,7 @@ struct Bind : Internal, back::aux::dependency
         struct InName : Internal, back::aux::dependency
             <
                 boost::mpl::_1,
-                Utility::Named<TExpected, TName>,
+                utility::Named<TExpected, TName>,
                 TGiven,
                 boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
             >
@@ -62,7 +62,7 @@ struct Bind : Internal, back::aux::dependency
     struct InName : Internal, back::aux::dependency
         <
             boost::mpl::_1,
-            Utility::Named<TExpected, TName>,
+            utility::Named<TExpected, TName>,
             TGiven
         >
     {
@@ -70,7 +70,7 @@ struct Bind : Internal, back::aux::dependency
         struct InCallStack : Internal, back::aux::dependency
             <
                 boost::mpl::_1,
-                Utility::Named<TExpected, TName>,
+                utility::Named<TExpected, TName>,
                 TGiven,
                 boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
             >
@@ -102,10 +102,10 @@ struct Bind<TExpected, TGiven, typename boost::enable_if< boost::mpl::or_<back::
         struct InName : Internal, back::aux::dependency
             <
                 boost::mpl::_1,
-                Utility::Named<TExpected, TName>,
+                utility::Named<TExpected, TName>,
                 TGiven,
                 boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
-                boost::mpl::or_< boost::is_base_of<boost::mpl::_1, Utility::Named<TExpected, TName> >, boost::is_same<boost::mpl::_1, Utility::Named<TExpected, TName> > >
+                boost::mpl::or_< boost::is_base_of<boost::mpl::_1, utility::Named<TExpected, TName> >, boost::is_same<boost::mpl::_1, utility::Named<TExpected, TName> > >
             >
         { };
     };
@@ -114,20 +114,20 @@ struct Bind<TExpected, TGiven, typename boost::enable_if< boost::mpl::or_<back::
     struct InName : Internal, back::aux::dependency
         <
             boost::mpl::_1,
-            Utility::Named<TExpected, TName>,
+            utility::Named<TExpected, TName>,
             TGiven,
             boost::mpl::vector0<>,
-            boost::mpl::or_< boost::is_base_of<boost::mpl::_1, Utility::Named<TExpected, TName> >, boost::is_same<boost::mpl::_1, Utility::Named<TExpected, TName> > >
+            boost::mpl::or_< boost::is_base_of<boost::mpl::_1, utility::Named<TExpected, TName> >, boost::is_same<boost::mpl::_1, utility::Named<TExpected, TName> > >
         >
     {
         template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
         struct InCallStack : Internal, back::aux::dependency
             <
                 boost::mpl::_1,
-                Utility::Named<TExpected, TName>,
+                utility::Named<TExpected, TName>,
                 TGiven,
                 boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
-                boost::mpl::or_< boost::is_base_of<boost::mpl::_1, Utility::Named<TExpected, TName> >, boost::is_same<boost::mpl::_1, Utility::Named<TExpected, TName> > >
+                boost::mpl::or_< boost::is_base_of<boost::mpl::_1, utility::Named<TExpected, TName> >, boost::is_same<boost::mpl::_1, utility::Named<TExpected, TName> > >
             >
         { };
     };

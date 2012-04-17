@@ -68,7 +68,7 @@
     template<typename T> struct Annotate : aux::Annotate<T> { };
 
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    class Module : public back::Module
+    class module : public back::module
     {
         template<typename TInstance, typename T> struct IsSameinstance : boost::mpl::or_
             <
@@ -148,7 +148,7 @@
             >::type
         { };
 
-        Module() { }
+        module() { }
 
         #include BOOST_PP_ITERATE()
 
@@ -175,7 +175,7 @@
 #else
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    Module(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg))
+    module(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg))
         : m_pool(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg))
     { }
 

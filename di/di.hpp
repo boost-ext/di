@@ -15,12 +15,12 @@
 #include "di/front/base/module.hpp"
 #include "di/front/fusion/module.hpp"
 
-// Utility
+// utility
 #include "di/utility/injector.hpp"
 #include "di/utility/named.hpp"
 #include "di/utility/provider.hpp"
 
-// Policies
+// policies
 #include "di/back/policies/check_for_binding_correctness.hpp"
 #include "di/back/policies/check_for_circular_dependencies.hpp"
 #include "di/back/policies/check_for_creation_ownership.hpp"
