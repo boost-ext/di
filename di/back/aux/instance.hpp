@@ -18,35 +18,35 @@
 
 namespace di
 {
-namespace Back
+namespace back
 {
-namespace Aux
+namespace aux
 {
 
-namespace Detail
+namespace detail
 {
 
 BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
 
 template<typename T, typename = void>
-struct GetValueType
+struct get_value_type
 {
     typedef T type;
 };
 
 template<>
-struct GetValueType<std::string, void>
+struct get_value_type<std::string, void>
 {
     typedef std::string type;
 };
 
 template<typename T>
-struct GetValueType<T, typename boost::enable_if<has_value_type<T> >::type>
+struct get_value_type<T, typename boost::enable_if<has_value_type<T> >::type>
 {
     typedef typename T::value_type type;
 };
 
-} // namespace Detail
+} // namespace detail
 
 template
 <
@@ -54,31 +54,31 @@ template
     typename TContext = boost::mpl::vector0<>,
     typename Enable = void
 >
-class Instance
+class instance
 {
 public:
-    typedef T ValueType;
-    typedef boost::variant<const T&, T&, boost::shared_ptr<T> > ResultType;
+    typedef T value_type;
+    typedef boost::variant<const T&, T&, boost::shared_ptr<T> > result_type;
 
-    explicit Instance(const T& p_member)
-        : m_member(p_member)
+    explicit instance(const T& member)
+        : member_(member)
     { }
 
-    explicit Instance(T& p_member)
-        : m_member(p_member)
+    explicit instance(T& member)
+        : member_(member)
     { }
 
-    explicit Instance(boost::shared_ptr<T> p_member)
-        : m_member(p_member)
+    explicit instance(boost::shared_ptr<T> member)
+        : member_(member)
     { }
 
-    ResultType get() const
+    result_type get() const
     {
-        return m_member;
+        return member_;
     }
 
 private:
-    ResultType m_member;
+    result_type member_;
 };
 
 template
@@ -86,38 +86,38 @@ template
     typename T,
     typename TContext
 >
-class Instance
+class instance
     <
         T, TContext,
         typename boost::enable_if
         <
             boost::mpl::or_
             <
-                boost::is_same<typename Detail::GetValueType<T>::type, std::string>,
-                boost::is_pod<typename Detail::GetValueType<T>::type>
+                boost::is_same<typename detail::get_value_type<T>::type, std::string>,
+                boost::is_pod<typename detail::get_value_type<T>::type>
             >
         >::type
     >
 {
 public:
-    typedef T ValueType;
-    typedef typename Detail::GetValueType<T>::type ResultType;
+    typedef T value_type;
+    typedef typename detail::get_value_type<T>::type result_type;
 
-    explicit Instance(ResultType p_member)
-        : m_member(p_member)
+    explicit instance(result_type member)
+        : member_(member)
     { }
 
-    ResultType get() const
+    result_type get() const
     {
-        return m_member;
+        return member_;
     }
 
 private:
-    ResultType m_member;
+    result_type member_;
 };
 
-} // namespace Aux
-} // namespace Back
+} // namespace aux
+} // namespace back
 } // namespace di
 
 #endif

@@ -77,7 +77,7 @@ struct C3
 
 struct C4
 {
-    DI_CTOR(C4, boost::shared_ptr<C3> c3, di::Utility::Named<int, boost::mpl::string<'1'> > i1, di::Utility::Named<int, boost::mpl::string<'2'> > i2)
+    DI_CTOR(C4, boost::shared_ptr<C3> c3, di::utility::named<int, boost::mpl::string<'1'> > i1, di::utility::named<int, boost::mpl::string<'2'> > i2)
         : c3(c3), i1(i1), i2(i2)
     { }
 
@@ -139,9 +139,9 @@ struct Transaction
     int i;
 };
 
-struct TransactionProvider : di::Utility::Provider< boost::shared_ptr<Transaction> >
+struct Transactionprovider : di::utility::provider< boost::shared_ptr<Transaction> >
 {
-    DI_CTOR(TransactionProvider, boost::shared_ptr<C3> c3)
+    DI_CTOR(Transactionprovider, boost::shared_ptr<C3> c3)
         : c3(c3)
     { }
 
@@ -155,11 +155,11 @@ struct TransactionProvider : di::Utility::Provider< boost::shared_ptr<Transactio
 
 struct TransactionUsage
 {
-    DI_CTOR(TransactionUsage, boost::shared_ptr< di::Utility::Provider< boost::shared_ptr<Transaction> > > p)
+    DI_CTOR(TransactionUsage, boost::shared_ptr< di::utility::provider< boost::shared_ptr<Transaction> > > p)
         : p(p)
     { }
 
-    boost::shared_ptr< di::Utility::Provider< boost::shared_ptr<Transaction> > > p;
+    boost::shared_ptr< di::utility::provider< boost::shared_ptr<Transaction> > > p;
 };
 
 

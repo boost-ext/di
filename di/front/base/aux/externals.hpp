@@ -14,22 +14,22 @@
 
 namespace di
 {
-namespace Front
+namespace front
 {
-namespace Base
+namespace base
 {
-namespace Aux
+namespace aux
 {
 
-namespace Detail { class Externals { }; } // namespace Detail
+namespace detail { class externals { }; } // namespace detail
 
 template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-struct Externals : Detail::Externals, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
+struct externals : detail::externals, boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
 { };
 
-} // namespace Aux
-} // namespace Base
-} // namespace Front
+} // namespace aux
+} // namespace base
+} // namespace front
 } // namespace di
 
 #endif

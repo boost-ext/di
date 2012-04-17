@@ -9,27 +9,27 @@
 
 namespace di
 {
-namespace Front
+namespace front
 {
-namespace Base
+namespace base
 {
-namespace Aux
+namespace aux
 {
 
 template<typename TDerived>
-struct Annotate
+struct annotate
 {
     template<typename TName = void>
-    struct With : TDerived
+    struct with : TDerived
     {
-        typedef TDerived Derived;
-        typedef TName Name;
+        typedef TDerived derived;
+        typedef TName name;
     };
 };
 
-} // namespace Aux
-} // namespace Base
-} // namespace Front
+} // namespace aux
+} // namespace base
+} // namespace front
 } // namespace di
 
 #endif

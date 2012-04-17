@@ -28,18 +28,18 @@
 
 namespace di
 {
-namespace Back
+namespace back
 {
-namespace Detail
+namespace detail
 {
 
-namespace Detail
+namespace detail
 {
 
 BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
 template<typename TCallStack, typename TContext>
-struct EqualCallStack : boost::mpl::equal
+struct equal_call_stack : boost::mpl::equal
     <
         boost::mpl::iterator_range
         <
@@ -55,24 +55,24 @@ struct EqualCallStack : boost::mpl::equal
 { };
 
 template<typename T1, typename T2>
-struct LessContextSize : boost::mpl::bool_<(Aux::GetContextSize<T1>::value > Aux::GetContextSize<T2>::value)>::type
+struct less_context_size : boost::mpl::bool_<(aux::get_context_size<T1>::value > aux::get_context_size<T2>::value)>::type
 { };
 
 template<typename T, typename TBind>
-struct Comparator : boost::mpl::apply<TBind, T>::type
+struct comparator : boost::mpl::apply<TBind, T>::type
 { };
 
 template<typename T, typename TDefault, typename = void>
-struct MakeDefaultDependency
-    : TDefault::template Rebind<typename Aux::MakePlain<T>::type, typename Aux::MakePlain<T>::type>
+struct make_default_dependency
+    : TDefault::template rebind<typename aux::make_plain<T>::type, typename aux::make_plain<T>::type>
 { };
 
 template<typename T, typename TDefault>
-struct MakeDefaultDependency<T, TDefault, typename boost::enable_if<has_element_type<T> >::type>
-    : TDefault::template Rebind<typename Aux::MakePlain<T>::type, typename Aux::MakePlain<typename T::value_type>::type>
+struct make_default_dependency<T, TDefault, typename boost::enable_if<has_element_type<T> >::type>
+    : TDefault::template rebind<typename aux::make_plain<T>::type, typename aux::make_plain<typename T::value_type>::type>
 { };
 
-} // namespace Detail
+} // namespace detail
 
 template
 <
@@ -81,7 +81,7 @@ template
     typename TDeps,
     typename TDefault
 >
-struct Binder : boost::mpl::deref
+struct binder : boost::mpl::deref
     <
         boost::mpl::begin
         <
@@ -97,23 +97,23 @@ struct Binder : boost::mpl::deref
                         <
                             boost::mpl::and_
                             <
-                                Detail::Comparator<typename Aux::MakePlain<T>::type, Aux::GetBind<boost::mpl::_2> >,
-                                Detail::EqualCallStack<TCallStack, Aux::GetContext<boost::mpl::_2> >
+                                detail::comparator<typename aux::make_plain<T>::type, aux::get_bind<boost::mpl::_2> >,
+                                detail::equal_call_stack<TCallStack, aux::get_context<boost::mpl::_2> >
                             >,
                             boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>,
                             boost::mpl::_1
                         >
                     >::type,
-                    Detail::LessContextSize<boost::mpl::_1, boost::mpl::_2>
+                    detail::less_context_size<boost::mpl::_1, boost::mpl::_2>
                 >::type,
-                typename Detail::MakeDefaultDependency<T, TDefault>::type
+                typename detail::make_default_dependency<T, TDefault>::type
             >::type
         >
     >::type
 { };
 
-} // namespace Detail
-} // namespace Back
+} // namespace detail
+} // namespace back
 } // namespace di
 
 #endif

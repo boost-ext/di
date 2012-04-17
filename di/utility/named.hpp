@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef DI_UTILITY_NAMED_HPP
-#define DI_UTILITY_NAMED_HPP
+#ifndef DI_utILITY_NAMED_HPP
+#define DI_utILITY_NAMED_HPP
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
@@ -14,71 +14,71 @@
 
 namespace di
 {
-namespace Utility
+namespace utility
 {
 
 /**
- * Example: Named< int, mpl::string<'Port'> >
+ * Example: named< int, mpl::string<'Port'> >
  */
 template<typename T, typename TName = void>
-class Named
+class named
 {
 public:
-    typedef typename Back::Aux::MakePlain<T>::type value_type;
-    typedef Named<value_type, TName> element_type;
+    typedef typename back::aux::make_plain<T>::type value_type;
+    typedef named<value_type, TName> element_type;
 
-    Named(T p_value = T()) // non explicit
-        : m_value(new T(p_value))
+    named(T value = T()) // non explicit
+        : value_(new T(value))
     { }
 
-    Named(const boost::shared_ptr<T>& p_value) // non explicit
-        : m_value(p_value)
+    named(const boost::shared_ptr<T>& value) // non explicit
+        : value_(value)
     { }
 
-    operator T() const { return *m_value; }
+    operator T() const { return *value_; }
 
 private:
-    boost::shared_ptr<T> m_value;
+    boost::shared_ptr<T> value_;
 };
 
 template<typename T, typename TName>
-class Named< boost::shared_ptr<T>, TName>
+class named< boost::shared_ptr<T>, TName>
 {
 public:
-    typedef Named<typename Back::Aux::MakePlain<T>::type, TName> element_type;
-    typedef typename Back::Aux::MakePlain<T>::type value_type;
+    typedef named<typename back::aux::make_plain<T>::type, TName> element_type;
+    typedef typename back::aux::make_plain<T>::type value_type;
 
-    Named(boost::shared_ptr<T> p_value = boost::make_shared<T>()) // non explicit
-        : m_value(p_value)
+    named(boost::shared_ptr<T> value = boost::make_shared<T>()) // non explicit
+        : value_(value)
     { }
 
-    Named(value_type p_value) // non explicit
-       : m_value(boost::make_shared<value_type>(p_value))
+    named(value_type value) // non explicit
+       : value_(boost::make_shared<value_type>(value))
     { }
 
-    operator boost::shared_ptr<T>() const { return m_value; }
-    operator value_type() const { return *m_value; }
-    T* operator->() const { return m_value.get(); }
-    T& operator*() const { return *m_value; }
-    T* get() const { return m_value.get(); }
+    operator boost::shared_ptr<T>() const { return value_; }
+    operator value_type() const { return *value_; }
+    T* operator->() const { return value_.get(); }
+    T& operator*() const { return *value_; }
+    T* get() const { return value_.get(); }
 
 private:
-    boost::shared_ptr<T> m_value;
+    boost::shared_ptr<T> value_;
 };
 
 template<typename T, typename TName>
-class Named< const boost::shared_ptr<T>&, TName> : Named< boost::shared_ptr<T>, TName>
+class named< const boost::shared_ptr<T>&, TName> : named< boost::shared_ptr<T>, TName>
 {
 public:
-    typedef Named<typename Back::Aux::MakePlain<T>::type, TName> element_type;
-    typedef typename Back::Aux::MakePlain<T>::type value_type;
+    typedef named<typename back::aux::make_plain<T>::type, TName> element_type;
+    typedef typename back::aux::make_plain<T>::type value_type;
 
-    Named(const boost::shared_ptr<T>& p_value) // non explicit
-        : Named< boost::shared_ptr<T>, TName>(p_value)
+    named(const boost::shared_ptr<T>& value) // non explicit
+        : named< boost::shared_ptr<T>, TName>(value)
     { }
 };
 
-} // namespace Utility
+} // namespace utility
 } // namespace di
 
 #endif

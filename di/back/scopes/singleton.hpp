@@ -19,38 +19,38 @@
 
     namespace di
     {
-    namespace Back
+    namespace back
     {
-    namespace Scopes
+    namespace scopes
     {
 
-    class Singleton
+    class singleton
     {
     public:
-        template<typename T> class Scope
+        template<typename T> class scope
         {
         public:
-            typedef boost::shared_ptr<T> ResultType;
+            typedef boost::shared_ptr<T> result_type;
 
-            ResultType create()
+            result_type create()
             {
-                if (!m_instance)
+                if (!instance_)
                 {
-                    m_instance.reset(new T);
+                    instance_.reset(new T);
                 }
 
-                return m_instance;
+                return instance_;
             }
 
             #include BOOST_PP_ITERATE()
 
         private:
-            ResultType m_instance;
+            result_type instance_;
         };
     };
 
-    } // namespace Scope
-    } // namespace Back
+    } // namespace scope
+    } // namespace back
     } // namespace di
 
     #endif
@@ -58,14 +58,14 @@
 #else
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    ResultType create(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg))
+    result_type create(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg))
     {
-        if (!m_instance)
+        if (!instance_)
         {
-            m_instance.reset(new T(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg)));
+            instance_.reset(new T(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg)));
         }
 
-        return m_instance;
+        return instance_;
     }
 
 #endif

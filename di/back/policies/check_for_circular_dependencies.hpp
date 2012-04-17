@@ -6,7 +6,6 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-
     #ifndef DI_BACK_POLICIES_CHECK_FOR_CIRCULAR_DEPENDENCIES_HPP
     #define DI_BACK_POLICIES_CHECK_FOR_CIRCULAR_DEPENDENCIES_HPP
 
@@ -32,19 +31,19 @@
 
     namespace di
     {
-    namespace Back
+    namespace back
     {
-    namespace Policies
+    namespace policies
     {
 
-    class CheckForCircularDependencies
+    class check_for_circular_dependencies
     {
     public:
-        template<typename TDeps, typename TGiven, template<typename, typename, typename = TDeps, typename = Aux::Dependency<Scopes::PerRequest, boost::mpl::_1, boost::mpl::_2> > class TBinder = Detail::Binder>
-        class Assert
+        template<typename TDeps, typename TGiven, template<typename, typename, typename = TDeps, typename = aux::dependency<scopes::per_request, boost::mpl::_1, boost::mpl::_2> > class TBinder = detail::binder>
+        class verify
         {
             template<typename TCallStack>
-            struct IsUniqueCallStack : boost::mpl::bool_
+            struct is_unique_call_stack : boost::mpl::bool_
                 <
                     static_cast<std::size_t>(boost::mpl::accumulate
                         <
@@ -56,25 +55,25 @@
                 >
             { };
 
-            template<typename, typename, typename = void, typename = void> struct CircularDependenciesImpl;
+            template<typename, typename, typename = void, typename = void> struct circular_dependencies_impl;
 
             template<typename T, typename TCallStack, typename = void, typename = void>
-            struct CircularDependencies : CircularDependenciesImpl
+            struct circular_dependencies : circular_dependencies_impl
                 <
                     typename TBinder<T, TCallStack>::type,
-                    typename Aux::UpdateCallStack<TCallStack, typename TBinder<T, TCallStack>::type>::type
+                    typename aux::update_call_stack<TCallStack, typename TBinder<T, TCallStack>::type>::type
                 >
             { };
 
             #include BOOST_PP_ITERATE()
 
         public:
-            typedef CircularDependencies<TGiven, boost::mpl::vector0<> > type;
+            typedef circular_dependencies<TGiven, boost::mpl::vector0<> > type;
         };
     };
 
-    } // namespace Policies
-    } // namespace Back
+    } // namespace policies
+    } // namespace back
     } // namespace di
 
     #endif
@@ -82,27 +81,27 @@
 #else
 
     #define DI_CHECK_FOR_CIRCULAR_DEPENDENCIES_IMPL(z, n, _) BOOST_PP_COMMA_IF(n)\
-        CircularDependencies<typename Aux::AtCtor<TDependency, n>::type, TCallStack>
+        circular_dependencies<typename aux::at_ctor<TDependency, n>::type, TCallStack>
 
     template<typename TDependency, typename TCallStack>
-    struct CircularDependenciesImpl
+    struct circular_dependencies_impl
         <
             TDependency,
             TCallStack,
-            typename Aux::EnableIfCtorSize<TDependency, BOOST_PP_ITERATION()>::type,
-            typename boost::enable_if< IsUniqueCallStack<TCallStack> >::type
+            typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION()>::type,
+            typename boost::enable_if< is_unique_call_stack<TCallStack> >::type
         >
     BOOST_PP_EXPR_IF(BOOST_PP_ITERATION(), :)
         BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_CHECK_FOR_CIRCULAR_DEPENDENCIES_IMPL, ~)
     { };
 
     template<typename TDependency, typename TCallStack>
-    struct CircularDependenciesImpl
+    struct circular_dependencies_impl
         <
             TDependency,
             TCallStack,
-            typename Aux::EnableIfCtorSize<TDependency, BOOST_PP_ITERATION()>::type,
-            typename boost::disable_if< IsUniqueCallStack<TCallStack> >::type
+            typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION()>::type,
+            typename boost::disable_if< is_unique_call_stack<TCallStack> >::type
         >
     :
         boost::mpl::false_
@@ -110,7 +109,7 @@
        DI_STATIC_ASSERT(
             false,
             CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED,
-            (typename TDependency::Given, TCallStack)
+            (typename TDependency::given, TCallStack)
         );
     };
 

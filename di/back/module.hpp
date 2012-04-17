@@ -9,12 +9,12 @@
 
 namespace di
 {
-namespace Back
+namespace back
 {
 
-class Module { };
+class module { };
 
-} // namespace Back
+} // namespace back
 } // namespace di
 
 #endif

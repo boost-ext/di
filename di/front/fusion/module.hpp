@@ -32,36 +32,36 @@
 
     namespace di
     {
-    namespace Front
+    namespace front
     {
-    namespace Fusion
+    namespace fusion
     {
 
-    template<typename TScope> struct Scope : Base::Aux::Scope<TScope> { };
-    template<typename TExpected, typename TGiven = TExpected> struct Bind : Base::Aux::Bind<TExpected, TGiven> { };
+    template<typename TScope> struct scope : base::aux::scope<TScope> { };
+    template<typename TExpected, typename TGiven = TExpected> struct bind : base::aux::bind<TExpected, TGiven> { };
 
-    template<typename TExpected, typename TGiven = TExpected> struct Singleton : Scope<Back::Scopes::Singleton>::Bind< Bind<TExpected, TGiven> > { };
-    template<typename T> struct Singleton<T, T> : Scope<Back::Scopes::Singleton>::Bind<T> { };
+    template<typename TExpected, typename TGiven = TExpected> struct singleton : scope<back::scopes::singleton>::bind< bind<TExpected, TGiven> > { };
+    template<typename T> struct singleton<T, T> : scope<back::scopes::singleton>::bind<T> { };
 
-    template<typename TExpected, typename TGiven = TExpected> struct PerRequest : Scope<Back::Scopes::PerRequest>::Bind< Bind<TExpected, TGiven> > { };
-    template<typename T> struct PerRequest<T, T> : Scope<Back::Scopes::PerRequest>::Bind<T> { };
+    template<typename TExpected, typename TGiven = TExpected> struct per_request : scope<back::scopes::per_request>::bind< bind<TExpected, TGiven> > { };
+    template<typename T> struct per_request<T, T> : scope<back::scopes::per_request>::bind<T> { };
 
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    struct Singletons : Scope<Back::Scopes::Singleton>::Bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
+    struct singletons : scope<back::scopes::singleton>::bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
 
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    struct PerRequests : Scope<Back::Scopes::PerRequest>::Bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
+    struct per_requests : scope<back::scopes::per_request>::bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
 
     template
     <
         typename TSeq = boost::mpl::vector0<>
     >
-    class Module : public Back::Module
+    class module : public back::module
     {
     public:
-        typedef Back::Aux::Pool<TSeq> Pool;
+        typedef back::aux::pool<TSeq> pool;
 
-        struct Dependencies : boost::mpl::fold
+        struct dependencies : boost::mpl::fold
             <
                 TSeq,
                 boost::mpl::vector0<>,
@@ -69,29 +69,29 @@
                 <
                     boost::mpl::if_
                     <
-                        boost::is_base_of<Base::Aux::Internal, boost::mpl::_2>,
+                        boost::is_base_of<base::aux::internal, boost::mpl::_2>,
                         boost::mpl::_2,
-                        PerRequest<boost::mpl::_2>
+                        per_request<boost::mpl::_2>
                     >,
                     boost::mpl::back_inserter<boost::mpl::_1>
                 >
             >::type
         { };
 
-        Module() { }
+        module() { }
 
         #include BOOST_PP_ITERATE()
 
-        Module<> operator()() const { return Module<>(); }
+        module<> operator()() const { return module<>(); }
 
-        const Pool& pool() const { return m_pool; }
+        const pool& get_pool() const { return pool_; }
 
     private:
-        Pool m_pool;
+        pool pool_;
     };
 
-    } // namespace Fusion
-    } // namespace Front
+    } // namespace fusion
+    } // namespace front
     } // namespace di
 
     #endif
@@ -99,15 +99,15 @@
 #else
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    Module(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg))
-        : m_pool(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg))
+    module(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg))
+        : pool_(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg))
     { }
 
-    template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)> Module<boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), Arg)> >
-    operator()(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg)) const
+    template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)> module<boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), Arg)> >
+    operator()(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg)) const
     {
-        return Module< boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), Arg)> >(
-            BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg));
+        return module< boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), Arg)> >(
+            BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg));
     }
 
 #endif

@@ -20,20 +20,20 @@
 
     namespace di
     {
-    namespace Back
+    namespace back
     {
-    namespace Scopes
+    namespace scopes
     {
 
-    class PerRequest
+    class per_request
     {
     public:
-        template<typename T> class Scope
+        template<typename T> class scope
         {
         public:
-            typedef boost::shared_ptr<T> ResultType;
+            typedef boost::shared_ptr<T> result_type;
 
-            ResultType create()
+            result_type create()
             {
                 return boost::make_shared<T>();
             }
@@ -42,8 +42,8 @@
         };
     };
 
-    } // namespace Scope
-    } // namespace Back
+    } // namespace scope
+    } // namespace back
     } // namespace di
 
     #endif
@@ -51,9 +51,9 @@
 #else
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    ResultType create(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg))
+    result_type create(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg))
     {
-        return ResultType(new T(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg)));
+        return result_type(new T(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg)));
     }
 
 #endif

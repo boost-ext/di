@@ -40,62 +40,62 @@
 
     namespace di
     {
-    namespace Front
+    namespace front
     {
-    namespace Base
+    namespace base
     {
 
-    template<typename TScope> struct Scope : Aux::Scope<TScope> { };
-    template<typename TExpected, typename TGiven = TExpected> struct Bind : Aux::Bind<TExpected, TGiven> { };
+    template<typename TScope> struct scope : aux::scope<TScope> { };
+    template<typename TExpected, typename TGiven = TExpected> struct bind : aux::bind<TExpected, TGiven> { };
 
-    template<typename TExpected, typename TGiven = TExpected> struct Singleton : Scope<Back::Scopes::Singleton>::Bind< Bind<TExpected, TGiven> > { };
-    template<typename T> struct Singleton<T, T> : Scope<Back::Scopes::Singleton>::Bind<T> { };
+    template<typename TExpected, typename TGiven = TExpected> struct singleton : scope<back::scopes::singleton>::bind< bind<TExpected, TGiven> > { };
+    template<typename T> struct singleton<T, T> : scope<back::scopes::singleton>::bind<T> { };
 
-    template<typename TExpected, typename TGiven = TExpected> struct PerRequest : Scope<Back::Scopes::PerRequest>::Bind< Bind<TExpected, TGiven> > { };
-    template<typename T> struct PerRequest<T, T> : Scope<Back::Scopes::PerRequest>::Bind<T> { };
+    template<typename TExpected, typename TGiven = TExpected> struct per_request : scope<back::scopes::per_request>::bind< bind<TExpected, TGiven> > { };
+    template<typename T> struct per_request<T, T> : scope<back::scopes::per_request>::bind<T> { };
 
-    template<typename T> struct External : Aux::Externals<T> { };
-
-    template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    struct Singletons : Scope<Back::Scopes::Singleton>::Bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
+    template<typename T> struct External : aux::externals<T> { };
 
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    struct PerRequests : Scope<Back::Scopes::PerRequest>::Bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
+    struct singletons : scope<back::scopes::singleton>::bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
 
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    struct Externals : Aux::Externals<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
-
-    template<typename T> struct Annotate : Aux::Annotate<T> { };
+    struct per_requests : scope<back::scopes::per_request>::bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
 
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    class Module : public Back::Module
+    struct externals : aux::externals<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
+
+    template<typename T> struct annotate : aux::annotate<T> { };
+
+    template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
+    class module : public back::module
     {
-        template<typename TInstance, typename T> struct IsSameInstance : boost::mpl::or_
+        template<typename TInstance, typename T> struct is_same_instance : boost::mpl::or_
             <
-                boost::is_same<typename TInstance::Name, T>,
-                boost::is_same<typename TInstance::ValueType, T>
+                boost::is_same<typename TInstance::name, T>,
+                boost::is_same<typename TInstance::value_type, T>
             >
         { };
 
-        template<typename TSeq, typename T> struct FindInstanceType
-            : boost::mpl::find_if<TSeq, IsSameInstance<boost::mpl::_1, T> >::type
+        template<typename TSeq, typename T> struct find_instance_type
+            : boost::mpl::find_if<TSeq, is_same_instance<boost::mpl::_1, T> >::type
         { };
 
         template<typename T, typename Enable = void>
-        struct MakeAnnotation
+        struct make_annotation
         {
-            typedef typename Annotate<Back::Aux::Instance<T> >::template With<> type;
+            typedef typename annotate<back::aux::instance<T> >::template with<> type;
         };
 
         template<typename T>
-        struct MakeAnnotation<T, typename boost::enable_if<boost::is_base_of<Base::Aux::Internal, T> >::type>
+        struct make_annotation<T, typename boost::enable_if<boost::is_base_of<base::aux::internal, T> >::type>
         {
-            typedef typename T::template Rebind<Back::Scopes::Singleton>::type Dependency;
-            typedef Back::Aux::Instance<typename Dependency::Expected, typename Dependency::Context> Instance;
-            typedef typename Annotate<Instance>::template With<typename T::Name> type;
+            typedef typename T::template rebind<back::scopes::singleton>::type dependency;
+            typedef back::aux::instance<typename dependency::expected, typename dependency::context> instance;
+            typedef typename annotate<instance>::template with<typename T::name> type;
         };
 
-        struct Externals : boost::mpl::transform
+        struct externals : boost::mpl::transform
             <
                 typename boost::mpl::fold
                 <
@@ -105,28 +105,28 @@
                     <
                         boost::mpl::if_
                         <
-                            boost::is_base_of<Aux::Detail::Externals, boost::mpl::_2>,
+                            boost::is_base_of<aux::detail::externals, boost::mpl::_2>,
                             boost::mpl::_2,
                             boost::mpl::vector0<>
                         >,
                         boost::mpl::back_inserter<boost::mpl::_1>
                     >
                 >::type,
-                MakeAnnotation<boost::mpl::_1>
+                make_annotation<boost::mpl::_1>
             >::type
         { };
 
-        struct Instances : boost::mpl::transform
+        struct instances : boost::mpl::transform
             <
-                Externals,
-                Back::Aux::GetDerived<boost::mpl::_1>
+                externals,
+                back::aux::get_derived<boost::mpl::_1>
             >::type
         { };
 
     public:
-        typedef Back::Aux::Pool<typename Instances::type> Pool;
+        typedef back::aux::pool<typename instances::type> pool;
 
-        struct Dependencies : boost::mpl::fold
+        struct dependencies : boost::mpl::fold
             <
                 boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
                 boost::mpl::vector0<>,
@@ -134,13 +134,13 @@
                 <
                     boost::mpl::if_
                     <
-                        boost::is_base_of<Aux::Detail::Externals, boost::mpl::_2>,
+                        boost::is_base_of<aux::detail::externals, boost::mpl::_2>,
                         boost::mpl::vector0<>,
                         boost::mpl::if_
                         <
                             boost::mpl::is_sequence<boost::mpl::_2>,
                             boost::mpl::_2,
-                            PerRequest<boost::mpl::_2>
+                            per_request<boost::mpl::_2>
                         >
                     >,
                     boost::mpl::back_inserter<boost::mpl::_1>
@@ -148,26 +148,26 @@
             >::type
         { };
 
-        Module() { }
+        module() { }
 
         #include BOOST_PP_ITERATE()
 
-        template<typename T, typename TValue>
-        inline static typename boost::disable_if<boost::is_same<FindInstanceType<Externals, T>, boost::mpl::end<Externals> >, typename FindInstanceType<Externals, T>::type::Derived>::type
-        Set(TValue p_value)
+        template<typename T, typename Tvalue>
+        inline static typename boost::disable_if<boost::is_same<find_instance_type<externals, T>, boost::mpl::end<externals> >, typename find_instance_type<externals, T>::type::derived>::type
+        set(Tvalue value)
         {
-            typedef typename FindInstanceType<Externals, T>::type Annotation;
-            return typename Annotation::Derived(p_value);
+            typedef typename find_instance_type<externals, T>::type annotation;
+            return typename annotation::derived(value);
         }
 
-        const Pool& pool() const { return m_pool; }
+        const pool& get_pool() const { return pool_; }
 
     private:
-        Pool m_pool;
+        pool pool_;
     };
 
-    } // namespace Base
-    } // namespace Front
+    } // namespace base
+    } // namespace front
     } // namespace di
 
     #endif
@@ -175,8 +175,8 @@
 #else
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    Module(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &p_arg))
-        : m_pool(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), p_arg))
+    module(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg))
+        : pool_(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg))
     { }
 
 #endif

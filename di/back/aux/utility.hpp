@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef DI_BACK_AUX_UTILITY_HPP
-#define DI_BACK_AUX_UTILITY_HPP
+#ifndef DI_BACK_AUX_utILITY_HPP
+#define DI_BACK_AUX_utILITY_HPP
 
 #include <boost/shared_ptr.hpp>
 #include <boost/type_traits/remove_reference.hpp>
@@ -20,88 +20,88 @@
 
 namespace di
 {
-namespace Back
+namespace back
 {
-namespace Aux
+namespace aux
 {
 
-template<typename T> struct GetBind
+template<typename T> struct get_bind
 {
-    typedef typename T::Bind type;
+    typedef typename T::bind type;
 };
 
-template<typename T> struct GetPool
+template<typename T> struct get_pool
 {
-    typedef typename T::Pool type;
+    typedef typename T::pool type;
 };
 
-template<typename T> struct GetContext
+template<typename T> struct get_context
 {
-    typedef typename T::Context type;
+    typedef typename T::context type;
 };
 
-template<typename T> struct GetContextSize
+template<typename T> struct get_context_size
 {
-    static const std::size_t value = boost::mpl::size<typename GetContext<T>::type>::value;
+    static const std::size_t value = boost::mpl::size<typename get_context<T>::type>::value;
 };
 
-template<typename T> struct GetDependencies
+template<typename T> struct get_dependencies
 {
-    typedef typename T::Dependencies type;
+    typedef typename T::dependencies type;
 };
 
-template<typename T> struct GetExternals
+template<typename T> struct get_externals
 {
-    typedef typename T::Externals type;
+    typedef typename T::externals type;
 };
 
-template<typename T> struct GetDerived
+template<typename T> struct get_derived
 {
-    typedef typename T::Derived type;
+    typedef typename T::derived type;
 };
 
-template<typename T> struct GetSeq
+template<typename T> struct get_seq
 {
-    typedef typename T::Seq type;
+    typedef typename T::seq type;
 };
 
-template<typename TDependency, int N, typename TResult = void> struct EnableIfCtorSize
-    : boost::enable_if_c<boost::mpl::size<typename TDependency::Ctor>::value == N, TResult>
+template<typename TDependency, int N, typename TResult = void> struct enable_if_ctor_size
+    : boost::enable_if_c<boost::mpl::size<typename TDependency::ctor>::value == N, TResult>
 { };
 
-template<typename TDependency, int N> struct AtCtor
-    : boost::mpl::at_c<typename TDependency::Ctor, N>
+template<typename TDependency, int N> struct at_ctor
+    : boost::mpl::at_c<typename TDependency::ctor, N>
 { };
 
-template<typename TCallStack, typename TDependency> struct UpdateCallStack
-    : boost::mpl::push_back<TCallStack, typename TDependency::Given>
+template<typename TCallStack, typename TDependency> struct update_call_stack
+    : boost::mpl::push_back<TCallStack, typename TDependency::given>
 { };
 
-template<typename TElement> class MakePlain
+template<typename TElement> class make_plain
 {
     BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
-    template<typename T> struct RemoveAccessors
+    template<typename T> struct remove_accessors
     {
         typedef typename boost::remove_cv<typename boost::remove_pointer<typename boost::remove_reference<T>::type>::type>::type type;
     };
 
-    template<typename T, typename Enable = void> struct DerefElementType
+    template<typename T, typename Enable = void> struct deref_element_type
     {
         typedef T type;
     };
 
-    template<typename T> struct DerefElementType<T, typename boost::enable_if< has_element_type<T> >::type>
+    template<typename T> struct deref_element_type<T, typename boost::enable_if< has_element_type<T> >::type>
     {
         typedef typename T::element_type type;
     };
 
 public:
-    typedef typename DerefElementType<typename RemoveAccessors<typename DerefElementType<typename RemoveAccessors<TElement>::type>::type>::type>::type type;
+    typedef typename deref_element_type<typename remove_accessors<typename deref_element_type<typename remove_accessors<TElement>::type>::type>::type>::type type;
 };
 
-} // namespace Aux
-} // namespace Back
+} // namespace aux
+} // namespace back
 } // namespace di
 
 #endif

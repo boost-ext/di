@@ -10,7 +10,7 @@ To get started
 
 Documentation
 -----
-* [Wiki](http://qsrc.github.com/di)
+* [wiki](http://qsrc.github.com/di)
 
 Usage
 -----
@@ -168,7 +168,7 @@ Requirements
         * c++ 98 standard-compliant compiler supporting BOOST_TYPEOF
         * boost >= 1.43 (needed files from boost_1_49 are in Externals/boost)
 
-    test:
+    tests:
         * gnu-compatible Make >= 3.81
         * [optional] lcov, cppcheck, scan-build, valgrind
 

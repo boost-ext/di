@@ -22,49 +22,49 @@
 
 namespace di
 {
-namespace Back
+namespace back
 {
 
 template
 <
     typename TDeps,
-    typename TPool = Aux::Pool<>,
-    typename TPolices = Policy<>,
-    template<typename, typename> class TConverter = Detail::Converter,
-    template<typename = TDeps, typename = TPool> class TCreator = Detail::Creator,
-    template<typename = TDeps> class TVisitor = Detail::Visitor
+    typename TPool = aux::pool<>,
+    typename Tpolicies = policy<>,
+    template<typename, typename> class TConverter = detail::converter,
+    template<typename = TDeps, typename = TPool> class TCreator = detail::creator,
+    template<typename = TDeps> class TVisitor = detail::visitor
 >
-class Factory
+class factory
 {
-    struct Entries
+    struct entries
         : boost::mpl::inherit_linearly<TDeps, boost::mpl::inherit<boost::mpl::_1, boost::mpl::_2> >::type
     { };
 
 public:
-    explicit Factory(const TPool& p_pool = TPool())
-        : m_pool(p_pool)
+    explicit factory(const TPool& pool = TPool())
+        : pool_(pool)
     { }
 
     template<typename T> T create()
     {
-        typedef boost::mpl::vector0<> EmptyCallStack;
-        typedef typename TPolices::template Assert<TDeps, T>::type Polices;
-        return TConverter<Scopes::PerRequest, T>::execute(TCreator<>::template execute<T, EmptyCallStack>(m_entries, m_pool));
+        typedef boost::mpl::vector0<> empty_call_stack;
+        typedef typename Tpolicies::template verify<TDeps, T>::type polices;
+        return TConverter<scopes::per_request, T>::execute(TCreator<>::template execute<T, empty_call_stack>(m_entries, pool_));
     }
 
-    template<typename T, typename Visitor> void visit(const Visitor& p_visitor)
+    template<typename T, typename Visitor> void visit(const Visitor& visitor)
     {
-        typedef boost::mpl::vector0<> EmptyCallStack;
-        typedef typename TPolices::template Assert<TDeps, T>::type Polices;
-        TVisitor<>::template execute<T, EmptyCallStack>(p_visitor);
+        typedef boost::mpl::vector0<> empty_call_stack;
+        typedef typename Tpolicies::template verify<TDeps, T>::type polices;
+        TVisitor<>::template execute<T, empty_call_stack>(visitor);
     }
 
 private:
-    const TPool& m_pool;
-    Entries m_entries;
+    const TPool& pool_;
+    entries m_entries;
 };
 
-} // namespace Back
+} // namespace back
 } // namespace di
 
 #endif

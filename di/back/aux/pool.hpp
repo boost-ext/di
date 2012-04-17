@@ -30,9 +30,9 @@
 
     namespace di
     {
-    namespace Back
+    namespace back
     {
-    namespace Aux
+    namespace aux
     {
 
     template
@@ -40,19 +40,19 @@
         typename TSeq = boost::mpl::vector0<>,
         typename Enable = void
     >
-    class Pool
+    class pool
     {
     public:
-        typedef TSeq Seq;
+        typedef TSeq seq;
 
-        Pool() { }
+        pool() { }
 
-        template<typename T> struct ResultType
+        template<typename T> struct result_type
         {
-            typedef typename T::ResultType type;
+            typedef typename T::result_type type;
         };
 
-        template<typename T> typename ResultType<T>::type get() const
+        template<typename T> typename result_type<T>::type get() const
         {
             return T::get();
         }
@@ -60,24 +60,24 @@
 
     #include BOOST_PP_ITERATE()
 
-    } // namespace Aux
-    } // namespace Back
+    } // namespace aux
+    } // namespace back
     } // namespace di
 
     #endif
 
 #else
     #define DI_DERIVES_IMPL(_, n, seq) BOOST_PP_COMMA_IF(n) public boost::mpl::at_c<seq, n>::type
-    #define DI_CTOR_INITLIST_IMPL(_, n, na) BOOST_PP_COMMA_IF(n) T##n(p_arg##n)
+    #define DI_CTOR_INITLIST_IMPL(_, n, na) BOOST_PP_COMMA_IF(n) T##n(arg##n)
 
     template<typename TSeq>
-    class Pool<TSeq, typename boost::enable_if_c< boost::mpl::size<TSeq>::value == BOOST_PP_ITERATION()>::type>
+    class pool<TSeq, typename boost::enable_if_c< boost::mpl::size<TSeq>::value == BOOST_PP_ITERATION()>::type>
         : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_DERIVES_IMPL, TSeq)
     {
-        BOOST_MPL_HAS_XXX_TRAIT_DEF(Seq)
+        BOOST_MPL_HAS_XXX_TRAIT_DEF(seq)
 
     public:
-        struct Seq : boost::mpl::fold
+        struct seq : boost::mpl::fold
             <
                 TSeq,
                 boost::mpl::vector0<>,
@@ -85,8 +85,8 @@
                 <
                     boost::mpl::if_
                     <
-                        has_Seq<boost::mpl::_2>,
-                        GetSeq<boost::mpl::_2>,
+                        has_seq<boost::mpl::_2>,
+                        get_seq<boost::mpl::_2>,
                         typename boost::mpl::vector<boost::mpl::_2>::type
                     >,
                     boost::mpl::back_inserter<boost::mpl::_1>
@@ -98,20 +98,20 @@
         #   pragma GCC diagnostic ignored "-Wreorder"
         #endif
 
-        Pool() { }
+        pool() { }
 
         template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename T)>
-        Pool(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const T, &p_arg))
+        pool(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const T, &arg))
             : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_CTOR_INITLIST_IMPL, ~)
         { }
 
-        template<typename T> struct ResultType
+        template<typename T> struct result_type
         {
-            typedef typename T::ResultType type;
+            typedef typename T::result_type type;
         };
 
         template<typename T>
-        typename ResultType<T>::type get() const
+        typename result_type<T>::type get() const
         {
             return T::get();
         }

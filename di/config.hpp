@@ -45,8 +45,8 @@ namespace di
  * } // namespace di
  * @endcode
  */
-class Specialized { };
-template<typename, typename = Specialized> struct Defaults;
+class specialized { };
+template<typename, typename = specialized> struct defaults;
 
 } // namespace di
 

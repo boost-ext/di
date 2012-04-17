@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef DI_BACK_AUX_VALUE_HPP
-#define DI_BACK_AUX_VALUE_HPP
+#ifndef DI_BACK_AUX_RESULT_HPP
+#define DI_BACK_AUX_RESULT_HPP
 
 #include <boost/typeof/typeof.hpp>
 #include <boost/type_traits/is_arithmetic.hpp>
@@ -19,56 +19,56 @@
 
 namespace di
 {
-namespace Back
+namespace back
 {
-namespace Aux
-{
-
-namespace Detail
+namespace aux
 {
 
-template<typename Derived, typename = void> class HasValue
+namespace detail
 {
-    struct Helper { static int value; };
-    struct Base : boost::mpl::if_<boost::is_arithmetic<Derived>, boost::mpl::void_, Derived>::type, Helper { };
+
+template<typename TDerived, typename = void> class has_value
+{
+    struct helper { static int value; };
+    struct base : boost::mpl::if_<boost::is_arithmetic<TDerived>, boost::mpl::void_, TDerived>::type, helper { };
 
     template<typename T> static boost::mpl::aux::no_tag  deduce(boost::non_type<const int*, &T::value>*);
     template<typename T> static boost::mpl::aux::yes_tag deduce(...);
 
 public:
-    static const bool value = sizeof(deduce<Base>(0)) == sizeof(boost::mpl::aux::yes_tag);
+    BOOST_STATIC_CONSTANT(bool, value = sizeof(deduce<base>(0)) == sizeof(boost::mpl::aux::yes_tag));
 };
 
-}// namespace Detail
+}// namespace detail
 
-template<typename, typename = void> class Value : public boost::mpl::false_ { };
+template<typename, typename = void> class result : public boost::mpl::false_ { };
 
 template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, int C)>
-class Value< boost::mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> > : public boost::mpl::true_
+class result< boost::mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> > : public boost::mpl::true_
 {
 public:
-    typedef std::string ResultType;
+    typedef std::string result_type;
 
-    inline static ResultType create()
+    inline static result_type create()
     {
         return boost::mpl::c_str< boost::mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> >::value;
     }
 };
 
 template<typename T>
-class Value<T, typename boost::enable_if< Detail::HasValue<T> >::type> : public boost::mpl::true_
+class result<T, typename boost::enable_if< detail::has_value<T> >::type> : public boost::mpl::true_
 {
 public:
-    typedef BOOST_TYPEOF_TPL(T::value) ResultType;
+    typedef BOOST_TYPEOF_TPL(T::value) result_type;
 
-    inline static ResultType create()
+    inline static result_type create()
     {
         return T::value;
     }
 };
 
-} // namespace Aux
-} // namespace Back
+} // namespace aux
+} // namespace back
 } // namespace di
 
 #endif

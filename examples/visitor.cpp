@@ -10,25 +10,25 @@
 #include "common/utility.hpp"
 #include "common/data.hpp"
 
-namespace Base    = di::Front::Base;
-namespace Utility = di::Utility;
+namespace base    = di::front::base;
+namespace utility = di::utility;
 
-class PrintVisitor
+class print_visitor
 {
 public:
     template<typename T> void operator()() const
     {
-        int size = boost::mpl::size<typename T::Context>::value;
+        int size = boost::mpl::size<typename T::context>::value;
         while(--size) {
             std::cout << "\t";
         }
-        std::cout << demangle(typeid(typename T::Type).name()) << std::endl;
+        std::cout << demangle(typeid(typename T::type).name()) << std::endl;
     }
 };
 
-struct VisitorModule : Base::Module
+struct visitor_module : base::module
     <
-        Base::Singletons <
+        base::singletons <
             CIf0
         >
     >
@@ -36,8 +36,8 @@ struct VisitorModule : Base::Module
 
 int main()
 {
-    Utility::Injector<VisitorModule> injector;
-    injector.visit<C8>(PrintVisitor());
+    utility::injector<visitor_module> injector;
+    injector.visit<c8>(print_visitor());
 
     return 0;
 }
