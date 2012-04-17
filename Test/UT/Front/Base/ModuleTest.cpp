@@ -642,7 +642,7 @@ BOOST_AUTO_TEST_CASE(ModuleCtorWithExternalsSharedPtr)
 
     typedef Module
     <
-        Externals<
+        External<
             Value
         >
     >

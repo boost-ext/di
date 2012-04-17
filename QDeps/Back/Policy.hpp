@@ -22,10 +22,7 @@ namespace QDeps
 namespace Back
 {
 
-namespace Detail
-{
-class Policy { };
-} // namespace Detail
+namespace Detail { class Policy { }; } // namespace Detail
 
 template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
 class Policy : Detail::Policy
