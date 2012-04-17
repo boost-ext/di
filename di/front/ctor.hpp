@@ -17,13 +17,13 @@ namespace di
  * struct C { C(int, double); };
  *
  * template<>
- * struct CtorTraits<C>
+ * struct ctorTraits<C>
  * {
  *     static void ctor(int, double);
  * };
  * @endcode
  */
-template<typename T> struct CtorTraits
+template<typename T> struct ctorTraits
 {
     static void ctor(); //trivial ctor
 };

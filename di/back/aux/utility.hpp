@@ -66,11 +66,11 @@ template<typename T> struct get_seq
 };
 
 template<typename TDependency, int N, typename TResult = void> struct enable_if_ctor_size
-    : boost::enable_if_c<boost::mpl::size<typename TDependency::Ctor>::value == N, TResult>
+    : boost::enable_if_c<boost::mpl::size<typename TDependency::ctor>::value == N, TResult>
 { };
 
 template<typename TDependency, int N> struct at_ctor
-    : boost::mpl::at_c<typename TDependency::Ctor, N>
+    : boost::mpl::at_c<typename TDependency::ctor, N>
 { };
 
 template<typename TCallStack, typename TDependency> struct update_call_stack

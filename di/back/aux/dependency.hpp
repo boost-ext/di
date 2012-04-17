@@ -73,12 +73,12 @@
             : boost::mpl::and_< boost::mpl::not_<TValue<TGiven> >, boost::mpl::not_<boost::mpl::contains<typename TPool::Seq, TInstance<> > > >
         { };
 
-        template<bool, typename = void> struct CtorImpl
-            : boost::function_types::parameter_types<BOOST_TYPEOF_TPL(CtorTraits<TGiven>::ctor)>::type
+        template<bool, typename = void> struct ctor_impl
+            : boost::function_types::parameter_types<BOOST_TYPEOF_TPL(ctorTraits<TGiven>::ctor)>::type
         { };
 
         template<typename Dummy>
-        struct CtorImpl<true, Dummy>
+        struct ctor_impl<true, Dummy>
             : boost::function_types::parameter_types<BOOST_TYPEOF_TPL(TGiven::DI_CTOR_UNIQUE_NAME::ctor)>::type
         { };
 
@@ -89,8 +89,8 @@
         typedef TContext Context;
         typedef TBind Bind;
 
-        struct Ctor
-            : CtorImpl<BOOST_PP_CAT(has_, DI_CTOR_UNIQUE_NAME)<Given>::value>::type
+        struct ctor
+            : ctor_impl<BOOST_PP_CAT(has_, DI_CTOR_UNIQUE_NAME)<Given>::value>::type
         { };
 
         template<typename, typename = void> struct result_type;
