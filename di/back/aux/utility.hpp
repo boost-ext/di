@@ -16,7 +16,7 @@
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/if.hpp>
-#include "di/Config.hpp"
+#include "di/config.hpp"
 
 namespace di
 {

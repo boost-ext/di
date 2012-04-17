@@ -20,10 +20,10 @@
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/push_back.hpp>
-#include "di/Back/Aux/Dependency.hpp"
-#include "di/Back/Aux/Utility.hpp"
-#include "di/Utility/Named.hpp"
-#include "di/Front/Base/Aux/Internal.hpp"
+#include "di/back/aux/dependency.hpp"
+#include "di/back/aux/utility.hpp"
+#include "di/utility/named.hpp"
+#include "di/front/base/aux/internal.hpp"
 
 namespace di
 {

@@ -7,8 +7,8 @@
 #include <iostream>
 #include <boost/mpl/size.hpp>
 #include <di/di.hpp>
-#include "Common/Utility.hpp"
-#include "Common/Data.hpp"
+#include "common/utility.hpp"
+#include "common/data.hpp"
 
 namespace Base    = di::Front::Base;
 namespace Utility = di::Utility;

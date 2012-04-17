@@ -7,24 +7,24 @@
 #ifndef DI_DI_HPP
 #define DI_DI_HPP
 
-#include "di/Version.hpp"
-#include "di/Config.hpp"
+#include "di/version.hpp"
+#include "di/config.hpp"
 
 // Front ends
-#include "di/Front/Ctor.hpp"
-#include "di/Front/Base/Module.hpp"
-#include "di/Front/Fusion/Module.hpp"
+#include "di/front/ctor.hpp"
+#include "di/front/base/module.hpp"
+#include "di/front/fusion/module.hpp"
 
 // Utility
-#include "di/Utility/Injector.hpp"
-#include "di/Utility/Named.hpp"
-#include "di/Utility/Provider.hpp"
+#include "di/utility/injector.hpp"
+#include "di/utility/named.hpp"
+#include "di/utility/provider.hpp"
 
 // Policies
-#include "di/Back/Policies/CheckForBindingCorrectness.hpp"
-#include "di/Back/Policies/CheckForCircularDependencies.hpp"
-#include "di/Back/Policies/CheckForCreationOwnership.hpp"
-#include "di/Back/Policies/CheckForReferencesWithoutOwnership.hpp"
+#include "di/back/policies/check_for_binding_correctness.hpp"
+#include "di/back/policies/check_for_circular_dependencies.hpp"
+#include "di/back/policies/check_for_creation_ownership.hpp"
+#include "di/back/policies/check_for_references_without_ownership.hpp"
 
 #endif
 

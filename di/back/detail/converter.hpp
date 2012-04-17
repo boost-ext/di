@@ -10,7 +10,7 @@
 #include <boost/variant.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
-#include "di/Utility/Named.hpp"
+#include "di/utility/named.hpp"
 
 namespace di
 {

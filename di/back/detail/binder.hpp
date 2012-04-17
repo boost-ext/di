@@ -24,7 +24,7 @@
 #include <boost/mpl/deref.hpp>
 #include <boost/mpl/begin_end.hpp>
 #include <boost/mpl/has_xxx.hpp>
-#include "di/Back/Aux/Utility.hpp"
+#include "di/back/aux/utility.hpp"
 
 namespace di
 {

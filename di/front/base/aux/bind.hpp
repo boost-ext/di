@@ -15,10 +15,10 @@
 #include <boost/mpl/limits/vector.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/or.hpp>
-#include "di/Back/Aux/Dependency.hpp"
-#include "di/Back/Aux/Value.hpp"
-#include "di/Utility/Named.hpp"
-#include "di/Front/Base/Aux/Internal.hpp"
+#include "di/back/aux/dependency.hpp"
+#include "di/back/aux/value.hpp"
+#include "di/utility/named.hpp"
+#include "di/front/base/aux/internal.hpp"
 
 namespace di
 {

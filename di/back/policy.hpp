@@ -13,9 +13,9 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/void.hpp>
-#include "di/Back/Aux/Utility.hpp"
-#include "di/Back/Policies/CheckForCircularDependencies.hpp"
-#include "di/Back/Policies/CheckForCreationOwnership.hpp"
+#include "di/back/aux/utility.hpp"
+#include "di/back/policies/check_for_circular_dependencies.hpp"
+#include "di/back/policies/check_for_creation_ownership.hpp"
 
 namespace di
 {

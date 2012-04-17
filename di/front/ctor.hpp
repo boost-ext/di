@@ -7,7 +7,7 @@
 #ifndef DI_FRONT_CTOR_HPP
 #define DI_FRONT_CTOR_HPP
 
-#include "di/Config.hpp"
+#include "di/config.hpp"
 
 namespace di
 {

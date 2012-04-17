@@ -11,14 +11,14 @@
 #include <boost/mpl/inherit.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/transform.hpp>
-#include "di/Back/Aux/Pool.hpp"
-#include "di/Back/Policy.hpp"
-#include "di/Back/Aux/Utility.hpp"
-#include "di/Back/Aux/Dependency.hpp"
-#include "di/Back/Scopes/PerRequest.hpp"
-#include "di/Back/Detail/Converter.hpp"
-#include "di/Back/Detail/Creator.hpp"
-#include "di/Back/Detail/Visitor.hpp"
+#include "di/back/aux/pool.hpp"
+#include "di/back/policy.hpp"
+#include "di/back/aux/utility.hpp"
+#include "di/back/aux/dependency.hpp"
+#include "di/back/scopes/per_request.hpp"
+#include "di/back/detail/converter.hpp"
+#include "di/back/detail/creator.hpp"
+#include "di/back/detail/visitor.hpp"
 
 namespace di
 {

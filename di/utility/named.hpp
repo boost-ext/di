@@ -9,8 +9,8 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
-#include "di/Back/Aux/Utility.hpp"
-#include "di/Config.hpp"
+#include "di/back/aux/utility.hpp"
+#include "di/config.hpp"
 
 namespace di
 {
