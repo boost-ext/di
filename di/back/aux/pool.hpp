@@ -26,7 +26,7 @@
     #include <boost/mpl/has_xxx.hpp>
     #include "di/back/aux/utility.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "di/Back/Aux/Pool.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "di/back/aux/pool.hpp"))
 
     namespace di
     {

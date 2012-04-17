@@ -21,7 +21,7 @@
     #include "di/back/scopes/per_request.hpp"
     #include "di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, DI_FUNCTION_ARITY_LIMIT_SIZE, "di/Back/Detail/Visitor.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, DI_FUNCTION_ARITY_LIMIT_SIZE, "di/back/detail/visitor.hpp"))
 
     namespace di
     {

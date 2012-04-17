@@ -31,7 +31,7 @@
     #include "di/front/ctor.hpp"
     #include "di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, DI_FUNCTION_ARITY_LIMIT_SIZE, "di/Back/Aux/Dependency.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, DI_FUNCTION_ARITY_LIMIT_SIZE, "di/back/aux/dependency.hpp"))
 
     namespace di
     {

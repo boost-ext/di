@@ -28,7 +28,7 @@
     #include "di/front/base/aux/bind.hpp"
     #include "di/front/base/aux/scope.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "di/Front/Fusion/Module.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "di/front/fusion/module.hpp"))
 
     namespace di
     {

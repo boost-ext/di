@@ -6,8 +6,9 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef DI_BACK_POLICIES_CHECKFORCIRCULARDEPENDENCIES_HPP
-    #define DI_BACK_POLICIES_CHECKFORCIRCULARDEPENDENCIES_HPP
+
+    #ifndef DI_BACK_POLICIES_CHECK_FOR_CIRCULAR_DEPENDENCIES_HPP
+    #define DI_BACK_POLICIES_CHECK_FOR_CIRCULAR_DEPENDENCIES_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
@@ -27,7 +28,7 @@
     #include "di/back/scopes/per_request.hpp"
     #include "di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, DI_FUNCTION_ARITY_LIMIT_SIZE, "di/Back/Policies/CheckForCircularDependencies.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, DI_FUNCTION_ARITY_LIMIT_SIZE, "di/back/policies/check_for_circular_dependencies.hpp"))
 
     namespace di
     {

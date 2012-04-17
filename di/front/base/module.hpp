@@ -30,13 +30,13 @@
     #include "di/back/module.hpp"
     #include "di/back/scopes/singleton.hpp"
     #include "di/back/scopes/per_request.hpp"
-    #include "di/front/base/Aux/internal.hpp"
-    #include "di/front/base/Aux/scope.hpp"
-    #include "di/front/base/Aux/bind.hpp"
-    #include "di/front/base/Aux/externals.hpp"
-    #include "di/front/base/Aux/annotate.hpp"
+    #include "di/front/base/aux/internal.hpp"
+    #include "di/front/base/aux/scope.hpp"
+    #include "di/front/base/aux/bind.hpp"
+    #include "di/front/base/aux/externals.hpp"
+    #include "di/front/base/aux/annotate.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "di/Front/Base/Module.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "di/front/base/module.hpp"))
 
     namespace di
     {

@@ -15,7 +15,7 @@
     #include <boost/preprocessor/repetition/enum_binary_params.hpp>
     #include "di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, DI_FUNCTION_ARITY_LIMIT_SIZE, "di/Back/Scopes/Singleton.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, DI_FUNCTION_ARITY_LIMIT_SIZE, "di/back/scopes/singleton.hpp"))
 
     namespace di
     {
