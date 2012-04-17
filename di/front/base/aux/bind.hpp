@@ -16,7 +16,7 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/or.hpp>
 #include "di/back/aux/dependency.hpp"
-#include "di/back/aux/value.hpp"
+#include "di/back/aux/result.hpp"
 #include "di/utility/named.hpp"
 #include "di/front/base/aux/internal.hpp"
 
@@ -79,7 +79,7 @@ struct Bind : Internal, back::aux::Dependency
 };
 
 template<typename TExpected, typename TGiven>
-struct Bind<TExpected, TGiven, typename boost::enable_if< boost::mpl::or_<back::aux::Value<TGiven>, boost::is_same<TExpected, TGiven> > >::type> : Internal, back::aux::Dependency
+struct Bind<TExpected, TGiven, typename boost::enable_if< boost::mpl::or_<back::aux::result<TGiven>, boost::is_same<TExpected, TGiven> > >::type> : Internal, back::aux::Dependency
     <
         boost::mpl::_1,
         TExpected,

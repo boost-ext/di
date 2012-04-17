@@ -10,10 +10,10 @@
 class C1 { };
 class C2 { };
 
-class LValue
+class Lvalue
 {
 public:
-    DI_CTOR(LValue, C1, C2)
+    DI_CTOR(Lvalue, C1, C2)
     { }
 };
 
@@ -27,7 +27,7 @@ public:
 int main()
 {
     di::Utility::Injector<> injector;
-    injector.create<LValue>();
+    injector.create<Lvalue>();
     injector.create<SharedPtr>();
 
     return 0;

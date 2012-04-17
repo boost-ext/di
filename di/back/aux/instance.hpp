@@ -29,19 +29,19 @@ namespace detail
 BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
 
 template<typename T, typename = void>
-struct GetValueType
+struct GetvalueType
 {
     typedef T type;
 };
 
 template<>
-struct GetValueType<std::string, void>
+struct GetvalueType<std::string, void>
 {
     typedef std::string type;
 };
 
 template<typename T>
-struct GetValueType<T, typename boost::enable_if<has_value_type<T> >::type>
+struct GetvalueType<T, typename boost::enable_if<has_value_type<T> >::type>
 {
     typedef typename T::value_type type;
 };
@@ -57,7 +57,7 @@ template
 class Instance
 {
 public:
-    typedef T ValueType;
+    typedef T valueType;
     typedef boost::variant<const T&, T&, boost::shared_ptr<T> > result_type;
 
     explicit Instance(const T& p_member)
@@ -93,15 +93,15 @@ class Instance
         <
             boost::mpl::or_
             <
-                boost::is_same<typename detail::GetValueType<T>::type, std::string>,
-                boost::is_pod<typename detail::GetValueType<T>::type>
+                boost::is_same<typename detail::GetvalueType<T>::type, std::string>,
+                boost::is_pod<typename detail::GetvalueType<T>::type>
             >
         >::type
     >
 {
 public:
-    typedef T ValueType;
-    typedef typename detail::GetValueType<T>::type result_type;
+    typedef T valueType;
+    typedef typename detail::GetvalueType<T>::type result_type;
 
     explicit Instance(result_type p_member)
         : m_member(p_member)

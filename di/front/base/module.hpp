@@ -73,7 +73,7 @@
         template<typename TInstance, typename T> struct IsSameInstance : boost::mpl::or_
             <
                 boost::is_same<typename TInstance::Name, T>,
-                boost::is_same<typename TInstance::ValueType, T>
+                boost::is_same<typename TInstance::valueType, T>
             >
         { };
 
@@ -152,9 +152,9 @@
 
         #include BOOST_PP_ITERATE()
 
-        template<typename T, typename TValue>
+        template<typename T, typename Tvalue>
         inline static typename boost::disable_if<boost::is_same<FindInstanceType<Externals, T>, boost::mpl::end<Externals> >, typename FindInstanceType<Externals, T>::type::Derived>::type
-        Set(TValue p_value)
+        Set(Tvalue p_value)
         {
             typedef typename FindInstanceType<Externals, T>::type Annotation;
             return typename Annotation::Derived(p_value);

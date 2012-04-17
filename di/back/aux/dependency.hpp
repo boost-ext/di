@@ -27,7 +27,7 @@
     #include <boost/mpl/identity.hpp>
     #include <boost/mpl/has_xxx.hpp>
     #include "di/back/aux/instance.hpp"
-    #include "di/back/aux/value.hpp"
+    #include "di/back/aux/result.hpp"
     #include "di/front/ctor.hpp"
     #include "di/config.hpp"
 
@@ -47,7 +47,7 @@
         typename TGiven = TExpected,
         typename TContext = boost::mpl::vector0<>,
         typename TBind = boost::is_same<boost::mpl::_1, TExpected>,
-        template<typename, typename = void> class TValue = Value,
+        template<typename, typename = void> class TResult = result,
         template<typename = TExpected, typename = TContext, typename = void> class TInstance = Instance
     >
     class Dependency
@@ -65,12 +65,12 @@
             : boost::mpl::contains<typename TPool::Seq, TInstance<> >
         { };
 
-        template<typename TPool> struct IsValueType
-            : boost::mpl::and_< TValue<TGiven>, boost::mpl::not_<boost::mpl::contains<typename TPool::Seq, TInstance<> > > >
+        template<typename TPool> struct IsvalueType
+            : boost::mpl::and_< TResult<TGiven>, boost::mpl::not_<boost::mpl::contains<typename TPool::Seq, TInstance<> > > >
         { };
 
         template<typename TPool> struct IsScopeType
-            : boost::mpl::and_< boost::mpl::not_<TValue<TGiven> >, boost::mpl::not_<boost::mpl::contains<typename TPool::Seq, TInstance<> > > >
+            : boost::mpl::and_< boost::mpl::not_<TResult<TGiven> >, boost::mpl::not_<boost::mpl::contains<typename TPool::Seq, TInstance<> > > >
         { };
 
         template<bool, typename = void> struct ctor_impl
@@ -101,8 +101,8 @@
         { };
 
         template<typename TPool>
-        struct result_type<TPool, typename boost::enable_if< IsValueType<TPool> >::type>
-            : boost::mpl::identity<typename TValue<TGiven>::result_type>
+        struct result_type<TPool, typename boost::enable_if< IsvalueType<TPool> >::type>
+            : boost::mpl::identity<typename TResult<TGiven>::result_type>
         { };
 
         template<typename TPool>
@@ -117,9 +117,9 @@
         }
 
         template<typename TPool>
-        typename boost::enable_if<IsValueType<TPool>, typename result_type<TPool>::type>::type create(const TPool&)
+        typename boost::enable_if<IsvalueType<TPool>, typename result_type<TPool>::type>::type create(const TPool&)
         {
-            return TValue<TGiven>::create();
+            return TResult<TGiven>::create();
         }
 
         template<typename TPool>
@@ -140,15 +140,15 @@
         typename TGiven,
         typename TContext,
         typename TBind,
-        template<typename, typename> class TValue,
+        template<typename, typename> class TResult,
         template<typename, typename, typename> class TInstance
     >
-    class Dependency<boost::mpl::_1, TExpected, TGiven, TContext, TBind, TValue, TInstance>
+    class Dependency<boost::mpl::_1, TExpected, TGiven, TContext, TBind, TResult, TInstance>
     {
     public:
         template<typename Scope> struct Rebind
         {
-            typedef Dependency<Scope, TExpected, TGiven, TContext, TBind, TValue, TInstance> type;
+            typedef Dependency<Scope, TExpected, TGiven, TContext, TBind, TResult, TInstance> type;
         };
     };
 
@@ -157,15 +157,15 @@
         typename TScope,
         typename TContext,
         typename TBind,
-        template<typename, typename> class TValue,
+        template<typename, typename> class TResult,
         template<typename, typename, typename> class TInstance
     >
-    class Dependency<TScope, boost::mpl::_1, boost::mpl::_2, TContext, TBind, TValue, TInstance>
+    class Dependency<TScope, boost::mpl::_1, boost::mpl::_2, TContext, TBind, TResult, TInstance>
     {
     public:
         template<typename Expected, typename Given> struct Rebind
         {
-            typedef Dependency<TScope, Expected, Given, TContext, TBind, TValue, TInstance> type;
+            typedef Dependency<TScope, Expected, Given, TContext, TBind, TResult, TInstance> type;
         };
     };
 
