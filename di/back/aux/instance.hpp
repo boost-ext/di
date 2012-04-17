@@ -61,24 +61,24 @@ public:
     typedef boost::variant<const T&, T&, boost::shared_ptr<T> > result_type;
 
     explicit instance(const T& member)
-        : m_member(member)
+        : member_(member)
     { }
 
     explicit instance(T& member)
-        : m_member(member)
+        : member_(member)
     { }
 
     explicit instance(boost::shared_ptr<T> member)
-        : m_member(member)
+        : member_(member)
     { }
 
     result_type get() const
     {
-        return m_member;
+        return member_;
     }
 
 private:
-    result_type m_member;
+    result_type member_;
 };
 
 template
@@ -104,16 +104,16 @@ public:
     typedef typename detail::get_value_type<T>::type result_type;
 
     explicit instance(result_type member)
-        : m_member(member)
+        : member_(member)
     { }
 
     result_type get() const
     {
-        return m_member;
+        return member_;
     }
 
 private:
-    result_type m_member;
+    result_type member_;
 };
 
 } // namespace aux

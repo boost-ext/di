@@ -42,14 +42,14 @@ class factory
 
 public:
     explicit factory(const TPool& pool = TPool())
-        : m_pool(pool)
+        : pool_(pool)
     { }
 
     template<typename T> T create()
     {
         typedef boost::mpl::vector0<> empty_call_stack;
         typedef typename Tpolicies::template verify<TDeps, T>::type polices;
-        return TConverter<scopes::per_request, T>::execute(TCreator<>::template execute<T, empty_call_stack>(m_entries, m_pool));
+        return TConverter<scopes::per_request, T>::execute(TCreator<>::template execute<T, empty_call_stack>(m_entries, pool_));
     }
 
     template<typename T, typename Visitor> void visit(const Visitor& visitor)
@@ -60,7 +60,7 @@ public:
     }
 
 private:
-    const TPool& m_pool;
+    const TPool& pool_;
     entries m_entries;
 };
 

@@ -21,16 +21,16 @@ using namespace test::common;
 
 BOOST_AUTO_TEST_CASE(per_requestCreate)
 {
-    per_request::scope<int> l_pr;
+    per_request::scope<int> pr;
 
-    BOOST_CHECK((l_pr.create().get() != l_pr.create().get()));
+    BOOST_CHECK((pr.create().get() != pr.create().get()));
 }
 
 BOOST_AUTO_TEST_CASE(per_requestCreateArgs)
 {
-    per_request::scope<C2> l_pr;
+    per_request::scope<C2> pr;
 
-    BOOST_CHECK((l_pr.create<int, double, char>(0, 0.0, '0').get() != l_pr.create<int, double, char>(0, 0.0, '0').get()));
+    BOOST_CHECK((pr.create<int, double, char>(0, 0.0, '0').get() != pr.create<int, double, char>(0, 0.0, '0').get()));
 }
 
 } // namespace ut

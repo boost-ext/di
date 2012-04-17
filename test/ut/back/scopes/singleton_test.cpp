@@ -21,16 +21,16 @@ using namespace test::common;
 
 BOOST_AUTO_TEST_CASE(singletonCreate)
 {
-    singleton::scope<int> l_s;
+    singleton::scope<int> s;
 
-    BOOST_CHECK((l_s.create() == l_s.create()));
+    BOOST_CHECK((s.create() == s.create()));
 }
 
 BOOST_AUTO_TEST_CASE(singletonCreateArgs)
 {
-    singleton::scope<C2> l_s;
+    singleton::scope<C2> s;
 
-    BOOST_CHECK((l_s.create<int, double, char>(0, 0.0, '0') == l_s.create<int, double, char>(0, 0.0, '0')));
+    BOOST_CHECK((s.create<int, double, char>(0, 0.0, '0') == s.create<int, double, char>(0, 0.0, '0')));
 }
 
 } // namespace ut

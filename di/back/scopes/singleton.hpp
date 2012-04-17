@@ -34,18 +34,18 @@
 
             result_type create()
             {
-                if (!m_instance)
+                if (!instance_)
                 {
-                    m_instance.reset(new T);
+                    instance_.reset(new T);
                 }
 
-                return m_instance;
+                return instance_;
             }
 
             #include BOOST_PP_ITERATE()
 
         private:
-            result_type m_instance;
+            result_type instance_;
         };
     };
 
@@ -60,12 +60,12 @@
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
     result_type create(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg))
     {
-        if (!m_instance)
+        if (!instance_)
         {
-            m_instance.reset(new T(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg)));
+            instance_.reset(new T(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg)));
         }
 
-        return m_instance;
+        return instance_;
     }
 
 #endif

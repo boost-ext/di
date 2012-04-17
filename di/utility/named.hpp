@@ -28,17 +28,17 @@ public:
     typedef named<value_type, TName> element_type;
 
     named(T value = T()) // non explicit
-        : m_value(new T(value))
+        : value_(new T(value))
     { }
 
     named(const boost::shared_ptr<T>& value) // non explicit
-        : m_value(value)
+        : value_(value)
     { }
 
-    operator T() const { return *m_value; }
+    operator T() const { return *value_; }
 
 private:
-    boost::shared_ptr<T> m_value;
+    boost::shared_ptr<T> value_;
 };
 
 template<typename T, typename TName>
@@ -49,21 +49,21 @@ public:
     typedef typename back::aux::make_plain<T>::type value_type;
 
     named(boost::shared_ptr<T> value = boost::make_shared<T>()) // non explicit
-        : m_value(value)
+        : value_(value)
     { }
 
     named(value_type value) // non explicit
-       : m_value(boost::make_shared<value_type>(value))
+       : value_(boost::make_shared<value_type>(value))
     { }
 
-    operator boost::shared_ptr<T>() const { return m_value; }
-    operator value_type() const { return *m_value; }
-    T* operator->() const { return m_value.get(); }
-    T& operator*() const { return *m_value; }
-    T* get() const { return m_value.get(); }
+    operator boost::shared_ptr<T>() const { return value_; }
+    operator value_type() const { return *value_; }
+    T* operator->() const { return value_.get(); }
+    T& operator*() const { return *value_; }
+    T* get() const { return value_.get(); }
 
 private:
-    boost::shared_ptr<T> m_value;
+    boost::shared_ptr<T> value_;
 };
 
 template<typename T, typename TName>

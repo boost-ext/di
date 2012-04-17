@@ -96,24 +96,24 @@
 
     public:
         injector()
-            : m_pool(), m_factory(m_pool)
+            : pool_(), factory_(pool_)
         { }
 
         #include BOOST_PP_ITERATE()
 
         template<typename T> T create()
         {
-            return m_factory.create<T>();
+            return factory_.create<T>();
         }
 
         template<typename T, typename Visitor> void visit(const Visitor& visitor)
         {
-            return m_factory.visit<T>(visitor);
+            return factory_.visit<T>(visitor);
         }
 
     private:
-        pool m_pool;
-        factory m_factory;
+        pool pool_;
+        factory factory_;
     };
 
     } // namespace utility
@@ -125,8 +125,8 @@
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename M)>
     injector(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const M, &module))
-        : m_pool(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), module, .get_pool() BOOST_PP_INTERCEPT)),
-          m_factory(m_pool)
+        : pool_(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), module, .get_pool() BOOST_PP_INTERCEPT)),
+          factory_(pool_)
     { }
 
     #define DI_MODULE_ARG(_, n, M) BOOST_PP_COMMA_IF(n) const M##n& module##n = M##n()

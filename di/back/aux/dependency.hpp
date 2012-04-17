@@ -125,13 +125,13 @@
         template<typename TPool>
         typename boost::enable_if<IsscopeType<TPool>, typename result_type<TPool>::type>::type create(const TPool&)
         {
-            return m_scope.create();
+            return scope_.create();
         }
 
         #include BOOST_PP_ITERATE()
 
     private:
-        typename TScope::template scope<TGiven> m_scope;
+        typename TScope::template scope<TGiven> scope_;
     };
 
     template
@@ -180,7 +180,7 @@
     template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
     typename boost::enable_if<IsscopeType<TPool>, typename result_type<TPool>::type>::type create(const TPool&, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg))
     {
-        return m_scope.create(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg));
+        return scope_.create(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg));
     }
 
     template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>

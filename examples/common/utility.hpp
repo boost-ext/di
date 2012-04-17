@@ -15,11 +15,11 @@
 inline std::string demangle(const std::string& mangled)
 {
 #if defined(__GNUC__) && !defined(__llvm__)
-    char* l_demangled = abi::__cxa_demangle(mangled.c_str(), 0, 0, 0);
+    char* demangled = abi::__cxa_demangle(mangled.c_str(), 0, 0, 0);
 
     if (l_demangled)
     {
-        boost::shared_ptr<char> l_result(l_demangled, std::free);
+        boost::shared_ptr<char> result(l_demangled, std::free);
         return std::string(l_demangled);
     }
 #endif

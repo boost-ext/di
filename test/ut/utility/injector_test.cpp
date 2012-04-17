@@ -38,8 +38,8 @@ BOOST_AUTO_TEST_CASE(ctorEmpty)
 {
     typedef injector<> Inj;
 
-    Inj l_inj; //have to compile
-    (void)l_inj;
+    Inj inj; //have to compile
+    (void)inj;
 }
 
 BOOST_AUTO_TEST_CASE(Simplemodule)
@@ -47,8 +47,8 @@ BOOST_AUTO_TEST_CASE(Simplemodule)
     typedef injector<module> Inj;
     module module;
 
-    Inj l_inj(module); //have to compile
-    (void)l_inj;
+    Inj inj(module); //have to compile
+    (void)inj;
 }
 
 } // namespace ut

@@ -160,10 +160,10 @@
             return typename annotation::derived(value);
         }
 
-        const pool& get_pool() const { return m_pool; }
+        const pool& get_pool() const { return pool_; }
 
     private:
-        pool m_pool;
+        pool pool_;
     };
 
     } // namespace base
@@ -176,7 +176,7 @@
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
     module(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg))
-        : m_pool(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg))
+        : pool_(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg))
     { }
 
 #endif
