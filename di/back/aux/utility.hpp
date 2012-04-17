@@ -47,12 +47,12 @@ template<typename T> struct get_context_size
 
 template<typename T> struct get_dependencies
 {
-    typedef typename T::Dependencies type;
+    typedef typename T::dependencies type;
 };
 
 template<typename T> struct get_externals
 {
-    typedef typename T::Externals type;
+    typedef typename T::externals type;
 };
 
 template<typename T> struct get_derived

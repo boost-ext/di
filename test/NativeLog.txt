@@ -1,0 +1,192 @@
+---------------------------------------------------------------------
+BD Software STL Message Decryptor v3.10 for gcc 2/3/4
+---------------------------------------------------------------------
+Command line: '/hdr:m /cand:s /iter:L'
+banner = Y
+break_algorithm = D
+comma_wrap = B
+close_wrap = Y
+output_width = 80
+tabsize = 4
+advise_re_policy_opts = 1
+reformat_linenumbers = 0
+wrap_own_msgs = 0
+header_policy = M
+with_policy = S
+headers_to_show = 1
+candidate_policy = S
+pathname_policy = S
+show_backtraces = Y
+---------------------------------------------------------------------
+Native input follows:
+---------------------------------------------------------------------
+
+Raw unprocessed input line:
+ut/front/base/module_test.cpp:450:9: error: expected '{' before '>' token
+
+
+
+The line at the point of the error was:
+ut/front/base/module_test.cpp:450:9: error: expected '{' before '>' token
+
+                                                                 ^
+
+Nesting key: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1
+
+STL Decryptor ERROR: the char '>' (position 65) DOESN'T MATCH DELIMITER '{'!
+ut/front/base/module_test.cpp:450:9: error: expected unqualified-id before '>' token
+ut/front/base/module_test.cpp:453:270: error: incomplete type 'di::Front::Base::UT::externalsBase::test_method()::TestModule' used in nested name specifier
+ut/front/base/module_test.cpp:453:270: error: incomplete type 'di::Front::Base::UT::externalsBase::test_method()::TestModule' used in nested name specifier
+ut/front/base/module_test.cpp:453:294: error: template argument 2 is invalid
+ut/front/base/module_test.cpp:455:90: error: incomplete type 'di::Front::Base::UT::externalsBase::test_method()::TestModule' used in nested name specifier
+ut/front/base/module_test.cpp:455:90: error: incomplete type 'di::Front::Base::UT::externalsBase::test_method()::TestModule' used in nested name specifier
+ut/front/base/module_test.cpp:455:112: error: template argument 2 is invalid
+ut/front/base/module_test.cpp: In member function 'void di::Front::Base::UT::externalsMix::test_method()':
+ut/front/base/module_test.cpp:471:13: error: 'externals' was not declared in this scope
+ut/front/base/module_test.cpp:474:13: error: template argument 1 is invalid
+ut/front/base/module_test.cpp:476:9: error: expected '{' before '>' token
+
+The line at the point of the error was:
+ut/front/base/module_test.cpp:476:9: error: expected '{' before '>' token
+
+                                                                 ^
+
+Nesting key: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1
+
+STL Decryptor ERROR: the char '>' (position 65) DOESN'T MATCH DELIMITER '{'!
+ut/front/base/module_test.cpp:476:9: error: expected unqualified-id before '>' token
+ut/front/base/module_test.cpp:479:270: error: incomplete type 'di::Front::Base::UT::externalsMix::test_method()::TestModule' used in nested name specifier
+ut/front/base/module_test.cpp:479:270: error: incomplete type 'di::Front::Base::UT::externalsMix::test_method()::TestModule' used in nested name specifier
+ut/front/base/module_test.cpp:479:294: error: template argument 2 is invalid
+ut/front/base/module_test.cpp:481:118: error: incomplete type 'di::Front::Base::UT::externalsMix::test_method()::TestModule' used in nested name specifier
+ut/front/base/module_test.cpp:481:118: error: incomplete type 'di::Front::Base::UT::externalsMix::test_method()::TestModule' used in nested name specifier
+ut/front/base/module_test.cpp:481:140: error: template argument 2 is invalid
+ut/front/base/module_test.cpp: In member function 'void di::Front::Base::UT::externalsBind::test_method()':
+ut/front/base/module_test.cpp:499:13: error: 'externals' was not declared in this scope
+ut/front/base/module_test.cpp:504:13: error: template argument 1 is invalid
+ut/front/base/module_test.cpp:505:9: error: expected '{' before '>' token
+
+The line at the point of the error was:
+ut/front/base/module_test.cpp:505:9: error: expected '{' before '>' token
+
+                                                                 ^
+
+Nesting key: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1
+
+STL Decryptor ERROR: the char '>' (position 65) DOESN'T MATCH DELIMITER '{'!
+ut/front/base/module_test.cpp:505:9: error: expected unqualified-id before '>' token
+ut/front/base/module_test.cpp:508:270: error: incomplete type 'di::Front::Base::UT::externalsBind::test_method()::TestModule' used in nested name specifier
+ut/front/base/module_test.cpp:508:270: error: incomplete type 'di::Front::Base::UT::externalsBind::test_method()::TestModule' used in nested name specifier
+ut/front/base/module_test.cpp:508:294: error: template argument 2 is invalid
+ut/front/base/module_test.cpp:510:191: error: incomplete type 'di::Front::Base::UT::externalsBind::test_method()::TestModule' used in nested name specifier
+ut/front/base/module_test.cpp:510:191: error: incomplete type 'di::Front::Base::UT::externalsBind::test_method()::TestModule' used in nested name specifier
+ut/front/base/module_test.cpp:510:213: error: template argument 2 is invalid
+ut/front/base/module_test.cpp: In member function 'void di::Front::Base::UT::SetInstanceInt::test_method()':
+ut/front/base/module_test.cpp:531:13: error: 'externals' was not declared in this scope
+ut/front/base/module_test.cpp:533:13: error: template argument 1 is invalid
+ut/front/base/module_test.cpp:534:9: error: expected '{' before '>' token
+
+The line at the point of the error was:
+ut/front/base/module_test.cpp:534:9: error: expected '{' before '>' token
+
+                                                                 ^
+
+Nesting key: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1
+
+STL Decryptor ERROR: the char '>' (position 65) DOESN'T MATCH DELIMITER '{'!
+ut/front/base/module_test.cpp:534:9: error: expected unqualified-id before '>' token
+ut/front/base/module_test.cpp:537:593: error: incomplete type 'di::Front::Base::UT::SetInstanceInt::test_method()::TestModule' used in nested name specifier
+ut/front/base/module_test.cpp:537:609: error: expected primary-expression before 'int'
+ut/front/base/module_test.cpp: In member function 'void di::Front::Base::UT::SetInstanceAnnotateInCallStack::test_method()':
+ut/front/base/module_test.cpp:547:13: error: 'externals' was not declared in this scope
+ut/front/base/module_test.cpp:550:13: error: template argument 1 is invalid
+ut/front/base/module_test.cpp:551:9: error: expected '{' before '>' token
+
+The line at the point of the error was:
+ut/front/base/module_test.cpp:551:9: error: expected '{' before '>' token
+
+                                                                 ^
+
+Nesting key: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1
+
+STL Decryptor ERROR: the char '>' (position 65) DOESN'T MATCH DELIMITER '{'!
+ut/front/base/module_test.cpp:551:9: error: expected unqualified-id before '>' token
+ut/front/base/module_test.cpp:554:595: error: incomplete type 'di::Front::Base::UT::SetInstanceAnnotateInCallStack::test_method()::TestModule' used in nested name specifier
+ut/front/base/module_test.cpp:554:612: error: expected primary-expression before '>' token
+ut/front/base/module_test.cpp:554:618: error: request for member 'get' in 'i1', which is of non-class type 'const int'
+ut/front/base/module_test.cpp:555:595: error: incomplete type 'di::Front::Base::UT::SetInstanceAnnotateInCallStack::test_method()::TestModule' used in nested name specifier
+ut/front/base/module_test.cpp:555:612: error: expected primary-expression before '>' token
+ut/front/base/module_test.cpp:555:618: error: request for member 'get' in 'i2', which is of non-class type 'const int'
+ut/front/base/module_test.cpp: In member function 'void di::Front::Base::UT::SetInstanceAnnotateInName::test_method()':
+ut/front/base/module_test.cpp:565:13: error: 'externals' was not declared in this scope
+ut/front/base/module_test.cpp:568:13: error: template argument 1 is invalid
+ut/front/base/module_test.cpp:569:9: error: expected '{' before '>' token
+
+The line at the point of the error was:
+ut/front/base/module_test.cpp:569:9: error: expected '{' before '>' token
+
+                                                                 ^
+
+Nesting key: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1
+
+STL Decryptor ERROR: the char '>' (position 65) DOESN'T MATCH DELIMITER '{'!
+ut/front/base/module_test.cpp:569:9: error: expected unqualified-id before '>' token
+ut/front/base/module_test.cpp:572:595: error: incomplete type 'di::Front::Base::UT::SetInstanceAnnotateInName::test_method()::TestModule' used in nested name specifier
+ut/front/base/module_test.cpp:572:612: error: expected primary-expression before '>' token
+ut/front/base/module_test.cpp:572:618: error: request for member 'get' in 'i1', which is of non-class type 'const int'
+ut/front/base/module_test.cpp:573:595: error: incomplete type 'di::Front::Base::UT::SetInstanceAnnotateInName::test_method()::TestModule' used in nested name specifier
+ut/front/base/module_test.cpp:573:612: error: expected primary-expression before '>' token
+ut/front/base/module_test.cpp:573:618: error: request for member 'get' in 'i2', which is of non-class type 'const int'
+ut/front/base/module_test.cpp: In member function 'void di::Front::Base::UT::SetInstanceAnnotateInNameInCallStack::test_method()':
+ut/front/base/module_test.cpp:583:13: error: 'externals' was not declared in this scope
+ut/front/base/module_test.cpp:586:13: error: template argument 1 is invalid
+ut/front/base/module_test.cpp:587:9: error: expected '{' before '>' token
+
+The line at the point of the error was:
+ut/front/base/module_test.cpp:587:9: error: expected '{' before '>' token
+
+                                                                 ^
+
+Nesting key: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1
+
+STL Decryptor ERROR: the char '>' (position 65) DOESN'T MATCH DELIMITER '{'!
+ut/front/base/module_test.cpp:587:9: error: expected unqualified-id before '>' token
+ut/front/base/module_test.cpp:590:595: error: incomplete type 'di::Front::Base::UT::SetInstanceAnnotateInNameInCallStack::test_method()::TestModule' used in nested name specifier
+ut/front/base/module_test.cpp:590:612: error: expected primary-expression before '>' token
+ut/front/base/module_test.cpp:590:618: error: request for member 'get' in 'i1', which is of non-class type 'const int'
+ut/front/base/module_test.cpp:591:595: error: incomplete type 'di::Front::Base::UT::SetInstanceAnnotateInNameInCallStack::test_method()::TestModule' used in nested name specifier
+ut/front/base/module_test.cpp:591:612: error: expected primary-expression before '>' token
+ut/front/base/module_test.cpp:591:618: error: request for member 'get' in 'i2', which is of non-class type 'const int'
+ut/front/base/module_test.cpp: In member function 'void di::Front::Base::UT::SetInstanceMix::test_method()':
+ut/front/base/module_test.cpp:602:13: error: 'externals' was not declared in this scope
+ut/front/base/module_test.cpp:606:13: error: template argument 1 is invalid
+ut/front/base/module_test.cpp:607:9: error: expected '{' before '>' token
+
+The line at the point of the error was:
+ut/front/base/module_test.cpp:607:9: error: expected '{' before '>' token
+
+                                                                 ^
+
+Nesting key: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1
+
+STL Decryptor ERROR: the char '>' (position 65) DOESN'T MATCH DELIMITER '{'!
+ut/front/base/module_test.cpp:607:9: error: expected unqualified-id before '>' token
+ut/front/base/module_test.cpp:610:595: error: incomplete type 'di::Front::Base::UT::SetInstanceMix::test_method()::TestModule' used in nested name specifier
+ut/front/base/module_test.cpp:610:611: error: expected primary-expression before 'int'
+ut/front/base/module_test.cpp:611:595: error: incomplete type 'di::Front::Base::UT::SetInstanceMix::test_method()::TestModule' used in nested name specifier
+ut/front/base/module_test.cpp:611:612: error: expected primary-expression before '>' token
+ut/front/base/module_test.cpp:611:618: error: request for member 'get' in 'i2', which is of non-class type 'const int'
+ut/front/base/module_test.cpp:612:595: error: incomplete type 'di::Front::Base::UT::SetInstanceMix::test_method()::TestModule' used in nested name specifier
+ut/front/base/module_test.cpp:612:612: error: expected primary-expression before '>' token
+ut/front/base/module_test.cpp:612:618: error: request for member 'get' in 'i3', which is of non-class type 'const int'
+ut/front/base/module_test.cpp: In member function 'void di::Front::Base::UT::ModuleCtorWithexternals::test_method()':
+ut/front/base/module_test.cpp:622:9: error: 'externals' was not declared in this scope
+ut/front/base/module_test.cpp:625:9: error: template argument 1 is invalid
+ut/front/base/module_test.cpp:626:5: error: expected unqualified-id before '>' token
+ut/front/base/module_test.cpp:629:5: error: 'TestModule' was not declared in this scope
+ut/front/base/module_test.cpp:629:16: error: expected ';' before 'module'
+ut/front/base/module_test.cpp:634:593: error: 'module' was not declared in this scope
+ut/front/base/module_test.cpp:635:593: error: 'module' was not declared in this scope
+At global scope:
+cc1plus: error: unrecognized command line option "-Wno-four-char-constants" [-Werror]
+cc1plus: all warnings being treated as errors

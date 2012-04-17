@@ -61,7 +61,7 @@
     public:
         typedef back::aux::pool<TSeq> pool;
 
-        struct Dependencies : boost::mpl::fold
+        struct dependencies : boost::mpl::fold
             <
                 TSeq,
                 boost::mpl::vector0<>,

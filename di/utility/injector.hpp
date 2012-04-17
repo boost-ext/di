@@ -56,20 +56,20 @@
         { };
 
         template<typename TSeq, typename TResult = boost::mpl::set0<> >
-        struct DependenciesImpl : boost::mpl::fold
+        struct dependencies_impl : boost::mpl::fold
             <
                 TSeq,
                 TResult,
                 boost::mpl::if_
                 <
                     boost::is_base_of<back::module, boost::mpl::_2>,
-                    DependenciesImpl<back::aux::get_dependencies<boost::mpl::_2>, boost::mpl::_1>,
+                    dependencies_impl<back::aux::get_dependencies<boost::mpl::_2>, boost::mpl::_1>,
                     boost::mpl::insert<boost::mpl::_1, boost::mpl::_2>
                 >
             >
         { };
 
-        struct Externals : boost::mpl::fold
+        struct externals : boost::mpl::fold
             <
                 typename boost::mpl::fold
                 <
@@ -82,17 +82,17 @@
             >::type
         { };
 
-        struct Dependencies : boost::mpl::fold
+        struct dependencies : boost::mpl::fold
             <
-                typename DependenciesImpl<modules>::type,
+                typename dependencies_impl<modules>::type,
                 boost::mpl::vector0<>,
                 boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>
             >::type
         { };
 
-        typedef back::aux::pool<typename Externals::type> pool;
+        typedef back::aux::pool<typename externals::type> pool;
         typedef typename boost::mpl::deref<typename boost::mpl::begin<policies>::type>::type policy;
-        typedef back::factory<typename Dependencies::type, pool, policy> factory;
+        typedef back::factory<typename dependencies::type, pool, policy> factory;
 
     public:
         injector()

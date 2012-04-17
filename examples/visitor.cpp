@@ -13,7 +13,7 @@
 namespace base    = di::front::base;
 namespace utility = di::utility;
 
-class Printvisitor
+class print_visitor
 {
 public:
     template<typename T> void operator()() const
@@ -26,7 +26,7 @@ public:
     }
 };
 
-struct visitormodule : base::module
+struct visitor_module : base::module
     <
         base::singletons <
             CIf0
@@ -36,8 +36,8 @@ struct visitormodule : base::module
 
 int main()
 {
-    utility::injector<visitormodule> injector;
-    injector.visit<C8>(Printvisitor());
+    utility::injector<visitor_module> injector;
+    injector.visit<c8>(print_visitor());
 
     return 0;
 }

@@ -54,7 +54,7 @@
     template<typename TExpected, typename TGiven = TExpected> struct per_request : scope<back::scopes::per_request>::bind< bind<TExpected, TGiven> > { };
     template<typename T> struct per_request<T, T> : scope<back::scopes::per_request>::bind<T> { };
 
-    template<typename T> struct External : aux::Externals<T> { };
+    template<typename T> struct External : aux::externals<T> { };
 
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
     struct singletons : scope<back::scopes::singleton>::bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
@@ -63,7 +63,7 @@
     struct per_requests : scope<back::scopes::per_request>::bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
 
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    struct Externals : aux::Externals<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
+    struct externals : aux::externals<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> { };
 
     template<typename T> struct annotate : aux::annotate<T> { };
 
@@ -95,7 +95,7 @@
             typedef typename annotate<instance>::template with<typename T::name> type;
         };
 
-        struct Externals : boost::mpl::transform
+        struct externals : boost::mpl::transform
             <
                 typename boost::mpl::fold
                 <
@@ -105,7 +105,7 @@
                     <
                         boost::mpl::if_
                         <
-                            boost::is_base_of<aux::detail::Externals, boost::mpl::_2>,
+                            boost::is_base_of<aux::detail::externals, boost::mpl::_2>,
                             boost::mpl::_2,
                             boost::mpl::vector0<>
                         >,
@@ -118,7 +118,7 @@
 
         struct instances : boost::mpl::transform
             <
-                Externals,
+                externals,
                 back::aux::get_derived<boost::mpl::_1>
             >::type
         { };
@@ -126,7 +126,7 @@
     public:
         typedef back::aux::pool<typename instances::type> pool;
 
-        struct Dependencies : boost::mpl::fold
+        struct dependencies : boost::mpl::fold
             <
                 boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
                 boost::mpl::vector0<>,
@@ -134,7 +134,7 @@
                 <
                     boost::mpl::if_
                     <
-                        boost::is_base_of<aux::detail::Externals, boost::mpl::_2>,
+                        boost::is_base_of<aux::detail::externals, boost::mpl::_2>,
                         boost::mpl::vector0<>,
                         boost::mpl::if_
                         <
@@ -153,10 +153,10 @@
         #include BOOST_PP_ITERATE()
 
         template<typename T, typename Tvalue>
-        inline static typename boost::disable_if<boost::is_same<FindinstanceType<Externals, T>, boost::mpl::end<Externals> >, typename FindinstanceType<Externals, T>::type::derived>::type
+        inline static typename boost::disable_if<boost::is_same<FindinstanceType<externals, T>, boost::mpl::end<externals> >, typename FindinstanceType<externals, T>::type::derived>::type
         Set(Tvalue p_value)
         {
-            typedef typename FindinstanceType<Externals, T>::type Annotation;
+            typedef typename FindinstanceType<externals, T>::type Annotation;
             return typename Annotation::derived(p_value);
         }
 
