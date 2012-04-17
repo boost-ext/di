@@ -26,10 +26,10 @@
     #include <boost/mpl/placeholders.hpp>
     #include <boost/mpl/identity.hpp>
     #include <boost/mpl/has_xxx.hpp>
-    #include "di/Back/Aux/Instance.hpp"
-    #include "di/Back/Aux/Value.hpp"
-    #include "di/Front/Ctor.hpp"
-    #include "di/Config.hpp"
+    #include "di/back/aux/instance.hpp"
+    #include "di/back/aux/value.hpp"
+    #include "di/front/ctor.hpp"
+    #include "di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, DI_FUNCTION_ARITY_LIMIT_SIZE, "di/Back/Aux/Dependency.hpp"))
 

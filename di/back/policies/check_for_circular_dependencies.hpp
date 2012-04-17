@@ -21,11 +21,11 @@
     #include <boost/mpl/accumulate.hpp>
     #include <boost/mpl/transform.hpp>
     #include <boost/mpl/size.hpp>
-    #include "di/Back/Aux/Utility.hpp"
-    #include "di/Back/Aux/Dependency.hpp"
-    #include "di/Back/Detail/Binder.hpp"
-    #include "di/Back/Scopes/PerRequest.hpp"
-    #include "di/Config.hpp"
+    #include "di/back/aux/utility.hpp"
+    #include "di/back/aux/dependency.hpp"
+    #include "di/back/detail/binder.hpp"
+    #include "di/back/scopes/per_request.hpp"
+    #include "di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, DI_FUNCTION_ARITY_LIMIT_SIZE, "di/Back/Policies/CheckForCircularDependencies.hpp"))
 

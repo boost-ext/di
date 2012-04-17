@@ -24,17 +24,17 @@
     #include <boost/mpl/copy.hpp>
     #include <boost/mpl/transform.hpp>
     #include <boost/mpl/begin_end.hpp>
-    #include "di/Back/Aux/Pool.hpp"
-    #include "di/Back/Aux/Utility.hpp"
-    #include "di/Back/Aux/Instance.hpp"
-    #include "di/Back/Module.hpp"
-    #include "di/Back/Scopes/Singleton.hpp"
-    #include "di/Back/Scopes/PerRequest.hpp"
-    #include "di/Front/Base/Aux/Internal.hpp"
-    #include "di/Front/Base/Aux/Scope.hpp"
-    #include "di/Front/Base/Aux/Bind.hpp"
-    #include "di/Front/Base/Aux/Externals.hpp"
-    #include "di/Front/Base/Aux/Annotate.hpp"
+    #include "di/back/aux/pool.hpp"
+    #include "di/back/aux/utility.hpp"
+    #include "di/back/aux/instance.hpp"
+    #include "di/back/module.hpp"
+    #include "di/back/scopes/singleton.hpp"
+    #include "di/back/scopes/per_request.hpp"
+    #include "di/front/base/Aux/internal.hpp"
+    #include "di/front/base/Aux/scope.hpp"
+    #include "di/front/base/Aux/bind.hpp"
+    #include "di/front/base/Aux/externals.hpp"
+    #include "di/front/base/Aux/annotate.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "di/Front/Base/Module.hpp"))
 

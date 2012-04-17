@@ -21,12 +21,12 @@
     #include <boost/mpl/back_inserter.hpp>
     #include <boost/mpl/copy.hpp>
     #include <boost/mpl/if.hpp>
-    #include "di/Back/Aux/Pool.hpp"
-    #include "di/Back/Module.hpp"
-    #include "di/Back/Scopes/Singleton.hpp"
-    #include "di/Back/Scopes/PerRequest.hpp"
-    #include "di/Front/Base/Aux/Bind.hpp"
-    #include "di/Front/Base/Aux/Scope.hpp"
+    #include "di/back/aux/pool.hpp"
+    #include "di/back/module.hpp"
+    #include "di/back/scopes/singleton.hpp"
+    #include "di/back/scopes/per_request.hpp"
+    #include "di/front/base/aux/bind.hpp"
+    #include "di/front/base/aux/scope.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "di/Front/Fusion/Module.hpp"))
 

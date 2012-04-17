@@ -28,12 +28,12 @@
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/fold.hpp>
     #include <boost/mpl/if.hpp>
-    #include "di/Back/Aux/Pool.hpp"
-    #include "di/Back/Aux/Utility.hpp"
-    #include "di/Back/Module.hpp"
-    #include "di/Back/Factory.hpp"
-    #include "di/Back/Policy.hpp"
-    #include "di/Config.hpp"
+    #include "di/back/aux/pool.hpp"
+    #include "di/back/aux/utility.hpp"
+    #include "di/back/module.hpp"
+    #include "di/back/factory.hpp"
+    #include "di/back/policy.hpp"
+    #include "di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "di/Utility/Injector.hpp"))
 

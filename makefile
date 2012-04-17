@@ -5,31 +5,25 @@ COMPILERS:=g++ clang++ icc
 
 .PHONY: all test examples doc install release clean
 
-#define EXTERNAL_template =
-	#$(1): $(1)_external
-#endef
-
-#$(foreach compiler, $(COMPILERS), $(eval $(call EXTERNAL_template, $(compiler))))
-
 all: verify examples doc
 
 verify:
-	@cd Test && make all
+	@cd test && make all
 
 test:
-	@cd Test && make test
+	@cd test && make test
 
 examples:
-	@cd Examples && make examples
+	@cd examples && make examples
 
 doc:
-	@cd Doc && make doc
+	@cd doc && make doc
 
 install:
 	@cp -r $(TARGET) $(HEADERS)
 
 externals_boost:
-	@cd Test && make CXX='clang++' EXTRA_CXXFLAGS='-H' test 2>&1 >/dev/null | grep boost | sed "s/.*\/\(boost.*\)/\1/" | xargs -i% sh -c "[ -e $(EXTERNALS)/% ] || (cd $(HEADERS) && cp --parents % $(EXTERNALS)/boost)"
+	@cd test && make CXX='clang++' EXTRA_CXXFLAGS='-H' test 2>&1 >/dev/null | grep boost | sed "s/.*\/\(boost.*\)/\1/" | xargs -i% sh -c "[ -e $(EXTERNALS)/% ] || (cd $(HEADERS) && cp --parents % $(EXTERNALS)/boost)"
 
 #release: externals_boost
 	# test, diagnostics, ...
@@ -39,7 +33,7 @@ externals_boost:
 	# create tag from lib version
 
 clean:
-	@cd Test && make clean
-	@cd Doc && make clean
-	@cd Examples && make clean
+	@cd test && make clean
+	@cd doc && make clean
+	@cd examples && make clean
 
