@@ -124,7 +124,7 @@
         { };
 
     public:
-        typedef back::aux::Pool<typename instances::type> Pool;
+        typedef back::aux::pool<typename instances::type> pool;
 
         struct Dependencies : boost::mpl::fold
             <
@@ -160,10 +160,10 @@
             return typename Annotation::derived(p_value);
         }
 
-        const Pool& pool() const { return m_pool; }
+        const pool& get_pool() const { return m_pool; }
 
     private:
-        Pool m_pool;
+        pool m_pool;
     };
 
     } // namespace base

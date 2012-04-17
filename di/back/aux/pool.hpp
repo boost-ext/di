@@ -40,12 +40,12 @@
         typename TSeq = boost::mpl::vector0<>,
         typename Enable = void
     >
-    class Pool
+    class pool
     {
     public:
         typedef TSeq seq;
 
-        Pool() { }
+        pool() { }
 
         template<typename T> struct result_type
         {
@@ -71,7 +71,7 @@
     #define DI_CTOR_INITLIST_IMPL(_, n, na) BOOST_PP_COMMA_IF(n) T##n(p_arg##n)
 
     template<typename TSeq>
-    class Pool<TSeq, typename boost::enable_if_c< boost::mpl::size<TSeq>::value == BOOST_PP_ITERATION()>::type>
+    class pool<TSeq, typename boost::enable_if_c< boost::mpl::size<TSeq>::value == BOOST_PP_ITERATION()>::type>
         : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_DERIVES_IMPL, TSeq)
     {
         BOOST_MPL_HAS_XXX_TRAIT_DEF(seq)
@@ -98,10 +98,10 @@
         #   pragma GCC diagnostic ignored "-Wreorder"
         #endif
 
-        Pool() { }
+        pool() { }
 
         template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename T)>
-        Pool(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const T, &p_arg))
+        pool(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const T, &p_arg))
             : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), DI_CTOR_INITLIST_IMPL, ~)
         { }
 

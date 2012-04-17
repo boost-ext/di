@@ -28,7 +28,7 @@ namespace back
 template
 <
     typename TDeps,
-    typename TPool = aux::Pool<>,
+    typename TPool = aux::pool<>,
     typename Tpolicies = policy<>,
     template<typename, typename> class TConverter = detail::converter,
     template<typename = TDeps, typename = TPool> class TCreator = detail::creator,

@@ -32,7 +32,7 @@ template<typename T> struct get_bind
 
 template<typename T> struct get_pool
 {
-    typedef typename T::Pool type;
+    typedef typename T::pool type;
 };
 
 template<typename T> struct get_context

@@ -61,7 +61,7 @@
             (TGiven)
         );
 
-        template<typename TPool> struct IsPoolType
+        template<typename TPool> struct IspoolType
             : boost::mpl::contains<typename TPool::seq, TInstance<> >
         { };
 
@@ -96,7 +96,7 @@
         template<typename, typename = void> struct result_type;
 
         template<typename TPool>
-        struct result_type<TPool, typename boost::enable_if< IsPoolType<TPool> >::type>
+        struct result_type<TPool, typename boost::enable_if< IspoolType<TPool> >::type>
             : TPool::template result_type<TInstance<> >
         { };
 
@@ -111,7 +111,7 @@
         { };
 
         template<typename TPool>
-        typename boost::enable_if<IsPoolType<TPool>, typename result_type<TPool>::type>::type create(const TPool& p_pool)
+        typename boost::enable_if<IspoolType<TPool>, typename result_type<TPool>::type>::type create(const TPool& p_pool)
         {
             return p_pool.template get<TInstance<> >();
         }
@@ -184,7 +184,7 @@
     }
 
     template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    typename boost::enable_if<IsPoolType<TPool>, typename result_type<TPool>::type>::type create(const TPool& p_pool, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, & BOOST_PP_INTERCEPT))
+    typename boost::enable_if<IspoolType<TPool>, typename result_type<TPool>::type>::type create(const TPool& p_pool, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, & BOOST_PP_INTERCEPT))
     {
         return p_pool.template get<TInstance<> >();
     }

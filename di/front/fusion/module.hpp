@@ -59,7 +59,7 @@
     class module : public back::module
     {
     public:
-        typedef back::aux::Pool<TSeq> Pool;
+        typedef back::aux::pool<TSeq> pool;
 
         struct Dependencies : boost::mpl::fold
             <
@@ -84,10 +84,10 @@
 
         module<> operator()() const { return module<>(); }
 
-        const Pool& pool() const { return m_pool; }
+        const pool& get_pool() const { return m_pool; }
 
     private:
-        Pool m_pool;
+        pool m_pool;
     };
 
     } // namespace fusion

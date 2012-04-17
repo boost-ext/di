@@ -90,9 +90,9 @@
             >::type
         { };
 
-        typedef back::aux::Pool<typename Externals::type> Pool;
+        typedef back::aux::pool<typename Externals::type> pool;
         typedef typename boost::mpl::deref<typename boost::mpl::begin<policies>::type>::type policy;
-        typedef back::factory<typename Dependencies::type, Pool, policy> factory;
+        typedef back::factory<typename Dependencies::type, pool, policy> factory;
 
     public:
         injector()
@@ -112,7 +112,7 @@
         }
 
     private:
-        Pool m_pool;
+        pool m_pool;
         factory m_factory;
     };
 
@@ -125,7 +125,7 @@
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename M)>
     injector(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const M, &p_module))
-        : m_pool(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), p_module, .pool() BOOST_PP_INTERCEPT)),
+        : m_pool(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), p_module, .get_pool() BOOST_PP_INTERCEPT)),
           m_factory(m_pool)
     { }
 
