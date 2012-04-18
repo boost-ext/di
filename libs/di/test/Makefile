@@ -7,9 +7,8 @@ SCAN_BUILD:=scan-build
 VALGRIND:=valgrind
 GENHTML:=genhtml
 LCOV:=lcov
-BOOST:=../externals/boost
 DI:=..
-CXXFLAGS:=-I$(BOOST) -I$(DI) -DDI_FUNCTION_ARITY_LIMIT_SIZE=4 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants $(EXTRA_CXXFLAGS)
+CXXFLAGS:=-I$(DI) -DDI_FUNCTION_ARITY_LIMIT_SIZE=4 -g -O0 --coverage -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-long-long -Wno-multichar -Wno-four-char-constants $(EXTRA_CXXFLAGS)
 
 -include $(patsubst %.dep,.deps/%.dep,$(patsubst %.cpp,%.dep,$(shell find . -iname "*.cpp")))
 
@@ -21,8 +20,6 @@ lib_boost_unit_test_framework.a: $(patsubst %.cpp,%.o,$(shell find $(BOOST)/libs
 test: lib_boost_unit_test_framework.a $(patsubst %.cpp,%.o,$(shell find . -iname "*.cpp"))
 	$(CXX) $(CXXFLAGS) -DBOOST_TEST_MODULE=$@ -o $@ $(patsubst %.cpp,%.o,$(shell find . -iname "*.cpp")) lib_boost_unit_test_framework.a
 	./$@
-
-run_test:
 
 cppcheck:
 	$(CPPCHECK) -I$(BOOST) -I$(DI) --check-config .

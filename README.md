@@ -6,24 +6,22 @@ C++ Dependency Injection Framework
 
 To get started
 -----
-`git clone git://github.com/qsrc/di.git`
+[documentation](http://qsrc.github.com/di)
 
-Documentation
------
-* [wiki](http://qsrc.github.com/di)
+`git clone git://github.com/qsrc/di.git`
 
 Usage
 -----
 
 ``` C++
-#include <di/di.hpp>
+#include <boost/di.hpp>
 
 struct num_of_limits { };
-struct allocator : iallocator { DI_CTOR(allocator, int, shared_ptr<load>) { } };
-struct data : idata { DI_CTOR(named<capacity_limit, down>, named<capacity_limit, up>) { } };
-struct storage { DI_CTOR_TRAITS(named<int, up>, float); storage(int, float) { } };
+struct allocator : iallocator { BOOST_BOOST_DI_CTOR(allocator, int, shared_ptr<load>) { } };
+struct data : idata { BOOST_DI_CTOR(named<capacity_limit, down>, named<capacity_limit, up>) { } };
+struct storage { BOOST_DI_CTOR_TRAITS(named<int, up>, float); storage(int, float) { } };
 template<> struct ctor_traits<load> { static void ctor(shared_ptr<storage>); };
-struct app { DI_CTOR(storage, const shared_ptr<limit_checker>&) { } };
+struct app { BOOST_DI_CTOR(storage, const shared_ptr<limit_checker>&) { } };
 ...
 ```
 
@@ -118,34 +116,6 @@ class text_visitor
 
 injector.visit<C3>(text_visitor());                             // apply text_visitor for C3
 ```
-
-``` C++
-struct action {
-    DI_CTOR(action, shared_ptr<data>, shared_ptr<msg_sender>) { ... }
-    template<typename Event> void operator()(const event&) { }
-};
-
-struct guard {
-    DI_CTOR(guard, shared_ptr<common>) { ... }
-    template<typename Event> bool operator()(const event&) { return false; }
-};
-
-class example : public qfsm::fsm
-{
-    class s1 { };
-    class s2 { };
-
-public:
-    typedef qfsm::transition_table
-    <
-        transition < s1 , e1 , s2 , action , guard >
-    >
-    transition_table;
-};
-
-qfsm::front::fsm<example> fsm =
-    injector<>().create<front::fsm<example> >();                // create fsm with actions and guards
-```
 Features
 -----
     * injection via constructor
@@ -162,44 +132,16 @@ Features
     * policies (ex. circular dependencies detection)
     * compile time approach (supports C++98, C++11)
 
-Requirements
+Supported Compilers
 ------------
-    code:
-        * c++ 98 standard-compliant compiler supporting BOOST_TYPEOF
-        * boost >= 1.43 (needed files from boost_1_49 are in Externals/boost)
-
-    tests:
-        * gnu-compatible Make >= 3.81
-        * [optional] lcov, cppcheck, scan-build, valgrind
-
-    documentation:
-        * vim >= 7.3
-        * vimwiki >= 1.2 (vimwiki 1.2 is in Externals/vimwiki)
-
-    supported compilers (successfully tested):
-        * gcc   >= 4.3
-        * clang >= 3.0
+    * gcc   >= 4.3
+    * clang >= 3.0
 
 Tests & Examples & Doc & Diagnostics
 ------------
-    make                # test cov cppcheck scan-build valgrind doc examples
-    make test           # compile and run only UT/MT
-    make examples       # build examples
-
-Install
-------------
-    [sudo] make install   # copy di to /usr/include
-
-C++ Dependency Injection Frameworks
-------------
-* https://github.com/qsrc/di
-* https://github.com/phs/sauce
-* https://bitbucket.org/cheez/dicpp
-* http://code.google.com/p/spring-cpp
-* http://code.google.com/p/autumnframework
-* http://code.google.com/p/ffead-cpp
-* http://sourceforge.net/projects/qtioccontainer
-* http://sourceforge.net/projects/cpp-resolver
+    cd libs/di && make                # test cov cppcheck scan-build valgrind doc examples
+    cd libs/di && make test           # compile and run only ut/mt
+    cd libs/di && make examples       # build examples
 
 Author
 ------

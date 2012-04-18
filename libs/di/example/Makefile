@@ -1,8 +1,7 @@
 MAKEFLAGS+=-j$(shell grep -c '^processor' /proc/cpuinfo) -l
-BOOST:=../externals/boost
 DI:=..
-DI_PCH:=.di.hpp
-CXXFLAGS:=-I. -I$(BOOST) -I$(DI) -O2 -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-multichar -Wno-four-char-constants $(EXTRA_CXXFLAGS)
+DI_PCH:=di_pch.hpp
+CXXFLAGS:=-I. -I$(DI) -O2 -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-multichar -Wno-four-char-constants $(EXTRA_CXXFLAGS)
 EXAMPLES:=$(patsubst %.cpp, %.o, $(shell find . -iname "*.cpp"))
 
 .PHONY: examples pch clean

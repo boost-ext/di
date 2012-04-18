@@ -25,5 +25,24 @@
 #include "di/back/policies/check_for_creation_ownership.hpp"
 #include "di/back/policies/check_for_references_without_ownership.hpp"
 
+namespace boost
+{
+namespace di
+{
+
+} // namespace di
+} // namespace boost
+
+boost::di::fusion::module
+boost::di::fusion::singletons
+boost::di::fusion::per_request
+
+boost::di::base::module
+boost::di::base::singletons
+
+boost::di::injector
+boost::di::named
+boost::di::provider
+
 #endif
 
