@@ -62,14 +62,14 @@ BOOST_AUTO_TEST_CASE(Empty)
 
 BOOST_AUTO_TEST_CASE(defaultscope)
 {
-    struct testmodule : module<C1> { };
+    struct testmodule : module<c1> { };
 
     BOOST_CHECK((
         equal
         <
             vector
             <
-                dependency<back::scopes::per_request, C1, C1, vector0<>, or_< is_base_of<_1, C1>, is_same<_1, C1> > >
+                dependency<back::scopes::per_request, c1, c1, vector0<>, or_< is_base_of<_1, c1>, is_same<_1, c1> > >
             >,
             testmodule::dependencies
         >::value
@@ -80,16 +80,16 @@ BOOST_AUTO_TEST_CASE(defaultscope)
 
 BOOST_AUTO_TEST_CASE(defaultscopeMany)
 {
-    struct testmodule : module<C1, C2, C3> { };
+    struct testmodule : module<c1, c2, c3> { };
 
     BOOST_CHECK((
         equal
         <
             vector
             <
-                dependency<back::scopes::per_request, C1, C1, vector0<>, or_< is_base_of<_1, C1>, is_same<_1, C1> > >,
-                dependency<back::scopes::per_request, C2, C2, vector0<>, or_< is_base_of<_1, C2>, is_same<_1, C2> > >,
-                dependency<back::scopes::per_request, C3, C3, vector0<>, or_< is_base_of<_1, C3>, is_same<_1, C3> > >
+                dependency<back::scopes::per_request, c1, c1, vector0<>, or_< is_base_of<_1, c1>, is_same<_1, c1> > >,
+                dependency<back::scopes::per_request, c2, c2, vector0<>, or_< is_base_of<_1, c2>, is_same<_1, c2> > >,
+                dependency<back::scopes::per_request, c3, c3, vector0<>, or_< is_base_of<_1, c3>, is_same<_1, c3> > >
             >,
             testmodule::dependencies
         >::value
@@ -102,10 +102,10 @@ BOOST_AUTO_TEST_CASE(defaultscopebind)
 {
     struct testmodule : module
         <
-            bind<If0, CIf0>,
-            C1,
-            bind<C2>::in_name<int>,
-            bind<C3>::in_call_stack<C4, C5>
+            bind<if0, c0if0>,
+            c1,
+            bind<c2>::in_name<int>,
+            bind<c3>::in_call_stack<c4, c5>
         >
     { };
 
@@ -114,10 +114,10 @@ BOOST_AUTO_TEST_CASE(defaultscopebind)
         <
             vector
             <
-                dependency<back::scopes::per_request, If0, CIf0, vector0<>, is_same<_1, If0> >,
-                dependency<back::scopes::per_request, C1, C1, vector0<>, or_< is_base_of<_1, C1>, is_same<_1, C1> > >,
-                dependency<back::scopes::per_request, named<C2, int>, C2, vector0<>, or_< is_base_of<_1, named<C2, int> >, is_same<_1, named<C2, int> > > >,
-                dependency<back::scopes::per_request, C3, C3, vector<C4, C5>, or_< is_base_of<_1, C3>, is_same<_1, C3> > >
+                dependency<back::scopes::per_request, if0, c0if0, vector0<>, is_same<_1, if0> >,
+                dependency<back::scopes::per_request, c1, c1, vector0<>, or_< is_base_of<_1, c1>, is_same<_1, c1> > >,
+                dependency<back::scopes::per_request, named<c2, int>, c2, vector0<>, or_< is_base_of<_1, named<c2, int> >, is_same<_1, named<c2, int> > > >,
+                dependency<back::scopes::per_request, c3, c3, vector<c4, c5>, or_< is_base_of<_1, c3>, is_same<_1, c3> > >
             >,
             testmodule::dependencies
         >::value
@@ -131,7 +131,7 @@ BOOST_AUTO_TEST_CASE(Onescope)
     struct testmodule : module
         <
             scope<back::scopes::singleton>::bind <
-                CIf0
+                c0if0
             >
         >
     { };
@@ -141,7 +141,7 @@ BOOST_AUTO_TEST_CASE(Onescope)
         <
             vector
             <
-                dependency<back::scopes::singleton, CIf0, CIf0, vector0<>, or_< is_base_of<_1, CIf0>, is_same<_1, CIf0> > >
+                dependency<back::scopes::singleton, c0if0, c0if0, vector0<>, or_< is_base_of<_1, c0if0>, is_same<_1, c0if0> > >
             >,
             testmodule::dependencies
         >::value
@@ -155,7 +155,7 @@ BOOST_AUTO_TEST_CASE(OnescopeAlias)
     struct testmodule : module
         <
             singletons <
-                CIf0
+                c0if0
             >
         >
     { };
@@ -165,7 +165,7 @@ BOOST_AUTO_TEST_CASE(OnescopeAlias)
         <
             vector
             <
-                dependency<back::scopes::singleton, CIf0, CIf0, vector0<>, or_< is_base_of<_1, CIf0>, is_same<_1, CIf0> > >
+                dependency<back::scopes::singleton, c0if0, c0if0, vector0<>, or_< is_base_of<_1, c0if0>, is_same<_1, c0if0> > >
             >,
             testmodule::dependencies
         >::value
@@ -178,7 +178,7 @@ BOOST_AUTO_TEST_CASE(OnescopeDirect)
 {
     struct testmodule : module
         <
-            singleton<CIf0>
+            singleton<c0if0>
         >
     { };
 
@@ -187,7 +187,7 @@ BOOST_AUTO_TEST_CASE(OnescopeDirect)
         <
             vector
             <
-                dependency<back::scopes::singleton, CIf0, CIf0, vector0<>, or_< is_base_of<_1, CIf0>, is_same<_1, CIf0> > >
+                dependency<back::scopes::singleton, c0if0, c0if0, vector0<>, or_< is_base_of<_1, c0if0>, is_same<_1, c0if0> > >
             >,
             testmodule::dependencies
         >::value
@@ -201,9 +201,9 @@ BOOST_AUTO_TEST_CASE(Many)
     struct testmodule : module
         <
             singletons<
-                C1,
-                C2,
-                C3
+                c1,
+                c2,
+                c3
             >
         >
     { };
@@ -213,9 +213,9 @@ BOOST_AUTO_TEST_CASE(Many)
         <
             vector
             <
-                dependency<back::scopes::singleton, C1, C1, vector0<>, or_< is_base_of<_1, C1>, is_same<_1, C1> > >,
-                dependency<back::scopes::singleton, C2, C2, vector0<>, or_< is_base_of<_1, C2>, is_same<_1, C2> > >,
-                dependency<back::scopes::singleton, C3, C3, vector0<>, or_< is_base_of<_1, C3>, is_same<_1, C3> > >
+                dependency<back::scopes::singleton, c1, c1, vector0<>, or_< is_base_of<_1, c1>, is_same<_1, c1> > >,
+                dependency<back::scopes::singleton, c2, c2, vector0<>, or_< is_base_of<_1, c2>, is_same<_1, c2> > >,
+                dependency<back::scopes::singleton, c3, c3, vector0<>, or_< is_base_of<_1, c3>, is_same<_1, c3> > >
             >,
             testmodule::dependencies
         >::value
@@ -229,12 +229,12 @@ BOOST_AUTO_TEST_CASE(Manyscopes)
     struct testmodule : module
         <
             singletons<
-                C1,
-                C2
+                c1,
+                c2
             >,
             per_requests<
-                C3,
-                C4
+                c3,
+                c4
             >
         >
     { };
@@ -244,10 +244,10 @@ BOOST_AUTO_TEST_CASE(Manyscopes)
         <
             vector
             <
-                dependency<back::scopes::singleton, C1, C1, vector0<>, or_< is_base_of<_1, C1>, is_same<_1, C1> > >,
-                dependency<back::scopes::singleton, C2, C2, vector0<>, or_< is_base_of<_1, C2>, is_same<_1, C2> > >,
-                dependency<back::scopes::per_request, C3, C3, vector0<>, or_< is_base_of<_1, C3>, is_same<_1, C3> > >,
-                dependency<back::scopes::per_request, C4, C4, vector0<>, or_< is_base_of<_1, C4>, is_same<_1, C4> > >
+                dependency<back::scopes::singleton, c1, c1, vector0<>, or_< is_base_of<_1, c1>, is_same<_1, c1> > >,
+                dependency<back::scopes::singleton, c2, c2, vector0<>, or_< is_base_of<_1, c2>, is_same<_1, c2> > >,
+                dependency<back::scopes::per_request, c3, c3, vector0<>, or_< is_base_of<_1, c3>, is_same<_1, c3> > >,
+                dependency<back::scopes::per_request, c4, c4, vector0<>, or_< is_base_of<_1, c4>, is_same<_1, c4> > >
             >,
             testmodule::dependencies
         >::value
@@ -260,7 +260,7 @@ BOOST_AUTO_TEST_CASE(in_call_stack)
 {
     struct testmodule : module
         <
-            per_request<C1>::in_call_stack<C2>
+            per_request<c1>::in_call_stack<c2>
         >
     { };
 
@@ -269,7 +269,7 @@ BOOST_AUTO_TEST_CASE(in_call_stack)
         <
             vector
             <
-                dependency<back::scopes::per_request, C1, C1, vector<C2>, or_< is_base_of<_1, C1>, is_same<_1, C1> > >
+                dependency<back::scopes::per_request, c1, c1, vector<c2>, or_< is_base_of<_1, c1>, is_same<_1, c1> > >
             >,
             testmodule::dependencies
         >::value
@@ -282,7 +282,7 @@ BOOST_AUTO_TEST_CASE(in_name)
 {
     struct testmodule : module
         <
-            singleton<C1>::in_name<int>
+            singleton<c1>::in_name<int>
         >
     { };
 
@@ -291,7 +291,7 @@ BOOST_AUTO_TEST_CASE(in_name)
         <
             vector
             <
-                dependency<back::scopes::singleton, named<C1, int>, C1, vector0<>, or_< is_base_of<_1, named<C1, int> >, is_same<_1, named<C1, int> > > >
+                dependency<back::scopes::singleton, named<c1, int>, c1, vector0<>, or_< is_base_of<_1, named<c1, int> >, is_same<_1, named<c1, int> > > >
             >,
             testmodule::dependencies
         >::value
@@ -305,8 +305,8 @@ BOOST_AUTO_TEST_CASE(in_namein_call_stack)
     struct testmodule : module
         <
             singletons<
-                bind<C1>::in_name<int>::in_call_stack<double>,
-                bind<C2>::in_name<double>::in_call_stack<int>
+                bind<c1>::in_name<int>::in_call_stack<double>,
+                bind<c2>::in_name<double>::in_call_stack<int>
             >
         >
     { };
@@ -316,8 +316,8 @@ BOOST_AUTO_TEST_CASE(in_namein_call_stack)
         <
             vector
             <
-                dependency<back::scopes::singleton, named<C1, int>, C1, vector<double>, or_< is_base_of<_1, named<C1, int> >, is_same<_1, named<C1, int> > > >,
-                dependency<back::scopes::singleton, named<C2, double>, C2, vector<int>, or_< is_base_of<_1,  named<C2, double> >, is_same<_1,  named<C2, double> > > >
+                dependency<back::scopes::singleton, named<c1, int>, c1, vector<double>, or_< is_base_of<_1, named<c1, int> >, is_same<_1, named<c1, int> > > >,
+                dependency<back::scopes::singleton, named<c2, double>, c2, vector<int>, or_< is_base_of<_1,  named<c2, double> >, is_same<_1,  named<c2, double> > > >
             >,
             testmodule::dependencies
         >::value
@@ -331,8 +331,8 @@ BOOST_AUTO_TEST_CASE(in_call_stackin_name)
     struct testmodule : module
         <
             singletons<
-                bind<C1>::in_call_stack<double>::in_name<int>,
-                bind<C2>::in_call_stack<int>::in_name<double>
+                bind<c1>::in_call_stack<double>::in_name<int>,
+                bind<c2>::in_call_stack<int>::in_name<double>
             >
         >
     { };
@@ -342,8 +342,8 @@ BOOST_AUTO_TEST_CASE(in_call_stackin_name)
         <
             vector
             <
-                dependency<back::scopes::singleton, named<C1, int>, C1, vector<double>, or_< is_base_of<_1, named<C1, int> >, is_same<_1, named<C1, int> > > >,
-                dependency<back::scopes::singleton, named<C2, double>, C2, vector<int>, or_< is_base_of<_1,  named<C2, double> >, is_same<_1,  named<C2, double> > > >
+                dependency<back::scopes::singleton, named<c1, int>, c1, vector<double>, or_< is_base_of<_1, named<c1, int> >, is_same<_1, named<c1, int> > > >,
+                dependency<back::scopes::singleton, named<c2, double>, c2, vector<int>, or_< is_base_of<_1,  named<c2, double> >, is_same<_1,  named<c2, double> > > >
             >,
             testmodule::dependencies
         >::value
@@ -357,7 +357,7 @@ BOOST_AUTO_TEST_CASE(bindIf)
     struct testmodule : module
         <
             singletons<
-                bind<If0, CIf0>
+                bind<if0, c0if0>
             >
         >
     { };
@@ -367,7 +367,7 @@ BOOST_AUTO_TEST_CASE(bindIf)
         <
             vector
             <
-                dependency<back::scopes::singleton, If0, CIf0, vector0<>, is_same<_1, If0> >
+                dependency<back::scopes::singleton, if0, c0if0, vector0<>, is_same<_1, if0> >
             >,
             testmodule::dependencies
         >::value
@@ -381,15 +381,15 @@ BOOST_AUTO_TEST_CASE(Mix)
     struct testmodule : module
         <
             singletons<
-                bind<If0, CIf0>,
-                C1,
-                bind<C2>::in_name<int>,
-                bind<C3>::in_call_stack<C4, C5>
+                bind<if0, c0if0>,
+                c1,
+                bind<c2>::in_name<int>,
+                bind<c3>::in_call_stack<c4, c5>
             >,
             per_requests <
-                C6
+                c6
             >,
-            singleton<C7>::in_name<double>::in_call_stack<C1>
+            singleton<c7>::in_name<double>::in_call_stack<c1>
         >
     { };
 
@@ -398,12 +398,12 @@ BOOST_AUTO_TEST_CASE(Mix)
         <
             vector
             <
-                dependency<back::scopes::singleton, If0, CIf0, vector0<>, is_same<_1, If0> >,
-                dependency<back::scopes::singleton, C1, C1, vector0<>, or_< is_base_of<_1, C1>, is_same<_1, C1> > >,
-                dependency<back::scopes::singleton, named<C2, int>, C2, vector0<>, or_< is_base_of<_1, named<C2, int> >, is_same<_1, named<C2, int> > > >,
-                dependency<back::scopes::singleton, C3, C3, vector<C4, C5>, or_< is_base_of<_1, C3>, is_same<_1, C3> > >,
-                dependency<back::scopes::per_request, C6, C6, vector0<>, or_< is_base_of<_1, C6>, is_same<_1, C6> > >,
-                dependency<back::scopes::singleton, named<C7, double>, C7, vector<C1>, or_< is_base_of<_1, named<C7, double> >, is_same<_1, named<C7, double> > > >
+                dependency<back::scopes::singleton, if0, c0if0, vector0<>, is_same<_1, if0> >,
+                dependency<back::scopes::singleton, c1, c1, vector0<>, or_< is_base_of<_1, c1>, is_same<_1, c1> > >,
+                dependency<back::scopes::singleton, named<c2, int>, c2, vector0<>, or_< is_base_of<_1, named<c2, int> >, is_same<_1, named<c2, int> > > >,
+                dependency<back::scopes::singleton, c3, c3, vector<c4, c5>, or_< is_base_of<_1, c3>, is_same<_1, c3> > >,
+                dependency<back::scopes::per_request, c6, c6, vector0<>, or_< is_base_of<_1, c6>, is_same<_1, c6> > >,
+                dependency<back::scopes::singleton, named<c7, double>, c7, vector<c1>, or_< is_base_of<_1, named<c7, double> >, is_same<_1, named<c7, double> > > >
             >,
             testmodule::dependencies
         >::value
@@ -418,8 +418,8 @@ BOOST_AUTO_TEST_CASE(namedin_call_stack)
         <
             per_requests <
                 bind<int, int_<1> >,
-                bind<int, int_<4> >::in_name< string<'2'> >::in_call_stack<C7, C6, C4>,
-                bind<int, int_<5> >::in_call_stack<C2>
+                bind<int, int_<4> >::in_name< string<'2'> >::in_call_stack<c7, c6, c4>,
+                bind<int, int_<5> >::in_call_stack<c2>
             >
         >
     { };
@@ -432,8 +432,8 @@ BOOST_AUTO_TEST_CASE(namedin_call_stack)
             vector
             <
                 dependency<back::scopes::per_request, int, int_<1>, vector0<>, or_< is_base_of<_1, int>, is_same<_1, int> > >,
-                dependency<back::scopes::per_request, named<int, string<'2'> >, int_<4>, vector<C7, C6, C4>, or_< is_base_of<_1, named<int, string<'2'> > >, is_same<_1, named<int, string<'2'> > > > >,
-                dependency<back::scopes::per_request, int, int_<5>, vector<C2>, or_< is_base_of<_1, int>, is_same<_1, int> > >
+                dependency<back::scopes::per_request, named<int, string<'2'> >, int_<4>, vector<c7, c6, c4>, or_< is_base_of<_1, named<int, string<'2'> > >, is_same<_1, named<int, string<'2'> > > > >,
+                dependency<back::scopes::per_request, int, int_<5>, vector<c2>, or_< is_base_of<_1, int>, is_same<_1, int> > >
             >,
             testmodule::dependencies
         >::value
@@ -445,7 +445,7 @@ BOOST_AUTO_TEST_CASE(externalsbase)
     struct testmodule : module
         <
             externals<
-                C1
+                c1
             >
         >
     { };
@@ -457,7 +457,7 @@ BOOST_AUTO_TEST_CASE(externalsbase)
         <
             vector
             <
-                instance<C1>
+                instance<c1>
             >,
             testmodule::pool::seq
         >::value
@@ -469,10 +469,10 @@ BOOST_AUTO_TEST_CASE(externalsMix)
     struct testmodule : module
         <
             externals<
-                C1,
-                C2
+                c1,
+                c2
             >,
-            External<C3>
+            External<c3>
         >
     { };
 
@@ -483,9 +483,9 @@ BOOST_AUTO_TEST_CASE(externalsMix)
         <
             vector
             <
-                instance<C1>,
-                instance<C2>,
-                instance<C3>
+                instance<c1>,
+                instance<c2>,
+                instance<c3>
             >,
             testmodule::pool::seq
         >::value
@@ -498,9 +498,9 @@ BOOST_AUTO_TEST_CASE(externalsbind)
         <
             externals<
                 int,
-                bind<C1>::in_name<int>,
-                bind<C2>::in_call_stack<C1>,
-                bind<C3>::in_name<double>::in_call_stack<C4, C5>
+                bind<c1>::in_name<int>,
+                bind<c2>::in_call_stack<c1>,
+                bind<c3>::in_name<double>::in_call_stack<c4, c5>
             >
         >
     { };
@@ -513,9 +513,9 @@ BOOST_AUTO_TEST_CASE(externalsbind)
             vector
             <
                 instance<int>,
-                instance<named<C1, int> >,
-                instance<C2, vector<C1> >,
-                instance<named<C3, double>, vector<C4, C5> >
+                instance<named<c1, int> >,
+                instance<c2, vector<c1> >,
+                instance<named<c3, double>, vector<c4, c5> >
             >,
             testmodule::pool::seq
         >::value
@@ -545,8 +545,8 @@ BOOST_AUTO_TEST_CASE(setinstanceannotatein_call_stack)
     struct testmodule : module
         <
             externals<
-                annotate< bind<int>::in_call_stack<C1, C2> >::with<A>,
-                annotate< bind<int>::in_call_stack<C3, C4> >::with<B>
+                annotate< bind<int>::in_call_stack<c1, c2> >::with<A>,
+                annotate< bind<int>::in_call_stack<c3, c4> >::with<B>
             >
         >
     { };
@@ -581,8 +581,8 @@ BOOST_AUTO_TEST_CASE(setinstanceannotatein_namein_call_stack)
     struct testmodule : module
         <
             externals<
-                annotate< bind<int>::in_call_stack<C1, C2>::in_name<float> >::with<A>,
-                annotate< bind<int>::in_name<double>::in_call_stack<C3, C4> >::with<B>
+                annotate< bind<int>::in_call_stack<c1, c2>::in_name<float> >::with<A>,
+                annotate< bind<int>::in_name<double>::in_call_stack<c3, c4> >::with<B>
             >
         >
     { };
@@ -602,7 +602,7 @@ BOOST_AUTO_TEST_CASE(setinstanceMix)
             externals<
                 int,
                 annotate< bind<int>::in_name<float> >::with<A>,
-                annotate< bind<int>::in_call_stack<C1, C2>::in_name<float> >::with<B>
+                annotate< bind<int>::in_call_stack<c1, c2>::in_name<float> >::with<B>
             >
         >
     { };

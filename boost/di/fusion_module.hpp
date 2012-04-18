@@ -22,9 +22,9 @@
     #include <boost/mpl/copy.hpp>
     #include <boost/mpl/if.hpp>
     #include "boost/di/aux/pool.hpp"
-    #include "boost/di/operation.hpp"
-    #include "boost/di/scope/per_request.hpp"
-    #include "boost/di/scope/singleton.hpp"
+    #include "boost/di/scopes/per_request.hpp"
+    #include "boost/di/scopes/singleton.hpp"
+    #include "boost/di/concepts.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/module/fusion_module.hpp"))
 

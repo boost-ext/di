@@ -7,6 +7,9 @@
 #ifndef BOOST_DI_CONCEPTS_HPP
 #define BOOST_DI_CONCEPTS_HPP
 
+#include <boost/preprocessor/repetition/enum_params.hpp>
+#include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
+#include <boost/mpl/limits/vector.hpp>
 #include "boost/di/concepts/annotate.hpp"
 #include "boost/di/concepts/bind.hpp"
 #include "boost/di/concepts/externals.hpp"
@@ -74,4 +77,6 @@ struct annotate
 
 } // namespace di
 } // namespace boost
+
+#endif
 

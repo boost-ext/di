@@ -12,7 +12,7 @@
 #include "di/ctor.hpp"
 #include "di/injector.hpp"
 
-// module
+// modules
 #include "di/generic_module.hpp"
 #include "di/fusion_module.hpp"
 
@@ -27,7 +27,7 @@
 #include "di/named.hpp"
 #include "di/provider.hpp"
 
-// policies
+// policy
 #include "di/policy.hpp"
 
 #endif

@@ -10,7 +10,7 @@
 #include <boost/variant.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
-#include "boost/di/utility/named.hpp"
+#include "boost/di/named.hpp"
 
 namespace boost {
 namespace di {
@@ -54,19 +54,19 @@ public:
 };
 
 template<typename TScope, typename TDest, typename TName>
-class converter<TScope, utility::named<TDest, TName> >
+class converter<TScope, named<TDest, TName> >
 {
 public:
     template<typename TSrc>
-    static utility::named<TDest, TName> execute(const TSrc& src)
+    static named<TDest, TName> execute(const TSrc& src)
     {
-        return utility::named<TDest, TName>(src);
+        return named<TDest, TName>(src);
     }
 
     template<BOOST_VARIANT_ENUM_PARAMS(typename T)>
-    static utility::named<TDest, TName> execute(const boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src)
+    static named<TDest, TName> execute(const boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src)
     {
-        return boost::apply_visitor(converterImpl<TScope, utility::named<TDest, TName> >(), src);
+        return boost::apply_visitor(converterImpl<TScope, named<TDest, TName> >(), src);
     }
 };
 

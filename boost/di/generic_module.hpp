@@ -12,7 +12,7 @@
     #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
     #include <boost/preprocessor/repetition/enum_params.hpp>
     #include <boost/type_traits/is_same.hpp>
-    #include <boost/type_traits/is_generic_module_of.hpp>
+    #include <boost/type_traits/is_base_of.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/limits/vector.hpp>
     #include <boost/mpl/vector.hpp>
@@ -59,7 +59,7 @@
         };
 
         template<typename T>
-        struct make_annotation<T, typename boost::enable_if<boost::is_generic_module_of<generic_module::aux::internal, T> >::type>
+        struct make_annotation<T, typename boost::enable_if<boost::is_base_of<generic_module::aux::internal, T> >::type>
         {
             typedef typename T::template rebind<back::scopes::singleton>::type dependency;
             typedef back::aux::instance<typename dependency::expected, typename dependency::context> instance;
@@ -76,7 +76,7 @@
                     <
                         boost::mpl::if_
                         <
-                            boost::is_generic_module_of<aux::detail::externals, boost::mpl::_2>,
+                            boost::is_base_of<aux::detail::externals, boost::mpl::_2>,
                             boost::mpl::_2,
                             boost::mpl::vector0<>
                         >,
@@ -103,7 +103,7 @@
                 boost::mpl::vector0<>,
                 boost::mpl::copy<
                     boost::mpl::if_<
-                        boost::is_generic_module_of<aux::detail::externals, boost::mpl::_2>,
+                        boost::is_base_of<aux::detail::externals, boost::mpl::_2>,
                         boost::mpl::vector0<>,
                         boost::mpl::if_<
                             boost::mpl::is_sequence<boost::mpl::_2>,

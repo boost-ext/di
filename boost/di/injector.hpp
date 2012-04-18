@@ -32,7 +32,7 @@
     #include "boost/di/aux/utility.hpp"
     #include "boost/di/module/aux/module.hpp"
     #include "boost/di/detail/factory.hpp"
-    #include "boost/di/policy/policy.hpp"
+    #include "boost/di/policies/policy.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/injector.hpp"))

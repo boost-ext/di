@@ -6,7 +6,7 @@
 //
 #include <boost/test/unit_test.hpp>
 #include "test/common/data.hpp"
-#include "di/back/scopes/singleton.hpp"
+#include "di/back/scopes/per_request.hpp"
 
 namespace di
 {
@@ -19,18 +19,18 @@ namespace ut
 
 using namespace test::common;
 
-BOOST_AUTO_TEST_CASE(singletonCreate)
+BOOST_AUTO_TEST_CASE(per_requestCreate)
 {
-    singleton::scope<int> s;
+    per_request::scope<int> pr;
 
-    BOOST_CHECK((s.create() == s.create()));
+    BOOST_CHECK((pr.create().get() != pr.create().get()));
 }
 
-BOOST_AUTO_TEST_CASE(singletonCreateArgs)
+BOOST_AUTO_TEST_CASE(per_requestCreateArgs)
 {
-    singleton::scope<C2> s;
+    per_request::scope<c2> pr;
 
-    BOOST_CHECK((s.create<int, double, char>(0, 0.0, '0') == s.create<int, double, char>(0, 0.0, '0')));
+    BOOST_CHECK((pr.create<int, double, char>(0, 0.0, '0').get() != pr.create<int, double, char>(0, 0.0, '0').get()));
 }
 
 } // namespace ut

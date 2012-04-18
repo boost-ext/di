@@ -51,15 +51,15 @@ BOOST_AUTO_TEST_CASE(fusionMix)
 {
     BOOST_AUTO(fusionmodule, module<>()(
         singletons<
-            bind<If0, CIf0>,
-            C1,
-            bind<C2>::in_name<int>,
-            bind<C3>::in_call_stack<C4, C5>
+            bind<if0, c0if0>,
+            c1,
+            bind<c2>::in_name<int>,
+            bind<c3>::in_call_stack<c4, c5>
         >(),
         per_requests <
-            C6
+            c6
         >(),
-        singleton<C7>::in_name<double>::in_call_stack<C1>()
+        singleton<c7>::in_name<double>::in_call_stack<c1>()
     ));
 
     typedef BOOST_TYPEOF(fusionmodule) testmodule;
@@ -69,12 +69,12 @@ BOOST_AUTO_TEST_CASE(fusionMix)
         <
             vector
             <
-                dependency<back::scopes::singleton, If0, CIf0, vector0<>, is_same<_1, If0> >,
-                dependency<back::scopes::singleton, C1, C1, vector0<>, or_< is_base_of<_1, C1>, is_same<_1, C1> > >,
-                dependency<back::scopes::singleton, named<C2, int>, C2, vector0<>, or_< is_base_of<_1, named<C2, int> >, is_same<_1, named<C2, int> > > >,
-                dependency<back::scopes::singleton, C3, C3, vector<C4, C5>, or_< is_base_of<_1, C3>, is_same<_1, C3> > >,
-                dependency<back::scopes::per_request, C6, C6, vector0<>, or_< is_base_of<_1, C6>, is_same<_1, C6> > >,
-                dependency<back::scopes::singleton, named<C7, double>, C7, vector<C1>, or_< is_base_of<_1, named<C7, double> >, is_same<_1, named<C7, double> > > >
+                dependency<back::scopes::singleton, if0, c0if0, vector0<>, is_same<_1, if0> >,
+                dependency<back::scopes::singleton, c1, c1, vector0<>, or_< is_base_of<_1, c1>, is_same<_1, c1> > >,
+                dependency<back::scopes::singleton, named<c2, int>, c2, vector0<>, or_< is_base_of<_1, named<c2, int> >, is_same<_1, named<c2, int> > > >,
+                dependency<back::scopes::singleton, c3, c3, vector<c4, c5>, or_< is_base_of<_1, c3>, is_same<_1, c3> > >,
+                dependency<back::scopes::per_request, c6, c6, vector0<>, or_< is_base_of<_1, c6>, is_same<_1, c6> > >,
+                dependency<back::scopes::singleton, named<c7, double>, c7, vector<c1>, or_< is_base_of<_1, named<c7, double> >, is_same<_1, named<c7, double> > > >
             >,
             testmodule::dependencies
         >::value

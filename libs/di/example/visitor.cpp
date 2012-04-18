@@ -7,11 +7,8 @@
 #include <iostream>
 #include <boost/mpl/size.hpp>
 #include <di/di.hpp>
-#include "common/utility.hpp"
-#include "common/data.hpp"
 
-namespace base    = di::front::base;
-namespace utility = di::utility;
+namespace di = boost::di;
 
 class print_visitor
 {
@@ -22,22 +19,22 @@ public:
         while(--size) {
             std::cout << "\t";
         }
-        std::cout << demangle(typeid(typename T::type).name()) << std::endl;
+        std::cout << typeid(typename T::type).name() << std::endl;
     }
 };
 
-struct visitor_module : base::module
+struct visitor_module : di::generic_module
     <
-        base::singletons <
-            CIf0
+        di::singletons <
+            c0if0
         >
     >
 { };
 
 int main()
 {
-    utility::injector<visitor_module> injector;
-    injector.visit<c8>(print_visitor());
+    di::injector<visitor_module> injector;
+    injector.visit<c8_>(print_visitor());
 
     return 0;
 }

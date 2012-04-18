@@ -5,28 +5,30 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <boost/shared_ptr.hpp>
-#include <di/di.hpp>
+#include <boost/di.hpp>
 
-class C1 { };
-class C2 { };
+class c1 { };
+class c2 { };
+
+namespace di = boost::di;
 
 class Lvalue
 {
 public:
-    BOOST_DI_CTOR(Lvalue, C1, C2)
+    BOOST_DI_CTOR(Lvalue, c1, c2)
     { }
 };
 
 class SharedPtr
 {
 public:
-    BOOST_DI_CTOR(SharedPtr, boost::shared_ptr<C1>, boost::shared_ptr<C2>)
+    BOOST_DI_CTOR(SharedPtr, boost::shared_ptr<c1>, boost::shared_ptr<c2>)
     { }
 };
 
 int main()
 {
-    di::utility::injector<> injector;
+    di::injector<> injector;
     injector.create<Lvalue>();
     injector.create<SharedPtr>();
 

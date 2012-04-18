@@ -27,23 +27,23 @@ using namespace back;
 
 typedef front::base::module <
     singletons <
-        C3
+        c3
     >,
     per_requests <
-        CIf0,
-        bind<CIf01>::in_call_stack<C6, C5>,
-        bind<CIf02>::in_call_stack<C7>,
+        c0if0,
+        bind<c1if0>::in_call_stack<c6, c5>,
+        bind<c2if0>::in_call_stack<c7>,
         bind<int, int_<1> >,
-        bind<int, int_<2> >::in_call_stack<C8>,
-        bind<int, int_<3> >::in_name< mpl::string<'1'> >::in_call_stack<C7, C6, C4>,
-        bind<int, int_<4> >::in_name< mpl::string<'2'> >::in_call_stack<C7, C6, C4>,
-        bind<int, int_<5> >::in_call_stack<C2>
+        bind<int, int_<2> >::in_call_stack<c8>,
+        bind<int, int_<3> >::in_name< mpl::string<'1'> >::in_call_stack<c7, c6, c4>,
+        bind<int, int_<4> >::in_name< mpl::string<'2'> >::in_call_stack<c7, c6, c4>,
+        bind<int, int_<5> >::in_call_stack<c2>
     >
 > basemodule1;
 
 typedef front::base::module <
     singletons <
-        C3
+        c3
     >,
     per_requests <
         bind<int, int_<0> >::in_name< mpl::string<'1'> >,
@@ -53,23 +53,23 @@ typedef front::base::module <
 
 typedef front::base::module <
     singletons <
-        CIf0
+        c0if0
     >,
     per_requests <
-        bind<int, int_<2> >::in_call_stack<C8>,
+        bind<int, int_<2> >::in_call_stack<c8>,
         bind<int, int_<3> >::in_name< mpl::string<'2'> >
     >
 > basemodule3;
 
 typedef front::base::module <
     per_requests <
-        Transactionprovider, int_<0>
+        transaction_provider, int_<0>
     >
 > provider_module;
 
 typedef front::base::module <
     singletons <
-        CIf0
+        c0if0
     >,
     externals <
         int,
@@ -79,7 +79,7 @@ typedef front::base::module <
 
 struct externalsmodulector : front::base::module <
     singletons <
-        CIf0
+        c0if0
     >,
     externals <
         int,
@@ -94,33 +94,33 @@ struct externalsmodulector : front::base::module <
 
 BOOST_AUTO(fusionmodule1, front::fusion::module<>()(
     singletons <
-        C3
+        c3
     >(),
     per_requests <
-        CIf0,
-        bind<CIf01>::in_call_stack<C6, C5>,
-        bind<CIf02>::in_call_stack<C7>,
+        c0if0,
+        bind<c1if0>::in_call_stack<c6, c5>,
+        bind<c2if0>::in_call_stack<c7>,
         bind<int, int_<1> >,
-        bind<int, int_<2> >::in_call_stack<C8>,
-        bind<int, int_<3> >::in_name< mpl::string<'1'> >::in_call_stack<C7, C6, C4>,
-        bind<int, int_<4> >::in_name< mpl::string<'2'> >::in_call_stack<C7, C6, C4>,
-        bind<int, int_<5> >::in_call_stack<C2>
+        bind<int, int_<2> >::in_call_stack<c8>,
+        bind<int, int_<3> >::in_name< mpl::string<'1'> >::in_call_stack<c7, c6, c4>,
+        bind<int, int_<4> >::in_name< mpl::string<'2'> >::in_call_stack<c7, c6, c4>,
+        bind<int, int_<5> >::in_call_stack<c2>
     >()
 ));
 
 BOOST_AUTO(fusionmodule2, front::fusion::module<>()(
     singletons <
-        CIf0
+        c0if0
     >(),
     per_requests <
-        bind<int, int_<2> >::in_call_stack<C8>,
+        bind<int, int_<2> >::in_call_stack<c8>,
         bind<int, int_<3> >::in_name< mpl::string<'2'> >
     >()
 ));
 
 BOOST_AUTO(fusionmodule3, front::fusion::module<>()(
     singletons <
-        C3
+        c3
     >(),
     per_requests <
         bind<int, int_<0> >::in_name< mpl::string<'1'> >,
@@ -130,7 +130,7 @@ BOOST_AUTO(fusionmodule3, front::fusion::module<>()(
 
 BOOST_AUTO(fusion_provider_module, front::fusion::module<>()(
     per_requests <
-        Transactionprovider, int_<0>
+        transaction_provider, int_<0>
     >()
 ));
 
@@ -140,22 +140,22 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Onemodule, injector,
 {
     injector inj;
 
-    shared_ptr<C8> c8 = inj.template create< shared_ptr<C8> >();
+    shared_ptr<c8> c8_ = inj.template create< shared_ptr<c8> >();
 
-    BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
-    BOOST_CHECK(c8->c7->c6->c4->c3 == c8->c7->c6->c3);
-    BOOST_CHECK(c8->c7->if0 != c8->c7->c6->c5.if0);
+    BOOST_CHECK(c8_->c1_ != c8_->c7_->c6_->c5_.c1_);
+    BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
+    BOOST_CHECK(c8_->c7_->if0 != c8_->c7_->c6_->c5_.if0);
 
-    BOOST_CHECK(dynamic_cast<CIf01*>(c8->c7->c6->c5.if0.get()));
-    BOOST_CHECK(dynamic_cast<CIf02*>(c8->c7->if0.get()));
+    BOOST_CHECK(dynamic_cast<c1if0*>(c8_->c7_->c6_->c5_.if0.get()));
+    BOOST_CHECK(dynamic_cast<c2if0*>(c8_->c7_->if0.get()));
 
-    BOOST_CHECK_EQUAL(2, c8->i);
-    BOOST_CHECK_EQUAL(3, c8->c7->c6->c4->i1);
-    BOOST_CHECK_EQUAL(4, c8->c7->c6->c4->i2);
-    BOOST_CHECK_EQUAL(1, c8->c7->c6->c3->i);
-    BOOST_CHECK_EQUAL(5, c8->c7->c6->c5.c2->i);
-    BOOST_CHECK_EQUAL(0.0, c8->c7->c6->c5.c2->d);
-    BOOST_CHECK_EQUAL(0, c8->c7->c6->c5.c2->c);
+    BOOST_CHECK_EQUAL(2, c8_->i);
+    BOOST_CHECK_EQUAL(3, c8_->c7_->c6_->c4_->i1);
+    BOOST_CHECK_EQUAL(4, c8_->c7_->c6_->c4_->i2);
+    BOOST_CHECK_EQUAL(1, c8_->c7_->c6_->c3_->i);
+    BOOST_CHECK_EQUAL(5, c8_->c7_->c6_->c5_.c2_->i);
+    BOOST_CHECK_EQUAL(0.0, c8_->c7_->c6_->c5_.c2_->d);
+    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
 BOOST_AUTO_TEST_CASE_VARIADIC(Manymodules, injector,
@@ -166,22 +166,22 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Manymodules, injector,
 {
     injector inj;
 
-    shared_ptr<C8> c8 = inj.template create< shared_ptr<C8> >();
+    shared_ptr<c8> c8_ = inj.template create< shared_ptr<c8> >();
 
-    BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
-    BOOST_CHECK(c8->c7->c6->c4->c3 == c8->c7->c6->c3);
-    BOOST_CHECK(c8->c7->if0 == c8->c7->c6->c5.if0);
+    BOOST_CHECK(c8_->c1_ != c8_->c7_->c6_->c5_.c1_);
+    BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
+    BOOST_CHECK(c8_->c7_->if0 == c8_->c7_->c6_->c5_.if0);
 
-    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
-    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->if0.get()));
+    BOOST_CHECK(dynamic_cast<c0if0*>(c8_->c7_->c6_->c5_.if0.get()));
+    BOOST_CHECK(dynamic_cast<c0if0*>(c8_->c7_->if0.get()));
 
-    BOOST_CHECK_EQUAL(2, c8->i);
-    BOOST_CHECK_EQUAL(0, c8->c7->c6->c4->i1);
-    BOOST_CHECK_EQUAL(3, c8->c7->c6->c4->i2);
-    BOOST_CHECK_EQUAL(1, c8->c7->c6->c3->i);
-    BOOST_CHECK_EQUAL(1, c8->c7->c6->c5.c2->i);
-    BOOST_CHECK_EQUAL(0.0, c8->c7->c6->c5.c2->d);
-    BOOST_CHECK_EQUAL(0, c8->c7->c6->c5.c2->c);
+    BOOST_CHECK_EQUAL(2, c8_->i);
+    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c4_->i1);
+    BOOST_CHECK_EQUAL(3, c8_->c7_->c6_->c4_->i2);
+    BOOST_CHECK_EQUAL(1, c8_->c7_->c6_->c3_->i);
+    BOOST_CHECK_EQUAL(1, c8_->c7_->c6_->c5_.c2_->i);
+    BOOST_CHECK_EQUAL(0.0, c8_->c7_->c6_->c5_.c2_->d);
+    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
 BOOST_AUTO_TEST_CASE_VARIADIC(Mixmodules, injector,
@@ -190,22 +190,22 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Mixmodules, injector,
 {
     injector inj;
 
-    shared_ptr<C8> c8 = inj.template create< shared_ptr<C8> >();
+    shared_ptr<c8> c8_ = inj.template create< shared_ptr<c8> >();
 
-    BOOST_CHECK(c8->c1 != c8->c7->c6->c5.c1);
-    BOOST_CHECK(c8->c7->c6->c4->c3 == c8->c7->c6->c3);
-    BOOST_CHECK(c8->c7->if0 == c8->c7->c6->c5.if0);
+    BOOST_CHECK(c8_->c1_ != c8_->c7_->c6_->c5_.c1_);
+    BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
+    BOOST_CHECK(c8_->c7_->if0 == c8_->c7_->c6_->c5_.if0);
 
-    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->c6->c5.if0.get()));
-    BOOST_CHECK(dynamic_cast<CIf0*>(c8->c7->if0.get()));
+    BOOST_CHECK(dynamic_cast<c0if0*>(c8_->c7_->c6_->c5_.if0.get()));
+    BOOST_CHECK(dynamic_cast<c0if0*>(c8_->c7_->if0.get()));
 
-    BOOST_CHECK_EQUAL(2, c8->i);
-    BOOST_CHECK_EQUAL(0, c8->c7->c6->c4->i1);
-    BOOST_CHECK_EQUAL(3, c8->c7->c6->c4->i2);
-    BOOST_CHECK_EQUAL(1, c8->c7->c6->c3->i);
-    BOOST_CHECK_EQUAL(1, c8->c7->c6->c5.c2->i);
-    BOOST_CHECK_EQUAL(0.0, c8->c7->c6->c5.c2->d);
-    BOOST_CHECK_EQUAL(0, c8->c7->c6->c5.c2->c);
+    BOOST_CHECK_EQUAL(2, c8_->i);
+    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c4_->i1);
+    BOOST_CHECK_EQUAL(3, c8_->c7_->c6_->c4_->i2);
+    BOOST_CHECK_EQUAL(1, c8_->c7_->c6_->c3_->i);
+    BOOST_CHECK_EQUAL(1, c8_->c7_->c6_->c5_.c2_->i);
+    BOOST_CHECK_EQUAL(0.0, c8_->c7_->c6_->c5_.c2_->d);
+    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
 BOOST_AUTO_TEST_CASE_VARIADIC(Basicprovider, injector,
@@ -213,7 +213,7 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Basicprovider, injector,
     injector<BOOST_TYPEOF(fusion_provider_module)>)
 {
     injector inj;
-    TransactionUsage obj = inj.template create<TransactionUsage>();
+    transaction_usage obj = inj.template create<transaction_usage>();
     BOOST_CHECK(obj.p->get().get() != obj.p->get().get());
 }
 
@@ -226,15 +226,15 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Basicvisitor, injector,
     <
         vector
         <
-            TransactionUsage,
-            shared_ptr< provider< shared_ptr<Transaction> > >,
-            shared_ptr<C3>,
+            transaction_usage,
+            shared_ptr< provider< shared_ptr<transaction> > >,
+            shared_ptr<c3>,
             int
         >
     >
     visitor;
 
-    inj.template visit<TransactionUsage>(visitor);
+    inj.template visit<transaction_usage>(visitor);
 }
 
 BOOST_AUTO_TEST_CASE_VARIADIC(Basicexternals, injector,
@@ -247,10 +247,10 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Basicexternals, injector,
         )
     );
 
-    shared_ptr<C9> c9 = inj.template create< shared_ptr<C9> >();
+    shared_ptr<c9> c9_ = inj.template create< shared_ptr<c9> >();
 
-    BOOST_CHECK_EQUAL(42, c9->i);
-    BOOST_CHECK_EQUAL(87.0, c9->d);
+    BOOST_CHECK_EQUAL(42, c9_->i);
+    BOOST_CHECK_EQUAL(87.0, c9_->d);
 }
 
 BOOST_AUTO_TEST_CASE_VARIADIC(Basicexternalsctor, injector,
@@ -260,10 +260,10 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Basicexternalsctor, injector,
         externalsmodulector(42, 87.0)
     );
 
-    shared_ptr<C9> c9 = inj.template create< shared_ptr<C9> >();
+    shared_ptr<c9> c9_ = inj.template create< shared_ptr<c9> >();
 
-    BOOST_CHECK_EQUAL(42, c9->i);
-    BOOST_CHECK_EQUAL(87.0, c9->d);
+    BOOST_CHECK_EQUAL(42, c9_->i);
+    BOOST_CHECK_EQUAL(87.0, c9_->d);
 }
 
 } // namespace mt

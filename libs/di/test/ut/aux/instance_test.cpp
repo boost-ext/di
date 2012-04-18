@@ -85,22 +85,22 @@ BOOST_AUTO_TEST_CASE(instanceVariantSharedPtr)
 
 BOOST_AUTO_TEST_CASE(instancenamed)
 {
-    typedef named<shared_ptr<int>, A> c1_t;
-    typedef named<shared_ptr<int>, B> c2_t;
+    typedef named<shared_ptr<int>, A> c1__t;
+    typedef named<shared_ptr<int>, B> c2__t;
 
-    shared_ptr<c1_t> c1(new c1_t(make_shared<int>(42)));
-    shared_ptr<c2_t> c2(new c2_t(make_shared<int>(87)));
+    shared_ptr<c1__t> c1_(new c1__t(make_shared<int>(42)));
+    shared_ptr<c2__t> c2_(new c2__t(make_shared<int>(87)));
 
-    BOOST_CHECK((*boost::get<shared_ptr<c1_t> >(instance<c1_t>(c1).get())->i != *boost::get<shared_ptr<c2_t> >(instance<c2_t>(c2).get())->i));
+    BOOST_CHECK((*boost::get<shared_ptr<c1__t> >(instance<c1__t>(c1_).get())->i != *boost::get<shared_ptr<c2__t> >(instance<c2__t>(c2_).get())->i));
 }
 
 BOOST_AUTO_TEST_CASE(instancecontext)
 {
-    shared_ptr<C> c1(new C);
-    shared_ptr<C> c2(new C);
+    shared_ptr<C> c1_(new C);
+    shared_ptr<C> c2_(new C);
 
     BOOST_CHECK((instance<int, A>(87).get() != instance<int, B>(42).get()));
-    BOOST_CHECK((boost::get<shared_ptr<C> >(instance<C, A>(c1).get()) != boost::get<shared_ptr<C> >(instance<C, B>(c2).get())));
+    BOOST_CHECK((boost::get<shared_ptr<C> >(instance<C, A>(c1_).get()) != boost::get<shared_ptr<C> >(instance<C, B>(c2_).get())));
 }
 
 } // namespace ut

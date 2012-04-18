@@ -19,30 +19,30 @@ namespace di {
 namespace test {
 namespace common {
 
-struct If0
+struct if0
 {
-    virtual ~If0() { }
+    virtual ~if0() { }
     virtual void dummy() = 0;
 };
 
-struct CIf0 : If0
+struct c0if0 : if0
 {
     virtual void dummy() { }
 };
 
-struct CIf01 : If0
+struct c1if0 : if0
 {
     virtual void dummy() { }
 };
 
-struct CIf02 : If0
+struct c2if0 : if0
 {
     virtual void dummy() { }
 };
 
-struct CIf03 : If0
+struct c2if0 : if0
 {
-    BOOST_DI_CTOR(CIf03, int i, double d)
+    BOOST_DI_CTOR(c2if0, int i, double d)
         : i(i), d(d)
     { }
 
@@ -52,19 +52,19 @@ struct CIf03 : If0
     double d;
 };
 
-struct C0
+struct c0
 {
     //trivial ctor
 };
 
-struct C1
+struct c1
 {
-    explicit C1(int = 0) { }
+    explicit c1(int = 0) { }
 };
 
-struct C2
+struct c2
 {
-    BOOST_DI_CTOR(C2, int i, double d, char c)
+    BOOST_DI_CTOR(c2, int i, double d, char c)
         : i(i), d(d), c(c)
     { }
 
@@ -73,84 +73,84 @@ struct C2
     char c;
 };
 
-struct C3
+struct c3
 {
-    BOOST_DI_CTOR(explicit C3, int i = 0)
+    BOOST_DI_CTOR(explicit c3, int i = 0)
         : i(i)
     { }
 
     int i;
 };
 
-struct C4
+struct c4
 {
-    BOOST_DI_CTOR(C4, shared_ptr<C3> c3, named<int, mpl::string<'1'> > i1, named<int, mpl::string<'2'> > i2)
-        : c3(c3), i1(i1), i2(i2)
+    BOOST_DI_CTOR(c4, shared_ptr<c3> c3_, named<int, mpl::string<'1'> > i1, named<int, mpl::string<'2'> > i2)
+        : c3_(c3_), i1(i1), i2(i2)
     { }
 
-    shared_ptr<C3> c3;
+    shared_ptr<c3> c3_;
     int i1;
     int i2;
 };
 
-struct C5
+struct c5
 {
-    BOOST_DI_CTOR(C5, shared_ptr<If0> if0, shared_ptr<C2> c2, shared_ptr<C1> c1)
-        : if0(if0), c2(c2), c1(c1)
+    BOOST_DI_CTOR(c5, shared_ptr<if0> if0, shared_ptr<c2> c2_, shared_ptr<c1> c1_)
+        : if0(if0), c2_(c2_), c1_(c1_)
     { }
 
-    shared_ptr<If0> if0;
-    shared_ptr<C2> c2;
-    shared_ptr<C1> c1;
+    shared_ptr<if0> if0;
+    shared_ptr<c2> c2_;
+    shared_ptr<c1> c1_;
 };
 
-struct C6
+struct c6
 {
-    BOOST_DI_CTOR(C6, shared_ptr<C3> c3, const shared_ptr<C4>& c4, C5 c5)
-        : c3(c3), c4(c4), c5(c5)
+    BOOST_DI_CTOR(c6, shared_ptr<c3> c3_, const shared_ptr<c4>& c4_, c5 c5_)
+        : c3_(c3_), c4_(c4_), c5_(c5_)
     { }
 
-    shared_ptr<C3> c3;
-    shared_ptr<C4> c4;
-    C5 c5;
+    shared_ptr<c3> c3_;
+    shared_ptr<c4> c4_;
+    c5 c5_;
 };
 
-struct C7
+struct c7
 {
-    BOOST_DI_CTOR(C7, shared_ptr<If0> if0, shared_ptr<C6> c6)
-        : if0(if0), c6(c6)
+    BOOST_DI_CTOR(c7, shared_ptr<if0> if0, shared_ptr<c6> c6_)
+        : if0(if0), c6_(c6_)
     { }
 
-    shared_ptr<If0> if0;
-    shared_ptr<C6> c6;
+    shared_ptr<if0> if0;
+    shared_ptr<c6> c6_;
 };
 
-struct C8
+struct c8
 {
-    BOOST_DI_CTOR(C8, shared_ptr<C7> c7, C0 c0, shared_ptr<C1> c1, int i)
-        : c7(c7), c0(c0), c1(c1), i(i)
+    BOOST_DI_CTOR(c8, shared_ptr<c7> c7_, c0 c0_, shared_ptr<c1> c1_, int i)
+        : c7_(c7_), c0_(c0_), c1_(c1_), i(i)
     { }
 
-    shared_ptr<C7> c7;
-    C0 c0;
-    shared_ptr<C1> c1;
+    shared_ptr<c7> c7_;
+    c0 c0_;
+    shared_ptr<c1> c1_;
     int i;
 };
 
-struct C9 : C2
+struct c9 : c2
 {
-    BOOST_DI_CTOR(C9, int i, double d, char c, std::string s = "string")
-        : C2(i, d, c), s(s)
+    BOOST_DI_CTOR(c9, int i, double d, char c, std::string s = "string")
+        : c2(i, d, c), s(s)
     { }
 
     std::string s;
 };
 
-struct C10
+struct c10
 {
     BOOST_DI_CTOR_TRAITS(named<int, mpl::string<'1'> >, named<int, mpl::string<'2'> >);
 
-    C10(int i1, int i2)
+    c10(int i1, int i2)
         : i1(i1), i2(i2)
     { }
 
@@ -158,38 +158,38 @@ struct C10
     int i2;
 };
 
-struct C11
+struct c11
 {
-    BOOST_DI_CTOR(C11, named< shared_ptr<int>, mpl::string<'1'> > i)
+    BOOST_DI_CTOR(c11, named< shared_ptr<int>, mpl::string<'1'> > i)
         : i(i)
     { }
 
     shared_ptr<int> i;
 };
 
-struct C12
+struct c12
 {
-    BOOST_DI_CTOR(C12, named< shared_ptr<If0>, mpl::string<'1'> > if0, named< shared_ptr<C2>, _2> c2)
-        : if0(if0), c2(c2)
+    BOOST_DI_CTOR(c12, named< shared_ptr<if0>, mpl::string<'1'> > if0, named< shared_ptr<c2>, _2> c2_)
+        : if0(if0), c2_(c2_)
     { }
 
-    shared_ptr<If0> if0;
-    shared_ptr<C2> c2;
+    shared_ptr<if0> if0;
+    shared_ptr<c2> c2_;
 };
 
-struct C13
+struct c13
 {
-    BOOST_DI_CTOR(C13, named< shared_ptr<If0> > if0, C3 c3)
-        : if0(if0), c3(c3)
+    BOOST_DI_CTOR(c13, named< shared_ptr<if0> > if0, c3 c3_)
+        : if0(if0), c3_(c3_)
     { }
 
-    shared_ptr<If0> if0;
-    C3 c3;
+    shared_ptr<if0> if0;
+    c3 c3_;
 };
 
-struct C14
+struct c14_
 {
-    C14(int i, double d)
+    c14_(int i, double d)
         : i(i), d(d)
     { }
 
@@ -197,71 +197,71 @@ struct C14
     double d;
 };
 
-struct CD2;
-struct CD5;
+struct cd2;
+struct cd5;
 
-struct CD1
+struct cd1
 {
-    BOOST_DI_CTOR(CD1, CD2*) { };
+    BOOST_DI_CTOR(cd1, cd2*) { };
 };
 
-struct CD2
+struct cd2
 {
-    BOOST_DI_CTOR(CD2, CD1*) { };
+    BOOST_DI_CTOR(cd2, cd1*) { };
 };
 
-struct CD3
+struct cd3
 {
-    BOOST_DI_CTOR(CD3, CD5*) { };
+    BOOST_DI_CTOR(cd3, cd5*) { };
 };
 
-struct CD4
+struct cd4
 {
-    BOOST_DI_CTOR(CD4, CD3*) { };
+    BOOST_DI_CTOR(cd4, cd3*) { };
 };
 
-struct CD5
+struct cd5
 {
-    BOOST_DI_CTOR(CD5, CD4*) { };
+    BOOST_DI_CTOR(cd5, cd4*) { };
 };
 
-struct Transaction
+struct transaction
 {
-    Transaction(int i)
+    transaction(int i)
         : i(i)
     { }
 
     int i;
 };
 
-struct Transactionprovider : provider< shared_ptr<Transaction> >
+struct transaction_provider : provider< shared_ptr<transaction> >
 {
-    BOOST_DI_CTOR(Transactionprovider, shared_ptr<C3> c3)
-        : c3(c3)
+    BOOST_DI_CTOR(transaction_provider, shared_ptr<c3> c3_)
+        : c3_(c3_)
     { }
 
-    virtual shared_ptr<Transaction> get() const
+    virtual shared_ptr<transaction> get() const
     {
-        return boost::make_shared<Transaction>(c3->i);
+        return boost::make_shared<transaction>(c3_->i);
     }
 
-    shared_ptr<C3> c3;
+    shared_ptr<c3> c3_;
 };
 
-struct TransactionUsage
+struct transaction_usage
 {
-    BOOST_DI_CTOR(TransactionUsage, shared_ptr< provider< shared_ptr<Transaction> > > p)
+    BOOST_DI_CTOR(transaction_usage, shared_ptr< provider< shared_ptr<transaction> > > p)
         : p(p)
     { }
 
-    shared_ptr< provider< shared_ptr<Transaction> > > p;
+    shared_ptr< provider< shared_ptr<transaction> > > p;
 };
 
 } // namespace common
 } // namespace test
 
 template<>
-struct ctor_traits<test::common::C14>
+struct ctor_traits<test::common::c14>
 {
     static void ctor(int, double);
 };
