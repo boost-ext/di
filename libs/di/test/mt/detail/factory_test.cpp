@@ -12,13 +12,13 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/or.hpp>
 #include "test/common/data.hpp"
-#include "di/utility/named.hpp"
-#include "di/back/scopes/per_request.hpp"
-#include "di/back/scopes/singleton.hpp"
-#include "di/back/aux/dependency.hpp"
-#include "di/back/aux/instance.hpp"
-#include "di/back/aux/pool.hpp"
-#include "di/back/factory.hpp"
+#include "boost/di/named.hpp"
+#include "boost/di/scopes/per_request.hpp"
+#include "boost/di/scopes/singleton.hpp"
+#include "boost/di/aux/dependency.hpp"
+#include "boost/di/aux/instance.hpp"
+#include "boost/di/aux/pool.hpp"
+#include "boost/di/detail/factory.hpp"
 
 namespace di
 {

@@ -43,7 +43,6 @@ int main()
     injector.create<c7>();
     injector.create<c6>();
     injector.create<c5>();
-    //injector.create<transaction_usage>();
 
     return 0;
 }

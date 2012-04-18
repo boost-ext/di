@@ -40,9 +40,9 @@ struct c2if0 : if0
     virtual void dummy() { }
 };
 
-struct c2if0 : if0
+struct c3if0 : if0
 {
-    BOOST_DI_CTOR(c2if0, int i, double d)
+    BOOST_DI_CTOR(c3if0, int i, double d)
         : i(i), d(d)
     { }
 

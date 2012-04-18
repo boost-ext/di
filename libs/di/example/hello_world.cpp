@@ -7,30 +7,22 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/di.hpp>
 
+namespace di = boost::di;
+
 class c1 { };
 class c2 { };
 
-namespace di = boost::di;
-
-class Lvalue
+class hello_world
 {
 public:
-    BOOST_DI_CTOR(Lvalue, c1, c2)
-    { }
-};
-
-class SharedPtr
-{
-public:
-    BOOST_DI_CTOR(SharedPtr, boost::shared_ptr<c1>, boost::shared_ptr<c2>)
+    BOOST_DI_CTOR(hello_world, boost::shared_ptr<c1>, boost::shared_ptr<c2>)
     { }
 };
 
 int main()
 {
     di::injector<> injector;
-    injector.create<Lvalue>();
-    injector.create<SharedPtr>();
+    injector.create<hello_world>();
 
     return 0;
 }

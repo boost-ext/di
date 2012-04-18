@@ -9,7 +9,7 @@
 #include <boost/mpl/vector.hpp>
 #include "test/common/data.hpp"
 #include "test/common/visitor.hpp"
-#include "di/di.hpp"
+#include "boost/di.hpp"
 
 #define BOOST_AUTO_TEST_CASE_VARIADIC(test, type, ...) \
     typedef boost::mpl::vector<__VA_ARGS__> test##types; BOOST_AUTO_TEST_CASE_TEMPLATE(test, type, test##types)

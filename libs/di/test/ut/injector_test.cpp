@@ -7,8 +7,8 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
-#include "di/back/module.hpp"
-#include "di/utility/injector.hpp"
+#include "boost/di/aux/utility.hpp"
+#include "boost/di/injector.hpp"
 
 namespace di
 {
