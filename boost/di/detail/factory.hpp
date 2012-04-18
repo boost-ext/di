@@ -44,7 +44,8 @@ public:
         : pool_(pool)
     { }
 
-    template<typename T> T create()
+    template<typename T>
+    T create()
     {
         typedef boost::mpl::vector0<> empty_call_stack;
         typedef typename Tpolicies::template verify<TDeps, T>::type polices;
@@ -52,7 +53,8 @@ public:
             TCreator<>::template execute<T, empty_call_stack>(m_entries, pool_));
     }
 
-    template<typename T, typename Visitor> void visit(const Visitor& visitor)
+    template<typename T, typename Visitor>
+    void visit(const Visitor& visitor)
     {
         typedef boost::mpl::vector0<> empty_call_stack;
         typedef typename Tpolicies::template verify<TDeps, T>::type polices;

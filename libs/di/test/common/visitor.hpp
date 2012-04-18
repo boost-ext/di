@@ -17,12 +17,10 @@
 #include <boost/mpl/pop_front.hpp>
 #include <boost/mpl/front.hpp>
 
-namespace di
-{
-namespace test
-{
-namespace common
-{
+namespace boost {
+namespace di {
+namespace test {
+namespace common {
 
 using namespace boost;
 using namespace boost::mpl;
@@ -57,6 +55,7 @@ private:
 } // namespace common
 } // namespace test
 } // namespace di
+} // namespace boost
 
 #endif
 

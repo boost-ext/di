@@ -64,7 +64,10 @@
         }
     };
 
-    template<typename TDeps, typename TPool> struct creator : creator_impl<TDeps, TPool> { };
+    template<typename TDeps, typename TPool>
+    struct creator
+        : creator_impl<TDeps, TPool>
+    { };
 
     } // namespace detail
     } // namespace di

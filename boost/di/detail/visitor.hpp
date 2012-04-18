@@ -32,7 +32,7 @@
         typename TDeps,
         template<typename, typename, typename = TDeps, typename = aux::dependency<scopes::per_request, boost::mpl::_1, boost::mpl::_2> > class TBinder = binder
     >
-    class visitorImpl
+    class visitor_impl
     {
         template<typename T, typename TCallStack, typename TDependency>
         struct dependency
@@ -56,7 +56,10 @@
         #include BOOST_PP_ITERATE()
     };
 
-    template<typename TDeps> struct visitor : visitorImpl<TDeps> { };
+    template<typename TDeps>
+    struct visitor
+        : visitor_impl<TDeps>
+    { };
 
     } // namespace detail
     } // namespace di
@@ -66,8 +69,8 @@
 
 #else
 
-    template<typename T, typename TDependency, typename TCallStack, typename Tvisitor>
-    static typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION()>::type execute_impl(const Tvisitor& visitor)
+    template<typename T, typename TDependency, typename TCallStack, typename TVisitor>
+    static typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION()>::type execute_impl(const TVisitor& visitor)
     {
         visitor.template operator()< dependency<T, TCallStack, TDependency> >();
 

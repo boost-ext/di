@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef BOOST_DI_POLICY_CHECK_FOR_CIRCULAR_DEPENDENCIES_HPP
-    #define BOOST_DI_POLICY_CHECK_FOR_CIRCULAR_DEPENDENCIES_HPP
+    #ifndef BOOST_DI_POLICIES_CHECK_FOR_CIRCULAR_DEPENDENCIES_HPP
+    #define BOOST_DI_POLICIES_CHECK_FOR_CIRCULAR_DEPENDENCIES_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
@@ -31,7 +31,7 @@
 
     namespace boost {
     namespace di {
-    namespace policy {
+    namespace policies {
 
     class check_for_circular_dependencies
     {
@@ -45,12 +45,10 @@
         class verify
         {
             template<typename TCallStack>
-            struct is_unique_call_stack : boost::mpl::bool_
-                <
-                    static_cast<std::size_t>(boost::mpl::accumulate
-                        <
-                            typename boost::mpl::transform
-                            <
+            struct is_unique_call_stack
+                : boost::mpl::bool_<
+                    static_cast<std::size_t>(boost::mpl::accumulate<
+                            typename boost::mpl::transform<
                                 TCallStack,
                                 boost::mpl::count<TCallStack, boost::mpl::_>
                             >::type,
@@ -61,11 +59,12 @@
                 >
             { };
 
-            template<typename, typename, typename = void, typename = void> struct circular_dependencies_impl;
+            template<typename, typename, typename = void, typename = void>
+            struct circular_dependencies_impl;
 
             template<typename T, typename TCallStack, typename = void, typename = void>
-            struct circular_dependencies : circular_dependencies_impl
-                <
+            struct circular_dependencies
+                : circular_dependencies_impl<
                     typename TBinder<T, TCallStack>::type,
                     typename aux::update_call_stack<TCallStack, typename TBinder<T, TCallStack>::type>::type
                 >
@@ -78,7 +77,7 @@
         };
     };
 
-    } // namespace policy
+    } // namespace policies
     } // namespace di
     } // namespace boost
 
@@ -90,8 +89,7 @@
         circular_dependencies<typename aux::at_ctor<TDependency, n>::type, TCallStack>
 
     template<typename TDependency, typename TCallStack>
-    struct circular_dependencies_impl
-        <
+    struct circular_dependencies_impl<
             TDependency,
             TCallStack,
             typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION()>::type,

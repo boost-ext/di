@@ -45,21 +45,23 @@
     {
         typedef boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> seq;
 
-        struct modules : boost::mpl::remove_if<seq, boost::is_base_of<back::detail::policy, boost::mpl::_> >::type { };
-        struct policies : boost::mpl::joint_view
-            <
+        struct modules
+            : boost::mpl::remove_if<seq, boost::is_base_of<back::detail::policy, boost::mpl::_> >::type
+        { };
+
+        struct policies
+            : boost::mpl::joint_view<
                 boost::mpl::filter_view<seq, boost::is_base_of<back::detail::policy, boost::mpl::_> >,
                 boost::mpl::vector1<typename defaults<back::detail::policy, specialized>::type>
             >::type
         { };
 
         template<typename TSeq, typename TResult = boost::mpl::set0<> >
-        struct dependencies_impl : boost::mpl::fold
-            <
+        struct dependencies_impl
+            : boost::mpl::fold<
                 TSeq,
                 TResult,
-                boost::mpl::if_
-                <
+                boost::mpl::if_<
                     boost::is_base_of<back::module, boost::mpl::_2>,
                     dependencies_impl<back::aux::get_dependencies<boost::mpl::_2>, boost::mpl::_1>,
                     boost::mpl::insert<boost::mpl::_1, boost::mpl::_2>
@@ -67,10 +69,9 @@
             >
         { };
 
-        struct externals : boost::mpl::fold
-            <
-                typename boost::mpl::fold
-                <
+        struct externals
+            : boost::mpl::fold<
+                typename boost::mpl::fold<
                     modules,
                     boost::mpl::set<>,
                     boost::mpl::insert< boost::mpl::_1, back::aux::get_pool<boost::mpl::_2> >
@@ -80,8 +81,8 @@
             >::type
         { };
 
-        struct dependencies : boost::mpl::fold
-            <
+        struct dependencies
+            : boost::mpl::fold<
                 typename dependencies_impl<modules>::type,
                 boost::mpl::vector0<>,
                 boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>

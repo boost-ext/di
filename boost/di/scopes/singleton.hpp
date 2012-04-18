@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef BOOST_DI_SCOPE_SINGLETON_HPP
-    #define BOOST_DI_SCOPE_SINGLETON_HPP
+    #ifndef BOOST_DI_SCOPES_SINGLETON_HPP
+    #define BOOST_DI_SCOPES_SINGLETON_HPP
 
     #include <boost/shared_ptr.hpp>
     #include <boost/preprocessor/iteration/iterate.hpp>
@@ -15,16 +15,17 @@
     #include <boost/preprocessor/repetition/enum_binary_params.hpp>
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE, "boost/di/scope/singleton.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE, "boost/di/scopes/singleton.hpp"))
 
     namespace boost {
     namespace di {
-    namespace scope {
+    namespace scopes {
 
     class singleton
     {
     public:
-        template<typename T> class scope
+        template<typename T>
+        class scope
         {
         public:
             typedef boost::shared_ptr<T> result_type;
@@ -46,7 +47,7 @@
         };
     };
 
-    } // namespace scope
+    } // namespace scopes
     } // namespace di
     } // namespace boost
 

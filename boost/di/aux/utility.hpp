@@ -70,6 +70,11 @@ struct get_seq
     typedef typename T::seq type;
 };
 
+struct internal
+{
+    typedef void name; //no name
+};
+
 template<typename TDependency, int N, typename TResult = void>
 struct enable_if_ctor_size
     : boost::enable_if_c<boost::mpl::size<typename TDependency::ctor>::value == N, TResult>

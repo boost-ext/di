@@ -1,7 +1,6 @@
 MAKEFLAGS+=-j$(shell grep -c '^processor' /proc/cpuinfo) -l
-DI:=..
 DI_PCH:=di_pch.hpp
-CXXFLAGS:=-I. -I$(DI) -O2 -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-multichar -Wno-four-char-constants $(EXTRA_CXXFLAGS)
+CXXFLAGS:=-I. -I.. -O2 -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-multichar -Wno-four-char-constants $(EXTRA_CXXFLAGS)
 EXAMPLES:=$(patsubst %.cpp, %.o, $(shell find . -iname "*.cpp"))
 
 .PHONY: examples pch clean
@@ -13,7 +12,7 @@ examples: pch $(EXAMPLES)
 	./$*.exe
 
 pch:
-	@find $(DI)/di -iname "*.hpp" | xargs egrep "^\s*#include.*[\"|<]" | tr -d ' ' | cut -d':' -f2 | sort -u > $(DI_PCH)
+	@find ../di -iname "*.hpp" | xargs egrep "^\s*#include.*[\"|<]" | tr -d ' ' | cut -d':' -f2 | sort -u > $(DI_PCH)
 	$(CXX) $(CXXFLAGS) $(DI_PCH)
 
 clean:

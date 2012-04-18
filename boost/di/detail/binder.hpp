@@ -95,8 +95,16 @@ struct binder : boost::mpl::deref
                         <
                             boost::mpl::and_
                             <
-                                detail::comparator<typename aux::make_plain<T>::type, aux::get_bind<boost::mpl::_2> >,
-                                detail::equal_call_stack<TCallStack, aux::get_context<boost::mpl::_2> >
+                                detail::comparator
+                                <
+                                    typename aux::make_plain<T>::type,
+                                    aux::get_bind<boost::mpl::_2>
+                                >,
+                                detail::equal_call_stack
+                                <
+                                    TCallStack,
+                                    aux::get_context<boost::mpl::_2>
+                                >
                             >,
                             boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>,
                             boost::mpl::_1

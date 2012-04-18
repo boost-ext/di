@@ -14,7 +14,6 @@ using namespace boost::mpl;
 
 namespace base    = di::front::base;
 namespace fusion  = di::front::fusion;
-namespace utility = di::utility;
 
 struct basemodule : base::module <
     base::singletons <

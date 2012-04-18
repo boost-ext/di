@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_MODULE_AUX_BIND_HPP
-#define BOOST_DI_MODULE_AUX_BIND_HPP
+#ifndef BOOST_DI_CONCEPTS_BIND_HPP
+#define BOOST_DI_CONCEPTS_BIND_HPP
 
 #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
@@ -22,9 +22,7 @@
 
 namespace boost {
 namespace di {
-namespace module {
-namespace aux {
-namespace di {
+namespace concepts {
 
 template<typename TExpected, typename TGiven = TExpected, typename Enable = void>
 struct bind : internal, back::aux::dependency
@@ -130,8 +128,7 @@ struct bind<TExpected, TGiven, typename boost::enable_if< boost::mpl::or_<back::
     };
 };
 
-} // namespace aux
-} // namespace module
+} // namespace concepts
 } // namespace di
 } // namespace boost
 

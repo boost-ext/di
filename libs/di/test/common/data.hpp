@@ -14,16 +14,10 @@
 #include "di/utility/named.hpp"
 #include "di/utility/provider.hpp"
 
-namespace di
-{
-namespace test
-{
-namespace common
-{
-
-using namespace boost;
-using namespace boost::mpl;
-using namespace utility;
+namespace boost {
+namespace di {
+namespace test {
+namespace common {
 
 struct If0
 {
@@ -273,6 +267,7 @@ struct ctor_traits<test::common::C14>
 };
 
 } // namespace di
+} // namespace boost
 
 #endif
 

@@ -4,13 +4,12 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_MODULE_AUX_ANNOTATE_HPP
-#define BOOST_DI_MODULE_AUX_ANNOTATE_HPP
+#ifndef BOOST_DI_CONCEPTS_ANNOTATE_HPP
+#define BOOST_DI_CONCEPTS_ANNOTATE_HPP
 
 namespace boost {
 namespace di {
-namespace module {
-namespace aux {
+namespace concepts {
 
 template<typename TDerived>
 struct annotate
@@ -23,8 +22,7 @@ struct annotate
     };
 };
 
-} // namespace aux
-} // namespace module
+} // namespace concepts
 } // namespace di
 } // namespace boost
 

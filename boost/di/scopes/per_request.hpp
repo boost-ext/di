@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef BOOST_DI_SCOPE_PER_REQUEST_HPP
-    #define BOOST_DI_SCOPE_PER_REQUEST_HPP
+    #ifndef BOOST_DI_SCOPES_PER_REQUEST_HPP
+    #define BOOST_DI_SCOPES_PER_REQUEST_HPP
 
     #include <boost/shared_ptr.hpp>
     #include <boost/make_shared.hpp>
@@ -16,16 +16,17 @@
     #include <boost/preprocessor/repetition/enum_binary_params.hpp>
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE, "boost/di/scope/per_request.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE, "boost/di/scopes/per_request.hpp"))
 
     namespace boost {
     namespace di {
-    namespace scope {
+    namespace scopes {
 
     class per_request
     {
     public:
-        template<typename T> class scope
+        template<typename T>
+        class scope
         {
         public:
             typedef boost::shared_ptr<T> result_type;
@@ -39,7 +40,7 @@
         };
     };
 
-    } // namespace scope
+    } // namespace scopes
     } // namespace di
     } // namespace boost
 

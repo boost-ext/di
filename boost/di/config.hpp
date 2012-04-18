@@ -51,7 +51,9 @@ namespace di {
  * @endcode
  */
 class specialized { };
-template<typename, typename = specialized> struct defaults;
+
+template<typename, typename = specialized>
+struct defaults;
 
 } // namespace di
 } // namespace boost

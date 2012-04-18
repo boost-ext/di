@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_POLICY_CHECK_FOR_CREATION_OWNERSHIP_HPP
-#define BOOST_DI_POLICY_CHECK_FOR_CREATION_OWNERSHIP_HPP
+#ifndef BOOST_DI_POLICIES_CHECK_FOR_CREATION_OWNERSHIP_HPP
+#define BOOST_DI_POLICIES_CHECK_FOR_CREATION_OWNERSHIP_HPP
 
 #include <boost/mpl/bool.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -14,8 +14,7 @@
 
 namespace boost {
 namespace di {
-namespace policy {
-{
+namespace policies {
 
 class check_for_creation_ownership
 {
@@ -26,7 +25,7 @@ public:
     { };
 
     template<typename TDeps, typename TGiven>
-    class verify<TDeps, TGiven, typename boost::enable_if< boost::is_reference<TGiven> >::type>
+    class verify<TDeps, TGiven, typename boost::enable_if<boost::is_reference<TGiven> >::type>
         : public boost::mpl::false_
     {
        BOOST_DI_STATIC_ASSERT(
@@ -37,7 +36,7 @@ public:
     };
 };
 
-} // namespace policy
+} // namespace policies
 } // namespace di
 } // namespace boost
 

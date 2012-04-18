@@ -27,7 +27,9 @@ namespace detail {
 template<typename TDerived, typename = void> class has_value
 {
     struct helper { static int value; };
-    struct base : boost::mpl::if_<boost::is_arithmetic<TDerived>, boost::mpl::void_, TDerived>::type, helper { };
+    struct base
+        : boost::mpl::if_<boost::is_arithmetic<TDerived>, boost::mpl::void_, TDerived>::type, helper
+    { };
 
     template<typename T> static boost::mpl::aux::no_tag  deduce(boost::non_type<const int*, &T::value>*);
     template<typename T> static boost::mpl::aux::yes_tag deduce(...);

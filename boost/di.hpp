@@ -12,19 +12,23 @@
 #include "di/ctor.hpp"
 #include "di/injector.hpp"
 
+// module
+#include "di/generic_module.hpp"
+#include "di/fusion_module.hpp"
+
+// concepts
+#include "di/concepts.hpp"
+
+// scopes
+#include "di/scopes/per_request.hpp"
+#include "di/scopes/singleton.hpp"
+
 // utility
 #include "di/named.hpp"
 #include "di/provider.hpp"
 
-// module
-#include "di/module/base.hpp"
-#include "di/module/fusion.hpp"
-
-// policy
-#include "di/policy/check_for_binding_correctness.hpp"
-#include "di/policy/check_for_circular_dependencies.hpp"
-#include "di/policy/check_for_creation_ownership.hpp"
-#include "di/policy/check_for_references_without_ownership.hpp"
+// policies
+#include "di/policy.hpp"
 
 #endif
 

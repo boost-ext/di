@@ -14,10 +14,9 @@
 #define BOOST_AUTO_TEST_CASE_VARIADIC(test, type, ...) \
     typedef boost::mpl::vector<__VA_ARGS__> test##types; BOOST_AUTO_TEST_CASE_TEMPLATE(test, type, test##types)
 
-namespace di
-{
-namespace mt
-{
+namespace boost {
+namespace di {
+namespace mt {
 
 using namespace boost;
 using namespace boost::mpl;
@@ -269,4 +268,5 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Basicexternalsctor, injector,
 
 } // namespace mt
 } // namespace di
+} // namespace boost
 

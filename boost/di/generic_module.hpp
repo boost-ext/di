@@ -6,13 +6,13 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef BOOST_DI_MODULE_BASE_HPP
-    #define BOOST_DI_MODULE_BASE_HPP
+    #ifndef BOOST_DI_MODULE_generic_module_HPP
+    #define BOOST_DI_MODULE_generic_module_HPP
 
     #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
     #include <boost/preprocessor/repetition/enum_params.hpp>
     #include <boost/type_traits/is_same.hpp>
-    #include <boost/type_traits/is_base_of.hpp>
+    #include <boost/type_traits/is_generic_module_of.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/limits/vector.hpp>
     #include <boost/mpl/vector.hpp>
@@ -28,77 +28,18 @@
     #include "boost/di/aux/utility.hpp"
     #include "boost/di/aux/instance.hpp"
     #include "boost/di/module/aux/module.hpp"
-    #include "boost/di/scope/singleton.hpp"
-    #include "boost/di/scope/per_request.hpp"
-    #include "boost/di/module/aux/internal.hpp"
-    #include "boost/di/module/aux/scope.hpp"
-    #include "boost/di/module/aux/bind.hpp"
-    #include "boost/di/module/aux/externals.hpp"
-    #include "boost/di/module/aux/annotate.hpp"
+    #include "boost/di/scopes/singleton.hpp"
+    #include "boost/di/scopes/per_request.hpp"
+    #include "boost/di/concepts.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/module/base.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/module/generic_module.hpp"))
 
     namespace boost {
     namespace di {
     namespace module {
 
-    template<typename TScope>
-    struct scope
-        : aux::scope<TScope>
-    { };
-
-    template<typename TExpected, typename TGiven = TExpected>
-    struct bind
-        : aux::bind<TExpected, TGiven>
-    { };
-
-    template<typename TExpected, typename TGiven = TExpected>
-    struct singleton
-        : scope<back::scopes::singleton>::bind< bind<TExpected, TGiven> >
-    { };
-
-    template<typename T>
-    struct singleton<T, T>
-        : scope<back::scopes::singleton>::bind<T>
-    { };
-
-    template<typename TExpected, typename TGiven = TExpected>
-    struct per_request
-        : scope<back::scopes::per_request>::bind< bind<TExpected, TGiven> >
-    { };
-
-    template<typename T>
-    struct per_request<T, T>
-        : scope<back::scopes::per_request>::bind<T>
-    { };
-
-    template<typename T>
-    struct External
-        : aux::externals<T>
-    { };
-
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    struct singletons
-        : scope<back::scopes::singleton>::bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
-    { };
-
-    template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    struct per_requests
-        : scope<back::scopes::per_request>::bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
-    { };
-
-    template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    struct externals
-        : aux::externals<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
-    { };
-
-    template<typename T>
-    struct annotate
-        : aux::annotate<T>
-    { };
-
-    template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    class module : public aux::module
+    class generic_module : public aux::module
     {
         template<typename TInstance, typename T> struct is_same_instance : boost::mpl::or_
             <
@@ -118,7 +59,7 @@
         };
 
         template<typename T>
-        struct make_annotation<T, typename boost::enable_if<boost::is_base_of<base::aux::internal, T> >::type>
+        struct make_annotation<T, typename boost::enable_if<boost::is_generic_module_of<generic_module::aux::internal, T> >::type>
         {
             typedef typename T::template rebind<back::scopes::singleton>::type dependency;
             typedef back::aux::instance<typename dependency::expected, typename dependency::context> instance;
@@ -135,7 +76,7 @@
                     <
                         boost::mpl::if_
                         <
-                            boost::is_base_of<aux::detail::externals, boost::mpl::_2>,
+                            boost::is_generic_module_of<aux::detail::externals, boost::mpl::_2>,
                             boost::mpl::_2,
                             boost::mpl::vector0<>
                         >,
@@ -156,18 +97,15 @@
     public:
         typedef back::aux::pool<typename instances::type> pool;
 
-        struct dependencies : boost::mpl::fold
-            <
+        struct dependencies
+            : boost::mpl::fold<
                 boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
                 boost::mpl::vector0<>,
-                boost::mpl::copy
-                <
-                    boost::mpl::if_
-                    <
-                        boost::is_base_of<aux::detail::externals, boost::mpl::_2>,
+                boost::mpl::copy<
+                    boost::mpl::if_<
+                        boost::is_generic_module_of<aux::detail::externals, boost::mpl::_2>,
                         boost::mpl::vector0<>,
-                        boost::mpl::if_
-                        <
+                        boost::mpl::if_<
                             boost::mpl::is_sequence<boost::mpl::_2>,
                             boost::mpl::_2,
                             per_request<boost::mpl::_2>
@@ -178,15 +116,13 @@
             >::type
         { };
 
-        module() { }
+        generic_module() { }
 
         #include BOOST_PP_ITERATE()
 
         template<typename T, typename Tvalue>
-        inline static typename boost::disable_if
-        <
-            boost::is_same
-            <
+        inline static typename boost::disable_if<
+            boost::is_same<
                 find_instance_type<externals, T>,
                 boost::mpl::end<externals>
             >,
@@ -213,7 +149,7 @@
 #else
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    module(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg))
+    generic_module(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg))
         : pool_(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg))
     { }
 
