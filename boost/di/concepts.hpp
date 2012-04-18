@@ -13,7 +13,6 @@
 #include "boost/di/concepts/annotate.hpp"
 #include "boost/di/concepts/bind.hpp"
 #include "boost/di/concepts/externals.hpp"
-#include "boost/di/concepts/internal.hpp"
 #include "boost/di/concepts/scope.hpp"
 #include "boost/di/scopes/per_request.hpp"
 #include "boost/di/scopes/singleton.hpp"
@@ -28,7 +27,7 @@ struct scope
 
 template<typename TExpected, typename TGiven = TExpected>
 struct bind
-    : base::concepts::bind<TExpected, TGiven>
+    : concepts::bind<TExpected, TGiven>
 { };
 
 template<typename TExpected, typename TGiven = TExpected>

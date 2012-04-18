@@ -18,7 +18,7 @@
     #include "boost/di/aux/utility.hpp"
     #include "boost/di/aux/dependency.hpp"
     #include "boost/di/detail/binder.hpp"
-    #include "boost/di/scope/per_request.hpp"
+    #include "boost/di/scopes/per_request.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE, "boost/di/detail/visitor.hpp"))

@@ -10,9 +10,9 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/mpl/string.hpp>
-#include "di/front/ctor.hpp"
-#include "di/utility/named.hpp"
-#include "di/utility/provider.hpp"
+#include "boost/di/ctor.hpp"
+#include "boost/di/named.hpp"
+#include "boost/di/provider.hpp"
 
 namespace boost {
 namespace di {

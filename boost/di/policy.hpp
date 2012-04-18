@@ -16,6 +16,7 @@
 #include "boost/di/aux/utility.hpp"
 #include "boost/di/policies/check_for_circular_dependencies.hpp"
 #include "boost/di/policies/check_for_creation_ownership.hpp"
+#include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {
@@ -42,8 +43,6 @@ public:
         typedef void type;
     };
 };
-
-} // namespace back
 
 template<typename TDefault>
 struct defaults<detail::policy, TDefault>

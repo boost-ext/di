@@ -27,16 +27,14 @@
     #include "boost/di/aux/pool.hpp"
     #include "boost/di/aux/utility.hpp"
     #include "boost/di/aux/instance.hpp"
-    #include "boost/di/module/aux/module.hpp"
     #include "boost/di/scopes/singleton.hpp"
     #include "boost/di/scopes/per_request.hpp"
     #include "boost/di/concepts.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/module/generic_module.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/generic_module.hpp"))
 
     namespace boost {
     namespace di {
-    namespace module {
 
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
     class generic_module : public aux::module
@@ -55,14 +53,14 @@
         template<typename T, typename Enable = void>
         struct make_annotation
         {
-            typedef typename annotate<back::aux::instance<T> >::template with<> type;
+            typedef typename annotate<aux::instance<T> >::template with<> type;
         };
 
         template<typename T>
-        struct make_annotation<T, typename boost::enable_if<boost::is_base_of<generic_module::aux::internal, T> >::type>
+        struct make_annotation<T, typename boost::enable_if<boost::is_base_of<aux::internal, T> >::type>
         {
-            typedef typename T::template rebind<back::scopes::singleton>::type dependency;
-            typedef back::aux::instance<typename dependency::expected, typename dependency::context> instance;
+            typedef typename T::template rebind<scopes::singleton>::type dependency;
+            typedef aux::instance<typename dependency::expected, typename dependency::context> instance;
             typedef typename annotate<instance>::template with<typename T::name> type;
         };
 
@@ -76,7 +74,7 @@
                     <
                         boost::mpl::if_
                         <
-                            boost::is_base_of<aux::detail::externals, boost::mpl::_2>,
+                            boost::is_base_of<concepts::detail::externals, boost::mpl::_2>,
                             boost::mpl::_2,
                             boost::mpl::vector0<>
                         >,
@@ -90,12 +88,12 @@
         struct instances : boost::mpl::transform
             <
                 externals,
-                back::aux::get_derived<boost::mpl::_1>
+                aux::get_derived<boost::mpl::_1>
             >::type
         { };
 
     public:
-        typedef back::aux::pool<typename instances::type> pool;
+        typedef aux::pool<typename instances::type> pool;
 
         struct dependencies
             : boost::mpl::fold<
@@ -103,7 +101,7 @@
                 boost::mpl::vector0<>,
                 boost::mpl::copy<
                     boost::mpl::if_<
-                        boost::is_base_of<aux::detail::externals, boost::mpl::_2>,
+                        boost::is_base_of<concepts::detail::externals, boost::mpl::_2>,
                         boost::mpl::vector0<>,
                         boost::mpl::if_<
                             boost::mpl::is_sequence<boost::mpl::_2>,
@@ -140,7 +138,6 @@
         pool pool_;
     };
 
-    } // namespace module
     } // namespace di
     } // namespace boost
 

@@ -26,7 +26,7 @@
     #include "boost/di/scopes/singleton.hpp"
     #include "boost/di/concepts.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/module/fusion_module.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/fusion_module.hpp"))
 
     namespace boost {
     namespace di {
@@ -38,7 +38,7 @@
     class fusion_module : public aux::module
     {
     public:
-        typedef back::aux::pool<TSeq> pool;
+        typedef aux::pool<TSeq> pool;
 
         struct dependencies : boost::mpl::fold
             <
@@ -48,7 +48,7 @@
                 <
                     boost::mpl::if_
                     <
-                        boost::is_base_of<base::aux::internal, boost::mpl::_2>,
+                        boost::is_base_of<aux::internal, boost::mpl::_2>,
                         boost::mpl::_2,
                         per_request<boost::mpl::_2>
                     >,

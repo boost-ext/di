@@ -23,7 +23,8 @@ namespace di {
  * };
  * @endcode
  */
-template<typename T> struct ctor_traits
+template<typename T>
+struct ctor_traits
 {
     static void ctor(); //trivial ctor
 };

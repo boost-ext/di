@@ -6,16 +6,18 @@
 //
 #include <iostream>
 #include <boost/mpl/size.hpp>
-#include <di/di.hpp>
+#include <boost/di.hpp>
+#include "common/data.hpp"
 
-namespace di = boost::di;
+namespace mpl = boost::mpl;
+namespace di  = boost::di;
 
 class print_visitor
 {
 public:
     template<typename T> void operator()() const
     {
-        int size = boost::mpl::size<typename T::context>::value;
+        int size = mpl::size<typename T::context>::value;
         while(--size) {
             std::cout << "\t";
         }
@@ -34,7 +36,7 @@ struct visitor_module : di::generic_module
 int main()
 {
     di::injector<visitor_module> injector;
-    injector.visit<c8_>(print_visitor());
+    injector.visit<c8>(print_visitor());
 
     return 0;
 }

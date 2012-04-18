@@ -22,7 +22,7 @@ template<typename T, typename TName = void>
 class named
 {
 public:
-    typedef typename back::aux::make_plain<T>::type value_type;
+    typedef typename aux::make_plain<T>::type value_type;
     typedef named<value_type, TName> element_type;
 
     named(T value = T()) // non explicit
@@ -43,8 +43,8 @@ template<typename T, typename TName>
 class named< boost::shared_ptr<T>, TName>
 {
 public:
-    typedef named<typename back::aux::make_plain<T>::type, TName> element_type;
-    typedef typename back::aux::make_plain<T>::type value_type;
+    typedef named<typename aux::make_plain<T>::type, TName> element_type;
+    typedef typename aux::make_plain<T>::type value_type;
 
     named(boost::shared_ptr<T> value = boost::make_shared<T>()) // non explicit
         : value_(value)
@@ -68,8 +68,8 @@ template<typename T, typename TName>
 class named< const boost::shared_ptr<T>&, TName> : named< boost::shared_ptr<T>, TName>
 {
 public:
-    typedef named<typename back::aux::make_plain<T>::type, TName> element_type;
-    typedef typename back::aux::make_plain<T>::type value_type;
+    typedef named<typename aux::make_plain<T>::type, TName> element_type;
+    typedef typename aux::make_plain<T>::type value_type;
 
     named(const boost::shared_ptr<T>& value) // non explicit
         : named< boost::shared_ptr<T>, TName>(value)

@@ -24,10 +24,10 @@
     #include "boost/di/aux/utility.hpp"
     #include "boost/di/aux/dependency.hpp"
     #include "boost/di/detail/binder.hpp"
-    #include "boost/di/scope/per_request.hpp"
+    #include "boost/di/scopes/per_request.hpp"
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE, "boost/di/policy/check_for_circular_dependencies.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE, "boost/di/policies/check_for_circular_dependencies.hpp"))
 
     namespace boost {
     namespace di {

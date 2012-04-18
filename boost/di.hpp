@@ -8,27 +8,27 @@
 #define BOOST_DI_HPP
 
 // core
-#include "di/config.hpp"
-#include "di/ctor.hpp"
-#include "di/injector.hpp"
+#include "boost/di/config.hpp"
+#include "boost/di/ctor.hpp"
+#include "boost/di/injector.hpp"
 
 // modules
-#include "di/generic_module.hpp"
-#include "di/fusion_module.hpp"
+#include "boost/di/generic_module.hpp"
+#include "boost/di/fusion_module.hpp"
 
 // concepts
-#include "di/concepts.hpp"
+#include "boost/di/concepts.hpp"
 
 // scopes
-#include "di/scopes/per_request.hpp"
-#include "di/scopes/singleton.hpp"
+#include "boost/di/scopes/per_request.hpp"
+#include "boost/di/scopes/singleton.hpp"
 
 // utility
-#include "di/named.hpp"
-#include "di/provider.hpp"
+#include "boost/di/named.hpp"
+#include "boost/di/provider.hpp"
 
 // policy
-#include "di/policy.hpp"
+#include "boost/di/policy.hpp"
 
 #endif
 

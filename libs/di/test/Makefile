@@ -3,9 +3,7 @@ CXXFLAGS:=-I.. -DDI_FUNCTION_ARITY_LIMIT_SIZE=4 -g -O0 -std=c++98 -Wall -Wextra 
 
 -include $(patsubst %.dep,.deps/%.dep,$(patsubst %.cpp,%.dep,$(shell find . -iname "*.cpp")))
 
-all: test clean
-
-test: $(patsubst %.cpp,%.o,$(shell find . -iname "*.cpp"))
+all test: $(patsubst %.cpp,%.o,$(shell find . -iname "*.cpp"))
 	$(CXX) $(CXXFLAGS) -DBOOST_TEST_MODULE=$@ -o $@ $? lib_boost_unit_test_framework.a
 	./$@
 

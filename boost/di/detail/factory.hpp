@@ -14,11 +14,11 @@
 #include "boost/di/aux/pool.hpp"
 #include "boost/di/aux/utility.hpp"
 #include "boost/di/aux/dependency.hpp"
-#include "boost/di/policies/policy.hpp"
-#include "boost/di/scopes/per_request.hpp"
 #include "boost/di/detail/converter.hpp"
 #include "boost/di/detail/creator.hpp"
 #include "boost/di/detail/visitor.hpp"
+#include "boost/di/scopes/per_request.hpp"
+#include "boost/di/policy.hpp"
 
 namespace boost {
 namespace di {
@@ -28,7 +28,7 @@ template
 <
     typename TDeps,
     typename TPool = aux::pool<>,
-    typename Tpolicies = policy<>,
+    typename TPolicies = di::policy<>,
     template<typename, typename> class TConverter = converter,
     template<typename = TDeps, typename = TPool> class TCreator = creator,
     template<typename = TDeps> class TVisitor = visitor
@@ -48,7 +48,7 @@ public:
     T create()
     {
         typedef boost::mpl::vector0<> empty_call_stack;
-        typedef typename Tpolicies::template verify<TDeps, T>::type policies;
+        typedef typename TPolicies::template verify<TDeps, T>::type policies;
         return TConverter<scopes::per_request, T>::execute(
             TCreator<>::template execute<T, empty_call_stack>(m_entries, pool_));
     }
@@ -57,7 +57,7 @@ public:
     void visit(const Visitor& visitor)
     {
         typedef boost::mpl::vector0<> empty_call_stack;
-        typedef typename Tpolicies::template verify<TDeps, T>::type policies;
+        typedef typename TPolicies::template verify<TDeps, T>::type policies;
         TVisitor<>::template execute<T, empty_call_stack>(visitor);
     }
 

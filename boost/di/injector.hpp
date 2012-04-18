@@ -30,9 +30,8 @@
     #include <boost/mpl/if.hpp>
     #include "boost/di/aux/pool.hpp"
     #include "boost/di/aux/utility.hpp"
-    #include "boost/di/module/aux/module.hpp"
     #include "boost/di/detail/factory.hpp"
-    #include "boost/di/policies/policy.hpp"
+    #include "boost/di/policy.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/injector.hpp"))
@@ -46,13 +45,13 @@
         typedef boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> seq;
 
         struct modules
-            : boost::mpl::remove_if<seq, boost::is_base_of<back::detail::policy, boost::mpl::_> >::type
+            : boost::mpl::remove_if<seq, boost::is_base_of<detail::policy, boost::mpl::_> >::type
         { };
 
         struct policies
             : boost::mpl::joint_view<
-                boost::mpl::filter_view<seq, boost::is_base_of<back::detail::policy, boost::mpl::_> >,
-                boost::mpl::vector1<typename defaults<back::detail::policy, specialized>::type>
+                boost::mpl::filter_view<seq, boost::is_base_of<detail::policy, boost::mpl::_> >,
+                boost::mpl::vector1<typename defaults<detail::policy, specialized>::type>
             >::type
         { };
 
@@ -62,8 +61,8 @@
                 TSeq,
                 TResult,
                 boost::mpl::if_<
-                    boost::is_base_of<back::module, boost::mpl::_2>,
-                    dependencies_impl<back::aux::get_dependencies<boost::mpl::_2>, boost::mpl::_1>,
+                    boost::is_base_of<aux::module, boost::mpl::_2>,
+                    dependencies_impl<aux::get_dependencies<boost::mpl::_2>, boost::mpl::_1>,
                     boost::mpl::insert<boost::mpl::_1, boost::mpl::_2>
                 >
             >
@@ -74,7 +73,7 @@
                 typename boost::mpl::fold<
                     modules,
                     boost::mpl::set<>,
-                    boost::mpl::insert< boost::mpl::_1, back::aux::get_pool<boost::mpl::_2> >
+                    boost::mpl::insert< boost::mpl::_1, aux::get_pool<boost::mpl::_2> >
                 >::type,
                 boost::mpl::vector0<>,
                 boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>
@@ -89,9 +88,9 @@
             >::type
         { };
 
-        typedef back::aux::pool<typename externals::type> pool;
+        typedef aux::pool<typename externals::type> pool;
         typedef typename boost::mpl::deref<typename boost::mpl::begin<policies>::type>::type policy;
-        typedef back::factory<typename dependencies::type, pool, policy> factory;
+        typedef detail::factory<typename dependencies::type, pool, policy> factory;
 
     public:
         injector()
