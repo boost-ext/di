@@ -26,29 +26,35 @@
 # define BOOST_DI_STATIC_ASSERT(cond, expr, types) BOOST_MPL_ASSERT_MSG(cond, expr, types)
 #endif
 
-namespace di
-{
+namespace boost {
+namespace di {
 
 /**
- * Example of changing default behavior using specialized class
+ * example of changing default behavior using specialized class
  *
  * @code
- * #include <di/config.hpp>
+ * #include <boost/di/config.hpp>
  *
- * namespace di
- * {
- * template<>
- * struct defaults<back::detail::policy, di::specialized>
- * {
- *     typedef back::policy<...> type;
- * };
+ * namespace boost {
+ * namespace di {
+ *     template<>
+ *     struct defaults<policy, specialized>
+ *     {
+ *         typedef policy
+ *         <
+ *             policy::check_for_circular_dependencies
+ *         >
+ *         type;
+ *     };
  * } // namespace di
+ * } // namespace boost
  * @endcode
  */
 class specialized { };
 template<typename, typename = specialized> struct defaults;
 
 } // namespace di
+} // namespace boost
 
 #endif
 
