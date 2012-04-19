@@ -24,10 +24,6 @@ namespace fusion
 namespace ut
 {
 
-using namespace test::common;
-using namespace back;
-using namespace back::aux;
-using namespace utility;
 
 BOOST_AUTO_TEST_CASE(fusionEmpty)
 {

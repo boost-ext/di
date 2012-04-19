@@ -27,10 +27,6 @@ namespace back
 namespace mt
 {
 
-using namespace test::common;
-using namespace utility;
-using namespace scopes;
-using namespace aux;
 
 BOOST_AUTO_TEST_CASE(CreateUsingCopy)
 {

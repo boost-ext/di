@@ -8,7 +8,7 @@
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/string.hpp>
 #include <boost/di.hpp>
-#include "common/data.hpp"
+#include "data.hpp"
 
 namespace mpl = boost::mpl;
 namespace di  = boost::di;

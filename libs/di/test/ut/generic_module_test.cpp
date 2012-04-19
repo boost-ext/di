@@ -25,11 +25,6 @@ namespace base
 namespace ut
 {
 
-using namespace test::common;
-using namespace back;
-using namespace back::aux;
-using namespace back::scopes;
-using namespace utility;
 
 class A { };
 class B { };

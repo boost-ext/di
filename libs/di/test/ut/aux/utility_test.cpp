@@ -22,7 +22,6 @@ namespace aux
 namespace ut
 {
 
-using namespace utility;
 
 class A { };
 

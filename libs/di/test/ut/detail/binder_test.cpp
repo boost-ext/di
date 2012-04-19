@@ -21,8 +21,6 @@ namespace detail
 namespace ut
 {
 
-using namespace utility;
-using namespace aux;
 
 template<typename TExpected, typename TGiven = TExpected, typename TContext = vector0<> > struct dependency
 {

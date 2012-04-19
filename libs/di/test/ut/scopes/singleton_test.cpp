@@ -17,7 +17,6 @@ namespace scopes
 namespace ut
 {
 
-using namespace test::common;
 
 BOOST_AUTO_TEST_CASE(singletonCreate)
 {

@@ -18,10 +18,6 @@ namespace boost {
 namespace di {
 namespace mt {
 
-using namespace test::common;
-using namespace utility;
-using namespace front::base;
-using namespace back;
 
 typedef front::base::module <
     singletons <
