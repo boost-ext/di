@@ -1,6 +1,0 @@
-*.[oa]
-*.gcda
-*.gcno
-*.gch
-.deps
-test/test
