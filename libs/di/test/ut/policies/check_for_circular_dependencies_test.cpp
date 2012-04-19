@@ -9,18 +9,14 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_base_of.hpp>
-#include "di/back/policies/check_for_circular_dependencies.hpp"
+#include "boost/di/policies/check_for_circular_dependencies.hpp"
 #include "data.hpp"
 
-namespace di
-{
-namespace back
-{
-namespace policies
-{
-namespace ut
-{
-
+namespace boost {
+namespace di {
+namespace policies {
+namespace test {
+namespace ut {
 
 BOOST_AUTO_TEST_CASE(Nocircular_dependencies)
 {
@@ -68,7 +64,8 @@ BOOST_AUTO_TEST_CASE(InDirect)
 }
 
 } // namespace ut
+} // namespace test
 } // namespace policies
-} // namespace back
 } // namespace di
+} // namespace boost
 

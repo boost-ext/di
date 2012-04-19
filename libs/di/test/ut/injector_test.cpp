@@ -10,13 +10,10 @@
 #include "boost/di/aux/utility.hpp"
 #include "boost/di/injector.hpp"
 
-namespace di
-{
-namespace utility
-{
-namespace ut
-{
-
+namespace boost {
+namespace di {
+namespace test {
+namespace ut {
 
 class A { };
 class B { };
@@ -51,6 +48,7 @@ BOOST_AUTO_TEST_CASE(Simplemodule)
 }
 
 } // namespace ut
-} // namespace utility
+} // namespace test
 } // namespace di
+} // namespace boost
 

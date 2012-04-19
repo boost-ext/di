@@ -7,17 +7,13 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
-#include "di/back/aux/explicit_value.hpp"
+#include "boost/di/aux/explicit_value.hpp"
 
-namespace di
-{
-namespace back
-{
-namespace aux
-{
-namespace ut
-{
-
+namespace boost {
+namespace di {
+namespace aux {
+namespace test {
+namespace ut {
 
 struct Empty { };
 struct Doublevalue
@@ -55,7 +51,8 @@ BOOST_AUTO_TEST_CASE(has_value_type)
 }
 
 } // namespace ut
+} // namespace test
 } // namespace aux
-} // namespace back
 } // namespace di
+} // namespace boost
 

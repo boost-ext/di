@@ -7,17 +7,13 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include "di/back/detail/visitor.hpp"
+#include "boost/di/detail/visitor.hpp"
 
-namespace di
-{
-namespace back
-{
-namespace detail
-{
-namespace ut
-{
-
+namespace boost {
+namespace di {
+namespace detail {
+namespace test {
+namespace ut {
 
 template<typename T>
 struct dependency
@@ -48,7 +44,8 @@ BOOST_AUTO_TEST_CASE(VisitSimple)
 }
 
 } // namespace ut
+} // namespace test
 } // namespace detail
-} // namespace back
 } // namespace di
+} // namespace boost
 

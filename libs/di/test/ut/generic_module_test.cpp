@@ -10,21 +10,16 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
 #include <boost/mpl/or.hpp>
+#include "boost/di/aux/instance.hpp"
+#include "boost/di/aux/dependency.hpp"
+#include "boost/di/named.hpp"
+#include "boost/di/generic_module.hpp"
 #include "data.hpp"
-#include "di/back/aux/instance.hpp"
-#include "di/back/aux/dependency.hpp"
-#include "di/front/base/module.hpp"
-#include "di/utility/named.hpp"
 
-namespace di
-{
-namespace front
-{
-namespace base
-{
-namespace ut
-{
-
+namespace boost {
+namespace di {
+namespace test {
+namespace ut {
 
 class A { };
 class B { };

@@ -9,18 +9,14 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_base_of.hpp>
-#include "di/back/detail/binder.hpp"
-#include "di/utility/named.hpp"
+#include "boost/di/named.hpp"
+#include "boost/di/detail/binder.hpp"
 
-namespace di
-{
-namespace back
-{
-namespace detail
-{
-namespace ut
-{
-
+namespace boost {
+namespace di {
+namespace detail {
+namespace test {
+namespace ut {
 
 template<typename TExpected, typename TGiven = TExpected, typename TContext = vector0<> > struct dependency
 {
@@ -485,7 +481,8 @@ BOOST_AUTO_TEST_CASE(namedType)
 }
 
 } // namespace ut
+} // namespace test
 } // namespace detail
-} // namespace back
 } // namespace di
+} // namespace boost
 

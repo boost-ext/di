@@ -7,17 +7,13 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
-#include "di/back/aux/pool.hpp"
+#include "boost/di/aux/pool.hpp"
 
-namespace di
-{
-namespace back
-{
-namespace aux
-{
-namespace ut
-{
-
+namespace boost {
+namespace di {
+namespace aux {
+namespace test {
+namespace ut {
 
 template<typename T>
 struct Allocator
@@ -125,7 +121,8 @@ BOOST_AUTO_TEST_CASE(poolGet)
 }
 
 } // namespace ut
+} // namespace test
 } // namespace aux
-} // namespace back
 } // namespace di
+} // namespace boost
 

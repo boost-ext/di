@@ -7,17 +7,13 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
-#include "di/back/aux/instance.hpp"
+#include "boost/di/aux/instance.hpp"
 
-namespace di
-{
-namespace back
-{
-namespace aux
-{
-namespace ut
-{
-
+namespace boost {
+namespace di {
+namespace aux {
+namespace test {
+namespace ut {
 
 class A { };
 class B { };
@@ -103,7 +99,8 @@ BOOST_AUTO_TEST_CASE(instancecontext)
 }
 
 } // namespace ut
+} // namespace test
 } // namespace aux
-} // namespace back
 } // namespace di
+} // namespace boost
 

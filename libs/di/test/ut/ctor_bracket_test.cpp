@@ -7,16 +7,12 @@
 #include <boost/test/unit_test.hpp>
 
 #define BOOST_DI_CTOR_CFG_BRACKET
-#include "di/front/ctor.hpp"
+#include "boost/di/ctor.hpp"
 
-namespace di
-{
-namespace utility
-{
-namespace scopes
-{
-namespace ut
-{
+namespace boost {
+namespace di {
+namespace test {
+namespace ut {
 
 BOOST_AUTO_TEST_CASE(BracketctorEmpty)
 {
@@ -89,7 +85,7 @@ BOOST_AUTO_TEST_CASE(Bracketctor_traits)
 }
 
 } // namespace ut
-} // namespace scopes
-} // namespace utility
+} // namespace test
 } // namespace di
+} // namespace boost
 

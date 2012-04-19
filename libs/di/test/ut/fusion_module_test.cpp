@@ -10,20 +10,15 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
 #include <boost/mpl/or.hpp>
-#include "di/back/aux/dependency.hpp"
-#include "di/front/fusion/module.hpp"
-#include "di/utility/named.hpp"
+#include "boost/di/aux/dependency.hpp"
+#include "boost/di/named.hpp"
+#include "boost/di/fusion_module.hpp"
 #include "data.hpp"
 
-namespace di
-{
-namespace front
-{
-namespace fusion
-{
-namespace ut
-{
-
+namespace boost {
+namespace di {
+namespace test {
+namespace ut {
 
 BOOST_AUTO_TEST_CASE(fusionEmpty)
 {
@@ -76,7 +71,7 @@ BOOST_AUTO_TEST_CASE(fusionMix)
 }
 
 } // namespace ut
-} // namespace fusion
-} // namespace front
+} // namespace test
 } // namespace di
+} // namespace boost
 

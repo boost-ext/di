@@ -5,18 +5,14 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <boost/test/unit_test.hpp>
+#include "boost/di/scopes/per_request.hpp"
 #include "data.hpp"
-#include "di/back/scopes/per_request.hpp"
 
-namespace di
-{
-namespace back
-{
-namespace scopes
-{
-namespace ut
-{
-
+namespace boost {
+namespace di {
+namespace scopes {
+namespace test {
+namespace ut {
 
 BOOST_AUTO_TEST_CASE(per_requestCreate)
 {
@@ -33,7 +29,8 @@ BOOST_AUTO_TEST_CASE(per_requestCreateArgs)
 }
 
 } // namespace ut
-} // namespace scope
-} // namespace back
+} // namespace test
+} // namespace scopes
 } // namespace di
+} // namespace boost
 
