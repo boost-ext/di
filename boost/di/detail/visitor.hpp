@@ -27,14 +27,17 @@
     namespace di {
     namespace detail {
 
-    template
-    <
-        typename TDeps,
-        template<typename, typename, typename = TDeps, typename = aux::dependency<scopes::per_request, mpl::_1, mpl::_2> > class TBinder = binder
+    template<
+        typename TDeps
+      , template<typename, typename, typename = TDeps, typename = aux::dependency<scopes::per_request, mpl::_1, mpl::_2> > class TBinder = binder
     >
     class visitor_impl
     {
-        template<typename T, typename TCallStack, typename TDependency>
+        template<
+            typename T
+          , typename TCallStack
+          , typename TDependency
+        >
         struct dependency
         {
             typedef T type;
@@ -70,7 +73,8 @@
 #else
 
     template<typename T, typename TDependency, typename TCallStack, typename TVisitor>
-    static typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION()>::type execute_impl(const TVisitor& visitor)
+    static typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION()>::type
+    execute_impl(const TVisitor& visitor)
     {
         visitor.template operator()< dependency<T, TCallStack, TDependency> >();
 

@@ -17,7 +17,6 @@
 namespace boost {
 namespace di {
 namespace test {
-namespace common {
 
 struct if0
 {
@@ -257,7 +256,6 @@ struct transaction_usage
     shared_ptr< provider< shared_ptr<transaction> > > p;
 };
 
-} // namespace common
 } // namespace test
 
 template<>

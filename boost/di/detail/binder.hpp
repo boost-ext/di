@@ -35,19 +35,17 @@ namespace detail {
 BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
 template<typename TCallStack, typename TContext>
-struct equal_call_stack : mpl::equal
-    <
-        mpl::iterator_range
-        <
-            typename mpl::advance_c
-            <
-                typename mpl::begin<TCallStack>::type,
-                mpl::size<TCallStack>::value - mpl::size<TContext>::value
-            >::type,
-            typename mpl::end<TCallStack>::type
-        >,
-        TContext
-    >
+struct equal_call_stack
+    : mpl::equal<
+        mpl::iterator_range<
+            typename mpl::advance_c<
+                typename mpl::begin<TCallStack>::type
+              , mpl::size<TCallStack>::value - mpl::size<TContext>::value
+            >::type
+          , typename mpl::end<TCallStack>::type
+        >
+      , TContext
+      >
 { };
 
 template<typename T1, typename T2>
@@ -72,47 +70,38 @@ struct make_default_dependency<T, TDefault, typename enable_if<has_element_type<
 
 } // namespace detail
 
-template
-<
-    typename T,
-    typename TCallStack,
-    typename TDeps,
-    typename TDefault
+template<
+    typename T
+  , typename TCallStack
+  , typename TDeps
+  , typename TDefault
 >
-struct binder : mpl::deref
-    <
-        mpl::begin
-        <
-            typename mpl::push_back
-            <
-                typename mpl::sort
-                <
-                    typename mpl::fold
-                    <
-                        TDeps,
-                        mpl::vector0<>,
-                        mpl::if_
-                        <
-                            mpl::and_
-                            <
-                                detail::comparator
-                                <
-                                    typename aux::make_plain<T>::type,
-                                    aux::get_bind<mpl::_2>
-                                >,
-                                detail::equal_call_stack
-                                <
-                                    TCallStack,
-                                    aux::get_context<mpl::_2>
+struct binder :
+    mpl::deref<
+        mpl::begin<
+            typename mpl::push_back<
+                typename mpl::sort<
+                    typename mpl::fold<
+                        TDeps
+                      , mpl::vector0<>
+                      , mpl::if_<
+                            mpl::and_<
+                                detail::comparator<
+                                    typename aux::make_plain<T>::type
+                                  , aux::get_bind<mpl::_2>
                                 >
-                            >,
-                            mpl::push_back<mpl::_1, mpl::_2>,
-                            mpl::_1
+                              , detail::equal_call_stack<
+                                    TCallStack
+                                  , aux::get_context<mpl::_2>
+                                >
+                            >
+                          , mpl::push_back<mpl::_1, mpl::_2>
+                          , mpl::_1
                         >
-                    >::type,
-                    detail::less_context_size<mpl::_1, mpl::_2>
-                >::type,
-                typename detail::make_default_dependency<T, TDefault>::type
+                    >::type
+                  , detail::less_context_size<mpl::_1, mpl::_2>
+                >::type
+              , typename detail::make_default_dependency<T, TDefault>::type
             >::type
         >
     >::type

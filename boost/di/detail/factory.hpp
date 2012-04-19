@@ -24,14 +24,13 @@ namespace boost {
 namespace di {
 namespace detail {
 
-template
-<
-    typename TDeps,
-    typename TPool = aux::pool<>,
-    typename TPolicies = di::policy<>,
-    template<typename, typename> class TConverter = converter,
-    template<typename = TDeps, typename = TPool> class TCreator = creator,
-    template<typename = TDeps> class TVisitor = visitor
+template<
+    typename TDeps
+  , typename TPool = aux::pool<>
+  , typename TPolicies = di::policy<>
+  , template<typename, typename> class TConverter = converter
+  , template<typename = TDeps, typename = TPool> class TCreator = creator
+  , template<typename = TDeps> class TVisitor = visitor
 >
 class factory
 {

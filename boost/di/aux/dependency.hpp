@@ -37,15 +37,14 @@
     namespace di {
     namespace aux {
 
-    template
-    <
-        typename TScope,
-        typename TExpected,
-        typename TGiven = TExpected,
-        typename TContext = mpl::vector0<>,
-        typename TBind = is_same<mpl::_1, TExpected>,
-        template<typename, typename = void> class TValue = explicit_value,
-        template<typename = TExpected, typename = TContext, typename = void> class TInstance = instance
+    template<
+        typename TScope
+      , typename TExpected
+      , typename TGiven = TExpected
+      , typename TContext = mpl::vector0<>
+      , typename TBind = is_same<mpl::_1, TExpected>
+      , template<typename, typename = void> class TValue = explicit_value
+      , template<typename = TExpected, typename = TContext, typename = void> class TInstance = instance
     >
     class dependency
     {
@@ -147,14 +146,13 @@
         typename TScope::template scope<TGiven> scope_;
     };
 
-    template
-    <
-        typename TExpected,
-        typename TGiven,
-        typename TContext,
-        typename TBind,
-        template<typename, typename> class TValue,
-        template<typename, typename, typename> class TInstance
+    template<
+        typename TExpected
+      , typename TGiven
+      , typename TContext
+      , typename TBind
+      , template<typename, typename> class TValue
+      , template<typename, typename, typename> class TInstance
     >
     class dependency<mpl::_1, TExpected, TGiven, TContext, TBind, TValue, TInstance>
     {
@@ -166,13 +164,12 @@
         };
     };
 
-    template
-    <
-        typename TScope,
-        typename TContext,
-        typename TBind,
-        template<typename, typename> class TValue,
-        template<typename, typename, typename> class TInstance
+    template<
+        typename TScope
+      , typename TContext
+      , typename TBind
+      , template<typename, typename> class TValue
+      , template<typename, typename, typename> class TInstance
     >
     class dependency<TScope, mpl::_1, mpl::_2, TContext, TBind, TValue, TInstance>
     {

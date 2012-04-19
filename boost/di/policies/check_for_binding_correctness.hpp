@@ -16,7 +16,11 @@ namespace policies {
 class check_for_binding_correctness
 {
 public:
-    template<typename TDeps, typename TGiven, typename Enable = void>
+    template<
+        typename TDeps
+      , typename TGiven
+      , typename Enable = void
+    >
     class verify
         : public mpl::true_
     { };

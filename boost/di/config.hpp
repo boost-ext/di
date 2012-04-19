@@ -42,8 +42,7 @@ namespace di {
  *     {
  *         typedef policy<
  *             polices::check_for_circular_dependencies
- *         >
- *         type;
+ *         > type;
  *     };
  * } // namespace di
  * } // namespace boost

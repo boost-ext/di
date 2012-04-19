@@ -31,21 +31,25 @@ class policy
 {
     typedef mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> sequence;
 
-    template<typename TDeps, typename T, typename TPolicy>
+    template<
+        typename TDeps
+      , typename T
+      , typename TPolicy
+    >
     struct verify_impl
         : TPolicy::template verify<TDeps, typename aux::make_plain<T>::type>::type
     { };
 
 public:
     template<
-        typename TDeps,
-        typename T
-      >
+        typename TDeps
+      , typename T
+    >
     struct verify
         : mpl::fold<
-            sequence
-            mpl::void_
-            verify_impl<TDeps, T, mpl::_2>
+              sequence
+            , mpl::void_
+            , verify_impl<TDeps, T, mpl::_2>
           >::type
     {
         typedef void type;
@@ -56,10 +60,10 @@ template<typename TDefault>
 struct defaults<detail::policy, TDefault>
 {
     typedef policy<
-        policies::check_for_binding_correctness,
-        policies::check_for_circular_dependencies,
-        policies::check_for_creation_ownership,
-        policies::check_for_references_without_ownership
+        policies::check_for_binding_correctness
+      , policies::check_for_circular_dependencies
+      , policies::check_for_creation_ownership
+      , policies::check_for_references_without_ownership
     > type;
 };
 

@@ -39,14 +39,16 @@
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
     class generic_module : public aux::module
     {
-        template<typename TInstance, typename T> struct is_same_instance : mpl::or_
-            <
-                is_same<typename TInstance::name, T>,
-                is_same<typename TInstance::value_type, T>
-            >
+        template<typename TInstance, typename T>
+        struct is_same_instance
+            : mpl::or_<
+                  is_same<typename TInstance::name, T>
+                , is_same<typename TInstance::value_type, T>
+              >
         { };
 
-        template<typename TSequence, typename T> struct find_instance_type
+        template<typename TSequence, typename T>
+        struct find_instance_type
             : mpl::find_if<TSequence, is_same_instance<mpl::_1, T> >::type
         { };
 
@@ -64,32 +66,29 @@
             typedef typename annotate<instance>::template with<typename T::name> type;
         };
 
-        struct externals : mpl::transform
-            <
-                typename mpl::fold
-                <
-                    mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
-                    mpl::vector0<>,
-                    mpl::copy
-                    <
-                        mpl::if_
-                        <
-                            is_base_of<concepts::detail::externals, mpl::_2>,
-                            mpl::_2,
-                            mpl::vector0<>
-                        >,
-                        mpl::back_inserter<mpl::_1>
-                    >
-                >::type,
-                make_annotation<mpl::_1>
-            >::type
+        struct externals
+            : mpl::transform<
+                  typename mpl::fold<
+                      mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
+                    , mpl::vector0<>
+                    , mpl::copy<
+                          mpl::if_<
+                              is_base_of<concepts::detail::externals, mpl::_2>
+                            , mpl::_2
+                            , mpl::vector0<>
+                          >
+                        , mpl::back_inserter<mpl::_1>
+                      >
+                  >::type
+                , make_annotation<mpl::_1>
+              >::type
         { };
 
-        struct instances : mpl::transform
-            <
-                externals,
-                aux::get_derived<mpl::_1>
-            >::type
+        struct instances
+            : mpl::transform<
+                  externals
+                , aux::get_derived<mpl::_1>
+              >::type
         { };
 
     public:
@@ -97,19 +96,19 @@
 
         struct dependencies
             : mpl::fold<
-                mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
-                mpl::vector0<>,
-                mpl::copy<
+                mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
+              , mpl::vector0<>
+              , mpl::copy<
                     mpl::if_<
-                        is_base_of<concepts::detail::externals, mpl::_2>,
-                        mpl::vector0<>,
-                        mpl::if_<
-                            mpl::is_sequence<mpl::_2>,
-                            mpl::_2,
-                            per_request<mpl::_2>
+                        is_base_of<concepts::detail::externals, mpl::_2>
+                      , mpl::vector0<>
+                      , mpl::if_<
+                            mpl::is_sequence<mpl::_2>
+                          , mpl::_2
+                          , per_request<mpl::_2>
                         >
-                    >,
-                    mpl::back_inserter<mpl::_1>
+                    >
+                  , mpl::back_inserter<mpl::_1>
                 >
             >::type
         { };
@@ -118,14 +117,14 @@
 
         #include BOOST_PP_ITERATE()
 
-        template<typename T, typename Tvalue>
-        inline static typename disable_if<
-            is_same<
-                find_instance_type<externals, T>,
-                mpl::end<externals>
-            >,
-            typename find_instance_type<externals, T>::type::derived
-        >::type
+        template<typename T, typename Tvalue> inline static
+            typename disable_if<
+                is_same<
+                    find_instance_type<externals, T>
+                  , mpl::end<externals>
+                >
+              , typename find_instance_type<externals, T>::type::derived
+            >::type
         set(Tvalue value)
         {
             typedef typename find_instance_type<externals, T>::type annotation;

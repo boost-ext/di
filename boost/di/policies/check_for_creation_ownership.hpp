@@ -19,12 +19,19 @@ namespace policies {
 class check_for_creation_ownership
 {
 public:
-    template<typename TDeps, typename TGiven, typename Enable = void>
+    template<
+        typename TDeps
+      , typename TGiven
+      , typename Enable = void
+    >
     class verify
         : public mpl::true_
     { };
 
-    template<typename TDeps, typename TGiven>
+    template<
+        typename TDeps
+      , typename TGiven
+    >
     class verify<TDeps, TGiven, typename enable_if<is_reference<TGiven> >::type>
         : public mpl::false_
     {

@@ -36,38 +36,50 @@
     class check_for_circular_dependencies
     {
     public:
-        template
-        <
-            typename TDeps,
-            typename TGiven,
-            template<typename, typename, typename = TDeps, typename = aux::dependency<scopes::per_request, mpl::_1, mpl::_2> > class TBinder = detail::binder
+        template<
+            typename TDeps
+          , typename TGiven
+          , template<typename, typename, typename = TDeps, typename = aux::dependency<scopes::per_request, mpl::_1, mpl::_2> > class TBinder = detail::binder
         >
         class verify
         {
             template<typename TCallStack>
             struct is_unique_call_stack
                 : mpl::bool_<
-                    static_cast<std::size_t>(mpl::accumulate<
-                            typename mpl::transform<
-                                TCallStack,
-                                mpl::count<TCallStack, mpl::_>
-                            >::type,
-                            mpl::int_<0>,
-                            mpl::plus< mpl::_1, mpl::_2>
-                        >::type::value
+                      static_cast<std::size_t>(mpl::accumulate<
+                          typename mpl::transform<
+                              TCallStack
+                            , mpl::count<TCallStack, mpl::_>
+                          >::type
+                        , mpl::int_<0>
+                        , mpl::plus< mpl::_1, mpl::_2>
+                      >::type::value
                     ) == mpl::size<TCallStack>::value
-                >
+                  >
             { };
 
-            template<typename, typename, typename = void, typename = void>
+            template<
+                typename
+              , typename
+              , typename = void
+              , typename = void
+            >
             struct circular_dependencies_impl;
 
-            template<typename T, typename TCallStack, typename = void, typename = void>
+            template<
+                typename T
+              , typename TCallStack
+              , typename = void
+              , typename = void
+            >
             struct circular_dependencies
                 : circular_dependencies_impl<
-                    typename TBinder<T, TCallStack>::type,
-                    typename aux::update_call_stack<TCallStack, typename TBinder<T, TCallStack>::type>::type
-                >
+                      typename TBinder<T, TCallStack>::type
+                    , typename aux::update_call_stack<
+                          TCallStack
+                        , typename TBinder<T, TCallStack>::type
+                      >::type
+                  >
             { };
 
             #include BOOST_PP_ITERATE()
@@ -90,23 +102,22 @@
 
     template<typename TDependency, typename TCallStack>
     struct circular_dependencies_impl<
-            TDependency,
-            TCallStack,
-            typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION()>::type,
-            typename enable_if< is_unique_call_stack<TCallStack> >::type
-        >
+        TDependency
+      , TCallStack
+      , typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION()>::type
+      , typename enable_if< is_unique_call_stack<TCallStack> >::type
+    >
     BOOST_PP_EXPR_IF(BOOST_PP_ITERATION(), :)
         BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_CHECK_FOR_CIRCULAR_DEPENDENCIES_IMPL, ~)
     { };
 
     template<typename TDependency, typename TCallStack>
-    struct circular_dependencies_impl
-        <
-            TDependency,
-            TCallStack,
-            typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION()>::type,
-            typename disable_if< is_unique_call_stack<TCallStack> >::type
-        >
+    struct circular_dependencies_impl<
+        TDependency
+      , TCallStack
+      , typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION()>::type
+      , typename disable_if< is_unique_call_stack<TCallStack> >::type
+    >
     :
         mpl::false_
     {

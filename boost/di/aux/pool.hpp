@@ -32,10 +32,9 @@
     namespace di {
     namespace aux {
 
-    template
-    <
-        typename TSequence = mpl::vector0<>,
-        typename Enable = void
+    template<
+        typename TSequence = mpl::vector0<>
+      , typename Enable = void
     >
     class pool
     {
@@ -50,7 +49,8 @@
             typedef typename T::result_type type;
         };
 
-        template<typename T> typename result_type<T>::type get() const
+        template<typename T>
+        typename result_type<T>::type get() const
         {
             return T::get();
         }

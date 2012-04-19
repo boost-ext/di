@@ -7,17 +7,17 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
 #include <boost/mpl/vector.hpp>
-#include "data.hpp"
-#include "test/common/visitor.hpp"
+#include "mt/visitor.hpp"
 #include "boost/di.hpp"
+#include "data.hpp"
 
 #define BOOST_AUTO_TEST_CASE_VARIADIC(test, type, ...) \
     typedef mpl::vector<__VA_ARGS__> test##types; BOOST_AUTO_TEST_CASE_TEMPLATE(test, type, test##types)
 
 namespace boost {
 namespace di {
+namespace test {
 namespace mt {
-
 
 typedef front::base::module <
     singletons <
@@ -261,6 +261,7 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Basicexternalsctor, injector,
 }
 
 } // namespace mt
+} // namespace test
 } // namespace di
 } // namespace boost
 

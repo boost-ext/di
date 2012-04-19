@@ -20,7 +20,7 @@ template<typename, typename>
 class converter;
 
 template<typename TScope, typename TDest>
-class converterImpl
+class converter_impl
     : public static_visitor<TDest>
 {
 public:
@@ -49,7 +49,7 @@ public:
     template<BOOST_VARIANT_ENUM_PARAMS(typename T)>
     static TDest execute(const variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src)
     {
-        return apply_visitor(converterImpl<TScope, TDest>(), src);
+        return apply_visitor(converter_impl<TScope, TDest>(), src);
     }
 };
 
@@ -66,7 +66,7 @@ public:
     template<BOOST_VARIANT_ENUM_PARAMS(typename T)>
     static named<TDest, TName> execute(const variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src)
     {
-        return apply_visitor(converterImpl<TScope, named<TDest, TName> >(), src);
+        return apply_visitor(converter_impl<TScope, named<TDest, TName> >(), src);
     }
 };
 
@@ -89,7 +89,7 @@ public:
     template<BOOST_VARIANT_ENUM_PARAMS(typename T)>
     static TDest execute(const variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src)
     {
-        return apply_visitor(converterImpl<TScope, TDest&>(), src);
+        return apply_visitor(converter_impl<TScope, TDest&>(), src);
     }
 };
 
@@ -112,7 +112,7 @@ public:
     template<BOOST_VARIANT_ENUM_PARAMS(typename T)>
     static TDest execute(const variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src)
     {
-        return apply_visitor(converterImpl<TScope, const TDest&>(), src);
+        return apply_visitor(converter_impl<TScope, const TDest&>(), src);
     }
 };
 
@@ -169,7 +169,7 @@ public:
     template<BOOST_VARIANT_ENUM_PARAMS(typename T)>
     static TDest execute(const variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src)
     {
-        return apply_visitor(converterImpl<TScope, shared_ptr<TDest> >(), src);
+        return apply_visitor(converter_impl<TScope, shared_ptr<TDest> >(), src);
     }
 };
 
@@ -192,7 +192,7 @@ public:
     template<BOOST_VARIANT_ENUM_PARAMS(typename T)>
     static TDest execute(const variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src)
     {
-        return apply_visitor(converterImpl<TScope, shared_ptr<TDest> >(), src);
+        return apply_visitor(converter_impl<TScope, shared_ptr<TDest> >(), src);
     }
 };
 

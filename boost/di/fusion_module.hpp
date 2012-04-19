@@ -41,17 +41,17 @@
 
         struct dependencies
             : mpl::fold<
-                TSequence,
-                mpl::vector0<>,
-                mpl::copy<
-                    mpl::if_<
-                        is_base_of<aux::internal, mpl::_2>,
-                        mpl::_2,
-                        per_request<mpl::_2>
-                    >,
-                    mpl::back_inserter<mpl::_1>
-                >
-            >::type
+                  TSequence
+                , mpl::vector0<>
+                , mpl::copy<
+                      mpl::if_<
+                          is_base_of<aux::internal, mpl::_2>
+                        , mpl::_2
+                        , per_request<mpl::_2>
+                      >
+                    , mpl::back_inserter<mpl::_1>
+                  >
+              >::type
         { };
 
         fusion_module() { }

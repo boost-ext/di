@@ -44,11 +44,10 @@ struct get_value_type<T, typename enable_if<has_value_type<T> >::type>
 
 } // namespace detail
 
-template
-<
-    typename T,
-    typename TContext = mpl::vector0<>,
-    typename Enable = void
+template<
+    typename T
+  , typename TContext = mpl::vector0<>
+  , typename Enable = void
 >
 class instance
 {
@@ -77,10 +76,9 @@ private:
     result_type member_;
 };
 
-template
-<
-    typename T,
-    typename TContext
+template<
+    typename T
+  , typename TContext
 >
 class instance<
         T,
