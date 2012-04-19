@@ -37,102 +37,105 @@ class scope
     { };
 
 public:
-    template
-    <
-        typename TExpected,
-        typename TGiven,
-        typename TContext = mpl::vector0<>
+    template<
+        typename TExpected
+      , typename TGiven
+      , typename TContext = mpl::vector0<>
     >
-    struct dependency : aux::internal, aux::dependency
-        <
-            mpl::_1,
-            TExpected,
-            TGiven,
-            TContext,
-            mpl::or_< is_base_of<mpl::_1, TExpected>, is_same<mpl::_1, TExpected> >
-        >
+    struct dependency
+        : aux::dependency<
+              mpl::_1
+             , TExpected
+             , TGiven
+             , TContext
+             , mpl::or_<
+                  is_base_of<mpl::_1, TExpected>,
+                  is_same<mpl::_1, TExpected>
+               >
+          >
+        , aux::internal
     { };
 
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    struct bind : aux::internal, mpl::fold
-        <
-            mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
-            mpl::vector0<>,
-            mpl::if_
-            <
-                is_base_of<aux::internal, mpl::_2>,
-                mpl::push_back<mpl::_1, rebind<mpl::_2, TScope> >,
-                mpl::push_back<mpl::_1, rebind<dependency<mpl::_2, mpl::_2>, TScope> >
-            >
-        >::type
+    struct bind
+        : mpl::fold<
+              mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
+            , mpl::vector0<>
+            , mpl::if_<
+                  is_base_of<aux::internal, mpl::_2>
+                , mpl::push_back<mpl::_1, rebind<mpl::_2, TScope> >
+                , mpl::push_back<mpl::_1, rebind<dependency<mpl::_2, mpl::_2>, TScope> >
+              >
+          >::type
+        , aux::internal
     { };
 
     template<typename TExpected>
-    struct bind<TExpected, BOOST_PP_ENUM_PARAMS(BOOST_PP_SUB(BOOST_MPL_LIMIT_VECTOR_SIZE, 1), mpl_::na BOOST_PP_INTERCEPT)> : aux::internal, mpl::fold
-        <
-            mpl::vector1<TExpected>,
-            mpl::vector0<>,
-            mpl::if_
-            <
-                is_base_of<aux::internal, mpl::_2>,
-                mpl::push_back<mpl::_1, rebind<mpl::_2, TScope> >,
-                mpl::push_back<mpl::_1, rebind< dependency<mpl::_2, mpl::_2>, TScope> >
-            >
-        >::type
+    struct bind<TExpected, BOOST_PP_ENUM_PARAMS(BOOST_PP_SUB(BOOST_MPL_LIMIT_VECTOR_SIZE, 1), mpl_::na BOOST_PP_INTERCEPT)>
+        : mpl::fold<
+              mpl::vector1<TExpected>
+            , mpl::vector0<>
+            , mpl::if_<
+                  is_base_of<aux::internal, mpl::_2>
+                , mpl::push_back<mpl::_1, rebind<mpl::_2, TScope> >
+                , mpl::push_back<mpl::_1, rebind< dependency<mpl::_2, mpl::_2>, TScope> >
+              >
+          >::type
+        , aux::internal
     {
         template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-        struct in_call_stack : aux::internal, mpl::fold
-            <
-                mpl::vector1<TExpected>,
-                mpl::vector0<>,
-                mpl::if_
-                <
-                    is_base_of<aux::internal, mpl::_2>,
-                    mpl::push_back<mpl::_1, rebind<mpl::_2, TScope> >,
-                    mpl::push_back<mpl::_1, rebind< dependency<mpl::_2, mpl::_2, mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >, TScope> >
-                >
-            >::type
+        struct in_call_stack
+            : mpl::fold<
+                  mpl::vector1<TExpected>
+                , mpl::vector0<>
+                , mpl::if_<
+                      is_base_of<aux::internal, mpl::_2>
+                    , mpl::push_back<mpl::_1, rebind<mpl::_2, TScope> >
+                    , mpl::push_back<mpl::_1, rebind< dependency<mpl::_2, mpl::_2, mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >, TScope> >
+                  >
+              >::type
+            , aux::internal
         {
             template<typename TName>
-            struct in_name : aux::internal, mpl::fold
-                <
-                    mpl::vector1<TExpected>,
-                    mpl::vector0<>,
-                    mpl::if_
-                    <
-                        is_base_of<aux::internal, mpl::_2>,
-                        mpl::push_back<mpl::_1, rebind<mpl::_2, TScope> >,
-                        mpl::push_back<mpl::_1, rebind< dependency<named<mpl::_2, TName>, mpl::_2, mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >, TScope> >
+            struct in_name
+                : mpl::fold<
+                      mpl::vector1<TExpected>
+                    , mpl::vector0<>
+                    , mpl::if_<
+                          is_base_of<aux::internal, mpl::_2>
+                        , mpl::push_back<mpl::_1, rebind<mpl::_2, TScope> >
+                        , mpl::push_back<mpl::_1, rebind< dependency<named<mpl::_2, TName>, mpl::_2, mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >, TScope> >
                     >
-                >::type
+                  >::type
+                , aux::internal
             { };
         };
 
         template<typename TName>
-        struct in_name : aux::internal, mpl::fold
-            <
-                mpl::vector1<TExpected>,
-                mpl::vector0<>,
-                mpl::if_
-                <
-                    is_base_of<aux::internal, mpl::_2>,
-                    mpl::push_back<mpl::_1, rebind<mpl::_2, TScope> >,
-                    mpl::push_back<mpl::_1, rebind< dependency<named<mpl::_2, TName>, mpl::_2>, TScope> >
-                >
-            >::type
+        struct in_name
+            : mpl::fold<
+                  mpl::vector1<TExpected>
+                , mpl::vector0<>
+                , mpl::if_<
+                      is_base_of<aux::internal, mpl::_2>
+                    , mpl::push_back<mpl::_1, rebind<mpl::_2, TScope> >
+                    , mpl::push_back<mpl::_1, rebind< dependency<named<mpl::_2, TName>, mpl::_2>, TScope> >
+                  >
+              >::type
+            , aux::internal
         {
             template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-            struct in_call_stack : aux::internal, mpl::fold
-                <
-                    mpl::vector1<TExpected>,
-                    mpl::vector0<>,
-                    mpl::if_
-                    <
-                        is_base_of<aux::internal, mpl::_2>,
-                        mpl::push_back<mpl::_1, rebind<mpl::_2, TScope> >,
-                        mpl::push_back<mpl::_1, rebind< dependency<named<mpl::_2, TName>, mpl::_2, mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >, TScope> >
+            struct in_call_stack
+                : mpl::fold<
+                    mpl::vector1<TExpected>
+                  , mpl::vector0<>
+                  , mpl::if_<
+                        is_base_of<aux::internal, mpl::_2>
+                      , mpl::push_back<mpl::_1, rebind<mpl::_2, TScope> >
+                      , mpl::push_back<mpl::_1, rebind< dependency<named<mpl::_2, TName>, mpl::_2, mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >, TScope> >
                     >
-                >::type
+                  >::type
+                , aux::internal
             { };
         };
     };
