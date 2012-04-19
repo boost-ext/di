@@ -25,42 +25,42 @@ namespace di {
 namespace test {
 namespace mt {
 
-BOOST_AUTO_TEST_CASE(CreateUsingCopy)
+BOOST_AUTO_TEST_CASE(create_using_copy)
 {
     detail::factory< mpl::vector0<> > factory;
     c0 obj = factory.create<c0>();
     (void)(obj);
 }
 
-BOOST_AUTO_TEST_CASE(CreateUsingPtr)
+BOOST_AUTO_TEST_CASE(create_using_ptr)
 {
     detail::factory< mpl::vector0<> > factory;
     c0* obj = factory.create<c0*>();
     BOOST_CHECK(obj);
 }
 
-BOOST_AUTO_TEST_CASE(CreateUsingConstPtr)
+BOOST_AUTO_TEST_CASE(create_using_const_ptr)
 {
     detail::factory< mpl::vector0<> > factory;
     const c0* obj = factory.create<const c0*>();
     BOOST_CHECK(obj);
 }
 
-BOOST_AUTO_TEST_CASE(CreateUsingSharedPtr)
+BOOST_AUTO_TEST_CASE(create_using_shared_ptr)
 {
     detail::factory< mpl::vector0<> > factory;
     shared_ptr<c0> obj = factory.create< shared_ptr<c0> >();
     BOOST_CHECK(obj);
 }
 
-BOOST_AUTO_TEST_CASE(CreateDefaultctor)
+BOOST_AUTO_TEST_CASE(create_default_ctor)
 {
     detail::factory< mpl::vector0<> > factory;
     c0 obj = factory.create<c0>();
     (void)(obj);
 }
 
-BOOST_AUTO_TEST_CASE(Createper_request)
+BOOST_AUTO_TEST_CASE(create_per_request)
 {
     detail::factory<
         mpl::vector<
@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE(Createper_request)
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(Createper_requestsingleton)
+BOOST_AUTO_TEST_CASE(create_per_request_singleton)
 {
     detail::factory<
         mpl::vector<
@@ -113,7 +113,7 @@ BOOST_AUTO_TEST_CASE(Createper_requestsingleton)
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(CreatescopesingletonPath)
+BOOST_AUTO_TEST_CASE(create_singleton_path)
 {
     detail::factory<
         mpl::vector<
@@ -142,7 +142,7 @@ BOOST_AUTO_TEST_CASE(CreatescopesingletonPath)
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(Createper_requestsingletonPathOrder)
+BOOST_AUTO_TEST_CASE(create_per_request_singleton_path_order)
 {
     detail::factory<
         mpl::vector<
@@ -171,7 +171,7 @@ BOOST_AUTO_TEST_CASE(Createper_requestsingletonPathOrder)
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(Createper_requestsingletonPathMix)
+BOOST_AUTO_TEST_CASE(create_per_request_singleton_path_mix)
 {
     detail::factory<
         mpl::vector<
@@ -205,7 +205,7 @@ BOOST_AUTO_TEST_CASE(Createper_requestsingletonPathMix)
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(CreatesingletonImpl)
+BOOST_AUTO_TEST_CASE(create_singleton_impl)
 {
     detail::factory<
         mpl::vector<
@@ -231,7 +231,7 @@ BOOST_AUTO_TEST_CASE(CreatesingletonImpl)
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(CreatesingletonMany)
+BOOST_AUTO_TEST_CASE(create_singleton_many)
 {
     detail::factory<
         mpl::vector<
@@ -275,7 +275,7 @@ BOOST_AUTO_TEST_CASE(ctor_traits)
     BOOST_CHECK_EQUAL(0.0, obj.d);
 }
 
-BOOST_AUTO_TEST_CASE(Classctor_traits)
+BOOST_AUTO_TEST_CASE(class_ctor_traits)
 {
     const int i1 = 42;
     const int i2 = 87;
@@ -293,7 +293,7 @@ BOOST_AUTO_TEST_CASE(Classctor_traits)
     BOOST_CHECK_EQUAL(i2, obj.i2);
 }
 
-BOOST_AUTO_TEST_CASE(baseOf)
+BOOST_AUTO_TEST_CASE(base_of)
 {
     detail::factory<
         mpl::vector<
@@ -323,7 +323,7 @@ BOOST_AUTO_TEST_CASE(baseOf)
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(baseOfInterfaceNotTrivialctor)
+BOOST_AUTO_TEST_CASE(base_of_interface_not_trivial_ctor)
 {
     detail::factory<
         mpl::vector<
@@ -336,7 +336,7 @@ BOOST_AUTO_TEST_CASE(baseOfInterfaceNotTrivialctor)
     BOOST_CHECK(obj.p->get().get() != obj.p->get().get());
 }
 
-BOOST_AUTO_TEST_CASE(namedSharedPtrbaseOf)
+BOOST_AUTO_TEST_CASE(named_shared_ptr_base_of)
 {
     const int i = 42;
 
@@ -351,7 +351,7 @@ BOOST_AUTO_TEST_CASE(namedSharedPtrbaseOf)
     BOOST_CHECK_EQUAL(i, *obj.i);
 }
 
-BOOST_AUTO_TEST_CASE(namedSharedPtr)
+BOOST_AUTO_TEST_CASE(named_shared_ptr)
 {
     const int i = 42;
 
@@ -366,7 +366,7 @@ BOOST_AUTO_TEST_CASE(namedSharedPtr)
     BOOST_CHECK_EQUAL(i, *obj.i);
 }
 
-BOOST_AUTO_TEST_CASE(namedSharedPtrIf)
+BOOST_AUTO_TEST_CASE(named_shared_ptr_if)
 {
     detail::factory<
         mpl::vector<
@@ -382,7 +382,7 @@ BOOST_AUTO_TEST_CASE(namedSharedPtrIf)
     BOOST_CHECK_EQUAL(0, obj.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(namedSharedPtrIfwithNotTrivialctor)
+BOOST_AUTO_TEST_CASE(named_shared_ptr_if_with_not_trivial_ctor)
 {
     const int i = 42;
 
@@ -402,7 +402,7 @@ BOOST_AUTO_TEST_CASE(namedSharedPtrIfwithNotTrivialctor)
     BOOST_CHECK_EQUAL(0.0, if0_->d);
 }
 
-BOOST_AUTO_TEST_CASE(externalsCreateByvalues)
+BOOST_AUTO_TEST_CASE(externals_create_by_explicit_value)
 {
     const int i = 42;
     const double d = 21.0;
@@ -433,7 +433,7 @@ BOOST_AUTO_TEST_CASE(externalsCreateByvalues)
     BOOST_CHECK_EQUAL("test", obj.s);
 }
 
-BOOST_AUTO_TEST_CASE(externalsCreatewithNonTrivialctor)
+BOOST_AUTO_TEST_CASE(externals_create_with_non_trivial_ctor)
 {
     const int i = 42;
     const double d = 21.0;
@@ -462,7 +462,7 @@ BOOST_AUTO_TEST_CASE(externalsCreatewithNonTrivialctor)
 }
 
 #if 0
-BOOST_AUTO_TEST_CASE(externalsCreatewithAttributes)
+BOOST_AUTO_TEST_CASE(externals_create_with_attributes)
 {
     const int i1 = 42;
     const int i2 = 87;

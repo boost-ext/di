@@ -22,62 +22,63 @@ namespace mt {
 typedef generic_module<
     singletons<
         c3
-    >,
-    per_requests<
-        c0if0,
-        bind<c1if0>::in_call_stack<c6, c5>,
-        bind<c2if0>::in_call_stack<c7>,
-        bind<int, mpl::int_<1> >,
-        bind<int, mpl::int_<2> >::in_call_stack<c8>,
-        bind<int, mpl::int_<3> >::in_name< mpl::string<'1'> >::in_call_stack<c7, c6, c4>,
-        bind<int, mpl::int_<4> >::in_name< mpl::string<'2'> >::in_call_stack<c7, c6, c4>,
-        bind<int, mpl::int_<5> >::in_call_stack<c2>
+    >
+  , per_requests<
+        c0if0
+      , bind<c1if0>::in_call_stack<c6, c5>
+      , bind<c2if0>::in_call_stack<c7>
+      , bind<int, mpl::int_<1> >
+      , bind<int, mpl::int_<2> >::in_call_stack<c8>
+      , bind<int, mpl::int_<3> >::in_name< mpl::string<'1'> >::in_call_stack<c7, c6, c4>
+      , bind<int, mpl::int_<4> >::in_name< mpl::string<'2'> >::in_call_stack<c7, c6, c4>
+      , bind<int, mpl::int_<5> >::in_call_stack<c2>
     >
 > basemodule1;
 
 typedef generic_module<
     singletons<
         c3
-    >,
-    per_requests<
-        bind<int, mpl::int_<0> >::in_name< mpl::string<'1'> >,
-        bind<int, mpl::int_<1> >
+    >
+  , per_requests<
+        bind<int, mpl::int_<0> >::in_name< mpl::string<'1'> >
+      , bind<int, mpl::int_<1> >
     >
 > basemodule2;
 
 typedef generic_module<
     singletons<
         c0if0
-    >,
-    per_requests<
-        bind<int, mpl::int_<2> >::in_call_stack<c8>,
-        bind<int, mpl::int_<3> >::in_name< mpl::string<'2'> >
+    >
+  , per_requests<
+        bind<int, mpl::int_<2> >::in_call_stack<c8>
+      , bind<int, mpl::int_<3> >::in_name< mpl::string<'2'> >
     >
 > basemodule3;
 
 typedef generic_module<
     per_requests<
-        transaction_provider, mpl::int_<0>
+        transaction_provider
+      , mpl::int_<0>
     >
 > provider_module;
 
 typedef generic_module<
     singletons<
         c0if0
-    >,
-    externals<
-        int,
-        double
+    >
+  , externals<
+        int
+      , double
     >
 > externalsmodule;
 
 struct externalsmodulector : generic_module<
     singletons<
         c0if0
-    >,
-    externals<
-        int,
-        double
+    >
+  , externals<
+        int
+      , double
     >
 >
 {
@@ -89,36 +90,36 @@ struct externalsmodulector : generic_module<
 BOOST_AUTO(fusionmodule1, fusion_module<>()(
     singletons<
         c3
-    >(),
-    per_requests<
-        c0if0,
-        bind<c1if0>::in_call_stack<c6, c5>,
-        bind<c2if0>::in_call_stack<c7>,
-        bind<int, mpl::int_<1> >,
-        bind<int, mpl::int_<2> >::in_call_stack<c8>,
-        bind<int, mpl::int_<3> >::in_name< mpl::string<'1'> >::in_call_stack<c7, c6, c4>,
-        bind<int, mpl::int_<4> >::in_name< mpl::string<'2'> >::in_call_stack<c7, c6, c4>,
-        bind<int, mpl::int_<5> >::in_call_stack<c2>
+    >()
+  , per_requests<
+        c0if0
+      , bind<c1if0>::in_call_stack<c6, c5>
+      , bind<c2if0>::in_call_stack<c7>
+      , bind<int, mpl::int_<1> >
+      , bind<int, mpl::int_<2> >::in_call_stack<c8>
+      , bind<int, mpl::int_<3> >::in_name< mpl::string<'1'> >::in_call_stack<c7, c6, c4>
+      , bind<int, mpl::int_<4> >::in_name< mpl::string<'2'> >::in_call_stack<c7, c6, c4>
+      , bind<int, mpl::int_<5> >::in_call_stack<c2>
     >()
 ));
 
 BOOST_AUTO(fusionmodule2, fusion_module<>()(
     singletons<
         c0if0
-    >(),
-    per_requests<
-        bind<int, mpl::int_<2> >::in_call_stack<c8>,
-        bind<int, mpl::int_<3> >::in_name< mpl::string<'2'> >
+    >()
+  , per_requests<
+        bind<int, mpl::int_<2> >::in_call_stack<c8>
+      , bind<int, mpl::int_<3> >::in_name< mpl::string<'2'> >
     >()
 ));
 
 BOOST_AUTO(fusionmodule3, fusion_module<>()(
     singletons<
         c3
-    >(),
-    per_requests<
-        bind<int, mpl::int_<0> >::in_name< mpl::string<'1'> >,
-        bind<int, mpl::int_<1> >
+    >()
+  , per_requests<
+        bind<int, mpl::int_<0> >::in_name< mpl::string<'1'> >
+      , bind<int, mpl::int_<1> >
     >()
 ));
 
@@ -128,7 +129,7 @@ BOOST_AUTO(fusion_provider_module, fusion_module<>()(
     >()
 ));
 
-BOOST_AUTO_TEST_CASE_VARIADIC(Onemodule, TInjector,
+BOOST_AUTO_TEST_CASE_VARIADIC(one_module, TInjector,
     injector<basemodule1>,
     injector<BOOST_TYPEOF(fusionmodule1)>)
 {
@@ -152,7 +153,7 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Onemodule, TInjector,
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE_VARIADIC(Manymodules, TInjector,
+BOOST_AUTO_TEST_CASE_VARIADIC(many_modules, TInjector,
     injector<basemodule2, basemodule3>,
     injector<basemodule3, basemodule2>,
     injector<BOOST_TYPEOF(fusionmodule2), BOOST_TYPEOF(fusionmodule3)>,
@@ -178,7 +179,7 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Manymodules, TInjector,
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE_VARIADIC(Mixmodules, TInjector,
+BOOST_AUTO_TEST_CASE_VARIADIC(mix_modules, TInjector,
     injector<basemodule2, BOOST_TYPEOF(fusionmodule2)>,
     injector<BOOST_TYPEOF(fusionmodule2), basemodule2>)
 {
@@ -202,7 +203,7 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Mixmodules, TInjector,
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE_VARIADIC(Basicprovider, TInjector,
+BOOST_AUTO_TEST_CASE_VARIADIC(basic_provider, TInjector,
     injector<provider_module>,
     injector<BOOST_TYPEOF(fusion_provider_module)>)
 {
@@ -216,6 +217,7 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Basicvisitor, TInjector,
     injector<BOOST_TYPEOF(fusion_provider_module)>)
 {
     TInjector injector;
+
     visitor<
         mpl::vector<
             transaction_usage
@@ -228,7 +230,7 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Basicvisitor, TInjector,
     injector.template visit<transaction_usage>(visitor_mock);
 }
 
-BOOST_AUTO_TEST_CASE_VARIADIC(Basicexternals, TInjector,
+BOOST_AUTO_TEST_CASE_VARIADIC(basic_externals, TInjector,
     injector<externalsmodule>)
 {
     TInjector injector(
@@ -244,7 +246,7 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Basicexternals, TInjector,
     BOOST_CHECK_EQUAL(87.0, c9_->d);
 }
 
-BOOST_AUTO_TEST_CASE_VARIADIC(Basicexternalsctor, TInjector,
+BOOST_AUTO_TEST_CASE_VARIADIC(basic_externals_ctor, TInjector,
     injector<externalsmodulector>)
 {
     TInjector injector(
