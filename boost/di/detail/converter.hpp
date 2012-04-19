@@ -21,7 +21,7 @@ class converter;
 
 template<typename TScope, typename TDest>
 class converterImpl
-    : public boost::static_visitor<TDest>
+    : public static_visitor<TDest>
 {
 public:
     template<typename T> TDest operator()(T member) const
@@ -41,15 +41,15 @@ public:
     }
 
     template<typename TSrc>
-    static TDest execute(const boost::shared_ptr<TSrc>& src)
+    static TDest execute(const shared_ptr<TSrc>& src)
     {
         return *src;
     }
 
     template<BOOST_VARIANT_ENUM_PARAMS(typename T)>
-    static TDest execute(const boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src)
+    static TDest execute(const variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src)
     {
-        return boost::apply_visitor(converterImpl<TScope, TDest>(), src);
+        return apply_visitor(converterImpl<TScope, TDest>(), src);
     }
 };
 
@@ -64,9 +64,9 @@ public:
     }
 
     template<BOOST_VARIANT_ENUM_PARAMS(typename T)>
-    static named<TDest, TName> execute(const boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src)
+    static named<TDest, TName> execute(const variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src)
     {
-        return boost::apply_visitor(converterImpl<TScope, named<TDest, TName> >(), src);
+        return apply_visitor(converterImpl<TScope, named<TDest, TName> >(), src);
     }
 };
 
@@ -81,15 +81,15 @@ public:
     }
 
     template<typename TSrc>
-    static TDest& execute(const boost::shared_ptr<TSrc>& src)
+    static TDest& execute(const shared_ptr<TSrc>& src)
     {
         return *src;
     }
 
     template<BOOST_VARIANT_ENUM_PARAMS(typename T)>
-    static TDest execute(const boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src)
+    static TDest execute(const variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src)
     {
-        return boost::apply_visitor(converterImpl<TScope, TDest&>(), src);
+        return apply_visitor(converterImpl<TScope, TDest&>(), src);
     }
 };
 
@@ -104,15 +104,15 @@ public:
     }
 
     template<typename TSrc>
-    static const TDest& execute(const boost::shared_ptr<TSrc>& src)
+    static const TDest& execute(const shared_ptr<TSrc>& src)
     {
         return *src;
     }
 
     template<BOOST_VARIANT_ENUM_PARAMS(typename T)>
-    static TDest execute(const boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src)
+    static TDest execute(const variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src)
     {
-        return boost::apply_visitor(converterImpl<TScope, const TDest&>(), src);
+        return apply_visitor(converterImpl<TScope, const TDest&>(), src);
     }
 };
 
@@ -127,7 +127,7 @@ public:
     }
 
     template<typename TSrc>
-    static TDest* execute(const boost::shared_ptr<TSrc>& src)
+    static TDest* execute(const shared_ptr<TSrc>& src)
     {
         return src.get();
     }
@@ -144,55 +144,55 @@ public:
     }
 
     template<typename TSrc>
-    static const TDest* execute(const boost::shared_ptr<TSrc>& src)
+    static const TDest* execute(const shared_ptr<TSrc>& src)
     {
         return src.get();
     }
 };
 
 template<typename TScope, typename TDest>
-class converter<TScope,  boost::shared_ptr<TDest> >
+class converter<TScope,  shared_ptr<TDest> >
 {
 public:
     template<typename TSrc>
-    static boost::shared_ptr<TDest> execute(const TSrc& src)
+    static shared_ptr<TDest> execute(const TSrc& src)
     {
-        return boost::make_shared<TDest>(src);
+        return make_shared<TDest>(src);
     }
 
     template<typename TSrc>
-    static boost::shared_ptr<TDest> execute(const boost::shared_ptr<TSrc>& src)
+    static shared_ptr<TDest> execute(const shared_ptr<TSrc>& src)
     {
         return src;
     }
 
     template<BOOST_VARIANT_ENUM_PARAMS(typename T)>
-    static TDest execute(const boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src)
+    static TDest execute(const variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src)
     {
-        return boost::apply_visitor(converterImpl<TScope, boost::shared_ptr<TDest> >(), src);
+        return apply_visitor(converterImpl<TScope, shared_ptr<TDest> >(), src);
     }
 };
 
 template<typename TScope, typename TDest>
-class converter<TScope, const boost::shared_ptr<TDest>&>
+class converter<TScope, const shared_ptr<TDest>&>
 {
 public:
     template<typename TSrc>
-    static const boost::shared_ptr<TDest>& execute(const TSrc& src)
+    static const shared_ptr<TDest>& execute(const TSrc& src)
     {
-        return boost::make_shared<TDest>(src);
+        return make_shared<TDest>(src);
     }
 
     template<typename TSrc>
-    static const boost::shared_ptr<TDest>& execute(const boost::shared_ptr<TSrc>& src)
+    static const shared_ptr<TDest>& execute(const shared_ptr<TSrc>& src)
     {
         return src;
     }
 
     template<BOOST_VARIANT_ENUM_PARAMS(typename T)>
-    static TDest execute(const boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src)
+    static TDest execute(const variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src)
     {
-        return boost::apply_visitor(converterImpl<TScope, boost::shared_ptr<TDest> >(), src);
+        return apply_visitor(converterImpl<TScope, shared_ptr<TDest> >(), src);
     }
 };
 

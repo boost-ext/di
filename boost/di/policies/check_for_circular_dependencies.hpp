@@ -40,22 +40,22 @@
         <
             typename TDeps,
             typename TGiven,
-            template<typename, typename, typename = TDeps, typename = aux::dependency<scopes::per_request, boost::mpl::_1, boost::mpl::_2> > class TBinder = detail::binder
+            template<typename, typename, typename = TDeps, typename = aux::dependency<scopes::per_request, mpl::_1, mpl::_2> > class TBinder = detail::binder
         >
         class verify
         {
             template<typename TCallStack>
             struct is_unique_call_stack
-                : boost::mpl::bool_<
-                    static_cast<std::size_t>(boost::mpl::accumulate<
-                            typename boost::mpl::transform<
+                : mpl::bool_<
+                    static_cast<std::size_t>(mpl::accumulate<
+                            typename mpl::transform<
                                 TCallStack,
-                                boost::mpl::count<TCallStack, boost::mpl::_>
+                                mpl::count<TCallStack, mpl::_>
                             >::type,
-                            boost::mpl::int_<0>,
-                            boost::mpl::plus< boost::mpl::_1, boost::mpl::_2>
+                            mpl::int_<0>,
+                            mpl::plus< mpl::_1, mpl::_2>
                         >::type::value
-                    ) == boost::mpl::size<TCallStack>::value
+                    ) == mpl::size<TCallStack>::value
                 >
             { };
 
@@ -73,7 +73,7 @@
             #include BOOST_PP_ITERATE()
 
         public:
-            typedef circular_dependencies<TGiven, boost::mpl::vector0<> > type;
+            typedef circular_dependencies<TGiven, mpl::vector0<> > type;
         };
     };
 
@@ -93,7 +93,7 @@
             TDependency,
             TCallStack,
             typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION()>::type,
-            typename boost::enable_if< is_unique_call_stack<TCallStack> >::type
+            typename enable_if< is_unique_call_stack<TCallStack> >::type
         >
     BOOST_PP_EXPR_IF(BOOST_PP_ITERATION(), :)
         BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_CHECK_FOR_CIRCULAR_DEPENDENCIES_IMPL, ~)
@@ -105,10 +105,10 @@
             TDependency,
             TCallStack,
             typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION()>::type,
-            typename boost::disable_if< is_unique_call_stack<TCallStack> >::type
+            typename disable_if< is_unique_call_stack<TCallStack> >::type
         >
     :
-        boost::mpl::false_
+        mpl::false_
     {
        BOOST_DI_STATIC_ASSERT(
             false,

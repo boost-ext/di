@@ -6,26 +6,13 @@
 //
 #include <boost/test/unit_test.hpp>
 #include <boost/shared_ptr.hpp>
-#include "di/named.hpp"
+#include "boost/di/named.hpp"
 
-namespace di
-{
-namespace utility
-{
-namespace ut
-{
-
-using namespace boost;
-
-class name { };
-class I { };
-class Impl : I { };
-
-BOOST_AUTO_TEST_CASE(baseOf)
-{
-}
+namespace boost {
+namespace di {
+namespace ut {
 
 } // namespace ut
-} // namespace utility
 } // namespace di
+} // namespace boost
 

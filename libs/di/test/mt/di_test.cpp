@@ -12,14 +12,14 @@
 #include "boost/di.hpp"
 
 #define BOOST_AUTO_TEST_CASE_VARIADIC(test, type, ...) \
-    typedef boost::mpl::vector<__VA_ARGS__> test##types; BOOST_AUTO_TEST_CASE_TEMPLATE(test, type, test##types)
+    typedef mpl::vector<__VA_ARGS__> test##types; BOOST_AUTO_TEST_CASE_TEMPLATE(test, type, test##types)
 
 namespace boost {
 namespace di {
 namespace mt {
 
 using namespace boost;
-using namespace boost::mpl;
+using namespace mpl;
 using namespace test::common;
 using namespace utility;
 using namespace front::base;

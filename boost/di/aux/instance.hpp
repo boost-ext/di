@@ -37,7 +37,7 @@ struct get_value_type<std::string, void>
 };
 
 template<typename T>
-struct get_value_type<T, typename boost::enable_if<has_value_type<T> >::type>
+struct get_value_type<T, typename enable_if<has_value_type<T> >::type>
 {
     typedef typename T::value_type type;
 };
@@ -47,14 +47,14 @@ struct get_value_type<T, typename boost::enable_if<has_value_type<T> >::type>
 template
 <
     typename T,
-    typename TContext = boost::mpl::vector0<>,
+    typename TContext = mpl::vector0<>,
     typename Enable = void
 >
 class instance
 {
 public:
     typedef T value_type;
-    typedef boost::variant<const T&, T&, boost::shared_ptr<T> > result_type;
+    typedef variant<const T&, T&, shared_ptr<T> > result_type;
 
     explicit instance(const T& member)
         : member_(member)
@@ -64,7 +64,7 @@ public:
         : member_(member)
     { }
 
-    explicit instance(boost::shared_ptr<T> member)
+    explicit instance(shared_ptr<T> member)
         : member_(member)
     { }
 
@@ -85,12 +85,12 @@ template
 class instance
     <
         T, TContext,
-        typename boost::enable_if
+        typename enable_if
         <
-            boost::mpl::or_
+            mpl::or_
             <
-                boost::is_same<typename detail::get_value_type<T>::type, std::string>,
-                boost::is_pod<typename detail::get_value_type<T>::type>
+                is_same<typename detail::get_value_type<T>::type, std::string>,
+                is_pod<typename detail::get_value_type<T>::type>
             >
         >::type
     >

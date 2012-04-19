@@ -36,7 +36,7 @@ template
 class factory
 {
     struct entries
-        : boost::mpl::inherit_linearly<TDeps, boost::mpl::inherit<boost::mpl::_1, boost::mpl::_2> >::type
+        : mpl::inherit_linearly<TDeps, mpl::inherit<mpl::_1, mpl::_2> >::type
     { };
 
 public:
@@ -47,7 +47,7 @@ public:
     template<typename T>
     T create()
     {
-        typedef boost::mpl::vector0<> empty_call_stack;
+        typedef mpl::vector0<> empty_call_stack;
         typedef typename TPolicies::template verify<TDeps, T>::type policies;
         return TConverter<scopes::per_request, T>::execute(
             TCreator<>::template execute<T, empty_call_stack>(m_entries, pool_));
@@ -56,7 +56,7 @@ public:
     template<typename T, typename Visitor>
     void visit(const Visitor& visitor)
     {
-        typedef boost::mpl::vector0<> empty_call_stack;
+        typedef mpl::vector0<> empty_call_stack;
         typedef typename TPolicies::template verify<TDeps, T>::type policies;
         TVisitor<>::template execute<T, empty_call_stack>(visitor);
     }

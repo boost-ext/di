@@ -23,30 +23,30 @@ namespace ut
 {
 
 using namespace boost;
-using namespace boost::mpl;
+using namespace mpl;
 using namespace utility;
 
 class A { };
 
-typedef boost::mpl::vector<int, A> make_plainTypes;
+typedef mpl::vector<int, A> make_plainTypes;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(make_plainType, T, make_plainTypes)
 {
-    BOOST_CHECK((boost::is_same<T, typename make_plain<T>::type>::value));
-    BOOST_CHECK((boost::is_same<T, typename make_plain<T*>::type>::value));
-    BOOST_CHECK((boost::is_same<T, typename make_plain<const T*>::type>::value));
-    BOOST_CHECK((boost::is_same<T, typename make_plain<const T>::type>::value));
-    BOOST_CHECK((boost::is_same<T, typename make_plain<const T&>::type>::value));
-    BOOST_CHECK((boost::is_same<T, typename make_plain<T&>::type>::value));
-    BOOST_CHECK((boost::is_same<T, typename make_plain<shared_ptr<T> >::type>::value));
-    BOOST_CHECK((boost::is_same<T, typename make_plain<const shared_ptr<T>&>::type>::value));
-    BOOST_CHECK((boost::is_same<T, typename make_plain<shared_ptr<T>&>::type>::value));
-    BOOST_CHECK((boost::is_same<T, typename make_plain<volatile T>::type>::value));
-    BOOST_CHECK((boost::is_same<named<T, _1>, typename make_plain<named<T, _1> >::type>::value));
-    BOOST_CHECK((boost::is_same<named<T, _1>, typename make_plain<named<shared_ptr<T>, _1> >::type>::value));
-    BOOST_CHECK((boost::is_same<named<T, _1>, typename make_plain<named<const shared_ptr<T>&, _1> >::type>::value));
-    BOOST_CHECK((boost::is_same<named<T, _1>, typename make_plain<shared_ptr< named<const shared_ptr<T>&, _1> > >::type>::value));
-    BOOST_CHECK((boost::is_same<named<T, _1>, typename make_plain<const shared_ptr< named<const shared_ptr<T>&, _1> >&>::type>::value));
+    BOOST_CHECK((is_same<T, typename make_plain<T>::type>::value));
+    BOOST_CHECK((is_same<T, typename make_plain<T*>::type>::value));
+    BOOST_CHECK((is_same<T, typename make_plain<const T*>::type>::value));
+    BOOST_CHECK((is_same<T, typename make_plain<const T>::type>::value));
+    BOOST_CHECK((is_same<T, typename make_plain<const T&>::type>::value));
+    BOOST_CHECK((is_same<T, typename make_plain<T&>::type>::value));
+    BOOST_CHECK((is_same<T, typename make_plain<shared_ptr<T> >::type>::value));
+    BOOST_CHECK((is_same<T, typename make_plain<const shared_ptr<T>&>::type>::value));
+    BOOST_CHECK((is_same<T, typename make_plain<shared_ptr<T>&>::type>::value));
+    BOOST_CHECK((is_same<T, typename make_plain<volatile T>::type>::value));
+    BOOST_CHECK((is_same<named<T, _1>, typename make_plain<named<T, _1> >::type>::value));
+    BOOST_CHECK((is_same<named<T, _1>, typename make_plain<named<shared_ptr<T>, _1> >::type>::value));
+    BOOST_CHECK((is_same<named<T, _1>, typename make_plain<named<const shared_ptr<T>&, _1> >::type>::value));
+    BOOST_CHECK((is_same<named<T, _1>, typename make_plain<shared_ptr< named<const shared_ptr<T>&, _1> > >::type>::value));
+    BOOST_CHECK((is_same<named<T, _1>, typename make_plain<const shared_ptr< named<const shared_ptr<T>&, _1> >&>::type>::value));
 }
 
 } // namespace ut

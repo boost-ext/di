@@ -34,7 +34,7 @@
     <
         typename TDeps,
         typename TPool,
-        template<typename, typename, typename = TDeps, typename = aux::dependency<scopes::per_request, boost::mpl::_1, boost::mpl::_2> > class TBinder = binder,
+        template<typename, typename, typename = TDeps, typename = aux::dependency<scopes::per_request, mpl::_1, mpl::_2> > class TBinder = binder,
         template<typename, typename> class TConverter = converter
     >
     class creator_impl
@@ -52,13 +52,13 @@
         #include BOOST_PP_ITERATE()
 
         template<typename TDependency, typename TEntries>
-        static typename boost::enable_if<boost::is_base_of<TDependency, TEntries>, TDependency&>::type acquire(TEntries& entries)
+        static typename enable_if<is_base_of<TDependency, TEntries>, TDependency&>::type acquire(TEntries& entries)
         {
             return static_cast<TDependency&>(entries);
         }
 
         template<typename TDependency, typename TEntries>
-        static typename boost::disable_if<boost::is_base_of<TDependency, TEntries>, TDependency>::type acquire(TEntries&)
+        static typename disable_if<is_base_of<TDependency, TEntries>, TDependency>::type acquire(TEntries&)
         {
             return TDependency();
         }

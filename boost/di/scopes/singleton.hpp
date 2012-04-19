@@ -28,7 +28,7 @@
         class scope
         {
         public:
-            typedef boost::shared_ptr<T> result_type;
+            typedef shared_ptr<T> result_type;
 
             result_type create()
             {

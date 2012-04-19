@@ -29,11 +29,11 @@
         class scope
         {
         public:
-            typedef boost::shared_ptr<T> result_type;
+            typedef shared_ptr<T> result_type;
 
             result_type create()
             {
-                return boost::make_shared<T>();
+                return make_shared<T>();
             }
 
             #include BOOST_PP_ITERATE()

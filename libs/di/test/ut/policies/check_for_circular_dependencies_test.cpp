@@ -22,14 +22,14 @@ namespace ut
 {
 
 using namespace test::common;
-using namespace boost::mpl;
+using namespace mpl;
 
 BOOST_AUTO_TEST_CASE(Nocircular_dependencies)
 {
     BOOST_CHECK((
-        !boost::is_base_of
+        !is_base_of
         <
-            boost::mpl::false_,
+            mpl::false_,
             check_for_circular_dependencies::verify
             <
                 vector0<>,
@@ -42,9 +42,9 @@ BOOST_AUTO_TEST_CASE(Nocircular_dependencies)
 BOOST_AUTO_TEST_CASE(Direct)
 {
     BOOST_CHECK((
-        boost::is_base_of
+        is_base_of
         <
-            boost::mpl::false_,
+            mpl::false_,
             check_for_circular_dependencies::verify
             <
                 vector0<>,
@@ -57,9 +57,9 @@ BOOST_AUTO_TEST_CASE(Direct)
 BOOST_AUTO_TEST_CASE(InDirect)
 {
     BOOST_CHECK((
-        boost::is_base_of
+        is_base_of
         <
-            boost::mpl::false_,
+            mpl::false_,
             check_for_circular_dependencies::verify
             <
                 vector0<>,

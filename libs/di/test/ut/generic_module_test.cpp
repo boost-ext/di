@@ -30,7 +30,7 @@ using namespace back;
 using namespace back::aux;
 using namespace back::scopes;
 using namespace utility;
-using namespace boost::mpl;
+using namespace mpl;
 using namespace boost;
 
 class A { };
@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE(Empty)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, testmodule::pool::seq>::value));
+    BOOST_CHECK((equal<vector0<>, testmodule::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(defaultscope)
@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE(defaultscope)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, testmodule::pool::seq>::value));
+    BOOST_CHECK((equal<vector0<>, testmodule::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(defaultscopeMany)
@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE(defaultscopeMany)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, testmodule::pool::seq>::value));
+    BOOST_CHECK((equal<vector0<>, testmodule::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(defaultscopebind)
@@ -123,7 +123,7 @@ BOOST_AUTO_TEST_CASE(defaultscopebind)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, testmodule::pool::seq>::value));
+    BOOST_CHECK((equal<vector0<>, testmodule::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(Onescope)
@@ -147,7 +147,7 @@ BOOST_AUTO_TEST_CASE(Onescope)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, testmodule::pool::seq>::value));
+    BOOST_CHECK((equal<vector0<>, testmodule::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(OnescopeAlias)
@@ -171,7 +171,7 @@ BOOST_AUTO_TEST_CASE(OnescopeAlias)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, testmodule::pool::seq>::value));
+    BOOST_CHECK((equal<vector0<>, testmodule::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(OnescopeDirect)
@@ -193,7 +193,7 @@ BOOST_AUTO_TEST_CASE(OnescopeDirect)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, testmodule::pool::seq>::value));
+    BOOST_CHECK((equal<vector0<>, testmodule::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(Many)
@@ -221,7 +221,7 @@ BOOST_AUTO_TEST_CASE(Many)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, testmodule::pool::seq>::value));
+    BOOST_CHECK((equal<vector0<>, testmodule::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(Manyscopes)
@@ -253,7 +253,7 @@ BOOST_AUTO_TEST_CASE(Manyscopes)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, testmodule::pool::seq>::value));
+    BOOST_CHECK((equal<vector0<>, testmodule::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(in_call_stack)
@@ -275,7 +275,7 @@ BOOST_AUTO_TEST_CASE(in_call_stack)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, testmodule::pool::seq>::value));
+    BOOST_CHECK((equal<vector0<>, testmodule::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(in_name)
@@ -297,7 +297,7 @@ BOOST_AUTO_TEST_CASE(in_name)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, testmodule::pool::seq>::value));
+    BOOST_CHECK((equal<vector0<>, testmodule::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(in_namein_call_stack)
@@ -323,7 +323,7 @@ BOOST_AUTO_TEST_CASE(in_namein_call_stack)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, testmodule::pool::seq>::value));
+    BOOST_CHECK((equal<vector0<>, testmodule::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(in_call_stackin_name)
@@ -349,7 +349,7 @@ BOOST_AUTO_TEST_CASE(in_call_stackin_name)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, testmodule::pool::seq>::value));
+    BOOST_CHECK((equal<vector0<>, testmodule::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(bindIf)
@@ -373,7 +373,7 @@ BOOST_AUTO_TEST_CASE(bindIf)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, testmodule::pool::seq>::value));
+    BOOST_CHECK((equal<vector0<>, testmodule::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(Mix)
@@ -409,7 +409,7 @@ BOOST_AUTO_TEST_CASE(Mix)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, testmodule::pool::seq>::value));
+    BOOST_CHECK((equal<vector0<>, testmodule::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(namedin_call_stack)
@@ -424,7 +424,7 @@ BOOST_AUTO_TEST_CASE(namedin_call_stack)
         >
     { };
 
-    BOOST_CHECK((equal<vector0<>, testmodule::pool::seq>::value));
+    BOOST_CHECK((equal<vector0<>, testmodule::pool::sequence>::value));
 
     BOOST_CHECK((
         equal
@@ -459,7 +459,7 @@ BOOST_AUTO_TEST_CASE(externalsbase)
             <
                 instance<c1>
             >,
-            testmodule::pool::seq
+            testmodule::pool::sequence
         >::value
     ));
 }
@@ -487,7 +487,7 @@ BOOST_AUTO_TEST_CASE(externalsMix)
                 instance<c2>,
                 instance<c3>
             >,
-            testmodule::pool::seq
+            testmodule::pool::sequence
         >::value
     ));
 }
@@ -517,7 +517,7 @@ BOOST_AUTO_TEST_CASE(externalsbind)
                 instance<c2, vector<c1> >,
                 instance<named<c3, double>, vector<c4, c5> >
             >,
-            testmodule::pool::seq
+            testmodule::pool::sequence
         >::value
     ));
 }
@@ -652,7 +652,7 @@ BOOST_AUTO_TEST_CASE(module_ctor_withexternalsSharedPtr)
         testmodule::set<value>(v)
     );
 
-    BOOST_CHECK_EQUAL(i, boost::get<shared_ptr<value> >(module.get_pool().get< instance<value> >())->i);
+    BOOST_CHECK_EQUAL(i, get<shared_ptr<value> >(module.get_pool().get< instance<value> >())->i);
 }
 
 } // namespace ut

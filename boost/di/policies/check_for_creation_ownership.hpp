@@ -21,12 +21,12 @@ class check_for_creation_ownership
 public:
     template<typename TDeps, typename TGiven, typename Enable = void>
     class verify
-        : public boost::mpl::true_
+        : public mpl::true_
     { };
 
     template<typename TDeps, typename TGiven>
-    class verify<TDeps, TGiven, typename boost::enable_if<boost::is_reference<TGiven> >::type>
-        : public boost::mpl::false_
+    class verify<TDeps, TGiven, typename enable_if<is_reference<TGiven> >::type>
+        : public mpl::false_
     {
        BOOST_DI_STATIC_ASSERT(
             false,

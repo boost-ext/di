@@ -31,7 +31,7 @@ using namespace test::common;
 using namespace utility;
 using namespace scopes;
 using namespace aux;
-using namespace boost::mpl;
+using namespace mpl;
 using namespace boost;
 
 BOOST_AUTO_TEST_CASE(CreateUsingCopy)
@@ -463,7 +463,7 @@ BOOST_AUTO_TEST_CASE(externalsCreateByvalues)
 
     typedef pool< vector<instance<int>, instance<double>, instance<char> > > pool;
 
-    boost::scoped_ptr<pool> test_pool(
+    scoped_ptr<pool> test_pool(
         new pool(
             instance<int>(i),
             instance<double>(d),
@@ -497,7 +497,7 @@ BOOST_AUTO_TEST_CASE(externalsCreatewithNonTrivialctor)
 
     typedef pool< vector<instance<c2> > > pool;
 
-    boost::scoped_ptr<pool> test_pool(
+    scoped_ptr<pool> test_pool(
         new pool(
             instance<c2>(make_shared<c2>(i, d, c))
         )
@@ -530,7 +530,7 @@ BOOST_AUTO_TEST_CASE(externalsCreatewithAttributes)
     typedef named<int, string<'2'> > named2;
     typedef pool< vector<instance<named1>, instance<named2> > > pool;
 
-    boost::scoped_ptr<pool> test_pool(
+    scoped_ptr<pool> test_pool(
         new pool(
             instance<named1>(make_shared<named1>(i1)),
             instance<named2>(make_shared<named2>(i2))

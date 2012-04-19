@@ -242,7 +242,7 @@ struct transaction_provider : provider< shared_ptr<transaction> >
 
     virtual shared_ptr<transaction> get() const
     {
-        return boost::make_shared<transaction>(c3_->i);
+        return make_shared<transaction>(c3_->i);
     }
 
     shared_ptr<c3> c3_;

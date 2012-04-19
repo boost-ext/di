@@ -22,13 +22,13 @@ namespace ut
 {
 
 using namespace boost;
-using namespace boost::mpl;
+using namespace mpl;
 
 template<typename T, typename> struct FakeResult { };
 
-template<typename TSeq, int value = 0> struct Fakepool
+template<typename TSequence, int value = 0> struct Fakepool
 {
-    typedef TSeq seq;
+    typedef TSequence sequence;
 
     template<typename T> struct result_type
     {

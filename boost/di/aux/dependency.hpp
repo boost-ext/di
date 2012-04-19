@@ -42,8 +42,8 @@
         typename TScope,
         typename TExpected,
         typename TGiven = TExpected,
-        typename TContext = boost::mpl::vector0<>,
-        typename TBind = boost::is_same<boost::mpl::_1, TExpected>,
+        typename TContext = mpl::vector0<>,
+        typename TBind = is_same<mpl::_1, TExpected>,
         template<typename, typename = void> class TValue = explicit_value,
         template<typename = TExpected, typename = TContext, typename = void> class TInstance = instance
     >
@@ -58,25 +58,37 @@
             (TGiven)
         );
 
-        template<typename TPool> struct is_pool_type
-            : boost::mpl::contains<typename TPool::seq, TInstance<> >
+        template<typename TPool>
+        struct is_pool_type
+            : mpl::contains<typename TPool::sequence, TInstance<> >
         { };
 
-        template<typename TPool> struct is_value_type
-            : boost::mpl::and_< TValue<TGiven>, boost::mpl::not_<boost::mpl::contains<typename TPool::seq, TInstance<> > > >
+        template<typename TPool>
+        struct is_value_type
+            : mpl::and_<
+                TValue<TGiven>,
+                mpl::not_<
+                    mpl::contains<typename TPool::sequence, TInstance<> >
+                >
+              >
         { };
 
-        template<typename TPool> struct is_scope_type
-            : boost::mpl::and_< boost::mpl::not_<TValue<TGiven> >, boost::mpl::not_<boost::mpl::contains<typename TPool::seq, TInstance<> > > >
+        template<typename TPool>
+        struct is_scope_type
+            : mpl::and_<
+                mpl::not_<TValue<TGiven> >,
+                mpl::not_<mpl::contains<typename TPool::sequence, TInstance<> > >
+              >
         { };
 
-        template<bool, typename = void> struct ctor_impl
-            : boost::function_types::parameter_types<BOOST_TYPEOF_TPL(ctor_traits<TGiven>::ctor)>::type
+        template<bool, typename = void>
+        struct ctor_impl
+            : function_types::parameter_types<BOOST_TYPEOF_TPL(ctor_traits<TGiven>::ctor)>::type
         { };
 
         template<typename Dummy>
         struct ctor_impl<true, Dummy>
-            : boost::function_types::parameter_types<BOOST_TYPEOF_TPL(TGiven::BOOST_DI_CTOR_UNIQUE_NAME::ctor)>::type
+            : function_types::parameter_types<BOOST_TYPEOF_TPL(TGiven::BOOST_DI_CTOR_UNIQUE_NAME::ctor)>::type
         { };
 
     public:
@@ -90,37 +102,41 @@
             : ctor_impl<BOOST_PP_CAT(has_, BOOST_DI_CTOR_UNIQUE_NAME)<given>::value>::type
         { };
 
-        template<typename, typename = void> struct result_type;
+        template<typename, typename = void>
+        struct result_type;
 
         template<typename TPool>
-        struct result_type<TPool, typename boost::enable_if< is_pool_type<TPool> >::type>
+        struct result_type<TPool, typename enable_if< is_pool_type<TPool> >::type>
             : TPool::template result_type<TInstance<> >
         { };
 
         template<typename TPool>
-        struct result_type<TPool, typename boost::enable_if< is_value_type<TPool> >::type>
-            : boost::mpl::identity<typename TValue<TGiven>::result_type>
+        struct result_type<TPool, typename enable_if< is_value_type<TPool> >::type>
+            : mpl::identity<typename TValue<TGiven>::result_type>
         { };
 
         template<typename TPool>
-        struct result_type<TPool, typename boost::enable_if< is_scope_type<TPool> >::type>
-            : boost::mpl::identity<typename TScope::template scope<TGiven>::result_type>
+        struct result_type<TPool, typename enable_if< is_scope_type<TPool> >::type>
+            : mpl::identity<typename TScope::template scope<TGiven>::result_type>
         { };
 
         template<typename TPool>
-        typename boost::enable_if<is_pool_type<TPool>, typename result_type<TPool>::type>::type create(const TPool& pool)
+        typename enable_if<is_pool_type<TPool>, typename result_type<TPool>::type>::type
+        create(const TPool& pool)
         {
             return pool.template get<TInstance<> >();
         }
 
         template<typename TPool>
-        typename boost::enable_if<is_value_type<TPool>, typename result_type<TPool>::type>::type create(const TPool&)
+        typename enable_if<is_value_type<TPool>, typename result_type<TPool>::type>::type
+        create(const TPool&)
         {
             return TValue<TGiven>::create();
         }
 
         template<typename TPool>
-        typename boost::enable_if<is_scope_type<TPool>, typename result_type<TPool>::type>::type create(const TPool&)
+        typename enable_if<is_scope_type<TPool>, typename result_type<TPool>::type>::type
+        create(const TPool&)
         {
             return scope_.create();
         }
@@ -140,12 +156,13 @@
         template<typename, typename> class TValue,
         template<typename, typename, typename> class TInstance
     >
-    class dependency<boost::mpl::_1, TExpected, TGiven, TContext, TBind, TValue, TInstance>
+    class dependency<mpl::_1, TExpected, TGiven, TContext, TBind, TValue, TInstance>
     {
     public:
-        template<typename scope> struct rebind
+        template<typename TScope>
+        struct rebind
         {
-            typedef dependency<scope, TExpected, TGiven, TContext, TBind, TValue, TInstance> type;
+            typedef dependency<TScope, TExpected, TGiven, TContext, TBind, TValue, TInstance> type;
         };
     };
 
@@ -157,12 +174,13 @@
         template<typename, typename> class TValue,
         template<typename, typename, typename> class TInstance
     >
-    class dependency<TScope, boost::mpl::_1, boost::mpl::_2, TContext, TBind, TValue, TInstance>
+    class dependency<TScope, mpl::_1, mpl::_2, TContext, TBind, TValue, TInstance>
     {
     public:
-        template<typename expected, typename given> struct rebind
+        template<typename TExpected, typename TGiven>
+        struct rebind
         {
-            typedef dependency<TScope, expected, given, TContext, TBind, TValue, TInstance> type;
+            typedef dependency<TScope, TExpected, TGiven, TContext, TBind, TValue, TInstance> type;
         };
     };
 
@@ -175,14 +193,14 @@
 #else
 
     template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    typename boost::enable_if<is_scope_type<TPool>, typename result_type<TPool>::type>::type
+    typename enable_if<is_scope_type<TPool>, typename result_type<TPool>::type>::type
     create(const TPool&, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg))
     {
         return scope_.create(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg));
     }
 
     template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    typename boost::enable_if<is_pool_type<TPool>, typename result_type<TPool>::type>::type
+    typename enable_if<is_pool_type<TPool>, typename result_type<TPool>::type>::type
     create(const TPool& pool, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, & BOOST_PP_INTERCEPT))
     {
         return pool.template get<TInstance<> >();

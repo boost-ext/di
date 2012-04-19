@@ -30,7 +30,7 @@
     template
     <
         typename TDeps,
-        template<typename, typename, typename = TDeps, typename = aux::dependency<scopes::per_request, boost::mpl::_1, boost::mpl::_2> > class TBinder = binder
+        template<typename, typename, typename = TDeps, typename = aux::dependency<scopes::per_request, mpl::_1, mpl::_2> > class TBinder = binder
     >
     class visitor_impl
     {

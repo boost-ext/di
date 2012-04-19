@@ -14,8 +14,10 @@
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/void.hpp>
 #include "boost/di/aux/utility.hpp"
+#include "boost/di/policies/check_for_binding_correctness.hpp"
 #include "boost/di/policies/check_for_circular_dependencies.hpp"
 #include "boost/di/policies/check_for_creation_ownership.hpp"
+#include "boost/di/policies/check_for_references_without_ownership.hpp"
 #include "boost/di/config.hpp"
 
 namespace boost {
@@ -27,18 +29,24 @@ template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typena
 class policy
     : detail::policy
 {
-    typedef boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> seq;
+    typedef mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> sequence;
 
-    template<typename TDeps, typename T, typename Tpolicy>
+    template<typename TDeps, typename T, typename TPolicy>
     struct verify_impl
-    {
-        typedef typename Tpolicy::template verify<TDeps, typename aux::make_plain<T>::type>::type type;
-    };
+        : TPolicy::template verify<TDeps, typename aux::make_plain<T>::type>::type
+    { };
 
 public:
-    template<typename TDeps, typename T>
+    template<
+        typename TDeps,
+        typename T
+    >
     struct verify
-        : boost::mpl::fold<seq, boost::mpl::void_, verify_impl<TDeps, T, boost::mpl::_2> >::type
+        : mpl::fold<
+            sequence,
+            mpl::void_,
+            verify_impl<TDeps, T, mpl::_2>
+          >::type
     {
         typedef void type;
     };
@@ -47,12 +55,12 @@ public:
 template<typename TDefault>
 struct defaults<detail::policy, TDefault>
 {
-    typedef policy
-    <
+    typedef policy<
+        policies::check_for_binding_correctness,
         policies::check_for_circular_dependencies,
-        policies::check_for_creation_ownership
-    >
-    type;
+        policies::check_for_creation_ownership,
+        policies::check_for_references_without_ownership
+    > type;
 };
 
 } // namespace di

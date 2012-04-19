@@ -19,7 +19,7 @@ namespace ut
 {
 
 using namespace boost;
-using namespace boost::mpl;
+using namespace mpl;
 
 struct Empty { };
 struct Doublevalue

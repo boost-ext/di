@@ -33,26 +33,26 @@
 
     template
     <
-        typename TSeq = boost::mpl::vector0<>
+        typename TSequence = mpl::vector0<>
     >
     class fusion_module : public aux::module
     {
     public:
-        typedef aux::pool<TSeq> pool;
+        typedef aux::pool<TSequence> pool;
 
-        struct dependencies : boost::mpl::fold
+        struct dependencies : mpl::fold
             <
-                TSeq,
-                boost::mpl::vector0<>,
-                boost::mpl::copy
+                TSequence,
+                mpl::vector0<>,
+                mpl::copy
                 <
-                    boost::mpl::if_
+                    mpl::if_
                     <
-                        boost::is_base_of<aux::internal, boost::mpl::_2>,
-                        boost::mpl::_2,
-                        per_request<boost::mpl::_2>
+                        is_base_of<aux::internal, mpl::_2>,
+                        mpl::_2,
+                        per_request<mpl::_2>
                     >,
-                    boost::mpl::back_inserter<boost::mpl::_1>
+                    mpl::back_inserter<mpl::_1>
                 >
             >::type
         { };
@@ -82,10 +82,10 @@
     { }
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    fusion_module<boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), Arg)> >
+    fusion_module<mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), Arg)> >
     operator()(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg)) const
     {
-        return fusion_module< boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), Arg)> >(
+        return fusion_module< mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), Arg)> >(
             BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg));
     }
 

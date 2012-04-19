@@ -23,20 +23,20 @@ namespace ut
 {
 
 using namespace boost;
-using namespace boost::mpl;
+using namespace mpl;
 
 BOOST_AUTO_TEST_CASE(ClearCreationOwnership)
 {
-    BOOST_CHECK((boost::is_base_of<boost::mpl::true_, check_for_creation_ownership::verify<vector0<>, int>::type>::value));
-    BOOST_CHECK((boost::is_base_of<boost::mpl::true_, check_for_creation_ownership::verify<vector0<>, int*>::type>::value));
-    BOOST_CHECK((boost::is_base_of<boost::mpl::true_, check_for_creation_ownership::verify<vector0<>, const int*>::type>::value));
-    BOOST_CHECK((boost::is_base_of<boost::mpl::true_, check_for_creation_ownership::verify<vector0<>, shared_ptr<int> >::type>::value));
+    BOOST_CHECK((is_base_of<mpl::true_, check_for_creation_ownership::verify<vector0<>, int>::type>::value));
+    BOOST_CHECK((is_base_of<mpl::true_, check_for_creation_ownership::verify<vector0<>, int*>::type>::value));
+    BOOST_CHECK((is_base_of<mpl::true_, check_for_creation_ownership::verify<vector0<>, const int*>::type>::value));
+    BOOST_CHECK((is_base_of<mpl::true_, check_for_creation_ownership::verify<vector0<>, shared_ptr<int> >::type>::value));
 }
 
 BOOST_AUTO_TEST_CASE(NotClearCreationOwnership)
 {
-    BOOST_CHECK((boost::is_base_of<boost::mpl::false_, check_for_creation_ownership::verify<vector0<>, int&>::type>::value));
-    BOOST_CHECK((boost::is_base_of<boost::mpl::false_, check_for_creation_ownership::verify<vector0<>, const int&>::type>::value));
+    BOOST_CHECK((is_base_of<mpl::false_, check_for_creation_ownership::verify<vector0<>, int&>::type>::value));
+    BOOST_CHECK((is_base_of<mpl::false_, check_for_creation_ownership::verify<vector0<>, const int&>::type>::value));
 }
 
 } // namespace ut

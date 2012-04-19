@@ -66,21 +66,21 @@ BOOST_AUTO_TEST_CASE(instanceStringwithvalue_type)
 BOOST_AUTO_TEST_CASE(instanceVariantRef)
 {
     C c;
-    C& ref = boost::get<C&>(instance<C>(c).get());
+    C& ref = get<C&>(instance<C>(c).get());
     BOOST_CHECK_EQUAL(&c, &ref);
 }
 
 BOOST_AUTO_TEST_CASE(instanceVariantConstRef)
 {
     C c;
-    const C& constRef = boost::get<const C&>(instance<C>(c).get());
+    const C& constRef = get<const C&>(instance<C>(c).get());
     BOOST_CHECK_EQUAL(&c, &constRef);
 }
 
 BOOST_AUTO_TEST_CASE(instanceVariantSharedPtr)
 {
     shared_ptr<C> c(new C);
-    BOOST_CHECK_EQUAL(c, boost::get<shared_ptr<C> >(instance<C>(c).get()));
+    BOOST_CHECK_EQUAL(c, get<shared_ptr<C> >(instance<C>(c).get()));
 }
 
 BOOST_AUTO_TEST_CASE(instancenamed)
@@ -91,7 +91,7 @@ BOOST_AUTO_TEST_CASE(instancenamed)
     shared_ptr<c1__t> c1_(new c1__t(make_shared<int>(42)));
     shared_ptr<c2__t> c2_(new c2__t(make_shared<int>(87)));
 
-    BOOST_CHECK((*boost::get<shared_ptr<c1__t> >(instance<c1__t>(c1_).get())->i != *boost::get<shared_ptr<c2__t> >(instance<c2__t>(c2_).get())->i));
+    BOOST_CHECK((*get<shared_ptr<c1__t> >(instance<c1__t>(c1_).get())->i != *get<shared_ptr<c2__t> >(instance<c2__t>(c2_).get())->i));
 }
 
 BOOST_AUTO_TEST_CASE(instancecontext)
@@ -100,7 +100,7 @@ BOOST_AUTO_TEST_CASE(instancecontext)
     shared_ptr<C> c2_(new C);
 
     BOOST_CHECK((instance<int, A>(87).get() != instance<int, B>(42).get()));
-    BOOST_CHECK((boost::get<shared_ptr<C> >(instance<C, A>(c1_).get()) != boost::get<shared_ptr<C> >(instance<C, B>(c2_).get())));
+    BOOST_CHECK((get<shared_ptr<C> >(instance<C, A>(c1_).get()) != get<shared_ptr<C> >(instance<C, B>(c2_).get())));
 }
 
 } // namespace ut

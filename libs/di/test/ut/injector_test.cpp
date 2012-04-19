@@ -17,7 +17,7 @@ namespace utility
 namespace ut
 {
 
-using namespace boost::mpl;
+using namespace mpl;
 
 class A { };
 class B { };
@@ -28,7 +28,7 @@ struct fake_pool { };
 struct module : back::module
 {
     typedef fake_pool pool;
-    typedef boost::mpl::vector<A, B, C> dependencies;
+    typedef mpl::vector<A, B, C> dependencies;
 
     const pool& get_pool() const { return pool_; }
     pool pool_;

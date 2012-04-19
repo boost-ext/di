@@ -19,7 +19,7 @@ namespace ut
 {
 
 using namespace boost;
-using namespace boost::mpl;
+using namespace mpl;
 
 template<typename T>
 struct Allocator
@@ -61,7 +61,7 @@ BOOST_AUTO_TEST_CASE(poolEmpty)
 
     pool_type pool;
 
-    BOOST_CHECK((equal<vector0<>, pool_type::seq>::value));
+    BOOST_CHECK((equal<vector0<>, pool_type::sequence>::value));
     (void)pool;
 }
 
@@ -73,7 +73,7 @@ BOOST_AUTO_TEST_CASE(poolctorOrder)
 
     pool_type pool(defaultctor, trivialctor);
 
-    BOOST_CHECK((equal<vector<Trivialctor, Defaultctor>, pool_type::seq>::value));
+    BOOST_CHECK((equal<vector<Trivialctor, Defaultctor>, pool_type::sequence>::value));
     (void)pool;
 }
 
@@ -85,7 +85,7 @@ BOOST_AUTO_TEST_CASE(poolctorOrderReverse)
 
     pool_type pool(trivialctor, defaultctor);
 
-    BOOST_CHECK((equal<vector<Trivialctor, Defaultctor>, pool_type::seq>::value));
+    BOOST_CHECK((equal<vector<Trivialctor, Defaultctor>, pool_type::sequence>::value));
     (void)pool;
 }
 
@@ -105,7 +105,7 @@ BOOST_AUTO_TEST_CASE(poolOfpools)
 
     BOOST_CHECK_EQUAL(trivialctor.get(), pool.get<TrivialctorType>());
     BOOST_CHECK_EQUAL(defaultctor.get(), pool.get<DefaultctorType>());
-    BOOST_CHECK((equal<vector<DefaultctorType, TrivialctorType>, pool_type::seq>::value));
+    BOOST_CHECK((equal<vector<DefaultctorType, TrivialctorType>, pool_type::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(poolGet)

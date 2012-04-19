@@ -40,8 +40,7 @@ namespace di {
  *     template<>
  *     struct defaults<policy, specialized>
  *     {
- *         typedef policy
- *         <
+ *         typedef policy<
  *             policy::check_for_circular_dependencies
  *         >
  *         type;

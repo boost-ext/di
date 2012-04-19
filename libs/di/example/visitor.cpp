@@ -25,13 +25,11 @@ public:
     }
 };
 
-struct visitor_module : di::generic_module
-    <
-        di::singletons <
-            c0if0
-        >
+typedef di::generic_module<
+    di::singletons<
+        c0if0
     >
-{ };
+> visitor_module;
 
 int main()
 {

@@ -43,7 +43,7 @@ struct get_context
 template<typename T>
 struct get_context_size
 {
-    BOOST_STATIC_CONSTANT(std::size_t, value = boost::mpl::size<typename get_context<T>::type>::value);
+    BOOST_STATIC_CONSTANT(std::size_t, value = mpl::size<typename get_context<T>::type>::value);
 };
 
 template<typename T>
@@ -65,9 +65,9 @@ struct get_derived
 };
 
 template<typename T>
-struct get_seq
+struct get_sequence
 {
-    typedef typename T::seq type;
+    typedef typename T::sequence type;
 };
 
 struct internal
@@ -79,17 +79,17 @@ struct module { };
 
 template<typename TDependency, int N, typename TResult = void>
 struct enable_if_ctor_size
-    : boost::enable_if_c<boost::mpl::size<typename TDependency::ctor>::value == N, TResult>
+    : enable_if_c<mpl::size<typename TDependency::ctor>::value == N, TResult>
 { };
 
 template<typename TDependency, int N>
 struct at_ctor
-    : boost::mpl::at_c<typename TDependency::ctor, N>
+    : mpl::at_c<typename TDependency::ctor, N>
 { };
 
 template<typename TCallStack, typename TDependency>
 struct update_call_stack
-    : boost::mpl::push_back<TCallStack, typename TDependency::given>
+    : mpl::push_back<TCallStack, typename TDependency::given>
 { };
 
 template<typename TElement>
@@ -100,11 +100,11 @@ class make_plain
     template<typename T>
     struct remove_accessors
     {
-        typedef typename boost::remove_cv
+        typedef typename remove_cv
             <
-                typename boost::remove_pointer
+                typename remove_pointer
                 <
-                    typename boost::remove_reference<T>::type
+                    typename remove_reference<T>::type
                 >::type
             >::type
         type;
@@ -117,7 +117,7 @@ class make_plain
     };
 
     template<typename T>
-    struct deref_element_type<T, typename boost::enable_if< has_element_type<T> >::type>
+    struct deref_element_type<T, typename enable_if< has_element_type<T> >::type>
     {
         typedef typename T::element_type type;
     };

@@ -28,39 +28,39 @@ template<typename TDerived, typename = void> class has_value
 {
     struct helper { static int value; };
     struct base
-        : boost::mpl::if_<boost::is_arithmetic<TDerived>, boost::mpl::void_, TDerived>::type, helper
+        : mpl::if_<is_arithmetic<TDerived>, mpl::void_, TDerived>::type, helper
     { };
 
-    template<typename T> static boost::mpl::aux::no_tag  deduce(boost::non_type<const int*, &T::value>*);
-    template<typename T> static boost::mpl::aux::yes_tag deduce(...);
+    template<typename T> static mpl::aux::no_tag  deduce(non_type<const int*, &T::value>*);
+    template<typename T> static mpl::aux::yes_tag deduce(...);
 
 public:
-    BOOST_STATIC_CONSTANT(bool, value = sizeof(deduce<base>(0)) == sizeof(boost::mpl::aux::yes_tag));
+    BOOST_STATIC_CONSTANT(bool, value = sizeof(deduce<base>(0)) == sizeof(mpl::aux::yes_tag));
 };
 
 }// namespace detail
 
 template<typename, typename = void>
 class explicit_value
-    : public boost::mpl::false_
+    : public mpl::false_
 { };
 
 template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, int C)>
-class explicit_value< boost::mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> >
-    : public boost::mpl::true_
+class explicit_value< mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> >
+    : public mpl::true_
 {
 public:
     typedef std::string result_type;
 
     inline static result_type create()
     {
-        return boost::mpl::c_str< boost::mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> >::value;
+        return mpl::c_str< mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> >::value;
     }
 };
 
 template<typename T>
-class explicit_value<T, typename boost::enable_if< detail::has_value<T> >::type>
-    : public boost::mpl::true_
+class explicit_value<T, typename enable_if< detail::has_value<T> >::type>
+    : public mpl::true_
 {
 public:
     typedef BOOST_TYPEOF_TPL(T::value) result_type;

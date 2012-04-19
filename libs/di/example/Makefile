@@ -12,5 +12,5 @@ all: $(EXAMPLES)
 	./$*.exe
 
 clean:
-	@find . -iname "*.o" -or -iname "*.exe" -or | xargs --no-run-if-empty rm -f
+	@find . -iname "*.o" -or -iname "*.exe" | xargs --no-run-if-empty rm -f
 

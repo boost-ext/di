@@ -35,16 +35,16 @@ namespace detail {
 BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
 template<typename TCallStack, typename TContext>
-struct equal_call_stack : boost::mpl::equal
+struct equal_call_stack : mpl::equal
     <
-        boost::mpl::iterator_range
+        mpl::iterator_range
         <
-            typename boost::mpl::advance_c
+            typename mpl::advance_c
             <
-                typename boost::mpl::begin<TCallStack>::type,
-                boost::mpl::size<TCallStack>::value - boost::mpl::size<TContext>::value
+                typename mpl::begin<TCallStack>::type,
+                mpl::size<TCallStack>::value - mpl::size<TContext>::value
             >::type,
-            typename boost::mpl::end<TCallStack>::type
+            typename mpl::end<TCallStack>::type
         >,
         TContext
     >
@@ -52,12 +52,12 @@ struct equal_call_stack : boost::mpl::equal
 
 template<typename T1, typename T2>
 struct less_context_size
-    : boost::mpl::bool_<(aux::get_context_size<T1>::value > aux::get_context_size<T2>::value)>::type
+    : mpl::bool_<(aux::get_context_size<T1>::value > aux::get_context_size<T2>::value)>::type
 { };
 
 template<typename T, typename TBind>
 struct comparator
-    : boost::mpl::apply<TBind, T>::type
+    : mpl::apply<TBind, T>::type
 { };
 
 template<typename T, typename TDefault, typename = void>
@@ -66,7 +66,7 @@ struct make_default_dependency
 { };
 
 template<typename T, typename TDefault>
-struct make_default_dependency<T, TDefault, typename boost::enable_if<has_element_type<T> >::type>
+struct make_default_dependency<T, TDefault, typename enable_if<has_element_type<T> >::type>
     : TDefault::template rebind<typename aux::make_plain<T>::type, typename aux::make_plain<typename T::value_type>::type>
 { };
 
@@ -79,38 +79,38 @@ template
     typename TDeps,
     typename TDefault
 >
-struct binder : boost::mpl::deref
+struct binder : mpl::deref
     <
-        boost::mpl::begin
+        mpl::begin
         <
-            typename boost::mpl::push_back
+            typename mpl::push_back
             <
-                typename boost::mpl::sort
+                typename mpl::sort
                 <
-                    typename boost::mpl::fold
+                    typename mpl::fold
                     <
                         TDeps,
-                        boost::mpl::vector0<>,
-                        boost::mpl::if_
+                        mpl::vector0<>,
+                        mpl::if_
                         <
-                            boost::mpl::and_
+                            mpl::and_
                             <
                                 detail::comparator
                                 <
                                     typename aux::make_plain<T>::type,
-                                    aux::get_bind<boost::mpl::_2>
+                                    aux::get_bind<mpl::_2>
                                 >,
                                 detail::equal_call_stack
                                 <
                                     TCallStack,
-                                    aux::get_context<boost::mpl::_2>
+                                    aux::get_context<mpl::_2>
                                 >
                             >,
-                            boost::mpl::push_back<boost::mpl::_1, boost::mpl::_2>,
-                            boost::mpl::_1
+                            mpl::push_back<mpl::_1, mpl::_2>,
+                            mpl::_1
                         >
                     >::type,
-                    detail::less_context_size<boost::mpl::_1, boost::mpl::_2>
+                    detail::less_context_size<mpl::_1, mpl::_2>
                 >::type,
                 typename detail::make_default_dependency<T, TDefault>::type
             >::type

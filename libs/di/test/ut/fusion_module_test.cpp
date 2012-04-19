@@ -28,7 +28,7 @@ using namespace test::common;
 using namespace back;
 using namespace back::aux;
 using namespace utility;
-using namespace boost::mpl;
+using namespace mpl;
 using namespace boost;
 
 BOOST_AUTO_TEST_CASE(fusionEmpty)
@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(fusionEmpty)
         >::value
     ));
 
-    BOOST_CHECK((equal<vector0<>, testmodule::pool::seq>::value));
+    BOOST_CHECK((equal<vector0<>, testmodule::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(fusionMix)

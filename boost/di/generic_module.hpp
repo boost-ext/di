@@ -39,15 +39,15 @@
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
     class generic_module : public aux::module
     {
-        template<typename TInstance, typename T> struct is_same_instance : boost::mpl::or_
+        template<typename TInstance, typename T> struct is_same_instance : mpl::or_
             <
-                boost::is_same<typename TInstance::name, T>,
-                boost::is_same<typename TInstance::value_type, T>
+                is_same<typename TInstance::name, T>,
+                is_same<typename TInstance::value_type, T>
             >
         { };
 
-        template<typename TSeq, typename T> struct find_instance_type
-            : boost::mpl::find_if<TSeq, is_same_instance<boost::mpl::_1, T> >::type
+        template<typename TSequence, typename T> struct find_instance_type
+            : mpl::find_if<TSequence, is_same_instance<mpl::_1, T> >::type
         { };
 
         template<typename T, typename Enable = void>
@@ -57,38 +57,38 @@
         };
 
         template<typename T>
-        struct make_annotation<T, typename boost::enable_if<boost::is_base_of<aux::internal, T> >::type>
+        struct make_annotation<T, typename enable_if<is_base_of<aux::internal, T> >::type>
         {
             typedef typename T::template rebind<scopes::singleton>::type dependency;
             typedef aux::instance<typename dependency::expected, typename dependency::context> instance;
             typedef typename annotate<instance>::template with<typename T::name> type;
         };
 
-        struct externals : boost::mpl::transform
+        struct externals : mpl::transform
             <
-                typename boost::mpl::fold
+                typename mpl::fold
                 <
-                    boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
-                    boost::mpl::vector0<>,
-                    boost::mpl::copy
+                    mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
+                    mpl::vector0<>,
+                    mpl::copy
                     <
-                        boost::mpl::if_
+                        mpl::if_
                         <
-                            boost::is_base_of<concepts::detail::externals, boost::mpl::_2>,
-                            boost::mpl::_2,
-                            boost::mpl::vector0<>
+                            is_base_of<concepts::detail::externals, mpl::_2>,
+                            mpl::_2,
+                            mpl::vector0<>
                         >,
-                        boost::mpl::back_inserter<boost::mpl::_1>
+                        mpl::back_inserter<mpl::_1>
                     >
                 >::type,
-                make_annotation<boost::mpl::_1>
+                make_annotation<mpl::_1>
             >::type
         { };
 
-        struct instances : boost::mpl::transform
+        struct instances : mpl::transform
             <
                 externals,
-                aux::get_derived<boost::mpl::_1>
+                aux::get_derived<mpl::_1>
             >::type
         { };
 
@@ -96,20 +96,20 @@
         typedef aux::pool<typename instances::type> pool;
 
         struct dependencies
-            : boost::mpl::fold<
-                boost::mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
-                boost::mpl::vector0<>,
-                boost::mpl::copy<
-                    boost::mpl::if_<
-                        boost::is_base_of<concepts::detail::externals, boost::mpl::_2>,
-                        boost::mpl::vector0<>,
-                        boost::mpl::if_<
-                            boost::mpl::is_sequence<boost::mpl::_2>,
-                            boost::mpl::_2,
-                            per_request<boost::mpl::_2>
+            : mpl::fold<
+                mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>,
+                mpl::vector0<>,
+                mpl::copy<
+                    mpl::if_<
+                        is_base_of<concepts::detail::externals, mpl::_2>,
+                        mpl::vector0<>,
+                        mpl::if_<
+                            mpl::is_sequence<mpl::_2>,
+                            mpl::_2,
+                            per_request<mpl::_2>
                         >
                     >,
-                    boost::mpl::back_inserter<boost::mpl::_1>
+                    mpl::back_inserter<mpl::_1>
                 >
             >::type
         { };
@@ -119,10 +119,10 @@
         #include BOOST_PP_ITERATE()
 
         template<typename T, typename Tvalue>
-        inline static typename boost::disable_if<
-            boost::is_same<
+        inline static typename disable_if<
+            is_same<
                 find_instance_type<externals, T>,
-                boost::mpl::end<externals>
+                mpl::end<externals>
             >,
             typename find_instance_type<externals, T>::type::derived
         >::type

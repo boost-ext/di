@@ -23,9 +23,9 @@ namespace test {
 namespace common {
 
 using namespace boost;
-using namespace boost::mpl;
+using namespace mpl;
 
-template<typename TSeq = vector0<> >
+template<typename TSequence = vector0<> >
 class visitor
 {
     typedef std::vector<std::string> visits_t;
@@ -33,7 +33,7 @@ class visitor
 public:
     ~visitor()
     {
-        verify<TSeq>(0);
+        verify<TSequence>(0);
     }
 
     template<typename T> void operator()() const
@@ -42,11 +42,11 @@ public:
     }
 
 private:
-    template<typename seq> void verify(int, typename enable_if< empty<seq> >::type* = 0) { }
-    template<typename seq> void verify(int i, typename disable_if< empty<seq> >::type* = 0)
+    template<typename sequence> void verify(int, typename enable_if< empty<sequence> >::type* = 0) { }
+    template<typename sequence> void verify(int i, typename disable_if< empty<sequence> >::type* = 0)
     {
-        BOOST_CHECK_EQUAL(typeid(typename front<seq>::type).name(), visits.at(i));
-        verify<typename pop_front<seq>::type>(i + 1);
+        BOOST_CHECK_EQUAL(typeid(typename front<sequence>::type).name(), visits.at(i));
+        verify<typename pop_front<sequence>::type>(i + 1);
     }
 
     mutable visits_t visits;

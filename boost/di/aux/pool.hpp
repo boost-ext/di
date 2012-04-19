@@ -34,17 +34,18 @@
 
     template
     <
-        typename TSeq = boost::mpl::vector0<>,
+        typename TSequence = mpl::vector0<>,
         typename Enable = void
     >
     class pool
     {
     public:
-        typedef TSeq seq;
+        typedef TSequence sequence;
 
         pool() { }
 
-        template<typename T> struct result_type
+        template<typename T>
+        struct result_type
         {
             typedef typename T::result_type type;
         };
@@ -64,29 +65,27 @@
     #endif
 
 #else
-    #define BOOST_DI_DERIVES_IMPL(_, n, seq) BOOST_PP_COMMA_IF(n) public boost::mpl::at_c<seq, n>::type
+    #define BOOST_DI_DERIVES_IMPL(_, n, sequence) BOOST_PP_COMMA_IF(n) public mpl::at_c<sequence, n>::type
     #define BOOST_DI_CTOR_INITLIST_IMPL(_, n, na) BOOST_PP_COMMA_IF(n) T##n(arg##n)
 
-    template<typename TSeq>
-    class pool<TSeq, typename boost::enable_if_c< boost::mpl::size<TSeq>::value == BOOST_PP_ITERATION()>::type>
-        : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_DERIVES_IMPL, TSeq)
+    template<typename TSequence>
+    class pool<TSequence, typename enable_if_c<mpl::size<TSequence>::value == BOOST_PP_ITERATION()>::type>
+        : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_DERIVES_IMPL, TSequence)
     {
-        BOOST_MPL_HAS_XXX_TRAIT_DEF(seq)
+        BOOST_MPL_HAS_XXX_TRAIT_DEF(sequence)
 
     public:
-        struct seq : boost::mpl::fold
-            <
-                TSeq,
-                boost::mpl::vector0<>,
-                boost::mpl::copy
-                <
-                    boost::mpl::if_
-                    <
-                        has_seq<boost::mpl::_2>,
-                        get_seq<boost::mpl::_2>,
-                        typename boost::mpl::vector<boost::mpl::_2>::type
+        struct sequence :
+            mpl::fold<
+                TSequence,
+                mpl::vector0<>,
+                mpl::copy<
+                    mpl::if_<
+                        has_sequence<mpl::_2>,
+                        get_sequence<mpl::_2>,
+                        typename mpl::vector<mpl::_2>::type
                     >,
-                    boost::mpl::back_inserter<boost::mpl::_1>
+                    mpl::back_inserter<mpl::_1>
                 >
             >::type
         { };
@@ -102,7 +101,8 @@
             : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_CTOR_INITLIST_IMPL, ~)
         { }
 
-        template<typename T> struct result_type
+        template<typename T>
+        struct result_type
         {
             typedef typename T::result_type type;
         };

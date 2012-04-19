@@ -22,7 +22,7 @@ namespace ut
 {
 
 using namespace boost;
-using namespace boost::mpl;
+using namespace mpl;
 using namespace utility;
 using namespace aux;
 
