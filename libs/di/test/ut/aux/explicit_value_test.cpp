@@ -18,8 +18,6 @@ namespace aux
 namespace ut
 {
 
-using namespace boost;
-using namespace mpl;
 
 struct Empty { };
 struct Doublevalue

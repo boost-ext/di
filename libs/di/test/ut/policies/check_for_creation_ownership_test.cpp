@@ -22,8 +22,6 @@ namespace policies
 namespace ut
 {
 
-using namespace boost;
-using namespace mpl;
 
 BOOST_AUTO_TEST_CASE(ClearCreationOwnership)
 {

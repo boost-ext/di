@@ -30,8 +30,6 @@ using namespace back;
 using namespace back::aux;
 using namespace back::scopes;
 using namespace utility;
-using namespace mpl;
-using namespace boost;
 
 class A { };
 class B { };

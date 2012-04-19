@@ -31,8 +31,6 @@ using namespace test::common;
 using namespace utility;
 using namespace scopes;
 using namespace aux;
-using namespace mpl;
-using namespace boost;
 
 BOOST_AUTO_TEST_CASE(CreateUsingCopy)
 {

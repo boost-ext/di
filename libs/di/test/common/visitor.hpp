@@ -22,8 +22,6 @@ namespace di {
 namespace test {
 namespace common {
 
-using namespace boost;
-using namespace mpl;
 
 template<typename TSequence = vector0<> >
 class visitor

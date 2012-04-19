@@ -22,7 +22,6 @@ namespace ut
 {
 
 using namespace test::common;
-using namespace mpl;
 
 BOOST_AUTO_TEST_CASE(Nocircular_dependencies)
 {

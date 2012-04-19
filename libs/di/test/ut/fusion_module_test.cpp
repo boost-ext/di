@@ -28,8 +28,6 @@ using namespace test::common;
 using namespace back;
 using namespace back::aux;
 using namespace utility;
-using namespace mpl;
-using namespace boost;
 
 BOOST_AUTO_TEST_CASE(fusionEmpty)
 {

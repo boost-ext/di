@@ -22,8 +22,6 @@ namespace aux
 namespace ut
 {
 
-using namespace boost;
-using namespace mpl;
 using namespace utility;
 
 class A { };

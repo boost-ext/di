@@ -18,7 +18,6 @@ namespace aux
 namespace ut
 {
 
-using namespace boost;
 
 class A { };
 class B { };

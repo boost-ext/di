@@ -17,7 +17,6 @@ namespace utility
 namespace ut
 {
 
-using namespace mpl;
 
 class A { };
 class B { };

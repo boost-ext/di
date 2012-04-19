@@ -18,8 +18,6 @@ namespace boost {
 namespace di {
 namespace mt {
 
-using namespace boost;
-using namespace mpl;
 using namespace test::common;
 using namespace utility;
 using namespace front::base;

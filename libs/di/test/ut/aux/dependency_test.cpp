@@ -21,8 +21,6 @@ namespace aux
 namespace ut
 {
 
-using namespace boost;
-using namespace mpl;
 
 template<typename T, typename> struct FakeResult { };
 

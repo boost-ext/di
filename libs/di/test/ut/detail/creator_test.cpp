@@ -18,8 +18,6 @@ namespace detail
 namespace ut
 {
 
-using namespace boost;
-using namespace mpl;
 
 class Fakepool { };
 
