@@ -40,11 +40,11 @@ public:
     template<
         typename TDeps,
         typename T
-    >
+      >
     struct verify
         : mpl::fold<
-            sequence,
-            mpl::void_,
+            sequence
+            mpl::void_
             verify_impl<TDeps, T, mpl::_2>
           >::type
     {

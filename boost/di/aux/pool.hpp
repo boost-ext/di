@@ -75,8 +75,8 @@
         BOOST_MPL_HAS_XXX_TRAIT_DEF(sequence)
 
     public:
-        struct sequence :
-            mpl::fold<
+        struct sequence
+            : mpl::fold<
                 TSequence,
                 mpl::vector0<>,
                 mpl::copy<

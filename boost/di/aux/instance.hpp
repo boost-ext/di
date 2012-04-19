@@ -82,13 +82,11 @@ template
     typename T,
     typename TContext
 >
-class instance
-    <
-        T, TContext,
-        typename enable_if
-        <
-            mpl::or_
-            <
+class instance<
+        T,
+        TContext,
+        typename enable_if<
+            mpl::or_<
                 is_same<typename detail::get_value_type<T>::type, std::string>,
                 is_pod<typename detail::get_value_type<T>::type>
             >

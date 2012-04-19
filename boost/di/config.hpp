@@ -38,10 +38,10 @@ namespace di {
  * namespace boost {
  * namespace di {
  *     template<>
- *     struct defaults<policy, specialized>
+ *     struct defaults<detail::policy, specialized>
  *     {
  *         typedef policy<
- *             policy::check_for_circular_dependencies
+ *             polices::check_for_circular_dependencies
  *         >
  *         type;
  *     };

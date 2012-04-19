@@ -24,7 +24,8 @@ namespace aux {
 
 namespace detail {
 
-template<typename TDerived, typename = void> class has_value
+template<typename TDerived, typename = void>
+class has_value
 {
     struct helper { static int value; };
     struct base

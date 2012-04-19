@@ -52,7 +52,7 @@
             : mpl::joint_view<
                 mpl::filter_view<sequence, is_base_of<detail::policy, mpl::_> >,
                 mpl::vector1<typename defaults<detail::policy, specialized>::type>
-            >::type
+              >::type
         { };
 
         template<typename TSequence, typename TResult = mpl::set0<> >
@@ -65,7 +65,7 @@
                     dependencies_impl<aux::get_dependencies<mpl::_2>, mpl::_1>,
                     mpl::insert<mpl::_1, mpl::_2>
                 >
-            >
+              >
         { };
 
         struct externals
@@ -77,7 +77,7 @@
                 >::type,
                 mpl::vector0<>,
                 mpl::push_back<mpl::_1, mpl::_2>
-            >::type
+              >::type
         { };
 
         struct dependencies
@@ -85,7 +85,7 @@
                 typename dependencies_impl<modules>::type,
                 mpl::vector0<>,
                 mpl::push_back<mpl::_1, mpl::_2>
-            >::type
+              >::type
         { };
 
         typedef aux::pool<typename externals::type> pool;

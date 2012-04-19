@@ -99,16 +99,12 @@ class make_plain
 
     template<typename T>
     struct remove_accessors
-    {
-        typedef typename remove_cv
-            <
-                typename remove_pointer
-                <
-                    typename remove_reference<T>::type
-                >::type
+        : remove_cv<
+            typename remove_pointer<
+                typename remove_reference<T>::type
             >::type
-        type;
-    };
+          >
+    { };
 
     template<typename T, typename Enable = void>
     struct deref_element_type
@@ -123,17 +119,13 @@ class make_plain
     };
 
 public:
-    typedef typename deref_element_type
-        <
-            typename remove_accessors
-            <
-                typename deref_element_type
-                <
-                    typename remove_accessors<TElement>::type
-                >::type
+    typedef typename deref_element_type<
+        typename remove_accessors<
+            typename deref_element_type<
+                typename remove_accessors<TElement>::type
             >::type
         >::type
-    type;
+    >::type type;
 };
 
 } // namespace aux

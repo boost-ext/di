@@ -31,8 +31,7 @@
     namespace boost {
     namespace di {
 
-    template
-    <
+    template<
         typename TSequence = mpl::vector0<>
     >
     class fusion_module : public aux::module
@@ -40,14 +39,12 @@
     public:
         typedef aux::pool<TSequence> pool;
 
-        struct dependencies : mpl::fold
-            <
+        struct dependencies
+            : mpl::fold<
                 TSequence,
                 mpl::vector0<>,
-                mpl::copy
-                <
-                    mpl::if_
-                    <
+                mpl::copy<
+                    mpl::if_<
                         is_base_of<aux::internal, mpl::_2>,
                         mpl::_2,
                         per_request<mpl::_2>
