@@ -4,14 +4,13 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-/*#include <boost/test/unit_test.hpp>*/
-//#include <boost/test/test_case_template.hpp>
-//#include <boost/mpl/vector.hpp>
-//#include "mt/visitor.hpp"
-//#include "boost/di.hpp"
-/*#include "data.hpp"*/
+#include <boost/test/unit_test.hpp>
+#include <boost/test/test_case_template.hpp>
+#include <boost/mpl/vector.hpp>
+#include "mt/visitor.hpp"
+#include "boost/di.hpp"
+#include "data.hpp"
 
-#if 0
 #define BOOST_AUTO_TEST_CASE_VARIADIC(test, type, ...) \
     typedef mpl::vector<__VA_ARGS__> test##types; BOOST_AUTO_TEST_CASE_TEMPLATE(test, type, test##types)
 
@@ -20,112 +19,112 @@ namespace di {
 namespace test {
 namespace mt {
 
-typedef front::base::module <
-    singletons <
+typedef generic_module<
+    singletons<
         c3
     >,
-    per_requests <
+    per_requests<
         c0if0,
         bind<c1if0>::in_call_stack<c6, c5>,
         bind<c2if0>::in_call_stack<c7>,
-        bind<int, int_<1> >,
-        bind<int, int_<2> >::in_call_stack<c8>,
-        bind<int, int_<3> >::in_name< mpl::string<'1'> >::in_call_stack<c7, c6, c4>,
-        bind<int, int_<4> >::in_name< mpl::string<'2'> >::in_call_stack<c7, c6, c4>,
-        bind<int, int_<5> >::in_call_stack<c2>
+        bind<int, mpl::int_<1> >,
+        bind<int, mpl::int_<2> >::in_call_stack<c8>,
+        bind<int, mpl::int_<3> >::in_name< mpl::string<'1'> >::in_call_stack<c7, c6, c4>,
+        bind<int, mpl::int_<4> >::in_name< mpl::string<'2'> >::in_call_stack<c7, c6, c4>,
+        bind<int, mpl::int_<5> >::in_call_stack<c2>
     >
 > basemodule1;
 
-typedef front::base::module <
-    singletons <
+typedef generic_module<
+    singletons<
         c3
     >,
-    per_requests <
-        bind<int, int_<0> >::in_name< mpl::string<'1'> >,
-        bind<int, int_<1> >
+    per_requests<
+        bind<int, mpl::int_<0> >::in_name< mpl::string<'1'> >,
+        bind<int, mpl::int_<1> >
     >
 > basemodule2;
 
-typedef front::base::module <
-    singletons <
+typedef generic_module<
+    singletons<
         c0if0
     >,
-    per_requests <
-        bind<int, int_<2> >::in_call_stack<c8>,
-        bind<int, int_<3> >::in_name< mpl::string<'2'> >
+    per_requests<
+        bind<int, mpl::int_<2> >::in_call_stack<c8>,
+        bind<int, mpl::int_<3> >::in_name< mpl::string<'2'> >
     >
 > basemodule3;
 
-typedef front::base::module <
-    per_requests <
-        transaction_provider, int_<0>
+typedef generic_module<
+    per_requests<
+        transaction_provider, mpl::int_<0>
     >
 > provider_module;
 
-typedef front::base::module <
-    singletons <
+typedef generic_module<
+    singletons<
         c0if0
     >,
-    externals <
+    externals<
         int,
         double
     >
 > externalsmodule;
 
-struct externalsmodulector : front::base::module <
-    singletons <
+struct externalsmodulector : generic_module<
+    singletons<
         c0if0
     >,
-    externals <
+    externals<
         int,
         double
     >
 >
 {
     externalsmodulector(int i, double d)
-        : module(set<int>(i), set<double>(d))
+        : generic_module(set<int>(i), set<double>(d))
     { }
 };
 
-BOOST_AUTO(fusionmodule1, front::fusion::module<>()(
-    singletons <
+BOOST_AUTO(fusionmodule1, fusion_module<>()(
+    singletons<
         c3
     >(),
-    per_requests <
+    per_requests<
         c0if0,
         bind<c1if0>::in_call_stack<c6, c5>,
         bind<c2if0>::in_call_stack<c7>,
-        bind<int, int_<1> >,
-        bind<int, int_<2> >::in_call_stack<c8>,
-        bind<int, int_<3> >::in_name< mpl::string<'1'> >::in_call_stack<c7, c6, c4>,
-        bind<int, int_<4> >::in_name< mpl::string<'2'> >::in_call_stack<c7, c6, c4>,
-        bind<int, int_<5> >::in_call_stack<c2>
+        bind<int, mpl::int_<1> >,
+        bind<int, mpl::int_<2> >::in_call_stack<c8>,
+        bind<int, mpl::int_<3> >::in_name< mpl::string<'1'> >::in_call_stack<c7, c6, c4>,
+        bind<int, mpl::int_<4> >::in_name< mpl::string<'2'> >::in_call_stack<c7, c6, c4>,
+        bind<int, mpl::int_<5> >::in_call_stack<c2>
     >()
 ));
 
-BOOST_AUTO(fusionmodule2, front::fusion::module<>()(
-    singletons <
+BOOST_AUTO(fusionmodule2, fusion_module<>()(
+    singletons<
         c0if0
     >(),
-    per_requests <
-        bind<int, int_<2> >::in_call_stack<c8>,
-        bind<int, int_<3> >::in_name< mpl::string<'2'> >
+    per_requests<
+        bind<int, mpl::int_<2> >::in_call_stack<c8>,
+        bind<int, mpl::int_<3> >::in_name< mpl::string<'2'> >
     >()
 ));
 
-BOOST_AUTO(fusionmodule3, front::fusion::module<>()(
-    singletons <
+BOOST_AUTO(fusionmodule3, fusion_module<>()(
+    singletons<
         c3
     >(),
-    per_requests <
-        bind<int, int_<0> >::in_name< mpl::string<'1'> >,
-        bind<int, int_<1> >
+    per_requests<
+        bind<int, mpl::int_<0> >::in_name< mpl::string<'1'> >,
+        bind<int, mpl::int_<1> >
     >()
 ));
 
-BOOST_AUTO(fusion_provider_module, front::fusion::module<>()(
-    per_requests <
-        transaction_provider, int_<0>
+BOOST_AUTO(fusion_provider_module, fusion_module<>()(
+    per_requests<
+        transaction_provider, mpl::int_<0>
     >()
 ));
 
@@ -139,10 +138,10 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Onemodule, TInjector,
 
     BOOST_CHECK(c8_->c1_ != c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
-    BOOST_CHECK(c8_->c7_->if0 != c8_->c7_->c6_->c5_.if0);
+    BOOST_CHECK(c8_->c7_->if0_ != c8_->c7_->c6_->c5_.if0_);
 
-    BOOST_CHECK(dynamic_cast<c1if0*>(c8_->c7_->c6_->c5_.if0.get()));
-    BOOST_CHECK(dynamic_cast<c2if0*>(c8_->c7_->if0.get()));
+    BOOST_CHECK(dynamic_cast<c1if0*>(c8_->c7_->c6_->c5_.if0_.get()));
+    BOOST_CHECK(dynamic_cast<c2if0*>(c8_->c7_->if0_.get()));
 
     BOOST_CHECK_EQUAL(2, c8_->i);
     BOOST_CHECK_EQUAL(3, c8_->c7_->c6_->c4_->i1);
@@ -165,10 +164,10 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Manymodules, TInjector,
 
     BOOST_CHECK(c8_->c1_ != c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
-    BOOST_CHECK(c8_->c7_->if0 == c8_->c7_->c6_->c5_.if0);
+    BOOST_CHECK(c8_->c7_->if0_ == c8_->c7_->c6_->c5_.if0_);
 
-    BOOST_CHECK(dynamic_cast<c0if0*>(c8_->c7_->c6_->c5_.if0.get()));
-    BOOST_CHECK(dynamic_cast<c0if0*>(c8_->c7_->if0.get()));
+    BOOST_CHECK(dynamic_cast<c0if0*>(c8_->c7_->c6_->c5_.if0_.get()));
+    BOOST_CHECK(dynamic_cast<c0if0*>(c8_->c7_->if0_.get()));
 
     BOOST_CHECK_EQUAL(2, c8_->i);
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c4_->i1);
@@ -189,10 +188,10 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Mixmodules, TInjector,
 
     BOOST_CHECK(c8_->c1_ != c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
-    BOOST_CHECK(c8_->c7_->if0 == c8_->c7_->c6_->c5_.if0);
+    BOOST_CHECK(c8_->c7_->if0_ == c8_->c7_->c6_->c5_.if0_);
 
-    BOOST_CHECK(dynamic_cast<c0if0*>(c8_->c7_->c6_->c5_.if0.get()));
-    BOOST_CHECK(dynamic_cast<c0if0*>(c8_->c7_->if0.get()));
+    BOOST_CHECK(dynamic_cast<c0if0*>(c8_->c7_->c6_->c5_.if0_.get()));
+    BOOST_CHECK(dynamic_cast<c0if0*>(c8_->c7_->if0_.get()));
 
     BOOST_CHECK_EQUAL(2, c8_->i);
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c4_->i1);
@@ -217,19 +216,16 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Basicvisitor, TInjector,
     injector<BOOST_TYPEOF(fusion_provider_module)>)
 {
     TInjector injector;
-    visitor
-    <
-        vector
-        <
-            transaction_usage,
-            shared_ptr< provider< shared_ptr<transaction> > >,
-            shared_ptr<c3>,
-            int
+    visitor<
+        mpl::vector<
+            transaction_usage
+          , shared_ptr< provider< shared_ptr<transaction> > >
+          , shared_ptr<c3>
+          , int
         >
-    >
-    visitor;
+    > visitor_mock;
 
-    injector.template visit<transaction_usage>(visitor);
+    injector.template visit<transaction_usage>(visitor_mock);
 }
 
 BOOST_AUTO_TEST_CASE_VARIADIC(Basicexternals, TInjector,
@@ -237,8 +233,8 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Basicexternals, TInjector,
 {
     TInjector injector(
         externalsmodule(
-            externalsmodule::set<int>(42),
-            externalsmodule::set<double>(87.0)
+            externalsmodule::set<int>(42)
+          , externalsmodule::set<double>(87.0)
         )
     );
 
@@ -266,4 +262,3 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Basicexternalsctor, TInjector,
 } // namespace di
 } // namespace boost
 
-#endif
