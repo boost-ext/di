@@ -4,13 +4,14 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <boost/test/unit_test.hpp>
-#include <boost/test/test_case_template.hpp>
-#include <boost/mpl/vector.hpp>
-#include "mt/visitor.hpp"
-#include "boost/di.hpp"
-#include "data.hpp"
+/*#include <boost/test/unit_test.hpp>*/
+//#include <boost/test/test_case_template.hpp>
+//#include <boost/mpl/vector.hpp>
+//#include "mt/visitor.hpp"
+//#include "boost/di.hpp"
+/*#include "data.hpp"*/
 
+#if 0
 #define BOOST_AUTO_TEST_CASE_VARIADIC(test, type, ...) \
     typedef mpl::vector<__VA_ARGS__> test##types; BOOST_AUTO_TEST_CASE_TEMPLATE(test, type, test##types)
 
@@ -128,13 +129,13 @@ BOOST_AUTO(fusion_provider_module, front::fusion::module<>()(
     >()
 ));
 
-BOOST_AUTO_TEST_CASE_VARIADIC(Onemodule, injector,
+BOOST_AUTO_TEST_CASE_VARIADIC(Onemodule, TInjector,
     injector<basemodule1>,
     injector<BOOST_TYPEOF(fusionmodule1)>)
 {
-    injector inj;
+    TInjector injector;
 
-    shared_ptr<c8> c8_ = inj.template create< shared_ptr<c8> >();
+    shared_ptr<c8> c8_ = injector.template create< shared_ptr<c8> >();
 
     BOOST_CHECK(c8_->c1_ != c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -152,15 +153,15 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Onemodule, injector,
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE_VARIADIC(Manymodules, injector,
+BOOST_AUTO_TEST_CASE_VARIADIC(Manymodules, TInjector,
     injector<basemodule2, basemodule3>,
     injector<basemodule3, basemodule2>,
     injector<BOOST_TYPEOF(fusionmodule2), BOOST_TYPEOF(fusionmodule3)>,
     injector<BOOST_TYPEOF(fusionmodule3), BOOST_TYPEOF(fusionmodule2)>)
 {
-    injector inj;
+    TInjector injector;
 
-    shared_ptr<c8> c8_ = inj.template create< shared_ptr<c8> >();
+    shared_ptr<c8> c8_ = injector.template create< shared_ptr<c8> >();
 
     BOOST_CHECK(c8_->c1_ != c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -178,13 +179,13 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Manymodules, injector,
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE_VARIADIC(Mixmodules, injector,
+BOOST_AUTO_TEST_CASE_VARIADIC(Mixmodules, TInjector,
     injector<basemodule2, BOOST_TYPEOF(fusionmodule2)>,
     injector<BOOST_TYPEOF(fusionmodule2), basemodule2>)
 {
-    injector inj;
+    TInjector injector;
 
-    shared_ptr<c8> c8_ = inj.template create< shared_ptr<c8> >();
+    shared_ptr<c8> c8_ = injector.template create< shared_ptr<c8> >();
 
     BOOST_CHECK(c8_->c1_ != c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -202,20 +203,20 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Mixmodules, injector,
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE_VARIADIC(Basicprovider, injector,
+BOOST_AUTO_TEST_CASE_VARIADIC(Basicprovider, TInjector,
     injector<provider_module>,
     injector<BOOST_TYPEOF(fusion_provider_module)>)
 {
-    injector inj;
-    transaction_usage obj = inj.template create<transaction_usage>();
+    TInjector injector;
+    transaction_usage obj = injector.template create<transaction_usage>();
     BOOST_CHECK(obj.p->get().get() != obj.p->get().get());
 }
 
-BOOST_AUTO_TEST_CASE_VARIADIC(Basicvisitor, injector,
+BOOST_AUTO_TEST_CASE_VARIADIC(Basicvisitor, TInjector,
     injector<provider_module>,
     injector<BOOST_TYPEOF(fusion_provider_module)>)
 {
-    injector inj;
+    TInjector injector;
     visitor
     <
         vector
@@ -228,33 +229,33 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Basicvisitor, injector,
     >
     visitor;
 
-    inj.template visit<transaction_usage>(visitor);
+    injector.template visit<transaction_usage>(visitor);
 }
 
-BOOST_AUTO_TEST_CASE_VARIADIC(Basicexternals, injector,
+BOOST_AUTO_TEST_CASE_VARIADIC(Basicexternals, TInjector,
     injector<externalsmodule>)
 {
-    injector inj(
+    TInjector injector(
         externalsmodule(
             externalsmodule::set<int>(42),
             externalsmodule::set<double>(87.0)
         )
     );
 
-    shared_ptr<c9> c9_ = inj.template create< shared_ptr<c9> >();
+    shared_ptr<c9> c9_ = injector.template create< shared_ptr<c9> >();
 
     BOOST_CHECK_EQUAL(42, c9_->i);
     BOOST_CHECK_EQUAL(87.0, c9_->d);
 }
 
-BOOST_AUTO_TEST_CASE_VARIADIC(Basicexternalsctor, injector,
+BOOST_AUTO_TEST_CASE_VARIADIC(Basicexternalsctor, TInjector,
     injector<externalsmodulector>)
 {
-    injector inj(
+    TInjector injector(
         externalsmodulector(42, 87.0)
     );
 
-    shared_ptr<c9> c9_ = inj.template create< shared_ptr<c9> >();
+    shared_ptr<c9> c9_ = injector.template create< shared_ptr<c9> >();
 
     BOOST_CHECK_EQUAL(42, c9_->i);
     BOOST_CHECK_EQUAL(87.0, c9_->d);
@@ -265,3 +266,4 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Basicexternalsctor, injector,
 } // namespace di
 } // namespace boost
 
+#endif

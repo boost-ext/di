@@ -15,7 +15,8 @@ namespace di  = boost::di;
 class print_visitor
 {
 public:
-    template<typename T> void operator()() const
+    template<typename T>
+    void operator()() const
     {
         int size = mpl::size<typename T::context>::value;
         while(--size) {

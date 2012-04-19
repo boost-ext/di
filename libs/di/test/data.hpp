@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_TEST_COMMON_DATA_HPP
-#define BOOST_DI_TEST_COMMON_DATA_HPP
+#ifndef BOOST_DI_TEST_DATA_HPP
+#define BOOST_DI_TEST_DATA_HPP
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
@@ -94,11 +94,11 @@ struct c4
 
 struct c5
 {
-    BOOST_DI_CTOR(c5, shared_ptr<if0> if0, shared_ptr<c2> c2_, shared_ptr<c1> c1_)
-        : if0(if0), c2_(c2_), c1_(c1_)
+    BOOST_DI_CTOR(c5, shared_ptr<if0> if0_, shared_ptr<c2> c2_, shared_ptr<c1> c1_)
+        : if0_(if0_), c2_(c2_), c1_(c1_)
     { }
 
-    shared_ptr<if0> if0;
+    shared_ptr<if0> if0_;
     shared_ptr<c2> c2_;
     shared_ptr<c1> c1_;
 };
@@ -116,11 +116,11 @@ struct c6
 
 struct c7
 {
-    BOOST_DI_CTOR(c7, shared_ptr<if0> if0, shared_ptr<c6> c6_)
-        : if0(if0), c6_(c6_)
+    BOOST_DI_CTOR(c7, shared_ptr<if0> if0_, shared_ptr<c6> c6_)
+        : if0_(if0_), c6_(c6_)
     { }
 
-    shared_ptr<if0> if0;
+    shared_ptr<if0> if0_;
     shared_ptr<c6> c6_;
 };
 
@@ -168,27 +168,27 @@ struct c11
 
 struct c12
 {
-    BOOST_DI_CTOR(c12, named< shared_ptr<if0>, mpl::string<'1'> > if0, named< shared_ptr<c2>, _2> c2_)
-        : if0(if0), c2_(c2_)
+    BOOST_DI_CTOR(c12, named< shared_ptr<if0>, mpl::string<'1'> > if0_, named< shared_ptr<c2>, mpl::string<'2'> > c2_)
+        : if0_(if0_), c2_(c2_)
     { }
 
-    shared_ptr<if0> if0;
+    shared_ptr<if0> if0_;
     shared_ptr<c2> c2_;
 };
 
 struct c13
 {
-    BOOST_DI_CTOR(c13, named< shared_ptr<if0> > if0, c3 c3_)
-        : if0(if0), c3_(c3_)
+    BOOST_DI_CTOR(c13, named< shared_ptr<if0> > if0_, c3 c3_)
+        : if0_(if0_), c3_(c3_)
     { }
 
-    shared_ptr<if0> if0;
+    shared_ptr<if0> if0_;
     c3 c3_;
 };
 
-struct c14_
+struct c14
 {
-    c14_(int i, double d)
+    c14(int i, double d)
         : i(i), d(d)
     { }
 
@@ -259,7 +259,7 @@ struct transaction_usage
 } // namespace test
 
 template<>
-struct ctor_traits<test::common::c14>
+struct ctor_traits<test::c14>
 {
     static void ctor(int, double);
 };

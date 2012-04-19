@@ -7,7 +7,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include "di/back/detail/creator.hpp"
+#include "di/detail/creator.hpp"
 
 namespace di
 {
@@ -17,7 +17,6 @@ namespace detail
 {
 namespace ut
 {
-
 
 class Fakepool { };
 
