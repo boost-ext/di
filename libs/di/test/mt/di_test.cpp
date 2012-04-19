@@ -7,7 +7,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
 #include <boost/mpl/vector.hpp>
-#include "test/common/data.hpp"
+#include "data.hpp"
 #include "test/common/visitor.hpp"
 #include "boost/di.hpp"
 

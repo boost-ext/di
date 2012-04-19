@@ -10,7 +10,7 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include "di/back/policies/check_for_circular_dependencies.hpp"
-#include "test/common/data.hpp"
+#include "data.hpp"
 
 namespace di
 {

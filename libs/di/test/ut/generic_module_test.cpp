@@ -10,7 +10,7 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
 #include <boost/mpl/or.hpp>
-#include "test/common/data.hpp"
+#include "data.hpp"
 #include "di/back/aux/instance.hpp"
 #include "di/back/aux/dependency.hpp"
 #include "di/front/base/module.hpp"

@@ -10,10 +10,10 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
 #include <boost/mpl/or.hpp>
-#include "test/common/data.hpp"
 #include "di/back/aux/dependency.hpp"
 #include "di/front/fusion/module.hpp"
 #include "di/utility/named.hpp"
+#include "data.hpp"
 
 namespace di
 {

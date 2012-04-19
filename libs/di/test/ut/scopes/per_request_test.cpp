@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <boost/test/unit_test.hpp>
-#include "test/common/data.hpp"
+#include "data.hpp"
 #include "di/back/scopes/per_request.hpp"
 
 namespace di

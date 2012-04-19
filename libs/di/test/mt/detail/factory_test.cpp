@@ -11,7 +11,7 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/or.hpp>
-#include "test/common/data.hpp"
+#include "data.hpp"
 #include "boost/di/named.hpp"
 #include "boost/di/scopes/per_request.hpp"
 #include "boost/di/scopes/singleton.hpp"
