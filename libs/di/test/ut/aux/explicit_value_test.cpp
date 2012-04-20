@@ -12,7 +12,6 @@
 namespace boost {
 namespace di {
 namespace aux {
-namespace test {
 namespace ut {
 
 struct empty { };
@@ -51,7 +50,6 @@ BOOST_AUTO_TEST_CASE(explicit_value_has_value_type)
 }
 
 } // namespace ut
-} // namespace test
 } // namespace aux
 } // namespace di
 } // namespace boost

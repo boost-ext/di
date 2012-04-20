@@ -18,7 +18,6 @@
 
 namespace boost {
 namespace di {
-namespace test {
 namespace ut {
 
 struct value

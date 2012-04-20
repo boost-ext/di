@@ -13,7 +13,6 @@
 namespace boost {
 namespace di {
 namespace aux {
-namespace test {
 namespace ut {
 
 template<typename T, typename TName = void>
@@ -93,7 +92,6 @@ BOOST_AUTO_TEST_CASE(instance_context)
 }
 
 } // namespace ut
-} // namespace test
 } // namespace aux
 } // namespace di
 } // namespace boost

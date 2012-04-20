@@ -12,7 +12,6 @@
 
 namespace boost {
 namespace di {
-namespace test {
 namespace detail {
 namespace ut {
 
@@ -47,7 +46,6 @@ BOOST_AUTO_TEST_CASE(visitor_simple)
 
 } // namespace ut
 } // namespace detail
-} // namespace test
 } // namespace di
 } // namespace boost
 

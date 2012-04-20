@@ -15,7 +15,6 @@
 namespace boost {
 namespace di {
 namespace aux {
-namespace test {
 namespace ut {
 
 template<typename T, typename>
@@ -137,7 +136,6 @@ BOOST_AUTO_TEST_CASE(dependency_create_by_scope)
 }
 
 } // namespace ut
-} // namespace test
 } // namespace aux
 } // namespace di
 } // namespace boost

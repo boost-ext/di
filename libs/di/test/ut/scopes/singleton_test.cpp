@@ -10,7 +10,6 @@
 
 namespace boost {
 namespace di {
-namespace test {
 namespace scopes {
 namespace ut {
 
@@ -30,7 +29,6 @@ BOOST_AUTO_TEST_CASE(singleton_create_args)
 
 } // namespace ut
 } // namespace scopes
-} // namespace test
 } // namespace di
 } // namespace boost
 

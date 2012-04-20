@@ -11,7 +11,6 @@
 
 namespace boost {
 namespace di {
-namespace test {
 namespace ut {
 
 BOOST_AUTO_TEST_CASE(ctor_bracket_empty)
@@ -85,7 +84,6 @@ BOOST_AUTO_TEST_CASE(ctor_bracket_traits)
 }
 
 } // namespace ut
-} // namespace test
 } // namespace di
 } // namespace boost
 

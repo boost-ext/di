@@ -16,7 +16,6 @@
 
 namespace boost {
 namespace di {
-namespace test {
 namespace mt {
 
 typedef generic_module<
@@ -260,7 +259,6 @@ BOOST_AUTO_TEST_CASE_VARIADIC(basic_externals_ctor, TInjector,
 }
 
 } // namespace mt
-} // namespace test
 } // namespace di
 } // namespace boost
 

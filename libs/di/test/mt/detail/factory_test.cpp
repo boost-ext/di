@@ -22,7 +22,6 @@
 
 namespace boost {
 namespace di {
-namespace test {
 namespace mt {
 
 BOOST_AUTO_TEST_CASE(create_using_copy)
@@ -494,7 +493,6 @@ BOOST_AUTO_TEST_CASE(externals_create_with_attributes)
 #endif
 
 } // namespace mt
-} // namespace test
 } // namespace di
 } // namespace boost
 

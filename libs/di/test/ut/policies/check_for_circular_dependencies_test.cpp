@@ -14,7 +14,6 @@
 
 namespace boost {
 namespace di {
-namespace test {
 namespace policies {
 namespace ut {
 
@@ -59,7 +58,6 @@ BOOST_AUTO_TEST_CASE(in_direct)
 
 } // namespace ut
 } // namespace policies
-} // namespace test
 } // namespace di
 } // namespace boost
 

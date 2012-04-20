@@ -15,7 +15,6 @@
 namespace boost {
 namespace di {
 namespace detail {
-namespace test {
 namespace ut {
 
 template<
@@ -439,7 +438,6 @@ BOOST_AUTO_TEST_CASE(binder_named_type)
 
 } // namespace ut
 } // namespace detail
-} // namespace test
 } // namespace di
 } // namespace boost
 

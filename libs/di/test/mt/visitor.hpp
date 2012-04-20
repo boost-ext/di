@@ -19,7 +19,6 @@
 
 namespace boost {
 namespace di {
-namespace test {
 namespace mt {
 
 template<typename TSequence = mpl::vector0<> >
@@ -54,7 +53,6 @@ private:
 };
 
 } // namespace mt
-} // namespace test
 } // namespace di
 } // namespace boost
 

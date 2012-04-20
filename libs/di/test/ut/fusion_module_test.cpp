@@ -17,7 +17,6 @@
 
 namespace boost {
 namespace di {
-namespace test {
 namespace ut {
 
 BOOST_AUTO_TEST_CASE(fusion_module_empty)
@@ -68,7 +67,6 @@ BOOST_AUTO_TEST_CASE(fusion_module_mix)
 }
 
 } // namespace ut
-} // namespace test
 } // namespace di
 } // namespace boost
 

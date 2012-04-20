@@ -16,7 +16,6 @@
 
 namespace boost {
 namespace di {
-namespace test {
 
 class a { };
 class b { };
@@ -263,7 +262,6 @@ struct transaction_usage
     shared_ptr< provider< shared_ptr<transaction> > > p;
 };
 
-} // namespace test
 
 template<>
 struct ctor_traits<test::c14>
