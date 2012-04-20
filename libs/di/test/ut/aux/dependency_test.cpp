@@ -18,9 +18,12 @@ namespace aux {
 namespace test {
 namespace ut {
 
-template<typename T, typename> struct FakeResult { };
+template<typename T, typename>
+struct FakeResult
+{ };
 
-template<typename TSequence, int value = 0> struct Fakepool
+template<typename TSequence, int value = 0>
+struct Fakepool
 {
     typedef TSequence sequence;
 

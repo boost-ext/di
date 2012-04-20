@@ -19,11 +19,11 @@ namespace aux {
 namespace test {
 namespace ut {
 
-class A { };
+class a { };
 
-typedef mpl::vector<int, A> make_plainTypes;
+typedef mpl::vector<int, A> make_plain_t;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(make_plainType, T, make_plainTypes)
+BOOST_AUTO_TEST_CASE_TEMPLATE(make_plain_t, T, make_plain_t)
 {
     BOOST_CHECK((is_same<T, typename make_plain<T>::type>::value));
     BOOST_CHECK((is_same<T, typename make_plain<T*>::type>::value));

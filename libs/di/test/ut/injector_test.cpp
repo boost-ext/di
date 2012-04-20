@@ -15,36 +15,36 @@ namespace di {
 namespace test {
 namespace ut {
 
-class A { };
-class B { };
-class C { };
+class a { };
+class b { };
+class c { };
 
 struct fake_pool { };
 
-struct module : back::module
+struct module : aux::module
 {
     typedef fake_pool pool;
-    typedef mpl::vector<A, B, C> dependencies;
+    typedef mpl::vector<a, b, c> dependencies;
 
     const pool& get_pool() const { return pool_; }
     pool pool_;
 };
 
-BOOST_AUTO_TEST_CASE(ctorEmpty)
+BOOST_AUTO_TEST_CASE(ctor_empty)
 {
-    typedef injector<> Inj;
+    typedef injector<> injector_t;
 
-    Inj inj; //have to compile
-    (void)inj;
+    injector_t injector_; //have to compile
+    (void)injector;
 }
 
-BOOST_AUTO_TEST_CASE(Simplemodule)
+BOOST_AUTO_TEST_CASE(simple_module)
 {
-    typedef injector<module> Inj;
-    module module;
+    typedef injector<module> injector_t;
+    module module_;
 
-    Inj inj(module); //have to compile
-    (void)inj;
+    injector_t injector_(module_); //have to compile
+    (void)injector_;
 }
 
 } // namespace ut
