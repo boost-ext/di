@@ -7,13 +7,13 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_base_of.hpp>
-#include <boost/mpl/mpl::vector.hpp>
-#include <boost/mpl/mpl::equal.hpp>
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/equal.hpp>
 #include <boost/mpl/or.hpp>
 #include "boost/di/aux/instance.hpp"
-#include "boost/di/aux/aux::dependency.hpp"
+#include "boost/di/aux/dependency.hpp"
 #include "boost/di/named.hpp"
-#include "boost/di/module.hpp"
+#include "boost/di/generic_module.hpp"
 #include "data.hpp"
 
 namespace boost {

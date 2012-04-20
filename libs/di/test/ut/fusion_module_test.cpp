@@ -12,7 +12,7 @@
 #include <boost/mpl/or.hpp>
 #include "boost/di/aux/dependency.hpp"
 #include "boost/di/named.hpp"
-#include "boost/di/module.hpp"
+#include "boost/di/fusion_module.hpp"
 #include "data.hpp"
 
 namespace boost {
