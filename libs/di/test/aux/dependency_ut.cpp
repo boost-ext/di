@@ -15,7 +15,7 @@
 namespace boost {
 namespace di {
 namespace aux {
-namespace ut {
+namespace test {
 
 template<typename T, typename>
 struct fake_result
@@ -135,7 +135,7 @@ BOOST_AUTO_TEST_CASE(dependency_create_by_scope)
     BOOST_CHECK_EQUAL(i, *dependency_.create(pool_));
 }
 
-} // namespace ut
+} // namespace test
 } // namespace aux
 } // namespace di
 } // namespace boost

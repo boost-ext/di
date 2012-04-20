@@ -18,7 +18,7 @@
 
 namespace boost {
 namespace di {
-namespace ut {
+namespace test {
 
 struct value
 {
@@ -599,7 +599,7 @@ BOOST_AUTO_TEST_CASE(generic_module_ctor_with_externals_shared_ptr)
     BOOST_CHECK_EQUAL(i, get<shared_ptr<value> >(module_.get_pool().get< instance<value> >())->i);
 }
 
-} // namespace ut
+} // namespace test
 } // namespace base
 } // namespace front
 } // namespace di

@@ -11,7 +11,7 @@
 
 namespace boost {
 namespace di {
-namespace ut {
+namespace test {
 
 BOOST_AUTO_TEST_CASE(ctor_va_args_empty)
 {
@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_CASE(ctor_va_args_traits)
     BOOST_CHECK_EQUAL(d, c_.d);
 }
 
-} // namespace ut
+} // namespace test
 } // namespace di
 } // namespace boost
 

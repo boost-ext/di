@@ -17,7 +17,7 @@
 namespace boost {
 namespace di {
 namespace aux {
-namespace ut {
+namespace test {
 
 typedef mpl::vector<int, a> make_plain_t;
 
@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(utility_make_plain, T, make_plain_t)
     BOOST_CHECK((is_same<named<T, _1>, typename make_plain<const shared_ptr< named<const shared_ptr<T>&, _1> >&>::type>::value));
 }
 
-} // namespace ut
+} // namespace test
 } // namespace aux
 } // namespace di
 } // namespace boost

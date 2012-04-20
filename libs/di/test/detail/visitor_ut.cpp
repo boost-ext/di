@@ -13,7 +13,7 @@
 namespace boost {
 namespace di {
 namespace detail {
-namespace ut {
+namespace test {
 
 template<typename T>
 struct dependency
@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(visitor_simple)
     visitor< mpl::vector<dependency_t> >::execute<int, mpl::vector0<> >(visitor_mock);
 }
 
-} // namespace ut
+} // namespace test
 } // namespace detail
 } // namespace di
 } // namespace boost

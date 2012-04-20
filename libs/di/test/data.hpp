@@ -16,6 +16,7 @@
 
 namespace boost {
 namespace di {
+namespace test {
 
 class a { };
 class b { };
@@ -269,6 +270,7 @@ struct ctor_traits<test::c14>
     static void ctor(int, double);
 };
 
+} // namespace test
 } // namespace di
 } // namespace boost
 

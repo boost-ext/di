@@ -12,7 +12,7 @@
 namespace boost {
 namespace di {
 namespace detail {
-namespace ut {
+namespace test {
 
 class fake_pool { };
 
@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_CASE(creator_simple)
     ));
 }
 
-} // namespace ut
+} // namespace test
 } // namespace detail
 } // namespace di
 } // namespace boost

@@ -11,7 +11,7 @@
 namespace boost {
 namespace di {
 namespace scopes {
-namespace ut {
+namespace test {
 
 BOOST_AUTO_TEST_CASE(per_request_create)
 {
@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_CASE(per_request_create_args)
     BOOST_CHECK((per_request_.create<int, double, char>(0, 0.0, '0').get() != per_request_.create<int, double, char>(0, 0.0, '0').get()));
 }
 
-} // namespace ut
+} // namespace test
 } // namespace scopes
 } // namespace di
 } // namespace boost

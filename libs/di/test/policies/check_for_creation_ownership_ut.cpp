@@ -16,7 +16,7 @@
 namespace boost {
 namespace di {
 namespace policies {
-namespace ut {
+namespace test {
 
 BOOST_AUTO_TEST_CASE(creation_ownership_clear)
 {
@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE(creation_ownership_not_clear)
     BOOST_CHECK((is_base_of<mpl::false_, check_for_creation_ownership::verify<mpl::vector0<>, const int&>::type>::value));
 }
 
-} // namespace ut
+} // namespace test
 } // namespace policies
 } // namespace di
 } // namespace boost

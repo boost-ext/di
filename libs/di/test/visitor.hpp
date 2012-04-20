@@ -19,7 +19,7 @@
 
 namespace boost {
 namespace di {
-namespace mt {
+namespace test {
 
 template<typename TSequence = mpl::vector0<> >
 class visitor
@@ -52,7 +52,7 @@ private:
     mutable visits_t visits;
 };
 
-} // namespace mt
+} // namespace test
 } // namespace di
 } // namespace boost
 
