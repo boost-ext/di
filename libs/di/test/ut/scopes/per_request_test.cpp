@@ -10,9 +10,9 @@
 
 namespace boost {
 namespace di {
-namespace scopes {
 namespace test {
 namespace ut {
+namespace scopes {
 
 BOOST_AUTO_TEST_CASE(per_requestCreate)
 {

@@ -39,3 +39,39 @@ __ ../../../../index.htm
  Motivation
 ============
 
+============
+ Factory vs Dependency Injection Framework
+============
+Seperate creation/instantiation | Business logic
+    -> Factories
+        writing factories is tedious
+            - boilerplate code
+            - circular dependecies
+            - scopes (singleton by value)
+        more up front checking
+        -> Dependency injection framework
+
+============
+ Features
+============
+    * injection via constructor
+    * configuration via front ends (base, fusion)
+    * binding via interface/implementation
+    * binding via is_base_of (smart binding)
+    * binding via call_stack (path binding)
+    * binding via external objects
+    * binding via named parameters
+    * providers
+    * scopes (per_request, singleton, session, custom scope)
+    * modules
+    * visitors
+    * policies (ex. circular dependencies detection)
+    * compile time approach (supports C++98, C++11)
+
+============
+ Supported Compilers
+============
+    * gcc   >= 4.3
+    * clang >= 3.0
+    * msvc
+

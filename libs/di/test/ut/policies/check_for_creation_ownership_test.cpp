@@ -15,21 +15,22 @@
 
 namespace boost {
 namespace di {
+namespace policies {
 namespace test {
 namespace ut {
 
-BOOST_AUTO_TEST_CASE(ClearCreationOwnership)
+BOOST_AUTO_TEST_CASE(creation_ownership_clear)
 {
-    BOOST_CHECK((is_base_of<mpl::true_, check_for_creation_ownership::verify<vector0<>, int>::type>::value));
-    BOOST_CHECK((is_base_of<mpl::true_, check_for_creation_ownership::verify<vector0<>, int*>::type>::value));
-    BOOST_CHECK((is_base_of<mpl::true_, check_for_creation_ownership::verify<vector0<>, const int*>::type>::value));
-    BOOST_CHECK((is_base_of<mpl::true_, check_for_creation_ownership::verify<vector0<>, shared_ptr<int> >::type>::value));
+    BOOST_CHECK((is_base_of<mpl::true_, policies::check_for_creation_ownership::verify<mpl::vector0<>, int>::type>::value));
+    BOOST_CHECK((is_base_of<mpl::true_, policies::check_for_creation_ownership::verify<mpl::vector0<>, int*>::type>::value));
+    BOOST_CHECK((is_base_of<mpl::true_, policies::check_for_creation_ownership::verify<mpl::vector0<>, const int*>::type>::value));
+    BOOST_CHECK((is_base_of<mpl::true_, policies::check_for_creation_ownership::verify<mpl::vector0<>, shared_ptr<int> >::type>::value));
 }
 
-BOOST_AUTO_TEST_CASE(NotClearCreationOwnership)
+BOOST_AUTO_TEST_CASE(creation_ownership_not_clear)
 {
-    BOOST_CHECK((is_base_of<mpl::false_, check_for_creation_ownership::verify<vector0<>, int&>::type>::value));
-    BOOST_CHECK((is_base_of<mpl::false_, check_for_creation_ownership::verify<vector0<>, const int&>::type>::value));
+    BOOST_CHECK((is_base_of<mpl::false_, policies::check_for_creation_ownership::verify<mpl::vector0<>, int&>::type>::value));
+    BOOST_CHECK((is_base_of<mpl::false_, policies::check_for_creation_ownership::verify<mpl::vector0<>, const int&>::type>::value));
 }
 
 } // namespace ut
