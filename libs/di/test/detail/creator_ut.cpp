@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <boost/test/unit_test.hpp>
-#include <boost/mpl/mpl::vector.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include "boost/di/detail/creator.hpp"
 
@@ -23,7 +23,7 @@ struct dependency
     typedef T expected;
     typedef mpl::vector0<> context;
     typedef void scope;
-    typedef is_same<_1, T> bind;
+    typedef is_same<mpl::_1, T> bind;
     typedef mpl::vector0<> ctor;
 
     template<typename TPool>

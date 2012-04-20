@@ -7,7 +7,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_base_of.hpp>
-#include <boost/mpl/mpl::vector.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
 #include <boost/mpl/or.hpp>
 #include "boost/di/aux/dependency.hpp"
@@ -25,13 +25,13 @@ BOOST_AUTO_TEST_CASE(fusion_module_empty)
     typedef BOOST_TYPEOF(module) module_t;
 
     BOOST_CHECK((
-        equal<
+        mpl::equal<
             mpl::vector0<>
           , module_t::dependencies
         >::value
     ));
 
-    BOOST_CHECK((equal<mpl::vector0<>, module_t::pool::sequence>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector0<>, module_t::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_mix)
@@ -52,14 +52,14 @@ BOOST_AUTO_TEST_CASE(fusion_module_mix)
     typedef BOOST_TYPEOF(module) module_t;
 
     BOOST_CHECK((
-        equal<
+        mpl::equal<
             mpl::vector<
-                dependency<back::scopes::singleton, if0, c0if0, mpl::vector0<>, is_same<mpl::_1, if0> >,
-              , dependency<back::scopes::singleton, c1, c1, mpl::vector0<>, mpl::or_< is_base_of<mpl::_1, c1>, is_same<mpl::_1, c1> > >
-              , dependency<back::scopes::singleton, named<c2, int>, c2, mpl::vector0<>, mpl::or_< is_base_of<mpl::_1, named<c2, int> >, is_same<mpl::_1, named<c2, int> > > >
-              , dependency<back::scopes::singleton, c3, c3, mpl::vector<c4, c5>, mpl::or_< is_base_of<mpl::_1, c3>, is_same<mpl::_1, c3> > >
-              , dependency<back::scopes::per_request, c6, c6, mpl::vector0<>, mpl::or_< is_base_of<mpl::_1, c6>, is_same<mpl::_1, c6> > >
-              , dependency<back::scopes::singleton, named<c7, double>, c7, mpl::vector<c1>, mpl::or_< is_base_of<mpl::_1, named<c7, double> >, is_same<mpl::_1, named<c7, double> > > >
+                aux::dependency<scopes::singleton, if0, c0if0, mpl::vector0<>, is_same<mpl::_1, if0> >
+              , aux::dependency<scopes::singleton, c1, c1, mpl::vector0<>, mpl::or_< is_base_of<mpl::_1, c1>, is_same<mpl::_1, c1> > >
+              , aux::dependency<scopes::singleton, named<c2, int>, c2, mpl::vector0<>, mpl::or_< is_base_of<mpl::_1, named<c2, int> >, is_same<mpl::_1, named<c2, int> > > >
+              , aux::dependency<scopes::singleton, c3, c3, mpl::vector<c4, c5>, mpl::or_< is_base_of<mpl::_1, c3>, is_same<mpl::_1, c3> > >
+              , aux::dependency<scopes::per_request, c6, c6, mpl::vector0<>, mpl::or_< is_base_of<mpl::_1, c6>, is_same<mpl::_1, c6> > >
+              , aux::dependency<scopes::singleton, named<c7, double>, c7, mpl::vector<c1>, mpl::or_< is_base_of<mpl::_1, named<c7, double> >, is_same<mpl::_1, named<c7, double> > > >
             >
           , module_t::dependencies
         >::value

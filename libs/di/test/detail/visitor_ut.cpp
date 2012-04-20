@@ -22,7 +22,7 @@ struct dependency
     typedef T expected;
     typedef mpl::vector0<> context;
     typedef void scope;
-    typedef is_same<_1, T> bind;
+    typedef is_same<mpl::_1, T> bind;
     typedef mpl::vector0<> ctor;
 };
 

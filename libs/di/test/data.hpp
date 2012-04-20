@@ -16,7 +16,7 @@
 
 namespace boost {
 namespace di {
-namespace test {
+//namespace test {
 
 class a { };
 class b { };
@@ -265,12 +265,12 @@ struct transaction_usage
 
 
 template<>
-struct ctor_traits<test::c14>
+struct ctor_traits<c14>
 {
     static void ctor(int, double);
 };
 
-} // namespace test
+//} // namespace test
 } // namespace di
 } // namespace boost
 

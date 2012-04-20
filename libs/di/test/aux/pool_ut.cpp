@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE(pool_empty)
 
     pool_t pool_;
 
-    BOOST_CHECK((equal<mpl::vector0<>, pool_t::sequence>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector0<>, pool_t::sequence>::value));
     (void)pool_;
 }
 
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE(pool_ctor_order)
 
     pool_t pool_(default_ctor_, trivial_ctor_);
 
-    BOOST_CHECK((equal<mpl::vector<trivial_ctor, default_ctor>, pool_t::sequence>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector<trivial_ctor, default_ctor>, pool_t::sequence>::value));
     (void)pool_;
 }
 
@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(pool_ctor_order_reverse)
 
     pool_t pool_(trivial_ctor_, default_ctor_);
 
-    BOOST_CHECK((equal<mpl::vector<trivial_ctor, default_ctor>, pool_t::sequence>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector<trivial_ctor, default_ctor>, pool_t::sequence>::value));
     (void)pool_;
 }
 
@@ -92,11 +92,14 @@ BOOST_AUTO_TEST_CASE(pool_of_pools)
     default_ctor_t default_ctor_(new default_ctor);
     trivial_ctor_t trivial_ctor_(new trivial_ctor);
 
-    pool_t pool_(pool_1_t(default_ctor_), pool_2_t(trivial_ctor_));
+    pool_1_t pool_1_(default_ctor_);
+    pool_2_t pool_2_(trivial_ctor_);
+
+    pool_t pool_(pool_1_, pool_2_);
 
     BOOST_CHECK_EQUAL(trivial_ctor_.get(), pool_.get<trivial_ctor_t>());
     BOOST_CHECK_EQUAL(default_ctor_.get(), pool_.get<default_ctor_t>());
-    BOOST_CHECK((equal<mpl::vector<default_ctor_t, trivial_ctor_t>, pool_t::sequence>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector<default_ctor_t, trivial_ctor_t>, pool_t::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(pool_get)

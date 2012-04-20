@@ -30,15 +30,15 @@ BOOST_AUTO_TEST_CASE(explicit_value_generic)
 BOOST_AUTO_TEST_CASE(explicit_value_mpl_int)
 {
     const int i = 42;
-    BOOST_CHECK((explicit_value<int_<0> >::value));
-    BOOST_CHECK_EQUAL(i, explicit_value<int_<i> >::create());
+    BOOST_CHECK((explicit_value<mpl::int_<0> >::value));
+    BOOST_CHECK_EQUAL(i, explicit_value<mpl::int_<i> >::create());
 }
 
 BOOST_AUTO_TEST_CASE(explicit_value_mpl_string)
 {
     const std::string s = "s";
-    BOOST_CHECK((explicit_value<string<'s'> >::value));
-    BOOST_CHECK_EQUAL(s, explicit_value<string<'s'> >::create());
+    BOOST_CHECK((explicit_value<mpl::string<'s'> >::value));
+    BOOST_CHECK_EQUAL(s, explicit_value<mpl::string<'s'> >::create());
 }
 
 BOOST_AUTO_TEST_CASE(explicit_value_has_value_type)

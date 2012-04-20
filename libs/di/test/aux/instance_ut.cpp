@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE(instance_string_with_value_type)
 BOOST_AUTO_TEST_CASE(instance_variant_ref)
 {
     c c_;
-    c& c_ref_ = get<C&>(instance<c>(c_).get());
+    c& c_ref_ = get<c&>(instance<c>(c_).get());
     BOOST_CHECK_EQUAL(&c_, &c_ref_);
 }
 

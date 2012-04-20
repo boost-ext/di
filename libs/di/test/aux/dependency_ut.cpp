@@ -6,7 +6,7 @@
 //
 #include <boost/test/unit_test.hpp>
 #include <boost/make_shared.hpp>
-#include <boost/mpl/mpl::vector.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include "boost/di/aux/instance.hpp"
@@ -120,7 +120,7 @@ BOOST_AUTO_TEST_CASE(dependency_create_by_pool)
 BOOST_AUTO_TEST_CASE(dependency_create_by_value)
 {
     const int i = 42;
-    dependency< fake_scope<>, int, int_<i> > dependency_;
+    dependency< fake_scope<>, int, mpl::int_<i> > dependency_;
     fake_pool< mpl::vector0<> > pool_;
 
     BOOST_CHECK_EQUAL(i, dependency_.create(pool_));

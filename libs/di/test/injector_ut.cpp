@@ -9,6 +9,7 @@
 #include <boost/mpl/equal.hpp>
 #include "boost/di/aux/utility.hpp"
 #include "boost/di/injector.hpp"
+#include "data.hpp"
 
 namespace boost {
 namespace di {
@@ -30,7 +31,7 @@ BOOST_AUTO_TEST_CASE(injector_ctor_empty)
     typedef injector<> injector_t;
 
     injector_t injector_; //have to compile
-    (void)injector;
+    (void)injector_;
 }
 
 BOOST_AUTO_TEST_CASE(injector_simple_module)
