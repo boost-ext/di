@@ -30,7 +30,7 @@ struct module : aux::module
     pool pool_;
 };
 
-BOOST_AUTO_TEST_CASE(ctor_empty)
+BOOST_AUTO_TEST_CASE(injector_ctor_empty)
 {
     typedef injector<> injector_t;
 
@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE(ctor_empty)
     (void)injector;
 }
 
-BOOST_AUTO_TEST_CASE(simple_module)
+BOOST_AUTO_TEST_CASE(injector_simple_module)
 {
     typedef injector<module> injector_t;
     module module_;

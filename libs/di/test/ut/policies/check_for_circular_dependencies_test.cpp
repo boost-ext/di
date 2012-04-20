@@ -14,8 +14,8 @@
 
 namespace boost {
 namespace di {
-namespace policies {
 namespace test {
+namespace policies {
 namespace ut {
 
 BOOST_AUTO_TEST_CASE(no_circular_dependencies)
@@ -25,7 +25,7 @@ BOOST_AUTO_TEST_CASE(no_circular_dependencies)
             mpl::false_
           , check_for_circular_dependencies::verify<
                 mpl::vector0<>
-             ,  c8
+              , c8
             >::type
          >::value
     ));
@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(direct)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(in_directo)
+BOOST_AUTO_TEST_CASE(in_direct)
 {
     BOOST_CHECK((
         is_base_of<
@@ -58,8 +58,8 @@ BOOST_AUTO_TEST_CASE(in_directo)
 }
 
 } // namespace ut
-} // namespace test
 } // namespace policies
+} // namespace test
 } // namespace di
 } // namespace boost
 

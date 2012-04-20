@@ -15,8 +15,8 @@
 
 namespace boost {
 namespace di {
-namespace policies {
 namespace test {
+namespace policies {
 namespace ut {
 
 BOOST_AUTO_TEST_CASE(creation_ownership_clear)
@@ -34,8 +34,8 @@ BOOST_AUTO_TEST_CASE(creation_ownership_not_clear)
 }
 
 } // namespace ut
-} // namespace test
 } // namespace policies
+} // namespace test
 } // namespace di
 } // namespace boost
 

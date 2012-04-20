@@ -14,7 +14,7 @@ namespace di {
 namespace test {
 namespace ut {
 
-BOOST_AUTO_TEST_CASE(va_args_ctor_empty)
+BOOST_AUTO_TEST_CASE(ctor_va_args_empty)
 {
     struct c
     {
@@ -23,7 +23,7 @@ BOOST_AUTO_TEST_CASE(va_args_ctor_empty)
     };
 }
 
-BOOST_AUTO_TEST_CASE(va_args_ctor_explicit_with_default)
+BOOST_AUTO_TEST_CASE(ctor_va_args_explicit_with_default)
 {
     struct c
     {
@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE(va_args_ctor_explicit_with_default)
     BOOST_CHECK_EQUAL(static_cast<int>(c::DEFAULT), c_.i);
 }
 
-BOOST_AUTO_TEST_CASE(va_args_ctor_params)
+BOOST_AUTO_TEST_CASE(ctor_va_args_params)
 {
     struct c
     {
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(va_args_ctor_params)
     BOOST_CHECK_EQUAL(d, c_.d);
 }
 
-BOOST_AUTO_TEST_CASE(va_args_ctor_traits)
+BOOST_AUTO_TEST_CASE(ctor_va_args_traits)
 {
     const int i = 1;
     const double d = 2.0;

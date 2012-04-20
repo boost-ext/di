@@ -11,26 +11,26 @@
 namespace boost {
 namespace di {
 namespace test {
-namespace ut {
 namespace scopes {
+namespace ut {
 
-BOOST_AUTO_TEST_CASE(per_requestCreate)
+BOOST_AUTO_TEST_CASE(per_request_create)
 {
-    per_request::scope<int> pr;
+    per_request::scope<int> per_request_;
 
-    BOOST_CHECK((pr.create().get() != pr.create().get()));
+    BOOST_CHECK((per_request_.create().get() != per_request_.create().get()));
 }
 
-BOOST_AUTO_TEST_CASE(per_requestCreateArgs)
+BOOST_AUTO_TEST_CASE(per_request_create_args)
 {
-    per_request::scope<c2> pr;
+    per_request::scope<c2> per_request_;
 
-    BOOST_CHECK((pr.create<int, double, char>(0, 0.0, '0').get() != pr.create<int, double, char>(0, 0.0, '0').get()));
+    BOOST_CHECK((per_request_.create<int, double, char>(0, 0.0, '0').get() != per_request_.create<int, double, char>(0, 0.0, '0').get()));
 }
 
 } // namespace ut
-} // namespace test
 } // namespace scopes
+} // namespace test
 } // namespace di
 } // namespace boost
 

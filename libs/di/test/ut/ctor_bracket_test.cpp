@@ -14,7 +14,7 @@ namespace di {
 namespace test {
 namespace ut {
 
-BOOST_AUTO_TEST_CASE(bracket_ctor_empty)
+BOOST_AUTO_TEST_CASE(ctor_bracket_empty)
 {
     struct c
     {
@@ -22,7 +22,7 @@ BOOST_AUTO_TEST_CASE(bracket_ctor_empty)
     };
 }
 
-BOOST_AUTO_TEST_CASE(bracket_ctor_explicit_with_default)
+BOOST_AUTO_TEST_CASE(ctor_bracket_explicit_with_default)
 {
     struct c
     {
@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(bracket_ctor_explicit_with_default)
     BOOST_CHECK_EQUAL(static_cast<int>(c::DEFAULT), c_.i);
 }
 
-BOOST_AUTO_TEST_CASE(bracket_ctor_params)
+BOOST_AUTO_TEST_CASE(ctor_bracket_params)
 {
     const int i = 1;
     const double d = 2.0;
@@ -61,7 +61,7 @@ BOOST_AUTO_TEST_CASE(bracket_ctor_params)
     BOOST_CHECK_EQUAL(d, c_.d);
 }
 
-BOOST_AUTO_TEST_CASE(bracket_ctor_traits)
+BOOST_AUTO_TEST_CASE(ctor_bracket_traits)
 {
     const int i = 1;
     const double d = 2.0;
