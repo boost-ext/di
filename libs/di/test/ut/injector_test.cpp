@@ -15,10 +15,6 @@ namespace di {
 namespace test {
 namespace ut {
 
-class a { };
-class b { };
-class c { };
-
 struct fake_pool { };
 
 struct module : aux::module

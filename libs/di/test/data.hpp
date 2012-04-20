@@ -18,6 +18,13 @@ namespace boost {
 namespace di {
 namespace test {
 
+class a { };
+class b { };
+class c
+{
+    int dummy;
+};
+
 struct if0
 {
     virtual ~if0() { }

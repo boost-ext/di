@@ -12,6 +12,7 @@
 #include <boost/type_traits/is_same.hpp>
 #include "boost/di/named.hpp"
 #include "boost/di/aux/utility.hpp"
+#include "data.hpp"
 
 namespace boost {
 namespace di {
@@ -19,11 +20,9 @@ namespace aux {
 namespace test {
 namespace ut {
 
-class a { };
+typedef mpl::vector<int, a> make_plain_t;
 
-typedef mpl::vector<int, A> make_plain_t;
-
-BOOST_AUTO_TEST_CASE_TEMPLATE(make_plain_t, T, make_plain_t)
+BOOST_AUTO_TEST_CASE_TEMPLATE(utility_make_plain, T, make_plain_t)
 {
     BOOST_CHECK((is_same<T, typename make_plain<T>::type>::value));
     BOOST_CHECK((is_same<T, typename make_plain<T*>::type>::value));

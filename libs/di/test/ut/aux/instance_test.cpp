@@ -8,19 +8,13 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include "boost/di/aux/instance.hpp"
+#include "data.hpp"
 
 namespace boost {
 namespace di {
 namespace aux {
 namespace test {
 namespace ut {
-
-class A { };
-class B { };
-class C
-{
-    int dummy;
-};
 
 template<typename T, typename TName = void>
 struct named
@@ -34,68 +28,68 @@ struct named
     T i;
 };
 
-BOOST_AUTO_TEST_CASE(instancePodvalue)
+BOOST_AUTO_TEST_CASE(instance_pod_value)
 {
     const int i = 42;
     BOOST_CHECK_EQUAL(i, instance<int>(i).get());
 }
 
-BOOST_AUTO_TEST_CASE(instancePodwithvalue_type)
+BOOST_AUTO_TEST_CASE(instance_pod_with_value_type)
 {
     const int i = 42;
     BOOST_CHECK_EQUAL(i, instance<named<int> >(i).get());
 }
 
-BOOST_AUTO_TEST_CASE(instanceStringvalue)
+BOOST_AUTO_TEST_CASE(instance_string_value)
 {
     const std::string s = "string";
     BOOST_CHECK_EQUAL(s, instance<std::string>(s).get());
 }
 
-BOOST_AUTO_TEST_CASE(instanceStringwithvalue_type)
+BOOST_AUTO_TEST_CASE(instance_string_with_value_type)
 {
     const std::string s = "string";
     BOOST_CHECK_EQUAL(s, instance<named<std::string> >(s).get());
 }
 
-BOOST_AUTO_TEST_CASE(instanceVariantRef)
+BOOST_AUTO_TEST_CASE(instance_variant_ref)
 {
-    C c;
-    C& ref = get<C&>(instance<C>(c).get());
-    BOOST_CHECK_EQUAL(&c, &ref);
+    c c_;
+    c& c_ref_ = get<C&>(instance<c>(c_).get());
+    BOOST_CHECK_EQUAL(&c_, &c_ref_);
 }
 
-BOOST_AUTO_TEST_CASE(instanceVariantConstRef)
+BOOST_AUTO_TEST_CASE(instance_variant_const_ref)
 {
-    C c;
-    const C& constRef = get<const C&>(instance<C>(c).get());
-    BOOST_CHECK_EQUAL(&c, &constRef);
+    c c_;
+    const c& const_c_ref_ = get<const c&>(instance<c>(c_).get());
+    BOOST_CHECK_EQUAL(&c_, &const_c_ref_);
 }
 
-BOOST_AUTO_TEST_CASE(instanceVariantSharedPtr)
+BOOST_AUTO_TEST_CASE(instance_variant_shared_ptr)
 {
-    shared_ptr<C> c(new C);
-    BOOST_CHECK_EQUAL(c, get<shared_ptr<C> >(instance<C>(c).get()));
+    shared_ptr<c> c_(new c);
+    BOOST_CHECK_EQUAL(c_, get<shared_ptr<c> >(instance<c>(c_).get()));
 }
 
-BOOST_AUTO_TEST_CASE(instancenamed)
+BOOST_AUTO_TEST_CASE(instance_named)
 {
-    typedef named<shared_ptr<int>, A> c1__t;
-    typedef named<shared_ptr<int>, B> c2__t;
+    typedef named<shared_ptr<int>, a> c1_t;
+    typedef named<shared_ptr<int>, b> c2_t;
 
-    shared_ptr<c1__t> c1_(new c1__t(make_shared<int>(42)));
-    shared_ptr<c2__t> c2_(new c2__t(make_shared<int>(87)));
+    shared_ptr<c1_t> c1_(new c1_t(make_shared<int>(42)));
+    shared_ptr<c2_t> c2_(new c2_t(make_shared<int>(87)));
 
-    BOOST_CHECK((*get<shared_ptr<c1__t> >(instance<c1__t>(c1_).get())->i != *get<shared_ptr<c2__t> >(instance<c2__t>(c2_).get())->i));
+    BOOST_CHECK((*get<shared_ptr<c1_t> >(instance<c1_t>(c1_).get())->i != *get<shared_ptr<c2_t> >(instance<c2_t>(c2_).get())->i));
 }
 
-BOOST_AUTO_TEST_CASE(instancecontext)
+BOOST_AUTO_TEST_CASE(instance_context)
 {
-    shared_ptr<C> c1_(new C);
-    shared_ptr<C> c2_(new C);
+    shared_ptr<c> c1_(new c);
+    shared_ptr<c> c2_(new c);
 
-    BOOST_CHECK((instance<int, A>(87).get() != instance<int, B>(42).get()));
-    BOOST_CHECK((get<shared_ptr<C> >(instance<C, A>(c1_).get()) != get<shared_ptr<C> >(instance<C, B>(c2_).get())));
+    BOOST_CHECK((instance<int, a>(87).get() != instance<int, b>(42).get()));
+    BOOST_CHECK((get<shared_ptr<c> >(instance<c, a>(c1_).get()) != get<shared_ptr<c> >(instance<c, b>(c2_).get())));
 }
 
 } // namespace ut

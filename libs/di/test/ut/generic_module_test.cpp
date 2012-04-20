@@ -21,9 +21,6 @@ namespace di {
 namespace test {
 namespace ut {
 
-class a { };
-class b { };
-
 struct value
 {
     explicit value(int i)

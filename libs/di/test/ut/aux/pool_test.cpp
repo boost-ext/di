@@ -16,11 +16,11 @@ namespace test {
 namespace ut {
 
 template<typename T>
-struct Allocator
+struct allocator
 {
     typedef shared_ptr<T> result_type;
 
-    Allocator(T* object) // non explicit
+    allocator(T* object) // non explicit
         : object(object)
     { }
 
@@ -32,92 +32,90 @@ struct Allocator
     shared_ptr<T> object;
 };
 
-struct Trivialctor
+struct trivial_ctor
 {
-    typedef Trivialctor result_type;
+    typedef trivial_ctor result_type;
 };
 
-struct Defaultctor
+struct default_ctor
 {
-    typedef Defaultctor result_type;
-    explicit Defaultctor(int = 0) { }
+    typedef default_ctor result_type;
+    explicit default_ctor(int = 0) { }
 };
 
-struct Customctor
+struct custom_ctor
 {
-    typedef Customctor result_type;
-    explicit Customctor(int) { }
+    typedef custom_ctor result_type;
+    explicit custom_ctor(int) { }
 };
 
-BOOST_AUTO_TEST_CASE(poolEmpty)
+BOOST_AUTO_TEST_CASE(pool_empty)
 {
-    typedef pool< vector0<> > pool_type;
+    typedef pool< mpl::vector0<> > pool_t;
 
-    pool_type pool;
+    pool_t pool_;
 
-    BOOST_CHECK((equal<vector0<>, pool_type::sequence>::value));
-    (void)pool;
+    BOOST_CHECK((equal<mpl::vector0<>, pool_t::sequence>::value));
+    (void)pool_;
 }
 
-BOOST_AUTO_TEST_CASE(poolctorOrder)
+BOOST_AUTO_TEST_CASE(pool_ctor_order)
 {
-    typedef pool< vector<Trivialctor, Defaultctor> > pool_type;
-    Defaultctor defaultctor;
-    Trivialctor trivialctor;
+    typedef pool< mpl::vector<trivial_ctor, default_ctor> > pool_t;
+    default_ctor default_ctor_;
+    trivial_ctor trivial_ctor_;
 
-    pool_type pool(defaultctor, trivialctor);
+    pool_t pool_(default_ctor_, trivial_ctor_);
 
-    BOOST_CHECK((equal<vector<Trivialctor, Defaultctor>, pool_type::sequence>::value));
-    (void)pool;
+    BOOST_CHECK((equal<mpl::vector<trivial_ctor, default_ctor>, pool_t::sequence>::value));
+    (void)pool_;
 }
 
-BOOST_AUTO_TEST_CASE(poolctorOrderReverse)
+BOOST_AUTO_TEST_CASE(pool_ctor_order_reverse)
 {
-    typedef pool< vector<Trivialctor, Defaultctor> > pool_type;
-    Defaultctor defaultctor;
-    Trivialctor trivialctor;
+    typedef pool< mpl::vector<trivial_ctor, default_ctor> > pool_t;
+    default_ctor default_ctor_;
+    trivial_ctor trivial_ctor_;
 
-    pool_type pool(trivialctor, defaultctor);
+    pool_t pool_(trivial_ctor_, default_ctor_);
 
-    BOOST_CHECK((equal<vector<Trivialctor, Defaultctor>, pool_type::sequence>::value));
-    (void)pool;
+    BOOST_CHECK((equal<mpl::vector<trivial_ctor, default_ctor>, pool_t::sequence>::value));
+    (void)pool_;
 }
 
-BOOST_AUTO_TEST_CASE(poolOfpools)
+BOOST_AUTO_TEST_CASE(pool_of_pools)
 {
-    typedef Allocator<Trivialctor> TrivialctorType;
-    typedef Allocator<Defaultctor> DefaultctorType;
-    typedef pool< vector<DefaultctorType> > pool_type_1;
-    typedef pool< vector<TrivialctorType> > pool_type_2;
-    typedef pool< vector<pool_type_1, pool_type_2> > pool_type;
-    DefaultctorType defaultctor(new Defaultctor);
-    TrivialctorType trivialctor(new Trivialctor);
+    typedef allocator<trivial_ctor> trivial_ctor_t;
+    typedef allocator<default_ctor> default_ctor_t;
+    typedef pool< mpl::vector<default_ctor_t> > pool_1_t;
+    typedef pool< mpl::vector<trivial_ctor_t> > pool_2_t;
+    typedef pool< mpl::vector<pool_1_t, pool_2_t> > pool_t;
+    default_ctor_t default_ctor_(new default_ctor);
+    trivial_ctor_t trivial_ctor_(new trivial_ctor);
 
-    pool_type_1 pool_1(defaultctor);
-    pool_type_2 pool_2(trivialctor);
-    pool_type pool(pool_1, pool_2);
+    pool_t pool_(pool_1_t(default_ctor_), pool_2_t(trivial_ctor_));
 
-    BOOST_CHECK_EQUAL(trivialctor.get(), pool.get<TrivialctorType>());
-    BOOST_CHECK_EQUAL(defaultctor.get(), pool.get<DefaultctorType>());
-    BOOST_CHECK((equal<vector<DefaultctorType, TrivialctorType>, pool_type::sequence>::value));
+    BOOST_CHECK_EQUAL(trivial_ctor_.get(), pool_.get<trivial_ctor_t>());
+    BOOST_CHECK_EQUAL(default_ctor_.get(), pool_.get<default_ctor_t>());
+    BOOST_CHECK((equal<mpl::vector<default_ctor_t, trivial_ctor_t>, pool_t::sequence>::value));
 }
 
-BOOST_AUTO_TEST_CASE(poolGet)
+BOOST_AUTO_TEST_CASE(pool_get)
 {
-    typedef Allocator<Customctor> CustomctorType;
-    typedef Allocator<Trivialctor> TrivialctorType;
-    typedef Allocator<Defaultctor> DefaultctorType;
-    typedef pool< vector<TrivialctorType, DefaultctorType, CustomctorType> > pool_type;
+    typedef allocator<custom_ctor> custom_ctor_t;
+    typedef allocator<trivial_ctor> trivial_ctor_t;
+    typedef allocator<default_ctor> default_ctor_t;
+    typedef pool< mpl::vector<trivial_ctor_t, default_ctor_t, custom_ctor_t> > pool_t;
 
-    CustomctorType customctor(new Customctor(0));
-    TrivialctorType trivialctor(new Trivialctor);
-    DefaultctorType defaultctor(new Defaultctor);
+    custom_ctor_t custom_ctor_(new custom_ctor(0));
+    trivial_ctor_t trivial_ctor_(new trivial_ctor);
+    default_ctor_t default_ctor_(new default_ctor);
 
-    pool_type pool(customctor, trivialctor, defaultctor);
+    pool_t pool_(custom_ctor_, trivial_ctor_, default_ctor_);
 
-    BOOST_CHECK_EQUAL(trivialctor.get(), pool.get<TrivialctorType>());
-    BOOST_CHECK_EQUAL(customctor.get(), pool.get<CustomctorType>());
-    BOOST_CHECK_EQUAL(defaultctor.get(), pool.get<DefaultctorType>());
+    BOOST_CHECK_EQUAL(trivial_ctor_.get(), pool_.get<trivial_ctor_t>());
+    BOOST_CHECK_EQUAL(custom_ctor_.get(), pool_.get<custom_ctor_t>());
+    BOOST_CHECK_EQUAL(default_ctor_.get(), pool_.get<default_ctor_t>());
 }
 
 } // namespace ut

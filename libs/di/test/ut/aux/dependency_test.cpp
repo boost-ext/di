@@ -6,7 +6,7 @@
 //
 #include <boost/test/unit_test.hpp>
 #include <boost/make_shared.hpp>
-#include <boost/mpl/vector.hpp>
+#include <boost/mpl/mpl::vector.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include "boost/di/aux/instance.hpp"
@@ -19,20 +19,22 @@ namespace test {
 namespace ut {
 
 template<typename T, typename>
-struct FakeResult
+struct fake_result
 { };
 
 template<typename TSequence, int value = 0>
-struct Fakepool
+struct fake_pool
 {
     typedef TSequence sequence;
 
-    template<typename T> struct result_type
+    template<typename T>
+    struct result_type
     {
         typedef shared_ptr<int> type;
     };
 
-    template<typename T> typename result_type<int>::type get() const
+    template<typename T>
+    typename result_type<int>::type get() const
     {
        return make_shared<int>(value);
     }
@@ -49,95 +51,89 @@ struct fake_scope
     };
 };
 
-struct Otherfake_scope { };
+struct other_fake_scope { };
 
-BOOST_AUTO_TEST_CASE(Default)
+BOOST_AUTO_TEST_CASE(dependency_default)
 {
-    typedef dependency<fake_scope<>, int> Dep;
+    typedef dependency<fake_scope<>, int> dependency_t;
 
-    BOOST_CHECK((is_same<vector0<>, Dep::context>::value));
-    BOOST_CHECK((is_same<is_same<_1, int>, Dep::bind>::value));
+    BOOST_CHECK((is_same<mpl::vector0<>, dependency_t::context>::value));
+    BOOST_CHECK((is_same<is_same<mpl::_1, int>, dependency_t::bind>::value));
 }
 
-BOOST_AUTO_TEST_CASE(rebindscope)
+BOOST_AUTO_TEST_CASE(dependency_rebind_scope)
 {
     BOOST_CHECK((
-        is_same
-        <
-            dependency
-            <
-                Otherfake_scope,
-                int,
-                int,
-                vector0<>,
-                is_same<_1, int>,
-                FakeResult
-            >,
-            dependency
-            <
-                _1,
-                int,
-                int,
-                vector0<>,
-                is_same<_1, int>,
-                FakeResult
-            >::rebind<Otherfake_scope>::type
+        is_same<
+            dependency<
+                other_fake_scope
+              , int
+              , int
+              , mpl::vector0<>
+              , is_same<mpl::_1, int>
+              , fake_result
+            >
+          , dependency<
+                mpl::_1
+              , int
+              , int
+              , mpl::vector0<>
+              , is_same<mpl::_1, int>
+              , fake_result
+            >::rebind<other_fake_scope>::type
         >::value
     ));
 }
 
-BOOST_AUTO_TEST_CASE(rebindType)
+BOOST_AUTO_TEST_CASE(dependency_rebind_type)
 {
     BOOST_CHECK((
-        is_same
-        <
-            dependency
-            <
-                void,
-                double,
-                int,
-                vector0<>,
-                is_same<_1, int>,
-                FakeResult
-            >,
-            dependency
-            <
-                void,
-                _1,
-                _2,
-                vector0<>,
-                is_same<_1, int>,
-                FakeResult
+        is_same<
+            dependency<
+                void
+              , double
+              , int
+              , mpl::vector0<>
+              , is_same<mpl::_1, int>
+              , fake_result
+            >
+          , dependency<
+                void
+              , mpl::_1
+              , mpl::_2
+              , mpl::vector0<>
+              , is_same<mpl::_1, int>
+              , fake_result
             >::rebind<double, int>::type
         >::value
     ));
 }
 
-BOOST_AUTO_TEST_CASE(CreateBypool)
+BOOST_AUTO_TEST_CASE(dependency_create_by_pool)
 {
     const int i = 42;
-    dependency< fake_scope<>, int > dep;
-    Fakepool< vector<instance<int> >, i > pool;
+    dependency< fake_scope<>, int > dependency_;
+    fake_pool< mpl::vector<instance<int> >, i > pool_;
 
-    BOOST_CHECK_EQUAL(i, *dep.create(pool));
+    BOOST_CHECK_EQUAL(i, *dependency_.create(pool_));
 }
 
-BOOST_AUTO_TEST_CASE(CreateByvalue)
+BOOST_AUTO_TEST_CASE(dependency_create_by_value)
 {
     const int i = 42;
-    dependency< fake_scope<>, int, int_<i> > dep;
-    Fakepool< vector0<> > pool;
+    dependency< fake_scope<>, int, int_<i> > dependency_;
+    fake_pool< mpl::vector0<> > pool_;
 
-    BOOST_CHECK_EQUAL(i, dep.create(pool));
+    BOOST_CHECK_EQUAL(i, dependency_.create(pool_));
 }
 
-BOOST_AUTO_TEST_CASE(CreateByscope)
+BOOST_AUTO_TEST_CASE(dependency_create_by_scope)
 {
     const int i = 42;
-    dependency<fake_scope<i>, int> dep;
-    Fakepool< vector0<> > pool;
+    dependency<fake_scope<i>, int> dependency_;
+    fake_pool< mpl::vector0<> > pool_;
 
-    BOOST_CHECK_EQUAL(i, *dep.create(pool));
+    BOOST_CHECK_EQUAL(i, *dependency_.create(pool_));
 }
 
 } // namespace ut
