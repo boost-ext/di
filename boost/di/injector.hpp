@@ -45,7 +45,10 @@
         typedef mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> sequence;
 
         struct modules
-            : mpl::remove_if<sequence, is_base_of<detail::policy, mpl::_> >::type
+            : mpl::remove_if<
+                  sequence
+                , is_base_of<detail::policy, mpl::_>
+              >::type
         { };
 
         struct policies
