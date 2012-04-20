@@ -7,8 +7,8 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
 #include <boost/mpl/vector.hpp>
-#include "mt/visitor.hpp"
 #include "boost/di.hpp"
+#include "visitor.hpp"
 #include "data.hpp"
 
 #define BOOST_AUTO_TEST_CASE_VARIADIC(test, type, ...) \
@@ -17,7 +17,6 @@
 namespace boost {
 namespace di {
 namespace test {
-namespace mt {
 
 typedef generic_module<
     singletons<
@@ -259,7 +258,6 @@ BOOST_AUTO_TEST_CASE_VARIADIC(basic_externals_ctor, TInjector,
     BOOST_CHECK_EQUAL(87.0, c9_->d);
 }
 
-} // namespace mt
 } // namespace test
 } // namespace di
 } // namespace boost

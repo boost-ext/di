@@ -7,51 +7,46 @@
 #include <boost/test/unit_test.hpp>
 
 #define BOOST_DI_CTOR_CFG_BRACKET
-#include "di/front/ctor.hpp"
+#include "boost/di/ctor.hpp"
 
-namespace di
-{
-namespace utility
-{
-namespace scopes
-{
-namespace ut
-{
+namespace boost {
+namespace di {
+namespace test {
 
-BOOST_AUTO_TEST_CASE(BracketctorEmpty)
+BOOST_AUTO_TEST_CASE(ctor_bracket_empty)
 {
-    struct C
+    struct c
     {
-        BOOST_DI_CTOR(C, ()) { }
+        BOOST_DI_CTOR(c, ()) { }
     };
 }
 
-BOOST_AUTO_TEST_CASE(BracketctorExplicitwithDefault)
+BOOST_AUTO_TEST_CASE(ctor_bracket_explicit_with_default)
 {
-    struct C
+    struct c
     {
         enum { DEFAULT = 42 };
 
-        BOOST_DI_CTOR(explicit C, (int i = DEFAULT))
+        BOOST_DI_CTOR(explicit c, (int i = DEFAULT))
             : i(i)
         { }
 
         int i;
     };
 
-    C c;
+    c c_;
 
-    BOOST_CHECK_EQUAL(static_cast<int>(C::DEFAULT), c.i);
+    BOOST_CHECK_EQUAL(static_cast<int>(c::DEFAULT), c_.i);
 }
 
-BOOST_AUTO_TEST_CASE(BracketctorParams)
+BOOST_AUTO_TEST_CASE(ctor_bracket_params)
 {
     const int i = 1;
     const double d = 2.0;
 
-    struct C
+    struct c
     {
-        BOOST_DI_CTOR(C, (int i, double d))
+        BOOST_DI_CTOR(c, (int i, double d))
             : i(i), d(d)
         { }
 
@@ -59,22 +54,22 @@ BOOST_AUTO_TEST_CASE(BracketctorParams)
         double d;
     };
 
-    C c(i, d);
+    c c_(i, d);
 
-    BOOST_CHECK_EQUAL(i, c.i);
-    BOOST_CHECK_EQUAL(d, c.d);
+    BOOST_CHECK_EQUAL(i, c_.i);
+    BOOST_CHECK_EQUAL(d, c_.d);
 }
 
-BOOST_AUTO_TEST_CASE(Bracketctor_traits)
+BOOST_AUTO_TEST_CASE(ctor_bracket_traits)
 {
     const int i = 1;
     const double d = 2.0;
 
-    struct C
+    struct c
     {
         BOOST_DI_CTOR_TRAITS((int i, double d));
 
-        C(int i, double d)
+        c(int i, double d)
             : i(i), d(d)
         { }
 
@@ -82,14 +77,13 @@ BOOST_AUTO_TEST_CASE(Bracketctor_traits)
         double d;
     };
 
-    C c(i, d);
+    c c_(i, d);
 
-    BOOST_CHECK_EQUAL(i, c.i);
-    BOOST_CHECK_EQUAL(d, c.d);
+    BOOST_CHECK_EQUAL(i, c_.i);
+    BOOST_CHECK_EQUAL(d, c_.d);
 }
 
-} // namespace ut
-} // namespace scopes
-} // namespace utility
+} // namespace test
 } // namespace di
+} // namespace boost
 

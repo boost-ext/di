@@ -5,16 +5,14 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <boost/test/unit_test.hpp>
-#include "di/back/factory.hpp"
+#include <boost/shared_ptr.hpp>
+#include "boost/di/named.hpp"
 
-namespace di
-{
-namespace back
-{
-namespace ut
-{
+namespace boost {
+namespace di {
+namespace test {
 
-} // namespace ut
-} // namespace back
+} // namespace test
 } // namespace di
+} // namespace boost
 

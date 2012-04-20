@@ -16,7 +16,14 @@
 
 namespace boost {
 namespace di {
-namespace test {
+//namespace test {
+
+class a { };
+class b { };
+class c
+{
+    int dummy;
+};
 
 struct if0
 {
@@ -256,14 +263,14 @@ struct transaction_usage
     shared_ptr< provider< shared_ptr<transaction> > > p;
 };
 
-} // namespace test
 
 template<>
-struct ctor_traits<test::c14>
+struct ctor_traits<c14>
 {
     static void ctor(int, double);
 };
 
+//} // namespace test
 } // namespace di
 } // namespace boost
 

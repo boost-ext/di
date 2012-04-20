@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef BOOST_DI_MODULE_generic_module_HPP
-    #define BOOST_DI_MODULE_generic_module_HPP
+    #ifndef BOOST_DI_MODULE_GENERIC_MODULE_HPP
+    #define BOOST_DI_MODULE_GENERIC_MODULE_HPP
 
     #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
     #include <boost/preprocessor/repetition/enum_params.hpp>

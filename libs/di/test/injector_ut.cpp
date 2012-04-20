@@ -9,48 +9,41 @@
 #include <boost/mpl/equal.hpp>
 #include "boost/di/aux/utility.hpp"
 #include "boost/di/injector.hpp"
+#include "data.hpp"
 
-namespace di
-{
-namespace utility
-{
-namespace ut
-{
-
-
-class A { };
-class B { };
-class C { };
+namespace boost {
+namespace di {
+namespace test {
 
 struct fake_pool { };
 
-struct module : back::module
+struct module : aux::module
 {
     typedef fake_pool pool;
-    typedef mpl::vector<A, B, C> dependencies;
+    typedef mpl::vector<a, b, c> dependencies;
 
     const pool& get_pool() const { return pool_; }
     pool pool_;
 };
 
-BOOST_AUTO_TEST_CASE(ctorEmpty)
+BOOST_AUTO_TEST_CASE(injector_ctor_empty)
 {
-    typedef injector<> Inj;
+    typedef injector<> injector_t;
 
-    Inj inj; //have to compile
-    (void)inj;
+    injector_t injector_; //have to compile
+    (void)injector_;
 }
 
-BOOST_AUTO_TEST_CASE(Simplemodule)
+BOOST_AUTO_TEST_CASE(injector_simple_module)
 {
-    typedef injector<module> Inj;
-    module module;
+    typedef injector<module> injector_t;
+    module module_;
 
-    Inj inj(module); //have to compile
-    (void)inj;
+    injector_t injector_(module_); //have to compile
+    (void)injector_;
 }
 
-} // namespace ut
-} // namespace utility
+} // namespace test
 } // namespace di
+} // namespace boost
 

@@ -24,7 +24,8 @@ class converter_impl
     : public static_visitor<TDest>
 {
 public:
-    template<typename T> TDest operator()(T member) const
+    template<typename T>
+    TDest operator()(T member) const
     {
         return converter<TScope, TDest>::execute(member);
     }
