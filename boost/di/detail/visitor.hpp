@@ -21,8 +21,13 @@
     #include "boost/di/scopes/per_request.hpp"
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (\
-        BOOST_DI_PARAMS(0, BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE, "boost/di/detail/visitor.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (           \
+        BOOST_DI_PARAMS(                            \
+            0                                       \
+          , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE      \
+          , "boost/di/detail/visitor.hpp"           \
+        )                                           \
+    )
 
     namespace boost {
     namespace di {
@@ -30,7 +35,12 @@
 
     template<
         typename TDeps
-      , template<typename, typename, typename = TDeps, typename = aux::dependency<scopes::per_request, mpl::_1, mpl::_2> > class TBinder = binder
+      , template<
+            typename
+          , typename
+          , typename = TDeps
+          , typename = aux::dependency<scopes::per_request, mpl::_1, mpl::_2>
+        > class TBinder = binder
     >
     class visitor_impl
     {

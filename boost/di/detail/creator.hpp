@@ -24,9 +24,13 @@
     #include "boost/di/scopes/per_request.hpp"
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (\
-        BOOST_DI_PARAMS(0, BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE, "boost/di/detail/creator.hpp"))
-
+    #define BOOST_PP_ITERATION_PARAMS_1 (           \
+        BOOST_DI_PARAMS(                            \
+            0                                       \
+          , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE      \
+          , "boost/di/detail/creator.hpp"           \
+        )                                           \
+    )
     namespace boost {
     namespace di {
     namespace detail {
@@ -34,8 +38,16 @@
     template<
         typename TDeps
       , typename TPool
-      , template<typename, typename, typename = TDeps, typename = aux::dependency<scopes::per_request, mpl::_1, mpl::_2> > class TBinder = binder
-      , template<typename, typename> class TConverter = converter
+      , template<
+            typename
+          , typename
+          , typename = TDeps
+          , typename = aux::dependency<scopes::per_request, mpl::_1, mpl::_2>
+        > class TBinder = binder
+      , template<
+            typename
+          , typename
+        > class TConverter = converter
     >
     class creator_impl
     {
@@ -78,7 +90,11 @@
 #else
 
     template<typename TDependency, typename TCallStack, typename TEntries>
-    static typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION(), typename TDependency::template result_type<TPool>::type>::type
+    static typename aux::enable_if_ctor_size<
+        TDependency
+      , BOOST_PP_ITERATION()
+      , typename TDependency::template result_type<TPool>::type
+    >::type
     execute_impl(TEntries& entries, const TPool& pool) {
         #define BOOST_DI_CREATOR_EXECUTE(z, n, _) BOOST_PP_COMMA_IF(n)                                       \
              TConverter<typename TDependency::scope, typename aux::at_ctor<TDependency, n>::type>::execute(  \

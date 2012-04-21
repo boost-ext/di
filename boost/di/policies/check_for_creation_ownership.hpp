@@ -10,6 +10,7 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_reference.hpp>
+#include <boost/mpl/assert.hpp>
 #include "boost/di/config.hpp"
 
 namespace boost {
@@ -22,6 +23,7 @@ public:
     template<
         typename TDeps
       , typename TGiven
+      , bool Assert = true
       , typename Enable = void
     >
     class verify
@@ -31,12 +33,13 @@ public:
     template<
         typename TDeps
       , typename TGiven
+      , bool Assert
     >
-    class verify<TDeps, TGiven, typename enable_if<is_reference<TGiven> >::type>
+    class verify<TDeps, TGiven, Assert, typename enable_if<is_reference<TGiven> >::type>
         : public mpl::false_
     {
-       BOOST_DI_STATIC_ASSERT(
-            false,
+       BOOST_MPL_ASSERT_MSG(
+            !Assert,
             CREATION_OWNERSHIP_IS_NOT_CLEAR,
             (TGiven)
         );

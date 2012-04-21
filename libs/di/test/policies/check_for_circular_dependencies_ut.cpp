@@ -4,8 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#define BOOST_DI_STATIC_ASSERT(cond, expr, types) typedef void _
-
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_base_of.hpp>
@@ -25,6 +23,7 @@ BOOST_AUTO_TEST_CASE(no_circular_dependencies)
           , check_for_circular_dependencies::verify<
                 mpl::vector0<>
               , c8
+              , false
             >::type
          >::value
     ));
@@ -38,6 +37,7 @@ BOOST_AUTO_TEST_CASE(direct)
           , check_for_circular_dependencies::verify<
                 mpl::vector0<>
               , cd1
+              , false
             >::type
         >::value
     ));
@@ -51,6 +51,7 @@ BOOST_AUTO_TEST_CASE(in_direct)
           , check_for_circular_dependencies::verify<
                 mpl::vector0<>
               , cd5
+              , false
             >::type
         >::value
     ));
