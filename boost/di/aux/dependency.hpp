@@ -121,22 +121,19 @@
 
         template<typename TPool>
         typename enable_if<is_pool_type<TPool>, typename result_type<TPool>::type>::type
-        create(const TPool& pool)
-        {
+        create(const TPool& pool) {
             return pool.template get<TInstance<> >();
         }
 
         template<typename TPool>
         typename enable_if<is_value_type<TPool>, typename result_type<TPool>::type>::type
-        create(const TPool&)
-        {
+        create(const TPool&) {
             return TValue<TGiven>::create();
         }
 
         template<typename TPool>
         typename enable_if<is_scope_type<TPool>, typename result_type<TPool>::type>::type
-        create(const TPool&)
-        {
+        create(const TPool&) {
             return scope_.create();
         }
 
@@ -191,15 +188,13 @@
 
     template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
     typename enable_if<is_scope_type<TPool>, typename result_type<TPool>::type>::type
-    create(const TPool&, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg))
-    {
+    create(const TPool&, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg)) {
         return scope_.create(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg));
     }
 
     template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
     typename enable_if<is_pool_type<TPool>, typename result_type<TPool>::type>::type
-    create(const TPool& pool, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, & BOOST_PP_INTERCEPT))
-    {
+    create(const TPool& pool, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, & BOOST_PP_INTERCEPT)) {
         return pool.template get<TInstance<> >();
     }
 

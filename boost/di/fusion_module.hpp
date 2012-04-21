@@ -34,7 +34,8 @@
     template<
         typename TSequence = mpl::vector0<>
     >
-    class fusion_module : public aux::module
+    class fusion_module
+        : public aux::module
     {
     public:
         typedef aux::pool<TSequence> pool;
@@ -80,8 +81,7 @@
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
     fusion_module<mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), Arg)> >
-    operator()(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg)) const
-    {
+    operator()(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg)) const {
         return fusion_module< mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), Arg)> >(
             BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg));
     }

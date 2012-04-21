@@ -31,8 +31,7 @@
         public:
             typedef shared_ptr<T> result_type;
 
-            result_type create()
-            {
+            result_type create() {
                 return make_shared<T>();
             }
 
@@ -49,8 +48,7 @@
 #else
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    result_type create(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg))
-    {
+    result_type create(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg)) {
         return result_type(new T(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg)));
     }
 

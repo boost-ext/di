@@ -33,8 +33,7 @@ struct fake_pool
     };
 
     template<typename T>
-    typename result_type<int>::type get() const
-    {
+    typename result_type<int>::type get() const {
        return make_shared<int>(value);
     }
 };

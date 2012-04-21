@@ -67,8 +67,7 @@ public:
         : member_(member)
     { }
 
-    result_type get() const
-    {
+    result_type get() const {
         return member_;
     }
 
@@ -99,8 +98,7 @@ public:
         : member_(member)
     { }
 
-    result_type get() const
-    {
+    result_type get() const {
         return member_;
     }
 

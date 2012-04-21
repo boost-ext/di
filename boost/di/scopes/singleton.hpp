@@ -30,10 +30,8 @@
         public:
             typedef shared_ptr<T> result_type;
 
-            result_type create()
-            {
-                if (!instance_)
-                {
+            result_type create() {
+                if (!instance_) {
                     instance_.reset(new T);
                 }
 
@@ -56,10 +54,8 @@
 #else
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    result_type create(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg))
-    {
-        if (!instance_)
-        {
+    result_type create(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg)) {
+        if (!instance_) {
             instance_.reset(new T(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg)));
         }
 

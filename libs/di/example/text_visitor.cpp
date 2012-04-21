@@ -16,8 +16,7 @@ class print_visitor
 {
 public:
     template<typename T>
-    void operator()() const
-    {
+    void operator()() const {
         int size = mpl::size<typename T::context>::value;
         while(--size) {
             std::cout << "\t";

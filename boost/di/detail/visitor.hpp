@@ -48,8 +48,7 @@
 
     public:
         template<typename T, typename TCallStack, typename TVisitor>
-        static void execute(const TVisitor& visitor)
-        {
+        static void execute(const TVisitor& visitor) {
             typedef typename TBinder<T, TCallStack>::type ToBeCreated;
             typedef typename aux::update_call_stack<TCallStack, ToBeCreated>::type CallStack;
             execute_impl<T, ToBeCreated, CallStack>(visitor);
@@ -74,8 +73,7 @@
 
     template<typename T, typename TDependency, typename TCallStack, typename TVisitor>
     static typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION()>::type
-    execute_impl(const TVisitor& visitor)
-    {
+    execute_impl(const TVisitor& visitor) {
         visitor.template operator()< dependency<T, TCallStack, TDependency> >();
 
         #define BOOST_DI_VISITOR_EXECUTE(z, n, _)\

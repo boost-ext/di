@@ -37,7 +37,8 @@
     namespace di {
 
     template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
-    class generic_module : public aux::module
+    class generic_module
+        : public aux::module
     {
         template<typename TInstance, typename T>
         struct is_same_instance
@@ -125,8 +126,7 @@
                 >
               , typename find_instance_type<externals, T>::type::derived
             >::type
-        set(Tvalue value)
-        {
+        set(Tvalue value) {
             typedef typename find_instance_type<externals, T>::type annotation;
             return typename annotation::derived(value);
         }

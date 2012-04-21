@@ -108,8 +108,7 @@
         };
 
         template<typename T>
-        typename result_type<T>::type get() const
-        {
+        typename result_type<T>::type get() const {
             return T::get();
         }
     };

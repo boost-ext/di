@@ -41,8 +41,7 @@
     public:
         template<typename T, typename TCallStack, typename TEntries>
         static typename TBinder<T, TCallStack>::type::template result_type<TPool>::type
-        execute(TEntries& entries, const TPool& pool)
-        {
+        execute(TEntries& entries, const TPool& pool) {
             typedef typename TBinder<T, TCallStack>::type ToBeCreated;
             typedef typename aux::update_call_stack<TCallStack, ToBeCreated>::type CallStack;
             return execute_impl<ToBeCreated, CallStack, TEntries>(entries, pool);
@@ -53,15 +52,13 @@
 
         template<typename TDependency, typename TEntries>
         static typename enable_if<is_base_of<TDependency, TEntries>, TDependency&>::type
-        acquire(TEntries& entries)
-        {
+        acquire(TEntries& entries) {
             return static_cast<TDependency&>(entries);
         }
 
         template<typename TDependency, typename TEntries>
         static typename disable_if<is_base_of<TDependency, TEntries>, TDependency>::type
-        acquire(TEntries&)
-        {
+        acquire(TEntries&) {
             return TDependency();
         }
     };
@@ -81,8 +78,7 @@
 
     template<typename TDependency, typename TCallStack, typename TEntries>
     static typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION(), typename TDependency::template result_type<TPool>::type>::type
-    execute_impl(TEntries& entries, const TPool& pool)
-    {
+    execute_impl(TEntries& entries, const TPool& pool) {
         #define BOOST_DI_CREATOR_EXECUTE(z, n, _) BOOST_PP_COMMA_IF(n)                                         \
              TConverter<typename TDependency::scope, typename aux::at_ctor<TDependency, n>::type>::execute(  \
                 execute<typename aux::at_ctor<TDependency, n>::type, TCallStack>(entries, pool))

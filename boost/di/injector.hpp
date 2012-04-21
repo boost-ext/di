@@ -102,13 +102,12 @@
 
         #include BOOST_PP_ITERATE()
 
-        template<typename T> T create()
-        {
+        template<typename T> T create() {
             return factory_.create<T>();
         }
 
-        template<typename T, typename Visitor> void visit(const Visitor& visitor)
-        {
+        template<typename T, typename Visitor>
+        void visit(const Visitor& visitor) {
             return factory_.visit<T>(visitor);
         }
 
@@ -139,8 +138,7 @@
             mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), M)>
         >::type
     >
-    install(BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_MODULE_ARG, M))
-    {
+    install(BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_MODULE_ARG, M)) {
         typedef injector<
             typename mpl::joint_view<
                 modules,

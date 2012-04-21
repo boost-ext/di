@@ -20,7 +20,7 @@ public:
 };
 
 typedef di::generic_module<
-    di::per_requests<
+    di::per_request<
         c
     >
 > module;

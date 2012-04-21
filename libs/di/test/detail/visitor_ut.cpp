@@ -30,8 +30,7 @@ template<typename T>
 struct visitor_mock
 {
     template<typename TDependency>
-    void operator()() const
-    {
+    void operator()() const {
         BOOST_CHECK_EQUAL(typeid(T).name(), typeid(typename TDependency::given).name());
     }
 };

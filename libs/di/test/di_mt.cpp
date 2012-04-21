@@ -32,7 +32,7 @@ typedef generic_module<
       , bind<int, mpl::int_<4> >::in_name< mpl::string<'2'> >::in_call_stack<c7, c6, c4>
       , bind<int, mpl::int_<5> >::in_call_stack<c2>
     >
-> basemodule1;
+> base_module_1;
 
 typedef generic_module<
     singletons<
@@ -42,7 +42,7 @@ typedef generic_module<
         bind<int, mpl::int_<0> >::in_name< mpl::string<'1'> >
       , bind<int, mpl::int_<1> >
     >
-> basemodule2;
+> base_module_2;
 
 typedef generic_module<
     singletons<
@@ -52,7 +52,7 @@ typedef generic_module<
         bind<int, mpl::int_<2> >::in_call_stack<c8>
       , bind<int, mpl::int_<3> >::in_name< mpl::string<'2'> >
     >
-> basemodule3;
+> base_module_3;
 
 typedef generic_module<
     per_requests<
@@ -69,9 +69,9 @@ typedef generic_module<
         int
       , double
     >
-> externalsmodule;
+> externals_module;
 
-struct externalsmodulector : generic_module<
+struct externals_module_ctor : generic_module<
     singletons<
         c0if0
     >
@@ -81,12 +81,12 @@ struct externalsmodulector : generic_module<
     >
 >
 {
-    externalsmodulector(int i, double d)
+    externals_module_ctor(int i, double d)
         : generic_module(set<int>(i), set<double>(d))
     { }
 };
 
-BOOST_AUTO(fusionmodule1, fusion_module<>()(
+BOOST_AUTO(fusion_module_1, fusion_module<>()(
     singletons<
         c3
     >()
@@ -102,7 +102,7 @@ BOOST_AUTO(fusionmodule1, fusion_module<>()(
     >()
 ));
 
-BOOST_AUTO(fusionmodule2, fusion_module<>()(
+BOOST_AUTO(fusion_module_2, fusion_module<>()(
     singletons<
         c0if0
     >()
@@ -112,7 +112,7 @@ BOOST_AUTO(fusionmodule2, fusion_module<>()(
     >()
 ));
 
-BOOST_AUTO(fusionmodule3, fusion_module<>()(
+BOOST_AUTO(fusion_module_3, fusion_module<>()(
     singletons<
         c3
     >()
@@ -129,8 +129,8 @@ BOOST_AUTO(fusion_provider_module, fusion_module<>()(
 ));
 
 BOOST_AUTO_TEST_CASE_VARIADIC(one_module, TInjector,
-    injector<basemodule1>,
-    injector<BOOST_TYPEOF(fusionmodule1)>)
+    injector<base_module_1>,
+    injector<BOOST_TYPEOF(fusion_module_1)>)
 {
     TInjector injector;
 
@@ -153,10 +153,10 @@ BOOST_AUTO_TEST_CASE_VARIADIC(one_module, TInjector,
 }
 
 BOOST_AUTO_TEST_CASE_VARIADIC(many_modules, TInjector,
-    injector<basemodule2, basemodule3>,
-    injector<basemodule3, basemodule2>,
-    injector<BOOST_TYPEOF(fusionmodule2), BOOST_TYPEOF(fusionmodule3)>,
-    injector<BOOST_TYPEOF(fusionmodule3), BOOST_TYPEOF(fusionmodule2)>)
+    injector<base_module_2, base_module_3>,
+    injector<base_module_3, base_module_2>,
+    injector<BOOST_TYPEOF(fusion_module_2), BOOST_TYPEOF(fusion_module_3)>,
+    injector<BOOST_TYPEOF(fusion_module_3), BOOST_TYPEOF(fusion_module_2)>)
 {
     TInjector injector;
 
@@ -179,8 +179,8 @@ BOOST_AUTO_TEST_CASE_VARIADIC(many_modules, TInjector,
 }
 
 BOOST_AUTO_TEST_CASE_VARIADIC(mix_modules, TInjector,
-    injector<basemodule2, BOOST_TYPEOF(fusionmodule2)>,
-    injector<BOOST_TYPEOF(fusionmodule2), basemodule2>)
+    injector<base_module_2, BOOST_TYPEOF(fusion_module_2)>,
+    injector<BOOST_TYPEOF(fusion_module_2), base_module_2>)
 {
     TInjector injector;
 
@@ -230,12 +230,12 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Basicvisitor, TInjector,
 }
 
 BOOST_AUTO_TEST_CASE_VARIADIC(basic_externals, TInjector,
-    injector<externalsmodule>)
+    injector<externals_module>)
 {
     TInjector injector(
-        externalsmodule(
-            externalsmodule::set<int>(42)
-          , externalsmodule::set<double>(87.0)
+        externals_module(
+            externals_module::set<int>(42)
+          , externals_module::set<double>(87.0)
         )
     );
 
@@ -246,10 +246,10 @@ BOOST_AUTO_TEST_CASE_VARIADIC(basic_externals, TInjector,
 }
 
 BOOST_AUTO_TEST_CASE_VARIADIC(basic_externals_ctor, TInjector,
-    injector<externalsmodulector>)
+    injector<externals_module_ctor>)
 {
     TInjector injector(
-        externalsmodulector(42, 87.0)
+        externals_module_ctor(42, 87.0)
     );
 
     shared_ptr<c9> c9_ = injector.template create< shared_ptr<c9> >();
