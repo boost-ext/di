@@ -58,6 +58,35 @@ struct comparator
     : mpl::apply<TBind, T>::type
 { };
 
+
+template<
+    typename T
+  , typename TCallStack
+  , typename TDeps
+> struct sort_dependecies_by_call_stack_order
+    : mpl::sort<
+        typename mpl::fold<
+            TDeps
+          , mpl::vector0<>
+          , mpl::if_<
+                mpl::and_<
+                    detail::comparator<
+                        typename aux::make_plain<T>::type
+                      , aux::get_bind<mpl::_2>
+                    >
+                  , detail::equal_call_stack<
+                        TCallStack
+                      , aux::get_context<mpl::_2>
+                    >
+                >
+              , mpl::push_back<mpl::_1, mpl::_2>
+              , mpl::_1
+            >
+        >::type
+      , detail::less_context_size<mpl::_1, mpl::_2>
+    >::type
+{ };
+
 template<typename T, typename TDefault, typename = void>
 struct make_default_dependency
     : TDefault::template rebind<
@@ -86,28 +115,15 @@ struct binder :
     mpl::deref<
         mpl::begin<
             typename mpl::push_back<
-                typename mpl::sort<
-                    typename mpl::fold<
-                        TDeps
-                      , mpl::vector0<>
-                      , mpl::if_<
-                            mpl::and_<
-                                detail::comparator<
-                                    typename aux::make_plain<T>::type
-                                  , aux::get_bind<mpl::_2>
-                                >
-                              , detail::equal_call_stack<
-                                    TCallStack
-                                  , aux::get_context<mpl::_2>
-                                >
-                            >
-                          , mpl::push_back<mpl::_1, mpl::_2>
-                          , mpl::_1
-                        >
-                    >::type
-                  , detail::less_context_size<mpl::_1, mpl::_2>
+                typename detail::sort_dependecies_by_call_stack_order<
+                    T
+                  , TCallStack
+                  , TDeps
                 >::type
-              , typename detail::make_default_dependency<T, TDefault>::type
+              , typename detail::make_default_dependency<
+                    T
+                  , TDefault
+                >::type
             >::type
         >
     >::type
