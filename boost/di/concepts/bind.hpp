@@ -7,18 +7,16 @@
 #ifndef BOOST_DI_CONCEPTS_BIND_HPP
 #define BOOST_DI_CONCEPTS_BIND_HPP
 
-#include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
-#include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include <boost/mpl/limits/vector.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/or.hpp>
 #include "boost/di/aux/dependency.hpp"
 #include "boost/di/aux/explicit_value.hpp"
 #include "boost/di/aux/utility.hpp"
 #include "boost/di/named.hpp"
+#include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {
@@ -38,13 +36,13 @@ struct bind
       >
     , aux::internal
 {
-    template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
+    template<BOOST_DI_ARGS_TYPES_MPL(T)>
     struct in_call_stack
         : aux::dependency<
               mpl::_1
             , TExpected
             , TGiven
-            , mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
+            , mpl::vector<BOOST_DI_ARGS_MPL(T)>
           >
         , aux::internal
     {
@@ -54,7 +52,7 @@ struct bind
                   mpl::_1
                 , named<TExpected, TName>
                 , TGiven
-                , mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
+                , mpl::vector<BOOST_DI_ARGS_MPL(T)>
               >
             , aux::internal
         { };
@@ -69,13 +67,13 @@ struct bind
           >
         , aux::internal
     {
-        template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
+        template<BOOST_DI_ARGS_TYPES_MPL(T)>
         struct in_call_stack
             : aux::dependency<
                   mpl::_1
                 , named<TExpected, TName>
                 , TGiven
-                , mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
+                , mpl::vector<BOOST_DI_ARGS_MPL(T)>
               >
             , aux::internal
         { };
@@ -105,13 +103,13 @@ struct bind<
       >
     , aux::internal
 {
-    template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
+    template<BOOST_DI_ARGS_TYPES_MPL(T)>
     struct in_call_stack
         : aux::dependency<
               mpl::_1
             , TExpected
             , TGiven
-            , mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
+            , mpl::vector<BOOST_DI_ARGS_MPL(T)>
             , mpl::or_<
                   is_base_of<mpl::_1, TExpected>
                 , is_same<mpl::_1, TExpected>
@@ -125,7 +123,7 @@ struct bind<
                   mpl::_1
                 , named<TExpected, TName>
                 , TGiven
-                , mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
+                , mpl::vector<BOOST_DI_ARGS_MPL(T)>
                 , mpl::or_<
                       is_base_of<mpl::_1, named<TExpected, TName> >
                     , is_same<mpl::_1, named<TExpected, TName> >
@@ -149,13 +147,13 @@ struct bind<
           >
         , aux::internal
     {
-        template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
+        template<BOOST_DI_ARGS_TYPES_MPL(T)>
         struct in_call_stack
             : aux::dependency<
                   mpl::_1
                 , named<TExpected, TName>
                 , TGiven
-                , mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
+                , mpl::vector<BOOST_DI_ARGS_MPL(T)>
                 , mpl::or_<
                       is_base_of<mpl::_1, named<TExpected, TName> >,
                       is_same<mpl::_1, named<TExpected, TName> >

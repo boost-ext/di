@@ -11,10 +11,6 @@
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
-    #include <boost/preprocessor/repetition/enum_params.hpp>
-    #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
-    #include <boost/preprocessor/punctuation/comma_if.hpp>
-    #include <boost/preprocessor/facilities/intercept.hpp>
     #include <boost/type_traits/is_base_of.hpp>
     #include <boost/mpl/limits/vector.hpp>
     #include <boost/mpl/vector.hpp>
@@ -35,15 +31,15 @@
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (\
-        3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/injector.hpp"))
+        BOOST_DI_PARAMS(1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/injector.hpp"))
 
     namespace boost {
     namespace di {
 
-    template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
+    template<BOOST_DI_ARGS_TYPES_MPL(T)>
     class injector
     {
-        typedef mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> sequence;
+        typedef mpl::vector<BOOST_DI_ARGS_MPL(T)> sequence;
 
         struct modules
             : mpl::remove_if<

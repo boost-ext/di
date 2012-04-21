@@ -11,12 +11,10 @@
 
     #include <boost/shared_ptr.hpp>
     #include <boost/preprocessor/iteration/iterate.hpp>
-    #include <boost/preprocessor/repetition/enum_params.hpp>
-    #include <boost/preprocessor/repetition/enum_binary_params.hpp>
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (\
-        3, (1, BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE, "boost/di/scopes/singleton.hpp"))
+        BOOST_DI_PARAMS(1, BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE, "boost/di/scopes/singleton.hpp"))
 
     namespace boost {
     namespace di {

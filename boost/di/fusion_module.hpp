@@ -10,9 +10,6 @@
     #define BOOST_DI_MODULE_FUSION_MODULE_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
-    #include <boost/preprocessor/repetition/enum_params.hpp>
-    #include <boost/preprocessor/repetition/enum_binary_params.hpp>
-    #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
     #include <boost/typeof/typeof.hpp>
     #include <boost/type_traits/is_base_of.hpp>
     #include <boost/mpl/limits/vector.hpp>
@@ -25,9 +22,10 @@
     #include "boost/di/scopes/per_request.hpp"
     #include "boost/di/scopes/singleton.hpp"
     #include "boost/di/concepts.hpp"
+    #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (\
-        3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/fusion_module.hpp"))
+        BOOST_DI_PARAMS(1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/fusion_module.hpp"))
 
     namespace boost {
     namespace di {

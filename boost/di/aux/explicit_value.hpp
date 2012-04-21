@@ -8,6 +8,7 @@
 #define BOOST_DI_AUX_EXPLICIT_VALUE_HPP
 
 #include <string>
+#include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/type_traits/is_arithmetic.hpp>
 #include <boost/utility/enable_if.hpp>

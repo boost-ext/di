@@ -9,8 +9,6 @@
     #ifndef BOOST_DI_MODULE_GENERIC_MODULE_HPP
     #define BOOST_DI_MODULE_GENERIC_MODULE_HPP
 
-    #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
-    #include <boost/preprocessor/repetition/enum_params.hpp>
     #include <boost/type_traits/is_same.hpp>
     #include <boost/type_traits/is_base_of.hpp>
     #include <boost/utility/enable_if.hpp>
@@ -30,14 +28,15 @@
     #include "boost/di/scopes/singleton.hpp"
     #include "boost/di/scopes/per_request.hpp"
     #include "boost/di/concepts.hpp"
+    #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (\
-        3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/generic_module.hpp"))
+        BOOST_DI_PARAMS(1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/generic_module.hpp"))
 
     namespace boost {
     namespace di {
 
-    template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
+    template<BOOST_DI_ARGS_TYPES_MPL(T)>
     class generic_module
         : public aux::module
     {
@@ -71,7 +70,7 @@
         struct externals
             : mpl::transform<
                   typename mpl::fold<
-                      mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
+                      mpl::vector<BOOST_DI_ARGS_MPL(T)>
                     , mpl::vector0<>
                     , mpl::copy<
                           mpl::if_<
@@ -98,7 +97,7 @@
 
         struct dependencies
             : mpl::fold<
-                mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
+                mpl::vector<BOOST_DI_ARGS_MPL(T)>
               , mpl::vector0<>
               , mpl::copy<
                     mpl::if_<
