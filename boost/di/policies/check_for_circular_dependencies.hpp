@@ -27,7 +27,8 @@
     #include "boost/di/scopes/per_request.hpp"
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (0, BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE, "boost/di/policies/check_for_circular_dependencies.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (\
+        BOOST_DI_PARAMS(0, BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE, "boost/di/policies/check_for_circular_dependencies.hpp"))
 
     namespace boost {
     namespace di {

@@ -11,6 +11,7 @@
 #include <boost/type_traits/is_base_of.hpp>
 #include "boost/di/named.hpp"
 #include "boost/di/detail/binder.hpp"
+#include "data.hpp"
 
 namespace boost {
 namespace di {
@@ -54,13 +55,6 @@ struct dependency_base_of
         typedef dependency<Expected, Given, TContext> type;
     };
 };
-
-class a { };
-class b { };
-class c { };
-class d { };
-class i { };
-class impl : public i { };
 
 BOOST_AUTO_TEST_CASE(binder_empty)
 {

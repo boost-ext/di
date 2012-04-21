@@ -7,15 +7,13 @@
 #ifndef BOOST_DI_CONCEPTS_HPP
 #define BOOST_DI_CONCEPTS_HPP
 
-#include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
-#include <boost/mpl/limits/vector.hpp>
 #include "boost/di/concepts/annotate.hpp"
 #include "boost/di/concepts/bind.hpp"
 #include "boost/di/concepts/externals.hpp"
 #include "boost/di/concepts/scope.hpp"
 #include "boost/di/scopes/per_request.hpp"
 #include "boost/di/scopes/singleton.hpp"
+#include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {
@@ -49,14 +47,14 @@ struct per_request<T, T>
     : scope<scopes::per_request>::bind<T>
 { };
 
-template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
+template<BOOST_DI_ARGS_TYPES_MPL(T)>
 struct singletons
-    : scope<scopes::singleton>::bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
+    : scope<scopes::singleton>::bind<BOOST_DI_ARGS_MPL(T)>
 { };
 
-template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
+template<BOOST_DI_ARGS_TYPES_MPL(T)>
 struct per_requests
-    : scope<scopes::per_request>::bind<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
+    : scope<scopes::per_request>::bind<BOOST_DI_ARGS_MPL(T)>
 { };
 
 template<typename T>
@@ -64,9 +62,9 @@ struct external
     : concepts::externals<T>
 { };
 
-template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
+template<BOOST_DI_ARGS_TYPES_MPL(T)>
 struct externals
-    : concepts::externals<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
+    : concepts::externals<BOOST_DI_ARGS_MPL(T)>
 { };
 
 template<typename T>

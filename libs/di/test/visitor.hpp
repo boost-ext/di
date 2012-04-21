@@ -27,14 +27,12 @@ class visitor
     typedef std::vector<std::string> visits_t;
 
 public:
-    ~visitor()
-    {
+    ~visitor() {
         verify<TSequence>(0);
     }
 
     template<typename T>
-    void operator()() const
-    {
+    void operator()() const {
         visits.push_back(typeid(typename T::type).name());
     }
 
@@ -43,8 +41,7 @@ private:
     void verify(int, typename enable_if< mpl::empty<Sequence> >::type* = 0) { }
 
     template<typename Sequence>
-    void verify(int i, typename disable_if< mpl::empty<Sequence> >::type* = 0)
-    {
+    void verify(int i, typename disable_if< mpl::empty<Sequence> >::type* = 0) {
         BOOST_CHECK_EQUAL(typeid(typename mpl::front<Sequence>::type).name(), visits.at(i));
         verify<typename mpl::pop_front<Sequence>::type>(i + 1);
     }

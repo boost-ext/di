@@ -10,7 +10,8 @@
 #include <boost/mpl/inherit_linearly.hpp>
 #include <boost/mpl/inherit.hpp>
 #include <boost/mpl/vector.hpp>
-#include <boost/mpl/transform.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/empty.hpp>
 #include "boost/di/aux/pool.hpp"
 #include "boost/di/aux/utility.hpp"
 #include "boost/di/aux/dependency.hpp"
@@ -38,31 +39,37 @@ class factory
         : mpl::inherit_linearly<TDeps, mpl::inherit<mpl::_1, mpl::_2> >::type
     { };
 
+    typedef typename mpl::if_<
+        mpl::empty<typename TPool::sequence>
+      , TPool
+      , const TPool&
+    >::type pool_t;
+
 public:
-    explicit factory(const TPool& pool = TPool())
+    factory() { }
+
+    explicit factory(const TPool& pool)
         : pool_(pool)
     { }
 
     template<typename T>
-    T create()
-    {
+    T create() {
         typedef mpl::vector0<> empty_call_stack;
         typedef typename TPolicies::template verify<TDeps, T>::type policies;
         return TConverter<scopes::per_request, T>::execute(
-            TCreator<>::template execute<T, empty_call_stack>(m_entries, pool_));
+            TCreator<>::template execute<T, empty_call_stack>(entries_, pool_));
     }
 
     template<typename T, typename Visitor>
-    void visit(const Visitor& visitor)
-    {
+    void visit(const Visitor& visitor) {
         typedef mpl::vector0<> empty_call_stack;
         typedef typename TPolicies::template verify<TDeps, T>::type policies;
         TVisitor<>::template execute<T, empty_call_stack>(visitor);
     }
 
 private:
-    const TPool& pool_;
-    entries m_entries;
+    pool_t pool_;
+    entries entries_;
 };
 
 } // namespace detail

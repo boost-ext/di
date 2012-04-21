@@ -26,7 +26,8 @@
     #include <boost/mpl/has_xxx.hpp>
     #include "boost/di/aux/utility.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/aux/pool.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (\
+        3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/aux/pool.hpp"))
 
     namespace boost {
     namespace di {
@@ -108,8 +109,7 @@
         };
 
         template<typename T>
-        typename result_type<T>::type get() const
-        {
+        typename result_type<T>::type get() const {
             return T::get();
         }
     };

@@ -7,10 +7,6 @@
 #ifndef BOOST_DI_CONCEPTS_SCOPE_HPP
 #define BOOST_DI_CONCEPTS_SCOPE_HPP
 
-#include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
-#include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/preprocessor/facilities/intercept.hpp>
-#include <boost/preprocessor/arithmetic/sub.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/limits/vector.hpp>
@@ -23,6 +19,7 @@
 #include "boost/di/aux/dependency.hpp"
 #include "boost/di/aux/utility.hpp"
 #include "boost/di/named.hpp"
+#include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {
@@ -56,15 +53,21 @@ public:
         , aux::internal
     { };
 
-    template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
+    template<BOOST_DI_ARGS_TYPES_MPL(T)>
     struct bind
         : mpl::fold<
-              mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)>
+              mpl::vector<BOOST_DI_ARGS_MPL(T)>
             , mpl::vector0<>
             , mpl::if_<
                   is_base_of<aux::internal, mpl::_2>
-                , mpl::push_back<mpl::_1, rebind<mpl::_2, TScope> >
-                , mpl::push_back<mpl::_1, rebind<dependency<mpl::_2, mpl::_2>, TScope> >
+                , mpl::push_back<
+                      mpl::_1
+                    , rebind<mpl::_2, TScope>
+                  >
+                , mpl::push_back<
+                      mpl::_1
+                    , rebind<dependency<mpl::_2, mpl::_2>, TScope>
+                  >
               >
           >::type
         , aux::internal
@@ -77,21 +80,40 @@ public:
             , mpl::vector0<>
             , mpl::if_<
                   is_base_of<aux::internal, mpl::_2>
-                , mpl::push_back<mpl::_1, rebind<mpl::_2, TScope> >
-                , mpl::push_back<mpl::_1, rebind< dependency<mpl::_2, mpl::_2>, TScope> >
+                , mpl::push_back<
+                      mpl::_1
+                    , rebind<mpl::_2, TScope>
+                  >
+                , mpl::push_back<
+                      mpl::_1
+                    , rebind< dependency<mpl::_2, mpl::_2>, TScope>
+                  >
               >
           >::type
         , aux::internal
     {
-        template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
+        template<BOOST_DI_ARGS_TYPES_MPL(T)>
         struct in_call_stack
             : mpl::fold<
                   mpl::vector1<TExpected>
                 , mpl::vector0<>
                 , mpl::if_<
                       is_base_of<aux::internal, mpl::_2>
-                    , mpl::push_back<mpl::_1, rebind<mpl::_2, TScope> >
-                    , mpl::push_back<mpl::_1, rebind< dependency<mpl::_2, mpl::_2, mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >, TScope> >
+                    , mpl::push_back<
+                          mpl::_1
+                        , rebind<mpl::_2, TScope>
+                      >
+                    , mpl::push_back<
+                          mpl::_1
+                        , rebind<
+                              dependency<
+                                  mpl::_2
+                                , mpl::_2
+                               , mpl::vector<BOOST_DI_ARGS_MPL(T)>
+                              >
+                            , TScope
+                          >
+                      >
                   >
               >::type
             , aux::internal
@@ -103,9 +125,21 @@ public:
                     , mpl::vector0<>
                     , mpl::if_<
                           is_base_of<aux::internal, mpl::_2>
-                        , mpl::push_back<mpl::_1, rebind<mpl::_2, TScope> >
-                        , mpl::push_back<mpl::_1, rebind< dependency<named<mpl::_2, TName>, mpl::_2, mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >, TScope> >
-                    >
+                        , mpl::push_back<
+                              mpl::_1
+                            , rebind<mpl::_2, TScope>
+                          >
+                        , mpl::push_back<
+                              mpl::_1
+                            , rebind<
+                                  dependency<
+                                      named<mpl::_2, TName>
+                                    , mpl::_2, mpl::vector<BOOST_DI_ARGS_MPL(T)>
+                                  >
+                                , TScope
+                              >
+                          >
+                      >
                   >::type
                 , aux::internal
             { };
@@ -118,21 +152,46 @@ public:
                 , mpl::vector0<>
                 , mpl::if_<
                       is_base_of<aux::internal, mpl::_2>
-                    , mpl::push_back<mpl::_1, rebind<mpl::_2, TScope> >
-                    , mpl::push_back<mpl::_1, rebind< dependency<named<mpl::_2, TName>, mpl::_2>, TScope> >
+                    , mpl::push_back<
+                          mpl::_1
+                        , rebind<mpl::_2, TScope>
+                      >
+                    , mpl::push_back<
+                          mpl::_1
+                        , rebind<
+                              dependency<
+                                  named<mpl::_2, TName>
+                                , mpl::_2
+                              >
+                            , TScope
+                          >
+                      >
                   >
               >::type
             , aux::internal
         {
-            template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
+            template<BOOST_DI_ARGS_TYPES_MPL(T)>
             struct in_call_stack
                 : mpl::fold<
                     mpl::vector1<TExpected>
                   , mpl::vector0<>
                   , mpl::if_<
                         is_base_of<aux::internal, mpl::_2>
-                      , mpl::push_back<mpl::_1, rebind<mpl::_2, TScope> >
-                      , mpl::push_back<mpl::_1, rebind< dependency<named<mpl::_2, TName>, mpl::_2, mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> >, TScope> >
+                      , mpl::push_back<
+                            mpl::_1
+                          , rebind<mpl::_2, TScope>
+                        >
+                      , mpl::push_back<
+                            mpl::_1
+                          , rebind<
+                                dependency<
+                                    named<mpl::_2, TName>
+                                  , mpl::_2
+                                  , mpl::vector<BOOST_DI_ARGS_MPL(T)>
+                                >
+                              , TScope
+                            >
+                        >
                     >
                   >::type
                 , aux::internal

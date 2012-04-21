@@ -11,11 +11,10 @@
 
     #include <boost/shared_ptr.hpp>
     #include <boost/preprocessor/iteration/iterate.hpp>
-    #include <boost/preprocessor/repetition/enum_params.hpp>
-    #include <boost/preprocessor/repetition/enum_binary_params.hpp>
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE, "boost/di/scopes/singleton.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (\
+        BOOST_DI_PARAMS(1, BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE, "boost/di/scopes/singleton.hpp"))
 
     namespace boost {
     namespace di {
@@ -30,10 +29,8 @@
         public:
             typedef shared_ptr<T> result_type;
 
-            result_type create()
-            {
-                if (!instance_)
-                {
+            result_type create() {
+                if (!instance_) {
                     instance_.reset(new T);
                 }
 
@@ -56,10 +53,8 @@
 #else
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    result_type create(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg))
-    {
-        if (!instance_)
-        {
+    result_type create(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg)) {
+        if (!instance_) {
             instance_.reset(new T(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg)));
         }
 

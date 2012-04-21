@@ -24,6 +24,9 @@ class c
 {
     int dummy;
 };
+class d { };
+class i { };
+class impl : public i { };
 
 struct if0
 {

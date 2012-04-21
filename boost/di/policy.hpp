@@ -7,9 +7,6 @@
 #ifndef BOOST_DI_POLICY_HPP
 #define BOOST_DI_POLICY_HPP
 
-#include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
-#include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/mpl/limits/vector.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/void.hpp>
@@ -25,11 +22,11 @@ namespace di {
 
 namespace detail { class policy { }; } // namespace detail
 
-template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename T, mpl_::na)>
+template<BOOST_DI_ARGS_TYPES_MPL(T)>
 class policy
     : detail::policy
 {
-    typedef mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, T)> sequence;
+    typedef mpl::vector<BOOST_DI_ARGS_MPL(T)> sequence;
 
     template<
         typename TDeps

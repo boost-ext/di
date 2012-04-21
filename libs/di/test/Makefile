@@ -10,11 +10,11 @@ all test: $(patsubst %.cpp,%.o,$(shell find . -iname "*.cpp"))
 clean:
 	@find . -iname "*.o" | xargs --no-run-if-empty rm -f
 
-#.deps:
-	#@mkdir $@
+.deps:
+	@mkdir $@
 
-#.deps/%.dep: %.cpp .deps
-	#@mkdir -p $(shell dirname $@) 2>/dev/null
-	#@$(lastword $(CXX)) $(CXXFLAGS) -MM $< > $@
-	#@sed -i".bak" -e 's|.*:|$*.o:|' $@
+.deps/%.dep: %.cpp .deps
+	@mkdir -p $(shell dirname $@) 2>/dev/null
+	@$(lastword $(CXX)) $(CXXFLAGS) -MM $< > $@
+	@sed -i -e 's|.*:|$*.o:|' $@
 
