@@ -10,9 +10,6 @@
     #define BOOST_DI_AUX_DEPENDENCY_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
-    #include <boost/preprocessor/repetition/enum_params.hpp>
-    #include <boost/preprocessor/repetition/enum_binary_params.hpp>
-    #include <boost/preprocessor/facilities/intercept.hpp>
     #include <boost/preprocessor/cat.hpp>
     #include <boost/typeof/typeof.hpp>
     #include <boost/function_types/parameter_types.hpp>
@@ -31,7 +28,8 @@
     #include "boost/di/ctor.hpp"
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE, "boost/di/aux/dependency.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (\
+        BOOST_DI_PARAMS(1, BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE, "boost/di/aux/dependency.hpp"))
 
     namespace boost {
     namespace di {
@@ -186,15 +184,15 @@
 
 #else
 
-    template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
+    template<typename TPool, BOOST_DI_ARGS_TYPES(Args)>
     typename enable_if<is_scope_type<TPool>, typename result_type<TPool>::type>::type
-    create(const TPool&, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg)) {
-        return scope_.create(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg));
+    create(const TPool&, BOOST_DI_ARGS(Args, args)) {
+        return scope_.create(BOOST_DI_ARGS_PASS(args));
     }
 
-    template<typename TPool, BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
+    template<typename TPool, BOOST_DI_ARGS_TYPES(Args)>
     typename enable_if<is_pool_type<TPool>, typename result_type<TPool>::type>::type
-    create(const TPool& pool, BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, & BOOST_PP_INTERCEPT)) {
+    create(const TPool& pool, BOOST_DI_ARGS_NOT_USED(Args)) {
         return pool.template get<TInstance<> >();
     }
 

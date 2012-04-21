@@ -26,7 +26,8 @@
     #include "boost/di/scopes/singleton.hpp"
     #include "boost/di/concepts.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/fusion_module.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (\
+        3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/fusion_module.hpp"))
 
     namespace boost {
     namespace di {

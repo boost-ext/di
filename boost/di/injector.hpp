@@ -34,7 +34,8 @@
     #include "boost/di/policy.hpp"
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/injector.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (\
+        3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/injector.hpp"))
 
     namespace boost {
     namespace di {

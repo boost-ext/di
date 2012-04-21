@@ -16,7 +16,8 @@
     #include <boost/preprocessor/repetition/enum_binary_params.hpp>
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE, "boost/di/scopes/per_request.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (\
+        3, (1, BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE, "boost/di/scopes/per_request.hpp"))
 
     namespace boost {
     namespace di {

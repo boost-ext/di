@@ -31,7 +31,8 @@
     #include "boost/di/scopes/per_request.hpp"
     #include "boost/di/concepts.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/generic_module.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (\
+        3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/generic_module.hpp"))
 
     namespace boost {
     namespace di {

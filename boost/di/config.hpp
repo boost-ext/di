@@ -7,23 +7,66 @@
 #ifndef BOOST_DI_CONFIG_HPP
 #define BOOST_DI_CONFIG_HPP
 
-#include <boost/mpl/assert.hpp>
+#include <boost/preprocessor/iteration/iterate.hpp>
+#include <boost/preprocessor/repetition/enum_params.hpp>
+#include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
+#include <boost/preprocessor/repetition/enum_binary_params.hpp>
+#include <boost/preprocessor/facilities/intercept.hpp>
+#include <boost/mpl/limits/vector.hpp>
 #include <boost/config.hpp>
+
+//TODO remove
+#include <boost/mpl/assert.hpp>
+#ifndef BOOST_DI_STATIC_ASSERT
+# define BOOST_DI_STATIC_ASSERT(cond, expr, types) BOOST_MPL_ASSERT_MSG(cond, expr, types)
+#endif
+
 
 #if !defined(BOOST_DI_CTOR_CFG_VA_ARGS) && !defined(BOOST_DI_CTOR_CFG_BRACKET)
 # define BOOST_DI_CTOR_CFG_VA_ARGS
-#endif
-
-#if !defined(BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE)
-# define BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE 10
 #endif
 
 #if !defined(BOOST_DI_CTOR_UNIQUE_NAME)
 # define BOOST_DI_CTOR_UNIQUE_NAME ctor__
 #endif
 
-#ifndef BOOST_DI_STATIC_ASSERT
-# define BOOST_DI_STATIC_ASSERT(cond, expr, types) BOOST_MPL_ASSERT_MSG(cond, expr, types)
+#if defined(BOOST_HAS_VARIADIC_TMPL)
+
+#define BOOST_DI_PARAMS(start, limit, file) 3, (0, 0, file)
+
+# define BOOST_DI_ARGS_TYPES_MPL(Args) typename... Args
+# define BOOST_DI_ARGS_MPL(Args) Args...
+
+# define BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE 0
+# define BOOST_DI_ARGS_TYPES(Args) typename... Args
+# define BOOST_DI_ARGS(Args, args) Args&&... args
+# define BOOST_DI_ARGS_NOT_USED(Args) Args&&...
+# define BOOST_DI_ARGS_PASS(args) args
+# define BOOST_DI_ARGS_FORWARD(args) std::forward(args)...
+
+#else
+
+# if !defined(BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE)
+#  define BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE 10
+# endif
+
+#define BOOST_DI_PARAMS(start, limit, file) 3, (start, limit, file)
+
+# define BOOST_DI_ARGS_TYPES_MPL(Arg) BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_LIMIT_VECTOR_SIZE, typename Arg, mpl_::na)
+# define BOOST_DI_ARGS_MPL(Arg) BOOST_PP_ENUM_PARAMS(BOOST_MPL_LIMIT_VECTOR_SIZE, Arg)
+
+# define BOOST_DI_ARGS_TYPES(Arg) BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)
+# define BOOST_DI_ARGS(Arg, arg) BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg)
+# define BOOST_DI_ARGS_NOT_USED(Arg) BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, & BOOST_PP_INTERCEPT)
+# define BOOST_DI_ARGS_PASS(arg) BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg)
+# define BOOST_DI_ARGS_FORWARD(arg) BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg)
+
+#endif
+
+#if defined(BOOST_HAS_VARIADIC_TMPL)
+# define ARITY 0 //infinity
+#else
+# define ARITY 5
 #endif
 
 namespace boost {
