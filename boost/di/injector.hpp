@@ -30,8 +30,13 @@
     #include "boost/di/policy.hpp"
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (\
-        BOOST_DI_PARAMS(1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/injector.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (   \
+        BOOST_DI_PARAMS(                    \
+            1                               \
+          , BOOST_MPL_LIMIT_VECTOR_SIZE     \
+          , "boost/di/injector.hpp"         \
+        )                                   \
+    )
 
     namespace boost {
     namespace di {
@@ -120,8 +125,8 @@
 
 #else
 
-    template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename M)>
-    injector(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const M, &module))
+    template<BOOST_DI_ARGS_TYPES(M)>
+    injector(BOOST_DI_ARGS(M, module))
         : pool_(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), module, .get_pool() BOOST_PP_INTERCEPT))
         , factory_(pool_)
     { }

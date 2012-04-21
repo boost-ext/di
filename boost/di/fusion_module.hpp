@@ -6,13 +6,12 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef BOOST_DI_MODULE_FUSION_MODULE_HPP
-    #define BOOST_DI_MODULE_FUSION_MODULE_HPP
+    #ifndef BOOST_DI_FUSION_MODULE_HPP
+    #define BOOST_DI_FUSION_MODULE_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/typeof/typeof.hpp>
     #include <boost/type_traits/is_base_of.hpp>
-    #include <boost/mpl/limits/vector.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/fold.hpp>
     #include <boost/mpl/back_inserter.hpp>
@@ -24,8 +23,13 @@
     #include "boost/di/concepts.hpp"
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (\
-        BOOST_DI_PARAMS(1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/fusion_module.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (           \
+        BOOST_DI_PARAMS(                            \
+            1                                       \
+          , BOOST_MPL_LIMIT_VECTOR_SIZE             \
+          , "boost/di/fusion_module.hpp"            \
+        )                                           \
+    )
 
     namespace boost {
     namespace di {
@@ -58,9 +62,13 @@
 
         #include BOOST_PP_ITERATE()
 
-        fusion_module<> operator()() const { return fusion_module<>(); }
+        fusion_module<> operator()() const {
+            return fusion_module<>();
+        }
 
-        const pool& get_pool() const { return pool_; }
+        const pool& get_pool() const {
+            return pool_;
+        }
 
     private:
         pool pool_;
@@ -73,16 +81,16 @@
 
 #else
 
-    template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    fusion_module(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg))
-        : pool_(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg))
+    template<BOOST_DI_ARGS_TYPES(Args)>
+    fusion_module(BOOST_DI_ARGS(Args, args))
+        : pool_(BOOST_DI_ARGS_FORWARD(args))
     { }
 
-    template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    fusion_module<mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), Arg)> >
-    operator()(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg)) const {
-        return fusion_module< mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), Arg)> >(
-            BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg));
+    template<BOOST_DI_ARGS_TYPES(Args)>
+    fusion_module<mpl::vector<BOOST_DI_ARGS_PASS_TYPES(Args)> >
+    operator()(BOOST_DI_ARGS(Args, args)) const {
+        return fusion_module<mpl::vector<BOOST_DI_ARGS_PASS_TYPES(Args)> >(
+            BOOST_DI_ARGS_FORWARD(args));
     }
 
 #endif

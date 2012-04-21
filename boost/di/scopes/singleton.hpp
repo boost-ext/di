@@ -13,8 +13,13 @@
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (\
-        BOOST_DI_PARAMS(1, BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE, "boost/di/scopes/singleton.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (           \
+        BOOST_DI_PARAMS(                            \
+            1                                       \
+          , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE      \
+          , "boost/di/scopes/singleton.hpp"         \
+        )                                           \
+    )
 
     namespace boost {
     namespace di {
@@ -52,10 +57,10 @@
 
 #else
 
-    template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    result_type create(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg)) {
+    template<BOOST_DI_ARGS_TYPES(Args)>
+    result_type create(BOOST_DI_ARGS(Args, args)) {
         if (!instance_) {
-            instance_.reset(new T(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg)));
+            instance_.reset(new T(BOOST_DI_ARGS_FORWARD(args)));
         }
 
         return instance_;

@@ -10,12 +10,9 @@
     #define BOOST_DI_AUX_POOL_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
-    #include <boost/preprocessor/repetition/enum_params.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
-    #include <boost/preprocessor/repetition/enum_binary_params.hpp>
     #include <boost/preprocessor/punctuation/comma_if.hpp>
     #include <boost/utility/enable_if.hpp>
-    #include <boost/mpl/limits/vector.hpp>
     #include <boost/mpl/fold.hpp>
     #include <boost/mpl/copy.hpp>
     #include <boost/mpl/if.hpp>
@@ -25,9 +22,15 @@
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/has_xxx.hpp>
     #include "boost/di/aux/utility.hpp"
+    #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (\
-        3, (1, BOOST_MPL_LIMIT_VECTOR_SIZE, "boost/di/aux/pool.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (   \
+        BOOST_DI_PARAMS(                    \
+            1                               \
+          , BOOST_MPL_LIMIT_VECTOR_SIZE     \
+          , "boost/di/aux/pool.hpp"         \
+        )                                   \
+    )
 
     namespace boost {
     namespace di {
@@ -66,8 +69,11 @@
     #endif
 
 #else
-    #define BOOST_DI_DERIVES_IMPL(_, n, sequence) BOOST_PP_COMMA_IF(n) public mpl::at_c<sequence, n>::type
-    #define BOOST_DI_CTOR_INITLIST_IMPL(_, n, na) BOOST_PP_COMMA_IF(n) T##n(arg##n)
+    #define BOOST_DI_DERIVES_IMPL(_, n, sequence)                   \
+        BOOST_PP_COMMA_IF(n) public mpl::at_c<sequence, n>::type
+
+    #define BOOST_DI_CTOR_INITLIST_IMPL(_, n, na)                   \
+        BOOST_PP_COMMA_IF(n) Args##n(args##n)
 
     template<typename TSequence>
     class pool<TSequence, typename enable_if_c<mpl::size<TSequence>::value == BOOST_PP_ITERATION()>::type>
@@ -97,8 +103,8 @@
 
         pool() { }
 
-        template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename T)>
-        pool(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const T, &arg))
+        template<BOOST_DI_ARGS_TYPES(Args)>
+        pool(BOOST_DI_ARGS(Args, args))
             : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_CTOR_INITLIST_IMPL, ~)
         { }
 

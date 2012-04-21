@@ -22,14 +22,20 @@
     #include <boost/mpl/contains.hpp>
     #include <boost/mpl/placeholders.hpp>
     #include <boost/mpl/identity.hpp>
+    #include <boost/mpl/assert.hpp>
     #include <boost/mpl/has_xxx.hpp>
     #include "boost/di/aux/instance.hpp"
     #include "boost/di/aux/explicit_value.hpp"
     #include "boost/di/ctor.hpp"
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (\
-        BOOST_DI_PARAMS(1, BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE, "boost/di/aux/dependency.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (           \
+        BOOST_DI_PARAMS(                            \
+            1                                       \
+          , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE      \
+          , "boost/di/aux/dependency.hpp"           \
+        )                                           \
+    )
 
     namespace boost {
     namespace di {
@@ -41,15 +47,22 @@
       , typename TGiven = TExpected
       , typename TContext = mpl::vector0<>
       , typename TBind = is_same<mpl::_1, TExpected>
-      , template<typename, typename = void> class TValue = explicit_value
-      , template<typename = TExpected, typename = TContext, typename = void> class TInstance = instance
+      , template<
+            typename
+          , typename = void
+        > class TValue = explicit_value
+      , template<
+            typename = TExpected
+          , typename = TContext
+          , typename = void
+        > class TInstance = instance
     >
     class dependency
     {
         BOOST_MPL_HAS_XXX_TRAIT_DEF(BOOST_DI_CTOR_UNIQUE_NAME)
         BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
-        BOOST_DI_STATIC_ASSERT(
+        BOOST_MPL_ASSERT_MSG(
             !has_element_type<TGiven>::value,
             GIVEN_TYPE_WITH_ELEMENT_TYPE,
             (TGiven)
@@ -146,8 +159,15 @@
       , typename TGiven
       , typename TContext
       , typename TBind
-      , template<typename, typename> class TValue
-      , template<typename, typename, typename> class TInstance
+      , template<
+            typename
+          , typename
+        > class TValue
+      , template<
+            typename
+          , typename
+          , typename
+        > class TInstance
     >
     class dependency<mpl::_1, TExpected, TGiven, TContext, TBind, TValue, TInstance>
     {
@@ -163,8 +183,15 @@
         typename TScope
       , typename TContext
       , typename TBind
-      , template<typename, typename> class TValue
-      , template<typename, typename, typename> class TInstance
+      , template<
+            typename
+          , typename
+        > class TValue
+      , template<
+            typename
+          , typename
+          , typename
+        > class TInstance
     >
     class dependency<TScope, mpl::_1, mpl::_2, TContext, TBind, TValue, TInstance>
     {

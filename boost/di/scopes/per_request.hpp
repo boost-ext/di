@@ -9,13 +9,18 @@
     #ifndef BOOST_DI_SCOPES_PER_REQUEST_HPP
     #define BOOST_DI_SCOPES_PER_REQUEST_HPP
 
+    #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/shared_ptr.hpp>
     #include <boost/make_shared.hpp>
-    #include <boost/preprocessor/iteration/iterate.hpp>
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (\
-        BOOST_DI_PARAMS(1, BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE, "boost/di/scopes/per_request.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (           \
+        BOOST_DI_PARAMS(                            \
+            1                                       \
+          , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE      \
+          , "boost/di/scopes/per_request.hpp"       \
+        )                                           \
+    )
 
     namespace boost {
     namespace di {
@@ -46,9 +51,9 @@
 
 #else
 
-    template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename Arg)>
-    result_type create(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const Arg, &arg)) {
-        return result_type(new T(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), arg)));
+    template<BOOST_DI_ARGS_TYPES(Args)>
+    result_type create(BOOST_DI_ARGS(Args, args)) {
+        return result_type(new T(BOOST_DI_ARGS_FORWARD(args)));
     }
 
 #endif

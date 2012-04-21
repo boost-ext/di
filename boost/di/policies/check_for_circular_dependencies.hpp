@@ -21,14 +21,20 @@
     #include <boost/mpl/accumulate.hpp>
     #include <boost/mpl/transform.hpp>
     #include <boost/mpl/size.hpp>
+    #include <boost/mpl/assert.hpp>
     #include "boost/di/aux/utility.hpp"
     #include "boost/di/aux/dependency.hpp"
     #include "boost/di/detail/binder.hpp"
     #include "boost/di/scopes/per_request.hpp"
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (\
-        BOOST_DI_PARAMS(0, BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE, "boost/di/policies/check_for_circular_dependencies.hpp"))
+    #define BOOST_PP_ITERATION_PARAMS_1 (                               \
+        BOOST_DI_PARAMS(                                                \
+            0                                                           \
+          , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE                          \
+          , "boost/di/policies/check_for_circular_dependencies.hpp"     \
+        )                                                               \
+    )
 
     namespace boost {
     namespace di {
@@ -40,7 +46,13 @@
         template<
             typename TDeps
           , typename TGiven
-          , template<typename, typename, typename = TDeps, typename = aux::dependency<scopes::per_request, mpl::_1, mpl::_2> > class TBinder = detail::binder
+          , bool Assert = true
+          , template<
+                typename
+              , typename
+              , typename = TDeps
+              , typename = aux::dependency<scopes::per_request, mpl::_1, mpl::_2>
+            > class TBinder = detail::binder
         >
         class verify
         {
@@ -122,8 +134,8 @@
     :
         mpl::false_
     {
-       BOOST_DI_STATIC_ASSERT(
-            false,
+       BOOST_MPL_ASSERT_MSG(
+            !Assert,
             CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED,
             (typename TDependency::given, TCallStack)
         );
