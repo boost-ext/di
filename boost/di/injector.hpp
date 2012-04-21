@@ -125,8 +125,8 @@
 
     template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename M)>
     injector(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), const M, &module))
-        : pool_(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), module, .get_pool() BOOST_PP_INTERCEPT)),
-          factory_(pool_)
+        : pool_(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), module, .get_pool() BOOST_PP_INTERCEPT))
+        , factory_(pool_)
     { }
 
     #define BOOST_DI_MODULE_ARG(_, n, M) BOOST_PP_COMMA_IF(n) const M##n& module##n = M##n()

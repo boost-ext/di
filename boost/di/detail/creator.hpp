@@ -79,7 +79,7 @@
     template<typename TDependency, typename TCallStack, typename TEntries>
     static typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION(), typename TDependency::template result_type<TPool>::type>::type
     execute_impl(TEntries& entries, const TPool& pool) {
-        #define BOOST_DI_CREATOR_EXECUTE(z, n, _) BOOST_PP_COMMA_IF(n)                                         \
+        #define BOOST_DI_CREATOR_EXECUTE(z, n, _) BOOST_PP_COMMA_IF(n)                                       \
              TConverter<typename TDependency::scope, typename aux::at_ctor<TDependency, n>::type>::execute(  \
                 execute<typename aux::at_ctor<TDependency, n>::type, TCallStack>(entries, pool))
 
