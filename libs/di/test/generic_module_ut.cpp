@@ -90,7 +90,7 @@ BOOST_AUTO_TEST_CASE(generic_module_default_scope_bind)
               bind<if0, c0if0>
             , c1
             , bind<c2>::in_name<int>
-            , bind<c3>::in_call_stack<c4, c5>
+            , bind<c3>::in_call<c4, c5>
           >
     { };
 
@@ -225,11 +225,11 @@ BOOST_AUTO_TEST_CASE(generic_module_many_scopes)
     BOOST_CHECK((mpl::equal<mpl::vector0<>, module::pool::sequence>::value));
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_in_call_stack)
+BOOST_AUTO_TEST_CASE(generic_module_in_call)
 {
     struct module
         : generic_module<
-              per_request<c1>::in_call_stack<c2>
+              per_request<c1>::in_call<c2>
           >
     { };
 
@@ -265,13 +265,13 @@ BOOST_AUTO_TEST_CASE(generic_module_in_name)
     BOOST_CHECK((mpl::equal<mpl::vector0<>, module::pool::sequence>::value));
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_in_namein_call_stack)
+BOOST_AUTO_TEST_CASE(generic_module_in_namein_call)
 {
     struct module
         : generic_module<
               singletons<
-                  bind<c1>::in_name<int>::in_call_stack<double>
-                , bind<c2>::in_name<double>::in_call_stack<int>
+                  bind<c1>::in_name<int>::in_call<double>
+                , bind<c2>::in_name<double>::in_call<int>
               >
           >
     { };
@@ -289,13 +289,13 @@ BOOST_AUTO_TEST_CASE(generic_module_in_namein_call_stack)
     BOOST_CHECK((mpl::equal<mpl::vector0<>, module::pool::sequence>::value));
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_in_call_stack_in_name)
+BOOST_AUTO_TEST_CASE(generic_module_in_call_in_name)
 {
     struct module
         : generic_module<
               singletons<
-                  bind<c1>::in_call_stack<double>::in_name<int>
-                , bind<c2>::in_call_stack<int>::in_name<double>
+                  bind<c1>::in_call<double>::in_name<int>
+                , bind<c2>::in_call<int>::in_name<double>
               >
           >
     { };
@@ -343,12 +343,12 @@ BOOST_AUTO_TEST_CASE(generic_module_mix)
                   bind<if0, c0if0>
                 , c1
                 , bind<c2>::in_name<int>
-                , bind<c3>::in_call_stack<c4, c5>
+                , bind<c3>::in_call<c4, c5>
               >
             , per_requests <
                 c6
               >
-            , singleton<c7>::in_name<double>::in_call_stack<c1>
+            , singleton<c7>::in_name<double>::in_call<c1>
           >
     { };
 
@@ -369,14 +369,14 @@ BOOST_AUTO_TEST_CASE(generic_module_mix)
     BOOST_CHECK((mpl::equal<mpl::vector0<>, module::pool::sequence>::value));
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_named_in_call_stack)
+BOOST_AUTO_TEST_CASE(generic_module_named_in_call)
 {
     struct module
         : generic_module<
               per_requests<
                   bind<int, mpl::int_<1> >
-                , bind<int, mpl::int_<4> >::in_name< mpl::string<'2'> >::in_call_stack<c7, c6, c4>
-                , bind<int, mpl::int_<5> >::in_call_stack<c2>
+                , bind<int, mpl::int_<4> >::in_name< mpl::string<'2'> >::in_call<c7, c6, c4>
+                , bind<int, mpl::int_<5> >::in_call<c2>
               >
           >
     { };
@@ -449,8 +449,8 @@ BOOST_AUTO_TEST_CASE(generic_module_externals_bind)
               externals<
                   int
                 , bind<c1>::in_name<int>
-                , bind<c2>::in_call_stack<c1>
-                , bind<c3>::in_name<double>::in_call_stack<c4, c5>
+                , bind<c2>::in_call<c1>
+                , bind<c3>::in_name<double>::in_call<c4, c5>
               >
           >
     { };
@@ -485,7 +485,7 @@ BOOST_AUTO_TEST_CASE(generic_module_set_instance_int)
     BOOST_CHECK_EQUAL(i, module::set<int>(i).get());
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_set_instance_annotate_in_in_call_stack)
+BOOST_AUTO_TEST_CASE(generic_module_set_instance_annotate_in_in_call)
 {
     const int i1 = 42;
     const int i2 = 43;
@@ -493,8 +493,8 @@ BOOST_AUTO_TEST_CASE(generic_module_set_instance_annotate_in_in_call_stack)
     struct module
         : generic_module<
               externals<
-                  annotate< bind<int>::in_call_stack<c1, c2> >::with<a>
-                , annotate< bind<int>::in_call_stack<c3, c4> >::with<b>
+                  annotate< bind<int>::in_call<c1, c2> >::with<a>
+                , annotate< bind<int>::in_call<c3, c4> >::with<b>
               >
           >
     { };
@@ -521,7 +521,7 @@ BOOST_AUTO_TEST_CASE(generic_module_set_instance_annotate_in_name)
     BOOST_CHECK_EQUAL(i2, module::set<b>(i2).get());
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_set_instance_annotatein_name_in_call_stack)
+BOOST_AUTO_TEST_CASE(generic_module_set_instance_annotatein_name_in_call)
 {
     const int i1 = 42;
     const int i2 = 43;
@@ -529,8 +529,8 @@ BOOST_AUTO_TEST_CASE(generic_module_set_instance_annotatein_name_in_call_stack)
     struct module
         : generic_module<
               externals<
-                  annotate< bind<int>::in_call_stack<c1, c2>::in_name<float> >::with<a>
-                , annotate< bind<int>::in_name<double>::in_call_stack<c3, c4> >::with<b>
+                  annotate< bind<int>::in_call<c1, c2>::in_name<float> >::with<a>
+                , annotate< bind<int>::in_name<double>::in_call<c3, c4> >::with<b>
               >
           >
     { };
@@ -550,7 +550,7 @@ BOOST_AUTO_TEST_CASE(generic_module_set_instance_mix)
               externals<
                   int
                 , annotate< bind<int>::in_name<float> >::with<a>
-                , annotate< bind<int>::in_call_stack<c1, c2>::in_name<float> >::with<b>
+                , annotate< bind<int>::in_call<c1, c2>::in_name<float> >::with<b>
               >
           >
     { };

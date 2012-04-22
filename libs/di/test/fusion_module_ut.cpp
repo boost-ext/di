@@ -41,12 +41,12 @@ BOOST_AUTO_TEST_CASE(fusion_module_mix)
             bind<if0, c0if0>
           , c1
           , bind<c2>::in_name<int>
-          , bind<c3>::in_call_stack<c4, c5>
+          , bind<c3>::in_call<c4, c5>
         >()
       , per_requests <
             c6
         >()
-      , singleton<c7>::in_name<double>::in_call_stack<c1>()
+      , singleton<c7>::in_name<double>::in_call<c1>()
     ));
 
     typedef BOOST_TYPEOF(module) module_t;

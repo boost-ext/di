@@ -93,7 +93,7 @@ public:
         , aux::internal
     {
         template<BOOST_DI_ARGS_TYPES_MPL(T)>
-        struct in_call_stack
+        struct in_call
             : mpl::fold<
                   mpl::vector1<TExpected>
                 , mpl::vector0<>
@@ -171,7 +171,7 @@ public:
             , aux::internal
         {
             template<BOOST_DI_ARGS_TYPES_MPL(T)>
-            struct in_call_stack
+            struct in_call
                 : mpl::fold<
                     mpl::vector1<TExpected>
                   , mpl::vector0<>

@@ -9,6 +9,7 @@
 
 #include "boost/di/concepts/annotate.hpp"
 #include "boost/di/concepts/bind.hpp"
+#include "boost/di/concepts/call_stack.hpp"
 #include "boost/di/concepts/externals.hpp"
 #include "boost/di/concepts/scope.hpp"
 #include "boost/di/scopes/per_request.hpp"
@@ -70,6 +71,11 @@ struct externals
 template<typename T>
 struct annotate
     : concepts::annotate<T>
+{ };
+
+template<BOOST_DI_ARGS_TYPES_MPL(T)>
+struct call_stack
+    : concepts::call_stack<BOOST_DI_ARGS_MPL(T)>
 { };
 
 } // namespace di

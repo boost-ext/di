@@ -21,13 +21,13 @@ int main()
         >,
         di::per_requests<
             c0if0,
-            di::bind<c1if0>::in_call_stack<c6, c5>,
-            di::bind<c2if0>::in_call_stack<c7>,
+            di::bind<c1if0>::in_call<c6, c5>,
+            di::bind<c2if0>::in_call<c7>,
             di::bind<int, mpl::int_<1> >,
-            di::bind<int, mpl::int_<2> >::in_call_stack<c8>,
-            di::bind<int, mpl::int_<3> >::in_name< mpl::string<'1'> >::in_call_stack<c7, c6, c4>,
-            di::bind<int, mpl::int_<4> >::in_name< mpl::string<'2'> >::in_call_stack<c7, c6, c4>,
-            di::bind<int, mpl::int_<5> >::in_call_stack<c2>
+            di::bind<int, mpl::int_<2> >::in_call<c8>,
+            di::bind<int, mpl::int_<3> >::in_name< mpl::string<'1'> >::in_call<c7, c6, c4>,
+            di::bind<int, mpl::int_<4> >::in_name< mpl::string<'2'> >::in_call<c7, c6, c4>,
+            di::bind<int, mpl::int_<5> >::in_call<c2>
         >
     > generic_module;
 

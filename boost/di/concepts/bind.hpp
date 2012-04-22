@@ -37,7 +37,7 @@ struct bind
     , aux::internal
 {
     template<BOOST_DI_ARGS_TYPES_MPL(T)>
-    struct in_call_stack
+    struct in_call
         : aux::dependency<
               mpl::_1
             , TExpected
@@ -68,7 +68,7 @@ struct bind
         , aux::internal
     {
         template<BOOST_DI_ARGS_TYPES_MPL(T)>
-        struct in_call_stack
+        struct in_call
             : aux::dependency<
                   mpl::_1
                 , named<TExpected, TName>
@@ -104,7 +104,7 @@ struct bind<
     , aux::internal
 {
     template<BOOST_DI_ARGS_TYPES_MPL(T)>
-    struct in_call_stack
+    struct in_call
         : aux::dependency<
               mpl::_1
             , TExpected
@@ -148,7 +148,7 @@ struct bind<
         , aux::internal
     {
         template<BOOST_DI_ARGS_TYPES_MPL(T)>
-        struct in_call_stack
+        struct in_call
             : aux::dependency<
                   mpl::_1
                 , named<TExpected, TName>
