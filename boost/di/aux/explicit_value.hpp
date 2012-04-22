@@ -34,10 +34,13 @@ class has_value
     { };
 
     template<typename T> static mpl::aux::no_tag  deduce(non_type<const int*, &T::value>*);
-    template<typename T> static mpl::aux::yes_tag deduce(...);
+    template<typename>   static mpl::aux::yes_tag deduce(...);
 
 public:
-    BOOST_STATIC_CONSTANT(bool, value = sizeof(deduce<base>(0)) == sizeof(mpl::aux::yes_tag));
+    BOOST_STATIC_CONSTANT(
+        bool
+      , value = sizeof(deduce<base>(0)) == sizeof(mpl::aux::yes_tag)
+    );
 };
 
 }// namespace detail
@@ -48,14 +51,14 @@ class explicit_value
 { };
 
 template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, int C)>
-class explicit_value< mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> >
+class explicit_value<mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> >
     : public mpl::true_
 {
 public:
     typedef std::string result_type;
 
     inline static result_type create() {
-        return mpl::c_str< mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> >::value;
+        return mpl::c_str<mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> >::value;
     }
 };
 

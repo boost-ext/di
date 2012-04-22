@@ -19,14 +19,14 @@ public:
     { }
 };
 
-typedef di::generic_module<
-    di::per_request<
-        c
-    >
-> module;
-
 int main()
 {
+    typedef di::generic_module<
+        di::per_request<
+            c
+        >
+    > module;
+
     di::injector<module> injector;
     injector.create<hello_world>();
 

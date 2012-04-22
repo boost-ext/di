@@ -6,11 +6,13 @@
 //
 #include <iostream>
 #include <boost/mpl/size.hpp>
+#include <boost/units/detail/utility.hpp>
 #include <boost/di.hpp>
 #include "data.hpp"
 
-namespace mpl = boost::mpl;
-namespace di  = boost::di;
+namespace mpl   = boost::mpl;
+namespace utils = boost::units::detail;
+namespace di    = boost::di;
 
 class print_visitor
 {
@@ -21,18 +23,18 @@ public:
         while(--size) {
             std::cout << "\t";
         }
-        std::cout << typeid(typename T::type).name() << std::endl;
+        std::cout << utils::demangle(typeid(typename T::type).name()) << std::endl;
     }
 };
 
-typedef di::generic_module<
-    di::singletons<
-        c0if0
-    >
-> visitor_module;
-
 int main()
 {
+    typedef di::generic_module<
+        di::singletons<
+            c0if0
+        >
+    > visitor_module;
+
     di::injector<visitor_module> injector;
     injector.visit<c8>(print_visitor());
 

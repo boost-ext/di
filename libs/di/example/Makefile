@@ -1,7 +1,8 @@
 MAKEFLAGS+=-j$(shell grep -c '^processor' /proc/cpuinfo) -l
 DI:=../../..
 CXXFLAGS:=-I. -I$(DI) -O2 -std=c++98 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wno-variadic-macros -Wno-multichar -Wno-four-char-constants $(EXTRA_CXXFLAGS)
-EXAMPLES:=$(patsubst %.cpp, %.o, $(shell find . -iname "*.cpp"))
+#EXAMPLES:=$(patsubst %.cpp, %.o, $(shell find . -iname "*.cpp"))
+EXAMPLES:=uml_visitor.o
 
 .PHONY: all clean
 

@@ -86,7 +86,11 @@ template<
     >::type
 { };
 
-template<typename T, typename TDefault, typename = void>
+template<
+    typename T
+  , typename TDefault
+  , typename = void
+>
 struct make_default_dependency
     : TDefault::template rebind<
           typename aux::make_plain<T>::type
@@ -94,8 +98,15 @@ struct make_default_dependency
       >
 { };
 
-template<typename T, typename TDefault>
-struct make_default_dependency<T, TDefault, typename enable_if<has_element_type<T> >::type>
+template<
+    typename T
+  , typename TDefault
+>
+struct make_default_dependency<
+    T
+  , TDefault
+  , typename enable_if<has_element_type<T> >::type
+>
     : TDefault::template rebind<
           typename aux::make_plain<T>::type
         , typename aux::make_plain<typename T::value_type>::type

@@ -55,10 +55,15 @@
             typedef TCallStack context;
             typedef typename TDependency::given given;
             typedef typename TDependency::expected expected;
+            typedef typename TDependency::scope scope;
         };
 
     public:
-        template<typename T, typename TCallStack, typename TVisitor>
+        template<
+            typename T
+          , typename TCallStack
+          , typename TVisitor
+        >
         static void execute(const TVisitor& visitor) {
             typedef typename TBinder<T, TCallStack>::type to_bo_created_t;
             typedef typename aux::update_call_stack<TCallStack, to_bo_created_t>::type call_stack_t;
@@ -82,15 +87,27 @@
 
 #else
 
-    template<typename T, typename TDependency, typename TCallStack, typename TVisitor>
+    template<
+        typename T
+      , typename TDependency
+      , typename TCallStack
+      , typename TVisitor
+    >
     static typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION()>::type
     execute_impl(const TVisitor& visitor) {
-        visitor.template operator()< dependency<T, TCallStack, TDependency> >();
+        visitor.template operator()<dependency<T, TCallStack, TDependency> >();
 
-        #define BOOST_DI_VISITOR_EXECUTE(z, n, _)\
-            execute<typename aux::at_ctor<TDependency, n>::type, TCallStack>(visitor);
+        #define BOOST_DI_VISITOR_EXECUTE(z, n, _)               \
+            execute<                                            \
+                typename aux::at_ctor<TDependency, n>::type     \
+              , TCallStack                                      \
+            >(visitor);
 
-        BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_VISITOR_EXECUTE, ~);
+        BOOST_PP_REPEAT(
+            BOOST_PP_ITERATION()
+          , BOOST_DI_VISITOR_EXECUTE
+          , ~
+        );
 
         #undef BOOST_DI_VISITOR_EXECUTE
     }

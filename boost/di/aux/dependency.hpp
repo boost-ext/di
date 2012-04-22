@@ -93,12 +93,16 @@
 
         template<bool, typename = void>
         struct ctor_impl
-            : function_types::parameter_types<BOOST_TYPEOF_TPL(ctor_traits<TGiven>::ctor)>::type
+            : function_types::parameter_types<
+                  BOOST_TYPEOF_TPL(ctor_traits<TGiven>::ctor)
+              >::type
         { };
 
         template<typename Dummy>
         struct ctor_impl<true, Dummy>
-            : function_types::parameter_types<BOOST_TYPEOF_TPL(TGiven::BOOST_DI_CTOR_UNIQUE_NAME::ctor)>::type
+            : function_types::parameter_types<
+                  BOOST_TYPEOF_TPL(TGiven::BOOST_DI_CTOR_UNIQUE_NAME::ctor)
+              >::type
         { };
 
     public:
@@ -169,13 +173,29 @@
           , typename
         > class TInstance
     >
-    class dependency<mpl::_1, TExpected, TGiven, TContext, TBind, TValue, TInstance>
+    class dependency<
+        mpl::_1
+      , TExpected
+      , TGiven
+      , TContext
+      , TBind
+      , TValue
+      , TInstance
+    >
     {
     public:
         template<typename TScope>
         struct rebind
         {
-            typedef dependency<TScope, TExpected, TGiven, TContext, TBind, TValue, TInstance> type;
+            typedef dependency<
+                TScope
+              , TExpected
+              , TGiven
+              , TContext
+              , TBind
+              , TValue
+              , TInstance
+            > type;
         };
     };
 
@@ -193,13 +213,29 @@
           , typename
         > class TInstance
     >
-    class dependency<TScope, mpl::_1, mpl::_2, TContext, TBind, TValue, TInstance>
+    class dependency<
+        TScope
+      , mpl::_1
+      , mpl::_2
+      , TContext
+      , TBind
+      , TValue
+      , TInstance
+    >
     {
     public:
         template<typename TExpected, typename TGiven>
         struct rebind
         {
-            typedef dependency<TScope, TExpected, TGiven, TContext, TBind, TValue, TInstance> type;
+            typedef dependency<
+                TScope
+              , TExpected
+              , TGiven
+              , TContext
+              , TBind
+              , TValue
+              , TInstance
+            > type;
         };
     };
 

@@ -14,6 +14,9 @@
 namespace mpl = boost::mpl;
 namespace di  = boost::di;
 
+class id { };
+class port { };
+
 struct if0
 {
     virtual ~if0() { }
@@ -79,7 +82,7 @@ struct c3
 
 struct c4
 {
-    BOOST_DI_CTOR(c4, boost::shared_ptr<c3> c3_, di::named<int, mpl::string<'1'> > i1, di::named<int, mpl::string<'2'> > i2)
+    BOOST_DI_CTOR(c4, boost::shared_ptr<c3> c3_, di::named<int, id> i1, di::named<int, port> i2)
         : c3_(c3_), i1(i1), i2(i2)
     { }
 
