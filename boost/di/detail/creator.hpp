@@ -55,9 +55,9 @@
         template<typename T, typename TCallStack, typename TEntries>
         static typename TBinder<T, TCallStack>::type::template result_type<TPool>::type
         execute(TEntries& entries, const TPool& pool) {
-            typedef typename TBinder<T, TCallStack>::type ToBeCreated;
-            typedef typename aux::update_call_stack<TCallStack, ToBeCreated>::type CallStack;
-            return execute_impl<ToBeCreated, CallStack, TEntries>(entries, pool);
+            typedef typename TBinder<T, TCallStack>::type to_bo_created_t;
+            typedef typename aux::update_call_stack<TCallStack, to_bo_created>::type call_stack_t;
+            return execute_impl<to_bo_created_t, call_stack_t, TEntries>(entries, pool);
         }
 
     private:

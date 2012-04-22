@@ -58,7 +58,6 @@ struct comparator
     : mpl::apply<TBind, T>::type
 { };
 
-
 template<
     typename T
   , typename TCallStack
@@ -111,22 +110,22 @@ template<
   , typename TDeps
   , typename TDefault
 >
-struct binder :
-    mpl::deref<
-        mpl::begin<
-            typename mpl::push_back<
-                typename detail::sort_dependecies_by_call_stack_order<
-                    T
-                  , TCallStack
-                  , TDeps
-                >::type
-              , typename detail::make_default_dependency<
-                    T
-                  , TDefault
-                >::type
-            >::type
-        >
-    >::type
+struct binder
+    : mpl::deref<
+          mpl::begin<
+              typename mpl::push_back<
+                  typename detail::sort_dependecies_by_call_stack_order<
+                      T
+                    , TCallStack
+                    , TDeps
+                  >::type
+                , typename detail::make_default_dependency<
+                      T
+                    , TDefault
+                  >::type
+              >::type
+          >
+      >::type
 { };
 
 } // namespace detail

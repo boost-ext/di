@@ -60,9 +60,9 @@
     public:
         template<typename T, typename TCallStack, typename TVisitor>
         static void execute(const TVisitor& visitor) {
-            typedef typename TBinder<T, TCallStack>::type ToBeCreated;
-            typedef typename aux::update_call_stack<TCallStack, ToBeCreated>::type CallStack;
-            execute_impl<T, ToBeCreated, CallStack>(visitor);
+            typedef typename TBinder<T, TCallStack>::type to_bo_created_t;
+            typedef typename aux::update_call_stack<TCallStack, to_bo_created_t>::type call_stack_t;
+            execute_impl<T, to_bo_created_t, call_stack_t>(visitor);
         }
 
     private:
