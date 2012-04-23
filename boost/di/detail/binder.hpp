@@ -50,7 +50,11 @@ struct equal_call_stack
 
 template<typename T1, typename T2>
 struct less_context_size
-    : mpl::bool_<(aux::get_context_size<T1>::value > aux::get_context_size<T2>::value)>::type
+    : mpl::bool_<(
+          aux::get_context_size<T1>::value
+          >
+          aux::get_context_size<T2>::value
+      )>::type
 { };
 
 template<typename T, typename TBind>
