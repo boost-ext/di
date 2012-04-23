@@ -17,7 +17,26 @@
 
 namespace boost {
 namespace di {
-namespace test {
+
+template<
+    typename TScope
+  , typename TExpected
+  , typename TGiven
+  , typename TContext = mpl::vector0<>
+>
+struct dependency_base_of
+{
+    typedef typename aux::dependency<
+        TScope
+      , TExpected
+      , TGiven
+      , TContext
+      , mpl::or_<
+            is_base_of<mpl::_1, TExpected>
+          , is_same<mpl::_1, TExpected>
+        >
+    > type;
+};
 
 BOOST_AUTO_TEST_CASE(fusion_module_empty)
 {
@@ -54,19 +73,18 @@ BOOST_AUTO_TEST_CASE(fusion_module_mix)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                aux::dependency<scopes::singleton, if0, c0if0, mpl::vector0<>, is_same<mpl::_1, if0> >
-              , aux::dependency<scopes::singleton, c1, c1, mpl::vector0<>, mpl::or_< is_base_of<mpl::_1, c1>, is_same<mpl::_1, c1> > >
-              , aux::dependency<scopes::singleton, named<c2, int>, c2, mpl::vector0<>, mpl::or_< is_base_of<mpl::_1, named<c2, int> >, is_same<mpl::_1, named<c2, int> > > >
-              , aux::dependency<scopes::singleton, c3, c3, mpl::vector<c4, c5>, mpl::or_< is_base_of<mpl::_1, c3>, is_same<mpl::_1, c3> > >
-              , aux::dependency<scopes::per_request, c6, c6, mpl::vector0<>, mpl::or_< is_base_of<mpl::_1, c6>, is_same<mpl::_1, c6> > >
-              , aux::dependency<scopes::singleton, named<c7, double>, c7, mpl::vector<c1>, mpl::or_< is_base_of<mpl::_1, named<c7, double> >, is_same<mpl::_1, named<c7, double> > > >
+                aux::dependency<scopes::singleton, if0, c0if0>
+              , dependency_base_of<scopes::singleton, c1, c1>::type
+              , dependency_base_of<scopes::singleton, named<c2, int>, c2>::type
+              , dependency_base_of<scopes::singleton, c3, c3, mpl::vector<c4, c5> >::type
+              , dependency_base_of<scopes::per_request, c6, c6>::type
+              , dependency_base_of<scopes::singleton, named<c7, double>, c7, mpl::vector<c1> >::type
             >
           , module_t::dependencies
         >::value
     ));
 }
 
-} // namespace test
 } // namespace di
 } // namespace boost
 

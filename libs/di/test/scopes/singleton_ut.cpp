@@ -11,7 +11,6 @@
 namespace boost {
 namespace di {
 namespace scopes {
-namespace test {
 
 BOOST_AUTO_TEST_CASE(singleton_create)
 {
@@ -24,10 +23,13 @@ BOOST_AUTO_TEST_CASE(singleton_create_args)
 {
     singleton::scope<c2> singleton_;
 
-    BOOST_CHECK((singleton_.create<int, double, char>(0, 0.0, '0') == singleton_.create<int, double, char>(0, 0.0, '0')));
+    BOOST_CHECK((
+        singleton_.create<int, double, char>(0, 0.0, '0')
+        ==
+        singleton_.create<int, double, char>(0, 0.0, '0'))
+    );
 }
 
-} // namespace test
 } // namespace scopes
 } // namespace di
 } // namespace boost

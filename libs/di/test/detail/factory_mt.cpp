@@ -23,7 +23,25 @@
 namespace boost {
 namespace di {
 namespace detail {
-namespace test {
+
+template<
+    typename TScope
+  , typename TExpected
+  , typename TGiven
+  , typename TContext = mpl::vector0<>
+>
+struct dependency_base_of
+    : aux::dependency<
+          TScope
+        , TExpected
+        , TGiven
+        , TContext
+        , mpl::or_<
+              is_base_of<mpl::_1, TExpected>
+            , is_same<mpl::_1, TExpected>
+          >
+      >
+{ };
 
 BOOST_AUTO_TEST_CASE(create_using_copy)
 {
@@ -265,7 +283,7 @@ BOOST_AUTO_TEST_CASE(ctor_traits)
 
     factory<
         mpl::vector<
-            aux::dependency<scopes::per_request, int, mpl::int_<i>, mpl::vector0<>, mpl::or_< is_base_of<mpl::_1, int>, is_same<mpl::_1, int> > >
+            dependency_base_of<scopes::per_request, int, mpl::int_<i> >
         >
     > factory_;
 
@@ -297,11 +315,11 @@ BOOST_AUTO_TEST_CASE(base_of)
 {
     factory<
         mpl::vector<
-            aux::dependency<scopes::per_request, int, mpl::int_<1>, mpl::vector0<>, mpl::or_< is_base_of<mpl::_1, int>, is_same<mpl::_1, int> > >
-          , aux::dependency<scopes::per_request, named<int, mpl::string<'2'> >, mpl::int_<4>, mpl::vector<c7, c6, c4>, mpl::or_< is_base_of<mpl::_1, named<int, mpl::string<'2'> > >, is_same<mpl::_1, named<int, mpl::string<'2'> > > > >
-          , aux::dependency<scopes::per_request, int, mpl::int_<5>, mpl::vector<c2>, mpl::or_< is_base_of<mpl::_1, int>, is_same<mpl::_1, int> > >
-          , aux::dependency<scopes::per_request, c0if0, c0if0, mpl::vector0<>, mpl::or_< is_base_of<mpl::_1, c0if0>, is_same<mpl::_1, c0if0> > >
-          , aux::dependency<scopes::per_request, named<int, mpl::string<'1'> >, mpl::int_<3>, mpl::vector<c7, c6, c4>, mpl::or_< is_base_of<mpl::_1, named<int, mpl::string<'1'> > >, is_same<mpl::_1, named<int, mpl::string<'1'> > > > >
+            dependency_base_of<scopes::per_request, int, mpl::int_<1> >
+          , dependency_base_of<scopes::per_request, named<int, mpl::string<'2'> >, mpl::int_<4>, mpl::vector<c7, c6, c4> >
+          , dependency_base_of<scopes::per_request, int, mpl::int_<5>, mpl::vector<c2> >
+          , dependency_base_of<scopes::per_request, c0if0, c0if0>
+          , dependency_base_of<scopes::per_request, named<int, mpl::string<'1'> >, mpl::int_<3>, mpl::vector<c7, c6, c4> >
         >
     > factory_;
 
@@ -327,7 +345,7 @@ BOOST_AUTO_TEST_CASE(base_of_interface_not_trivial_ctor)
 {
     factory<
         mpl::vector<
-            aux::dependency<scopes::per_request, transaction_provider, transaction_provider, mpl::vector0<>, mpl::or_< is_base_of<mpl::_1, transaction_provider>, is_same<mpl::_1, transaction_provider> > >
+            dependency_base_of<scopes::per_request, transaction_provider, transaction_provider>
         >
     > factory_;
 
@@ -342,7 +360,7 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr_base_of)
 
     factory<
         mpl::vector<
-            aux::dependency<scopes::per_request, named<int, mpl::string<'1'> >, mpl::int_<i>, mpl::vector0<> >
+            aux::dependency<scopes::per_request, named<int, mpl::string<'1'> >, mpl::int_<i> >
         >
     > factory_;
 
@@ -357,7 +375,7 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr)
 
     factory<
         mpl::vector<
-            aux::dependency<scopes::per_request, named<int, mpl::string<'1'> >, mpl::int_<i>, mpl::vector0<>, mpl::or_< is_base_of<mpl::_1, named<int, mpl::string<'1'> > >, is_same<mpl::_1, named<int, mpl::string<'1'> > > > >
+            dependency_base_of<scopes::per_request, named<int, mpl::string<'1'> >, mpl::int_<i> >
         >
     > factory_;
 
@@ -370,7 +388,7 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr_if)
 {
     factory<
         mpl::vector<
-            aux::dependency<scopes::per_request, named<if0, mpl::string<'1'> >, c0if0, mpl::vector0<>, mpl::or_< is_base_of<mpl::_1, named<if0, mpl::string<'1'> > >, is_same<mpl::_1, named<if0, mpl::string<'1'> > > > >
+            dependency_base_of<scopes::per_request, named<if0, mpl::string<'1'> >, c0if0>
         >
     > factory_;
 
@@ -388,8 +406,8 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr_if_with_not_trivial_ctor)
 
     factory<
         mpl::vector<
-            aux::dependency<scopes::per_request, named<if0>, c3if0, mpl::vector0<>, mpl::or_< is_base_of<mpl::_1, named<if0> >, is_same<mpl::_1, named<if0> > > >
-          , aux::dependency<scopes::per_request, int, mpl::int_<i>, mpl::vector0<>, mpl::or_< is_base_of<mpl::_1, int>, is_same<mpl::_1, int> > >
+            dependency_base_of<scopes::per_request, named<if0>, c3if0>
+          , dependency_base_of<scopes::per_request, int, mpl::int_<i> >
         >
     > factory_;
 
@@ -499,7 +517,6 @@ BOOST_AUTO_TEST_CASE(externals_create_with_attributes)
 }
 #endif
 
-} // namespace test
 } // namespace detail
 } // namespace di
 } // namespace boost

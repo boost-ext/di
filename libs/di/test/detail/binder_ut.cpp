@@ -16,7 +16,6 @@
 namespace boost {
 namespace di {
 namespace detail {
-namespace test {
 
 template<
     typename TExpected
@@ -430,7 +429,6 @@ BOOST_AUTO_TEST_CASE(binder_named_type)
     ));
 }
 
-} // namespace test
 } // namespace detail
 } // namespace di
 } // namespace boost

@@ -10,9 +10,7 @@
 
 namespace boost {
 namespace di {
-namespace test {
 
-} // namespace test
 } // namespace di
 } // namespace boost
 

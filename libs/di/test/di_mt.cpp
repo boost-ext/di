@@ -16,7 +16,6 @@
 
 namespace boost {
 namespace di {
-namespace test {
 
 typedef generic_module<
     singletons<
@@ -258,7 +257,6 @@ BOOST_AUTO_TEST_CASE_VARIADIC(basic_externals_ctor, TInjector,
     BOOST_CHECK_EQUAL(87.0, c9_->d);
 }
 
-} // namespace test
 } // namespace di
 } // namespace boost
 

@@ -13,7 +13,6 @@
 
 namespace boost {
 namespace di {
-namespace test {
 
 struct fake_pool { };
 
@@ -43,7 +42,6 @@ BOOST_AUTO_TEST_CASE(injector_simple_module)
     (void)injector_;
 }
 
-} // namespace test
 } // namespace di
 } // namespace boost
 
