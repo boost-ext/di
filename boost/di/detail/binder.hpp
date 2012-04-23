@@ -17,12 +17,17 @@
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/int.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/deref.hpp>
 #include <boost/mpl/begin_end.hpp>
+#include <boost/mpl/next_prior.hpp>
+#include <boost/mpl/greater.hpp>
+#include <boost/mpl/less.hpp>
+#include <boost/mpl/min_max.hpp>
 #include <boost/mpl/has_xxx.hpp>
 #include "boost/di/aux/utility.hpp"
 
@@ -34,27 +39,55 @@ namespace detail {
 
 BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
-template<typename TCallStack, typename TContext>
+template<typename TCallStack, typename T>
 struct equal_call_stack
     : mpl::equal<
         mpl::iterator_range<
             typename mpl::advance_c<
                 typename mpl::begin<TCallStack>::type
-              , mpl::size<TCallStack>::value - mpl::size<TContext>::value
+              , mpl::size<TCallStack>::value - mpl::size<T>::value
             >::type
           , typename mpl::end<TCallStack>::type
         >
-      , TContext
+      , T
       >
+{ };
+
+template<typename TCallStack, typename TContext, typename = void>
+struct for_each_context
+    : mpl::fold<
+        TContext
+      , mpl::int_<mpl::equal<TCallStack, TContext>::value>
+      , mpl::if_<
+            equal_call_stack<
+                TCallStack
+              , mpl::_2
+            >
+          , mpl::next<mpl::_1>
+          , mpl::_1
+        >
+    >::type
+{ };
+
+template<typename TContext>
+struct get_longest_context_size
+    : mpl::fold<
+          TContext
+        , mpl::int_<0>
+        , mpl::max<mpl::_1, mpl::size<mpl::_2> >
+      >::type
 { };
 
 template<typename T1, typename T2>
 struct less_context_size
-    : mpl::bool_<(
-          aux::get_context_size<T1>::value
-          >
-          aux::get_context_size<T2>::value
-      )>::type
+    : mpl::less<
+         get_longest_context_size<
+            typename aux::get_context<T2>::type
+         >
+       , get_longest_context_size<
+            typename aux::get_context<T1>::type
+         >
+      >
 { };
 
 template<typename T, typename TBind>
@@ -66,7 +99,8 @@ template<
     typename T
   , typename TCallStack
   , typename TDeps
-> struct sort_dependecies_by_call_stack_order
+>
+struct sort_dependecies_by_call_stack_order
     : mpl::sort<
         typename mpl::fold<
             TDeps
@@ -77,7 +111,7 @@ template<
                         typename aux::make_plain<T>::type
                       , aux::get_bind<mpl::_2>
                     >
-                  , detail::equal_call_stack<
+                  , detail::for_each_context<
                         TCallStack
                       , aux::get_context<mpl::_2>
                     >

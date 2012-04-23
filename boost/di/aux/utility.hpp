@@ -41,15 +41,6 @@ struct get_context
 };
 
 template<typename T>
-struct get_context_size
-{
-    BOOST_STATIC_CONSTANT(
-        std::size_t
-      , value = mpl::size<typename get_context<T>::type>::value
-    );
-};
-
-template<typename T>
 struct get_dependencies
 {
     typedef typename T::dependencies type;
