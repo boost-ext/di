@@ -18,7 +18,7 @@
 #include "boost/di/aux/instance.hpp"
 #include "boost/di/aux/pool.hpp"
 #include "boost/di/detail/factory.hpp"
-#include "common.hpp"
+#include "dependency.hpp"
 #include "data.hpp"
 
 namespace boost {

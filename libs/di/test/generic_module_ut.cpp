@@ -13,7 +13,7 @@
 #include "boost/di/aux/dependency.hpp"
 #include "boost/di/named.hpp"
 #include "boost/di/generic_module.hpp"
-#include "common.hpp"
+#include "dependency.hpp"
 #include "data.hpp"
 
 namespace boost {
