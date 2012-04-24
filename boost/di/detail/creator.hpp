@@ -60,8 +60,11 @@
         static typename TBinder<T, TCallStack>::type::template result_type<TPool>::type
         execute(TEntries& entries, const TPool& pool) {
             typedef typename TBinder<T, TCallStack>::type to_bo_created_t;
-            typedef typename aux::update_call_stack<TCallStack, to_bo_created_t>::type call_stack_t;
-            return execute_impl<to_bo_created_t, call_stack_t, TEntries>(entries, pool);
+            return execute_impl<
+                to_bo_created_t
+              , typename aux::update_call_stack<TCallStack, to_bo_created_t>::type
+              , TEntries
+            >(entries, pool);
         }
 
     private:

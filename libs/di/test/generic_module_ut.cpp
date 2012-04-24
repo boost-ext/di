@@ -23,15 +23,35 @@ template<
     typename TScope
   , typename TExpected
   , typename TGiven
-  , typename TContext = mpl::vector0<>
+  , typename TContext0 = mpl_::na
+  , typename TContext1 = mpl_::na
+  , typename TContext2 = mpl_::na
 >
-struct dependency_base_of
+struct dependency
 {
-    typedef typename aux::dependency<
+    typedef typename dependency<
         TScope
       , TExpected
       , TGiven
-      , TContext
+      , mpl::vector<TContext0, TContext1, TContext2>
+    > type;
+};
+
+template<
+    typename TScope
+  , typename TExpected
+  , typename TGiven
+  , typename TContext0 = mpl_::na
+  , typename TContext1 = mpl_::na
+  , typename TContext2 = mpl_::na
+>
+struct dependency_base_of
+{
+    typedef typename dependency<
+        TScope
+      , TExpected
+      , TGiven
+      , mpl::vector<TContext0, TContext1, TContext2>
       , mpl::or_<
             is_base_of<mpl::_1, TExpected>
           , is_same<mpl::_1, TExpected>
@@ -116,7 +136,7 @@ BOOST_AUTO_TEST_CASE(generic_module_default_scope_bind)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                aux::dependency<scopes::per_request, if0, c0if0, mpl::vector0<>, is_same<mpl::_1, if0> >
+                dependency<scopes::per_request, if0, c0if0>::type
               , dependency_base_of<scopes::per_request, c1, c1>::type
               , dependency_base_of<scopes::per_request, named<c2, int>, c2>::type
               , dependency_base_of<scopes::per_request, c3, c3, mpl::vector<c4, c5> >::type
@@ -345,7 +365,7 @@ BOOST_AUTO_TEST_CASE(generic_module_bind_if)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                aux::dependency<scopes::singleton, if0, c0if0, mpl::vector0<>, is_same<mpl::_1, if0> >
+                dependency<scopes::singleton, if0, c0if0>::type
             >
           , module::dependencies
         >::value
@@ -374,7 +394,7 @@ BOOST_AUTO_TEST_CASE(generic_module_mix)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                aux::dependency<scopes::singleton, if0, c0if0, mpl::vector0<>, is_same<mpl::_1, if0> >
+                dependency<scopes::singleton, if0, c0if0>::type
               , dependency_base_of<scopes::singleton, c1, c1>::type
               , dependency_base_of<scopes::singleton, named<c2, int>, c2>::type
               , dependency_base_of<scopes::singleton, c3, c3, mpl::vector<c4, c5> >::type

@@ -64,14 +64,6 @@ struct get_sequence
     typedef typename T::sequence type;
 };
 
-//TODO remove internal and module
-struct internal
-{
-    typedef void name; //no name
-};
-
-struct module { };
-
 template<typename TDependency, int N, typename TResult = void>
 struct enable_if_ctor_size
     : enable_if_c<mpl::size<typename TDependency::ctor>::value == N, TResult>

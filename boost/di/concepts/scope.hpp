@@ -16,8 +16,9 @@
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/push_back.hpp>
+#include "boost/di/concepts/bind.hpp"
 #include "boost/di/aux/dependency.hpp"
-#include "boost/di/aux/utility.hpp"
+#include "boost/di/concepts/annotate.hpp"
 #include "boost/di/named.hpp"
 #include "boost/di/config.hpp"
 
@@ -50,7 +51,7 @@ public:
                   is_same<mpl::_1, TExpected>
                >
           >
-        , aux::internal
+        , annotate<>::with<>
     { };
 
     template<BOOST_DI_ARGS_TYPES_MPL(T)>
@@ -59,7 +60,7 @@ public:
               mpl::vector<BOOST_DI_ARGS_MPL(T)>
             , mpl::vector0<>
             , mpl::if_<
-                  is_base_of<aux::internal, mpl::_2>
+                  is_base_of<annotate<>::with<>, mpl::_2>
                 , mpl::push_back<
                       mpl::_1
                     , rebind<mpl::_2, TScope>
@@ -70,7 +71,7 @@ public:
                   >
               >
           >::type
-        , aux::internal
+        , annotate<>::with<>
     { };
 
     template<typename TExpected>
@@ -79,7 +80,7 @@ public:
               mpl::vector1<TExpected>
             , mpl::vector0<>
             , mpl::if_<
-                  is_base_of<aux::internal, mpl::_2>
+                  is_base_of<annotate<>::with<>, mpl::_2>
                 , mpl::push_back<
                       mpl::_1
                     , rebind<mpl::_2, TScope>
@@ -90,7 +91,7 @@ public:
                   >
               >
           >::type
-        , aux::internal
+        , annotate<>::with<>
     {
         template<BOOST_DI_ARGS_TYPES_MPL(T)>
         struct in_call
@@ -98,7 +99,7 @@ public:
                   mpl::vector1<TExpected>
                 , mpl::vector0<>
                 , mpl::if_<
-                      is_base_of<aux::internal, mpl::_2>
+                      is_base_of<annotate<>::with<>, mpl::_2>
                     , mpl::push_back<
                           mpl::_1
                         , rebind<mpl::_2, TScope>
@@ -116,7 +117,7 @@ public:
                       >
                   >
               >::type
-            , aux::internal
+            , annotate<>::with<>
         {
             template<typename TName>
             struct in_name
@@ -124,7 +125,7 @@ public:
                       mpl::vector1<TExpected>
                     , mpl::vector0<>
                     , mpl::if_<
-                          is_base_of<aux::internal, mpl::_2>
+                          is_base_of<annotate<>::with<>, mpl::_2>
                         , mpl::push_back<
                               mpl::_1
                             , rebind<mpl::_2, TScope>
@@ -141,7 +142,7 @@ public:
                           >
                       >
                   >::type
-                , aux::internal
+                , annotate<>::with<>
             { };
         };
 
@@ -151,7 +152,7 @@ public:
                   mpl::vector1<TExpected>
                 , mpl::vector0<>
                 , mpl::if_<
-                      is_base_of<aux::internal, mpl::_2>
+                      is_base_of<annotate<>::with<>, mpl::_2>
                     , mpl::push_back<
                           mpl::_1
                         , rebind<mpl::_2, TScope>
@@ -168,7 +169,7 @@ public:
                       >
                   >
               >::type
-            , aux::internal
+            , annotate<>::with<>
         {
             template<BOOST_DI_ARGS_TYPES_MPL(T)>
             struct in_call
@@ -176,7 +177,7 @@ public:
                     mpl::vector1<TExpected>
                   , mpl::vector0<>
                   , mpl::if_<
-                        is_base_of<aux::internal, mpl::_2>
+                        is_base_of<annotate<>::with<>, mpl::_2>
                       , mpl::push_back<
                             mpl::_1
                           , rebind<mpl::_2, TScope>
@@ -194,7 +195,7 @@ public:
                         >
                     >
                   >::type
-                , aux::internal
+                , annotate<>::with<>
             { };
         };
     };

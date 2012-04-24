@@ -17,6 +17,7 @@
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/is_sequence.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/and.hpp>
@@ -61,7 +62,11 @@ struct for_each_context
       , mpl::if_<
             equal_call_stack<
                 TCallStack
-              , mpl::_2
+              , mpl::if_<
+                    mpl::is_sequence<mpl::_2>
+                  , mpl::_2
+                  , mpl::vector<mpl::_2>
+                >
             >
           , mpl::next<mpl::_1>
           , mpl::_1

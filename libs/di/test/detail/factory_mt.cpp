@@ -27,15 +27,34 @@ namespace detail {
 template<
     typename TScope
   , typename TExpected
-  , typename TGiven
-  , typename TContext = mpl::vector0<>
+  , typename TGiven = TExpected
+  , typename TContext0 = mpl_::na
+  , typename TContext1 = mpl_::na
+  , typename TContext2 = mpl_::na
+>
+struct dependency
+    : aux::dependency<
+          TScope
+        , TExpected
+        , TGiven
+        , mpl::vector<TContext0, TContext1, TContext2>
+      >
+{ };
+
+template<
+    typename TScope
+  , typename TExpected
+  , typename TGiven = TExpected
+  , typename TContext0 = mpl_::na
+  , typename TContext1 = mpl_::na
+  , typename TContext2 = mpl_::na
 >
 struct dependency_base_of
     : aux::dependency<
           TScope
         , TExpected
         , TGiven
-        , TContext
+        , mpl::vector<TContext0, TContext1, TContext2>
         , mpl::or_<
               is_base_of<mpl::_1, TExpected>
             , is_same<mpl::_1, TExpected>
@@ -82,7 +101,7 @@ BOOST_AUTO_TEST_CASE(create_per_request)
 {
     factory<
         mpl::vector<
-            aux::dependency<scopes::per_request, if0, c0if0>
+            dependency<scopes::per_request, if0, c0if0>
         >
     > factory_;
 
@@ -108,8 +127,8 @@ BOOST_AUTO_TEST_CASE(create_per_request_singleton)
 {
     factory<
         mpl::vector<
-            aux::dependency<scopes::per_request, if0, c0if0>
-          , aux::dependency<scopes::singleton, c3>
+            dependency<scopes::per_request, if0, c0if0>
+          , dependency<scopes::singleton, c3>
         >
     > factory_;
 
@@ -135,9 +154,9 @@ BOOST_AUTO_TEST_CASE(create_singleton_path)
 {
     factory<
         mpl::vector<
-            aux::dependency<scopes::per_request, if0, c0if0>
-          , aux::dependency<scopes::per_request, if0, c1if0, mpl::vector<mpl::vector<c6, c5> > >
-          , aux::dependency<scopes::singleton, c3>
+            dependency<scopes::per_request, if0, c0if0>
+          , dependency<scopes::per_request, if0, c1if0, mpl::vector<c6, c5> >
+          , dependency<scopes::singleton, c3>
         >
     >
     factory_;
@@ -164,10 +183,10 @@ BOOST_AUTO_TEST_CASE(create_per_request_singleton_path_order)
 {
     factory<
         mpl::vector<
-            aux::dependency<scopes::per_request, if0, c0if0>
-          , aux::dependency<scopes::per_request, if0, c1if0, mpl::vector<mpl::vector<c6, c5> > >
-          , aux::dependency<scopes::per_request, if0, c2if0, mpl::vector<mpl::vector<c7> > >
-          , aux::dependency<scopes::singleton, c3>
+            dependency<scopes::per_request, if0, c0if0>
+          , dependency<scopes::per_request, if0, c1if0, mpl::vector<c6, c5> >
+          , dependency<scopes::per_request, if0, c2if0, mpl::vector<c7> >
+          , dependency<scopes::singleton, c3>
         >
     > factory_;
 
@@ -193,15 +212,15 @@ BOOST_AUTO_TEST_CASE(create_per_request_singleton_path_mix)
 {
     factory<
         mpl::vector<
-            aux::dependency<scopes::per_request, if0, c0if0>
-          , aux::dependency<scopes::per_request, if0, c1if0, mpl::vector<mpl::vector<c6, c5> > >
-          , aux::dependency<scopes::per_request, if0, c2if0, mpl::vector<mpl::vector<c7> > >
-          , aux::dependency<scopes::singleton, c3>
-          , aux::dependency<scopes::per_request, int, mpl::int_<1> >
-          , aux::dependency<scopes::per_request, int, mpl::int_<2>, mpl::vector<mpl::vector<c8> > >
-          , aux::dependency<scopes::per_request, named<int, mpl::string<'1'> >, mpl::int_<3>, mpl::vector<mpl::vector<c7, c6, c4> > >
-          , aux::dependency<scopes::per_request, named<int, mpl::string<'2'> >, mpl::int_<4>, mpl::vector<mpl::vector<c7, c6, c4> > >
-          , aux::dependency<scopes::per_request, int, mpl::int_<5>, mpl::vector<mpl::vector<c2> > >
+            dependency<scopes::per_request, if0, c0if0>
+          , dependency<scopes::per_request, if0, c1if0, mpl::vector<c6, c5> >
+          , dependency<scopes::per_request, if0, c2if0, mpl::vector<c7> >
+          , dependency<scopes::singleton, c3>
+          , dependency<scopes::per_request, int, mpl::int_<1> >
+          , dependency<scopes::per_request, int, mpl::int_<2>, mpl::vector<c8> >
+          , dependency<scopes::per_request, named<int, mpl::string<'1'> >, mpl::int_<3>, mpl::vector<c7, c6, c4> >
+          , dependency<scopes::per_request, named<int, mpl::string<'2'> >, mpl::int_<4>, mpl::vector<c7, c6, c4> >
+          , dependency<scopes::per_request, int, mpl::int_<5>, mpl::vector<c2> >
         >
     > factory_;
 
@@ -227,7 +246,7 @@ BOOST_AUTO_TEST_CASE(create_singleton_impl)
 {
     factory<
         mpl::vector<
-            aux::dependency<scopes::singleton, if0, c0if0>
+            dependency<scopes::singleton, if0, c0if0>
         >
     > factory_;
 
@@ -253,9 +272,9 @@ BOOST_AUTO_TEST_CASE(create_singleton_many)
 {
     factory<
         mpl::vector<
-            aux::dependency<scopes::singleton, if0, c0if0>
-          , aux::dependency<scopes::singleton, c3>
-          , aux::dependency<scopes::singleton, c1>
+            dependency<scopes::singleton, if0, c0if0>
+          , dependency<scopes::singleton, c3>
+          , dependency<scopes::singleton, c1>
         >
     > factory_;
 
@@ -300,8 +319,8 @@ BOOST_AUTO_TEST_CASE(class_ctor_traits)
 
     factory<
         mpl::vector<
-            aux::dependency<scopes::per_request, named<int, mpl::string<'1'> >, mpl::int_<i1> >
-          , aux::dependency<scopes::per_request, named<int, mpl::string<'2'> >, mpl::int_<i2> >
+            dependency<scopes::per_request, named<int, mpl::string<'1'> >, mpl::int_<i1> >
+          , dependency<scopes::per_request, named<int, mpl::string<'2'> >, mpl::int_<i2> >
         >
     > factory_;
 
@@ -316,10 +335,10 @@ BOOST_AUTO_TEST_CASE(base_of)
     factory<
         mpl::vector<
             dependency_base_of<scopes::per_request, int, mpl::int_<1> >
-          , dependency_base_of<scopes::per_request, named<int, mpl::string<'2'> >, mpl::int_<4>, mpl::vector<mpl::vector<c7, c6, c4> > >
-          , dependency_base_of<scopes::per_request, int, mpl::int_<5>, mpl::vector<mpl::vector<c2> > >
+          , dependency_base_of<scopes::per_request, named<int, mpl::string<'2'> >, mpl::int_<4>, mpl::vector<c7, c6, c4> >
+          , dependency_base_of<scopes::per_request, int, mpl::int_<5>, mpl::vector<c2> >
           , dependency_base_of<scopes::per_request, c0if0, c0if0>
-          , dependency_base_of<scopes::per_request, named<int, mpl::string<'1'> >, mpl::int_<3>, mpl::vector<mpl::vector<c7, c6, c4> > >
+          , dependency_base_of<scopes::per_request, named<int, mpl::string<'1'> >, mpl::int_<3>, mpl::vector<c7, c6, c4> >
         >
     > factory_;
 
@@ -360,7 +379,7 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr_base_of)
 
     factory<
         mpl::vector<
-            aux::dependency<scopes::per_request, named<int, mpl::string<'1'> >, mpl::int_<i> >
+            dependency<scopes::per_request, named<int, mpl::string<'1'> >, mpl::int_<i> >
         >
     > factory_;
 
@@ -444,7 +463,7 @@ BOOST_AUTO_TEST_CASE(externals_create_by_explicit_value)
 
     factory<
         mpl::vector<
-            aux::dependency<scopes::per_request, std::string, mpl::string<'test'> >
+            dependency<scopes::per_request, std::string, mpl::string<'test'> >
         >
       , pool_t
     > factory_(*pool_);
@@ -463,7 +482,7 @@ BOOST_AUTO_TEST_CASE(externals_create_with_non_trivial_ctor)
     const double d = 21.0;
     const char c = 'x';
 
-    typedef aux::pool< mpl::vector<mpl::vector<aux::instance<c2> > > > pool;
+    typedef aux::pool< mpl::vector<aux::instance<c2> > > pool;
 
     scoped_ptr<pool> pool_(
         new pool(
@@ -473,7 +492,7 @@ BOOST_AUTO_TEST_CASE(externals_create_with_non_trivial_ctor)
 
     factory<
         mpl::vector<
-            aux::dependency<scopes::per_request, c2>
+            dependency<scopes::per_request, c2>
         >
       , pool
     > factory_(*pool_);
@@ -504,8 +523,8 @@ BOOST_AUTO_TEST_CASE(externals_create_with_attributes)
 
     factory<
         vector<
-            aux::dependency<scopes::per_request, named1, int>
-          , aux::dependency<scopes::per_request, named2, int>
+            dependency<scopes::per_request, named1, int>
+          , dependency<scopes::per_request, named2, int>
         >
       , pool
     > factory_(*pool_);

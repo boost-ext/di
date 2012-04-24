@@ -22,8 +22,9 @@
     #include <boost/mpl/copy.hpp>
     #include <boost/mpl/transform.hpp>
     #include <boost/mpl/begin_end.hpp>
+    #include <boost/mpl/has_xxx.hpp>
+    #include "boost/di/aux/module.hpp"
     #include "boost/di/aux/pool.hpp"
-    #include "boost/di/aux/utility.hpp"
     #include "boost/di/aux/instance.hpp"
     #include "boost/di/scopes/singleton.hpp"
     #include "boost/di/scopes/per_request.hpp"
@@ -45,6 +46,8 @@
     class generic_module
         : public aux::module
     {
+        BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
+
         template<typename TInstance, typename T>
         struct is_same_instance
             : mpl::or_<
@@ -76,7 +79,7 @@
         };
 
         template<typename T>
-        struct make_annotation<T, typename enable_if<is_base_of<aux::internal, T> >::type>
+        struct make_annotation<T, typename enable_if<has_name<T> >::type>
         {
             typedef typename T::template rebind<scopes::singleton>::type dependency;
             typedef aux::instance<typename dependency::expected, typename dependency::context> instance;

@@ -66,8 +66,11 @@
         >
         static void execute(const TVisitor& visitor) {
             typedef typename TBinder<T, TCallStack>::type to_bo_created_t;
-            typedef typename aux::update_call_stack<TCallStack, to_bo_created_t>::type call_stack_t;
-            execute_impl<T, to_bo_created_t, call_stack_t>(visitor);
+            execute_impl<
+                T
+              , to_bo_created_t
+              , typename aux::update_call_stack<TCallStack, to_bo_created_t>::type
+            >(visitor);
         }
 
     private:

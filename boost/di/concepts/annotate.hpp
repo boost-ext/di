@@ -7,11 +7,13 @@
 #ifndef BOOST_DI_CONCEPTS_ANNOTATE_HPP
 #define BOOST_DI_CONCEPTS_ANNOTATE_HPP
 
+#include <boost/mpl/void.hpp>
+
 namespace boost {
 namespace di {
 namespace concepts {
 
-template<typename TDerived>
+template<typename TDerived = mpl::void_>
 struct annotate
 {
     template<typename TName = void>
