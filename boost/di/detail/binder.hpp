@@ -67,16 +67,16 @@ struct make_context
       >::type
 { };
 
-template<typename TCallStack , typename TContext>
+template<typename TCallStack, typename TContext>
 struct for_each_context
     : mpl::fold<
-        TContext
-      , mpl::int_<equal_call_stack<TCallStack, TContext>::value>
-      , mpl::if_<
-            equal_call_stack<TCallStack, mpl::_2>
-          , mpl::next<mpl::_1>
-          , mpl::_1
-        >
+          TContext
+        , mpl::int_<equal_call_stack<TCallStack, TContext>::value>
+        , mpl::if_<
+              equal_call_stack<TCallStack, mpl::_2>
+            , mpl::next<mpl::_1>
+            , mpl::_1
+          >
     >::type
 { };
 

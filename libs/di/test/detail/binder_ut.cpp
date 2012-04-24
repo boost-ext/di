@@ -5,6 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <boost/test/unit_test.hpp>
+#include <boost/test/test_case_template.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -473,6 +474,76 @@ BOOST_AUTO_TEST_CASE(binder_named_type)
                 named< shared_ptr<int>, mpl::_1>
               , mpl::vector0<>
               , mpl::vector0<>
+              , dependency<mpl::_1, mpl::_2>
+            >::type
+        >::value
+    ));
+}
+
+typedef mpl::vector<
+    mpl::vector<c1>
+  , mpl::vector<c2, c3>
+> binder_multiple_calls_t;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(binder_multiple_calls, TContext, binder_multiple_calls_t)
+{
+    BOOST_CHECK((
+        is_same<
+            dependency<int, int, c1, mpl::vector<c2, c3> >
+          , typename binder<
+                int
+              , TContext
+              , mpl::vector<
+                    dependency<int, int, c1, mpl::vector<c2, c3> >
+                >
+              , dependency<mpl::_1, mpl::_2>
+            >::type
+        >::value
+    ));
+}
+
+typedef mpl::vector<
+    mpl::vector<c1>
+  , mpl::vector<c1, c2, c3, c4>
+  , mpl::vector<c2, c3, c4>
+  , mpl::vector<c3, c4>
+  , mpl::vector<c5>
+> binder_multiple_calls_many_t;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(binder_multiple_calls_many, TContext, binder_multiple_calls_many_t)
+{
+    BOOST_CHECK((
+        is_same<
+            dependency<int, int, c1, c5, mpl::vector<c3, c4> >
+          , typename binder<
+                int
+              , TContext
+              , mpl::vector<
+                    dependency<int, int, c1, c5, mpl::vector<c3, c4> >
+                >
+              , dependency<mpl::_1, mpl::_2>
+            >::type
+        >::value
+    ));
+}
+
+typedef mpl::vector<
+    mpl::vector<c3>
+  , mpl::vector<c6>
+  , mpl::vector<c3, c2>
+> binder_multiple_calls_not_found_t;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(binder_multiple_calls_not_found, TContext, binder_multiple_calls_not_found_t)
+{
+    BOOST_CHECK((
+        is_same<
+            dependency<int, int>
+          , typename binder<
+                int
+              , TContext
+              , mpl::vector<
+                    dependency<int, int, c1, c5, mpl::vector<c3, c4> >
+                >
               , dependency<mpl::_1, mpl::_2>
             >::type
         >::value
