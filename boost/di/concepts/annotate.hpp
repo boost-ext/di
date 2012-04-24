@@ -7,19 +7,30 @@
 #ifndef BOOST_DI_CONCEPTS_ANNOTATE_HPP
 #define BOOST_DI_CONCEPTS_ANNOTATE_HPP
 
-#include <boost/mpl/void.hpp>
+#include <boost/none_t.hpp>
 
 namespace boost {
 namespace di {
 namespace concepts {
 
-template<typename TDerived = mpl::void_>
+template<typename TDerived = boost::none_t>
 struct annotate
 {
     template<typename TName = void>
     struct with : TDerived
     {
         typedef TDerived derived;
+        typedef TName name;
+    };
+};
+
+template<>
+struct annotate<boost::none_t>
+{
+    template<typename TName = void>
+    struct with
+    {
+        typedef boost::none_t derived;
         typedef TName name;
     };
 };

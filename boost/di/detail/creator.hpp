@@ -31,6 +31,7 @@
           , "boost/di/detail/creator.hpp"           \
         )                                           \
     )
+
     namespace boost {
     namespace di {
     namespace detail {

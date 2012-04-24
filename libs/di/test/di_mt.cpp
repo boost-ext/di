@@ -23,12 +23,12 @@ typedef generic_module<
     >
   , per_requests<
         c0if0
-      , bind<c1if0>::in_call<c6, c5>
+      , bind<c1if0>::in_call<call_stack<c6, c5> >
       , bind<c2if0>::in_call<c7>
       , bind<int, mpl::int_<1> >
       , bind<int, mpl::int_<2> >::in_call<c8>
-      , bind<int, mpl::int_<3> >::in_name< mpl::string<'1'> >::in_call<c7, c6, c4>
-      , bind<int, mpl::int_<4> >::in_name< mpl::string<'2'> >::in_call<c7, c6, c4>
+      , bind<int, mpl::int_<3> >::in_name< mpl::string<'1'> >::in_call<call_stack<c7, c6, c4> >
+      , bind<int, mpl::int_<4> >::in_name< mpl::string<'2'> >::in_call<call_stack<c7, c6, c4> >
       , bind<int, mpl::int_<5> >::in_call<c2>
     >
 > base_module_1;
@@ -91,12 +91,12 @@ BOOST_AUTO(fusion_module_1, fusion_module<>()(
     >()
   , per_requests<
         c0if0
-      , bind<c1if0>::in_call<c6, c5>
+      , bind<c1if0>::in_call<call_stack<c6, c5> >
       , bind<c2if0>::in_call<c7>
       , bind<int, mpl::int_<1> >
       , bind<int, mpl::int_<2> >::in_call<c8>
-      , bind<int, mpl::int_<3> >::in_name< mpl::string<'1'> >::in_call<c7, c6, c4>
-      , bind<int, mpl::int_<4> >::in_name< mpl::string<'2'> >::in_call<c7, c6, c4>
+      , bind<int, mpl::int_<3> >::in_name< mpl::string<'1'> >::in_call<call_stack<c7, c6, c4> >
+      , bind<int, mpl::int_<4> >::in_name< mpl::string<'2'> >::in_call<call_stack<c7, c6, c4> >
       , bind<int, mpl::int_<5> >::in_call<c2>
     >()
 ));

@@ -35,12 +35,6 @@ struct get_pool
 };
 
 template<typename T>
-struct get_context
-{
-    typedef typename T::context type;
-};
-
-template<typename T>
 struct get_dependencies
 {
     typedef typename T::dependencies type;

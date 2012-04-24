@@ -10,6 +10,8 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
 #include <boost/mpl/or.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/empty.hpp>
 #include "boost/di/aux/dependency.hpp"
 #include "boost/di/named.hpp"
 #include "boost/di/fusion_module.hpp"
@@ -28,11 +30,12 @@ template<
 >
 struct dependency
 {
+    typedef mpl::vector<TContext0, TContext1, TContext2> context;
     typedef typename aux::dependency<
         TScope
       , TExpected
       , TGiven
-      , mpl::vector<TContext0, TContext1, TContext2>
+      , typename mpl::if_<mpl::empty<context>, mpl::vector0<>, context>::type
     > type;
 };
 
@@ -46,11 +49,12 @@ template<
 >
 struct dependency_base_of
 {
+    typedef mpl::vector<TContext0, TContext1, TContext2> context;
     typedef typename aux::dependency<
         TScope
       , TExpected
       , TGiven
-      , mpl::vector<TContext0, TContext1, TContext2>
+      , typename mpl::if_<mpl::empty<context>, mpl::vector0<>, context>::type
       , mpl::or_<
             is_base_of<mpl::_1, TExpected>
           , is_same<mpl::_1, TExpected>
@@ -80,7 +84,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_mix)
             bind<if0, c0if0>
           , c1
           , bind<c2>::in_name<int>
-          , bind<c3>::in_call<c4, c5>
+          , bind<c3>::in_call<call_stack<c4, c5> >
         >()
       , per_requests <
             c6
@@ -96,9 +100,9 @@ BOOST_AUTO_TEST_CASE(fusion_module_mix)
                 dependency<scopes::singleton, if0, c0if0>::type
               , dependency_base_of<scopes::singleton, c1, c1>::type
               , dependency_base_of<scopes::singleton, named<c2, int>, c2>::type
-              , dependency_base_of<scopes::singleton, c3, c3, mpl::vector<c4, c5> >::type
+              , dependency_base_of<scopes::singleton, c3, c3, call_stack<c4, c5> >::type
               , dependency_base_of<scopes::per_request, c6, c6>::type
-              , dependency_base_of<scopes::singleton, named<c7, double>, c7, mpl::vector<c1> >::type
+              , dependency_base_of<scopes::singleton, named<c7, double>, c7, c1>::type
             >
           , module_t::dependencies
         >::value

@@ -17,7 +17,6 @@
     #include <boost/mpl/back_inserter.hpp>
     #include <boost/mpl/copy.hpp>
     #include <boost/mpl/if.hpp>
-    #include <boost/mpl/has_xxx.hpp>
     #include "boost/di/aux/module.hpp"
     #include "boost/di/aux/pool.hpp"
     #include "boost/di/scopes/per_request.hpp"
@@ -42,8 +41,6 @@
     class fusion_module
         : public aux::module
     {
-        BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
-
     public:
         typedef aux::pool<TSequence> pool;
 
@@ -53,7 +50,7 @@
                 , mpl::vector0<>
                 , mpl::copy<
                       mpl::if_<
-                          has_name<mpl::_2>
+                          is_base_of<concepts::annotate<>::with<>, mpl::_2>
                         , mpl::_2
                         , per_request<mpl::_2>
                       >

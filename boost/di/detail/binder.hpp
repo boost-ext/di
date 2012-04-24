@@ -40,34 +40,40 @@ namespace detail {
 
 BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
-template<typename TCallStack, typename T>
+template<typename TCallStack, typename TContext>
 struct equal_call_stack
     : mpl::equal<
         mpl::iterator_range<
             typename mpl::advance_c<
                 typename mpl::begin<TCallStack>::type
-              , mpl::size<TCallStack>::value - mpl::size<T>::value
+              , mpl::size<TCallStack>::value - mpl::size<TContext>::value
             >::type
           , typename mpl::end<TCallStack>::type
         >
-      , T
+      , TContext
       >
 { };
 
-template<typename TCallStack, typename TContext>
+template<typename T>
+struct make_context
+    : mpl::fold<
+          typename T::context
+        , mpl::vector0<>
+        , mpl::if_<
+              mpl::is_sequence<mpl::_2>
+            , mpl::push_back<mpl::_1, mpl::_2>
+            , mpl::push_back<mpl::_1, mpl::vector1<mpl::_2> >
+          >
+      >::type
+{ };
+
+template<typename TCallStack , typename TContext>
 struct for_each_context
     : mpl::fold<
         TContext
-      , mpl::int_<mpl::equal<TCallStack, TContext>::value>
+      , mpl::int_<equal_call_stack<TCallStack, TContext>::value>
       , mpl::if_<
-            equal_call_stack<
-                TCallStack
-              , mpl::if_<
-                    mpl::is_sequence<mpl::_2>
-                  , mpl::_2
-                  , mpl::vector<mpl::_2>
-                >
-            >
+            equal_call_stack<TCallStack, mpl::_2>
           , mpl::next<mpl::_1>
           , mpl::_1
         >
@@ -86,12 +92,8 @@ struct get_longest_context_size
 template<typename T1, typename T2>
 struct less_context_size
     : mpl::less<
-         get_longest_context_size<
-            typename aux::get_context<T2>::type
-         >
-       , get_longest_context_size<
-            typename aux::get_context<T1>::type
-         >
+         get_longest_context_size<make_context<T2> >
+       , get_longest_context_size<make_context<T1> >
       >
 { };
 
@@ -118,7 +120,7 @@ struct sort_dependecies_by_call_stack_order
                     >
                   , detail::for_each_context<
                         TCallStack
-                      , aux::get_context<mpl::_2>
+                      , detail::make_context<mpl::_2>
                     >
                 >
               , mpl::push_back<mpl::_1, mpl::_2>
