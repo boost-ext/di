@@ -47,6 +47,12 @@
     {
         BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
 
+        template<typename T>
+        struct get_derived
+        {
+            typedef typename T::derived type;
+        };
+
         template<typename TInstance, typename T>
         struct is_same_instance
             : mpl::or_<
@@ -106,7 +112,7 @@
         struct instances
             : mpl::transform<
                   externals
-                , aux::get_derived<mpl::_1>
+                , get_derived<mpl::_1>
               >::type
         { };
 

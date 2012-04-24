@@ -22,42 +22,6 @@ namespace boost {
 namespace di {
 namespace aux {
 
-template<typename T>
-struct get_bind
-{
-    typedef typename T::bind type;
-};
-
-template<typename T>
-struct get_pool
-{
-    typedef typename T::pool type;
-};
-
-template<typename T>
-struct get_dependencies
-{
-    typedef typename T::dependencies type;
-};
-
-template<typename T>
-struct get_externals
-{
-    typedef typename T::externals type;
-};
-
-template<typename T>
-struct get_derived
-{
-    typedef typename T::derived type;
-};
-
-template<typename T>
-struct get_sequence
-{
-    typedef typename T::sequence type;
-};
-
 template<typename TDependency, int N, typename TResult = void>
 struct enable_if_ctor_size
     : enable_if_c<mpl::size<typename TDependency::ctor>::value == N, TResult>

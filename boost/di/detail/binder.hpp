@@ -40,6 +40,12 @@ namespace detail {
 
 BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
+template<typename T>
+struct get_bind
+{
+    typedef typename T::bind type;
+};
+
 template<typename TCallStack, typename TContext>
 struct equal_call_stack
     : mpl::equal<
@@ -116,7 +122,7 @@ struct sort_dependecies_by_call_stack_order
                 mpl::and_<
                     detail::comparator<
                         typename aux::make_plain<T>::type
-                      , aux::get_bind<mpl::_2>
+                      , detail::get_bind<mpl::_2>
                     >
                   , detail::for_each_context<
                         TCallStack

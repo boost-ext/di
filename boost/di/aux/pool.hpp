@@ -21,7 +21,6 @@
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/has_xxx.hpp>
-    #include "boost/di/aux/utility.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
@@ -80,6 +79,12 @@
         : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_DERIVES_IMPL, TSequence)
     {
         BOOST_MPL_HAS_XXX_TRAIT_DEF(sequence)
+
+        template<typename T>
+        struct get_sequence
+        {
+            typedef typename T::sequence type;
+        };
 
     public:
         struct sequence

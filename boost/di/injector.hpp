@@ -47,6 +47,18 @@
     {
         typedef mpl::vector<BOOST_DI_ARGS_MPL(T)> sequence;
 
+        template<typename T>
+        struct get_dependencies
+        {
+            typedef typename T::dependencies type;
+        };
+
+        template<typename T>
+        struct get_pool
+        {
+            typedef typename T::pool type;
+        };
+
         struct modules
             : mpl::remove_if<
                   sequence
@@ -68,7 +80,7 @@
                 TResult,
                 mpl::if_<
                     is_base_of<aux::module, mpl::_2>,
-                    dependencies_impl<aux::get_dependencies<mpl::_2>, mpl::_1>,
+                    dependencies_impl<get_dependencies<mpl::_2>, mpl::_1>,
                     mpl::insert<mpl::_1, mpl::_2>
                 >
               >
@@ -79,7 +91,7 @@
                 typename mpl::fold<
                     modules,
                     mpl::set<>,
-                    mpl::insert< mpl::_1, aux::get_pool<mpl::_2> >
+                    mpl::insert< mpl::_1, get_pool<mpl::_2> >
                 >::type,
                 mpl::vector0<>,
                 mpl::push_back<mpl::_1, mpl::_2>
