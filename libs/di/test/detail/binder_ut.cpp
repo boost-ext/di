@@ -13,7 +13,6 @@
 #include "boost/di/detail/binder.hpp"
 #include "data.hpp"
 
-#include <boost/units/detail/utility.hpp>
 namespace boost {
 namespace di {
 namespace detail {
@@ -21,38 +20,42 @@ namespace detail {
 template<
     typename TExpected
   , typename TGiven = TExpected
-  , typename TContext = mpl::vector0<>
+  , typename TContext0 = mpl_::na
+  , typename TContext1 = mpl_::na
+  , typename TContext2 = mpl_::na
 >
 struct dependency
 {
     typedef is_same<mpl::_1, TExpected> bind;
-    typedef TContext context;
+    typedef mpl::vector3<TContext0, TContext1, TContext2> context;
     typedef TExpected expected;
     typedef TGiven given;
 
     template<typename Expected, typename Given>
     struct rebind
     {
-        typedef dependency<Expected, Given, TContext> type;
+        typedef dependency<Expected, Given, context> type;
     };
 };
 
 template<
     typename TExpected
   , typename TGiven = TExpected
-  , typename TContext = mpl::vector0<>
+  , typename TContext0 = mpl_::na
+  , typename TContext1 = mpl_::na
+  , typename TContext2 = mpl_::na
 >
 struct dependency_base_of
 {
     typedef is_base_of<mpl::_1, TExpected> bind;
-    typedef TContext context;
+    typedef mpl::vector3<TContext0, TContext1, TContext2> context;
     typedef TExpected expected;
     typedef TGiven given;
 
     template<typename Expected, typename Given>
     struct rebind
     {
-        typedef dependency<Expected, Given, TContext> type;
+        typedef dependency<Expected, Given, context> type;
     };
 };
 
@@ -155,7 +158,7 @@ BOOST_AUTO_TEST_CASE(binder_context)
               , mpl::vector<a, b>
               , mpl::vector<
                     dependency<int, int, mpl::vector<mpl::vector<a> > >
-                   , dependency<int, int, mpl::vector<mpl::vector<a, b> > >
+                  , dependency<int, int, mpl::vector<mpl::vector<a, b> > >
                 >
               , dependency<mpl::_1, mpl::_2>
             >::type

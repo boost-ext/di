@@ -615,7 +615,10 @@ BOOST_AUTO_TEST_CASE(generic_module_ctor_with_externals_shared_ptr)
         module::set<value>(v)
     );
 
-    BOOST_CHECK_EQUAL(i, get<shared_ptr<value> >(module_.get_pool().get< aux::instance<value> >())->i);
+    BOOST_CHECK_EQUAL(
+        i
+      , get<shared_ptr<value> >(module_.get_pool().get< aux::instance<value> >())->i
+    );
 }
 
 } // namespace di

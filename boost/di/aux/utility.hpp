@@ -64,6 +64,7 @@ struct get_sequence
     typedef typename T::sequence type;
 };
 
+//TODO remove internal and module
 struct internal
 {
     typedef void name; //no name
