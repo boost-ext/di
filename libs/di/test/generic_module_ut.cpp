@@ -394,6 +394,30 @@ BOOST_AUTO_TEST_CASE(generic_module_named_in_call)
     ));
 }
 
+BOOST_AUTO_TEST_CASE(generic_multiple_calls)
+{
+    struct module
+        : generic_module<
+              singletons<
+                  bind<c0>::in_call<c1, call_stack<c2, c3>, c4 >
+              >
+            , bind<c5>::in_call<int, double>
+          >
+    { };
+
+    BOOST_CHECK((
+        mpl::equal<
+            mpl::vector<
+                dependency_base_of<scopes::singleton, c0, c0, c1, call_stack<c2, c3>, c4>::type
+              , dependency_base_of<scopes::per_request, c5, c5, int, double>::type
+            >
+          , module::dependencies
+        >::value
+    ));
+
+    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::pool::sequence>::value));
+}
+
 BOOST_AUTO_TEST_CASE(generic_module_externals_base)
 {
     struct module

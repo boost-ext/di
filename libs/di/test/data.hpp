@@ -206,6 +206,16 @@ struct c14
     double d;
 };
 
+struct c15
+{
+    BOOST_DI_CTOR(c15, shared_ptr<c3> c3_, c6 c6_)
+        : c3_(c3_), c6_(c6_)
+    { }
+
+    shared_ptr<c3> c3_;
+    c6 c6_;
+};
+
 struct cd2;
 struct cd5;
 

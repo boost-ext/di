@@ -480,6 +480,23 @@ BOOST_AUTO_TEST_CASE(binder_named_type)
     ));
 }
 
+BOOST_AUTO_TEST_CASE(binder_call_call_stack)
+{
+    BOOST_CHECK((
+        is_same<
+            dependency<int, int, c1, mpl::vector<c2> >
+          , typename binder<
+                int
+              , mpl::vector<c2>
+              , mpl::vector<
+                    dependency<int, int, c1, mpl::vector<c2> >
+                >
+              , dependency<mpl::_1, mpl::_2>
+            >::type
+        >::value
+    ));
+}
+
 typedef mpl::vector<
     mpl::vector<c1>
   , mpl::vector<c2, c3>

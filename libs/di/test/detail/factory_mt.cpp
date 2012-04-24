@@ -25,42 +25,42 @@ namespace boost {
 namespace di {
 namespace detail {
 
-BOOST_AUTO_TEST_CASE(create_using_copy)
+BOOST_AUTO_TEST_CASE(factory_create_using_copy)
 {
     factory< mpl::vector0<> > factory_;
     c0 obj = factory_.create<c0>();
     (void)(obj);
 }
 
-BOOST_AUTO_TEST_CASE(create_using_ptr)
+BOOST_AUTO_TEST_CASE(factory_create_using_ptr)
 {
     factory< mpl::vector0<> > factory_;
     c0* obj = factory_.create<c0*>();
     BOOST_CHECK(obj);
 }
 
-BOOST_AUTO_TEST_CASE(create_using_const_ptr)
+BOOST_AUTO_TEST_CASE(factory_create_using_const_ptr)
 {
     factory< mpl::vector0<> > factory_;
     const c0* obj = factory_.create<const c0*>();
     BOOST_CHECK(obj);
 }
 
-BOOST_AUTO_TEST_CASE(create_using_shared_ptr)
+BOOST_AUTO_TEST_CASE(factory_create_using_shared_ptr)
 {
     factory< mpl::vector0<> > factory_;
     shared_ptr<c0> obj = factory_.create< shared_ptr<c0> >();
     BOOST_CHECK(obj);
 }
 
-BOOST_AUTO_TEST_CASE(create_default_ctor)
+BOOST_AUTO_TEST_CASE(factory_create_default_ctor)
 {
     factory< mpl::vector0<> > factory_;
     c0 obj = factory_.create<c0>();
     (void)(obj);
 }
 
-BOOST_AUTO_TEST_CASE(create_per_request)
+BOOST_AUTO_TEST_CASE(factory_create_per_request)
 {
     factory<
         mpl::vector<
@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE(create_per_request)
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(create_per_request_singleton)
+BOOST_AUTO_TEST_CASE(factory_create_per_request_singleton)
 {
     factory<
         mpl::vector<
@@ -113,7 +113,7 @@ BOOST_AUTO_TEST_CASE(create_per_request_singleton)
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(create_singleton_context)
+BOOST_AUTO_TEST_CASE(factory_create_singleton_context)
 {
     factory<
         mpl::vector<
@@ -142,7 +142,7 @@ BOOST_AUTO_TEST_CASE(create_singleton_context)
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(create_per_request_singleton_context_order)
+BOOST_AUTO_TEST_CASE(factory_create_per_request_singleton_context_order)
 {
     factory<
         mpl::vector<
@@ -171,7 +171,7 @@ BOOST_AUTO_TEST_CASE(create_per_request_singleton_context_order)
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(create_per_request_singleton_context_mix)
+BOOST_AUTO_TEST_CASE(factory_create_per_request_singleton_context_mix)
 {
     factory<
         mpl::vector<
@@ -205,7 +205,7 @@ BOOST_AUTO_TEST_CASE(create_per_request_singleton_context_mix)
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(create_singleton_impl)
+BOOST_AUTO_TEST_CASE(factory_create_singleton_impl)
 {
     factory<
         mpl::vector<
@@ -231,7 +231,7 @@ BOOST_AUTO_TEST_CASE(create_singleton_impl)
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(create_singleton_many)
+BOOST_AUTO_TEST_CASE(factory_create_singleton_many)
 {
     factory<
         mpl::vector<
@@ -259,7 +259,7 @@ BOOST_AUTO_TEST_CASE(create_singleton_many)
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(ctor_traits)
+BOOST_AUTO_TEST_CASE(factory_ctor_traits)
 {
     const int i = 42;
 
@@ -275,7 +275,7 @@ BOOST_AUTO_TEST_CASE(ctor_traits)
     BOOST_CHECK_EQUAL(0.0, obj.d);
 }
 
-BOOST_AUTO_TEST_CASE(class_ctor_traits)
+BOOST_AUTO_TEST_CASE(factory_class_ctor_traits)
 {
     const int i1 = 42;
     const int i2 = 87;
@@ -293,7 +293,7 @@ BOOST_AUTO_TEST_CASE(class_ctor_traits)
     BOOST_CHECK_EQUAL(i2, obj.i2);
 }
 
-BOOST_AUTO_TEST_CASE(base_of)
+BOOST_AUTO_TEST_CASE(factory_base_of)
 {
     factory<
         mpl::vector<
@@ -323,7 +323,22 @@ BOOST_AUTO_TEST_CASE(base_of)
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(base_of_interface_not_trivial_ctor)
+BOOST_AUTO_TEST_CASE(factory_multiple_calls)
+{
+    factory<
+        mpl::vector<
+            dependency_base_of<scopes::singleton, c3, c3, c15, concepts::call_stack<c6, c4> >::type
+          , dependency_base_of<scopes::singleton, c3, c3, c6>::type
+        >
+    > factory_;
+
+    shared_ptr<c15> c15_ = factory_.create< shared_ptr<c15> >();
+
+    BOOST_CHECK(c15_->c3_ == c15_->c6_.c4_->c3_);
+    BOOST_CHECK(c15_->c3_ != c15_->c6_.c3_);
+}
+
+BOOST_AUTO_TEST_CASE(factory_base_of_interface_not_trivial_ctor)
 {
     factory<
         mpl::vector<
@@ -336,7 +351,7 @@ BOOST_AUTO_TEST_CASE(base_of_interface_not_trivial_ctor)
     BOOST_CHECK(obj.p->get().get() != obj.p->get().get());
 }
 
-BOOST_AUTO_TEST_CASE(named_shared_ptr_base_of)
+BOOST_AUTO_TEST_CASE(factory_named_shared_ptr_base_of)
 {
     const int i = 42;
 
@@ -351,7 +366,7 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr_base_of)
     BOOST_CHECK_EQUAL(i, *obj.i);
 }
 
-BOOST_AUTO_TEST_CASE(named_shared_ptr)
+BOOST_AUTO_TEST_CASE(factory_named_shared_ptr)
 {
     const int i = 42;
 
@@ -366,7 +381,7 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr)
     BOOST_CHECK_EQUAL(i, *obj.i);
 }
 
-BOOST_AUTO_TEST_CASE(named_shared_ptr_if)
+BOOST_AUTO_TEST_CASE(factory_named_shared_ptr_if)
 {
     factory<
         mpl::vector<
@@ -382,7 +397,7 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr_if)
     BOOST_CHECK_EQUAL(0, obj.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(named_shared_ptr_if_with_not_trivial_ctor)
+BOOST_AUTO_TEST_CASE(factory_named_shared_ptr_if_with_not_trivial_ctor)
 {
     const int i = 42;
 
@@ -402,7 +417,7 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr_if_with_not_trivial_ctor)
     BOOST_CHECK_EQUAL(0.0, if0_->d);
 }
 
-BOOST_AUTO_TEST_CASE(externals_create_by_explicit_value)
+BOOST_AUTO_TEST_CASE(factory_externals_create_by_explicit_value)
 {
     const int i = 42;
     const double d = 21.0;
@@ -439,7 +454,7 @@ BOOST_AUTO_TEST_CASE(externals_create_by_explicit_value)
     BOOST_CHECK_EQUAL("test", obj.s);
 }
 
-BOOST_AUTO_TEST_CASE(externals_create_with_non_trivial_ctor)
+BOOST_AUTO_TEST_CASE(factory_externals_create_with_non_trivial_ctor)
 {
     const int i = 42;
     const double d = 21.0;
@@ -468,7 +483,7 @@ BOOST_AUTO_TEST_CASE(externals_create_with_non_trivial_ctor)
 }
 
 #if 0
-BOOST_AUTO_TEST_CASE(externals_create_with_attributes)
+BOOST_AUTO_TEST_CASE(factory_externals_create_with_attributes)
 {
     const int i1 = 42;
     const int i2 = 87;
