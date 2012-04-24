@@ -9,59 +9,15 @@
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
-#include <boost/mpl/or.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/mpl/empty.hpp>
 #include "boost/di/aux/instance.hpp"
 #include "boost/di/aux/dependency.hpp"
 #include "boost/di/named.hpp"
 #include "boost/di/generic_module.hpp"
+#include "common.hpp"
 #include "data.hpp"
 
 namespace boost {
 namespace di {
-
-template<
-    typename TScope
-  , typename TExpected
-  , typename TGiven
-  , typename TContext0 = mpl_::na
-  , typename TContext1 = mpl_::na
-  , typename TContext2 = mpl_::na
->
-struct dependency
-{
-    typedef mpl::vector<TContext0, TContext1, TContext2> context;
-    typedef typename aux::dependency<
-        TScope
-      , TExpected
-      , TGiven
-      , typename mpl::if_<mpl::empty<context>, mpl::vector0<>, context>::type
-    > type;
-};
-
-template<
-    typename TScope
-  , typename TExpected
-  , typename TGiven
-  , typename TContext0 = mpl_::na
-  , typename TContext1 = mpl_::na
-  , typename TContext2 = mpl_::na
->
-struct dependency_base_of
-{
-    typedef mpl::vector<TContext0, TContext1, TContext2> context;
-    typedef typename aux::dependency<
-        TScope
-      , TExpected
-      , TGiven
-      , typename mpl::if_<mpl::empty<context>, mpl::vector0<>, context>::type
-      , mpl::or_<
-            is_base_of<mpl::_1, TExpected>
-          , is_same<mpl::_1, TExpected>
-        >
-    > type;
-};
 
 struct value
 {
