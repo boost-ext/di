@@ -15,7 +15,6 @@
 namespace boost {
 namespace di {
 namespace aux {
-namespace test {
 
 template<typename T, typename>
 struct fake_result
@@ -34,7 +33,7 @@ struct fake_pool
 
     template<typename T>
     typename result_type<int>::type get() const {
-       return make_shared<int>(value);
+        return make_shared<int>(value);
     }
 };
 
@@ -134,7 +133,6 @@ BOOST_AUTO_TEST_CASE(dependency_create_by_scope)
     BOOST_CHECK_EQUAL(i, *dependency_.create(pool_));
 }
 
-} // namespace test
 } // namespace aux
 } // namespace di
 } // namespace boost

@@ -16,43 +16,58 @@
 namespace boost {
 namespace di {
 namespace detail {
-namespace test {
 
 template<
     typename TExpected
   , typename TGiven = TExpected
-  , typename TContext = mpl::vector0<>
+  , typename TContext0 = mpl_::na
+  , typename TContext1 = mpl_::na
+  , typename TContext2 = mpl_::na
 >
 struct dependency
 {
     typedef is_same<mpl::_1, TExpected> bind;
-    typedef TContext context;
+    typedef mpl::vector<TContext0, TContext1, TContext2> context;
     typedef TExpected expected;
     typedef TGiven given;
 
     template<typename Expected, typename Given>
     struct rebind
     {
-        typedef dependency<Expected, Given, TContext> type;
+        typedef dependency<
+            Expected
+          , Given
+          , TContext0
+          , TContext1
+          , TContext2
+        > type;
     };
 };
 
 template<
     typename TExpected
   , typename TGiven = TExpected
-  , typename TContext = mpl::vector0<>
+  , typename TContext0 = mpl_::na
+  , typename TContext1 = mpl_::na
+  , typename TContext2 = mpl_::na
 >
 struct dependency_base_of
 {
     typedef is_base_of<mpl::_1, TExpected> bind;
-    typedef TContext context;
+    typedef mpl::vector<TContext0, TContext1, TContext2> context;
     typedef TExpected expected;
     typedef TGiven given;
 
     template<typename Expected, typename Given>
     struct rebind
     {
-        typedef dependency<Expected, Given, TContext> type;
+        typedef dependency<
+            Expected
+          , Given
+          , TContext0
+          , TContext1
+          , TContext2
+        > type;
     };
 };
 
@@ -145,6 +160,23 @@ BOOST_AUTO_TEST_CASE(binder_not_found)
     ));
 }
 
+BOOST_AUTO_TEST_CASE(binder_if)
+{
+    BOOST_CHECK((
+        is_same<
+            dependency<if0, c0if0>
+          , binder<
+                if0
+              , mpl::vector0<>
+              , mpl::vector<
+                    dependency<if0, c0if0>
+                >
+              , dependency<mpl::_1, mpl::_2>
+            >::type
+        >::value
+    ));
+}
+
 BOOST_AUTO_TEST_CASE(binder_context)
 {
     BOOST_CHECK((
@@ -155,7 +187,24 @@ BOOST_AUTO_TEST_CASE(binder_context)
               , mpl::vector<a, b>
               , mpl::vector<
                     dependency<int, int, mpl::vector<a> >
-                   , dependency<int, int, mpl::vector<a, b> >
+                  , dependency<int, int, mpl::vector<a, b> >
+                >
+              , dependency<mpl::_1, mpl::_2>
+            >::type
+        >::value
+    ));
+}
+
+BOOST_AUTO_TEST_CASE(binder_context_if)
+{
+    BOOST_CHECK((
+        is_same<
+            dependency<if0, c0if0>
+          , binder<
+                if0
+              , mpl::vector<c1>
+              , mpl::vector<
+                    dependency<if0, c0if0>
                 >
               , dependency<mpl::_1, mpl::_2>
             >::type
@@ -182,7 +231,7 @@ BOOST_AUTO_TEST_CASE(binder_context_many)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(binder_contextManyEnd)
+BOOST_AUTO_TEST_CASE(binder_context_many_end)
 {
     BOOST_CHECK((
         is_same<
@@ -430,7 +479,6 @@ BOOST_AUTO_TEST_CASE(binder_named_type)
     ));
 }
 
-} // namespace test
 } // namespace detail
 } // namespace di
 } // namespace boost

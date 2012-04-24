@@ -4,14 +4,18 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <boost/test/unit_test.hpp>
-#include "boost/di/detail/factory.hpp"
+#ifndef BOOST_DI_AUX_MODULE_HPP
+#define BOOST_DI_AUX_MODULE_HPP
 
 namespace boost {
 namespace di {
-namespace detail {
+namespace aux {
 
-} // namespace detail
+class module { };
+
+} // namespace aux
 } // namespace di
 } // namespace boost
+
+#endif
 

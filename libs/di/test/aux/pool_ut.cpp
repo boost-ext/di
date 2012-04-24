@@ -12,7 +12,6 @@
 namespace boost {
 namespace di {
 namespace aux {
-namespace test {
 
 template<typename T>
 struct allocator
@@ -148,7 +147,6 @@ BOOST_AUTO_TEST_CASE(pool_get)
     BOOST_CHECK_EQUAL(default_ctor_.get(), pool_.get<default_ctor_t>());
 }
 
-} // namespace test
 } // namespace aux
 } // namespace di
 } // namespace boost

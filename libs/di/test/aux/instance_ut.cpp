@@ -13,7 +13,6 @@
 namespace boost {
 namespace di {
 namespace aux {
-namespace test {
 
 template<typename T, typename TName = void>
 struct named
@@ -91,7 +90,6 @@ BOOST_AUTO_TEST_CASE(instance_context)
     BOOST_CHECK((get<shared_ptr<c> >(instance<c, a>(c1_).get()) != get<shared_ptr<c> >(instance<c, b>(c2_).get())));
 }
 
-} // namespace test
 } // namespace aux
 } // namespace di
 } // namespace boost

@@ -17,6 +17,7 @@
     #include <boost/mpl/back_inserter.hpp>
     #include <boost/mpl/copy.hpp>
     #include <boost/mpl/if.hpp>
+    #include "boost/di/aux/module.hpp"
     #include "boost/di/aux/pool.hpp"
     #include "boost/di/scopes/per_request.hpp"
     #include "boost/di/scopes/singleton.hpp"
@@ -49,7 +50,7 @@
                 , mpl::vector0<>
                 , mpl::copy<
                       mpl::if_<
-                          is_base_of<aux::internal, mpl::_2>
+                          is_base_of<concepts::annotate<>::with<>, mpl::_2>
                         , mpl::_2
                         , per_request<mpl::_2>
                       >

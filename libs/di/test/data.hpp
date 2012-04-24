@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_TEST_DATA_HPP
-#define BOOST_DI_TEST_DATA_HPP
+#ifndef BOOST_DI_DATA_HPP
+#define BOOST_DI_DATA_HPP
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
@@ -16,7 +16,6 @@
 
 namespace boost {
 namespace di {
-//namespace test {
 
 class a { };
 class b { };
@@ -31,7 +30,8 @@ class impl : public i { };
 struct if0
 {
     virtual ~if0() { }
-    virtual void dummy() = 0;
+    //virtual void dummy() = 0;
+    virtual void dummy(){}
 };
 
 struct c0if0 : if0
@@ -266,14 +266,12 @@ struct transaction_usage
     shared_ptr< provider< shared_ptr<transaction> > > p;
 };
 
-
 template<>
 struct ctor_traits<c14>
 {
     static void ctor(int, double);
 };
 
-//} // namespace test
 } // namespace di
 } // namespace boost
 

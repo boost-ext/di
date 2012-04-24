@@ -13,7 +13,6 @@
 namespace boost {
 namespace di {
 namespace policies {
-namespace test {
 
 BOOST_AUTO_TEST_CASE(no_circular_dependencies)
 {
@@ -57,7 +56,6 @@ BOOST_AUTO_TEST_CASE(in_direct)
     ));
 }
 
-} // namespace test
 } // namespace policies
 } // namespace di
 } // namespace boost

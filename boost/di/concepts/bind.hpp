@@ -14,7 +14,7 @@
 #include <boost/mpl/or.hpp>
 #include "boost/di/aux/dependency.hpp"
 #include "boost/di/aux/explicit_value.hpp"
-#include "boost/di/aux/utility.hpp"
+#include "boost/di/concepts/annotate.hpp"
 #include "boost/di/named.hpp"
 #include "boost/di/config.hpp"
 
@@ -34,7 +34,7 @@ struct bind
         , TGiven
         , mpl::vector0<>
       >
-    , aux::internal
+    , annotate<>::with<>
 {
     template<BOOST_DI_ARGS_TYPES_MPL(T)>
     struct in_call
@@ -44,7 +44,7 @@ struct bind
             , TGiven
             , mpl::vector<BOOST_DI_ARGS_MPL(T)>
           >
-        , aux::internal
+        , annotate<>::with<>
     {
         template<typename TName>
         struct in_name
@@ -54,7 +54,7 @@ struct bind
                 , TGiven
                 , mpl::vector<BOOST_DI_ARGS_MPL(T)>
               >
-            , aux::internal
+            , annotate<>::with<>
         { };
     };
 
@@ -65,7 +65,7 @@ struct bind
             ,  named<TExpected, TName>
             ,  TGiven
           >
-        , aux::internal
+        , annotate<>::with<>
     {
         template<BOOST_DI_ARGS_TYPES_MPL(T)>
         struct in_call
@@ -75,7 +75,7 @@ struct bind
                 , TGiven
                 , mpl::vector<BOOST_DI_ARGS_MPL(T)>
               >
-            , aux::internal
+            , annotate<>::with<>
         { };
     };
 };
@@ -101,7 +101,7 @@ struct bind<
             , is_same<mpl::_1, TExpected>
           >
       >
-    , aux::internal
+    , annotate<>::with<>
 {
     template<BOOST_DI_ARGS_TYPES_MPL(T)>
     struct in_call
@@ -115,7 +115,7 @@ struct bind<
                 , is_same<mpl::_1, TExpected>
               >
           >
-        , aux::internal
+        , annotate<>::with<>
     {
         template<typename TName>
         struct in_name
@@ -129,7 +129,7 @@ struct bind<
                     , is_same<mpl::_1, named<TExpected, TName> >
                   >
               >
-            , aux::internal
+            , annotate<>::with<>
         { };
     };
 
@@ -145,7 +145,7 @@ struct bind<
                   is_same<mpl::_1, named<TExpected, TName> >
               >
           >
-        , aux::internal
+        , annotate<>::with<>
     {
         template<BOOST_DI_ARGS_TYPES_MPL(T)>
         struct in_call
@@ -159,7 +159,7 @@ struct bind<
                       is_same<mpl::_1, named<TExpected, TName> >
                   >
               >
-            , aux::internal
+            , annotate<>::with<>
         { };
     };
 };

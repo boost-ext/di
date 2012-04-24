@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_TEST_VISITOR_HPP
-#define BOOST_DI_TEST_VISITOR_HPP
+#ifndef BOOST_DI_VISITOR_HPP
+#define BOOST_DI_VISITOR_HPP
 
 #include <boost/test/unit_test.hpp>
 #include <typeinfo>
@@ -19,7 +19,6 @@
 
 namespace boost {
 namespace di {
-namespace test {
 
 template<typename TSequence = mpl::vector0<> >
 class visitor
@@ -49,7 +48,6 @@ private:
     mutable visits_t visits;
 };
 
-} // namespace test
 } // namespace di
 } // namespace boost
 

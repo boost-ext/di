@@ -26,6 +26,7 @@
     #include <boost/mpl/if.hpp>
     #include "boost/di/aux/pool.hpp"
     #include "boost/di/aux/utility.hpp"
+    #include "boost/di/aux/module.hpp"
     #include "boost/di/detail/factory.hpp"
     #include "boost/di/policy.hpp"
     #include "boost/di/config.hpp"
@@ -49,13 +50,13 @@
         struct modules
             : mpl::remove_if<
                   sequence
-                , is_base_of<detail::policy, mpl::_>
+                , is_base_of<detail::policy, mpl::_1>
               >::type
         { };
 
         struct policies
             : mpl::joint_view<
-                mpl::filter_view<sequence, is_base_of<detail::policy, mpl::_> >,
+                mpl::filter_view<sequence, is_base_of<detail::policy, mpl::_1> >,
                 mpl::vector1<typename defaults<detail::policy, specialized>::type>
               >::type
         { };

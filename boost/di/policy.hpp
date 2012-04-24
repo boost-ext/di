@@ -34,7 +34,10 @@ class policy
       , typename TPolicy
     >
     struct verify_impl
-        : TPolicy::template verify<TDeps, typename aux::make_plain<T>::type>::type
+        : TPolicy::template verify<
+              TDeps
+            , typename aux::make_plain<T>::type
+          >::type
     { };
 
 public:
