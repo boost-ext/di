@@ -32,7 +32,7 @@ struct dependency
         TScope
       , TExpected
       , TGiven
-      , mpl::vector3<TContext0, TContext1, TContext2>
+      , mpl::vector<TContext0, TContext1, TContext2>
     > type;
 };
 

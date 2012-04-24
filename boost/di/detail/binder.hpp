@@ -53,7 +53,7 @@ struct equal_call_stack
       >
 { };
 
-template<typename TCallStack, typename TContext, typename = void>
+template<typename TCallStack, typename TContext>
 struct for_each_context
     : mpl::fold<
         TContext
