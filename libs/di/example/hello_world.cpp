@@ -22,9 +22,7 @@ public:
 int main()
 {
     typedef di::generic_module<
-        di::per_request<
-            c
-        >
+        di::per_request<c>
     > module;
 
     di::injector<module> injector;

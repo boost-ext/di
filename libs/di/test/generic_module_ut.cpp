@@ -344,7 +344,7 @@ BOOST_AUTO_TEST_CASE(generic_module_mix)
                 , bind<c2>::in_name<int>
                 , bind<c3>::in_call<call_stack<c4, c5> >
               >
-            , per_requests <
+            , per_requests<
                 c6
               >
             , singleton<c7>::in_name<double>::in_call<c1>

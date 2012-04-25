@@ -44,8 +44,6 @@
     public:
         typedef TSequence sequence;
 
-        pool() { }
-
         template<typename T>
         struct result_type
         {
@@ -102,6 +100,12 @@
             >::type
         { };
 
+        template<typename T>
+        struct result_type
+        {
+            typedef typename T::result_type type;
+        };
+
         #if __GNUC__ >= 4
         # pragma GCC diagnostic ignored "-Wreorder"
         #endif
@@ -112,12 +116,6 @@
         pool(BOOST_DI_ARGS(Args, args))
             : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_CTOR_INITLIST_IMPL, ~)
         { }
-
-        template<typename T>
-        struct result_type
-        {
-            typedef typename T::result_type type;
-        };
 
         template<typename T>
         typename result_type<T>::type get() const {

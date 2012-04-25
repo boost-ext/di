@@ -152,6 +152,12 @@
             return scope_.create();
         }
 
+        template<typename T>
+        inline static TInstance<> to(T value)
+        {
+            return TInstance<>(value);
+        }
+
         #include BOOST_PP_ITERATE()
 
     private:

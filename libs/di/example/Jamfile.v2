@@ -1,0 +1,38 @@
+#
+# Copyright (c) 2012 Krzysztof Jusiak (krzysztof at jusiak dot net)
+#
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#
+
+import testing ;
+
+project
+    : requirements
+      <warnings>all
+      <warnings-as-errors>on
+      <toolset>gcc:<cxxflags>-Wextra
+      <toolset>gcc:<cxxflags>-pedantic
+      <toolset>gcc:<cxxflags>-pedantic-errors
+      <toolset>gcc:<cxxflags>-Wno-variadic-macros
+      <toolset>gcc:<cxxflags>-Wno-multichar
+      <toolset>clang:<cxxflags>-Wno-four-char-constants
+      <include>../../..
+    ;
+
+test-suite di_test
+    : [ run hello_world.cpp ]
+     #[ run text_visitor.cpp ]
+     #[ run scopes.cpp ]
+     #[ run generic_module.cpp ]
+     #[ run text_visitor.cpp ]
+     #[ run fusion_module.cpp ]
+     #[ run complex.cpp ]
+     #[ run externals.cpp ]
+     #[ run uml_visitor.cpp ]
+     #[ run provider.cpp ]
+     #[ run policies.cpp ]
+     #[ run ctor.cpp ]
+     #[ run concepts.cpp ]
+    ;
+

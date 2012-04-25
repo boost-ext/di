@@ -4,6 +4,7 @@
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
+
 import docutils ;
 import path ;
 
@@ -14,7 +15,7 @@ stylesheet = "--stylesheet=rst.css" ;
 for local b in $(bases)
 {
     html $(b) : $(b).rst :
-        <docutils-html>"-gdt --link-stylesheet --traceback --trim-footnote-reference-space --footnote-references=superscript "$(stylesheet)
+        <docutils-html>"/usr/bin/rst2html.py -gdt --link-stylesheet --traceback --trim-footnote-reference-space --footnote-references=superscript "$(stylesheet)
     ;
 }
 

@@ -14,7 +14,6 @@
 #include <boost/mpl/or.hpp>
 #include "boost/di/aux/dependency.hpp"
 #include "boost/di/aux/explicit_value.hpp"
-#include "boost/di/aux/instance.hpp"
 #include "boost/di/concepts/annotate.hpp"
 #include "boost/di/named.hpp"
 #include "boost/di/config.hpp"
@@ -57,11 +56,6 @@ struct bind
               >
             , annotate<>::with<>
         {
-            template<typename T>
-            static aux::instance<TExpected, mpl::vector<BOOST_DI_ARGS_MPL(T)> > to(T value)
-            {
-                return aux::instance<TExpected, mpl::vector<BOOST_DI_ARGS_MPL(T)> >(value);
-            }
         };
     };
 

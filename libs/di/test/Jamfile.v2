@@ -1,36 +1,53 @@
-# Copyright David Abrahams, Daniel Wallin 2006. Distributed under the
-# Boost Software License, Version 1.0. (See accompanying file
-# LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#
+# Copyright (c) 2012 Krzysztof Jusiak (krzysztof at jusiak dot net)
+#
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#
 
-# Boost Parameter Library test Jamfile
+import testing ;
 
-import python ;
+project
+    : requirements
+      <library>../../../../../../libboost_unit_test_framework.a/<link>static
+      #<library>/boost/test//boost_unit_test_framework/<link>static
+      <warnings>all
+      <warnings-as-errors>on
+      <toolset>gcc:<cxxflags>-Wextra
+      <toolset>gcc:<cxxflags>-pedantic
+      <toolset>gcc:<cxxflags>-pedantic-errors
+      <toolset>gcc:<cxxflags>-Wno-variadic-macros
+      <toolset>gcc:<cxxflags>-Wno-multichar
+      <toolset>clang:<cxxflags>-Wno-four-char-constants
+      <define>DDI_FUNCTION_ARITY_LIMIT_SIZE=4
+      <define>BOOST_TEST_MODULE=di_test
+      <include>../../..
+      <include>.
+    ;
 
-project boost/parameter
-  : default-build <warnings>off
-  ;
+test-suite di-test
+    : [ run aux/instance_ut.cpp ]
+      [ run aux/explicit_value_ut.cpp ]
+      [ run aux/dependency_ut.cpp ]
+      [ run aux/utility_ut.cpp ]
+      [ run aux/pool_ut.cpp ]
+      [ run detail/creator_ut.cpp ]
+      #[ run detail/factory_ut.cpp ]
+      [ run detail/visitor_ut.cpp ]
+      #[ run detail/converter_ut.cpp ]
+      [ run detail/binder_ut.cpp ]
+      [ run policies/check_for_creation_ownership_ut.cpp ]
+      [ run policies/check_for_circular_dependencies_ut.cpp ]
+      [ run scopes/per_request_ut.cpp ]
+      [ run scopes/singleton_ut.cpp ]
+      [ run ctor_bracket_ut.cpp ]
+      [ run ctor_va_args_ut.cpp ]
+      #[ run fusion_module_ut.cpp ]
+      [ run generic_module_ut.cpp ]
+      [ run injector_ut.cpp ]
+      #[ run named_ut.cpp ]
 
-test-suite "parameter"
-  :  [ run basics.cpp ]
-     [ run sfinae.cpp ]
-     [ run macros.cpp ]
-     [ run earwicker.cpp ]
-     [ run tutorial.cpp ]
-     [ run singular.cpp ]
-     [ run mpl.cpp ]
-     [ run preprocessor.cpp ]
-     [ run preprocessor_deduced.cpp ]
-     [ run efficiency.cpp : : : : : <variant>release ]
-     [ run maybe.cpp ]
-     [ run deduced.cpp ]
-     [ run optional_deduced_sfinae.cpp ]
-     [ run deduced_dependent_predicate.cpp ]
-     [ run normalized_argument_types.cpp ]
-     [ compile ntp.cpp ]
-     [ compile unwrap_cv_reference.cpp ]
-     [ compile-fail duplicates.cpp ]
-     [ compile-fail deduced_unmatched_arg.cpp ]
-     [ compile compose.cpp ]
-     [ bpl-test python_test ]
-  ;
+      [ run detail/factory_mt.cpp ]
+      [ run di_mt.cpp ]
+    ;
 
