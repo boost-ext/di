@@ -25,7 +25,7 @@ namespace concepts {
 template<
     typename TExpected
   , typename TGiven = TExpected
-  , typename Enable = void
+  , typename = void
 >
 struct bind
     : aux::dependency<

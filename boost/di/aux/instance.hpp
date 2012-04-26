@@ -24,6 +24,8 @@ namespace detail {
 
 BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
 
+class instance { };
+
 template<typename T, typename = void>
 struct get_value_type
 {
@@ -47,9 +49,10 @@ struct get_value_type<T, typename enable_if<has_value_type<T> >::type>
 template<
     typename T
   , typename TContext = mpl::vector0<>
-  , typename Enable = void
+  , typename = void
 >
 class instance
+    : public detail::instance
 {
 public:
     typedef T value_type;
@@ -89,6 +92,7 @@ class instance<
             >
         >::type
     >
+    : public detail::instance
 {
 public:
     typedef T value_type;

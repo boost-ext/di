@@ -24,7 +24,7 @@ public:
         typename TDeps
       , typename TGiven
       , bool Assert = true
-      , typename Enable = void
+      , typename = void
     >
     class verify
         : public mpl::true_

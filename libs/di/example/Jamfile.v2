@@ -11,12 +11,7 @@ project
     : requirements
       <warnings>all
       <warnings-as-errors>on
-      <toolset>gcc:<cxxflags>-Wextra
-      <toolset>gcc:<cxxflags>-pedantic
-      <toolset>gcc:<cxxflags>-pedantic-errors
-      <toolset>gcc:<cxxflags>-Wno-variadic-macros
-      <toolset>gcc:<cxxflags>-Wno-multichar
-      <toolset>clang:<cxxflags>-Wno-four-char-constants
+      <cxxflags>-Wno-variadic-macros
       <include>../../..
     ;
 

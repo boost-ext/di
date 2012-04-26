@@ -10,23 +10,18 @@
     #define BOOST_DI_AUX_DEPENDENCY_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
-    #include <boost/preprocessor/cat.hpp>
-    #include <boost/typeof/typeof.hpp>
-    #include <boost/function_types/parameter_types.hpp>
     #include <boost/type_traits/is_same.hpp>
     #include <boost/utility/enable_if.hpp>
-    #include <boost/mpl/if.hpp>
     #include <boost/mpl/and.hpp>
     #include <boost/mpl/not.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/contains.hpp>
     #include <boost/mpl/placeholders.hpp>
-    #include <boost/mpl/identity.hpp>
     #include <boost/mpl/assert.hpp>
     #include <boost/mpl/has_xxx.hpp>
     #include "boost/di/aux/instance.hpp"
     #include "boost/di/aux/explicit_value.hpp"
-    #include "boost/di/ctor.hpp"
+    #include "boost/di/aux/converter.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (           \
@@ -56,10 +51,13 @@
           , typename = TContext
           , typename = void
         > class TInstance = instance
+      , template<
+            typename
+          , typename
+        > class TConverter = converter
     >
     class dependency
     {
-        BOOST_MPL_HAS_XXX_TRAIT_DEF(BOOST_DI_CTOR_UNIQUE_NAME)
         BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
         BOOST_MPL_ASSERT_MSG(
@@ -91,72 +89,37 @@
               >
         { };
 
-        template<bool, typename = void>
-        struct ctor_impl
-            : function_types::parameter_types<
-                  BOOST_TYPEOF_TPL(ctor_traits<TGiven>::ctor)
-              >::type
-        { };
-
-        template<typename Dummy>
-        struct ctor_impl<true, Dummy>
-            : function_types::parameter_types<
-                  BOOST_TYPEOF_TPL(TGiven::BOOST_DI_CTOR_UNIQUE_NAME::ctor)
-              >::type
-        { };
-
     public:
+        typedef dependency type;
         typedef TScope scope;
         typedef TExpected expected;
         typedef TGiven given;
         typedef TContext context;
         typedef TBind bind;
 
-        struct ctor
-            : ctor_impl<BOOST_PP_CAT(has_, BOOST_DI_CTOR_UNIQUE_NAME)<given>::value>::type
-        { };
-
-        template<typename, typename = void>
-        struct result_type;
-
-        template<typename TPool>
-        struct result_type<TPool, typename enable_if< is_pool_type<TPool> >::type>
-            : TPool::template result_type<TInstance<> >
-        { };
-
-        template<typename TPool>
-        struct result_type<TPool, typename enable_if< is_value_type<TPool> >::type>
-            : mpl::identity<typename TValue<TGiven>::result_type>
-        { };
-
-        template<typename TPool>
-        struct result_type<TPool, typename enable_if< is_scope_type<TPool> >::type>
-            : mpl::identity<typename TScope::template scope<TGiven>::result_type>
-        { };
-
-        template<typename TPool>
-        typename enable_if<is_pool_type<TPool>, typename result_type<TPool>::type>::type
+        template<typename T, typename TPool>
+        typename enable_if<is_pool_type<TPool>, T>::type
         create(const TPool& pool) {
-            return pool.template get<TInstance<> >();
+            return TConverter<scope>::execute(pool.template get<TInstance<> >());
         }
 
-        template<typename TPool>
-        typename enable_if<is_value_type<TPool>, typename result_type<TPool>::type>::type
+        template<typename T, typename TPool>
+        typename enable_if<is_value_type<TPool>, T>::type
         create(const TPool&) {
-            return TValue<TGiven>::create();
+            return TConverter<scope>::execute(TValue<TGiven>::create());
         }
 
-        template<typename TPool>
-        typename enable_if<is_scope_type<TPool>, typename result_type<TPool>::type>::type
+        template<typename T, typename TPool>
+        typename enable_if<is_scope_type<TPool>, T>::type
         create(const TPool&) {
-            return scope_.create();
+            return TConverter<scope>::execute(scope_.create());
         }
 
-        template<typename T>
-        inline static TInstance<> to(T value)
-        {
-            return TInstance<>(value);
-        }
+        //template<typename T>
+        //inline static TInstance<> to(T value)
+        //{
+            //return TInstance<>(value);
+        //}
 
         #include BOOST_PP_ITERATE()
 
@@ -178,6 +141,10 @@
           , typename
           , typename
         > class TInstance
+      , template<
+            typename
+          , typename
+        > class TConverter
     >
     class dependency<
         mpl::_1
@@ -187,6 +154,7 @@
       , TBind
       , TValue
       , TInstance
+      , TConverter
     >
     {
     public:
@@ -201,6 +169,7 @@
               , TBind
               , TValue
               , TInstance
+              , TConverter
             > type;
         };
     };
@@ -218,6 +187,10 @@
           , typename
           , typename
         > class TInstance
+      , template<
+            typename
+          , typename
+        > class TConverter
     >
     class dependency<
         TScope
@@ -227,6 +200,7 @@
       , TBind
       , TValue
       , TInstance
+      , TConverter
     >
     {
     public:
@@ -241,6 +215,7 @@
               , TBind
               , TValue
               , TInstance
+              , TConverter
             > type;
         };
     };
@@ -253,16 +228,16 @@
 
 #else
 
-    template<typename TPool, BOOST_DI_ARGS_TYPES(Args)>
-    typename enable_if<is_scope_type<TPool>, typename result_type<TPool>::type>::type
+    template<typename T, typename TPool, BOOST_DI_ARGS_TYPES(Args)>
+    typename enable_if<is_scope_type<TPool>, T>::type
     create(const TPool&, BOOST_DI_ARGS(Args, args)) {
-        return scope_.create(BOOST_DI_ARGS_PASS(args));
+        return TConverter<scope>::execute(scope_.create(BOOST_DI_ARGS_PASS(args)));
     }
 
-    template<typename TPool, BOOST_DI_ARGS_TYPES(Args)>
-    typename enable_if<is_pool_type<TPool>, typename result_type<TPool>::type>::type
+    template<typename T, typename TPool, BOOST_DI_ARGS_TYPES(Args)>
+    typename enable_if<is_pool_type<TPool> >::type
     create(const TPool& pool, BOOST_DI_ARGS_NOT_USED(Args)) {
-        return pool.template get<TInstance<> >();
+        return TConverter<scope>::execute(pool.template get<TInstance<> >());
     }
 
 #endif

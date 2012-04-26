@@ -4,18 +4,21 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#include "boost/di/fusion_module.hpp"
+
 #include <boost/test/unit_test.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_base_of.hpp>
+#include <boost/typeof/typeof.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
+
 #include "boost/di/aux/dependency.hpp"
 #include "boost/di/named.hpp"
-#include "boost/di/fusion_module.hpp"
 #include "dependency.hpp"
 #include "data.hpp"
 
-#if 0
+#include <boost/units/detail/utility.hpp>
 namespace boost {
 namespace di {
 
@@ -43,70 +46,39 @@ BOOST_AUTO_TEST_CASE(fusion_module_empty)
     BOOST_CHECK((mpl::equal<mpl::vector0<>, module_t::pool::sequence>::value));
 }
 
-BOOST_AUTO_TEST_CASE(fusion_module_default_scope)
-{
-    struct module
-        : fusion_module<c1>
-    { };
-
-    BOOST_CHECK((
-        mpl::equal<
-            mpl::vector<
-                dependency_base_of<scopes::per_request, c1, c1>::type
-            >
-          , module::dependencies
-        >::value
-    ));
-
-    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::pool::sequence>::value));
-}
-
-BOOST_AUTO_TEST_CASE(fusion_module_default_scope_many)
-{
-    struct module
-        : fusion_module<c1, c2, c3>
-    { };
-
-    BOOST_CHECK((
-        mpl::equal<
-            mpl::vector<
-                dependency_base_of<scopes::per_request, c1, c1>::type
-              , dependency_base_of<scopes::per_request, c2, c2>::type
-              , dependency_base_of<scopes::per_request, c3, c3>::type
-            >
-          , module::dependencies
-        >::value
-    ));
-
-    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::pool::sequence>::value));
-}
-
 BOOST_AUTO_TEST_CASE(fusion_module_default_scope_bind)
 {
-    struct module
-        : fusion_module<
-              bind<if0, c0if0>
-            , c1
-            , bind<c2>::in_name<int>
-            , bind<c3>::in_call<call_stack<c4, c5> >
-          >
-    { };
+    BOOST_AUTO(module, fusion_module<>()(
+          bind<if0, c0if0>()
+        , bind<c2>::in_name<int>()
+        , bind<c3>::in_call<call_stack<c4, c5> >()
+    ));
+
+    typedef BOOST_TYPEOF(module) module_t;
 
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
                 dependency<scopes::per_request, if0, c0if0>::type
-              , dependency_base_of<scopes::per_request, c1, c1>::type
               , dependency_base_of<scopes::per_request, named<c2, int>, c2>::type
               , dependency_base_of<scopes::per_request, c3, c3, call_stack<c4, c5> >::type
             >
-          , module::dependencies
+          , module_t::dependencies
         >::value
     ));
 
-    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::pool::sequence>::value));
+    BOOST_CHECK((
+        mpl::equal<
+            mpl::vector<
+                bind<if0, c0if0>
+              , bind<c2>::in_name<int>
+              , bind<c3>::in_call<call_stack<c4, c5> >
+            >
+          , module_t::pool::sequence>::value
+    ));
 }
 
+#if 0
 BOOST_AUTO_TEST_CASE(fusion_module_one_scope)
 {
     struct module
@@ -621,8 +593,8 @@ BOOST_AUTO_TEST_CASE(fusion_module_ctor_with_externals_shared_ptr)
       , get<shared_ptr<value> >(module_.get_pool().get< aux::instance<value> >())->i
     );
 }
+#endif
 
 } // namespace di
 } // namespace boost
-#endif
 

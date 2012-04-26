@@ -37,7 +37,7 @@
 
     template<
         typename TSequence = mpl::vector0<>
-      , typename Enable = void
+      , typename = void
     >
     class pool
     {
@@ -73,7 +73,10 @@
         BOOST_PP_COMMA_IF(n) Args##n(args##n)
 
     template<typename TSequence>
-    class pool<TSequence, typename enable_if_c<mpl::size<TSequence>::value == BOOST_PP_ITERATION()>::type>
+    class pool<
+        TSequence
+      , typename enable_if_c<mpl::size<TSequence>::value == BOOST_PP_ITERATION()>::type
+    >
         : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_DERIVES_IMPL, TSequence)
     {
         BOOST_MPL_HAS_XXX_TRAIT_DEF(sequence)
@@ -85,19 +88,20 @@
         };
 
     public:
+        //TODO flatten here
         struct sequence
             : mpl::fold<
-                TSequence,
-                mpl::vector0<>,
-                mpl::copy<
-                    mpl::if_<
-                        has_sequence<mpl::_2>,
-                        get_sequence<mpl::_2>,
-                        typename mpl::vector<mpl::_2>::type
-                    >,
-                    mpl::back_inserter<mpl::_1>
-                >
-            >::type
+                  TSequence
+                , mpl::vector0<>,
+                  mpl::copy<
+                      mpl::if_<
+                          has_sequence<mpl::_2>
+                        , get_sequence<mpl::_2>
+                        , typename mpl::vector<mpl::_2>::type
+                      >
+                    , mpl::back_inserter<mpl::_1>
+                  >
+              >::type
         { };
 
         template<typename T>
@@ -105,10 +109,6 @@
         {
             typedef typename T::result_type type;
         };
-
-        #if __GNUC__ >= 4
-        # pragma GCC diagnostic ignored "-Wreorder"
-        #endif
 
         pool() { }
 

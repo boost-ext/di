@@ -19,7 +19,7 @@ public:
     template<
         typename TDeps
       , typename TGiven
-      , typename Enable = void
+      , typename = void
     >
     class verify
         : public mpl::true_

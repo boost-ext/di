@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_DETAIL_CONVERTER_HPP
-#define BOOST_DI_DETAIL_CONVERTER_HPP
+#ifndef BOOST_DI_AUX_CONVERTER_HPP
+#define BOOST_DI_AUX_CONVERTER_HPP
 
 #include <boost/variant.hpp>
 #include <boost/shared_ptr.hpp>
@@ -14,7 +14,7 @@
 
 namespace boost {
 namespace di {
-namespace detail {
+namespace aux {
 
 template<typename, typename>
 class converter;
@@ -175,7 +175,7 @@ public:
     }
 };
 
-} // namespace detail
+} // namespace aux
 } // namespace di
 } // namespace boost
 
