@@ -24,12 +24,12 @@
     #include "boost/di/aux/converter.hpp"
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (           \
-        BOOST_DI_PARAMS(                            \
-            1                                       \
-          , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE      \
-          , "boost/di/aux/dependency.hpp"           \
-        )                                           \
+    #define BOOST_PP_ITERATION_PARAMS_1 (       \
+        BOOST_DI_PARAMS(                        \
+            1                                   \
+          , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE  \
+          , "boost/di/aux/dependency.hpp"       \
+        )                                       \
     )
 
     namespace boost {

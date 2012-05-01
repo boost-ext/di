@@ -55,8 +55,7 @@ class instance
     : public detail::instance
 {
 public:
-    typedef T value_type;
-    typedef variant<const T&, T&, shared_ptr<T> > result_type;
+    //typedef T value_type;
 
     explicit instance(const T& member)
         : member_(member)
@@ -70,12 +69,12 @@ public:
         : member_(member)
     { }
 
-    result_type get() const {
+    variant<const T&, T&, shared_ptr<T> > get() const {
         return member_;
     }
 
 private:
-    result_type member_;
+    variant<const T&, T&, shared_ptr<T> > member_;
 };
 
 template<
@@ -94,9 +93,10 @@ class instance<
     >
     : public detail::instance
 {
-public:
-    typedef T value_type;
     typedef typename detail::get_value_type<T>::type result_type;
+
+public:
+    //typedef T value_type;
 
     explicit instance(result_type member)
         : member_(member)

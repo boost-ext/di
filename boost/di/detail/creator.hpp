@@ -24,12 +24,12 @@
     #include "boost/di/scopes/per_request.hpp"
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (           \
-        BOOST_DI_PARAMS(                            \
-            0                                       \
-          , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE      \
-          , "boost/di/detail/creator.hpp"           \
-        )                                           \
+    #define BOOST_PP_ITERATION_PARAMS_1 (       \
+        BOOST_DI_PARAMS(                        \
+            0                                   \
+          , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE  \
+          , "boost/di/detail/creator.hpp"       \
+        )                                       \
     )
 
     namespace boost {
@@ -38,7 +38,6 @@
 
     template<
         typename TDeps
-      , typename TPool
       , template<
             typename
           , typename
@@ -70,15 +69,13 @@
             typename T
           , typename TCallStack
           , typename TEntries
+          , typename TPool
         >
         static T execute(TEntries& entries, const TPool& pool) {
             typedef typename TBinder<T, TCallStack>::type to_bo_created_t;
             return execute_impl<
                 to_bo_created_t
-              , typename mpl::push_back<
-                    TCallStack
-                  , typename to_bo_created_t::given
-                >::type
+              , typename mpl::push_back<TCallStack, typename to_bo_created_t::given>::type
               , TEntries
             >(entries, pool);
         }
@@ -91,6 +88,7 @@
           , typename TCallStack
           , int N
           , typename TEntries
+          , typename TPool
         >
         static mpl::at_c<typename ctor<TDependency>::type, N>::type
         execute_impl(TEntries& entries, const TPool& pool) {
@@ -119,12 +117,9 @@
         }
     };
 
-    template<
-        typename TDeps
-      , typename TPool
-    >
+    template<typename TDeps>
     struct creator
-        : creator_impl<TDeps, TPool>
+        : creator_impl<TDeps>
     { };
 
     } // namespace detail
@@ -139,6 +134,7 @@
         typename TDependency
       , typename TCallStack
       , typename TEntries
+      , typename TPool
     >
     static typename enable_if_ctor_size<TDependency, BOOST_PP_ITERATION()>::type
     execute_impl(TEntries& entries, const TPool& pool) {
@@ -147,7 +143,7 @@
             BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
             BOOST_PP_ENUM_BINARY_PARAMS(
                 BOOST_PP_ITERATION()
-              , execute_impl<TDependency, TCallStack, TEntries>(entries, pool) BOOST_PP_INTERCEPT
+              , execute_impl<TDependency, TCallStack>(entries, pool) BOOST_PP_INTERCEPT
             )
         );
     }

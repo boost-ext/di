@@ -62,19 +62,6 @@ struct flatten
     >::type
 { };
 
-        template<typename TSequence>
-        struct dupa
-            : mpl::fold<
-                  TSequence
-                , mpl::vector0<>
-                , mpl::if_<
-                      is_base_of<aux::detail::instance, mpl::_1>
-                    , mpl::push_back<mpl::_1, mpl::_2>
-                    , mpl::_1
-                  >
-              >::type
-        { };
-
     template<
         typename TDeps
       , template<
@@ -83,7 +70,6 @@ struct flatten
         > class TPool = aux::pool
       , template<
             typename = typename aux::flatten<TDeps>::type
-          , typename = TPool<typename aux::flatten<TDeps>::type>
         > class TCreator = creator
       , template<
             typename = typename aux::flatten<TDeps>::type
