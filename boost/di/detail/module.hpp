@@ -9,29 +9,19 @@
     #ifndef BOOST_DI_DETAIL_MODULE_HPP
     #define BOOST_DI_DETAIL_MODULE_HPP
 
-    #include <boost/type_traits/is_base_of.hpp>
     #include <boost/preprocessor/iteration/iterate.hpp>
+    #include <boost/type_traits/is_base_of.hpp>
     #include <boost/mpl/limits/vector.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/filter_view.hpp>
     #include <boost/mpl/joint_view.hpp>
     #include <boost/mpl/inherit_linearly.hpp>
     #include <boost/mpl/inherit.hpp>
-    #include <boost/mpl/fold.hpp>
     #include <boost/mpl/deref.hpp>
     #include <boost/mpl/begin_end.hpp>
-    #include <boost/mpl/if.hpp>
-    #include <boost/mpl/copy_if.hpp>
-    #include <boost/mpl/back_inserter.hpp>
     #include "boost/di/aux/pool.hpp"
-    #include "boost/di/aux/make_plain.hpp"
-    #include "boost/di/aux/instance.hpp"
-    #include "boost/di/aux/dependency.hpp"
-    #include "boost/di/aux/converter.hpp"
     #include "boost/di/detail/creator.hpp"
     #include "boost/di/detail/visitor.hpp"
-    #include "boost/di/scopes/per_request.hpp"
-    #include "boost/di/concepts.hpp"
     #include "boost/di/policy.hpp"
     #include "boost/di/config.hpp"
 
@@ -47,62 +37,32 @@
     namespace di {
     namespace detail {
 
-    //namespace detail {
-
-    template<typename TDeps>
-    struct dependencies
-        : mpl::fold<
-              typename mpl::fold<
-                  TDeps
-                , mpl::vector0<>
-                , mpl::copy<
-                      mpl::if_<
-                          is_base_of<aux::instance, mpl::_2>
-                        , mpl::vector0<>
-                        , mpl::if_<
-                              mpl::is_sequence<mpl::_2>
-                            , mpl::_2
-                            , per_request<mpl::_2>
-                          >
-                      >
-                    , mpl::back_inserter<mpl::_1>
-                  >
-              >::type
-          >::type
-    { };
-
-    //} // namespace detail
-
     template<
-        typename TDeps
+        typename TDeps = mpl::vector0<>
+      , typename TExternals = mpl::vector0<>
       , template<
-            typename = typename dependencies<TDeps>::type
+            typename = TExternals
           , typename = void
         > class TPool = aux::pool
       , template<
-            typename = typename dependencies<TDeps>::type
+            typename = TDeps
         > class TCreator = creator
       , template<
-            typename = typename dependencies<TDeps>::type
+            typename = TDeps
         > class TVisitor = visitor
     >
     class module
     {
-    public:
-        typedef typename dependencies<TDeps>::type deps;
-        typedef deps dependencies; //TODO
-        typedef TPool<deps> pool;  //TODO
-
     private:
         struct entries
-            : mpl::inherit_linearly<deps, mpl::inherit<mpl::_1, mpl::_2> >::type
+            : mpl::inherit_linearly<TDeps, mpl::inherit<mpl::_1, mpl::_2> >::type
         { };
 
         struct policies
             : mpl::deref<
                   typename mpl::begin<
                        mpl::joint_view<
-                          mpl::filter_view<deps, is_base_of<policy, mpl::_1> >
+                          mpl::filter_view<TDeps, is_base_of<policy, mpl::_1> >
                         , mpl::vector1<typename defaults<policy, specialized>::type>
                       >
                   >::type
@@ -116,18 +76,18 @@
 
         template<typename T>
         T create() {
-            typedef typename policies::template verify<deps, T>::type policies_t;
+            typedef typename policies::template verify<TDeps, T>::type policies_t;
             return TCreator<>::template execute<T, mpl::vector0<> >(entries_, pool_);
         }
 
         template<typename T, typename Visitor>
         void visit(const Visitor& visitor) {
-            typedef typename policies::template verify<deps, T>::type policies_t;
+            typedef typename policies::template verify<TDeps, T>::type policies_t;
             TVisitor<>::template execute<T, mpl::vector0<> >(visitor);
         }
 
     private:
-        TPool<deps> pool_;
+        TPool<> pool_;
         entries entries_;
     };
 
