@@ -16,14 +16,11 @@ namespace aux {
 template<typename T>
 struct allocator
 {
-    typedef shared_ptr<T> result_type;
-
     allocator(T* object) // non explicit
         : object(object)
     { }
 
-    result_type get() const
-    {
+    shared_ptr<T> get() const {
         return object;
     }
 
@@ -32,19 +29,29 @@ struct allocator
 
 struct trivial_ctor
 {
-    typedef trivial_ctor result_type;
+    int get() const { return 0; }
 };
 
 struct default_ctor
 {
-    typedef default_ctor result_type;
-    explicit default_ctor(int = 0) { }
+    explicit default_ctor(int i = 0)
+        : i(i)
+    { }
+
+    int get() const { return i; }
+
+    int i;
 };
 
 struct custom_ctor
 {
-    typedef custom_ctor result_type;
-    explicit custom_ctor(int) { }
+    explicit custom_ctor(int i)
+        : i(i)
+    { }
+
+    int get() const { return i; }
+
+    int i;
 };
 
 BOOST_AUTO_TEST_CASE(pool_empty)

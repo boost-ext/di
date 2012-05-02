@@ -45,7 +45,7 @@
     {
         template<typename T>
         struct result_type
-            : function_types::result_type<BOOST_TYPEOF_TPL(&T::get)>::type
+            : function_types::result_type<BOOST_TYPEOF_TPL(&T::get)>
         { };
 
     public:
@@ -84,7 +84,7 @@
 
         template<typename T>
         struct result_type
-            : function_types::result_type<BOOST_TYPEOF_TPL(&T::get)>::type
+            : function_types::result_type<BOOST_TYPEOF_TPL(&T::get)>
         { };
 
         template<typename T>
