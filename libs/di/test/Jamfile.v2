@@ -39,7 +39,7 @@ test-suite di-test
       [ run scopes/singleton_ut.cpp ]
       [ run ctor_bracket_ut.cpp ]
       [ run ctor_va_args_ut.cpp ]
-      [ run generic_module_ut.cpp ]
+      #[ run generic_module_ut.cpp ]
       #[ run fusion_module_ut.cpp ]
       #[ run injector_ut.cpp ]
       #[ run named_ut.cpp ]

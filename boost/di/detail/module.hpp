@@ -31,6 +31,7 @@
     #include "boost/di/detail/creator.hpp"
     #include "boost/di/detail/visitor.hpp"
     #include "boost/di/scopes/per_request.hpp"
+    #include "boost/di/concepts.hpp"
     #include "boost/di/policy.hpp"
     #include "boost/di/config.hpp"
 
@@ -46,39 +47,51 @@
     namespace di {
     namespace detail {
 
-    template<typename TSequence>
-    struct flatten
+    //namespace detail {
+
+    template<typename TDeps>
+    struct dependencies
         : mpl::fold<
-            TSequence
-          , mpl::vector0<>
-          , mpl::copy<
-                mpl::if_<
-                    mpl::is_sequence<mpl::_2>
-                  , mpl::_2
-                  , typename mpl::vector<mpl::_2>::type
-                >
-              , mpl::back_inserter<mpl::_1>
-            >
-        >::type
+              typename mpl::fold<
+                  TDeps
+                , mpl::vector0<>
+                , mpl::copy<
+                      mpl::if_<
+                          is_base_of<aux::instance, mpl::_2>
+                        , mpl::vector0<>
+                        , mpl::if_<
+                              mpl::is_sequence<mpl::_2>
+                            , mpl::_2
+                            , per_request<mpl::_2>
+                          >
+                      >
+                    , mpl::back_inserter<mpl::_1>
+                  >
+              >::type
+          >::type
     { };
+
+    //} // namespace detail
 
     template<
         typename TDeps
       , template<
-            typename = typename flatten<TDeps>::type
+            typename = typename dependencies<TDeps>::type
           , typename = void
         > class TPool = aux::pool
       , template<
-            typename = typename flatten<TDeps>::type
+            typename = typename dependencies<TDeps>::type
         > class TCreator = creator
       , template<
-            typename = typename flatten<TDeps>::type
+            typename = typename dependencies<TDeps>::type
         > class TVisitor = visitor
     >
     class module
     {
     public:
-        typedef typename flatten<TDeps>::type deps;
+        typedef typename dependencies<TDeps>::type deps;
+        typedef deps dependencies; //TODO
+        typedef TPool<deps> pool;  //TODO
 
     private:
         struct entries

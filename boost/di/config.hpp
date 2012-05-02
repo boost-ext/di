@@ -15,7 +15,7 @@
 #include <boost/mpl/limits/vector.hpp>
 #include <boost/config.hpp>
 
-#if !defined(BOOST_DI_CTOR_CFG_VA_ARGS)                     \
+#if !defined(BOOST_DI_CTOR_CFG_VA_ARGS)                 \
  && !defined(BOOST_DI_CTOR_CFG_BRACKET)
 # define BOOST_DI_CTOR_CFG_VA_ARGS
 #endif
@@ -24,36 +24,36 @@
 # define BOOST_DI_CTOR_UNIQUE_NAME ctor__
 #endif
 
-#if defined(BOOST_HAS_VARIADIC_TMPL)                        \
+#if defined(BOOST_HAS_VARIADIC_TMPL)                    \
  && defined(BOOST_HAS_RVALUE_REFERENCES)
 
 # define BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE 0 // infinity
 
-#define BOOST_DI_ITERATION_PARAMS(start, limit, file)       \
+#define BOOST_DI_ITERATION_PARAMS(start, limit, file)   \
     3, (0, 0, file)
 
-# define BOOST_DI_ARGS_TYPES_MPL(Args)                      \
+# define BOOST_DI_ARGS_TYPES_MPL(Args)                  \
     typename... Args
 
-# define BOOST_DI_ARGS_MPL(Args)                            \
+# define BOOST_DI_ARGS_MPL(Args)                        \
     Args...
 
-# define BOOST_DI_ARGS_TYPES(Args)                          \
+# define BOOST_DI_ARGS_TYPES(Args)                      \
     typename... Args
 
-# define BOOST_DI_ARGS(Args, args)                          \
+# define BOOST_DI_ARGS(Args, args)                      \
     Args&&... args
 
-# define BOOST_DI_ARGS_NOT_USED(Args)                       \
+# define BOOST_DI_ARGS_NOT_USED(Args)                   \
     Args&&...
 
-# define BOOST_DI_ARGS_PASS(args)                           \
+# define BOOST_DI_ARGS_PASS(args)                       \
     args
 
-# define BOOST_DI_ARGS_PASS_TYPES(Args)                     \
+# define BOOST_DI_ARGS_PASS_TYPES(Args)                 \
     Args...
 
-# define BOOST_DI_ARGS_FORWARD(args)                        \
+# define BOOST_DI_ARGS_FORWARD(args)                    \
     std::forward(args)...
 
 #else
@@ -62,58 +62,58 @@
 #  define BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE 10
 # endif
 
-#define BOOST_DI_ITERATION_PARAMS(start, limit, file)       \
+#define BOOST_DI_ITERATION_PARAMS(start, limit, file)   \
     3, (start, limit, file)
 
-# define BOOST_DI_ARGS_TYPES_MPL(Arg)                       \
-    BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(                    \
-        BOOST_MPL_LIMIT_VECTOR_SIZE                         \
-      , typename Arg                                        \
-      , mpl_::na                                            \
+# define BOOST_DI_ARGS_TYPES_MPL(Arg)                   \
+    BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(                \
+        BOOST_MPL_LIMIT_VECTOR_SIZE                     \
+      , typename Arg                                    \
+      , mpl_::na                                        \
     )
 
-# define BOOST_DI_ARGS_MPL(Arg)                             \
-    BOOST_PP_ENUM_PARAMS(                                   \
-        BOOST_MPL_LIMIT_VECTOR_SIZE                         \
-      , Arg                                                 \
+# define BOOST_DI_ARGS_MPL(Arg)                         \
+    BOOST_PP_ENUM_PARAMS(                               \
+        BOOST_MPL_LIMIT_VECTOR_SIZE                     \
+      , Arg                                             \
     )
 
-# define BOOST_DI_ARGS_TYPES(Arg)                           \
-    BOOST_PP_ENUM_PARAMS(                                   \
-        BOOST_PP_ITERATION()                                \
-      , typename Arg                                        \
+# define BOOST_DI_ARGS_TYPES(Arg)                       \
+    BOOST_PP_ENUM_PARAMS(                               \
+        BOOST_PP_ITERATION()                            \
+      , typename Arg                                    \
     )
 
-# define BOOST_DI_ARGS(Arg, arg)                            \
-    BOOST_PP_ENUM_BINARY_PARAMS(                            \
-        BOOST_PP_ITERATION()                                \
-      , const Arg                                           \
-      , &arg                                                \
+# define BOOST_DI_ARGS(Arg, arg)                        \
+    BOOST_PP_ENUM_BINARY_PARAMS(                        \
+        BOOST_PP_ITERATION()                            \
+      , const Arg                                       \
+      , &arg                                            \
     )
 
-# define BOOST_DI_ARGS_NOT_USED(Arg)                        \
-    BOOST_PP_ENUM_BINARY_PARAMS(                            \
-        BOOST_PP_ITERATION()                                \
-      , const Arg                                           \
-      , & BOOST_PP_INTERCEPT                                \
+# define BOOST_DI_ARGS_NOT_USED(Arg)                    \
+    BOOST_PP_ENUM_BINARY_PARAMS(                        \
+        BOOST_PP_ITERATION()                            \
+      , const Arg                                       \
+      , & BOOST_PP_INTERCEPT                            \
     )
 
-# define BOOST_DI_ARGS_PASS(arg)                            \
-    BOOST_PP_ENUM_PARAMS(                                   \
-        BOOST_PP_ITERATION()                                \
-      , arg                                                 \
+# define BOOST_DI_ARGS_PASS(arg)                        \
+    BOOST_PP_ENUM_PARAMS(                               \
+        BOOST_PP_ITERATION()                            \
+      , arg                                             \
     )
 
-# define BOOST_DI_ARGS_PASS_TYPES(Args)                     \
-    BOOST_PP_ENUM_PARAMS(                                   \
-        BOOST_PP_ITERATION()                                \
-      , Args                                                \
+# define BOOST_DI_ARGS_PASS_TYPES(Args)                 \
+    BOOST_PP_ENUM_PARAMS(                               \
+        BOOST_PP_ITERATION()                            \
+      , Args                                            \
     )
 
-# define BOOST_DI_ARGS_FORWARD(arg)                         \
-    BOOST_PP_ENUM_PARAMS(                                   \
-        BOOST_PP_ITERATION()                                \
-      , arg                                                 \
+# define BOOST_DI_ARGS_FORWARD(arg)                     \
+    BOOST_PP_ENUM_PARAMS(                               \
+        BOOST_PP_ITERATION()                            \
+      , arg                                             \
     )
 
 #endif
