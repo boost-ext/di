@@ -53,6 +53,15 @@
     >
     class module
     {
+//TODO
+    public:
+        typedef TDeps dependencies;
+        typedef TPool<> pool;
+
+        const TPool<>& get_pool() const {
+            return pool_;
+        }
+
     private:
         struct entries
             : mpl::inherit_linearly<TDeps, mpl::inherit<mpl::_1, mpl::_2> >::type

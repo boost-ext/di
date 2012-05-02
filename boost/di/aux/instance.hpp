@@ -55,6 +55,9 @@ class instance
     : public detail::instance
 {
 public:
+    typedef instance type;
+    typedef T element_type;
+
     explicit instance(const T& member)
         : member_(member)
     { }
@@ -94,6 +97,9 @@ class instance<
     typedef typename detail::get_value_type<T>::type value_type;
 
 public:
+    typedef instance type;
+    typedef T element_type;
+
     explicit instance(value_type member)
         : member_(member)
     { }

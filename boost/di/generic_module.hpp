@@ -74,25 +74,22 @@
     template<typename TDeps>
     struct dependencies
         : mpl::fold<
-              typename mpl::fold<
-                  TDeps
-                , mpl::vector0<>
-                , mpl::copy<
-                      mpl::if_<
-                          is_base_of<aux::instance, mpl::_2>
-                        , mpl::vector0<>
-                        , mpl::if_<
-                              mpl::is_sequence<mpl::_2>
-                            , mpl::_2
-                            , per_request<mpl::_2>
-                          >
+              TDeps
+            , mpl::vector0<>
+            , mpl::copy<
+                  mpl::if_<
+                      is_base_of<concepts::detail::externals, mpl::_2>
+                    , mpl::vector0<>
+                    , mpl::if_<
+                          mpl::is_sequence<mpl::_2>
+                        , mpl::_2
+                        , per_request<mpl::_2>
                       >
-                    , mpl::back_inserter<mpl::_1>
                   >
-              >::type
+                , mpl::back_inserter<mpl::_1>
+              >
           >::type
     { };
-
 
     template<typename T>
     struct get_derived
@@ -113,16 +110,18 @@
     template<BOOST_DI_ARGS_TYPES_MPL(T)>
     class generic_module
         : public detail::module<
-              typename detail::instances<
-                  mpl::vector<BOOST_DI_ARGS_MPL(T)>
-              >::type
+              typename detail::dependencies<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
+            , typename detail::instances<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
           >
     {
+        //TODO
+        typedef typename detail::externals<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type externals;
+
         template<typename TInstance, typename T>
         struct is_same_instance
             : mpl::or_<
                   is_same<typename TInstance::name, T>
-                , is_same<typename TInstance::value_type, T>
+                , is_same<typename TInstance::element_type, T>
               >
         { };
 
@@ -147,12 +146,12 @@
 
         #include BOOST_PP_ITERATE()
 
-/*        template<typename T, typename TValue>*/
-        //static typename disable_if_instance_not_found<T, externals>::type
-        //set(TValue value) {
-            //typedef typename find_instance_type<externals, T>::type annotation;
-            //return typename annotation::derived(value);
-        /*}*/
+        template<typename T, typename TValue>
+        static typename disable_if_instance_not_found<T, externals>::type
+        set(TValue value) {
+            typedef typename find_instance_type<externals, T>::type annotation;
+            return typename annotation::derived(value);
+        }
     };
 
     } // namespace di
