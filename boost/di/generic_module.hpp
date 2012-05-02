@@ -163,7 +163,12 @@
 
     template<BOOST_DI_ARGS_TYPES(Args)>
     generic_module(BOOST_DI_ARGS(Args, args))
-        : detail::module<mpl::vector<BOOST_DI_ARGS_MPL(T)> >(BOOST_DI_ARGS_FORWARD(args))
+        : detail::module<
+              typename detail::dependencies<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
+            , typename detail::instances<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
+          >
+        (BOOST_DI_ARGS_FORWARD(args))
+
     { }
 
 #endif

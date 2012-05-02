@@ -584,7 +584,6 @@ BOOST_AUTO_TEST_CASE(generic_module_set_instance_mix)
     BOOST_CHECK_EQUAL(i3, module::set<b>(i3).get());
 }
 
-#if 0
 BOOST_AUTO_TEST_CASE(generic_module_ctor_with_externals)
 {
     const int i = 42;
@@ -606,6 +605,7 @@ BOOST_AUTO_TEST_CASE(generic_module_ctor_with_externals)
     BOOST_CHECK_EQUAL(d, module_.get_pool().get< aux::instance<double> >());
 }
 
+#if 0
 BOOST_AUTO_TEST_CASE(generic_module_ctor_with_externals_shared_ptr)
 {
     const int i = 42;
