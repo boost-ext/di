@@ -18,14 +18,14 @@
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/push_back.hpp>
     #include "boost/di/aux/dependency.hpp"
-    #include "boost/di/aux/ctor.hpp"
+    #include "boost/di/aux/ctor_traits.hpp"
+    #include "boost/di/aux/converter.hpp"
     #include "boost/di/detail/binder.hpp"
-    #include "boost/di/detail/converter.hpp"
     #include "boost/di/scopes/per_request.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
-        BOOST_DI_PARAMS(                        \
+        BOOST_DI_ITERATION_PARAMS(              \
             0                                   \
           , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE  \
           , "boost/di/detail/creator.hpp"       \
@@ -47,21 +47,13 @@
       , template<
             typename
           , typename = void
-        > class TCtor = aux::ctor
+        > class TCtorTraits = aux::ctor_traits
     >
     class creator_impl
     {
         template<typename TDependency>
         struct ctor
-            : TCtor<typename TDependency::given>::type
-        { };
-
-        template<typename TDependency, int N>
-        struct enable_if_ctor_size
-            : enable_if_c<
-                  mpl::size<typename ctor<TDependency>::type>::value == N
-                , typename mpl::at_c<typename ctor<TDependenc>::type, N>::type
-              >
+            : TCtorTraits<typename TDependency::given>::type
         { };
 
     public:
@@ -74,29 +66,17 @@
         static T execute(TEntries& entries, const TPool& pool) {
             typedef typename TBinder<T, TCallStack>::type to_bo_created_t;
             return execute_impl<
-                to_bo_created_t
-              , typename mpl::push_back<TCallStack, typename to_bo_created_t::given>::type
-              , TEntries
+                T
+              , to_bo_created_t
+              , typename mpl::push_back<
+                    TCallStack
+                  , typename to_bo_created_t::given
+                >::type
             >(entries, pool);
         }
 
     private:
         #include BOOST_PP_ITERATE()
-
-        template<
-          , typename TDependency
-          , typename TCallStack
-          , int N
-          , typename TEntries
-          , typename TPool
-        >
-        static mpl::at_c<typename ctor<TDependency>::type, N>::type
-        execute_impl(TEntries& entries, const TPool& pool) {
-            return execute<
-                mpl::at_c<typename ctor<TDependenc>::type, N>::type
-              , TCallStack
-            >(entries, pool)
-        }
 
         template<
             typename TDependency
@@ -131,21 +111,37 @@
 #else
 
     template<
-        typename TDependency
+        typename T
+      , typename TDependency
       , typename TCallStack
       , typename TEntries
       , typename TPool
     >
-    static typename enable_if_ctor_size<TDependency, BOOST_PP_ITERATION()>::type
-    execute_impl(TEntries& entries, const TPool& pool) {
-        return acquire<TDependency>(entries).create<typename ctor<TDependency>::type>(
+    static typename enable_if_c<
+        mpl::size<typename ctor<TDependency>::type>::value
+        ==
+        BOOST_PP_ITERATION()
+      , T
+    >::type execute_impl(TEntries& entries, const TPool& pool) {
+
+        #define BOOST_DI_CREATOR_EXECUTE(z, n, _)                               \
+            BOOST_PP_COMMA_IF(n)                                                \
+            execute<                                                            \
+                typename mpl::at_c<typename ctor<TDependency>::type, n>::type   \
+              , TCallStack                                                      \
+            >(entries, pool)
+
+        return acquire<TDependency>(entries).template create<T>(
             pool
             BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
-            BOOST_PP_ENUM_BINARY_PARAMS(
+            BOOST_PP_REPEAT(
                 BOOST_PP_ITERATION()
-              , execute_impl<TDependency, TCallStack>(entries, pool) BOOST_PP_INTERCEPT
+              , BOOST_DI_CREATOR_EXECUTE
+              , ~
             )
         );
+
+        #undef BOOST_DI_CREATOR_EXECUTE
     }
 
 #endif

@@ -24,10 +24,10 @@
     #include <boost/mpl/copy_if.hpp>
     #include <boost/mpl/back_inserter.hpp>
     #include "boost/di/aux/pool.hpp"
-    #include "boost/di/aux/utility.hpp"
+    #include "boost/di/aux/make_plain.hpp"
     #include "boost/di/aux/instance.hpp"
     #include "boost/di/aux/dependency.hpp"
-    #include "boost/di/detail/converter.hpp"
+    #include "boost/di/aux/converter.hpp"
     #include "boost/di/detail/creator.hpp"
     #include "boost/di/detail/visitor.hpp"
     #include "boost/di/scopes/per_request.hpp"
@@ -35,7 +35,7 @@
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
-        BOOST_DI_PARAMS(                    \
+        BOOST_DI_ITERATION_PARAMS(          \
             1                               \
           , BOOST_MPL_LIMIT_VECTOR_SIZE     \
           , "boost/di/detail/module.hpp"    \
@@ -46,39 +46,39 @@
     namespace di {
     namespace detail {
 
-template<typename TSequence>
-struct flatten
-    : mpl::fold<
-        TSequence
-      , mpl::vector0<>
-      , mpl::copy<
-            mpl::if_<
-                mpl::is_sequence<mpl::_2>
-              , mpl::_2
-              , typename mpl::vector<mpl::_2>::type
+    template<typename TSequence>
+    struct flatten
+        : mpl::fold<
+            TSequence
+          , mpl::vector0<>
+          , mpl::copy<
+                mpl::if_<
+                    mpl::is_sequence<mpl::_2>
+                  , mpl::_2
+                  , typename mpl::vector<mpl::_2>::type
+                >
+              , mpl::back_inserter<mpl::_1>
             >
-          , mpl::back_inserter<mpl::_1>
-        >
-    >::type
-{ };
+        >::type
+    { };
 
     template<
         typename TDeps
       , template<
-            typename = typename aux::flatten<TDeps>::type
+            typename = typename flatten<TDeps>::type
           , typename = void
         > class TPool = aux::pool
       , template<
-            typename = typename aux::flatten<TDeps>::type
+            typename = typename flatten<TDeps>::type
         > class TCreator = creator
       , template<
-            typename = typename aux::flatten<TDeps>::type
+            typename = typename flatten<TDeps>::type
         > class TVisitor = visitor
     >
     class module
     {
     public:
-        typedef typename aux::flatten<TDeps>::type deps;
+        typedef typename flatten<TDeps>::type deps;
 
     private:
         struct entries

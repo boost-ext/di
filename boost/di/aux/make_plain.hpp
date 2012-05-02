@@ -56,13 +56,13 @@ struct deref_element_type<T, typename enable_if<has_element_type<T> >::type>
 
 template<typename TElement>
 struct make_plain
-    : deref_element_type<
-        typename remove_accessors<
-            typename deref_element_type<
-                typename remove_accessors<TElement>::type
+    : detail::deref_element_type<
+        typename detail::remove_accessors<
+            typename detail::deref_element_type<
+                typename detail::remove_accessors<TElement>::type
             >::type
         >::type
-    >::type
+    >
 { };
 
 } // namespace aux

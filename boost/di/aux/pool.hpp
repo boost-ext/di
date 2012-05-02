@@ -12,6 +12,8 @@
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/preprocessor/punctuation/comma_if.hpp>
+    #include <boost/function_types/result_type.hpp>
+    #include <boost/typeof/typeof.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/fold.hpp>
     #include <boost/mpl/copy.hpp>
@@ -41,14 +43,13 @@
     >
     class pool
     {
-    public:
-        typedef TSequence sequence;
-
         template<typename T>
         struct result_type
-        {
-            typedef typename T::result_type type;
-        };
+            : function_types::result_type<BOOST_TYPEOF_TPL(&T::get)>::type
+        { };
+
+    public:
+        typedef TSequence sequence;
 
         template<typename T>
         typename result_type<T>::type get() const
@@ -82,13 +83,17 @@
         BOOST_MPL_HAS_XXX_TRAIT_DEF(sequence)
 
         template<typename T>
+        struct result_type
+            : function_types::result_type<BOOST_TYPEOF_TPL(&T::get)>::type
+        { };
+
+        template<typename T>
         struct get_sequence
         {
             typedef typename T::sequence type;
         };
 
     public:
-        //TODO flatten here
         struct sequence
             : mpl::fold<
                   TSequence
@@ -103,12 +108,6 @@
                   >
               >::type
         { };
-
-        template<typename T>
-        struct result_type
-        {
-            typedef typename T::result_type type;
-        };
 
         pool() { }
 

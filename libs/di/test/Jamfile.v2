@@ -9,7 +9,7 @@ import testing ;
 
 project
     : requirements
-      <library>../../../../../../libboost_unit_test_framework.a/<link>static
+      <library>../../../../../../tools/libboost_unit_test_framework.a/<link>static
       #<library>/boost/test//boost_unit_test_framework/<link>static
       <warnings>all
       <warnings-as-errors>on
@@ -26,7 +26,7 @@ test-suite di-test
     : #[ run aux/instance_ut.cpp ]
       #[ run aux/explicit_value_ut.cpp ]
       #[ run aux/dependency_ut.cpp ]
-      #[ run aux/utility_ut.cpp ]
+      [ run aux/make_plain_ut.cpp ]
       #[ run aux/pool_ut.cpp ]
       #[ run detail/creator_ut.cpp ]
       #[ run detail/module_ut.cpp ]
@@ -44,7 +44,7 @@ test-suite di-test
       #[ run injector_ut.cpp ]
       #[ run named_ut.cpp ]
 
-      [ run detail/module_mt.cpp ]
+      #[ run detail/module_mt.cpp ]
       #[ run di_mt.cpp ]
     ;
 

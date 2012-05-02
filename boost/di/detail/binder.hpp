@@ -30,7 +30,7 @@
 #include <boost/mpl/less.hpp>
 #include <boost/mpl/min_max.hpp>
 #include <boost/mpl/has_xxx.hpp>
-#include "boost/di/aux/utility.hpp"
+#include "boost/di/aux/make_plain.hpp"
 
 namespace boost {
 namespace di {

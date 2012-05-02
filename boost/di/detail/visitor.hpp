@@ -11,22 +11,24 @@
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
+    #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/placeholders.hpp>
-    #include "boost/di/aux/utility.hpp"
+    #include "boost/di/aux/make_plain.hpp"
     #include "boost/di/aux/dependency.hpp"
+    #include "boost/di/aux/ctor_traits.hpp"
     #include "boost/di/detail/binder.hpp"
     #include "boost/di/scopes/per_request.hpp"
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (           \
-        BOOST_DI_PARAMS(                            \
-            0                                       \
-          , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE      \
-          , "boost/di/detail/visitor.hpp"           \
-        )                                           \
+    #define BOOST_PP_ITERATION_PARAMS_1 (       \
+        BOOST_DI_ITERATION_PARAMS(              \
+            0                                   \
+          , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE  \
+          , "boost/di/detail/visitor.hpp"       \
+        )                                       \
     )
 
     namespace boost {
@@ -41,9 +43,18 @@
           , typename = TDeps
           , typename = aux::dependency<scopes::per_request, mpl::_1, mpl::_2>
         > class TBinder = binder
+      , template<
+            typename
+          , typename = void
+        > class TCtorTraits = aux::ctor_traits
     >
     class visitor_impl
     {
+        template<typename TDependency>
+        struct ctor
+            : TCtorTraits<typename TDependency::given>::type
+        { };
+
         template<
             typename T
           , typename TCallStack
@@ -69,7 +80,7 @@
             execute_impl<
                 T
               , to_bo_created_t
-              , typename aux::update_call_stack<TCallStack, to_bo_created_t>::type
+              , typename mpl::push_back<TCallStack, typename to_bo_created_t::given>::type
             >(visitor);
         }
 
@@ -96,14 +107,18 @@
       , typename TCallStack
       , typename TVisitor
     >
-    static typename aux::enable_if_ctor_size<TDependency, BOOST_PP_ITERATION()>::type
-    execute_impl(const TVisitor& visitor) {
+    static typename enable_if_c<
+        mpl::size<typename ctor<TDependency>::type>::value
+        ==
+        BOOST_PP_ITERATION()
+    >::type execute_impl(const TVisitor& visitor) {
+
         visitor.template operator()<dependency<T, TCallStack, TDependency> >();
 
-        #define BOOST_DI_VISITOR_EXECUTE(z, n, _)               \
-            execute<                                            \
-                typename aux::at_ctor<TDependency, n>::type     \
-              , TCallStack                                      \
+        #define BOOST_DI_VISITOR_EXECUTE(z, n, _)                               \
+            execute<                                                            \
+                typename mpl::at_c<typename ctor<TDependency>::type, n>::type   \
+              , TCallStack                                                      \
             >(visitor);
 
         BOOST_PP_REPEAT(

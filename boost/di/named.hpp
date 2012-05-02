@@ -9,7 +9,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
-#include "boost/di/aux/utility.hpp"
+#include "boost/di/aux/make_plain.hpp"
 #include "boost/di/config.hpp"
 
 namespace boost {

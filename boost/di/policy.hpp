@@ -10,7 +10,7 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/void.hpp>
-#include "boost/di/aux/utility.hpp"
+#include "boost/di/aux/make_plain.hpp"
 #include "boost/di/policies/check_for_binding_correctness.hpp"
 #include "boost/di/policies/check_for_circular_dependencies.hpp"
 #include "boost/di/policies/check_for_creation_ownership.hpp"

@@ -55,8 +55,6 @@ class instance
     : public detail::instance
 {
 public:
-    //typedef T value_type;
-
     explicit instance(const T& member)
         : member_(member)
     { }
@@ -93,21 +91,19 @@ class instance<
     >
     : public detail::instance
 {
-    typedef typename detail::get_value_type<T>::type result_type;
+    typedef typename detail::get_value_type<T>::type value_type;
 
 public:
-    //typedef T value_type;
-
-    explicit instance(result_type member)
+    explicit instance(value_type member)
         : member_(member)
     { }
 
-    result_type get() const {
+    value_type get() const {
         return member_;
     }
 
 private:
-    result_type member_;
+    value_type member_;
 };
 
 } // namespace aux

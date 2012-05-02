@@ -29,7 +29,7 @@
 
 # define BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE 0 // infinity
 
-#define BOOST_DI_PARAMS(start, limit, file)                 \
+#define BOOST_DI_ITERATION_PARAMS(start, limit, file)       \
     3, (0, 0, file)
 
 # define BOOST_DI_ARGS_TYPES_MPL(Args)                      \
@@ -62,7 +62,7 @@
 #  define BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE 10
 # endif
 
-#define BOOST_DI_PARAMS(start, limit, file)                 \
+#define BOOST_DI_ITERATION_PARAMS(start, limit, file)       \
     3, (start, limit, file)
 
 # define BOOST_DI_ARGS_TYPES_MPL(Arg)                       \

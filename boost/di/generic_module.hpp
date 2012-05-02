@@ -23,7 +23,7 @@
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
-        BOOST_DI_PARAMS(                    \
+        BOOST_DI_ITERATION_PARAMS(          \
             1                               \
           ,  BOOST_MPL_LIMIT_VECTOR_SIZE    \
           , "boost/di/generic_module.hpp"   \

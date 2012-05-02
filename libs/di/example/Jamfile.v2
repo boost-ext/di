@@ -10,7 +10,7 @@ import testing ;
 project
     : requirements
       <warnings>all
-      <warnings-as-errors>on
+      #<warnings-as-errors>on
       <cxxflags>-Wno-variadic-macros
       <include>../../..
     ;
