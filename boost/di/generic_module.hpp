@@ -114,8 +114,7 @@
             , typename detail::instances<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
           >
     {
-        //TODO
-        typedef typename detail::externals<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type externals;
+        typedef typename detail::externals<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type externals_;
 
         template<typename TInstance, typename T>
         struct is_same_instance
@@ -125,19 +124,29 @@
               >
         { };
 
-        template<typename TSequence, typename T>
+        template<
+            typename T
+          , typename TExternals = typename detail::externals<
+                mpl::vector<BOOST_DI_ARGS_MPL(T)>
+            >::type
+        >
         struct find_instance_type
-            : mpl::find_if<TSequence, is_same_instance<mpl::_1, T> >::type
+            : mpl::find_if<TExternals, is_same_instance<mpl::_1, T> >::type
         { };
 
-        template<typename T, typename TExternals>
+        template<
+            typename T
+          , typename TExternals = typename detail::externals<
+                mpl::vector<BOOST_DI_ARGS_MPL(T)>
+            >::type
+        >
         struct disable_if_instance_not_found
             : disable_if<
                   is_same<
-                      find_instance_type<TExternals, T>
+                      find_instance_type<T, TExternals>
                     , mpl::end<TExternals>
                   >
-                , typename find_instance_type<TExternals, T>::type::derived
+                , typename find_instance_type<T, TExternals>::type::derived
               >
         { };
 
@@ -147,9 +156,9 @@
         #include BOOST_PP_ITERATE()
 
         template<typename T, typename TValue>
-        static typename disable_if_instance_not_found<T, externals>::type
+        static typename disable_if_instance_not_found<T>::type
         set(TValue value) {
-            typedef typename find_instance_type<externals, T>::type annotation;
+            typedef typename find_instance_type<T, externals_>::type annotation;
             return typename annotation::derived(value);
         }
     };

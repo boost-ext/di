@@ -53,10 +53,9 @@
     >
     class module
     {
-//TODO
     public:
         typedef TDeps dependencies;
-        typedef TPool<> pool;
+        typedef typename TPool<>::sequence externals;
 
         const TPool<>& get_pool() const {
             return pool_;
