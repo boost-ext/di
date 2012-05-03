@@ -12,6 +12,7 @@
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/mpl/limits/vector.hpp>
     #include "boost/di/detail/module.hpp"
+    #include "boost/di/concepts.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
@@ -25,11 +26,34 @@
     namespace boost {
     namespace di {
 
+    namespace detail {
+
+    template<typename TDeps>
+    struct dependencies
+        : mpl::fold<
+              TDeps
+            , mpl::vector0<>
+            , mpl::copy<
+                  mpl::if_<
+                      mpl::is_sequence<mpl::_2>
+                    , mpl::_2
+                    , per_request<mpl::_2>
+                  >
+                , mpl::back_inserter<mpl::_1>
+              >
+          >::type
+    { };
+
+    } // namespace detail
+
     template<
         typename TSequence = mpl::vector0<>
     >
     class fusion_module
-        : public detail::module<TSequence>
+        : public detail::module<
+              typename detail::dependencies<TSequence>::type
+            , TSequence
+          >
     {
     public:
         fusion_module() { }
@@ -50,7 +74,11 @@
 
     template<BOOST_DI_ARGS_TYPES(Args)>
     fusion_module(BOOST_DI_ARGS(Args, args))
-        : detail::module<TSequence>(BOOST_DI_ARGS_FORWARD(args))
+        : detail::module<
+              typename detail::dependencies<TSequence>::type
+            , TSequence
+          >
+        (BOOST_DI_ARGS_FORWARD(args))
     { }
 
     template<BOOST_DI_ARGS_TYPES(Args)>

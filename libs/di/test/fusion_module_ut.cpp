@@ -14,11 +14,12 @@
 #include <boost/mpl/equal.hpp>
 
 #include "boost/di/aux/dependency.hpp"
+#include "boost/di/concepts.hpp"
 #include "boost/di/named.hpp"
 #include "dependency.hpp"
 #include "data.hpp"
 
-#include <boost/units/detail/utility.hpp>
+//#include <boost/units/detail/utility.hpp>
 namespace boost {
 namespace di {
 
