@@ -417,6 +417,7 @@ BOOST_AUTO_TEST_CASE(module_named_shared_ptr_if_with_not_trivial_ctor)
     BOOST_CHECK_EQUAL(0.0, if0_->d);
 }
 
+#if 0
 BOOST_AUTO_TEST_CASE(module_externals_create_by_explicit_value)
 {
     const int i = 42;
@@ -448,7 +449,6 @@ BOOST_AUTO_TEST_CASE(module_externals_create_by_explicit_value)
     BOOST_CHECK_EQUAL("test", obj.s);
 }
 
-#if 0
 BOOST_AUTO_TEST_CASE(module_externals_create_with_non_trivial_ctor)
 {
     const int i = 42;

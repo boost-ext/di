@@ -117,11 +117,10 @@
             return TConverter<scope, T>::execute(pool.template get<TInstance<> >());
         }
 
-        //template<typename T>
-        //inline static TInstance<> to(T value)
-        //{
-            //return TInstance<>(value);
-        //}
+        template<typename T>
+        static TInstance<> to(T value) {
+            return TInstance<>(value);
+        }
 
         #include BOOST_PP_ITERATE()
 
