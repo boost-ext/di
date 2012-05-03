@@ -16,18 +16,18 @@ project
     ;
 
 test-suite di_test
-    : [ run hello_world.cpp ]
-     #[ run text_visitor.cpp ]
-     #[ run scopes.cpp ]
-     #[ run generic_module.cpp ]
-     #[ run text_visitor.cpp ]
-     #[ run fusion_module.cpp ]
-     #[ run complex.cpp ]
-     #[ run externals.cpp ]
-     #[ run uml_visitor.cpp ]
-     #[ run provider.cpp ]
-     #[ run policies.cpp ]
-     #[ run ctor.cpp ]
-     #[ run concepts.cpp ]
+    : [ run concepts.cpp ]
+      [ run ctor.cpp ]
+      [ run externals.cpp ]
+      [ run fusion_module.cpp ]
+      [ run generic_module.cpp ]
+      [ run hello_world.cpp ]
+      [ run injector.cpp ]
+      [ run modules.cpp ]
+      [ run policies.cpp ]
+      [ run provider.cpp ]
+      [ run scopes.cpp ]
+      [ run text_visitor.cpp ]
+      [ run uml_visitor.cpp ]
     ;
 
