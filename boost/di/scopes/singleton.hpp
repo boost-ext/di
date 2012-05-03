@@ -32,9 +32,7 @@
         class scope
         {
         public:
-            typedef shared_ptr<T> result_type;
-
-            result_type create() {
+            shared_ptr<T> create() {
                 if (!instance_) {
                     instance_.reset(new T);
                 }
@@ -45,7 +43,7 @@
             #include BOOST_PP_ITERATE()
 
         private:
-            result_type instance_;
+            shared_ptr<T> instance_;
         };
     };
 
@@ -58,7 +56,7 @@
 #else
 
     template<BOOST_DI_ARGS_TYPES(Args)>
-    result_type create(BOOST_DI_ARGS(Args, args)) {
+    shared_ptr<T> create(BOOST_DI_ARGS(Args, args)) {
         if (!instance_) {
             instance_.reset(new T(BOOST_DI_ARGS_FORWARD(args)));
         }

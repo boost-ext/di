@@ -44,7 +44,7 @@ test-suite di-test
       #[ run injector_ut.cpp ]
       #[ run named_ut.cpp ]
 
-      #[ run detail/module_mt.cpp ]
+      [ run detail/module_mt.cpp ]
       #[ run di_mt.cpp ]
     ;
 

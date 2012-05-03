@@ -55,7 +55,7 @@ class explicit_value<mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAM
     : public mpl::true_
 {
 public:
-    static std::string create() {
+    inline static std::string create() {
         return mpl::c_str<mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> >::value;
     }
 };
@@ -65,7 +65,7 @@ class explicit_value<T, typename enable_if<detail::has_value<T> >::type>
     : public mpl::true_
 {
 public:
-    static BOOST_TYPEOF_TPL(T::value) create() {
+    inline static BOOST_TYPEOF_TPL(T::value) create() {
         return T::value;
     }
 };

@@ -33,9 +33,7 @@
         class scope
         {
         public:
-            typedef shared_ptr<T> result_type;
-
-            result_type create() {
+            shared_ptr<T> create() {
                 return make_shared<T>();
             }
 
@@ -52,8 +50,8 @@
 #else
 
     template<BOOST_DI_ARGS_TYPES(Args)>
-    result_type create(BOOST_DI_ARGS(Args, args)) {
-        return result_type(new T(BOOST_DI_ARGS_FORWARD(args)));
+    shared_ptr<T> create(BOOST_DI_ARGS(Args, args)) {
+        return shared_ptr<T>(new T(BOOST_DI_ARGS_FORWARD(args)));
     }
 
 #endif

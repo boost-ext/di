@@ -45,7 +45,7 @@
       , template<
             typename
           , typename = void
-        > class TValue = explicit_value
+        > class TExplicitValue = explicit_value
       , template<
             typename = TExpected
           , typename = TContext
@@ -61,9 +61,9 @@
         BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
         BOOST_MPL_ASSERT_MSG(
-            !has_element_type<TGiven>::value,
-            GIVEN_TYPE_WITH_ELEMENT_TYPE,
-            (TGiven)
+            !has_element_type<TGiven>::value
+          , GIVEN_TYPE_WITH_ELEMENT_TYPE
+          , (TGiven)
         );
 
         template<typename TPool>
@@ -74,18 +74,18 @@
         template<typename TPool>
         struct is_value_type
             : mpl::and_<
-                TValue<TGiven>,
-                mpl::not_<
-                    mpl::contains<typename TPool::sequence, TInstance<> >
-                >
+                  TExplicitValue<TGiven>
+                , mpl::not_<
+                      mpl::contains<typename TPool::sequence, TInstance<> >
+                  >
               >
         { };
 
         template<typename TPool>
         struct is_scope_type
             : mpl::and_<
-                mpl::not_<TValue<TGiven> >,
-                mpl::not_<mpl::contains<typename TPool::sequence, TInstance<> > >
+                  mpl::not_<TExplicitValue<TGiven> >
+                , mpl::not_<mpl::contains<typename TPool::sequence, TInstance<> > >
               >
         { };
 
@@ -106,7 +106,7 @@
         template<typename T, typename TPool>
         typename enable_if<is_value_type<TPool>, T>::type
         create(const TPool&) {
-            return TConverter<scope, T>::execute(TValue<TGiven>::create());
+            return TConverter<scope, T>::execute(TExplicitValue<TGiven>::create());
         }
 
         template<typename T, typename TPool>
@@ -135,7 +135,7 @@
       , template<
             typename
           , typename
-        > class TValue
+        > class TExplicitValue
       , template<
             typename
           , typename
@@ -152,7 +152,7 @@
       , TGiven
       , TContext
       , TBind
-      , TValue
+      , TExplicitValue
       , TInstance
       , TConverter
     >
@@ -167,7 +167,7 @@
               , TGiven
               , TContext
               , TBind
-              , TValue
+              , TExplicitValue
               , TInstance
               , TConverter
             > type;
@@ -181,7 +181,7 @@
       , template<
             typename
           , typename
-        > class TValue
+        > class TExplicitValue
       , template<
             typename
           , typename
@@ -198,7 +198,7 @@
       , mpl::_2
       , TContext
       , TBind
-      , TValue
+      , TExplicitValue
       , TInstance
       , TConverter
     >
@@ -213,7 +213,7 @@
               , TGiven
               , TContext
               , TBind
-              , TValue
+              , TExplicitValue
               , TInstance
               , TConverter
             > type;
