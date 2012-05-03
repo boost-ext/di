@@ -24,6 +24,8 @@
     #include "boost/di/aux/converter.hpp"
     #include "boost/di/config.hpp"
 
+#include <boost/units/detail/utility.hpp>
+
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
         BOOST_DI_ITERATION_PARAMS(              \
             1                                   \
@@ -67,11 +69,6 @@
         );
 
         template<typename TPool>
-        struct is_pool_type
-            : mpl::contains<typename TPool::sequence, TInstance<> >
-        { };
-
-        template<typename TPool>
         struct is_value_type
             : mpl::and_<
                   TExplicitValue<TGiven>
@@ -89,6 +86,11 @@
               >
         { };
 
+        template<typename TPool>
+        struct is_pool_type
+            : mpl::contains<typename TPool::sequence, TInstance<> >
+        { };
+
     public:
         typedef dependency type;
         typedef TScope scope;
@@ -96,12 +98,6 @@
         typedef TGiven given;
         typedef TContext context;
         typedef TBind bind;
-
-        template<typename T, typename TPool>
-        typename enable_if<is_pool_type<TPool>, T>::type
-        create(const TPool& pool) {
-            return TConverter<scope, T>::execute(pool.template get<TInstance<> >());
-        }
 
         template<typename T, typename TPool>
         typename enable_if<is_value_type<TPool>, T>::type
@@ -113,6 +109,12 @@
         typename enable_if<is_scope_type<TPool>, T>::type
         create(const TPool&) {
             return TConverter<scope, T>::execute(scope_.create());
+        }
+
+        template<typename T, typename TPool>
+        typename enable_if<is_pool_type<TPool>, T>::type
+        create(const TPool& pool) {
+            return TConverter<scope, T>::execute(pool.template get<TInstance<> >());
         }
 
         //template<typename T>

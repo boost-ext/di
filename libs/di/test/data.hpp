@@ -115,7 +115,8 @@ struct c5
 
 struct c6
 {
-    BOOST_DI_CTOR(c6, shared_ptr<c3> c3_, const shared_ptr<c4>& c4_, c5 c5_)
+    //BOOST_DI_CTOR(c6, shared_ptr<c3> c3_, const shared_ptr<c4>& c4_, c5 c5_)
+    BOOST_DI_CTOR(c6, shared_ptr<c3> c3_, shared_ptr<c4> c4_, c5 c5_)
         : c3_(c3_), c4_(c4_), c5_(c5_)
     { }
 
