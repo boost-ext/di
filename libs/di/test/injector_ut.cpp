@@ -7,7 +7,6 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
-#include "boost/di/aux/utility.hpp"
 #include "boost/di/injector.hpp"
 #include "data.hpp"
 
@@ -16,12 +15,15 @@ namespace di {
 
 struct fake_pool { };
 
-struct module : aux::module
+struct module
 {
     typedef fake_pool pool;
     typedef mpl::vector<a, b, c> dependencies;
 
-    const pool& get_pool() const { return pool_; }
+    const pool& get_pool() const {
+        return pool_;
+    }
+
     pool pool_;
 };
 

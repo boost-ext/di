@@ -33,17 +33,32 @@
     namespace detail {
 
     template<typename T>
-    struct get_deps_impl
+    struct get_dependencies_impl
     {
-        typedef typename T::deps type;
+        typedef typename T::dependencies type;
+    };
+
+    template<typename T>
+    struct get_externals_impl
+    {
+        typedef typename T::pool type;
     };
 
     template<typename TSequence>
-    struct get_deps
+    struct get_dependencies
         : mpl::fold<
               TSequence
             , mpl::vector0<>
-            , mpl::push_back<mpl::_1, get_deps_impl<mpl::_2> >
+            , mpl::push_back<mpl::_1, get_dependencies_impl<mpl::_2> >
+          >::type
+    { };
+
+    template<typename TSequence>
+    struct get_externals
+        : mpl::fold<
+              TSequence
+            , mpl::vector0<>
+            , mpl::push_back<mpl::_1, get_externals_impl<mpl::_2> >
           >::type
     { };
 
@@ -52,7 +67,8 @@
     template<BOOST_DI_ARGS_TYPES_MPL(T)>
     class injector
         : public detail::module<
-              typename detail::get_deps<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
+              typename detail::get_dependencies<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
+            , typename detail::get_externals<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
           >
     {
     public:
@@ -70,7 +86,16 @@
 
     template<BOOST_DI_ARGS_TYPES(M)>
     injector(BOOST_DI_ARGS(M, module))
-        //: detail::module(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), module, .get_pool() BOOST_PP_INTERCEPT))
+        : detail::module<
+              typename detail::get_dependencies<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
+            , typename detail::get_externals<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
+          >(
+              BOOST_PP_ENUM_BINARY_PARAMS(
+                  BOOST_PP_ITERATION()
+                , module
+                , .get_pool() BOOST_PP_INTERCEPT
+              )
+          )
     { }
 
     //#define BOOST_DI_MODULE_ARG(_, n, M) BOOST_PP_COMMA_IF(n) const M##n& module##n = M##n()

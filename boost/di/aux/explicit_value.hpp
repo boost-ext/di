@@ -43,7 +43,7 @@ public:
     );
 };
 
-}// namespace detail
+} // namespace detail
 
 template<typename, typename = void>
 class explicit_value
