@@ -75,7 +75,7 @@ public:
     { };
 
     template<typename TExpected>
-    struct bind<TExpected, BOOST_PP_ENUM_PARAMS(BOOST_PP_SUB(BOOST_MPL_LIMIT_VECTOR_SIZE, 1), mpl_::na BOOST_PP_INTERCEPT)>
+    struct bind<TExpected, BOOST_DI_ARGS_MPL_NA(1)>
         : mpl::fold<
               mpl::vector1<TExpected>
             , mpl::vector0<>

@@ -11,6 +11,7 @@
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
+#include <boost/preprocessor/arithmetic/sub.hpp>
 #include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/mpl/limits/vector.hpp>
 #include <boost/config.hpp>
@@ -37,6 +38,8 @@
 
 # define BOOST_DI_ARGS_MPL(Args)                        \
     Args...
+
+# define BOOST_DI_ARGS_MPL_NA(count) // empty
 
 # define BOOST_DI_ARGS_TYPES(Args)                      \
     typename... Args
@@ -76,6 +79,15 @@
     BOOST_PP_ENUM_PARAMS(                               \
         BOOST_MPL_LIMIT_VECTOR_SIZE                     \
       , Arg                                             \
+    )
+
+# define BOOST_DI_ARGS_MPL_NA(count)                    \
+    BOOST_PP_ENUM_PARAMS(                               \
+        BOOST_PP_SUB(                                   \
+            BOOST_MPL_LIMIT_VECTOR_SIZE                 \
+          , count                                       \
+        )                                               \
+      , mpl_::na BOOST_PP_INTERCEPT                     \
     )
 
 # define BOOST_DI_ARGS_TYPES(Arg)                       \
