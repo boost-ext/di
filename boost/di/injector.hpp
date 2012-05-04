@@ -18,6 +18,7 @@
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/set.hpp>
     #include <boost/mpl/insert.hpp>
+    #include <boost/mpl/joint_view.hpp>
     #include "boost/di/aux/pool.hpp"
     #include "boost/di/detail/module.hpp"
     #include "boost/di/config.hpp"
@@ -49,38 +50,38 @@
         typedef typename T::pool type;
     };
 
-    template<typename TSequence, typename TResult = mpl::set0<> >
+    template<typename TDeps, typename TResult = mpl::set0<> >
     struct deps_impl
         : mpl::fold<
-            TSequence,
-            TResult,
-            mpl::if_<
-                has_deps<mpl::_2>,
-                deps_impl<get_deps<mpl::_2>, mpl::_1>,
-                mpl::insert<mpl::_1, mpl::_2>
+              TDeps
+            , TResult
+            , mpl::if_<
+                  has_deps<mpl::_2>
+                , deps_impl<get_deps<mpl::_2>, mpl::_1>
+                , mpl::insert<mpl::_1, mpl::_2>
             >
           >
     { };
 
-    template<typename TSequence>
+    template<typename TDeps>
     struct pools
         : mpl::fold<
-            typename mpl::fold<
-                TSequence,
-                mpl::set<>,
-                mpl::insert< mpl::_1, get_pool<mpl::_2> >
-            >::type,
-            mpl::vector0<>,
-            mpl::push_back<mpl::_1, mpl::_2>
+              typename mpl::fold<
+                  TDeps
+                , mpl::set<>
+                , mpl::insert< mpl::_1, get_pool<mpl::_2> >
+              >::type
+            , mpl::vector0<>
+            , mpl::push_back<mpl::_1, mpl::_2>
           >::type
     { };
 
-    template<typename TSequence>
+    template<typename TDeps>
     struct deps
         : mpl::fold<
-            typename deps_impl<TSequence>::type,
-            mpl::vector0<>,
-            mpl::push_back<mpl::_1, mpl::_2>
+              typename deps_impl<TDeps>::type
+            , mpl::vector0<>
+            , mpl::push_back<mpl::_1, mpl::_2>
           >::type
     { };
 
@@ -117,34 +118,32 @@
                 , module
                 , .get_pool() BOOST_PP_INTERCEPT
               )
-              //BOOST_PP_ENUM_PARAMS(
-                  //BOOST_PP_ITERATION()
-                //, module
-              //)
           )
     { }
 
-    //#define BOOST_DI_MODULE_ARG(_, n, M) BOOST_PP_COMMA_IF(n) const M##n& module##n = M##n()
+    #define BOOST_DI_INJECTOR_INSTALL_ARG(_, n, M)  \
+        BOOST_PP_COMMA_IF(n)                        \
+        const M##n& module##n = M##n()
 
-    //template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename M)>
-    //injector<
-        //typename mpl::joint_view<
-            //modules,
-            //mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), M)>
-        //>::type
-    //>
-    //install(BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_MODULE_ARG, M)) {
-        //typedef injector<
-            //typename mpl::joint_view<
-                //modules,
-                //mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), M)>
-            //>::type
-        //> injector_t;
+    template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename M)>
+    injector<
+        typename mpl::joint_view<
+            mpl::vector<BOOST_DI_ARGS_MPL(T)>
+          , mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), M)>
+        >::type
+    >
+    install(BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_INJECTOR_INSTALL_ARG, M)) {
+        typedef injector<
+            typename mpl::joint_view<
+                mpl::vector<BOOST_DI_ARGS_MPL(T)>
+              , mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), M)>
+            >::type
+        > injector_t;
 
-        //return injector_t(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), module));
-    //}
+        return injector_t(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), module));
+    }
 
-    #undef BOOST_DI_MODULE_ARG
+    #undef BOOST_DI_INJECTOR_INSTALL_ARG
 
 #endif
 

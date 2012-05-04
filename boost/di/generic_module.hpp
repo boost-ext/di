@@ -114,8 +114,6 @@
             , typename detail::instances<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
           >
     {
-        typedef typename detail::externals<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type externals_;
-
         template<typename TInstance, typename T>
         struct is_same_instance
             : mpl::or_<
@@ -158,7 +156,7 @@
         template<typename T, typename TValue>
         static typename disable_if_instance_not_found<T>::type
         set(TValue value) {
-            typedef typename find_instance_type<T, externals_>::type annotation;
+            typedef typename find_instance_type<T>::type annotation;
             return typename annotation::derived(value);
         }
     };

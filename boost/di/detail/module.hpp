@@ -68,18 +68,14 @@
               >::type
         { };
 
-    //protected:
     public:
+    //protected:
         typedef TDeps deps;
         typedef TPool<> pool;
 
         const TPool<>& get_pool() const {
             return pool_;
         }
-
-        //operator const TPool<>&() const {
-            //return pool_;
-        //}
 
     public:
         module() { }
