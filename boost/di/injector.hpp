@@ -17,14 +17,19 @@
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/set.hpp>
     #include <boost/mpl/insert.hpp>
+    #include <boost/mpl/if.hpp>
+    #include <boost/mpl/is_sequence.hpp>
     #include "boost/di/aux/pool.hpp"
     #include "boost/di/detail/module.hpp"
     #include "boost/di/config.hpp"
 
+#include <boost/mpl/copy.hpp>
+#include <boost/mpl/back_inserter.hpp>
+
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
         BOOST_DI_ITERATION_PARAMS(          \
             1                               \
-          , BOOST_DI_MODULES_LIMIT_SIZE     \
+          , BOOST_MPL_LIMIT_VECTOR_SIZE     \
           , "boost/di/injector.hpp"         \
         )                                   \
     )
@@ -61,11 +66,27 @@
           >
     { };
 
+    template<typename TSeq>
+    struct flatten
+        : mpl::fold<
+            TSeq
+          , mpl::vector0<>
+          , mpl::copy<
+                mpl::if_<
+                    mpl::is_sequence<boost::mpl::_2>
+                  , mpl::_2
+                  , typename mpl::vector<boost::mpl::_2>::type
+                >
+              , mpl::back_inserter<boost::mpl::_1>
+            >
+        >
+    { };
+
     template<typename TModules>
     struct pools
         : mpl::fold<
               typename mpl::fold<
-                  TModules
+                  typename flatten<TModules>::type
                 , mpl::set<>
                 , mpl::insert<mpl::_1, get_pool<mpl::_2> >
               >::type
@@ -77,7 +98,7 @@
     template<typename TModules>
     struct deps
         : mpl::fold<
-              typename deps_impl<TModules>::type
+              typename deps_impl<typename flatten<TModules>::type>::type
             , mpl::vector0<>
             , mpl::push_back<mpl::_1, mpl::_2>
           >::type
@@ -85,15 +106,11 @@
 
     } // namespace detail
 
-    template<BOOST_DI_TYPES_DEFAULT_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T, mpl_::na)>
+    template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     class injector
         : public detail::module<
-              typename detail::deps<
-                  mpl::vector<BOOST_DI_TYPES_PASS_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T)>
-              >::type
-            , typename detail::pools<
-                  mpl::vector<BOOST_DI_TYPES_PASS_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T)>
-              >::type
+              typename detail::deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
+            , typename detail::pools<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
           >
     {
     public:
@@ -112,12 +129,8 @@
     template<BOOST_DI_TYPES(M)>
     injector(BOOST_DI_ARGS(M, module))
         : detail::module<
-              typename detail::deps<
-                  mpl::vector<BOOST_DI_TYPES_PASS_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T)>
-              >::type
-            , typename detail::pools<
-                  mpl::vector<BOOST_DI_TYPES_PASS_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T)>
-              >::type
+              typename detail::deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
+            , typename detail::pools<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
           >(
               BOOST_PP_ENUM_BINARY_PARAMS(
                   BOOST_PP_ITERATION()
@@ -131,17 +144,17 @@
         BOOST_PP_COMMA_IF(n)                        \
         const M##n& module##n = M##n()
 
-    //template<BOOST_DI_ARGS_MODULES(M)>
-    //injector<
-        //BOOST_DI_ARGS_MODULES(T)
-      //, BOOST_DI_ARGS_MODULES(M)
-    //>
-    //install(BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_INJECTOR_INSTALL_ARG, M)) {
-        //return injector<
-            //BOOST_DI_ARGS_MODULES(T)
-          //, BOOST_DI_ARGS_PASS_TYPES(M)
-        //>(BOOST_DI_ARGS_PASS(module));
-    //}
+    template<BOOST_DI_TYPES(M)>
+    injector<
+        mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+      , mpl::vector<BOOST_DI_TYPES_PASS(M)>
+    >
+    install(BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_INJECTOR_INSTALL_ARG, M)) {
+        return injector<
+            mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+          , mpl::vector<BOOST_DI_TYPES_PASS(M)>
+        >(BOOST_DI_ARGS_PASS(module));
+    }
 
     #undef BOOST_DI_INJECTOR_INSTALL_ARG
 

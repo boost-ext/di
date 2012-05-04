@@ -27,7 +27,6 @@
 #if defined(BOOST_HAS_VARIADIC_TMPL) && defined(BOOST_HAS_RVALUE_REFERENCES)
 
 #   define BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE 0 // infinity
-#   define BOOST_DI_MODULES_LIMIT_SIZE 0 // infinity
 
 #   define BOOST_DI_ITERATION_PARAMS(start, limit, file)    \
         3, (0, 0, file)
@@ -100,10 +99,6 @@
 #       define BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE 10
 #   endif
 
-#   if !defined(BOOST_DI_MODULES_LIMIT_SIZE)
-#       define BOOST_DI_MODULES_LIMIT_SIZE 10
-#   endif
-
 #   define BOOST_DI_ITERATION_PARAMS(start, limit, file)    \
         3, (start, limit, file)
 
@@ -147,7 +142,7 @@
 #   define BOOST_DI_ARGS_NOT_USED_IMPL(limit, TArg)         \
         BOOST_PP_ENUM_BINARY_PARAMS(                        \
             limit                                           \
-          , const TArg                                       \
+          , const TArg                                      \
           , & BOOST_PP_INTERCEPT                            \
         )
 
@@ -188,7 +183,7 @@
 #   define BOOST_DI_TYPES_PASS_MPL(TArg)                    \
         BOOST_DI_TYPES_PASS_IMPL(                           \
             BOOST_MPL_LIMIT_VECTOR_SIZE                     \
-          ,  TArg                                           \
+          , TArg                                            \
         )
 
 //-------------------------------------------------------------
@@ -202,7 +197,7 @@
 #   define BOOST_DI_TYPES_PASS(TArg)                        \
         BOOST_DI_TYPES_PASS_IMPL(                           \
             BOOST_PP_ITERATION()                            \
-          ,  TArg                                           \
+          , TArg                                            \
         )
 
 #   define BOOST_DI_ARGS(TArg, arg)                         \
