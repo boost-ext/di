@@ -86,11 +86,15 @@
 
     } // namespace detail
 
-    template<BOOST_DI_TYPES_MODULES(T)>
+    template<BOOST_DI_TYPES_DEFAULT_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T)>
     class injector
         : public detail::module<
-              typename detail::deps<mpl::vector<BOOST_DI_ARGS_MODULES(T)> >::type
-            , typename detail::pools<mpl::vector<BOOST_DI_ARGS_MODULES(T)> >::type
+              typename detail::deps<
+                  mpl::vector<BOOST_DI_TYPES_PASS_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T)>
+              >::type
+            , typename detail::pools<
+                  mpl::vector<(BOOST_DI_TYPES_PASS_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T)>
+              >::type
           >
     {
     public:
@@ -109,8 +113,12 @@
     template<BOOST_DI_TYPES(M)>
     injector(BOOST_DI_ARGS(M, module))
         : detail::module<
-              typename detail::deps<mpl::vector<BOOST_DI_ARGS_MODULES(T)> >::type
-            , typename detail::pools<mpl::vector<BOOST_DI_ARGS_MODULES(T)> >::type
+              typename detail::deps<
+                  mpl::vector<BOOST_DI_TYPES_PASS_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T)>
+              >::type
+            , typename detail::pools<
+                  mpl::vector<(BOOST_DI_TYPES_PASS_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T)>
+              >::type
           >(
               BOOST_PP_ENUM_BINARY_PARAMS(
                   BOOST_PP_ITERATION()
