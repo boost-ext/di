@@ -260,7 +260,7 @@ BOOST_AUTO_TEST_CASE_VARIADIC(basic_externals_ctor, TInjector,
 BOOST_AUTO_TEST_CASE(install)
 {
     //injector<> injector;
-    //injector.install(base_module_2(), base_module_3());
+    //injector.install(base_module_2());
 }
 
 } // namespace di

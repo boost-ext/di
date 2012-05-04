@@ -18,7 +18,6 @@
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/set.hpp>
     #include <boost/mpl/insert.hpp>
-    #include <boost/mpl/joint_view.hpp>
     #include "boost/di/aux/pool.hpp"
     #include "boost/di/detail/module.hpp"
     #include "boost/di/config.hpp"
@@ -26,7 +25,7 @@
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
         BOOST_DI_ITERATION_PARAMS(          \
             1                               \
-          , BOOST_MPL_LIMIT_VECTOR_SIZE     \
+          , BOOST_DI_MODULES_LIMIT_SIZE     \
           , "boost/di/injector.hpp"         \
         )                                   \
     )
@@ -87,11 +86,11 @@
 
     } // namespace detail
 
-    template<BOOST_DI_ARGS_TYPES_MPL(T)>
+    template<BOOST_DI_ARGS_TYPES_MODULES(T)>
     class injector
         : public detail::module<
-              typename detail::deps<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
-            , typename detail::pools<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
+              typename detail::deps<mpl::vector<BOOST_DI_ARGS_MODULES(T)> >::type
+            , typename detail::pools<mpl::vector<BOOST_DI_ARGS_MODULES(T)> >::type
           >
     {
     public:
@@ -110,8 +109,8 @@
     template<BOOST_DI_ARGS_TYPES(M)>
     injector(BOOST_DI_ARGS(M, module))
         : detail::module<
-              typename detail::deps<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
-            , typename detail::pools<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
+              typename detail::deps<mpl::vector<BOOST_DI_ARGS_MODULES(T)> >::type
+            , typename detail::pools<mpl::vector<BOOST_DI_ARGS_MODULES(T)> >::type
           >(
               BOOST_PP_ENUM_BINARY_PARAMS(
                   BOOST_PP_ITERATION()
@@ -125,23 +124,17 @@
         BOOST_PP_COMMA_IF(n)                        \
         const M##n& module##n = M##n()
 
-    template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename M)>
-    injector<
-        typename mpl::joint_view<
-            mpl::vector<BOOST_DI_ARGS_MPL(T)>
-          , mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), M)>
-        >::type
-    >
-    install(BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_INJECTOR_INSTALL_ARG, M)) {
-        typedef injector<
-            typename mpl::joint_view<
-                mpl::vector<BOOST_DI_ARGS_MPL(T)>
-              , mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), M)>
-            >::type
-        > injector_t;
-
-        return injector_t(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), module));
-    }
+    //template<BOOST_DI_ARGS_MODULES(M)>
+    //injector<
+        //BOOST_DI_ARGS_MODULES(T)
+      //, BOOST_DI_ARGS_MODULES(M)
+    //>
+    //install(BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_INJECTOR_INSTALL_ARG, M)) {
+        //return injector<
+            //BOOST_DI_ARGS_MODULES(T)
+          //, BOOST_DI_ARGS_PASS_TYPES(M)
+        //>(BOOST_DI_ARGS_PASS(module));
+    //}
 
     #undef BOOST_DI_INJECTOR_INSTALL_ARG
 
