@@ -19,12 +19,12 @@
     #include <boost/mpl/insert.hpp>
     #include <boost/mpl/if.hpp>
     #include <boost/mpl/is_sequence.hpp>
+    #include <boost/mpl/copy.hpp>
+    #include <boost/mpl/back_inserter.hpp>
     #include "boost/di/aux/pool.hpp"
     #include "boost/di/detail/module.hpp"
     #include "boost/di/config.hpp"
 
-#include <boost/mpl/copy.hpp>
-#include <boost/mpl/back_inserter.hpp>
 
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
         BOOST_DI_ITERATION_PARAMS(          \

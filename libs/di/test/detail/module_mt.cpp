@@ -327,7 +327,8 @@ BOOST_AUTO_TEST_CASE(module_multiple_calls)
 {
     module<
         mpl::vector<
-            dependency_base_of<scopes::singleton, c3, c3, c15, concepts::call_stack<c6, c4> >::type
+            dependency_base_of<scopes::per_request, c0if0, c0if0>::type
+          , dependency_base_of<scopes::singleton, c3, c3, c15, concepts::call_stack<c6, c4> >::type
           , dependency_base_of<scopes::singleton, c3, c3, c6>::type
         >
     > module_;

@@ -8,11 +8,14 @@
 #include <boost/mpl/size.hpp>
 #include <boost/units/detail/utility.hpp>
 #include <boost/di.hpp>
-#include "data.hpp"
 
 namespace mpl   = boost::mpl;
 namespace utils = boost::units::detail;
 namespace di    = boost::di;
+
+namespace {
+
+} // namespace
 
 class print_visitor
 {

@@ -9,6 +9,8 @@
 
 namespace di = boost::di;
 
+namespace {
+
 struct i { virtual ~i() { }; };
 struct c : i { };
 
@@ -18,6 +20,8 @@ public:
     BOOST_DI_CTOR(hello_world, boost::shared_ptr<i>)
     { }
 };
+
+} // namespace
 
 int main()
 {

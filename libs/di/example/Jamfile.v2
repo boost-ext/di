@@ -26,7 +26,7 @@ test-suite di_test
       [ run modules.cpp ]
       [ run policies.cpp ]
       [ run provider.cpp ]
-      [ run scopes.cpp ]
+      [ run session_scope.cpp ]
       [ run text_visitor.cpp ]
       [ run uml_visitor.cpp ]
     ;

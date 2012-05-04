@@ -30,8 +30,7 @@ class impl : public i { };
 struct if0
 {
     virtual ~if0() { }
-    //virtual void dummy() = 0;
-    virtual void dummy(){}
+    virtual void dummy() = 0;
 };
 
 struct c0if0 : if0
