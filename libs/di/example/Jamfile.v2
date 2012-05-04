@@ -16,16 +16,14 @@ project
     ;
 
 test-suite di_test
-    : #[ run concepts.cpp ]
-      #[ run ctor.cpp ]
-      #[ run externals.cpp ]
-      #[ run fusion_module.cpp ]
-      #[ run generic_module.cpp ]
+    : [ run check_for_creation_by_smart_ptr_policy.cpp ]
+      [ run ctor.cpp ]
+      [ run fusion_module.cpp ]
+      [ run generic_module.cpp ]
       [ run hello_world.cpp ]
-      #[ run injector.cpp ]
-      #[ run modules.cpp ]
-      [ run check_for_creation_by_smart_ptr_policy.cpp ]
-      #[ run provider.cpp ]
+      [ run injector.cpp ]
+      [ run named.cpp ]
+      [ run provider.cpp ]
       [ run session_scope.cpp : : : <cxxflags>-std=c++0x ]
       [ run text_visitor.cpp ]
       [ run uml_visitor.cpp ]

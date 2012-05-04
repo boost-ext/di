@@ -25,11 +25,6 @@ struct c0if0 : if0
     virtual void dummy() { }
 };
 
-struct c1if0 : if0
-{
-    virtual void dummy() { }
-};
-
 struct c1
 {
     explicit c1(int = 0) { }
@@ -37,33 +32,17 @@ struct c1
 
 struct c2
 {
-    BOOST_DI_CTOR(c2, int i, double d, char c)
-        : i(i), d(d), c(c)
-    { }
-
-    int i;
-    double d;
-    char c;
+    BOOST_DI_CTOR(c2, int, double, char) { }
 };
 
 struct c3
 {
-    BOOST_DI_CTOR(explicit c3, int i = 0)
-        : i(i)
-    { }
-
-    int i;
+    BOOST_DI_CTOR(explicit c3, boost::shared_ptr<if0>) { }
 };
 
 struct c4
 {
-    BOOST_DI_CTOR(c4, shared_ptr<c3> c3_, named<int, mpl::string<'1'> > i1, named<int, mpl::string<'2'> > i2)
-        : c3_(c3_), i1(i1), i2(i2)
-    { }
-
-    shared_ptr<c3> c3_;
-    int i1;
-    int i2;
+    BOOST_DI_CTOR(c4, boost::shared_ptr<c3>) { }
 };
 
 } // namespace
@@ -76,7 +55,7 @@ int main()
         >,
         di::per_requests<
             c0if0
-          , di::bind<c2if0>::in_call<c7>
+          , di::bind<c0if0>::in_call<c3>
         >
     > generic_module;
 

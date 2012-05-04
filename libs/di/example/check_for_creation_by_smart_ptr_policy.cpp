@@ -68,8 +68,7 @@ public:
     >
     class verify<TDeps, TGiven, typename boost::enable_if<has_element_type<TGiven> >::type>
         : public mpl::true_
-    {
-    };
+    { };
 };
 
 int main()
