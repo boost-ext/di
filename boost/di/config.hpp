@@ -125,10 +125,11 @@
           , TArg                                              \
         )
 
-#   define BOOST_DI_ARGS_IMPL(limit, TArg)                    \
-        BOOST_PP_ENUM_PARAMS(                                 \
+#   define BOOST_DI_ARGS_IMPL(limit, TArg, arg)               \
+        BOOST_PP_ENUM_BINARY_PARAMS(                          \
             limit                                             \
-          , TArg                                              \
+          , const TArg                                        \
+          , &arg                                              \
         )
 
 #   define BOOST_DI_ARGS_NA_IMPL(limit, count, TNa)           \
@@ -138,13 +139,6 @@
               , count                                         \
             )                                                 \
           , TNa BOOST_PP_INTERCEPT                            \
-        )
-
-#   define BOOST_DI_ARGS_IMPL(limit, TArg, arg)               \
-        BOOST_PP_ENUM_BINARY_PARAMS(                          \
-            limit                                             \
-          , const TArg                                        \
-          , &arg                                              \
         )
 
 #   define BOOST_DI_ARGS_NOT_USED_IMPL(limit, TArg)           \
