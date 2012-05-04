@@ -24,7 +24,7 @@ test-suite di_test
       [ run hello_world.cpp ]
       #[ run injector.cpp ]
       #[ run modules.cpp ]
-      [ run check_creation_by_smart_ptr_policy.cpp ]
+      [ run check_for_creation_by_smart_ptr_policy.cpp ]
       #[ run provider.cpp ]
       [ run session_scope.cpp : : : <cxxflags>-std=c++0x ]
       [ run text_visitor.cpp ]
