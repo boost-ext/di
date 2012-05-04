@@ -17,9 +17,9 @@ namespace concepts {
 
 namespace detail { class externals { }; } // namespace detail
 
-template<BOOST_DI_ARGS_TYPES_MPL(T)>
+template<BOOST_DI_TYPES_MPL(T)>
 struct externals
-    : detail::externals, mpl::vector<BOOST_DI_ARGS_MPL(T)>
+    : detail::externals, mpl::vector<BOOST_DI_TYPES_MPL(T)>
 { };
 
 } // namespace concepts

@@ -54,10 +54,10 @@ public:
         , annotate<>::with<>
     { };
 
-    template<BOOST_DI_ARGS_TYPES_MPL(T)>
+    template<BOOST_DI_TYPES_MPL(T)>
     struct bind
         : mpl::fold<
-              mpl::vector<BOOST_DI_ARGS_MPL(T)>
+              mpl::vector<BOOST_DI_TYPES_MPL(T)>
             , mpl::vector0<>
             , mpl::if_<
                   is_base_of<annotate<>::with<>, mpl::_2>
@@ -75,7 +75,7 @@ public:
     { };
 
     template<typename TExpected>
-    struct bind<TExpected, BOOST_DI_ARGS_MPL_NA(1)>
+    struct bind<TExpected, BOOST_DI_TYPES_MPL_NA(1)>
         : mpl::fold<
               mpl::vector1<TExpected>
             , mpl::vector0<>
@@ -93,7 +93,7 @@ public:
           >::type
         , annotate<>::with<>
     {
-        template<BOOST_DI_ARGS_TYPES_MPL(T)>
+        template<BOOST_DI_TYPES_MPL(T)>
         struct in_call
             : mpl::fold<
                   mpl::vector1<TExpected>
@@ -110,7 +110,7 @@ public:
                               dependency<
                                   mpl::_2
                                 , mpl::_2
-                               , mpl::vector<BOOST_DI_ARGS_MPL(T)>
+                               , mpl::vector<BOOST_DI_TYPES_MPL(T)>
                               >
                             , TScope
                           >
@@ -135,7 +135,7 @@ public:
                             , rebind<
                                   dependency<
                                       named<mpl::_2, TName>
-                                    , mpl::_2, mpl::vector<BOOST_DI_ARGS_MPL(T)>
+                                    , mpl::_2, mpl::vector<BOOST_DI_TYPES_MPL(T)>
                                   >
                                 , TScope
                               >
@@ -171,7 +171,7 @@ public:
               >::type
             , annotate<>::with<>
         {
-            template<BOOST_DI_ARGS_TYPES_MPL(T)>
+            template<BOOST_DI_TYPES_MPL(T)>
             struct in_call
                 : mpl::fold<
                     mpl::vector1<TExpected>
@@ -188,7 +188,7 @@ public:
                                 dependency<
                                     named<mpl::_2, TName>
                                   , mpl::_2
-                                  , mpl::vector<BOOST_DI_ARGS_MPL(T)>
+                                  , mpl::vector<BOOST_DI_TYPES_MPL(T)>
                                 >
                               , TScope
                             >

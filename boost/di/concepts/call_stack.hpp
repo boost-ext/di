@@ -15,9 +15,9 @@ namespace boost {
 namespace di {
 namespace concepts {
 
-template<BOOST_DI_ARGS_TYPES_MPL(T)>
+template<BOOST_DI_TYPES_MPL(T)>
 struct call_stack
-    : mpl::vector<BOOST_DI_ARGS_MPL(T)>
+    : mpl::vector<BOOST_DI_TYPES_MPL(T)>
 { };
 
 } // namespace concepts

@@ -142,7 +142,7 @@
 
 #else
 
-    template<BOOST_DI_ARGS_TYPES(Args)>
+    template<BOOST_DI_TYPES(Args)>
     module(BOOST_DI_ARGS(Args, args))
         : pool_(BOOST_DI_ARGS_FORWARD(args))
     { }

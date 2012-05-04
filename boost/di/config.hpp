@@ -63,10 +63,10 @@
 #   define BOOST_DI_TYPES_DEFAULT_MPL(TArgs)                  \
         BOOST_DI_TYPES_DEFAULT_IMPL(~, TArgs, ~)
 
-#   define BOOST_DI_ARGS_MPL(TArgs)                           \
+#   define BOOST_DI_TYPES_MPL(TArgs)                          \
         BOOST_DI_TYPES_IMPL(~, TArgs)
 
-#   define BOOST_DI_ARGS_MPL_NA(count)                        \
+#   define BOOST_DI_TYPES_MPL_NA(count)                       \
         //empty
 
 //-------------------------------------------------------
@@ -101,7 +101,7 @@
 #       define BOOST_DI_MODULES_LIMIT_SIZE 10
 #   endif
 
-#   define BOOST_DI_ITERATION_PARAMS(start, limit, file)       \
+#   define BOOST_DI_ITERATION_PARAMS(start, limit, file)      \
         3, (start, limit, file)
 
 //-------------------------------------------------------
@@ -169,13 +169,13 @@
           , mpl_::na                                          \
         )
 
-#   define BOOST_DI_ARGS_MPL(TArg)                            \
+#   define BOOST_DI_TYPES_MPL(TArg)                           \ 
         BOOST_DI_ARGS_IMPL(                                   \
             BOOST_MPL_LIMIT_VECTOR_SIZE                       \
           , TArg                                              \
         )
 
-#   define BOOST_DI_ARGS_MPL_NA(count)                        \
+#   define BOOST_DI_TYPES_MPL_NA(count)                       \
         BOOST_DI_ARGS_NA_IMPL(                                \
             BOOST_MPL_LIMIT_VECTOR_SIZE                       \
           , count                                             \

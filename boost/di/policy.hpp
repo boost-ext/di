@@ -22,11 +22,11 @@ namespace di {
 
 namespace detail { class policy { }; } // namespace detail
 
-template<BOOST_DI_ARGS_TYPES_MPL(T)>
+template<BOOST_DI_TYPES_MPL(T)>
 class policy
     : detail::policy
 {
-    typedef mpl::vector<BOOST_DI_ARGS_MPL(T)> sequence;
+    typedef mpl::vector<BOOST_DI_TYPES_MPL(T)> sequence;
 
     template<
         typename TDeps

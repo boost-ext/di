@@ -86,7 +86,7 @@
 
     } // namespace detail
 
-    template<BOOST_DI_ARGS_TYPES_MODULES(T)>
+    template<BOOST_DI_TYPES_MODULES(T)>
     class injector
         : public detail::module<
               typename detail::deps<mpl::vector<BOOST_DI_ARGS_MODULES(T)> >::type
@@ -106,7 +106,7 @@
 
 #else
 
-    template<BOOST_DI_ARGS_TYPES(M)>
+    template<BOOST_DI_TYPES(M)>
     injector(BOOST_DI_ARGS(M, module))
         : detail::module<
               typename detail::deps<mpl::vector<BOOST_DI_ARGS_MODULES(T)> >::type

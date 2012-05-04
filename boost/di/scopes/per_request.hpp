@@ -49,7 +49,7 @@
 
 #else
 
-    template<BOOST_DI_ARGS_TYPES(Args)>
+    template<BOOST_DI_TYPES(Args)>
     shared_ptr<T> create(BOOST_DI_ARGS(Args, args)) {
         return shared_ptr<T>(new T(BOOST_DI_ARGS_FORWARD(args)));
     }

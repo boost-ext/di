@@ -111,7 +111,7 @@
 
         pool() { }
 
-        template<BOOST_DI_ARGS_TYPES(Args)>
+        template<BOOST_DI_TYPES(Args)>
         pool(BOOST_DI_ARGS(Args, args))
             : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_CTOR_INITLIST_IMPL, ~)
         { }

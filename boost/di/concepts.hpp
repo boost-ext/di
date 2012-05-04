@@ -48,14 +48,14 @@ struct per_request<T, T>
     : scope<scopes::per_request>::bind<T>
 { };
 
-template<BOOST_DI_ARGS_TYPES_MPL(T)>
+template<BOOST_DI_TYPES_MPL(T)>
 struct singletons
-    : scope<scopes::singleton>::bind<BOOST_DI_ARGS_MPL(T)>
+    : scope<scopes::singleton>::bind<BOOST_DI_TYPES_MPL(T)>
 { };
 
-template<BOOST_DI_ARGS_TYPES_MPL(T)>
+template<BOOST_DI_TYPES_MPL(T)>
 struct per_requests
-    : scope<scopes::per_request>::bind<BOOST_DI_ARGS_MPL(T)>
+    : scope<scopes::per_request>::bind<BOOST_DI_TYPES_MPL(T)>
 { };
 
 template<typename T>
@@ -63,9 +63,9 @@ struct external
     : concepts::externals<T>
 { };
 
-template<BOOST_DI_ARGS_TYPES_MPL(T)>
+template<BOOST_DI_TYPES_MPL(T)>
 struct externals
-    : concepts::externals<BOOST_DI_ARGS_MPL(T)>
+    : concepts::externals<BOOST_DI_TYPES_MPL(T)>
 { };
 
 template<typename T>
@@ -73,9 +73,9 @@ struct annotate
     : concepts::annotate<T>
 { };
 
-template<BOOST_DI_ARGS_TYPES_MPL(T)>
+template<BOOST_DI_TYPES_MPL(T)>
 struct call_stack
-    : concepts::call_stack<BOOST_DI_ARGS_MPL(T)>
+    : concepts::call_stack<BOOST_DI_TYPES_MPL(T)>
 { };
 
 } // namespace di

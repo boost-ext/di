@@ -36,13 +36,13 @@ struct bind
       >
     , annotate<>::with<>
 {
-    template<BOOST_DI_ARGS_TYPES_MPL(T)>
+    template<BOOST_DI_TYPES_MPL(T)>
     struct in_call
         : aux::dependency<
               mpl::_1
             , TExpected
             , TGiven
-            , mpl::vector<BOOST_DI_ARGS_MPL(T)>
+            , mpl::vector<BOOST_DI_TYPES_MPL(T)>
           >
         , annotate<>::with<>
     {
@@ -52,7 +52,7 @@ struct bind
                   mpl::_1
                 , named<TExpected, TName>
                 , TGiven
-                , mpl::vector<BOOST_DI_ARGS_MPL(T)>
+                , mpl::vector<BOOST_DI_TYPES_MPL(T)>
               >
             , annotate<>::with<>
         {
@@ -68,13 +68,13 @@ struct bind
           >
         , annotate<>::with<>
     {
-        template<BOOST_DI_ARGS_TYPES_MPL(T)>
+        template<BOOST_DI_TYPES_MPL(T)>
         struct in_call
             : aux::dependency<
                   mpl::_1
                 , named<TExpected, TName>
                 , TGiven
-                , mpl::vector<BOOST_DI_ARGS_MPL(T)>
+                , mpl::vector<BOOST_DI_TYPES_MPL(T)>
               >
             , annotate<>::with<>
         { };
@@ -104,13 +104,13 @@ struct bind<
       >
     , annotate<>::with<>
 {
-    template<BOOST_DI_ARGS_TYPES_MPL(T)>
+    template<BOOST_DI_TYPES_MPL(T)>
     struct in_call
         : aux::dependency<
               mpl::_1
             , TExpected
             , TGiven
-            , mpl::vector<BOOST_DI_ARGS_MPL(T)>
+            , mpl::vector<BOOST_DI_TYPES_MPL(T)>
             , mpl::or_<
                   is_base_of<mpl::_1, TExpected>
                 , is_same<mpl::_1, TExpected>
@@ -124,7 +124,7 @@ struct bind<
                   mpl::_1
                 , named<TExpected, TName>
                 , TGiven
-                , mpl::vector<BOOST_DI_ARGS_MPL(T)>
+                , mpl::vector<BOOST_DI_TYPES_MPL(T)>
                 , mpl::or_<
                       is_base_of<mpl::_1, named<TExpected, TName> >
                     , is_same<mpl::_1, named<TExpected, TName> >
@@ -148,13 +148,13 @@ struct bind<
           >
         , annotate<>::with<>
     {
-        template<BOOST_DI_ARGS_TYPES_MPL(T)>
+        template<BOOST_DI_TYPES_MPL(T)>
         struct in_call
             : aux::dependency<
                   mpl::_1
                 , named<TExpected, TName>
                 , TGiven
-                , mpl::vector<BOOST_DI_ARGS_MPL(T)>
+                , mpl::vector<BOOST_DI_TYPES_MPL(T)>
                 , mpl::or_<
                       is_base_of<mpl::_1, named<TExpected, TName> >,
                       is_same<mpl::_1, named<TExpected, TName> >

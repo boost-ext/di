@@ -70,7 +70,7 @@
 
 #else
 
-    template<BOOST_DI_ARGS_TYPES(Args)>
+    template<BOOST_DI_TYPES(Args)>
     fusion_module(BOOST_DI_ARGS(Args, args))
         : detail::module<
               typename detail::fusion_deps<TDeps>::type
@@ -79,7 +79,7 @@
         (BOOST_DI_ARGS_FORWARD(args))
     { }
 
-    template<BOOST_DI_ARGS_TYPES(Args)>
+    template<BOOST_DI_TYPES(Args)>
     fusion_module<mpl::vector<BOOST_DI_ARGS_PASS_TYPES(Args)> >
     operator()(BOOST_DI_ARGS(Args, args)) const {
         return fusion_module<mpl::vector<BOOST_DI_ARGS_PASS_TYPES(Args)> >(
