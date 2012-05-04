@@ -69,6 +69,9 @@
 #   define BOOST_DI_TYPES_MPL_NA(count)                     \
         //empty
 
+#   define BOOST_DI_TYPES_PASS_MPL(TArgs)                   \
+        BOOST_DI_TYPES_PASS_IMPL(~, TArgs)
+
 //-----------------------------------------------------------
 
 #   define BOOST_DI_TYPES(TArgs)                            \
@@ -119,7 +122,7 @@
           , typename TArg                                   \
         )
 
-#   define BOOST_DI_TYPES_PASS_IMPL(limit, TArgs)           \
+#   define BOOST_DI_TYPES_PASS_IMPL(limit, TArg)            \
         BOOST_PP_ENUM_PARAMS(                               \
             limit                                           \
           , TArg                                            \
@@ -144,7 +147,7 @@
 #   define BOOST_DI_ARGS_NOT_USED_IMPL(limit, TArg)         \
         BOOST_PP_ENUM_BINARY_PARAMS(                        \
             limit                                           \
-          , const Arg                                       \
+          , const TArg                                       \
           , & BOOST_PP_INTERCEPT                            \
         )
 
@@ -170,7 +173,7 @@
         )
 
 #   define BOOST_DI_TYPES_MPL(TArg)                         \
-        BOOST_DI_ARGS_IMPL(                                 \
+        BOOST_DI_TYPES_IMPL(                                \
             BOOST_MPL_LIMIT_VECTOR_SIZE                     \
           , TArg                                            \
         )
@@ -182,12 +185,18 @@
           , mpl_::na                                        \
         )
 
+#   define BOOST_DI_TYPES_PASS_MPL(TArg)                    \
+        BOOST_DI_TYPES_PASS_IMPL(                           \
+            BOOST_MPL_LIMIT_VECTOR_SIZE                     \
+          ,  TArg                                           \
+        )
+
 //-------------------------------------------------------------
 
 #   define BOOST_DI_TYPES(TArg)                             \
         BOOST_DI_TYPES_IMPL(                                \
             BOOST_PP_ITERATION()                            \
-          , Targ                                            \
+          , TArg                                            \
         )
 
 #   define BOOST_DI_TYPES_PASS(TArg)                        \

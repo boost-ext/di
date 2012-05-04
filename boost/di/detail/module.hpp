@@ -13,7 +13,6 @@
     #include <boost/type_traits/is_base_of.hpp>
     #include <boost/type_traits/is_same.hpp>
     #include <boost/utility/enable_if.hpp>
-    #include <boost/mpl/limits/vector.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/filter_view.hpp>
     #include <boost/mpl/joint_view.hpp>

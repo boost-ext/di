@@ -10,7 +10,6 @@
     #define BOOST_DI_FUSION_MODULE_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
-    #include <boost/mpl/limits/vector.hpp>
     #include "boost/di/detail/module.hpp"
     #include "boost/di/concepts.hpp"
     #include "boost/di/config.hpp"

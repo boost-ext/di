@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_CONCEPTS_EXTERNALS_HPP
 #define BOOST_DI_CONCEPTS_EXTERNALS_HPP
 
-#include <boost/mpl/limits/vector.hpp>
 #include <boost/mpl/vector.hpp>
 #include "boost/di/config.hpp"
 
@@ -17,9 +16,9 @@ namespace concepts {
 
 namespace detail { class externals { }; } // namespace detail
 
-template<BOOST_DI_TYPES_MPL(T)>
+template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 struct externals
-    : detail::externals, mpl::vector<BOOST_DI_TYPES_MPL(T)>
+    : detail::externals, mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
 { };
 
 } // namespace concepts

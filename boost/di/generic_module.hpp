@@ -12,7 +12,6 @@
     #include <boost/type_traits/is_same.hpp>
     #include <boost/type_traits/is_base_of.hpp>
     #include <boost/utility/enable_if.hpp>
-    #include <boost/mpl/limits/vector.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/if.hpp>
     #include <boost/mpl/not.hpp>

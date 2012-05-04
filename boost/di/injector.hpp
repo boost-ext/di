@@ -12,7 +12,6 @@
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/type_traits/is_same.hpp>
-    #include <boost/mpl/limits/vector.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/fold.hpp>
     #include <boost/mpl/push_back.hpp>
@@ -86,14 +85,14 @@
 
     } // namespace detail
 
-    template<BOOST_DI_TYPES_DEFAULT_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T)>
+    template<BOOST_DI_TYPES_DEFAULT_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T, mpl_::na)>
     class injector
         : public detail::module<
               typename detail::deps<
-                  mpl::vector<BOOST_DI_TYPES_PASS_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T)>
+                  mpl::vector<BOOST_DI_TYPES_PASS_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T, mpl_::na)>
               >::type
             , typename detail::pools<
-                  mpl::vector<(BOOST_DI_TYPES_PASS_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T)>
+                  mpl::vector<(BOOST_DI_TYPES_PASS_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T, mpl_::na)>
               >::type
           >
     {
@@ -114,10 +113,10 @@
     injector(BOOST_DI_ARGS(M, module))
         : detail::module<
               typename detail::deps<
-                  mpl::vector<BOOST_DI_TYPES_PASS_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T)>
+                  mpl::vector<BOOST_DI_TYPES_PASS_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T, mpl_::na)>
               >::type
             , typename detail::pools<
-                  mpl::vector<(BOOST_DI_TYPES_PASS_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T)>
+                  mpl::vector<(BOOST_DI_TYPES_PASS_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T, mpl_::na)>
               >::type
           >(
               BOOST_PP_ENUM_BINARY_PARAMS(
