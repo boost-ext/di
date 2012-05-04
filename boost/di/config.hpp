@@ -32,7 +32,7 @@
 #   define BOOST_DI_ITERATION_PARAMS(start, limit, file)      \
         3, (0, 0, file)
 
-//-------------------------------------------------------
+//-------------------------------------------------------------
 
 #   define BOOST_DI_TYPES_DEFAULT_IMPL(limit, TArgs, TNa)     \
         typename... TArgs
@@ -58,7 +58,7 @@
 #   define BOOST_DI_ARGS_FORWARD_IMPL(limit, args)            \
         std::forward(args)...
 
-//-------------------------------------------------------
+//-------------------------------------------------------------
 
 #   define BOOST_DI_TYPES_DEFAULT_MPL(TArgs)                  \
         BOOST_DI_TYPES_DEFAULT_IMPL(~, TArgs, ~)
@@ -69,7 +69,7 @@
 #   define BOOST_DI_TYPES_MPL_NA(count)                       \
         //empty
 
-//-------------------------------------------------------
+//-------------------------------------------------------------
 
 #   define BOOST_DI_TYPES(TArgs)                              \
         BOOST_DI_TYPES_IMPL(~, TArgs)
@@ -89,7 +89,7 @@
 #   define BOOST_DI_ARGS_FORWARD(args)                        \
         BOOST_DI_ARGS_FORWARD_IMPL(~, args)
 
-//-------------------------------------------------------
+//-------------------------------------------------------------
 
 #else
 
@@ -104,7 +104,7 @@
 #   define BOOST_DI_ITERATION_PARAMS(start, limit, file)      \
         3, (start, limit, file)
 
-//-------------------------------------------------------
+//-------------------------------------------------------------
 
 #   define BOOST_DI_TYPES_DEFAULT_IMPL(limit, TArg, TNa)      \
         BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(                  \
@@ -160,7 +160,7 @@
           , arg                                               \
         )
 
-//------------------------------------------------------    -
+//-------------------------------------------------------------
 
 #   define BOOST_DI_TYPES_DEFAULT_MPL(TArg)                   \
         BOOST_DI_TYPES_DEFAULT_IMPL(                          \
@@ -169,7 +169,7 @@
           , mpl_::na                                          \
         )
 
-#   define BOOST_DI_TYPES_MPL(TArg)                           \ 
+#   define BOOST_DI_TYPES_MPL(TArg)                           \
         BOOST_DI_ARGS_IMPL(                                   \
             BOOST_MPL_LIMIT_VECTOR_SIZE                       \
           , TArg                                              \
@@ -182,7 +182,7 @@
           , mpl_::na                                          \
         )
 
-//------------------------------------------------------    -
+//-------------------------------------------------------------
 
 #   define BOOST_DI_TYPES(TArg)                               \
         BOOST_DI_TYPES_IMPL(                                  \
@@ -222,7 +222,7 @@
           , arg                                               \
         )
 
-//-------------------------------------------------------
+//-------------------------------------------------------------
 
 #endif
 
