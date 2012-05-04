@@ -4,27 +4,79 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#include <utility>
+#include <memory>
 #include <boost/di.hpp>
 
 namespace di = boost::di;
 
-#if 0
+namespace {
+
+struct c1 { };
+
+struct c2
+{
+    BOOST_DI_CTOR(c2, std::shared_ptr<c1> ptr) {
+        if (ptr) {
+            std::clog << "in scope" << std::endl;
+        } else {
+            std::clog << "not in scope" << std::endl;
+        }
+    }
+};
+
+} // namespace
+
+
 class session_scope
 {
 public:
+    class entry { };
+    class exit { };
+
     template<typename T>
     class scope
     {
     public:
-        template<typename... Args>
-        boost::shared_ptr<T> create(Args.. args) {
-            return boost::make_shared(args)
+        scope()
+            : in_scope_(false) {
         }
+
+        void call(const entry&) {
+            in_scope_ = true;
+        }
+
+        void call(const exit&) {
+            in_scope_ = false;
+        }
+
+        template<typename... Args>
+        std::shared_ptr<T> create(Args&&... args) {
+            if (in_scope_) {
+                return std::make_shared<T>(std::forward(args)...);
+            }
+            return nullptr;
+        }
+
+    private:
+        bool in_scope_;
     };
 };
-#endif
 
 int main()
 {
+    typedef di::generic_module<
+        di::scope<session_scope>::bind<
+            c1
+        >
+    > generic_module;
+
+    di::injector<generic_module> injector;
+
+    injector.create<c2>(); // not in scope
+    injector.call<session_scope>(session_scope::entry());
+    injector.create<c2>(); // in scope
+    injector.call<session_scope>(session_scope::exit());
+    injector.create<c2>(); // not in scope
 }
 

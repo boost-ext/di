@@ -115,6 +115,11 @@
             return TConverter<scope, T>::execute(pool.template get<TInstance<> >());
         }
 
+        template<typename TAction>
+        void call(const TAction& action) {
+            scope_.call(action);
+        }
+
         template<typename T>
         static TInstance<> to(T value) {
             return TInstance<>(value);

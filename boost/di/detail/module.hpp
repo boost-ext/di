@@ -125,7 +125,8 @@
             >
         >::type
         call_impl(const Action& action) {
-            static_cast<typename mpl::front<Deps>::type&>(entries_).call(action);
+            typedef typename mpl::front<Deps>::type type;
+            static_cast<type&>(entries_).call(action);
             call_impl<Scope, typename mpl::pop_front<Deps>::type>(action);
         }
 
