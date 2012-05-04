@@ -30,7 +30,7 @@
 #include <boost/mpl/less.hpp>
 #include <boost/mpl/min_max.hpp>
 #include <boost/mpl/has_xxx.hpp>
-#include "boost/di/aux/utility.hpp"
+#include "boost/di/aux/make_plain.hpp"
 
 namespace boost {
 namespace di {
@@ -161,6 +161,7 @@ struct make_default_dependency<
     : TDefault::template rebind<
           typename aux::make_plain<T>::type
         , typename aux::make_plain<typename T::value_type>::type
+        //, typename aux::make_plain<typename T::element_type>::type
       >
 { };
 

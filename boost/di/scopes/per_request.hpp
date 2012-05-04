@@ -14,12 +14,12 @@
     #include <boost/make_shared.hpp>
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (           \
-        BOOST_DI_PARAMS(                            \
-            1                                       \
-          , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE      \
-          , "boost/di/scopes/per_request.hpp"       \
-        )                                           \
+    #define BOOST_PP_ITERATION_PARAMS_1 (       \
+        BOOST_DI_ITERATION_PARAMS(              \
+            1                                   \
+          , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE  \
+          , "boost/di/scopes/per_request.hpp"   \
+        )                                       \
     )
 
     namespace boost {
@@ -33,9 +33,7 @@
         class scope
         {
         public:
-            typedef shared_ptr<T> result_type;
-
-            result_type create() {
+            shared_ptr<T> create() {
                 return make_shared<T>();
             }
 
@@ -51,9 +49,9 @@
 
 #else
 
-    template<BOOST_DI_ARGS_TYPES(Args)>
-    result_type create(BOOST_DI_ARGS(Args, args)) {
-        return result_type(new T(BOOST_DI_ARGS_FORWARD(args)));
+    template<BOOST_DI_TYPES(Args)>
+    shared_ptr<T> create(BOOST_DI_ARGS(Args, args)) {
+        return shared_ptr<T>(new T(BOOST_DI_ARGS_FORWARD(args)));
     }
 
 #endif

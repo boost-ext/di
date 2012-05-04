@@ -10,55 +10,49 @@
     #define BOOST_DI_FUSION_MODULE_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
-    #include <boost/typeof/typeof.hpp>
-    #include <boost/type_traits/is_base_of.hpp>
-    #include <boost/mpl/vector.hpp>
-    #include <boost/mpl/fold.hpp>
-    #include <boost/mpl/back_inserter.hpp>
-    #include <boost/mpl/copy.hpp>
-    #include <boost/mpl/if.hpp>
-    #include "boost/di/aux/module.hpp"
-    #include "boost/di/aux/pool.hpp"
-    #include "boost/di/scopes/per_request.hpp"
-    #include "boost/di/scopes/singleton.hpp"
+    #include "boost/di/detail/module.hpp"
     #include "boost/di/concepts.hpp"
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (           \
-        BOOST_DI_PARAMS(                            \
-            1                                       \
-          , BOOST_MPL_LIMIT_VECTOR_SIZE             \
-          , "boost/di/fusion_module.hpp"            \
-        )                                           \
+    #define BOOST_PP_ITERATION_PARAMS_1 (   \
+        BOOST_DI_ITERATION_PARAMS(          \
+            1                               \
+          , BOOST_MPL_LIMIT_VECTOR_SIZE     \
+          , "boost/di/fusion_module.hpp"    \
+        )                                   \
     )
 
     namespace boost {
     namespace di {
 
-    template<
-        typename TSequence = mpl::vector0<>
-    >
+    namespace detail {
+
+    template<typename TDeps>
+    struct fusion_deps
+        : mpl::fold<
+              TDeps
+            , mpl::vector0<>
+            , mpl::copy<
+                  mpl::if_<
+                      mpl::is_sequence<mpl::_2>
+                    , mpl::_2
+                    , per_request<mpl::_2>
+                  >
+                , mpl::back_inserter<mpl::_1>
+              >
+          >::type
+    { };
+
+    } // namespace detail
+
+    template<typename TDeps = mpl::vector0<> >
     class fusion_module
-        : public aux::module
+        : public detail::module<
+              typename detail::fusion_deps<TDeps>::type
+            , TDeps
+          >
     {
     public:
-        typedef aux::pool<TSequence> pool;
-
-        struct dependencies
-            : mpl::fold<
-                  TSequence
-                , mpl::vector0<>
-                , mpl::copy<
-                      mpl::if_<
-                          is_base_of<concepts::annotate<>::with<>, mpl::_2>
-                        , mpl::_2
-                        , per_request<mpl::_2>
-                      >
-                    , mpl::back_inserter<mpl::_1>
-                  >
-              >::type
-        { };
-
         fusion_module() { }
 
         #include BOOST_PP_ITERATE()
@@ -66,13 +60,6 @@
         fusion_module<> operator()() const {
             return fusion_module<>();
         }
-
-        const pool& get_pool() const {
-            return pool_;
-        }
-
-    private:
-        pool pool_;
     };
 
     } // namespace di
@@ -82,15 +69,19 @@
 
 #else
 
-    template<BOOST_DI_ARGS_TYPES(Args)>
+    template<BOOST_DI_TYPES(Args)>
     fusion_module(BOOST_DI_ARGS(Args, args))
-        : pool_(BOOST_DI_ARGS_FORWARD(args))
+        : detail::module<
+              typename detail::fusion_deps<TDeps>::type
+            , TDeps
+          >
+        (BOOST_DI_ARGS_FORWARD(args))
     { }
 
-    template<BOOST_DI_ARGS_TYPES(Args)>
-    fusion_module<mpl::vector<BOOST_DI_ARGS_PASS_TYPES(Args)> >
+    template<BOOST_DI_TYPES(Args)>
+    fusion_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >
     operator()(BOOST_DI_ARGS(Args, args)) const {
-        return fusion_module<mpl::vector<BOOST_DI_ARGS_PASS_TYPES(Args)> >(
+        return fusion_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >(
             BOOST_DI_ARGS_FORWARD(args));
     }
 

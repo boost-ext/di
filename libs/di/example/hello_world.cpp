@@ -9,6 +9,8 @@
 
 namespace di = boost::di;
 
+namespace {
+
 struct i { virtual ~i() { }; };
 struct c : i { };
 
@@ -19,12 +21,12 @@ public:
     { }
 };
 
+} // namespace
+
 int main()
 {
     typedef di::generic_module<
-        di::per_request<
-            c
-        >
+        di::per_request<c>
     > module;
 
     di::injector<module> injector;

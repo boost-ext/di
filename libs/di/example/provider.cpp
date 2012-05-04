@@ -4,18 +4,25 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_AUX_MODULE_HPP
-#define BOOST_DI_AUX_MODULE_HPP
+#include <boost/di.hpp>
+#include <boost/mpl/int.hpp>
 
-namespace boost {
-namespace di {
-namespace aux {
+namespace di = boost::di;
 
-class module { };
+namespace {
 
-} // namespace aux
-} // namespace di
-} // namespace boost
+struct transaction
+{
+    transaction(int i)
+        : i(i)
+    { }
 
-#endif
+    int i;
+};
+
+} // namespace
+
+int main()
+{
+}
 

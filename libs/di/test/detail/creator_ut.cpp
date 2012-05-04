@@ -31,7 +31,10 @@ struct dependency
         typedef T type;
     };
 
-    T create(const fake_pool&) { return value; }
+    template<typename>
+    T create(const fake_pool&) {
+        return value;
+    }
 };
 
 template<typename T>
@@ -49,7 +52,6 @@ BOOST_AUTO_TEST_CASE(creator_simple)
     BOOST_CHECK_EQUAL(i, (
         creator<
             mpl::vector<dependency_t>
-          , fake_pool
         >::execute<int, mpl::vector0<> >(entries_, pool_)
     ));
 }

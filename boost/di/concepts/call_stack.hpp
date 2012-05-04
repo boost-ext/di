@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_CONCEPTS_CALL_STACK_HPP
 #define BOOST_DI_CONCEPTS_CALL_STACK_HPP
 
-#include <boost/mpl/limits/vector.hpp>
 #include <boost/mpl/vector.hpp>
 #include "boost/di/config.hpp"
 
@@ -15,9 +14,9 @@ namespace boost {
 namespace di {
 namespace concepts {
 
-template<BOOST_DI_ARGS_TYPES_MPL(T)>
+template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 struct call_stack
-    : mpl::vector<BOOST_DI_ARGS_MPL(T)>
+    : mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
 { };
 
 } // namespace concepts

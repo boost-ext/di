@@ -16,9 +16,36 @@ namespace boost {
 namespace di {
 namespace aux {
 
+template<int value = 0>
+struct fake_scope
+{
+    template<typename T>
+    struct scope
+    {
+        shared_ptr<T> create() { return make_shared<T>(value); }
+    };
+};
+
+struct other_fake_scope { };
+
 template<typename T, typename>
 struct fake_result
 { };
+
+template<
+    typename T
+  , typename TContext = mpl::vector0<>
+  , typename = void
+>
+class fake_instance { };
+
+template<typename TScope, typename TDest>
+class fake_converter
+{
+public:
+    template<typename TSrc>
+    static TDest execute(TSrc src) { return src; }
+};
 
 template<typename TSequence, int value = 0>
 struct fake_pool
@@ -26,29 +53,10 @@ struct fake_pool
     typedef TSequence sequence;
 
     template<typename T>
-    struct result_type
-    {
-        typedef shared_ptr<int> type;
-    };
-
-    template<typename T>
-    typename result_type<int>::type get() const {
+    shared_ptr<int> get() const {
         return make_shared<int>(value);
     }
 };
-
-template<int value = 0>
-struct fake_scope
-{
-    template<typename T>
-    struct scope
-    {
-        typedef shared_ptr<T> result_type;
-        result_type create() { return make_shared<T>(value); }
-    };
-};
-
-struct other_fake_scope { };
 
 BOOST_AUTO_TEST_CASE(dependency_default)
 {
@@ -69,6 +77,8 @@ BOOST_AUTO_TEST_CASE(dependency_rebind_scope)
               , mpl::vector0<>
               , is_same<mpl::_1, int>
               , fake_result
+              , fake_instance
+              , fake_converter
             >
           , dependency<
                 mpl::_1
@@ -77,6 +87,8 @@ BOOST_AUTO_TEST_CASE(dependency_rebind_scope)
               , mpl::vector0<>
               , is_same<mpl::_1, int>
               , fake_result
+              , fake_instance
+              , fake_converter
             >::rebind<other_fake_scope>::type
         >::value
     ));
@@ -93,6 +105,8 @@ BOOST_AUTO_TEST_CASE(dependency_rebind_type)
               , mpl::vector0<>
               , is_same<mpl::_1, int>
               , fake_result
+              , fake_instance
+              , fake_converter
             >
           , dependency<
                 void
@@ -101,6 +115,8 @@ BOOST_AUTO_TEST_CASE(dependency_rebind_type)
               , mpl::vector0<>
               , is_same<mpl::_1, int>
               , fake_result
+              , fake_instance
+              , fake_converter
             >::rebind<double, int>::type
         >::value
     ));
@@ -112,7 +128,7 @@ BOOST_AUTO_TEST_CASE(dependency_create_by_pool)
     dependency< fake_scope<>, int > dependency_;
     fake_pool< mpl::vector<instance<int> >, i > pool_;
 
-    BOOST_CHECK_EQUAL(i, *dependency_.create(pool_));
+    BOOST_CHECK_EQUAL(i, dependency_.create<int>(pool_));
 }
 
 BOOST_AUTO_TEST_CASE(dependency_create_by_value)
@@ -121,7 +137,7 @@ BOOST_AUTO_TEST_CASE(dependency_create_by_value)
     dependency< fake_scope<>, int, mpl::int_<i> > dependency_;
     fake_pool< mpl::vector0<> > pool_;
 
-    BOOST_CHECK_EQUAL(i, dependency_.create(pool_));
+    BOOST_CHECK_EQUAL(i, dependency_.create<int>(pool_));
 }
 
 BOOST_AUTO_TEST_CASE(dependency_create_by_scope)
@@ -130,7 +146,7 @@ BOOST_AUTO_TEST_CASE(dependency_create_by_scope)
     dependency<fake_scope<i>, int> dependency_;
     fake_pool< mpl::vector0<> > pool_;
 
-    BOOST_CHECK_EQUAL(i, *dependency_.create(pool_));
+    BOOST_CHECK_EQUAL(i, dependency_.create<int>(pool_));
 }
 
 } // namespace aux

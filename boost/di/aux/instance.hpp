@@ -24,6 +24,8 @@ namespace detail {
 
 BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
 
+class instance { };
+
 template<typename T, typename = void>
 struct get_value_type
 {
@@ -47,13 +49,14 @@ struct get_value_type<T, typename enable_if<has_value_type<T> >::type>
 template<
     typename T
   , typename TContext = mpl::vector0<>
-  , typename Enable = void
+  , typename = void
 >
 class instance
+    : public detail::instance
 {
 public:
-    typedef T value_type;
-    typedef variant<const T&, T&, shared_ptr<T> > result_type;
+    typedef instance type;
+    typedef T element_type;
 
     explicit instance(const T& member)
         : member_(member)
@@ -67,12 +70,12 @@ public:
         : member_(member)
     { }
 
-    result_type get() const {
+    variant<const T&, T&, shared_ptr<T> > get() const {
         return member_;
     }
 
 private:
-    result_type member_;
+    variant<const T&, T&, shared_ptr<T> > member_;
 };
 
 template<
@@ -89,21 +92,24 @@ class instance<
             >
         >::type
     >
+    : public detail::instance
 {
-public:
-    typedef T value_type;
-    typedef typename detail::get_value_type<T>::type result_type;
+    typedef typename detail::get_value_type<T>::type value_type;
 
-    explicit instance(result_type member)
+public:
+    typedef instance type;
+    typedef T element_type;
+
+    explicit instance(value_type member)
         : member_(member)
     { }
 
-    result_type get() const {
+    value_type get() const {
         return member_;
     }
 
 private:
-    result_type member_;
+    value_type member_;
 };
 
 } // namespace aux

@@ -13,7 +13,7 @@ namespace boost {
 namespace di {
 namespace concepts {
 
-template<typename TDerived = boost::none_t>
+template<typename TDerived = none_t>
 struct annotate
 {
     template<typename TName = void>
@@ -25,12 +25,12 @@ struct annotate
 };
 
 template<>
-struct annotate<boost::none_t>
+struct annotate<none_t>
 {
     template<typename TName = void>
     struct with
     {
-        typedef boost::none_t derived;
+        typedef none_t derived;
         typedef TName name;
     };
 };

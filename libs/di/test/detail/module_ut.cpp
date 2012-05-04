@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <boost/test/unit_test.hpp>
-#include "boost/di/detail/factory.hpp"
+#include "boost/di/detail/module.hpp"
 
 namespace boost {
 namespace di {

@@ -10,7 +10,6 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/void.hpp>
-#include "boost/di/aux/utility.hpp"
 #include "boost/di/policies/check_for_binding_correctness.hpp"
 #include "boost/di/policies/check_for_circular_dependencies.hpp"
 #include "boost/di/policies/check_for_creation_ownership.hpp"
@@ -22,11 +21,11 @@ namespace di {
 
 namespace detail { class policy { }; } // namespace detail
 
-template<BOOST_DI_ARGS_TYPES_MPL(T)>
+template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 class policy
     : detail::policy
 {
-    typedef mpl::vector<BOOST_DI_ARGS_MPL(T)> sequence;
+    typedef mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> sequence;
 
     template<
         typename TDeps
@@ -34,10 +33,7 @@ class policy
       , typename TPolicy
     >
     struct verify_impl
-        : TPolicy::template verify<
-              TDeps
-            , typename aux::make_plain<T>::type
-          >::type
+        : TPolicy::template verify<TDeps, T>::type
     { };
 
 public:

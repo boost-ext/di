@@ -11,28 +11,23 @@
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
-    #include <boost/type_traits/is_base_of.hpp>
-    #include <boost/mpl/limits/vector.hpp>
+    #include <boost/type_traits/is_same.hpp>
     #include <boost/mpl/vector.hpp>
+    #include <boost/mpl/fold.hpp>
+    #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/set.hpp>
     #include <boost/mpl/insert.hpp>
-    #include <boost/mpl/remove_if.hpp>
-    #include <boost/mpl/filter_view.hpp>
-    #include <boost/mpl/joint_view.hpp>
-    #include <boost/mpl/begin_end.hpp>
-    #include <boost/mpl/deref.hpp>
-    #include <boost/mpl/push_back.hpp>
-    #include <boost/mpl/fold.hpp>
     #include <boost/mpl/if.hpp>
+    #include <boost/mpl/is_sequence.hpp>
+    #include <boost/mpl/copy.hpp>
+    #include <boost/mpl/back_inserter.hpp>
     #include "boost/di/aux/pool.hpp"
-    #include "boost/di/aux/utility.hpp"
-    #include "boost/di/aux/module.hpp"
-    #include "boost/di/detail/factory.hpp"
-    #include "boost/di/policy.hpp"
+    #include "boost/di/detail/module.hpp"
     #include "boost/di/config.hpp"
 
+
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
-        BOOST_DI_PARAMS(                    \
+        BOOST_DI_ITERATION_PARAMS(          \
             1                               \
           , BOOST_MPL_LIMIT_VECTOR_SIZE     \
           , "boost/di/injector.hpp"         \
@@ -42,93 +37,91 @@
     namespace boost {
     namespace di {
 
-    template<BOOST_DI_ARGS_TYPES_MPL(T)>
-    class injector
+    namespace detail {
+
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(deps)
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(pool)
+
+    template<typename T>
+    struct get_deps
     {
-        typedef mpl::vector<BOOST_DI_ARGS_MPL(T)> sequence;
+        typedef typename T::deps type;
+    };
 
-        template<typename T>
-        struct get_dependencies
-        {
-            typedef typename T::dependencies type;
-        };
+    template<typename T>
+    struct get_pool
+    {
+        typedef typename T::pool type;
+    };
 
-        template<typename T>
-        struct get_pool
-        {
-            typedef typename T::pool type;
-        };
+    template<typename TModules, typename TResult = mpl::set0<> >
+    struct deps_impl
+        : mpl::fold<
+              TModules
+            , TResult
+            , mpl::if_<
+                  has_deps<mpl::_2>
+                , deps_impl<get_deps<mpl::_2>, mpl::_1>
+                , mpl::insert<mpl::_1, mpl::_2>
+            >
+          >
+    { };
 
-        struct modules
-            : mpl::remove_if<
-                  sequence
-                , is_base_of<detail::policy, mpl::_1>
-              >::type
-        { };
-
-        struct policies
-            : mpl::joint_view<
-                mpl::filter_view<sequence, is_base_of<detail::policy, mpl::_1> >,
-                mpl::vector1<typename defaults<detail::policy, specialized>::type>
-              >::type
-        { };
-
-        template<typename TSequence, typename TResult = mpl::set0<> >
-        struct dependencies_impl
-            : mpl::fold<
-                TSequence,
-                TResult,
+    template<typename TSeq>
+    struct flatten
+        : mpl::fold<
+            TSeq
+          , mpl::vector0<>
+          , mpl::copy<
                 mpl::if_<
-                    is_base_of<aux::module, mpl::_2>,
-                    dependencies_impl<get_dependencies<mpl::_2>, mpl::_1>,
-                    mpl::insert<mpl::_1, mpl::_2>
+                    mpl::is_sequence<boost::mpl::_2>
+                  , mpl::_2
+                  , typename mpl::vector<boost::mpl::_2>::type
                 >
-              >
-        { };
+              , mpl::back_inserter<boost::mpl::_1>
+            >
+        >
+    { };
 
-        struct externals
-            : mpl::fold<
-                typename mpl::fold<
-                    modules,
-                    mpl::set<>,
-                    mpl::insert< mpl::_1, get_pool<mpl::_2> >
-                >::type,
-                mpl::vector0<>,
-                mpl::push_back<mpl::_1, mpl::_2>
+    template<typename TModules>
+    struct pools
+        : mpl::fold<
+              typename mpl::fold<
+                  typename flatten<TModules>::type
+                , mpl::set<>
+                , mpl::if_<
+                      has_pool<mpl::_2>
+                    , mpl::insert<mpl::_1, get_pool<mpl::_2> >
+                    , mpl::_1
+                  >
               >::type
-        { };
+            , mpl::vector0<>
+            , mpl::push_back<mpl::_1, mpl::_2>
+          >::type
+    { };
 
-        struct dependencies
-            : mpl::fold<
-                typename dependencies_impl<modules>::type,
-                mpl::vector0<>,
-                mpl::push_back<mpl::_1, mpl::_2>
-              >::type
-        { };
+    template<typename TModules>
+    struct deps
+        : mpl::fold<
+              typename deps_impl<typename flatten<TModules>::type>::type
+            , mpl::vector0<>
+            , mpl::push_back<mpl::_1, mpl::_2>
+          >::type
+    { };
 
-        typedef aux::pool<typename externals::type> pool;
-        typedef typename mpl::deref<typename mpl::begin<policies>::type>::type policy;
-        typedef detail::factory<typename dependencies::type, pool, policy> factory;
+    } // namespace detail
 
+    template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
+    class injector
+        : public detail::module<
+              typename detail::deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
+            , typename detail::pools<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
+          >
+    {
     public:
-        injector()
-            : pool_(), factory_(pool_)
-        { }
+        injector() { }
 
         #include BOOST_PP_ITERATE()
-
-        template<typename T> T create() {
-            return factory_.create<T>();
-        }
-
-        template<typename T, typename Visitor>
-        void visit(const Visitor& visitor) {
-            return factory_.visit<T>(visitor);
-        }
-
-    private:
-        pool pool_;
-        factory factory_;
     };
 
     } // namespace di
@@ -138,33 +131,37 @@
 
 #else
 
-    template<BOOST_DI_ARGS_TYPES(M)>
+    template<BOOST_DI_TYPES(M)>
     injector(BOOST_DI_ARGS(M, module))
-        : pool_(BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), module, .get_pool() BOOST_PP_INTERCEPT))
-        , factory_(pool_)
+        : detail::module<
+              typename detail::deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
+            , typename detail::pools<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
+          >(
+              BOOST_PP_ENUM_BINARY_PARAMS(
+                  BOOST_PP_ITERATION()
+                , module
+                , .get_pool() BOOST_PP_INTERCEPT
+              )
+          )
     { }
 
-    #define BOOST_DI_MODULE_ARG(_, n, M) BOOST_PP_COMMA_IF(n) const M##n& module##n = M##n()
+    #define BOOST_DI_INJECTOR_INSTALL_ARG(_, n, M)  \
+        BOOST_PP_COMMA_IF(n)                        \
+        const M##n& module##n = M##n()
 
-    template<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), typename M)>
+    template<BOOST_DI_TYPES(M)>
     injector<
-        typename mpl::joint_view<
-            modules,
-            mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), M)>
-        >::type
+        mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+      , mpl::vector<BOOST_DI_TYPES_PASS(M)>
     >
-    install(BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_MODULE_ARG, M)) {
-        typedef injector<
-            typename mpl::joint_view<
-                modules,
-                mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), M)>
-            >::type
-        > injector_t;
-
-        return injector_t(BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), module));
+    install(BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_INJECTOR_INSTALL_ARG, M)) {
+        return injector<
+            mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+          , mpl::vector<BOOST_DI_TYPES_PASS(M)>
+        >(BOOST_DI_ARGS_PASS(module));
     }
 
-    #undef BOOST_DI_MODULE_ARG
+    #undef BOOST_DI_INJECTOR_INSTALL_ARG
 
 #endif
 

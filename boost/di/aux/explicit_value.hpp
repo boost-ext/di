@@ -43,7 +43,7 @@ public:
     );
 };
 
-}// namespace detail
+} // namespace detail
 
 template<typename, typename = void>
 class explicit_value
@@ -55,21 +55,17 @@ class explicit_value<mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAM
     : public mpl::true_
 {
 public:
-    typedef std::string result_type;
-
-    inline static result_type create() {
+    inline static std::string create() {
         return mpl::c_str<mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> >::value;
     }
 };
 
 template<typename T>
-class explicit_value<T, typename enable_if< detail::has_value<T> >::type>
+class explicit_value<T, typename enable_if<detail::has_value<T> >::type>
     : public mpl::true_
 {
 public:
-    typedef BOOST_TYPEOF_TPL(T::value) result_type;
-
-    inline static result_type create() {
+    inline static BOOST_TYPEOF_TPL(T::value) create() {
         return T::value;
     }
 };

@@ -12,6 +12,8 @@
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/preprocessor/punctuation/comma_if.hpp>
+    #include <boost/function_types/result_type.hpp>
+    #include <boost/typeof/typeof.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/fold.hpp>
     #include <boost/mpl/copy.hpp>
@@ -24,7 +26,7 @@
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
-        BOOST_DI_PARAMS(                    \
+        BOOST_DI_ITERATION_PARAMS(          \
             1                               \
           , BOOST_MPL_LIMIT_VECTOR_SIZE     \
           , "boost/di/aux/pool.hpp"         \
@@ -37,20 +39,17 @@
 
     template<
         typename TSequence = mpl::vector0<>
-      , typename Enable = void
+      , typename = void
     >
     class pool
     {
-    public:
-        typedef TSequence sequence;
-
-        pool() { }
-
         template<typename T>
         struct result_type
-        {
-            typedef typename T::result_type type;
-        };
+            : function_types::result_type<BOOST_TYPEOF_TPL(&T::get)>
+        { };
+
+    public:
+        typedef TSequence sequence;
 
         template<typename T>
         typename result_type<T>::type get() const
@@ -75,10 +74,18 @@
         BOOST_PP_COMMA_IF(n) Args##n(args##n)
 
     template<typename TSequence>
-    class pool<TSequence, typename enable_if_c<mpl::size<TSequence>::value == BOOST_PP_ITERATION()>::type>
+    class pool<
+        TSequence
+      , typename enable_if_c<mpl::size<TSequence>::value == BOOST_PP_ITERATION()>::type
+    >
         : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_DERIVES_IMPL, TSequence)
     {
         BOOST_MPL_HAS_XXX_TRAIT_DEF(sequence)
+
+        template<typename T>
+        struct result_type
+            : function_types::result_type<BOOST_TYPEOF_TPL(&T::get)>
+        { };
 
         template<typename T>
         struct get_sequence
@@ -89,35 +96,25 @@
     public:
         struct sequence
             : mpl::fold<
-                TSequence,
-                mpl::vector0<>,
-                mpl::copy<
-                    mpl::if_<
-                        has_sequence<mpl::_2>,
-                        get_sequence<mpl::_2>,
-                        typename mpl::vector<mpl::_2>::type
-                    >,
-                    mpl::back_inserter<mpl::_1>
-                >
-            >::type
+                  TSequence
+                , mpl::vector0<>,
+                  mpl::copy<
+                      mpl::if_<
+                          has_sequence<mpl::_2>
+                        , get_sequence<mpl::_2>
+                        , typename mpl::vector<mpl::_2>::type
+                      >
+                    , mpl::back_inserter<mpl::_1>
+                  >
+              >::type
         { };
-
-        #if __GNUC__ >= 4
-        # pragma GCC diagnostic ignored "-Wreorder"
-        #endif
 
         pool() { }
 
-        template<BOOST_DI_ARGS_TYPES(Args)>
+        template<BOOST_DI_TYPES(Args)>
         pool(BOOST_DI_ARGS(Args, args))
             : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_CTOR_INITLIST_IMPL, ~)
         { }
-
-        template<typename T>
-        struct result_type
-        {
-            typedef typename T::result_type type;
-        };
 
         template<typename T>
         typename result_type<T>::type get() const {

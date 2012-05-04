@@ -8,41 +8,69 @@
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/string.hpp>
 #include <boost/di.hpp>
-#include "data.hpp"
 
 namespace mpl = boost::mpl;
 namespace di  = boost::di;
+
+namespace {
+
+struct if0
+{
+    virtual ~if0() { }
+    virtual void dummy() = 0;
+};
+
+struct c0if0 : if0
+{
+    virtual void dummy() { }
+};
+
+struct c1
+{
+    explicit c1(int = 0) { }
+};
+
+struct c2
+{
+    BOOST_DI_CTOR(c2, int, double, char) { }
+};
+
+struct c3
+{
+    BOOST_DI_CTOR(explicit c3, boost::shared_ptr<if0>) { }
+};
+
+struct c4
+{
+    BOOST_DI_CTOR(c4, boost::shared_ptr<c3>) { }
+};
+
+} // namespace
 
 int main()
 {
     typedef di::generic_module<
         di::singletons<
-            c1, c2, c3, c4
+            c2, c3, c4
         >,
         di::per_requests<
-            c0if0,
-            di::bind<c1if0>::in_call<c6, c5>,
-            di::bind<c2if0>::in_call<c7>,
-            di::bind<int, mpl::int_<1> >,
-            di::bind<int, mpl::int_<2> >::in_call<c8>,
-            di::bind<int, mpl::int_<3> >::in_name< mpl::string<'1'> >::in_call<c7, c6, c4>,
-            di::bind<int, mpl::int_<4> >::in_name< mpl::string<'2'> >::in_call<c7, c6, c4>,
-            di::bind<int, mpl::int_<5> >::in_call<c2>
+            c0if0
+          , di::bind<c0if0>::in_call<c3>
         >
     > generic_module;
 
     BOOST_AUTO(fusion_module, di::fusion_module<>()(
-        di::per_requests<
+        di::singletons<
             c1
+        >()
+      , di::per_requests<
+            di::bind<int, mpl::int_<1> >
         >()
     ));
 
     di::injector<generic_module, BOOST_TYPEOF(fusion_module)> injector;
 
-    injector.create<c8>();
-    injector.create<c7>();
-    injector.create<c6>();
-    injector.create<c5>();
+    injector.create<c4>();
 
     return 0;
 }

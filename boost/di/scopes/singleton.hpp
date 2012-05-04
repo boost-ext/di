@@ -13,12 +13,12 @@
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (           \
-        BOOST_DI_PARAMS(                            \
-            1                                       \
-          , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE      \
-          , "boost/di/scopes/singleton.hpp"         \
-        )                                           \
+    #define BOOST_PP_ITERATION_PARAMS_1 (       \
+        BOOST_DI_ITERATION_PARAMS(              \
+            1                                   \
+          , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE  \
+          , "boost/di/scopes/singleton.hpp"     \
+        )                                       \
     )
 
     namespace boost {
@@ -32,9 +32,7 @@
         class scope
         {
         public:
-            typedef shared_ptr<T> result_type;
-
-            result_type create() {
+            shared_ptr<T> create() {
                 if (!instance_) {
                     instance_.reset(new T);
                 }
@@ -45,7 +43,7 @@
             #include BOOST_PP_ITERATE()
 
         private:
-            result_type instance_;
+            shared_ptr<T> instance_;
         };
     };
 
@@ -57,8 +55,8 @@
 
 #else
 
-    template<BOOST_DI_ARGS_TYPES(Args)>
-    result_type create(BOOST_DI_ARGS(Args, args)) {
+    template<BOOST_DI_TYPES(Args)>
+    shared_ptr<T> create(BOOST_DI_ARGS(Args, args)) {
         if (!instance_) {
             instance_.reset(new T(BOOST_DI_ARGS_FORWARD(args)));
         }

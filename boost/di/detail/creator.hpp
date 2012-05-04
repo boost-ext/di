@@ -17,19 +17,19 @@
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/push_back.hpp>
-    #include "boost/di/aux/utility.hpp"
     #include "boost/di/aux/dependency.hpp"
+    #include "boost/di/aux/ctor_traits.hpp"
+    #include "boost/di/aux/converter.hpp"
     #include "boost/di/detail/binder.hpp"
-    #include "boost/di/detail/converter.hpp"
     #include "boost/di/scopes/per_request.hpp"
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (           \
-        BOOST_DI_PARAMS(                            \
-            0                                       \
-          , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE      \
-          , "boost/di/detail/creator.hpp"           \
-        )                                           \
+    #define BOOST_PP_ITERATION_PARAMS_1 (       \
+        BOOST_DI_ITERATION_PARAMS(              \
+            0                                   \
+          , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE  \
+          , "boost/di/detail/creator.hpp"       \
+        )                                       \
     )
 
     namespace boost {
@@ -38,7 +38,6 @@
 
     template<
         typename TDeps
-      , typename TPool
       , template<
             typename
           , typename
@@ -47,24 +46,32 @@
         > class TBinder = binder
       , template<
             typename
-          , typename
-        > class TConverter = converter
+          , typename = void
+        > class TCtorTraits = aux::ctor_traits
     >
     class creator_impl
     {
+        template<typename TDependency>
+        struct ctor
+            : TCtorTraits<typename TDependency::given>::type
+        { };
+
     public:
         template<
             typename T
           , typename TCallStack
           , typename TEntries
+          , typename TPool
         >
-        static typename TBinder<T, TCallStack>::type::template result_type<TPool>::type
-        execute(TEntries& entries, const TPool& pool) {
+        static T execute(TEntries& entries, const TPool& pool) {
             typedef typename TBinder<T, TCallStack>::type to_bo_created_t;
             return execute_impl<
-                to_bo_created_t
-              , typename aux::update_call_stack<TCallStack, to_bo_created_t>::type
-              , TEntries
+                T
+              , to_bo_created_t
+              , typename mpl::push_back<
+                    TCallStack
+                  , typename to_bo_created_t::given
+                >::type
             >(entries, pool);
         }
 
@@ -90,12 +97,9 @@
         }
     };
 
-    template<
-        typename TDeps
-      , typename TPool
-    >
+    template<typename TDeps>
     struct creator
-        : creator_impl<TDeps, TPool>
+        : creator_impl<TDeps>
     { };
 
     } // namespace detail
@@ -107,29 +111,27 @@
 #else
 
     template<
-        typename TDependency
+        typename T
+      , typename TDependency
       , typename TCallStack
       , typename TEntries
+      , typename TPool
     >
-    static typename aux::enable_if_ctor_size<
-        TDependency
-      , BOOST_PP_ITERATION()
-      , typename TDependency::template result_type<TPool>::type
-    >::type
-    execute_impl(TEntries& entries, const TPool& pool) {
+    static typename enable_if_c<
+        mpl::size<typename ctor<TDependency>::type>::value
+        ==
+        BOOST_PP_ITERATION()
+      , T
+    >::type execute_impl(TEntries& entries, const TPool& pool) {
 
-        #define BOOST_DI_CREATOR_EXECUTE(z, n, _)                   \
-            BOOST_PP_COMMA_IF(n)                                    \
-            TConverter<                                             \
-                typename TDependency::scope                         \
-              , typename aux::at_ctor<TDependency, n>::type         \
-            >::execute(                                             \
-                execute<                                            \
-                    typename aux::at_ctor<TDependency, n>::type     \
-                  , TCallStack                                      \
-                >(entries, pool))
+        #define BOOST_DI_CREATOR_EXECUTE(z, n, _)                               \
+            BOOST_PP_COMMA_IF(n)                                                \
+            execute<                                                            \
+                typename mpl::at_c<typename ctor<TDependency>::type, n>::type   \
+              , TCallStack                                                      \
+            >(entries, pool)
 
-        return acquire<TDependency>(entries).create(
+        return acquire<TDependency>(entries).template create<T>(
             pool
             BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
             BOOST_PP_REPEAT(

@@ -30,8 +30,7 @@ class impl : public i { };
 struct if0
 {
     virtual ~if0() { }
-    //virtual void dummy() = 0;
-    virtual void dummy(){}
+    virtual void dummy() = 0;
 };
 
 struct c0if0 : if0
@@ -115,7 +114,8 @@ struct c5
 
 struct c6
 {
-    BOOST_DI_CTOR(c6, shared_ptr<c3> c3_, const shared_ptr<c4>& c4_, c5 c5_)
+    //BOOST_DI_CTOR(c6, shared_ptr<c3> c3_, const shared_ptr<c4>& c4_, c5 c5_)
+    BOOST_DI_CTOR(c6, shared_ptr<c3> c3_, shared_ptr<c4> c4_, c5 c5_)
         : c3_(c3_), c4_(c4_), c5_(c5_)
     { }
 
@@ -253,7 +253,8 @@ struct transaction
     int i;
 };
 
-struct transaction_provider : provider< shared_ptr<transaction> >
+struct transaction_provider
+    : provider< shared_ptr<transaction> >
 {
     BOOST_DI_CTOR(transaction_provider, shared_ptr<c3> c3_)
         : c3_(c3_)
