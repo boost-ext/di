@@ -240,13 +240,15 @@ namespace di {
  *
  * namespace boost {
  * namespace di {
- *     template<>
- *     struct defaults<detail::policy, specialized>
- *     {
- *         typedef policy<
- *             polices::check_for_circular_dependencies
- *         > type;
- *     };
+ *
+ * template<>
+ * struct defaults<detail::policy, specialized>
+ * {
+ *     typedef policy<
+ *         policies::check_for_circular_dependencies
+ *     > type;
+ * };
+ *
  * } // namespace di
  * } // namespace boost
  * @endcode

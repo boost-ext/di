@@ -16,6 +16,25 @@ namespace utils = boost::units::detail;
 namespace di    = boost::di;
 
 namespace {
+
+struct i0 { virtual ~i0() { }; };
+struct c0 : i0 { };
+
+struct c1
+{
+    BOOST_DI_CTOR(c1, boost::shared_ptr<i0>) { }
+};
+
+struct c2
+{
+    BOOST_DI_CTOR(c2, int i, double d, char c) { }
+};
+
+struct c3
+{
+    BOOST_DI_CTOR(c3, boost::shared_ptr<c1>, boost::shared_ptr<c2>) { }
+};
+
 } // namespace
 
 /**
@@ -114,14 +133,14 @@ int main()
 {
     typedef di::generic_module<
         di::singletons<
-            di::bind<if0, c0if0>
+            di::bind<i0, c0>
         >
     > visitor_module;
 
     di::injector<visitor_module> injector;
 
     std::stringstream stream;
-    injector.visit<c8>(uml_visitor<plant_uml>(stream));
+    injector.visit<c3>(uml_visitor<plant_uml>(stream));
     std::cout << stream.str();
 
     return 0;

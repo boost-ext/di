@@ -18,15 +18,14 @@ struct c2
 {
     BOOST_DI_CTOR(c2, std::shared_ptr<c1> ptr) {
         if (ptr) {
-            std::clog << "in scope" << std::endl;
+            std::clog << "in session scope" << std::endl;
         } else {
-            std::clog << "not in scope" << std::endl;
+            std::clog << "not in session scope" << std::endl;
         }
     }
 };
 
 } // namespace
-
 
 class session_scope
 {
@@ -73,10 +72,10 @@ int main()
 
     di::injector<generic_module> injector;
 
-    injector.create<c2>(); // not in scope
+    injector.create<c2>(); // not in session scope
     injector.call<session_scope>(session_scope::entry());
-    injector.create<c2>(); // in scope
+    injector.create<c2>(); // in session scope
     injector.call<session_scope>(session_scope::exit());
-    injector.create<c2>(); // not in scope
+    injector.create<c2>(); // not in session scope
 }
 
