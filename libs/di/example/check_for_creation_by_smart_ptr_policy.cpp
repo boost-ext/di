@@ -9,10 +9,29 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/has_xxx.hpp>
 #include <boost/mpl/assert.hpp>
-#include <boost/di.hpp>
+#include <boost/di/policy.hpp>
 
 namespace mpl = boost::mpl;
 namespace di  = boost::di;
+
+class check_for_creation_by_smart_ptr;
+
+namespace boost {
+namespace di {
+
+template<>
+struct defaults<detail::policy, specialized>
+{
+    typedef policy<
+        policies::check_for_circular_dependencies
+      , check_for_creation_by_smart_ptr
+    > type;
+};
+
+} // namespace di
+} // namespace boost
+
+#include <boost/di.hpp>
 
 namespace {
 
@@ -37,9 +56,9 @@ public:
         : public mpl::false_
     {
        BOOST_MPL_ASSERT_MSG(
-            false,
-            CREATION_SMART_PTR_IS_ALLOWED,
-            (TGiven)
+            false
+          , CREATION_BY_SMART_PTR_IS_NOT_ALLOWED
+          , (TGiven)
         );
     };
 
@@ -49,33 +68,23 @@ public:
     >
     class verify<TDeps, TGiven, typename boost::enable_if<has_element_type<TGiven> >::type>
         : public mpl::true_
-    { };
+    {
+    };
 };
-
-namespace boost {
-namespace di {
-
-template<>
-struct defaults<detail::policy, specialized>
-{
-    typedef policy<
-        policies::check_for_circular_dependencies
-      , policies::check_for_creation_by_smart_ptr
-    > type;
-};
-
-} // namespace di
-} // namespace boost
 
 int main()
 {
-    di::injector<> injector;
-    injector.create< boost::shared_ptr<c> >()
-    //injector.create<c>(); //compiler error (CREATION_SMART_PTR_IS_ALLOWED)
+    {
+        di::injector<> injector;
+        injector.create<boost::shared_ptr<c> >();
+        //injector.create<c>(); //compiler error (CREATION_SMART_PTR_IS_ALLOWED)
+    }
 
-    //di::injector<policy<> injector;
-    //injector.create< boost::shared_ptr<c> >()
-    //injector.create<c>(); //compiler error (CREATION_SMART_PTR_IS_ALLOWED)
+    {
+        di::injector<di::policy<check_for_creation_by_smart_ptr> > injector;
+        injector.create<boost::shared_ptr<c> >();
+        //injector.create<c>(); //compiler error (CREATION_SMART_PTR_IS_ALLOWED)
+    }
 
     return 0;
 }

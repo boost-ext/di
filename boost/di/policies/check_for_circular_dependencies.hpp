@@ -25,6 +25,7 @@
     #include <boost/mpl/assert.hpp>
     #include "boost/di/aux/ctor_traits.hpp"
     #include "boost/di/aux/dependency.hpp"
+    #include "boost/di/aux/make_plain.hpp"
     #include "boost/di/detail/binder.hpp"
     #include "boost/di/scopes/per_request.hpp"
     #include "boost/di/config.hpp"
@@ -108,7 +109,10 @@
             #include BOOST_PP_ITERATE()
 
         public:
-            typedef circular_dependencies<TGiven, mpl::vector0<> > type;
+            typedef circular_dependencies<
+                typename aux::make_plain<TGiven>::type
+              , mpl::vector0<>
+            > type;
         };
     };
 
@@ -157,9 +161,9 @@
         mpl::false_
     {
        BOOST_MPL_ASSERT_MSG(
-            !Assert,
-            CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED,
-            (typename TDependency::given, TCallStack)
+            !Assert
+          , CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED
+          , (typename TDependency::given, TCallStack)
         );
     };
 

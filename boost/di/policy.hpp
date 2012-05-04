@@ -10,7 +10,6 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/void.hpp>
-#include "boost/di/aux/make_plain.hpp"
 #include "boost/di/policies/check_for_binding_correctness.hpp"
 #include "boost/di/policies/check_for_circular_dependencies.hpp"
 #include "boost/di/policies/check_for_creation_ownership.hpp"
@@ -34,10 +33,7 @@ class policy
       , typename TPolicy
     >
     struct verify_impl
-        : TPolicy::template verify<
-              TDeps
-            , typename aux::make_plain<T>::type
-          >::type
+        : TPolicy::template verify<TDeps, T>::type
     { };
 
 public:

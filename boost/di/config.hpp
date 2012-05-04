@@ -236,7 +236,7 @@ namespace di {
  * example of changing default behavior using specialized class
  *
  * @code
- * #include <boost/di/config.hpp>
+ * #include <boost/di/policy.hpp>
  *
  * namespace boost {
  * namespace di {

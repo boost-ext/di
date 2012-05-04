@@ -18,6 +18,7 @@
     #include <boost/mpl/joint_view.hpp>
     #include <boost/mpl/inherit_linearly.hpp>
     #include <boost/mpl/inherit.hpp>
+    #include <boost/mpl/remove_if.hpp>
     #include <boost/mpl/deref.hpp>
     #include <boost/mpl/begin_end.hpp>
     #include <boost/mpl/pop_front.hpp>
@@ -50,16 +51,18 @@
           , typename = void
         > class TPool = aux::pool
       , template<
-            typename = TDeps
+            typename
         > class TCreator = creator
       , template<
-            typename = TDeps
+            typename
         > class TVisitor = visitor
     >
     class module
     {
-        struct entries
-            : mpl::inherit_linearly<TDeps, mpl::inherit<mpl::_1, mpl::_2> >::type
+    public:
+    //protected:
+        struct deps
+            : mpl::remove_if<TDeps, is_base_of<policy, mpl::_1> >::type
         { };
 
         struct policies
@@ -73,14 +76,16 @@
               >::type
         { };
 
-    public:
-    //protected:
-        typedef TDeps deps;
         typedef TPool<> pool;
 
         const TPool<>& get_pool() const {
             return pool_;
         }
+
+    private:
+        struct entries
+            : mpl::inherit_linearly<deps, mpl::inherit<mpl::_1, mpl::_2> >::type
+        { };
 
     public:
         module() { }
@@ -89,19 +94,19 @@
 
         template<typename T>
         T create() {
-            typedef typename policies::template verify<TDeps, T>::type policies_t;
-            return TCreator<>::template execute<T, mpl::vector0<> >(entries_, pool_);
+            typedef typename policies::template verify<deps, T>::type policies_t;
+            return TCreator<deps>::template execute<T, mpl::vector0<> >(entries_, pool_);
         }
 
         template<typename T, typename Visitor>
         void visit(const Visitor& visitor) {
-            typedef typename policies::template verify<TDeps, T>::type policies_t;
-            TVisitor<>::template execute<T, mpl::vector0<> >(visitor);
+            typedef typename policies::template verify<deps, T>::type policies_t;
+            TVisitor<deps>::template execute<T, mpl::vector0<> >(visitor);
         }
 
         template<typename Scope, typename Action>
         void call(const Action& action) {
-            call_impl<Scope, TDeps>(action);
+            call_impl<Scope, deps>(action);
         }
 
     private:

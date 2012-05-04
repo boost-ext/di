@@ -40,6 +40,7 @@
     namespace detail {
 
     BOOST_MPL_HAS_XXX_TRAIT_DEF(deps)
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(pool)
 
     template<typename T>
     struct get_deps
@@ -88,7 +89,11 @@
               typename mpl::fold<
                   typename flatten<TModules>::type
                 , mpl::set<>
-                , mpl::insert<mpl::_1, get_pool<mpl::_2> >
+                , mpl::if_<
+                      has_pool<mpl::_2>
+                    , mpl::insert<mpl::_1, get_pool<mpl::_2> >
+                    , mpl::_1
+                  >
               >::type
             , mpl::vector0<>
             , mpl::push_back<mpl::_1, mpl::_2>

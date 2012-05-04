@@ -39,9 +39,9 @@ public:
         : public mpl::false_
     {
        BOOST_MPL_ASSERT_MSG(
-            !Assert,
-            CREATION_OWNERSHIP_IS_NOT_CLEAR,
-            (TGiven)
+            !Assert
+          , CREATION_OWNERSHIP_IS_NOT_CLEAR
+          , (TGiven)
         );
     };
 };
