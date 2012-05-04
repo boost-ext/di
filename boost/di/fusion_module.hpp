@@ -79,9 +79,9 @@
     { }
 
     template<BOOST_DI_TYPES(Args)>
-    fusion_module<mpl::vector<BOOST_DI_ARGS_PASS_TYPES(Args)> >
+    fusion_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >
     operator()(BOOST_DI_ARGS(Args, args)) const {
-        return fusion_module<mpl::vector<BOOST_DI_ARGS_PASS_TYPES(Args)> >(
+        return fusion_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >(
             BOOST_DI_ARGS_FORWARD(args));
     }
 

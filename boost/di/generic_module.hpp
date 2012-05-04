@@ -106,11 +106,11 @@
 
     } // namespace detail
 
-    template<BOOST_DI_TYPES_MPL(T)>
+    template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     class generic_module
         : public detail::module<
-              typename detail::generic_deps<mpl::vector<BOOST_DI_TYPES_MPL(T)> >::type
-            , typename detail::instances<mpl::vector<BOOST_DI_TYPES_MPL(T)> >::type
+              typename detail::generic_deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
+            , typename detail::instances<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
           >
     {
         template<typename TInstance, typename T>
@@ -124,7 +124,7 @@
         template<
             typename T
           , typename TExternals = typename detail::externals<
-                mpl::vector<BOOST_DI_TYPES_MPL(T)>
+                mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
             >::type
         >
         struct find_instance_type
@@ -134,7 +134,7 @@
         template<
             typename T
           , typename TExternals = typename detail::externals<
-                mpl::vector<BOOST_DI_TYPES_MPL(T)>
+                mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
             >::type
         >
         struct disable_if_instance_not_found
@@ -170,8 +170,8 @@
     template<BOOST_DI_TYPES(Args)>
     generic_module(BOOST_DI_ARGS(Args, args))
         : detail::module<
-              typename detail::generic_deps<mpl::vector<BOOST_DI_TYPES_MPL(T)> >::type
-            , typename detail::instances<mpl::vector<BOOST_DI_TYPES_MPL(T)> >::type
+              typename detail::generic_deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
+            , typename detail::instances<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
           >
         (BOOST_DI_ARGS_FORWARD(args))
 

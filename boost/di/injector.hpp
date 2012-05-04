@@ -89,10 +89,10 @@
     class injector
         : public detail::module<
               typename detail::deps<
-                  mpl::vector<BOOST_DI_TYPES_PASS_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T, mpl_::na)>
+                  mpl::vector<BOOST_DI_TYPES_PASS_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T)>
               >::type
             , typename detail::pools<
-                  mpl::vector<(BOOST_DI_TYPES_PASS_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T, mpl_::na)>
+                  mpl::vector<BOOST_DI_TYPES_PASS_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T)>
               >::type
           >
     {
@@ -113,10 +113,10 @@
     injector(BOOST_DI_ARGS(M, module))
         : detail::module<
               typename detail::deps<
-                  mpl::vector<BOOST_DI_TYPES_PASS_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T, mpl_::na)>
+                  mpl::vector<BOOST_DI_TYPES_PASS_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T)>
               >::type
             , typename detail::pools<
-                  mpl::vector<(BOOST_DI_TYPES_PASS_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T, mpl_::na)>
+                  mpl::vector<BOOST_DI_TYPES_PASS_IMPL(BOOST_DI_MODULES_LIMIT_SIZE, T)>
               >::type
           >(
               BOOST_PP_ENUM_BINARY_PARAMS(
