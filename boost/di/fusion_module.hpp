@@ -29,7 +29,7 @@
     namespace detail {
 
     template<typename TDeps>
-    struct fusion_dependencies
+    struct fusion_deps
         : mpl::fold<
               TDeps
             , mpl::vector0<>
@@ -51,7 +51,7 @@
     >
     class fusion_module
         : public detail::module<
-              typename detail::fusion_dependencies<TSequence>::type
+              typename detail::fusion_deps<TSequence>::type
             , TSequence
           >
     {
@@ -75,7 +75,7 @@
     template<BOOST_DI_ARGS_TYPES(Args)>
     fusion_module(BOOST_DI_ARGS(Args, args))
         : detail::module<
-              typename detail::fusion_dependencies<TSequence>::type
+              typename detail::fusion_deps<TSequence>::type
             , TSequence
           >
         (BOOST_DI_ARGS_FORWARD(args))

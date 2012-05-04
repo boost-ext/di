@@ -35,12 +35,12 @@
 
     namespace detail {
 
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(dependencies)
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(deps)
 
     template<typename T>
-    struct get_dependencies
+    struct get_deps
     {
-        typedef typename T::dependencies type;
+        typedef typename T::deps type;
     };
 
     template<typename T>
@@ -50,13 +50,13 @@
     };
 
     template<typename TSequence, typename TResult = mpl::set0<> >
-    struct dependencies_impl
+    struct deps_impl
         : mpl::fold<
             TSequence,
             TResult,
             mpl::if_<
-                has_dependencies<mpl::_2>,
-                dependencies_impl<get_dependencies<mpl::_2>, mpl::_1>,
+                has_deps<mpl::_2>,
+                deps_impl<get_deps<mpl::_2>, mpl::_1>,
                 mpl::insert<mpl::_1, mpl::_2>
             >
           >
@@ -76,9 +76,9 @@
     { };
 
     template<typename TSequence>
-    struct dependencies
+    struct deps
         : mpl::fold<
-            typename dependencies_impl<TSequence>::type,
+            typename deps_impl<TSequence>::type,
             mpl::vector0<>,
             mpl::push_back<mpl::_1, mpl::_2>
           >::type
@@ -89,7 +89,7 @@
     template<BOOST_DI_ARGS_TYPES_MPL(T)>
     class injector
         : public detail::module<
-              typename detail::dependencies<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
+              typename detail::deps<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
             , typename detail::pools<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
           >
     {
@@ -109,7 +109,7 @@
     template<BOOST_DI_ARGS_TYPES(M)>
     injector(BOOST_DI_ARGS(M, module))
         : detail::module<
-              typename detail::dependencies<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
+              typename detail::deps<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
             , typename detail::pools<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
           >(
               BOOST_PP_ENUM_BINARY_PARAMS(
@@ -117,6 +117,10 @@
                 , module
                 , .get_pool() BOOST_PP_INTERCEPT
               )
+              //BOOST_PP_ENUM_PARAMS(
+                  //BOOST_PP_ITERATION()
+                //, module
+              //)
           )
     { }
 
