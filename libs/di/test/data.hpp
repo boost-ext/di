@@ -253,7 +253,8 @@ struct transaction
     int i;
 };
 
-struct transaction_provider : provider< shared_ptr<transaction> >
+struct transaction_provider
+    : provider< shared_ptr<transaction> >
 {
     BOOST_DI_CTOR(transaction_provider, shared_ptr<c3> c3_)
         : c3_(c3_)

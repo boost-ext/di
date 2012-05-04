@@ -160,8 +160,8 @@ struct make_default_dependency<
 >
     : TDefault::template rebind<
           typename aux::make_plain<T>::type
-        //, typename aux::make_plain<typename T::value_type>::type
-        , typename aux::make_plain<typename T::element_type>::type
+        , typename aux::make_plain<typename T::value_type>::type
+        //, typename aux::make_plain<typename T::element_type>::type
       >
 { };
 

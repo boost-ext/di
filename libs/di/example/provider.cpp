@@ -5,8 +5,22 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <boost/di.hpp>
+#include <boost/mpl/int.hpp>
 
 namespace di = boost::di;
+
+namespace {
+
+struct transaction
+{
+    transaction(int i)
+        : i(i)
+    { }
+
+    int i;
+};
+
+} // namespace
 
 int main()
 {
