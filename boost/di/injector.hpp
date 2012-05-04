@@ -50,10 +50,10 @@
         typedef typename T::pool type;
     };
 
-    template<typename TDeps, typename TResult = mpl::set0<> >
+    template<typename TModules, typename TResult = mpl::set0<> >
     struct deps_impl
         : mpl::fold<
-              TDeps
+              TModules
             , TResult
             , mpl::if_<
                   has_deps<mpl::_2>
@@ -63,23 +63,23 @@
           >
     { };
 
-    template<typename TDeps>
+    template<typename TModules>
     struct pools
         : mpl::fold<
               typename mpl::fold<
-                  TDeps
+                  TModules
                 , mpl::set<>
-                , mpl::insert< mpl::_1, get_pool<mpl::_2> >
+                , mpl::insert<mpl::_1, get_pool<mpl::_2> >
               >::type
             , mpl::vector0<>
             , mpl::push_back<mpl::_1, mpl::_2>
           >::type
     { };
 
-    template<typename TDeps>
+    template<typename TModules>
     struct deps
         : mpl::fold<
-              typename deps_impl<TDeps>::type
+              typename deps_impl<TModules>::type
             , mpl::vector0<>
             , mpl::push_back<mpl::_1, mpl::_2>
           >::type

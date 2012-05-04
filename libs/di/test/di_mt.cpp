@@ -257,6 +257,12 @@ BOOST_AUTO_TEST_CASE_VARIADIC(basic_externals_ctor, TInjector,
     BOOST_CHECK_EQUAL(87.0, c9_->d);
 }
 
+BOOST_AUTO_TEST_CASE(install)
+{
+    //injector<> injector;
+    //injector.install(base_module_2(), base_module_3());
+}
+
 } // namespace di
 } // namespace boost
 

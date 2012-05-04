@@ -11,6 +11,8 @@
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/type_traits/is_base_of.hpp>
+    #include <boost/type_traits/is_same.hpp>
+    #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/limits/vector.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/filter_view.hpp>
@@ -19,6 +21,10 @@
     #include <boost/mpl/inherit.hpp>
     #include <boost/mpl/deref.hpp>
     #include <boost/mpl/begin_end.hpp>
+    #include <boost/mpl/pop_front.hpp>
+    #include <boost/mpl/front.hpp>
+    #include <boost/mpl/and.hpp>
+    #include <boost/mpl/not.hpp>
     #include "boost/di/aux/pool.hpp"
     #include "boost/di/detail/creator.hpp"
     #include "boost/di/detail/visitor.hpp"
@@ -94,7 +100,36 @@
             TVisitor<>::template execute<T, mpl::vector0<> >(visitor);
         }
 
+        template<typename Scope, typename Action>
+        void call(const Action& action) {
+            call_impl<Scope, TDeps>(action);
+        }
+
     private:
+        template<
+            typename Scope
+          , typename Deps
+          , typename Action
+        >
+        typename enable_if<mpl::empty<Deps> >::type
+        call_impl(const Action&) { }
+
+        template<
+            typename Scope
+          , typename Deps
+          , typename Action
+        >
+        typename enable_if<
+            mpl::and_<
+                mpl::not_<mpl::empty<Deps> >
+              , is_same<typename mpl::front<Deps>::type::scope, Scope>
+            >
+        >::type
+        call_impl(const Action& action) {
+            static_cast<typename mpl::front<Deps>::type&>(entries_).call(action);
+            call_impl<Scope, typename mpl::pop_front<Deps>::type>(action);
+        }
+
         TPool<> pool_;
         entries entries_;
     };
