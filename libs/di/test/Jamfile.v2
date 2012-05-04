@@ -45,6 +45,6 @@ test-suite di-test
       #[ run named_ut.cpp ]
 
       [ run detail/module_mt.cpp ]
-      #[ run di_mt.cpp ]
+      [ run di_mt.cpp ]
     ;
 

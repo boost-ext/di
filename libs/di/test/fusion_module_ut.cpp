@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_empty)
         >::value
     ));
 
-    BOOST_CHECK((mpl::equal<mpl::vector0<>, module_t::externals>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector0<>, module_t::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_default_scope_bind)
@@ -74,7 +74,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_default_scope_bind)
               , bind<c2>::in_name<int>
               , bind<c3>::in_call<call_stack<c4, c5> >
             >
-          , module_t::externals>::value
+          , module_t::pool::sequence>::value
     ));
 }
 
@@ -98,7 +98,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_one_scope)
         >::value
     ));
 
-    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::externals>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_one_scope_alias)
@@ -120,7 +120,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_one_scope_alias)
         >::value
     ));
 
-    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::externals>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_one_scope_direct)
@@ -140,7 +140,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_one_scope_direct)
         >::value
     ));
 
-    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::externals>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_many_singletons)
@@ -164,7 +164,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_many_singletons)
         >::value
     ));
 
-    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::externals>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_many_scopes)
@@ -192,7 +192,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_many_scopes)
         >::value
     ));
 
-    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::externals>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_in_call)
@@ -212,7 +212,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_in_call)
         >::value
     ));
 
-    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::externals>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_in_name)
@@ -232,7 +232,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_in_name)
         >::value
     ));
 
-    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::externals>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_in_namein_call)
@@ -256,7 +256,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_in_namein_call)
         >::value
     ));
 
-    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::externals>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_in_call_in_name)
@@ -280,7 +280,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_in_call_in_name)
         >::value
     ));
 
-    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::externals>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_bind_if)
@@ -302,7 +302,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_bind_if)
         >::value
     ));
 
-    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::externals>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_mix)
@@ -349,7 +349,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_named_in_call)
           >
     { };
 
-    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::externals>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::pool::sequence>::value));
 
     BOOST_CHECK((
         mpl::equal<
@@ -384,7 +384,7 @@ BOOST_AUTO_TEST_CASE(fusion_multiple_calls)
         >::value
     ));
 
-    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::externals>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector0<>, module::pool::sequence>::value));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_externals_base)
@@ -404,7 +404,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_externals_base)
             mpl::vector<
                 aux::instance<c1>
             >
-          , module::externals
+          , module::pool::sequence
         >::value
     ));
 }
@@ -429,7 +429,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_externals_mix)
               , aux::instance<c2>
               , aux::instance<c3>
             >
-          , module::externals
+          , module::pool::sequence
         >::value
     ));
 }
@@ -457,7 +457,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_externals_bind)
               , aux::instance<c2, mpl::vector<c1> >
               , aux::instance<named<c3, double>, mpl::vector<c4, c5> >
             >
-          , module::externals
+          , module::pool::sequence
         >::value
     ));
 }

@@ -56,7 +56,6 @@
     public:
         //TODO
         typedef TDeps dependencies;
-        typedef typename TPool<>::sequence externals;
         typedef TPool<> pool;
 
         const TPool<>& get_pool() const {

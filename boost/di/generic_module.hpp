@@ -72,7 +72,7 @@
     { };
 
     template<typename TDeps>
-    struct dependencies
+    struct generic_dependencies
         : mpl::fold<
               TDeps
             , mpl::vector0<>
@@ -110,7 +110,7 @@
     template<BOOST_DI_ARGS_TYPES_MPL(T)>
     class generic_module
         : public detail::module<
-              typename detail::dependencies<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
+              typename detail::generic_dependencies<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
             , typename detail::instances<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
           >
     {
@@ -173,7 +173,7 @@
     template<BOOST_DI_ARGS_TYPES(Args)>
     generic_module(BOOST_DI_ARGS(Args, args))
         : detail::module<
-              typename detail::dependencies<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
+              typename detail::generic_dependencies<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
             , typename detail::instances<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
           >
         (BOOST_DI_ARGS_FORWARD(args))

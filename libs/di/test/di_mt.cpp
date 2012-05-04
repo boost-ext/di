@@ -151,6 +151,7 @@ BOOST_AUTO_TEST_CASE_VARIADIC(one_module, TInjector,
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
+#if 0
 BOOST_AUTO_TEST_CASE_VARIADIC(many_modules, TInjector,
     injector<base_module_2, base_module_3>,
     injector<base_module_3, base_module_2>,
@@ -256,6 +257,7 @@ BOOST_AUTO_TEST_CASE_VARIADIC(basic_externals_ctor, TInjector,
     BOOST_CHECK_EQUAL(42, c9_->i);
     BOOST_CHECK_EQUAL(87.0, c9_->d);
 }
+#endif
 
 } // namespace di
 } // namespace boost

@@ -11,10 +11,13 @@
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
+    #include <boost/type_traits/is_same.hpp>
     #include <boost/mpl/limits/vector.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/fold.hpp>
     #include <boost/mpl/push_back.hpp>
+    #include <boost/mpl/set.hpp>
+    #include <boost/mpl/insert.hpp>
     #include "boost/di/aux/pool.hpp"
     #include "boost/di/detail/module.hpp"
     #include "boost/di/config.hpp"
@@ -32,33 +35,52 @@
 
     namespace detail {
 
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(dependencies)
+
     template<typename T>
-    struct get_dependencies_impl
+    struct get_dependencies
     {
         typedef typename T::dependencies type;
     };
 
     template<typename T>
-    struct get_externals_impl
+    struct get_pool
     {
         typedef typename T::pool type;
     };
 
-    template<typename TSequence>
-    struct get_dependencies
+    template<typename TSequence, typename TResult = mpl::set0<> >
+    struct dependencies_impl
         : mpl::fold<
-              TSequence
-            , mpl::vector0<>
-            , mpl::push_back<mpl::_1, get_dependencies_impl<mpl::_2> >
+            TSequence,
+            TResult,
+            mpl::if_<
+                has_dependencies<mpl::_2>,
+                dependencies_impl<get_dependencies<mpl::_2>, mpl::_1>,
+                mpl::insert<mpl::_1, mpl::_2>
+            >
+          >
+    { };
+
+    template<typename TSequence>
+    struct pools
+        : mpl::fold<
+            typename mpl::fold<
+                TSequence,
+                mpl::set<>,
+                mpl::insert< mpl::_1, get_pool<mpl::_2> >
+            >::type,
+            mpl::vector0<>,
+            mpl::push_back<mpl::_1, mpl::_2>
           >::type
     { };
 
     template<typename TSequence>
-    struct get_externals
+    struct dependencies
         : mpl::fold<
-              TSequence
-            , mpl::vector0<>
-            , mpl::push_back<mpl::_1, get_externals_impl<mpl::_2> >
+            typename dependencies_impl<TSequence>::type,
+            mpl::vector0<>,
+            mpl::push_back<mpl::_1, mpl::_2>
           >::type
     { };
 
@@ -67,8 +89,8 @@
     template<BOOST_DI_ARGS_TYPES_MPL(T)>
     class injector
         : public detail::module<
-              typename detail::get_dependencies<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
-            , typename detail::get_externals<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
+              typename detail::dependencies<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
+            , typename detail::pools<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
           >
     {
     public:
@@ -87,8 +109,8 @@
     template<BOOST_DI_ARGS_TYPES(M)>
     injector(BOOST_DI_ARGS(M, module))
         : detail::module<
-              typename detail::get_dependencies<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
-            , typename detail::get_externals<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
+              typename detail::dependencies<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
+            , typename detail::pools<mpl::vector<BOOST_DI_ARGS_MPL(T)> >::type
           >(
               BOOST_PP_ENUM_BINARY_PARAMS(
                   BOOST_PP_ITERATION()
