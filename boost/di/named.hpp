@@ -15,9 +15,6 @@
 namespace boost {
 namespace di {
 
-/**
- * example: named<int, mpl::string<'port'> >
- */
 template<typename T, typename TName = void>
 class named
 {
