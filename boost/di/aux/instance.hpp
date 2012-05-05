@@ -39,7 +39,7 @@ public:
         : member_(member)
     { }
 
-    explicit instance(shared_ptr<T> member)
+    explicit instance(const shared_ptr<T>& member)
         : member_(member)
     { }
 
