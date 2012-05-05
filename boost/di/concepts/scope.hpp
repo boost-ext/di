@@ -86,7 +86,7 @@ public:
                   >
                 , mpl::push_back<
                       mpl::_1
-                    , rebind< dependency<mpl::_2, mpl::_2>, TScope>
+                    , rebind<dependency<mpl::_2, mpl::_2>, TScope>
                   >
               >
           >::type

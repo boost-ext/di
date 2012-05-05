@@ -76,7 +76,7 @@
                             , mpl::count<TCallStack, mpl::_>
                           >::type
                         , mpl::int_<0>
-                        , mpl::plus< mpl::_1, mpl::_2>
+                        , mpl::plus<mpl::_1, mpl::_2>
                       >::type::value
                     ) == mpl::size<TCallStack>::value
                   >

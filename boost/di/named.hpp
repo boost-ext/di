@@ -16,7 +16,7 @@ namespace boost {
 namespace di {
 
 /**
- * example: named< int, mpl::string<'port'> >
+ * example: named<int, mpl::string<'port'> >
  */
 template<typename T, typename TName = void>
 class named
@@ -40,7 +40,7 @@ private:
 };
 
 template<typename T, typename TName>
-class named< shared_ptr<T>, TName>
+class named<shared_ptr<T>, TName>
 {
 public:
     typedef named<typename aux::make_plain<T>::type, TName> element_type;
@@ -65,15 +65,15 @@ private:
 };
 
 template<typename T, typename TName>
-class named< const shared_ptr<T>&, TName>
-    : named< shared_ptr<T>, TName>
+class named<const shared_ptr<T>&, TName>
+    : named<shared_ptr<T>, TName>
 {
 public:
     typedef named<typename aux::make_plain<T>::type, TName> element_type;
     typedef typename aux::make_plain<T>::type value_type;
 
     named(const shared_ptr<T>& value) // non explicit
-        : named< shared_ptr<T>, TName>(value)
+        : named<shared_ptr<T>, TName>(value)
     { }
 };
 

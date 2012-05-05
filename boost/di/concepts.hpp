@@ -31,7 +31,7 @@ struct bind
 
 template<typename TExpected, typename TGiven = TExpected>
 struct singleton
-    : scope<scopes::singleton>::bind< bind<TExpected, TGiven> >
+    : scope<scopes::singleton>::bind<bind<TExpected, TGiven> >
 { };
 
 template<typename T> struct singleton<T, T>
@@ -40,7 +40,7 @@ template<typename T> struct singleton<T, T>
 
 template<typename TExpected, typename TGiven = TExpected>
 struct per_request
-    : scope<scopes::per_request>::bind< bind<TExpected, TGiven> >
+    : scope<scopes::per_request>::bind<bind<TExpected, TGiven> >
 { };
 
 template<typename T>
