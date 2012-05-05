@@ -143,6 +143,16 @@ int main()
     injector.visit<c3>(uml_visitor<plant_uml>(stream));
     std::cout << stream.str();
 
+    // @startuml uml_visitor.png
+    // "(anonymous namespace)::c3" .. "(anonymous namespace)::c1"
+    // "(anonymous namespace)::i0" <|-- "(anonymous namespace)::c0"
+    // "(anonymous namespace)::c1" .. "(anonymous namespace)::i0"
+    // "(anonymous namespace)::c3" .. "(anonymous namespace)::c2"
+    // "(anonymous namespace)::c2" .. "int"
+    // "(anonymous namespace)::c2" .. "double"
+    // "(anonymous namespace)::c2" .. "char"
+    // @enduml
+
     return 0;
 }
 

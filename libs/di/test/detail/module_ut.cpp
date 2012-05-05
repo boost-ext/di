@@ -11,6 +11,10 @@ namespace boost {
 namespace di {
 namespace detail {
 
+BOOST_AUTO_TEST_CASE(module_simple)
+{
+}
+
 } // namespace detail
 } // namespace di
 } // namespace boost
