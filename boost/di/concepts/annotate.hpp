@@ -8,6 +8,8 @@
 #define BOOST_DI_CONCEPTS_ANNOTATE_HPP
 
 #include <boost/none_t.hpp>
+#include <boost/mpl/vector.hpp>
+#include "boost/di/aux/instance.hpp"
 
 namespace boost {
 namespace di {
@@ -32,6 +34,23 @@ struct annotate<none_t>
     {
         typedef none_t derived;
         typedef TName name;
+    };
+
+    template<
+        typename TExpected
+      , typename TContext = mpl::vector0<>
+      , template<
+            typename = TExpected
+          , typename = TContext
+          , typename = void
+        > class TInstance = aux::instance
+    >
+    struct with_ : with<>
+    {
+        template<typename T>
+        static TInstance<> to(T value) {
+            return TInstance<>(value);
+        }
     };
 };
 

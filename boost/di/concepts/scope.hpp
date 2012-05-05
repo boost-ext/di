@@ -50,7 +50,10 @@ public:
                 , is_same<mpl::_1, TExpected>
                >
           >
-        , annotate<>::with<>
+        , annotate<>::with_<
+              TExpected
+            , TContext
+          >
     { };
 
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>

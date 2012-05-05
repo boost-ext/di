@@ -120,11 +120,6 @@
             scope_.call(action);
         }
 
-        template<typename T>
-        static TInstance<> to(T value) {
-            return TInstance<>(value);
-        }
-
         #include BOOST_PP_ITERATE()
 
     private:
@@ -176,11 +171,6 @@
               , TConverter
             > type;
         };
-
-        template<typename T>
-        static TInstance<TExpected, TContext, void> to(T value) {
-            return TInstance<TExpected, TContext, void>(value);
-        }
     };
 
     template<

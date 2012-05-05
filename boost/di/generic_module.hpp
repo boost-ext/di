@@ -176,7 +176,6 @@
             , typename detail::instances<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
           >
         (BOOST_DI_ARGS_FORWARD(args))
-
     { }
 
 #endif
