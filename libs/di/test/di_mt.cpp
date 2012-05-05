@@ -11,8 +11,9 @@
 #include "visitor.hpp"
 #include "data.hpp"
 
-#define BOOST_AUTO_TEST_CASE_VARIADIC(test, type, ...) \
-    typedef mpl::vector<__VA_ARGS__> test##types; BOOST_AUTO_TEST_CASE_TEMPLATE(test, type, test##types)
+#define BOOST_AUTO_TEST_CASE_VARIADIC(test, type, ...)      \
+    typedef mpl::vector<__VA_ARGS__> test##types;           \
+    BOOST_AUTO_TEST_CASE_TEMPLATE(test, type, test##types)
 
 namespace boost {
 namespace di {
