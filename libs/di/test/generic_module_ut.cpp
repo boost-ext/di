@@ -113,9 +113,9 @@ BOOST_AUTO_TEST_CASE(generic_module_one_scope)
 {
     struct module
         : generic_module<
-            scope<scopes::singleton>::bind<
-                c0if0
-            >
+              scope<scopes::singleton>::bind<
+                  c0if0
+              >
           >
     { };
 
@@ -135,9 +135,9 @@ BOOST_AUTO_TEST_CASE(generic_module_one_scope_alias)
 {
     struct module
         : generic_module<
-            singletons<
-                c0if0
-            >
+              singletons<
+                  c0if0
+              >
           >
     { };
 
@@ -157,7 +157,7 @@ BOOST_AUTO_TEST_CASE(generic_module_one_scope_direct)
 {
     struct module
         : generic_module<
-            singleton<c0if0>
+              singleton<c0if0>
           >
     { };
 

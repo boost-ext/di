@@ -96,7 +96,17 @@ BOOST_AUTO_TEST_CASE(fusion_module_one_scope)
         >::value
     ));
 
-    //BOOST_CHECK((mpl::equal<mpl::vector0<>, module_t::pool::sequence>::value));
+    BOOST_CHECK((
+        mpl::equal<
+            mpl::vector<
+                scope<scopes::singleton>::bind<
+                    c0if0
+                >
+            >
+          , module_t::pool::sequence
+        >::value
+    ));
+
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_one_scope_alias)
@@ -118,7 +128,16 @@ BOOST_AUTO_TEST_CASE(fusion_module_one_scope_alias)
         >::value
     ));
 
-    //BOOST_CHECK((mpl::equal<mpl::vector0<>, module_t::pool::sequence>::value));
+    BOOST_CHECK((
+        mpl::equal<
+            mpl::vector<
+                singletons<
+                    c0if0
+                >
+            >
+          , module_t::pool::sequence
+        >::value
+    ));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_one_scope_direct)
@@ -138,7 +157,14 @@ BOOST_AUTO_TEST_CASE(fusion_module_one_scope_direct)
         >::value
     ));
 
-    //BOOST_CHECK((mpl::equal<mpl::vector0<>, module_t::pool::sequence>::value));
+    BOOST_CHECK((
+        mpl::equal<
+            mpl::vector<
+                singleton<c0if0>
+            >
+          , module_t::pool::sequence
+        >::value
+    ));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_many_singletons)
@@ -162,7 +188,16 @@ BOOST_AUTO_TEST_CASE(fusion_module_many_singletons)
         >::value
     ));
 
-    //BOOST_CHECK((mpl::equal<mpl::vector0<>, module_t::pool::sequence>::value));
+    BOOST_CHECK((
+        mpl::equal<
+            mpl::vector<
+                singletons<
+                    c1, c2, c3
+                >
+            >
+          , module_t::pool::sequence
+        >::value
+    ));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_many_scopes)
@@ -190,7 +225,19 @@ BOOST_AUTO_TEST_CASE(fusion_module_many_scopes)
         >::value
     ));
 
-    //BOOST_CHECK((mpl::equal<mpl::vector0<>, module_t::pool::sequence>::value));
+    BOOST_CHECK((
+        mpl::equal<
+            mpl::vector<
+                singletons<
+                  c1, c2
+                >
+              , per_requests<
+                  c3, c4
+                >
+            >
+          , module_t::pool::sequence
+        >::value
+    ));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_in_call)
@@ -210,7 +257,14 @@ BOOST_AUTO_TEST_CASE(fusion_module_in_call)
         >::value
     ));
 
-    //BOOST_CHECK((mpl::equal<mpl::vector0<>, module_t::pool::sequence>::value));
+    BOOST_CHECK((
+        mpl::equal<
+            mpl::vector<
+                per_request<c1>::in_call<c2>
+            >
+          , module_t::pool::sequence
+        >::value
+    ));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_in_name)
@@ -230,7 +284,14 @@ BOOST_AUTO_TEST_CASE(fusion_module_in_name)
         >::value
     ));
 
-    //BOOST_CHECK((mpl::equal<mpl::vector0<>, module_t::pool::sequence>::value));
+    BOOST_CHECK((
+        mpl::equal<
+            mpl::vector<
+                singleton<c1>::in_name<int>
+            >
+          , module_t::pool::sequence
+        >::value
+    ));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_in_namein_call)
@@ -254,7 +315,17 @@ BOOST_AUTO_TEST_CASE(fusion_module_in_namein_call)
         >::value
     ));
 
-    //BOOST_CHECK((mpl::equal<mpl::vector0<>, module_t::pool::sequence>::value));
+    BOOST_CHECK((
+        mpl::equal<
+            mpl::vector<
+                singletons<
+                    bind<c1>::in_name<int>::in_call<double>
+                  , bind<c2>::in_name<double>::in_call<int>
+                >
+            >
+          , module_t::pool::sequence
+        >::value
+    ));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_in_call_in_name)
@@ -278,7 +349,17 @@ BOOST_AUTO_TEST_CASE(fusion_module_in_call_in_name)
         >::value
     ));
 
-    //BOOST_CHECK((mpl::equal<mpl::vector0<>, module_t::pool::sequence>::value));
+    BOOST_CHECK((
+        mpl::equal<
+            mpl::vector<
+                singletons<
+                    bind<c1>::in_call<double>::in_name<int>
+                  , bind<c2>::in_call<int>::in_name<double>
+                >
+            >
+          , module_t::pool::sequence
+        >::value
+    ));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_bind_if)
@@ -300,7 +381,16 @@ BOOST_AUTO_TEST_CASE(fusion_module_bind_if)
         >::value
     ));
 
-    //BOOST_CHECK((mpl::equal<mpl::vector0<>, module_t::pool::sequence>::value));
+    BOOST_CHECK((
+        mpl::equal<
+            mpl::vector<
+                singletons<
+                    bind<if0, c0if0>
+                >
+            >
+          , module_t::pool::sequence
+        >::value
+    ));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_mix)
@@ -333,6 +423,24 @@ BOOST_AUTO_TEST_CASE(fusion_module_mix)
           , module_t::deps
         >::value
     ));
+
+    BOOST_CHECK((
+        mpl::equal<
+            mpl::vector<
+                singletons<
+                    bind<if0, c0if0>
+                  , c1
+                  , bind<c2>::in_name<int>
+                  , bind<c3>::in_call<call_stack<c4, c5> >
+                >
+              , per_requests<
+                    c6
+                >
+              , singleton<c7>::in_name<double>::in_call<c1>
+            >
+          , module_t::pool::sequence
+        >::value
+    ));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_named_in_call)
@@ -358,7 +466,18 @@ BOOST_AUTO_TEST_CASE(fusion_module_named_in_call)
         >::value
     ));
 
-    //BOOST_CHECK((mpl::equal<mpl::vector0<>, module_t::pool::sequence>::value));
+    BOOST_CHECK((
+        mpl::equal<
+            mpl::vector<
+                per_requests<
+                    bind<int, mpl::int_<1> >
+                  , bind<int, mpl::int_<4> >::in_name< mpl::string<'2'> >::in_call<call_stack<c7, c6, c4> >
+                  , bind<int, mpl::int_<5> >::in_call<c2>
+                >
+            >
+          , module_t::pool::sequence
+        >::value
+    ));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_multiple_calls)
@@ -382,7 +501,17 @@ BOOST_AUTO_TEST_CASE(fusion_multiple_calls)
         >::value
     ));
 
-    //BOOST_CHECK((mpl::equal<mpl::vector0<>, module_t::pool::sequence>::value));
+    BOOST_CHECK((
+        mpl::equal<
+            mpl::vector<
+                singletons<
+                    bind<c0>::in_call<c1, call_stack<c2, c3>, c4 >
+                >
+              , bind<c5>::in_call<int, double>
+            >
+          , module_t::pool::sequence
+        >::value
+    ));
 }
 
 } // namespace di
