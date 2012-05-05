@@ -60,11 +60,11 @@
     {
         BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
-        //BOOST_MPL_ASSERT_MSG(
-            //!has_element_type<TGiven>::value
-          //, GIVEN_TYPE_WITH_ELEMENT_TYPE
-          //, (TGiven)
-        //);
+        BOOST_MPL_ASSERT_MSG(
+            !has_element_type<TGiven>::value
+          , GIVEN_TYPE_WITH_ELEMENT_TYPE
+          , (TGiven)
+        );
 
         template<typename TPool>
         struct is_value_type
