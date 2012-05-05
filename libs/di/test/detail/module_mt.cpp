@@ -472,30 +472,30 @@ BOOST_AUTO_TEST_CASE(module_externals_create_with_non_trivial_ctor)
 
 BOOST_AUTO_TEST_CASE(module_externals_create_with_attributes)
 {
-    //const int i1 = 42;
-    //const int i2 = 87;
+    const int i1 = 42;
+    const int i2 = 87;
 
-    //typedef named<int, mpl::string<'1'> > named1;
-    //typedef named<int, mpl::string<'2'> > named2;
-//make_shared<named1>(i1);
-    //aux::instance<named1> i1_(make_shared<named1>(i1));
-    //aux::instance<named2> i2_(make_shared<named2>(i2));
+    typedef named<int, mpl::string<'1'> > named1;
+    typedef named<int, mpl::string<'2'> > named2;
 
-    //module<
-        //mpl::vector<
-            //dependency<scopes::per_request, named1, int>::type
-          //, dependency<scopes::per_request, named2, int>::type
-        //>
-      //, mpl::vector<
-            //aux::instance<named1>
-          //, aux::instance<named2>
-        //>
-    //> module_(i1_, i2_);
+    aux::instance<named1> i1_(i1);
+    aux::instance<named2> i2_(i2);
 
-    //c4 obj = module_.create<c4>();
+    module<
+        mpl::vector<
+            dependency<scopes::per_request, named1, int>::type
+          , dependency<scopes::per_request, named2, int>::type
+        >
+      , mpl::vector<
+            aux::instance<named1>
+          , aux::instance<named2>
+        >
+    > module_(i1_, i2_);
 
-    //BOOST_CHECK_EQUAL(i1, obj.i1);
-    //BOOST_CHECK_EQUAL(i2, obj.i2);
+    c4 obj = module_.create<c4>();
+
+    BOOST_CHECK_EQUAL(i1, obj.i1);
+    BOOST_CHECK_EQUAL(i2, obj.i2);
 }
 
 } // namespace detail

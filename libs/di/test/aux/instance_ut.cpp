@@ -70,7 +70,7 @@ BOOST_AUTO_TEST_CASE(instance_variant_shared_ptr)
     BOOST_CHECK_EQUAL(c_, get<shared_ptr<c> >(instance<c>(c_).get()));
 }
 
-BOOST_AUTO_TEST_CASE(instance_named)
+BOOST_AUTO_TEST_CASE(instance_named_shared_ptr)
 {
     typedef named<shared_ptr<int>, a> c1_t;
     typedef named<shared_ptr<int>, b> c2_t;
