@@ -29,8 +29,8 @@
 #include <boost/mpl/greater.hpp>
 #include <boost/mpl/less.hpp>
 #include <boost/mpl/min_max.hpp>
-#include <boost/mpl/has_xxx.hpp>
 #include "boost/di/aux/make_plain.hpp"
+#include "boost/di/aux/value_type.hpp"
 
 namespace boost {
 namespace di {
@@ -139,28 +139,12 @@ template<
     typename TGiven
   , typename TDefault
 >
-class make_default_dependency
-{
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
-
-    template<typename T, typename = void>
-    struct get_value_type
-    {
-        typedef T type;
-    };
-
-    template<typename T>
-    struct get_value_type<T, typename enable_if<has_value_type<T> >::type>
-    {
-        typedef typename T::value_type type;
-    };
-
-public:
-    typedef typename TDefault::template rebind<
-        TGiven
-      , typename get_value_type<TGiven>::type
-    >::type type;
-};
+struct make_default_dependency
+    : TDefault::template rebind<
+          TGiven
+        , typename aux::value_type<TGiven>::type
+      >
+{ };
 
 } // namespace detail
 

@@ -44,8 +44,8 @@ test-suite di-test
       [ run injector_ut.cpp ]
       [ run named_ut.cpp ]
 
-      #[ compile-fail policies/check_for_circular_dependencies_mt.cpp ]
-      #[ compile-fail policies/check_for_creation_ownership_mt.cpp ]
+      [ compile-fail policies/check_for_circular_dependencies_mt.cpp ]
+      [ compile-fail policies/check_for_creation_ownership_mt.cpp ]
 
       [ run detail/module_mt.cpp ]
       [ run di_mt.cpp ]

@@ -244,7 +244,6 @@ BOOST_AUTO_TEST_CASE_VARIADIC(basic_externals, TInjector,
     BOOST_CHECK_EQUAL(87.0, c9_->d);
 }
 
-#if 0
 BOOST_AUTO_TEST_CASE_VARIADIC(basic_externals_ctor, TInjector,
     injector<externals_module_ctor>)
 {
@@ -257,7 +256,6 @@ BOOST_AUTO_TEST_CASE_VARIADIC(basic_externals_ctor, TInjector,
     BOOST_CHECK_EQUAL(42, c9_->i);
     BOOST_CHECK_EQUAL(87.0, c9_->d);
 }
-#endif
 
 BOOST_AUTO_TEST_CASE(install)
 {
