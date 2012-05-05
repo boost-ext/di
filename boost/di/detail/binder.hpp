@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_DETAIL_BINDER_HPP
 #define BOOST_DI_DETAIL_BINDER_HPP
 
-#include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/iterator_range.hpp>

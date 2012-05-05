@@ -29,6 +29,7 @@ test-suite di-test
       [ run aux/instance_ut.cpp ]
       [ run aux/make_plain_ut.cpp ]
       [ run aux/pool_ut.cpp ]
+      [ run aux/value_type_ut.cpp ]
       [ run detail/module_ut.cpp ]
       [ run detail/creator_ut.cpp ]
       [ run detail/visitor_ut.cpp ]

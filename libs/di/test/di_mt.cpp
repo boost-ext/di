@@ -32,7 +32,7 @@ typedef generic_module<
       , bind<int, mpl::int_<4> >::in_name<mpl::string<'2'> >::in_call<call_stack<c7, c6, c4> >
       , bind<int, mpl::int_<5> >::in_call<c2>
     >
-> base_module_1;
+> generic_module_1;
 
 typedef generic_module<
     singletons<
@@ -42,7 +42,7 @@ typedef generic_module<
         bind<int, mpl::int_<0> >::in_name<mpl::string<'1'> >
       , bind<int, mpl::int_<1> >
     >
-> base_module_2;
+> generic_module_2;
 
 typedef generic_module<
     singletons<
@@ -52,7 +52,7 @@ typedef generic_module<
         bind<int, mpl::int_<2> >::in_call<c8>
       , bind<int, mpl::int_<3> >::in_name<mpl::string<'2'> >
     >
-> base_module_3;
+> generic_module_3;
 
 typedef generic_module<
     per_requests<
@@ -129,7 +129,7 @@ BOOST_AUTO(fusion_provider_module, fusion_module<>()(
 ));
 
 BOOST_AUTO_TEST_CASE_VARIADIC(one_module, TInjector,
-    injector<base_module_1>,
+    injector<generic_module_1>,
     injector<BOOST_TYPEOF(fusion_module_1)>)
 {
     TInjector injector;
@@ -153,8 +153,8 @@ BOOST_AUTO_TEST_CASE_VARIADIC(one_module, TInjector,
 }
 
 BOOST_AUTO_TEST_CASE_VARIADIC(many_modules, TInjector,
-    injector<base_module_2, base_module_3>,
-    injector<base_module_3, base_module_2>,
+    injector<generic_module_2, generic_module_3>,
+    injector<generic_module_3, generic_module_2>,
     injector<BOOST_TYPEOF(fusion_module_2), BOOST_TYPEOF(fusion_module_3)>,
     injector<BOOST_TYPEOF(fusion_module_3), BOOST_TYPEOF(fusion_module_2)>)
 {
@@ -179,8 +179,8 @@ BOOST_AUTO_TEST_CASE_VARIADIC(many_modules, TInjector,
 }
 
 BOOST_AUTO_TEST_CASE_VARIADIC(mix_modules, TInjector,
-    injector<base_module_2, BOOST_TYPEOF(fusion_module_2)>,
-    injector<BOOST_TYPEOF(fusion_module_2), base_module_2>)
+    injector<generic_module_2, BOOST_TYPEOF(fusion_module_2)>,
+    injector<BOOST_TYPEOF(fusion_module_2), generic_module_2>)
 {
     TInjector injector;
 
@@ -258,10 +258,24 @@ BOOST_AUTO_TEST_CASE_VARIADIC(basic_externals_ctor, TInjector,
     BOOST_CHECK_EQUAL(87.0, c9_->d);
 }
 
-BOOST_AUTO_TEST_CASE(install)
+BOOST_AUTO_TEST_CASE(have_to_compile)
 {
-    injector<> injector;
-    injector.install(base_module_2());
+    {
+        injector<BOOST_TYPEOF(fusion_module_1)> injector(fusion_module_1);
+        (void)injector;
+    }
+
+    {
+        //injector<generic_module_1, BOOST_TYPEOF(fusion_module_1)> injector(fusion_module_1);
+        //(void)injector;
+    }
+
+    {
+        injector<>().install(generic_module_2());
+        //injector<>().install(generic_module_1(), generic_module_2());
+        //injector<>().install(generic_module_1(), fusion_module_1);
+        //injector<>().install(fusion_module_1, fusion_module_2);
+    }
 }
 
 } // namespace di
