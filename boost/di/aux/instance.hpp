@@ -20,15 +20,12 @@ namespace boost {
 namespace di {
 namespace aux {
 
-namespace detail { class instance { }; } // namespace detail
-
 template<
     typename T
   , typename TContext = mpl::vector0<>
   , typename = void
 >
 class instance
-    : public detail::instance
 {
 public:
     typedef instance type;
@@ -68,7 +65,6 @@ class instance<
             >
         >::type
     >
-    : public detail::instance
 {
     typedef typename aux::value_type<T>::type value_type;
 
