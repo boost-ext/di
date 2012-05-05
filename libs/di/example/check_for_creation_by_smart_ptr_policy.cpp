@@ -37,7 +37,7 @@ namespace {
 
 struct c
 {
-    BOOST_DI_CTOR(c, int i, double d, char c) { }
+    BOOST_DI_CTOR(c, int, double, char) { }
 };
 
 } // namespace
