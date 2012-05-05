@@ -86,15 +86,21 @@ int main()
                   di::singletons<
                       c1
                   >
-                , di::per_requests<
+                , di::per_request<
                       c0
-                    , mpl::int_<42>
-                    , di::bind<int, mpl::int_<87> >::in_name<name>
+                  >
+                , di::scope<di::scopes::per_request>::bind<
+                      mpl::int_<42>
+                  >
+                , di::per_requests<
+                      di::bind<int, mpl::int_<87> >::in_name<name>
                     , di::bind<c01>::in_call<di::call_stack<c2, c1> >
                   >
-                , di::externals<
+                , di::external<
                       double
-                    , di::annotate<di::bind<double>::in_call<c0> >::with<double_name>
+                  >
+                , di::externals<
+                      di::annotate<di::bind<double>::in_call<c0> >::with<double_name>
                   >
               >
         {

@@ -76,9 +76,56 @@ int main()
     }
 
     {
-        //install
+        typedef di::generic_module<
+            di::singletons<
+                c2, c3, c4
+            >,
+            di::per_requests<
+                c0if0
+              , di::bind<c0if0>::in_call<c3>
+            >
+        > generic_module;
+
+        auto fusion_module = di::fusion_module<>()(
+            di::singletons<
+                c1
+            >()
+          , di::per_requests<
+                di::bind<int, mpl::int_<1> >
+            >()
+        );
+
+        di::injector<generic_module, decltype(fusion_module)> injector;
+
+        boost::shared_ptr<c4> c4_ = injector.create< boost::shared_ptr<c4> >();
+        (void)c4_;
     }
 
+    {
+        typedef di::generic_module<
+            di::singletons<
+                c2, c3, c4
+            >,
+            di::per_requests<
+                c0if0
+              , di::bind<c0if0>::in_call<c3>
+            >
+        > generic_module;
+
+        auto fusion_module = di::fusion_module<>()(
+            di::singletons<
+                c1
+            >()
+          , di::per_requests<
+                di::bind<int, mpl::int_<1> >
+            >()
+        );
+
+        auto injector = di::injector<>().install(generic_module(), fusion_module);
+
+        boost::shared_ptr<c4> c4_ = injector.create< boost::shared_ptr<c4> >();
+        (void)c4_;
+    }
 
     return 0;
 }

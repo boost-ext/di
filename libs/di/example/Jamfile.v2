@@ -22,7 +22,7 @@ test-suite di_test
       [ run fusion_module.cpp : : : <cxxflags>-std=c++0x ]
       [ run generic_module.cpp ]
       [ run hello_world.cpp ]
-      [ run injector.cpp ]
+      [ run injector.cpp  : : : <cxxflags>-std=c++0x ]
       [ run named.cpp ]
       [ run provider.cpp ]
       #[ run session_scope.cpp : : : <cxxflags>-std=c++0x ]
