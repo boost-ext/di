@@ -121,7 +121,7 @@
         }
 
         template<typename T>
-        inline static TInstance<> to(T value) {
+        static TInstance<> to(T value) {
             return TInstance<>(value);
         }
 
@@ -138,12 +138,12 @@
       , typename TBind
       , template<
             typename
-          , typename = void
+          , typename
         > class TExplicitValue
       , template<
-            typename = TExpected
-          , typename = TContext
-          , typename = void
+            typename
+          , typename
+          , typename
         > class TInstance
       , template<
             typename
@@ -178,8 +178,8 @@
         };
 
         template<typename T>
-        inline static TInstance<> to(T value) {
-            return TInstance<>(value);
+        static TInstance<TExpected, TContext, void> to(T value) {
+            return TInstance<TExpected, TContext, void>(value);
         }
     };
 

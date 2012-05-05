@@ -65,6 +65,7 @@ int main()
               , di::bind<c01>::in_call<di::call_stack<c2, c1> >
             >()
           , di::bind<double>::to(42.0)
+          , di::bind<double>::in_call<c0>::to(87.0)
         ));
 
         fusion_module.create<c3>();
@@ -83,6 +84,7 @@ int main()
               , di::bind<c01>::in_call<di::call_stack<c2, c1> >
             >()
           , di::bind<double>::to(42.0)
+          , di::bind<double>::in_call<c0>::to(87.0)
         );
 
         fusion_module.create<c3>();
