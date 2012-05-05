@@ -22,11 +22,11 @@ struct c
 
 BOOST_AUTO_TEST_CASE(value_type_basic)
 {
-    BOOST_CHECK((is_same<int, typename value_type<int>::type>::value));
-    BOOST_CHECK((is_same<int, typename value_type<shared_ptr<int> >::type>::value));
-    BOOST_CHECK((is_same<int, typename value_type<named<int> >::type>::value));
-    BOOST_CHECK((is_same<int, typename value_type<c>::type>::value));
-    BOOST_CHECK((is_same<std::string, typename value_type<std::string>::type>::value));
+    BOOST_CHECK((is_same<int, value_type<int>::type>::value));
+    BOOST_CHECK((is_same<int, value_type<shared_ptr<int> >::type>::value));
+    BOOST_CHECK((is_same<int, value_type<named<int> >::type>::value));
+    BOOST_CHECK((is_same<int, value_type<c>::type>::value));
+    BOOST_CHECK((is_same<std::string, value_type<std::string>::type>::value));
 }
 
 } // namespace aux

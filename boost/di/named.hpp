@@ -9,13 +9,20 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
+#include <boost/type_traits/is_polymorphic.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/mpl/has_xxx.hpp>
 #include "boost/di/aux/make_plain.hpp"
 #include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {
 
-template<typename T, typename TName = void>
+template<
+    typename T
+  , typename TName = void
+  , typename = void
+>
 class named
 {
 public:
@@ -23,55 +30,58 @@ public:
     typedef named<value_type, TName> element_type;
 
     named(T value = T()) // non explicit
-        : value_(new T(value))
-    { }
-
-    named(const shared_ptr<T>& value) // non explicit
         : value_(value)
     { }
 
-    operator T() const { return *value_; }
+    //TODO
+    named(const shared_ptr<T>& value) // non explicit
+        : value_(*value)
+    { }
+
+    operator T() const { return value_; }
 
 private:
-    shared_ptr<T> value_;
+    T value_;
 };
 
-template<typename T, typename TName>
-class named<shared_ptr<T>, TName>
+template<
+    typename T
+  , typename TName
+>
+class named<T, TName, typename enable_if<is_polymorphic<T> >::type>
+{
+public:
+    typedef typename aux::make_plain<T>::type value_type;
+    typedef named<value_type, TName> element_type;
+};
+
+template<
+    typename T
+  , typename TName
+>
+class named<T, TName, typename enable_if<aux::detail::has_element_type<T> >::type>
 {
 public:
     typedef named<typename aux::make_plain<T>::type, TName> element_type;
     typedef typename aux::make_plain<T>::type value_type;
 
-    named(shared_ptr<T> value = make_shared<T>()) // non explicit
+    named(T value = T(new typename T::element_type)) // non explicit
         : value_(value)
     { }
 
+    //TODO
     named(value_type value) // non explicit
        : value_(make_shared<value_type>(value))
     { }
 
-    operator shared_ptr<T>() const { return value_; }
+    operator T() const { return value_; }
     operator value_type() const { return *value_; }
     T* operator->() const { return value_.get(); }
     T& operator*() const { return *value_; }
     T* get() const { return value_.get(); }
 
 private:
-    shared_ptr<T> value_;
-};
-
-template<typename T, typename TName>
-class named<const shared_ptr<T>&, TName>
-    : named<shared_ptr<T>, TName>
-{
-public:
-    typedef named<typename aux::make_plain<T>::type, TName> element_type;
-    typedef typename aux::make_plain<T>::type value_type;
-
-    named(const shared_ptr<T>& value) // non explicit
-        : named<shared_ptr<T>, TName>(value)
-    { }
+    T value_;
 };
 
 } // namespace boost

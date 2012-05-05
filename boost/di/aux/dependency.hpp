@@ -234,7 +234,7 @@
     }
 
     template<typename T, typename TPool, BOOST_DI_TYPES(Args)>
-    typename enable_if<is_pool_type<TPool> >::type
+    typename enable_if<is_pool_type<TPool>, T>::type
     create(const TPool& pool, BOOST_DI_ARGS_NOT_USED(Args)) {
         return TConverter<scope, T>::execute(pool.template get<TInstance<> >());
     }

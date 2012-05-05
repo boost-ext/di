@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <boost/test/unit_test.hpp>
-#include <boost/scoped_ptr.hpp>
+#include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -27,35 +27,35 @@ namespace detail {
 
 BOOST_AUTO_TEST_CASE(module_create_using_copy)
 {
-    module< mpl::vector0<> > module_;
+    module<mpl::vector0<> > module_;
     c0 obj = module_.create<c0>();
     (void)(obj);
 }
 
 BOOST_AUTO_TEST_CASE(module_create_using_ptr)
 {
-    module< mpl::vector0<> > module_;
+    module<mpl::vector0<> > module_;
     c0* obj = module_.create<c0*>();
     BOOST_CHECK(obj);
 }
 
 BOOST_AUTO_TEST_CASE(module_create_using_const_ptr)
 {
-    module< mpl::vector0<> > module_;
+    module<mpl::vector0<> > module_;
     const c0* obj = module_.create<const c0*>();
     BOOST_CHECK(obj);
 }
 
 BOOST_AUTO_TEST_CASE(module_create_using_shared_ptr)
 {
-    module< mpl::vector0<> > module_;
-    shared_ptr<c0> obj = module_.create< shared_ptr<c0> >();
+    module<mpl::vector0<> > module_;
+    shared_ptr<c0> obj = module_.create<shared_ptr<c0> >();
     BOOST_CHECK(obj);
 }
 
 BOOST_AUTO_TEST_CASE(module_create_default_ctor)
 {
-    module< mpl::vector0<> > module_;
+    module<mpl::vector0<> > module_;
     c0 obj = module_.create<c0>();
     (void)(obj);
 }
@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_CASE(module_create_per_request)
         >
     > module_;
 
-    shared_ptr<c8> c8_ = module_.create< shared_ptr<c8> >();
+    shared_ptr<c8> c8_ = module_.create<shared_ptr<c8> >();
 
     BOOST_CHECK(c8_->c1_ != c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ != c8_->c7_->c6_->c3_);
@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE(module_create_per_request_singleton)
         >
     > module_;
 
-    shared_ptr<c8> c8_ = module_.create< shared_ptr<c8> >();
+    shared_ptr<c8> c8_ = module_.create<shared_ptr<c8> >();
 
     BOOST_CHECK(c8_->c1_ != c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE(module_create_singleton_context)
     >
     module_;
 
-    shared_ptr<c8> c8_ = module_.create< shared_ptr<c8> >();
+    shared_ptr<c8> c8_ = module_.create<shared_ptr<c8> >();
 
     BOOST_CHECK(c8_->c1_ != c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -153,7 +153,7 @@ BOOST_AUTO_TEST_CASE(module_create_per_request_singleton_context_order)
         >
     > module_;
 
-    shared_ptr<c8> c8_ = module_.create< shared_ptr<c8> >();
+    shared_ptr<c8> c8_ = module_.create<shared_ptr<c8> >();
 
     BOOST_CHECK(c8_->c1_ != c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -187,7 +187,7 @@ BOOST_AUTO_TEST_CASE(module_create_per_request_singleton_context_mix)
         >
     > module_;
 
-    shared_ptr<c8> c8_ = module_.create< shared_ptr<c8> >();
+    shared_ptr<c8> c8_ = module_.create<shared_ptr<c8> >();
 
     BOOST_CHECK(c8_->c1_ != c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -213,7 +213,7 @@ BOOST_AUTO_TEST_CASE(module_create_singleton_impl)
         >
     > module_;
 
-    shared_ptr<c8> c8_ = module_.create< shared_ptr<c8> >();
+    shared_ptr<c8> c8_ = module_.create<shared_ptr<c8> >();
 
     BOOST_CHECK(c8_->c1_ != c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ != c8_->c7_->c6_->c3_);
@@ -241,7 +241,7 @@ BOOST_AUTO_TEST_CASE(module_create_singleton_many)
         >
     > module_;
 
-    shared_ptr<c8> c8_ = module_.create< shared_ptr<c8> >();
+    shared_ptr<c8> c8_ = module_.create<shared_ptr<c8> >();
 
     BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -305,7 +305,7 @@ BOOST_AUTO_TEST_CASE(module_base_of)
         >
     > module_;
 
-    shared_ptr<c8> c8_ = module_.create< shared_ptr<c8> >();
+    shared_ptr<c8> c8_ = module_.create<shared_ptr<c8> >();
 
     BOOST_CHECK(c8_->c1_ != c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ != c8_->c7_->c6_->c3_);
@@ -333,10 +333,9 @@ BOOST_AUTO_TEST_CASE(module_multiple_calls)
         >
     > module_;
 
-    shared_ptr<c15> c15_ = module_.create< shared_ptr<c15> >();
+    shared_ptr<c15> c15_ = module_.create<shared_ptr<c15> >();
 
-    BOOST_CHECK(c15_->c3_ == c15_->c6_.c4_->c3_);
-    BOOST_CHECK(c15_->c3_ != c15_->c6_.c3_);
+    BOOST_CHECK(c15_->c3_ == c15_->c6_.c4_->c3_); BOOST_CHECK(c15_->c3_ != c15_->c6_.c3_);
 }
 
 BOOST_AUTO_TEST_CASE(module_base_of_interface_not_trivial_ctor)
@@ -418,36 +417,33 @@ BOOST_AUTO_TEST_CASE(module_named_shared_ptr_if_with_not_trivial_ctor)
     BOOST_CHECK_EQUAL(0.0, if0_->d);
 }
 
-#if 0
 BOOST_AUTO_TEST_CASE(module_externals_create_by_explicit_value)
 {
     const int i = 42;
     const double d = 21.0;
     const char c = 'x';
 
-    typedef module<
+    aux::instance<int> i_(i);
+    aux::instance<double> d_(d);
+    aux::instance<char> c_(c);
+
+    module<
         mpl::vector<
-            dependency<scopes::per_request, std::string, mpl::string<'test'> >::type
+            dependency<scopes::per_request, std::string, mpl::string<'di'> >::type
         >
       , mpl::vector<
             aux::instance<int>
           , aux::instance<double>
           , aux::instance<char>
         >
-    > module_t;
-
-    module_t module_((
-        aux::instance<int>(i)
-      , aux::instance<double>(d)
-      , aux::instance<char>(c)
-    ));
+    > module_(i_, d_, c_);
 
     c9 obj = module_.create<c9>();
 
     BOOST_CHECK_EQUAL(i, obj.i);
     BOOST_CHECK_EQUAL(d, obj.d);
     BOOST_CHECK_EQUAL(c, obj.c);
-    BOOST_CHECK_EQUAL("test", obj.s);
+    BOOST_CHECK_EQUAL("di", obj.s);
 }
 
 BOOST_AUTO_TEST_CASE(module_externals_create_with_non_trivial_ctor)
@@ -456,20 +452,16 @@ BOOST_AUTO_TEST_CASE(module_externals_create_with_non_trivial_ctor)
     const double d = 21.0;
     const char c = 'x';
 
-    typedef aux::pool< mpl::vector<aux::instance<c2> > > pool;
-
-    scoped_ptr<pool> pool_(
-        new pool(
-            aux::instance<c2>(make_shared<c2>(i, d, c))
-        )
-    );
+    aux::instance<c2> c2_(make_shared<c2>(i, d, c));
 
     module<
         mpl::vector<
             dependency<scopes::per_request, c2>::type
         >
-      , pool
-    > module_(*pool_);
+      , mpl::vector<
+            aux::instance<c2>
+        >
+    > module_(c2_);
 
     c2 obj = module_.create<c2>();
 
@@ -478,6 +470,7 @@ BOOST_AUTO_TEST_CASE(module_externals_create_with_non_trivial_ctor)
     BOOST_CHECK_EQUAL(c, obj.c);
 }
 
+#if 0
 BOOST_AUTO_TEST_CASE(module_externals_create_with_attributes)
 {
     const int i1 = 42;
@@ -485,7 +478,7 @@ BOOST_AUTO_TEST_CASE(module_externals_create_with_attributes)
 
     typedef named<int, mpl::string<'1'> > named1;
     typedef named<int, mpl::string<'2'> > named2;
-    typedef aux::pool< mpl::vector<aux::instance<named1>, aux::instance<named2> > > pool;
+    typedef aux::pool<mpl::vector<aux::instance<named1>, aux::instance<named2> > > pool;
 
     scoped_ptr<pool> pool_(
         new pool(

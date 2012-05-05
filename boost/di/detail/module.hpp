@@ -59,12 +59,13 @@
     >
     class module
     {
+    //TODO protected:
     public:
-    //protected:
         struct deps
             : mpl::remove_if<TDeps, is_base_of<policy, mpl::_1> >::type
         { };
 
+        //TODO join all
         struct policies
             : mpl::deref<
                   typename mpl::begin<
@@ -148,7 +149,7 @@
 #else
 
     template<BOOST_DI_TYPES(Args)>
-    module(BOOST_DI_ARGS(Args, args))
+    explicit module(BOOST_DI_ARGS(Args, args))
         : pool_(BOOST_DI_ARGS_FORWARD(args))
     { }
 
