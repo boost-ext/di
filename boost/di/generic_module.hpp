@@ -16,13 +16,15 @@
     #include <boost/mpl/if.hpp>
     #include <boost/mpl/not.hpp>
     #include <boost/mpl/or.hpp>
+    #include <boost/mpl/copy.hpp>
     #include <boost/mpl/find_if.hpp>
     #include <boost/mpl/begin_end.hpp>
+    #include <boost/mpl/is_sequence.hpp>
+    #include <boost/mpl/back_inserter.hpp>
     #include "boost/di/aux/instance.hpp"
     #include "boost/di/detail/module.hpp"
-    #include "boost/di/config.hpp"
-
     #include "boost/di/concepts.hpp"
+    #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
         BOOST_DI_ITERATION_PARAMS(          \
@@ -168,7 +170,7 @@
 #else
 
     template<BOOST_DI_TYPES(Args)>
-    generic_module(BOOST_DI_ARGS(Args, args))
+    explicit generic_module(BOOST_DI_ARGS(Args, args))
         : detail::module<
               typename detail::generic_deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
             , typename detail::instances<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type

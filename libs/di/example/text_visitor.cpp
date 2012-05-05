@@ -27,7 +27,7 @@ struct c1
 
 struct c2
 {
-    BOOST_DI_CTOR(c2, int i, double d, char c) { }
+    BOOST_DI_CTOR(c2, int, double, char) { }
 };
 
 struct c3
@@ -37,7 +37,7 @@ struct c3
 
 } // namespace
 
-class print_visitor
+class text_visitor
 {
 public:
     template<typename T>
@@ -62,7 +62,7 @@ int main()
     > visitor_module;
 
     di::injector<visitor_module> injector;
-    injector.visit<c3>(print_visitor());
+    injector.visit<c3>(text_visitor());
 
     // (anonymous namespace)::c3
     // 	boost::shared_ptr<(anonymous namespace)::c1>

@@ -10,6 +10,11 @@
     #define BOOST_DI_FUSION_MODULE_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
+    #include <boost/mpl/vector.hpp>
+    #include <boost/mpl/fold.hpp>
+    #include <boost/mpl/copy.hpp>
+    #include <boost/mpl/back_inserter.hpp>
+    #include <boost/mpl/placeholders.hpp>
     #include "boost/di/detail/module.hpp"
     #include "boost/di/concepts.hpp"
     #include "boost/di/config.hpp"
@@ -33,11 +38,7 @@
               TDeps
             , mpl::vector0<>
             , mpl::copy<
-                  mpl::if_<
-                      mpl::is_sequence<mpl::_2>
-                    , mpl::_2
-                    , per_request<mpl::_2>
-                  >
+                  mpl::_2
                 , mpl::back_inserter<mpl::_1>
               >
           >::type
@@ -70,7 +71,7 @@
 #else
 
     template<BOOST_DI_TYPES(Args)>
-    fusion_module(BOOST_DI_ARGS(Args, args))
+    explicit fusion_module(BOOST_DI_ARGS(Args, args))
         : detail::module<
               typename detail::fusion_deps<TDeps>::type
             , TDeps

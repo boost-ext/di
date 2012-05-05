@@ -21,7 +21,7 @@
 #endif
 
 #if !defined(BOOST_DI_CTOR_UNIQUE_NAME)
-#   define BOOST_DI_CTOR_UNIQUE_NAME ctor__
+#   define BOOST_DI_CTOR_UNIQUE_NAME boost_di_ctor
 #endif
 
 #if defined(BOOST_HAS_VARIADIC_TMPL) && defined(BOOST_HAS_RVALUE_REFERENCES)
@@ -37,10 +37,10 @@
         typename... TArgs
 
 #   define BOOST_DI_TYPES_IMPL(limit, TArgs)                \
-        typename... Args
+        typename... TArgs
 
 #   define BOOST_DI_TYPES_PASS_IMPL(limit, args)            \
-        Args...
+        args...
 
 #   define BOOST_DI_ARGS_IMPL(limit, TArgs, args)           \
         TArgs&&... args

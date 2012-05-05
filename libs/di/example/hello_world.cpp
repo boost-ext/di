@@ -11,25 +11,24 @@ namespace di = boost::di;
 
 namespace {
 
-struct i { virtual ~i() { }; };
-struct c : i { };
+struct c0
+{ };
 
-class hello_world
+struct c1
 {
-public:
-    BOOST_DI_CTOR(hello_world, boost::shared_ptr<i>)
-    { }
+    BOOST_DI_CTOR(c1, boost::shared_ptr<c0>, int, double) { }
+};
+
+struct hello_world
+{
+    BOOST_DI_CTOR(hello_world, boost::shared_ptr<c1>) { }
 };
 
 } // namespace
 
 int main()
 {
-    typedef di::generic_module<
-        di::per_request<c>
-    > module;
-
-    di::injector<module> injector;
+    di::injector<> injector;
     injector.create<hello_world>();
 
     return 0;

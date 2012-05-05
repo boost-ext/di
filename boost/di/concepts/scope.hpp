@@ -41,13 +41,13 @@ public:
     >
     struct dependency
         : aux::dependency<
-              mpl::_1
+               mpl::_1
              , TExpected
              , TGiven
              , TContext
              , mpl::or_<
-                  is_base_of<mpl::_1, TExpected>,
-                  is_same<mpl::_1, TExpected>
+                  is_base_of<mpl::_1, TExpected>
+                , is_same<mpl::_1, TExpected>
                >
           >
         , annotate<>::with<>
@@ -109,7 +109,7 @@ public:
                               dependency<
                                   mpl::_2
                                 , mpl::_2
-                               , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+                                , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
                               >
                             , TScope
                           >

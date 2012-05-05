@@ -27,7 +27,7 @@ struct c1
 
 struct c2
 {
-    BOOST_DI_CTOR(c2, int i, double d, char c) { }
+    BOOST_DI_CTOR(c2, int, double, char) { }
 };
 
 struct c3

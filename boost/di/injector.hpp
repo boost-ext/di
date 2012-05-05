@@ -25,7 +25,6 @@
     #include "boost/di/detail/module.hpp"
     #include "boost/di/config.hpp"
 
-
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
         BOOST_DI_ITERATION_PARAMS(          \
             1                               \
@@ -132,7 +131,7 @@
 #else
 
     template<BOOST_DI_TYPES(M)>
-    injector(BOOST_DI_ARGS(M, module))
+    explicit injector(BOOST_DI_ARGS(M, module))
         : detail::module<
               typename detail::deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
             , typename detail::pools<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type

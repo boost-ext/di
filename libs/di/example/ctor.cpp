@@ -10,8 +10,9 @@ namespace di = boost::di;
 
 namespace {
 
-struct c0
-{ };
+struct name { };
+
+struct c0 { };
 
 struct c1
 {
@@ -20,8 +21,8 @@ struct c1
 
 struct c2
 {
-    BOOST_DI_CTOR_TRAITS(char, double);
-    c2(char, double) { }
+    BOOST_DI_CTOR_TRAITS(char, double, int);
+    c2(char, double, di::named<int, name>) { }
 };
 
 struct c3

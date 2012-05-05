@@ -55,8 +55,7 @@ struct bind
                 , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
               >
             , annotate<>::with<>
-        {
-        };
+        { };
     };
 
     template<typename TName>
@@ -142,8 +141,8 @@ struct bind<
             , TGiven
             , mpl::vector0<>
             , mpl::or_<
-                  is_base_of<mpl::_1, named<TExpected, TName> >,
-                  is_same<mpl::_1, named<TExpected, TName> >
+                  is_base_of<mpl::_1, named<TExpected, TName> >
+                , is_same<mpl::_1, named<TExpected, TName> >
               >
           >
         , annotate<>::with<>
@@ -156,8 +155,8 @@ struct bind<
                 , TGiven
                 , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
                 , mpl::or_<
-                      is_base_of<mpl::_1, named<TExpected, TName> >,
-                      is_same<mpl::_1, named<TExpected, TName> >
+                      is_base_of<mpl::_1, named<TExpected, TName> >
+                    , is_same<mpl::_1, named<TExpected, TName> >
                   >
               >
             , annotate<>::with<>

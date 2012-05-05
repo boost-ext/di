@@ -49,28 +49,36 @@ struct c4
 
 int main()
 {
-    typedef di::generic_module<
-        di::singletons<
-            c2, c3, c4
-        >,
-        di::per_requests<
-            c0if0
-          , di::bind<c0if0>::in_call<c3>
-        >
-    > generic_module;
+    {
+        typedef di::generic_module<
+            di::singletons<
+                c2, c3, c4
+            >,
+            di::per_requests<
+                c0if0
+              , di::bind<c0if0>::in_call<c3>
+            >
+        > generic_module;
 
-    BOOST_AUTO(fusion_module, di::fusion_module<>()(
-        di::singletons<
-            c1
-        >()
-      , di::per_requests<
-            di::bind<int, mpl::int_<1> >
-        >()
-    ));
+        BOOST_AUTO(fusion_module, di::fusion_module<>()(
+            di::singletons<
+                c1
+            >()
+          , di::per_requests<
+                di::bind<int, mpl::int_<1> >
+            >()
+        ));
 
-    di::injector<generic_module, BOOST_TYPEOF(fusion_module)> injector;
+        di::injector<generic_module, BOOST_TYPEOF(fusion_module)> injector;
 
-    injector.create<c4>();
+        boost::shared_ptr<c4> c4_ = injector.create< boost::shared_ptr<c4> >();
+        (void)c4_;
+    }
+
+    {
+        //install
+    }
+
 
     return 0;
 }
