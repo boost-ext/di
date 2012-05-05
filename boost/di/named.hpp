@@ -65,7 +65,8 @@ private:
 };
 
 template<typename T, typename TName>
-class named< const shared_ptr<T>&, TName> : named< shared_ptr<T>, TName>
+class named< const shared_ptr<T>&, TName>
+    : named< shared_ptr<T>, TName>
 {
 public:
     typedef named<typename aux::make_plain<T>::type, TName> element_type;

@@ -14,6 +14,8 @@
 #include "boost/di/detail/binder.hpp"
 #include "data.hpp"
 
+#include <boost/units/detail/utility.hpp>
+
 namespace boost {
 namespace di {
 namespace detail {
@@ -469,15 +471,28 @@ BOOST_AUTO_TEST_CASE(binder_named_type)
 {
     BOOST_CHECK((
         is_same<
-            dependency< named<int, mpl::_1>, int>
+            dependency<named<int, mpl::_1>, int>
           , binder<
-                named< shared_ptr<int>, mpl::_1>
+                named<shared_ptr<int>, mpl::_1>
               , mpl::vector0<>
               , mpl::vector0<>
               , dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));
+
+    std::cout << "DUPA: " << 
+            units::detail::demangle(
+typeid(
+
+          binder<
+                named<shared_ptr<int>, mpl::_1>
+              , mpl::vector0<>
+              , mpl::vector0<>
+              , dependency<mpl::_1, mpl::_2>
+            >::type
+            ).name()) << std::endl;
+
 }
 
 BOOST_AUTO_TEST_CASE(binder_call_call_stack)

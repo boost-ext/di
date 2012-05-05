@@ -375,7 +375,7 @@ BOOST_AUTO_TEST_CASE(generic_module_named_in_call)
         : generic_module<
               per_requests<
                   bind<int, mpl::int_<1> >
-                , bind<int, mpl::int_<4> >::in_name< mpl::string<'2'> >::in_call<call_stack<c7, c6, c4> >
+                , bind<int, mpl::int_<4> >::in_name<mpl::string<'2'> >::in_call<call_stack<c7, c6, c4> >
                 , bind<int, mpl::int_<5> >::in_call<c2>
               >
           >
@@ -517,8 +517,8 @@ BOOST_AUTO_TEST_CASE(generic_module_set_instance_annotate_in_in_call)
     struct module
         : generic_module<
               externals<
-                  annotate< bind<int>::in_call<c1, c2> >::with<a>
-                , annotate< bind<int>::in_call<c3, c4> >::with<b>
+                  annotate<bind<int>::in_call<c1, c2> >::with<a>
+                , annotate<bind<int>::in_call<c3, c4> >::with<b>
               >
           >
     { };
@@ -535,8 +535,8 @@ BOOST_AUTO_TEST_CASE(generic_module_set_instance_annotate_in_name)
     struct module
         : generic_module<
               externals<
-                  annotate< bind<int>::in_name<float> >::with<a>
-                , annotate< bind<int>::in_name<double> >::with<b>
+                  annotate<bind<int>::in_name<float> >::with<a>
+                , annotate<bind<int>::in_name<double> >::with<b>
               >
           >
     { };
@@ -553,8 +553,8 @@ BOOST_AUTO_TEST_CASE(generic_module_set_instance_annotatein_name_in_call)
     struct module
         : generic_module<
               externals<
-                  annotate< bind<int>::in_call<c1, c2>::in_name<float> >::with<a>
-                , annotate< bind<int>::in_name<double>::in_call<c3, c4> >::with<b>
+                  annotate<bind<int>::in_call<c1, c2>::in_name<float> >::with<a>
+                , annotate<bind<int>::in_name<double>::in_call<c3, c4> >::with<b>
               >
           >
     { };
@@ -573,8 +573,8 @@ BOOST_AUTO_TEST_CASE(generic_module_set_instance_mix)
         : generic_module<
               externals<
                   int
-                , annotate< bind<int>::in_name<float> >::with<a>
-                , annotate< bind<int>::in_call<c1, c2>::in_name<float> >::with<b>
+                , annotate<bind<int>::in_name<float> >::with<a>
+                , annotate<bind<int>::in_call<c1, c2>::in_name<float> >::with<b>
               >
           >
     { };
@@ -601,8 +601,8 @@ BOOST_AUTO_TEST_CASE(generic_module_ctor_with_externals)
         module::set<double>(d)
     );
 
-    BOOST_CHECK_EQUAL(i, module_.get_pool().get< aux::instance<int> >());
-    BOOST_CHECK_EQUAL(d, module_.get_pool().get< aux::instance<double> >());
+    BOOST_CHECK_EQUAL(i, module_.get_pool().get<aux::instance<int> >());
+    BOOST_CHECK_EQUAL(d, module_.get_pool().get<aux::instance<double> >());
 }
 
 BOOST_AUTO_TEST_CASE(generic_module_ctor_with_externals_shared_ptr)
@@ -622,7 +622,7 @@ BOOST_AUTO_TEST_CASE(generic_module_ctor_with_externals_shared_ptr)
 
     BOOST_CHECK_EQUAL(
         i
-      , get<shared_ptr<value> >(module_.get_pool().get< aux::instance<value> >())->i
+      , get<shared_ptr<value> >(module_.get_pool().get<aux::instance<value> >())->i
     );
 }
 

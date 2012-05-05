@@ -8,12 +8,12 @@
 #define BOOST_DI_DETAIL_BINDER_HPP
 
 #include <boost/utility/enable_if.hpp>
-#include <boost/mpl/iterator_range.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/mpl/placeholders.hpp>
+#include <boost/mpl/iterator_range.hpp>
 #include <boost/mpl/advance.hpp>
 #include <boost/mpl/equal.hpp>
 #include <boost/mpl/sort.hpp>
-#include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/if.hpp>
@@ -37,8 +37,6 @@ namespace di {
 namespace detail {
 
 namespace detail {
-
-BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
 template<typename T>
 struct get_bind
@@ -109,7 +107,7 @@ struct comparator
 { };
 
 template<
-    typename T
+    typename TGiven
   , typename TCallStack
   , typename TDeps
 >
@@ -121,7 +119,7 @@ struct sort_dependecies_by_call_stack_order
           , mpl::if_<
                 mpl::and_<
                     detail::comparator<
-                        typename aux::make_plain<T>::type
+                        TGiven
                       , detail::get_bind<mpl::_2>
                     >
                   , detail::for_each_context<
@@ -138,32 +136,31 @@ struct sort_dependecies_by_call_stack_order
 { };
 
 template<
-    typename T
+    typename TGiven
   , typename TDefault
-  , typename = void
 >
-struct make_default_dependency
-    : TDefault::template rebind<
-          typename aux::make_plain<T>::type
-        , typename aux::make_plain<T>::type
-      >
-{ };
+class make_default_dependency
+{
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
 
-template<
-    typename T
-  , typename TDefault
->
-struct make_default_dependency<
-    T
-  , TDefault
-  , typename enable_if<has_element_type<T> >::type
->
-    : TDefault::template rebind<
-          typename aux::make_plain<T>::type
-        , typename aux::make_plain<typename T::value_type>::type
-        //, typename aux::make_plain<typename T::element_type>::type
-      >
-{ };
+    template<typename T, typename = void>
+    struct get_value_type
+    {
+        typedef T type;
+    };
+
+    template<typename T>
+    struct get_value_type<T, typename enable_if<has_value_type<T> >::type>
+    {
+        typedef typename T::value_type type;
+    };
+
+public:
+    typedef typename TDefault::template rebind<
+        TGiven
+      , typename get_value_type<TGiven>::type
+    >::type type;
+};
 
 } // namespace detail
 
@@ -178,12 +175,12 @@ struct binder
           mpl::begin<
               typename mpl::push_back<
                   typename detail::sort_dependecies_by_call_stack_order<
-                      T
+                      typename aux::make_plain<T>::type
                     , TCallStack
                     , TDeps
                   >::type
                 , typename detail::make_default_dependency<
-                      T
+                      typename aux::make_plain<T>::type
                     , TDefault
                   >::type
               >::type
