@@ -9,7 +9,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/variant.hpp>
-#include <boost/type_traits/is_pod.hpp>
+#include <boost/type_traits/is_arithmetic.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
@@ -88,7 +88,7 @@ class instance<
         typename enable_if<
             mpl::or_<
                 is_same<typename detail::get_value_type<T>::type, std::string>
-              , is_pod<typename detail::get_value_type<T>::type>
+              , is_arithmetic<typename detail::get_value_type<T>::type>
             >
         >::type
     >

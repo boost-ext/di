@@ -26,13 +26,13 @@ struct named
     T i;
 };
 
-BOOST_AUTO_TEST_CASE(instance_pod_value)
+BOOST_AUTO_TEST_CASE(instance_arithmetic_value)
 {
     const int i = 42;
     BOOST_CHECK_EQUAL(i, instance<int>(i).get());
 }
 
-BOOST_AUTO_TEST_CASE(instance_pod_with_value_type)
+BOOST_AUTO_TEST_CASE(instance_arithmetic_with_value_type)
 {
     const int i = 42;
     BOOST_CHECK_EQUAL(i, instance<named<int> >(i).get());
@@ -78,7 +78,11 @@ BOOST_AUTO_TEST_CASE(instance_named)
     shared_ptr<c1_t> c1_(new c1_t(make_shared<int>(42)));
     shared_ptr<c2_t> c2_(new c2_t(make_shared<int>(87)));
 
-    BOOST_CHECK((*get<shared_ptr<c1_t> >(instance<c1_t>(c1_).get())->i != *get<shared_ptr<c2_t> >(instance<c2_t>(c2_).get())->i));
+    BOOST_CHECK((
+        *get<shared_ptr<c1_t> >(instance<c1_t>(c1_).get())->i
+        !=
+        *get<shared_ptr<c2_t> >(instance<c2_t>(c2_).get())->i
+    ));
 }
 
 BOOST_AUTO_TEST_CASE(instance_context)
@@ -87,7 +91,11 @@ BOOST_AUTO_TEST_CASE(instance_context)
     shared_ptr<c> c2_(new c);
 
     BOOST_CHECK((instance<int, a>(87).get() != instance<int, b>(42).get()));
-    BOOST_CHECK((get<shared_ptr<c> >(instance<c, a>(c1_).get()) != get<shared_ptr<c> >(instance<c, b>(c2_).get())));
+    BOOST_CHECK((
+        get<shared_ptr<c> >(instance<c, a>(c1_).get())
+        !=
+        get<shared_ptr<c> >(instance<c, b>(c2_).get())
+    ));
 }
 
 } // namespace aux

@@ -25,8 +25,8 @@ class converter_impl
 {
 public:
     template<typename T>
-    TDest operator()(T member) const {
-        return converter<TScope, TDest>::execute(member);
+    TDest operator()(T object) const {
+        return converter<TScope, TDest>::execute(object);
     }
 };
 
@@ -150,7 +150,7 @@ public:
     }
 
     template<BOOST_VARIANT_ENUM_PARAMS(typename T)>
-    static TDest execute(const variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src) {
+    static shared_ptr<TDest> execute(const variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src) {
         return apply_visitor(converter_impl<TScope, shared_ptr<TDest> >(), src);
     }
 };

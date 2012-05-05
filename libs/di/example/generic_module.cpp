@@ -6,6 +6,7 @@
 //
 #include <typeinfo>
 #include <iostream>
+#include <boost/shared_ptr.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/di.hpp>
 
@@ -24,8 +25,7 @@ struct c0 : i0
     BOOST_DI_CTOR(c0, di::named<int, name>, double) { }
 };
 
-struct c01 : i0
-{ };
+struct c01 : i0 { };
 
 struct c1
 {
@@ -37,9 +37,12 @@ struct c2
     BOOST_DI_CTOR(c2, c1, int, double, char) { }
 };
 
-struct c3
+struct c3 { };
+struct c4 { };
+
+struct c5
 {
-    BOOST_DI_CTOR(c3, c1, c2, boost::shared_ptr<i0>) { }
+    BOOST_DI_CTOR(c5, c1, c2, boost::shared_ptr<i0>, boost::shared_ptr<c3>, boost::shared_ptr<c4>) { }
 };
 
 } // namespace
@@ -54,6 +57,9 @@ struct visitor
 
 int main()
 {
+    boost::shared_ptr<c3> c3_(new c3);
+    c4 c4_;
+
     {
         typedef di::generic_module<
             di::singletons<
@@ -68,16 +74,20 @@ int main()
           , di::externals<
                 double
               , di::annotate<di::bind<double>::in_call<c0> >::with<double_name>
+              , c3
+              , c4
             >
         > generic_module_t;
 
-        generic_module_t generic_module(
+        generic_module_t generic_module( //note: order is not important
             generic_module_t::set<double>(42.0)
           , generic_module_t::set<double_name>(87.0)
+          , generic_module_t::set<c3>(c3_)
+          , generic_module_t::set<c4>(c4_)
         );
 
-        generic_module.create<c3>();
-        generic_module.visit<c3>(visitor());
+        generic_module.create<c5>();
+        generic_module.visit<c5>(visitor());
     }
 
     {
@@ -101,19 +111,26 @@ int main()
                   >
                 , di::externals<
                       di::annotate<di::bind<double>::in_call<c0> >::with<double_name>
+                    , c3
+                    , c4
                   >
               >
         {
-            generic_module_(double d1 = 42.0, double d2 = 87.0)
+            generic_module_(double d1
+                          , double d2
+                          , boost::shared_ptr<c3> c3_
+                          , c4& c4_ )
                 : generic_module(
                       set<double>(d1)
                     , set<double_name>(d2)
+                    , set<c3>(c3_)
+                    , set<c4>(c4_)
                   )
             { }
-        };
+        } generic_module(42.0, 87.0, c3_, c4_);
 
-        generic_module_().create<c3>();
-        generic_module_().visit<c3>(visitor());
+        generic_module.create<c5>();
+        generic_module.visit<c5>(visitor());
     }
 }
 

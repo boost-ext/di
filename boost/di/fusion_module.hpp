@@ -13,8 +13,10 @@
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/fold.hpp>
     #include <boost/mpl/copy.hpp>
+    #include <boost/mpl/if.hpp>
     #include <boost/mpl/back_inserter.hpp>
     #include <boost/mpl/placeholders.hpp>
+    #include <boost/mpl/has_xxx.hpp>
     #include "boost/di/detail/module.hpp"
     #include "boost/di/concepts.hpp"
     #include "boost/di/config.hpp"
@@ -32,13 +34,23 @@
 
     namespace detail {
 
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
+
     template<typename TDeps>
     struct fusion_deps
         : mpl::fold<
               TDeps
             , mpl::vector0<>
             , mpl::copy<
-                  mpl::_2
+                  mpl::if_<
+                      mpl::is_sequence<mpl::_2>
+                    , mpl::_2
+                    , mpl::if_<
+                          has_element_type<mpl::_2>
+                        , mpl::_2
+                        , per_request<mpl::_2>
+                      >
+                  >
                 , mpl::back_inserter<mpl::_1>
               >
           >::type

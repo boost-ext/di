@@ -12,6 +12,8 @@ project
       <warnings>all
       <warnings-as-errors>on
       <cxxflags>-Wno-variadic-macros
+      <toolset>gcc:<cxxflags>-Wno-multichar
+      <toolset>clang:<cxxflags>-Wno-four-char-constants
       <include>../../..
     ;
 
