@@ -135,13 +135,11 @@
         : detail::module<
               typename detail::deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
             , typename detail::pools<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
-          >(
-              BOOST_PP_ENUM_BINARY_PARAMS(
-                  BOOST_PP_ITERATION()
-                , module
-                , .get_pool() BOOST_PP_INTERCEPT
-              )
-          )
+          >(BOOST_PP_ENUM_BINARY_PARAMS(
+                BOOST_PP_ITERATION()
+              , module
+              , .get_pool() BOOST_PP_INTERCEPT
+           ))
     { }
 
     #define BOOST_DI_INJECTOR_INSTALL_ARG(_, n, M)  \
