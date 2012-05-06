@@ -10,16 +10,17 @@
     #define BOOST_DI_AUX_POOL_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
+    #include <boost/preprocessor/iteration/local.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/preprocessor/punctuation/comma_if.hpp>
     #include <boost/function_types/result_type.hpp>
     #include <boost/typeof/typeof.hpp>
     #include <boost/utility/enable_if.hpp>
+    #include <boost/mpl/vector.hpp>
     #include <boost/mpl/fold.hpp>
     #include <boost/mpl/copy.hpp>
     #include <boost/mpl/if.hpp>
     #include <boost/mpl/back_inserter.hpp>
-    #include <boost/mpl/vector.hpp>
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/has_xxx.hpp>
@@ -70,9 +71,6 @@
     #define BOOST_DI_DERIVES_IMPL(_, n, sequence)                   \
         BOOST_PP_COMMA_IF(n) public mpl::at_c<sequence, n>::type
 
-    #define BOOST_DI_CTOR_INITLIST_IMPL(_, n, na)                   \
-        BOOST_PP_COMMA_IF(n) Args##n(args##n)
-
     template<typename TSequence>
     class pool<
         TSequence
@@ -111,10 +109,18 @@
 
         pool() { }
 
-        template<BOOST_DI_TYPES(Args)>
-        explicit pool(BOOST_DI_ARGS(Args, args))
-            : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_CTOR_INITLIST_IMPL, ~)
-        { }
+        #define BOOST_DI_CTOR_INITLIST_IMPL(_, n, na)                   \
+            BOOST_PP_COMMA_IF(n) Args##n(args##n)
+
+        #define BOOST_PP_LOCAL_MACRO(n)                                 \
+            template<BOOST_DI_TYPES_IMPL(n, Args)>                      \
+            explicit pool(BOOST_DI_ARGS_IMPL(n, Args, args))            \
+                : BOOST_PP_REPEAT(n, BOOST_DI_CTOR_INITLIST_IMPL, ~)    \
+            { }
+
+        #define BOOST_PP_LOCAL_LIMITS (1, BOOST_PP_ITERATION())
+        #include BOOST_PP_LOCAL_ITERATE()
+        #undef BOOST_DI_CTOR_INITLIST_IMPL
 
         template<typename T>
         typename result_type<T>::type get() const {
@@ -123,7 +129,6 @@
     };
 
     #undef BOOST_DI_DERIVES_IMPL
-    #undef BOOST_DI_CTOR_INITLIST_IMPL
 
 #endif
 

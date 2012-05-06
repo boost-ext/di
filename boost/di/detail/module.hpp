@@ -112,8 +112,7 @@
 
     private:
         template<
-            typename Scope
-          , typename Deps
+            typename Scope , typename Deps
           , typename Action
         >
         typename enable_if<mpl::empty<Deps> >::type

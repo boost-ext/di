@@ -266,8 +266,13 @@ BOOST_AUTO_TEST_CASE(have_to_compile)
     }
 
     {
-        //injector<generic_module_1, BOOST_TYPEOF(fusion_module_1)> injector(fusion_module_1);
-        //(void)injector;
+        injector<generic_module_1, BOOST_TYPEOF(fusion_module_1)> injector(fusion_module_1);
+        (void)injector;
+    }
+
+    {
+        injector<BOOST_TYPEOF(fusion_module_1), generic_module_1> injector(fusion_module_1);
+        (void)injector;
     }
 
     {
