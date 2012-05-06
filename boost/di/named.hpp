@@ -33,7 +33,6 @@ public:
         : value_(value)
     { }
 
-    //TODO
     named(const shared_ptr<T>& value) // non explicit
         : value_(*value)
     { }
@@ -69,7 +68,6 @@ public:
         : value_(value)
     { }
 
-    //TODO
     named(value_type value) // non explicit
        : value_(make_shared<value_type>(value))
     { }
