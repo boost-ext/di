@@ -21,8 +21,8 @@ struct c1
 
 struct c2
 {
-    BOOST_DI_CTOR_TRAITS(int, int = 0);
-    c2(int, di::named<int, name>) { }
+    BOOST_DI_CTOR_TRAITS(int, di::named<int, name>);
+    c2(int, int = 0) { }
 };
 
 struct c3
