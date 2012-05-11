@@ -16,18 +16,18 @@ struct c0 { };
 
 struct c1
 {
-    BOOST_DI_CTOR(c1, int = 0) { }
+    BOOST_DI_CTOR(c1, int, di::named<int, name> = 0) { }
 };
 
 struct c2
 {
-    BOOST_DI_CTOR_TRAITS(char, double, int);
-    c2(char, double, di::named<int, name>) { }
+    BOOST_DI_CTOR_TRAITS(int, int = 0);
+    c2(int, di::named<int, name>) { }
 };
 
 struct c3
 {
-    c3(int, double) { }
+    c3(int, int) { }
 };
 
 } // namespace
@@ -38,7 +38,7 @@ namespace di {
 template<>
 struct ctor_traits<c3>
 {
-    static void ctor(int, double);
+    static void ctor(int, di::named<int, name>);
 };
 
 } // namespace di

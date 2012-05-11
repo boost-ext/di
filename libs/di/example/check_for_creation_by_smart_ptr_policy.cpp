@@ -57,7 +57,7 @@ public:
     {
        BOOST_MPL_ASSERT_MSG(
             false
-          , CREATION_BY_SMART_PTR_IS_NOT_ALLOWED
+          , CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED
           , (TGiven)
         );
     };
@@ -76,13 +76,13 @@ int main()
     {
         di::injector<> injector;
         injector.create<boost::shared_ptr<c> >();
-        //injector.create<c>(); //compile error (CREATION_SMART_PTR_IS_ALLOWED)
+        //injector.create<c>(); //compile error (CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED)
     }
 
     {
         di::injector<di::policy<check_for_creation_by_smart_ptr> > injector;
         injector.create<boost::shared_ptr<c> >();
-        //injector.create<c>(); //compile error (CREATION_SMART_PTR_IS_ALLOWED)
+        //injector.create<c>(); //compile error (CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED)
     }
 
     return 0;

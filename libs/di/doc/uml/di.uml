@@ -1,0 +1,46 @@
+@startuml di.png
+
+dependency
+pool
+named
+injector
+fusion_module <|-- module
+generic_module <|-- module
+
+module : create
+module : visit
+module : call
+
+creator
+visitor
+binder
+
+converter
+ctor_traits
+dependency
+explicit_value
+instance
+pool
+value_type
+
+provider
+
+scopes
+per_request
+singleton
+
+policy
+check_for_binding_correctness
+check_for_circular_dependencies
+check_for_creation_ownership
+check_for_references_without_ownership
+
+concepts
+annotate
+bind
+call_stack
+externals
+scope
+
+@enduml
+
