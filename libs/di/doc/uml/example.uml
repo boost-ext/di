@@ -1,0 +1,10 @@
+@startuml uml_visitor.png
+"(anonymous namespace)::c3" .. "(anonymous namespace)::c1"
+"(anonymous namespace)::i0" <|-- "(anonymous namespace)::c0"
+"(anonymous namespace)::c1" .. "(anonymous namespace)::i0"
+"(anonymous namespace)::c3" .. "(anonymous namespace)::c2"
+"(anonymous namespace)::c2" .. "int"
+"(anonymous namespace)::c2" .. "double"
+"(anonymous namespace)::c2" .. "char"
+@enduml
+

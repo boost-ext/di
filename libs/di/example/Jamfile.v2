@@ -13,6 +13,7 @@ project
       <warnings-as-errors>on
       <cxxflags>-Wno-variadic-macros
       <cxxflags>-Wno-multichar
+      <cxxflags>-std=c++0x
       <include>../../..
     ;
 
@@ -20,13 +21,13 @@ test-suite di_test
     : [ run check_for_creation_by_smart_ptr_policy.cpp ]
       [ run concepts.cpp ]
       [ run ctor.cpp ]
-      [ run fusion_module.cpp : : : <cxxflags>-std=c++0x ]
+      [ run fusion_module.cpp ]
       [ run generic_module.cpp ]
       [ run hello_world.cpp ]
-      [ run injector.cpp  : : : <cxxflags>-std=c++0x ]
+      [ run injector.cpp ]
       [ run named.cpp ]
       [ run provider.cpp ]
-      [ run session_scope.cpp : : : <cxxflags>-std=c++0x ]
+      [ run session_scope.cpp ]
       [ run text_visitor.cpp ]
       [ run uml_visitor.cpp ]
     ;

@@ -25,8 +25,6 @@ template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 class policy
     : detail::policy
 {
-    typedef mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> sequence;
-
     template<
         typename TDeps
       , typename T
@@ -37,13 +35,15 @@ class policy
     { };
 
 public:
+    typedef mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> policies;
+
     template<
         typename TDeps
       , typename T
     >
     struct verify
         : mpl::fold<
-              sequence
+              policies
             , mpl::void_
             , verify_impl<TDeps, T, mpl::_2>
           >::type

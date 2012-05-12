@@ -9,8 +9,7 @@ import testing ;
 
 project
     : requirements
-      <library>../../../../../../tools/libboost_unit_test_framework.a/<link>static
-      #<library>/boost/test//boost_unit_test_framework/<link>static
+      <library>/boost/test//boost_unit_test_framework/<link>static
       <warnings>all
       <warnings-as-errors>on
       <cxxflags>-Wno-variadic-macros
