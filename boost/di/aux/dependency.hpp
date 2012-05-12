@@ -71,7 +71,7 @@
             : mpl::and_<
                   TExplicitValue<TGiven>
                 , mpl::not_<
-                      mpl::contains<typename TPool::sequence, TInstance<> >
+                      mpl::contains<typename TPool::externals, TInstance<> >
                   >
               >
         { };
@@ -80,13 +80,13 @@
         struct is_scope_type
             : mpl::and_<
                   mpl::not_<TExplicitValue<TGiven> >
-                , mpl::not_<mpl::contains<typename TPool::sequence, TInstance<> > >
+                , mpl::not_<mpl::contains<typename TPool::externals, TInstance<> > >
               >
         { };
 
         template<typename TPool>
         struct is_pool_type
-            : mpl::contains<typename TPool::sequence, TInstance<> >
+            : mpl::contains<typename TPool::externals, TInstance<> >
         { };
 
     public:

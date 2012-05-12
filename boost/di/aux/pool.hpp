@@ -19,7 +19,6 @@
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/fold.hpp>
     #include <boost/mpl/copy.hpp>
-    #include <boost/mpl/if.hpp>
     #include <boost/mpl/back_inserter.hpp>
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/size.hpp>
@@ -39,7 +38,7 @@
     namespace aux {
 
     template<
-        typename TSequence = mpl::vector0<>
+        typename TExternals = mpl::vector0<>
       , typename = void
     >
     class pool
@@ -50,7 +49,7 @@
         { };
 
     public:
-        typedef TSequence sequence;
+        typedef TExternals externals;
 
         template<typename T>
         typename result_type<T>::type get() const
@@ -71,37 +70,39 @@
     #define BOOST_DI_DERIVES_IMPL(_, n, sequence)                   \
         BOOST_PP_COMMA_IF(n) public mpl::at_c<sequence, n>::type
 
-    template<typename TSequence>
+    template<typename TExternals>
     class pool<
-        TSequence
-      , typename enable_if_c<mpl::size<TSequence>::value == BOOST_PP_ITERATION()>::type
+        TExternals
+      , typename enable_if_c<mpl::size<TExternals>::value == BOOST_PP_ITERATION()>::type
     >
-        : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_DERIVES_IMPL, TSequence)
+        : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_DERIVES_IMPL, TExternals)
     {
-        BOOST_MPL_HAS_XXX_TRAIT_DEF(sequence)
+        BOOST_MPL_HAS_XXX_TRAIT_DEF(externals)
 
         template<typename T>
         struct result_type
             : function_types::result_type<BOOST_TYPEOF_TPL(&T::get)>
         { };
 
-        template<typename T>
-        struct get_sequence
+        template<typename T, typename = void>
+        struct externals_impl
         {
-            typedef typename T::sequence type;
+            typedef typename mpl::vector<T> type;
+        };
+
+        template<typename T>
+        struct externals_impl<T, typename enable_if<has_externals<T> >::type>
+        {
+            typedef typename T::externals type;
         };
 
     public:
-        struct sequence
+        struct externals
             : mpl::fold<
-                  TSequence
+                  TExternals
                 , mpl::vector0<>,
                   mpl::copy<
-                      mpl::if_<
-                          has_sequence<mpl::_2>
-                        , get_sequence<mpl::_2>
-                        , typename mpl::vector<mpl::_2>::type
-                      >
+                      externals_impl<mpl::_2>
                     , mpl::back_inserter<mpl::_1>
                   >
               >::type

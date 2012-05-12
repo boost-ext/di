@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_empty)
         >::value
     ));
 
-    BOOST_CHECK((mpl::equal<mpl::vector0<>, module_t::pool::sequence>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector0<>, module_t::pool::externals>::value));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_default_scope_bind)
@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_default_scope_bind)
               , bind<c2>::in_name<int>
               , bind<c3>::in_call<call_stack<c4, c5> >
             >
-          , module_t::pool::sequence
+          , module_t::pool::externals
         >::value
     ));
 }
@@ -103,7 +103,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_one_scope)
                     c0if0
                 >
             >
-          , module_t::pool::sequence
+          , module_t::pool::externals
         >::value
     ));
 
@@ -135,7 +135,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_one_scope_alias)
                     c0if0
                 >
             >
-          , module_t::pool::sequence
+          , module_t::pool::externals
         >::value
     ));
 }
@@ -162,7 +162,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_one_scope_direct)
             mpl::vector<
                 singleton<c0if0>
             >
-          , module_t::pool::sequence
+          , module_t::pool::externals
         >::value
     ));
 }
@@ -195,7 +195,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_many_singletons)
                     c1, c2, c3
                 >
             >
-          , module_t::pool::sequence
+          , module_t::pool::externals
         >::value
     ));
 }
@@ -235,7 +235,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_many_scopes)
                   c3, c4
                 >
             >
-          , module_t::pool::sequence
+          , module_t::pool::externals
         >::value
     ));
 }
@@ -262,7 +262,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_in_call)
             mpl::vector<
                 per_request<c1>::in_call<c2>
             >
-          , module_t::pool::sequence
+          , module_t::pool::externals
         >::value
     ));
 }
@@ -289,7 +289,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_in_name)
             mpl::vector<
                 singleton<c1>::in_name<int>
             >
-          , module_t::pool::sequence
+          , module_t::pool::externals
         >::value
     ));
 }
@@ -323,7 +323,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_in_namein_call)
                   , bind<c2>::in_name<double>::in_call<int>
                 >
             >
-          , module_t::pool::sequence
+          , module_t::pool::externals
         >::value
     ));
 }
@@ -357,7 +357,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_in_call_in_name)
                   , bind<c2>::in_call<int>::in_name<double>
                 >
             >
-          , module_t::pool::sequence
+          , module_t::pool::externals
         >::value
     ));
 }
@@ -388,7 +388,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_bind_if)
                     bind<if0, c0if0>
                 >
             >
-          , module_t::pool::sequence
+          , module_t::pool::externals
         >::value
     ));
 }
@@ -438,7 +438,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_mix)
                 >
               , singleton<c7>::in_name<double>::in_call<c1>
             >
-          , module_t::pool::sequence
+          , module_t::pool::externals
         >::value
     ));
 }
@@ -475,7 +475,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_named_in_call)
                   , bind<int, mpl::int_<5> >::in_call<c2>
                 >
             >
-          , module_t::pool::sequence
+          , module_t::pool::externals
         >::value
     ));
 }
@@ -509,7 +509,7 @@ BOOST_AUTO_TEST_CASE(fusion_multiple_calls)
                 >
               , bind<c5>::in_call<int, double>
             >
-          , module_t::pool::sequence
+          , module_t::pool::externals
         >::value
     ));
 }
