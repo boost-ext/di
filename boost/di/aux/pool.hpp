@@ -100,8 +100,8 @@
         struct externals
             : mpl::fold<
                   TExternals
-                , mpl::vector0<>,
-                  mpl::copy<
+                , mpl::vector0<>
+                , mpl::copy<
                       externals_impl<mpl::_2>
                     , mpl::back_inserter<mpl::_1>
                   >

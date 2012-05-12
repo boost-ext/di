@@ -47,10 +47,10 @@ public:
     static TDest execute(TSrc src) { return src; }
 };
 
-template<typename TSequence, int value = 0>
+template<typename TExternals, int value = 0>
 struct fake_pool
 {
-    typedef TSequence sequence;
+    typedef TExternals externals;
 
     template<typename T>
     shared_ptr<int> get() const {
