@@ -11,17 +11,12 @@
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
-    #include <boost/type_traits/is_same.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/fold.hpp>
-    #include <boost/mpl/push_back.hpp>
-    #include <boost/mpl/set.hpp>
-    #include <boost/mpl/insert.hpp>
+    #include <boost/mpl/copy.hpp>
     #include <boost/mpl/if.hpp>
     #include <boost/mpl/is_sequence.hpp>
-    #include <boost/mpl/copy.hpp>
     #include <boost/mpl/back_inserter.hpp>
-    #include "boost/di/aux/pool.hpp"
     #include "boost/di/detail/module.hpp"
     #include "boost/di/config.hpp"
 
@@ -36,10 +31,32 @@
     namespace boost {
     namespace di {
 
+    namespace detail {
+
+    template<typename TSeq>
+    struct modules
+        : mpl::fold<
+            TSeq
+          , mpl::vector0<>
+          , mpl::copy<
+                mpl::if_<
+                    mpl::is_sequence<boost::mpl::_2>
+                  , mpl::_2
+                  , typename mpl::vector<boost::mpl::_2>::type
+                >
+              , mpl::back_inserter<boost::mpl::_1>
+            >
+          >::type
+    { };
+
+    } // namespace detail
+
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     class injector
         : public detail::module<
-              mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+              detail::modules<
+                  mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+              >
           >
     {
     public:
@@ -57,7 +74,11 @@
 
     template<BOOST_DI_TYPES(M)>
     explicit injector(BOOST_DI_ARGS(M, module))
-        : detail::module<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
+        : detail::module<
+              detail::modules<
+                  mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+              >
+          >
         (BOOST_DI_ARGS_PASS(module))
     { }
 

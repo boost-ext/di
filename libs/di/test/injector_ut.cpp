@@ -17,13 +17,8 @@ struct fake_pool { };
 
 struct module
 {
+    typedef mpl::vector<a, b, c> deps;
     typedef fake_pool pool;
-    typedef mpl::vector<a, b, c> dependencies;
-
-    const pool& get_pool() const {
-        return pool_;
-    }
-
     pool pool_;
 };
 
@@ -37,12 +32,11 @@ BOOST_AUTO_TEST_CASE(injector_ctor_empty)
 
 BOOST_AUTO_TEST_CASE(injector_simple_module)
 {
-    //typedef injector<module> injector_t;
-    //module module_;
+    typedef injector<module> injector_t;
+    module module_;
 
-    //TODO
-    //injector_t injector_(module_); //have to compile
-    //(void)injector_;
+    injector_t injector_(module_); //have to compile
+    (void)injector_;
 }
 
 } // namespace di

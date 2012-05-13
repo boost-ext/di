@@ -87,18 +87,6 @@
         { };
 
         template<typename T, typename = void>
-        struct pool_impl
-        {
-            typedef mpl::vector<T> type;
-        };
-
-        template<typename T>
-        struct pool_impl<T, typename enable_if<aux::has_pool<T> >::type>
-        {
-            typedef mpl::vector<typename T::pool> type;
-        };
-
-        template<typename T, typename = void>
         struct deps_impl
         {
             typedef mpl::vector<T> type;
@@ -108,6 +96,18 @@
         struct deps_impl<T, typename enable_if<aux::has_deps<T> >::type>
         {
             typedef typename T::deps type;
+        };
+
+        template<typename T, typename = void>
+        struct pool_impl
+        {
+            typedef mpl::vector<T> type;
+        };
+
+        template<typename T>
+        struct pool_impl<T, typename enable_if<aux::has_pool<T> >::type>
+        {
+            typedef mpl::vector<typename T::pool> type;
         };
 
     public:
@@ -128,17 +128,6 @@
               >::type
         { };
 
-        struct externals
-            : mpl::fold<
-                  TExternals
-                , mpl::vector0<>
-                , mpl::copy<
-                      pool_impl<mpl::_2>
-                    , mpl::back_inserter<boost::mpl::_1>
-                  >
-              >::type
-        { };
-
         struct policies
             : mpl::deref<
                   typename mpl::begin<
@@ -150,7 +139,16 @@
               >::type
         { };
 
-        typedef TPool<externals> pool;
+        typedef TPool<
+            typename mpl::fold<
+                TExternals
+              , mpl::vector0<>
+              , mpl::copy<
+                    pool_impl<mpl::_2>
+                  , mpl::back_inserter<boost::mpl::_1>
+                >
+            >::type
+        > pool;
 
     private:
         struct entries

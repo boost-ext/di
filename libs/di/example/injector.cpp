@@ -121,11 +121,10 @@ int main()
             >()
         );
 
-        //TODO
-/*        auto injector = di::injector<>().install(generic_module(), fusion_module);*/
+        auto injector = di::injector<>().install(generic_module(), fusion_module);
 
-        //boost::shared_ptr<c4> c4_ = injector.create< boost::shared_ptr<c4> >();
-        /*(void)c4_;*/
+        boost::shared_ptr<c4> c4_ = injector.create< boost::shared_ptr<c4> >();
+        (void)c4_;
     }
 
     return 0;
