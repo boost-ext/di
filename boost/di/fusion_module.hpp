@@ -16,7 +16,7 @@
     #include <boost/mpl/if.hpp>
     #include <boost/mpl/back_inserter.hpp>
     #include <boost/mpl/placeholders.hpp>
-    #include <boost/mpl/has_xxx.hpp>
+    #include "boost/di/aux/has_traits.hpp"
     #include "boost/di/detail/module.hpp"
     #include "boost/di/concepts.hpp"
     #include "boost/di/config.hpp"
@@ -34,8 +34,6 @@
 
     namespace detail {
 
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
-
     template<typename TDeps>
     struct fusion_deps
         : mpl::fold<
@@ -46,7 +44,7 @@
                       mpl::is_sequence<mpl::_2>
                     , mpl::_2
                     , mpl::if_<
-                          has_element_type<mpl::_2>
+                          aux::has_element_type<mpl::_2>
                         , mpl::_2
                         , per_request<mpl::_2>
                       >

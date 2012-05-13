@@ -11,8 +11,8 @@
 #include <boost/make_shared.hpp>
 #include <boost/type_traits/is_polymorphic.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/mpl/has_xxx.hpp>
 #include "boost/di/aux/make_plain.hpp"
+#include "boost/di/aux/has_traits.hpp"
 #include "boost/di/config.hpp"
 
 namespace boost {
@@ -58,7 +58,7 @@ template<
     typename T
   , typename TName
 >
-class named<T, TName, typename enable_if<aux::detail::has_element_type<T> >::type>
+class named<T, TName, typename enable_if<aux::has_element_type<T> >::type>
 {
 public:
     typedef named<typename aux::make_plain<T>::type, TName> element_type;

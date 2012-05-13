@@ -25,7 +25,10 @@
     #include <boost/mpl/front.hpp>
     #include <boost/mpl/and.hpp>
     #include <boost/mpl/not.hpp>
+    #include <boost/mpl/or.hpp>
+    #include <boost/mpl/equal_to.hpp>
     #include "boost/di/aux/pool.hpp"
+    #include "boost/di/aux/has_traits.hpp"
     #include "boost/di/detail/creator.hpp"
     #include "boost/di/detail/visitor.hpp"
     #include "boost/di/policy.hpp"
@@ -45,9 +48,9 @@
 
     template<
         typename TDeps = mpl::vector0<>
-      , typename TExternals = mpl::vector0<>
+      , typename TExternals = TDeps
       , template<
-            typename = TExternals
+            typename
           , typename = void
         > class TPool = aux::pool
       , template<
@@ -59,13 +62,83 @@
     >
     class module
     {
-    //TODO protected:
-    public:
-        struct deps
-            : mpl::remove_if<TDeps, is_base_of<policy, mpl::_1> >::type
+        template<
+            typename
+          , typename
+          , template<typename, typename> class
+          , template<typename> class
+          , template<typename> class
+        > friend class module;
+
+        template<typename TSeq>
+        struct is_module
+            : mpl::equal_to<
+                  mpl::size<TSeq>
+                , typename mpl::fold<
+                      TSeq
+                    , mpl::int_<0>
+                    , mpl::if_<
+                          aux::has_deps<mpl::_2>
+                        , mpl::next<mpl::_1>
+                        , mpl::_1
+                      >
+                  >::type
+              >
         { };
 
-        //TODO join all
+        template<typename T, typename = void>
+        struct pool_impl
+        {
+            typedef mpl::vector<T> type;
+        };
+
+        template<typename T>
+        struct pool_impl<T, typename enable_if<aux::has_pool<T> >::type>
+        {
+            typedef mpl::vector<typename T::pool> type;
+        };
+
+        template<typename T, typename = void>
+        struct deps_impl
+        {
+            typedef mpl::vector<T> type;
+        };
+
+        template<typename T>
+        struct deps_impl<T, typename enable_if<aux::has_deps<T> >::type>
+        {
+            typedef typename T::deps type;
+        };
+
+    public:
+        struct deps
+            : mpl::remove_if<
+                  typename mpl::fold<
+                      TDeps
+                    , mpl::vector0<>
+                    , mpl::copy<
+                          deps_impl<mpl::_2>
+                        , mpl::back_inserter<boost::mpl::_1>
+                      >
+                  >::type
+                , mpl::or_<
+                      is_base_of<policy, mpl::_1>
+                    , aux::has_element_type<mpl::_1>
+                  >
+              >::type
+        { };
+
+        struct externals
+            : mpl::fold<
+                  TExternals
+                , mpl::vector0<>
+                , mpl::copy<
+                      pool_impl<mpl::_2>
+                    , mpl::back_inserter<boost::mpl::_1>
+                  >
+              >::type
+        { };
+
         struct policies
             : mpl::deref<
                   typename mpl::begin<
@@ -77,11 +150,7 @@
               >::type
         { };
 
-        typedef TPool<> pool;
-
-        const TPool<>& get_pool() const {
-            return pool_;
-        }
+        typedef TPool<externals> pool;
 
     private:
         struct entries
@@ -136,7 +205,7 @@
             call_impl<Scope, typename mpl::pop_front<Deps>::type>(action);
         }
 
-        TPool<> pool_;
+        pool pool_;
         entries entries_;
     };
 
@@ -149,7 +218,20 @@
 #else
 
     template<BOOST_DI_TYPES(Args)>
-    explicit module(BOOST_DI_ARGS(Args, args))
+    explicit module(
+        BOOST_DI_ARGS(Args, args)
+      , typename enable_if<is_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >::type* = 0)
+        : pool_(BOOST_PP_ENUM_BINARY_PARAMS(
+              BOOST_PP_ITERATION()
+            , args
+            , .pool_ BOOST_PP_INTERCEPT
+          ))
+    { }
+
+    template<BOOST_DI_TYPES(Args)>
+    explicit module(
+        BOOST_DI_ARGS(Args, args)
+      , typename disable_if<is_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >::type* = 0)
         : pool_(BOOST_DI_ARGS_FORWARD(args))
     { }
 

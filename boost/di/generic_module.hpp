@@ -22,6 +22,7 @@
     #include <boost/mpl/is_sequence.hpp>
     #include <boost/mpl/back_inserter.hpp>
     #include "boost/di/aux/instance.hpp"
+    #include "boost/di/aux/has_traits.hpp"
     #include "boost/di/detail/module.hpp"
     #include "boost/di/concepts.hpp"
     #include "boost/di/config.hpp"
@@ -39,70 +40,32 @@
 
     namespace detail {
 
-    template<typename T, typename Enable = void>
-    struct make_annotation
-    {
-        typedef typename annotate<aux::instance<T> >::template with<> type;
-    };
-
     template<typename T>
-    struct make_annotation<T, typename enable_if<is_base_of<concepts::annotate<>::with<>, T> >::type>
+    struct derived
     {
-        typedef typename T::template rebind<scopes::singleton>::type dependency;
-        typedef aux::instance<typename dependency::expected, typename dependency::context> instance;
-        typedef typename annotate<instance>::template with<typename T::name> type;
+        typedef typename T::derived type;
     };
 
-    template<typename TDeps>
-    struct externals
+    template<typename TDeps, typename T = derived<mpl::_1> >
+    struct generic_deps
         : mpl::transform<
               typename mpl::fold<
                   TDeps
                 , mpl::vector0<>
                 , mpl::copy<
                       mpl::if_<
-                          is_base_of<concepts::detail::externals, mpl::_2>
-                        , mpl::_2
-                        , mpl::vector0<>
-                      >
-                    , mpl::back_inserter<mpl::_1>
-                  >
-              >::type
-            , make_annotation<mpl::_1>
-          >::type
-    { };
-
-    template<typename TDeps>
-    struct generic_deps
-        : mpl::fold<
-              TDeps
-            , mpl::vector0<>
-            , mpl::copy<
-                  mpl::if_<
-                      is_base_of<concepts::detail::externals, mpl::_2>
-                    , mpl::vector0<>
-                    , mpl::if_<
                           mpl::is_sequence<mpl::_2>
                         , mpl::_2
                         , per_request<mpl::_2>
                       >
+                    , mpl::back_inserter<mpl::_1>
                   >
-                , mpl::back_inserter<mpl::_1>
+              >::type
+            , mpl::if_<
+                  aux::has_element_type<mpl::_1> //is instance
+                , T
+                , mpl::_1
               >
-          >::type
-    { };
-
-    template<typename T>
-    struct get_derived
-    {
-        typedef typename T::derived type;
-    };
-
-    template<typename TDeps>
-    struct instances
-        : mpl::transform<
-              externals<TDeps>
-            , get_derived<mpl::_1>
           >::type
     { };
 
@@ -112,40 +75,50 @@
     class generic_module
         : public detail::module<
               typename detail::generic_deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
-            , typename detail::instances<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
+            , typename detail::generic_deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
           >
     {
-        template<typename TInstance, typename T>
+        struct annotations
+            : detail::generic_deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>, mpl::_1>
+        { };
+
+        template<
+            typename TInstance
+          , typename T
+          , typename = void
+        >
         struct is_same_instance
+            : mpl::false_
+        { };
+
+        template<
+            typename TInstance
+          , typename T
+        >
+        struct is_same_instance<
+            TInstance
+          , T
+          , typename enable_if<aux::has_element_type<TInstance> >::type
+        >
             : mpl::or_<
                   is_same<typename TInstance::name, T>
                 , is_same<typename TInstance::element_type, T>
               >
         { };
 
-        template<
-            typename T
-          , typename TExternals = typename detail::externals<
-                mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-            >::type
-        >
+        template<typename T>
         struct find_instance_type
-            : mpl::find_if<TExternals, is_same_instance<mpl::_1, T> >::type
+            : mpl::find_if<annotations, is_same_instance<mpl::_1, T> >::type
         { };
 
-        template<
-            typename T
-          , typename TExternals = typename detail::externals<
-                mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-            >::type
-        >
+        template<typename T>
         struct disable_if_instance_not_found
             : disable_if<
                   is_same<
-                      find_instance_type<T, TExternals>
-                    , mpl::end<TExternals>
+                      find_instance_type<T>
+                    , mpl::end<annotations>
                   >
-                , typename find_instance_type<T, TExternals>::type::derived
+                , typename find_instance_type<T>::type::derived
               >
         { };
 
@@ -173,7 +146,7 @@
     explicit generic_module(BOOST_DI_ARGS(Args, args))
         : detail::module<
               typename detail::generic_deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
-            , typename detail::instances<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
+            , typename detail::generic_deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
           >
         (BOOST_DI_ARGS_FORWARD(args))
     { }

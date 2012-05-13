@@ -38,7 +38,7 @@ namespace detail {
 namespace detail {
 
 template<typename T>
-struct get_bind
+struct bind
 {
     typedef typename T::bind type;
 };
@@ -119,7 +119,7 @@ struct sort_dependecies_by_call_stack_order
                 mpl::and_<
                     detail::comparator<
                         TGiven
-                      , detail::get_bind<mpl::_2>
+                      , detail::bind<mpl::_2>
                     >
                   , detail::for_each_context<
                         TCallStack

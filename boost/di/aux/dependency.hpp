@@ -18,10 +18,10 @@
     #include <boost/mpl/contains.hpp>
     #include <boost/mpl/placeholders.hpp>
     #include <boost/mpl/assert.hpp>
-    #include <boost/mpl/has_xxx.hpp>
     #include "boost/di/aux/instance.hpp"
     #include "boost/di/aux/explicit_value.hpp"
     #include "boost/di/aux/converter.hpp"
+    #include "boost/di/aux/has_traits.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
@@ -58,8 +58,6 @@
     >
     class dependency
     {
-        BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
-
         BOOST_MPL_ASSERT_MSG(
             !has_element_type<TGiven>::value
           , GIVEN_TYPE_WITH_ELEMENT_TYPE

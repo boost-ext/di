@@ -12,7 +12,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/function_types/parameter_types.hpp>
 #include <boost/mpl/bool.hpp>
-#include <boost/mpl/has_xxx.hpp>
+#include "boost/di/aux/has_traits.hpp"
 #include "boost/di/ctor.hpp"
 #include "boost/di/config.hpp"
 
@@ -27,10 +27,6 @@ struct ctor_traits
 
 namespace aux {
 
-namespace detail {
-BOOST_MPL_HAS_XXX_TRAIT_DEF(BOOST_DI_CTOR_UNIQUE_NAME)
-} // namespace detail
-
 template<typename T, typename = void>
 struct ctor_traits
     : function_types::parameter_types<
@@ -39,7 +35,7 @@ struct ctor_traits
 { };
 
 template<typename T>
-struct ctor_traits<T, typename enable_if<BOOST_PP_CAT(detail::has_, BOOST_DI_CTOR_UNIQUE_NAME)<T> >::type>
+struct ctor_traits<T, typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_CTOR_UNIQUE_NAME)<T> >::type>
     : function_types::parameter_types<
           BOOST_TYPEOF_TPL(T::BOOST_DI_CTOR_UNIQUE_NAME::ctor)
       >::type

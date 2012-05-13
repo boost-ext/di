@@ -22,7 +22,7 @@
     #include <boost/mpl/back_inserter.hpp>
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/size.hpp>
-    #include <boost/mpl/has_xxx.hpp>
+    #include "boost/di/aux/has_traits.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
@@ -77,8 +77,6 @@
     >
         : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_DERIVES_IMPL, TExternals)
     {
-        BOOST_MPL_HAS_XXX_TRAIT_DEF(externals)
-
         template<typename T>
         struct result_type
             : function_types::result_type<BOOST_TYPEOF_TPL(&T::get)>
@@ -87,7 +85,7 @@
         template<typename T, typename = void>
         struct externals_impl
         {
-            typedef typename mpl::vector<T> type;
+            typedef mpl::vector<T> type;
         };
 
         template<typename T>

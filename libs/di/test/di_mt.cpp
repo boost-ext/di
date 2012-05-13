@@ -276,7 +276,7 @@ BOOST_AUTO_TEST_CASE(have_to_compile)
     }
 
     {
-        injector<>().install(generic_module_2());
+        //injector<>().install(generic_module_2());
         //injector<>().install(generic_module_1(), generic_module_2());
         //injector<>().install(generic_module_1(), fusion_module_1);
         //injector<>().install(fusion_module_1, fusion_module_2);

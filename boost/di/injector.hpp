@@ -36,85 +36,10 @@
     namespace boost {
     namespace di {
 
-    namespace detail {
-
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(deps)
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(pool)
-
-    template<typename T>
-    struct get_deps
-    {
-        typedef typename T::deps type;
-    };
-
-    template<typename T>
-    struct get_pool
-    {
-        typedef typename T::pool type;
-    };
-
-    template<typename TModules, typename TResult = mpl::set0<> >
-    struct deps_impl
-        : mpl::fold<
-              TModules
-            , TResult
-            , mpl::if_<
-                  has_deps<mpl::_2>
-                , deps_impl<get_deps<mpl::_2>, mpl::_1>
-                , mpl::insert<mpl::_1, mpl::_2>
-            >
-          >
-    { };
-
-    template<typename TSeq>
-    struct flatten
-        : mpl::fold<
-            TSeq
-          , mpl::vector0<>
-          , mpl::copy<
-                mpl::if_<
-                    mpl::is_sequence<boost::mpl::_2>
-                  , mpl::_2
-                  , typename mpl::vector<boost::mpl::_2>::type
-                >
-              , mpl::back_inserter<boost::mpl::_1>
-            >
-        >
-    { };
-
-    template<typename TModules>
-    struct pools
-        : mpl::fold<
-              typename mpl::fold<
-                  typename flatten<TModules>::type
-                , mpl::set<>
-                , mpl::if_<
-                      has_pool<mpl::_2>
-                    , mpl::insert<mpl::_1, get_pool<mpl::_2> >
-                    , mpl::_1
-                  >
-              >::type
-            , mpl::vector0<>
-            , mpl::push_back<mpl::_1, mpl::_2>
-          >::type
-    { };
-
-    template<typename TModules>
-    struct deps
-        : mpl::fold<
-              typename deps_impl<typename flatten<TModules>::type>::type
-            , mpl::vector0<>
-            , mpl::push_back<mpl::_1, mpl::_2>
-          >::type
-    { };
-
-    } // namespace detail
-
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     class injector
         : public detail::module<
-              typename detail::deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
-            , typename detail::pools<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
+              mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
           >
     {
     public:
@@ -132,14 +57,8 @@
 
     template<BOOST_DI_TYPES(M)>
     explicit injector(BOOST_DI_ARGS(M, module))
-        : detail::module<
-              typename detail::deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
-            , typename detail::pools<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
-          >(BOOST_PP_ENUM_BINARY_PARAMS(
-                BOOST_PP_ITERATION()
-              , module
-              , .get_pool() BOOST_PP_INTERCEPT
-           ))
+        : detail::module<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
+        (BOOST_DI_ARGS_PASS(module))
     { }
 
     #define BOOST_DI_INJECTOR_INSTALL_ARG(_, n, M)  \

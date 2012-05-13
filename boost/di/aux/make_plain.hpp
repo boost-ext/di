@@ -21,6 +21,7 @@
 #include <boost/mpl/back_inserter.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/is_sequence.hpp>
+#include "boost/di/aux/has_traits.hpp"
 #include "boost/di/config.hpp"
 
 namespace boost {
@@ -28,8 +29,6 @@ namespace di {
 namespace aux {
 
 namespace detail {
-
-BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
 template<typename T>
 struct remove_accessors

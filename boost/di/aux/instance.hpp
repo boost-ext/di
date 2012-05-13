@@ -28,7 +28,6 @@ template<
 class instance
 {
 public:
-    typedef instance type;
     typedef T element_type;
 
     explicit instance(const T& member)
@@ -69,7 +68,6 @@ class instance<
     typedef typename aux::value_type<T>::type value_type;
 
 public:
-    typedef instance type;
     typedef T element_type;
 
     explicit instance(value_type member)
