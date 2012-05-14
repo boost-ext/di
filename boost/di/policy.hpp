@@ -19,11 +19,8 @@
 namespace boost {
 namespace di {
 
-namespace detail { class policy { }; } // namespace detail
-
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 class policy
-    : detail::policy
 {
     template<
         typename TDeps
@@ -53,7 +50,7 @@ public:
 };
 
 template<typename TDefault>
-struct defaults<detail::policy, TDefault>
+struct defaults<policy<>, TDefault>
 {
     typedef policy<
         policies::check_for_binding_correctness

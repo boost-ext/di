@@ -28,7 +28,7 @@
         BOOST_DI_ITERATION_PARAMS(              \
             1                                   \
           , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE  \
-          , "boost/di/aux_/dependency.hpp"       \
+          , "boost/di/aux_/dependency.hpp"      \
         )                                       \
     )
 

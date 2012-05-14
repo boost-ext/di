@@ -26,7 +26,7 @@
     #include "boost/di/aux_/ctor_traits.hpp"
     #include "boost/di/aux_/dependency.hpp"
     #include "boost/di/aux_/make_plain.hpp"
-    #include "boost/di/detail/binder.hpp"
+    #include "boost/di/aux_/binder.hpp"
     #include "boost/di/scopes/per_request.hpp"
     #include "boost/di/config.hpp"
 
@@ -52,9 +52,9 @@
           , template<
                 typename
               , typename
-              , typename = TDeps
+              , typename
               , typename = aux_::dependency<scopes::per_request, mpl::_1, mpl::_2>
-            > class TBinder = detail::binder
+            > class TBinder = aux_::binder
           , template<
                 typename
               , typename = void
@@ -98,10 +98,10 @@
             >
             struct circular_dependencies
                : circular_dependencies_impl<
-                      typename TBinder<T, TCallStack>::type
+                      typename TBinder<T, TCallStack, TDeps>::type
                     , typename mpl::push_back<
                           TCallStack
-                        , typename TBinder<T, TCallStack>::type::given
+                        , typename TBinder<T, TCallStack, TDeps>::type::given
                       >::type
                   >
             { };

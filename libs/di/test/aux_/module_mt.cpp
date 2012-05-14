@@ -17,7 +17,7 @@
 #include "boost/di/aux_/dependency.hpp"
 #include "boost/di/aux_/instance.hpp"
 #include "boost/di/aux_/pool.hpp"
-#include "boost/di/detail/module.hpp"
+#include "boost/di/aux_/module.hpp"
 #include "dependency.hpp"
 #include "data.hpp"
 

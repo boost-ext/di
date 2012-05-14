@@ -7,7 +7,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include "boost/di/detail/creator.hpp"
+#include "boost/di/aux_/creator.hpp"
 
 namespace boost {
 namespace di {
@@ -16,7 +16,7 @@ namespace aux_ {
 class fake_pool { };
 
 template<typename T, T value>
-struct dependency
+struct fake_dependency
 {
     typedef T given;
     typedef T expected;
@@ -45,7 +45,7 @@ struct entries
 BOOST_AUTO_TEST_CASE(creator_simple)
 {
     const int i = 42;
-    typedef dependency<int, i> dependency_t;
+    typedef fake_dependency<int, i> dependency_t;
     fake_pool pool_;
     entries<dependency_t> entries_;
 

@@ -19,7 +19,7 @@
     #include "boost/di/aux_/make_plain.hpp"
     #include "boost/di/aux_/dependency.hpp"
     #include "boost/di/aux_/ctor_traits.hpp"
-    #include "boost/di/detail/binder.hpp"
+    #include "boost/di/aux_/binder.hpp"
     #include "boost/di/scopes/per_request.hpp"
     #include "boost/di/config.hpp"
 
@@ -40,7 +40,7 @@
       , template<
             typename
           , typename
-          , typename = TDeps
+          , typename
           , typename = dependency<scopes::per_request, mpl::_1, mpl::_2>
         > class TBinder = binder
       , template<
@@ -76,7 +76,7 @@
           , typename TVisitor
         >
         static void execute(const TVisitor& visitor) {
-            typedef typename TBinder<T, TCallStack>::type to_bo_created_t;
+            typedef typename TBinder<T, TCallStack, TDeps>::type to_bo_created_t;
             execute_impl<
                 T
               , to_bo_created_t

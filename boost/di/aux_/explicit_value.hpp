@@ -33,13 +33,13 @@ class has_value
         : mpl::if_<is_arithmetic<TDerived>, mpl::void_, TDerived>::type, helper
     { };
 
-    template<typename T> static mpl::aux_::no_tag  deduce(non_type<const int*, &T::value>*);
-    template<typename>   static mpl::aux_::yes_tag deduce(...);
+    template<typename T> static mpl::aux::no_tag  deduce(non_type<const int*, &T::value>*);
+    template<typename>   static mpl::aux::yes_tag deduce(...);
 
 public:
     BOOST_STATIC_CONSTANT(
         bool
-      , value = sizeof(deduce<base>(0)) == sizeof(mpl::aux_::yes_tag)
+      , value = sizeof(deduce<base>(0)) == sizeof(mpl::aux::yes_tag)
     );
 };
 

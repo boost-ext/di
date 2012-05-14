@@ -29,8 +29,8 @@
     #include <boost/mpl/equal_to.hpp>
     #include "boost/di/aux_/pool.hpp"
     #include "boost/di/aux_/has_traits.hpp"
-    #include "boost/di/detail/creator.hpp"
-    #include "boost/di/detail/visitor.hpp"
+    #include "boost/di/aux_/creator.hpp"
+    #include "boost/di/aux_/visitor.hpp"
     #include "boost/di/policy.hpp"
     #include "boost/di/config.hpp"
 
@@ -122,7 +122,7 @@
                       >
                   >::type
                 , mpl::or_<
-                      is_base_of<policy, mpl::_1>
+                      has_policies<mpl::_2>
                     , has_element_type<mpl::_1>
                   >
               >::type
@@ -132,8 +132,8 @@
             : mpl::deref<
                   typename mpl::begin<
                        mpl::joint_view<
-                          mpl::filter_view<TDeps, is_base_of<policy, mpl::_1> >
-                        , mpl::vector1<typename defaults<policy, specialized>::type>
+                          mpl::filter_view<TDeps, has_policies<mpl::_1> >
+                        , mpl::vector1<typename defaults<policy<> >::type>
                       >
                   >::type
               >::type

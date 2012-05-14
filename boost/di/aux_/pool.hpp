@@ -29,7 +29,7 @@
         BOOST_DI_ITERATION_PARAMS(          \
             1                               \
           , BOOST_MPL_LIMIT_VECTOR_SIZE     \
-          , "boost/di/aux_/pool.hpp"         \
+          , "boost/di/aux_/pool.hpp"        \
         )                                   \
     )
 
