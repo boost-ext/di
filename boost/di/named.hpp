@@ -69,9 +69,9 @@ public:
     { }
 
     //TODO
-    //named(value_type value) // non explicit
-       //: value_(make_shared<value_type>(value))
-    //{ }
+    named(value_type value) // non explicit
+       : value_(make_shared<value_type>(value))
+    { }
 
     operator T() const { return value_; }
 /*    operator value_type() const { return *value_; }*/

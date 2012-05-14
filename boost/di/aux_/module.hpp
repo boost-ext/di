@@ -10,7 +10,6 @@
     #define BOOST_DI_AUX_MODULE_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
-    #include <boost/type_traits/is_base_of.hpp>
     #include <boost/type_traits/is_same.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/vector.hpp>
@@ -122,7 +121,7 @@
                       >
                   >::type
                 , mpl::or_<
-                      has_policies<mpl::_2>
+                      has_policy_type<mpl::_1>
                     , has_element_type<mpl::_1>
                   >
               >::type
@@ -132,9 +131,9 @@
             : mpl::deref<
                   typename mpl::begin<
                        mpl::joint_view<
-                          mpl::filter_view<TDeps, has_policies<mpl::_1> >
-                        , mpl::vector1<typename defaults<policy<> >::type>
-                      >
+                           mpl::filter_view<TDeps, has_policy_type<mpl::_1> >
+                         , mpl::vector1<typename defaults<policy<>, specialized>::type>
+                       >
                   >::type
               >::type
         { };
@@ -162,13 +161,13 @@
 
         template<typename T>
         T create() {
-            typedef typename policies::template verify<deps, T>::type policies_t;
+            typedef typename policies::template verify<deps, T>::type policies_type;
             return TCreator<deps>::template execute<T, mpl::vector0<> >(entries_, pool_);
         }
 
         template<typename T, typename Visitor>
         void visit(const Visitor& visitor) {
-            typedef typename policies::template verify<deps, T>::type policies_t;
+            typedef typename policies::template verify<deps, T>::type policies_type;
             TVisitor<deps>::template execute<T, mpl::vector0<> >(visitor);
         }
 

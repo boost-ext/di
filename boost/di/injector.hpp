@@ -54,9 +54,7 @@
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     class injector
         : public aux_::module<
-              detail::modules<
-                  mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-              >
+              detail::modules<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
           >
     {
     public:
@@ -75,9 +73,7 @@
     template<BOOST_DI_TYPES(M)>
     explicit injector(BOOST_DI_ARGS(M, module))
         : aux_::module<
-              detail::modules<
-                  mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-              >
+              detail::modules<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
           >
         (BOOST_DI_ARGS_PASS(module))
     { }

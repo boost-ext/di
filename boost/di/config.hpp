@@ -164,7 +164,7 @@
         BOOST_DI_TYPES_DEFAULT_IMPL(                        \
             BOOST_MPL_LIMIT_VECTOR_SIZE                     \
           , TArg                                            \
-          , mpl::na                                        \
+          , mpl::na                                         \
         )
 
 #   define BOOST_DI_TYPES_MPL(TArg)                         \
@@ -177,7 +177,7 @@
         BOOST_DI_ARGS_NA_IMPL(                              \
             BOOST_MPL_LIMIT_VECTOR_SIZE                     \
           , count                                           \
-          , mpl::na                                        \
+          , mpl::na                                         \
         )
 
 #   define BOOST_DI_TYPES_PASS_MPL(TArg)                    \
