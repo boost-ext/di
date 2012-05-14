@@ -75,7 +75,6 @@
     class generic_module
         : public detail::module<
               typename detail::generic_deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
-            , typename detail::generic_deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
           >
     {
         struct annotations
@@ -146,7 +145,6 @@
     explicit generic_module(BOOST_DI_ARGS(Args, args))
         : detail::module<
               typename detail::generic_deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
-            , typename detail::generic_deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
           >
         (BOOST_DI_ARGS_FORWARD(args))
     { }
