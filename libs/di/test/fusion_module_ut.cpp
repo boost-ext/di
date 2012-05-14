@@ -12,7 +12,7 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
 
-#include "boost/di/aux/dependency.hpp"
+#include "boost/di/aux_/dependency.hpp"
 #include "boost/di/concepts.hpp"
 #include "boost/di/named.hpp"
 #include "dependency.hpp"

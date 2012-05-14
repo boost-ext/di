@@ -22,14 +22,14 @@
     #include <boost/mpl/back_inserter.hpp>
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/size.hpp>
-    #include "boost/di/aux/has_traits.hpp"
+    #include "boost/di/aux_/has_traits.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
         BOOST_DI_ITERATION_PARAMS(          \
             1                               \
           , BOOST_MPL_LIMIT_VECTOR_SIZE     \
-          , "boost/di/aux/pool.hpp"         \
+          , "boost/di/aux_/pool.hpp"         \
         )                                   \
     )
 

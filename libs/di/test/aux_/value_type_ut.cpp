@@ -8,7 +8,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include "boost/di/named.hpp"
-#include "boost/di/aux/value_type.hpp"
+#include "boost/di/aux_/value_type.hpp"
 #include "data.hpp"
 
 namespace boost {

@@ -9,8 +9,8 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include "boost/di/aux/instance.hpp"
-#include "boost/di/aux/dependency.hpp"
+#include "boost/di/aux_/instance.hpp"
+#include "boost/di/aux_/dependency.hpp"
 
 namespace boost {
 namespace di {

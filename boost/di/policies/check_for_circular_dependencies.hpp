@@ -23,9 +23,9 @@
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/assert.hpp>
-    #include "boost/di/aux/ctor_traits.hpp"
-    #include "boost/di/aux/dependency.hpp"
-    #include "boost/di/aux/make_plain.hpp"
+    #include "boost/di/aux_/ctor_traits.hpp"
+    #include "boost/di/aux_/dependency.hpp"
+    #include "boost/di/aux_/make_plain.hpp"
     #include "boost/di/detail/binder.hpp"
     #include "boost/di/scopes/per_request.hpp"
     #include "boost/di/config.hpp"

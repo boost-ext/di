@@ -18,17 +18,17 @@
     #include <boost/mpl/contains.hpp>
     #include <boost/mpl/placeholders.hpp>
     #include <boost/mpl/assert.hpp>
-    #include "boost/di/aux/instance.hpp"
-    #include "boost/di/aux/explicit_value.hpp"
-    #include "boost/di/aux/converter.hpp"
-    #include "boost/di/aux/has_traits.hpp"
+    #include "boost/di/aux_/instance.hpp"
+    #include "boost/di/aux_/explicit_value.hpp"
+    #include "boost/di/aux_/converter.hpp"
+    #include "boost/di/aux_/has_traits.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
         BOOST_DI_ITERATION_PARAMS(              \
             1                                   \
           , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE  \
-          , "boost/di/aux/dependency.hpp"       \
+          , "boost/di/aux_/dependency.hpp"       \
         )                                       \
     )
 

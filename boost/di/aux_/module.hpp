@@ -27,8 +27,8 @@
     #include <boost/mpl/not.hpp>
     #include <boost/mpl/or.hpp>
     #include <boost/mpl/equal_to.hpp>
-    #include "boost/di/aux/pool.hpp"
-    #include "boost/di/aux/has_traits.hpp"
+    #include "boost/di/aux_/pool.hpp"
+    #include "boost/di/aux_/has_traits.hpp"
     #include "boost/di/detail/creator.hpp"
     #include "boost/di/detail/visitor.hpp"
     #include "boost/di/policy.hpp"

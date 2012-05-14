@@ -11,7 +11,7 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include "boost/di/named.hpp"
-#include "boost/di/aux/make_plain.hpp"
+#include "boost/di/aux_/make_plain.hpp"
 #include "data.hpp"
 
 namespace boost {

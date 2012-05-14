@@ -7,7 +7,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
-#include "boost/di/aux/pool.hpp"
+#include "boost/di/aux_/pool.hpp"
 
 namespace boost {
 namespace di {

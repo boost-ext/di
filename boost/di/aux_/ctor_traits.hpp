@@ -12,7 +12,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/function_types/parameter_types.hpp>
 #include <boost/mpl/bool.hpp>
-#include "boost/di/aux/has_traits.hpp"
+#include "boost/di/aux_/has_traits.hpp"
 #include "boost/di/ctor.hpp"
 #include "boost/di/config.hpp"
 

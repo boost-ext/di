@@ -7,7 +7,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
-#include "boost/di/aux/instance.hpp"
+#include "boost/di/aux_/instance.hpp"
 #include "data.hpp"
 
 namespace boost {

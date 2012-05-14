@@ -14,7 +14,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/or.hpp>
-#include "boost/di/aux/value_type.hpp"
+#include "boost/di/aux_/value_type.hpp"
 
 namespace boost {
 namespace di {
