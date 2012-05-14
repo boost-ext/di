@@ -14,7 +14,7 @@
 
 namespace boost {
 namespace di {
-namespace aux {
+namespace aux_ {
 
 template<typename, typename>
 class converter;
@@ -175,7 +175,7 @@ public:
     }
 };
 
-} // namespace aux
+} // namespace aux_
 } // namespace di
 } // namespace boost
 

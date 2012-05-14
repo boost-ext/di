@@ -43,7 +43,7 @@ struct annotate<none_t>
             typename = TExpected
           , typename = TContext
           , typename = void
-        > class TInstance = aux::instance
+        > class TInstance = aux_::instance
     >
     struct with_ : with<>
     {

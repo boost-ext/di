@@ -59,13 +59,13 @@ class instance<
       , TContext,
         typename enable_if<
             mpl::or_<
-                is_same<typename aux::value_type<T>::type, std::string>
-              , is_arithmetic<typename aux::value_type<T>::type>
+                is_same<typename aux_::value_type<T>::type, std::string>
+              , is_arithmetic<typename aux_::value_type<T>::type>
             >
         >::type
     >
 {
-    typedef typename aux::value_type<T>::type value_type;
+    typedef typename aux_::value_type<T>::type value_type;
 
 public:
     typedef T element_type;

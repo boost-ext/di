@@ -423,18 +423,18 @@ BOOST_AUTO_TEST_CASE(module_externals_create_by_explicit_value)
     const double d = 21.0;
     const char c = 'x';
 
-    aux::instance<int> i_(i);
-    aux::instance<double> d_(d);
-    aux::instance<char> c_(c);
+    aux_::instance<int> i_(i);
+    aux_::instance<double> d_(d);
+    aux_::instance<char> c_(c);
 
     module<
         mpl::vector<
             dependency<scopes::per_request, std::string, mpl::string<'di'> >::type
         >
       , mpl::vector<
-            aux::instance<int>
-          , aux::instance<double>
-          , aux::instance<char>
+            aux_::instance<int>
+          , aux_::instance<double>
+          , aux_::instance<char>
         >
     > module_(i_, d_, c_);
 
@@ -452,14 +452,14 @@ BOOST_AUTO_TEST_CASE(module_externals_create_with_non_trivial_ctor)
     const double d = 21.0;
     const char c = 'x';
 
-    aux::instance<c2> c2_(make_shared<c2>(i, d, c));
+    aux_::instance<c2> c2_(make_shared<c2>(i, d, c));
 
     module<
         mpl::vector<
             dependency<scopes::per_request, c2>::type
         >
       , mpl::vector<
-            aux::instance<c2>
+            aux_::instance<c2>
         >
     > module_(c2_);
 
@@ -478,8 +478,8 @@ BOOST_AUTO_TEST_CASE(module_externals_create_with_attributes)
     typedef named<int, mpl::string<'1'> > named1;
     typedef named<int, mpl::string<'2'> > named2;
 
-    aux::instance<named1> i1_(i1);
-    aux::instance<named2> i2_(i2);
+    aux_::instance<named1> i1_(i1);
+    aux_::instance<named2> i2_(i2);
 
     module<
         mpl::vector<
@@ -487,8 +487,8 @@ BOOST_AUTO_TEST_CASE(module_externals_create_with_attributes)
           , dependency<scopes::per_request, named2, int>::type
         >
       , mpl::vector<
-            aux::instance<named1>
-          , aux::instance<named2>
+            aux_::instance<named1>
+          , aux_::instance<named2>
         >
     > module_(i1_, i2_);
 

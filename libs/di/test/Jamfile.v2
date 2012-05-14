@@ -21,13 +21,13 @@ project
     ;
 
 test-suite di-test
-    : [ run aux/converter_ut.cpp ]
-      [ run aux/dependency_ut.cpp ]
-      [ run aux/explicit_value_ut.cpp ]
-      [ run aux/instance_ut.cpp ]
-      [ run aux/make_plain_ut.cpp ]
-      [ run aux/pool_ut.cpp ]
-      [ run aux/value_type_ut.cpp ]
+    : [ run aux_/converter_ut.cpp ]
+      [ run aux_/dependency_ut.cpp ]
+      [ run aux_/explicit_value_ut.cpp ]
+      [ run aux_/instance_ut.cpp ]
+      [ run aux_/make_plain_ut.cpp ]
+      [ run aux_/pool_ut.cpp ]
+      [ run aux_/value_type_ut.cpp ]
       [ run detail/module_ut.cpp ]
       [ run detail/creator_ut.cpp ]
       [ run detail/visitor_ut.cpp ]

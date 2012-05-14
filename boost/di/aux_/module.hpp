@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef BOOST_DI_DETAIL_MODULE_HPP
-    #define BOOST_DI_DETAIL_MODULE_HPP
+    #ifndef BOOST_DI_AUX_MODULE_HPP
+    #define BOOST_DI_AUX_MODULE_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/type_traits/is_base_of.hpp>
@@ -38,13 +38,13 @@
         BOOST_DI_ITERATION_PARAMS(          \
             1                               \
           , BOOST_MPL_LIMIT_VECTOR_SIZE     \
-          , "boost/di/detail/module.hpp"    \
+          , "boost/di/aux_/module.hpp"      \
         )                                   \
     )
 
     namespace boost {
     namespace di {
-    namespace detail {
+    namespace aux_ {
 
     template<
         typename TDeps = mpl::vector0<>
@@ -52,7 +52,7 @@
       , template<
             typename
           , typename = void
-        > class TPool = aux::pool
+        > class TPool = aux_::pool
       , template<
             typename
         > class TCreator = creator
@@ -78,7 +78,7 @@
                       TSeq
                     , mpl::int_<0>
                     , mpl::if_<
-                          aux::has_deps<mpl::_2>
+                          aux_::has_deps<mpl::_2>
                         , mpl::next<mpl::_1>
                         , mpl::_1
                       >
@@ -93,7 +93,7 @@
         };
 
         template<typename T>
-        struct deps_impl<T, typename enable_if<aux::has_deps<T> >::type>
+        struct deps_impl<T, typename enable_if<aux_::has_deps<T> >::type>
         {
             typedef typename T::deps type;
         };
@@ -105,7 +105,7 @@
         };
 
         template<typename T>
-        struct pool_impl<T, typename enable_if<aux::has_pool<T> >::type>
+        struct pool_impl<T, typename enable_if<aux_::has_pool<T> >::type>
         {
             typedef mpl::vector<typename T::pool> type;
         };
@@ -123,7 +123,7 @@
                   >::type
                 , mpl::or_<
                       is_base_of<policy, mpl::_1>
-                    , aux::has_element_type<mpl::_1>
+                    , aux_::has_element_type<mpl::_1>
                   >
               >::type
         { };
@@ -207,7 +207,7 @@
         entries entries_;
     };
 
-    } // namespace detail
+    } // namespace aux_
     } // namespace di
     } // namespace boost
 

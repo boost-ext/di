@@ -44,7 +44,7 @@
                       mpl::is_sequence<mpl::_2>
                     , mpl::_2
                     , mpl::if_<
-                          aux::has_element_type<mpl::_2>
+                          aux_::has_element_type<mpl::_2>
                         , mpl::_2
                         , per_request<mpl::_2>
                       >

@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef BOOST_DI_DETAIL_VISITOR_HPP
-    #define BOOST_DI_DETAIL_VISITOR_HPP
+    #ifndef BOOST_DI_AUX_VISITOR_HPP
+    #define BOOST_DI_AUX_VISITOR_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
@@ -27,13 +27,13 @@
         BOOST_DI_ITERATION_PARAMS(              \
             0                                   \
           , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE  \
-          , "boost/di/detail/visitor.hpp"       \
+          , "boost/di/aux_/visitor.hpp"         \
         )                                       \
     )
 
     namespace boost {
     namespace di {
-    namespace detail {
+    namespace aux_ {
 
     template<
         typename TDeps
@@ -41,12 +41,12 @@
             typename
           , typename
           , typename = TDeps
-          , typename = aux::dependency<scopes::per_request, mpl::_1, mpl::_2>
+          , typename = aux_::dependency<scopes::per_request, mpl::_1, mpl::_2>
         > class TBinder = binder
       , template<
             typename
           , typename = void
-        > class TCtorTraits = aux::ctor_traits
+        > class TCtorTraits = aux_::ctor_traits
     >
     class visitor_impl
     {
@@ -93,7 +93,7 @@
         : visitor_impl<TDeps>
     { };
 
-    } // namespace detail
+    } // namespace aux_
     } // namespace di
     } // namespace boost
 

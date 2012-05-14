@@ -62,7 +62,7 @@
                   >
               >::type
             , mpl::if_<
-                  aux::has_element_type<mpl::_1> //is instance
+                  aux_::has_element_type<mpl::_1> //is instance
                 , T
                 , mpl::_1
               >
@@ -97,7 +97,7 @@
         struct is_same_instance<
             TInstance
           , T
-          , typename enable_if<aux::has_element_type<TInstance> >::type
+          , typename enable_if<aux_::has_element_type<TInstance> >::type
         >
             : mpl::or_<
                   is_same<typename TInstance::name, T>

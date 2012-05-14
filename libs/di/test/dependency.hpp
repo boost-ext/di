@@ -28,7 +28,7 @@ template<
 struct dependency
 {
     typedef mpl::vector<TContext0, TContext1, TContext2> context;
-    typedef typename aux::dependency<
+    typedef typename aux_::dependency<
         TScope
       , TExpected
       , TGiven
@@ -47,7 +47,7 @@ template<
 struct dependency_base_of
 {
     typedef mpl::vector<TContext0, TContext1, TContext2> context;
-    typedef typename aux::dependency<
+    typedef typename aux_::dependency<
         TScope
       , TExpected
       , TGiven

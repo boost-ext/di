@@ -53,12 +53,12 @@
                 typename
               , typename
               , typename = TDeps
-              , typename = aux::dependency<scopes::per_request, mpl::_1, mpl::_2>
+              , typename = aux_::dependency<scopes::per_request, mpl::_1, mpl::_2>
             > class TBinder = detail::binder
           , template<
                 typename
               , typename = void
-            > class TCtorTraits = aux::ctor_traits
+            > class TCtorTraits = aux_::ctor_traits
         >
         class verify
         {
@@ -110,7 +110,7 @@
 
         public:
             typedef circular_dependencies<
-                typename aux::make_plain<TGiven>::type
+                typename aux_::make_plain<TGiven>::type
               , mpl::vector0<>
             > type;
         };

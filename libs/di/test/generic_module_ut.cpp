@@ -434,7 +434,7 @@ BOOST_AUTO_TEST_CASE(generic_module_externals_base)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                aux::instance<c1>
+                aux_::instance<c1>
             >
           , module::pool::externals
         >::value
@@ -457,9 +457,9 @@ BOOST_AUTO_TEST_CASE(generic_module_externals_mix)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                aux::instance<c1>
-              , aux::instance<c2>
-              , aux::instance<c3>
+                aux_::instance<c1>
+              , aux_::instance<c2>
+              , aux_::instance<c3>
             >
           , module::pool::externals
         >::value
@@ -484,10 +484,10 @@ BOOST_AUTO_TEST_CASE(generic_module_externals_bind)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                aux::instance<int>
-              , aux::instance<named<c1, int> >
-              , aux::instance<c2, mpl::vector<c1> >
-              , aux::instance<named<c3, double>, mpl::vector<c4, c5> >
+                aux_::instance<int>
+              , aux_::instance<named<c1, int> >
+              , aux_::instance<c2, mpl::vector<c1> >
+              , aux_::instance<named<c3, double>, mpl::vector<c4, c5> >
             >
           , module::pool::externals
         >::value
@@ -602,8 +602,8 @@ BOOST_AUTO_TEST_CASE(generic_module_ctor_with_externals)
     );
 
     //TODO
-    //BOOST_CHECK_EQUAL(i, module_.pool_.get<aux::instance<int> >());
-    //BOOST_CHECK_EQUAL(d, module_.pool_.get<aux::instance<double> >());
+    //BOOST_CHECK_EQUAL(i, module_.pool_.get<aux_::instance<int> >());
+    //BOOST_CHECK_EQUAL(d, module_.pool_.get<aux_::instance<double> >());
 }
 
 BOOST_AUTO_TEST_CASE(generic_module_ctor_with_externals_shared_ptr)
@@ -624,7 +624,7 @@ BOOST_AUTO_TEST_CASE(generic_module_ctor_with_externals_shared_ptr)
     //TODO
     //BOOST_CHECK_EQUAL(
         //i
-      //, get<shared_ptr<value> >(module_.pool_.get<aux::instance<value> >())->i
+      //, get<shared_ptr<value> >(module_.pool_.get<aux_::instance<value> >())->i
     //);
 }
 

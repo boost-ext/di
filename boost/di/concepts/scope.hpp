@@ -40,7 +40,7 @@ public:
       , typename TContext = mpl::vector0<>
     >
     struct dependency
-        : aux::dependency<
+        : aux_::dependency<
                mpl::_1
              , TExpected
              , TGiven
