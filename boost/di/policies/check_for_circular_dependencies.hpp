@@ -126,7 +126,7 @@
 
     #define BOOST_DI_CHECK_FOR_CIRCULAR_DEPENDENCIES_IMPL(z, n, _)          \
         BOOST_PP_COMMA_IF(n)                                                \
-        circular_dependencies<                                              \
+        circular_dependencies<                                             \
             typename mpl::at_c<typename ctor<TDependency>::type, n>::type   \
           , TCallStack                                                      \
         >

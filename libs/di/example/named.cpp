@@ -21,7 +21,7 @@ public:
       , di::named<int, mpl::string<'1'> > i1
       , di::named<int, mpl::string<'2'> > i2
     ) : i1(i1), i2(i2) {
-        std::clog << "i1:" << i1 << ", i2: " << i2 << std::endl;
+        std::clog <<"i1:" <<i1 <<", i2: " <<i2 <<std::endl;
     }
 
 private:

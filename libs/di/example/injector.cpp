@@ -71,7 +71,7 @@ int main()
 
         di::injector<generic_module, BOOST_TYPEOF(fusion_module)> injector;
 
-        boost::shared_ptr<c4> c4_ = injector.create< boost::shared_ptr<c4> >();
+        boost::shared_ptr<c4> c4_ = injector.create<boost::shared_ptr<c4> >();
         (void)c4_;
     }
 
@@ -97,7 +97,7 @@ int main()
 
         di::injector<generic_module, decltype(fusion_module)> injector;
 
-        boost::shared_ptr<c4> c4_ = injector.create< boost::shared_ptr<c4> >();
+        boost::shared_ptr<c4> c4_ = injector.create<boost::shared_ptr<c4> >();
         (void)c4_;
     }
 
@@ -123,7 +123,7 @@ int main()
 
         auto injector = di::injector<>().install(generic_module(), fusion_module);
 
-        boost::shared_ptr<c4> c4_ = injector.create< boost::shared_ptr<c4> >();
+        boost::shared_ptr<c4> c4_ = injector.create<boost::shared_ptr<c4> >();
         (void)c4_;
     }
 

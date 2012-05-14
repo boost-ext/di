@@ -46,12 +46,12 @@ class plant_uml
 public:
     void on_begin(std::stringstream& stream) const
     {
-        stream << "@startuml uml_visitor.png" << std::endl;
+        stream <<"@startuml uml_visitor.png" <<std::endl;
     }
 
     void on_end(std::stringstream& stream) const
     {
-        stream << "@enduml" << std::endl;
+        stream <<"@enduml" <<std::endl;
     }
 
     template<typename TDependency>
@@ -60,10 +60,10 @@ public:
                , const TDependency& to) const
     {
         if (to.expected != to.given) {
-            stream << "\"" << to.expected << "\" <|-- \"" << to.given << "\"" << std::endl;
+            stream <<"\"" <<to.expected <<"\" <|-- \"" <<to.given <<"\"" <<std::endl;
         }
 
-        stream << "\"" << from.expected << "\" .. \"" << to.expected << "\"" << std::endl;
+        stream <<"\"" <<from.expected <<"\" .. \"" <<to.expected <<"\"" <<std::endl;
     }
 };
 
@@ -141,7 +141,7 @@ int main()
 
     std::stringstream stream;
     injector.visit<c3>(uml_visitor<plant_uml>(stream));
-    std::cout << stream.str();
+    std::cout <<stream.str();
 
     // @startuml uml_visitor.png
     // "(anonymous namespace)::c3" .. "(anonymous namespace)::c1"

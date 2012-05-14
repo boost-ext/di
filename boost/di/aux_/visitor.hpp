@@ -116,7 +116,7 @@
         visitor.template operator()<dependency<T, TCallStack, TDependency> >();
 
         #define BOOST_DI_VISITOR_EXECUTE(z, n, _)                               \
-            execute<                                                            \
+            execute<                                                           \
                 typename mpl::at_c<typename ctor<TDependency>::type, n>::type   \
               , TCallStack                                                      \
             >(visitor);

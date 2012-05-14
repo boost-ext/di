@@ -169,7 +169,7 @@ struct c10
 
 struct c11
 {
-    BOOST_DI_CTOR(c11, named< shared_ptr<int>, mpl::string<'1'> > i)
+    BOOST_DI_CTOR(c11, named<shared_ptr<int>, mpl::string<'1'> > i)
         : i(i)
     { }
 
@@ -178,7 +178,7 @@ struct c11
 
 struct c12
 {
-    BOOST_DI_CTOR(c12, named< shared_ptr<if0>, mpl::string<'1'> > if0_, named< shared_ptr<c2>, mpl::string<'2'> > c2_)
+    BOOST_DI_CTOR(c12, named<shared_ptr<if0>, mpl::string<'1'> > if0_, named<shared_ptr<c2>, mpl::string<'2'> > c2_)
         : if0_(if0_), c2_(c2_)
     { }
 
@@ -188,7 +188,7 @@ struct c12
 
 struct c13
 {
-    BOOST_DI_CTOR(c13, named< shared_ptr<if0> > if0_, c3 c3_)
+    BOOST_DI_CTOR(c13, named<shared_ptr<if0> > if0_, c3 c3_)
         : if0_(if0_), c3_(c3_)
     { }
 
@@ -254,7 +254,7 @@ struct transaction
 };
 
 struct transaction_provider
-    : provider< shared_ptr<transaction> >
+    : provider<shared_ptr<transaction> >
 {
     BOOST_DI_CTOR(transaction_provider, shared_ptr<c3> c3_)
         : c3_(c3_)
@@ -270,11 +270,11 @@ struct transaction_provider
 
 struct transaction_usage
 {
-    BOOST_DI_CTOR(transaction_usage, shared_ptr< provider< shared_ptr<transaction> > > p)
+    BOOST_DI_CTOR(transaction_usage, shared_ptr<provider<shared_ptr<transaction> > > p)
         : p(p)
     { }
 
-    shared_ptr< provider< shared_ptr<transaction> > > p;
+    shared_ptr<provider<shared_ptr<transaction> > > p;
 };
 
 template<>

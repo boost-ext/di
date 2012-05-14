@@ -448,7 +448,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_named_in_call)
     BOOST_AUTO(module, fusion_module<>()(
         per_requests<
             bind<int, mpl::int_<1> >
-          , bind<int, mpl::int_<4> >::in_name< mpl::string<'2'> >::in_call<call_stack<c7, c6, c4> >
+          , bind<int, mpl::int_<4> >::in_name<mpl::string<'2'> >::in_call<call_stack<c7, c6, c4> >
           , bind<int, mpl::int_<5> >::in_call<c2>
         >()
     ));
@@ -471,7 +471,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_named_in_call)
             mpl::vector<
                 per_requests<
                     bind<int, mpl::int_<1> >
-                  , bind<int, mpl::int_<4> >::in_name< mpl::string<'2'> >::in_call<call_stack<c7, c6, c4> >
+                  , bind<int, mpl::int_<4> >::in_name<mpl::string<'2'> >::in_call<call_stack<c7, c6, c4> >
                   , bind<int, mpl::int_<5> >::in_call<c2>
                 >
             >

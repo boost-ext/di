@@ -18,9 +18,9 @@ struct c2
 {
     BOOST_DI_CTOR(c2, std::shared_ptr<c1> ptr) {
         if (ptr) {
-            std::clog << "in session scope" << std::endl;
+            std::clog <<"in session scope" <<std::endl;
         } else {
-            std::clog << "not in session scope" << std::endl;
+            std::clog <<"not in session scope" <<std::endl;
         }
     }
 };

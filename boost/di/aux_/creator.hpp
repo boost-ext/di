@@ -126,7 +126,7 @@
 
         #define BOOST_DI_CREATOR_EXECUTE(z, n, _)                               \
             BOOST_PP_COMMA_IF(n)                                                \
-            execute<                                                            \
+            execute<                                                           \
                 typename mpl::at_c<typename ctor<TDependency>::type, n>::type   \
               , TCallStack                                                      \
             >(entries, pool)

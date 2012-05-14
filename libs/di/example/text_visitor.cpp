@@ -44,9 +44,9 @@ public:
     void operator()() const {
         int size = mpl::size<typename T::context>::value;
         while(--size) {
-            std::cout << "\t";
+            std::cout <<"\t";
         }
-        std::cout << utils::demangle(typeid(typename T::type).name()) << std::endl;
+        std::cout <<utils::demangle(typeid(typename T::type).name()) <<std::endl;
     }
 };
 
