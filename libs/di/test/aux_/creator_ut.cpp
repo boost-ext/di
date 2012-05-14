@@ -11,7 +11,7 @@
 
 namespace boost {
 namespace di {
-namespace detail {
+namespace aux_ {
 
 class fake_pool { };
 
@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE(creator_simple)
     ));
 }
 
-} // namespace detail
+} // namespace aux_
 } // namespace di
 } // namespace boost
 

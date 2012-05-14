@@ -23,7 +23,7 @@
     #include <boost/mpl/back_inserter.hpp>
     #include "boost/di/aux/instance.hpp"
     #include "boost/di/aux/has_traits.hpp"
-    #include "boost/di/detail/module.hpp"
+    #include "boost/di/aux_/module.hpp"
     #include "boost/di/concepts.hpp"
     #include "boost/di/config.hpp"
 
@@ -73,7 +73,7 @@
 
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     class generic_module
-        : public detail::module<
+        : public aux_::module<
               typename detail::generic_deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
           >
     {
@@ -143,7 +143,7 @@
 
     template<BOOST_DI_TYPES(Args)>
     explicit generic_module(BOOST_DI_ARGS(Args, args))
-        : detail::module<
+        : aux_::module<
               typename detail::generic_deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
           >
         (BOOST_DI_ARGS_FORWARD(args))

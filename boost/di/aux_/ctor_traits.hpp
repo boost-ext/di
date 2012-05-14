@@ -25,7 +25,7 @@ struct ctor_traits
     static void ctor(); //trivial ctor
 };
 
-namespace aux {
+namespace aux_ {
 
 template<typename T, typename = void>
 struct ctor_traits
@@ -41,7 +41,7 @@ struct ctor_traits<T, typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_CTOR_UNIQUE
       >::type
 { };
 
-} // namespace aux
+} // namespace aux_
 } // namespace di
 } // namespace boost
 

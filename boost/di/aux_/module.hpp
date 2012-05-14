@@ -52,7 +52,7 @@
       , template<
             typename
           , typename = void
-        > class TPool = aux_::pool
+        > class TPool = pool
       , template<
             typename
         > class TCreator = creator
@@ -78,7 +78,7 @@
                       TSeq
                     , mpl::int_<0>
                     , mpl::if_<
-                          aux_::has_deps<mpl::_2>
+                          has_deps<mpl::_2>
                         , mpl::next<mpl::_1>
                         , mpl::_1
                       >
@@ -93,7 +93,7 @@
         };
 
         template<typename T>
-        struct deps_impl<T, typename enable_if<aux_::has_deps<T> >::type>
+        struct deps_impl<T, typename enable_if<has_deps<T> >::type>
         {
             typedef typename T::deps type;
         };
@@ -105,7 +105,7 @@
         };
 
         template<typename T>
-        struct pool_impl<T, typename enable_if<aux_::has_pool<T> >::type>
+        struct pool_impl<T, typename enable_if<has_pool<T> >::type>
         {
             typedef mpl::vector<typename T::pool> type;
         };
@@ -123,7 +123,7 @@
                   >::type
                 , mpl::or_<
                       is_base_of<policy, mpl::_1>
-                    , aux_::has_element_type<mpl::_1>
+                    , has_element_type<mpl::_1>
                   >
               >::type
         { };

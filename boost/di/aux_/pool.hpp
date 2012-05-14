@@ -35,7 +35,7 @@
 
     namespace boost {
     namespace di {
-    namespace aux {
+    namespace aux_ {
 
     template<
         typename TExternals = mpl::vector0<>
@@ -60,7 +60,7 @@
 
     #include BOOST_PP_ITERATE()
 
-    } // namespace aux
+    } // namespace aux_
     } // namespace di
     } // namespace boost
 

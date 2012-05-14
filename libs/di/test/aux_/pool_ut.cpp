@@ -11,7 +11,7 @@
 
 namespace boost {
 namespace di {
-namespace aux {
+namespace aux_ {
 
 template<typename T>
 struct allocator
@@ -177,7 +177,7 @@ BOOST_AUTO_TEST_CASE(pool_of_pools)
     ));
 }
 
-} // namespace aux
+} // namespace aux_
 } // namespace di
 } // namespace boost
 

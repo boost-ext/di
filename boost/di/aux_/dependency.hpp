@@ -34,7 +34,7 @@
 
     namespace boost {
     namespace di {
-    namespace aux {
+    namespace aux_ {
 
     template<
         typename TScope
@@ -219,7 +219,7 @@
         };
     };
 
-    } // namespace aux
+    } // namespace aux_
     } // namespace di
     } // namespace boost
 

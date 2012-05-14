@@ -141,7 +141,7 @@ template<
 struct make_default_dependency
     : TDefault::template rebind<
           TGiven
-        , typename aux_::value_type<TGiven>::type
+        , typename value_type<TGiven>::type
       >
 { };
 
@@ -158,12 +158,12 @@ struct binder
           mpl::begin<
               typename mpl::push_back<
                   typename detail::sort_dependecies_by_call_stack_order<
-                      typename aux_::make_plain<T>::type
+                      typename make_plain<T>::type
                     , TCallStack
                     , TDeps
                   >::type
                 , typename detail::make_default_dependency<
-                      typename aux_::make_plain<T>::type
+                      typename make_plain<T>::type
                     , TDefault
                   >::type
               >::type

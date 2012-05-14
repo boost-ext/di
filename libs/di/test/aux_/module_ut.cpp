@@ -9,13 +9,13 @@
 
 namespace boost {
 namespace di {
-namespace detail {
+namespace aux_ {
 
 BOOST_AUTO_TEST_CASE(module_simple)
 {
 }
 
-} // namespace detail
+} // namespace aux_
 } // namespace di
 } // namespace boost
 

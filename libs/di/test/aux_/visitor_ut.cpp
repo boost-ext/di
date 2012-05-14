@@ -12,7 +12,7 @@
 
 namespace boost {
 namespace di {
-namespace detail {
+namespace aux_ {
 
 template<typename T>
 struct dependency
@@ -39,10 +39,10 @@ BOOST_AUTO_TEST_CASE(visitor_simple)
     typedef dependency<int> dependency_t;
     visitor_mock<int> visitor_mock;
 
-    visitor< mpl::vector<dependency_t> >::execute<int, mpl::vector0<> >(visitor_mock);
+    visitor<mpl::vector<dependency_t> >::execute<int, mpl::vector0<> >(visitor_mock);
 }
 
-} // namespace detail
+} // namespace aux_
 } // namespace di
 } // namespace boost
 

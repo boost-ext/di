@@ -14,7 +14,7 @@
 
 namespace boost {
 namespace di {
-namespace aux {
+namespace aux_ {
 
 template<int value = 0>
 struct fake_scope
@@ -149,7 +149,7 @@ BOOST_AUTO_TEST_CASE(dependency_create_by_scope)
     BOOST_CHECK_EQUAL(i, dependency_.create<int>(pool_));
 }
 
-} // namespace aux
+} // namespace aux_
 } // namespace di
 } // namespace boost
 

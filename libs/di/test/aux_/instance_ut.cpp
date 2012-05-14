@@ -12,7 +12,7 @@
 
 namespace boost {
 namespace di {
-namespace aux {
+namespace aux_ {
 
 template<typename T, typename TName = void>
 struct named
@@ -98,7 +98,7 @@ BOOST_AUTO_TEST_CASE(instance_context)
     ));
 }
 
-} // namespace aux
+} // namespace aux_
 } // namespace di
 } // namespace boost
 

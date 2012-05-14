@@ -11,7 +11,7 @@
 
 namespace boost {
 namespace di {
-namespace aux {
+namespace aux_ {
 
 struct empty { };
 struct double_value
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(explicit_value_has_value_type)
     BOOST_CHECK_EQUAL(d, explicit_value<double_value>::create());
 }
 
-} // namespace aux
+} // namespace aux_
 } // namespace di
 } // namespace boost
 

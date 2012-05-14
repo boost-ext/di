@@ -13,7 +13,7 @@
 
 namespace boost {
 namespace di {
-namespace aux {
+namespace aux_ {
 
 template<typename T, typename = void>
 struct value_type
@@ -33,7 +33,7 @@ struct value_type<T, typename enable_if<has_value_type<T> >::type>
     typedef typename T::value_type type;
 };
 
-} // namespace aux
+} // namespace aux_
 } // namespace di
 } // namespace boost
 

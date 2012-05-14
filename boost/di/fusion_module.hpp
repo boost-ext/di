@@ -17,7 +17,7 @@
     #include <boost/mpl/back_inserter.hpp>
     #include <boost/mpl/placeholders.hpp>
     #include "boost/di/aux/has_traits.hpp"
-    #include "boost/di/detail/module.hpp"
+    #include "boost/di/aux_/module.hpp"
     #include "boost/di/concepts.hpp"
     #include "boost/di/config.hpp"
 
@@ -58,7 +58,7 @@
 
     template<typename TDeps = mpl::vector0<> >
     class fusion_module
-        : public detail::module<
+        : public aux_::module<
               typename detail::fusion_deps<TDeps>::type
             , TDeps
           >
@@ -82,7 +82,7 @@
 
     template<BOOST_DI_TYPES(Args)>
     explicit fusion_module(BOOST_DI_ARGS(Args, args))
-        : detail::module<
+        : aux_::module<
               typename detail::fusion_deps<TDeps>::type
             , TDeps
           >

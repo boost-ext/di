@@ -26,7 +26,7 @@
 
 namespace boost {
 namespace di {
-namespace aux {
+namespace aux_ {
 
 namespace detail {
 
@@ -64,7 +64,7 @@ struct make_plain
     >
 { };
 
-} // namespace aux
+} // namespace aux_
 } // namespace di
 } // namespace boost
 

@@ -16,7 +16,7 @@
 
 namespace boost {
 namespace di {
-namespace detail {
+namespace aux_ {
 
 template<
     typename TExpected
@@ -567,7 +567,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(binder_multiple_calls_not_found, TContext, binder_
     ));
 }
 
-} // namespace detail
+} // namespace aux_
 } // namespace di
 } // namespace boost
 

@@ -42,12 +42,12 @@
             typename
           , typename
           , typename = TDeps
-          , typename = aux_::dependency<scopes::per_request, mpl::_1, mpl::_2>
+          , typename = dependency<scopes::per_request, mpl::_1, mpl::_2>
         > class TBinder = binder
       , template<
             typename
           , typename = void
-        > class TCtorTraits = aux_::ctor_traits
+        > class TCtorTraits = ctor_traits
     >
     class creator_impl
     {
