@@ -19,11 +19,8 @@
 namespace boost {
 namespace di {
 
-namespace detail { class policy { }; } // namespace detail
-
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 class policy
-    : detail::policy
 {
     template<
         typename TDeps
@@ -35,7 +32,7 @@ class policy
     { };
 
 public:
-    typedef mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> policies;
+    typedef mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> policy_type;
 
     template<
         typename TDeps
@@ -43,7 +40,7 @@ public:
     >
     struct verify
         : mpl::fold<
-              policies
+              policy_type
             , mpl::void_
             , verify_impl<TDeps, T, mpl::_2>
           >::type
@@ -53,7 +50,7 @@ public:
 };
 
 template<typename TDefault>
-struct defaults<detail::policy, TDefault>
+struct defaults<policy<>, TDefault>
 {
     typedef policy<
         policies::check_for_binding_correctness

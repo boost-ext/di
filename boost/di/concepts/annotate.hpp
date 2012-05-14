@@ -9,7 +9,7 @@
 
 #include <boost/none_t.hpp>
 #include <boost/mpl/vector.hpp>
-#include "boost/di/aux/instance.hpp"
+#include "boost/di/aux_/instance.hpp"
 
 namespace boost {
 namespace di {
@@ -43,7 +43,7 @@ struct annotate<none_t>
             typename = TExpected
           , typename = TContext
           , typename = void
-        > class TInstance = aux::instance
+        > class TInstance = aux_::instance
     >
     struct with_ : with<>
     {

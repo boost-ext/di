@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef BOOST_DI_DETAIL_VISITOR_HPP
-    #define BOOST_DI_DETAIL_VISITOR_HPP
+    #ifndef BOOST_DI_AUX_VISITOR_HPP
+    #define BOOST_DI_AUX_VISITOR_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
@@ -16,10 +16,10 @@
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/placeholders.hpp>
-    #include "boost/di/aux/make_plain.hpp"
-    #include "boost/di/aux/dependency.hpp"
-    #include "boost/di/aux/ctor_traits.hpp"
-    #include "boost/di/detail/binder.hpp"
+    #include "boost/di/aux_/make_plain.hpp"
+    #include "boost/di/aux_/dependency.hpp"
+    #include "boost/di/aux_/ctor_traits.hpp"
+    #include "boost/di/aux_/binder.hpp"
     #include "boost/di/scopes/per_request.hpp"
     #include "boost/di/config.hpp"
 
@@ -27,26 +27,26 @@
         BOOST_DI_ITERATION_PARAMS(              \
             0                                   \
           , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE  \
-          , "boost/di/detail/visitor.hpp"       \
+          , "boost/di/aux_/visitor.hpp"         \
         )                                       \
     )
 
     namespace boost {
     namespace di {
-    namespace detail {
+    namespace aux_ {
 
     template<
         typename TDeps
       , template<
             typename
           , typename
-          , typename = TDeps
-          , typename = aux::dependency<scopes::per_request, mpl::_1, mpl::_2>
+          , typename
+          , typename = dependency<scopes::per_request, mpl::_1, mpl::_2>
         > class TBinder = binder
       , template<
             typename
           , typename = void
-        > class TCtorTraits = aux::ctor_traits
+        > class TCtorTraits = ctor_traits
     >
     class visitor_impl
     {
@@ -76,7 +76,7 @@
           , typename TVisitor
         >
         static void execute(const TVisitor& visitor) {
-            typedef typename TBinder<T, TCallStack>::type to_bo_created_t;
+            typedef typename TBinder<T, TCallStack, TDeps>::type to_bo_created_t;
             execute_impl<
                 T
               , to_bo_created_t
@@ -93,7 +93,7 @@
         : visitor_impl<TDeps>
     { };
 
-    } // namespace detail
+    } // namespace aux_
     } // namespace di
     } // namespace boost
 
@@ -116,7 +116,7 @@
         visitor.template operator()<dependency<T, TCallStack, TDependency> >();
 
         #define BOOST_DI_VISITOR_EXECUTE(z, n, _)                               \
-            execute<                                                            \
+            execute<                                                           \
                 typename mpl::at_c<typename ctor<TDependency>::type, n>::type   \
               , TCallStack                                                      \
             >(visitor);

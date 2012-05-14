@@ -21,7 +21,7 @@
 
 namespace boost {
 namespace di {
-namespace aux {
+namespace aux_ {
 
 namespace detail {
 
@@ -70,7 +70,7 @@ public:
     }
 };
 
-} // namespace aux
+} // namespace aux_
 } // namespace di
 } // namespace boost
 

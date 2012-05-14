@@ -7,12 +7,12 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
-#include "boost/di/aux/instance.hpp"
+#include "boost/di/aux_/instance.hpp"
 #include "data.hpp"
 
 namespace boost {
 namespace di {
-namespace aux {
+namespace aux_ {
 
 template<typename T, typename TName = void>
 struct named
@@ -98,7 +98,7 @@ BOOST_AUTO_TEST_CASE(instance_context)
     ));
 }
 
-} // namespace aux
+} // namespace aux_
 } // namespace di
 } // namespace boost
 

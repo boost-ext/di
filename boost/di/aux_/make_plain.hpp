@@ -21,12 +21,12 @@
 #include <boost/mpl/back_inserter.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/is_sequence.hpp>
-#include "boost/di/aux/has_traits.hpp"
+#include "boost/di/aux_/has_traits.hpp"
 #include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {
-namespace aux {
+namespace aux_ {
 
 namespace detail {
 
@@ -64,7 +64,7 @@ struct make_plain
     >
 { };
 
-} // namespace aux
+} // namespace aux_
 } // namespace di
 } // namespace boost
 

@@ -9,12 +9,11 @@
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
-#include "boost/di/aux/instance.hpp"
-#include "boost/di/aux/dependency.hpp"
+#include "boost/di/aux_/instance.hpp"
 #include "boost/di/named.hpp"
 #include "boost/di/generic_module.hpp"
 #include "boost/di/concepts.hpp"
-#include "dependency.hpp"
+#include "fake_dependency.hpp"
 #include "data.hpp"
 
 namespace boost {
@@ -54,7 +53,7 @@ BOOST_AUTO_TEST_CASE(generic_module_default_scope)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                dependency_base_of<scopes::per_request, c1, c1>::type
+                fake_dependency_base_of<scopes::per_request, c1, c1>::type
             >
           , module::deps
         >::value
@@ -72,9 +71,9 @@ BOOST_AUTO_TEST_CASE(generic_module_default_scope_many)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                dependency_base_of<scopes::per_request, c1, c1>::type
-              , dependency_base_of<scopes::per_request, c2, c2>::type
-              , dependency_base_of<scopes::per_request, c3, c3>::type
+                fake_dependency_base_of<scopes::per_request, c1, c1>::type
+              , fake_dependency_base_of<scopes::per_request, c2, c2>::type
+              , fake_dependency_base_of<scopes::per_request, c3, c3>::type
             >
           , module::deps
         >::value
@@ -97,10 +96,10 @@ BOOST_AUTO_TEST_CASE(generic_module_default_scope_bind)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                dependency<scopes::per_request, if0, c0if0>::type
-              , dependency_base_of<scopes::per_request, c1, c1>::type
-              , dependency_base_of<scopes::per_request, named<c2, int>, c2>::type
-              , dependency_base_of<scopes::per_request, c3, c3, call_stack<c4, c5> >::type
+                fake_dependency<scopes::per_request, if0, c0if0>::type
+              , fake_dependency_base_of<scopes::per_request, c1, c1>::type
+              , fake_dependency_base_of<scopes::per_request, named<c2, int>, c2>::type
+              , fake_dependency_base_of<scopes::per_request, c3, c3, call_stack<c4, c5> >::type
             >
           , module::deps
         >::value
@@ -122,7 +121,7 @@ BOOST_AUTO_TEST_CASE(generic_module_one_scope)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                dependency_base_of<scopes::singleton, c0if0, c0if0>::type
+                fake_dependency_base_of<scopes::singleton, c0if0, c0if0>::type
             >
           , module::deps
         >::value
@@ -144,7 +143,7 @@ BOOST_AUTO_TEST_CASE(generic_module_one_scope_alias)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                dependency_base_of<scopes::singleton, c0if0, c0if0>::type
+                fake_dependency_base_of<scopes::singleton, c0if0, c0if0>::type
             >
           , module::deps
         >::value
@@ -164,7 +163,7 @@ BOOST_AUTO_TEST_CASE(generic_module_one_scope_direct)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                dependency_base_of<scopes::singleton, c0if0, c0if0>::type
+                fake_dependency_base_of<scopes::singleton, c0if0, c0if0>::type
             >
           , module::deps
         >::value
@@ -186,9 +185,9 @@ BOOST_AUTO_TEST_CASE(generic_module_many_singletons)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                dependency_base_of<scopes::singleton, c1, c1>::type
-              , dependency_base_of<scopes::singleton, c2, c2>::type
-              , dependency_base_of<scopes::singleton, c3, c3>::type
+                fake_dependency_base_of<scopes::singleton, c1, c1>::type
+              , fake_dependency_base_of<scopes::singleton, c2, c2>::type
+              , fake_dependency_base_of<scopes::singleton, c3, c3>::type
             >
           , module::deps
         >::value
@@ -213,10 +212,10 @@ BOOST_AUTO_TEST_CASE(generic_module_many_scopes)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                dependency_base_of<scopes::singleton, c1, c1>::type
-              , dependency_base_of<scopes::singleton, c2, c2>::type
-              , dependency_base_of<scopes::per_request, c3, c3>::type
-              , dependency_base_of<scopes::per_request, c4, c4>::type
+                fake_dependency_base_of<scopes::singleton, c1, c1>::type
+              , fake_dependency_base_of<scopes::singleton, c2, c2>::type
+              , fake_dependency_base_of<scopes::per_request, c3, c3>::type
+              , fake_dependency_base_of<scopes::per_request, c4, c4>::type
             >,
             module::deps
         >::value
@@ -236,7 +235,7 @@ BOOST_AUTO_TEST_CASE(generic_module_in_call)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                dependency_base_of<scopes::per_request, c1, c1, c2>::type
+                fake_dependency_base_of<scopes::per_request, c1, c1, c2>::type
             >
           , module::deps
         >::value
@@ -256,7 +255,7 @@ BOOST_AUTO_TEST_CASE(generic_module_in_name)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                dependency_base_of<scopes::singleton, named<c1, int>, c1>::type
+                fake_dependency_base_of<scopes::singleton, named<c1, int>, c1>::type
             >
           , module::deps
         >::value
@@ -279,8 +278,8 @@ BOOST_AUTO_TEST_CASE(generic_module_in_namein_call)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                dependency_base_of<scopes::singleton, named<c1, int>, c1, double>::type
-              , dependency_base_of<scopes::singleton, named<c2, double>, c2, int>::type
+                fake_dependency_base_of<scopes::singleton, named<c1, int>, c1, double>::type
+              , fake_dependency_base_of<scopes::singleton, named<c2, double>, c2, int>::type
             >,
             module::deps
         >::value
@@ -303,8 +302,8 @@ BOOST_AUTO_TEST_CASE(generic_module_in_call_in_name)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                dependency_base_of<scopes::singleton, named<c1, int>, c1, double>::type
-              , dependency_base_of<scopes::singleton, named<c2, double>, c2, int>::type
+                fake_dependency_base_of<scopes::singleton, named<c1, int>, c1, double>::type
+              , fake_dependency_base_of<scopes::singleton, named<c2, double>, c2, int>::type
             >
           , module::deps
         >::value
@@ -326,7 +325,7 @@ BOOST_AUTO_TEST_CASE(generic_module_bind_if)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                dependency<scopes::singleton, if0, c0if0>::type
+                fake_dependency<scopes::singleton, if0, c0if0>::type
             >
           , module::deps
         >::value
@@ -355,12 +354,12 @@ BOOST_AUTO_TEST_CASE(generic_module_mix)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                dependency<scopes::singleton, if0, c0if0>::type
-              , dependency_base_of<scopes::singleton, c1, c1>::type
-              , dependency_base_of<scopes::singleton, named<c2, int>, c2>::type
-              , dependency_base_of<scopes::singleton, c3, c3, call_stack<c4, c5> >::type
-              , dependency_base_of<scopes::per_request, c6, c6>::type
-              , dependency_base_of<scopes::singleton, named<c7, double>, c7, c1>::type
+                fake_dependency<scopes::singleton, if0, c0if0>::type
+              , fake_dependency_base_of<scopes::singleton, c1, c1>::type
+              , fake_dependency_base_of<scopes::singleton, named<c2, int>, c2>::type
+              , fake_dependency_base_of<scopes::singleton, c3, c3, call_stack<c4, c5> >::type
+              , fake_dependency_base_of<scopes::per_request, c6, c6>::type
+              , fake_dependency_base_of<scopes::singleton, named<c7, double>, c7, c1>::type
             >
           , module::deps
         >::value
@@ -386,9 +385,9 @@ BOOST_AUTO_TEST_CASE(generic_module_named_in_call)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                dependency_base_of<scopes::per_request, int, mpl::int_<1> >::type
-              , dependency_base_of<scopes::per_request, named<int, mpl::string<'2'> >, mpl::int_<4>, call_stack<c7, c6, c4> >::type
-              , dependency_base_of<scopes::per_request, int, mpl::int_<5>, c2>::type
+                fake_dependency_base_of<scopes::per_request, int, mpl::int_<1> >::type
+              , fake_dependency_base_of<scopes::per_request, named<int, mpl::string<'2'> >, mpl::int_<4>, call_stack<c7, c6, c4> >::type
+              , fake_dependency_base_of<scopes::per_request, int, mpl::int_<5>, c2>::type
             >
           , module::deps
         >::value
@@ -409,8 +408,8 @@ BOOST_AUTO_TEST_CASE(generic_multiple_calls)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                dependency_base_of<scopes::singleton, c0, c0, c1, call_stack<c2, c3>, c4>::type
-              , dependency_base_of<scopes::per_request, c5, c5, int, double>::type
+                fake_dependency_base_of<scopes::singleton, c0, c0, c1, call_stack<c2, c3>, c4>::type
+              , fake_dependency_base_of<scopes::per_request, c5, c5, int, double>::type
             >
           , module::deps
         >::value
@@ -434,7 +433,7 @@ BOOST_AUTO_TEST_CASE(generic_module_externals_base)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                aux::instance<c1>
+                aux_::instance<c1>
             >
           , module::pool::externals
         >::value
@@ -457,9 +456,9 @@ BOOST_AUTO_TEST_CASE(generic_module_externals_mix)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                aux::instance<c1>
-              , aux::instance<c2>
-              , aux::instance<c3>
+                aux_::instance<c1>
+              , aux_::instance<c2>
+              , aux_::instance<c3>
             >
           , module::pool::externals
         >::value
@@ -484,10 +483,10 @@ BOOST_AUTO_TEST_CASE(generic_module_externals_bind)
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                aux::instance<int>
-              , aux::instance<named<c1, int> >
-              , aux::instance<c2, mpl::vector<c1> >
-              , aux::instance<named<c3, double>, mpl::vector<c4, c5> >
+                aux_::instance<int>
+              , aux_::instance<named<c1, int> >
+              , aux_::instance<c2, mpl::vector<c1> >
+              , aux_::instance<named<c3, double>, mpl::vector<c4, c5> >
             >
           , module::pool::externals
         >::value
@@ -602,8 +601,8 @@ BOOST_AUTO_TEST_CASE(generic_module_ctor_with_externals)
     );
 
     //TODO
-    //BOOST_CHECK_EQUAL(i, module_.pool_.get<aux::instance<int> >());
-    //BOOST_CHECK_EQUAL(d, module_.pool_.get<aux::instance<double> >());
+    //BOOST_CHECK_EQUAL(i, module_.pool_.get<aux_::instance<int> >());
+    //BOOST_CHECK_EQUAL(d, module_.pool_.get<aux_::instance<double> >());
 }
 
 BOOST_AUTO_TEST_CASE(generic_module_ctor_with_externals_shared_ptr)
@@ -624,7 +623,7 @@ BOOST_AUTO_TEST_CASE(generic_module_ctor_with_externals_shared_ptr)
     //TODO
     //BOOST_CHECK_EQUAL(
         //i
-      //, get<shared_ptr<value> >(module_.pool_.get<aux::instance<value> >())->i
+      //, get<shared_ptr<value> >(module_.pool_.get<aux_::instance<value> >())->i
     //);
 }
 

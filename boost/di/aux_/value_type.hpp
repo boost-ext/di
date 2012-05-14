@@ -9,11 +9,11 @@
 
 #include <string>
 #include <boost/utility/enable_if.hpp>
-#include "boost/di/aux/has_traits.hpp"
+#include "boost/di/aux_/has_traits.hpp"
 
 namespace boost {
 namespace di {
-namespace aux {
+namespace aux_ {
 
 template<typename T, typename = void>
 struct value_type
@@ -33,7 +33,7 @@ struct value_type<T, typename enable_if<has_value_type<T> >::type>
     typedef typename T::value_type type;
 };
 
-} // namespace aux
+} // namespace aux_
 } // namespace di
 } // namespace boost
 

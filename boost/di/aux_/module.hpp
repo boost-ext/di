@@ -6,11 +6,10 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef BOOST_DI_DETAIL_MODULE_HPP
-    #define BOOST_DI_DETAIL_MODULE_HPP
+    #ifndef BOOST_DI_AUX_MODULE_HPP
+    #define BOOST_DI_AUX_MODULE_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
-    #include <boost/type_traits/is_base_of.hpp>
     #include <boost/type_traits/is_same.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/vector.hpp>
@@ -27,10 +26,10 @@
     #include <boost/mpl/not.hpp>
     #include <boost/mpl/or.hpp>
     #include <boost/mpl/equal_to.hpp>
-    #include "boost/di/aux/pool.hpp"
-    #include "boost/di/aux/has_traits.hpp"
-    #include "boost/di/detail/creator.hpp"
-    #include "boost/di/detail/visitor.hpp"
+    #include "boost/di/aux_/pool.hpp"
+    #include "boost/di/aux_/has_traits.hpp"
+    #include "boost/di/aux_/creator.hpp"
+    #include "boost/di/aux_/visitor.hpp"
     #include "boost/di/policy.hpp"
     #include "boost/di/config.hpp"
 
@@ -38,13 +37,13 @@
         BOOST_DI_ITERATION_PARAMS(          \
             1                               \
           , BOOST_MPL_LIMIT_VECTOR_SIZE     \
-          , "boost/di/detail/module.hpp"    \
+          , "boost/di/aux_/module.hpp"      \
         )                                   \
     )
 
     namespace boost {
     namespace di {
-    namespace detail {
+    namespace aux_ {
 
     template<
         typename TDeps = mpl::vector0<>
@@ -52,7 +51,7 @@
       , template<
             typename
           , typename = void
-        > class TPool = aux::pool
+        > class TPool = pool
       , template<
             typename
         > class TCreator = creator
@@ -78,7 +77,7 @@
                       TSeq
                     , mpl::int_<0>
                     , mpl::if_<
-                          aux::has_deps<mpl::_2>
+                          has_deps<mpl::_2>
                         , mpl::next<mpl::_1>
                         , mpl::_1
                       >
@@ -93,7 +92,7 @@
         };
 
         template<typename T>
-        struct deps_impl<T, typename enable_if<aux::has_deps<T> >::type>
+        struct deps_impl<T, typename enable_if<has_deps<T> >::type>
         {
             typedef typename T::deps type;
         };
@@ -105,7 +104,7 @@
         };
 
         template<typename T>
-        struct pool_impl<T, typename enable_if<aux::has_pool<T> >::type>
+        struct pool_impl<T, typename enable_if<has_pool<T> >::type>
         {
             typedef mpl::vector<typename T::pool> type;
         };
@@ -122,8 +121,8 @@
                       >
                   >::type
                 , mpl::or_<
-                      is_base_of<policy, mpl::_1>
-                    , aux::has_element_type<mpl::_1>
+                      has_policy_type<mpl::_1>
+                    , has_element_type<mpl::_1>
                   >
               >::type
         { };
@@ -132,9 +131,9 @@
             : mpl::deref<
                   typename mpl::begin<
                        mpl::joint_view<
-                          mpl::filter_view<TDeps, is_base_of<policy, mpl::_1> >
-                        , mpl::vector1<typename defaults<policy, specialized>::type>
-                      >
+                           mpl::filter_view<TDeps, has_policy_type<mpl::_1> >
+                         , mpl::vector1<typename defaults<policy<>, specialized>::type>
+                       >
                   >::type
               >::type
         { };
@@ -162,13 +161,13 @@
 
         template<typename T>
         T create() {
-            typedef typename policies::template verify<deps, T>::type policies_t;
+            typedef typename policies::template verify<deps, T>::type policies_type;
             return TCreator<deps>::template execute<T, mpl::vector0<> >(entries_, pool_);
         }
 
         template<typename T, typename Visitor>
         void visit(const Visitor& visitor) {
-            typedef typename policies::template verify<deps, T>::type policies_t;
+            typedef typename policies::template verify<deps, T>::type policies_type;
             TVisitor<deps>::template execute<T, mpl::vector0<> >(visitor);
         }
 
@@ -207,7 +206,7 @@
         entries entries_;
     };
 
-    } // namespace detail
+    } // namespace aux_
     } // namespace di
     } // namespace boost
 

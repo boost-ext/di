@@ -8,14 +8,14 @@
 #include <typeinfo>
 #include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include "boost/di/detail/visitor.hpp"
+#include "boost/di/aux_/visitor.hpp"
 
 namespace boost {
 namespace di {
-namespace detail {
+namespace aux_ {
 
 template<typename T>
-struct dependency
+struct fake_dependency
 {
     typedef T given;
     typedef T expected;
@@ -36,13 +36,13 @@ struct visitor_mock
 
 BOOST_AUTO_TEST_CASE(visitor_simple)
 {
-    typedef dependency<int> dependency_t;
+    typedef fake_dependency<int> dependency_t;
     visitor_mock<int> visitor_mock;
 
-    visitor< mpl::vector<dependency_t> >::execute<int, mpl::vector0<> >(visitor_mock);
+    visitor<mpl::vector<dependency_t> >::execute<int, mpl::vector0<> >(visitor_mock);
 }
 
-} // namespace detail
+} // namespace aux_
 } // namespace di
 } // namespace boost
 

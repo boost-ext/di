@@ -18,23 +18,23 @@
     #include <boost/mpl/contains.hpp>
     #include <boost/mpl/placeholders.hpp>
     #include <boost/mpl/assert.hpp>
-    #include "boost/di/aux/instance.hpp"
-    #include "boost/di/aux/explicit_value.hpp"
-    #include "boost/di/aux/converter.hpp"
-    #include "boost/di/aux/has_traits.hpp"
+    #include "boost/di/aux_/instance.hpp"
+    #include "boost/di/aux_/explicit_value.hpp"
+    #include "boost/di/aux_/converter.hpp"
+    #include "boost/di/aux_/has_traits.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
         BOOST_DI_ITERATION_PARAMS(              \
             1                                   \
           , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE  \
-          , "boost/di/aux/dependency.hpp"       \
+          , "boost/di/aux_/dependency.hpp"      \
         )                                       \
     )
 
     namespace boost {
     namespace di {
-    namespace aux {
+    namespace aux_ {
 
     template<
         typename TScope
@@ -47,8 +47,8 @@
           , typename = void
         > class TExplicitValue = explicit_value
       , template<
-            typename = TExpected
-          , typename = TContext
+            typename
+          , typename
           , typename = void
         > class TInstance = instance
       , template<
@@ -64,12 +64,14 @@
           , (TGiven)
         );
 
+        typedef TInstance<TExpected, TContext> instance_type;
+
         template<typename TPool>
         struct is_value_type
             : mpl::and_<
                   TExplicitValue<TGiven>
                 , mpl::not_<
-                      mpl::contains<typename TPool::externals, TInstance<> >
+                      mpl::contains<typename TPool::externals, instance_type>
                   >
               >
         { };
@@ -78,13 +80,13 @@
         struct is_scope_type
             : mpl::and_<
                   mpl::not_<TExplicitValue<TGiven> >
-                , mpl::not_<mpl::contains<typename TPool::externals, TInstance<> > >
+                , mpl::not_<mpl::contains<typename TPool::externals, instance_type> >
               >
         { };
 
         template<typename TPool>
         struct is_pool_type
-            : mpl::contains<typename TPool::externals, TInstance<> >
+            : mpl::contains<typename TPool::externals, instance_type>
         { };
 
     public:
@@ -110,7 +112,7 @@
         template<typename T, typename TPool>
         typename enable_if<is_pool_type<TPool>, T>::type
         create(const TPool& pool) {
-            return TConverter<scope, T>::execute(pool.template get<TInstance<> >());
+            return TConverter<scope, T>::execute(pool.template get<instance_type>());
         }
 
         template<typename TAction>
@@ -217,7 +219,7 @@
         };
     };
 
-    } // namespace aux
+    } // namespace aux_
     } // namespace di
     } // namespace boost
 
@@ -234,7 +236,7 @@
     template<typename T, typename TPool, BOOST_DI_TYPES(Args)>
     typename enable_if<is_pool_type<TPool>, T>::type
     create(const TPool& pool, BOOST_DI_ARGS_NOT_USED(Args)) {
-        return TConverter<scope, T>::execute(pool.template get<TInstance<> >());
+        return TConverter<scope, T>::execute(pool.template get<instance_type>());
     }
 
 #endif

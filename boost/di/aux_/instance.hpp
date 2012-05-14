@@ -14,11 +14,11 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/or.hpp>
-#include "boost/di/aux/value_type.hpp"
+#include "boost/di/aux_/value_type.hpp"
 
 namespace boost {
 namespace di {
-namespace aux {
+namespace aux_ {
 
 template<
     typename T
@@ -59,13 +59,13 @@ class instance<
       , TContext,
         typename enable_if<
             mpl::or_<
-                is_same<typename aux::value_type<T>::type, std::string>
-              , is_arithmetic<typename aux::value_type<T>::type>
+                is_same<typename value_type<T>::type, std::string>
+              , is_arithmetic<typename value_type<T>::type>
             >
         >::type
     >
 {
-    typedef typename aux::value_type<T>::type value_type;
+    typedef typename value_type<T>::type value_type;
 
 public:
     typedef T element_type;
@@ -82,7 +82,7 @@ private:
     value_type member_;
 };
 
-} // namespace aux
+} // namespace aux_
 } // namespace di
 } // namespace boost
 

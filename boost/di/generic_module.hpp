@@ -21,9 +21,9 @@
     #include <boost/mpl/begin_end.hpp>
     #include <boost/mpl/is_sequence.hpp>
     #include <boost/mpl/back_inserter.hpp>
-    #include "boost/di/aux/instance.hpp"
-    #include "boost/di/aux/has_traits.hpp"
-    #include "boost/di/detail/module.hpp"
+    #include "boost/di/aux_/instance.hpp"
+    #include "boost/di/aux_/has_traits.hpp"
+    #include "boost/di/aux_/module.hpp"
     #include "boost/di/concepts.hpp"
     #include "boost/di/config.hpp"
 
@@ -62,7 +62,7 @@
                   >
               >::type
             , mpl::if_<
-                  aux::has_element_type<mpl::_1> //is instance
+                  aux_::has_element_type<mpl::_1> //is instance
                 , T
                 , mpl::_1
               >
@@ -73,9 +73,8 @@
 
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     class generic_module
-        : public detail::module<
+        : public aux_::module<
               typename detail::generic_deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
-            , typename detail::generic_deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
           >
     {
         struct annotations
@@ -98,7 +97,7 @@
         struct is_same_instance<
             TInstance
           , T
-          , typename enable_if<aux::has_element_type<TInstance> >::type
+          , typename enable_if<aux_::has_element_type<TInstance> >::type
         >
             : mpl::or_<
                   is_same<typename TInstance::name, T>
@@ -144,9 +143,8 @@
 
     template<BOOST_DI_TYPES(Args)>
     explicit generic_module(BOOST_DI_ARGS(Args, args))
-        : detail::module<
+        : aux_::module<
               typename detail::generic_deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
-            , typename detail::generic_deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
           >
         (BOOST_DI_ARGS_FORWARD(args))
     { }

@@ -23,10 +23,10 @@
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/assert.hpp>
-    #include "boost/di/aux/ctor_traits.hpp"
-    #include "boost/di/aux/dependency.hpp"
-    #include "boost/di/aux/make_plain.hpp"
-    #include "boost/di/detail/binder.hpp"
+    #include "boost/di/aux_/ctor_traits.hpp"
+    #include "boost/di/aux_/dependency.hpp"
+    #include "boost/di/aux_/make_plain.hpp"
+    #include "boost/di/aux_/binder.hpp"
     #include "boost/di/scopes/per_request.hpp"
     #include "boost/di/config.hpp"
 
@@ -52,13 +52,13 @@
           , template<
                 typename
               , typename
-              , typename = TDeps
-              , typename = aux::dependency<scopes::per_request, mpl::_1, mpl::_2>
-            > class TBinder = detail::binder
+              , typename
+              , typename = aux_::dependency<scopes::per_request, mpl::_1, mpl::_2>
+            > class TBinder = aux_::binder
           , template<
                 typename
               , typename = void
-            > class TCtorTraits = aux::ctor_traits
+            > class TCtorTraits = aux_::ctor_traits
         >
         class verify
         {
@@ -98,10 +98,10 @@
             >
             struct circular_dependencies
                : circular_dependencies_impl<
-                      typename TBinder<T, TCallStack>::type
+                      typename TBinder<T, TCallStack, TDeps>::type
                     , typename mpl::push_back<
                           TCallStack
-                        , typename TBinder<T, TCallStack>::type::given
+                        , typename TBinder<T, TCallStack, TDeps>::type::given
                       >::type
                   >
             { };
@@ -110,7 +110,7 @@
 
         public:
             typedef circular_dependencies<
-                typename aux::make_plain<TGiven>::type
+                typename aux_::make_plain<TGiven>::type
               , mpl::vector0<>
             > type;
         };
@@ -126,7 +126,7 @@
 
     #define BOOST_DI_CHECK_FOR_CIRCULAR_DEPENDENCIES_IMPL(z, n, _)          \
         BOOST_PP_COMMA_IF(n)                                                \
-        circular_dependencies<                                              \
+        circular_dependencies<                                             \
             typename mpl::at_c<typename ctor<TDependency>::type, n>::type   \
           , TCallStack                                                      \
         >

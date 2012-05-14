@@ -9,12 +9,12 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include "boost/di/aux/instance.hpp"
-#include "boost/di/aux/dependency.hpp"
+#include "boost/di/aux_/instance.hpp"
+#include "boost/di/aux_/dependency.hpp"
 
 namespace boost {
 namespace di {
-namespace aux {
+namespace aux_ {
 
 template<int value = 0>
 struct fake_scope
@@ -125,8 +125,8 @@ BOOST_AUTO_TEST_CASE(dependency_rebind_type)
 BOOST_AUTO_TEST_CASE(dependency_create_by_pool)
 {
     const int i = 42;
-    dependency< fake_scope<>, int > dependency_;
-    fake_pool< mpl::vector<instance<int> >, i > pool_;
+    dependency<fake_scope<>, int > dependency_;
+    fake_pool<mpl::vector<instance<int> >, i > pool_;
 
     BOOST_CHECK_EQUAL(i, dependency_.create<int>(pool_));
 }
@@ -134,8 +134,8 @@ BOOST_AUTO_TEST_CASE(dependency_create_by_pool)
 BOOST_AUTO_TEST_CASE(dependency_create_by_value)
 {
     const int i = 42;
-    dependency< fake_scope<>, int, mpl::int_<i> > dependency_;
-    fake_pool< mpl::vector0<> > pool_;
+    dependency<fake_scope<>, int, mpl::int_<i> > dependency_;
+    fake_pool<mpl::vector0<> > pool_;
 
     BOOST_CHECK_EQUAL(i, dependency_.create<int>(pool_));
 }
@@ -144,12 +144,12 @@ BOOST_AUTO_TEST_CASE(dependency_create_by_scope)
 {
     const int i = 42;
     dependency<fake_scope<i>, int> dependency_;
-    fake_pool< mpl::vector0<> > pool_;
+    fake_pool<mpl::vector0<> > pool_;
 
     BOOST_CHECK_EQUAL(i, dependency_.create<int>(pool_));
 }
 
-} // namespace aux
+} // namespace aux_
 } // namespace di
 } // namespace boost
 

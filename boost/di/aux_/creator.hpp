@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef BOOST_DI_DETAIL_CREATOR_HPP
-    #define BOOST_DI_DETAIL_CREATOR_HPP
+    #ifndef BOOST_DI_AUX_CREATOR_HPP
+    #define BOOST_DI_AUX_CREATOR_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
@@ -17,10 +17,10 @@
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/push_back.hpp>
-    #include "boost/di/aux/dependency.hpp"
-    #include "boost/di/aux/ctor_traits.hpp"
-    #include "boost/di/aux/converter.hpp"
-    #include "boost/di/detail/binder.hpp"
+    #include "boost/di/aux_/dependency.hpp"
+    #include "boost/di/aux_/ctor_traits.hpp"
+    #include "boost/di/aux_/converter.hpp"
+    #include "boost/di/aux_/binder.hpp"
     #include "boost/di/scopes/per_request.hpp"
     #include "boost/di/config.hpp"
 
@@ -28,26 +28,26 @@
         BOOST_DI_ITERATION_PARAMS(              \
             0                                   \
           , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE  \
-          , "boost/di/detail/creator.hpp"       \
+          , "boost/di/aux_/creator.hpp"         \
         )                                       \
     )
 
     namespace boost {
     namespace di {
-    namespace detail {
+    namespace aux_ {
 
     template<
         typename TDeps
       , template<
             typename
           , typename
-          , typename = TDeps
-          , typename = aux::dependency<scopes::per_request, mpl::_1, mpl::_2>
+          , typename
+          , typename = dependency<scopes::per_request, mpl::_1, mpl::_2>
         > class TBinder = binder
       , template<
             typename
           , typename = void
-        > class TCtorTraits = aux::ctor_traits
+        > class TCtorTraits = ctor_traits
     >
     class creator_impl
     {
@@ -64,7 +64,7 @@
           , typename TPool
         >
         static T execute(TEntries& entries, const TPool& pool) {
-            typedef typename TBinder<T, TCallStack>::type to_bo_created_t;
+            typedef typename TBinder<T, TCallStack, TDeps>::type to_bo_created_t;
             return execute_impl<
                 T
               , to_bo_created_t
@@ -102,7 +102,7 @@
         : creator_impl<TDeps>
     { };
 
-    } // namespace detail
+    } // namespace aux_
     } // namespace di
     } // namespace boost
 
@@ -126,7 +126,7 @@
 
         #define BOOST_DI_CREATOR_EXECUTE(z, n, _)                               \
             BOOST_PP_COMMA_IF(n)                                                \
-            execute<                                                            \
+            execute<                                                           \
                 typename mpl::at_c<typename ctor<TDependency>::type, n>::type   \
               , TCallStack                                                      \
             >(entries, pool)

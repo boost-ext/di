@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_DETAIL_BINDER_HPP
-#define BOOST_DI_DETAIL_BINDER_HPP
+#ifndef BOOST_DI_AUX_BINDER_HPP
+#define BOOST_DI_AUX_BINDER_HPP
 
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/placeholders.hpp>
@@ -28,12 +28,12 @@
 #include <boost/mpl/greater.hpp>
 #include <boost/mpl/less.hpp>
 #include <boost/mpl/min_max.hpp>
-#include "boost/di/aux/make_plain.hpp"
-#include "boost/di/aux/value_type.hpp"
+#include "boost/di/aux_/make_plain.hpp"
+#include "boost/di/aux_/value_type.hpp"
 
 namespace boost {
 namespace di {
-namespace detail {
+namespace aux_ {
 
 namespace detail {
 
@@ -141,7 +141,7 @@ template<
 struct make_default_dependency
     : TDefault::template rebind<
           TGiven
-        , typename aux::value_type<TGiven>::type
+        , typename value_type<TGiven>::type
       >
 { };
 
@@ -158,12 +158,12 @@ struct binder
           mpl::begin<
               typename mpl::push_back<
                   typename detail::sort_dependecies_by_call_stack_order<
-                      typename aux::make_plain<T>::type
+                      typename make_plain<T>::type
                     , TCallStack
                     , TDeps
                   >::type
                 , typename detail::make_default_dependency<
-                      typename aux::make_plain<T>::type
+                      typename make_plain<T>::type
                     , TDefault
                   >::type
               >::type
@@ -171,7 +171,7 @@ struct binder
       >::type
 { };
 
-} // namespace detail
+} // namespace aux_
 } // namespace di
 } // namespace boost
 

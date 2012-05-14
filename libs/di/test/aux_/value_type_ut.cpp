@@ -8,12 +8,12 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include "boost/di/named.hpp"
-#include "boost/di/aux/value_type.hpp"
+#include "boost/di/aux_/value_type.hpp"
 #include "data.hpp"
 
 namespace boost {
 namespace di {
-namespace aux {
+namespace aux_ {
 
 struct c
 {
@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE(value_type_basic)
     BOOST_CHECK((is_same<std::string, value_type<std::string>::type>::value));
 }
 
-} // namespace aux
+} // namespace aux_
 } // namespace di
 } // namespace boost
 

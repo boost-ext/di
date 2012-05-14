@@ -5,13 +5,13 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <boost/test/unit_test.hpp>
-#include "boost/di/detail/module.hpp"
+#include "boost/di/aux_/converter.hpp"
 
 namespace boost {
 namespace di {
 namespace detail {
 
-BOOST_AUTO_TEST_CASE(module_simple)
+BOOST_AUTO_TEST_CASE(converter_simple)
 {
 }
 

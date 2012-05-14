@@ -50,7 +50,7 @@ struct visitor
 {
     template<typename T>
     void operator()() const {
-        std::cout << typeid(typename T::type).name() << std::endl;
+        std::cout <<typeid(typename T::type).name() <<std::endl;
     }
 };
 

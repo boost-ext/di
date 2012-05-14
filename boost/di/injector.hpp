@@ -17,7 +17,7 @@
     #include <boost/mpl/if.hpp>
     #include <boost/mpl/is_sequence.hpp>
     #include <boost/mpl/back_inserter.hpp>
-    #include "boost/di/detail/module.hpp"
+    #include "boost/di/aux_/module.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
@@ -53,10 +53,8 @@
 
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     class injector
-        : public detail::module<
-              detail::modules<
-                  mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-              >
+        : public aux_::module<
+              detail::modules<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
           >
     {
     public:
@@ -74,10 +72,8 @@
 
     template<BOOST_DI_TYPES(M)>
     explicit injector(BOOST_DI_ARGS(M, module))
-        : detail::module<
-              detail::modules<
-                  mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-              >
+        : aux_::module<
+              detail::modules<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
           >
         (BOOST_DI_ARGS_PASS(module))
     { }

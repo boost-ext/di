@@ -16,8 +16,8 @@
     #include <boost/mpl/if.hpp>
     #include <boost/mpl/back_inserter.hpp>
     #include <boost/mpl/placeholders.hpp>
-    #include "boost/di/aux/has_traits.hpp"
-    #include "boost/di/detail/module.hpp"
+    #include "boost/di/aux_/has_traits.hpp"
+    #include "boost/di/aux_/module.hpp"
     #include "boost/di/concepts.hpp"
     #include "boost/di/config.hpp"
 
@@ -44,7 +44,7 @@
                       mpl::is_sequence<mpl::_2>
                     , mpl::_2
                     , mpl::if_<
-                          aux::has_element_type<mpl::_2>
+                          aux_::has_element_type<mpl::_2>
                         , mpl::_2
                         , per_request<mpl::_2>
                       >
@@ -58,7 +58,7 @@
 
     template<typename TDeps = mpl::vector0<> >
     class fusion_module
-        : public detail::module<
+        : public aux_::module<
               typename detail::fusion_deps<TDeps>::type
             , TDeps
           >
@@ -82,7 +82,7 @@
 
     template<BOOST_DI_TYPES(Args)>
     explicit fusion_module(BOOST_DI_ARGS(Args, args))
-        : detail::module<
+        : aux_::module<
               typename detail::fusion_deps<TDeps>::type
             , TDeps
           >
