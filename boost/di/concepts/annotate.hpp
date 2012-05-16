@@ -40,16 +40,16 @@ struct annotate<none_t>
         typename TExpected
       , typename TContext = mpl::vector0<>
       , template<
-            typename = TExpected
-          , typename = TContext
+            typename
+          , typename
           , typename = void
         > class TInstance = aux_::instance
     >
     struct with_ : with<>
     {
         template<typename T>
-        static TInstance<> to(T value) {
-            return TInstance<>(value);
+        static TInstance<TExpected, TContext> to(T value) {
+            return TInstance<TExpected, TContext>(value);
         }
     };
 };

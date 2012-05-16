@@ -111,7 +111,7 @@ int main()
             >
           , di::per_requests<
                 impl
-              , mpl::string<'di'>
+              , mpl::string<'s'>
               , di::bind<i, impl1>
               , di::bind<i, impl2>::in_name<name2>
               , di::bind<i, impl3>::in_call<c6>
@@ -141,7 +141,7 @@ int main()
             >()
           , di::per_requests<
                 impl
-              , mpl::string<'di'>
+              , mpl::string<'s'>
               , di::bind<i, impl1>
               , di::bind<i, impl2>::in_name<name2>
               , di::bind<i, impl3>::in_call<c6>

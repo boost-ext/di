@@ -428,7 +428,7 @@ BOOST_AUTO_TEST_CASE(module_externals_create_by_explicit_value)
 
     module<
         mpl::vector<
-            fake_dependency<scopes::per_request, std::string, mpl::string<'di'> >::type
+            fake_dependency<scopes::per_request, std::string, mpl::string<'s'> >::type
         >
       , mpl::vector<
             instance<int>
@@ -442,7 +442,7 @@ BOOST_AUTO_TEST_CASE(module_externals_create_by_explicit_value)
     BOOST_CHECK_EQUAL(i, obj.i);
     BOOST_CHECK_EQUAL(d, obj.d);
     BOOST_CHECK_EQUAL(c, obj.c);
-    BOOST_CHECK_EQUAL("di", obj.s);
+    BOOST_CHECK_EQUAL("s", obj.s);
 }
 
 BOOST_AUTO_TEST_CASE(module_externals_create_with_non_trivial_ctor)

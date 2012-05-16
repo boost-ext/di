@@ -56,6 +56,11 @@ class converter<TScope, named<TDest, TName> >
 public:
     template<typename TSrc>
     static named<TDest, TName> execute(const TSrc& src) {
+        return named<TDest, TName>(make_shared<TSrc>(src));
+    }
+
+    template<typename TSrc>
+    static named<TDest, TName> execute(const boost::shared_ptr<TSrc>& src) {
         return named<TDest, TName>(src);
     }
 

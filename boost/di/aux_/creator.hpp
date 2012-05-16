@@ -17,11 +17,9 @@
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/push_back.hpp>
-    #include "boost/di/aux_/dependency.hpp"
     #include "boost/di/aux_/ctor_traits.hpp"
     #include "boost/di/aux_/converter.hpp"
     #include "boost/di/aux_/binder.hpp"
-    #include "boost/di/scopes/per_request.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
@@ -42,7 +40,6 @@
             typename
           , typename
           , typename
-          , typename = dependency<scopes::per_request, mpl::_1, mpl::_2>
         > class TBinder = binder
       , template<
             typename
@@ -126,20 +123,21 @@
 
         #define BOOST_DI_CREATOR_EXECUTE(z, n, _)                               \
             BOOST_PP_COMMA_IF(n)                                                \
-            execute<                                                           \
+            execute<                                                            \
                 typename mpl::at_c<typename ctor<TDependency>::type, n>::type   \
               , TCallStack                                                      \
             >(entries, pool)
 
-        return acquire<TDependency>(entries).template create<T>(
-            pool
-            BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
-            BOOST_PP_REPEAT(
-                BOOST_PP_ITERATION()
-              , BOOST_DI_CREATOR_EXECUTE
-              , ~
-            )
-        );
+        return acquire<TDependency>(entries).BOOST_DI_TEMPLATE_QUALIFIER
+            create<T>(
+                pool
+                BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
+                BOOST_PP_REPEAT(
+                    BOOST_PP_ITERATION()
+                  , BOOST_DI_CREATOR_EXECUTE
+                  , ~
+                )
+            );
 
         #undef BOOST_DI_CREATOR_EXECUTE
     }

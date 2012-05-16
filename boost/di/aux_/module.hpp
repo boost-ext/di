@@ -13,6 +13,7 @@
     #include <boost/type_traits/is_same.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/vector.hpp>
+    #include <boost/mpl/set.hpp>
     #include <boost/mpl/filter_view.hpp>
     #include <boost/mpl/joint_view.hpp>
     #include <boost/mpl/inherit_linearly.hpp>
@@ -26,6 +27,8 @@
     #include <boost/mpl/not.hpp>
     #include <boost/mpl/or.hpp>
     #include <boost/mpl/equal_to.hpp>
+    #include <boost/mpl/push_back.hpp>
+    #include <boost/mpl/insert.hpp>
     #include "boost/di/aux_/pool.hpp"
     #include "boost/di/aux_/has_traits.hpp"
     #include "boost/di/aux_/creator.hpp"
@@ -113,12 +116,20 @@
         struct deps
             : mpl::remove_if<
                   typename mpl::fold<
-                      TDeps
+                      typename mpl::fold<
+                          typename mpl::fold<
+                              TDeps
+                            , mpl::vector0<>
+                            , mpl::copy<
+                                  deps_impl<mpl::_2>
+                                , mpl::back_inserter<boost::mpl::_1>
+                              >
+                          >::type
+                        , mpl::set0<>
+                        , mpl::insert<mpl::_1, mpl::_2>
+                      >::type
                     , mpl::vector0<>
-                    , mpl::copy<
-                          deps_impl<mpl::_2>
-                        , mpl::back_inserter<boost::mpl::_1>
-                      >
+                    , mpl::push_back<mpl::_1, mpl::_2>
                   >::type
                 , mpl::or_<
                       has_policy_type<mpl::_1>

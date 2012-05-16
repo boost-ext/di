@@ -12,6 +12,10 @@
 
 #if defined(BOOST_DI_CTOR_CFG_VA_ARGS)
 
+#   if defined(__GNUC__)
+#       pragma GCC system_header
+#   endif
+
 #   define BOOST_DI_CTOR_TRAITS(...)        \
         struct BOOST_DI_CTOR_UNIQUE_NAME    \
         {                                   \

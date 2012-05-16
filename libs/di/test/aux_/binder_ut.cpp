@@ -25,7 +25,7 @@ template<
   , typename TContext1 = mpl_::na
   , typename TContext2 = mpl_::na
 >
-struct dependency
+struct fake_dependency
 {
     typedef is_same<mpl::_1, TExpected> bind;
     typedef mpl::vector<TContext0, TContext1, TContext2> context;
@@ -35,7 +35,7 @@ struct dependency
     template<typename Expected, typename Given>
     struct rebind
     {
-        typedef dependency<
+        typedef fake_dependency<
             Expected
           , Given
           , TContext0
@@ -52,7 +52,7 @@ template<
   , typename TContext1 = mpl_::na
   , typename TContext2 = mpl_::na
 >
-struct dependency_base_of
+struct fake_dependency_base_of
 {
     typedef is_base_of<mpl::_1, TExpected> bind;
     typedef mpl::vector<TContext0, TContext1, TContext2> context;
@@ -62,7 +62,7 @@ struct dependency_base_of
     template<typename Expected, typename Given>
     struct rebind
     {
-        typedef dependency<
+        typedef fake_dependency<
             Expected
           , Given
           , TContext0
@@ -76,12 +76,12 @@ BOOST_AUTO_TEST_CASE(binder_empty)
 {
     BOOST_CHECK((
         is_same<
-            dependency<int>
-          , binder<
+            fake_dependency<int>
+          , binder_impl<
                 int
               , mpl::vector0<>
               , mpl::vector0<>
-              , dependency<mpl::_1, mpl::_2>
+              , fake_dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));
@@ -91,14 +91,14 @@ BOOST_AUTO_TEST_CASE(binder_one)
 {
     BOOST_CHECK((
         is_same<
-            dependency<int>
-          , binder<
+            fake_dependency<int>
+          , binder_impl<
                 int
               , mpl::vector0<>
               , mpl::vector<
-                    dependency<int>
+                    fake_dependency<int>
                 >
-              , dependency<mpl::_1, mpl::_2>
+              , fake_dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));
@@ -108,16 +108,16 @@ BOOST_AUTO_TEST_CASE(binder_found)
 {
     BOOST_CHECK((
         is_same<
-            dependency<float>
-          , binder<
+            fake_dependency<float>
+          , binder_impl<
                 float
               , mpl::vector0<>
               , mpl::vector<
-                    dependency<int>
-                  , dependency<float>
-                  , dependency<double>
+                    fake_dependency<int>
+                  , fake_dependency<float>
+                  , fake_dependency<double>
                 >
-              , dependency<mpl::_1, mpl::_2>
+              , fake_dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));
@@ -127,16 +127,16 @@ BOOST_AUTO_TEST_CASE(binder_found_many)
 {
     BOOST_CHECK((
         is_same<
-            dependency<float>
-          , binder<
+            fake_dependency<float>
+          , binder_impl<
                 float
               , mpl::vector0<>
               , mpl::vector<
-                    dependency<int>
-                  , dependency<float>
-                  , dependency<float>
+                    fake_dependency<int>
+                  , fake_dependency<float>
+                  , fake_dependency<float>
                 >
-              , dependency<mpl::_1, mpl::_2>
+              , fake_dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));
@@ -146,16 +146,16 @@ BOOST_AUTO_TEST_CASE(binder_not_found)
 {
     BOOST_CHECK((
         is_same<
-            dependency<double>
-          , binder<
+            fake_dependency<double>
+          , binder_impl<
                 double
               , mpl::vector0<>
               , mpl::vector<
-                    dependency<int>
-                  , dependency<float>
-                  , dependency<float>
+                    fake_dependency<int>
+                  , fake_dependency<float>
+                  , fake_dependency<float>
                 >
-              , dependency<mpl::_1, mpl::_2>
+              , fake_dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));
@@ -165,14 +165,14 @@ BOOST_AUTO_TEST_CASE(binder_if)
 {
     BOOST_CHECK((
         is_same<
-            dependency<if0, c0if0>
-          , binder<
+            fake_dependency<if0, c0if0>
+          , binder_impl<
                 if0
               , mpl::vector0<>
               , mpl::vector<
-                    dependency<if0, c0if0>
+                    fake_dependency<if0, c0if0>
                 >
-              , dependency<mpl::_1, mpl::_2>
+              , fake_dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));
@@ -182,15 +182,15 @@ BOOST_AUTO_TEST_CASE(binder_context)
 {
     BOOST_CHECK((
         is_same<
-            dependency<int, int, mpl::vector<a, b> >
-          , binder<
+            fake_dependency<int, int, mpl::vector<a, b> >
+          , binder_impl<
                 int
               , mpl::vector<a, b>
               , mpl::vector<
-                    dependency<int, int, mpl::vector<a> >
-                  , dependency<int, int, mpl::vector<a, b> >
+                    fake_dependency<int, int, mpl::vector<a> >
+                  , fake_dependency<int, int, mpl::vector<a, b> >
                 >
-              , dependency<mpl::_1, mpl::_2>
+              , fake_dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));
@@ -200,14 +200,14 @@ BOOST_AUTO_TEST_CASE(binder_context_if)
 {
     BOOST_CHECK((
         is_same<
-            dependency<if0, c0if0>
-          , binder<
+            fake_dependency<if0, c0if0>
+          , binder_impl<
                 if0
               , mpl::vector<c1>
               , mpl::vector<
-                    dependency<if0, c0if0>
+                    fake_dependency<if0, c0if0>
                 >
-              , dependency<mpl::_1, mpl::_2>
+              , fake_dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));
@@ -217,16 +217,16 @@ BOOST_AUTO_TEST_CASE(binder_context_many)
 {
     BOOST_CHECK((
         is_same<
-            dependency<int, int, mpl::vector<a, b> >
-          , binder<
+            fake_dependency<int, int, mpl::vector<a, b> >
+          , binder_impl<
                 int
               , mpl::vector<a, b>
               , mpl::vector<
-                    dependency<int>
-                  , dependency<int, int, mpl::vector<a> >
-                  , dependency<int, int, mpl::vector<a, b> >
+                    fake_dependency<int>
+                  , fake_dependency<int, int, mpl::vector<a> >
+                  , fake_dependency<int, int, mpl::vector<a, b> >
                 >
-              , dependency<mpl::_1, mpl::_2>
+              , fake_dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));
@@ -236,16 +236,16 @@ BOOST_AUTO_TEST_CASE(binder_context_many_end)
 {
     BOOST_CHECK((
         is_same<
-            dependency<int, int, mpl::vector<a, b> >
-          , binder<
+            fake_dependency<int, int, mpl::vector<a, b> >
+          , binder_impl<
                 int
               , mpl::vector<a, b>
               , mpl::vector<
-                    dependency<int>
-                  , dependency<int, int, mpl::vector<b> >
-                  , dependency<int, int, mpl::vector<a, b> >
+                    fake_dependency<int>
+                  , fake_dependency<int, int, mpl::vector<b> >
+                  , fake_dependency<int, int, mpl::vector<a, b> >
                 >
-              , dependency<mpl::_1, mpl::_2>
+              , fake_dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));
@@ -255,15 +255,15 @@ BOOST_AUTO_TEST_CASE(binder_context_not_found)
 {
     BOOST_CHECK((
         is_same<
-            dependency<int>
-          , binder<
+            fake_dependency<int>
+          , binder_impl<
                 int
               , mpl::vector<a>
               , mpl::vector<
-                    dependency<int, int, mpl::vector<b> >
-                  , dependency<int, int, mpl::vector<a, b> >
+                    fake_dependency<int, int, mpl::vector<b> >
+                  , fake_dependency<int, int, mpl::vector<a, b> >
                 >
-              , dependency<mpl::_1, mpl::_2>
+              , fake_dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));
@@ -273,17 +273,17 @@ BOOST_AUTO_TEST_CASE(binder_context_other_types)
 {
     BOOST_CHECK((
         is_same<
-            dependency<int, int, mpl::vector<a, b> >
-          , binder<
+            fake_dependency<int, int, mpl::vector<a, b> >
+          , binder_impl<
                 int
               , mpl::vector<a, b>
               , mpl::vector<
-                    dependency<int, int, mpl::vector<a> >
-                  , dependency<int, int, mpl::vector<a, b> >
-                  , dependency<float, float, mpl::vector<a, b> >
-                  , dependency<double>
+                    fake_dependency<int, int, mpl::vector<a> >
+                  , fake_dependency<int, int, mpl::vector<a, b> >
+                  , fake_dependency<float, float, mpl::vector<a, b> >
+                  , fake_dependency<double>
                 >
-              , dependency<mpl::_1, mpl::_2>
+              , fake_dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));
@@ -293,22 +293,22 @@ BOOST_AUTO_TEST_CASE(binder_context_long_with_order)
 {
     BOOST_CHECK((
         is_same<
-            dependency<int, int, mpl::vector<a, b, c> >
-          , binder<
+            fake_dependency<int, int, mpl::vector<a, b, c> >
+          , binder_impl<
                 int
               , mpl::vector<a, b, c>
               , mpl::vector<
-                    dependency<int, int, mpl::vector<a, b, c> >
-                  , dependency<int, int, mpl::vector<a> >
-                  , dependency<int, int, mpl::vector<b> >
-                  , dependency<int>
-                  , dependency<int, int, mpl::vector<b, c> >
-                  , dependency<int, int, mpl::vector<b, a, c> >
-                  , dependency<int, int, mpl::vector<b, c, c> >
-                  , dependency<int, int, mpl::vector<a, a, a> >
-                  , dependency<int, int, mpl::vector<c> >
+                    fake_dependency<int, int, mpl::vector<a, b, c> >
+                  , fake_dependency<int, int, mpl::vector<a> >
+                  , fake_dependency<int, int, mpl::vector<b> >
+                  , fake_dependency<int>
+                  , fake_dependency<int, int, mpl::vector<b, c> >
+                  , fake_dependency<int, int, mpl::vector<b, a, c> >
+                  , fake_dependency<int, int, mpl::vector<b, c, c> >
+                  , fake_dependency<int, int, mpl::vector<a, a, a> >
+                  , fake_dependency<int, int, mpl::vector<c> >
                 >
-              , dependency<mpl::_1, mpl::_2>
+              , fake_dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));
@@ -318,22 +318,22 @@ BOOST_AUTO_TEST_CASE(binder_context_long_with_order_empty_call_stack)
 {
     BOOST_CHECK((
         is_same<
-            dependency<int>
-          , binder<
+            fake_dependency<int>
+          , binder_impl<
                 int
               , mpl::vector<>
               , mpl::vector<
-                    dependency<int, int, mpl::vector<a, b, c> >
-                  , dependency<int, int, mpl::vector<a> >
-                  , dependency<int, int, mpl::vector<b> >
-                  , dependency<int>
-                  , dependency<int, int, mpl::vector<b, c> >
-                  , dependency<int, int, mpl::vector<b, a, c> >
-                  , dependency<int, int, mpl::vector<b, c, c> >
-                  , dependency<int, int, mpl::vector<a, a, a> >
-                  , dependency<int, int, mpl::vector<c> >
+                    fake_dependency<int, int, mpl::vector<a, b, c> >
+                  , fake_dependency<int, int, mpl::vector<a> >
+                  , fake_dependency<int, int, mpl::vector<b> >
+                  , fake_dependency<int>
+                  , fake_dependency<int, int, mpl::vector<b, c> >
+                  , fake_dependency<int, int, mpl::vector<b, a, c> >
+                  , fake_dependency<int, int, mpl::vector<b, c, c> >
+                  , fake_dependency<int, int, mpl::vector<a, a, a> >
+                  , fake_dependency<int, int, mpl::vector<c> >
                 >
-              , dependency<mpl::_1, mpl::_2>
+              , fake_dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));
@@ -343,22 +343,22 @@ BOOST_AUTO_TEST_CASE(binder_context_long_with_order_diff_call_stack)
 {
     BOOST_CHECK((
         is_same<
-            dependency<int, int, mpl::vector<b> >
-          , binder<
+            fake_dependency<int, int, mpl::vector<b> >
+          , binder_impl<
                 int
               , mpl::vector<c, a, b>
               , mpl::vector<
-                    dependency<int, int, mpl::vector<a, b, c> >
-                  , dependency<int, int, mpl::vector<a> >
-                  , dependency<int, int, mpl::vector<b> >
-                  , dependency<int>
-                  , dependency<int, int, mpl::vector<b, c> >
-                  , dependency<int, int, mpl::vector<b, a, c> >
-                  , dependency<int, int, mpl::vector<b, c, c> >
-                  , dependency<int, int, mpl::vector<a, a, a> >
-                  , dependency<int, int, mpl::vector<c> >
+                    fake_dependency<int, int, mpl::vector<a, b, c> >
+                  , fake_dependency<int, int, mpl::vector<a> >
+                  , fake_dependency<int, int, mpl::vector<b> >
+                  , fake_dependency<int>
+                  , fake_dependency<int, int, mpl::vector<b, c> >
+                  , fake_dependency<int, int, mpl::vector<b, a, c> >
+                  , fake_dependency<int, int, mpl::vector<b, c, c> >
+                  , fake_dependency<int, int, mpl::vector<a, a, a> >
+                  , fake_dependency<int, int, mpl::vector<c> >
                 >
-              , dependency<mpl::_1, mpl::_2>
+              , fake_dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));
@@ -368,22 +368,22 @@ BOOST_AUTO_TEST_CASE(binder_context_long_with_order_short_call_stack)
 {
     BOOST_CHECK((
         is_same<
-            dependency<int, int, mpl::vector<c> >
-          , binder<
+            fake_dependency<int, int, mpl::vector<c> >
+          , binder_impl<
                 int
               , mpl::vector<c>
               , mpl::vector<
-                    dependency<int, int, mpl::vector<a, b, c> >
-                  , dependency<int, int, mpl::vector<a> >
-                  , dependency<int, int, mpl::vector<b> >
-                  , dependency<int>
-                  , dependency<int, int, mpl::vector<b, c> >
-                  , dependency<int, int, mpl::vector<b, a, c> >
-                  , dependency<int, int, mpl::vector<b, c, c> >
-                  , dependency<int, int, mpl::vector<a, a, a> >
-                  , dependency<int, int, mpl::vector<c> >
+                    fake_dependency<int, int, mpl::vector<a, b, c> >
+                  , fake_dependency<int, int, mpl::vector<a> >
+                  , fake_dependency<int, int, mpl::vector<b> >
+                  , fake_dependency<int>
+                  , fake_dependency<int, int, mpl::vector<b, c> >
+                  , fake_dependency<int, int, mpl::vector<b, a, c> >
+                  , fake_dependency<int, int, mpl::vector<b, c, c> >
+                  , fake_dependency<int, int, mpl::vector<a, a, a> >
+                  , fake_dependency<int, int, mpl::vector<c> >
                 >
-              , dependency<mpl::_1, mpl::_2>
+              , fake_dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));
@@ -393,22 +393,22 @@ BOOST_AUTO_TEST_CASE(binder_context_long_with_order_to_long_call_stack)
 {
     BOOST_CHECK((
         is_same<
-            dependency<int>
-          , binder<
+            fake_dependency<int>
+          , binder_impl<
                 int
               , mpl::vector<a, b, c, d>
               , mpl::vector<
-                    dependency<int, int, mpl::vector<a, b, c> >
-                  , dependency<int, int, mpl::vector<a> >
-                  , dependency<int, int, mpl::vector<b> >
-                  , dependency<int>
-                  , dependency<int, int, mpl::vector<b, c> >
-                  , dependency<int, int, mpl::vector<b, a, c> >
-                  , dependency<int, int, mpl::vector<b, c, c> >
-                  , dependency<int, int, mpl::vector<a, a, a> >
-                  , dependency<int, int, mpl::vector<c> >
+                    fake_dependency<int, int, mpl::vector<a, b, c> >
+                  , fake_dependency<int, int, mpl::vector<a> >
+                  , fake_dependency<int, int, mpl::vector<b> >
+                  , fake_dependency<int>
+                  , fake_dependency<int, int, mpl::vector<b, c> >
+                  , fake_dependency<int, int, mpl::vector<b, a, c> >
+                  , fake_dependency<int, int, mpl::vector<b, c, c> >
+                  , fake_dependency<int, int, mpl::vector<a, a, a> >
+                  , fake_dependency<int, int, mpl::vector<c> >
                 >
-              , dependency<mpl::_1, mpl::_2>
+              , fake_dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));
@@ -418,14 +418,14 @@ BOOST_AUTO_TEST_CASE(binder_base_of_fail)
 {
     BOOST_CHECK((
         is_same<
-            dependency<i>
-          , binder<
+            fake_dependency<i>
+          , binder_impl<
                 i
               , mpl::vector0<>
               , mpl::vector<
-                    dependency_base_of<a>
+                    fake_dependency_base_of<a>
                 >
-              , dependency<mpl::_1, mpl::_2>
+              , fake_dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));
@@ -435,14 +435,14 @@ BOOST_AUTO_TEST_CASE(binder_base_of_successful)
 {
     BOOST_CHECK((
         is_same<
-            dependency_base_of<impl>
-          , binder<
+            fake_dependency_base_of<impl>
+          , binder_impl<
                 i
               , mpl::vector0<>
               , mpl::vector<
-                    dependency_base_of<impl>
+                    fake_dependency_base_of<impl>
                 >
-              , dependency<mpl::_1, mpl::_2>
+              , fake_dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));
@@ -452,14 +452,14 @@ BOOST_AUTO_TEST_CASE(binder_complex_type)
 {
     BOOST_CHECK((
         is_same<
-            dependency<int>
-          , binder<
+            fake_dependency<int>
+          , binder_impl<
                 shared_ptr<int>
               , mpl::vector0<>
               , mpl::vector<
-                    dependency<int>
+                    fake_dependency<int>
                 >
-              , dependency<mpl::_1, mpl::_2>
+              , fake_dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));
@@ -469,12 +469,12 @@ BOOST_AUTO_TEST_CASE(binder_named_type)
 {
     BOOST_CHECK((
         is_same<
-            dependency<named<int, mpl::_1>, int>
-          , binder<
+            fake_dependency<named<int, mpl::_1>, int>
+          , binder_impl<
                 named<shared_ptr<int>, mpl::_1>
               , mpl::vector0<>
               , mpl::vector0<>
-              , dependency<mpl::_1, mpl::_2>
+              , fake_dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));
@@ -484,14 +484,14 @@ BOOST_AUTO_TEST_CASE(binder_call_call_stack)
 {
     BOOST_CHECK((
         is_same<
-            dependency<int, int, c1, mpl::vector<c2> >
-          , binder<
+            fake_dependency<int, int, c1, mpl::vector<c2> >
+          , binder_impl<
                 int
               , mpl::vector<c2>
               , mpl::vector<
-                    dependency<int, int, c1, mpl::vector<c2> >
+                    fake_dependency<int, int, c1, mpl::vector<c2> >
                 >
-              , dependency<mpl::_1, mpl::_2>
+              , fake_dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));
@@ -506,14 +506,14 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(binder_multiple_calls, TContext, binder_multiple_c
 {
     BOOST_CHECK((
         is_same<
-            dependency<int, int, c1, mpl::vector<c2, c3> >
-          , typename binder<
+            fake_dependency<int, int, c1, mpl::vector<c2, c3> >
+          , typename binder_impl<
                 int
               , TContext
               , mpl::vector<
-                    dependency<int, int, c1, mpl::vector<c2, c3> >
+                    fake_dependency<int, int, c1, mpl::vector<c2, c3> >
                 >
-              , dependency<mpl::_1, mpl::_2>
+              , fake_dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));
@@ -531,14 +531,14 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(binder_multiple_calls_many, TContext, binder_multi
 {
     BOOST_CHECK((
         is_same<
-            dependency<int, int, c1, c5, mpl::vector<c3, c4> >
-          , typename binder<
+            fake_dependency<int, int, c1, c5, mpl::vector<c3, c4> >
+          , typename binder_impl<
                 int
               , TContext
               , mpl::vector<
-                    dependency<int, int, c1, c5, mpl::vector<c3, c4> >
+                    fake_dependency<int, int, c1, c5, mpl::vector<c3, c4> >
                 >
-              , dependency<mpl::_1, mpl::_2>
+              , fake_dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));
@@ -554,14 +554,14 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(binder_multiple_calls_not_found, TContext, binder_
 {
     BOOST_CHECK((
         is_same<
-            dependency<int, int>
-          , typename binder<
+            fake_dependency<int, int>
+          , typename binder_impl<
                 int
               , TContext
               , mpl::vector<
-                    dependency<int, int, c1, c5, mpl::vector<c3, c4> >
+                    fake_dependency<int, int, c1, c5, mpl::vector<c3, c4> >
                 >
-              , dependency<mpl::_1, mpl::_2>
+              , fake_dependency<mpl::_1, mpl::_2>
             >::type
         >::value
     ));

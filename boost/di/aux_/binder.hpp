@@ -28,8 +28,11 @@
 #include <boost/mpl/greater.hpp>
 #include <boost/mpl/less.hpp>
 #include <boost/mpl/min_max.hpp>
+#include <boost/mpl/minus.hpp>
+#include "boost/di/aux_/dependency.hpp"
 #include "boost/di/aux_/make_plain.hpp"
 #include "boost/di/aux_/value_type.hpp"
+#include "boost/di/scopes/per_request.hpp"
 
 namespace boost {
 namespace di {
@@ -47,9 +50,12 @@ template<typename TCallStack, typename TContext>
 struct equal_call_stack
     : mpl::equal<
         mpl::iterator_range<
-            typename mpl::advance_c<
+            typename mpl::advance<
                 typename mpl::begin<TCallStack>::type
-              , mpl::size<TCallStack>::value - mpl::size<TContext>::value
+              , typename mpl::max<
+                    mpl::int_<0>
+                  , mpl::minus<mpl::size<TCallStack>, mpl::size<TContext> >
+                >::type
             >::type
           , typename mpl::end<TCallStack>::type
         >
@@ -151,9 +157,9 @@ template<
     typename T
   , typename TCallStack
   , typename TDeps
-  , typename TDefault
+  , typename TDefault = dependency<scopes::per_request, mpl::_1, mpl::_2>
 >
-struct binder
+struct binder_impl
     : mpl::deref<
           mpl::begin<
               typename mpl::push_back<
@@ -169,6 +175,15 @@ struct binder
               >::type
           >
       >::type
+{ };
+
+template<
+    typename T
+  , typename TCallStack
+  , typename TDeps
+>
+struct binder
+    : binder_impl<T, TCallStack, TDeps>
 { };
 
 } // namespace aux_

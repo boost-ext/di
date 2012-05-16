@@ -12,8 +12,6 @@ project
       <library>/boost/test//boost_unit_test_framework/<link>static
       <warnings>all
       <warnings-as-errors>on
-      <cxxflags>-Wno-variadic-macros
-      <cxxflags>-Wno-multichar
       <define>DDI_FUNCTION_ARITY_LIMIT_SIZE=4
       <define>BOOST_TEST_MODULE=di_test
       <include>../../..

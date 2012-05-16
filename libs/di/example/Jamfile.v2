@@ -11,8 +11,6 @@ project
     : requirements
       <warnings>all
       <warnings-as-errors>on
-      <cxxflags>-Wno-variadic-macros
-      <cxxflags>-Wno-multichar
       <cxxflags>-std=c++0x
       <include>../../..
     ;

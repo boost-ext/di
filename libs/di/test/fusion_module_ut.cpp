@@ -15,6 +15,7 @@
 #include "boost/di/concepts.hpp"
 #include "boost/di/named.hpp"
 #include "fake_dependency.hpp"
+#include "contains_all.hpp"
 #include "data.hpp"
 
 namespace boost {
@@ -35,13 +36,13 @@ BOOST_AUTO_TEST_CASE(fusion_module_empty)
     typedef BOOST_TYPEOF(module) module_t;
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector0<>
           , module_t::deps
         >::value
     ));
 
-    BOOST_CHECK((mpl::equal<mpl::vector0<>, module_t::pool::externals>::value));
+    BOOST_CHECK((contains_all<mpl::vector0<>, module_t::pool::externals>::value));
 }
 
 BOOST_AUTO_TEST_CASE(fusion_module_default_scope_bind)
@@ -54,7 +55,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_default_scope_bind)
     typedef BOOST_TYPEOF(module) module_t;
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 fake_dependency<scopes::per_request, if0, c0if0>::type
               , fake_dependency_base_of<scopes::per_request, named<c2, int>, c2>::type
@@ -65,7 +66,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_default_scope_bind)
     ));
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 bind<if0, c0if0>
               , bind<c2>::in_name<int>
@@ -87,7 +88,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_one_scope)
     typedef BOOST_TYPEOF(module) module_t;
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 fake_dependency_base_of<scopes::singleton, c0if0, c0if0>::type
             >
@@ -96,7 +97,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_one_scope)
     ));
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 scope<scopes::singleton>::bind<
                     c0if0
@@ -119,7 +120,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_one_scope_alias)
     typedef BOOST_TYPEOF(module) module_t;
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 fake_dependency_base_of<scopes::singleton, c0if0, c0if0>::type
             >
@@ -128,7 +129,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_one_scope_alias)
     ));
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 singletons<
                     c0if0
@@ -148,7 +149,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_one_scope_direct)
     typedef BOOST_TYPEOF(module) module_t;
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 fake_dependency_base_of<scopes::singleton, c0if0, c0if0>::type
             >
@@ -157,7 +158,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_one_scope_direct)
     ));
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 singleton<c0if0>
             >
@@ -177,7 +178,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_many_singletons)
     typedef BOOST_TYPEOF(module) module_t;
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 fake_dependency_base_of<scopes::singleton, c1, c1>::type
               , fake_dependency_base_of<scopes::singleton, c2, c2>::type
@@ -188,7 +189,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_many_singletons)
     ));
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 singletons<
                     c1, c2, c3
@@ -213,7 +214,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_many_scopes)
     typedef BOOST_TYPEOF(module) module_t;
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 fake_dependency_base_of<scopes::singleton, c1, c1>::type
               , fake_dependency_base_of<scopes::singleton, c2, c2>::type
@@ -225,7 +226,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_many_scopes)
     ));
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 singletons<
                   c1, c2
@@ -248,7 +249,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_in_call)
     typedef BOOST_TYPEOF(module) module_t;
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 fake_dependency_base_of<scopes::per_request, c1, c1, c2>::type
             >
@@ -257,7 +258,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_in_call)
     ));
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 per_request<c1>::in_call<c2>
             >
@@ -275,7 +276,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_in_name)
     typedef BOOST_TYPEOF(module) module_t;
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 fake_dependency_base_of<scopes::singleton, named<c1, int>, c1>::type
             >
@@ -284,7 +285,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_in_name)
     ));
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 singleton<c1>::in_name<int>
             >
@@ -305,7 +306,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_in_namein_call)
     typedef BOOST_TYPEOF(module) module_t;
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 fake_dependency_base_of<scopes::singleton, named<c1, int>, c1, double>::type
               , fake_dependency_base_of<scopes::singleton, named<c2, double>, c2, int>::type
@@ -315,7 +316,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_in_namein_call)
     ));
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 singletons<
                     bind<c1>::in_name<int>::in_call<double>
@@ -339,7 +340,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_in_call_in_name)
     typedef BOOST_TYPEOF(module) module_t;
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 fake_dependency_base_of<scopes::singleton, named<c1, int>, c1, double>::type
               , fake_dependency_base_of<scopes::singleton, named<c2, double>, c2, int>::type
@@ -349,7 +350,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_in_call_in_name)
     ));
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 singletons<
                     bind<c1>::in_call<double>::in_name<int>
@@ -372,7 +373,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_bind_if)
     typedef BOOST_TYPEOF(module) module_t;
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 fake_dependency<scopes::singleton, if0, c0if0>::type
             >
@@ -381,7 +382,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_bind_if)
     ));
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 singletons<
                     bind<if0, c0if0>
@@ -410,7 +411,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_mix)
     typedef BOOST_TYPEOF(module) module_t;
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 fake_dependency<scopes::singleton, if0, c0if0>::type
               , fake_dependency_base_of<scopes::singleton, c1, c1>::type
@@ -424,7 +425,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_mix)
     ));
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 singletons<
                     bind<if0, c0if0>
@@ -455,7 +456,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_named_in_call)
     typedef BOOST_TYPEOF(module) module_t;
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 fake_dependency_base_of<scopes::per_request, int, mpl::int_<1> >::type
               , fake_dependency_base_of<scopes::per_request, named<int, mpl::string<'2'> >, mpl::int_<4>, call_stack<c7, c6, c4> >::type
@@ -466,7 +467,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_named_in_call)
     ));
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 per_requests<
                     bind<int, mpl::int_<1> >
@@ -491,7 +492,7 @@ BOOST_AUTO_TEST_CASE(fusion_multiple_calls)
     typedef BOOST_TYPEOF(module) module_t;
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 fake_dependency_base_of<scopes::singleton, c0, c0, c1, call_stack<c2, c3>, c4>::type
               , fake_dependency_base_of<scopes::per_request, c5, c5, int, double>::type
@@ -501,7 +502,7 @@ BOOST_AUTO_TEST_CASE(fusion_multiple_calls)
     ));
 
     BOOST_CHECK((
-        mpl::equal<
+        contains_all<
             mpl::vector<
                 singletons<
                     bind<c0>::in_call<c1, call_stack<c2, c3>, c4 >

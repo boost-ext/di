@@ -22,12 +22,11 @@
     #include <boost/mpl/transform.hpp>
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/at.hpp>
+    #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/assert.hpp>
     #include "boost/di/aux_/ctor_traits.hpp"
-    #include "boost/di/aux_/dependency.hpp"
     #include "boost/di/aux_/make_plain.hpp"
     #include "boost/di/aux_/binder.hpp"
-    #include "boost/di/scopes/per_request.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (                               \
@@ -53,7 +52,6 @@
                 typename
               , typename
               , typename
-              , typename = aux_::dependency<scopes::per_request, mpl::_1, mpl::_2>
             > class TBinder = aux_::binder
           , template<
                 typename
@@ -126,7 +124,7 @@
 
     #define BOOST_DI_CHECK_FOR_CIRCULAR_DEPENDENCIES_IMPL(z, n, _)          \
         BOOST_PP_COMMA_IF(n)                                                \
-        circular_dependencies<                                             \
+        circular_dependencies<                                              \
             typename mpl::at_c<typename ctor<TDependency>::type, n>::type   \
           , TCallStack                                                      \
         >

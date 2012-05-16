@@ -90,7 +90,6 @@
         { };
 
     public:
-        typedef dependency type;
         typedef TScope scope;
         typedef TExpected expected;
         typedef TGiven given;

@@ -11,10 +11,6 @@
 #include "visitor.hpp"
 #include "data.hpp"
 
-#define BOOST_AUTO_TEST_CASE_VARIADIC(test, type, ...)      \
-    typedef mpl::vector<__VA_ARGS__> test##types;           \
-    BOOST_AUTO_TEST_CASE_TEMPLATE(test, type, test##types)
-
 namespace boost {
 namespace di {
 
@@ -128,9 +124,12 @@ BOOST_AUTO(fusion_provider_module, fusion_module<>()(
     >()
 ));
 
-BOOST_AUTO_TEST_CASE_VARIADIC(one_module, TInjector,
-    injector<generic_module_1>,
-    injector<BOOST_TYPEOF(fusion_module_1)>)
+typedef mpl::vector<
+    injector<generic_module_1>
+  , injector<BOOST_TYPEOF(fusion_module_1)>
+> one_module_types;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(one_module, TInjector, one_module_types)
 {
     TInjector injector;
 
@@ -152,11 +151,14 @@ BOOST_AUTO_TEST_CASE_VARIADIC(one_module, TInjector,
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE_VARIADIC(many_modules, TInjector,
-    injector<generic_module_2, generic_module_3>,
-    injector<generic_module_3, generic_module_2>,
-    injector<BOOST_TYPEOF(fusion_module_2), BOOST_TYPEOF(fusion_module_3)>,
-    injector<BOOST_TYPEOF(fusion_module_3), BOOST_TYPEOF(fusion_module_2)>)
+typedef mpl::vector<
+    injector<generic_module_2, generic_module_3>
+  , injector<generic_module_3, generic_module_2>
+  , injector<BOOST_TYPEOF(fusion_module_2), BOOST_TYPEOF(fusion_module_3)>
+  , injector<BOOST_TYPEOF(fusion_module_3), BOOST_TYPEOF(fusion_module_2)>
+> many_modules_types;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(many_modules, TInjector, many_modules_types)
 {
     TInjector injector;
 
@@ -178,9 +180,12 @@ BOOST_AUTO_TEST_CASE_VARIADIC(many_modules, TInjector,
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE_VARIADIC(mix_modules, TInjector,
-    injector<generic_module_2, BOOST_TYPEOF(fusion_module_2)>,
-    injector<BOOST_TYPEOF(fusion_module_2), generic_module_2>)
+typedef mpl::vector<
+    injector<generic_module_2, BOOST_TYPEOF(fusion_module_2)>
+  , injector<BOOST_TYPEOF(fusion_module_2), generic_module_2>
+> mix_modules_types;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(mix_modules, TInjector, mix_modules_types)
 {
     TInjector injector;
 
@@ -202,18 +207,24 @@ BOOST_AUTO_TEST_CASE_VARIADIC(mix_modules, TInjector,
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE_VARIADIC(basic_provider, TInjector,
-    injector<provider_module>,
-    injector<BOOST_TYPEOF(fusion_provider_module)>)
+typedef mpl::vector<
+    injector<provider_module>
+  , injector<BOOST_TYPEOF(fusion_provider_module)>
+> basic_provider_types;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(basic_provider, TInjector, basic_provider_types)
 {
     TInjector injector;
     transaction_usage obj = injector.template create<transaction_usage>();
     BOOST_CHECK(obj.p->get().get() != obj.p->get().get());
 }
 
-BOOST_AUTO_TEST_CASE_VARIADIC(Basicvisitor, TInjector,
-    injector<provider_module>,
-    injector<BOOST_TYPEOF(fusion_provider_module)>)
+typedef mpl::vector<
+    injector<provider_module>
+  , injector<BOOST_TYPEOF(fusion_provider_module)>
+> basic_visitor_types;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(basic_visitor, TInjector, basic_visitor_types)
 {
     TInjector injector;
 
@@ -229,8 +240,11 @@ BOOST_AUTO_TEST_CASE_VARIADIC(Basicvisitor, TInjector,
     injector.template visit<transaction_usage>(visitor_mock);
 }
 
-BOOST_AUTO_TEST_CASE_VARIADIC(basic_externals, TInjector,
-    injector<externals_module>)
+typedef mpl::vector<
+    injector<externals_module>
+> basic_externals_types;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(basic_externals, TInjector, basic_externals_types)
 {
     TInjector injector(
         externals_module(
@@ -245,8 +259,11 @@ BOOST_AUTO_TEST_CASE_VARIADIC(basic_externals, TInjector,
     BOOST_CHECK_EQUAL(87.0, c9_->d);
 }
 
-BOOST_AUTO_TEST_CASE_VARIADIC(basic_externals_ctor, TInjector,
-    injector<externals_module_ctor>)
+typedef mpl::vector<
+    injector<externals_module_ctor>
+> basic_externals_ctor_types;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(basic_externals_ctor, TInjector, basic_externals_ctor_types)
 {
     TInjector injector(
         externals_module_ctor(42, 87.0)

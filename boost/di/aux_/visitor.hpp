@@ -17,10 +17,8 @@
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/placeholders.hpp>
     #include "boost/di/aux_/make_plain.hpp"
-    #include "boost/di/aux_/dependency.hpp"
     #include "boost/di/aux_/ctor_traits.hpp"
     #include "boost/di/aux_/binder.hpp"
-    #include "boost/di/scopes/per_request.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
@@ -41,7 +39,6 @@
             typename
           , typename
           , typename
-          , typename = dependency<scopes::per_request, mpl::_1, mpl::_2>
         > class TBinder = binder
       , template<
             typename
@@ -60,7 +57,7 @@
           , typename TCallStack
           , typename TDependency
         >
-        struct dependency
+        struct dependency_impl
         {
             typedef T type;
             typedef TCallStack context;
@@ -113,10 +110,11 @@
         BOOST_PP_ITERATION()
     >::type execute_impl(const TVisitor& visitor) {
 
-        visitor.template operator()<dependency<T, TCallStack, TDependency> >();
+        visitor.BOOST_DI_TEMPLATE_QUALIFIER
+            operator()<dependency_impl<T, TCallStack, TDependency> >();
 
         #define BOOST_DI_VISITOR_EXECUTE(z, n, _)                               \
-            execute<                                                           \
+            execute<                                                            \
                 typename mpl::at_c<typename ctor<TDependency>::type, n>::type   \
               , TCallStack                                                      \
             >(visitor);
