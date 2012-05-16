@@ -72,7 +72,7 @@ struct fake_dependency_base_of
     };
 };
 
-BOOST_AUTO_TEST_CASE(binder_empty)
+BOOST_AUTO_TEST_CASE(empty)
 {
     BOOST_CHECK((
         is_same<
@@ -87,7 +87,7 @@ BOOST_AUTO_TEST_CASE(binder_empty)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(binder_one)
+BOOST_AUTO_TEST_CASE(one)
 {
     BOOST_CHECK((
         is_same<
@@ -104,7 +104,7 @@ BOOST_AUTO_TEST_CASE(binder_one)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(binder_found)
+BOOST_AUTO_TEST_CASE(found)
 {
     BOOST_CHECK((
         is_same<
@@ -123,7 +123,7 @@ BOOST_AUTO_TEST_CASE(binder_found)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(binder_found_many)
+BOOST_AUTO_TEST_CASE(found_many)
 {
     BOOST_CHECK((
         is_same<
@@ -142,7 +142,7 @@ BOOST_AUTO_TEST_CASE(binder_found_many)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(binder_not_found)
+BOOST_AUTO_TEST_CASE(not_found)
 {
     BOOST_CHECK((
         is_same<
@@ -161,7 +161,7 @@ BOOST_AUTO_TEST_CASE(binder_not_found)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(binder_if)
+BOOST_AUTO_TEST_CASE(if_base)
 {
     BOOST_CHECK((
         is_same<
@@ -178,7 +178,7 @@ BOOST_AUTO_TEST_CASE(binder_if)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(binder_context)
+BOOST_AUTO_TEST_CASE(context)
 {
     BOOST_CHECK((
         is_same<
@@ -196,7 +196,7 @@ BOOST_AUTO_TEST_CASE(binder_context)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(binder_context_if)
+BOOST_AUTO_TEST_CASE(context_if)
 {
     BOOST_CHECK((
         is_same<
@@ -213,7 +213,7 @@ BOOST_AUTO_TEST_CASE(binder_context_if)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(binder_context_many)
+BOOST_AUTO_TEST_CASE(context_many)
 {
     BOOST_CHECK((
         is_same<
@@ -232,7 +232,7 @@ BOOST_AUTO_TEST_CASE(binder_context_many)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(binder_context_many_end)
+BOOST_AUTO_TEST_CASE(context_many_end)
 {
     BOOST_CHECK((
         is_same<
@@ -251,7 +251,7 @@ BOOST_AUTO_TEST_CASE(binder_context_many_end)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(binder_context_not_found)
+BOOST_AUTO_TEST_CASE(context_not_found)
 {
     BOOST_CHECK((
         is_same<
@@ -269,7 +269,7 @@ BOOST_AUTO_TEST_CASE(binder_context_not_found)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(binder_context_other_types)
+BOOST_AUTO_TEST_CASE(context_other_types)
 {
     BOOST_CHECK((
         is_same<
@@ -289,7 +289,7 @@ BOOST_AUTO_TEST_CASE(binder_context_other_types)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(binder_context_long_with_order)
+BOOST_AUTO_TEST_CASE(context_long_with_order)
 {
     BOOST_CHECK((
         is_same<
@@ -314,7 +314,7 @@ BOOST_AUTO_TEST_CASE(binder_context_long_with_order)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(binder_context_long_with_order_empty_call_stack)
+BOOST_AUTO_TEST_CASE(context_long_with_order_empty_call_stack)
 {
     BOOST_CHECK((
         is_same<
@@ -339,7 +339,7 @@ BOOST_AUTO_TEST_CASE(binder_context_long_with_order_empty_call_stack)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(binder_context_long_with_order_diff_call_stack)
+BOOST_AUTO_TEST_CASE(context_long_with_order_diff_call_stack)
 {
     BOOST_CHECK((
         is_same<
@@ -364,7 +364,7 @@ BOOST_AUTO_TEST_CASE(binder_context_long_with_order_diff_call_stack)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(binder_context_long_with_order_short_call_stack)
+BOOST_AUTO_TEST_CASE(context_long_with_order_short_call_stack)
 {
     BOOST_CHECK((
         is_same<
@@ -389,7 +389,7 @@ BOOST_AUTO_TEST_CASE(binder_context_long_with_order_short_call_stack)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(binder_context_long_with_order_to_long_call_stack)
+BOOST_AUTO_TEST_CASE(context_long_with_order_to_long_call_stack)
 {
     BOOST_CHECK((
         is_same<
@@ -414,7 +414,7 @@ BOOST_AUTO_TEST_CASE(binder_context_long_with_order_to_long_call_stack)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(binder_base_of_fail)
+BOOST_AUTO_TEST_CASE(base_of_fail)
 {
     BOOST_CHECK((
         is_same<
@@ -431,7 +431,7 @@ BOOST_AUTO_TEST_CASE(binder_base_of_fail)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(binder_base_of_successful)
+BOOST_AUTO_TEST_CASE(base_of_successful)
 {
     BOOST_CHECK((
         is_same<
@@ -448,7 +448,7 @@ BOOST_AUTO_TEST_CASE(binder_base_of_successful)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(binder_complex_type)
+BOOST_AUTO_TEST_CASE(complex_type)
 {
     BOOST_CHECK((
         is_same<
@@ -465,7 +465,7 @@ BOOST_AUTO_TEST_CASE(binder_complex_type)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(binder_named_type)
+BOOST_AUTO_TEST_CASE(named_type)
 {
     BOOST_CHECK((
         is_same<
@@ -480,7 +480,7 @@ BOOST_AUTO_TEST_CASE(binder_named_type)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(binder_call_call_stack)
+BOOST_AUTO_TEST_CASE(call_call_stack)
 {
     BOOST_CHECK((
         is_same<

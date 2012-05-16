@@ -29,7 +29,7 @@ struct value
     int i;
 };
 
-BOOST_AUTO_TEST_CASE(generic_module_empty)
+BOOST_AUTO_TEST_CASE(empty)
 {
     struct module
        : generic_module<>
@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(generic_module_empty)
     //BOOST_CHECK((contains_all<mpl::vector0<>, module::pool::externals>::value));
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_default_scope)
+BOOST_AUTO_TEST_CASE(default_scope)
 {
     struct module
         : generic_module<c1>
@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_CASE(generic_module_default_scope)
     //BOOST_CHECK((contains_all<mpl::vector0<>, module::pool::externals>::value));
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_default_scope_many)
+BOOST_AUTO_TEST_CASE(default_scope_many)
 {
     struct module
         : generic_module<c1, c2, c3>
@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_CASE(generic_module_default_scope_many)
     //BOOST_CHECK((contains_all<mpl::vector0<>, module::pool::externals>::value));
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_default_scope_bind)
+BOOST_AUTO_TEST_CASE(default_scope_bind)
 {
     struct module
         : generic_module<
@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_CASE(generic_module_default_scope_bind)
     //BOOST_CHECK((contains_all<mpl::vector0<>, module::pool::externals>::value));
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_one_scope)
+BOOST_AUTO_TEST_CASE(one_scope)
 {
     struct module
         : generic_module<
@@ -131,7 +131,7 @@ BOOST_AUTO_TEST_CASE(generic_module_one_scope)
     //BOOST_CHECK((contains_all<mpl::vector0<>, module::pool::externals>::value));
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_one_scope_alias)
+BOOST_AUTO_TEST_CASE(one_scope_alias)
 {
     struct module
         : generic_module<
@@ -153,7 +153,7 @@ BOOST_AUTO_TEST_CASE(generic_module_one_scope_alias)
     //BOOST_CHECK((contains_all<mpl::vector0<>, module::pool::externals>::value));
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_one_scope_direct)
+BOOST_AUTO_TEST_CASE(one_scope_direct)
 {
     struct module
         : generic_module<
@@ -173,7 +173,7 @@ BOOST_AUTO_TEST_CASE(generic_module_one_scope_direct)
     //BOOST_CHECK((contains_all<mpl::vector0<>, module::pool::externals>::value));
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_many_singletons)
+BOOST_AUTO_TEST_CASE(many_singletons)
 {
     struct module
         : generic_module<
@@ -197,7 +197,7 @@ BOOST_AUTO_TEST_CASE(generic_module_many_singletons)
     //BOOST_CHECK((contains_all<mpl::vector0<>, module::pool::externals>::value));
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_many_scopes)
+BOOST_AUTO_TEST_CASE(many_scopes)
 {
     struct module
         : generic_module<
@@ -225,7 +225,7 @@ BOOST_AUTO_TEST_CASE(generic_module_many_scopes)
     //BOOST_CHECK((contains_all<mpl::vector0<>, module::pool::externals>::value));
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_in_call)
+BOOST_AUTO_TEST_CASE(in_call)
 {
     struct module
         : generic_module<
@@ -245,7 +245,7 @@ BOOST_AUTO_TEST_CASE(generic_module_in_call)
     //BOOST_CHECK((contains_all<mpl::vector0<>, module::pool::externals>::value));
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_in_name)
+BOOST_AUTO_TEST_CASE(in_name)
 {
     struct module
         : generic_module<
@@ -265,7 +265,7 @@ BOOST_AUTO_TEST_CASE(generic_module_in_name)
     //BOOST_CHECK((contains_all<mpl::vector0<>, module::pool::externals>::value));
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_in_namein_call)
+BOOST_AUTO_TEST_CASE(in_namein_call)
 {
     struct module
         : generic_module<
@@ -289,7 +289,7 @@ BOOST_AUTO_TEST_CASE(generic_module_in_namein_call)
     //BOOST_CHECK((contains_all<mpl::vector0<>, module::pool::externals>::value));
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_in_call_in_name)
+BOOST_AUTO_TEST_CASE(in_call_in_name)
 {
     struct module
         : generic_module<
@@ -313,7 +313,7 @@ BOOST_AUTO_TEST_CASE(generic_module_in_call_in_name)
     //BOOST_CHECK((contains_all<mpl::vector0<>, module::pool::externals>::value));
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_bind_if)
+BOOST_AUTO_TEST_CASE(bind_if)
 {
     struct module
         : generic_module<
@@ -335,7 +335,7 @@ BOOST_AUTO_TEST_CASE(generic_module_bind_if)
     //BOOST_CHECK((contains_all<mpl::vector0<>, module::pool::externals>::value));
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_mix)
+BOOST_AUTO_TEST_CASE(mix)
 {
     struct module
         : generic_module<
@@ -369,7 +369,7 @@ BOOST_AUTO_TEST_CASE(generic_module_mix)
     //BOOST_CHECK((contains_all<mpl::vector0<>, module::pool::externals>::value));
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_named_in_call)
+BOOST_AUTO_TEST_CASE(named_in_call)
 {
     struct module
         : generic_module<
@@ -395,7 +395,7 @@ BOOST_AUTO_TEST_CASE(generic_module_named_in_call)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(generic_multiple_calls)
+BOOST_AUTO_TEST_CASE(multiple_calls)
 {
     struct module
         : generic_module<
@@ -419,7 +419,7 @@ BOOST_AUTO_TEST_CASE(generic_multiple_calls)
     //BOOST_CHECK((contains_all<mpl::vector0<>, module::pool::externals>::value));
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_externals_base)
+BOOST_AUTO_TEST_CASE(externals_base)
 {
     struct module
         : generic_module<
@@ -441,7 +441,7 @@ BOOST_AUTO_TEST_CASE(generic_module_externals_base)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_externals_mix)
+BOOST_AUTO_TEST_CASE(externals_mix)
 {
     struct module
         : generic_module<
@@ -466,7 +466,7 @@ BOOST_AUTO_TEST_CASE(generic_module_externals_mix)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_externals_bind)
+BOOST_AUTO_TEST_CASE(externals_bind)
 {
     struct module
         : generic_module<
@@ -494,7 +494,7 @@ BOOST_AUTO_TEST_CASE(generic_module_externals_bind)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_set_instance_int)
+BOOST_AUTO_TEST_CASE(set_instance_int)
 {
     const int i = 42;
 
@@ -509,7 +509,7 @@ BOOST_AUTO_TEST_CASE(generic_module_set_instance_int)
     BOOST_CHECK_EQUAL(i, module::set<int>(i).get());
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_set_instance_annotate_in_in_call)
+BOOST_AUTO_TEST_CASE(set_instance_annotate_in_in_call)
 {
     const int i1 = 42;
     const int i2 = 43;
@@ -527,7 +527,7 @@ BOOST_AUTO_TEST_CASE(generic_module_set_instance_annotate_in_in_call)
     BOOST_CHECK_EQUAL(i2, module::set<b>(i2).get());
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_set_instance_annotate_in_name)
+BOOST_AUTO_TEST_CASE(set_instance_annotate_in_name)
 {
     const int i1 = 42;
     const int i2 = 43;
@@ -545,7 +545,7 @@ BOOST_AUTO_TEST_CASE(generic_module_set_instance_annotate_in_name)
     BOOST_CHECK_EQUAL(i2, module::set<b>(i2).get());
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_set_instance_annotatein_name_in_call)
+BOOST_AUTO_TEST_CASE(set_instance_annotatein_name_in_call)
 {
     const int i1 = 42;
     const int i2 = 43;
@@ -563,7 +563,7 @@ BOOST_AUTO_TEST_CASE(generic_module_set_instance_annotatein_name_in_call)
     BOOST_CHECK_EQUAL(i2, module::set<b>(i2).get());
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_set_instance_mix)
+BOOST_AUTO_TEST_CASE(set_instance_mix)
 {
     const int i1 = 42;
     const int i2 = 43;
@@ -584,7 +584,7 @@ BOOST_AUTO_TEST_CASE(generic_module_set_instance_mix)
     BOOST_CHECK_EQUAL(i3, module::set<b>(i3).get());
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_ctor_with_externals)
+BOOST_AUTO_TEST_CASE(ctor_with_externals)
 {
     const int i = 42;
     const double d = 87.0;
@@ -606,7 +606,7 @@ BOOST_AUTO_TEST_CASE(generic_module_ctor_with_externals)
     //BOOST_CHECK_EQUAL(d, module_.pool_.get<aux_::instance<double> >());
 }
 
-BOOST_AUTO_TEST_CASE(generic_module_ctor_with_externals_shared_ptr)
+BOOST_AUTO_TEST_CASE(ctor_with_externals_shared_ptr)
 {
     const int i = 42;
     shared_ptr<value> v(new value(i));
@@ -626,6 +626,18 @@ BOOST_AUTO_TEST_CASE(generic_module_ctor_with_externals_shared_ptr)
         //i
       //, get<shared_ptr<value> >(module_.pool_.get<aux_::instance<value> >())->i
     //);
+}
+
+BOOST_AUTO_TEST_CASE(create)
+{
+}
+
+BOOST_AUTO_TEST_CASE(visit)
+{
+}
+
+BOOST_AUTO_TEST_CASE(call)
+{
 }
 
 } // namespace di

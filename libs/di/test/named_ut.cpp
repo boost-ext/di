@@ -11,7 +11,7 @@
 namespace boost {
 namespace di {
 
-BOOST_AUTO_TEST_CASE(named_simple)
+BOOST_AUTO_TEST_CASE(named_basic)
 {
 }
 

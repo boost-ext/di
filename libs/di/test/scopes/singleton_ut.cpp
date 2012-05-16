@@ -12,14 +12,14 @@ namespace boost {
 namespace di {
 namespace scopes {
 
-BOOST_AUTO_TEST_CASE(singleton_create)
+BOOST_AUTO_TEST_CASE(create)
 {
     singleton::scope<int> singleton_;
 
     BOOST_CHECK((singleton_.create() == singleton_.create()));
 }
 
-BOOST_AUTO_TEST_CASE(singleton_create_args)
+BOOST_AUTO_TEST_CASE(create_args)
 {
     singleton::scope<c2> singleton_;
 

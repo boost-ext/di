@@ -5,14 +5,29 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <boost/test/unit_test.hpp>
+#include <boost/mpl/vector.hpp>
+#include "boost/di/aux_/instance.hpp"
 #include "boost/di/aux_/module.hpp"
+#include "fake_dependency.hpp"
+#include "data.hpp"
 
 namespace boost {
 namespace di {
 namespace aux_ {
 
-BOOST_AUTO_TEST_CASE(module_simple)
+BOOST_AUTO_TEST_CASE(externals_fail)
 {
+    instance<int> i_(42);
+
+    module<
+        mpl::vector0<>
+      , mpl::vector<
+            instance<int>
+          , instance<double>
+        >
+    > module_(i_);
+
+    module_.create<c14>();
 }
 
 } // namespace aux_

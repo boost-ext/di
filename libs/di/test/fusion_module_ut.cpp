@@ -30,7 +30,7 @@ struct value
     int i;
 };
 
-BOOST_AUTO_TEST_CASE(fusion_module_empty)
+BOOST_AUTO_TEST_CASE(empty)
 {
     BOOST_AUTO(module, fusion_module<>()());
     typedef BOOST_TYPEOF(module) module_t;
@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_empty)
     BOOST_CHECK((contains_all<mpl::vector0<>, module_t::pool::externals>::value));
 }
 
-BOOST_AUTO_TEST_CASE(fusion_module_default_scope_bind)
+BOOST_AUTO_TEST_CASE(default_scope_bind)
 {
     BOOST_AUTO(module, fusion_module<>()(
           bind<if0, c0if0>()
@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_default_scope_bind)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(fusion_module_one_scope)
+BOOST_AUTO_TEST_CASE(one_scope)
 {
     BOOST_AUTO(module, fusion_module<>()(
         scope<scopes::singleton>::bind<
@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_one_scope)
 
 }
 
-BOOST_AUTO_TEST_CASE(fusion_module_one_scope_alias)
+BOOST_AUTO_TEST_CASE(one_scope_alias)
 {
     BOOST_AUTO(module, fusion_module<>()(
         singletons<
@@ -140,7 +140,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_one_scope_alias)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(fusion_module_one_scope_direct)
+BOOST_AUTO_TEST_CASE(one_scope_direct)
 {
     BOOST_AUTO(module, fusion_module<>()(
         singleton<c0if0>()
@@ -167,7 +167,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_one_scope_direct)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(fusion_module_many_singletons)
+BOOST_AUTO_TEST_CASE(many_singletons)
 {
     BOOST_AUTO(module, fusion_module<>()(
         singletons<
@@ -200,7 +200,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_many_singletons)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(fusion_module_many_scopes)
+BOOST_AUTO_TEST_CASE(many_scopes)
 {
     BOOST_AUTO(module, fusion_module<>()(
         singletons<
@@ -240,7 +240,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_many_scopes)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(fusion_module_in_call)
+BOOST_AUTO_TEST_CASE(in_call)
 {
     BOOST_AUTO(module, fusion_module<>()(
         per_request<c1>::in_call<c2>()
@@ -267,7 +267,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_in_call)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(fusion_module_in_name)
+BOOST_AUTO_TEST_CASE(in_name)
 {
     BOOST_AUTO(module, fusion_module<>()(
         singleton<c1>::in_name<int>()
@@ -294,7 +294,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_in_name)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(fusion_module_in_namein_call)
+BOOST_AUTO_TEST_CASE(in_namein_call)
 {
     BOOST_AUTO(module, fusion_module<>()(
         singletons<
@@ -328,7 +328,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_in_namein_call)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(fusion_module_in_call_in_name)
+BOOST_AUTO_TEST_CASE(in_call_in_name)
 {
     BOOST_AUTO(module, fusion_module<>()(
         singletons<
@@ -362,7 +362,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_in_call_in_name)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(fusion_module_bind_if)
+BOOST_AUTO_TEST_CASE(bind_if)
 {
     BOOST_AUTO(module, fusion_module<>()(
         singletons<
@@ -393,7 +393,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_bind_if)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(fusion_module_mix)
+BOOST_AUTO_TEST_CASE(mix)
 {
     BOOST_AUTO(module, fusion_module<>()(
         singletons<
@@ -443,7 +443,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_mix)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(fusion_module_named_in_call)
+BOOST_AUTO_TEST_CASE(named_in_call)
 {
     BOOST_AUTO(module, fusion_module<>()(
         per_requests<
@@ -480,7 +480,7 @@ BOOST_AUTO_TEST_CASE(fusion_module_named_in_call)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(fusion_multiple_calls)
+BOOST_AUTO_TEST_CASE(multiple_calls)
 {
     BOOST_AUTO(module, fusion_module<>()(
         singletons<
@@ -512,6 +512,77 @@ BOOST_AUTO_TEST_CASE(fusion_multiple_calls)
           , module_t::pool::externals
         >::value
     ));
+}
+
+BOOST_AUTO_TEST_CASE(to_basic)
+{
+    const int i = 42;
+    const int d = 87.0;
+
+    BOOST_AUTO(module, fusion_module<>()(
+        bind<int>::to(i)
+      , bind<double>::to(d)
+    ));
+
+    c14 c14_ = module.create<c14>();
+
+    BOOST_CHECK_EQUAL(i, c14_.i);
+    BOOST_CHECK_EQUAL(d, c14_.d);
+}
+
+BOOST_AUTO_TEST_CASE(to_in_name)
+{
+    const int i1 = 42;
+    const int i2 = 87;
+
+    BOOST_AUTO(module, fusion_module<>()(
+        bind<int>::in_name<mpl::string<'1'> >::to(i1)
+      , bind<int>::in_name<mpl::string<'2'> >::to(i2)
+    ));
+
+    c10 c10_ = module.create<c10>();
+
+    BOOST_CHECK_EQUAL(i1, c10_.i1);
+    BOOST_CHECK_EQUAL(i2, c10_.i2);
+}
+
+BOOST_AUTO_TEST_CASE(to_in_call)
+{
+    const int i = 42;
+
+    BOOST_AUTO(module, fusion_module<>()(
+        bind<int>::in_call<c3>::to(i)
+    ));
+
+    c4 c4_ = module.create<c4>();
+
+    BOOST_CHECK_EQUAL(i, c4_.c3_->i);
+    BOOST_CHECK_EQUAL(0, c4_.i1);
+    BOOST_CHECK_EQUAL(0, c4_.i2);
+}
+
+BOOST_AUTO_TEST_CASE(to_in_call_in_name)
+{
+}
+
+BOOST_AUTO_TEST_CASE(to_in_name_in_call)
+{
+}
+
+BOOST_AUTO_TEST_CASE(to_variant)
+{
+}
+
+BOOST_AUTO_TEST_CASE(create)
+{
+}
+
+BOOST_AUTO_TEST_CASE(visit)
+{
+}
+
+BOOST_AUTO_TEST_CASE(call)
+{
 }
 
 } // namespace di

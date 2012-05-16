@@ -21,17 +21,17 @@ namespace boost {
 namespace di {
 
 template<
-    typename T1
-  , typename T2
+    typename TFrom
+  , typename TIn
   , typename = void
 >
 struct contains_all
     : mpl::empty<
           typename mpl::fold<
-              T1
+              TFrom
             , mpl::vector0<>
             , mpl::if_<
-                  mpl::contains<T2, mpl::_2>
+                  mpl::contains<TIn, mpl::_2>
                 , mpl::_1
                 , mpl::push_back<mpl::_1, mpl::_2>
               >
@@ -40,13 +40,13 @@ struct contains_all
 { };
 
 template<
-    typename T1
-  , typename T2
+    typename TFrom
+  , typename TIn
 >
 struct contains_all<
-    T1
-  , T2
-  , typename enable_if<mpl::not_equal_to<mpl::size<T1>, mpl::size<T2> > >::type
+    TFrom
+  , TIn
+  , typename enable_if<mpl::not_equal_to<mpl::size<TFrom>, mpl::size<TIn> > >::type
 >
     : mpl::false_
 { };

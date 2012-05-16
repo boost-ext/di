@@ -14,7 +14,7 @@ namespace boost {
 namespace di {
 namespace policies {
 
-BOOST_AUTO_TEST_CASE(no_circular_dependencies)
+BOOST_AUTO_TEST_CASE(basic)
 {
     BOOST_CHECK((
         !is_base_of<

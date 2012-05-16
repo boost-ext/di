@@ -58,7 +58,7 @@ struct fake_pool
     }
 };
 
-BOOST_AUTO_TEST_CASE(dependency_default)
+BOOST_AUTO_TEST_CASE(default_value)
 {
     typedef dependency<fake_scope<>, int> dependency_t;
 
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE(dependency_default)
     BOOST_CHECK((is_same<is_same<mpl::_1, int>, dependency_t::bind>::value));
 }
 
-BOOST_AUTO_TEST_CASE(dependency_rebind_scope)
+BOOST_AUTO_TEST_CASE(rebind_scope)
 {
     BOOST_CHECK((
         is_same<
@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE(dependency_rebind_scope)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(dependency_rebind_type)
+BOOST_AUTO_TEST_CASE(rebind_type)
 {
     BOOST_CHECK((
         is_same<
@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE(dependency_rebind_type)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(dependency_create_by_pool)
+BOOST_AUTO_TEST_CASE(create_by_pool)
 {
     const int i = 42;
     dependency<fake_scope<>, int > dependency_;
@@ -131,7 +131,7 @@ BOOST_AUTO_TEST_CASE(dependency_create_by_pool)
     BOOST_CHECK_EQUAL(i, dependency_.create<int>(pool_));
 }
 
-BOOST_AUTO_TEST_CASE(dependency_create_by_value)
+BOOST_AUTO_TEST_CASE(create_by_value)
 {
     const int i = 42;
     dependency<fake_scope<>, int, mpl::int_<i> > dependency_;
@@ -140,7 +140,7 @@ BOOST_AUTO_TEST_CASE(dependency_create_by_value)
     BOOST_CHECK_EQUAL(i, dependency_.create<int>(pool_));
 }
 
-BOOST_AUTO_TEST_CASE(dependency_create_by_scope)
+BOOST_AUTO_TEST_CASE(create_by_scope)
 {
     const int i = 42;
     dependency<fake_scope<i>, int> dependency_;

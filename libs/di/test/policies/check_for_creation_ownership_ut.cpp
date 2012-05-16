@@ -15,7 +15,7 @@ namespace boost {
 namespace di {
 namespace policies {
 
-BOOST_AUTO_TEST_CASE(creation_ownership_clear)
+BOOST_AUTO_TEST_CASE(clear)
 {
     BOOST_CHECK((
         is_base_of<
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(creation_ownership_clear)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(creation_ownership_not_clear)
+BOOST_AUTO_TEST_CASE(not_clear)
 {
     BOOST_CHECK((
         is_base_of<

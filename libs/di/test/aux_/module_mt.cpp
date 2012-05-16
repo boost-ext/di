@@ -15,7 +15,6 @@
 #include "boost/di/scopes/per_request.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/aux_/instance.hpp"
-#include "boost/di/aux_/pool.hpp"
 #include "boost/di/aux_/module.hpp"
 #include "fake_dependency.hpp"
 #include "data.hpp"
@@ -24,42 +23,42 @@ namespace boost {
 namespace di {
 namespace aux_ {
 
-BOOST_AUTO_TEST_CASE(module_create_using_copy)
+BOOST_AUTO_TEST_CASE(create_using_copy)
 {
     module<mpl::vector0<> > module_;
     c0 obj = module_.create<c0>();
     (void)(obj);
 }
 
-BOOST_AUTO_TEST_CASE(module_create_using_ptr)
+BOOST_AUTO_TEST_CASE(create_using_ptr)
 {
     module<mpl::vector0<> > module_;
     c0* obj = module_.create<c0*>();
     BOOST_CHECK(obj);
 }
 
-BOOST_AUTO_TEST_CASE(module_create_using_const_ptr)
+BOOST_AUTO_TEST_CASE(create_using_const_ptr)
 {
     module<mpl::vector0<> > module_;
     const c0* obj = module_.create<const c0*>();
     BOOST_CHECK(obj);
 }
 
-BOOST_AUTO_TEST_CASE(module_create_using_shared_ptr)
+BOOST_AUTO_TEST_CASE(create_using_shared_ptr)
 {
     module<mpl::vector0<> > module_;
     shared_ptr<c0> obj = module_.create<shared_ptr<c0> >();
     BOOST_CHECK(obj);
 }
 
-BOOST_AUTO_TEST_CASE(module_create_default_ctor)
+BOOST_AUTO_TEST_CASE(create_default_ctor)
 {
     module<mpl::vector0<> > module_;
     c0 obj = module_.create<c0>();
     (void)(obj);
 }
 
-BOOST_AUTO_TEST_CASE(module_create_per_request)
+BOOST_AUTO_TEST_CASE(create_per_request)
 {
     module<
         mpl::vector<
@@ -85,7 +84,7 @@ BOOST_AUTO_TEST_CASE(module_create_per_request)
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(module_create_per_request_singleton)
+BOOST_AUTO_TEST_CASE(create_per_request_singleton)
 {
     module<
         mpl::vector<
@@ -112,7 +111,7 @@ BOOST_AUTO_TEST_CASE(module_create_per_request_singleton)
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(module_create_singleton_context)
+BOOST_AUTO_TEST_CASE(create_singleton_context)
 {
     module<
         mpl::vector<
@@ -141,7 +140,7 @@ BOOST_AUTO_TEST_CASE(module_create_singleton_context)
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(module_create_per_request_singleton_context_order)
+BOOST_AUTO_TEST_CASE(create_per_request_singleton_context_order)
 {
     module<
         mpl::vector<
@@ -170,7 +169,7 @@ BOOST_AUTO_TEST_CASE(module_create_per_request_singleton_context_order)
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(module_create_per_request_singleton_context_mix)
+BOOST_AUTO_TEST_CASE(create_per_request_singleton_context_mix)
 {
     module<
         mpl::vector<
@@ -204,7 +203,7 @@ BOOST_AUTO_TEST_CASE(module_create_per_request_singleton_context_mix)
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(module_create_singleton_impl)
+BOOST_AUTO_TEST_CASE(create_singleton_impl)
 {
     module<
         mpl::vector<
@@ -230,7 +229,7 @@ BOOST_AUTO_TEST_CASE(module_create_singleton_impl)
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(module_create_singleton_many)
+BOOST_AUTO_TEST_CASE(create_singleton_many)
 {
     module<
         mpl::vector<
@@ -258,7 +257,7 @@ BOOST_AUTO_TEST_CASE(module_create_singleton_many)
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(module_ctor_traits)
+BOOST_AUTO_TEST_CASE(ctor_trait)
 {
     const int i = 42;
 
@@ -274,7 +273,7 @@ BOOST_AUTO_TEST_CASE(module_ctor_traits)
     BOOST_CHECK_EQUAL(0.0, obj.d);
 }
 
-BOOST_AUTO_TEST_CASE(module_class_ctor_traits)
+BOOST_AUTO_TEST_CASE(class_ctor_traits)
 {
     const int i1 = 42;
     const int i2 = 87;
@@ -292,7 +291,7 @@ BOOST_AUTO_TEST_CASE(module_class_ctor_traits)
     BOOST_CHECK_EQUAL(i2, obj.i2);
 }
 
-BOOST_AUTO_TEST_CASE(module_base_of)
+BOOST_AUTO_TEST_CASE(base_of)
 {
     module<
         mpl::vector<
@@ -322,7 +321,7 @@ BOOST_AUTO_TEST_CASE(module_base_of)
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(module_multiple_calls)
+BOOST_AUTO_TEST_CASE(multiple_calls)
 {
     module<
         mpl::vector<
@@ -337,7 +336,7 @@ BOOST_AUTO_TEST_CASE(module_multiple_calls)
     BOOST_CHECK(c15_->c3_ == c15_->c6_.c4_->c3_); BOOST_CHECK(c15_->c3_ != c15_->c6_.c3_);
 }
 
-BOOST_AUTO_TEST_CASE(module_base_of_interface_not_trivial_ctor)
+BOOST_AUTO_TEST_CASE(base_of_interface_not_trivial_ctor)
 {
     module<
         mpl::vector<
@@ -350,7 +349,7 @@ BOOST_AUTO_TEST_CASE(module_base_of_interface_not_trivial_ctor)
     BOOST_CHECK(obj.p->get().get() != obj.p->get().get());
 }
 
-BOOST_AUTO_TEST_CASE(module_named_shared_ptr_base_of)
+BOOST_AUTO_TEST_CASE(named_shared_ptr_base_of)
 {
     const int i = 42;
 
@@ -365,7 +364,7 @@ BOOST_AUTO_TEST_CASE(module_named_shared_ptr_base_of)
     BOOST_CHECK_EQUAL(i, *obj.i);
 }
 
-BOOST_AUTO_TEST_CASE(module_named_shared_ptr)
+BOOST_AUTO_TEST_CASE(named_shared_ptr)
 {
     const int i = 42;
 
@@ -380,7 +379,7 @@ BOOST_AUTO_TEST_CASE(module_named_shared_ptr)
     BOOST_CHECK_EQUAL(i, *obj.i);
 }
 
-BOOST_AUTO_TEST_CASE(module_named_shared_ptr_if)
+BOOST_AUTO_TEST_CASE(named_shared_ptr_if)
 {
     module<
         mpl::vector<
@@ -396,7 +395,7 @@ BOOST_AUTO_TEST_CASE(module_named_shared_ptr_if)
     BOOST_CHECK_EQUAL(0, obj.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(module_named_shared_ptr_if_with_not_trivial_ctor)
+BOOST_AUTO_TEST_CASE(named_shared_ptr_if_with_not_trivial_ctor)
 {
     const int i = 42;
 
@@ -416,7 +415,7 @@ BOOST_AUTO_TEST_CASE(module_named_shared_ptr_if_with_not_trivial_ctor)
     BOOST_CHECK_EQUAL(0.0, if0_->d);
 }
 
-BOOST_AUTO_TEST_CASE(module_externals_create_by_explicit_value)
+BOOST_AUTO_TEST_CASE(externals_create_by_explicit_value)
 {
     const int i = 42;
     const double d = 21.0;
@@ -445,7 +444,7 @@ BOOST_AUTO_TEST_CASE(module_externals_create_by_explicit_value)
     BOOST_CHECK_EQUAL("s", obj.s);
 }
 
-BOOST_AUTO_TEST_CASE(module_externals_create_with_non_trivial_ctor)
+BOOST_AUTO_TEST_CASE(externals_create_with_non_trivial_ctor)
 {
     const int i = 42;
     const double d = 21.0;
@@ -469,7 +468,7 @@ BOOST_AUTO_TEST_CASE(module_externals_create_with_non_trivial_ctor)
     BOOST_CHECK_EQUAL(c, obj.c);
 }
 
-BOOST_AUTO_TEST_CASE(module_externals_create_with_attributes)
+BOOST_AUTO_TEST_CASE(externals_create_with_attributes)
 {
     const int i1 = 42;
     const int i2 = 87;

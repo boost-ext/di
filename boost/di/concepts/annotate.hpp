@@ -23,6 +23,8 @@ struct annotate
     {
         typedef TDerived derived;
         typedef TName name;
+
+        with() { }
     };
 };
 

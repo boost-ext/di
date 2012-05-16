@@ -275,7 +275,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(basic_externals_ctor, TInjector, basic_externals_c
     BOOST_CHECK_EQUAL(87.0, c9_->d);
 }
 
-BOOST_AUTO_TEST_CASE(have_to_compile)
+BOOST_AUTO_TEST_CASE(ctor)
 {
     {
         injector<BOOST_TYPEOF(fusion_module_1)> injector(fusion_module_1);
@@ -296,13 +296,14 @@ BOOST_AUTO_TEST_CASE(have_to_compile)
         injector<BOOST_TYPEOF(fusion_module_1), generic_module_1> injector(fusion_module_1);
         (void)injector;
     }
+}
 
-    {
-        injector<>().install(generic_module_2());
-        injector<>().install(generic_module_1(), generic_module_2());
-        injector<>().install(generic_module_1(), fusion_module_1);
-        injector<>().install(fusion_module_1, fusion_module_2);
-    }
+BOOST_AUTO_TEST_CASE(install)
+{
+    injector<>().install(generic_module_2());
+    injector<>().install(generic_module_1(), generic_module_2());
+    injector<>().install(generic_module_1(), fusion_module_1);
+    injector<>().install(fusion_module_1, fusion_module_2);
 }
 
 } // namespace di

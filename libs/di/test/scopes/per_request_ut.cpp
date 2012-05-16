@@ -12,14 +12,14 @@ namespace boost {
 namespace di {
 namespace scopes {
 
-BOOST_AUTO_TEST_CASE(per_request_create)
+BOOST_AUTO_TEST_CASE(create)
 {
     per_request::scope<int> per_request_;
 
     BOOST_CHECK((per_request_.create().get() != per_request_.create().get()));
 }
 
-BOOST_AUTO_TEST_CASE(per_request_create_args)
+BOOST_AUTO_TEST_CASE(create_args)
 {
     per_request::scope<c2> per_request_;
 
