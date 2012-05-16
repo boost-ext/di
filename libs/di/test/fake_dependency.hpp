@@ -22,9 +22,9 @@ template<
     typename TScope
   , typename TExpected
   , typename TGiven = TExpected
-  , typename TContext0 = mpl_::na
-  , typename TContext1 = mpl_::na
-  , typename TContext2 = mpl_::na
+  , typename TContext0 = mpl::na
+  , typename TContext1 = mpl::na
+  , typename TContext2 = mpl::na
 >
 struct fake_dependency
 {
@@ -41,9 +41,9 @@ template<
     typename TScope
   , typename TExpected
   , typename TGiven = TExpected
-  , typename TContext0 = mpl_::na
-  , typename TContext1 = mpl_::na
-  , typename TContext2 = mpl_::na
+  , typename TContext0 = mpl::na
+  , typename TContext1 = mpl::na
+  , typename TContext2 = mpl::na
 >
 struct fake_dependency_base_of
 {

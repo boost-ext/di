@@ -84,15 +84,12 @@
                 typename
               , typename
               , typename = void
-              , typename = void
             >
             struct circular_dependencies_impl;
 
             template<
                 typename T
               , typename TCallStack
-              , typename = void
-              , typename = void
             >
             struct circular_dependencies
                : circular_dependencies_impl<
@@ -137,8 +134,9 @@
             mpl::size<typename ctor<TDependency>::type>::value
             ==
             BOOST_PP_ITERATION()
+            &&
+            is_unique_call_stack<TCallStack>::value
         >::type
-      , typename enable_if<is_unique_call_stack<TCallStack> >::type
     >
     BOOST_PP_EXPR_IF(BOOST_PP_ITERATION(), :)
         BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_CHECK_FOR_CIRCULAR_DEPENDENCIES_IMPL, ~)
@@ -152,8 +150,9 @@
             mpl::size<typename ctor<TDependency>::type>::value
             ==
             BOOST_PP_ITERATION()
+            &&
+            !is_unique_call_stack<TCallStack>::value
         >::type
-      , typename disable_if<is_unique_call_stack<TCallStack> >::type
     >
     :
         mpl::false_
