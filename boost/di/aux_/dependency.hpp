@@ -229,7 +229,7 @@
     template<typename T, typename TPool, BOOST_DI_TYPES(Args)>
     typename enable_if<is_scope_type<TPool>, T>::type
     create(const TPool&, BOOST_DI_ARGS(Args, args)) {
-        return TConverter<scope, T>::execute(scope_.create(BOOST_DI_ARGS_PASS(args)));
+        return TConverter<scope, T>::execute(scope_.create(BOOST_DI_ARGS_FORWARD(args)));
     }
 
     template<typename T, typename TPool, BOOST_DI_TYPES(Args)>
