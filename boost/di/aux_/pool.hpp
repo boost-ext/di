@@ -33,6 +33,10 @@
         )                                   \
     )
 
+    #if (__GNUC__ >= 4)
+    #    pragma GCC diagnostic ignored "-Wreorder"
+    #endif
+
     namespace boost {
     namespace di {
     namespace aux_ {
