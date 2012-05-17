@@ -77,7 +77,9 @@
     template<typename TExternals>
     class pool<
         TExternals
-      , typename enable_if_c<mpl::size<TExternals>::value == BOOST_PP_ITERATION()>::type
+      , typename enable_if_c<
+            mpl::size<TExternals>::value == BOOST_PP_ITERATION()
+        >::type
     >
         : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_DERIVES_IMPL, TExternals)
     {

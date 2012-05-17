@@ -26,6 +26,19 @@ struct fake_dependency
 };
 
 template<typename T>
+struct fake_binder
+{
+    template<
+        typename
+      , typename
+    >
+    struct impl
+    {
+        typedef T type;
+    };
+};
+
+template<typename T>
 struct visitor_mock
 {
     template<typename TDependency>
@@ -39,7 +52,7 @@ BOOST_AUTO_TEST_CASE(basic)
     typedef fake_dependency<int> dependency_t;
     visitor_mock<int> visitor_mock;
 
-    visitor<mpl::vector<dependency_t> >::execute<int, mpl::vector0<> >(visitor_mock);
+    visitor<fake_binder<dependency_t> >::execute<int, mpl::vector0<> >(visitor_mock);
 }
 
 } // namespace aux_

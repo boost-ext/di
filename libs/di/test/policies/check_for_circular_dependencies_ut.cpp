@@ -21,6 +21,7 @@ BOOST_AUTO_TEST_CASE(basic)
             mpl::false_
           , check_for_circular_dependencies::verify<
                 mpl::vector0<>
+              , mpl::vector0<>
               , c8
               , false
             >::type
@@ -35,6 +36,7 @@ BOOST_AUTO_TEST_CASE(direct)
             mpl::false_
           , check_for_circular_dependencies::verify<
                 mpl::vector0<>
+              , mpl::vector0<>
               , cd1
               , false
             >::type
@@ -49,6 +51,7 @@ BOOST_AUTO_TEST_CASE(in_direct)
             mpl::false_
           , check_for_circular_dependencies::verify<
                 mpl::vector0<>
+              , mpl::vector0<>
               , cd5
               , false
             >::type

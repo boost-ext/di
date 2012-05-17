@@ -38,6 +38,19 @@ struct fake_dependency
 };
 
 template<typename T>
+struct fake_binder
+{
+    template<
+        typename
+      , typename
+    >
+    struct impl
+    {
+        typedef T type;
+    };
+};
+
+template<typename T>
 struct entries
     : T
 { };
@@ -51,7 +64,7 @@ BOOST_AUTO_TEST_CASE(creator_simple)
 
     BOOST_CHECK_EQUAL(i, (
         creator<
-            mpl::vector<dependency_t>
+            fake_binder<dependency_t>
         >::execute<int, mpl::vector0<> >(entries_, pool_)
     ));
 }

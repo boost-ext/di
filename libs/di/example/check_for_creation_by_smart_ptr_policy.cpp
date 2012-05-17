@@ -49,6 +49,7 @@ class check_for_creation_by_smart_ptr
 public:
     template<
         typename TDeps
+      , typename TExternals
       , typename TGiven
       , typename = void
     >
@@ -64,9 +65,15 @@ public:
 
     template<
         typename TDeps
+      , typename TExternals
       , typename TGiven
     >
-    class verify<TDeps, TGiven, typename boost::enable_if<has_element_type<TGiven> >::type>
+    class verify<
+        TDeps
+      , TExternals
+      , TGiven
+      , typename boost::enable_if<has_element_type<TGiven> >::type
+    >
         : public mpl::true_
     { };
 };

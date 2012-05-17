@@ -46,11 +46,11 @@
     public:
         template<
             typename TDeps
+          , typename TExternals
           , typename TGiven
           , bool Assert = true
           , template<
                 typename
-              , typename
               , typename
             > class TBinder = aux_::binder
           , template<
@@ -93,10 +93,16 @@
             >
             struct circular_dependencies
                : circular_dependencies_impl<
-                      typename TBinder<T, TCallStack, TDeps>::type
+                      typename TBinder<
+                          TDeps
+                        , TExternals
+                      >::template impl<T, TCallStack>::type
                     , typename mpl::push_back<
                           TCallStack
-                        , typename TBinder<T, TCallStack, TDeps>::type::given
+                        , typename TBinder<
+                              TDeps
+                            , TExternals
+                          >::template impl<T, TCallStack>::type::given
                       >::type
                   >
             { };

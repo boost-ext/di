@@ -22,6 +22,7 @@ class check_for_creation_ownership
 public:
     template<
         typename TDeps
+      , typename TExternals
       , typename TGiven
       , bool Assert = true
       , typename = void
@@ -32,10 +33,17 @@ public:
 
     template<
         typename TDeps
+      , typename TExternals
       , typename TGiven
       , bool Assert
     >
-    class verify<TDeps, TGiven, Assert, typename enable_if<is_reference<TGiven> >::type>
+    class verify<
+        TDeps
+      , TExternals
+      , TGiven
+      , Assert
+      , typename enable_if<is_reference<TGiven> >::type
+    >
         : public mpl::false_
     {
        BOOST_MPL_ASSERT_MSG(

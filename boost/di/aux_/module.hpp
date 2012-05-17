@@ -29,8 +29,9 @@
     #include <boost/mpl/equal_to.hpp>
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/insert.hpp>
-    #include "boost/di/aux_/pool.hpp"
     #include "boost/di/aux_/has_traits.hpp"
+    #include "boost/di/aux_/pool.hpp"
+    #include "boost/di/aux_/binder.hpp"
     #include "boost/di/aux_/creator.hpp"
     #include "boost/di/aux_/visitor.hpp"
     #include "boost/di/policy.hpp"
@@ -53,6 +54,10 @@
       , typename TExternals = TDeps
       , template<
             typename
+          , typename
+        > class TBinder = binder
+      , template<
+            typename
           , typename = void
         > class TPool = pool
       , template<
@@ -67,6 +72,7 @@
         template<
             typename
           , typename
+          , template<typename, typename> class
           , template<typename, typename> class
           , template<typename> class
           , template<typename> class
@@ -165,6 +171,8 @@
             : mpl::inherit_linearly<deps, mpl::inherit<mpl::_1, mpl::_2> >::type
         { };
 
+        typedef TBinder<deps, TExternals> binder_type;
+
     public:
         module() { }
 
@@ -172,14 +180,20 @@
 
         template<typename T>
         T create() {
-            typedef typename policies::template verify<deps, T>::type policies_type;
-            return TCreator<deps>::template execute<T, mpl::vector0<> >(entries_, pool_);
+            typedef typename policies::template
+                verify<deps, TExternals, T>::type policies_type;
+
+            return TCreator<binder_type>::template
+                execute<T, mpl::vector0<> >(entries_, pool_);
         }
 
         template<typename T, typename Visitor>
         void visit(const Visitor& visitor) {
-            typedef typename policies::template verify<deps, T>::type policies_type;
-            TVisitor<deps>::template execute<T, mpl::vector0<> >(visitor);
+            typedef typename policies::template
+                verify<deps, TExternals, T>::type policies_type;
+
+            TVisitor<binder_type>::template
+                execute<T, mpl::vector0<> >(visitor);
         }
 
         template<typename Scope, typename Action>
@@ -228,7 +242,9 @@
     template<BOOST_DI_TYPES(Args)>
     explicit module(
         BOOST_DI_ARGS(Args, args)
-      , typename enable_if<is_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >::type* = 0)
+      , typename enable_if<
+            is_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >
+        >::type* = 0)
         : pool_(BOOST_PP_ENUM_BINARY_PARAMS(
               BOOST_PP_ITERATION()
             , args
@@ -239,7 +255,9 @@
     template<BOOST_DI_TYPES(Args)>
     explicit module(
         BOOST_DI_ARGS(Args, args)
-      , typename disable_if<is_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >::type* = 0)
+      , typename disable_if<
+            is_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >
+        >::type* = 0)
         : pool_(BOOST_DI_ARGS_FORWARD(args))
     { }
 

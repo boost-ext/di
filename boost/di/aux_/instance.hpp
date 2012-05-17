@@ -29,6 +29,7 @@ class instance
 {
 public:
     typedef T element_type;
+    typedef TContext context;
 
     explicit instance(const T& member)
         : member_(member)
@@ -69,6 +70,7 @@ class instance<
 
 public:
     typedef T element_type;
+    typedef TContext context;
 
     explicit instance(value_type member)
         : member_(member)

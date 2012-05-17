@@ -18,6 +18,7 @@ class check_for_references_without_ownership
 public:
     template<
         typename TDeps
+      , typename TExternals
       , typename TGiven
       , typename = void
     >

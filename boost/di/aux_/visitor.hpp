@@ -18,7 +18,6 @@
     #include <boost/mpl/placeholders.hpp>
     #include "boost/di/aux_/make_plain.hpp"
     #include "boost/di/aux_/ctor_traits.hpp"
-    #include "boost/di/aux_/binder.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
@@ -34,12 +33,7 @@
     namespace aux_ {
 
     template<
-        typename TDeps
-      , template<
-            typename
-          , typename
-          , typename
-        > class TBinder = binder
+        typename TBinder
       , template<
             typename
           , typename = void
@@ -73,11 +67,16 @@
           , typename TVisitor
         >
         static void execute(const TVisitor& visitor) {
-            typedef typename TBinder<T, TCallStack, TDeps>::type to_bo_created_t;
+            typedef typename TBinder::template
+                impl<T, TCallStack>::type to_bo_created_t;
+
             execute_impl<
                 T
               , to_bo_created_t
-              , typename mpl::push_back<TCallStack, typename to_bo_created_t::given>::type
+              , typename mpl::push_back<
+                    TCallStack
+                  , typename to_bo_created_t::given
+                >::type
             >(visitor);
         }
 
@@ -85,9 +84,9 @@
         #include BOOST_PP_ITERATE()
     };
 
-    template<typename TDeps>
+    template<typename TBinder>
     struct visitor
-        : visitor_impl<TDeps>
+        : visitor_impl<TBinder>
     { };
 
     } // namespace aux_

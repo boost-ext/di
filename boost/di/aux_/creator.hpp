@@ -19,7 +19,6 @@
     #include <boost/mpl/push_back.hpp>
     #include "boost/di/aux_/ctor_traits.hpp"
     #include "boost/di/aux_/converter.hpp"
-    #include "boost/di/aux_/binder.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
@@ -35,12 +34,7 @@
     namespace aux_ {
 
     template<
-        typename TDeps
-      , template<
-            typename
-          , typename
-          , typename
-        > class TBinder = binder
+        typename TBinder
       , template<
             typename
           , typename = void
@@ -61,7 +55,9 @@
           , typename TPool
         >
         static T execute(TEntries& entries, const TPool& pool) {
-            typedef typename TBinder<T, TCallStack, TDeps>::type to_bo_created_t;
+            typedef typename TBinder::template
+                impl<T, TCallStack>::type to_bo_created_t;
+
             return execute_impl<
                 T
               , to_bo_created_t
@@ -79,7 +75,9 @@
             typename TDependency
           , typename TEntries
         >
-        static typename enable_if<is_base_of<TDependency, TEntries>, TDependency&>::type
+        static typename enable_if<
+            is_base_of<TDependency, TEntries>, TDependency&
+        >::type
         acquire(TEntries& entries) {
             return static_cast<TDependency&>(entries);
         }
@@ -88,15 +86,17 @@
             typename TDependency
           , typename TEntries
         >
-        static typename disable_if<is_base_of<TDependency, TEntries>, TDependency>::type
+        static typename disable_if<
+            is_base_of<TDependency, TEntries>, TDependency
+        >::type
         acquire(TEntries&) {
             return TDependency();
         }
     };
 
-    template<typename TDeps>
+    template<typename TBinder>
     struct creator
-        : creator_impl<TDeps>
+        : creator_impl<TBinder>
     { };
 
     } // namespace aux_

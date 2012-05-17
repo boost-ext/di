@@ -157,6 +157,7 @@ template<
     typename T
   , typename TCallStack
   , typename TDeps
+  , typename TExternals
   , typename TDefault = dependency<scopes::per_request, mpl::_1, mpl::_2>
 >
 struct binder_impl
@@ -178,13 +179,19 @@ struct binder_impl
 { };
 
 template<
-    typename T
-  , typename TCallStack
-  , typename TDeps
+    typename TDeps = mpl::vector0<>
+  , typename TExternals = mpl::vector0<>
 >
 struct binder
-    : binder_impl<T, TCallStack, TDeps>
-{ };
+{
+    template<
+        typename T
+      , typename TCallStack
+    >
+    struct impl
+        : binder_impl<T, TCallStack, TDeps, TExternals>
+    { };
+};
 
 } // namespace aux_
 } // namespace di

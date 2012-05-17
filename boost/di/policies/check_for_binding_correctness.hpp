@@ -18,6 +18,7 @@ class check_for_binding_correctness
 public:
     template<
         typename TDeps
+      , typename TExternals
       , typename TGiven
       , typename = void
     >
