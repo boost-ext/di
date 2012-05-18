@@ -146,7 +146,7 @@ struct get_dependency_by_call_stack_order
                 , TDefault
               >::type
           >
-      >::type
+      >
 { };
 
 struct empty_context
@@ -196,7 +196,7 @@ struct binder_impl
               typename make_plain<T>::type
             , detail::bind<mpl::_2>
           >
-      >
+      >::type
 { };
 
 template<
