@@ -526,9 +526,9 @@ BOOST_AUTO_TEST_CASE(call_call_stack)
 typedef mpl::vector<
     mpl::vector<c1>
   , mpl::vector<c2, c3>
-> binder_multiple_calls_t;
+> multiple_calls_t;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(binder_multiple_calls, TContext, binder_multiple_calls_t)
+BOOST_AUTO_TEST_CASE_TEMPLATE(multiple_calls, TContext, multiple_calls_t)
 {
     BOOST_CHECK((
         is_same<
@@ -552,9 +552,9 @@ typedef mpl::vector<
   , mpl::vector<c2, c3, c4>
   , mpl::vector<c3, c4>
   , mpl::vector<c5>
-> binder_multiple_calls_many_t;
+> multiple_calls_many_t;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(binder_multiple_calls_many, TContext, binder_multiple_calls_many_t)
+BOOST_AUTO_TEST_CASE_TEMPLATE(multiple_calls_many, TContext, multiple_calls_many_t)
 {
     BOOST_CHECK((
         is_same<
@@ -576,9 +576,9 @@ typedef mpl::vector<
     mpl::vector<c3>
   , mpl::vector<c6>
   , mpl::vector<c3, c2>
-> binder_multiple_calls_not_found_t;
+> multiple_calls_not_found_t;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(binder_multiple_calls_not_found, TContext, binder_multiple_calls_not_found_t)
+BOOST_AUTO_TEST_CASE_TEMPLATE(multiple_calls_not_found, TContext, multiple_calls_not_found_t)
 {
     BOOST_CHECK((
         is_same<
@@ -594,6 +594,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(binder_multiple_calls_not_found, TContext, binder_
             >::type
         >::value
     ));
+}
+
+BOOST_AUTO_TEST_CASE(default_with_externals_call)
+{
 }
 
 } // namespace aux_

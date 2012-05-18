@@ -29,6 +29,7 @@
 #include <boost/mpl/less.hpp>
 #include <boost/mpl/min_max.hpp>
 #include <boost/mpl/minus.hpp>
+#include <boost/mpl/filter_view.hpp>
 #include "boost/di/aux_/dependency.hpp"
 #include "boost/di/aux_/make_plain.hpp"
 #include "boost/di/aux_/value_type.hpp"
@@ -76,7 +77,10 @@ struct make_context
       >::type
 { };
 
-template<typename TCallStack, typename TContext>
+template<
+    typename TCallStack
+  , typename TContext
+>
 struct for_each_context
     : mpl::fold<
           TContext
@@ -86,7 +90,7 @@ struct for_each_context
             , mpl::next<mpl::_1>
             , mpl::_1
           >
-    >::type
+      >::type
 { };
 
 template<typename TContext>
@@ -113,7 +117,7 @@ struct comparator
 
 template<
     typename TCallStack
-  , typename TDeps
+  , typename TSeq
   , typename TDefault
   , typename TCond = mpl::true_
 >
@@ -123,14 +127,13 @@ struct get_dependency_by_call_stack_order
               typename mpl::push_back<
                   typename mpl::sort<
                       typename mpl::fold<
-                          TDeps
+                          TSeq
                         , mpl::vector0<>
                         , mpl::if_<
                               mpl::and_<
-                                  has_context<mpl::_2>
-                                , detail::for_each_context<
+                                  for_each_context<
                                       TCallStack
-                                    , detail::make_context<mpl::_2>
+                                    , make_context<mpl::_2>
                                   >
                                 , TCond
                               >
@@ -138,7 +141,7 @@ struct get_dependency_by_call_stack_order
                             , mpl::_1
                           >
                       >::type
-                    , detail::less_context_size<mpl::_1, mpl::_2>
+                    , less_context_size<mpl::_1, mpl::_2>
                   >::type
                 , TDefault
               >::type
@@ -163,7 +166,7 @@ struct make_default_dependency
         , typename value_type<TGiven>::type
         , typename get_dependency_by_call_stack_order<
               TCallStack
-            , mpl::vector0<>
+            , mpl::filter_view<TExternals, has_context<mpl::_1> >
             , empty_context
           >::type::context
       >
