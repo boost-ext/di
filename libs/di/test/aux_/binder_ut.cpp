@@ -32,7 +32,11 @@ struct fake_dependency
     typedef TExpected expected;
     typedef TGiven given;
 
-    template<typename Expected, typename Given>
+    template<
+        typename Expected
+      , typename Given
+      , typename Context
+    >
     struct rebind
     {
         typedef fake_dependency<

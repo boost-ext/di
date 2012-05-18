@@ -115,39 +115,51 @@ template<
     typename TGiven
   , typename TCallStack
   , typename TDeps
+  , typename TDefault
 >
-struct sort_dependecies_by_call_stack_order
-    : mpl::sort<
-        typename mpl::fold<
-            TDeps
-          , mpl::vector0<>
-          , mpl::if_<
-                mpl::and_<
-                    detail::comparator<
-                        TGiven
-                      , detail::bind<mpl::_2>
-                    >
-                  , detail::for_each_context<
-                        TCallStack
-                      , detail::make_context<mpl::_2>
-                    >
-                >
-              , mpl::push_back<mpl::_1, mpl::_2>
-              , mpl::_1
-            >
-        >::type
-      , detail::less_context_size<mpl::_1, mpl::_2>
-    >::type
+struct get_dependency_by_call_stack_order
+    : mpl::deref<
+          mpl::begin<
+              typename mpl::push_back<
+                  typename mpl::sort<
+                      typename mpl::fold<
+                          TDeps
+                        , mpl::vector0<>
+                        , mpl::if_<
+                              mpl::and_<
+                                  has_context<mpl::_2>
+                                , detail::for_each_context<
+                                      TCallStack
+                                    , detail::make_context<mpl::_2>
+                                  >
+                                , detail::comparator<
+                                      TGiven
+                                    , detail::bind<mpl::_2>
+                                  >
+                              >
+                            , mpl::push_back<mpl::_1, mpl::_2>
+                            , mpl::_1
+                          >
+                      >::type
+                    , detail::less_context_size<mpl::_1, mpl::_2>
+                  >::type
+                , TDefault
+              >::type
+          >
+      >::type
 { };
 
 template<
     typename TGiven
+  , typename TExternals
+  , typename TCallStack
   , typename TDefault
 >
 struct make_default_dependency
     : TDefault::template rebind<
           TGiven
         , typename value_type<TGiven>::type
+        , mpl::vector0<>
       >
 { };
 
@@ -158,24 +170,20 @@ template<
   , typename TCallStack
   , typename TDeps
   , typename TExternals
-  , typename TDefault = dependency<scopes::per_request, mpl::_1, mpl::_2>
+  , typename TDefault = dependency<scopes::per_request, mpl::_1, mpl::_2, mpl::_3>
 >
 struct binder_impl
-    : mpl::deref<
-          mpl::begin<
-              typename mpl::push_back<
-                  typename detail::sort_dependecies_by_call_stack_order<
-                      typename make_plain<T>::type
-                    , TCallStack
-                    , TDeps
-                  >::type
-                , typename detail::make_default_dependency<
-                      typename make_plain<T>::type
-                    , TDefault
-                  >::type
-              >::type
-          >
-      >::type
+    : detail::get_dependency_by_call_stack_order<
+          typename make_plain<T>::type
+        , TCallStack
+        , TDeps
+        , typename detail::make_default_dependency<
+              typename make_plain<T>::type
+            , TExternals
+            , TCallStack
+            , TDefault
+          >::type
+      >
 { };
 
 template<

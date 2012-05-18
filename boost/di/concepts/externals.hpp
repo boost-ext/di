@@ -29,11 +29,21 @@ struct make_annotation
 };
 
 template<typename T>
-struct make_annotation<T, typename enable_if<is_base_of<annotate<>::with<>, T> >::type>
+struct make_annotation<
+    T
+  , typename enable_if<is_base_of<annotate<>::with<>, T> >::type
+>
 {
-    typedef typename T::template rebind<scopes::singleton>::type dependency;
-    typedef aux_::instance<typename dependency::expected, typename dependency::context> instance;
-    typedef typename annotate<instance>::template with<typename T::name> type;
+    typedef typename T::template
+        rebind<scopes::singleton>::type dependency;
+
+    typedef aux_::instance<
+        typename dependency::expected
+      , typename dependency::context
+    > instance;
+
+    typedef typename annotate<instance>::template
+        with<typename T::name> type;
 };
 
 } // namespace detail

@@ -74,11 +74,15 @@
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     class generic_module
         : public aux_::module<
-              typename detail::generic_deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
+              typename detail::generic_deps<
+                  mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+              >::type
           >
     {
         struct annotations
-            : detail::generic_deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>, mpl::_1>
+            : detail::generic_deps<
+                  mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>, mpl::_1
+              >
         { };
 
         template<
@@ -144,7 +148,9 @@
     template<BOOST_DI_TYPES(Args)>
     explicit generic_module(BOOST_DI_ARGS(Args, args))
         : aux_::module<
-              typename detail::generic_deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >::type
+              typename detail::generic_deps<
+                  mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+              >::type
           >
         (BOOST_DI_ARGS_FORWARD(args))
     { }

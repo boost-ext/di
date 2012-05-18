@@ -112,12 +112,12 @@ BOOST_AUTO_TEST_CASE(rebind_type)
                 void
               , mpl::_1
               , mpl::_2
-              , mpl::vector0<>
+              , mpl::_3
               , is_same<mpl::_1, int>
               , fake_result
               , fake_instance
               , fake_converter
-            >::rebind<double, int>::type
+            >::rebind<double, int, mpl::vector0<> >::type
         >::value
     ));
 }

@@ -33,8 +33,11 @@ class has_value
         : mpl::if_<is_arithmetic<TDerived>, mpl::void_, TDerived>::type, helper
     { };
 
-    template<typename T> static mpl::aux::no_tag  deduce(non_type<const int*, &T::value>*);
-    template<typename>   static mpl::aux::yes_tag deduce(...);
+    template<typename T>
+    static mpl::aux::no_tag deduce(non_type<const int*, &T::value>*);
+
+    template<typename>
+    static mpl::aux::yes_tag deduce(...);
 
 public:
     BOOST_STATIC_CONSTANT(
@@ -51,12 +54,16 @@ class explicit_value
 { };
 
 template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, int C)>
-class explicit_value<mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> >
+class explicit_value<
+    mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)>
+>
     : public mpl::true_
 {
 public:
     inline static std::string create() {
-        return mpl::c_str<mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> >::value;
+        return mpl::c_str<
+            mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)>
+        >::value;
     }
 };
 
