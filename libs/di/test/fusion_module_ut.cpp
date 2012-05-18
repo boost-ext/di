@@ -548,17 +548,17 @@ BOOST_AUTO_TEST_CASE(to_in_name)
 
 BOOST_AUTO_TEST_CASE(to_in_call)
 {
-    //const int i = 42;
+    const int i = 42;
 
-    //BOOST_AUTO(module, fusion_module<>()(
-        //bind<int>::in_call<c3>::to(i)
-    //));
+    BOOST_AUTO(module, fusion_module<>()(
+        bind<int>::in_call<c3>::to(i)
+    ));
 
-    //c4 c4_ = module.create<c4>();
+    c4 c4_ = module.create<c4>();
 
-    //BOOST_CHECK_EQUAL(i, c4_.c3_->i);
-    //BOOST_CHECK_EQUAL(0, c4_.i1);
-    //BOOST_CHECK_EQUAL(0, c4_.i2);
+    BOOST_CHECK_EQUAL(i, c4_.c3_->i);
+    BOOST_CHECK_EQUAL(0, c4_.i1);
+    BOOST_CHECK_EQUAL(0, c4_.i2);
 }
 
 BOOST_AUTO_TEST_CASE(to_in_call_in_name)

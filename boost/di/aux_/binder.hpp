@@ -112,10 +112,10 @@ struct comparator
 { };
 
 template<
-    typename TGiven
-  , typename TCallStack
+    typename TCallStack
   , typename TDeps
   , typename TDefault
+  , typename TCond = mpl::true_
 >
 struct get_dependency_by_call_stack_order
     : mpl::deref<
@@ -132,10 +132,7 @@ struct get_dependency_by_call_stack_order
                                       TCallStack
                                     , detail::make_context<mpl::_2>
                                   >
-                                , detail::comparator<
-                                      TGiven
-                                    , detail::bind<mpl::_2>
-                                  >
+                                , TCond
                               >
                             , mpl::push_back<mpl::_1, mpl::_2>
                             , mpl::_1
@@ -149,6 +146,11 @@ struct get_dependency_by_call_stack_order
       >::type
 { };
 
+struct empty_context
+{
+    typedef mpl::vector0<> context;
+};
+
 template<
     typename TGiven
   , typename TExternals
@@ -159,7 +161,11 @@ struct make_default_dependency
     : TDefault::template rebind<
           TGiven
         , typename value_type<TGiven>::type
-        , mpl::vector0<>
+        , typename get_dependency_by_call_stack_order<
+              TCallStack
+            , mpl::vector0<>
+            , empty_context
+          >::type::context
       >
 { };
 
@@ -170,12 +176,12 @@ template<
   , typename TCallStack
   , typename TDeps
   , typename TExternals
-  , typename TDefault = dependency<scopes::per_request, mpl::_1, mpl::_2, mpl::_3>
+  , typename TDefault =
+        dependency<scopes::per_request, mpl::_1, mpl::_2, mpl::_3>
 >
 struct binder_impl
     : detail::get_dependency_by_call_stack_order<
-          typename make_plain<T>::type
-        , TCallStack
+          TCallStack
         , TDeps
         , typename detail::make_default_dependency<
               typename make_plain<T>::type
@@ -183,6 +189,10 @@ struct binder_impl
             , TCallStack
             , TDefault
           >::type
+        , detail::comparator<
+              typename make_plain<T>::type
+            , detail::bind<mpl::_2>
+          >
       >
 { };
 
