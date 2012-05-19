@@ -30,6 +30,7 @@
 #include <boost/mpl/min_max.hpp>
 #include <boost/mpl/minus.hpp>
 #include <boost/mpl/filter_view.hpp>
+
 #include "boost/di/aux_/dependency.hpp"
 #include "boost/di/aux_/make_plain.hpp"
 #include "boost/di/aux_/value_type.hpp"

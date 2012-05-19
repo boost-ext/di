@@ -16,6 +16,7 @@
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/placeholders.hpp>
+
     #include "boost/di/aux_/make_plain.hpp"
     #include "boost/di/aux_/ctor_traits.hpp"
     #include "boost/di/config.hpp"

@@ -9,6 +9,7 @@
 
 #include <boost/none_t.hpp>
 #include <boost/mpl/vector.hpp>
+
 #include "boost/di/aux_/instance.hpp"
 
 namespace boost {

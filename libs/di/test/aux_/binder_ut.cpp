@@ -4,14 +4,16 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#include "boost/di/aux_/binder.hpp"
+
 #include <boost/test/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_base_of.hpp>
+
 #include "boost/di/named.hpp"
-#include "boost/di/aux_/binder.hpp"
 #include "data.hpp"
 
 namespace boost {

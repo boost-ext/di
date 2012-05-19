@@ -18,6 +18,7 @@
     #include <boost/mpl/contains.hpp>
     #include <boost/mpl/placeholders.hpp>
     #include <boost/mpl/assert.hpp>
+
     #include "boost/di/aux_/instance.hpp"
     #include "boost/di/aux_/explicit_value.hpp"
     #include "boost/di/aux_/converter.hpp"

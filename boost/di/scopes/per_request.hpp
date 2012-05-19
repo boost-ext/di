@@ -12,6 +12,7 @@
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/shared_ptr.hpp>
     #include <boost/make_shared.hpp>
+
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \

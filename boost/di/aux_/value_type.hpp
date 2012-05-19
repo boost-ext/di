@@ -9,6 +9,7 @@
 
 #include <string>
 #include <boost/utility/enable_if.hpp>
+
 #include "boost/di/aux_/has_traits.hpp"
 
 namespace boost {

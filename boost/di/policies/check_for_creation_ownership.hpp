@@ -11,6 +11,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_reference.hpp>
 #include <boost/mpl/assert.hpp>
+
 #include "boost/di/config.hpp"
 
 namespace boost {

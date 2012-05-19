@@ -12,6 +12,7 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/or.hpp>
+
 #include "boost/di/aux_/dependency.hpp"
 #include "boost/di/aux_/explicit_value.hpp"
 #include "boost/di/concepts/annotate.hpp"

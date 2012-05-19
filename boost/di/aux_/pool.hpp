@@ -22,6 +22,7 @@
     #include <boost/mpl/back_inserter.hpp>
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/size.hpp>
+
     #include "boost/di/aux_/has_traits.hpp"
     #include "boost/di/config.hpp"
 

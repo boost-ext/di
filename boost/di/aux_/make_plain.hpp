@@ -21,6 +21,7 @@
 #include <boost/mpl/back_inserter.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/is_sequence.hpp>
+
 #include "boost/di/aux_/has_traits.hpp"
 #include "boost/di/config.hpp"
 

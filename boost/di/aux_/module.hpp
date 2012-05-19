@@ -29,6 +29,7 @@
     #include <boost/mpl/equal_to.hpp>
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/insert.hpp>
+
     #include "boost/di/aux_/has_traits.hpp"
     #include "boost/di/aux_/pool.hpp"
     #include "boost/di/aux_/binder.hpp"

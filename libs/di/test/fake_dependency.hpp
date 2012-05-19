@@ -7,13 +7,14 @@
 #ifndef BOOST_DI_FAKE_DEPENDENCY_HPP
 #define BOOST_DI_FAKE_DEPENDENCY_HPP
 
+#include "boost/di/aux_/dependency.hpp"
+
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/empty.hpp>
 #include <boost/mpl/or.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_base_of.hpp>
-#include "boost/di/aux_/dependency.hpp"
 
 namespace boost {
 namespace di {

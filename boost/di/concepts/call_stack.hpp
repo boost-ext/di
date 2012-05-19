@@ -8,6 +8,7 @@
 #define BOOST_DI_CONCEPTS_CALL_STACK_HPP
 
 #include <boost/mpl/vector.hpp>
+
 #include "boost/di/config.hpp"
 
 namespace boost {

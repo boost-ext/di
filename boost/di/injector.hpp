@@ -17,6 +17,7 @@
     #include <boost/mpl/if.hpp>
     #include <boost/mpl/is_sequence.hpp>
     #include <boost/mpl/back_inserter.hpp>
+
     #include "boost/di/aux_/module.hpp"
     #include "boost/di/config.hpp"
 

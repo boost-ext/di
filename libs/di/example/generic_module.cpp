@@ -42,7 +42,13 @@ struct c4 { };
 
 struct c5
 {
-    BOOST_DI_CTOR(c5, c1, c2, boost::shared_ptr<i0>, boost::shared_ptr<c3>, boost::shared_ptr<c4>) { }
+    BOOST_DI_CTOR(c5
+        , c1
+        , c2
+        , boost::shared_ptr<i0>
+        , boost::shared_ptr<c3>
+        , boost::shared_ptr<c4>
+    ) { }
 };
 
 } // namespace

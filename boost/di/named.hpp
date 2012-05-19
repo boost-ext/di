@@ -11,6 +11,7 @@
 #include <boost/make_shared.hpp>
 #include <boost/type_traits/is_polymorphic.hpp>
 #include <boost/utility/enable_if.hpp>
+
 #include "boost/di/aux_/make_plain.hpp"
 #include "boost/di/aux_/has_traits.hpp"
 #include "boost/di/config.hpp"

@@ -11,6 +11,7 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/transform.hpp>
+
 #include "boost/di/aux_/instance.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/concepts/annotate.hpp"

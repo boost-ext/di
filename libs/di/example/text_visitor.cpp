@@ -64,14 +64,14 @@ int main()
     di::injector<visitor_module> injector;
     injector.visit<c3>(text_visitor());
 
-    // (anonymous namespace)::c3
-    // 	boost::shared_ptr<(anonymous namespace)::c1>
-    // 		boost::shared_ptr<(anonymous namespace)::i0>
-    // 	boost::shared_ptr<(anonymous namespace)::c2>
-    // 		int
-    // 		double
-    // 		char
-
     return 0;
 }
+
+// (anonymous namespace)::c3
+// 	boost::shared_ptr<(anonymous namespace)::c1>
+// 		boost::shared_ptr<(anonymous namespace)::i0>
+// 	boost::shared_ptr<(anonymous namespace)::c2>
+// 		int
+// 		double
+// 		char
 

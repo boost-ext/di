@@ -8,6 +8,7 @@
 #define BOOST_DI_AUX_HAS_TRAIT_HPP
 
 #include <boost/mpl/has_xxx.hpp>
+
 #include "boost/di/config.hpp"
 
 namespace boost {

@@ -40,7 +40,11 @@ struct c2
 
 struct c3
 {
-    BOOST_DI_CTOR(c3, std::string, boost::shared_ptr<i>, di::named<boost::shared_ptr<i>, name2>) { }
+    BOOST_DI_CTOR(c3
+      , std::string
+      , boost::shared_ptr<i>
+      , di::named<boost::shared_ptr<i>, name2>
+    ) { }
 };
 
 struct c4 { };
