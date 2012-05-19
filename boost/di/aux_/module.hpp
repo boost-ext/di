@@ -149,7 +149,9 @@
                   typename mpl::begin<
                        mpl::joint_view<
                            mpl::filter_view<TDeps, has_policy_type<mpl::_1> >
-                         , mpl::vector1<typename defaults<policy<>, specialized>::type>
+                         , mpl::vector1<
+                              typename defaults<policy<>, specialized>::type
+                           >
                        >
                   >::type
               >::type

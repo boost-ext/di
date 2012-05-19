@@ -110,43 +110,72 @@ struct less_context_size
       >
 { };
 
-template<typename T, typename TBind>
-struct comparator
-    : mpl::apply<TBind, T>::type
+template<
+    typename TCallStack
+  , typename TSeq
+  , typename TCond
+>
+struct sort_dependencies_by_call_stack_order
+    : mpl::sort<
+          typename mpl::fold<
+              mpl::filter_view<TSeq, has_context<mpl::_1> >
+            , mpl::vector0<>
+            , mpl::if_<
+                  TCond
+                , mpl::push_back<mpl::_1, mpl::_2>
+                , mpl::_1
+              >
+          >::type
+        , less_context_size<mpl::_1, mpl::_2>
+      >::type
 { };
 
 template<
     typename TCallStack
   , typename TSeq
   , typename TDefault
-  , typename TCond = mpl::true_
+  , typename TCond =
+        for_each_context<
+            TCallStack
+          , make_context<mpl::_2>
+        >
 >
 struct get_dependency_by_call_stack_order
     : mpl::deref<
           mpl::begin<
               typename mpl::push_back<
-                  typename mpl::sort<
-                      typename mpl::fold<
-                          TSeq
-                        , mpl::vector0<>
-                        , mpl::if_<
-                              mpl::and_<
-                                  for_each_context<
-                                      TCallStack
-                                    , make_context<mpl::_2>
-                                  >
-                                , TCond
-                              >
-                            , mpl::push_back<mpl::_1, mpl::_2>
-                            , mpl::_1
-                          >
-                      >::type
-                    , less_context_size<mpl::_1, mpl::_2>
+                  typename sort_dependencies_by_call_stack_order<
+                      TCallStack
+                    , TSeq
+                    , TCond
                   >::type
                 , TDefault
               >::type
           >
-      >
+      >::type
+{ };
+
+template<
+    typename TCallStack
+  , typename TSeq
+  , typename TDefault
+>
+struct get_dependency_by_call_stack_order2
+    : mpl::deref<
+          mpl::begin<
+              typename mpl::push_back<
+                  typename sort_dependencies_by_call_stack_order<
+                      TCallStack
+                    , TSeq
+        , for_each_context<
+            TCallStack
+          , make_context<mpl::_2>
+        >
+                  >::type
+                , TDefault
+              >::type
+          >
+      >::type
 { };
 
 struct empty_context
@@ -164,12 +193,17 @@ struct make_default_dependency
     : TDefault::template rebind<
           TGiven
         , typename value_type<TGiven>::type
-        , typename get_dependency_by_call_stack_order<
+        , typename get_dependency_by_call_stack_order2<
               TCallStack
-            , mpl::filter_view<TExternals, has_context<mpl::_1> >
+            , TExternals
             , empty_context
           >::type::context
       >
+{ };
+
+template<typename T, typename TBind>
+struct comparator
+    : mpl::apply<TBind, T>::type
 { };
 
 } // namespace detail
@@ -192,11 +226,17 @@ struct binder_impl
             , TCallStack
             , TDefault
           >::type
-        , detail::comparator<
-              typename make_plain<T>::type
-            , detail::bind<mpl::_2>
+        , mpl::and_<
+              detail::comparator<
+                  typename make_plain<T>::type
+                , detail::bind<mpl::_2>
+              >
+            , detail::for_each_context<
+                  TCallStack
+                , detail::make_context<mpl::_2>
+              >
           >
-      >::type
+      >
 { };
 
 template<
