@@ -6,6 +6,7 @@
 #include "boost/di/fusion_module.hpp"
 
 #include <boost/test/unit_test.hpp>
+#include <boost/shared_ptr.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/typeof/typeof.hpp>
@@ -563,18 +564,87 @@ BOOST_AUTO_TEST_CASE(to_in_call)
 
 BOOST_AUTO_TEST_CASE(to_in_call_in_name)
 {
+    const int i1 = 42;
+    const int i2 = 87;
+
+    BOOST_AUTO(module, fusion_module<>()(
+        bind<int>::in_call<c4>::in_name<mpl::string<'1'> >::to(i1)
+      , bind<int>::in_call<c4>::in_name<mpl::string<'2'> >::to(i2)
+      , bind<c0if0>()
+    ));
+
+    c6 c6_ = module.create<c6>();
+
+    BOOST_CHECK_EQUAL(i1, c6_.c4_->i1);
+    BOOST_CHECK_EQUAL(i2, c6_.c4_->i2);
 }
 
 BOOST_AUTO_TEST_CASE(to_in_name_in_call)
 {
+    const int i1 = 42;
+    const int i2 = 87;
+
+    BOOST_AUTO(module, fusion_module<>()(
+        bind<int>::in_name<mpl::string<'1'> >::in_call<c4>::to(i1)
+      , bind<int>::in_name<mpl::string<'2'> >::in_call<c4>::to(i2)
+      , bind<c0if0>()
+    ));
+
+    c6 c6_ = module.create<c6>();
+
+    BOOST_CHECK_EQUAL(i1, c6_.c4_->i1);
+    BOOST_CHECK_EQUAL(i2, c6_.c4_->i2);
 }
 
 BOOST_AUTO_TEST_CASE(to_in_call_stack)
 {
+    const int i = 42;
+
+    BOOST_AUTO(module, fusion_module<>()(
+        bind<int>::in_call<call_stack<c4, c3> >::to(i)
+      , bind<c0if0>()
+    ));
+
+    c6 c6_ = module.create<c6>();
+
+    BOOST_CHECK_EQUAL(i, c6_.c4_->c3_->i);
+    BOOST_CHECK_EQUAL(0, c6_.c4_->i1);
+    BOOST_CHECK_EQUAL(0, c6_.c4_->i2);
 }
 
-BOOST_AUTO_TEST_CASE(to_variant)
+BOOST_AUTO_TEST_CASE(to_variant_shared_ptr)
 {
+    shared_ptr<c3> c3_(new c3);
+
+    BOOST_AUTO(module, fusion_module<>()(
+        bind<c3>::to(c3_)
+    ));
+
+    c4 c4_ = module.create<c4>();
+
+    BOOST_CHECK_EQUAL(c3_, c4_.c3_);
+}
+
+BOOST_AUTO_TEST_CASE(to_variant_ref)
+{
+/*    const int i = 42;*/
+    //const double d = 87.0;
+    //c3 c3_(i);
+    //c14 c14_(i, d);
+
+    //const c3& c3_const_ref = c3_;
+    //c14& c14_ref = c14_;
+
+    //BOOST_AUTO(module, fusion_module<>()(
+        //bind<c3>::to(c3_const_ref)
+      //, bind<c14>::to(c14_ref)
+    //));
+
+    //c16 c16_ = module.create<c16>();
+
+    //BOOST_CHECK_EQUAL(i, c16_.c3_.i);
+    //BOOST_CHECK_EQUAL(i, c16_.c14_.i);
+    /*BOOST_CHECK_EQUAL(d, c16_.c14_.d);*/
 }
 
 BOOST_AUTO_TEST_CASE(create)
