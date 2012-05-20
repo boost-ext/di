@@ -29,7 +29,14 @@ struct hello_world
 int main()
 {
     di::injector<> injector;
-    injector.create<hello_world>();
+
+    {
+        injector.create<hello_world>();
+    }
+
+    {
+        injector.create<boost::shared_ptr<hello_world> >();
+    }
 
     return 0;
 }

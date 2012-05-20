@@ -31,6 +31,13 @@ struct value
     int i;
 };
 
+struct dummy_scope
+{
+    template<typename>
+    struct scope
+    { };
+};
+
 BOOST_AUTO_TEST_CASE(empty)
 {
     BOOST_AUTO(module, fusion_module<>()());
@@ -107,7 +114,6 @@ BOOST_AUTO_TEST_CASE(one_scope)
           , module_t::pool::externals
         >::value
     ));
-
 }
 
 BOOST_AUTO_TEST_CASE(one_scope_alias)
@@ -162,6 +168,33 @@ BOOST_AUTO_TEST_CASE(one_scope_direct)
         contains_all<
             mpl::vector<
                 singleton<c0if0>
+            >
+          , module_t::pool::externals
+        >::value
+    ));
+}
+
+BOOST_AUTO_TEST_CASE(custom_scope)
+{
+    BOOST_AUTO(module, fusion_module<>()(
+        scope<dummy_scope>::bind<c0if0>()
+    ));
+
+    typedef BOOST_TYPEOF(module) module_t;
+
+    BOOST_CHECK((
+        contains_all<
+            mpl::vector<
+                fake_dependency_base_of<dummy_scope, c0if0, c0if0>::type
+            >
+          , module_t::deps
+        >::value
+    ));
+
+    BOOST_CHECK((
+        contains_all<
+            mpl::vector<
+                scope<dummy_scope>::bind<c0if0>
             >
           , module_t::pool::externals
         >::value
@@ -627,7 +660,7 @@ BOOST_AUTO_TEST_CASE(to_variant_shared_ptr)
 
 BOOST_AUTO_TEST_CASE(to_variant_ref)
 {
-/*    const int i = 42;*/
+    //const int i = 42;
     //const double d = 87.0;
     //c3 c3_(i);
     //c14 c14_(i, d);
@@ -644,7 +677,7 @@ BOOST_AUTO_TEST_CASE(to_variant_ref)
 
     //BOOST_CHECK_EQUAL(i, c16_.c3_.i);
     //BOOST_CHECK_EQUAL(i, c16_.c14_.i);
-    /*BOOST_CHECK_EQUAL(d, c16_.c14_.d);*/
+    //BOOST_CHECK_EQUAL(d, c16_.c14_.d);
 }
 
 BOOST_AUTO_TEST_CASE(create)

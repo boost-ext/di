@@ -31,6 +31,13 @@ struct value
     int i;
 };
 
+struct dummy_scope
+{
+    template<typename>
+    struct scope
+    { };
+};
+
 BOOST_AUTO_TEST_CASE(empty)
 {
     struct module
@@ -103,6 +110,28 @@ BOOST_AUTO_TEST_CASE(default_scope_bind)
               , fake_dependency_base_of<scopes::per_request, c1, c1>::type
               , fake_dependency_base_of<scopes::per_request, named<c2, int>, c2>::type
               , fake_dependency_base_of<scopes::per_request, c3, c3, call_stack<c4, c5> >::type
+            >
+          , module::deps
+        >::value
+    ));
+
+    //BOOST_CHECK((contains_all<mpl::vector0<>, module::pool::externals>::value));
+}
+
+BOOST_AUTO_TEST_CASE(custom_scope)
+{
+    struct module
+        : generic_module<
+              scope<dummy_scope>::bind<
+                  c0if0
+              >
+          >
+    { };
+
+    BOOST_CHECK((
+        contains_all<
+            mpl::vector<
+                fake_dependency_base_of<dummy_scope, c0if0, c0if0>::type
             >
           , module::deps
         >::value
