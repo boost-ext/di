@@ -21,28 +21,24 @@ struct double_value
 };
 double double_value::value = 0.0;
 
-BOOST_AUTO_TEST_CASE(value_generic)
-{
+BOOST_AUTO_TEST_CASE(value_generic) {
     BOOST_CHECK(!explicit_value<int>::value);
     BOOST_CHECK(!explicit_value<empty>::value);
 }
 
-BOOST_AUTO_TEST_CASE(value_mpl_int)
-{
+BOOST_AUTO_TEST_CASE(value_mpl_int) {
     const int i = 42;
     BOOST_CHECK((explicit_value<mpl::int_<0> >::value));
     BOOST_CHECK_EQUAL(i, explicit_value<mpl::int_<i> >::create());
 }
 
-BOOST_AUTO_TEST_CASE(value_mpl_string)
-{
+BOOST_AUTO_TEST_CASE(value_mpl_string) {
     const std::string s = "s";
     BOOST_CHECK((explicit_value<mpl::string<'s'> >::value));
     BOOST_CHECK_EQUAL(s, explicit_value<mpl::string<'s'> >::create());
 }
 
-BOOST_AUTO_TEST_CASE(value_has_value_type)
-{
+BOOST_AUTO_TEST_CASE(value_has_value_type) {
     const double d = 42.0;
     double_value::value = d;
     BOOST_CHECK((explicit_value<double_value>::value));

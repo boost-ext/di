@@ -28,52 +28,44 @@ struct named
     T i;
 };
 
-BOOST_AUTO_TEST_CASE(arithmetic_value)
-{
+BOOST_AUTO_TEST_CASE(arithmetic_value) {
     const int i = 42;
     BOOST_CHECK_EQUAL(i, instance<int>(i).get());
 }
 
-BOOST_AUTO_TEST_CASE(arithmetic_with_value_type)
-{
+BOOST_AUTO_TEST_CASE(arithmetic_with_value_type) {
     const int i = 42;
     BOOST_CHECK_EQUAL(i, instance<named<int> >(i).get());
 }
 
-BOOST_AUTO_TEST_CASE(string_value)
-{
+BOOST_AUTO_TEST_CASE(string_value) {
     const std::string s = "string";
     BOOST_CHECK_EQUAL(s, instance<std::string>(s).get());
 }
 
-BOOST_AUTO_TEST_CASE(string_with_value_type)
-{
+BOOST_AUTO_TEST_CASE(string_with_value_type) {
     const std::string s = "string";
     BOOST_CHECK_EQUAL(s, instance<named<std::string> >(s).get());
 }
 
-BOOST_AUTO_TEST_CASE(variant_ref)
-{
+BOOST_AUTO_TEST_CASE(variant_ref) {
     c c_;
     c& c_ref_ = get<c&>(instance<c>(c_).get());
     BOOST_CHECK_EQUAL(&c_, &c_ref_);
 }
 
-BOOST_AUTO_TEST_CASE(variant_const_ref)
-{
+BOOST_AUTO_TEST_CASE(variant_const_ref) {
     c c_;
     const c& const_c_ref_ = get<const c&>(instance<c>(c_).get());
     BOOST_CHECK_EQUAL(&c_, &const_c_ref_);
 }
 
-BOOST_AUTO_TEST_CASE(variant_shared_ptr)
-{
+BOOST_AUTO_TEST_CASE(variant_shared_ptr) {
     shared_ptr<c> c_(new c);
     BOOST_CHECK_EQUAL(c_, get<shared_ptr<c> >(instance<c>(c_).get()));
 }
 
-BOOST_AUTO_TEST_CASE(named_shared_ptr)
-{
+BOOST_AUTO_TEST_CASE(named_shared_ptr) {
     typedef named<shared_ptr<int>, a> c1_t;
     typedef named<shared_ptr<int>, b> c2_t;
 
@@ -87,8 +79,7 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(context)
-{
+BOOST_AUTO_TEST_CASE(context) {
     shared_ptr<c> c1_(new c);
     shared_ptr<c> c2_(new c);
 

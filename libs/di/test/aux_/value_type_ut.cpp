@@ -22,8 +22,7 @@ struct c
     typedef int value_type;
 };
 
-BOOST_AUTO_TEST_CASE(basic)
-{
+BOOST_AUTO_TEST_CASE(basic) {
     BOOST_CHECK((is_same<int, value_type<int>::type>::value));
     BOOST_CHECK((is_same<int, value_type<shared_ptr<int> >::type>::value));
     BOOST_CHECK((is_same<int, value_type<named<int> >::type>::value));

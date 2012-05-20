@@ -78,8 +78,7 @@ struct fake_dependency_base_of
     };
 };
 
-BOOST_AUTO_TEST_CASE(empty)
-{
+BOOST_AUTO_TEST_CASE(empty) {
     BOOST_CHECK((
         is_same<
             fake_dependency<int>
@@ -94,8 +93,7 @@ BOOST_AUTO_TEST_CASE(empty)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(one)
-{
+BOOST_AUTO_TEST_CASE(one) {
     BOOST_CHECK((
         is_same<
             fake_dependency<int>
@@ -112,8 +110,7 @@ BOOST_AUTO_TEST_CASE(one)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(found)
-{
+BOOST_AUTO_TEST_CASE(found) {
     BOOST_CHECK((
         is_same<
             fake_dependency<float>
@@ -132,8 +129,7 @@ BOOST_AUTO_TEST_CASE(found)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(found_many)
-{
+BOOST_AUTO_TEST_CASE(found_many) {
     BOOST_CHECK((
         is_same<
             fake_dependency<float>
@@ -152,8 +148,7 @@ BOOST_AUTO_TEST_CASE(found_many)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(not_found)
-{
+BOOST_AUTO_TEST_CASE(not_found) {
     BOOST_CHECK((
         is_same<
             fake_dependency<double>
@@ -172,8 +167,7 @@ BOOST_AUTO_TEST_CASE(not_found)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(if_base)
-{
+BOOST_AUTO_TEST_CASE(if_base) {
     BOOST_CHECK((
         is_same<
             fake_dependency<if0, c0if0>
@@ -190,8 +184,7 @@ BOOST_AUTO_TEST_CASE(if_base)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(context)
-{
+BOOST_AUTO_TEST_CASE(context) {
     BOOST_CHECK((
         is_same<
             fake_dependency<int, int, mpl::vector<a, b> >
@@ -209,8 +202,7 @@ BOOST_AUTO_TEST_CASE(context)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(context_if)
-{
+BOOST_AUTO_TEST_CASE(context_if) {
     BOOST_CHECK((
         is_same<
             fake_dependency<if0, c0if0>
@@ -227,8 +219,7 @@ BOOST_AUTO_TEST_CASE(context_if)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(context_many)
-{
+BOOST_AUTO_TEST_CASE(context_many) {
     BOOST_CHECK((
         is_same<
             fake_dependency<int, int, mpl::vector<a, b> >
@@ -247,8 +238,7 @@ BOOST_AUTO_TEST_CASE(context_many)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(context_many_end)
-{
+BOOST_AUTO_TEST_CASE(context_many_end) {
     BOOST_CHECK((
         is_same<
             fake_dependency<int, int, mpl::vector<a, b> >
@@ -267,8 +257,7 @@ BOOST_AUTO_TEST_CASE(context_many_end)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(context_not_found)
-{
+BOOST_AUTO_TEST_CASE(context_not_found) {
     BOOST_CHECK((
         is_same<
             fake_dependency<int>
@@ -286,8 +275,7 @@ BOOST_AUTO_TEST_CASE(context_not_found)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(context_other_types)
-{
+BOOST_AUTO_TEST_CASE(context_other_types) {
     BOOST_CHECK((
         is_same<
             fake_dependency<int, int, mpl::vector<a, b> >
@@ -307,8 +295,7 @@ BOOST_AUTO_TEST_CASE(context_other_types)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(context_long_with_order)
-{
+BOOST_AUTO_TEST_CASE(context_long_with_order) {
     BOOST_CHECK((
         is_same<
             fake_dependency<int, int, mpl::vector<a, b, c> >
@@ -333,8 +320,7 @@ BOOST_AUTO_TEST_CASE(context_long_with_order)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(context_long_with_order_empty_call_stack)
-{
+BOOST_AUTO_TEST_CASE(context_long_with_order_empty_call_stack) {
     BOOST_CHECK((
         is_same<
             fake_dependency<int>
@@ -359,8 +345,7 @@ BOOST_AUTO_TEST_CASE(context_long_with_order_empty_call_stack)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(context_long_with_order_diff_call_stack)
-{
+BOOST_AUTO_TEST_CASE(context_long_with_order_diff_call_stack) {
     BOOST_CHECK((
         is_same<
             fake_dependency<int, int, mpl::vector<b> >
@@ -385,8 +370,7 @@ BOOST_AUTO_TEST_CASE(context_long_with_order_diff_call_stack)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(context_long_with_order_short_call_stack)
-{
+BOOST_AUTO_TEST_CASE(context_long_with_order_short_call_stack) {
     BOOST_CHECK((
         is_same<
             fake_dependency<int, int, mpl::vector<c> >
@@ -411,8 +395,7 @@ BOOST_AUTO_TEST_CASE(context_long_with_order_short_call_stack)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(context_long_with_order_to_long_call_stack)
-{
+BOOST_AUTO_TEST_CASE(context_long_with_order_to_long_call_stack) {
     BOOST_CHECK((
         is_same<
             fake_dependency<int>
@@ -437,8 +420,7 @@ BOOST_AUTO_TEST_CASE(context_long_with_order_to_long_call_stack)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(base_of_fail)
-{
+BOOST_AUTO_TEST_CASE(base_of_fail) {
     BOOST_CHECK((
         is_same<
             fake_dependency<i>
@@ -455,8 +437,7 @@ BOOST_AUTO_TEST_CASE(base_of_fail)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(base_of_successful)
-{
+BOOST_AUTO_TEST_CASE(base_of_successful) {
     BOOST_CHECK((
         is_same<
             fake_dependency_base_of<impl>
@@ -473,8 +454,7 @@ BOOST_AUTO_TEST_CASE(base_of_successful)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(complex_type)
-{
+BOOST_AUTO_TEST_CASE(complex_type) {
     BOOST_CHECK((
         is_same<
             fake_dependency<int>
@@ -491,8 +471,7 @@ BOOST_AUTO_TEST_CASE(complex_type)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(named_type)
-{
+BOOST_AUTO_TEST_CASE(named_type) {
     BOOST_CHECK((
         is_same<
             fake_dependency<named<int, mpl::_1>, int>
@@ -507,8 +486,7 @@ BOOST_AUTO_TEST_CASE(named_type)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(call_call_stack)
-{
+BOOST_AUTO_TEST_CASE(call_call_stack) {
     BOOST_CHECK((
         is_same<
             fake_dependency<int, int, c1, mpl::vector<c2> >
@@ -530,8 +508,7 @@ typedef mpl::vector<
   , mpl::vector<c2, c3>
 > multiple_calls_t;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(multiple_calls, TContext, multiple_calls_t)
-{
+BOOST_AUTO_TEST_CASE_TEMPLATE(multiple_calls, TContext, multiple_calls_t) {
     BOOST_CHECK((
         is_same<
             fake_dependency<int, int, c1, mpl::vector<c2, c3> >
@@ -556,8 +533,7 @@ typedef mpl::vector<
   , mpl::vector<c5>
 > multiple_calls_many_t;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(multiple_calls_many, TContext, multiple_calls_many_t)
-{
+BOOST_AUTO_TEST_CASE_TEMPLATE(multiple_calls_many, TContext, multiple_calls_many_t) {
     BOOST_CHECK((
         is_same<
             fake_dependency<int, int, c1, c5, mpl::vector<c3, c4> >
@@ -580,8 +556,7 @@ typedef mpl::vector<
   , mpl::vector<c3, c2>
 > multiple_calls_not_found_t;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(multiple_calls_not_found, TContext, multiple_calls_not_found_t)
-{
+BOOST_AUTO_TEST_CASE_TEMPLATE(multiple_calls_not_found, TContext, multiple_calls_not_found_t) {
     BOOST_CHECK((
         is_same<
             fake_dependency<int, int>
@@ -598,8 +573,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(multiple_calls_not_found, TContext, multiple_calls
     ));
 }
 
-BOOST_AUTO_TEST_CASE(default_with_externals_call)
-{
+BOOST_AUTO_TEST_CASE(default_with_externals_call) {
 }
 
 } // namespace aux_

@@ -16,8 +16,7 @@ namespace boost {
 namespace di {
 namespace policies {
 
-BOOST_AUTO_TEST_CASE(clear)
-{
+BOOST_AUTO_TEST_CASE(clear) {
     BOOST_CHECK((
         is_base_of<
             mpl::true_
@@ -67,8 +66,7 @@ BOOST_AUTO_TEST_CASE(clear)
     ));
 }
 
-BOOST_AUTO_TEST_CASE(not_clear)
-{
+BOOST_AUTO_TEST_CASE(not_clear) {
     BOOST_CHECK((
         is_base_of<
             mpl::false_

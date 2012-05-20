@@ -48,8 +48,7 @@ struct visitor_mock
     }
 };
 
-BOOST_AUTO_TEST_CASE(basic)
-{
+BOOST_AUTO_TEST_CASE(basic) {
     typedef fake_dependency<int> dependency_t;
     visitor_mock<int> visitor_mock;
 

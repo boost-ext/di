@@ -55,8 +55,7 @@ struct custom_ctor
     int i;
 };
 
-BOOST_AUTO_TEST_CASE(empty)
-{
+BOOST_AUTO_TEST_CASE(empty) {
     typedef pool<mpl::vector0<> > pool_t;
 
     pool_t pool_;
@@ -71,8 +70,7 @@ BOOST_AUTO_TEST_CASE(empty)
     (void)pool_;
 }
 
-BOOST_AUTO_TEST_CASE(ctor_order)
-{
+BOOST_AUTO_TEST_CASE(ctor_order) {
     typedef pool<mpl::vector<trivial_ctor, default_ctor> > pool_t;
     default_ctor default_ctor_;
     trivial_ctor trivial_ctor_;
@@ -92,8 +90,7 @@ BOOST_AUTO_TEST_CASE(ctor_order)
     (void)pool_;
 }
 
-BOOST_AUTO_TEST_CASE(ctor_order_reverse)
-{
+BOOST_AUTO_TEST_CASE(ctor_order_reverse) {
     typedef pool<mpl::vector<trivial_ctor, default_ctor> > pool_t;
     default_ctor default_ctor_;
     trivial_ctor trivial_ctor_;
@@ -113,8 +110,7 @@ BOOST_AUTO_TEST_CASE(ctor_order_reverse)
     (void)pool_;
 }
 
-BOOST_AUTO_TEST_CASE(default_ctor_base)
-{
+BOOST_AUTO_TEST_CASE(default_ctor_base) {
     typedef pool<mpl::vector<trivial_ctor, default_ctor> > pool_t;
 
     pool_t pool_;
@@ -132,8 +128,7 @@ BOOST_AUTO_TEST_CASE(default_ctor_base)
     (void)pool_;
 }
 
-BOOST_AUTO_TEST_CASE(get)
-{
+BOOST_AUTO_TEST_CASE(get) {
     typedef allocator<custom_ctor> custom_ctor_t;
     typedef allocator<trivial_ctor> trivial_ctor_t;
     typedef allocator<default_ctor> default_ctor_t;
@@ -150,8 +145,7 @@ BOOST_AUTO_TEST_CASE(get)
     BOOST_CHECK_EQUAL(default_ctor_.get(), pool_.get<default_ctor_t>());
 }
 
-BOOST_AUTO_TEST_CASE(of_pools)
-{
+BOOST_AUTO_TEST_CASE(of_pools) {
     typedef allocator<trivial_ctor> trivial_ctor_t;
     typedef allocator<default_ctor> default_ctor_t;
     typedef pool<mpl::vector<default_ctor_t> > pool_1_t;

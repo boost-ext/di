@@ -12,16 +12,14 @@
 namespace boost {
 namespace di {
 
-BOOST_AUTO_TEST_CASE(empty)
-{
+BOOST_AUTO_TEST_CASE(empty) {
     struct c
     {
         BOOST_DI_CTOR(c, ()) { }
     };
 }
 
-BOOST_AUTO_TEST_CASE(explicit_with_default)
-{
+BOOST_AUTO_TEST_CASE(explicit_with_default) {
     struct c
     {
         enum { DEFAULT = 42 };
@@ -38,8 +36,7 @@ BOOST_AUTO_TEST_CASE(explicit_with_default)
     BOOST_CHECK_EQUAL(static_cast<int>(c::DEFAULT), c_.i);
 }
 
-BOOST_AUTO_TEST_CASE(params)
-{
+BOOST_AUTO_TEST_CASE(params) {
     const int i = 1;
     const double d = 2.0;
 
@@ -59,8 +56,7 @@ BOOST_AUTO_TEST_CASE(params)
     BOOST_CHECK_EQUAL(d, c_.d);
 }
 
-BOOST_AUTO_TEST_CASE(traits)
-{
+BOOST_AUTO_TEST_CASE(traits) {
     const int i = 1;
     const double d = 2.0;
 

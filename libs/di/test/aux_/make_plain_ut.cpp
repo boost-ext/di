@@ -22,8 +22,7 @@ namespace aux_ {
 
 typedef mpl::vector<int, a> make_plain_t;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(basic, T, make_plain_t)
-{
+BOOST_AUTO_TEST_CASE_TEMPLATE(basic, T, make_plain_t) {
     BOOST_CHECK((is_same<T, typename make_plain<T>::type>::value));
     BOOST_CHECK((is_same<T, typename make_plain<T*>::type>::value));
     BOOST_CHECK((is_same<T, typename make_plain<const T*>::type>::value));

@@ -130,8 +130,7 @@ typedef mpl::vector<
   , injector<BOOST_TYPEOF(fusion_module_1)>
 > one_module_types;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(one_module, TInjector, one_module_types)
-{
+BOOST_AUTO_TEST_CASE_TEMPLATE(one_module, TInjector, one_module_types) {
     TInjector injector;
 
     shared_ptr<c8> c8_ = injector.template create<shared_ptr<c8> >();
@@ -159,8 +158,7 @@ typedef mpl::vector<
   , injector<BOOST_TYPEOF(fusion_module_3), BOOST_TYPEOF(fusion_module_2)>
 > many_modules_types;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(many_modules, TInjector, many_modules_types)
-{
+BOOST_AUTO_TEST_CASE_TEMPLATE(many_modules, TInjector, many_modules_types) {
     TInjector injector;
 
     shared_ptr<c8> c8_ = injector.template create<shared_ptr<c8> >();
@@ -186,8 +184,7 @@ typedef mpl::vector<
   , injector<BOOST_TYPEOF(fusion_module_2), generic_module_2>
 > mix_modules_types;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(mix_modules, TInjector, mix_modules_types)
-{
+BOOST_AUTO_TEST_CASE_TEMPLATE(mix_modules, TInjector, mix_modules_types) {
     TInjector injector;
 
     shared_ptr<c8> c8_ = injector.template create<shared_ptr<c8> >();
@@ -213,8 +210,7 @@ typedef mpl::vector<
   , injector<BOOST_TYPEOF(fusion_provider_module)>
 > basic_provider_types;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(basic_provider, TInjector, basic_provider_types)
-{
+BOOST_AUTO_TEST_CASE_TEMPLATE(basic_provider, TInjector, basic_provider_types) {
     TInjector injector;
     transaction_usage obj = injector.template create<transaction_usage>();
     BOOST_CHECK(obj.p->get().get() != obj.p->get().get());
@@ -225,8 +221,7 @@ typedef mpl::vector<
   , injector<BOOST_TYPEOF(fusion_provider_module)>
 > basic_visitor_types;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(basic_visitor, TInjector, basic_visitor_types)
-{
+BOOST_AUTO_TEST_CASE_TEMPLATE(basic_visitor, TInjector, basic_visitor_types) {
     TInjector injector;
 
     visitor<
@@ -245,8 +240,7 @@ typedef mpl::vector<
     injector<externals_module>
 > basic_externals_types;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(basic_externals, TInjector, basic_externals_types)
-{
+BOOST_AUTO_TEST_CASE_TEMPLATE(basic_externals, TInjector, basic_externals_types) {
     TInjector injector(
         externals_module(
             externals_module::set<int>(42)
@@ -264,8 +258,7 @@ typedef mpl::vector<
     injector<externals_module_ctor>
 > basic_externals_ctor_types;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(basic_externals_ctor, TInjector, basic_externals_ctor_types)
-{
+BOOST_AUTO_TEST_CASE_TEMPLATE(basic_externals_ctor, TInjector, basic_externals_ctor_types) {
     TInjector injector(
         externals_module_ctor(42, 87.0)
     );
@@ -276,8 +269,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(basic_externals_ctor, TInjector, basic_externals_c
     BOOST_CHECK_EQUAL(87.0, c9_->d);
 }
 
-BOOST_AUTO_TEST_CASE(ctor)
-{
+BOOST_AUTO_TEST_CASE(ctor) {
     {
         injector<BOOST_TYPEOF(fusion_module_1)> injector(fusion_module_1);
         (void)injector;
@@ -299,8 +291,7 @@ BOOST_AUTO_TEST_CASE(ctor)
     }
 }
 
-BOOST_AUTO_TEST_CASE(install)
-{
+BOOST_AUTO_TEST_CASE(install) {
     injector<>().install(generic_module_2());
     injector<>().install(generic_module_1(), generic_module_2());
     injector<>().install(generic_module_1(), fusion_module_1);

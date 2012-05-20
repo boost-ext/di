@@ -56,8 +56,7 @@ struct entries
     : T
 { };
 
-BOOST_AUTO_TEST_CASE(creator_simple)
-{
+BOOST_AUTO_TEST_CASE(creator_simple) {
     const int i = 42;
     typedef fake_dependency<int, i> dependency_t;
     fake_pool pool_;
