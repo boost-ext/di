@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <utility>
-#include <memory>
+#include <boost/shared_ptr.hpp>
 #include <boost/di.hpp>
 
 namespace di = boost::di;
@@ -16,11 +16,11 @@ struct c1 { };
 
 struct c2
 {
-    BOOST_DI_CTOR(c2, std::shared_ptr<c1> ptr) {
+    BOOST_DI_CTOR(c2, boost::shared_ptr<c1> ptr) {
         if (ptr) {
-            std::clog <<"in session scope" <<std::endl;
+            std::clog <<"in session scope" << std::endl;
         } else {
-            std::clog <<"not in session scope" <<std::endl;
+            std::clog <<"not in session scope" << std::endl;
         }
     }
 };
@@ -50,11 +50,11 @@ public:
         }
 
         template<typename... Args>
-        std::shared_ptr<T> create(Args&&... args) {
+        boost::shared_ptr<T> create(Args&&... args) {
             if (in_scope_) {
-                return std::make_shared<T>(std::forward(args)...);
+                return boost::make_shared<T>(std::forward(args)...);
             }
-            return nullptr;
+            return boost::shared_ptr<T>();
         }
 
     private:

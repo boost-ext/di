@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_AUX_CONVERTER_HPP
 #define BOOST_DI_AUX_CONVERTER_HPP
 
+#include <memory>
 #include <boost/variant.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
