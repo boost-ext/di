@@ -14,7 +14,6 @@
 #include "boost/di/policies/check_for_binding_correctness.hpp"
 #include "boost/di/policies/check_for_circular_dependencies.hpp"
 #include "boost/di/policies/check_for_creation_ownership.hpp"
-#include "boost/di/policies/check_for_references_without_ownership.hpp"
 #include "boost/di/config.hpp"
 
 namespace boost {
@@ -34,6 +33,7 @@ class policy
     { };
 
 public:
+    typedef policy type;
     typedef mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> policy_type;
 
     template<
@@ -59,7 +59,6 @@ struct defaults<policy<>, TDefault>
         policies::check_for_binding_correctness
       , policies::check_for_circular_dependencies
       , policies::check_for_creation_ownership
-      , policies::check_for_references_without_ownership
     > type;
 };
 

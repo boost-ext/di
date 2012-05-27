@@ -113,10 +113,13 @@
         visitor.BOOST_DI_TEMPLATE_QUALIFIER
             operator()<dependency_impl<T, TCallStack, TDependency> >();
 
-        #define BOOST_DI_VISITOR_EXECUTE(z, n, _)                               \
-            execute<                                                            \
-                typename mpl::at_c<typename ctor<TDependency>::type, n>::type   \
-              , TCallStack                                                      \
+        #define BOOST_DI_VISITOR_EXECUTE(z, n, _)       \
+            execute<                                    \
+                typename mpl::at_c<                     \
+                    typename ctor<TDependency>::type    \
+                  , n                                   \
+                >::type                                 \
+              , TCallStack                              \
             >(visitor);
 
         BOOST_PP_REPEAT(

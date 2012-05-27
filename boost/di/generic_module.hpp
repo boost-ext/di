@@ -10,7 +10,6 @@
     #define BOOST_DI_GENERIC_MODULE_HPP
 
     #include <boost/type_traits/is_same.hpp>
-    #include <boost/type_traits/is_base_of.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/if.hpp>
@@ -47,7 +46,15 @@
         typedef typename T::derived type;
     };
 
-    template<typename TDeps, typename T = derived<mpl::_1> >
+    template<
+        typename TDeps
+      , typename _1 =
+            mpl::if_<
+                  aux_::has_element_type<mpl::_1> //is instance
+                , derived<mpl::_1>
+                , mpl::_1
+            >
+    >
     struct generic_deps
         : mpl::transform<
               typename mpl::fold<
@@ -62,11 +69,7 @@
                     , mpl::back_inserter<mpl::_1>
                   >
               >::type
-            , mpl::if_<
-                  aux_::has_element_type<mpl::_1> //is instance
-                , T
-                , mpl::_1
-              >
+            , _1
           >::type
     { };
 

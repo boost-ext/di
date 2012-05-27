@@ -24,8 +24,6 @@ struct annotate
     {
         typedef TDerived derived;
         typedef TName name;
-
-        with() { }
     };
 };
 
@@ -51,7 +49,17 @@ struct annotate<none_t>
     struct with_ : with<>
     {
         template<typename T>
-        static TInstance<TExpected, TContext> to(T value) {
+        static TInstance<TExpected, TContext> to(const T& value) {
+            return TInstance<TExpected, TContext>(value);
+        }
+
+        template<typename T>
+        static TInstance<TExpected, TContext> to(T& value) {
+            return TInstance<TExpected, TContext>(value);
+        }
+
+        template<typename T>
+        static TInstance<TExpected, TContext> to(shared_ptr<T> value) {
             return TInstance<TExpected, TContext>(value);
         }
     };

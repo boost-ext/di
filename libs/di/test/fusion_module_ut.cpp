@@ -16,27 +16,77 @@
 #include "boost/di/concepts.hpp"
 #include "boost/di/named.hpp"
 #include "fake_dependency.hpp"
+#include "fake_visitor.hpp"
+#include "fake_scope.hpp"
 #include "contains_all.hpp"
 #include "data.hpp"
 
 namespace boost {
 namespace di {
 
-struct value
-{
-    explicit value(int i)
-        : i(i)
-    { }
+BOOST_AUTO_TEST_CASE(create) {
+    BOOST_AUTO(module, fusion_module<>()(
+        per_requests<
+            c0if0
+        >()
+    ));
 
-    int i;
-};
+    shared_ptr<c8> c8_ = module.create<shared_ptr<c8> >();
 
-struct dummy_scope
-{
-    template<typename>
-    struct scope
-    { };
-};
+    BOOST_CHECK(c8_->c1_ != c8_->c7_->c6_->c5_.c1_);
+    BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ != c8_->c7_->c6_->c3_);
+    BOOST_CHECK(c8_->c7_->if0_ != c8_->c7_->c6_->c5_.if0_);
+
+    BOOST_CHECK(dynamic_cast<c0if0*>(c8_->c7_->c6_->c5_.if0_.get()));
+    BOOST_CHECK(dynamic_cast<c0if0*>(c8_->c7_->if0_.get()));
+
+    BOOST_CHECK_EQUAL(0, c8_->i);
+    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c4_->i1);
+    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c4_->i2);
+    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c3_->i);
+    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->i);
+    BOOST_CHECK_EQUAL(0.0, c8_->c7_->c6_->c5_.c2_->d);
+    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
+}
+
+BOOST_AUTO_TEST_CASE(visit) {
+    BOOST_AUTO(module, fusion_module<>()(
+        per_requests<
+            transaction_provider, mpl::int_<0>
+        >()
+    ));
+
+    fake_visitor<
+        mpl::vector<
+            transaction_usage
+          , shared_ptr<provider<shared_ptr<transaction> > >
+          , shared_ptr<c3>
+          , int
+        >
+    > visitor;
+
+    module.visit<transaction_usage>(visitor);
+}
+
+BOOST_AUTO_TEST_CASE(call) {
+    fake_scope::entry_calls() = 0;
+    fake_scope::exit_calls() = 0;
+
+    BOOST_AUTO(module, fusion_module<>()(
+        scope<fake_scope>::bind<c0if0>()
+    ));
+
+    BOOST_CHECK_EQUAL(0, fake_scope::entry_calls());
+    BOOST_CHECK_EQUAL(0, fake_scope::exit_calls());
+
+    module.call<fake_scope>(fake_scope::entry());
+    BOOST_CHECK_EQUAL(1, fake_scope::entry_calls());
+    BOOST_CHECK_EQUAL(0, fake_scope::exit_calls());
+
+    module.call<fake_scope>(fake_scope::exit());
+    BOOST_CHECK_EQUAL(1, fake_scope::entry_calls());
+    BOOST_CHECK_EQUAL(1, fake_scope::exit_calls());
+}
 
 BOOST_AUTO_TEST_CASE(empty) {
     BOOST_AUTO(module, fusion_module<>()());
@@ -171,7 +221,7 @@ BOOST_AUTO_TEST_CASE(one_scope_direct) {
 
 BOOST_AUTO_TEST_CASE(custom_scope) {
     BOOST_AUTO(module, fusion_module<>()(
-        scope<dummy_scope>::bind<c0if0>()
+        scope<fake_scope>::bind<c0if0>()
     ));
 
     typedef BOOST_TYPEOF(module) module_t;
@@ -179,7 +229,7 @@ BOOST_AUTO_TEST_CASE(custom_scope) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                fake_dependency_base_of<dummy_scope, c0if0, c0if0>::type
+                fake_dependency_base_of<fake_scope, c0if0, c0if0>::type
             >
           , module_t::deps
         >::value
@@ -188,7 +238,7 @@ BOOST_AUTO_TEST_CASE(custom_scope) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                scope<dummy_scope>::bind<c0if0>
+                scope<fake_scope>::bind<c0if0>
             >
           , module_t::pool::externals
         >::value
@@ -636,33 +686,48 @@ BOOST_AUTO_TEST_CASE(to_variant_shared_ptr) {
 }
 
 BOOST_AUTO_TEST_CASE(to_variant_ref) {
-    //const int i = 42;
-    //const double d = 87.0;
-    //c3 c3_(i);
-    //c14 c14_(i, d);
+    const int i = 42;
+    const double d = 87.0;
+    c3 c3_(i);
+    c14 c14_(i, d);
 
-    //const c3& c3_const_ref = c3_;
-    //c14& c14_ref = c14_;
+    const c3& c3_const_ref = c3_;
+    c14& c14_ref = c14_;
 
-    //BOOST_AUTO(module, fusion_module<>()(
-        //bind<c3>::to(c3_const_ref)
-      //, bind<c14>::to(c14_ref)
-    //));
+    BOOST_AUTO(module, fusion_module<>()(
+        bind<c3>::to(c3_const_ref)
+      , bind<c14>::to(c14_ref)
+    ));
 
-    //c16 c16_ = module.create<c16>();
+    c16 c16_ = module.create<c16>();
 
-    //BOOST_CHECK_EQUAL(i, c16_.c3_.i);
-    //BOOST_CHECK_EQUAL(i, c16_.c14_.i);
-    //BOOST_CHECK_EQUAL(d, c16_.c14_.d);
+    BOOST_CHECK(&c3_const_ref == &c16_.c3_);
+    BOOST_CHECK(&c14_ref == &c16_.c14_);
+
+    BOOST_CHECK_EQUAL(c3_.i, c16_.c3_.i);
+    BOOST_CHECK_EQUAL(c14_.i, c16_.c14_.i);
+    BOOST_CHECK_EQUAL(c14_.d, c16_.c14_.d);
 }
 
-BOOST_AUTO_TEST_CASE(create) {
-}
+BOOST_AUTO_TEST_CASE(to_variant_no_copy) {
+    const int i = 42;
+    const double d = 87.0;
+    c3 c3_(i);
+    c14 c14_(i, d);
 
-BOOST_AUTO_TEST_CASE(visit) {
-}
+    BOOST_AUTO(module, fusion_module<>()(
+        bind<c3>::to(c3_)
+      , bind<c14>::to(c14_)
+    ));
 
-BOOST_AUTO_TEST_CASE(call) {
+    c16 c16_ = module.create<c16>();
+
+    BOOST_CHECK(&c3_ == &c16_.c3_);
+    BOOST_CHECK(&c14_ == &c16_.c14_);
+
+    BOOST_CHECK_EQUAL(c3_.i, c16_.c3_.i);
+    BOOST_CHECK_EQUAL(c14_.i, c16_.c14_.i);
+    BOOST_CHECK_EQUAL(c14_.d, c16_.c14_.d);
 }
 
 } // namespace di

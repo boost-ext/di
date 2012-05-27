@@ -4,21 +4,37 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#include "boost/di/policy.hpp"
+
+namespace boost {
+namespace  di {
+
+template<>
+struct defaults<policy<>, specialized>
+{
+    typedef policy<> type;
+};
+
+} // namespace di
+} // namespace boost
+
 #include "boost/di/aux_/module.hpp"
 
 #include <boost/test/unit_test.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
-#include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/vector.hpp>
 
-#include "boost/di/named.hpp"
+#include "boost/di/aux_/instance.hpp"
 #include "boost/di/concepts/call_stack.hpp"
 #include "boost/di/scopes/per_request.hpp"
 #include "boost/di/scopes/singleton.hpp"
-#include "boost/di/aux_/instance.hpp"
+#include "boost/di/named.hpp"
 #include "fake_dependency.hpp"
+#include "fake_visitor.hpp"
+#include "fake_scope.hpp"
+#include "fake_policy.hpp"
 #include "data.hpp"
 
 namespace boost {
@@ -473,6 +489,101 @@ BOOST_AUTO_TEST_CASE(externals_create_with_attributes) {
     BOOST_CHECK_EQUAL(i1, obj.i1);
     BOOST_CHECK_EQUAL(i2, obj.i2);
 }
+
+BOOST_AUTO_TEST_CASE(visit) {
+    module<
+        mpl::vector<
+            fake_dependency_base_of<scopes::per_request, transaction_provider, transaction_provider>::type
+          , fake_dependency_base_of<scopes::per_request, int, mpl::int_<0> >::type
+        >
+    > module_;
+
+    fake_visitor<
+        mpl::vector<
+            transaction_usage
+          , shared_ptr<provider<shared_ptr<transaction> > >
+          , shared_ptr<c3>
+          , int
+        >
+    > visitor;
+
+    module_.visit<transaction_usage>(visitor);
+}
+
+BOOST_AUTO_TEST_CASE(call) {
+    fake_scope::entry_calls() = 0;
+    fake_scope::exit_calls() = 0;
+
+    module<
+        mpl::vector<
+            fake_dependency_base_of<fake_scope, c0if0, c0if0>::type
+        >
+    > module_;
+
+    BOOST_CHECK_EQUAL(0, fake_scope::entry_calls());
+    BOOST_CHECK_EQUAL(0, fake_scope::exit_calls());
+
+    module_.call<fake_scope>(fake_scope::entry());
+    BOOST_CHECK_EQUAL(1, fake_scope::entry_calls());
+    BOOST_CHECK_EQUAL(0, fake_scope::exit_calls());
+
+    module_.call<fake_scope>(fake_scope::exit());
+    BOOST_CHECK_EQUAL(1, fake_scope::entry_calls());
+    BOOST_CHECK_EQUAL(1, fake_scope::exit_calls());
+}
+
+BOOST_AUTO_TEST_CASE(policies) {
+    BOOST_CHECK((
+        is_same<
+            policy<fake_policy<0> >
+          , module<
+                mpl::vector<
+                    policy<fake_policy<0> >
+                >
+            >::policies::type
+        >::value
+    ));
+}
+
+BOOST_AUTO_TEST_CASE(policies_mix) {
+    BOOST_CHECK((
+        is_same<
+            policy<
+                fake_policy<0>
+              , fake_policy<1>
+            >
+          , module<
+                mpl::vector<
+                    fake_dependency_base_of<scopes::per_request, int, mpl::int_<0> >::type
+                  , policy<fake_policy<0>, fake_policy<1> >
+                >
+            >::policies::type
+        >::value
+    ));
+}
+
+#if 0
+BOOST_AUTO_TEST_CASE(policies_mix_join_many) {
+    BOOST_CHECK((
+        is_same<
+            mpl::vector<
+                fake_policy<0>
+              , fake_policy<1>
+              , fake_policy<2>
+              , fake_policy<3>
+            >
+           , module<
+                mpl::vector<
+                    policy<fake_policy<0>, fake_policy<1> >
+                  , policy<fake_policy<2> >
+                  , fake_dependency_base_of<scopes::per_request, int, mpl::int_<0> >::type
+                  , policy<fake_policy<3> >
+                >
+             >::policies::policy_type
+        >::value
+    ));
+}
+#endif
 
 } // namespace aux_
 } // namespace di

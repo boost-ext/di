@@ -267,14 +267,14 @@ struct c15
 struct c16
 {
     BOOST_DI_CTOR(c16
-        , const c3& c3_
         , c14& c14_
+        , const c3& c3_
     )
-        : c3_(c3_), c14_(c14_)
+        : c14_(c14_), c3_(c3_)
     { }
 
-    const c3& c3_;
     c14& c14_;
+    const c3& c3_;
 };
 
 struct cd2;

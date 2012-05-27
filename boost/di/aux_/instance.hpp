@@ -28,6 +28,12 @@ template<
 >
 class instance
 {
+    typedef variant<
+        T&
+      , const T&
+      , shared_ptr<T>
+    > value_type;
+
 public:
     typedef T element_type;
     typedef TContext context;
@@ -40,16 +46,16 @@ public:
         : member_(member)
     { }
 
-    explicit instance(const shared_ptr<T>& member)
+    explicit instance(shared_ptr<T> member)
         : member_(member)
     { }
 
-    variant<const T&, T&, shared_ptr<T> > get() const {
+     const value_type& get() const {
         return member_;
     }
 
 private:
-    variant<const T&, T&, shared_ptr<T> > member_;
+    value_type member_;
 };
 
 template<
@@ -77,7 +83,7 @@ public:
         : member_(member)
     { }
 
-    value_type get() const {
+    const value_type& get() const {
         return member_;
     }
 

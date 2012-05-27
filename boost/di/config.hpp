@@ -13,6 +13,7 @@
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/preprocessor/arithmetic/sub.hpp>
+#include <boost/ref.hpp>
 #include <boost/mpl/limits/vector.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/config.hpp>
@@ -92,6 +93,9 @@
     #define BOOST_DI_ARGS_FORWARD(args)                      \
          BOOST_DI_ARGS_FORWARD_IMPL(~, args)
 
+    #define BOOST_DI_REF_TYPE(Arg)                           \
+        Arg&
+
 //-----------------------------------------------------------
 
 #else
@@ -165,7 +169,7 @@
          BOOST_DI_TYPES_DEFAULT_IMPL(                        \
              BOOST_MPL_LIMIT_VECTOR_SIZE                     \
            , TArg                                            \
-           , mpl::na                                         \
+           , ::boost::mpl::na                                \
          )
 
     #define BOOST_DI_TYPES_MPL(TArg)                         \
@@ -178,7 +182,7 @@
          BOOST_DI_ARGS_NA_IMPL(                              \
              BOOST_MPL_LIMIT_VECTOR_SIZE                     \
            , count                                           \
-           , mpl::na                                         \
+           , ::boost::mpl::na                                \
          )
 
     #define BOOST_DI_TYPES_PASS_MPL(TArg)                    \
@@ -225,6 +229,9 @@
              BOOST_PP_ITERATION()                            \
            , arg                                             \
          )
+
+    #define BOOST_DI_REF_TYPE(Arg)                           \
+        ::boost::reference_wrapper<Arg>
 
 //-------------------------------------------------------------
 

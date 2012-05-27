@@ -32,7 +32,6 @@
 
     namespace boost {
     namespace di {
-
     namespace detail {
 
     template<typename TDeps>

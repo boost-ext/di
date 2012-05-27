@@ -26,7 +26,7 @@ class converter_impl
 {
 public:
     template<typename T>
-    TDest operator()(T object) const {
+    TDest operator()(T& object) const {
         return converter<TScope, TDest>::execute(object);
     }
 };
@@ -76,17 +76,22 @@ class converter<TScope, TDest&>
 {
 public:
     template<typename TSrc>
-    static TDest& execute(const TSrc& src) {
+    static TDest& execute(TSrc& src) {
         return src;
     }
 
     template<typename TSrc>
-    static TDest& execute(const shared_ptr<TSrc>& src) {
+    static TDest& execute(const TSrc& src) {
+        return const_cast<TDest&>(src);
+    }
+
+    template<typename TSrc>
+    static TDest& execute(shared_ptr<TSrc> src) {
         return *src;
     }
 
     template<BOOST_VARIANT_ENUM_PARAMS(typename T)>
-    static TDest execute(const variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src) {
+    static TDest& execute(const variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src) {
         return apply_visitor(converter_impl<TScope, TDest&>(), src);
     }
 };
@@ -101,12 +106,12 @@ public:
     }
 
     template<typename TSrc>
-    static const TDest& execute(const shared_ptr<TSrc>& src) {
+    static const TDest& execute(shared_ptr<TSrc> src) {
         return *src;
     }
 
     template<BOOST_VARIANT_ENUM_PARAMS(typename T)>
-    static TDest execute(const variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src) {
+    static const TDest& execute(const variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src) {
         return apply_visitor(converter_impl<TScope, const TDest&>(), src);
     }
 };
@@ -131,7 +136,7 @@ class converter<TScope, const TDest*>
 {
 public:
     template<typename TSrc>
-    static TDest* execute(TSrc src) {
+    static const TDest* execute(TSrc src) {
         return &src;
     }
 
@@ -142,7 +147,7 @@ public:
 };
 
 template<typename TScope, typename TDest>
-class converter<TScope,  shared_ptr<TDest> >
+class converter<TScope, shared_ptr<TDest> >
 {
 public:
     template<typename TSrc>
@@ -176,7 +181,7 @@ public:
     }
 
     template<BOOST_VARIANT_ENUM_PARAMS(typename T)>
-    static TDest execute(const variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src) {
+    static const shared_ptr<TDest>& execute(const variant<BOOST_VARIANT_ENUM_PARAMS(T)>& src) {
         return apply_visitor(converter_impl<TScope, shared_ptr<TDest> >(), src);
     }
 };

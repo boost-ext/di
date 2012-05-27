@@ -48,6 +48,24 @@
             : TCtorTraits<typename TDependency::given>::type
         { };
 
+        template<typename T>
+        struct ref_impl
+        {
+            typedef T type;
+        };
+
+        template<typename T>
+        struct ref_impl<T&>
+        {
+            typedef BOOST_DI_REF_TYPE(T) type;
+        };
+
+        template<typename T>
+        struct ref_impl<const T&>
+        {
+            typedef BOOST_DI_REF_TYPE(const T) type;
+        };
+
     public:
         template<
             typename T
@@ -122,12 +140,22 @@
       , T
     >::type execute_impl(TEntries& entries, const TPool& pool) {
 
-        #define BOOST_DI_CREATOR_EXECUTE(z, n, _)                               \
-            BOOST_PP_COMMA_IF(n)                                                \
-            execute<                                                            \
-                typename mpl::at_c<typename ctor<TDependency>::type, n>::type   \
-              , TCallStack                                                      \
-            >(entries, pool)
+        #define BOOST_DI_CREATOR_EXECUTE(z, n, _)           \
+            BOOST_PP_COMMA_IF(n)                            \
+            static_cast<                                    \
+                typename ref_impl<                          \
+                    typename mpl::at_c<                     \
+                        typename ctor<TDependency>::type    \
+                      , n                                   \
+                    >::type                                 \
+                >::type                                     \
+            >(execute<                                      \
+                  typename mpl::at_c<                       \
+                      typename ctor<TDependency>::type      \
+                     , n                                    \
+                  >::type                                   \
+                , TCallStack                                \
+              >(entries, pool))
 
         return acquire<TDependency>(entries).BOOST_DI_TEMPLATE_QUALIFIER
             create<T>(
