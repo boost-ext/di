@@ -658,6 +658,22 @@ BOOST_AUTO_TEST_CASE(to_in_name_in_call) {
     BOOST_CHECK_EQUAL(i2, c6_.c4_->i2);
 }
 
+BOOST_AUTO_TEST_CASE(to_in_call_with_global) {
+    const int i1 = 42;
+    const int i2 = 87;
+
+    BOOST_AUTO(module, fusion_module<>()(
+        bind<int>::in_call<c3>::to(i1)
+      , bind<int>::to(i2)
+    ));
+
+    c4 c4_ = module.create<c4>();
+
+    BOOST_CHECK_EQUAL(i1, c4_.c3_->i);
+    BOOST_CHECK_EQUAL(0, c4_.i1);
+    BOOST_CHECK_EQUAL(0, c4_.i2);
+}
+
 BOOST_AUTO_TEST_CASE(to_in_call_stack) {
     const int i = 42;
 

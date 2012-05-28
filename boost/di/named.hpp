@@ -10,6 +10,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/type_traits/is_polymorphic.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/type_traits/is_base_of.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include "boost/di/aux_/make_plain.hpp"
@@ -79,8 +81,8 @@ private:
     T value_;
 };
 
-} // namespace boost
 } // namespace di
+} // namespace boost
 
 #endif
 

@@ -69,7 +69,7 @@
                     , mpl::back_inserter<mpl::_1>
                   >
               >::type
-            , _1
+             , _1
           >::type
     { };
 

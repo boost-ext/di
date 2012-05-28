@@ -691,6 +691,53 @@ BOOST_AUTO_TEST_CASE(explicit_value) {
     BOOST_CHECK_EQUAL(double_value::value, module_.create<double>());
 }
 
+#if 0
+BOOST_AUTO_TEST_CASE(to_variant_ref) {
+    const int i = 42;
+    const double d = 87.0;
+    c3 c3_(i);
+    c14 c14_(i, d);
+
+    const c3& c3_const_ref = c3_;
+    c14& c14_ref = c14_;
+
+    BOOST_AUTO(module, fusion_module<>()(
+        bind<c3>::to(c3_const_ref)
+      , bind<c14>::to(c14_ref)
+    ));
+
+    c16 c16_ = module.create<c16>();
+
+    BOOST_CHECK(&c3_const_ref == &c16_.c3_);
+    BOOST_CHECK(&c14_ref == &c16_.c14_);
+
+    BOOST_CHECK_EQUAL(c3_.i, c16_.c3_.i);
+    BOOST_CHECK_EQUAL(c14_.i, c16_.c14_.i);
+    BOOST_CHECK_EQUAL(c14_.d, c16_.c14_.d);
+}
+
+BOOST_AUTO_TEST_CASE(to_variant_no_copy) {
+    const int i = 42;
+    const double d = 87.0;
+    c3 c3_(i);
+    c14 c14_(i, d);
+
+    BOOST_AUTO(module, fusion_module<>()(
+        bind<c3>::to(c3_)
+      , bind<c14>::to(c14_)
+    ));
+
+    c16 c16_ = module.create<c16>();
+
+    BOOST_CHECK(&c3_ == &c16_.c3_);
+    BOOST_CHECK(&c14_ == &c16_.c14_);
+
+    BOOST_CHECK_EQUAL(c3_.i, c16_.c3_.i);
+    BOOST_CHECK_EQUAL(c14_.i, c16_.c14_.i);
+    BOOST_CHECK_EQUAL(c14_.d, c16_.c14_.d);
+}
+#endif
+
 } // namespace di
 } // namespace boot
 
