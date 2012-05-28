@@ -35,6 +35,7 @@ class instance
     > value_type;
 
 public:
+    typedef instance type;
     typedef T element_type;
     typedef TContext context;
 
@@ -63,19 +64,20 @@ template<
   , typename TContext
 >
 class instance<
-        T
-      , TContext,
-        typename enable_if<
-            mpl::or_<
-                is_same<typename value_type<T>::type, std::string>
-              , is_arithmetic<typename value_type<T>::type>
-            >
-        >::type
-    >
+    T
+  , TContext
+  , typename enable_if<
+        mpl::or_<
+            is_same<typename value_type<T>::type, std::string>
+          , is_arithmetic<typename value_type<T>::type>
+        >
+    >::type
+>
 {
     typedef typename value_type<T>::type value_type;
 
 public:
+    typedef instance type;
     typedef T element_type;
     typedef TContext context;
 

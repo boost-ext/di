@@ -9,12 +9,12 @@
 
 #include "boost/di/aux_/dependency.hpp"
 
+#include <boost/type_traits/is_same.hpp>
+#include <boost/type_traits/is_base_of.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/empty.hpp>
 #include <boost/mpl/or.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/type_traits/is_base_of.hpp>
 
 namespace boost {
 namespace di {
@@ -29,6 +29,9 @@ template<
 >
 struct fake_dependency
 {
+    typedef is_same<mpl::_1, TExpected> bind;
+    typedef TExpected expected;
+    typedef TGiven given;
     typedef mpl::vector<TContext0, TContext1, TContext2> context;
     typedef typename aux_::dependency<
         TScope
@@ -48,6 +51,9 @@ template<
 >
 struct fake_dependency_base_of
 {
+    typedef is_same<mpl::_1, TExpected> bind;
+    typedef TExpected expected;
+    typedef TGiven given;
     typedef mpl::vector<TContext0, TContext1, TContext2> context;
     typedef typename aux_::dependency<
         TScope

@@ -7,8 +7,8 @@
 #include "boost/di/policies/check_for_circular_dependencies.hpp"
 
 #include <boost/test/unit_test.hpp>
-#include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_base_of.hpp>
+#include <boost/mpl/vector.hpp>
 
 #include "data.hpp"
 

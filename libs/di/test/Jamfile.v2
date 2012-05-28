@@ -31,6 +31,8 @@ test-suite di-test
       [ run aux_/pool_ut.cpp ]
       [ run aux_/value_type_ut.cpp ]
       [ run aux_/visitor_ut.cpp ]
+      [ run policies/check_for_binding_correctness_ut.cpp ]
+      [ compile-fail policies/check_for_binding_correctness_mt_fail.cpp ]
       [ run policies/check_for_creation_ownership_ut.cpp ]
       [ compile-fail policies/check_for_creation_ownership_mt_fail.cpp ]
       [ run policies/check_for_circular_dependencies_ut.cpp ]

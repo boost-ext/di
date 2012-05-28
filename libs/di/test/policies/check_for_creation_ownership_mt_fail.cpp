@@ -7,7 +7,7 @@
 #include "boost/di/policies/check_for_creation_ownership.hpp"
 
 #include <boost/test/unit_test.hpp>
-#include "boost/di/injector.hpp"
+#include "boost/di.hpp"
 
 #include "data.hpp"
 

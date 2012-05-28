@@ -202,7 +202,7 @@ struct make_default_dependency
       >
 { };
 
-template<typename T, typename TBind>
+template<typename TBind, typename T>
 struct comparator
     : mpl::apply<TBind, T>::type
 { };
@@ -216,21 +216,24 @@ template<
   , typename TExternals
   , typename TDefault =
         dependency<scopes::per_request, mpl::_1, mpl::_2, mpl::_3>
+  , template<
+        typename
+    > class TMakePlain = make_plain
 >
 struct binder_impl
     : detail::get_dependency_by_call_stack_order<
           TCallStack
         , TDeps
         , typename detail::make_default_dependency<
-              typename make_plain<T>::type
+              typename TMakePlain<T>::type
             , TExternals
             , TCallStack
             , TDefault
           >::type
         , mpl::and_<
               detail::comparator<
-                  typename make_plain<T>::type
-                , detail::bind<mpl::_2>
+                  detail::bind<mpl::_2>
+                , typename TMakePlain<T>::type
               >
             , detail::for_each_context<
                   TCallStack
