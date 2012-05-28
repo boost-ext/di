@@ -562,6 +562,7 @@ BOOST_AUTO_TEST_CASE(policies_mix) {
     ));
 }
 
+#if 0
 BOOST_AUTO_TEST_CASE(policies_mix_join_many) {
     BOOST_CHECK((
         is_same<
@@ -582,6 +583,7 @@ BOOST_AUTO_TEST_CASE(policies_mix_join_many) {
         >::value
     ));
 }
+#endif
 
 } // namespace aux_
 } // namespace di
