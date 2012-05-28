@@ -88,6 +88,16 @@ struct generic_module_externals_ctor : generic_module<
     { }
 };
 
+typedef generic_module<
+    bind<if0, c3if0>
+  , externals<
+        double
+      //, if0
+      , annotate<bind<int>::in_name<mpl::string<'1'> >::in_call<call_stack<c7, c6, c4> > >::with<a>
+      , annotate<bind<int>::in_call<c8> >::with<b>
+    >
+> generic_module_externals_1;
+
 BOOST_AUTO(fusion_module_1, fusion_module<>()(
     singletons<
         c3
@@ -134,6 +144,53 @@ BOOST_AUTO(fusion_module_provider, fusion_module<>()(
     >()
 ));
 
+BOOST_AUTO(fusion_module_externals, fusion_module<>()(
+    singletons<
+        c0if0
+    >()
+  , bind<int>::to(42)
+  , bind<double>::to(87.0)
+));
+
+BOOST_AUTO(fusion_module_externals_1, fusion_module<>()(
+    bind<int>::to(42)
+  , bind<int>::in_call<c2>::to(87)
+));
+
+void check(const c8& c8_) {
+    BOOST_CHECK(c8_.c1_ != c8_.c7_->c6_->c5_.c1_);
+    BOOST_CHECK(c8_.c7_->c6_->c4_->c3_ == c8_.c7_->c6_->c3_);
+    BOOST_CHECK(c8_.c7_->if0_ != c8_.c7_->c6_->c5_.if0_);
+
+    BOOST_CHECK(dynamic_cast<c1if0*>(c8_.c7_->c6_->c5_.if0_.get()));
+    BOOST_CHECK(dynamic_cast<c2if0*>(c8_.c7_->if0_.get()));
+
+    BOOST_CHECK_EQUAL(2, c8_.i);
+    BOOST_CHECK_EQUAL(3, c8_.c7_->c6_->c4_->i1);
+    BOOST_CHECK_EQUAL(4, c8_.c7_->c6_->c4_->i2);
+    BOOST_CHECK_EQUAL(1, c8_.c7_->c6_->c3_->i);
+    BOOST_CHECK_EQUAL(5, c8_.c7_->c6_->c5_.c2_->i);
+    BOOST_CHECK_EQUAL(0.0, c8_.c7_->c6_->c5_.c2_->d);
+    BOOST_CHECK_EQUAL(0, c8_.c7_->c6_->c5_.c2_->c);
+}
+
+void check(const shared_ptr<c8>& c8_) {
+    BOOST_CHECK(c8_->c1_ != c8_->c7_->c6_->c5_.c1_);
+    BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
+    BOOST_CHECK(c8_->c7_->if0_ == c8_->c7_->c6_->c5_.if0_);
+
+    BOOST_CHECK(dynamic_cast<c0if0*>(c8_->c7_->c6_->c5_.if0_.get()));
+    BOOST_CHECK(dynamic_cast<c0if0*>(c8_->c7_->if0_.get()));
+
+    BOOST_CHECK_EQUAL(2, c8_->i);
+    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c4_->i1);
+    BOOST_CHECK_EQUAL(3, c8_->c7_->c6_->c4_->i2);
+    BOOST_CHECK_EQUAL(1, c8_->c7_->c6_->c3_->i);
+    BOOST_CHECK_EQUAL(1, c8_->c7_->c6_->c5_.c2_->i);
+    BOOST_CHECK_EQUAL(0.0, c8_->c7_->c6_->c5_.c2_->d);
+    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
+}
+
 typedef mpl::vector<
     injector<generic_module_1>
   , injector<BOOST_TYPEOF(fusion_module_1)>
@@ -141,23 +198,7 @@ typedef mpl::vector<
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(one_module, TInjector, one_module_types) {
     TInjector injector;
-
-    shared_ptr<c8> c8_ = injector.template create<shared_ptr<c8> >();
-
-    BOOST_CHECK(c8_->c1_ != c8_->c7_->c6_->c5_.c1_);
-    BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
-    BOOST_CHECK(c8_->c7_->if0_ != c8_->c7_->c6_->c5_.if0_);
-
-    BOOST_CHECK(dynamic_cast<c1if0*>(c8_->c7_->c6_->c5_.if0_.get()));
-    BOOST_CHECK(dynamic_cast<c2if0*>(c8_->c7_->if0_.get()));
-
-    BOOST_CHECK_EQUAL(2, c8_->i);
-    BOOST_CHECK_EQUAL(3, c8_->c7_->c6_->c4_->i1);
-    BOOST_CHECK_EQUAL(4, c8_->c7_->c6_->c4_->i2);
-    BOOST_CHECK_EQUAL(1, c8_->c7_->c6_->c3_->i);
-    BOOST_CHECK_EQUAL(5, c8_->c7_->c6_->c5_.c2_->i);
-    BOOST_CHECK_EQUAL(0.0, c8_->c7_->c6_->c5_.c2_->d);
-    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
+    check(injector.template create<c8>());
 }
 
 typedef mpl::vector<
@@ -169,23 +210,7 @@ typedef mpl::vector<
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(many_modules, TInjector, many_modules_types) {
     TInjector injector;
-
-    shared_ptr<c8> c8_ = injector.template create<shared_ptr<c8> >();
-
-    BOOST_CHECK(c8_->c1_ != c8_->c7_->c6_->c5_.c1_);
-    BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
-    BOOST_CHECK(c8_->c7_->if0_ == c8_->c7_->c6_->c5_.if0_);
-
-    BOOST_CHECK(dynamic_cast<c0if0*>(c8_->c7_->c6_->c5_.if0_.get()));
-    BOOST_CHECK(dynamic_cast<c0if0*>(c8_->c7_->if0_.get()));
-
-    BOOST_CHECK_EQUAL(2, c8_->i);
-    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c4_->i1);
-    BOOST_CHECK_EQUAL(3, c8_->c7_->c6_->c4_->i2);
-    BOOST_CHECK_EQUAL(1, c8_->c7_->c6_->c3_->i);
-    BOOST_CHECK_EQUAL(1, c8_->c7_->c6_->c5_.c2_->i);
-    BOOST_CHECK_EQUAL(0.0, c8_->c7_->c6_->c5_.c2_->d);
-    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
+    check(injector.template create<shared_ptr<c8> >());
 }
 
 typedef mpl::vector<
@@ -196,22 +221,7 @@ typedef mpl::vector<
 BOOST_AUTO_TEST_CASE_TEMPLATE(mix_modules, TInjector, mix_modules_types) {
     TInjector injector;
 
-    shared_ptr<c8> c8_ = injector.template create<shared_ptr<c8> >();
-
-    BOOST_CHECK(c8_->c1_ != c8_->c7_->c6_->c5_.c1_);
-    BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
-    BOOST_CHECK(c8_->c7_->if0_ == c8_->c7_->c6_->c5_.if0_);
-
-    BOOST_CHECK(dynamic_cast<c0if0*>(c8_->c7_->c6_->c5_.if0_.get()));
-    BOOST_CHECK(dynamic_cast<c0if0*>(c8_->c7_->if0_.get()));
-
-    BOOST_CHECK_EQUAL(2, c8_->i);
-    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c4_->i1);
-    BOOST_CHECK_EQUAL(3, c8_->c7_->c6_->c4_->i2);
-    BOOST_CHECK_EQUAL(1, c8_->c7_->c6_->c3_->i);
-    BOOST_CHECK_EQUAL(1, c8_->c7_->c6_->c5_.c2_->i);
-    BOOST_CHECK_EQUAL(0.0, c8_->c7_->c6_->c5_.c2_->d);
-    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
+    check(injector.template create<shared_ptr<c8> >());
 }
 
 typedef mpl::vector<
@@ -265,73 +275,121 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(basic_call, TInjector, basic_call_types) {
     BOOST_CHECK(!injector.template create<shared_ptr<c3> >());
 }
 
-typedef mpl::vector<
-    injector<generic_module_externals>
-> basic_externals_types;
-
-BOOST_AUTO_TEST_CASE_TEMPLATE(basic_externals, TInjector, basic_externals_types) {
-    TInjector injector(
+BOOST_AUTO_TEST_CASE(basic_generic_module_externals) {
+    injector<generic_module_externals> injector_(
         generic_module_externals(
             generic_module_externals::set<int>(42)
           , generic_module_externals::set<double>(87.0)
         )
     );
 
-    shared_ptr<c9> c9_ = injector.template create<shared_ptr<c9> >();
+    shared_ptr<c9> c9_ = injector_.create<shared_ptr<c9> >();
 
     BOOST_CHECK_EQUAL(42, c9_->i);
     BOOST_CHECK_EQUAL(87.0, c9_->d);
 }
 
-typedef mpl::vector<
-    injector<generic_module_externals_ctor>
-> basic_externals_ctor_types;
-
-BOOST_AUTO_TEST_CASE_TEMPLATE(basic_externals_ctor, TInjector, basic_externals_ctor_types) {
-    TInjector injector(
+BOOST_AUTO_TEST_CASE(ctor_generic_module_externals) {
+    injector<generic_module_externals_ctor> injector_(
         generic_module_externals_ctor(42, 87.0)
     );
 
-    shared_ptr<c9> c9_ = injector.template create<shared_ptr<c9> >();
+    shared_ptr<c9> c9_ = injector_.create<shared_ptr<c9> >();
 
     BOOST_CHECK_EQUAL(42, c9_->i);
     BOOST_CHECK_EQUAL(87.0, c9_->d);
 }
 
+BOOST_AUTO_TEST_CASE(basic_fusion_module_externals) {
+    injector<BOOST_TYPEOF(fusion_module_externals)> injector_(fusion_module_externals);
+    shared_ptr<c9> c9_ = injector_.create<shared_ptr<c9> >();
+
+    BOOST_CHECK_EQUAL(42, c9_->i);
+    BOOST_CHECK_EQUAL(87.0, c9_->d);
+}
+
+BOOST_AUTO_TEST_CASE(externals_mix) {
+    //shared_ptr<c3if0> c3if0_(new c3if0(67, 78.0));
+
+    typedef generic_module_externals_1 gm;
+
+    injector<
+        BOOST_TYPEOF(fusion_module_externals_1)
+      , generic_module_externals_1
+    > injector_(
+        gm(
+            gm::set<a>(3.0)
+          , gm::set<b>(4.0)
+          //, gm::set<if0>(c3if0_)
+          , gm::set<double>(7.0)
+        )
+      , fusion_module_externals_1
+    );
+
+    shared_ptr<c8> c8_ = injector_.create<shared_ptr<c8> >();
+
+    BOOST_CHECK_EQUAL(3, c8_->i);
+    BOOST_CHECK_EQUAL(4, c8_->c7_->c6_->c4_->i1);
+    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c4_->i2);
+    BOOST_CHECK_EQUAL(42, c8_->c7_->c6_->c3_->i);
+    BOOST_CHECK_EQUAL(42, c8_->c7_->c6_->c5_.c2_->i);
+    BOOST_CHECK_EQUAL(7.0, c8_->c7_->c6_->c5_.c2_->d);
+    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
+    //BOOST_CHECK_EQUAL(67, dynamic_cast<c3if0&>(*c8_->c7_->c6_->c5_.if0_).i);
+    //BOOST_CHECK_EQUAL(78.0, dynamic_cast<c3if0&>(*c8_->c7_->c6_->c5_.if0_).d);
+    //BOOST_CHECK_EQUAL(67, dynamic_cast<c3if0&>(*c8_->c7_->if0_).i);
+    //BOOST_CHECK_EQUAL(78.0, dynamic_cast<c3if0&>(*c8_->c7_->if0_).d);
+}
+
 BOOST_AUTO_TEST_CASE(ctor) {
-    {
-        injector<BOOST_TYPEOF(fusion_module_1)> injector(fusion_module_1);
-        (void)injector;
-    }
+    injector<BOOST_TYPEOF(fusion_module_1)> injector(fusion_module_1);
+    check(injector.create<c8>());
+}
 
-    {
-        injector<generic_module_1, BOOST_TYPEOF(fusion_module_1)> injector(fusion_module_1, generic_module_1());
-        (void)injector;
-    }
+BOOST_AUTO_TEST_CASE(ctor_mix) {
+    injector<generic_module_2, BOOST_TYPEOF(fusion_module_2)> injector(fusion_module_2);
+    check(injector.create<shared_ptr<c8> >());
+}
 
-    {
-        injector<generic_module_1, BOOST_TYPEOF(fusion_module_1)> injector(fusion_module_1);
-        (void)injector;
-    }
+BOOST_AUTO_TEST_CASE(ctor_mix_order) {
+    injector<BOOST_TYPEOF(fusion_module_2), generic_module_2> injector(fusion_module_2);
+    check(injector.create<shared_ptr<c8> >());
+}
 
-    {
-        injector<BOOST_TYPEOF(fusion_module_1), generic_module_1> injector(fusion_module_1);
-        (void)injector;
-    }
+BOOST_AUTO_TEST_CASE(ctor_mix_explicit) {
+    injector<
+        generic_module_2
+      , BOOST_TYPEOF(fusion_module_2)
+    > injector(generic_module_2(), fusion_module_2);
+    check(injector.create<shared_ptr<c8> >());
+}
+
+BOOST_AUTO_TEST_CASE(ctor_mix_explicit_order) {
+    injector<
+        BOOST_TYPEOF(fusion_module_2)
+      , generic_module_2
+    > injector(fusion_module_2, generic_module_2());
+    check(injector.create<shared_ptr<c8> >());
 }
 
 BOOST_AUTO_TEST_CASE(install) {
-    injector<>().install(generic_module_2());
-    injector<>().install(generic_module_1(), generic_module_2());
-    injector<>().install(generic_module_1(), fusion_module_1);
-    injector<>().install(fusion_module_1, fusion_module_2);
+    injector<> injector_;
+    check(injector_.install(generic_module_2(), generic_module_3()).create<shared_ptr<c8> >());
 }
 
-BOOST_AUTO_TEST_CASE(pre_and_install) {
-    injector<>().install(generic_module_2());
-    injector<>().install(generic_module_1(), generic_module_2());
-    injector<>().install(generic_module_1(), fusion_module_1);
-    injector<>().install(fusion_module_1, fusion_module_2);
+BOOST_AUTO_TEST_CASE(install_mix) {
+    injector<> injector_;
+    check(injector_.install(generic_module_2(), fusion_module_2).create<shared_ptr<c8> >());
+}
+
+BOOST_AUTO_TEST_CASE(pre_installed_generic_module_install_fusion_module) {
+    injector<generic_module_2> injector_;
+    check(injector_.install(fusion_module_2).create<shared_ptr<c8> >());
+}
+
+BOOST_AUTO_TEST_CASE(pre_installed_fusion_module_install_generic_module) {
+    injector<BOOST_TYPEOF(fusion_module_2)> injector_(fusion_module_2);
+    check(injector_.install<generic_module_2>().create<shared_ptr<c8> >());
 }
 
 } // namespace di

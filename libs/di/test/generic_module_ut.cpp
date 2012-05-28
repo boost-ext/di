@@ -625,6 +625,23 @@ BOOST_AUTO_TEST_CASE(set_instance_mix) {
     BOOST_CHECK_EQUAL(i3, module::set<b>(i3).get());
 }
 
+BOOST_AUTO_TEST_CASE(set_if) {
+    shared_ptr<if0> c0if0_(new c0if0);
+
+    struct module
+        : generic_module<
+              externals<
+                  if0
+              >
+          >
+    { };
+
+    BOOST_CHECK_EQUAL(
+        c0if0_
+      , get<shared_ptr<if0> >(module::set<if0>(c0if0_).get())
+    );
+}
+
 BOOST_AUTO_TEST_CASE(ctor_with_externals) {
     const int i = 42;
     const double d = 87.0;
