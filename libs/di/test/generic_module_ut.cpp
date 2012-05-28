@@ -7,6 +7,7 @@
 #include "boost/di/generic_module.hpp"
 
 #include <boost/test/unit_test.hpp>
+#include <boost/shared_ptr.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/mpl/vector.hpp>
@@ -642,6 +643,91 @@ BOOST_AUTO_TEST_CASE(set_if) {
     );
 }
 
+BOOST_AUTO_TEST_CASE(set_variant_shared_ptr) {
+    shared_ptr<c3> c3_(new c3);
+
+    typedef generic_module<
+        external<c3>
+    > module;
+
+    module module_(
+        module::set<c3>(c3_)
+    );
+
+    c4 c4_ = module_.create<c4>();
+
+    BOOST_CHECK_EQUAL(c3_, c4_.c3_);
+}
+
+BOOST_AUTO_TEST_CASE(set_variant_ref) {
+    const int i = 42;
+    const double d = 87.0;
+    c3 c3_(i);
+    c14 c14_(i, d);
+
+    const c3& c3_const_ref = c3_;
+    c14& c14_ref = c14_;
+
+    typedef generic_module<
+        externals<
+            c3, c14
+        >
+    > module;
+
+    module module_(
+        module::set<c3>(c3_const_ref)
+      , module::set<c14>(c14_ref)
+    );
+
+    c16 c16_ = module_.create<c16>();
+
+    BOOST_CHECK(&c3_const_ref == &c16_.c3_);
+    BOOST_CHECK(&c14_ref == &c16_.c14_);
+
+    BOOST_CHECK_EQUAL(c3_.i, c16_.c3_.i);
+    BOOST_CHECK_EQUAL(c14_.i, c16_.c14_.i);
+    BOOST_CHECK_EQUAL(c14_.d, c16_.c14_.d);
+}
+
+BOOST_AUTO_TEST_CASE(set_variant_no_copy) {
+    const int i = 42;
+    const double d = 87.0;
+    c3 c3_(i);
+    c14 c14_(i, d);
+
+    typedef generic_module<
+        externals<
+            c3, c14
+        >
+    > module;
+
+    module module_(
+        module::set<c3>(c3_)
+      , module::set<c14>(c14_)
+    );
+
+    c16 c16_ = module_.create<c16>();
+
+    BOOST_CHECK(&c3_ == &c16_.c3_);
+    BOOST_CHECK(&c14_ == &c16_.c14_);
+
+    BOOST_CHECK_EQUAL(c3_.i, c16_.c3_.i);
+    BOOST_CHECK_EQUAL(c14_.i, c16_.c14_.i);
+    BOOST_CHECK_EQUAL(c14_.d, c16_.c14_.d);
+}
+
+BOOST_AUTO_TEST_CASE(explicit_value) {
+    double_value::value = 42.0;
+
+    struct module
+        : generic_module<
+              bind<double, double_value>
+          >
+    { } module_;
+
+    BOOST_CHECK_EQUAL(double_value::value, module_.create<double>());
+}
+
 BOOST_AUTO_TEST_CASE(ctor_with_externals) {
     const int i = 42;
     const double d = 87.0;
@@ -678,65 +764,6 @@ BOOST_AUTO_TEST_CASE(ctor_with_externals_shared_ptr) {
 
     BOOST_CHECK_EQUAL(i, module_.create<int_value>().i);
 }
-
-BOOST_AUTO_TEST_CASE(explicit_value) {
-    double_value::value = 42.0;
-
-    struct module
-        : generic_module<
-              bind<double, double_value>
-          >
-    { } module_;
-
-    BOOST_CHECK_EQUAL(double_value::value, module_.create<double>());
-}
-
-#if 0
-BOOST_AUTO_TEST_CASE(to_variant_ref) {
-    const int i = 42;
-    const double d = 87.0;
-    c3 c3_(i);
-    c14 c14_(i, d);
-
-    const c3& c3_const_ref = c3_;
-    c14& c14_ref = c14_;
-
-    BOOST_AUTO(module, fusion_module<>()(
-        bind<c3>::to(c3_const_ref)
-      , bind<c14>::to(c14_ref)
-    ));
-
-    c16 c16_ = module.create<c16>();
-
-    BOOST_CHECK(&c3_const_ref == &c16_.c3_);
-    BOOST_CHECK(&c14_ref == &c16_.c14_);
-
-    BOOST_CHECK_EQUAL(c3_.i, c16_.c3_.i);
-    BOOST_CHECK_EQUAL(c14_.i, c16_.c14_.i);
-    BOOST_CHECK_EQUAL(c14_.d, c16_.c14_.d);
-}
-
-BOOST_AUTO_TEST_CASE(to_variant_no_copy) {
-    const int i = 42;
-    const double d = 87.0;
-    c3 c3_(i);
-    c14 c14_(i, d);
-
-    BOOST_AUTO(module, fusion_module<>()(
-        bind<c3>::to(c3_)
-      , bind<c14>::to(c14_)
-    ));
-
-    c16 c16_ = module.create<c16>();
-
-    BOOST_CHECK(&c3_ == &c16_.c3_);
-    BOOST_CHECK(&c14_ == &c16_.c14_);
-
-    BOOST_CHECK_EQUAL(c3_.i, c16_.c3_.i);
-    BOOST_CHECK_EQUAL(c14_.i, c16_.c14_.i);
-    BOOST_CHECK_EQUAL(c14_.d, c16_.c14_.d);
-}
-#endif
 
 } // namespace di
 } // namespace boot

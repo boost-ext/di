@@ -136,7 +136,21 @@
 
         template<typename T, typename TValue>
         static typename disable_if_instance_not_found<T>::type
-        set(TValue value) {
+        set(const TValue& value) {
+            typedef typename find_instance_type<T>::type annotation;
+            return typename annotation::derived(value);
+        }
+
+        template<typename T, typename TValue>
+        static typename disable_if_instance_not_found<T>::type
+        set(TValue& value) {
+            typedef typename find_instance_type<T>::type annotation;
+            return typename annotation::derived(value);
+        }
+
+        template<typename T, typename TValue>
+        static typename disable_if_instance_not_found<T>::type
+        set(shared_ptr<TValue> value) {
             typedef typename find_instance_type<T>::type annotation;
             return typename annotation::derived(value);
         }

@@ -328,8 +328,8 @@ BOOST_AUTO_TEST_CASE(externals_mix) {
 
     shared_ptr<c8> c8_ = injector_.create<shared_ptr<c8> >();
 
-    //BOOST_CHECK_EQUAL(3, c8_->i);
-    //BOOST_CHECK_EQUAL(4, c8_->c7_->c6_->c4_->i1);
+    BOOST_CHECK_EQUAL(3, c8_->i);
+    BOOST_CHECK_EQUAL(4, c8_->c7_->c6_->c4_->i1);
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c4_->i2);
     BOOST_CHECK_EQUAL(42, c8_->c7_->c6_->c3_->i);
     BOOST_CHECK_EQUAL(42, c8_->c7_->c6_->c5_.c2_->i);
