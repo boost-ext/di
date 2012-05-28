@@ -48,7 +48,7 @@ public:
             , verify_impl<TDeps, TExternals, T, mpl::_2>
           >::type
     {
-        typedef void type;
+        typedef verify type;
     };
 };
 

@@ -14,10 +14,9 @@
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/fold.hpp>
+    #include <boost/mpl/transform.hpp>
     #include <boost/mpl/if.hpp>
     #include <boost/mpl/set.hpp>
-    #include <boost/mpl/filter_view.hpp>
-    #include <boost/mpl/joint_view.hpp>
     #include <boost/mpl/inherit_linearly.hpp>
     #include <boost/mpl/inherit.hpp>
     #include <boost/mpl/remove_if.hpp>
@@ -148,15 +147,16 @@
         { };
 
         struct policies
-            : mpl::deref<
-                  typename mpl::begin<
-                      mpl::joint_view<
-                          mpl::filter_view<TDeps, has_policy_type<mpl::_1> >
-                        , mpl::vector1<
-                              typename defaults<policy<>, specialized>::type
-                          >
-                       >
-                  >::type
+            : mpl::fold<
+                  TDeps
+                , mpl::vector1<
+                      typename defaults<policy<>, specialized>::type
+                  >
+                , mpl::if_<
+                      has_policy_type<mpl::_2>
+                    , mpl::push_back<mpl::_1, mpl::_2>
+                    , mpl::_1
+                  >
               >::type
         { };
 
@@ -173,7 +173,23 @@
 
     private:
         struct entries
-            : mpl::inherit_linearly<deps, mpl::inherit<mpl::_1, mpl::_2> >::type
+            : mpl::inherit_linearly<
+                  deps
+                , mpl::inherit<mpl::_1, mpl::_2>
+              >::type
+        { };
+
+        template<typename T, typename TPolicy>
+        struct verify_policies_impl
+            : TPolicy::template verify<deps, TExternals, T>::type
+        { };
+
+        template<typename T>
+        struct verify_policies
+            : mpl::transform<
+                  policies
+                , verify_policies_impl<T, mpl::_1>
+              >::type
         { };
 
         typedef TBinder<deps, TExternals> binder_type;
@@ -185,8 +201,7 @@
 
         template<typename T>
         T create() {
-            typedef typename policies::template
-                verify<deps, TExternals, T>::type policies_type;
+            typedef typename verify_policies<T>::type policies_type;
 
             return TCreator<binder_type>::template
                 execute<T, mpl::vector0<> >(entries_, pool_);
@@ -194,8 +209,7 @@
 
         template<typename T, typename Visitor>
         void visit(const Visitor& visitor) {
-            typedef typename policies::template
-                verify<deps, TExternals, T>::type policies_type;
+            typedef typename verify_policies<T>::type policies_type;
 
             TVisitor<binder_type>::template
                 execute<T, mpl::vector0<> >(visitor);

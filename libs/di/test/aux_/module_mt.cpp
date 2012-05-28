@@ -23,7 +23,6 @@ struct defaults<policy<>, specialized>
 #include <boost/test/unit_test.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/vector.hpp>
 
 #include "boost/di/aux_/instance.hpp"
@@ -35,6 +34,7 @@ struct defaults<policy<>, specialized>
 #include "fake_visitor.hpp"
 #include "fake_scope.hpp"
 #include "fake_policy.hpp"
+#include "contains_all.hpp"
 #include "data.hpp"
 
 namespace boost {
@@ -69,6 +69,11 @@ BOOST_AUTO_TEST_CASE(create_default_ctor) {
     module<mpl::vector0<> > module_;
     c0 obj = module_.create<c0>();
     (void)(obj);
+}
+
+BOOST_AUTO_TEST_CASE(empty) {
+    module<mpl::vector0<> > module_;
+    BOOST_CHECK_EQUAL(0, module_.create<int>());
 }
 
 BOOST_AUTO_TEST_CASE(create_per_request) {
@@ -534,8 +539,11 @@ BOOST_AUTO_TEST_CASE(call) {
 
 BOOST_AUTO_TEST_CASE(policies) {
     BOOST_CHECK((
-        is_same<
-            policy<fake_policy<0> >
+        contains_all<
+            mpl::vector<
+                policy<fake_policy<0> >
+              , policy<> // default
+            >
           , module<
                 mpl::vector<
                     policy<fake_policy<0> >
@@ -547,10 +555,13 @@ BOOST_AUTO_TEST_CASE(policies) {
 
 BOOST_AUTO_TEST_CASE(policies_mix) {
     BOOST_CHECK((
-        is_same<
-            policy<
-                fake_policy<0>
-              , fake_policy<1>
+        contains_all<
+            mpl::vector<
+                policy<
+                    fake_policy<0>
+                  , fake_policy<1>
+                >
+              , policy<> // default
             >
           , module<
                 mpl::vector<
@@ -562,28 +573,26 @@ BOOST_AUTO_TEST_CASE(policies_mix) {
     ));
 }
 
-#if 0
 BOOST_AUTO_TEST_CASE(policies_mix_join_many) {
     BOOST_CHECK((
-        is_same<
+        contains_all<
             mpl::vector<
-                fake_policy<0>
-              , fake_policy<1>
-              , fake_policy<2>
-              , fake_policy<3>
+                policy<fake_policy<0>, fake_policy<1> >
+              , policy<fake_policy<2> >
+              , policy<fake_policy<3> >
+              , policy<> // default
             >
-           , module<
+          , module<
                 mpl::vector<
                     policy<fake_policy<0>, fake_policy<1> >
                   , policy<fake_policy<2> >
                   , fake_dependency_base_of<scopes::per_request, int, mpl::int_<0> >::type
                   , policy<fake_policy<3> >
                 >
-             >::policies::policy_type
+            >::policies::type
         >::value
     ));
 }
-#endif
 
 } // namespace aux_
 } // namespace di
