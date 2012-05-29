@@ -26,8 +26,8 @@ test-suite di-test
       [ run aux_/instance_ut.cpp ]
       [ run aux_/make_plain_ut.cpp ]
       [ run aux_/module_mt.cpp ]
-      [ compile-fail aux_/module_mt_externals_fail.cpp ]
-      [ compile-fail aux_/module_mt_policy_fail.cpp ]
+      [ compile-fail aux_/module_externals_mt_fail.cpp ]
+      [ compile-fail aux_/module_policy_mt_fail.cpp ]
       [ run aux_/pool_ut.cpp ]
       [ run aux_/value_type_ut.cpp ]
       [ run aux_/visitor_ut.cpp ]
@@ -44,7 +44,8 @@ test-suite di-test
       [ run fusion_module_ut.cpp ]
       [ run generic_module_ut.cpp ]
       [ run injector_mt.cpp ]
-      [ compile-fail injector_mt_policy_fail.cpp ]
+      [ compile-fail injector_policy_mt_fail.cpp ]
+      [ compile-fail injector_binding_mt_fail.cpp ]
       [ run named_ut.cpp ]
     ;
 

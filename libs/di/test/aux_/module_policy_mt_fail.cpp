@@ -14,7 +14,7 @@ namespace boost {
 namespace di {
 namespace aux_ {
 
-BOOST_AUTO_TEST_CASE(policy_fail) {
+BOOST_AUTO_TEST_CASE(module_policy_fail) {
     module<>().create<const c1&>();
 }
 

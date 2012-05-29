@@ -16,7 +16,7 @@ namespace boost {
 namespace di {
 namespace aux_ {
 
-BOOST_AUTO_TEST_CASE(externals_fail) {
+BOOST_AUTO_TEST_CASE(module_externals_fail) {
     instance<int> i_(42);
 
     module<
