@@ -46,7 +46,12 @@ template<
 struct contains_all<
     TSrc
   , TDst
-  , typename enable_if<mpl::not_equal_to<mpl::size<TSrc>, mpl::size<TDst> > >::type
+  , typename enable_if<
+        mpl::not_equal_to<
+            mpl::size<TSrc>
+          , mpl::size<TDst>
+        >
+    >::type
 >
     : mpl::false_
 { };

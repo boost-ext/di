@@ -44,7 +44,6 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr) {
 
     BOOST_CHECK((is_same<int, named_t::value_type>::value));
     BOOST_CHECK((is_same<named<int, a>, named_t::element_type>::value));
-    BOOST_CHECK_EQUAL(i, named_);
     BOOST_CHECK_EQUAL(i, *named_);
     BOOST_CHECK_EQUAL(i_.get(), named_.get());
 }

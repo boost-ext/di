@@ -495,6 +495,31 @@ BOOST_AUTO_TEST_CASE(externals_create_with_attributes) {
     BOOST_CHECK_EQUAL(i2, obj.i2);
 }
 
+int f() { return 42; }
+
+//TODO
+#if 0
+BOOST_AUTO_TEST_CASE(create_using_ref_and_boost_function) {
+    const int i = 87;
+
+    instance<function<int()> > i_(&f);
+
+    module<
+        mpl::vector<
+            fake_dependency_base_of<scopes::per_request, int, mpl::int_<i> >::type
+        >
+      , mpl::vector<
+            instance<function<int()> >
+        >
+    > module_(i_);
+
+    c17 obj = module_.create<c17>();
+
+    BOOST_CHECK_EQUAL(42, obj.f_());
+    BOOST_CHECK_EQUAL(i, obj.c3_->i);
+}
+#endif
+
 BOOST_AUTO_TEST_CASE(visit) {
     module<
         mpl::vector<

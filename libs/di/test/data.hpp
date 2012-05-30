@@ -9,6 +9,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
+#include <boost/function.hpp>
 #include <boost/mpl/string.hpp>
 #include "boost/di/ctor.hpp"
 #include "boost/di/named.hpp"
@@ -275,6 +276,19 @@ struct c16
 
     c14& c14_;
     const c3& c3_;
+};
+
+struct c17
+{
+    BOOST_DI_CTOR(c17
+        , const shared_ptr<c3>& c3_
+        , function<int()> f_
+    )
+        : c3_(c3_), f_(f_)
+    { }
+
+    shared_ptr<c3> c3_;
+    function<int()> f_;
 };
 
 struct cd2;
