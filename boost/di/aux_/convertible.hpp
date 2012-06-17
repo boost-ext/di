@@ -107,12 +107,14 @@ class convertible
     public:
         template<typename TSrc>
         shared_ptr<TDest> operator()(const TSrc& object) const {
-            return shared_ptr<TSrc>(new TSrc(object));
+            //return shared_ptr<TSrc>(new TSrc(object));
+            return shared_ptr<TDest>();
         }
 
         template<typename TSrc>
         shared_ptr<TDest> operator()(TSrc& object) const {
-            return shared_ptr<TSrc>(new TSrc(object));
+            //return shared_ptr<TSrc>(new TSrc(&object));
+            return shared_ptr<TDest>();
         }
 
         template<typename TSrc>
@@ -151,8 +153,8 @@ public:
         return apply_visitor(convertible_impl<shared_ptr<object_type> >(), convertible_);
     }
 
-    template<typename I, typename TN>
-    operator named<shared_ptr<I>, TN>() const {
+    template<typename I, typename TName>
+    operator named<shared_ptr<I>, TName>() const {
         return apply_visitor(convertible_impl<shared_ptr<object_type> >(), convertible_);
     }
 
@@ -204,13 +206,13 @@ public:
         return make_shared<object_type>(convertible_);
     }
 
-    template<typename TN>
-    operator named<shared_ptr<object_type>, TN>() const {
+    template<typename TName>
+    operator named<shared_ptr<object_type>, TName>() const {
         return make_shared<object_type>(convertible_);
     }
 
-    template<typename TN>
-    operator named<object_type, TN>() const {
+    template<typename TName>
+    operator named<object_type, TName>() const {
         return convertible_;
     }
 
