@@ -283,7 +283,7 @@ struct c17
     BOOST_DI_CTOR(c17
         , const c3& c3_
         , function<int()> f_
-        , std::string s_
+        , const std::string& s_
         , int* i_
     )
         : c3_(c3_), f_(f_), s_(s_), i_(*i_)

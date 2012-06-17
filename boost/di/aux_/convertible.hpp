@@ -56,7 +56,7 @@ class convertible
       , shared_ptr<object_type>
     > value_type;
 
-    template<typename TDest>
+    template<typename>
     class convertible_impl;
 
     template<typename TDest>
@@ -79,6 +79,7 @@ class convertible
             return *object;
         }
     };
+
     template<typename TDest>
     class convertible_impl<TDest*>
         : public static_visitor<TDest*>
