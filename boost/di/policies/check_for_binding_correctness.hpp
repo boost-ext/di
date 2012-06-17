@@ -40,9 +40,6 @@ public:
             typename
           , typename = void
         > class TCtorTraits = aux_::ctor_traits
-      , template<
-            typename
-        > class TMakePlain = aux_::make_plain
     >
     class verify
     {
@@ -50,7 +47,7 @@ public:
         struct ctor
             : mpl::transform<
                   TCtorTraits<T>
-                , TMakePlain<mpl::_1>
+                , aux_::make_plain<mpl::_1>
               >::type
         { };
 

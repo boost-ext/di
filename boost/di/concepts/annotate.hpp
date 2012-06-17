@@ -10,7 +10,7 @@
 #include <boost/none_t.hpp>
 #include <boost/mpl/vector.hpp>
 
-#include "boost/di/aux_/instance.hpp"
+#include "boost/di/aux_/convertible.hpp"
 
 namespace boost {
 namespace di {
@@ -46,23 +46,23 @@ struct annotate<none_t>
             typename
           , typename
           , typename = void
-        > class TInstance = aux_::instance
+        > class TConvertible = aux_::convertible
     >
     struct with_ : with<>
     {
         template<typename T>
-        static TInstance<TExpected, TContext> to(const T& value) {
-            return TInstance<TExpected, TContext>(value);
+        static TConvertible<TExpected, TContext> to(const T& value) {
+            return TConvertible<TExpected, TContext>(value);
         }
 
         template<typename T>
-        static TInstance<TExpected, TContext> to(T& value) {
-            return TInstance<TExpected, TContext>(value);
+        static TConvertible<TExpected, TContext> to(T& value) {
+            return TConvertible<TExpected, TContext>(value);
         }
 
         template<typename T>
-        static TInstance<TExpected, TContext> to(shared_ptr<T> value) {
-            return TInstance<TExpected, TContext>(value);
+        static TConvertible<TExpected, TContext> to(shared_ptr<T> value) {
+            return TConvertible<TExpected, TContext>(value);
         }
     };
 };

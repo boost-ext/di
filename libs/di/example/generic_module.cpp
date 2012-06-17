@@ -57,7 +57,7 @@ struct visitor
 {
     template<typename T>
     void operator()() const {
-        std::cout <<typeid(typename T::type).name() <<std::endl;
+        std::cout << typeid(typename T::type).name() << std::endl;
     }
 };
 
@@ -85,7 +85,7 @@ int main()
             >
         > generic_module_t;
 
-        generic_module_t generic_module( //note: order is not important
+        generic_module_type generic_module( //note: order is not important
             generic_module_t::set<double>(42.0)
           , generic_module_t::set<double_name>(87.0)
           , generic_module_t::set<c3>(c3_)
@@ -105,7 +105,7 @@ int main()
                 , di::per_request<
                       c0
                   >
-                , di::scope<di::scopes::per_request>::bind<
+                , di::scope<di::scopes::per_request<> >::bind<
                       mpl::int_<42>
                   >
                 , di::per_requests<

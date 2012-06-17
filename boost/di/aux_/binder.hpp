@@ -48,20 +48,28 @@ struct bind
     typedef typename T::bind type;
 };
 
+struct empty_context
+{
+    typedef mpl::vector0<> context;
+};
+
 template<typename TCallStack, typename TContext>
 struct equal_call_stack
     : mpl::equal<
-        mpl::iterator_range<
-            typename mpl::advance<
-                typename mpl::begin<TCallStack>::type
-              , typename mpl::max<
-                    mpl::int_<0>
-                  , mpl::minus<mpl::size<TCallStack>, mpl::size<TContext> >
-                >::type
-            >::type
-          , typename mpl::end<TCallStack>::type
-        >
-      , TContext
+          mpl::iterator_range<
+              typename mpl::advance<
+                  typename mpl::begin<TCallStack>::type
+                , typename mpl::max<
+                      mpl::int_<0>
+                    , mpl::minus<
+                          mpl::size<TCallStack>
+                        , mpl::size<TContext>
+                      >
+                  >::type
+              >::type
+            , typename mpl::end<TCallStack>::type
+          >
+        , TContext
       >
 { };
 
@@ -85,7 +93,9 @@ template<
 struct for_each_context
     : mpl::fold<
           TContext
-        , mpl::int_<equal_call_stack<TCallStack, TContext>::value>
+        , mpl::int_<
+              equal_call_stack<TCallStack, TContext>::value
+          >
         , mpl::if_<
               equal_call_stack<TCallStack, mpl::_2>
             , mpl::next<mpl::_1>
@@ -157,34 +167,6 @@ struct get_dependency_by_call_stack_order
 { };
 
 template<
-    typename TCallStack
-  , typename TSeq
-  , typename TDefault
->
-struct get_dependency_by_call_stack_order2
-    : mpl::deref<
-          mpl::begin<
-              typename mpl::push_back<
-                  typename sort_dependencies_by_call_stack_order<
-                      TCallStack
-                    , TSeq
-        , for_each_context<
-            TCallStack
-          , make_context<mpl::_2>
-        >
-                  >::type
-                , TDefault
-              >::type
-          >
-      >::type
-{ };
-
-struct empty_context
-{
-    typedef mpl::vector0<> context;
-};
-
-template<
     typename TGiven
   , typename TExternals
   , typename TCallStack
@@ -194,7 +176,7 @@ struct make_default_dependency
     : TDefault::template rebind<
           TGiven
         , typename value_type<TGiven>::type
-        , typename get_dependency_by_call_stack_order2<
+        , typename get_dependency_by_call_stack_order<
               TCallStack
             , TExternals
             , empty_context
@@ -215,17 +197,15 @@ template<
   , typename TDeps
   , typename TExternals
   , typename TDefault =
-        dependency<scopes::per_request, mpl::_1, mpl::_2, mpl::_3>
-  , template<
-        typename
-    > class TMakePlain = make_plain
+  //TODO default allocator
+        dependency<scopes::per_request<>, mpl::_1, mpl::_2, mpl::_3>
 >
 struct binder_impl
     : detail::get_dependency_by_call_stack_order<
           TCallStack
         , TDeps
         , typename detail::make_default_dependency<
-              typename TMakePlain<T>::type
+              typename make_plain<T>::type
             , TExternals
             , TCallStack
             , TDefault
@@ -233,7 +213,7 @@ struct binder_impl
         , mpl::and_<
               detail::comparator<
                   detail::bind<mpl::_2>
-                , typename TMakePlain<T>::type
+                , typename make_plain<T>::type
               >
             , detail::for_each_context<
                   TCallStack
@@ -249,6 +229,8 @@ template<
 >
 struct binder
 {
+    typedef binder type;
+
     template<
         typename T
       , typename TCallStack

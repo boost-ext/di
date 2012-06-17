@@ -31,31 +31,32 @@ struct bind
 
 template<typename TExpected, typename TGiven = TExpected>
 struct singleton
-    : scope<scopes::singleton>::bind<bind<TExpected, TGiven> >
+    : scope<scopes::singleton<> >::bind<bind<TExpected, TGiven> >
 { };
 
-template<typename T> struct singleton<T, T>
-    : scope<scopes::singleton>::bind<T>
+template<typename T>
+struct singleton<T, T>
+    : scope<scopes::singleton<> >::bind<T>
 { };
 
 template<typename TExpected, typename TGiven = TExpected>
 struct per_request
-    : scope<scopes::per_request>::bind<bind<TExpected, TGiven> >
+    : scope<scopes::per_request<> >::bind<bind<TExpected, TGiven> >
 { };
 
 template<typename T>
 struct per_request<T, T>
-    : scope<scopes::per_request>::bind<T>
+    : scope<scopes::per_request<> >::bind<T>
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 struct singletons
-    : scope<scopes::singleton>::bind<BOOST_DI_TYPES_PASS_MPL(T)>
+    : scope<scopes::singleton<> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 struct per_requests
-    : scope<scopes::per_request>::bind<BOOST_DI_TYPES_PASS_MPL(T)>
+    : scope<scopes::per_request<> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
 { };
 
 template<typename T>

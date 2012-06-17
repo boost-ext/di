@@ -135,9 +135,9 @@ int main()
         di::singletons<
             di::bind<i0, c0>
         >
-    > visitor_module;
+    > module;
 
-    di::injector<visitor_module> injector;
+    di::injector<module> injector;
 
     std::stringstream stream;
     injector.visit<c3>(uml_visitor<plant_uml>(stream));

@@ -30,7 +30,12 @@ class has_value
 {
     struct helper { static int value; };
     struct base
-        : mpl::if_<is_arithmetic<TDerived>, mpl::void_, TDerived>::type, helper
+        : helper
+        , mpl::if_<
+              is_arithmetic<TDerived>
+            , mpl::void_
+            , TDerived
+          >::type
     { };
 
     template<typename T>
@@ -67,8 +72,15 @@ public:
     }
 };
 
-template<typename T>
-class explicit_value<T, typename enable_if<detail::has_value<T> >::type>
+template<
+    typename T
+>
+class explicit_value<
+    T
+  , typename enable_if<
+        detail::has_value<T>
+    >::type
+>
     : public mpl::true_
 {
 public:

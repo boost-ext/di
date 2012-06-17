@@ -88,7 +88,13 @@
         mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
       , mpl::vector<BOOST_DI_TYPES_PASS(M)>
     >
-    install(BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_INJECTOR_INSTALL_ARG, M)) {
+    install(
+        BOOST_PP_REPEAT(
+            BOOST_PP_ITERATION()
+          , BOOST_DI_INJECTOR_INSTALL_ARG
+          , M
+        )
+    ) {
         return injector<
             mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
           , mpl::vector<BOOST_DI_TYPES_PASS(M)>

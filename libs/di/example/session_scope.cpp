@@ -68,9 +68,9 @@ int main()
         di::scope<session_scope>::bind<
             c1
         >
-    > generic_module;
+    > module;
 
-    di::injector<generic_module> injector;
+    di::injector<module> injector;
 
     injector.create<c2>(); // not in session scope
     injector.call<session_scope>(session_scope::entry());

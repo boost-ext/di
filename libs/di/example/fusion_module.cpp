@@ -56,7 +56,7 @@ struct visitor
 {
     template<typename T>
     void operator()() const {
-        std::cout <<typeid(typename T::type).name() <<std::endl;
+        std::cout << typeid(typename T::type).name() << std::endl;
     }
 };
 
@@ -75,7 +75,7 @@ int main()
               , mpl::int_<42>
               , di::bind<int, mpl::int_<87> >::in_name<name>
               , di::bind<c01>::in_call<di::call_stack<c2, c1> >
-            >()
+            >
           , di::bind<double>::to(42.0)
           , di::bind<double>::in_call<c0>::to(87.0)
           , di::bind<c3>::to(c3_)

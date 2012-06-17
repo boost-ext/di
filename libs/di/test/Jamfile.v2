@@ -11,7 +11,7 @@ project
     : requirements
       <library>/boost/test//boost_unit_test_framework/<link>static
       <warnings>all
-      <warnings-as-errors>on
+      #<warnings-as-errors>on
       <define>DDI_FUNCTION_ARITY_LIMIT_SIZE=4
       <define>BOOST_TEST_MODULE=di_test
       <include>../../..
@@ -20,10 +20,10 @@ project
 
 test-suite di-test
     : [ run aux_/binder_ut.cpp ]
+      [ run aux_/convertible_ut.cpp ]
       [ run aux_/creator_ut.cpp ]
       [ run aux_/dependency_ut.cpp ]
       [ run aux_/explicit_value_ut.cpp ]
-      [ run aux_/instance_ut.cpp ]
       [ run aux_/make_plain_ut.cpp ]
       [ run aux_/module_mt.cpp ]
       [ compile-fail aux_/module_externals_mt_fail.cpp ]

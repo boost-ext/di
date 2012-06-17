@@ -68,6 +68,10 @@
       , template<
             typename
         > class TVisitor = visitor
+      , template<
+            typename
+          , typename
+        > class TDefaults = defaults
     >
     class module
     {
@@ -78,6 +82,7 @@
           , template<typename, typename> class
           , template<typename> class
           , template<typename> class
+          , template<typename, typename> class
         > friend class module;
 
         template<typename TSeq>
@@ -150,7 +155,7 @@
             : mpl::fold<
                   TDeps
                 , mpl::vector1<
-                      typename defaults<policy<>, specialized>::type
+                      typename TDefaults<policy<>, specialized>::type
                   >
                 , mpl::if_<
                       has_policy_type<mpl::_2>

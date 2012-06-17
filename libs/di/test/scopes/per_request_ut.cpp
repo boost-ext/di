@@ -7,7 +7,9 @@
 #include "boost/di/scopes/per_request.hpp"
 
 #include <boost/test/unit_test.hpp>
+#include <cstdlib>
 
+#include "fake_allocator.hpp"
 #include "data.hpp"
 
 namespace boost {
@@ -15,19 +17,30 @@ namespace di {
 namespace scopes {
 
 BOOST_AUTO_TEST_CASE(create) {
-    per_request::scope<int> per_request_;
+    per_request<>::scope<int> per_request_;
 
     BOOST_CHECK((per_request_.create().get() != per_request_.create().get()));
 }
 
 BOOST_AUTO_TEST_CASE(create_args) {
-    per_request::scope<c2> per_request_;
+    per_request<>::scope<c2> per_request_;
 
     BOOST_CHECK((
         per_request_.create<int, double, char>(0, 0.0, '0').get()
         !=
         per_request_.create<int, double, char>(0, 0.0, '0').get())
     );
+}
+
+BOOST_AUTO_TEST_CASE(create_allocator) {
+    allocate_calls = 0;
+    deallocate_calls = 0;
+
+    per_request<fake_allocator>::scope<int> per_request_;
+    per_request_.create<int>(0);
+
+    BOOST_CHECK_EQUAL(1, allocate_calls);
+    BOOST_CHECK_EQUAL(1, deallocate_calls);
 }
 
 } // namespace scopes

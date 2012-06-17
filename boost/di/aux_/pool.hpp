@@ -13,8 +13,6 @@
     #include <boost/preprocessor/iteration/local.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/preprocessor/punctuation/comma_if.hpp>
-    #include <boost/function_types/result_type.hpp>
-    #include <boost/typeof/typeof.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/fold.hpp>
@@ -48,18 +46,13 @@
     >
     class pool
     {
-        template<typename T>
-        struct result_type
-            : function_types::result_type<BOOST_TYPEOF_TPL(&T::get)>
-        { };
-
     public:
+        typedef pool type;
         typedef TExternals externals;
 
         template<typename T>
-        typename result_type<T>::type get() const
-        {
-            return T::get();
+        const T& get() const {
+            return static_cast<const T&>(*this);
         }
     };
 
@@ -82,13 +75,12 @@
             mpl::size<TExternals>::value == BOOST_PP_ITERATION()
         >::type
     >
-        : BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_DERIVES_IMPL, TExternals)
+        : BOOST_PP_REPEAT(
+              BOOST_PP_ITERATION()
+            , BOOST_DI_DERIVES_IMPL
+            , TExternals
+          )
     {
-        template<typename T>
-        struct result_type
-            : function_types::result_type<BOOST_TYPEOF_TPL(&T::get)>
-        { };
-
         template<typename T, typename = void>
         struct externals_impl
         {
@@ -102,6 +94,8 @@
         };
 
     public:
+        typedef pool type;
+
         struct externals
             : mpl::fold<
                   TExternals
@@ -129,8 +123,8 @@
         #undef BOOST_DI_CTOR_INITLIST_IMPL
 
         template<typename T>
-        typename result_type<T>::type get() const {
-            return T::get();
+        const T& get() const {
+            return static_cast<const T&>(*this);
         }
     };
 

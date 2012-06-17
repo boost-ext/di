@@ -23,7 +23,7 @@ namespace di {
 template<typename TSequence = mpl::vector0<> >
 class fake_visitor
 {
-    typedef std::vector<std::string> visits_t;
+    typedef std::vector<std::string> visits_type;
 
 public:
     ~fake_visitor() {
@@ -41,11 +41,14 @@ private:
 
     template<typename Sequence>
     void verify(int i, typename disable_if<mpl::empty<Sequence> >::type* = 0) {
-        BOOST_CHECK_EQUAL(typeid(typename mpl::front<Sequence>::type).name(), visits.at(i));
+        BOOST_CHECK_EQUAL(
+            typeid(typename mpl::front<Sequence>::type).name()
+          , visits.at(i)
+        );
         verify<typename mpl::pop_front<Sequence>::type>(i + 1);
     }
 
-    mutable visits_t visits;
+    mutable visits_type visits;
 };
 
 } // namespace di

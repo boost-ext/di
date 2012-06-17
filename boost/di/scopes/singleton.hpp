@@ -9,8 +9,10 @@
     #ifndef BOOST_DI_SCOPES_SINGLETON_HPP
     #define BOOST_DI_SCOPES_SINGLETON_HPP
 
-    #include <boost/shared_ptr.hpp>
+    #include <memory>
     #include <boost/preprocessor/iteration/iterate.hpp>
+    #include <boost/make_shared.hpp>
+    #include <boost/shared_ptr.hpp>
 
     #include "boost/di/config.hpp"
 
@@ -26,6 +28,9 @@
     namespace di {
     namespace scopes {
 
+    template<
+        template<typename> class TAllocator = std::allocator
+    >
     class singleton
     {
     public:
@@ -35,7 +40,7 @@
         public:
             shared_ptr<T> create() {
                 if (!instance_) {
-                    instance_.reset(new T);
+                    instance_ = allocate_shared<T>(TAllocator<T>());
                 }
 
                 return instance_;
@@ -59,7 +64,10 @@
     template<BOOST_DI_TYPES(Args)>
     shared_ptr<T> create(BOOST_DI_ARGS(Args, args)) {
         if (!instance_) {
-            instance_.reset(new T(BOOST_DI_ARGS_FORWARD(args)));
+            instance_ = allocate_shared<T>(
+                TAllocator<T>()
+              , BOOST_DI_ARGS_FORWARD(args)
+            );
         }
 
         return instance_;

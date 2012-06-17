@@ -22,7 +22,7 @@ namespace boost {
 namespace di {
 
 template<
-    typename T
+    typename T = void
   , typename TName = void
   , typename = void
 >
@@ -31,6 +31,7 @@ class named
 public:
     typedef typename aux_::make_plain<T>::type value_type;
     typedef named<value_type, TName> element_type;
+    typedef TName name;
 
     named(T value = T()) // non explicit
         : value_(value)
@@ -40,7 +41,9 @@ public:
         : value_(*value)
     { }
 
-    operator T() const { return value_; }
+    operator T() const {
+        return value_;
+    }
 
 private:
     T value_;
@@ -55,6 +58,7 @@ class named<T, TName, typename enable_if<is_polymorphic<T> >::type>
 public:
     typedef typename aux_::make_plain<T>::type value_type;
     typedef named<value_type, TName> element_type;
+    typedef TName name;
 };
 
 template<
@@ -66,6 +70,7 @@ class named<T, TName, typename enable_if<aux_::has_element_type<T> >::type>
 public:
     typedef named<typename aux_::make_plain<T>::type, TName> element_type;
     typedef typename aux_::make_plain<T>::type value_type;
+    typedef TName name;
 
     named(T value = T(new typename T::element_type)) // non explicit
         : value_(value)

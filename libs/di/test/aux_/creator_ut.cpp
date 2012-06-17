@@ -10,6 +10,8 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_same.hpp>
 
+#include "fake_binder.hpp"
+
 namespace boost {
 namespace di {
 namespace aux_ {
@@ -19,36 +21,17 @@ class fake_pool { };
 template<typename T, T value>
 struct fake_dependency
 {
+    typedef fake_dependency type;
     typedef T given;
     typedef T expected;
     typedef mpl::vector0<> context;
     typedef void scope;
     typedef is_same<mpl::_1, T> bind;
-    typedef mpl::vector0<> ctor;
+    typedef T result_type;
 
-    template<typename TPool>
-    struct result_type
-    {
-        typedef T type;
-    };
-
-    template<typename>
     T create(const fake_pool&) {
         return value;
     }
-};
-
-template<typename T>
-struct fake_binder
-{
-    template<
-        typename
-      , typename
-    >
-    struct impl
-    {
-        typedef T type;
-    };
 };
 
 template<typename T>

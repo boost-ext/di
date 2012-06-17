@@ -12,7 +12,7 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/transform.hpp>
 
-#include "boost/di/aux_/instance.hpp"
+#include "boost/di/aux_/convertible.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/concepts/annotate.hpp"
 #include "boost/di/config.hpp"
@@ -26,7 +26,7 @@ namespace detail {
 template<typename T, typename Enable = void>
 struct make_annotation
 {
-    typedef typename annotate<aux_::instance<T> >::template with<> type;
+    typedef typename annotate<aux_::convertible<T> >::template with<> type;
 };
 
 template<typename T>
@@ -36,14 +36,14 @@ struct make_annotation<
 >
 {
     typedef typename T::template
-        rebind<scopes::singleton>::type dependency;
+        rebind<scopes::singleton<> >::type dependency;
 
-    typedef aux_::instance<
+    typedef aux_::convertible<
         typename dependency::expected
       , typename dependency::context
-    > instance;
+    > convertible;
 
-    typedef typename annotate<instance>::template
+    typedef typename annotate<convertible>::template
         with<typename T::name> type;
 };
 

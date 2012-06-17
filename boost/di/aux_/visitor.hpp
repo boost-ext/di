@@ -50,6 +50,14 @@
         template<
             typename T
           , typename TCallStack
+        >
+        struct binder
+            : TBinder::template impl<T, TCallStack>::type
+        { };
+
+        template<
+            typename T
+          , typename TCallStack
           , typename TDependency
         >
         struct dependency_impl
@@ -68,16 +76,13 @@
           , typename TVisitor
         >
         static void execute(const TVisitor& visitor) {
-            typedef typename TBinder::template
-                impl<T, TCallStack>::type to_bo_created_t;
-
             execute_impl<
                 T
-              , to_bo_created_t
               , typename mpl::push_back<
                     TCallStack
-                  , typename to_bo_created_t::given
+                  , typename binder<T, TCallStack>::given
                 >::type
+              , binder<T, TCallStack>
             >(visitor);
         }
 
@@ -100,8 +105,8 @@
 
     template<
         typename T
-      , typename TDependency
       , typename TCallStack
+      , typename TDependency
       , typename TVisitor
     >
     static typename enable_if_c<

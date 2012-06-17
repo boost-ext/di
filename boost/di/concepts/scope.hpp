@@ -26,7 +26,13 @@ namespace boost {
 namespace di {
 namespace concepts {
 
-template<typename TScope>
+template<
+    typename TScope
+/*  , template<*/
+        //typename
+      //, typename
+    /*> class TNamed = typename defaults<named<> >::type*/
+>
 class scope
 {
     template<typename TRebind, typename T>
@@ -138,7 +144,8 @@ public:
                             , rebind<
                                   dependency<
                                       named<mpl::_2, TName>
-                                    , mpl::_2, mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+                                    , mpl::_2
+                                    , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
                                   >
                                 , TScope
                               >
@@ -177,26 +184,26 @@ public:
             template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
             struct in_call
                 : mpl::fold<
-                    mpl::vector1<TExpected>
-                  , mpl::vector0<>
-                  , mpl::if_<
-                        is_base_of<annotate<>::with<>, mpl::_2>
-                      , mpl::push_back<
-                            mpl::_1
-                          , rebind<mpl::_2, TScope>
-                        >
-                      , mpl::push_back<
-                            mpl::_1
-                          , rebind<
-                                dependency<
-                                    named<mpl::_2, TName>
-                                  , mpl::_2
-                                  , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-                                >
-                              , TScope
-                            >
-                        >
-                    >
+                      mpl::vector1<TExpected>
+                    , mpl::vector0<>
+                    , mpl::if_<
+                          is_base_of<annotate<>::with<>, mpl::_2>
+                        , mpl::push_back<
+                              mpl::_1
+                            , rebind<mpl::_2, TScope>
+                          >
+                        , mpl::push_back<
+                              mpl::_1
+                            , rebind<
+                                  dependency<
+                                      named<mpl::_2, TName>
+                                    , mpl::_2
+                                    , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+                                  >
+                                , TScope
+                              >
+                          >
+                      >
                   >::type
                 , annotate<>::with<>
             { };

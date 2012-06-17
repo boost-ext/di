@@ -21,7 +21,6 @@
     #include <boost/mpl/is_sequence.hpp>
     #include <boost/mpl/back_inserter.hpp>
 
-    #include "boost/di/aux_/instance.hpp"
     #include "boost/di/aux_/has_traits.hpp"
     #include "boost/di/aux_/module.hpp"
     #include "boost/di/concepts.hpp"
@@ -50,7 +49,7 @@
         typename TDeps
       , typename _1 =
             mpl::if_<
-                  aux_::has_element_type<mpl::_1> //is instance
+                  aux_::has_element_type<mpl::_1> //is convertible
                 , derived<mpl::_1>
                 , mpl::_1
             >
@@ -69,7 +68,7 @@
                     , mpl::back_inserter<mpl::_1>
                   >
               >::type
-             , _1
+            , _1
           >::type
     { };
 
@@ -90,42 +89,42 @@
         { };
 
         template<
-            typename TInstance
+            typename TConvertible
           , typename T
           , typename = void
         >
-        struct is_same_instance
+        struct is_convertible
             : mpl::false_
         { };
 
         template<
-            typename TInstance
+            typename TConvertible
           , typename T
         >
-        struct is_same_instance<
-            TInstance
+        struct is_convertible<
+            TConvertible
           , T
-          , typename enable_if<aux_::has_element_type<TInstance> >::type
+          , typename enable_if<aux_::has_element_type<TConvertible> >::type
         >
             : mpl::or_<
-                  is_same<typename TInstance::name, T>
-                , is_same<typename TInstance::element_type, T>
+                  is_same<typename TConvertible::name, T>
+                , is_same<typename TConvertible::element_type, T>
               >
         { };
 
         template<typename T>
-        struct find_instance_type
-            : mpl::find_if<annotations, is_same_instance<mpl::_1, T> >::type
+        struct find_convertible_type
+            : mpl::find_if<annotations, is_convertible<mpl::_1, T> >::type
         { };
 
         template<typename T>
-        struct disable_if_instance_not_found
+        struct disable_if_convertible_not_found
             : disable_if<
                   is_same<
-                      find_instance_type<T>
+                      find_convertible_type<T>
                     , mpl::end<annotations>
                   >
-                , typename find_instance_type<T>::type::derived
+                , typename find_convertible_type<T>::type::derived
               >
         { };
 
@@ -135,23 +134,23 @@
         #include BOOST_PP_ITERATE()
 
         template<typename T, typename TValue>
-        static typename disable_if_instance_not_found<T>::type
+        static typename disable_if_convertible_not_found<T>::type
         set(const TValue& value) {
-            typedef typename find_instance_type<T>::type annotation;
+            typedef typename find_convertible_type<T>::type annotation;
             return typename annotation::derived(value);
         }
 
         template<typename T, typename TValue>
-        static typename disable_if_instance_not_found<T>::type
+        static typename disable_if_convertible_not_found<T>::type
         set(TValue& value) {
-            typedef typename find_instance_type<T>::type annotation;
+            typedef typename find_convertible_type<T>::type annotation;
             return typename annotation::derived(value);
         }
 
         template<typename T, typename TValue>
-        static typename disable_if_instance_not_found<T>::type
+        static typename disable_if_convertible_not_found<T>::type
         set(shared_ptr<TValue> value) {
-            typedef typename find_instance_type<T>::type annotation;
+            typedef typename find_convertible_type<T>::type annotation;
             return typename annotation::derived(value);
         }
     };

@@ -21,25 +21,17 @@ struct allocator
         : object(object)
     { }
 
-    shared_ptr<T> get() const {
-        return object;
-    }
-
     shared_ptr<T> object;
 };
 
 struct trivial_ctor
-{
-    int get() const { return 0; }
-};
+{ };
 
 struct default_ctor
 {
     explicit default_ctor(int i = 0)
         : i(i)
     { }
-
-    int get() const { return i; }
 
     int i;
 };
@@ -50,20 +42,18 @@ struct custom_ctor
         : i(i)
     { }
 
-    int get() const { return i; }
-
     int i;
 };
 
 BOOST_AUTO_TEST_CASE(empty) {
-    typedef pool<mpl::vector0<> > pool_t;
+    typedef pool<mpl::vector0<> > pool_type;
 
-    pool_t pool_;
+    pool_type pool_;
 
     BOOST_CHECK((
         mpl::equal<
             mpl::vector0<>
-          , pool_t::externals
+          , pool_type::externals
         >::value
     ));
 
@@ -71,11 +61,17 @@ BOOST_AUTO_TEST_CASE(empty) {
 }
 
 BOOST_AUTO_TEST_CASE(ctor_order) {
-    typedef pool<mpl::vector<trivial_ctor, default_ctor> > pool_t;
+    typedef pool<
+        mpl::vector<
+            trivial_ctor
+          , default_ctor
+        >
+    > pool_type;
+
     default_ctor default_ctor_;
     trivial_ctor trivial_ctor_;
 
-    pool_t pool_(default_ctor_, trivial_ctor_);
+    pool_type pool_(default_ctor_, trivial_ctor_);
 
     BOOST_CHECK((
         mpl::equal<
@@ -83,7 +79,7 @@ BOOST_AUTO_TEST_CASE(ctor_order) {
                 trivial_ctor
               , default_ctor
             >
-          , pool_t::externals
+          , pool_type::externals
         >::value
     ));
 
@@ -91,11 +87,17 @@ BOOST_AUTO_TEST_CASE(ctor_order) {
 }
 
 BOOST_AUTO_TEST_CASE(ctor_order_reverse) {
-    typedef pool<mpl::vector<trivial_ctor, default_ctor> > pool_t;
+    typedef pool<
+        mpl::vector<
+            trivial_ctor
+          , default_ctor
+        >
+    > pool_type;
+
     default_ctor default_ctor_;
     trivial_ctor trivial_ctor_;
 
-    pool_t pool_(trivial_ctor_, default_ctor_);
+    pool_type pool_(trivial_ctor_, default_ctor_);
 
     BOOST_CHECK((
         mpl::equal<
@@ -103,7 +105,7 @@ BOOST_AUTO_TEST_CASE(ctor_order_reverse) {
                 trivial_ctor
               , default_ctor
             >
-          , pool_t::externals
+          , pool_type::externals
         >::value
     ));
 
@@ -111,9 +113,14 @@ BOOST_AUTO_TEST_CASE(ctor_order_reverse) {
 }
 
 BOOST_AUTO_TEST_CASE(default_ctor_base) {
-    typedef pool<mpl::vector<trivial_ctor, default_ctor> > pool_t;
+    typedef pool<
+        mpl::vector<
+            trivial_ctor
+          , default_ctor
+        >
+    > pool_type;
 
-    pool_t pool_;
+    pool_type pool_;
 
     BOOST_CHECK((
         mpl::equal<
@@ -121,7 +128,7 @@ BOOST_AUTO_TEST_CASE(default_ctor_base) {
                 trivial_ctor
               , default_ctor
             >
-          , pool_t::externals
+          , pool_type::externals
         >::value
     ));
 
@@ -129,47 +136,68 @@ BOOST_AUTO_TEST_CASE(default_ctor_base) {
 }
 
 BOOST_AUTO_TEST_CASE(get) {
-    typedef allocator<custom_ctor> custom_ctor_t;
-    typedef allocator<trivial_ctor> trivial_ctor_t;
-    typedef allocator<default_ctor> default_ctor_t;
-    typedef pool<mpl::vector<trivial_ctor_t, default_ctor_t, custom_ctor_t> > pool_t;
+    typedef allocator<custom_ctor> custom_ctor_type;
+    typedef allocator<trivial_ctor> trivial_ctor_type;
+    typedef allocator<default_ctor> default_ctor_type;
+    typedef pool<
+        mpl::vector<
+            trivial_ctor_type
+          , default_ctor_type
+          , custom_ctor_type
+        >
+    > pool_type;
 
-    custom_ctor_t custom_ctor_(new custom_ctor(0));
-    trivial_ctor_t trivial_ctor_(new trivial_ctor);
-    default_ctor_t default_ctor_(new default_ctor);
+    custom_ctor_type custom_ctor_(new custom_ctor(0));
+    trivial_ctor_type trivial_ctor_(new trivial_ctor);
+    default_ctor_type default_ctor_(new default_ctor);
 
-    pool_t pool_(custom_ctor_, trivial_ctor_, default_ctor_);
+    pool_type pool_(custom_ctor_, trivial_ctor_, default_ctor_);
 
-    BOOST_CHECK_EQUAL(trivial_ctor_.get(), pool_.get<trivial_ctor_t>());
-    BOOST_CHECK_EQUAL(custom_ctor_.get(), pool_.get<custom_ctor_t>());
-    BOOST_CHECK_EQUAL(default_ctor_.get(), pool_.get<default_ctor_t>());
+    BOOST_CHECK_EQUAL(
+        trivial_ctor_.object
+      , pool_.get<trivial_ctor_type>().object
+    );
+    BOOST_CHECK_EQUAL(
+        custom_ctor_.object
+      , pool_.get<custom_ctor_type>().object
+    );
+    BOOST_CHECK_EQUAL(
+        default_ctor_.object
+      , pool_.get<default_ctor_type>().object
+    );
 }
 
 BOOST_AUTO_TEST_CASE(of_pools) {
-    typedef allocator<trivial_ctor> trivial_ctor_t;
-    typedef allocator<default_ctor> default_ctor_t;
-    typedef pool<mpl::vector<default_ctor_t> > pool_1_t;
-    typedef pool<mpl::vector<trivial_ctor_t> > pool_2_t;
-    typedef pool<mpl::vector<pool_1_t, pool_2_t> > pool_t;
-    default_ctor_t default_ctor_(new default_ctor);
-    trivial_ctor_t trivial_ctor_(new trivial_ctor);
+    typedef allocator<trivial_ctor> trivial_ctor_type;
+    typedef allocator<default_ctor> default_ctor_type;
+    typedef pool<mpl::vector<default_ctor_type> > pool_1_type;
+    typedef pool<mpl::vector<trivial_ctor_type> > pool_2_type;
+    typedef pool<mpl::vector<pool_1_type, pool_2_type> > pool_type;
+    default_ctor_type default_ctor_(new default_ctor);
+    trivial_ctor_type trivial_ctor_(new trivial_ctor);
 
-    pool_1_t pool_1_(default_ctor_);
-    pool_2_t pool_2_(trivial_ctor_);
+    pool_1_type pool_1_(default_ctor_);
+    pool_2_type pool_2_(trivial_ctor_);
 
-    pool_t pool_(pool_1_, pool_2_);
+    pool_type pool_(pool_1_, pool_2_);
 
-    BOOST_CHECK_EQUAL(trivial_ctor_.get(), pool_.get<trivial_ctor_t>());
-    BOOST_CHECK_EQUAL(default_ctor_.get(), pool_.get<default_ctor_t>());
     BOOST_CHECK((
         mpl::equal<
             mpl::vector<
-                default_ctor_t
-              , trivial_ctor_t
+                default_ctor_type
+              , trivial_ctor_type
             >
-          , pool_t::externals
+          , pool_type::externals
         >::value
     ));
+    BOOST_CHECK_EQUAL(
+        trivial_ctor_.object
+      , pool_.get<trivial_ctor_type>().object
+    );
+    BOOST_CHECK_EQUAL(
+        default_ctor_.object
+      , pool_.get<default_ctor_type>().object
+    );
 }
 
 } // namespace aux_

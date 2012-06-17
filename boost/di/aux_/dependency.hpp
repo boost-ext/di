@@ -19,9 +19,8 @@
     #include <boost/mpl/placeholders.hpp>
     #include <boost/mpl/assert.hpp>
 
-    #include "boost/di/aux_/instance.hpp"
+    #include "boost/di/aux_/convertible.hpp"
     #include "boost/di/aux_/explicit_value.hpp"
-    #include "boost/di/aux_/converter.hpp"
     #include "boost/di/aux_/has_traits.hpp"
     #include "boost/di/config.hpp"
 
@@ -51,11 +50,7 @@
             typename
           , typename
           , typename = void
-        > class TInstance = instance
-      , template<
-            typename
-          , typename
-        > class TConverter = converter
+        > class TConvertible = convertible
     >
     class dependency
     {
@@ -65,14 +60,25 @@
           , (TGiven)
         );
 
-        typedef TInstance<TExpected, TContext> instance_type;
+    public:
+        typedef dependency type;
+        typedef TConvertible<TExpected, TContext> result_type;
+        typedef TScope scope;
+        typedef TExpected expected;
+        typedef TGiven given;
+        typedef TContext context;
+        typedef TBind bind;
 
+    private:
         template<typename TPool>
         struct is_value_type
             : mpl::and_<
                   TExplicitValue<TGiven>
                 , mpl::not_<
-                      mpl::contains<typename TPool::externals, instance_type>
+                      mpl::contains<
+                          typename TPool::externals
+                        , result_type
+                      >
                   >
               >
         { };
@@ -81,41 +87,40 @@
         struct is_scope_type
             : mpl::and_<
                   mpl::not_<TExplicitValue<TGiven> >
-                , mpl::not_<mpl::contains<typename TPool::externals, instance_type> >
+                , mpl::not_<
+                      mpl::contains<
+                          typename TPool::externals
+                        , result_type
+                      >
+                  >
               >
         { };
 
         template<typename TPool>
         struct is_pool_type
-            : mpl::contains<typename TPool::externals, instance_type>
+            : mpl::contains<
+                  typename TPool::externals
+                , result_type
+              >
         { };
 
     public:
-        typedef TScope scope;
-        typedef TExpected expected;
-        typedef TGiven given;
-        typedef TContext context;
-        typedef TBind bind;
-
-        template<typename T, typename TPool>
-        typename enable_if<is_value_type<TPool>, T>::type
+        template<typename TPool>
+        typename enable_if<is_value_type<TPool>, result_type>::type
         create(const TPool&) {
-            return TConverter<scope, T>::execute(
-                TExplicitValue<TGiven>::create());
+            return result_type(TExplicitValue<TGiven>::create());
         }
 
-        template<typename T, typename TPool>
-        typename enable_if<is_scope_type<TPool>, T>::type
+        template<typename TPool>
+        typename enable_if<is_scope_type<TPool>, result_type>::type
         create(const TPool&) {
-            return TConverter<scope, T>::execute(
-                scope_.create());
+            return result_type(scope_.create());
         }
 
-        template<typename T, typename TPool>
-        typename enable_if<is_pool_type<TPool>, T>::type
+        template<typename TPool>
+        typename enable_if<is_pool_type<TPool>, result_type>::type
         create(const TPool& pool) {
-            return TConverter<scope, T>::execute(
-                pool.template get<instance_type>());
+            return result_type(pool.template get<result_type>());
         }
 
         template<typename TAction>
@@ -142,11 +147,7 @@
             typename
           , typename
           , typename
-        > class TInstance
-      , template<
-            typename
-          , typename
-        > class TConverter
+        > class TConvertible
     >
     class dependency<
         mpl::_1
@@ -155,8 +156,7 @@
       , TContext
       , TBind
       , TExplicitValue
-      , TInstance
-      , TConverter
+      , TConvertible
     >
     {
     public:
@@ -170,8 +170,7 @@
               , TContext
               , TBind
               , TExplicitValue
-              , TInstance
-              , TConverter
+              , TConvertible
             > type;
         };
     };
@@ -187,11 +186,7 @@
             typename
           , typename
           , typename
-        > class TInstance
-      , template<
-            typename
-          , typename
-        > class TConverter
+        > class TConvertible
     >
     class dependency<
         TScope
@@ -200,8 +195,7 @@
       , mpl::_3
       , TBind
       , TExplicitValue
-      , TInstance
-      , TConverter
+      , TConvertible
     >
     {
     public:
@@ -219,8 +213,7 @@
               , TContext
               , TBind
               , TExplicitValue
-              , TInstance
-              , TConverter
+              , TConvertible
             > type;
         };
     };
@@ -233,18 +226,16 @@
 
 #else
 
-    template<typename T, typename TPool, BOOST_DI_TYPES(Args)>
-    typename enable_if<is_scope_type<TPool>, T>::type
+    template<typename TPool, BOOST_DI_TYPES(Args)>
+    typename enable_if<is_scope_type<TPool>, result_type>::type
     create(const TPool&, BOOST_DI_ARGS(Args, args)) {
-        return TConverter<scope, T>::execute(
-            scope_.create(BOOST_DI_ARGS_FORWARD(args)));
+        return result_type(scope_.create(BOOST_DI_ARGS_FORWARD(args)));
     }
 
-    template<typename T, typename TPool, BOOST_DI_TYPES(Args)>
-    typename enable_if<is_pool_type<TPool>, T>::type
+    template<typename TPool, BOOST_DI_TYPES(Args)>
+    typename enable_if<is_pool_type<TPool>, result_type>::type
     create(const TPool& pool, BOOST_DI_ARGS_NOT_USED(Args)) {
-        return TConverter<scope, T>::execute(
-            pool.template get<instance_type>());
+        return result_type(pool.template get<result_type>());
     }
 
 #endif

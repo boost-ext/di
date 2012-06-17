@@ -93,9 +93,6 @@
     #define BOOST_DI_ARGS_FORWARD(args)                      \
          BOOST_DI_ARGS_FORWARD_IMPL(~, args)
 
-    #define BOOST_DI_REF_TYPE(Arg)                           \
-        Arg&
-
 //-----------------------------------------------------------
 
 #else
@@ -229,9 +226,6 @@
              BOOST_PP_ITERATION()                            \
            , arg                                             \
          )
-
-    #define BOOST_DI_REF_TYPE(Arg)                           \
-        ::boost::reference_wrapper<Arg>
 
 //-------------------------------------------------------------
 

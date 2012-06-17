@@ -59,9 +59,9 @@ int main()
       , di::singletons<
             c0
         >
-    > visitor_module;
+    > module;
 
-    di::injector<visitor_module> injector;
+    di::injector<module> injector;
     injector.visit<c3>(text_visitor());
 
     return 0;

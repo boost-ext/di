@@ -19,7 +19,6 @@
     #include <boost/mpl/push_back.hpp>
 
     #include "boost/di/aux_/ctor_traits.hpp"
-    #include "boost/di/aux_/converter.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
@@ -48,23 +47,13 @@
             : TCtorTraits<typename TDependency::given>::type
         { };
 
-        template<typename T>
-        struct ref_impl
-        {
-            typedef T type;
-        };
-
-        template<typename T>
-        struct ref_impl<T&>
-        {
-            typedef BOOST_DI_REF_TYPE(T) type;
-        };
-
-        template<typename T>
-        struct ref_impl<const T&>
-        {
-            typedef BOOST_DI_REF_TYPE(const T) type;
-        };
+        template<
+            typename T
+          , typename TCallStack
+        >
+        struct binder
+            : TBinder::template impl<T, TCallStack>::type
+        { };
 
     public:
         template<
@@ -73,17 +62,15 @@
           , typename TEntries
           , typename TPool
         >
-        static T execute(TEntries& entries, const TPool& pool) {
-            typedef typename TBinder::template
-                impl<T, TCallStack>::type to_bo_created_t;
-
+        static typename binder<T, TCallStack>::result_type
+        execute(TEntries& entries, const TPool& pool) {
             return execute_impl<
                 T
-              , to_bo_created_t
               , typename mpl::push_back<
                     TCallStack
-                  , typename to_bo_created_t::given
+                  , typename binder<T, TCallStack>::given
                 >::type
+              , binder<T, TCallStack>
             >(entries, pool);
         }
 
@@ -95,7 +82,8 @@
           , typename TEntries
         >
         static typename enable_if<
-            is_base_of<TDependency, TEntries>, TDependency&
+            is_base_of<TDependency, TEntries>
+          , TDependency&
         >::type
         acquire(TEntries& entries) {
             return static_cast<TDependency&>(entries);
@@ -106,7 +94,8 @@
           , typename TEntries
         >
         static typename disable_if<
-            is_base_of<TDependency, TEntries>, TDependency
+            is_base_of<TDependency, TEntries>
+          , TDependency
         >::type
         acquire(TEntries&) {
             return TDependency();
@@ -128,8 +117,8 @@
 
     template<
         typename T
-      , typename TDependency
       , typename TCallStack
+      , typename TDependency
       , typename TEntries
       , typename TPool
     >
@@ -137,36 +126,28 @@
         mpl::size<typename ctor<TDependency>::type>::value
         ==
         BOOST_PP_ITERATION()
-      , T
+      , typename TDependency::result_type
     >::type execute_impl(TEntries& entries, const TPool& pool) {
 
-        #define BOOST_DI_CREATOR_EXECUTE(z, n, _)           \
-            BOOST_PP_COMMA_IF(n)                            \
-            static_cast<                                    \
-                typename ref_impl<                          \
-                    typename mpl::at_c<                     \
-                        typename ctor<TDependency>::type    \
-                      , n                                   \
-                    >::type                                 \
-                >::type                                     \
-            >(execute<                                      \
-                  typename mpl::at_c<                       \
-                      typename ctor<TDependency>::type      \
-                     , n                                    \
-                  >::type                                   \
-                , TCallStack                                \
-              >(entries, pool))
+        #define BOOST_DI_CREATOR_EXECUTE(z, n, _)       \
+            BOOST_PP_COMMA_IF(n)                        \
+            execute<                                    \
+                typename mpl::at_c<                     \
+                    typename ctor<TDependency>::type    \
+                  , n                                   \
+                >::type                                 \
+              , TCallStack                              \
+            >(entries, pool)
 
-        return acquire<TDependency>(entries).BOOST_DI_TEMPLATE_QUALIFIER
-            create<T>(
-                pool
-                BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
-                BOOST_PP_REPEAT(
-                    BOOST_PP_ITERATION()
-                  , BOOST_DI_CREATOR_EXECUTE
-                  , ~
-                )
-            );
+        return acquire<typename TDependency::type>(entries).create(
+            pool
+            BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
+            BOOST_PP_REPEAT(
+                BOOST_PP_ITERATION()
+              , BOOST_DI_CREATOR_EXECUTE
+              , ~
+            )
+        );
 
         #undef BOOST_DI_CREATOR_EXECUTE
     }

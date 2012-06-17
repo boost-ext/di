@@ -146,7 +146,11 @@
         >::type
     >
     BOOST_PP_EXPR_IF(BOOST_PP_ITERATION(), :)
-        BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_CHECK_FOR_CIRCULAR_DEPENDENCIES_IMPL, ~)
+        BOOST_PP_REPEAT(
+            BOOST_PP_ITERATION()
+          , BOOST_DI_CHECK_FOR_CIRCULAR_DEPENDENCIES_IMPL
+          , ~
+        )
     { };
 
     template<typename TDependency, typename TCallStack>

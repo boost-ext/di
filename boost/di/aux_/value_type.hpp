@@ -22,6 +22,7 @@ struct value_type
     typedef T type;
 };
 
+//TODO
 template<>
 struct value_type<std::string, void>
 {

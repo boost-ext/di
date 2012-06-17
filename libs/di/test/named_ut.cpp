@@ -18,32 +18,32 @@ namespace di {
 
 BOOST_AUTO_TEST_CASE(named_int_value) {
     const int i = 42;
-    typedef named<int, a> named_t;
-    named_t named_(i);
+    typedef named<int, a> named_type;
+    named_type named_(i);
 
-    BOOST_CHECK((is_same<int, named_t::value_type>::value));
-    BOOST_CHECK((is_same<named<int, a>, named_t::element_type>::value));
+    BOOST_CHECK((is_same<int, named_type::value_type>::value));
+    BOOST_CHECK((is_same<named<int, a>, named_type::element_type>::value));
     BOOST_CHECK_EQUAL(i, named_);
 }
 
 BOOST_AUTO_TEST_CASE(named_int_shared_ptr) {
     const int i = 42;
-    typedef named<int, a> named_t;
-    named_t named_(make_shared<int>(i));
+    typedef named<int, a> named_type;
+    named_type named_(make_shared<int>(i));
 
-    BOOST_CHECK((is_same<int, named_t::value_type>::value));
-    BOOST_CHECK((is_same<named<int, a>, named_t::element_type>::value));
+    BOOST_CHECK((is_same<int, named_type::value_type>::value));
+    BOOST_CHECK((is_same<named<int, a>, named_type::element_type>::value));
     BOOST_CHECK_EQUAL(i, named_);
 }
 
 BOOST_AUTO_TEST_CASE(named_shared_ptr) {
     const int i = 42;
-    typedef named<shared_ptr<int>, a> named_t;
+    typedef named<shared_ptr<int>, a> named_type;
     shared_ptr<int> i_(new int(i));
-    named_t named_(i_);
+    named_type named_(i_);
 
-    BOOST_CHECK((is_same<int, named_t::value_type>::value));
-    BOOST_CHECK((is_same<named<int, a>, named_t::element_type>::value));
+    BOOST_CHECK((is_same<int, named_type::value_type>::value));
+    BOOST_CHECK((is_same<named<int, a>, named_type::element_type>::value));
     BOOST_CHECK_EQUAL(i, *named_);
     BOOST_CHECK_EQUAL(i_.get(), named_.get());
 }

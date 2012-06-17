@@ -9,6 +9,7 @@
     #ifndef BOOST_DI_SCOPES_PER_REQUEST_HPP
     #define BOOST_DI_SCOPES_PER_REQUEST_HPP
 
+    #include <memory>
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/shared_ptr.hpp>
     #include <boost/make_shared.hpp>
@@ -27,6 +28,9 @@
     namespace di {
     namespace scopes {
 
+    template<
+        template<typename> class TAllocator = std::allocator
+    >
     class per_request
     {
     public:
@@ -35,7 +39,7 @@
         {
         public:
             shared_ptr<T> create() {
-                return make_shared<T>();
+                return allocate_shared<T>(TAllocator<T>());
             }
 
             #include BOOST_PP_ITERATE()
@@ -52,7 +56,10 @@
 
     template<BOOST_DI_TYPES(Args)>
     shared_ptr<T> create(BOOST_DI_ARGS(Args, args)) {
-        return shared_ptr<T>(new T(BOOST_DI_ARGS_FORWARD(args)));
+        return allocate_shared<T>(
+            TAllocator<T>()
+          , BOOST_DI_ARGS_FORWARD(args)
+        );
     }
 
 #endif

@@ -9,6 +9,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
+#include <boost/noncopyable.hpp>
 #include <boost/function.hpp>
 #include <boost/mpl/string.hpp>
 #include "boost/di/ctor.hpp"
@@ -69,7 +70,7 @@ struct c0
     //trivial ctor
 };
 
-struct c1
+struct c1 : noncopyable
 {
     explicit c1(int = 0) { }
 };
@@ -218,8 +219,7 @@ struct c11
 struct c12
 {
     BOOST_DI_CTOR(c12
-        , named<shared_ptr<if0>
-        , mpl::string<'1'> > if0_
+        , named<shared_ptr<if0>, mpl::string<'1'> > if0_
         , named<shared_ptr<c2>, mpl::string<'2'> > c2_
     )
         : if0_(if0_), c2_(c2_)
@@ -265,7 +265,7 @@ struct c15
     c6 c6_;
 };
 
-struct c16
+struct c16 : noncopyable
 {
     BOOST_DI_CTOR(c16
         , c14& c14_
@@ -281,14 +281,18 @@ struct c16
 struct c17
 {
     BOOST_DI_CTOR(c17
-        , const shared_ptr<c3>& c3_
+        , const c3& c3_
         , function<int()> f_
+        , std::string s_
+        , int* i_
     )
-        : c3_(c3_), f_(f_)
+        : c3_(c3_), f_(f_), s_(s_), i_(*i_)
     { }
 
-    shared_ptr<c3> c3_;
+    c3 c3_;
     function<int()> f_;
+    std::string s_;
+    int i_;
 };
 
 struct cd2;
