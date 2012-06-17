@@ -34,7 +34,7 @@ struct pool_allocator
 int main()
 {
     typedef di::generic_module<
-        di::scope<per_request<pool_allocator> >::bind<
+        di::scope<di::scopes::per_request<pool_allocator> >::bind<
             c
         >
     > module;

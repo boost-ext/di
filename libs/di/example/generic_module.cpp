@@ -83,13 +83,13 @@ int main()
               , c3
               , c4
             >
-        > generic_module_t;
+        > generic_module_type;
 
         generic_module_type generic_module( //note: order is not important
-            generic_module_t::set<double>(42.0)
-          , generic_module_t::set<double_name>(87.0)
-          , generic_module_t::set<c3>(c3_)
-          , generic_module_t::set<c4>(c4_)
+            generic_module_type::set<double>(42.0)
+          , generic_module_type::set<double_name>(87.0)
+          , generic_module_type::set<c3>(c3_)
+          , generic_module_type::set<c4>(c4_)
         );
 
         generic_module.create<c5>();

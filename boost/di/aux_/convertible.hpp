@@ -107,14 +107,12 @@ class convertible
     public:
         template<typename TSrc>
         shared_ptr<TDest> operator()(const TSrc& object) const {
-            //TODO
-            throw 0;
+            return shared_ptr<TSrc>(new TSrc(object));
         }
 
         template<typename TSrc>
         shared_ptr<TDest> operator()(TSrc& object) const {
-            //TODO
-            throw 0;
+            return shared_ptr<TSrc>(new TSrc(object));
         }
 
         template<typename TSrc>
