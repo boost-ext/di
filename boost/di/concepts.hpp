@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_CONCEPTS_HPP
 #define BOOST_DI_CONCEPTS_HPP
 
-#include "boost/di/aux_/meta.hpp"
+#include "boost/di/aux_/meta_config.hpp"
 #include "boost/di/concepts/annotate.hpp"
 #include "boost/di/concepts/bind.hpp"
 #include "boost/di/concepts/call_stack.hpp"

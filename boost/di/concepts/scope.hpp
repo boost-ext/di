@@ -16,7 +16,7 @@
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/push_back.hpp>
 
-#include "boost/di/aux_/meta.hpp"
+#include "boost/di/aux_/meta_config.hpp"
 #include "boost/di/aux_/dependency.hpp"
 #include "boost/di/concepts/bind.hpp"
 #include "boost/di/concepts/annotate.hpp"

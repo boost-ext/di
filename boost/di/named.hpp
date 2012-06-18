@@ -14,7 +14,7 @@
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/utility/enable_if.hpp>
 
-#include "boost/di/aux_/meta.hpp"
+#include "boost/di/aux_/meta_config.hpp"
 #include "boost/di/aux_/make_plain.hpp"
 #include "boost/di/aux_/has_traits.hpp"
 

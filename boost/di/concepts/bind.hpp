@@ -13,7 +13,7 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/or.hpp>
 
-#include "boost/di/aux_/meta.hpp"
+#include "boost/di/aux_/meta_config.hpp"
 #include "boost/di/aux_/dependency.hpp"
 #include "boost/di/aux_/explicit_value.hpp"
 #include "boost/di/concepts/annotate.hpp"

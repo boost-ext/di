@@ -17,28 +17,27 @@
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/placeholders.hpp>
 
-    #include "boost/di/aux_/meta.hpp"
-    #include "boost/di/aux_/make_plain.hpp"
+    #include "boost/di/aux_/meta_config.hpp"
     #include "boost/di/aux_/ctor_traits.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
         BOOST_DI_ITERATION_PARAMS(              \
             0                                   \
           , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE  \
-          , "boost/di/aux_/visitor.hpp"         \
+          , "boost/di/detail/visitor.hpp"       \
         )                                       \
     )
 
     namespace boost {
     namespace di {
-    namespace aux_ {
+    namespace detail {
 
     template<
         typename TBinder
       , template<
             typename
           , typename = void
-        > class TCtorTraits = ctor_traits
+        > class TCtorTraits = aux_::ctor_traits
     >
     class visitor_impl
     {
@@ -95,7 +94,7 @@
         : visitor_impl<TBinder>
     { };
 
-    } // namespace aux_
+    } // namespace detail
     } // namespace di
     } // namespace boost
 

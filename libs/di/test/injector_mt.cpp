@@ -6,11 +6,14 @@
 //
 #include "fake_config.hpp"
 
+#include "boost/di/injector.hpp"
+
 #include <boost/test/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
 #include <boost/mpl/vector.hpp>
 
-#include "boost/di.hpp"
+#include "boost/di/generic_module.hpp"
+#include "boost/di/fusion_module.hpp"
 #include "fake_visitor.hpp"
 #include "fake_scope.hpp"
 #include "data.hpp"

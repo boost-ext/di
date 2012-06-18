@@ -12,7 +12,7 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/transform.hpp>
 
-#include "boost/di/aux_/meta.hpp"
+#include "boost/di/aux_/meta_config.hpp"
 #include "boost/di/aux_/convertible.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/concepts/annotate.hpp"

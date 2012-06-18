@@ -22,9 +22,9 @@
     #include <boost/mpl/is_sequence.hpp>
     #include <boost/mpl/back_inserter.hpp>
 
-    #include "boost/di/aux_/meta.hpp"
+    #include "boost/di/aux_/meta_config.hpp"
     #include "boost/di/aux_/has_traits.hpp"
-    #include "boost/di/aux_/module.hpp"
+    #include "boost/di/detail/module.hpp"
     #include "boost/di/concepts.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
@@ -77,7 +77,7 @@
 
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     class generic_module
-        : public aux_::module<
+        : public detail::module<
               typename detail::generic_deps<
                   mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
               >::type
@@ -170,7 +170,7 @@
 
     template<BOOST_DI_TYPES(Args)>
     explicit generic_module(BOOST_DI_ARGS(Args, args))
-        : aux_::module<
+        : detail::module<
               typename detail::generic_deps<
                   mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
               >::type

@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/aux_/binder.hpp"
+#include "boost/di/detail/binder.hpp"
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
@@ -21,7 +21,7 @@
 
 namespace boost {
 namespace di {
-namespace aux_ {
+namespace detail {
 
 struct fake_scope { };
 
@@ -544,7 +544,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(multiple_calls_not_found, TContext, multiple_calls
     ));
 }
 
-} // namespace aux_
+} // namespace detail
 } // namespace di
 } // namespace boost
 

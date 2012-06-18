@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_AUX_BINDER_HPP
-#define BOOST_DI_AUX_BINDER_HPP
+#ifndef BOOST_DI_DETAIL_BINDER_HPP
+#define BOOST_DI_DETAIL_BINDER_HPP
 
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/placeholders.hpp>
@@ -38,7 +38,7 @@
 
 namespace boost {
 namespace di {
-namespace aux_ {
+namespace detail {
 
 namespace detail {
 
@@ -129,7 +129,7 @@ template<
 struct sort_dependencies_by_call_stack_order
     : mpl::sort<
           typename mpl::fold<
-              mpl::filter_view<TSeq, has_context<mpl::_1> >
+              mpl::filter_view<TSeq, aux_::has_context<mpl::_1> >
             , mpl::vector0<>
             , mpl::if_<
                   TCond
@@ -175,7 +175,7 @@ template<
 struct make_default_dependency
     : TDefault::template rebind<
           TGiven
-        , typename value_type<TGiven>::type
+        , typename aux_::value_type<TGiven>::type
         , typename get_dependency_by_call_stack_order<
               TCallStack
             , TExternals
@@ -197,7 +197,7 @@ template<
   , typename TDeps
   , typename TExternals
   , typename TDefault =
-    dependency<
+    aux_::dependency<
         scopes::per_request<>
       , mpl::_1
       , mpl::_2
@@ -209,7 +209,7 @@ struct binder_impl
           TCallStack
         , TDeps
         , typename detail::make_default_dependency<
-              typename make_plain<T>::type
+              typename aux_::make_plain<T>::type
             , TExternals
             , TCallStack
             , TDefault
@@ -217,7 +217,7 @@ struct binder_impl
         , mpl::and_<
               detail::comparator<
                   detail::bind<mpl::_2>
-                , typename make_plain<T>::type
+                , typename aux_::make_plain<T>::type
               >
             , detail::for_each_context<
                   TCallStack
@@ -244,7 +244,7 @@ struct binder
     { };
 };
 
-} // namespace aux_
+} // namespace detail
 } // namespace di
 } // namespace boost
 

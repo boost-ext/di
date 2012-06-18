@@ -21,14 +21,14 @@
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/size.hpp>
 
-    #include "boost/di/aux_/meta.hpp"
+    #include "boost/di/aux_/meta_config.hpp"
     #include "boost/di/aux_/has_traits.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
         BOOST_DI_ITERATION_PARAMS(          \
             1                               \
           , BOOST_MPL_LIMIT_VECTOR_SIZE     \
-          , "boost/di/aux_/pool.hpp"        \
+          , "boost/di/detail/pool.hpp"      \
         )                                   \
     )
 
@@ -38,7 +38,7 @@
 
     namespace boost {
     namespace di {
-    namespace aux_ {
+    namespace detail {
 
     template<
         typename TExternals = mpl::vector0<>
@@ -58,7 +58,7 @@
 
     #include BOOST_PP_ITERATE()
 
-    } // namespace aux_
+    } // namespace detail
     } // namespace di
     } // namespace boost
 
@@ -88,7 +88,12 @@
         };
 
         template<typename T>
-        struct externals_impl<T, typename enable_if<has_externals<T> >::type>
+        struct externals_impl<
+            T
+          , typename enable_if<
+                aux_::has_externals<T>
+            >::type
+        >
         {
             typedef typename T::externals type;
         };

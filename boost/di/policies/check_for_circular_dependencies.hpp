@@ -25,10 +25,10 @@
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/assert.hpp>
 
-    #include "boost/di/aux_/meta.hpp"
+    #include "boost/di/aux_/meta_config.hpp"
     #include "boost/di/aux_/ctor_traits.hpp"
     #include "boost/di/aux_/make_plain.hpp"
-    #include "boost/di/aux_/binder.hpp"
+    #include "boost/di/detail/binder.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (                               \
         BOOST_DI_ITERATION_PARAMS(                                      \
@@ -53,7 +53,7 @@
           , template<
                 typename
               , typename
-            > class TBinder = aux_::binder
+            > class TBinder = detail::binder
           , template<
                 typename
               , typename = void

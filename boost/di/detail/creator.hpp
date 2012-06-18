@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef BOOST_DI_AUX_CREATOR_HPP
-    #define BOOST_DI_AUX_CREATOR_HPP
+    #ifndef BOOST_DI_DETAIL_CREATOR_HPP
+    #define BOOST_DI_DETAIL_CREATOR_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
@@ -18,27 +18,27 @@
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/push_back.hpp>
 
-    #include "boost/di/aux_/meta.hpp"
+    #include "boost/di/aux_/meta_config.hpp"
     #include "boost/di/aux_/ctor_traits.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
         BOOST_DI_ITERATION_PARAMS(              \
             0                                   \
           , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE  \
-          , "boost/di/aux_/creator.hpp"         \
+          , "boost/di/detail/creator.hpp"       \
         )                                       \
     )
 
     namespace boost {
     namespace di {
-    namespace aux_ {
+    namespace detail {
 
     template<
         typename TBinder
       , template<
             typename
           , typename = void
-        > class TCtorTraits = ctor_traits
+        > class TCtorTraits = aux_::ctor_traits
     >
     class creator_impl
     {
@@ -107,7 +107,7 @@
         : creator_impl<TBinder>
     { };
 
-    } // namespace aux_
+    } // namespace detail
     } // namespace di
     } // namespace boost
 
