@@ -12,7 +12,7 @@
 #include <boost/type_traits/is_reference.hpp>
 #include <boost/mpl/assert.hpp>
 
-#include "boost/di/config.hpp"
+#include "boost/di/aux_/meta.hpp"
 
 namespace boost {
 namespace di {

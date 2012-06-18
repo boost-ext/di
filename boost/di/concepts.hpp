@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_CONCEPTS_HPP
 #define BOOST_DI_CONCEPTS_HPP
 
+#include "boost/di/aux_/meta.hpp"
 #include "boost/di/concepts/annotate.hpp"
 #include "boost/di/concepts/bind.hpp"
 #include "boost/di/concepts/call_stack.hpp"
@@ -14,7 +15,6 @@
 #include "boost/di/concepts/scope.hpp"
 #include "boost/di/scopes/per_request.hpp"
 #include "boost/di/scopes/singleton.hpp"
-#include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {

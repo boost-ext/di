@@ -12,18 +12,8 @@
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/fold.hpp>
-#include <boost/mpl/copy.hpp>
-#include <boost/mpl/size.hpp>
-#include <boost/mpl/at.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/mpl/back_inserter.hpp>
-#include <boost/mpl/push_back.hpp>
-#include <boost/mpl/is_sequence.hpp>
 
 #include "boost/di/aux_/has_traits.hpp"
-#include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {
@@ -47,7 +37,12 @@ struct deref_element_type
 };
 
 template<typename T>
-struct deref_element_type<T, typename enable_if<has_element_type<T> >::type>
+struct deref_element_type<
+    T
+  , typename enable_if<
+        has_element_type<T>
+    >::type
+>
 {
     typedef typename T::element_type type;
 };

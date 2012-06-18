@@ -17,9 +17,9 @@
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/placeholders.hpp>
 
+    #include "boost/di/aux_/meta.hpp"
     #include "boost/di/aux_/make_plain.hpp"
     #include "boost/di/aux_/ctor_traits.hpp"
-    #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
         BOOST_DI_ITERATION_PARAMS(              \

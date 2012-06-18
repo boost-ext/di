@@ -19,10 +19,10 @@
     #include <boost/mpl/placeholders.hpp>
     #include <boost/mpl/assert.hpp>
 
+    #include "boost/di/aux_/meta.hpp"
     #include "boost/di/aux_/convertible.hpp"
     #include "boost/di/aux_/explicit_value.hpp"
     #include "boost/di/aux_/has_traits.hpp"
-    #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
         BOOST_DI_ITERATION_PARAMS(              \

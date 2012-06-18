@@ -17,10 +17,10 @@
     #include <boost/mpl/back_inserter.hpp>
     #include <boost/mpl/placeholders.hpp>
 
+    #include "boost/di/aux_/meta.hpp"
     #include "boost/di/aux_/has_traits.hpp"
     #include "boost/di/aux_/module.hpp"
     #include "boost/di/concepts.hpp"
-    #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
         BOOST_DI_ITERATION_PARAMS(          \

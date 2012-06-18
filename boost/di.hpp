@@ -10,7 +10,6 @@
 // core
 #include "boost/di/ctor.hpp"
 #include "boost/di/config.hpp"
-#include "boost/di/defaults.hpp"
 
 // modules
 #include "boost/di/injector.hpp"

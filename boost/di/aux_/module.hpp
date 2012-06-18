@@ -31,12 +31,12 @@
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/insert.hpp>
 
+    #include "boost/di/aux_/meta.hpp"
     #include "boost/di/aux_/has_traits.hpp"
     #include "boost/di/aux_/pool.hpp"
     #include "boost/di/aux_/binder.hpp"
     #include "boost/di/aux_/creator.hpp"
     #include "boost/di/aux_/visitor.hpp"
-    #include "boost/di/defaults.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
@@ -69,7 +69,7 @@
             typename
         > class TVisitor = visitor
       , typename TPolicies
-            = defaults<specialized>::policies
+            = config<specialized>::policies
     >
     class module
     {
