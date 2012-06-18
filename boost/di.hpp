@@ -8,8 +8,9 @@
 #define BOOST_DI_HPP
 
 // core
-#include "boost/di/config.hpp"
 #include "boost/di/ctor.hpp"
+#include "boost/di/config.hpp"
+#include "boost/di/defaults.hpp"
 
 // modules
 #include "boost/di/injector.hpp"
@@ -23,12 +24,15 @@
 #include "boost/di/scopes/per_request.hpp"
 #include "boost/di/scopes/singleton.hpp"
 
-// utility
+// utilities
 #include "boost/di/named.hpp"
 #include "boost/di/provider.hpp"
 
-// policy
+// policies
 #include "boost/di/policy.hpp"
+#include "boost/di/policies/check_for_binding_correctness.hpp"
+#include "boost/di/policies/check_for_circular_dependencies.hpp"
+#include "boost/di/policies/check_for_creation_ownership.hpp"
 
 #endif
 

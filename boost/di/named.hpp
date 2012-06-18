@@ -53,7 +53,13 @@ template<
     typename T
   , typename TName
 >
-class named<T, TName, typename enable_if<is_polymorphic<T> >::type>
+class named<
+    T
+  , TName
+  , typename enable_if<
+        is_polymorphic<T>
+    >::type
+>
 {
 public:
     typedef typename aux_::make_plain<T>::type value_type;
@@ -65,7 +71,13 @@ template<
     typename T
   , typename TName
 >
-class named<T, TName, typename enable_if<aux_::has_element_type<T> >::type>
+class named<
+    T
+  , TName
+  , typename enable_if<
+        aux_::has_element_type<T>
+    >::type
+>
 {
 public:
     typedef named<typename aux_::make_plain<T>::type, TName> element_type;

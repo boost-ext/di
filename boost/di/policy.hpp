@@ -11,9 +11,6 @@
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/void.hpp>
 
-#include "boost/di/policies/check_for_binding_correctness.hpp"
-#include "boost/di/policies/check_for_circular_dependencies.hpp"
-#include "boost/di/policies/check_for_creation_ownership.hpp"
 #include "boost/di/config.hpp"
 
 namespace boost {
@@ -50,16 +47,6 @@ public:
     {
         typedef verify type;
     };
-};
-
-template<typename TDefault>
-struct defaults<policy<>, TDefault>
-{
-    typedef policy<
-        policies::check_for_binding_correctness
-      , policies::check_for_circular_dependencies
-      , policies::check_for_creation_ownership
-    > type;
 };
 
 } // namespace di

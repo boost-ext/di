@@ -197,8 +197,12 @@ template<
   , typename TDeps
   , typename TExternals
   , typename TDefault =
-  //TODO default allocator
-        dependency<scopes::per_request<>, mpl::_1, mpl::_2, mpl::_3>
+    dependency<
+        scopes::per_request<>
+      , mpl::_1
+      , mpl::_2
+      , mpl::_3
+    >
 >
 struct binder_impl
     : detail::get_dependency_by_call_stack_order<

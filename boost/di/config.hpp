@@ -13,7 +13,6 @@
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/preprocessor/arithmetic/sub.hpp>
-#include <boost/ref.hpp>
 #include <boost/mpl/limits/vector.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/config.hpp>
@@ -236,38 +235,6 @@
 #else
     #define BOOST_DI_TEMPLATE_QUALIFIER template
 #endif
-
-namespace boost {
-namespace di {
-
-/**
- * example of changing default behavior using specialized class
- *
- * @code
- * #include <boost/di/policy.hpp>
- *
- * namespace boost {
- * namespace di {
- *
- * template<>
- * struct defaults<policy<>, specialized>
- * {
- *     typedef policy<
- *         policies::check_for_circular_dependencies
- *     > type;
- * };
- *
- * } // namespace di
- * } // namespace boost
- * @endcode
- */
-class specialized { };
-
-template<typename, typename = specialized>
-struct defaults;
-
-} // namespace di
-} // namespace boost
 
 #endif
 

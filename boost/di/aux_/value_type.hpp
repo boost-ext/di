@@ -22,7 +22,6 @@ struct value_type
     typedef T type;
 };
 
-//TODO
 template<>
 struct value_type<std::string, void>
 {
@@ -30,7 +29,12 @@ struct value_type<std::string, void>
 };
 
 template<typename T>
-struct value_type<T, typename enable_if<has_value_type<T> >::type>
+struct value_type<
+    T
+  , typename enable_if<
+        has_value_type<T>
+    >::type
+>
 {
     typedef typename T::value_type type;
 };

@@ -9,7 +9,7 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/has_xxx.hpp>
 #include <boost/mpl/assert.hpp>
-#include <boost/di/policy.hpp>
+#include <boost/di/defaults.hpp>
 
 namespace mpl = boost::mpl;
 namespace di  = boost::di;
@@ -20,12 +20,13 @@ namespace boost {
 namespace di {
 
 template<>
-struct defaults<policy<>, specialized>
+struct defaults<specialized>
+    : defaults<>
 {
     typedef policy<
-        policies::check_for_circular_dependencies
+        di::policies::check_for_circular_dependencies
       , check_for_creation_by_smart_ptr
-    > type;
+    > policies;
 };
 
 } // namespace di

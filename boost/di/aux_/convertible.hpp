@@ -15,10 +15,10 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/or.hpp>
+#include <boost/mpl/and.hpp>
 
 #include "boost/di/aux_/value_type.hpp"
 #include "boost/di/aux_/has_traits.hpp"
-
 #include "boost/di/named.hpp"
 
 namespace boost {
@@ -34,7 +34,15 @@ struct plain_type
 };
 
 template<typename T>
-struct plain_type<T, typename enable_if<has_name<T> >::type>
+struct plain_type<
+    T
+  , typename enable_if<
+        mpl::and_<
+            has_name<T>
+          , has_value_type<T>
+        >
+    >::type
+>
 {
     typedef typename T::value_type type;
 };
@@ -142,21 +150,25 @@ public:
     { }
 
     operator object_type&() const {
-        return apply_visitor(convertible_impl<object_type&>(), convertible_);
+        return apply_visitor(
+            convertible_impl<object_type&>(), convertible_);
     }
 
     operator object_type*() const {
-        return apply_visitor(convertible_impl<object_type*>(), convertible_);
+        return apply_visitor(
+            convertible_impl<object_type*>(), convertible_);
     }
 
     template<typename I>
     operator shared_ptr<I>() const {
-        return apply_visitor(convertible_impl<shared_ptr<object_type> >(), convertible_);
+        return apply_visitor(
+            convertible_impl<shared_ptr<object_type> >(), convertible_);
     }
 
     template<typename I, typename TName>
     operator named<shared_ptr<I>, TName>() const {
-        return apply_visitor(convertible_impl<shared_ptr<object_type> >(), convertible_);
+        return apply_visitor(
+            convertible_impl<shared_ptr<object_type> >(), convertible_);
     }
 
 private:

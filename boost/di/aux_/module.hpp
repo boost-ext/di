@@ -36,7 +36,7 @@
     #include "boost/di/aux_/binder.hpp"
     #include "boost/di/aux_/creator.hpp"
     #include "boost/di/aux_/visitor.hpp"
-    #include "boost/di/policy.hpp"
+    #include "boost/di/defaults.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
@@ -68,10 +68,8 @@
       , template<
             typename
         > class TVisitor = visitor
-      , template<
-            typename
-          , typename
-        > class TDefaults = defaults
+      , typename TPolicies
+            = defaults<specialized>::policies
     >
     class module
     {
@@ -82,7 +80,7 @@
           , template<typename, typename> class
           , template<typename> class
           , template<typename> class
-          , template<typename, typename> class
+          , typename
         > friend class module;
 
         template<typename TSeq>
@@ -154,9 +152,8 @@
         struct policies
             : mpl::fold<
                   TDeps
-                , mpl::vector1<
-                      typename TDefaults<policy<>, specialized>::type
-                  >
+              //TODO
+                , mpl::vector1<TPolicies>
                 , mpl::if_<
                       has_policy_type<mpl::_2>
                     , mpl::push_back<mpl::_1, mpl::_2>

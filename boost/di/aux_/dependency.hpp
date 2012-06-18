@@ -120,7 +120,7 @@
         template<typename TPool>
         typename enable_if<is_pool_type<TPool>, result_type>::type
         create(const TPool& pool) {
-            return result_type(pool.template get<result_type>());
+            return pool.template get<result_type>();
         }
 
         template<typename TAction>
@@ -235,7 +235,7 @@
     template<typename TPool, BOOST_DI_TYPES(Args)>
     typename enable_if<is_pool_type<TPool>, result_type>::type
     create(const TPool& pool, BOOST_DI_ARGS_NOT_USED(Args)) {
-        return result_type(pool.template get<result_type>());
+        return pool.template get<result_type>();
     }
 
 #endif

@@ -9,11 +9,11 @@
     #ifndef BOOST_DI_SCOPES_SINGLETON_HPP
     #define BOOST_DI_SCOPES_SINGLETON_HPP
 
-    #include <memory>
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/make_shared.hpp>
     #include <boost/shared_ptr.hpp>
 
+    #include "boost/di/defaults.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
@@ -29,7 +29,9 @@
     namespace scopes {
 
     template<
-        template<typename> class TAllocator = std::allocator
+        template<
+            typename
+        > class TAllocator = defaults<specialized>::allocator
     >
     class singleton
     {

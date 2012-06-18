@@ -15,6 +15,7 @@
     #include <boost/mpl/if.hpp>
     #include <boost/mpl/not.hpp>
     #include <boost/mpl/or.hpp>
+    #include <boost/mpl/and.hpp>
     #include <boost/mpl/copy.hpp>
     #include <boost/mpl/find_if.hpp>
     #include <boost/mpl/begin_end.hpp>
@@ -104,7 +105,12 @@
         struct is_convertible<
             TConvertible
           , T
-          , typename enable_if<aux_::has_element_type<TConvertible> >::type
+          , typename enable_if<
+                mpl::and_<
+                    aux_::has_name<TConvertible>
+                  , aux_::has_element_type<TConvertible>
+                >
+            >::type
         >
             : mpl::or_<
                   is_same<typename TConvertible::name, T>
