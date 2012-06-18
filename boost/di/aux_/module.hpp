@@ -152,7 +152,6 @@
         struct policies
             : mpl::fold<
                   TDeps
-              //TODO
                 , mpl::vector1<TPolicies>
                 , mpl::if_<
                       has_policy_type<mpl::_2>
