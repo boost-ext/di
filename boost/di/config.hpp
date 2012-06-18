@@ -19,6 +19,10 @@
     #define BOOST_DI_CTOR_UNIQUE_NAME boost_di_ctor
 #endif
 
+#if !defined(BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE)
+    #define BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE 10
+#endif
+
 namespace boost {
 namespace di {
 

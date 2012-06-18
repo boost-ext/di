@@ -14,6 +14,7 @@
 #include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/preprocessor/arithmetic/sub.hpp>
 #include <boost/mpl/limits/vector.hpp>
+#include <boost/mpl/aux_/na_fwd.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/config.hpp>
 
@@ -87,10 +88,6 @@
 //-----------------------------------------------------------
 
 #else
-
-    #if !defined(BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE)
-        #define BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE 10
-    #endif
 
     #define BOOST_DI_ITERATION_PARAMS(start, limit, file)    \
          3, (start, limit, file)
