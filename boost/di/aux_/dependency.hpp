@@ -20,7 +20,7 @@
     #include <boost/mpl/assert.hpp>
 
     #include "boost/di/aux_/meta_config.hpp"
-    #include "boost/di/aux_/convertible.hpp"
+    #include "boost/di/aux_/external.hpp"
     #include "boost/di/aux_/explicit_value.hpp"
     #include "boost/di/aux_/has_traits.hpp"
 
@@ -50,7 +50,7 @@
             typename
           , typename
           , typename = void
-        > class TConvertible = convertible
+        > class TExternal = external
     >
     class dependency
     {
@@ -62,7 +62,7 @@
 
     public:
         typedef dependency type;
-        typedef TConvertible<TExpected, TContext> result_type;
+        typedef TExternal<TExpected, TContext> result_type;
         typedef TScope scope;
         typedef TExpected expected;
         typedef TGiven given;
@@ -147,7 +147,7 @@
             typename
           , typename
           , typename
-        > class TConvertible
+        > class TExternal
     >
     class dependency<
         mpl::_1
@@ -156,7 +156,7 @@
       , TContext
       , TBind
       , TExplicitValue
-      , TConvertible
+      , TExternal
     >
     {
     public:
@@ -170,7 +170,7 @@
               , TContext
               , TBind
               , TExplicitValue
-              , TConvertible
+              , TExternal
             > type;
         };
     };
@@ -186,7 +186,7 @@
             typename
           , typename
           , typename
-        > class TConvertible
+        > class TExternal
     >
     class dependency<
         TScope
@@ -195,7 +195,7 @@
       , mpl::_3
       , TBind
       , TExplicitValue
-      , TConvertible
+      , TExternal
     >
     {
     public:
@@ -213,7 +213,7 @@
               , TContext
               , TBind
               , TExplicitValue
-              , TConvertible
+              , TExternal
             > type;
         };
     };

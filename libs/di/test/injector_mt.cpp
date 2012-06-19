@@ -97,7 +97,7 @@ typedef generic_module<
     bind<if0, c3if0>
   , externals<
         double
-      //, if0
+      , if0
       , annotate<bind<int>::in_name<mpl::string<'1'> >::in_call<call_stack<c7, c6, c4> > >::with<a>
       , annotate<bind<int>::in_call<c8> >::with<b>
     >
@@ -313,30 +313,29 @@ BOOST_AUTO_TEST_CASE(basic_fusion_module_externals) {
     BOOST_CHECK_EQUAL(87.0, c9_->d);
 }
 
-//TODO
-#if 0
 BOOST_AUTO_TEST_CASE(externals_mix) {
     shared_ptr<c3if0> c3if0_(new c3if0(67, 78.0));
 
-    typedef generic_module_externals_1 gm;
+    typedef generic_module_externals_1 generic_module;
 
     injector<
         BOOST_TYPEOF(fusion_module_externals_1)
       , generic_module_externals_1
     > injector_(
-        gm(
-            gm::set<a>(3.0)
-          , gm::set<b>(4.0)
-          , gm::set<if0>(c3if0_)
-          , gm::set<double>(7.0)
+        generic_module(
+            generic_module::set<a>(3.0)
+          , generic_module::set<b>(4.0)
+          , generic_module::set<if0>(c3if0_)
+          , generic_module::set<double>(7.0)
         )
       , fusion_module_externals_1
     );
 
     shared_ptr<c8> c8_ = injector_.create<shared_ptr<c8> >();
 
-    BOOST_CHECK_EQUAL(3, c8_->i);
-    BOOST_CHECK_EQUAL(4, c8_->c7_->c6_->c4_->i1);
+    //TODO
+    //BOOST_CHECK_EQUAL(4, c8_->i);
+    //BOOST_CHECK_EQUAL(3, c8_->c7_->c6_->c4_->i1);
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c4_->i2);
     BOOST_CHECK_EQUAL(42, c8_->c7_->c6_->c3_->i);
     BOOST_CHECK_EQUAL(42, c8_->c7_->c6_->c5_.c2_->i);
@@ -346,7 +345,6 @@ BOOST_AUTO_TEST_CASE(externals_mix) {
     BOOST_CHECK_EQUAL(78.0, dynamic_cast<c3if0&>(*c8_->c7_->c6_->c5_.if0_).d);
     BOOST_CHECK_EQUAL(67, dynamic_cast<c3if0&>(*c8_->c7_->if0_).i);
 }
-#endif
 
 BOOST_AUTO_TEST_CASE(ctor) {
     injector<BOOST_TYPEOF(fusion_module_1)> injector(fusion_module_1);

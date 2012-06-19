@@ -14,7 +14,7 @@
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
-#include "boost/di/aux_/convertible.hpp"
+#include "boost/di/aux_/external.hpp"
 #include "boost/di/named.hpp"
 #include "boost/di/concepts.hpp"
 
@@ -486,7 +486,7 @@ BOOST_AUTO_TEST_CASE(externals_base) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                aux_::convertible<c1>
+                aux_::external<c1>
             >
           , module::pool::externals
         >::value
@@ -508,9 +508,9 @@ BOOST_AUTO_TEST_CASE(externals_mix) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                aux_::convertible<c1>
-              , aux_::convertible<c2>
-              , aux_::convertible<c3>
+                aux_::external<c1>
+              , aux_::external<c2>
+              , aux_::external<c3>
             >
           , module::pool::externals
         >::value
@@ -534,10 +534,10 @@ BOOST_AUTO_TEST_CASE(externals_bind) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                aux_::convertible<int>
-              , aux_::convertible<named<c1, int> >
-              , aux_::convertible<c2, mpl::vector<c1> >
-              , aux_::convertible<named<c3, double>, mpl::vector<c4, c5> >
+                aux_::external<int>
+              , aux_::external<named<c1, int> >
+              , aux_::external<c2, mpl::vector<c1> >
+              , aux_::external<named<c3, double>, mpl::vector<c4, c5> >
             >
           , module::pool::externals
         >::value
@@ -767,6 +767,26 @@ BOOST_AUTO_TEST_CASE(ctor_with_externals_shared_ptr) {
 
     BOOST_CHECK_EQUAL(i, module_.create<int_value>().i);
 }
+
+//TODO
+#if 0
+BOOST_AUTO_TEST_CASE(externals_annotate) {
+    const int i = 42;
+
+    typedef generic_module<
+        bind<int, mpl::int_<0> >
+      , externals<
+            annotate<bind<int>::in_call<c14> >::with<a>
+        >
+    > module;
+
+    module module_(
+        module::set<a>(i)
+    );
+
+    BOOST_CHECK_EQUAL(i, module_.create<c14>().i);
+}
+#endif
 
 } // namespace di
 } // namespace boot

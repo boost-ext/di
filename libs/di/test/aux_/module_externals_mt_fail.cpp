@@ -19,13 +19,13 @@ namespace di {
 namespace detail {
 
 BOOST_AUTO_TEST_CASE(module_externals_fail) {
-    aux_::convertible<int> i_(42);
+    aux_::external<int> i_(42);
 
     module<
         mpl::vector0<>
       , mpl::vector<
-            aux_::convertible<int>
-          , aux_::convertible<double>
+            aux_::external<int>
+          , aux_::external<double>
         >
     > module_(i_);
 

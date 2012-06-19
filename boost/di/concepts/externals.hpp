@@ -13,7 +13,7 @@
 #include <boost/mpl/transform.hpp>
 
 #include "boost/di/aux_/meta_config.hpp"
-#include "boost/di/aux_/convertible.hpp"
+#include "boost/di/aux_/external.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/concepts/annotate.hpp"
 
@@ -26,7 +26,7 @@ namespace detail {
 template<typename T, typename Enable = void>
 struct make_annotation
 {
-    typedef typename annotate<aux_::convertible<T> >::template with<> type;
+    typedef typename annotate<aux_::external<T> >::template with<> type;
 };
 
 template<typename T>
@@ -38,12 +38,12 @@ struct make_annotation<
     typedef typename T::template
         rebind<scopes::singleton<> >::type dependency;
 
-    typedef aux_::convertible<
+    typedef aux_::external<
         typename dependency::expected
       , typename dependency::context
-    > convertible;
+    > external;
 
-    typedef typename annotate<convertible>::template
+    typedef typename annotate<external>::template
         with<typename T::name> type;
 };
 

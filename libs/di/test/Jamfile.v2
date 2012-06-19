@@ -19,9 +19,9 @@ project
     ;
 
 test-suite di-test
-    : [ run aux_/convertible_ut.cpp ]
-      [ run aux_/dependency_ut.cpp ]
+    : [ run aux_/dependency_ut.cpp ]
       [ run aux_/explicit_value_ut.cpp ]
+      [ run aux_/external_ut.cpp ]
       [ run aux_/make_plain_ut.cpp ]
       [ compile-fail aux_/module_externals_mt_fail.cpp ]
       [ compile-fail aux_/module_policy_mt_fail.cpp ]

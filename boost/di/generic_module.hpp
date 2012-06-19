@@ -50,7 +50,7 @@
         typename TDeps
       , typename _1 =
             mpl::if_<
-                  aux_::has_element_type<mpl::_1> //is convertible
+                  aux_::has_element_type<mpl::_1> //is external
                 , derived<mpl::_1>
                 , mpl::_1
             >
@@ -90,47 +90,47 @@
         { };
 
         template<
-            typename TConvertible
+            typename TExternal
           , typename T
           , typename = void
         >
-        struct is_convertible
+        struct is_external
             : mpl::false_
         { };
 
         template<
-            typename TConvertible
+            typename TExternal
           , typename T
         >
-        struct is_convertible<
-            TConvertible
+        struct is_external<
+            TExternal
           , T
           , typename enable_if<
                 mpl::and_<
-                    aux_::has_name<TConvertible>
-                  , aux_::has_element_type<TConvertible>
+                    aux_::has_name<TExternal>
+                  , aux_::has_element_type<TExternal>
                 >
             >::type
         >
             : mpl::or_<
-                  is_same<typename TConvertible::name, T>
-                , is_same<typename TConvertible::element_type, T>
+                  is_same<typename TExternal::name, T>
+                , is_same<typename TExternal::element_type, T>
               >
         { };
 
         template<typename T>
-        struct find_convertible_type
-            : mpl::find_if<annotations, is_convertible<mpl::_1, T> >::type
+        struct find_external_type
+            : mpl::find_if<annotations, is_external<mpl::_1, T> >::type
         { };
 
         template<typename T>
-        struct disable_if_convertible_not_found
+        struct disable_if_external_not_found
             : disable_if<
                   is_same<
-                      find_convertible_type<T>
+                      find_external_type<T>
                     , mpl::end<annotations>
                   >
-                , typename find_convertible_type<T>::type::derived
+                , typename find_external_type<T>::type::derived
               >
         { };
 
@@ -140,23 +140,23 @@
         #include BOOST_PP_ITERATE()
 
         template<typename T, typename TValue>
-        static typename disable_if_convertible_not_found<T>::type
+        static typename disable_if_external_not_found<T>::type
         set(const TValue& value) {
-            typedef typename find_convertible_type<T>::type annotation;
+            typedef typename find_external_type<T>::type annotation;
             return typename annotation::derived(value);
         }
 
         template<typename T, typename TValue>
-        static typename disable_if_convertible_not_found<T>::type
+        static typename disable_if_external_not_found<T>::type
         set(TValue& value) {
-            typedef typename find_convertible_type<T>::type annotation;
+            typedef typename find_external_type<T>::type annotation;
             return typename annotation::derived(value);
         }
 
         template<typename T, typename TValue>
-        static typename disable_if_convertible_not_found<T>::type
+        static typename disable_if_external_not_found<T>::type
         set(shared_ptr<TValue> value) {
-            typedef typename find_convertible_type<T>::type annotation;
+            typedef typename find_external_type<T>::type annotation;
             return typename annotation::derived(value);
         }
     };

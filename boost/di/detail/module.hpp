@@ -124,6 +124,10 @@
         };
 
     public:
+        //TODO
+        //for each type in pool
+        //push_back<dependency<singleton, type, type, context> >
+
         struct deps
             : mpl::remove_if<
                   typename mpl::fold<

@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_AUX_CONVERTIBLE_HPP
-#define BOOST_DI_AUX_CONVERTIBLE_HPP
+#ifndef BOOST_DI_AUX_EXTERNAL_HPP
+#define BOOST_DI_AUX_EXTERNAL_HPP
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
@@ -54,7 +54,7 @@ template<
   , typename TContext = mpl::vector0<>
   , typename = void
 >
-class convertible
+class external
 {
     typedef typename detail::plain_type<T>::type object_type;
 
@@ -65,10 +65,10 @@ class convertible
     > value_type;
 
     template<typename>
-    class convertible_impl;
+    class external_impl;
 
     template<typename TDest>
-    class convertible_impl<TDest&>
+    class external_impl<TDest&>
         : public static_visitor<TDest&>
     {
     public:
@@ -89,7 +89,7 @@ class convertible
     };
 
     template<typename TDest>
-    class convertible_impl<TDest*>
+    class external_impl<TDest*>
         : public static_visitor<TDest*>
     {
     public:
@@ -110,7 +110,7 @@ class convertible
     };
 
     template<typename TDest>
-    class convertible_impl<shared_ptr<TDest> >
+    class external_impl<shared_ptr<TDest> >
         : public static_visitor<shared_ptr<TDest> >
     {
     public:
@@ -133,53 +133,53 @@ class convertible
     };
 
 public:
-    typedef convertible type;
+    typedef external type;
     typedef T element_type;
     typedef TContext context;
 
-    convertible(const object_type& object) // non explicit
-        : convertible_(object)
+    external(const object_type& object) // non explicit
+        : external_(object)
     { }
 
-    convertible(object_type& object) // non explicit
-        : convertible_(object)
+    external(object_type& object) // non explicit
+        : external_(object)
     { }
 
-    convertible(shared_ptr<object_type> object) // non explicit
-        : convertible_(object)
+    external(shared_ptr<object_type> object) // non explicit
+        : external_(object)
     { }
 
     operator object_type&() const {
         return apply_visitor(
-            convertible_impl<object_type&>(), convertible_);
+            external_impl<object_type&>(), external_);
     }
 
     operator object_type*() const {
         return apply_visitor(
-            convertible_impl<object_type*>(), convertible_);
+            external_impl<object_type*>(), external_);
     }
 
     template<typename I>
     operator shared_ptr<I>() const {
         return apply_visitor(
-            convertible_impl<shared_ptr<object_type> >(), convertible_);
+            external_impl<shared_ptr<object_type> >(), external_);
     }
 
     template<typename I, typename TName>
     operator named<shared_ptr<I>, TName>() const {
         return apply_visitor(
-            convertible_impl<shared_ptr<object_type> >(), convertible_);
+            external_impl<shared_ptr<object_type> >(), external_);
     }
 
 private:
-    value_type convertible_;
+    value_type external_;
 };
 
 template<
     typename T
   , typename TContext
 >
-class convertible<
+class external<
     T
   , TContext
   , typename enable_if<
@@ -195,42 +195,42 @@ class convertible<
     typedef typename detail::plain_type<value_type>::type object_type;
 
 public:
-    typedef convertible type;
+    typedef external type;
     typedef T element_type;
     typedef TContext context;
 
-    convertible(object_type object) // non explicit
-        : convertible_(object)
+    external(object_type object) // non explicit
+        : external_(object)
     { }
 
-    convertible(shared_ptr<object_type> object) // non explicit
-        : convertible_(*object)
+    external(shared_ptr<object_type> object) // non explicit
+        : external_(*object)
     { }
 
     operator object_type() const {
-        return convertible_;
+        return external_;
     }
 
     operator object_type*() const {
-        return new object_type(convertible_);
+        return new object_type(external_);
     }
 
     operator shared_ptr<object_type>() const {
-        return make_shared<object_type>(convertible_);
+        return make_shared<object_type>(external_);
     }
 
     template<typename TName>
     operator named<shared_ptr<object_type>, TName>() const {
-        return make_shared<object_type>(convertible_);
+        return make_shared<object_type>(external_);
     }
 
     template<typename TName>
     operator named<object_type, TName>() const {
-        return convertible_;
+        return external_;
     }
 
 private:
-    object_type convertible_;
+    object_type external_;
 };
 
 } // namespace aux_

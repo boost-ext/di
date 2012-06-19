@@ -15,7 +15,7 @@
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/string.hpp>
 
-#include "boost/di/aux_/convertible.hpp"
+#include "boost/di/aux_/external.hpp"
 #include "boost/di/concepts/call_stack.hpp"
 #include "boost/di/scopes/per_request.hpp"
 #include "boost/di/scopes/singleton.hpp"
@@ -416,18 +416,18 @@ BOOST_AUTO_TEST_CASE(externals_create_by_explicit_value) {
     const double d = 21.0;
     const char c = 'x';
 
-    aux_::convertible<int> i_(i);
-    aux_::convertible<double> d_(d);
-    aux_::convertible<char> c_(c);
+    aux_::external<int> i_(i);
+    aux_::external<double> d_(d);
+    aux_::external<char> c_(c);
 
     module<
         mpl::vector<
             fake_dependency<scopes::per_request<>, std::string, mpl::string<'s'> >::type
         >
       , mpl::vector<
-            aux_::convertible<int>
-          , aux_::convertible<double>
-          , aux_::convertible<char>
+            aux_::external<int>
+          , aux_::external<double>
+          , aux_::external<char>
         >
     > module_(i_, d_, c_);
 
@@ -444,14 +444,14 @@ BOOST_AUTO_TEST_CASE(externals_create_with_non_trivial_ctor) {
     const double d = 21.0;
     const char c = 'x';
 
-    aux_::convertible<c2> c2_(make_shared<c2>(i, d, c));
+    aux_::external<c2> c2_(make_shared<c2>(i, d, c));
 
     module<
         mpl::vector<
             fake_dependency<scopes::per_request<>, c2>::type
         >
       , mpl::vector<
-            aux_::convertible<c2>
+            aux_::external<c2>
         >
     > module_(c2_);
 
@@ -469,8 +469,8 @@ BOOST_AUTO_TEST_CASE(externals_create_with_attributes) {
     typedef named<int, mpl::string<'1'> > named1;
     typedef named<int, mpl::string<'2'> > named2;
 
-    aux_::convertible<named1> i1_(i1);
-    aux_::convertible<named2> i2_(i2);
+    aux_::external<named1> i1_(i1);
+    aux_::external<named2> i2_(i2);
 
     module<
         mpl::vector<
@@ -478,8 +478,8 @@ BOOST_AUTO_TEST_CASE(externals_create_with_attributes) {
           , fake_dependency<scopes::per_request<>, named2, int>::type
         >
       , mpl::vector<
-            aux_::convertible<named1>
-          , aux_::convertible<named2>
+            aux_::external<named1>
+          , aux_::external<named2>
         >
     > module_(i1_, i2_);
 
@@ -497,7 +497,7 @@ BOOST_AUTO_TEST_CASE(create_string_boost_function_ptr) {
         static int f() { return i1; }
     };
 
-    aux_::convertible<function<int()> > i_(&c::f);
+    aux_::external<function<int()> > i_(&c::f);
 
     module<
         mpl::vector<
@@ -505,7 +505,7 @@ BOOST_AUTO_TEST_CASE(create_string_boost_function_ptr) {
           , fake_dependency_base_of<scopes::per_request<>, std::string, mpl::string<'s'> >::type
         >
       , mpl::vector<
-            aux_::convertible<function<int()> >
+            aux_::external<function<int()> >
         >
     > module_(i_);
 
