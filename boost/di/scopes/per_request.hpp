@@ -38,6 +38,14 @@
         template<typename T>
         class scope
         {
+            //TODO
+            //typedef convertible<T> result_type;
+            //class convertible
+            //{
+            //    operator const T&() {
+            //    }
+            //};
+
         public:
             shared_ptr<T> create() {
                 return allocate_shared<T>(TAllocator<T>());

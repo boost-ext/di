@@ -137,6 +137,25 @@ public:
     typedef T element_type;
     typedef TContext context;
 
+    class helper
+    {
+    public:
+        template<typename TValue>
+        inline static external to(const TValue& value) {
+            return external(value);
+        }
+
+        template<typename TValue>
+        inline static external to(TValue& value) {
+            return external(value);
+        }
+
+        template<typename TValue>
+        inline static external to(shared_ptr<TValue> value) {
+            return external(value);
+        }
+    };
+
     external(const object_type& object) // non explicit
         : external_(object)
     { }
@@ -198,6 +217,25 @@ public:
     typedef external type;
     typedef T element_type;
     typedef TContext context;
+
+    class helper
+    {
+    public:
+        template<typename TValue>
+        inline static external to(const TValue& value) {
+            return external(value);
+        }
+
+        template<typename TValue>
+        inline static external to(TValue& value) {
+            return external(value);
+        }
+
+        template<typename TValue>
+        inline static external to(shared_ptr<TValue> value) {
+            return external(value);
+        }
+    };
 
     external(object_type object) // non explicit
         : external_(object)

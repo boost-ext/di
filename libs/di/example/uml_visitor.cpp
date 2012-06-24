@@ -141,7 +141,7 @@ int main()
 
     std::stringstream stream;
     injector.visit<c3>(uml_visitor<plant_uml>(stream));
-    std::cout <<stream.str();
+    std::cout << stream.str();
 
     return 0;
 }

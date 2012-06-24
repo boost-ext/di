@@ -67,6 +67,9 @@ struct config
     struct allocator
         : std::allocator<T>
     { };
+
+
+    //convertible
 };
 
 } // namespace di

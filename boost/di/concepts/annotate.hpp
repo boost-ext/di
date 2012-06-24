@@ -20,12 +20,11 @@ template<typename TDerived = none_t>
 struct annotate
 {
     template<typename TName = void>
-    struct with : TDerived
+    struct with
+        : TDerived
     {
         typedef TDerived derived;
         typedef TName name;
-
-        with() { }
     };
 };
 
@@ -48,24 +47,10 @@ struct annotate<none_t>
           , typename = void
         > class TExternal = aux_::external
     >
-    struct with_ : with<>
-    {
-        //TOOD
-        template<typename T>
-        static TExternal<TExpected, TContext> to(const T& value) {
-            return TExternal<TExpected, TContext>(value);
-        }
-
-        template<typename T>
-        static TExternal<TExpected, TContext> to(T& value) {
-            return TExternal<TExpected, TContext>(value);
-        }
-
-        template<typename T>
-        static TExternal<TExpected, TContext> to(shared_ptr<T> value) {
-            return TExternal<TExpected, TContext>(value);
-        }
-    };
+    struct with_
+        : with<>
+        , TExternal<TExpected, TContext>::helper
+    { };
 };
 
 } // namespace concepts

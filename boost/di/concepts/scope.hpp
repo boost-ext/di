@@ -28,10 +28,6 @@ namespace concepts {
 
 template<
     typename TScope
-/*  , template<*/
-        //typename
-      //, typename
-    /*> class TNamed = typename defaults<named<> >::type*/
 >
 class scope
 {
