@@ -68,8 +68,7 @@ struct config
         : std::allocator<T>
     { };
 
-
-    //convertible
+    //external
 };
 
 } // namespace di

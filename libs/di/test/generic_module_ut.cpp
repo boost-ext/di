@@ -481,7 +481,14 @@ BOOST_AUTO_TEST_CASE(externals_base) {
           >
     { };
 
-    BOOST_CHECK((contains_all<mpl::vector0<>, module::deps>::value));
+    BOOST_CHECK((
+        contains_all<
+            mpl::vector<
+                fake_dependency<scopes::singleton<>, c1, c1>::type
+            >
+          , module::deps
+        >::value
+    ));
 
     BOOST_CHECK((
         contains_all<
@@ -503,7 +510,16 @@ BOOST_AUTO_TEST_CASE(externals_mix) {
           >
     { };
 
-    BOOST_CHECK((contains_all<mpl::vector0<>, module::deps>::value));
+    BOOST_CHECK((
+        contains_all<
+            mpl::vector<
+                fake_dependency<scopes::singleton<>, c1, c1>::type
+              , fake_dependency<scopes::singleton<>, c2, c2>::type
+              , fake_dependency<scopes::singleton<>, c3, c3>::type
+            >
+          , module::deps
+        >::value
+    ));
 
     BOOST_CHECK((
         contains_all<
@@ -529,7 +545,17 @@ BOOST_AUTO_TEST_CASE(externals_bind) {
           >
     { };
 
-    BOOST_CHECK((contains_all<mpl::vector0<>, module::deps>::value));
+    BOOST_CHECK((
+        contains_all<
+            mpl::vector<
+                fake_dependency<scopes::singleton<>, int, int>::type
+              , fake_dependency<scopes::singleton<>, named<c1, int>, c1>::type
+              , fake_dependency<scopes::singleton<>, c2, c2, c1>::type
+              , fake_dependency<scopes::singleton<>, named<c3, double>, c3, c4, c5>::type
+            >
+          , module::deps
+        >::value
+    ));
 
     BOOST_CHECK((
         contains_all<
@@ -768,8 +794,6 @@ BOOST_AUTO_TEST_CASE(ctor_with_externals_shared_ptr) {
     BOOST_CHECK_EQUAL(i, module_.create<int_value>().i);
 }
 
-//TODO
-#if 0
 BOOST_AUTO_TEST_CASE(externals_annotate) {
     const int i = 42;
 
@@ -786,7 +810,6 @@ BOOST_AUTO_TEST_CASE(externals_annotate) {
 
     BOOST_CHECK_EQUAL(i, module_.create<c14>().i);
 }
-#endif
 
 } // namespace di
 } // namespace boot

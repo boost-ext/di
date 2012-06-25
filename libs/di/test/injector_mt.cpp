@@ -337,7 +337,7 @@ BOOST_AUTO_TEST_CASE(externals_mix) {
     BOOST_CHECK_EQUAL(3, c8_->c7_->c6_->c4_->i1);
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c4_->i2);
     BOOST_CHECK_EQUAL(42, c8_->c7_->c6_->c3_->i);
-    BOOST_CHECK_EQUAL(42, c8_->c7_->c6_->c5_.c2_->i);
+    BOOST_CHECK_EQUAL(87, c8_->c7_->c6_->c5_.c2_->i);
     BOOST_CHECK_EQUAL(7.0, c8_->c7_->c6_->c5_.c2_->d);
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
     BOOST_CHECK_EQUAL(67, dynamic_cast<c3if0&>(*c8_->c7_->c6_->c5_.if0_).i);

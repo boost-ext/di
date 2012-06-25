@@ -137,7 +137,7 @@ public:
     typedef T element_type;
     typedef TContext context;
 
-    class helper
+    class from
     {
     public:
         template<typename TValue>
@@ -218,7 +218,7 @@ public:
     typedef T element_type;
     typedef TContext context;
 
-    class helper
+    class from
     {
     public:
         template<typename TValue>

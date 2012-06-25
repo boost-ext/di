@@ -39,6 +39,11 @@
     #include "boost/di/detail/visitor.hpp"
     #include "boost/di/config.hpp"
 
+
+#include "boost/di/scopes/singleton.hpp"
+#include "boost/di/aux_/value_type.hpp"
+#include <boost/mpl/transform.hpp>
+
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
         BOOST_DI_ITERATION_PARAMS(          \
             1                               \
@@ -124,35 +129,6 @@
         };
 
     public:
-        //TODO
-        //for each type in pool
-        //push_back<dependency<singleton, type, type, context> >
-
-        struct deps
-            : mpl::remove_if<
-                  typename mpl::fold<
-                      typename mpl::fold<
-                          typename mpl::fold<
-                              TDeps
-                            , mpl::vector0<>
-                            , mpl::copy<
-                                  deps_impl<mpl::_2>
-                                , mpl::back_inserter<boost::mpl::_1>
-                              >
-                          >::type
-                        , mpl::set0<>
-                        , mpl::insert<mpl::_1, mpl::_2>
-                      >::type
-                    , mpl::vector0<>
-                    , mpl::push_back<mpl::_1, mpl::_2>
-                  >::type
-                , mpl::or_<
-                      aux_::has_policy_type<mpl::_1>
-                    , aux_::has_element_type<mpl::_1>
-                  >
-              >::type
-        { };
-
         struct policies
             : mpl::fold<
                   TDeps
@@ -175,6 +151,58 @@
                 >
             >::type
         > pool;
+
+        template<typename T>
+        struct add_dependency
+        {
+            typedef typename aux_::dependency<
+                scopes::singleton<>
+              , typename T::element_type
+              , typename aux_::value_type<typename T::element_type>::type
+              , typename T::context
+            > type;
+        };
+
+        struct pool_deps
+            : mpl::fold<
+                  typename pool::externals
+                , mpl::vector0<>
+                , mpl::if_<
+                      aux_::has_element_type<mpl::_2>
+                    , mpl::push_back<
+                          mpl::_1
+                        , add_dependency<mpl::_2>
+                      >
+                    , mpl::_1
+                  >
+              >::type
+        { };
+
+        struct deps
+            : mpl::remove_if<
+                  typename mpl::fold<
+                      typename mpl::fold<
+                          typename mpl::fold<
+                              TDeps
+                            , pool_deps
+                            , mpl::copy<
+                                  deps_impl<mpl::_2>
+                                , mpl::back_inserter<boost::mpl::_1>
+                              >
+                          >::type
+                        , mpl::set0<>
+                        , mpl::insert<mpl::_1, mpl::_2>
+                      >::type
+                    , mpl::vector0<>
+                    , mpl::push_back<mpl::_1, mpl::_2>
+                  >::type
+                , mpl::or_<
+                      aux_::has_policy_type<mpl::_1>
+                    , aux_::has_element_type<mpl::_1>
+                  >
+              >::type
+        { };
+
 
     private:
         struct entries
