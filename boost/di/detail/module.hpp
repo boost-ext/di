@@ -33,16 +33,15 @@
 
     #include "boost/di/aux_/meta_config.hpp"
     #include "boost/di/aux_/has_traits.hpp"
+    #include "boost/di/aux_/value_type.hpp"
+    #include "boost/di/aux_/dependency.hpp"
     #include "boost/di/detail/pool.hpp"
     #include "boost/di/detail/binder.hpp"
     #include "boost/di/detail/creator.hpp"
     #include "boost/di/detail/visitor.hpp"
+    #include "boost/di/scopes/singleton.hpp"
     #include "boost/di/config.hpp"
 
-
-#include "boost/di/scopes/singleton.hpp"
-#include "boost/di/aux_/value_type.hpp"
-#include <boost/mpl/transform.hpp>
 
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
         BOOST_DI_ITERATION_PARAMS(          \
@@ -55,6 +54,16 @@
     namespace boost {
     namespace di {
     namespace detail {
+
+    template<typename T>
+    struct dependency_impl
+        : aux_::dependency<
+            scopes::singleton<>
+          , typename T::element_type
+          , typename aux_::value_type<typename T::element_type>::type
+          , typename T::context
+        >
+    { };
 
     template<
         typename TDeps = mpl::vector0<>
@@ -73,6 +82,9 @@
       , template<
             typename
         > class TVisitor = visitor
+      , template<
+            typename
+        > class TDependency = dependency_impl
       , typename TPolicies
             = config<specialized>::policies
     >
@@ -83,6 +95,7 @@
           , typename
           , template<typename, typename> class
           , template<typename, typename> class
+          , template<typename> class
           , template<typename> class
           , template<typename> class
           , typename
@@ -152,39 +165,24 @@
             >::type
         > pool;
 
-        template<typename T>
-        struct add_dependency
-        {
-            typedef typename aux_::dependency<
-                scopes::singleton<>
-              , typename T::element_type
-              , typename aux_::value_type<typename T::element_type>::type
-              , typename T::context
-            > type;
-        };
-
-        struct pool_deps
-            : mpl::fold<
-                  typename pool::externals
-                , mpl::vector0<>
-                , mpl::if_<
-                      aux_::has_element_type<mpl::_2>
-                    , mpl::push_back<
-                          mpl::_1
-                        , add_dependency<mpl::_2>
-                      >
-                    , mpl::_1
-                  >
-              >::type
-        { };
-
         struct deps
             : mpl::remove_if<
                   typename mpl::fold<
                       typename mpl::fold<
                           typename mpl::fold<
                               TDeps
-                            , pool_deps
+                            , typename mpl::fold<
+                                  typename pool::externals
+                                , mpl::vector0<>
+                                , mpl::if_<
+                                      aux_::has_element_type<mpl::_2>
+                                    , mpl::push_back<
+                                          mpl::_1
+                                        , TDependency<mpl::_2>
+                                      >
+                                    , mpl::_1
+                                  >
+                              >::type
                             , mpl::copy<
                                   deps_impl<mpl::_2>
                                 , mpl::back_inserter<boost::mpl::_1>
@@ -202,7 +200,6 @@
                   >
               >::type
         { };
-
 
     private:
         struct entries
