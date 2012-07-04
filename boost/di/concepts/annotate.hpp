@@ -10,7 +10,7 @@
 #include <boost/none_t.hpp>
 #include <boost/mpl/vector.hpp>
 
-#include "boost/di/aux_/external.hpp"
+#include "boost/di/scopes/external.hpp"
 
 namespace boost {
 namespace di {
@@ -45,7 +45,7 @@ struct annotate<none_t>
             typename
           , typename
           , typename = void
-        > class TExternal = aux_::external
+        > class TExternal = scopes::external
     >
     struct with_
         : with<>

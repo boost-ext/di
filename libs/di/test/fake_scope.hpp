@@ -14,6 +14,7 @@
     #include <boost/shared_ptr.hpp>
     #include <boost/make_shared.hpp>
 
+    #include "boost/di/scopes/external.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
@@ -32,9 +33,11 @@
         struct entry { };
         struct exit { };
 
-        template<typename T>
+        template<typename T, typename U>
         struct scope
         {
+            typedef scopes::external<U> result_type; //TODO fake_external
+
             void call(const entry&) {
                 entry_calls()++;
             }
@@ -43,12 +46,12 @@
                 exit_calls()++;
             }
 
-            shared_ptr<T> create() {
+            result_type create() {
                 if (entry_calls() > exit_calls()) {
-                    return make_shared<T>();
+                    return result_type(make_shared<T>());
                 }
 
-                return shared_ptr<T>();
+                return result_type(shared_ptr<T>());
             }
 
             #include BOOST_PP_ITERATE()
@@ -73,12 +76,12 @@
 #else
 
     template<BOOST_DI_TYPES(Args)>
-    shared_ptr<T> create(BOOST_DI_ARGS(Args, args)) {
+    result_type create(BOOST_DI_ARGS(Args, args)) {
         if (entry_calls() > exit_calls()) {
-            return shared_ptr<T>(new T(BOOST_DI_ARGS_FORWARD(args)));
+            return result_type(shared_ptr<T>(new T(BOOST_DI_ARGS_FORWARD(args))));
         }
 
-        return shared_ptr<T>();
+        return result_type(shared_ptr<T>());
     }
 
 #endif

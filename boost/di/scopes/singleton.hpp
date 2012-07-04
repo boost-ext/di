@@ -9,10 +9,12 @@
     #ifndef BOOST_DI_SCOPES_SINGLETON_HPP
     #define BOOST_DI_SCOPES_SINGLETON_HPP
 
+    #include <memory>
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/make_shared.hpp>
     #include <boost/shared_ptr.hpp>
 
+    #include "boost/di/named.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
@@ -27,21 +29,61 @@
     namespace di {
     namespace scopes {
 
+    namespace detail {
+
+    template<typename TExpected>
+    class convertible_singleton
+    {
+    public:
+        template<typename T>
+        convertible_singleton(const shared_ptr<T>& object) // non explicit
+            : object_(object)
+        { }
+
+        template<typename T>
+        operator shared_ptr<T>() const {
+            return object_;
+        }
+
+        operator TExpected*() const {
+            return object_.get();
+        }
+
+        operator TExpected&() const {
+            return *object_;
+        }
+
+        template<typename TName>
+        operator named<shared_ptr<TExpected>, TName>() const {
+            return object_;
+        }
+
+    private:
+        shared_ptr<TExpected> object_;
+    };
+
+    } // namespace detail
+
     template<
         template<
             typename
-        > class TAllocator = config<specialized>::allocator
+        > class TAllocator = std::allocator
     >
     class singleton
     {
     public:
-        template<typename T>
+        template<
+            typename TExpected
+          , typename TGiven = TExpected
+        >
         class scope
         {
         public:
-            shared_ptr<T> create() {
+            typedef detail::convertible_singleton<TExpected> result_type;
+
+            result_type create() {
                 if (!instance_) {
-                    instance_ = allocate_shared<T>(TAllocator<T>());
+                    instance_ = allocate_shared<TGiven>(TAllocator<TGiven>());
                 }
 
                 return instance_;
@@ -50,7 +92,7 @@
             #include BOOST_PP_ITERATE()
 
         private:
-            shared_ptr<T> instance_;
+            shared_ptr<TGiven> instance_;
         };
     };
 
@@ -63,10 +105,10 @@
 #else
 
     template<BOOST_DI_TYPES(Args)>
-    shared_ptr<T> create(BOOST_DI_ARGS(Args, args)) {
+    result_type create(BOOST_DI_ARGS(Args, args)) {
         if (!instance_) {
-            instance_ = allocate_shared<T>(
-                TAllocator<T>()
+            instance_ = allocate_shared<TGiven>(
+                TAllocator<TGiven>()
               , BOOST_DI_ARGS_FORWARD(args)
             );
         }

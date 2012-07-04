@@ -17,8 +17,8 @@
     #include <boost/mpl/back_inserter.hpp>
     #include <boost/mpl/placeholders.hpp>
 
-    #include "boost/di/aux_/meta_config.hpp"
-    #include "boost/di/aux_/has_traits.hpp"
+    #include "boost/di/config.hpp"
+    #include "boost/di/type_traits/has_traits.hpp"
     #include "boost/di/detail/module.hpp"
     #include "boost/di/concepts.hpp"
 
@@ -45,7 +45,7 @@
                       mpl::is_sequence<mpl::_2>
                     , mpl::_2
                     , mpl::if_<
-                          aux_::has_element_type<mpl::_2>
+                          type_traits::has_element_type<mpl::_2>
                         , mpl::_2
                         , per_request<mpl::_2>
                       >

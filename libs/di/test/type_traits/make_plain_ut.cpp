@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/aux_/make_plain.hpp"
+#include "boost/di/type_traits/make_plain.hpp"
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
@@ -18,7 +18,7 @@
 
 namespace boost {
 namespace di {
-namespace aux_ {
+namespace type_traits {
 
 typedef mpl::vector<int, a> make_plain_t;
 
@@ -40,7 +40,16 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(basic, T, make_plain_t) {
     BOOST_CHECK((is_same<named<T, mpl::_1>, typename make_plain<const shared_ptr<named<const shared_ptr<T>&, mpl::_1> >&>::type>::value));
 }
 
-} // namespace aux_
+#if defined(BOOST_HAS_RVALUE_REFERENCES)
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(rvalue_references, T, make_plain_t) {
+    BOOST_CHECK((is_same<T, typename make_plain<T&&>::type>::value));
+    BOOST_CHECK((is_same<T, typename make_plain<const T&&>::type>::value));
+}
+
+#endif
+
+} // namespace type_traits
 } // namespace di
 } // namespace boost
 

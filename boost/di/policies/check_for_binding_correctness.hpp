@@ -21,8 +21,8 @@
 #include <boost/mpl/back.hpp>
 #include <boost/mpl/assert.hpp>
 
-#include "boost/di/aux_/make_plain.hpp"
-#include "boost/di/aux_/ctor_traits.hpp"
+#include "boost/di/type_traits/make_plain.hpp"
+#include "boost/di/type_traits/ctor_traits.hpp"
 
 namespace boost {
 namespace di {
@@ -39,7 +39,7 @@ public:
       , template<
             typename
           , typename = void
-        > class TCtorTraits = aux_::ctor_traits
+        > class TCtorTraits = type_traits::ctor_traits
     >
     class verify
     {
@@ -47,7 +47,7 @@ public:
         struct ctor
             : mpl::transform<
                   TCtorTraits<T>
-                , aux_::make_plain<mpl::_1>
+                , type_traits::make_plain<mpl::_1>
               >::type
         { };
 

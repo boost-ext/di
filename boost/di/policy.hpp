@@ -11,7 +11,7 @@
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/void.hpp>
 
-#include "boost/di/aux_/meta_config.hpp"
+#include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {

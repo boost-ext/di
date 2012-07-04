@@ -31,9 +31,9 @@
 #include <boost/mpl/minus.hpp>
 #include <boost/mpl/filter_view.hpp>
 
-#include "boost/di/aux_/dependency.hpp"
-#include "boost/di/aux_/make_plain.hpp"
-#include "boost/di/aux_/value_type.hpp"
+#include "boost/di/detail/dependency.hpp"
+#include "boost/di/type_traits/make_plain.hpp"
+#include "boost/di/type_traits/value_type.hpp"
 #include "boost/di/scopes/per_request.hpp"
 
 namespace boost {
@@ -129,7 +129,7 @@ template<
 struct sort_dependencies_by_call_stack_order
     : mpl::sort<
           typename mpl::fold<
-              mpl::filter_view<TSeq, aux_::has_context<mpl::_1> >
+              mpl::filter_view<TSeq, type_traits::has_context<mpl::_1> >
             , mpl::vector0<>
             , mpl::if_<
                   TCond
@@ -175,7 +175,7 @@ template<
 struct make_default_dependency
     : TDefault::template rebind<
           TGiven
-        , typename aux_::value_type<TGiven>::type
+        , typename type_traits::value_type<TGiven>::type
         , typename get_dependency_by_call_stack_order<
               TCallStack
             , TExternals
@@ -197,7 +197,7 @@ template<
   , typename TDeps
   , typename TExternals
   , typename TDefault =
-    aux_::dependency<
+    dependency<
         scopes::per_request<>
       , mpl::_1
       , mpl::_2
@@ -209,7 +209,7 @@ struct binder_impl
           TCallStack
         , TDeps
         , typename detail::make_default_dependency<
-              typename aux_::make_plain<T>::type
+              typename type_traits::make_plain<T>::type
             , TExternals
             , TCallStack
             , TDefault
@@ -217,7 +217,7 @@ struct binder_impl
         , mpl::and_<
               detail::comparator<
                   detail::bind<mpl::_2>
-                , typename aux_::make_plain<T>::type
+                , typename type_traits::make_plain<T>::type
               >
             , detail::for_each_context<
                   TCallStack

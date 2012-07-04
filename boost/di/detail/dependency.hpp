@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef BOOST_DI_AUX_DEPENDENCY_HPP
-    #define BOOST_DI_AUX_DEPENDENCY_HPP
+    #ifndef BOOST_DI_DETAIL_DEPENDENCY_HPP
+    #define BOOST_DI_DETAIL_DEPENDENCY_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/type_traits/is_same.hpp>
@@ -19,22 +19,22 @@
     #include <boost/mpl/placeholders.hpp>
     #include <boost/mpl/assert.hpp>
 
-    #include "boost/di/aux_/meta_config.hpp"
-    #include "boost/di/aux_/external.hpp"
-    #include "boost/di/aux_/explicit_value.hpp"
-    #include "boost/di/aux_/has_traits.hpp"
+    #include "boost/di/detail/explicit_value.hpp"
+    #include "boost/di/type_traits/has_traits.hpp"
+    #include "boost/di/scopes/external.hpp"
+    #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
         BOOST_DI_ITERATION_PARAMS(              \
             1                                   \
           , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE  \
-          , "boost/di/aux_/dependency.hpp"      \
+          , "boost/di/detail/dependency.hpp"    \
         )                                       \
     )
 
     namespace boost {
     namespace di {
-    namespace aux_ {
+    namespace detail {
 
     template<
         typename TScope
@@ -45,24 +45,26 @@
       , template<
             typename
           , typename = void
-        > class TExplicitValue = explicit_value
+        > class TExplicitValue = di::detail::explicit_value
       , template<
             typename
           , typename
           , typename = void
-        > class TExternal = external
+        > class TExternal = scopes::external
     >
     class dependency
     {
         BOOST_MPL_ASSERT_MSG(
-            !has_element_type<TGiven>::value
+            !type_traits::has_element_type<TGiven>::value
           , GIVEN_TYPE_WITH_ELEMENT_TYPE
           , (TGiven)
         );
 
+        typedef typename TScope::template scope<TExpected, TGiven> scope_type;
+        typedef TExternal<TExpected, TContext> external_type;
+
     public:
         typedef dependency type;
-        typedef TExternal<TExpected, TContext> result_type;
         typedef TScope scope;
         typedef TExpected expected;
         typedef TGiven given;
@@ -77,7 +79,7 @@
                 , mpl::not_<
                       mpl::contains<
                           typename TPool::externals
-                        , result_type
+                        , external_type
                       >
                   >
               >
@@ -90,37 +92,61 @@
                 , mpl::not_<
                       mpl::contains<
                           typename TPool::externals
-                        , result_type
+                        , external_type
                       >
                   >
               >
         { };
 
         template<typename TPool>
-        struct is_pool_type
+        struct is_external_type
             : mpl::contains<
                   typename TPool::externals
-                , result_type
+                , external_type
               >
         { };
 
     public:
+        template<typename TPool, typename = void>
+        struct result_type
+        {
+            typedef external_type type;
+        };
+
         template<typename TPool>
-        typename enable_if<is_value_type<TPool>, result_type>::type
+        struct result_type<
+            TPool
+          , typename enable_if<is_scope_type<TPool> >::type
+        >
+        {
+            typedef typename scope_type::result_type type;
+        };
+
+        template<typename TPool>
+        typename enable_if<
+            is_value_type<TPool>
+          , typename result_type<TPool>::type
+        >::type
         create(const TPool&) {
-            return result_type(TExplicitValue<TGiven>::create());
+            return TExplicitValue<TGiven>::create();
         }
 
         template<typename TPool>
-        typename enable_if<is_scope_type<TPool>, result_type>::type
+        typename enable_if<
+            is_scope_type<TPool>
+          , typename result_type<TPool>::type
+        >::type
         create(const TPool&) {
-            return result_type(scope_.create());
+            return scope_.create();
         }
 
         template<typename TPool>
-        typename enable_if<is_pool_type<TPool>, result_type>::type
+        typename enable_if<
+            is_external_type<TPool>
+          , typename result_type<TPool>::type
+        >::type
         create(const TPool& pool) {
-            return pool.template get<result_type>();
+            return pool.template get<typename result_type<TPool>::type>();
         }
 
         template<typename TAction>
@@ -131,7 +157,7 @@
         #include BOOST_PP_ITERATE()
 
     private:
-        typename TScope::template scope<TGiven> scope_;
+        scope_type scope_;
     };
 
     template<
@@ -218,7 +244,7 @@
         };
     };
 
-    } // namespace aux_
+    } // namespace detail
     } // namespace di
     } // namespace boost
 
@@ -227,15 +253,21 @@
 #else
 
     template<typename TPool, BOOST_DI_TYPES(Args)>
-    typename enable_if<is_scope_type<TPool>, result_type>::type
+    typename enable_if<
+        is_scope_type<TPool>
+      , typename result_type<TPool>::type
+    >::type
     create(const TPool&, BOOST_DI_ARGS(Args, args)) {
-        return result_type(scope_.create(BOOST_DI_ARGS_FORWARD(args)));
+        return scope_.create(BOOST_DI_ARGS_FORWARD(args));
     }
 
     template<typename TPool, BOOST_DI_TYPES(Args)>
-    typename enable_if<is_pool_type<TPool>, result_type>::type
+    typename enable_if<
+        is_external_type<TPool>
+      , typename result_type<TPool>::type
+    >::type
     create(const TPool& pool, BOOST_DI_ARGS_NOT_USED(Args)) {
-        return pool.template get<result_type>();
+        return pool.template get<typename result_type<TPool>::type>();
     }
 
 #endif

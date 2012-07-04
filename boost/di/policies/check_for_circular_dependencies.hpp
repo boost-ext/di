@@ -25,9 +25,9 @@
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/assert.hpp>
 
-    #include "boost/di/aux_/meta_config.hpp"
-    #include "boost/di/aux_/ctor_traits.hpp"
-    #include "boost/di/aux_/make_plain.hpp"
+    #include "boost/di/config.hpp"
+    #include "boost/di/type_traits/ctor_traits.hpp"
+    #include "boost/di/type_traits/make_plain.hpp"
     #include "boost/di/detail/binder.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (                               \
@@ -57,7 +57,7 @@
           , template<
                 typename
               , typename = void
-            > class TCtorTraits = aux_::ctor_traits
+            > class TCtorTraits = type_traits::ctor_traits
         >
         class verify
         {
@@ -112,7 +112,7 @@
 
         public:
             typedef circular_dependencies<
-                typename aux_::make_plain<TGiven>::type
+                typename type_traits::make_plain<TGiven>::type
               , mpl::vector0<>
             > type;
         };

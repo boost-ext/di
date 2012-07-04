@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/aux_/dependency.hpp"
+#include "boost/di/detail/dependency.hpp"
 
 #include <boost/test/unit_test.hpp>
 #include <boost/make_shared.hpp>
@@ -12,21 +12,23 @@
 #include <boost/mpl/int.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-#include "boost/di/aux_/external.hpp"
+#include "boost/di/scopes/external.hpp"
 
 namespace boost {
 namespace di {
-namespace aux_ {
+namespace detail {
 
 template<int value = 0>
 struct fake_scope
 {
-    template<typename T>
+    template<typename T, typename U>
     struct scope
     {
-        shared_ptr<T> create() {
-            return make_shared<T>(value);
-            }
+        typedef scopes::external<U> result_type;
+
+        result_type create() {
+            return result_type(make_shared<T>(value));
+        }
     };
 };
 
@@ -114,7 +116,7 @@ BOOST_AUTO_TEST_CASE(rebind_type) {
 BOOST_AUTO_TEST_CASE(create_by_pool) {
     const int i = 42;
     dependency<fake_scope<>, int> dependency_;
-    fake_pool<mpl::vector<external<int> >, i> pool_;
+    fake_pool<mpl::vector<scopes::external<int> >, i> pool_;
 
     BOOST_CHECK_EQUAL(i, static_cast<int>(dependency_.create(pool_)));
 }
@@ -135,7 +137,7 @@ BOOST_AUTO_TEST_CASE(create_by_scope) {
     BOOST_CHECK_EQUAL(i, static_cast<int>(dependency_.create(pool_)));
 }
 
-} // namespace aux_
+} // namespace detail
 } // namespace di
 } // namespace boost
 

@@ -13,7 +13,11 @@
     #include <boost/shared_ptr.hpp>
     #include <boost/make_shared.hpp>
 
+    #include "boost/di/named.hpp"
     #include "boost/di/config.hpp"
+
+//TODO
+#include "boost/di/scopes/external.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
         BOOST_DI_ITERATION_PARAMS(              \
@@ -27,28 +31,61 @@
     namespace di {
     namespace scopes {
 
+    namespace detail {
+
+    template<typename TExpected>
+    class convertible_per_request
+    {
+    public:
+        template<typename T>
+        convertible_per_request(const shared_ptr<T>& object) // non explicit
+            : object_(object)
+        { }
+
+        template<typename T>
+        operator shared_ptr<T>() const {
+            return object_;
+        }
+
+        operator TExpected*() const {
+            return object_.get();
+        }
+
+        operator TExpected&() const {
+            return *object_;
+        }
+
+        template<typename TName>
+        operator named<shared_ptr<TExpected>, TName>() const {
+            return object_;
+        }
+
+    private:
+        shared_ptr<TExpected> object_;
+    };
+
+    } // namespace detail
+
     template<
         template<
             typename
-        > class TAllocator = config<specialized>::allocator
+        > class TAllocator = std::allocator
     >
     class per_request
     {
     public:
-        template<typename T>
+        template<
+            typename TExpected
+          , typename TGiven = TExpected
+        >
         class scope
         {
-            //TODO
-            //typedef convertible<T> result_type;
-            //class convertible
-            //{
-            //    operator const T&() {
-            //    }
-            //};
-
         public:
-            shared_ptr<T> create() {
-                return allocate_shared<T>(TAllocator<T>());
+            //typedef convertible_per_request<TExpected> result_type;
+            typedef external<TExpected> result_type;
+
+            result_type create() {
+                return allocate_shared<TGiven>(TAllocator<TGiven>());
             }
 
             #include BOOST_PP_ITERATE()
@@ -64,9 +101,9 @@
 #else
 
     template<BOOST_DI_TYPES(Args)>
-    shared_ptr<T> create(BOOST_DI_ARGS(Args, args)) {
-        return allocate_shared<T>(
-            TAllocator<T>()
+    result_type create(BOOST_DI_ARGS(Args, args)) {
+        return allocate_shared<TGiven>(
+            TAllocator<TGiven>()
           , BOOST_DI_ARGS_FORWARD(args)
         );
     }

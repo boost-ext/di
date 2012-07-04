@@ -12,6 +12,7 @@
 #include "boost/di/policies/check_for_binding_correctness.hpp"
 #include "boost/di/policies/check_for_circular_dependencies.hpp"
 #include "boost/di/policies/check_for_creation_ownership.hpp"
+#include "boost/di/scopes/external.hpp"
 #include "data.hpp"
 
 namespace boost {
@@ -19,13 +20,13 @@ namespace di {
 namespace detail {
 
 BOOST_AUTO_TEST_CASE(module_externals_fail) {
-    aux_::external<int> i_(42);
+    scopes::external<int> i_(42);
 
     module<
         mpl::vector0<>
       , mpl::vector<
-            aux_::external<int>
-          , aux_::external<double>
+            scopes::external<int>
+          , scopes::external<double>
         >
     > module_(i_);
 

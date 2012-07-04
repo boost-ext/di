@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef BOOST_DI_AUX_POOL_HPP
-    #define BOOST_DI_AUX_POOL_HPP
+    #ifndef BOOST_DI_DETAIL_POOL_HPP
+    #define BOOST_DI_DETAIL_POOL_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/iteration/local.hpp>
@@ -21,8 +21,8 @@
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/size.hpp>
 
-    #include "boost/di/aux_/meta_config.hpp"
-    #include "boost/di/aux_/has_traits.hpp"
+    #include "boost/di/config.hpp"
+    #include "boost/di/type_traits/has_traits.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
         BOOST_DI_ITERATION_PARAMS(          \
@@ -91,7 +91,7 @@
         struct externals_impl<
             T
           , typename enable_if<
-                aux_::has_externals<T>
+                type_traits::has_externals<T>
             >::type
         >
         {

@@ -68,7 +68,8 @@ public:
 };
 
 template<typename TPolicy>
-class uml_visitor : public TPolicy
+class uml_visitor
+    : public TPolicy
 {
     struct dependency
     {

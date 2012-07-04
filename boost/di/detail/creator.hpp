@@ -18,8 +18,8 @@
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/push_back.hpp>
 
-    #include "boost/di/aux_/meta_config.hpp"
-    #include "boost/di/aux_/ctor_traits.hpp"
+    #include "boost/di/config.hpp"
+    #include "boost/di/type_traits/ctor_traits.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
         BOOST_DI_ITERATION_PARAMS(              \
@@ -38,7 +38,7 @@
       , template<
             typename
           , typename = void
-        > class TCtorTraits = aux_::ctor_traits
+        > class TCtorTraits = type_traits::ctor_traits
     >
     class creator_impl
     {
@@ -62,7 +62,7 @@
           , typename TEntries
           , typename TPool
         >
-        static typename binder<T, TCallStack>::result_type
+        static typename binder<T, TCallStack>::template result_type<TPool>::type
         execute(TEntries& entries, const TPool& pool) {
             return execute_impl<
                 T
@@ -126,7 +126,7 @@
         mpl::size<typename ctor<TDependency>::type>::value
         ==
         BOOST_PP_ITERATION()
-      , typename TDependency::result_type
+      , typename TDependency::template result_type<TPool>::type
     >::type execute_impl(TEntries& entries, const TPool& pool) {
 
         #define BOOST_DI_CREATOR_EXECUTE(z, n, _)       \

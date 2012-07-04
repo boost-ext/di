@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef BOOST_DI_AUX_VISITOR_HPP
-    #define BOOST_DI_AUX_VISITOR_HPP
+    #ifndef BOOST_DI_DETAIL_VISITOR_HPP
+    #define BOOST_DI_DETAIL_VISITOR_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
@@ -17,8 +17,8 @@
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/placeholders.hpp>
 
-    #include "boost/di/aux_/meta_config.hpp"
-    #include "boost/di/aux_/ctor_traits.hpp"
+    #include "boost/di/config.hpp"
+    #include "boost/di/type_traits/ctor_traits.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
         BOOST_DI_ITERATION_PARAMS(              \
@@ -37,7 +37,7 @@
       , template<
             typename
           , typename = void
-        > class TCtorTraits = aux_::ctor_traits
+        > class TCtorTraits = type_traits::ctor_traits
     >
     class visitor_impl
     {

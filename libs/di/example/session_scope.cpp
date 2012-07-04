@@ -33,10 +33,30 @@ public:
     class entry { };
     class exit { };
 
-    template<typename T>
+    template<typename TExpected, typename TGiven>
     class scope
     {
+        class convertible
+        {
+        public:
+            convertible(const boost::shared_ptr<TExpected>& object) // non explicit
+                : object_(object)
+            { }
+
+            operator boost::shared_ptr<TExpected>() const {
+                return object_;
+            }
+
+            operator TExpected&() const {
+                return *object_;
+            }
+
+            const boost::shared_ptr<TExpected>& object_;
+        };
+
     public:
+        typedef convertible result_type;
+
         scope()
             : in_scope_(false) {
         }
@@ -50,11 +70,11 @@ public:
         }
 
         template<typename... Args>
-        boost::shared_ptr<T> create(Args&&... args) {
+        result_type create(Args&&... args) {
             if (in_scope_) {
-                return boost::make_shared<T>(std::forward(args)...);
+                return boost::make_shared<TGiven>(std::forward(args)...);
             }
-            return boost::shared_ptr<T>();
+            return boost::shared_ptr<TGiven>();
         }
 
     private:

@@ -4,15 +4,15 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_AUX_EXPLICIT_VALUE_HPP
-#define BOOST_DI_AUX_EXPLICIT_VALUE_HPP
+#ifndef BOOST_DI_DETAIL_EXPLICIT_VALUE_HPP
+#define BOOST_DI_DETAIL_EXPLICIT_VALUE_HPP
 
 #include <string>
 #include <boost/preprocessor/repetition/enum_params.hpp>
+#include <boost/non_type.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/type_traits/is_arithmetic.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/non_type.hpp>
 #include <boost/mpl/aux_/yes_no.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/void.hpp>
@@ -21,7 +21,7 @@
 
 namespace boost {
 namespace di {
-namespace aux_ {
+namespace detail {
 
 namespace detail {
 
@@ -89,7 +89,7 @@ public:
     }
 };
 
-} // namespace aux_
+} // namespace detail
 } // namespace di
 } // namespace boost
 

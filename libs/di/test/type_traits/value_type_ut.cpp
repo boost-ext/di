@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/aux_/value_type.hpp"
+#include "boost/di/type_traits/value_type.hpp"
 
 #include <boost/test/unit_test.hpp>
 #include <boost/shared_ptr.hpp>
@@ -15,7 +15,7 @@
 
 namespace boost {
 namespace di {
-namespace aux_ {
+namespace type_traits {
 
 struct c
 {
@@ -30,7 +30,7 @@ BOOST_AUTO_TEST_CASE(basic) {
     BOOST_CHECK((is_same<std::string, value_type<std::string>::type>::value));
 }
 
-} // namespace aux_
+} // namespace type_traits
 } // namespace di
 } // namespace boost
 

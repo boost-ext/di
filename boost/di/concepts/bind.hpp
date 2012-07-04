@@ -13,11 +13,11 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/or.hpp>
 
-#include "boost/di/aux_/meta_config.hpp"
-#include "boost/di/aux_/dependency.hpp"
-#include "boost/di/aux_/explicit_value.hpp"
+#include "boost/di/detail/dependency.hpp"
+#include "boost/di/detail/explicit_value.hpp"
 #include "boost/di/concepts/annotate.hpp"
 #include "boost/di/named.hpp"
+#include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {
@@ -29,7 +29,7 @@ template<
   , typename = void
 >
 struct bind
-    : aux_::dependency<
+    : detail::dependency<
           mpl::_1
         , TExpected
         , TGiven
@@ -42,7 +42,7 @@ struct bind
 {
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     struct in_call
-        : aux_::dependency<
+        : detail::dependency<
               mpl::_1
             , TExpected
             , TGiven
@@ -55,7 +55,7 @@ struct bind
     {
         template<typename TName>
         struct in_name
-            : aux_::dependency<
+            : detail::dependency<
                   mpl::_1
                 , named<TExpected, TName>
                 , TGiven
@@ -70,7 +70,7 @@ struct bind
 
     template<typename TName>
     struct in_name
-        : aux_::dependency<
+        : detail::dependency<
               mpl::_1
             , named<TExpected, TName>
             , TGiven
@@ -81,7 +81,7 @@ struct bind
     {
         template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
         struct in_call
-            : aux_::dependency<
+            : detail::dependency<
                   mpl::_1
                 , named<TExpected, TName>
                 , TGiven
@@ -101,12 +101,12 @@ struct bind<
   , TGiven
   , typename enable_if<
         mpl::or_<
-            aux_::explicit_value<TGiven>
+            detail::explicit_value<TGiven>
           , is_same<TExpected, TGiven>
         >
     >::type
 >
-    : aux_::dependency<
+    : detail::dependency<
           mpl::_1
         , TExpected
         , TGiven
@@ -122,7 +122,7 @@ struct bind<
 {
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     struct in_call
-        : aux_::dependency<
+        : detail::dependency<
               mpl::_1
             , TExpected
             , TGiven
@@ -139,7 +139,7 @@ struct bind<
     {
         template<typename TName>
         struct in_name
-            : aux_::dependency<
+            : detail::dependency<
                   mpl::_1
                 , named<TExpected, TName>
                 , TGiven
@@ -158,7 +158,7 @@ struct bind<
 
     template<typename TName>
     struct in_name
-        : aux_::dependency<
+        : detail::dependency<
               mpl::_1
             , named<TExpected, TName>
             , TGiven
@@ -174,7 +174,7 @@ struct bind<
     {
         template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
         struct in_call
-            : aux_::dependency<
+            : detail::dependency<
                   mpl::_1
                 , named<TExpected, TName>
                 , TGiven

@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_AUX_MAKE_PLAIN_HPP
-#define BOOST_DI_AUX_MAKE_PLAIN_HPP
+#ifndef BOOST_DI_TYPE_TRAITS_MAKE_PLAIN_HPP
+#define BOOST_DI_TYPE_TRAITS_MAKE_PLAIN_HPP
 
 #include <boost/shared_ptr.hpp>
 #include <boost/type_traits/remove_reference.hpp>
@@ -13,11 +13,11 @@
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/utility/enable_if.hpp>
 
-#include "boost/di/aux_/has_traits.hpp"
+#include "boost/di/type_traits/has_traits.hpp"
 
 namespace boost {
 namespace di {
-namespace aux_ {
+namespace type_traits {
 
 namespace detail {
 
@@ -60,7 +60,7 @@ struct make_plain
     >
 { };
 
-} // namespace aux_
+} // namespace type_traits
 } // namespace di
 } // namespace boost
 

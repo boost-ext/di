@@ -14,9 +14,9 @@
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/utility/enable_if.hpp>
 
-#include "boost/di/aux_/meta_config.hpp"
-#include "boost/di/aux_/make_plain.hpp"
-#include "boost/di/aux_/has_traits.hpp"
+#include "boost/di/config.hpp"
+#include "boost/di/type_traits/make_plain.hpp"
+#include "boost/di/type_traits/has_traits.hpp"
 
 namespace boost {
 namespace di {
@@ -29,7 +29,7 @@ template<
 class named
 {
 public:
-    typedef typename aux_::make_plain<T>::type value_type;
+    typedef typename type_traits::make_plain<T>::type value_type;
     typedef named<value_type, TName> element_type;
     typedef TName name;
 
@@ -62,7 +62,7 @@ class named<
 >
 {
 public:
-    typedef typename aux_::make_plain<T>::type value_type;
+    typedef typename type_traits::make_plain<T>::type value_type;
     typedef named<value_type, TName> element_type;
     typedef TName name;
 };
@@ -75,13 +75,13 @@ class named<
     T
   , TName
   , typename enable_if<
-        aux_::has_element_type<T>
+        type_traits::has_element_type<T>
     >::type
 >
 {
 public:
-    typedef named<typename aux_::make_plain<T>::type, TName> element_type;
-    typedef typename aux_::make_plain<T>::type value_type;
+    typedef named<typename type_traits::make_plain<T>::type, TName> element_type;
+    typedef typename type_traits::make_plain<T>::type value_type;
     typedef TName name;
 
     named(T value = T(new typename T::element_type)) // non explicit

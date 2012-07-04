@@ -8,7 +8,7 @@
 #define BOOST_DI_CTOR_HPP
 
 #include "boost/di/config.hpp"
-#include "boost/di/aux_/ctor_traits.hpp"
+#include "boost/di/type_traits/ctor_traits.hpp"
 
 #if defined(BOOST_DI_CTOR_CFG_VA_ARGS)
 

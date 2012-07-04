@@ -4,8 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "fake_config.hpp"
-
 #include "boost/di/generic_module.hpp"
 
 #include <boost/test/unit_test.hpp>
@@ -14,7 +12,7 @@
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
-#include "boost/di/aux_/external.hpp"
+#include "boost/di/scopes/external.hpp"
 #include "boost/di/named.hpp"
 #include "boost/di/concepts.hpp"
 
@@ -493,7 +491,7 @@ BOOST_AUTO_TEST_CASE(externals_base) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                aux_::external<c1>
+                scopes::external<c1>
             >
           , module::pool::externals
         >::value
@@ -524,9 +522,9 @@ BOOST_AUTO_TEST_CASE(externals_mix) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                aux_::external<c1>
-              , aux_::external<c2>
-              , aux_::external<c3>
+                scopes::external<c1>
+              , scopes::external<c2>
+              , scopes::external<c3>
             >
           , module::pool::externals
         >::value
@@ -560,10 +558,10 @@ BOOST_AUTO_TEST_CASE(externals_bind) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                aux_::external<int>
-              , aux_::external<named<c1, int> >
-              , aux_::external<c2, mpl::vector<c1> >
-              , aux_::external<named<c3, double>, mpl::vector<c4, c5> >
+                scopes::external<int>
+              , scopes::external<named<c1, int> >
+              , scopes::external<c2, mpl::vector<c1> >
+              , scopes::external<named<c3, double>, mpl::vector<c4, c5> >
             >
           , module::pool::externals
         >::value

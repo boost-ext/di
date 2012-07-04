@@ -9,30 +9,10 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/has_xxx.hpp>
 #include <boost/mpl/assert.hpp>
-#include <boost/di/config.hpp>
+#include <boost/di.hpp>
 
 namespace mpl = boost::mpl;
 namespace di  = boost::di;
-
-class check_for_creation_by_smart_ptr;
-
-namespace boost {
-namespace di {
-
-template<>
-struct config<specialized>
-    : config<>
-{
-    typedef policy<
-        di::policies::check_for_circular_dependencies
-      , check_for_creation_by_smart_ptr
-    > policies;
-};
-
-} // namespace di
-} // namespace boost
-
-#include <boost/di.hpp>
 
 namespace {
 
@@ -81,17 +61,9 @@ public:
 
 int main()
 {
-    {
-        di::injector<> injector;
-        injector.create<boost::shared_ptr<c> >();
-        //injector.create<c>(); //compile error (CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED)
-    }
-
-    {
-        di::injector<di::policy<check_for_creation_by_smart_ptr> > injector;
-        injector.create<boost::shared_ptr<c> >();
-        //injector.create<c>(); //compile error (CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED)
-    }
+    di::injector<di::policy<check_for_creation_by_smart_ptr> > injector;
+    injector.create<boost::shared_ptr<c> >();
+    //injector.create<c>(); //compile error (CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED)
 
     return 0;
 }

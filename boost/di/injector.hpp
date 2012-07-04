@@ -18,7 +18,7 @@
     #include <boost/mpl/is_sequence.hpp>
     #include <boost/mpl/back_inserter.hpp>
 
-    #include "boost/di/aux_/meta_config.hpp"
+    #include "boost/di/config.hpp"
     #include "boost/di/detail/module.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (   \

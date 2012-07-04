@@ -12,10 +12,10 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/transform.hpp>
 
-#include "boost/di/aux_/meta_config.hpp"
-#include "boost/di/aux_/external.hpp"
 #include "boost/di/scopes/singleton.hpp"
+#include "boost/di/scopes/external.hpp"
 #include "boost/di/concepts/annotate.hpp"
+#include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {
@@ -26,7 +26,7 @@ namespace detail {
 template<typename T, typename Enable = void>
 struct make_annotation
 {
-    typedef typename annotate<aux_::external<T> >::template with<> type;
+    typedef typename annotate<scopes::external<T> >::template with<> type;
 };
 
 template<typename T>
@@ -38,7 +38,7 @@ struct make_annotation<
     typedef typename T::template
         rebind<scopes::singleton<> >::type dependency;
 
-    typedef aux_::external<
+    typedef scopes::external<
         typename dependency::expected
       , typename dependency::context
     > external;

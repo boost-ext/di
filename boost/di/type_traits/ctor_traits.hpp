@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_AUX_CTOR_TRAITS_HPP
-#define BOOST_DI_AUX_CTOR_TRAITS_HPP
+#ifndef BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
+#define BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/typeof/typeof.hpp>
@@ -13,8 +13,7 @@
 #include <boost/function_types/parameter_types.hpp>
 #include <boost/mpl/bool.hpp>
 
-#include "boost/di/aux_/has_traits.hpp"
-#include "boost/di/ctor.hpp"
+#include "boost/di/type_traits/has_traits.hpp"
 #include "boost/di/config.hpp"
 
 namespace boost {
@@ -26,7 +25,7 @@ struct ctor_traits
     static void ctor(); //trivial ctor
 };
 
-namespace aux_ {
+namespace type_traits {
 
 template<typename T, typename = void>
 struct ctor_traits
@@ -47,7 +46,7 @@ struct ctor_traits<
       >::type
 { };
 
-} // namespace aux_
+} // namespace type_traits
 } // namespace di
 } // namespace boost
 

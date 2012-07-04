@@ -22,8 +22,8 @@
     #include <boost/mpl/is_sequence.hpp>
     #include <boost/mpl/back_inserter.hpp>
 
-    #include "boost/di/aux_/meta_config.hpp"
-    #include "boost/di/aux_/has_traits.hpp"
+    #include "boost/di/config.hpp"
+    #include "boost/di/type_traits/has_traits.hpp"
     #include "boost/di/detail/module.hpp"
     #include "boost/di/concepts.hpp"
 
@@ -50,7 +50,7 @@
         typename TDeps
       , typename _1 =
             mpl::if_<
-                  aux_::has_element_type<mpl::_1> //is external
+                  type_traits::has_element_type<mpl::_1> //is external
                 , derived<mpl::_1>
                 , mpl::_1
             >
@@ -107,8 +107,8 @@
           , T
           , typename enable_if<
                 mpl::and_<
-                    aux_::has_name<TExternal>
-                  , aux_::has_element_type<TExternal>
+                    type_traits::has_name<TExternal>
+                  , type_traits::has_element_type<TExternal>
                 >
             >::type
         >

@@ -4,8 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "fake_config.hpp"
-
 #include "boost/di/detail/module.hpp"
 
 #include <boost/test/unit_test.hpp>
@@ -15,10 +13,10 @@
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/string.hpp>
 
-#include "boost/di/aux_/external.hpp"
 #include "boost/di/concepts/call_stack.hpp"
 #include "boost/di/scopes/per_request.hpp"
 #include "boost/di/scopes/singleton.hpp"
+#include "boost/di/scopes/external.hpp"
 #include "boost/di/named.hpp"
 #include "fake_dependency.hpp"
 #include "fake_dependency_base_of.hpp"
@@ -416,18 +414,18 @@ BOOST_AUTO_TEST_CASE(externals_create_by_explicit_value) {
     const double d = 21.0;
     const char c = 'x';
 
-    aux_::external<int> i_(i);
-    aux_::external<double> d_(d);
-    aux_::external<char> c_(c);
+    scopes::external<int> i_(i);
+    scopes::external<double> d_(d);
+    scopes::external<char> c_(c);
 
     module<
         mpl::vector<
             fake_dependency<scopes::per_request<>, std::string, mpl::string<'s'> >::type
         >
       , mpl::vector<
-            aux_::external<int>
-          , aux_::external<double>
-          , aux_::external<char>
+            scopes::external<int>
+          , scopes::external<double>
+          , scopes::external<char>
         >
     > module_(i_, d_, c_);
 
@@ -444,14 +442,14 @@ BOOST_AUTO_TEST_CASE(externals_create_with_non_trivial_ctor) {
     const double d = 21.0;
     const char c = 'x';
 
-    aux_::external<c2> c2_(make_shared<c2>(i, d, c));
+    scopes::external<c2> c2_(make_shared<c2>(i, d, c));
 
     module<
         mpl::vector<
             fake_dependency<scopes::per_request<>, c2>::type
         >
       , mpl::vector<
-            aux_::external<c2>
+            scopes::external<c2>
         >
     > module_(c2_);
 
@@ -469,8 +467,8 @@ BOOST_AUTO_TEST_CASE(externals_create_with_attributes) {
     typedef named<int, mpl::string<'1'> > named1;
     typedef named<int, mpl::string<'2'> > named2;
 
-    aux_::external<named1> i1_(i1);
-    aux_::external<named2> i2_(i2);
+    scopes::external<named1> i1_(i1);
+    scopes::external<named2> i2_(i2);
 
     module<
         mpl::vector<
@@ -478,8 +476,8 @@ BOOST_AUTO_TEST_CASE(externals_create_with_attributes) {
           , fake_dependency<scopes::per_request<>, named2, int>::type
         >
       , mpl::vector<
-            aux_::external<named1>
-          , aux_::external<named2>
+            scopes::external<named1>
+          , scopes::external<named2>
         >
     > module_(i1_, i2_);
 
@@ -497,7 +495,7 @@ BOOST_AUTO_TEST_CASE(create_string_boost_function_ptr) {
         static int f() { return i1; }
     };
 
-    aux_::external<function<int()> > i_(&c::f);
+    scopes::external<function<int()> > i_(&c::f);
 
     module<
         mpl::vector<
@@ -505,7 +503,7 @@ BOOST_AUTO_TEST_CASE(create_string_boost_function_ptr) {
           , fake_dependency_base_of<scopes::per_request<>, std::string, mpl::string<'s'> >::type
         >
       , mpl::vector<
-            aux_::external<function<int()> >
+            scopes::external<function<int()> >
         >
     > module_(i_);
 

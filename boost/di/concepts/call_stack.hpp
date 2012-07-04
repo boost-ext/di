@@ -9,7 +9,7 @@
 
 #include <boost/mpl/vector.hpp>
 
-#include "boost/di/aux_/meta_config.hpp"
+#include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {

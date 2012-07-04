@@ -7,9 +7,16 @@
 #ifndef BOOST_DI_CONFIG_HPP
 #define BOOST_DI_CONFIG_HPP
 
-#include <memory>
-
-#include "boost/di/policy.hpp"
+#include <boost/preprocessor/iteration/iterate.hpp>
+#include <boost/preprocessor/repetition/enum_params.hpp>
+#include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
+#include <boost/preprocessor/repetition/enum_binary_params.hpp>
+#include <boost/preprocessor/facilities/intercept.hpp>
+#include <boost/preprocessor/arithmetic/sub.hpp>
+#include <boost/mpl/limits/vector.hpp>
+#include <boost/mpl/aux_/na_fwd.hpp>
+#include <boost/detail/workaround.hpp>
+#include <boost/config.hpp>
 
 #if !defined(BOOST_DI_CTOR_CFG_VA_ARGS) && !defined(BOOST_DI_CTOR_CFG_BRACKET)
     #define BOOST_DI_CTOR_CFG_VA_ARGS
@@ -23,56 +30,212 @@
     #define BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE 10
 #endif
 
-namespace boost {
-namespace di {
+#if defined(BOOST_HAS_VARIADIC_TMPL) && defined(BOOST_HAS_RVALUE_REFERENCES)
 
-namespace policies {
-class check_for_binding_correctness;
-class check_for_circular_dependencies;
-class check_for_creation_ownership;
-} // namespace policies
+    #define BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE 0 // infinity
 
-class specialized { };
+    #define BOOST_DI_ITERATION_PARAMS(start, limit, file)    \
+         3, (0, 0, file)
 
-/**
- * @code
- * #include <boost/di/config.hpp>
- *
- * namespace boost {
- * namespace di {
- *
- * template<>
- * struct config<specialized>
- *     : config<>
- * {
- *     typedef policy<
- *         di::policies::check_for_circular_dependencies
- *     > policies;
- * };
- *
- * } // namespace di
- * } // namespace boost
- * @endcode
- */
-template<typename TDefault = void>
-struct config
-{
-    typedef policy<
-        policies::check_for_binding_correctness
-      , policies::check_for_circular_dependencies
-      , policies::check_for_creation_ownership
-    > policies;
+//-----------------------------------------------------------
 
-    template<typename T>
-    struct allocator
-        : std::allocator<T>
-    { };
+    #define BOOST_DI_TYPES_DEFAULT_IMPL(limit, TArgs, TNa)   \
+         typename... TArgs
 
-    //external
-};
+    #define BOOST_DI_TYPES_IMPL(limit, TArgs)                \
+         typename... TArgs
 
-} // namespace di
-} // namespace boost
+    #define BOOST_DI_TYPES_PASS_IMPL(limit, args)            \
+         args...
+
+    #define BOOST_DI_ARGS_IMPL(limit, TArgs, args)           \
+         TArgs&&... args
+
+    #define BOOST_DI_ARGS_NA_IMPL(limit, count, TNa)         \
+         // empty
+
+    #define BOOST_DI_ARGS_NOT_USED_IMPL(limit, TArgs)        \
+         TArgs&&...
+
+    #define BOOST_DI_ARGS_PASS_IMPL(limit, args)             \
+         args
+
+    #define BOOST_DI_ARGS_FORWARD_IMPL(limit, args)          \
+         std::forward(args)...
+
+//-----------------------------------------------------------
+
+    #define BOOST_DI_TYPES_DEFAULT_MPL(TArgs)                \
+         BOOST_DI_TYPES_DEFAULT_IMPL(~, TArgs, ~)
+
+    #define BOOST_DI_TYPES_MPL(TArgs)                        \
+         BOOST_DI_TYPES_IMPL(~, TArgs)
+
+    #define BOOST_DI_TYPES_MPL_NA(count)                     \
+         //empty
+
+    #define BOOST_DI_TYPES_PASS_MPL(TArgs)                   \
+         BOOST_DI_TYPES_PASS_IMPL(~, TArgs)
+
+//-----------------------------------------------------------
+
+    #define BOOST_DI_TYPES(TArgs)                            \
+         BOOST_DI_TYPES_IMPL(~, TArgs)
+
+    #define BOOST_DI_TYPES_PASS(args)                        \
+         BOOST_DI_TYPES_PASS_IMPL(~, args)
+
+    #define BOOST_DI_ARGS(TArgs, args)                       \
+         BOOST_DI_ARGS_IMPL(~, TArgs, args)
+
+    #define BOOST_DI_ARGS_NOT_USED(TArgs)                    \
+         BOOST_DI_ARGS_NOT_USED_IMPL(~, TArgs)
+
+    #define BOOST_DI_ARGS_PASS(args)                         \
+         BOOST_DI_ARGS_PASS_IMPL(~, args)
+
+    #define BOOST_DI_ARGS_FORWARD(args)                      \
+         BOOST_DI_ARGS_FORWARD_IMPL(~, args)
+
+//-----------------------------------------------------------
+
+#else
+
+    #define BOOST_DI_ITERATION_PARAMS(start, limit, file)    \
+         3, (start, limit, file)
+
+//-----------------------------------------------------------
+
+    #define BOOST_DI_TYPES_DEFAULT_IMPL(limit, TArg, TNa)    \
+         BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(                \
+             limit                                           \
+           , typename TArg                                   \
+           , TNa                                             \
+         )
+
+    #define BOOST_DI_TYPES_IMPL(limit, TArg)                 \
+         BOOST_PP_ENUM_PARAMS(                               \
+             limit                                           \
+           , typename TArg                                   \
+         )
+
+    #define BOOST_DI_TYPES_PASS_IMPL(limit, TArg)            \
+         BOOST_PP_ENUM_PARAMS(                               \
+             limit                                           \
+           , TArg                                            \
+         )
+
+    #define BOOST_DI_ARGS_IMPL(limit, TArg, arg)             \
+         BOOST_PP_ENUM_BINARY_PARAMS(                        \
+             limit                                           \
+           , const TArg                                      \
+           , &arg                                            \
+         )
+
+    #define BOOST_DI_ARGS_NA_IMPL(limit, count, TNa)         \
+         BOOST_PP_ENUM_PARAMS(                               \
+             BOOST_PP_SUB(                                   \
+                 limit                                       \
+               , count                                       \
+             )                                               \
+           , TNa BOOST_PP_INTERCEPT                          \
+         )
+
+    #define BOOST_DI_ARGS_NOT_USED_IMPL(limit, TArg)         \
+         BOOST_PP_ENUM_BINARY_PARAMS(                        \
+             limit                                           \
+           , const TArg                                      \
+           , & BOOST_PP_INTERCEPT                            \
+         )
+
+    #define BOOST_DI_ARGS_PASS_IMPL(limit, arg)              \
+         BOOST_PP_ENUM_PARAMS(                               \
+             limit                                           \
+           , arg                                             \
+         )
+
+    #define BOOST_DI_ARGS_FORWARD_IMPL(limit, arg)           \
+         BOOST_PP_ENUM_PARAMS(                               \
+             limit                                           \
+           , arg                                             \
+         )
+
+//-----------------------------------------------------------
+
+    #define BOOST_DI_TYPES_DEFAULT_MPL(TArg)                 \
+         BOOST_DI_TYPES_DEFAULT_IMPL(                        \
+             BOOST_MPL_LIMIT_VECTOR_SIZE                     \
+           , TArg                                            \
+           , ::boost::mpl::na                                \
+         )
+
+    #define BOOST_DI_TYPES_MPL(TArg)                         \
+         BOOST_DI_TYPES_IMPL(                                \
+             BOOST_MPL_LIMIT_VECTOR_SIZE                     \
+           , TArg                                            \
+         )
+
+    #define BOOST_DI_TYPES_MPL_NA(count)                     \
+         BOOST_DI_ARGS_NA_IMPL(                              \
+             BOOST_MPL_LIMIT_VECTOR_SIZE                     \
+           , count                                           \
+           , ::boost::mpl::na                                \
+         )
+
+    #define BOOST_DI_TYPES_PASS_MPL(TArg)                    \
+         BOOST_DI_TYPES_PASS_IMPL(                           \
+             BOOST_MPL_LIMIT_VECTOR_SIZE                     \
+           , TArg                                            \
+         )
+
+//-------------------------------------------------------------
+
+    #define BOOST_DI_TYPES(TArg)                             \
+         BOOST_DI_TYPES_IMPL(                                \
+             BOOST_PP_ITERATION()                            \
+           , TArg                                            \
+         )
+
+    #define BOOST_DI_TYPES_PASS(TArg)                        \
+         BOOST_DI_TYPES_PASS_IMPL(                           \
+             BOOST_PP_ITERATION()                            \
+           , TArg                                            \
+         )
+
+    #define BOOST_DI_ARGS(TArg, arg)                         \
+         BOOST_DI_ARGS_IMPL(                                 \
+             BOOST_PP_ITERATION()                            \
+           , TArg                                            \
+           , arg                                             \
+         )
+
+    #define BOOST_DI_ARGS_NOT_USED(TArg)                     \
+         BOOST_DI_ARGS_NOT_USED_IMPL(                        \
+             BOOST_PP_ITERATION()                            \
+           , TArg                                            \
+         )
+
+    #define BOOST_DI_ARGS_PASS(arg)                          \
+         BOOST_DI_ARGS_PASS_IMPL(                            \
+             BOOST_PP_ITERATION()                            \
+           , arg                                             \
+         )
+
+    #define BOOST_DI_ARGS_FORWARD(arg)                       \
+         BOOST_DI_ARGS_FORWARD_IMPL(                         \
+             BOOST_PP_ITERATION()                            \
+           , arg                                             \
+         )
+
+//-------------------------------------------------------------
+
+#endif
+
+#if BOOST_WORKAROUND(BOOST_MSVC, < 1700)
+    #define BOOST_DI_TEMPLATE_QUALIFIER
+#else
+    #define BOOST_DI_TEMPLATE_QUALIFIER template
+#endif
 
 #endif
 

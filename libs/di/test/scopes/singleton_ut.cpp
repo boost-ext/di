@@ -18,17 +18,21 @@ namespace scopes {
 BOOST_AUTO_TEST_CASE(create) {
     singleton<>::scope<int> singleton_;
 
-    BOOST_CHECK((singleton_.create() == singleton_.create()));
+    BOOST_CHECK((
+        static_cast<int*>(singleton_.create())
+        ==
+        static_cast<int*>(singleton_.create())
+    ));
 }
 
 BOOST_AUTO_TEST_CASE(create_args) {
     singleton<>::scope<c2> singleton_;
 
     BOOST_CHECK((
-        singleton_.create<int, double, char>(0, 0.0, '0')
+        static_cast<c2*>(singleton_.create<int, double, char>(0, 0.0, '0'))
         ==
-        singleton_.create<int, double, char>(0, 0.0, '0'))
-    );
+        static_cast<c2*>(singleton_.create<int, double, char>(0, 0.0, '0'))
+    ));
 }
 
 BOOST_AUTO_TEST_CASE(create_allocator) {

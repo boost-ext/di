@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_FAKE_DEPENDENCY_BASE_OF_HPP
 #define BOOST_DI_FAKE_DEPENDENCY_BASE_OF_HPP
 
-#include "boost/di/aux_/dependency.hpp"
+#include "boost/di/detail/dependency.hpp"
 
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_base_of.hpp>
@@ -38,7 +38,7 @@ struct fake_dependency_base_of
     typedef TExpected expected;
     typedef TGiven given;
     typedef mpl::vector<TContext0, TContext1, TContext2> context;
-    typedef typename aux_::dependency<
+    typedef typename detail::dependency<
         TScope
       , TExpected
       , TGiven

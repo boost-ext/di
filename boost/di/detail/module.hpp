@@ -31,17 +31,16 @@
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/insert.hpp>
 
-    #include "boost/di/aux_/meta_config.hpp"
-    #include "boost/di/aux_/has_traits.hpp"
-    #include "boost/di/aux_/value_type.hpp"
-    #include "boost/di/aux_/dependency.hpp"
+    #include "boost/di/type_traits/has_traits.hpp"
+    #include "boost/di/type_traits/value_type.hpp"
+    #include "boost/di/detail/dependency.hpp"
     #include "boost/di/detail/pool.hpp"
     #include "boost/di/detail/binder.hpp"
     #include "boost/di/detail/creator.hpp"
     #include "boost/di/detail/visitor.hpp"
     #include "boost/di/scopes/singleton.hpp"
+    #include "boost/di/policy.hpp"
     #include "boost/di/config.hpp"
-
 
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
         BOOST_DI_ITERATION_PARAMS(          \
@@ -57,10 +56,10 @@
 
     template<typename T>
     struct dependency_impl
-        : aux_::dependency<
+        : dependency<
             scopes::singleton<>
           , typename T::element_type
-          , typename aux_::value_type<typename T::element_type>::type
+          , typename type_traits::value_type<typename T::element_type>::type
           , typename T::context
         >
     { };
@@ -85,8 +84,7 @@
       , template<
             typename
         > class TDependency = dependency_impl
-      , typename TPolicies
-            = config<specialized>::policies
+      , typename TPolicies = policy<>
     >
     class module
     {
@@ -109,7 +107,7 @@
                       TSeq
                     , mpl::int_<0>
                     , mpl::if_<
-                          aux_::has_deps<mpl::_2>
+                          type_traits::has_deps<mpl::_2>
                         , mpl::next<mpl::_1>
                         , mpl::_1
                       >
@@ -124,7 +122,7 @@
         };
 
         template<typename T>
-        struct deps_impl<T, typename enable_if<aux_::has_deps<T> >::type>
+        struct deps_impl<T, typename enable_if<type_traits::has_deps<T> >::type>
         {
             typedef typename T::deps type;
         };
@@ -136,7 +134,7 @@
         };
 
         template<typename T>
-        struct pool_impl<T, typename enable_if<aux_::has_pool<T> >::type>
+        struct pool_impl<T, typename enable_if<type_traits::has_pool<T> >::type>
         {
             typedef mpl::vector<typename T::pool> type;
         };
@@ -147,7 +145,7 @@
                   TDeps
                 , mpl::vector1<TPolicies>
                 , mpl::if_<
-                      aux_::has_policy_type<mpl::_2>
+                      type_traits::has_policy_type<mpl::_2>
                     , mpl::push_back<mpl::_1, mpl::_2>
                     , mpl::_1
                   >
@@ -175,7 +173,7 @@
                                   typename pool::externals
                                 , mpl::vector0<>
                                 , mpl::if_<
-                                      aux_::has_element_type<mpl::_2>
+                                      type_traits::has_element_type<mpl::_2>
                                     , mpl::push_back<
                                           mpl::_1
                                         , TDependency<mpl::_2>
@@ -195,8 +193,8 @@
                     , mpl::push_back<mpl::_1, mpl::_2>
                   >::type
                 , mpl::or_<
-                      aux_::has_policy_type<mpl::_1>
-                    , aux_::has_element_type<mpl::_1>
+                      type_traits::has_policy_type<mpl::_1>
+                    , type_traits::has_element_type<mpl::_1>
                   >
               >::type
         { };

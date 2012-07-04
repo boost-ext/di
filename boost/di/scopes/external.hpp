@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_AUX_EXTERNAL_HPP
-#define BOOST_DI_AUX_EXTERNAL_HPP
+#ifndef BOOST_DI_SCOPES_EXTERNAL_HPP
+#define BOOST_DI_SCOPES_EXTERNAL_HPP
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
@@ -17,13 +17,14 @@
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/and.hpp>
 
-#include "boost/di/aux_/value_type.hpp"
-#include "boost/di/aux_/has_traits.hpp"
+#include "boost/di/type_traits/value_type.hpp"
+#include "boost/di/type_traits/has_traits.hpp"
 #include "boost/di/named.hpp"
+#include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {
-namespace aux_ {
+namespace scopes {
 
 namespace detail {
 
@@ -38,8 +39,8 @@ struct plain_type<
     T
   , typename enable_if<
         mpl::and_<
-            has_name<T>
-          , has_value_type<T>
+            type_traits::has_name<T>
+          , type_traits::has_value_type<T>
         >
     >::type
 >
@@ -164,7 +165,8 @@ public:
         : external_(object)
     { }
 
-    external(shared_ptr<object_type> object) // non explicit
+    template<typename TObject>
+    external(shared_ptr<TObject> object) // non explicit
         : external_(object)
     { }
 
@@ -203,14 +205,14 @@ class external<
   , TContext
   , typename enable_if<
         mpl::or_<
-            is_same<typename value_type<T>::type, std::string>
-          , is_arithmetic<typename value_type<T>::type>
-          , has_result_type<typename value_type<T>::type>
+            is_same<typename type_traits::value_type<T>::type, std::string>
+          , is_arithmetic<typename type_traits::value_type<T>::type>
+          , type_traits::has_result_type<typename type_traits::value_type<T>::type>
         >
     >::type
 >
 {
-    typedef typename value_type<T>::type value_type;
+    typedef typename type_traits::value_type<T>::type value_type;
     typedef typename detail::plain_type<value_type>::type object_type;
 
 public:
@@ -241,7 +243,8 @@ public:
         : external_(object)
     { }
 
-    external(shared_ptr<object_type> object) // non explicit
+    template<typename TObject>
+    external(shared_ptr<TObject> object) // non explicit
         : external_(*object)
     { }
 
@@ -271,7 +274,7 @@ private:
     object_type external_;
 };
 
-} // namespace aux_
+} // namespace scopes
 } // namespace di
 } // namespace boost
 

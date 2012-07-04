@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/aux_/explicit_value.hpp"
+#include "boost/di/detail/explicit_value.hpp"
 
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
@@ -12,7 +12,7 @@
 
 namespace boost {
 namespace di {
-namespace aux_ {
+namespace detail {
 
 struct empty { };
 struct double_value
@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(value_has_value_type) {
     BOOST_CHECK_EQUAL(d, explicit_value<double_value>::create());
 }
 
-} // namespace aux_
+} // namespace detail
 } // namespace di
 } // namespace boost
 
