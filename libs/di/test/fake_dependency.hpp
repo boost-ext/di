@@ -57,6 +57,12 @@ struct fake_dependency
           , TContext2
         > type;
     };
+
+    template<typename>
+    struct result_type
+    {
+        typedef TExpected type;
+    };
 };
 
 } // namespace di

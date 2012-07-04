@@ -9,14 +9,13 @@
 
 #include <boost/mpl/has_xxx.hpp>
 
-#include "boost/config.hpp"
+#include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {
 namespace type_traits {
 
-BOOST_MPL_HAS_XXX_TRAIT_DEF(boost_di_ctor) //TODO
-//BOOST_MPL_HAS_XXX_TRAIT_DEF(BOOST_DI_CTOR_UNIQUE_NAME)
+BOOST_MPL_HAS_XXX_TRAIT_DEF(BOOST_DI_CTOR_UNIQUE_NAME)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(result_type)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
