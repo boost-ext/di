@@ -54,6 +54,8 @@
     namespace di {
     namespace detail {
 
+    namespace aux {
+
     template<typename T>
     struct dependency_impl
         : dependency<
@@ -63,6 +65,8 @@
           , typename T::context
         >
     { };
+
+    } // namespace aux
 
     template<
         typename TDeps = mpl::vector0<>
@@ -83,7 +87,7 @@
         > class TVisitor = visitor
       , template<
             typename
-        > class TDependency = dependency_impl
+        > class TDependency = aux::dependency_impl
     >
     class module
     {
