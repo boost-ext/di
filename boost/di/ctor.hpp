@@ -7,12 +7,12 @@
 #ifndef BOOST_DI_CTOR_HPP
 #define BOOST_DI_CTOR_HPP
 
-#include "boost/di/config.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
+#include "boost/di/config.hpp"
 
 #if defined(BOOST_DI_CTOR_CFG_VA_ARGS)
 
-    #if defined(__GNUC__)
+    #if defined(__GNUC__) && (__GNUC__ >= 4)
         #pragma GCC system_header
     #endif
 

@@ -84,7 +84,6 @@
       , template<
             typename
         > class TDependency = dependency_impl
-      , typename TPolicies = policy<>
     >
     class module
     {
@@ -96,7 +95,6 @@
           , template<typename> class
           , template<typename> class
           , template<typename> class
-          , typename
         > friend class module;
 
         template<typename TSeq>
@@ -143,7 +141,7 @@
         struct policies
             : mpl::fold<
                   TDeps
-                , mpl::vector1<TPolicies>
+                , mpl::vector0<>
                 , mpl::if_<
                       type_traits::has_policy_type<mpl::_2>
                     , mpl::push_back<mpl::_1, mpl::_2>

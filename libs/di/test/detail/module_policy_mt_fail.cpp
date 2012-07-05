@@ -8,7 +8,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "boost/di/policies/check_for_binding_correctness.hpp"
+#include "boost/di/policies/check_for_creation_ownership.hpp"
 #include "data.hpp"
 
 namespace boost {
@@ -16,7 +16,9 @@ namespace di {
 namespace detail {
 
 BOOST_AUTO_TEST_CASE(module_policy_fail) {
-    module<policy<check_for_binding_correctness> >().create<const c1&>();
+    module<
+        mpl::vector<policy<policies::check_for_creation_ownership> >
+    >().create<const c1&>();
 }
 
 } // namespace detail

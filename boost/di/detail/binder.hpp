@@ -40,7 +40,7 @@ namespace boost {
 namespace di {
 namespace detail {
 
-namespace detail {
+namespace aux {
 
 template<typename T>
 struct bind
@@ -189,7 +189,7 @@ struct comparator
     : mpl::apply<TBind, T>::type
 { };
 
-} // namespace detail
+} // namespace aux
 
 template<
     typename T
@@ -205,23 +205,23 @@ template<
     >
 >
 struct binder_impl
-    : detail::get_dependency_by_call_stack_order<
+    : aux::get_dependency_by_call_stack_order<
           TCallStack
         , TDeps
-        , typename detail::make_default_dependency<
+        , typename aux::make_default_dependency<
               typename type_traits::make_plain<T>::type
             , TExternals
             , TCallStack
             , TDefault
           >::type
         , mpl::and_<
-              detail::comparator<
-                  detail::bind<mpl::_2>
+              aux::comparator<
+                  aux::bind<mpl::_2>
                 , typename type_traits::make_plain<T>::type
               >
-            , detail::for_each_context<
+            , aux::for_each_context<
                   TCallStack
-                , detail::make_context<mpl::_2>
+                , aux::make_context<mpl::_2>
               >
           >
       >

@@ -17,10 +17,10 @@
     #include <boost/mpl/back_inserter.hpp>
     #include <boost/mpl/placeholders.hpp>
 
-    #include "boost/di/config.hpp"
     #include "boost/di/type_traits/has_traits.hpp"
     #include "boost/di/detail/module.hpp"
     #include "boost/di/concepts.hpp"
+    #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
         BOOST_DI_ITERATION_PARAMS(          \
@@ -33,7 +33,7 @@
     namespace boost {
     namespace di {
 
-    namespace detail {
+    namespace aux {
 
     template<typename TDeps>
     struct fusion_deps
@@ -55,12 +55,12 @@
           >::type
     { };
 
-    } // namespace detail
+    } // namespace aux
 
     template<typename TDeps = mpl::vector0<> >
     class fusion_module
         : public detail::module<
-              typename detail::fusion_deps<TDeps>::type
+              typename aux::fusion_deps<TDeps>::type
             , TDeps
           >
     {
@@ -84,7 +84,7 @@
     template<BOOST_DI_TYPES(Args)>
     explicit fusion_module(BOOST_DI_ARGS(Args, args))
         : detail::module<
-              typename detail::fusion_deps<TDeps>::type
+              typename aux::fusion_deps<TDeps>::type
             , TDeps
           >
         (BOOST_DI_ARGS_FORWARD(args))

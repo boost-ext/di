@@ -45,7 +45,7 @@
       , template<
             typename
           , typename = void
-        > class TExplicitValue = di::detail::explicit_value
+        > class TExplicitValue = explicit_value
       , template<
             typename
           , typename

@@ -31,7 +31,7 @@
     namespace di {
     namespace scopes {
 
-    namespace detail {
+    namespace aux {
 
     template<typename TExpected>
     class convertible_per_request
@@ -64,7 +64,7 @@
         shared_ptr<TExpected> object_;
     };
 
-    } // namespace detail
+    } // namespace aux
 
     template<
         template<
@@ -81,7 +81,7 @@
         class scope
         {
         public:
-            //typedef convertible_per_request<TExpected> result_type;
+            //typedef aux::convertible_per_request<TExpected> result_type;
             typedef external<TExpected> result_type;
 
             result_type create() {

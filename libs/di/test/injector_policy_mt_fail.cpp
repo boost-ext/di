@@ -8,14 +8,16 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "boost/di/policies/check_for_binding_correctness.hpp"
+#include "boost/di/policies/check_for_creation_ownership.hpp"
 #include "data.hpp"
 
 namespace boost {
 namespace di {
 
 BOOST_AUTO_TEST_CASE(policy_fail) {
-    injector<policy<check_for_binding_correctness> >().create<const c1&>();
+    injector<
+        policy<policies::check_for_creation_ownership>
+    >().create<const c1&>();
 }
 
 } // namespace di

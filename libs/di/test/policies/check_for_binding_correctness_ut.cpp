@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE(correct_many) {
                 >
               , mpl::vector0<>
               , none_t
-              //, false
+              , false
             >::type
          >::value
     ));

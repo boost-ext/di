@@ -19,7 +19,6 @@ namespace boost {
 namespace di {
 namespace type_traits {
 
-
 template<typename>
 struct scope_traits;
 
@@ -28,7 +27,6 @@ struct scope_traits<boost::shared_ptr<T> >
 {
     typedef scopes::singleton<> type;
 };
-
 
 #if !defined(BOOST_NO_CXX11_SMART_PTR)
 template<typename T>

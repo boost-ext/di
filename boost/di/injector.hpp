@@ -32,7 +32,7 @@
     namespace boost {
     namespace di {
 
-    namespace detail {
+    namespace aux {
 
     template<typename TSeq>
     struct modules
@@ -50,12 +50,12 @@
           >::type
     { };
 
-    } // namespace detail
+    } // namespace aux
 
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     class injector
         : public detail::module<
-              detail::modules<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
+              aux::modules<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
           >
     {
     public:
@@ -74,7 +74,7 @@
     template<BOOST_DI_TYPES(M)>
     explicit injector(BOOST_DI_ARGS(M, module))
         : detail::module<
-              detail::modules<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
+              aux::modules<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
           >
         (BOOST_DI_ARGS_PASS(module))
     { }

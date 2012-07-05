@@ -23,7 +23,7 @@ namespace boost {
 namespace di {
 namespace detail {
 
-namespace detail {
+namespace aux {
 
 template<typename TDerived, typename = void>
 class has_value
@@ -51,7 +51,7 @@ public:
     );
 };
 
-} // namespace detail
+} // namespace aux
 
 template<typename, typename = void>
 class explicit_value
@@ -78,7 +78,7 @@ template<
 class explicit_value<
     T
   , typename enable_if<
-        detail::has_value<T>
+        aux::has_value<T>
     >::type
 >
     : public mpl::true_

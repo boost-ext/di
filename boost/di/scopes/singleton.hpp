@@ -29,7 +29,7 @@
     namespace di {
     namespace scopes {
 
-    namespace detail {
+    namespace aux {
 
     template<typename TExpected>
     class convertible_singleton
@@ -62,7 +62,7 @@
         shared_ptr<TExpected> object_;
     };
 
-    } // namespace detail
+    } // namespace aux
 
     template<
         template<
@@ -79,7 +79,7 @@
         class scope
         {
         public:
-            typedef detail::convertible_singleton<TExpected> result_type;
+            typedef aux::convertible_singleton<TExpected> result_type;
 
             result_type create() {
                 if (!instance_) {

@@ -14,9 +14,9 @@
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/utility/enable_if.hpp>
 
-#include "boost/di/config.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/type_traits/has_traits.hpp"
+#include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {

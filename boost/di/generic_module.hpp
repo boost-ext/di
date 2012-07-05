@@ -22,10 +22,10 @@
     #include <boost/mpl/is_sequence.hpp>
     #include <boost/mpl/back_inserter.hpp>
 
-    #include "boost/di/config.hpp"
     #include "boost/di/type_traits/has_traits.hpp"
     #include "boost/di/detail/module.hpp"
     #include "boost/di/concepts.hpp"
+    #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
         BOOST_DI_ITERATION_PARAMS(          \
@@ -38,7 +38,7 @@
     namespace boost {
     namespace di {
 
-    namespace detail {
+    namespace aux {
 
     template<typename T>
     struct derived
@@ -73,18 +73,18 @@
           >::type
     { };
 
-    } // namespace detail
+    } // namespace aux
 
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     class generic_module
         : public detail::module<
-              typename detail::generic_deps<
+              typename aux::generic_deps<
                   mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
               >::type
           >
     {
         struct annotations
-            : detail::generic_deps<
+            : aux::generic_deps<
                   mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>, mpl::_1
               >
         { };
@@ -171,7 +171,7 @@
     template<BOOST_DI_TYPES(Args)>
     explicit generic_module(BOOST_DI_ARGS(Args, args))
         : detail::module<
-              typename detail::generic_deps<
+              typename aux::generic_deps<
                   mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
               >::type
           >

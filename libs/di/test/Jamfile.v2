@@ -21,6 +21,7 @@ project
 test-suite di-test
     : [ run type_traits/make_plain_ut.cpp ]
       [ run type_traits/value_type_ut.cpp ]
+      [ run type_traits/ctor_traits_ut.cpp ]
       [ run detail/binder_ut.cpp ]
       [ run detail/creator_ut.cpp ]
       [ run detail/dependency_ut.cpp ]

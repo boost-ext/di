@@ -19,7 +19,7 @@ namespace boost {
 namespace di {
 namespace type_traits {
 
-namespace detail {
+namespace aux {
 
 template<typename T>
 struct remove_accessors
@@ -47,14 +47,14 @@ struct deref_element_type<
     typedef typename T::element_type type;
 };
 
-} // namespace detail
+} // namespace aux
 
 template<typename TElement>
 struct make_plain
-    : detail::deref_element_type<
-        typename detail::remove_accessors<
-            typename detail::deref_element_type<
-                typename detail::remove_accessors<TElement>::type
+    : aux::deref_element_type<
+        typename aux::remove_accessors<
+            typename aux::deref_element_type<
+                typename aux::remove_accessors<TElement>::type
             >::type
         >::type
     >

@@ -12,6 +12,7 @@
 
 #include "boost/di/generic_module.hpp"
 #include "boost/di/fusion_module.hpp"
+
 #include "fake_visitor.hpp"
 #include "fake_scope.hpp"
 #include "data.hpp"

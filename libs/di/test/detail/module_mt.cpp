@@ -562,7 +562,6 @@ BOOST_AUTO_TEST_CASE(policies) {
         contains_all<
             mpl::vector<
                 policy<fake_policy<0> >
-              , policy<> // default
             >
           , module<
                 mpl::vector<
@@ -581,7 +580,6 @@ BOOST_AUTO_TEST_CASE(policies_mix) {
                     fake_policy<0>
                   , fake_policy<1>
                 >
-              , policy<> // default
             >
           , module<
                 mpl::vector<
@@ -600,7 +598,6 @@ BOOST_AUTO_TEST_CASE(policies_mix_join_many) {
                 policy<fake_policy<0>, fake_policy<1> >
               , policy<fake_policy<2> >
               , policy<fake_policy<3> >
-              , policy<> // default
             >
           , module<
                 mpl::vector<
