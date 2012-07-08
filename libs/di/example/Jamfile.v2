@@ -12,6 +12,7 @@ project
       <warnings>all
       <warnings-as-errors>on
       <cxxflags>-std=c++0x
+      <define>BOOST_DI_NO_CXX11_FEATURES
       <include>../../..
     ;
 
@@ -25,6 +26,7 @@ test-suite di_test
       [ run injector.cpp ]
       [ run named.cpp ]
       [ run pool_allocator.cpp ]
+#      [ run scope_deduction.cpp ]
       [ run provider.cpp ]
       [ run session_scope.cpp ]
       [ run text_visitor.cpp ]
