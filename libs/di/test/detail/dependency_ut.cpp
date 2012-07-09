@@ -12,7 +12,7 @@
 #include <boost/mpl/int.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-#include "boost/di/scopes/external.hpp"
+#include "boost/di/scopes/external_.hpp"
 
 namespace boost {
 namespace di {

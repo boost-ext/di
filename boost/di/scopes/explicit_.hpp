@@ -54,12 +54,12 @@ public:
 } // namespace aux
 
 template<typename, typename = void>
-class explicit
+class explicit_
     : public mpl::false_
 { };
 
 template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, int C)>
-class explicit_value<
+class explicit_<
     mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)>
 >
     : public mpl::true_
@@ -75,7 +75,7 @@ public:
 template<
     typename T
 >
-class explicit_value<
+class explicit_<
     T
   , typename enable_if<
         aux::has_value<T>
@@ -95,43 +95,4 @@ public:
 
 #endif
 
-#if !BOOST_PP_IS_ITERATING
-
-    #ifndef BOOST_DI_SCOPES_PER_REQUEST_HPP
-    #define BOOST_DI_SCOPES_PER_REQUEST_HPP
-
-    #include <boost/preprocessor/iteration/iterate.hpp>
-    #include <boost/shared_ptr.hpp>
-    #include <boost/make_shared.hpp>
-
-    #include "boost/di/named.hpp"
-    #include "boost/di/config.hpp"
-
-    namespace boost {
-    namespace di {
-    namespace scopes {
-
-    class explicit_
-    {
-    public:
-        template<
-            typename TExpected
-          , typename TGiven = TExpected
-        >
-        class scope
-        {
-        public:
-            typedef external<TExpected> result_type;
-
-            result_type create() {
-                return allocate_shared<TGiven>(TAllocator<TGiven>());
-            }
-
-            #include BOOST_PP_ITERATE()
-        };
-    };
-
-    } // namespace scopes
-    } // namespace di
-    } // namespace boost
 

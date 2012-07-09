@@ -12,7 +12,7 @@
 #include "boost/di/policies/check_for_binding_correctness.hpp"
 #include "boost/di/policies/check_for_circular_dependencies.hpp"
 #include "boost/di/policies/check_for_creation_ownership.hpp"
-#include "boost/di/scopes/external.hpp"
+#include "boost/di/scopes/external_.hpp"
 #include "data.hpp"
 
 namespace boost {

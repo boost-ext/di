@@ -12,7 +12,7 @@
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
-#include "boost/di/scopes/external.hpp"
+#include "boost/di/scopes/external_.hpp"
 #include "boost/di/named.hpp"
 #include "boost/di/concepts.hpp"
 

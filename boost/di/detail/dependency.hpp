@@ -19,9 +19,9 @@
     #include <boost/mpl/placeholders.hpp>
     #include <boost/mpl/assert.hpp>
 
-    #include "boost/di/detail/explicit_value.hpp"
     #include "boost/di/type_traits/has_traits.hpp"
-    #include "boost/di/scopes/external.hpp"
+    #include "boost/di/scopes/explicit_.hpp"
+    #include "boost/di/scopes/external_.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
@@ -45,7 +45,7 @@
       , template<
             typename
           , typename = void
-        > class TExplicitValue = explicit_value
+        > class TExplicit = scopes::explicit_
       , template<
             typename
           , typename
@@ -75,7 +75,7 @@
         template<typename TPool>
         struct is_value_type
             : mpl::and_<
-                  TExplicitValue<TGiven>
+                  TExplicit<TGiven>
                 , mpl::not_<
                       mpl::contains<
                           typename TPool::externals
@@ -88,7 +88,7 @@
         template<typename TPool>
         struct is_scope_type
             : mpl::and_<
-                  mpl::not_<TExplicitValue<TGiven> >
+                  mpl::not_<TExplicit<TGiven> >
                 , mpl::not_<
                       mpl::contains<
                           typename TPool::externals
@@ -128,7 +128,7 @@
           , typename result_type<TPool>::type
         >::type
         create(const TPool&) {
-            return TExplicitValue<TGiven>::create();
+            return TExplicit<TGiven>::create();
         }
 
         template<typename TPool>
@@ -168,7 +168,7 @@
       , template<
             typename
           , typename
-        > class TExplicitValue
+        > class TExplicit
       , template<
             typename
           , typename
@@ -181,7 +181,7 @@
       , TGiven
       , TContext
       , TBind
-      , TExplicitValue
+      , TExplicit
       , TExternal
     >
     {
@@ -195,7 +195,7 @@
               , TGiven
               , TContext
               , TBind
-              , TExplicitValue
+              , TExplicit
               , TExternal
             > type;
         };
@@ -207,7 +207,7 @@
       , template<
             typename
           , typename
-        > class TExplicitValue
+        > class TExplicit
       , template<
             typename
           , typename
@@ -220,7 +220,7 @@
       , mpl::_2
       , mpl::_3
       , TBind
-      , TExplicitValue
+      , TExplicit
       , TExternal
     >
     {
@@ -238,7 +238,7 @@
               , TGiven
               , TContext
               , TBind
-              , TExplicitValue
+              , TExplicit
               , TExternal
             > type;
         };

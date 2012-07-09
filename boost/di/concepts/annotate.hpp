@@ -10,7 +10,7 @@
 #include <boost/none_t.hpp>
 #include <boost/mpl/vector.hpp>
 
-#include "boost/di/scopes/external.hpp"
+#include "boost/di/scopes/external_.hpp"
 
 namespace boost {
 namespace di {

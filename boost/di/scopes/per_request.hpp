@@ -17,7 +17,7 @@
     #include "boost/di/config.hpp"
 
 //TODO
-#include "boost/di/scopes/external.hpp"
+#include "boost/di/scopes/external_.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
         BOOST_DI_ITERATION_PARAMS(              \

@@ -13,7 +13,7 @@
 #include <boost/mpl/transform.hpp>
 
 #include "boost/di/scopes/singleton.hpp"
-#include "boost/di/scopes/external.hpp"
+#include "boost/di/scopes/external_.hpp"
 #include "boost/di/concepts/annotate.hpp"
 #include "boost/di/config.hpp"
 

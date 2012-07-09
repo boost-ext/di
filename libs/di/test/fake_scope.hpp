@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-
 #if !BOOST_PP_IS_ITERATING
 
     #ifndef BOOST_DI_FAKE_SCOPE_HPP
@@ -14,7 +13,7 @@
     #include <boost/shared_ptr.hpp>
     #include <boost/make_shared.hpp>
 
-    #include "boost/di/scopes/external.hpp"
+    #include "boost/di/scopes/external_.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \

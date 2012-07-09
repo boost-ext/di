@@ -75,9 +75,6 @@ private:
             typeid(typename T::second).name()
           , visits.at(i).scope
         );
-
-        std::cout << "D1: " << visits.at(i).type << std::endl;
-        std::cout << "D2: " << visits.at(i).scope << std::endl;
     }
 
     template<typename T>

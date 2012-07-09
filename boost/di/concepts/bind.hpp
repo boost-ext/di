@@ -14,7 +14,7 @@
 #include <boost/mpl/or.hpp>
 
 #include "boost/di/detail/dependency.hpp"
-#include "boost/di/detail/explicit_value.hpp"
+#include "boost/di/scopes/explicit_.hpp"
 #include "boost/di/concepts/annotate.hpp"
 #include "boost/di/named.hpp"
 #include "boost/di/config.hpp"
@@ -101,7 +101,7 @@ struct bind<
   , TGiven
   , typename enable_if<
         mpl::or_<
-            detail::explicit_value<TGiven>
+            scopes::explicit_<TGiven>
           , is_same<TExpected, TGiven>
         >
     >::type
