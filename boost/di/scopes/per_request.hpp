@@ -70,6 +70,9 @@
         template<
             typename
         > class TAllocator = std::allocator
+      , template<
+            typename
+        > class TConvertible = aux::convertible_per_request
     >
     class per_request
     {
@@ -81,7 +84,7 @@
         class scope
         {
         public:
-            //typedef aux::convertible_per_request<TExpected> result_type;
+            //typedef TConvertible<TExpected> result_type;
             typedef external<TExpected> result_type;
 
             result_type create() {

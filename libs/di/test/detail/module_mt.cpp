@@ -12,6 +12,7 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/string.hpp>
+#include <boost/mpl/pair.hpp>
 
 #include "boost/di/concepts/call_stack.hpp"
 #include "boost/di/scopes/per_request.hpp"
@@ -609,6 +610,30 @@ BOOST_AUTO_TEST_CASE(policies_mix_join_many) {
             >::policies::type
         >::value
     ));
+}
+
+BOOST_AUTO_TEST_CASE(scope_auto_deduction) {
+
+    c3 c3_;
+    scopes::external<c3> e3(c3_);
+
+    module<
+        mpl::vector0<>
+      , mpl::vector<
+            scopes::external<c3>
+        >
+    > module_(e3);
+
+    fake_visitor<
+        mpl::vector<
+            mpl::pair<c18, scopes::per_request<> >
+          , mpl::pair<c0, scopes::per_request<> >
+          , mpl::pair<shared_ptr<c1>, scopes::singleton<> >
+          , mpl::pair<c3&, scopes::singleton<> >
+        >
+    > visitor;
+
+    module_.visit<c18>(visitor);
 }
 
 } // namespace detail

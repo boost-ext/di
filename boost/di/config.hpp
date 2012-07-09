@@ -18,7 +18,9 @@
 #include <boost/detail/workaround.hpp>
 #include <boost/config.hpp>
 
-#if !defined(BOOST_DI_CTOR_CFG_VA_ARGS) && !defined(BOOST_DI_CTOR_CFG_BRACKET)
+#if !defined(BOOST_DI_CTOR_CFG_VA_ARGS) &&                  \
+    !defined(BOOST_DI_CTOR_CFG_BRACKET)
+
     #define BOOST_DI_CTOR_CFG_VA_ARGS
 #endif
 

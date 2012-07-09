@@ -68,6 +68,9 @@
         template<
             typename
         > class TAllocator = std::allocator
+      , template<
+            typename
+        > class TConvertible = aux::convertible_singleton
     >
     class singleton
     {
@@ -79,7 +82,7 @@
         class scope
         {
         public:
-            typedef aux::convertible_singleton<TExpected> result_type;
+            typedef TConvertible<TExpected> result_type;
 
             result_type create() {
                 if (!instance_) {

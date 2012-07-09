@@ -34,7 +34,7 @@
 #include "boost/di/detail/dependency.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/type_traits/value_type.hpp"
-#include "boost/di/scopes/per_request.hpp"
+#include "boost/di/type_traits/scope_traits.hpp"
 
 namespace boost {
 namespace di {
@@ -198,7 +198,7 @@ template<
   , typename TExternals
   , typename TDefault =
     dependency<
-        scopes::per_request<>
+        typename type_traits::scope_traits<T>::type
       , mpl::_1
       , mpl::_2
       , mpl::_3

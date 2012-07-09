@@ -19,22 +19,11 @@ namespace boost {
 namespace di {
 namespace type_traits {
 
-template<typename>
-struct scope_traits;
-
 template<typename T>
-struct scope_traits<boost::shared_ptr<T> >
+struct scope_traits
 {
-    typedef scopes::singleton<> type;
+    typedef scopes::per_request<> type;
 };
-
-#if !defined(BOOST_NO_CXX11_SMART_PTR)
-template<typename T>
-struct scope_traits<std::shared_ptr<T> >
-{
-    typedef scopes::singleton<> type;
-};
-#endif
 
 template<typename T>
 struct scope_traits<T&>
@@ -43,27 +32,21 @@ struct scope_traits<T&>
 };
 
 template<typename T>
+struct scope_traits<const T&>
+{
+    typedef scopes::per_request<> type;
+};
+
+template<typename T>
 struct scope_traits<T*>
 {
-    typedef scopes::per_request<T> type;
+    typedef scopes::per_request<> type;
 };
 
 template<typename T>
 struct scope_traits<const T*>
 {
-    typedef scopes::per_request<T> type;
-};
-
-template<typename T>
-struct scope_traits<T&&>
-{
-    typedef scopes::per_request<T> type;
-};
-
-template<typename T>
-struct scope_traits<const T&&>
-{
-    typedef scopes::per_request<T> type;
+    typedef scopes::per_request<> type;
 };
 
 template<typename T>
@@ -73,10 +56,42 @@ struct scope_traits<std::auto_ptr<T> >
 };
 
 template<typename T>
+struct scope_traits<boost::shared_ptr<T> >
+{
+    typedef scopes::singleton<> type;
+};
+
+#if !defined(BOOST_NO_CXX11_SMART_PTR)
+
+template<typename T>
+struct scope_traits<std::shared_ptr<T> >
+{
+    typedef scopes::singleton<> type;
+};
+
+template<typename T>
 struct scope_traits<std::unique_ptr<T> >
 {
     typedef scopes::per_request<> type;
 };
+
+#endif
+
+#if !defined(BOOST_NO_RVALUE_REFERENCES)
+
+template<typename T>
+struct scope_traits<T&&>
+{
+    typedef scopes::per_request<> type;
+};
+
+template<typename T>
+struct scope_traits<const T&&>
+{
+    typedef scopes::per_request<> type;
+};
+
+#endif
 
 } // namespace type_traits
 } // namespace di

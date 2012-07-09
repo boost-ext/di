@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_DATA_HPP
 #define BOOST_DI_DATA_HPP
 
+#include <memory>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/noncopyable.hpp>
@@ -293,6 +294,21 @@ struct c17
     function<int()> f_;
     std::string s_;
     int i_;
+};
+
+struct c18
+{
+    BOOST_DI_CTOR(c18
+        , c0 c0_ // per_request
+        , boost::shared_ptr<c1> c1_ // singleton
+        , c3& c3_ // external
+    )
+        : c0_(c0_), c1_(c1_), c3_(c3_)
+    { }
+
+    c0 c0_;
+    boost::shared_ptr<c1> c1_;
+    c3& c3_;
 };
 
 struct cd2;

@@ -32,7 +32,7 @@
         )                                   \
     )
 
-    #if (__GNUC__ >= 4)
+    #if defined(__GNUC__) && (__GNUC__ >= 4)
     #    pragma GCC diagnostic ignored "-Wreorder"
     #endif
 
