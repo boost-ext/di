@@ -25,7 +25,7 @@ test-suite di_test
       [ run hello_world.cpp ]
       [ run injector.cpp ]
       [ run named.cpp ]
-      [ run pool_allocator.cpp ]
+    # [ run pool_allocator.cpp ]
 #      [ run scope_deduction.cpp ]
       [ run provider.cpp ]
       [ run session_scope.cpp ]
