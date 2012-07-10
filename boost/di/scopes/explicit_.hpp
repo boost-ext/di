@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_DETAIL_EXPLICIT_VALUE_HPP
-#define BOOST_DI_DETAIL_EXPLICIT_VALUE_HPP
+#ifndef HBOOST_DI_SCOPES_EXPLICIT__HPP
+#define HBOOST_DI_SCOPES_EXPLICIT__HPP
 
 #include <string>
 #include <boost/preprocessor/repetition/enum_params.hpp>
@@ -18,6 +18,8 @@
 #include <boost/mpl/void.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/string.hpp>
+
+#include "boost/di/scopes/external_.hpp"
 
 namespace boost {
 namespace di {
@@ -51,15 +53,13 @@ public:
     );
 };
 
-} // namespace aux
-
 template<typename, typename = void>
-class explicit_
+class explicit_impl
     : public mpl::false_
 { };
 
 template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, int C)>
-class explicit_<
+class explicit_impl<
     mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)>
 >
     : public mpl::true_
@@ -75,10 +75,10 @@ public:
 template<
     typename T
 >
-class explicit_<
+class explicit_impl<
     T
   , typename enable_if<
-        aux::has_value<T>
+        has_value<T>
     >::type
 >
     : public mpl::true_
@@ -87,6 +87,26 @@ public:
     inline static BOOST_TYPEOF_TPL(T::value) create() {
         return T::value;
     }
+};
+
+} // namespace aux
+
+class explicit_
+{
+public:
+    template<
+        typename TExpected
+      , typename TGiven = TExpected
+    >
+    class scope
+    {
+    public:
+        typedef external<TExpected> result_type;
+
+        result_type create() {
+            return aux::explicit_impl<TGiven>::create();
+        }
+    };
 };
 
 } // namespace detail

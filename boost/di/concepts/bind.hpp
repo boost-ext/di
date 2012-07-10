@@ -100,10 +100,7 @@ struct bind<
     TExpected
   , TGiven
   , typename enable_if<
-        mpl::or_<
-            scopes::explicit_<TGiven>
-          , is_same<TExpected, TGiven>
-        >
+        is_same<TExpected, TGiven>
     >::type
 >
     : detail::dependency<
@@ -188,6 +185,87 @@ struct bind<
                   named<TExpected, TName>
                 , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
               >
+        { };
+    };
+};
+
+template<typename TExpected, typename TGiven>
+struct bind<
+    TExpected
+  , TGiven
+  , typename enable_if<
+        scopes::aux::explicit_impl<TGiven>
+    >::type
+>
+    : detail::dependency<
+          scopes::explicit_
+        , TExpected
+        , TGiven
+        , mpl::vector0<>
+        , mpl::or_<
+              is_base_of<mpl::_1, TExpected>
+            , is_same<mpl::_1, TExpected>
+          >
+      >
+    , annotate<>::with<>
+{
+    template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
+    struct in_call
+        : detail::dependency<
+              scopes::explicit_
+            , TExpected
+            , TGiven
+            , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+            , mpl::or_<
+                  is_base_of<mpl::_1, TExpected>
+                , is_same<mpl::_1, TExpected>
+              >
+          >
+        , annotate<>::with<>
+    {
+        template<typename TName>
+        struct in_name
+            : detail::dependency<
+                  scopes::explicit_
+                , named<TExpected, TName>
+                , TGiven
+                , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+                , mpl::or_<
+                      is_base_of<mpl::_1, named<TExpected, TName> >
+                    , is_same<mpl::_1, named<TExpected, TName> >
+                  >
+              >
+            , annotate<>::with<>
+        { };
+    };
+
+    template<typename TName>
+    struct in_name
+        : detail::dependency<
+              scopes::explicit_
+            , named<TExpected, TName>
+            , TGiven
+            , mpl::vector0<>
+            , mpl::or_<
+                  is_base_of<mpl::_1, named<TExpected, TName> >
+                , is_same<mpl::_1, named<TExpected, TName> >
+              >
+          >
+        , annotate<>::with<>
+    {
+        template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
+        struct in_call
+            : detail::dependency<
+                  scopes::explicit_
+                , named<TExpected, TName>
+                , TGiven
+                , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+                , mpl::or_<
+                      is_base_of<mpl::_1, named<TExpected, TName> >
+                    , is_same<mpl::_1, named<TExpected, TName> >
+                  >
+              >
+            , annotate<>::with<>
         { };
     };
 };

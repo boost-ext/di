@@ -39,17 +39,6 @@ struct c4
 
 int main()
 {
-    //scope_traits - auto deduction
-    //by ref -> external
-    //by shared_ptr -> singleton
-    //by value -> per_request
-    //by rvalue -> per_request
-    //by const ref -> per_request
-    //by ptr -> per_request
-    //by const ptr -> per_request
-    //by auto_ptr -> per_request
-    //by unique_ptr -> per_request
-
     {
         typedef di::generic_module<
             c0if0
