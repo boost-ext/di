@@ -12,8 +12,8 @@
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
-#include "boost/di/scopes/external_.hpp"
-#include "boost/di/scopes/explicit_.hpp"
+#include "boost/di/scopes/external.hpp"
+#include "boost/di/scopes/fixed.hpp"
 #include "boost/di/named.hpp"
 #include "boost/di/concepts.hpp"
 
@@ -441,9 +441,9 @@ BOOST_AUTO_TEST_CASE(named_in_call) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                fake_dependency_base_of<scopes::explicit_, int, mpl::int_<1> >::type
-              , fake_dependency_base_of<scopes::explicit_, named<int, mpl::string<'2'> >, mpl::int_<4>, call_stack<c7, c6, c4> >::type
-              , fake_dependency_base_of<scopes::explicit_, int, mpl::int_<5>, c2>::type
+                fake_dependency_base_of<scopes::fixed, int, mpl::int_<1> >::type
+              , fake_dependency_base_of<scopes::fixed, named<int, mpl::string<'2'> >, mpl::int_<4>, call_stack<c7, c6, c4> >::type
+              , fake_dependency_base_of<scopes::fixed, int, mpl::int_<5>, c2>::type
             >
           , module::deps
         >::value
@@ -492,7 +492,7 @@ BOOST_AUTO_TEST_CASE(externals_base) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                scopes::external<c1>
+                scopes::variant<c1>
             >
           , module::pool::externals
         >::value
@@ -523,9 +523,9 @@ BOOST_AUTO_TEST_CASE(externals_mix) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                scopes::external<c1>
-              , scopes::external<c2>
-              , scopes::external<c3>
+                scopes::variant<c1>
+              , scopes::variant<c2>
+              , scopes::variant<c3>
             >
           , module::pool::externals
         >::value
@@ -559,10 +559,10 @@ BOOST_AUTO_TEST_CASE(externals_bind) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                scopes::external<int>
-              , scopes::external<named<c1, int> >
-              , scopes::external<c2, mpl::vector<c1> >
-              , scopes::external<named<c3, double>, mpl::vector<c4, c5> >
+                scopes::variant<int>
+              , scopes::variant<named<c1, int> >
+              , scopes::variant<c2, mpl::vector<c1> >
+              , scopes::variant<named<c3, double>, mpl::vector<c4, c5> >
             >
           , module::pool::externals
         >::value
@@ -744,7 +744,7 @@ BOOST_AUTO_TEST_CASE(set_variant_no_copy) {
     BOOST_CHECK_EQUAL(c14_.d, c16_->c14_.d);
 }
 
-BOOST_AUTO_TEST_CASE(explicit_value) {
+BOOST_AUTO_TEST_CASE(fixed_value) {
     double_value::value = 42.0;
 
     struct module

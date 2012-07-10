@@ -17,7 +17,7 @@
     #include "boost/di/config.hpp"
 
 //TODO
-#include "boost/di/scopes/external_.hpp"
+#include "boost/di/scopes/external.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
         BOOST_DI_ITERATION_PARAMS(              \
@@ -85,7 +85,7 @@
         {
         public:
             //typedef TConvertible<TExpected> result_type;
-            typedef external<TExpected> result_type;
+            typedef variant<TExpected> result_type;
 
             result_type create() {
                 return allocate_shared<TGiven>(TAllocator<TGiven>());

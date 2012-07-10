@@ -13,7 +13,7 @@
 
 #include "boost/di/scopes/per_request.hpp"
 #include "boost/di/scopes/singleton.hpp"
-#include "boost/di/scopes/external_.hpp"
+#include "boost/di/scopes/external.hpp"
 
 namespace boost {
 namespace di {
@@ -28,7 +28,7 @@ struct scope_traits
 template<typename T>
 struct scope_traits<T&>
 {
-    typedef scopes::external<T> type;
+    typedef scopes::external type;
 };
 
 template<typename T>

@@ -13,7 +13,7 @@
     #include <boost/shared_ptr.hpp>
     #include <boost/make_shared.hpp>
 
-    #include "boost/di/scopes/external_.hpp"
+    #include "boost/di/scopes/external.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
@@ -35,7 +35,7 @@
         template<typename T, typename U>
         struct scope
         {
-            typedef scopes::external<U> result_type; //TODO fake_external
+            typedef scopes::variant<U> result_type; //TODO fake_variant
 
             void call(const entry&) {
                 entry_calls()++;

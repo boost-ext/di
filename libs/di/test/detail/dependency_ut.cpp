@@ -12,7 +12,7 @@
 #include <boost/mpl/int.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-#include "boost/di/scopes/external_.hpp"
+#include "boost/di/scopes/external.hpp"
 
 namespace boost {
 namespace di {
@@ -24,7 +24,7 @@ struct fake_scope
     template<typename T, typename U>
     struct scope
     {
-        typedef scopes::external<U> result_type;
+        typedef scopes::variant<U> result_type;
 
         result_type create() {
             return result_type(make_shared<T>(value));
@@ -35,7 +35,7 @@ struct fake_scope
 struct other_fake_scope { };
 
 template<typename T, typename>
-struct fake_explicit_value
+struct fake_fixed_value
 { };
 
 template<
@@ -112,7 +112,7 @@ BOOST_AUTO_TEST_CASE(rebind_type) {
 BOOST_AUTO_TEST_CASE(create_by_pool) {
     const int i = 42;
     dependency<fake_scope<>, int> dependency_;
-    fake_pool<mpl::vector<scopes::external<int> >, i> pool_;
+    fake_pool<mpl::vector<scopes::variant<int> >, i> pool_;
 
     BOOST_CHECK_EQUAL(i, static_cast<int>(dependency_.create(pool_)));
 }

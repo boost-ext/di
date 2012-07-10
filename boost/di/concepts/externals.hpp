@@ -13,7 +13,7 @@
 #include <boost/mpl/transform.hpp>
 
 #include "boost/di/scopes/singleton.hpp"
-#include "boost/di/scopes/external_.hpp"
+#include "boost/di/scopes/external.hpp"
 #include "boost/di/concepts/annotate.hpp"
 #include "boost/di/config.hpp"
 
@@ -26,7 +26,7 @@ namespace detail {
 template<typename T, typename Enable = void>
 struct make_annotation
 {
-    typedef typename annotate<scopes::external<T> >::template with<> type;
+    typedef typename annotate<scopes::variant<T> >::template with<> type;
 };
 
 template<typename T>
@@ -38,7 +38,7 @@ struct make_annotation<
     typedef typename T::template
         rebind<scopes::singleton<> >::type dependency;
 
-    typedef scopes::external<
+    typedef scopes::variant<
         typename dependency::expected
       , typename dependency::context
     > external;

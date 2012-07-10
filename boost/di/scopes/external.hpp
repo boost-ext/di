@@ -29,7 +29,7 @@
         BOOST_DI_ITERATION_PARAMS(              \
             1                                   \
           , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE  \
-          , "boost/di/scopes/external_.hpp"     \
+          , "boost/di/scopes/external.hpp"      \
         )                                       \
     )
 
@@ -66,21 +66,21 @@
       , typename TContext = mpl::vector0<>
       , typename = void
     >
-    class external
+    class variant
     {
         typedef typename aux::plain_type<T>::type object_type;
 
-        typedef variant<
+        typedef boost::variant<
             object_type&
           , const object_type&
           , shared_ptr<object_type>
         > value_type;
 
         template<typename>
-        class external_impl;
+        class variant_impl;
 
         template<typename TDest>
-        class external_impl<TDest&>
+        class variant_impl<TDest&>
             : public static_visitor<TDest&>
         {
         public:
@@ -101,7 +101,7 @@
         };
 
         template<typename TDest>
-        class external_impl<TDest*>
+        class variant_impl<TDest*>
             : public static_visitor<TDest*>
         {
         public:
@@ -122,7 +122,7 @@
         };
 
         template<typename TDest>
-        class external_impl<shared_ptr<TDest> >
+        class variant_impl<shared_ptr<TDest> >
             : public static_visitor<shared_ptr<TDest> >
         {
         public:
@@ -145,7 +145,7 @@
         };
 
     public:
-        typedef external type;
+        typedef variant type;
         typedef T element_type;
         typedef TContext context;
 
@@ -153,65 +153,65 @@
         {
         public:
             template<typename TValue>
-            inline static external to(const TValue& value) {
-                return external(value);
+            inline static variant to(const TValue& value) {
+                return variant(value);
             }
 
             template<typename TValue>
-            inline static external to(TValue& value) {
-                return external(value);
+            inline static variant to(TValue& value) {
+                return variant(value);
             }
 
             template<typename TValue>
-            inline static external to(shared_ptr<TValue> value) {
-                return external(value);
+            inline static variant to(shared_ptr<TValue> value) {
+                return variant(value);
             }
         };
 
-        external(const object_type& object) // non explicit
-            : external_(object)
+        variant(const object_type& object) // non explicit
+            : variant_(object)
         { }
 
-        external(object_type& object) // non explicit
-            : external_(object)
+        variant(object_type& object) // non explicit
+            : variant_(object)
         { }
 
         template<typename TObject>
-        external(shared_ptr<TObject> object) // non explicit
-            : external_(object)
+        variant(shared_ptr<TObject> object) // non explicit
+            : variant_(object)
         { }
 
         operator object_type&() const {
             return apply_visitor(
-                external_impl<object_type&>(), external_);
+                variant_impl<object_type&>(), variant_);
         }
 
         operator object_type*() const {
             return apply_visitor(
-                external_impl<object_type*>(), external_);
+                variant_impl<object_type*>(), variant_);
         }
 
         template<typename I>
         operator shared_ptr<I>() const {
             return apply_visitor(
-                external_impl<shared_ptr<object_type> >(), external_);
+                variant_impl<shared_ptr<object_type> >(), variant_);
         }
 
         template<typename I, typename TName>
         operator named<shared_ptr<I>, TName>() const {
             return apply_visitor(
-                external_impl<shared_ptr<object_type> >(), external_);
+                variant_impl<shared_ptr<object_type> >(), variant_);
         }
 
     private:
-        value_type external_;
+        value_type variant_;
     };
 
     template<
         typename T
       , typename TContext
     >
-    class external<
+    class variant<
         T
       , TContext
       , typename enable_if<
@@ -227,7 +227,7 @@
         typedef typename aux::plain_type<value_type>::type object_type;
 
     public:
-        typedef external type;
+        typedef variant type;
         typedef T element_type;
         typedef TContext context;
 
@@ -235,57 +235,57 @@
         {
         public:
             template<typename TValue>
-            inline static external to(const TValue& value) {
-                return external(value);
+            inline static variant to(const TValue& value) {
+                return variant(value);
             }
 
             template<typename TValue>
-            inline static external to(TValue& value) {
-                return external(value);
+            inline static variant to(TValue& value) {
+                return variant(value);
             }
 
             template<typename TValue>
-            inline static external to(shared_ptr<TValue> value) {
-                return external(value);
+            inline static variant to(shared_ptr<TValue> value) {
+                return variant(value);
             }
         };
 
-        external(object_type object) // non explicit
-            : external_(object)
+        variant(object_type object) // non explicit
+            : variant_(object)
         { }
 
         template<typename TObject>
-        external(shared_ptr<TObject> object) // non explicit
-            : external_(*object)
+        variant(shared_ptr<TObject> object) // non explicit
+            : variant_(*object)
         { }
 
         operator object_type() const {
-            return external_;
+            return variant_;
         }
 
         operator object_type*() const {
-            return new object_type(external_);
+            return new object_type(variant_);
         }
 
         operator shared_ptr<object_type>() const {
-            return make_shared<object_type>(external_);
+            return make_shared<object_type>(variant_);
         }
 
         template<typename TName>
         operator named<shared_ptr<object_type>, TName>() const {
-            return make_shared<object_type>(external_);
+            return make_shared<object_type>(variant_);
         }
 
         template<typename TName>
         operator named<object_type, TName>() const {
-            return external_;
+            return variant_;
         }
 
     private:
-        object_type external_;
+        object_type variant_;
     };
 
-    class external_
+    class external
     {
     public:
         template<
@@ -295,7 +295,7 @@
         class scope
         {
         public:
-            typedef external<TExpected> result_type;
+            typedef variant<TExpected> result_type;
 
             result_type create() {
                 return boost::shared_ptr<TGiven>();

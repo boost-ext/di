@@ -36,7 +36,7 @@ test-suite di-test
       [ compile-fail policies/check_for_creation_ownership_mt_fail.cpp ]
       [ run policies/check_for_circular_dependencies_ut.cpp ]
       [ compile-fail policies/check_for_circular_dependencies_mt_fail.cpp ]
-      [ run scopes/explicit_ut.cpp ]
+      [ run scopes/fixed_ut.cpp ]
       [ run scopes/external_ut.cpp ]
       [ run scopes/per_request_ut.cpp ]
       [ run scopes/singleton_ut.cpp ]

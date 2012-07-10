@@ -20,7 +20,7 @@
     #include <boost/mpl/assert.hpp>
 
     #include "boost/di/type_traits/has_traits.hpp"
-    #include "boost/di/scopes/external_.hpp"
+    #include "boost/di/scopes/external.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
@@ -45,7 +45,7 @@
             typename
           , typename
           , typename = void
-        > class TExternal = scopes::external
+        > class TExternal = scopes::variant
     >
     class dependency
     {

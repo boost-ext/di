@@ -528,9 +528,9 @@ BOOST_AUTO_TEST_CASE(named_in_call) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                fake_dependency_base_of<scopes::explicit_, int, mpl::int_<1> >::type
-              , fake_dependency_base_of<scopes::explicit_, named<int, mpl::string<'2'> >, mpl::int_<4>, call_stack<c7, c6, c4> >::type
-              , fake_dependency_base_of<scopes::explicit_, int, mpl::int_<5>, c2>::type
+                fake_dependency_base_of<scopes::fixed, int, mpl::int_<1> >::type
+              , fake_dependency_base_of<scopes::fixed, named<int, mpl::string<'2'> >, mpl::int_<4>, call_stack<c7, c6, c4> >::type
+              , fake_dependency_base_of<scopes::fixed, int, mpl::int_<5>, c2>::type
             >
           , module_t::deps
         >::value
