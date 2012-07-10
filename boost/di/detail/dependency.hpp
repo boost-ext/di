@@ -20,7 +20,6 @@
     #include <boost/mpl/assert.hpp>
 
     #include "boost/di/type_traits/has_traits.hpp"
-    //#include "boost/di/scopes/explicit_.hpp"
     #include "boost/di/scopes/external_.hpp"
     #include "boost/di/config.hpp"
 
@@ -42,10 +41,6 @@
       , typename TGiven = TExpected
       , typename TContext = mpl::vector0<>
       , typename TBind = is_same<mpl::_1, TExpected>
-      //, template<
-            //typename
-          //, typename = void
-        //> class TExplicit = scopes::explicit_
       , template<
             typename
           , typename
@@ -72,30 +67,14 @@
         typedef TBind bind;
 
     private:
-        //template<typename TPool>
-        //struct is_value_type
-            //: mpl::and_<
-                  //TExplicit<TGiven>
-                //, mpl::not_<
-                      //mpl::contains<
-                          //typename TPool::externals
-                        //, external_type
-                      //>
-                  //>
-              //>
-        //{ };
-
         template<typename TPool>
         struct is_scope_type
-            : /*mpl::and_<*/
-                  //mpl::not_<TExplicit<TGiven> >
-                mpl::not_<
-                      mpl::contains<
-                          typename TPool::externals
-                        , external_type
-                      >
+            : mpl::not_<
+                  mpl::contains<
+                      typename TPool::externals
+                    , external_type
                   >
-              //>
+              >
         { };
 
         template<typename TPool>
@@ -121,15 +100,6 @@
         {
             typedef typename scope_type::result_type type;
         };
-
-        //template<typename TPool>
-        //typename enable_if<
-            //is_value_type<TPool>
-          //, typename result_type<TPool>::type
-        //>::type
-        //create(const TPool&) {
-            //return TExplicit<TGiven>::create();
-        //}
 
         template<typename TPool>
         typename enable_if<
@@ -164,7 +134,6 @@
               , TGiven
               , TContext
               , TBind
-              //, TExplicit
               , TExternal
             > type;
         };
@@ -180,10 +149,6 @@
       , typename TGiven
       , typename TContext
       , typename TBind
-      //, template<
-            //typename
-          //, typename
-        //> class TExplicit
       , template<
             typename
           , typename
@@ -196,7 +161,6 @@
       , TGiven
       , TContext
       , TBind
-      //, TExplicit
       , TExternal
     >
     {
@@ -210,7 +174,6 @@
               , TGiven
               , TContext
               , TBind
-              //, TExplicit
               , TExternal
             > type;
         };
@@ -219,10 +182,6 @@
     template<
         typename TScope
       , typename TBind
-      //, template<
-            //typename
-          //, typename
-        //> class TExplicit
       , template<
             typename
           , typename
@@ -235,7 +194,6 @@
       , mpl::_2
       , mpl::_3
       , TBind
-      //, TExplicit
       , TExternal
     >
     {
@@ -253,7 +211,6 @@
               , TGiven
               , TContext
               , TBind
-              //, TExplicit
               , TExternal
             > type;
         };
