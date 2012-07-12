@@ -224,7 +224,6 @@ typedef mpl::vector<
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(mix_modules, TInjector, mix_modules_types) {
     TInjector injector;
-
     check(injector.template create<shared_ptr<c8> >());
 }
 

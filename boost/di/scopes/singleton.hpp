@@ -10,9 +10,11 @@
     #define BOOST_DI_SCOPES_SINGLETON_HPP
 
     #include <memory>
+    #include <cassert>
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/make_shared.hpp>
     #include <boost/shared_ptr.hpp>
+    #include <boost/weak_ptr.hpp>
 
     #include "boost/di/named.hpp"
     #include "boost/di/config.hpp"
@@ -31,35 +33,45 @@
 
     namespace aux {
 
-    template<typename TExpected>
-    class convertible_singleton
+    template<typename T>
+    class convertible_shared
     {
     public:
-        template<typename T>
-        convertible_singleton(const shared_ptr<T>& object) // non explicit
+        convertible_shared(T* object = NULL) // non explicit
             : object_(object)
         { }
 
-        template<typename T>
-        operator shared_ptr<T>() const {
-            return object_;
+        template<typename I>
+        operator shared_ptr<I>() const {
+            assert(object_);
+
+            if (weak_.expired()) {
+                shared_ptr<I> object(object_);
+                weak_ = static_pointer_cast<T>(object);
+                return object;
+            }
+
+            shared_ptr<I> object(weak_);
+            return object;
         }
 
-        operator TExpected*() const {
-            return object_.get();
+        template<typename I, typename TName>
+        operator named<I, TName>() const {
+            return static_cast<shared_ptr<I> >(this);
         }
 
-        operator TExpected&() const {
-            return *object_;
+        template<typename I, typename TName>
+        operator named<shared_ptr<I>, TName>() const {
+            return static_cast<shared_ptr<I> >(this);
         }
 
-        template<typename TName>
-        operator named<shared_ptr<TExpected>, TName>() const {
+        operator bool() const {
             return object_;
         }
 
     private:
-        shared_ptr<TExpected> object_;
+        T* object_;
+        mutable weak_ptr<T> weak_;
     };
 
     } // namespace aux
@@ -70,7 +82,7 @@
         > class TAllocator = std::allocator
       , template<
             typename
-        > class TConvertible = aux::convertible_singleton
+        > class TConvertible = aux::convertible_shared
     >
     class singleton
     {
@@ -82,20 +94,20 @@
         class scope
         {
         public:
-            typedef TConvertible<TExpected> result_type;
+            typedef TConvertible<TGiven> result_type;
 
             result_type create() {
-                if (!instance_) {
-                    instance_ = allocate_shared<TGiven>(TAllocator<TGiven>());
+                if (!object_) {
+                    object_ = new TGiven(); //TODO allocator
                 }
 
-                return instance_;
+                return object_;
             }
 
             #include BOOST_PP_ITERATE()
 
         private:
-            shared_ptr<TGiven> instance_;
+            result_type object_;
         };
     };
 
@@ -109,14 +121,11 @@
 
     template<BOOST_DI_TYPES(Args)>
     result_type create(BOOST_DI_ARGS(Args, args)) {
-        if (!instance_) {
-            instance_ = allocate_shared<TGiven>(
-                TAllocator<TGiven>()
-              , BOOST_DI_ARGS_FORWARD(args)
-            );
+        if (!object_) {
+            object_ = new TGiven(BOOST_DI_ARGS_FORWARD(args)); //TODO allocator
         }
 
-        return instance_;
+        return object_;
     }
 
 #endif

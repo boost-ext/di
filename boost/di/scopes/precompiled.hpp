@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_SCOPES_FIXED_HPP
-#define BOOST_DI_SCOPES_FIXED_HPP
+#ifndef BOOST_DI_SCOPES_PRECOMPILED_HPP
+#define BOOST_DI_SCOPES_PRECOMPILED_HPP
 
 #include <string>
 #include <boost/preprocessor/repetition/enum_params.hpp>
@@ -54,12 +54,12 @@ public:
 };
 
 template<typename, typename = void>
-class fixed_impl
+class precompiled_impl
     : public mpl::false_
 { };
 
 template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, int C)>
-class fixed_impl<
+class precompiled_impl<
     mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)>
 >
     : public mpl::true_
@@ -75,7 +75,7 @@ public:
 template<
     typename T
 >
-class fixed_impl<
+class precompiled_impl<
     T
   , typename enable_if<
         has_value<T>
@@ -91,7 +91,7 @@ public:
 
 } // namespace aux
 
-class fixed
+class precompiled
 {
 public:
     template<
@@ -101,10 +101,10 @@ public:
     class scope
     {
     public:
-        typedef variant<TExpected> result_type;
+        typedef variant<TExpected> result_type; //TODO own convertible
 
         result_type create() {
-            return aux::fixed_impl<TGiven>::create();
+            return aux::precompiled_impl<TGiven>::create();
         }
     };
 };

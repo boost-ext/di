@@ -16,9 +16,6 @@
     #include "boost/di/named.hpp"
     #include "boost/di/config.hpp"
 
-//TODO
-#include "boost/di/scopes/external.hpp"
-
     #define BOOST_PP_ITERATION_PARAMS_1 (       \
         BOOST_DI_ITERATION_PARAMS(              \
             1                                   \
@@ -33,35 +30,43 @@
 
     namespace aux {
 
-    template<typename TExpected>
-    class convertible_per_request
+    template<typename T>
+    class convertible_value
     {
     public:
-        template<typename T>
-        convertible_per_request(const shared_ptr<T>& object) // non explicit
+        convertible_value(T* object) // non explicit
             : object_(object)
         { }
 
-        template<typename T>
-        operator shared_ptr<T>() const {
-            return object_;
+        operator T*() const {
+            return object_; // has to be deleted by client
         }
 
-        operator TExpected*() const {
-            return object_.get();
-        }
-
-        operator TExpected&() const {
+        operator const T&() const {
             return *object_;
+            //TODO should be deleted by di immediately and copied by client in ctor
         }
 
-        template<typename TName>
-        operator named<shared_ptr<TExpected>, TName>() const {
-            return object_;
+        //operator auto_ptr
+        //operator unique_ptr
+
+        template<typename I>
+        operator shared_ptr<I>() const {
+            return shared_ptr<I>(object_);
+        }
+
+        template<typename I, typename TName>
+        operator named<I, TName>() const {
+            return shared_ptr<I>(object_);
+        }
+
+        template<typename I, typename TName>
+        operator named<shared_ptr<I>, TName>() const {
+            return shared_ptr<I>(object_);
         }
 
     private:
-        shared_ptr<TExpected> object_;
+        T* object_;
     };
 
     } // namespace aux
@@ -72,7 +77,7 @@
         > class TAllocator = std::allocator
       , template<
             typename
-        > class TConvertible = aux::convertible_per_request
+        > class TConvertible = aux::convertible_value
     >
     class per_request
     {
@@ -84,11 +89,10 @@
         class scope
         {
         public:
-            //typedef TConvertible<TExpected> result_type;
-            typedef variant<TExpected> result_type;
+            typedef TConvertible<TGiven> result_type;
 
             result_type create() {
-                return allocate_shared<TGiven>(TAllocator<TGiven>());
+                return new TGiven(); //TODO allocator
             }
 
             #include BOOST_PP_ITERATE()
@@ -105,10 +109,7 @@
 
     template<BOOST_DI_TYPES(Args)>
     result_type create(BOOST_DI_ARGS(Args, args)) {
-        return allocate_shared<TGiven>(
-            TAllocator<TGiven>()
-          , BOOST_DI_ARGS_FORWARD(args)
-        );
+        return new TGiven(BOOST_DI_ARGS_FORWARD(args)); //TODO allocator
     }
 
 #endif
