@@ -53,7 +53,7 @@ public:
         TDeps
       , TExternals
       , TGiven
-      , typename boost::enable_if<has_element_type<TGiven> >::type
+      , typename boost::enable_if<has_element_type<TGiven>>::type
     >
         : public mpl::true_
     { };
@@ -61,8 +61,8 @@ public:
 
 int main()
 {
-    di::injector<di::policy<check_for_creation_by_smart_ptr> > injector;
-    injector.create<boost::shared_ptr<c> >();
+    di::injector<di::policy<check_for_creation_by_smart_ptr>> injector;
+    injector.create<boost::shared_ptr<c>>();
     //injector.create<c>(); //compile error (CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED)
 
     return 0;

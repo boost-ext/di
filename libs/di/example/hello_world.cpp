@@ -35,7 +35,7 @@ int main()
     }
 
     {
-        injector.create<boost::shared_ptr<hello_world> >();
+        injector.create<boost::shared_ptr<hello_world>>();
     }
 
     return 0;

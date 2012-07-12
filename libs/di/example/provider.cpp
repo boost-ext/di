@@ -28,7 +28,7 @@ struct transaction
 
 struct usage
 {
-    BOOST_DI_CTOR(usage, boost::shared_ptr<di::provider<int> > p) {
+    BOOST_DI_CTOR(usage, boost::shared_ptr<di::provider<int>> p) {
         std::cout << p->get() << std::endl; // 0
         std::cout << p->get() << std::endl; // 1
     }

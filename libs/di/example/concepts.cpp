@@ -93,7 +93,7 @@ int main()
     {
         typedef di::generic_module<
             c0 // per_request
-          , di::bind<int, mpl::int_<42> >::in_call<c1> // per_request
+          , di::bind<int, mpl::int_<42>>::in_call<c1> // per_request
           , di::singleton<
                 c1
             >
@@ -111,7 +111,7 @@ int main()
             >
           , di::externals<
                 double
-              , di::annotate<di::bind<double>::in_call<c1, c2> >::with<name1>
+              , di::annotate<di::bind<double>::in_call<c1, c2>>::with<name1>
             >
           , di::per_requests<
                 impl
@@ -119,10 +119,10 @@ int main()
               , di::bind<i, impl1>
               , di::bind<i, impl2>::in_name<name2>
               , di::bind<i, impl3>::in_call<c6>
-              , di::bind<i, impl4>::in_call<di::call_stack<c8, c7> >::in_name<name3>
+              , di::bind<i, impl4>::in_call<di::call_stack<c8, c7>>::in_name<name3>
             >
           , di::singletons<
-                di::bind<c9>::in_call<c10, c11, di::call_stack<c13, c12> >
+                di::bind<c9>::in_call<c10, c11, di::call_stack<c13, c12>>
             >
         > generic_module;
     }
@@ -130,7 +130,7 @@ int main()
     {
         BOOST_AUTO(fusion_module, di::fusion_module<>()(
             di::bind<c0>() // per_request
-          , di::bind<int, mpl::int_<42> >::in_call<c1>() // per_request
+          , di::bind<int, mpl::int_<42>>::in_call<c1>() // per_request
           , di::singleton<
                 c1
             >()
@@ -149,10 +149,10 @@ int main()
               , di::bind<i, impl1>
               , di::bind<i, impl2>::in_name<name2>
               , di::bind<i, impl3>::in_call<c6>
-              , di::bind<i, impl4>::in_call<di::call_stack<c8, c7> >::in_name<name3>
+              , di::bind<i, impl4>::in_call<di::call_stack<c8, c7>>::in_name<name3>
             >()
           , di::singletons<
-                di::bind<c9>::in_call<c10, c11, di::call_stack<c13, c12> >
+                di::bind<c9>::in_call<c10, c11, di::call_stack<c13, c12>>
             >()
           , di::bind<int>::to(0)
           , di::bind<double>::to(0.0)

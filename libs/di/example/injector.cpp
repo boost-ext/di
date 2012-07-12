@@ -25,6 +25,11 @@ struct c0if0 : if0
     virtual void dummy() { }
 };
 
+struct c1if0 : if0
+{
+    virtual void dummy() { }
+};
+
 struct c1
 {
     explicit c1(int = 0) { }
@@ -53,10 +58,10 @@ int main()
         typedef di::generic_module<
             di::singletons<
                 c2, c3, c4
-            >,
-            di::per_requests<
+            >
+          , di::per_requests<
                 c0if0
-              , di::bind<c0if0>::in_call<c3>
+              , di::bind<c1if0>::in_call<c3>
             >
         > generic_module;
 
@@ -65,13 +70,13 @@ int main()
                 c1
             >()
           , di::per_requests<
-                di::bind<int, mpl::int_<1> >
+                di::bind<int, mpl::int_<1>>
             >()
         ));
 
         di::injector<generic_module, BOOST_TYPEOF(fusion_module)> injector;
 
-        boost::shared_ptr<c4> c4_ = injector.create<boost::shared_ptr<c4> >();
+        boost::shared_ptr<c4> c4_ = injector.create<boost::shared_ptr<c4>>();
         (void)c4_;
     }
 
@@ -91,13 +96,13 @@ int main()
                 c1
             >()
           , di::per_requests<
-                di::bind<int, mpl::int_<1> >
+                di::bind<int, mpl::int_<1>>
             >()
         );
 
         di::injector<generic_module, decltype(fusion_module)> injector;
 
-        boost::shared_ptr<c4> c4_ = injector.create<boost::shared_ptr<c4> >();
+        boost::shared_ptr<c4> c4_ = injector.create<boost::shared_ptr<c4>>();
         (void)c4_;
     }
 
@@ -108,7 +113,7 @@ int main()
             >,
             di::per_requests<
                 c0if0
-              , di::bind<c0if0>::in_call<c3>
+              , di::bind<c1if0>::in_call<c3>
             >
         > generic_module;
 
@@ -117,13 +122,13 @@ int main()
                 c1
             >()
           , di::per_requests<
-                di::bind<int, mpl::int_<1> >
+                di::bind<int, mpl::int_<1>>
             >()
         );
 
         auto injector = di::injector<>().install(generic_module(), fusion_module);
 
-        boost::shared_ptr<c4> c4_ = injector.create<boost::shared_ptr<c4> >();
+        boost::shared_ptr<c4> c4_ = injector.create<boost::shared_ptr<c4>>();
         (void)c4_;
     }
 

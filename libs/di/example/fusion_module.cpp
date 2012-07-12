@@ -73,8 +73,8 @@ int main()
           , di::per_requests<
                 c0
               , mpl::int_<42>
-              , di::bind<int, mpl::int_<87> >::in_name<name>
-              , di::bind<c01>::in_call<di::call_stack<c2, c1> >
+              , di::bind<int, mpl::int_<87>>::in_name<name>
+              , di::bind<c01>::in_call<di::call_stack<c2, c1>>
             >()
           , di::bind<double>::to(42.0)
           , di::bind<double>::in_call<c0>::to(87.0)
@@ -94,12 +94,12 @@ int main()
           , di::per_request<
                 c0
             >()
-          , di::scope<di::scopes::per_request<> >::bind<
+          , di::scope<di::scopes::per_request<>>::bind<
                 mpl::int_<42>
             >()
           , di::per_requests<
-                di::bind<int, mpl::int_<87> >::in_name<name>
-              , di::bind<c01>::in_call<di::call_stack<c2, c1> >
+                di::bind<int, mpl::int_<87>>::in_name<name>
+              , di::bind<c01>::in_call<di::call_stack<c2, c1>>
             >()
           , di::bind<double>::to(42.0)
           , di::bind<double>::in_call<c0>::to(87.0)
