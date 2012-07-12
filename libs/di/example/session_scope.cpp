@@ -47,11 +47,7 @@ public:
                 return object_;
             }
 
-            operator TExpected&() const {
-                return *object_;
-            }
-
-            const boost::shared_ptr<TExpected>& object_;
+            boost::shared_ptr<TExpected> object_;
         };
 
     public:

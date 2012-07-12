@@ -14,7 +14,6 @@
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/make_shared.hpp>
     #include <boost/shared_ptr.hpp>
-    #include <boost/weak_ptr.hpp>
 
     #include "boost/di/named.hpp"
     #include "boost/di/config.hpp"
@@ -43,26 +42,17 @@
 
         template<typename I>
         operator shared_ptr<I>() const {
-            assert(object_);
-
-            if (weak_.expired()) {
-                shared_ptr<I> object(object_);
-                weak_ = static_pointer_cast<T>(object);
-                return object;
-            }
-
-            shared_ptr<I> object(weak_);
-            return object;
+            return object_;
         }
 
         template<typename I, typename TName>
         operator named<I, TName>() const {
-            return static_cast<shared_ptr<I> >(this);
+            return object_;
         }
 
         template<typename I, typename TName>
         operator named<shared_ptr<I>, TName>() const {
-            return static_cast<shared_ptr<I> >(this);
+            return object_;
         }
 
         operator bool() const {
@@ -70,8 +60,7 @@
         }
 
     private:
-        T* object_;
-        mutable weak_ptr<T> weak_;
+        shared_ptr<T> object_;
     };
 
     } // namespace aux

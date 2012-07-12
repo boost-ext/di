@@ -34,7 +34,7 @@ struct c1
 
 struct c2
 {
-    BOOST_DI_CTOR(c2, c1, int, double, char) { }
+    BOOST_DI_CTOR(c2, boost::shared_ptr<c1>, int, double, char) { }
 };
 
 struct c3 { };
@@ -43,7 +43,7 @@ struct c4 { };
 struct c5
 {
     BOOST_DI_CTOR(c5
-        , c1
+        , boost::shared_ptr<c1>
         , c2
         , boost::shared_ptr<i0>
         , boost::shared_ptr<c3>
