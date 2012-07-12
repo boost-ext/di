@@ -49,5 +49,6 @@ test-suite di-test
       [ compile-fail policies/check_for_circular_dependencies_mt_fail.cpp ]
       [ compile-fail injector_policy_mt_fail.cpp ]
       [ compile-fail injector_binding_mt_fail.cpp ]
+      [ compile-fail injector_singleton_by_copy_mt_fail.cpp ]
     ;
 

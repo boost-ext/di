@@ -12,8 +12,9 @@
     #include <memory>
     #include <cassert>
     #include <boost/preprocessor/iteration/iterate.hpp>
-    #include <boost/make_shared.hpp>
     #include <boost/shared_ptr.hpp>
+    #include <boost/make_shared.hpp>
+    #include <boost/mpl/assert.hpp>
 
     #include "boost/di/named.hpp"
     #include "boost/di/config.hpp"
@@ -53,6 +54,14 @@
         template<typename I, typename TName>
         operator named<shared_ptr<I>, TName>() const {
             return object_;
+        }
+
+        operator T() const {
+            BOOST_MPL_ASSERT_MSG(
+                false
+              , SINGLETON_SCOPE_CANT_BE_PASSED_BY_COPY
+              , (T)
+            );
         }
 
         operator bool() const {
