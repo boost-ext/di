@@ -45,7 +45,7 @@ struct annotate<none_t>
             typename
           , typename
           , typename = void
-        > class TExternal = scopes::variant
+        > class TExternal = scopes::convertible_any
     >
     struct with_
         : with<>

@@ -45,7 +45,7 @@
             typename
           , typename
           , typename = void
-        > class TExternal = scopes::variant
+        > class TExternal = scopes::convertible_any
     >
     class dependency
     {

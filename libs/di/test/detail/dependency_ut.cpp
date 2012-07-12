@@ -24,7 +24,7 @@ struct fake_scope
     template<typename T, typename U>
     struct scope
     {
-        typedef scopes::variant<U> result_type;
+        typedef scopes::convertible_any<U> result_type;
 
         result_type create() {
             return result_type(make_shared<T>(value));
@@ -112,7 +112,7 @@ BOOST_AUTO_TEST_CASE(rebind_type) {
 BOOST_AUTO_TEST_CASE(create_by_pool) {
     const int i = 42;
     dependency<fake_scope<>, int> dependency_;
-    fake_pool<mpl::vector<scopes::variant<int> >, i> pool_;
+    fake_pool<mpl::vector<scopes::convertible_any<int> >, i> pool_;
 
     BOOST_CHECK_EQUAL(i, static_cast<int>(dependency_.create(pool_)));
 }

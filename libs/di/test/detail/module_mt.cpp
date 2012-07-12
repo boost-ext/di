@@ -416,18 +416,18 @@ BOOST_AUTO_TEST_CASE(externals_create_by_explicit_value) {
     const double d = 21.0;
     const char c = 'x';
 
-    scopes::variant<int> i_(i);
-    scopes::variant<double> d_(d);
-    scopes::variant<char> c_(c);
+    scopes::convertible_any<int> i_(i);
+    scopes::convertible_any<double> d_(d);
+    scopes::convertible_any<char> c_(c);
 
     module<
         mpl::vector<
             fake_dependency<scopes::precompiled<>, std::string, mpl::string<'s'> >::type
         >
       , mpl::vector<
-            scopes::variant<int>
-          , scopes::variant<double>
-          , scopes::variant<char>
+            scopes::convertible_any<int>
+          , scopes::convertible_any<double>
+          , scopes::convertible_any<char>
         >
     > module_(i_, d_, c_);
 
@@ -444,14 +444,14 @@ BOOST_AUTO_TEST_CASE(externals_create_with_non_trivial_ctor) {
     const double d = 21.0;
     const char c = 'x';
 
-    scopes::variant<c2> c2_(make_shared<c2>(i, d, c));
+    scopes::convertible_any<c2> c2_(make_shared<c2>(i, d, c));
 
     module<
         mpl::vector<
             fake_dependency<scopes::per_request<>, c2>::type
         >
       , mpl::vector<
-            scopes::variant<c2>
+            scopes::convertible_any<c2>
         >
     > module_(c2_);
 
@@ -469,8 +469,8 @@ BOOST_AUTO_TEST_CASE(externals_create_with_attributes) {
     typedef named<int, mpl::string<'1'> > named1;
     typedef named<int, mpl::string<'2'> > named2;
 
-    scopes::variant<named1> i1_(i1);
-    scopes::variant<named2> i2_(i2);
+    scopes::convertible_any<named1> i1_(i1);
+    scopes::convertible_any<named2> i2_(i2);
 
     module<
         mpl::vector<
@@ -478,8 +478,8 @@ BOOST_AUTO_TEST_CASE(externals_create_with_attributes) {
           , fake_dependency<scopes::per_request<>, named2, int>::type
         >
       , mpl::vector<
-            scopes::variant<named1>
-          , scopes::variant<named2>
+            scopes::convertible_any<named1>
+          , scopes::convertible_any<named2>
         >
     > module_(i1_, i2_);
 
@@ -497,7 +497,7 @@ BOOST_AUTO_TEST_CASE(create_string_boost_function_ptr) {
         static int f() { return i1; }
     };
 
-    scopes::variant<function<int()> > i_(&c::f);
+    scopes::convertible_any<function<int()> > i_(&c::f);
 
     module<
         mpl::vector<
@@ -505,7 +505,7 @@ BOOST_AUTO_TEST_CASE(create_string_boost_function_ptr) {
           , fake_dependency_base_of<scopes::precompiled<>, std::string, mpl::string<'s'> >::type
         >
       , mpl::vector<
-            scopes::variant<function<int()> >
+            scopes::convertible_any<function<int()> >
         >
     > module_(i_);
 
@@ -615,12 +615,12 @@ BOOST_AUTO_TEST_CASE(policies_mix_join_many) {
 BOOST_AUTO_TEST_CASE(scope_auto_deduction) {
 
     c3 c3_;
-    scopes::variant<c3> e3(c3_);
+    scopes::convertible_any<c3> e3(c3_);
 
     module<
         mpl::vector0<>
       , mpl::vector<
-            scopes::variant<c3>
+            scopes::convertible_any<c3>
         >
     > module_(e3);
 

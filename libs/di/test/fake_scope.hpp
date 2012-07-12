@@ -35,7 +35,7 @@
         template<typename T, typename U>
         struct scope
         {
-            typedef scopes::variant<U> result_type; //TODO fake_variant
+            typedef scopes::convertible_any<U> result_type; //TODO fake_variant
 
             void call(const entry&) {
                 entry_calls()++;

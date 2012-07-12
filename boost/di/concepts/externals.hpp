@@ -26,7 +26,7 @@ namespace detail {
 template<typename T, typename Enable = void>
 struct make_annotation
 {
-    typedef typename annotate<scopes::variant<T> >::template with<> type;
+    typedef typename annotate<scopes::convertible_any<T> >::template with<> type;
 };
 
 template<typename T>
@@ -38,7 +38,7 @@ struct make_annotation<
     typedef typename T::template
         rebind<scopes::singleton<> >::type dependency;
 
-    typedef scopes::variant<
+    typedef scopes::convertible_any<
         typename dependency::expected
       , typename dependency::context
     > external;

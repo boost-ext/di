@@ -20,13 +20,13 @@ namespace di {
 namespace detail {
 
 BOOST_AUTO_TEST_CASE(module_externals_fail) {
-    scopes::variant<int> i_(42);
+    scopes::convertible_any<int> i_(42);
 
     module<
         mpl::vector0<>
       , mpl::vector<
-            scopes::variant<int>
-          , scopes::variant<double>
+            scopes::convertible_any<int>
+          , scopes::convertible_any<double>
         >
     > module_(i_);
 

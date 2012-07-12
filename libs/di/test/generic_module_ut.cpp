@@ -494,7 +494,7 @@ BOOST_AUTO_TEST_CASE(externals_base) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                scopes::variant<c1>
+                scopes::convertible_any<c1>
             >
           , module::pool::externals
         >::value
@@ -525,9 +525,9 @@ BOOST_AUTO_TEST_CASE(externals_mix) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                scopes::variant<c1>
-              , scopes::variant<c2>
-              , scopes::variant<c3>
+                scopes::convertible_any<c1>
+              , scopes::convertible_any<c2>
+              , scopes::convertible_any<c3>
             >
           , module::pool::externals
         >::value
@@ -561,10 +561,10 @@ BOOST_AUTO_TEST_CASE(externals_bind) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                scopes::variant<int>
-              , scopes::variant<named<c1, int> >
-              , scopes::variant<c2, mpl::vector<c1> >
-              , scopes::variant<named<c3, double>, mpl::vector<c4, c5> >
+                scopes::convertible_any<int>
+              , scopes::convertible_any<named<c1, int> >
+              , scopes::convertible_any<c2, mpl::vector<c1> >
+              , scopes::convertible_any<named<c3, double>, mpl::vector<c4, c5> >
             >
           , module::pool::externals
         >::value

@@ -66,21 +66,21 @@
       , typename TContext = mpl::vector0<>
       , typename = void
     >
-    class variant
+    class convertible_any
     {
         typedef typename aux::plain_type<T>::type object_type;
 
-        typedef boost::variant<
+        typedef variant<
             object_type&
           , const object_type&
           , shared_ptr<object_type>
         > value_type;
 
         template<typename>
-        class variant_impl;
+        class convertible_any_impl;
 
         template<typename TDest>
-        class variant_impl<TDest&>
+        class convertible_any_impl<TDest&>
             : public static_visitor<TDest&>
         {
         public:
@@ -101,7 +101,7 @@
         };
 
         template<typename TDest>
-        class variant_impl<TDest*>
+        class convertible_any_impl<TDest*>
             : public static_visitor<TDest*>
         {
         public:
@@ -122,7 +122,7 @@
         };
 
         template<typename TDest>
-        class variant_impl<shared_ptr<TDest> >
+        class convertible_any_impl<shared_ptr<TDest> >
             : public static_visitor<shared_ptr<TDest> >
         {
         public:
@@ -145,7 +145,7 @@
         };
 
     public:
-        typedef variant type;
+        typedef convertible_any type;
         typedef T element_type;
         typedef TContext context;
 
@@ -153,65 +153,65 @@
         {
         public:
             template<typename TValue>
-            inline static variant to(const TValue& value) {
-                return variant(value);
+            inline static convertible_any to(const TValue& value) {
+                return convertible_any(value);
             }
 
             template<typename TValue>
-            inline static variant to(TValue& value) {
-                return variant(value);
+            inline static convertible_any to(TValue& value) {
+                return convertible_any(value);
             }
 
             template<typename TValue>
-            inline static variant to(shared_ptr<TValue> value) {
-                return variant(value);
+            inline static convertible_any to(shared_ptr<TValue> value) {
+                return convertible_any(value);
             }
         };
 
-        variant(const object_type& object) // non explicit
-            : variant_(object)
+        convertible_any(const object_type& object) // non explicit
+            : convertible_any_(object)
         { }
 
-        variant(object_type& object) // non explicit
-            : variant_(object)
+        convertible_any(object_type& object) // non explicit
+            : convertible_any_(object)
         { }
 
         template<typename TObject>
-        variant(shared_ptr<TObject> object) // non explicit
-            : variant_(object)
+        convertible_any(shared_ptr<TObject> object) // non explicit
+            : convertible_any_(object)
         { }
 
         operator object_type&() const {
             return apply_visitor(
-                variant_impl<object_type&>(), variant_);
+                convertible_any_impl<object_type&>(), convertible_any_);
         }
 
         operator object_type*() const {
             return apply_visitor(
-                variant_impl<object_type*>(), variant_);
+                convertible_any_impl<object_type*>(), convertible_any_);
         }
 
         template<typename I>
         operator shared_ptr<I>() const {
             return apply_visitor(
-                variant_impl<shared_ptr<object_type> >(), variant_);
+                convertible_any_impl<shared_ptr<object_type> >(), convertible_any_);
         }
 
         template<typename I, typename TName>
         operator named<shared_ptr<I>, TName>() const {
             return apply_visitor(
-                variant_impl<shared_ptr<object_type> >(), variant_);
+                convertible_any_impl<shared_ptr<object_type> >(), convertible_any_);
         }
 
     private:
-        value_type variant_;
+        value_type convertible_any_;
     };
 
     template<
         typename T
       , typename TContext
     >
-    class variant<
+    class convertible_any<
         T
       , TContext
       , typename enable_if<
@@ -227,7 +227,7 @@
         typedef typename aux::plain_type<value_type>::type object_type;
 
     public:
-        typedef variant type;
+        typedef convertible_any type;
         typedef T element_type;
         typedef TContext context;
 
@@ -235,54 +235,54 @@
         {
         public:
             template<typename TValue>
-            inline static variant to(const TValue& value) {
-                return variant(value);
+            inline static convertible_any to(const TValue& value) {
+                return convertible_any(value);
             }
 
             template<typename TValue>
-            inline static variant to(TValue& value) {
-                return variant(value);
+            inline static convertible_any to(TValue& value) {
+                return convertible_any(value);
             }
 
             template<typename TValue>
-            inline static variant to(shared_ptr<TValue> value) {
-                return variant(value);
+            inline static convertible_any to(shared_ptr<TValue> value) {
+                return convertible_any(value);
             }
         };
 
-        variant(object_type object) // non explicit
-            : variant_(object)
+        convertible_any(object_type object) // non explicit
+            : convertible_any_(object)
         { }
 
         template<typename TObject>
-        variant(shared_ptr<TObject> object) // non explicit
-            : variant_(*object)
+        convertible_any(shared_ptr<TObject> object) // non explicit
+            : convertible_any_(*object)
         { }
 
         operator object_type() const {
-            return variant_;
+            return convertible_any_;
         }
 
         operator object_type*() const {
-            return new object_type(variant_);
+            return new object_type(convertible_any_);
         }
 
         operator shared_ptr<object_type>() const {
-            return make_shared<object_type>(variant_);
+            return make_shared<object_type>(convertible_any_);
         }
 
         template<typename TName>
         operator named<shared_ptr<object_type>, TName>() const {
-            return make_shared<object_type>(variant_);
+            return make_shared<object_type>(convertible_any_);
         }
 
         template<typename TName>
         operator named<object_type, TName>() const {
-            return variant_;
+            return convertible_any_;
         }
 
     private:
-        object_type variant_;
+        object_type convertible_any_;
     };
 
     class external
@@ -295,7 +295,7 @@
         class scope
         {
         public:
-            typedef variant<TExpected> result_type;
+            typedef convertible_any<TExpected> result_type;
 
             result_type create() {
                 return boost::shared_ptr<TGiven>();
