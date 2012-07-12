@@ -8,6 +8,8 @@
 #define BOOST_DI_SCOPES_PRECOMPILED_HPP
 
 #include <string>
+#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/non_type.hpp>
 #include <boost/typeof/typeof.hpp>
@@ -19,7 +21,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/string.hpp>
 
-#include "boost/di/scopes/external.hpp"
+#include "boost/di/named.hpp"
 
 namespace boost {
 namespace di {
@@ -89,8 +91,39 @@ public:
     }
 };
 
+template<typename T>
+class convertible_copy
+{
+public:
+    convertible_copy(T object) // non explicit
+        : object_(object)
+    { }
+
+    operator T() const {
+        return object_;
+    }
+
+    template<typename TName>
+    operator named<T, TName>() const {
+        return object_;
+    }
+
+    template<typename TName>
+    operator named<shared_ptr<T>, TName>() const {
+        return make_shared<T>(object_);
+    }
+
+private:
+    T object_;
+};
+
 } // namespace aux
 
+template<
+    template<
+        typename
+    > class TConvertible = aux::convertible_copy
+>
 class precompiled
 {
 public:
@@ -101,7 +134,9 @@ public:
     class scope
     {
     public:
-        typedef variant<TExpected> result_type; //TODO own convertible
+        typedef TConvertible<
+            BOOST_TYPEOF_TPL(aux::precompiled_impl<TGiven>::create())
+        > result_type;
 
         result_type create() {
             return aux::precompiled_impl<TGiven>::create();
@@ -114,5 +149,4 @@ public:
 } // namespace boost
 
 #endif
-
 
