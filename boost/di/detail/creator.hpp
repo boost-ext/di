@@ -60,10 +60,10 @@
             typename T
           , typename TCallStack
           , typename TEntries
-          , typename TPool
+          , typename TExternals
         >
-        static typename binder<T, TCallStack>::template result_type<TPool>::type
-        execute(TEntries& entries, const TPool& pool) {
+        static typename binder<T, TCallStack>::template result_type<TExternals>::type
+        execute(TEntries& entries, const TExternals& externals) {
             return execute_impl<
                 T
               , typename mpl::push_back<
@@ -71,7 +71,7 @@
                   , typename binder<T, TCallStack>::given
                 >::type
               , binder<T, TCallStack>
-            >(entries, pool);
+            >(entries, externals);
         }
 
     private:
@@ -120,14 +120,14 @@
       , typename TCallStack
       , typename TDependency
       , typename TEntries
-      , typename TPool
+      , typename TExternals
     >
     static typename enable_if_c<
         mpl::size<typename ctor<TDependency>::type>::value
         ==
         BOOST_PP_ITERATION()
-      , typename TDependency::template result_type<TPool>::type
-    >::type execute_impl(TEntries& entries, const TPool& pool) {
+      , typename TDependency::template result_type<TExternals>::type
+    >::type execute_impl(TEntries& entries, const TExternals& externals) {
 
         #define BOOST_DI_CREATOR_EXECUTE(z, n, _)       \
             BOOST_PP_COMMA_IF(n)                        \
@@ -137,10 +137,10 @@
                   , n                                   \
                 >::type                                 \
               , TCallStack                              \
-            >(entries, pool)
+            >(entries, externals)
 
         return acquire<typename TDependency::type>(entries).create(
-            pool
+            externals
             BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
             BOOST_PP_REPEAT(
                 BOOST_PP_ITERATION()

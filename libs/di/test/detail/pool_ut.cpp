@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE(empty) {
     BOOST_CHECK((
         mpl::equal<
             mpl::vector0<>
-          , pool_type::externals
+          , pool_type::types
         >::value
     ));
 
@@ -79,7 +79,7 @@ BOOST_AUTO_TEST_CASE(ctor_order) {
                 trivial_ctor
               , default_ctor
             >
-          , pool_type::externals
+          , pool_type::types
         >::value
     ));
 
@@ -105,7 +105,7 @@ BOOST_AUTO_TEST_CASE(ctor_order_reverse) {
                 trivial_ctor
               , default_ctor
             >
-          , pool_type::externals
+          , pool_type::types
         >::value
     ));
 
@@ -128,7 +128,7 @@ BOOST_AUTO_TEST_CASE(default_ctor_base) {
                 trivial_ctor
               , default_ctor
             >
-          , pool_type::externals
+          , pool_type::types
         >::value
     ));
 
@@ -187,7 +187,7 @@ BOOST_AUTO_TEST_CASE(of_pools) {
                 default_ctor_type
               , trivial_ctor_type
             >
-          , pool_type::externals
+          , pool_type::types
         >::value
     ));
     BOOST_CHECK_EQUAL(

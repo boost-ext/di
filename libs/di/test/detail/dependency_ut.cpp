@@ -45,10 +45,10 @@ template<
 >
 class fake_external { };
 
-template<typename TExternals, int value = 0>
+template<typename TTypes, int value = 0>
 struct fake_pool
 {
-    typedef TExternals externals;
+    typedef TTypes types;
 
     template<typename>
     int get() const {

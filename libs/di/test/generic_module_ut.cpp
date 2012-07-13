@@ -496,7 +496,7 @@ BOOST_AUTO_TEST_CASE(externals_base) {
             mpl::vector<
                 scopes::convertible_any<c1>
             >
-          , module::pool::externals
+          , module::externals::types
         >::value
     ));
 }
@@ -529,7 +529,7 @@ BOOST_AUTO_TEST_CASE(externals_mix) {
               , scopes::convertible_any<c2>
               , scopes::convertible_any<c3>
             >
-          , module::pool::externals
+          , module::externals::types
         >::value
     ));
 }
@@ -566,7 +566,7 @@ BOOST_AUTO_TEST_CASE(externals_bind) {
               , scopes::convertible_any<c2, mpl::vector<c1> >
               , scopes::convertible_any<named<c3, double>, mpl::vector<c4, c5> >
             >
-          , module::pool::externals
+          , module::externals::types
         >::value
     ));
 }

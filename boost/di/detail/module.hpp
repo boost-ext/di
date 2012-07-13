@@ -17,8 +17,6 @@
     #include <boost/mpl/transform.hpp>
     #include <boost/mpl/if.hpp>
     #include <boost/mpl/set.hpp>
-    #include <boost/mpl/inherit_linearly.hpp>
-    #include <boost/mpl/inherit.hpp>
     #include <boost/mpl/remove_if.hpp>
     #include <boost/mpl/deref.hpp>
     #include <boost/mpl/begin_end.hpp>
@@ -117,28 +115,44 @@
               >
         { };
 
-        template<typename T, typename = void>
+        template<
+            typename T
+          , typename = void
+        >
         struct deps_impl
         {
             typedef mpl::vector<T> type;
         };
 
         template<typename T>
-        struct deps_impl<T, typename enable_if<type_traits::has_deps<T> >::type>
+        struct deps_impl<
+            T
+          , typename enable_if<
+                type_traits::has_deps<T>
+            >::type
+        >
         {
             typedef typename T::deps type;
         };
 
-        template<typename T, typename = void>
-        struct pool_impl
+        template<
+            typename T
+          , typename = void
+        >
+        struct externals_impl
         {
             typedef mpl::vector<T> type;
         };
 
         template<typename T>
-        struct pool_impl<T, typename enable_if<type_traits::has_pool<T> >::type>
+        struct externals_impl<
+            T
+          , typename enable_if<
+                type_traits::has_externals<T>
+            >::type
+        >
         {
-            typedef mpl::vector<typename T::pool> type;
+            typedef mpl::vector<typename T::externals> type;
         };
 
     public:
@@ -159,11 +173,11 @@
                 TExternals
               , mpl::vector0<>
               , mpl::copy<
-                    pool_impl<mpl::_2>
+                    externals_impl<mpl::_2>
                   , mpl::back_inserter<boost::mpl::_1>
                 >
             >::type
-        > pool;
+        > externals;
 
         struct deps
             : mpl::remove_if<
@@ -172,7 +186,7 @@
                           typename mpl::fold<
                               TDeps
                             , typename mpl::fold<
-                                  typename pool::externals
+                                  typename externals::types
                                 , mpl::vector0<>
                                 , mpl::if_<
                                       type_traits::has_element_type<mpl::_2>
@@ -202,13 +216,6 @@
         { };
 
     private:
-        struct entries
-            : mpl::inherit_linearly<
-                  deps
-                , mpl::inherit<mpl::_1, mpl::_2>
-              >::type
-        { };
-
         template<typename T, typename TPolicy>
         struct verify_policies_impl
             : TPolicy::template verify<deps, TExternals, T>::type
@@ -234,7 +241,7 @@
             typedef typename verify_policies<T>::type policies_type;
 
             return TCreator<binder_type>::template
-                execute<T, mpl::vector0<> >(entries_, pool_);
+                execute<T, mpl::vector0<> >(entries_, externals_);
         }
 
         template<typename T, typename Visitor>
@@ -276,8 +283,8 @@
             call_impl<Scope, typename mpl::pop_front<Deps>::type>(action);
         }
 
-        pool pool_;
-        entries entries_;
+        externals externals_;
+        TPool<deps> entries_;
     };
 
     } // namespace detail
@@ -294,10 +301,10 @@
       , typename enable_if<
             is_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >
         >::type* = 0)
-        : pool_(BOOST_PP_ENUM_BINARY_PARAMS(
+        : externals_(BOOST_PP_ENUM_BINARY_PARAMS(
               BOOST_PP_ITERATION()
             , args
-            , .pool_ BOOST_PP_INTERCEPT
+            , .externals_ BOOST_PP_INTERCEPT
           ))
     { }
 
@@ -307,7 +314,7 @@
       , typename disable_if<
             is_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >
         >::type* = 0)
-        : pool_(BOOST_DI_ARGS_FORWARD(args))
+        : externals_(BOOST_DI_ARGS_FORWARD(args))
     { }
 
 #endif

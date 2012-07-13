@@ -67,56 +67,56 @@
         typedef TBind bind;
 
     private:
-        template<typename TPool>
+        template<typename TExternals>
         struct is_scope_type
             : mpl::not_<
                   mpl::contains<
-                      typename TPool::externals
+                      typename TExternals::types
                     , external_type
                   >
               >
         { };
 
-        template<typename TPool>
+        template<typename TExternals>
         struct is_external_type
             : mpl::contains<
-                  typename TPool::externals
+                  typename TExternals::types
                 , external_type
               >
         { };
 
     public:
-        template<typename TPool, typename = void>
+        template<typename TExternals, typename = void>
         struct result_type
         {
             typedef external_type type;
         };
 
-        template<typename TPool>
+        template<typename TExternals>
         struct result_type<
-            TPool
-          , typename enable_if<is_scope_type<TPool> >::type
+            TExternals
+          , typename enable_if<is_scope_type<TExternals> >::type
         >
         {
             typedef typename scope_type::result_type type;
         };
 
-        template<typename TPool>
+        template<typename TExternals>
         typename enable_if<
-            is_scope_type<TPool>
-          , typename result_type<TPool>::type
+            is_scope_type<TExternals>
+          , typename result_type<TExternals>::type
         >::type
-        create(const TPool&) {
+        create(const TExternals&) {
             return scope_.create();
         }
 
-        template<typename TPool>
+        template<typename TExternals>
         typename enable_if<
-            is_external_type<TPool>
-          , typename result_type<TPool>::type
+            is_external_type<TExternals>
+          , typename result_type<TExternals>::type
         >::type
-        create(const TPool& pool) {
-            return pool.template get<typename result_type<TPool>::type>();
+        create(const TExternals& externals) {
+            return externals.template get<typename result_type<TExternals>::type>();
         }
 
         template<typename TAction>
@@ -224,22 +224,22 @@
 
 #else
 
-    template<typename TPool, BOOST_DI_TYPES(Args)>
+    template<typename TExternals, BOOST_DI_TYPES(Args)>
     typename enable_if<
-        is_scope_type<TPool>
-      , typename result_type<TPool>::type
+        is_scope_type<TExternals>
+      , typename result_type<TExternals>::type
     >::type
-    create(const TPool&, BOOST_DI_ARGS(Args, args)) {
+    create(const TExternals&, BOOST_DI_ARGS(Args, args)) {
         return scope_.create(BOOST_DI_ARGS_FORWARD(args));
     }
 
-    template<typename TPool, BOOST_DI_TYPES(Args)>
+    template<typename TExternals, BOOST_DI_TYPES(Args)>
     typename enable_if<
-        is_external_type<TPool>
-      , typename result_type<TPool>::type
+        is_external_type<TExternals>
+      , typename result_type<TExternals>::type
     >::type
-    create(const TPool& pool, BOOST_DI_ARGS_NOT_USED(Args)) {
-        return pool.template get<typename result_type<TPool>::type>();
+    create(const TExternals& externals, BOOST_DI_ARGS_NOT_USED(Args)) {
+        return externals.template get<typename result_type<TExternals>::type>();
     }
 
 #endif

@@ -41,14 +41,14 @@
     namespace detail {
 
     template<
-        typename TExternals = mpl::vector0<>
+        typename TTypes = mpl::vector0<>
       , typename = void
     >
     class pool
     {
     public:
         typedef pool type;
-        typedef TExternals externals;
+        typedef TTypes types;
 
         template<typename T>
         const T& get() const {
@@ -68,45 +68,45 @@
     #define BOOST_DI_DERIVES_IMPL(_, n, sequence)                   \
         BOOST_PP_COMMA_IF(n) public mpl::at_c<sequence, n>::type
 
-    template<typename TExternals>
+    template<typename TTypes>
     class pool<
-        TExternals
+        TTypes
       , typename enable_if_c<
-            mpl::size<TExternals>::value == BOOST_PP_ITERATION()
+            mpl::size<TTypes>::value == BOOST_PP_ITERATION()
         >::type
     >
         : BOOST_PP_REPEAT(
               BOOST_PP_ITERATION()
             , BOOST_DI_DERIVES_IMPL
-            , TExternals
+            , TTypes
           )
     {
         template<typename T, typename = void>
-        struct externals_impl
+        struct types_impl
         {
             typedef mpl::vector<T> type;
         };
 
         template<typename T>
-        struct externals_impl<
+        struct types_impl<
             T
           , typename enable_if<
-                type_traits::has_externals<T>
+                type_traits::has_types<T>
             >::type
         >
         {
-            typedef typename T::externals type;
+            typedef typename T::types type;
         };
 
     public:
         typedef pool type;
 
-        struct externals
+        struct types
             : mpl::fold<
-                  TExternals
+                  TTypes
                 , mpl::vector0<>
                 , mpl::copy<
-                      externals_impl<mpl::_2>
+                      types_impl<mpl::_2>
                     , mpl::back_inserter<mpl::_1>
                   >
               >::type
