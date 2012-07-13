@@ -241,7 +241,7 @@
             typedef typename verify_policies<T>::type policies_type;
 
             return TCreator<binder_type>::template
-                execute<T, mpl::vector0<> >(entries_, externals_);
+                execute<T, mpl::vector0<> >(deps_, externals_);
         }
 
         template<typename T, typename Visitor>
@@ -279,12 +279,12 @@
         >::type
         call_impl(const Action& action) {
             typedef typename mpl::front<Deps>::type type;
-            static_cast<type&>(entries_).call(action);
+            static_cast<type&>(deps_).call(action);
             call_impl<Scope, typename mpl::pop_front<Deps>::type>(action);
         }
 
         externals externals_;
-        TPool<deps> entries_;
+        TPool<deps> deps_;
     };
 
     } // namespace detail

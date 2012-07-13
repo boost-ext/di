@@ -59,11 +59,11 @@
         template<
             typename T
           , typename TCallStack
-          , typename TEntries
+          , typename TDeps
           , typename TExternals
         >
         static typename binder<T, TCallStack>::template result_type<TExternals>::type
-        execute(TEntries& entries, const TExternals& externals) {
+        execute(TDeps& deps, const TExternals& externals) {
             return execute_impl<
                 T
               , typename mpl::push_back<
@@ -71,7 +71,7 @@
                   , typename binder<T, TCallStack>::given
                 >::type
               , binder<T, TCallStack>
-            >(entries, externals);
+            >(deps, externals);
         }
 
     private:
@@ -79,25 +79,25 @@
 
         template<
             typename TDependency
-          , typename TEntries
+          , typename TDeps
         >
         static typename enable_if<
-            is_base_of<TDependency, TEntries>
+            is_base_of<TDependency, TDeps>
           , TDependency&
         >::type
-        acquire(TEntries& entries) {
-            return static_cast<TDependency&>(entries);
+        acquire(TDeps& deps) {
+            return static_cast<TDependency&>(deps);
         }
 
         template<
             typename TDependency
-          , typename TEntries
+          , typename TDeps
         >
         static typename disable_if<
-            is_base_of<TDependency, TEntries>
+            is_base_of<TDependency, TDeps>
           , TDependency
         >::type
-        acquire(TEntries&) {
+        acquire(TDeps&) {
             return TDependency();
         }
     };
@@ -119,7 +119,7 @@
         typename T
       , typename TCallStack
       , typename TDependency
-      , typename TEntries
+      , typename TDeps
       , typename TExternals
     >
     static typename enable_if_c<
@@ -127,7 +127,7 @@
         ==
         BOOST_PP_ITERATION()
       , typename TDependency::template result_type<TExternals>::type
-    >::type execute_impl(TEntries& entries, const TExternals& externals) {
+    >::type execute_impl(TDeps& deps, const TExternals& externals) {
 
         #define BOOST_DI_CREATOR_EXECUTE(z, n, _)       \
             BOOST_PP_COMMA_IF(n)                        \
@@ -137,9 +137,9 @@
                   , n                                   \
                 >::type                                 \
               , TCallStack                              \
-            >(entries, externals)
+            >(deps, externals)
 
-        return acquire<typename TDependency::type>(entries).create(
+        return acquire<typename TDependency::type>(deps).create(
             externals
             BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
             BOOST_PP_REPEAT(
