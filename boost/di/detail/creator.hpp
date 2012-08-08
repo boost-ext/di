@@ -14,6 +14,7 @@
     #include <boost/preprocessor/punctuation/comma_if.hpp>
     #include <boost/type_traits/is_base_of.hpp>
     #include <boost/utility/enable_if.hpp>
+    #include <boost/ref.hpp>
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/push_back.hpp>
@@ -80,25 +81,27 @@
         template<
             typename TDependency
           , typename TDeps
+          , typename TExternals
         >
         static typename enable_if<
             is_base_of<TDependency, TDeps>
           , TDependency&
         >::type
-        acquire(TDeps& deps) {
+        acquire(TDeps& deps, const TExternals&) {
             return static_cast<TDependency&>(deps);
         }
 
         template<
             typename TDependency
           , typename TDeps
+          , typename TExternals
         >
         static typename disable_if<
             is_base_of<TDependency, TDeps>
           , TDependency
         >::type
-        acquire(TDeps&) {
-            return TDependency();
+        acquire(TDeps&, const TExternals& externals) {
+            return TDependency(cref(externals));
         }
     };
 
@@ -139,7 +142,7 @@
               , TCallStack                              \
             >(deps, externals)
 
-        return acquire<typename TDependency::type>(deps).create(
+        return acquire<typename TDependency::type>(deps, externals).create(
             externals
             BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
             BOOST_PP_REPEAT(

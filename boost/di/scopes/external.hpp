@@ -295,6 +295,10 @@
         class scope
         {
         public:
+            //template<typename T>
+            //external(const T& t)
+            //{ }
+
             typedef convertible_any<TExpected> result_type;
 
             result_type create() {

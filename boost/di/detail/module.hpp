@@ -12,6 +12,7 @@
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/type_traits/is_same.hpp>
     #include <boost/utility/enable_if.hpp>
+    #include <boost/ref.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/fold.hpp>
     #include <boost/mpl/transform.hpp>
@@ -232,7 +233,9 @@
         typedef TBinder<deps, TExternals> binder_type;
 
     public:
-        module() { }
+        module()
+            : deps_(cref(externals_))
+        { }
 
         #include BOOST_PP_ITERATE()
 
@@ -306,6 +309,7 @@
             , args
             , .externals_ BOOST_PP_INTERCEPT
           ))
+        , deps_(cref(externals_))
     { }
 
     template<BOOST_DI_TYPES(Args)>
@@ -315,6 +319,7 @@
             is_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >
         >::type* = 0)
         : externals_(BOOST_DI_ARGS_FORWARD(args))
+        , deps_(cref(externals_))
     { }
 
 #endif

@@ -51,6 +51,12 @@
         typedef pool type;
         typedef TTypes types;
 
+        pool() { }
+
+        template<typename T>
+        explicit pool(const reference_wrapper<T>&)
+        { }
+
         template<typename T>
         const T& get() const {
             return static_cast<const T&>(*this);
