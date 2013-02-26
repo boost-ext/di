@@ -41,21 +41,14 @@ int main()
 {
     {
         typedef di::generic_module<
-            c0if0
-            //deduce<c0if0>
-            //deduce<c1, c2>
-            //per_request<c3>  //auto deduction
-            //singleton<c0if0> //auto deduction
+            di::deduced<
+                c0if0 // singleton<bind<if0, c0if0>>, per_request<c3>
+            >
         > generic_module;
 
         di::injector<generic_module>().create<c4>();
-
-/*        auto fu<>()(*/
-          /*deduce<c1, c2, c3>()*/
-
     }
 
     return 0;
 }
-
 

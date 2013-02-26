@@ -26,7 +26,7 @@ enum eid
     e1, e2
 };
 
-class factory
+class i_factory
 {
 public:
     BOOST_DI_CTOR(factory, eid id)
@@ -54,7 +54,7 @@ int main()
     eid id = e2;
 
     typedef di::generic_module<
-        factory // bind<i, factory>
+        i_factory // or bind<i, factory>
       , external<eid>
     > generic_module;
 

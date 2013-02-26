@@ -20,6 +20,7 @@ test-suite di_test
     : [ run check_for_creation_by_smart_ptr_policy.cpp ]
       [ run concepts.cpp ]
       [ run ctor.cpp ]
+#      [ run deduced_scope.cpp ]
 #      [ run factory.cpp ]
       [ run fusion_module.cpp ]
       [ run generic_module.cpp ]
@@ -28,8 +29,8 @@ test-suite di_test
       [ run named.cpp ]
 #      [ run pool_allocator.cpp ]
       [ run provider.cpp ]
-#      [ run scope_deduction.cpp ]
       [ run session_scope.cpp ]
+#      [ run setter.cpp ]
       [ run text_visitor.cpp ]
       [ run uml_visitor.cpp ]
     ;
