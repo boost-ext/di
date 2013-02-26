@@ -217,6 +217,44 @@ BOOST_AUTO_TEST_CASE(same_arg_for_all_types) {
     BOOST_CHECK_EQUAL(i, pool_.get<custom_ctor_other>().i);
 }
 
+BOOST_AUTO_TEST_CASE(subset) {
+    typedef allocator<trivial_ctor> trivial_ctor_type;
+    typedef allocator<default_ctor> default_ctor_type;
+    typedef allocator<custom_ctor> custom_ctor_type;
+
+    typedef pool<
+        mpl::vector<
+            trivial_ctor_type
+          , default_ctor_type
+          , custom_ctor_type
+        >
+    > pool_all_type;
+
+    typedef pool<
+        mpl::vector<
+            trivial_ctor_type
+          , custom_ctor_type
+        >
+    > pool_subset_type;
+
+    trivial_ctor_type trivial_ctor_(new trivial_ctor);
+    default_ctor_type default_ctor_(new default_ctor);
+    custom_ctor_type custom_ctor_(new custom_ctor(0));
+
+    pool_all_type pool_all_(default_ctor_, trivial_ctor_, custom_ctor_);
+    pool_subset_type pool_subset_(cref(pool_all_));
+
+    BOOST_CHECK_EQUAL(
+        trivial_ctor_.object
+      , pool_subset_.get<trivial_ctor_type>().object
+    );
+
+    BOOST_CHECK_EQUAL(
+        custom_ctor_.object
+      , pool_subset_.get<custom_ctor_type>().object
+    );
+}
+
 } // namespace detail
 } // namespace di
 } // namespace boost
