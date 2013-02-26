@@ -14,7 +14,6 @@
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/preprocessor/punctuation/comma_if.hpp>
     #include <boost/utility/enable_if.hpp>
-    #include <boost/ref.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/fold.hpp>
     #include <boost/mpl/copy.hpp>
@@ -72,18 +71,18 @@
     #endif
 
 #else
-    #define n BOOST_PP_ITERATION()
-
-    #define BOOST_DI_DERIVES_IMPL(_, n, types)                          \
-        BOOST_PP_COMMA_IF(n) public mpl::at_c<types, n>::type
+    #define BOOST_DI_DERIVES_IMPL(_, n, sequence)                   \
+        BOOST_PP_COMMA_IF(n) public mpl::at_c<sequence, n>::type
 
     template<typename TTypes>
     class pool<
         TTypes
-      , typename enable_if_c<mpl::size<TTypes>::value == n>::type
+      , typename enable_if_c<
+            mpl::size<TTypes>::value == BOOST_PP_ITERATION()
+        >::type
     >
         : BOOST_PP_REPEAT(
-              n
+              BOOST_PP_ITERATION()
             , BOOST_DI_DERIVES_IMPL
             , TTypes
           )
@@ -130,18 +129,8 @@
                 : BOOST_PP_REPEAT(n, BOOST_DI_CTOR_INITLIST_IMPL, ~)    \
             { }
 
-        #define BOOST_PP_LOCAL_LIMITS (1, n)
+        #define BOOST_PP_LOCAL_LIMITS (1, BOOST_PP_ITERATION())
         #include BOOST_PP_LOCAL_ITERATE()
-        #undef BOOST_DI_CTOR_INITLIST_IMPL
-
-        #define BOOST_DI_CTOR_INITLIST_IMPL(_, n, types)                \
-            BOOST_PP_COMMA_IF(n) mpl::at_c<types, n>::type(arg)
-
-        template<typename T>
-        explicit pool(const reference_wrapper<T>& arg)
-            : BOOST_PP_REPEAT(n, BOOST_DI_CTOR_INITLIST_IMPL, TTypes)
-        { }
-
         #undef BOOST_DI_CTOR_INITLIST_IMPL
 
         template<typename T>
@@ -151,7 +140,6 @@
     };
 
     #undef BOOST_DI_DERIVES_IMPL
-    #undef n
 
 #endif
 
