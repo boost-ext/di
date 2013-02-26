@@ -45,6 +45,15 @@ struct custom_ctor
     int i;
 };
 
+struct custom_ctor_other
+{
+    explicit custom_ctor_other(int i)
+        : i(i)
+    { }
+
+    int i;
+};
+
 BOOST_AUTO_TEST_CASE(empty) {
     typedef pool<mpl::vector0<> > pool_type;
 
@@ -167,7 +176,7 @@ BOOST_AUTO_TEST_CASE(get) {
     );
 }
 
-BOOST_AUTO_TEST_CASE(of_pools) {
+BOOST_AUTO_TEST_CASE(pool_of_pools) {
     typedef allocator<trivial_ctor> trivial_ctor_type;
     typedef allocator<default_ctor> default_ctor_type;
     typedef pool<mpl::vector<default_ctor_type> > pool_1_type;
@@ -198,6 +207,14 @@ BOOST_AUTO_TEST_CASE(of_pools) {
         default_ctor_.object
       , pool_.get<default_ctor_type>().object
     );
+}
+
+BOOST_AUTO_TEST_CASE(same_arg_for_all_types) {
+    const int i = 42;
+    pool<mpl::vector<custom_ctor, custom_ctor_other> > pool_(cref(i));
+
+    BOOST_CHECK_EQUAL(i, pool_.get<custom_ctor>().i);
+    BOOST_CHECK_EQUAL(i, pool_.get<custom_ctor_other>().i);
 }
 
 } // namespace detail
