@@ -41,7 +41,7 @@ int main()
 {
     {
         typedef di::generic_module<
-            di::deduced<
+            di::deduce<
                 c0if0 // singleton<bind<if0, c0if0>>, per_request<c3>
             >
         > generic_module;

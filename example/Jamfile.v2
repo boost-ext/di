@@ -20,7 +20,7 @@ test-suite di_test :
     [ run check_for_creation_by_smart_ptr_policy.cpp ]
     [ run concepts.cpp ]
     [ run ctor.cpp ]
-#    [ run deduced_scope.cpp ]
+#    [ run deduce_scope.cpp ]
 #    [ run factory.cpp ]
     [ run fusion_module.cpp ]
     [ run generic_module.cpp ]

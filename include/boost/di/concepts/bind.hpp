@@ -14,7 +14,7 @@
 #include <boost/mpl/or.hpp>
 
 #include "boost/di/detail/dependency.hpp"
-#include "boost/di/scopes/stated.hpp"
+#include "boost/di/scopes/definite.hpp"
 #include "boost/di/concepts/annotate.hpp"
 #include "boost/di/named.hpp"
 #include "boost/di/config.hpp"
@@ -25,14 +25,14 @@ namespace concepts {
 
 template<
     typename TExpected
-  , typename TStated = TExpected
+  , typename TGiven = TExpected
   , typename = void
 >
 struct bind
     : detail::dependency<
           mpl::_1
         , TExpected
-        , TStated
+        , TGiven
         , mpl::vector0<>
       >
     , annotate<>::with_<
@@ -45,7 +45,7 @@ struct bind
         : detail::dependency<
               mpl::_1
             , TExpected
-            , TStated
+            , TGiven
             , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
           >
         , annotate<>::with_<
@@ -58,7 +58,7 @@ struct bind
             : detail::dependency<
                   mpl::_1
                 , named<TExpected, TName>
-                , TStated
+                , TGiven
                 , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
               >
             , annotate<>::with_<
@@ -73,7 +73,7 @@ struct bind
         : detail::dependency<
               mpl::_1
             , named<TExpected, TName>
-            , TStated
+            , TGiven
           >
         , annotate<>::with_<
               named<TExpected, TName>
@@ -84,7 +84,7 @@ struct bind
             : detail::dependency<
                   mpl::_1
                 , named<TExpected, TName>
-                , TStated
+                , TGiven
                 , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
               >
             , annotate<>::with_<
@@ -95,18 +95,18 @@ struct bind
     };
 };
 
-template<typename TExpected, typename TStated>
+template<typename TExpected, typename TGiven>
 struct bind<
     TExpected
-  , TStated
+  , TGiven
   , typename enable_if<
-        is_same<TExpected, TStated>
+        is_same<TExpected, TGiven>
     >::type
 >
     : detail::dependency<
           mpl::_1
         , TExpected
-        , TStated
+        , TGiven
         , mpl::vector0<>
         , mpl::or_<
               is_base_of<mpl::_1, TExpected>
@@ -122,7 +122,7 @@ struct bind<
         : detail::dependency<
               mpl::_1
             , TExpected
-            , TStated
+            , TGiven
             , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
             , mpl::or_<
                   is_base_of<mpl::_1, TExpected>
@@ -139,7 +139,7 @@ struct bind<
             : detail::dependency<
                   mpl::_1
                 , named<TExpected, TName>
-                , TStated
+                , TGiven
                 , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
                 , mpl::or_<
                       is_base_of<mpl::_1, named<TExpected, TName> >
@@ -158,7 +158,7 @@ struct bind<
         : detail::dependency<
               mpl::_1
             , named<TExpected, TName>
-            , TStated
+            , TGiven
             , mpl::vector0<>
             , mpl::or_<
                   is_base_of<mpl::_1, named<TExpected, TName> >
@@ -174,7 +174,7 @@ struct bind<
             : detail::dependency<
                   mpl::_1
                 , named<TExpected, TName>
-                , TStated
+                , TGiven
                 , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
                 , mpl::or_<
                       is_base_of<mpl::_1, named<TExpected, TName> >
@@ -189,18 +189,18 @@ struct bind<
     };
 };
 
-template<typename TExpected, typename TStated>
+template<typename TExpected, typename TGiven>
 struct bind<
     TExpected
-  , TStated
+  , TGiven
   , typename enable_if<
-        scopes::aux::stated_impl<TStated>
+        scopes::aux::definite_impl<TGiven>
     >::type
 >
     : detail::dependency<
-          scopes::stated<>
+          scopes::definite<>
         , TExpected
-        , TStated
+        , TGiven
         , mpl::vector0<>
         , mpl::or_<
               is_base_of<mpl::_1, TExpected>
@@ -212,9 +212,9 @@ struct bind<
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     struct in_call
         : detail::dependency<
-              scopes::stated<>
+              scopes::definite<>
             , TExpected
-            , TStated
+            , TGiven
             , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
             , mpl::or_<
                   is_base_of<mpl::_1, TExpected>
@@ -226,9 +226,9 @@ struct bind<
         template<typename TName>
         struct in_name
             : detail::dependency<
-                  scopes::stated<>
+                  scopes::definite<>
                 , named<TExpected, TName>
-                , TStated
+                , TGiven
                 , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
                 , mpl::or_<
                       is_base_of<mpl::_1, named<TExpected, TName> >
@@ -242,9 +242,9 @@ struct bind<
     template<typename TName>
     struct in_name
         : detail::dependency<
-              scopes::stated<>
+              scopes::definite<>
             , named<TExpected, TName>
-            , TStated
+            , TGiven
             , mpl::vector0<>
             , mpl::or_<
                   is_base_of<mpl::_1, named<TExpected, TName> >
@@ -256,9 +256,9 @@ struct bind<
         template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
         struct in_call
             : detail::dependency<
-                  scopes::stated<>
+                  scopes::definite<>
                 , named<TExpected, TName>
-                , TStated
+                , TGiven
                 , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
                 , mpl::or_<
                       is_base_of<mpl::_1, named<TExpected, TName> >

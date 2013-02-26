@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_SCOPES_STATED_HPP
-#define BOOST_DI_SCOPES_STATED_HPP
+#ifndef BOOST_DI_SCOPES_DEFINITE_HPP
+#define BOOST_DI_SCOPES_DEFINITE_HPP
 
 #include <string>
 #include <boost/shared_ptr.hpp>
@@ -56,12 +56,12 @@ public:
 };
 
 template<typename, typename = void>
-class stated_impl
+class definite_impl
     : public mpl::false_
 { };
 
 template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, int C)>
-class stated_impl<
+class definite_impl<
     mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)>
 >
     : public mpl::true_
@@ -77,7 +77,7 @@ public:
 template<
     typename T
 >
-class stated_impl<
+class definite_impl<
     T
   , typename enable_if<
         has_value<T>
@@ -124,22 +124,22 @@ template<
         typename
     > class TConvertible = aux::convertible_copy
 >
-class stated
+class definite
 {
 public:
     template<
         typename TExpected
-      , typename Tstated = TExpected
+      , typename TGiven = TExpected
     >
     class scope
     {
     public:
         typedef TConvertible<
-            BOOST_TYPEOF_TPL(aux::stated_impl<Tstated>::create())
+            BOOST_TYPEOF_TPL(aux::definite_impl<TGiven>::create())
         > result_type;
 
         result_type create() {
-            return aux::stated_impl<Tstated>::create();
+            return aux::definite_impl<TGiven>::create();
         }
     };
 };
