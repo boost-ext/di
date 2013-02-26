@@ -1,0 +1,37 @@
+#
+# Copyright (c) 2012 Krzysztof Jusiak (krzysztof at jusiak dot net)
+#
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#
+
+import testing ;
+
+project di :
+    requirements
+        <include>.
+        <warnings>all
+        <warnings-as-errors>on
+        <cxxflags>-std=c++0x
+        <define>BOOST_DI_NO_CXX11_FEATURES
+;
+
+test-suite di_test :
+    [ run check_for_creation_by_smart_ptr_policy.cpp ]
+    [ run concepts.cpp ]
+    [ run ctor.cpp ]
+#    [ run deduced_scope.cpp ]
+#    [ run factory.cpp ]
+    [ run fusion_module.cpp ]
+    [ run generic_module.cpp ]
+    [ run hello_world.cpp ]
+    [ run injector.cpp ]
+    [ run named.cpp ]
+#    [ run pool_allocator.cpp ]
+    [ run provider.cpp ]
+    [ run session_scope.cpp ]
+#    [ run setter.cpp ]
+    [ run text_visitor.cpp ]
+    [ run uml_visitor.cpp ]
+;
+
