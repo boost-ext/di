@@ -86,12 +86,6 @@
         { };
 
     public:
-        dependency() { } //TODO workaround
-
-        template<typename T>
-        dependency(const T&)
-        { }
-
         template<typename TExternals, typename = void>
         struct result_type
         {
@@ -130,6 +124,7 @@
             scope_.call(action);
         }
 
+        //workaround
         template<typename>
         struct rebind
         {

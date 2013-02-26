@@ -109,8 +109,6 @@ BOOST_AUTO_TEST_CASE(rebind_type) {
     ));
 }
 
-#if 0
-TODO
 BOOST_AUTO_TEST_CASE(create_by_pool) {
     const int i = 42;
     dependency<fake_scope<>, int> dependency_;
@@ -126,7 +124,6 @@ BOOST_AUTO_TEST_CASE(create_by_scope) {
 
     BOOST_CHECK_EQUAL(i, static_cast<int>(dependency_.create(pool_)));
 }
-#endif
 
 } // namespace detail
 } // namespace di
