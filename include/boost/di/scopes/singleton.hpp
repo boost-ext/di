@@ -65,7 +65,7 @@
         }
 
         operator bool() const {
-            return object_;
+            return object_.get();
         }
 
     private:
