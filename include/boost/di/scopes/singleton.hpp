@@ -53,7 +53,7 @@
 
         template<typename I, typename TName>
         operator named<shared_ptr<I>, TName>() const {
-            return object_;
+            return named<shared_ptr<I>, TName>(object_);
         }
 
         operator T() const {
