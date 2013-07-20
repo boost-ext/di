@@ -29,6 +29,12 @@ struct bind
     : concepts::bind<TExpected, TGiven>
 { };
 
+template<typename TName, int Value>
+struct bind_int : bind<int, mpl::int_<Value>>::template in_name<TName> { };
+
+template<typename TName, typename TStr>
+struct bind_string : bind<std::string, TStr>::template in_name<TName> { };
+
 template<typename TExpected, typename TGiven = TExpected>
 struct singleton
     : scope<scopes::singleton<> >::bind<bind<TExpected, TGiven> >
