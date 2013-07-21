@@ -30,7 +30,7 @@ struct bind
 { };
 
 template<typename TName, int Value>
-struct bind_int : bind<int, mpl::int_<Value>>::template in_name<TName> { };
+struct bind_int : bind<int, mpl::int_<Value> >::template in_name<TName> { };
 
 template<typename TName, typename TStr>
 struct bind_string : bind<std::string, TStr>::template in_name<TName> { };
