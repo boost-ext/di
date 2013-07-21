@@ -37,8 +37,8 @@ BOOST_AUTO_TEST_CASE(create) {
 
     shared_ptr<c8> c8_ = module.create<shared_ptr<c8> >();
 
-    BOOST_CHECK(c8_->c1_ != c8_->c7_->c6_->c5_.c1_);
-    BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ != c8_->c7_->c6_->c3_);
+    BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
+    BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
     BOOST_CHECK(c8_->c7_->if0_ != c8_->c7_->c6_->c5_.if0_);
 
     BOOST_CHECK(dynamic_cast<c0if0*>(c8_->c7_->c6_->c5_.if0_.get()));

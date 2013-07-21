@@ -9,7 +9,10 @@
     #ifndef BOOST_DI_DETAIL_MODULE_HPP
     #define BOOST_DI_DETAIL_MODULE_HPP
 
+    #include <map>
+    #include <typeinfo>
     #include <boost/preprocessor/iteration/iterate.hpp>
+    #include <boost/any.hpp>
     #include <boost/type_traits/is_same.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/vector.hpp>
@@ -98,6 +101,16 @@
           , template<typename> class
           , template<typename> class
         > friend class module;
+
+        class type_info_cmp
+        {
+        public:
+            bool operator ()(const std::type_info* a, const std::type_info* b) const {
+                return a->before(*b);
+            }
+        };
+
+        typedef std::map<const std::type_info*, boost::any, type_info_cmp> type_info_deps_t;
 
         template<typename TSeq>
         struct is_module
@@ -241,7 +254,7 @@
             typedef typename verify_policies<T>::type policies_type;
 
             return TCreator<binder_type>::template
-                execute<T, mpl::vector0<> >(deps_, externals_);
+                execute<T, mpl::vector0<> >(deps_, externals_, type_info_deps_);
         }
 
         template<typename T, typename Visitor>
@@ -285,6 +298,7 @@
 
         externals externals_;
         TPool<deps> deps_;
+        type_info_deps_t type_info_deps_;
     };
 
     } // namespace detail

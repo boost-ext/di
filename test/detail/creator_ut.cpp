@@ -6,6 +6,9 @@
 //
 #include "boost/di/detail/creator.hpp"
 
+#include <map>
+#include <typeinfo>
+#include <boost/any.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -45,14 +48,16 @@ struct entries
 
 BOOST_AUTO_TEST_CASE(creator_simple) {
     const int i = 42;
+
     typedef fake_dependency<int, i> dependency_type;
     fake_pool pool_;
     entries<dependency_type> entries_;
+    std::map<const std::type_info*, boost::any> type_info_deps_;
 
     BOOST_CHECK_EQUAL(i, (
         creator<
             fake_binder<dependency_type>
-        >::execute<int, mpl::vector0<> >(entries_, pool_)
+        >::execute<int, mpl::vector0<> >(entries_, pool_, type_info_deps_)
     ));
 }
 

@@ -298,15 +298,28 @@ struct c18
 {
     BOOST_DI_CTOR(c18
         , c0 c0_ // per_request
-        , boost::shared_ptr<c1> c1_ // singleton
+        , shared_ptr<c1> c1_ // singleton
         , c3& c3_ // external
     )
         : c0_(c0_), c1_(c1_), c3_(c3_)
     { }
 
     c0 c0_;
-    boost::shared_ptr<c1> c1_;
+    shared_ptr<c1> c1_;
     c3& c3_;
+};
+
+struct c19
+{
+    BOOST_DI_CTOR(c19
+        , shared_ptr<c1> c1_
+        , shared_ptr<c1> c1__
+    )
+        : c1_(c1_), c1__(c1__)
+    { }
+
+    shared_ptr<c1> c1_;
+    shared_ptr<c1> c1__;
 };
 
 struct cd2;
