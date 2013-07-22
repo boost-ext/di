@@ -322,6 +322,19 @@ struct c19
     shared_ptr<c1> c1__;
 };
 
+struct c20
+{
+    BOOST_DI_CTOR(c20
+        , shared_ptr<if0> if0_
+        , shared_ptr<if0> if0__
+    )
+        : if0_(if0_), if0__(if0__)
+    { }
+
+    shared_ptr<if0> if0_;
+    shared_ptr<if0> if0__;
+};
+
 struct cd2;
 struct cd5;
 

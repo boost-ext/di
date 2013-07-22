@@ -102,6 +102,10 @@ typedef generic_module<
     >
 > generic_module_externals_1;
 
+typedef generic_module<
+    c0if0
+> generic_module_c0if0;
+
 BOOST_AUTO(fusion_module_1, fusion_module<>()(
     singletons<
         c3
@@ -398,6 +402,13 @@ BOOST_AUTO_TEST_CASE(scope_deduction) {
     shared_ptr<c19> c19_ = injector<>().create<shared_ptr<c19> >();
     BOOST_CHECK(c19_->c1_ == c19_->c1__);
 }
+
+#if 0
+BOOST_AUTO_TEST_CASE(scope_deduction_if) {
+    shared_ptr<c20> c20_ = injector<generic_module_c0if0>().create<shared_ptr<c20> >();
+    BOOST_CHECK(c20_->if0_ == c20_->if0__);
+}
+#endif
 
 } // namespace di
 } // namespace boost

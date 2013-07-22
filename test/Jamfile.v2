@@ -9,9 +9,7 @@ import testing ;
 
 project di :
     requirements
-        <include>/home/krzychoo/Projects/boost_1_52_0
         <include>.
-        <include>../include
         <library>/boost/test//boost_unit_test_framework/<link>static
         <warnings>all
         <warnings-as-errors>on
