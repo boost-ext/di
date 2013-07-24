@@ -22,10 +22,7 @@ namespace di {
 
 class a { };
 class b { };
-class c
-{
-    int dummy;
-};
+class c { };
 class d { };
 class i { };
 class impl : public i { };
