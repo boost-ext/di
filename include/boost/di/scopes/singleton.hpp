@@ -37,6 +37,8 @@
     class convertible_shared
     {
     public:
+        typedef T element_type;
+
         convertible_shared(T* object = NULL) // non explicit
             : object_(object)
         { }

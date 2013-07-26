@@ -34,6 +34,8 @@
     class convertible_value
     {
     public:
+        typedef T element_type;
+
         convertible_value(T* object) // non explicit
             : object_(object)
         { }

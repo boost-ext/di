@@ -95,6 +95,8 @@ template<typename T>
 class convertible_copy
 {
 public:
+    typedef T element_type;
+
     convertible_copy(T object) // non explicit
         : object_(object)
     { }
