@@ -68,7 +68,6 @@
     >
     class convertible_any
     {
-        typedef T element_type;
         typedef typename aux::plain_type<T>::type object_type;
 
         typedef variant<
