@@ -33,7 +33,7 @@
     defined(BOOST_DI_NO_CXX11_FEATURES)
 
     #if !defined(BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE)
-        #define BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE 10
+        #define BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE BOOST_MPL_LIMIT_VECTOR_SIZE
     #endif
 
     #define BOOST_DI_ITERATION_PARAMS(start, limit, file)   \

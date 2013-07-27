@@ -44,8 +44,8 @@ struct extensions
 BOOST_AUTO_TEST_CASE(basic) {
     BOOST_CHECK((mpl::equal<mpl::vector0<>, ctor_traits<void>::type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector0<>, ctor_traits<empty>::type>::value));
-    BOOST_CHECK((mpl::equal<mpl::vector<int, double>, ctor_traits<int_double>::type>::value));
-    BOOST_CHECK((mpl::equal<mpl::vector<char*, const int&>, ctor_traits<extensions>::type>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector2<int, double>, ctor_traits<int_double>::type>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector2<char*, const int&>, ctor_traits<extensions>::type>::value));
 }
 
 } // namespace type_traits
