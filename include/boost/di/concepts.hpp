@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_CONCEPTS_HPP
 #define BOOST_DI_CONCEPTS_HPP
 
+#include <boost/mpl/string.hpp>
 #include "boost/di/concepts/annotate.hpp"
 #include "boost/di/concepts/bind.hpp"
 #include "boost/di/concepts/call_stack.hpp"
@@ -29,10 +30,10 @@ struct bind
     : concepts::bind<TExpected, TGiven>
 { };
 
-template<typename TName, int Value>
+template<typename TName, int Value = 0>
 struct bind_int : bind<int, mpl::int_<Value> >::template in_name<TName> { };
 
-template<typename TName, typename TStr>
+template<typename TName, typename TStr = mpl::string<''> >
 struct bind_string : bind<std::string, TStr>::template in_name<TName> { };
 
 template<typename TExpected, typename TGiven = TExpected>
