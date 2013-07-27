@@ -58,6 +58,7 @@
             return named<shared_ptr<I>, TName>(object_);
         }
 
+#if 0 //gcc 4.8.1
         operator T() const {
             BOOST_MPL_ASSERT_MSG(
                 false
@@ -65,6 +66,7 @@
               , (T)
             );
         }
+#endif
 
         operator bool() const {
             return object_.get();

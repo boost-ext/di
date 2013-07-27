@@ -49,11 +49,14 @@
     >
     class dependency
     {
+
+#if 0 //gcc 4.8.1
         BOOST_MPL_ASSERT_MSG(
             !type_traits::has_element_type<TGiven>::value
           , GIVEN_TYPE_WITH_ELEMENT_TYPE
           , (TGiven)
         );
+#endif
 
         typedef typename TScope::template scope<TExpected, TGiven> scope_type;
         typedef TExternal<TExpected, TContext> external_type;
