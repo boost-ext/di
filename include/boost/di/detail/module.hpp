@@ -15,6 +15,8 @@
     #include <boost/any.hpp>
     #include <boost/type_traits/is_same.hpp>
     #include <boost/utility/enable_if.hpp>
+    #include <boost/mpl/assert.hpp>
+    #include <boost/mpl/is_sequence.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/fold.hpp>
     #include <boost/mpl/transform.hpp>
@@ -251,7 +253,7 @@
 
         template<typename T>
         T create() {
-            typedef typename verify_policies<T>::type policies_type;
+            BOOST_MPL_ASSERT((mpl::is_sequence<typename verify_policies<T>::type>));
 
             return TCreator<binder_type>::template
                 execute<T, mpl::vector0<> >(deps_, externals_, type_info_deps_);
@@ -259,7 +261,7 @@
 
         template<typename T, typename Visitor>
         void visit(const Visitor& visitor) {
-            typedef typename verify_policies<T>::type policies_type;
+            BOOST_MPL_ASSERT((mpl::is_sequence<typename verify_policies<T>::type>));
 
             TVisitor<binder_type>::template
                 execute<T, mpl::vector0<> >(visitor);
