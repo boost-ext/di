@@ -332,6 +332,19 @@ struct c20
     shared_ptr<if0> if0__;
 };
 
+struct c21
+{
+    BOOST_DI_CTOR(c21
+        , std::shared_ptr<if0> if0_
+        , std::unique_ptr<if0> if0__
+    )
+        : if0_(if0_), if0__(std::move(if0__))
+    { }
+
+    std::shared_ptr<if0> if0_;
+    std::unique_ptr<if0> if0__;
+};
+
 struct cd2;
 struct cd5;
 

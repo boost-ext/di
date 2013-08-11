@@ -40,7 +40,6 @@ BOOST_AUTO_TEST_CASE(create_args) {
     ));
 }
 
-//TODO
 #if 0
 BOOST_AUTO_TEST_CASE(create_allocator) {
     allocate_calls = 0;

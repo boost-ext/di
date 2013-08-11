@@ -31,60 +31,10 @@
     namespace di {
     namespace scopes {
 
-    namespace aux {
-
-    template<typename T>
-    class convertible_shared
-    {
-    public:
-        typedef T element_type;
-
-        convertible_shared(T* object = NULL) // non explicit
-            : object_(object)
-        { }
-
-        template<typename I>
-        operator shared_ptr<I>() const {
-            return object_;
-        }
-
-        template<typename I, typename TName>
-        operator named<I, TName>() const {
-            return object_;
-        }
-
-        template<typename I, typename TName>
-        operator named<shared_ptr<I>, TName>() const {
-            return named<shared_ptr<I>, TName>(object_);
-        }
-
-#if 0 //gcc 4.8.1
-        operator T() const {
-            BOOST_MPL_ASSERT_MSG(
-                false
-              , SINGLETON_SCOPE_CANT_BE_PASSED_BY_COPY
-              , (T)
-            );
-        }
-#endif
-
-        operator bool() const {
-            return object_.get();
-        }
-
-    private:
-        shared_ptr<T> object_;
-    };
-
-    } // namespace aux
-
     template<
         template<
             typename
         > class TAllocator = std::allocator
-      , template<
-            typename
-        > class TConvertible = aux::convertible_shared
     >
     class singleton
     {
@@ -95,21 +45,54 @@
         >
         class scope
         {
-        public:
-            typedef TConvertible<TGiven> result_type;
+            class empty_deleter
+            {
+            public:
+                void operator()(void*) { }
+            };
 
-            result_type create() {
+        public:
+            typedef scope result_type;
+
+            template<typename I, typename TName>
+            operator named<I, TName>() const {
+                return object_;
+            }
+
+            template<typename I>
+            operator shared_ptr<I>() const {
+                return object_;
+            }
+
+            template<typename I, typename TName>
+            operator named<shared_ptr<I>, TName>() const {
+                return object_;
+            }
+
+        #if !defined(BOOST_NO_CXX11_SMART_PTR)
+            template<typename I>
+            operator std::shared_ptr<I>() const {
+                return std::shared_ptr<I>(object_.get(), empty_deleter());
+            }
+
+            template<typename I, typename TName>
+            operator named<std::shared_ptr<I>, TName>() const {
+                return named<std::shared_ptr<I>, TName>(std::shared_ptr<I>(object_.get(), empty_deleter()));
+            }
+        #endif
+
+            result_type& create() {
                 if (!object_) {
-                    object_ = new TGiven(); //TODO allocator
+                    object_.reset(new TGiven());
                 }
 
-                return object_;
+                return *this;
             }
 
             #include BOOST_PP_ITERATE()
 
         private:
-            result_type object_;
+            shared_ptr<TGiven> object_;
         };
     };
 
@@ -122,12 +105,12 @@
 #else
 
     template<BOOST_DI_TYPES(Args)>
-    result_type create(BOOST_DI_ARGS(Args, args)) {
+    result_type& create(BOOST_DI_ARGS(Args, args)) {
         if (!object_) {
-            object_ = new TGiven(BOOST_DI_ARGS_FORWARD(args)); //TODO allocator
+            object_.reset(new TGiven(BOOST_DI_ARGS_FORWARD(args)));
         }
 
-        return object_;
+        return *this;
     }
 
 #endif

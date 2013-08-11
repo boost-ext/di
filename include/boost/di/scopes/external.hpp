@@ -298,7 +298,7 @@
             typedef convertible_any<TExpected> result_type;
 
             result_type create() {
-                return boost::shared_ptr<TGiven>();
+                return shared_ptr<TGiven>();
             }
 
             #include BOOST_PP_ITERATE()
@@ -315,7 +315,7 @@
 
     template<BOOST_DI_TYPES(Args)>
     result_type create(BOOST_DI_ARGS(Args, args)) {
-        return boost::shared_ptr<TGiven>();
+        return shared_ptr<TGiven>();
     }
 
 #endif

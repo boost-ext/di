@@ -12,7 +12,7 @@ project di :
         <include>.
         <warnings>all
         <warnings-as-errors>on
-        <cxxflags>-std=c++0x
+        <cxxflags>-std=c++11
         <define>BOOST_DI_NO_CXX11_FEATURES
 ;
 

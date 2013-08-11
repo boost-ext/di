@@ -11,7 +11,8 @@
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/shared_ptr.hpp>
-    #include <boost/make_shared.hpp>
+    #include <boost/function.hpp>
+    #include <boost/bind.hpp>
 
     #include "boost/di/named.hpp"
     #include "boost/di/config.hpp"
@@ -28,58 +29,10 @@
     namespace di {
     namespace scopes {
 
-    namespace aux {
-
-    template<typename T>
-    class convertible_value
-    {
-    public:
-        typedef T element_type;
-
-        convertible_value(T* object) // non explicit
-            : object_(object)
-        { }
-
-        operator T*() const {
-            return object_; // has to be deleted by client
-        }
-
-        operator const T&() const {
-            return *object_;
-            //TODO should be deleted by di immediately and copied by client in ctor
-        }
-
-        //operator auto_ptr
-        //operator unique_ptr
-
-        template<typename I>
-        operator shared_ptr<I>() const {
-            return shared_ptr<I>(object_);
-        }
-
-        template<typename I, typename TName>
-        operator named<I, TName>() const {
-            return shared_ptr<I>(object_);
-        }
-
-        template<typename I, typename TName>
-        operator named<shared_ptr<I>, TName>() const {
-            return shared_ptr<I>(object_);
-        }
-
-    private:
-        T* object_;
-    };
-
-    } // namespace aux
-
     template<
         template<
             typename
         > class TAllocator = std::allocator
-      , template<
-            typename
-        > class TConvertible = aux::convertible_value
     >
     class per_request
     {
@@ -91,13 +44,77 @@
         class scope
         {
         public:
-            typedef TConvertible<TGiven> result_type;
+            typedef scope result_type;
 
-            result_type create() {
-                return new TGiven(); //TODO allocator
+            operator TGiven*() const {
+                return object_();
+            }
+
+            operator const TGiven&() const {
+                return *object_();
+                //TODO should be deleted by di immediately and copied by client in ctor
+            }
+
+            template<typename I, typename TName>
+            operator named<I, TName>() const {
+                return *object_();
+            }
+
+            template<typename I>
+            operator shared_ptr<I>() const {
+                return shared_ptr<I>(object_());
+            }
+
+            template<typename I, typename TName>
+            operator named<shared_ptr<I>, TName>() const {
+                return shared_ptr<I>(object_());
+            }
+
+            template<typename I>
+            operator std::auto_ptr<I>() const {
+                return std::auto_ptr<I>(object_());
+            }
+
+            template<typename I, typename TName>
+            operator named<std::auto_ptr<I>, TName>() const {
+                return std::auto_ptr<I>(object_());
+            }
+
+        #if !defined(BOOST_NO_CXX11_SMART_PTR)
+            template<typename I>
+            operator std::shared_ptr<I>() const {
+                return object_();
+            }
+
+            template<typename I, typename TName>
+            operator named<std::shared_ptr<I>, TName>() const {
+                return named<std::shared_ptr<I>, TName>(object_());
+            }
+
+            template<typename I>
+            operator std::unique_ptr<I>() const {
+                return std::unique_ptr<I>(object_());
+            }
+
+            template<typename I, typename TName>
+            operator named<std::unique_ptr<I>, TName>() const {
+                return named<std::unique_ptr<I>, TName>(object_());
+            }
+        #endif
+
+            static TGiven* create_impl() {
+                return new TGiven();
+            }
+
+            result_type& create() {
+                object_ = bind(static_cast<TGiven*(*)()>(&scope::create_impl));
+                return *this;
             }
 
             #include BOOST_PP_ITERATE()
+
+        private:
+            function<TGiven*()> object_;
         };
     };
 
@@ -110,8 +127,14 @@
 #else
 
     template<BOOST_DI_TYPES(Args)>
-    result_type create(BOOST_DI_ARGS(Args, args)) {
-        return new TGiven(BOOST_DI_ARGS_FORWARD(args)); //TODO allocator
+    result_type& create(BOOST_DI_ARGS(Args, args)) {
+        object_ = bind(&scope::create_impl<BOOST_DI_TYPES_PASS(Args)>, BOOST_DI_ARGS_FORWARD(args));
+        return *this;
+    }
+
+    template<BOOST_DI_TYPES(Args)>
+    static TGiven* create_impl(BOOST_DI_ARGS(Args, args)) {
+        return new TGiven(BOOST_DI_ARGS_FORWARD(args));
     }
 
 #endif
