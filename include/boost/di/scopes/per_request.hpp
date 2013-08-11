@@ -9,10 +9,21 @@
     #ifndef BOOST_DI_SCOPES_PER_REQUEST_HPP
     #define BOOST_DI_SCOPES_PER_REQUEST_HPP
 
+    #include <string>
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/shared_ptr.hpp>
     #include <boost/function.hpp>
     #include <boost/bind.hpp>
+    #include <boost/mpl/string.hpp>
+    #include <boost/utility/enable_if.hpp>
+    #include <boost/mpl/aux_/yes_no.hpp>
+    #include <boost/mpl/bool.hpp>
+    #include <boost/mpl/void.hpp>
+    #include <boost/mpl/if.hpp>
+    #include <boost/type_traits/is_arithmetic.hpp>
+    #include <boost/non_type.hpp>
+    #include <boost/typeof/typeof.hpp>
+    #include <boost/preprocessor/repetition/enum_params.hpp>
 
     #include "boost/di/named.hpp"
     #include "boost/di/config.hpp"
@@ -36,10 +47,79 @@
     >
     class per_request
     {
+        template<
+            typename TDerived
+          , typename = void
+        >
+        class has_value
+        {
+            struct helper { static int value; };
+            struct base
+                : helper
+                , mpl::if_<
+                      is_arithmetic<TDerived>
+                    , mpl::void_
+                    , TDerived
+                  >::type
+            { };
+
+            template<typename T>
+            static mpl::aux::no_tag deduce(non_type<const int*, &T::value>*);
+
+            template<typename>
+            static mpl::aux::yes_tag deduce(...);
+
+        public:
+            BOOST_STATIC_CONSTANT(
+                bool
+              , value = sizeof(deduce<base>(0)) == sizeof(mpl::aux::yes_tag)
+            );
+        };
+
+        template<
+            typename
+          , typename = void
+        >
+        class explicit_impl
+            : public mpl::false_
+        { };
+
+        template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, int C)>
+        class explicit_impl<
+            mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)>
+        >
+            : public mpl::true_
+        {
+        public:
+            inline static std::string create() {
+                return mpl::c_str<
+                    mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)>
+                >::value;
+            }
+        };
+
+        template<
+            typename T
+        >
+        class explicit_impl<
+            T
+          , typename enable_if<
+                has_value<T>
+            >::type
+        >
+            : public mpl::true_
+        {
+        public:
+            inline static BOOST_TYPEOF_TPL(T::value) create() {
+                return T::value;
+            }
+        };
+
     public:
         template<
             typename TExpected
           , typename TGiven = TExpected
+          , typename = void
         >
         class scope
         {
@@ -50,14 +130,13 @@
                 return object_();
             }
 
-            operator const TGiven&() const {
-                return *object_();
-                //TODO should be deleted by di immediately and copied by client in ctor
+            operator TGiven() const {
+                return *object_(); //TODO delete
             }
 
             template<typename I, typename TName>
             operator named<I, TName>() const {
-                return *object_();
+                return *object_(); //TODO delete
             }
 
             template<typename I>
@@ -102,19 +181,74 @@
             }
         #endif
 
-            static TGiven* create_impl() {
-                return new TGiven();
-            }
-
             result_type& create() {
                 object_ = bind(static_cast<TGiven*(*)()>(&scope::create_impl));
                 return *this;
+            }
+
+            static TGiven* create_impl() {
+                return new TGiven();
             }
 
             #include BOOST_PP_ITERATE()
 
         private:
             function<TGiven*()> object_;
+        };
+
+        template<
+            typename TExpected
+          , typename TGiven
+        >
+        class scope<
+            TExpected
+          , TGiven
+          , typename enable_if<explicit_impl<TGiven> >::type
+        >
+        {
+            typedef BOOST_TYPEOF_TPL(explicit_impl<TGiven>::create()) T;
+
+        public:
+            typedef scope result_type;
+
+            operator T() const {
+                return object_();
+            }
+
+            template<typename TName>
+            operator named<T, TName>() const {
+                return object_();
+            }
+
+            template<typename TName>
+            operator shared_ptr<T>() const {
+                return make_shared<T>(object_());
+            }
+
+            template<typename TName>
+            operator named<shared_ptr<T>, TName>() const {
+                return make_shared<T>(object_());
+            }
+
+        #if !defined(BOOST_NO_CXX11_SMART_PTR)
+            template<typename TName>
+            operator std::shared_ptr<T>() const {
+                return std::make_shared<T>(object_());
+            }
+
+            template<typename TName>
+            operator named<std::shared_ptr<T>, TName>() const {
+                return std::make_shared<T>(object_());
+            }
+        #endif
+
+            result_type& create() {
+                object_ = bind(&explicit_impl<TGiven>::create);
+                return *this;
+            }
+
+        private:
+            function<T()> object_;
         };
     };
 

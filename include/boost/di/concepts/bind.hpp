@@ -14,7 +14,7 @@
 #include <boost/mpl/or.hpp>
 
 #include "boost/di/detail/dependency.hpp"
-#include "boost/di/scopes/definite.hpp"
+#include "boost/di/scopes/per_request.hpp"
 #include "boost/di/concepts/annotate.hpp"
 #include "boost/di/named.hpp"
 #include "boost/di/config.hpp"
@@ -194,11 +194,11 @@ struct bind<
     TExpected
   , TGiven
   , typename enable_if<
-        scopes::aux::definite_impl<TGiven>
+        scopes::per_request<>::explicit_impl<TGiven>
     >::type
 >
     : detail::dependency<
-          scopes::definite<>
+          scopes::per_request<>
         , TExpected
         , TGiven
         , mpl::vector0<>
@@ -212,7 +212,7 @@ struct bind<
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     struct in_call
         : detail::dependency<
-              scopes::definite<>
+              scopes::per_request<>
             , TExpected
             , TGiven
             , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
@@ -226,7 +226,7 @@ struct bind<
         template<typename TName>
         struct in_name
             : detail::dependency<
-                  scopes::definite<>
+                  scopes::per_request<>
                 , named<TExpected, TName>
                 , TGiven
                 , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
@@ -242,7 +242,7 @@ struct bind<
     template<typename TName>
     struct in_name
         : detail::dependency<
-              scopes::definite<>
+              scopes::per_request<>
             , named<TExpected, TName>
             , TGiven
             , mpl::vector0<>
@@ -256,7 +256,7 @@ struct bind<
         template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
         struct in_call
             : detail::dependency<
-                  scopes::definite<>
+                  scopes::per_request<>
                 , named<TExpected, TName>
                 , TGiven
                 , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
