@@ -18,7 +18,6 @@
     #include <boost/mpl/contains.hpp>
     #include <boost/mpl/placeholders.hpp>
 
-    #include "boost/di/type_traits/has_traits.hpp"
     #include "boost/di/scopes/external.hpp"
     #include "boost/di/config.hpp"
 
