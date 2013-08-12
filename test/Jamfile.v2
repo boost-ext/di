@@ -14,6 +14,7 @@ project di :
         <library>/boost/test//boost_unit_test_framework/<link>static
         <warnings>all
         <cxxflags>-std=c++11
+        <cxxflags>-Wno-unused-local-typedefs
         <define>BOOST_DI_NO_CXX11_FEATURES
         <define>DDI_FUNCTION_ARITY_LIMIT_SIZE=4
         <define>BOOST_TEST_MODULE=di_test

@@ -14,10 +14,10 @@
 #include <boost/mpl/string.hpp>
 #include <boost/mpl/pair.hpp>
 
-#include "boost/di/concepts/call_stack.hpp"
 #include "boost/di/scopes/per_request.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/external.hpp"
+#include "boost/di/concepts.hpp"
 #include "boost/di/named.hpp"
 #include "fake_dependency.hpp"
 #include "fake_dependency_base_of.hpp"
@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE(create_singleton_context) {
     module<
         mpl::vector<
             fake_dependency<scopes::per_request<>, if0, c0if0>::type
-          , fake_dependency<scopes::per_request<>, if0, c1if0, concepts::call_stack<c6, c5> >::type
+          , fake_dependency<scopes::per_request<>, if0, c1if0, call_stack<c6, c5> >::type
           , fake_dependency<scopes::singleton<>, c3>::type
         >
     >
@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_CASE(create_per_request_singleton_context_order) {
     module<
         mpl::vector<
             fake_dependency<scopes::per_request<>, if0, c0if0>::type
-          , fake_dependency<scopes::per_request<>, if0, c1if0, concepts::call_stack<c6, c5> >::type
+          , fake_dependency<scopes::per_request<>, if0, c1if0, call_stack<c6, c5> >::type
           , fake_dependency<scopes::per_request<>, if0, c2if0, c7>::type
           , fake_dependency<scopes::singleton<>, c3>::type
         >
@@ -180,13 +180,13 @@ BOOST_AUTO_TEST_CASE(create_per_request_singleton_context_mix) {
     module<
         mpl::vector<
             fake_dependency<scopes::per_request<>, if0, c0if0>::type
-          , fake_dependency<scopes::per_request<>, if0, c1if0, concepts::call_stack<c6, c5> >::type
+          , fake_dependency<scopes::per_request<>, if0, c1if0, call_stack<c6, c5> >::type
           , fake_dependency<scopes::per_request<>, if0, c2if0, c7>::type
           , fake_dependency<scopes::singleton<>, c3>::type
           , fake_dependency<scopes::per_request<>, int, mpl::int_<1> >::type
           , fake_dependency<scopes::per_request<>, int, mpl::int_<2>, c8>::type
-          , fake_dependency<scopes::per_request<>, named<int, mpl::string<'1'> >, mpl::int_<3>, concepts::call_stack<c7, c6, c4> >::type
-          , fake_dependency<scopes::per_request<>, named<int, mpl::string<'2'> >, mpl::int_<4>, concepts::call_stack<c7, c6, c4> >::type
+          , fake_dependency<scopes::per_request<>, named<int, mpl::string<'1'> >, mpl::int_<3>, call_stack<c7, c6, c4> >::type
+          , fake_dependency<scopes::per_request<>, named<int, mpl::string<'2'> >, mpl::int_<4>, call_stack<c7, c6, c4> >::type
           , fake_dependency<scopes::per_request<>, int, mpl::int_<5>, c2>::type
         >
     > module_;
@@ -297,10 +297,10 @@ BOOST_AUTO_TEST_CASE(base_of) {
     module<
         mpl::vector<
             fake_dependency_base_of<scopes::per_request<>, int, mpl::int_<1> >::type
-          , fake_dependency_base_of<scopes::per_request<>, named<int, mpl::string<'2'> >, mpl::int_<4>, concepts::call_stack<c7, c6, c4> >::type
+          , fake_dependency_base_of<scopes::per_request<>, named<int, mpl::string<'2'> >, mpl::int_<4>, call_stack<c7, c6, c4> >::type
           , fake_dependency_base_of<scopes::per_request<>, int, mpl::int_<5>, c2>::type
           , fake_dependency_base_of<scopes::per_request<>, c0if0, c0if0>::type
-          , fake_dependency_base_of<scopes::per_request<>, named<int, mpl::string<'1'> >, mpl::int_<3>, concepts::call_stack<c7, c6, c4> >::type
+          , fake_dependency_base_of<scopes::per_request<>, named<int, mpl::string<'1'> >, mpl::int_<3>, call_stack<c7, c6, c4> >::type
         >
     > module_;
 
@@ -326,7 +326,7 @@ BOOST_AUTO_TEST_CASE(multiple_calls) {
     module<
         mpl::vector<
             fake_dependency_base_of<scopes::per_request<>, c0if0, c0if0>::type
-          , fake_dependency_base_of<scopes::singleton<>, c3, c3, c15, concepts::call_stack<c6, c4> >::type
+          , fake_dependency_base_of<scopes::singleton<>, c3, c3, c15, call_stack<c6, c4> >::type
           , fake_dependency_base_of<scopes::singleton<>, c3, c3, c6>::type
         >
     > module_;

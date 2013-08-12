@@ -45,6 +45,8 @@
     #include "boost/di/policy.hpp"
     #include "boost/di/config.hpp"
 
+#include <boost/units/detail/utility.hpp>
+
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
         BOOST_DI_ITERATION_PARAMS(          \
             1                               \
@@ -253,6 +255,11 @@
 
         template<typename T>
         T create() {
+            TPool<deps> deps_;
+            type_info_deps_t type_info_deps_;
+
+            //std::cout << units::detail::demangle(typeid(typename deps::type).name()) << std::endl;
+
             BOOST_MPL_ASSERT((mpl::is_sequence<typename verify_policies<T>::type>));
 
             return TCreator<binder_type>::template
@@ -269,7 +276,8 @@
 
         template<typename Scope, typename Action>
         void call(const Action& action) {
-            call_impl<Scope, deps>(action);
+            TPool<deps> deps_;
+            call_impl<Scope, deps>(action, deps_);
         }
 
     private:
@@ -277,14 +285,16 @@
             typename Scope
           , typename Deps
           , typename Action
+          , typename T
         >
         typename enable_if<mpl::empty<Deps> >::type
-        call_impl(const Action&) { }
+        call_impl(const Action&, T&) { }
 
         template<
             typename Scope
           , typename Deps
           , typename Action
+          , typename T
         >
         typename enable_if<
             mpl::and_<
@@ -292,15 +302,13 @@
               , is_same<typename mpl::front<Deps>::type::scope, Scope>
             >
         >::type
-        call_impl(const Action& action) {
+        call_impl(const Action& action, T& deps) {
             typedef typename mpl::front<Deps>::type type;
-            static_cast<type&>(deps_).call(action);
-            call_impl<Scope, typename mpl::pop_front<Deps>::type>(action);
+            static_cast<type&>(deps).call(action);
+            call_impl<Scope, typename mpl::pop_front<Deps>::type>(action, deps);
         }
 
         externals externals_;
-        TPool<deps> deps_;
-        type_info_deps_t type_info_deps_;
     };
 
     } // namespace detail

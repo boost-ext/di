@@ -404,15 +404,16 @@ BOOST_AUTO_TEST_CASE(scope_deduction) {
 }
 
 #if 0
+BOOST_AUTO_TEST_CASE(scope_deduction_if) {
+    shared_ptr<c20> c20_ = injector<generic_module_c0if0>().create<shared_ptr<c20> >();
+    BOOST_CHECK(c20_->if0_ == c20_->if0__);
+}
+
 BOOST_AUTO_TEST_CASE(std_shared_ptr_std_unique_ptr) {
     std::shared_ptr<c21> c21_ = injector<>().create<std::shared_ptr<c21> >();
     BOOST_CHECK(c21_->if0__ == c21_->if0__);
 }
 
-BOOST_AUTO_TEST_CASE(scope_deduction_if) {
-    shared_ptr<c20> c20_ = injector<generic_module_c0if0>().create<shared_ptr<c20> >();
-    BOOST_CHECK(c20_->if0_ == c20_->if0__);
-}
 #endif
 
 } // namespace di

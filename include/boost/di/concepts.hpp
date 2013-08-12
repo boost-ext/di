@@ -10,7 +10,6 @@
 #include <boost/mpl/string.hpp>
 #include "boost/di/concepts/annotate.hpp"
 #include "boost/di/concepts/bind.hpp"
-#include "boost/di/concepts/call_stack.hpp"
 #include "boost/di/concepts/externals.hpp"
 #include "boost/di/concepts/scope.hpp"
 #include "boost/di/scopes/per_request.hpp"
@@ -83,8 +82,26 @@ struct annotate
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 struct call_stack
-    : concepts::call_stack<BOOST_DI_TYPES_PASS_MPL(T)>
+    : mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
 { };
+
+#if 0
+class dummy
+{
+public:
+    template<
+        typename TExpected
+      , typename TGiven = TExpected
+    >
+    class scope { };
+};
+
+template<typename TExpected, typename TGiven = TExpected>
+struct deduced
+    : scope<dummy>::bind<bind<TExpected, TGiven> >
+{ };
+#endif
+
 
 } // namespace di
 } // namespace boost
