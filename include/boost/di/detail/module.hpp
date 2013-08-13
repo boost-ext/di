@@ -277,23 +277,23 @@
             >
             struct dependecies_impl
                 : unique<
-                    typename mpl::fold<
-                        ctor<T>
-                      , mpl::vector0<>
-                      , mpl::copy<
-                            mpl::joint_view<
-                                mpl::vector1<binder<mpl::_2, TCallStack> >
-                              , dependecies_impl<
-                                    mpl::_2
-                                  , mpl::push_back<
-                                        TCallStack
-                                      , type_traits::make_plain<mpl::_2>
-                                    >
-                                >
-                            >
-                          , mpl::back_inserter<mpl::_1>
-                        >
-                    >::type
+                      typename mpl::fold<
+                          ctor<T>
+                        , mpl::vector0<>
+                        , mpl::copy<
+                              mpl::joint_view<
+                                  mpl::vector1<binder<mpl::_2, TCallStack> >
+                                , dependecies_impl<
+                                      mpl::_2
+                                    , mpl::push_back<
+                                          TCallStack
+                                        , type_traits::make_plain<mpl::_2>
+                                      >
+                                  >
+                              >
+                            , mpl::back_inserter<mpl::_1>
+                          >
+                      >::type
                   >
             { };
 
