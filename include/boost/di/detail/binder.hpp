@@ -36,6 +36,8 @@
 #include "boost/di/type_traits/value_type.hpp"
 #include "boost/di/type_traits/scope_traits.hpp"
 
+#include "boost/di/concepts.hpp"
+
 namespace boost {
 namespace di {
 namespace detail {
@@ -224,7 +226,7 @@ struct binder_impl
                 , aux::make_context<mpl::_2>
               >
           >
-      >
+      >::type::template rebind<typename type_traits::scope_traits<T>::type>::type
 { };
 
 template<

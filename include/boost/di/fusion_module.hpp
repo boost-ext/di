@@ -47,7 +47,7 @@
                     , mpl::if_<
                           type_traits::has_element_type<mpl::_2>
                         , mpl::_2
-                        , per_request<mpl::_2>
+                        , deduced<mpl::_2>
                       >
                   >
                 , mpl::back_inserter<mpl::_1>

@@ -85,23 +85,10 @@ struct call_stack
     : mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
 { };
 
-#if 0
-class dummy
-{
-public:
-    template<
-        typename TExpected
-      , typename TGiven = TExpected
-    >
-    class scope { };
-};
-
 template<typename TExpected, typename TGiven = TExpected>
 struct deduced
     : scope<dummy>::bind<bind<TExpected, TGiven> >
 { };
-#endif
-
 
 } // namespace di
 } // namespace boost

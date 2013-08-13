@@ -43,7 +43,7 @@
     #include "boost/di/policy.hpp"
     #include "boost/di/config.hpp"
 
-#include <boost/units/detail/utility.hpp>
+//#include <boost/units/detail/utility.hpp>
 
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
         BOOST_DI_ITERATION_PARAMS(          \
@@ -320,8 +320,8 @@
         T create() {
             TPool<typename all_deps<T>::type> deps_;
 
-            std::cout << units::detail::demangle(typeid(typename deps::type).name()) << std::endl;
-            std::cout << units::detail::demangle(typeid(typename all_deps<T>::type).name()) << std::endl;
+/*            std::cout << units::detail::demangle(typeid(typename deps::type).name()) << std::endl;*/
+            /*std::cout << units::detail::demangle(typeid(typename all_deps<T>::type).name()) << std::endl;*/
 
             BOOST_MPL_ASSERT((mpl::is_sequence<typename verify_policies<T>::type>));
 

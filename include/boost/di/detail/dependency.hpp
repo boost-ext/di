@@ -31,6 +31,17 @@
 
     namespace boost {
     namespace di {
+
+    class dummy
+    {
+    public:
+        template<typename, typename>
+        class scope {
+        public:
+            typedef scope result_type;
+        };
+    };
+
     namespace detail {
 
     template<
@@ -116,12 +127,11 @@
             scope_.call(action);
         }
 
-        //workaround
-        template<typename>
+        template<typename T>
         struct rebind
         {
             typedef dependency<
-                TScope
+                typename mpl::if_<is_same<TScope, dummy>, T, TScope>::type
               , TExpected
               , TGiven
               , TContext

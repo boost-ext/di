@@ -199,12 +199,12 @@ void check(const shared_ptr<c8>& c8_) {
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
+#if 0
 typedef mpl::vector<
     injector<generic_module_1>
   , injector<BOOST_TYPEOF(fusion_module_1)>
 > one_module_types;
 
-#if 0
 BOOST_AUTO_TEST_CASE_TEMPLATE(one_module, TInjector, one_module_types) {
     TInjector injector;
     check(injector.template create<c8>());
@@ -398,19 +398,19 @@ BOOST_AUTO_TEST_CASE(pre_installed_fusion_module_install_generic_module) {
     injector<BOOST_TYPEOF(fusion_module_2)> injector_(fusion_module_2);
     check(injector_.install<generic_module_2>().create<shared_ptr<c8> >());
 }
-
 #endif
+
 BOOST_AUTO_TEST_CASE(scope_deduction) {
     shared_ptr<c19> c19_ = injector<>().create<shared_ptr<c19> >();
     BOOST_CHECK(c19_->c1_ == c19_->c1__);
 }
 
-#if 0
 BOOST_AUTO_TEST_CASE(scope_deduction_if) {
     shared_ptr<c20> c20_ = injector<generic_module_c0if0>().create<shared_ptr<c20> >();
     BOOST_CHECK(c20_->if0_ == c20_->if0__);
 }
 
+#if 0
 BOOST_AUTO_TEST_CASE(std_shared_ptr_std_unique_ptr) {
     std::shared_ptr<c21> c21_ = injector<>().create<std::shared_ptr<c21> >();
     BOOST_CHECK(c21_->if0__ == c21_->if0__);
