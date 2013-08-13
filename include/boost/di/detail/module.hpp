@@ -9,10 +9,7 @@
     #ifndef BOOST_DI_DETAIL_MODULE_HPP
     #define BOOST_DI_DETAIL_MODULE_HPP
 
-    #include <map>
-    #include <typeinfo>
     #include <boost/preprocessor/iteration/iterate.hpp>
-    #include <boost/any.hpp>
     #include <boost/type_traits/is_same.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/assert.hpp>
@@ -33,6 +30,7 @@
     #include <boost/mpl/equal_to.hpp>
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/insert.hpp>
+    #include <boost/mpl/joint_view.hpp>
 
     #include "boost/di/type_traits/has_traits.hpp"
     #include "boost/di/type_traits/value_type.hpp"
@@ -105,16 +103,6 @@
           , template<typename> class
           , template<typename> class
         > friend class module;
-
-        class type_info_cmp
-        {
-        public:
-            bool operator ()(const std::type_info* a, const std::type_info* b) const {
-                return a->before(*b);
-            }
-        };
-
-        typedef std::map<const std::type_info*, boost::any, type_info_cmp> type_info_deps_t;
 
         template<typename TSeq>
         struct is_module
@@ -248,6 +236,81 @@
 
         typedef TBinder<deps, TExternals> binder_type;
 
+        template<typename Sequence>
+        struct unique
+            : mpl::fold<
+                typename mpl::fold<
+                    Sequence,
+                    mpl::set0<>,
+                    mpl::insert<mpl::_1, mpl::_2 >
+                >::type,
+                mpl::vector0<>,
+                mpl::push_back<mpl::_1, mpl::_2>
+            >
+        { };
+
+        template<
+            typename TGiven
+          , template<
+                typename
+              , typename = void
+            > class TCtorTraits = type_traits::ctor_traits
+        >
+        class dependecies
+        {
+            template<typename T>
+            struct ctor
+                : TCtorTraits<typename type_traits::make_plain<T>::type>::type
+            { };
+
+            template<
+                typename T
+              , typename TCallStack
+            >
+            struct binder
+                : binder_type::template impl<T, TCallStack>::type
+            { };
+
+            template<
+                typename T
+              , typename TCallStack = mpl::vector0<>
+            >
+            struct dependecies_impl
+                : unique<
+                    typename mpl::fold<
+                        ctor<T>
+                      , mpl::vector0<>
+                      , mpl::copy<
+                            mpl::joint_view<
+                                mpl::vector1<binder<mpl::_2, TCallStack> >
+                              , dependecies_impl<
+                                    mpl::_2
+                                  , mpl::push_back<
+                                        TCallStack
+                                      , type_traits::make_plain<mpl::_2>
+                                    >
+                                >
+                            >
+                          , mpl::back_inserter<mpl::_1>
+                        >
+                    >::type
+                  >
+            { };
+
+        public:
+            typedef typename mpl::push_back<
+                typename dependecies_impl<TGiven>::type
+              , binder<TGiven, mpl::vector0<> >
+            >::type type;
+        };
+
+        template<typename T>
+        struct all_deps
+            : unique<
+                mpl::joint_view<deps, typename dependecies<T>::type>
+            >
+        { };
+
     public:
         module() { }
 
@@ -255,15 +318,15 @@
 
         template<typename T>
         T create() {
-            TPool<deps> deps_;
-            type_info_deps_t type_info_deps_;
+            TPool<typename all_deps<T>::type> deps_;
 
-            //std::cout << units::detail::demangle(typeid(typename deps::type).name()) << std::endl;
+            std::cout << units::detail::demangle(typeid(typename deps::type).name()) << std::endl;
+            std::cout << units::detail::demangle(typeid(typename all_deps<T>::type).name()) << std::endl;
 
             BOOST_MPL_ASSERT((mpl::is_sequence<typename verify_policies<T>::type>));
 
             return TCreator<binder_type>::template
-                execute<T, mpl::vector0<> >(deps_, externals_, type_info_deps_);
+                execute<T, mpl::vector0<> >(deps_, externals_);
         }
 
         template<typename T, typename Visitor>

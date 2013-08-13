@@ -204,6 +204,7 @@ typedef mpl::vector<
   , injector<BOOST_TYPEOF(fusion_module_1)>
 > one_module_types;
 
+#if 0
 BOOST_AUTO_TEST_CASE_TEMPLATE(one_module, TInjector, one_module_types) {
     TInjector injector;
     check(injector.template create<c8>());
@@ -398,6 +399,7 @@ BOOST_AUTO_TEST_CASE(pre_installed_fusion_module_install_generic_module) {
     check(injector_.install<generic_module_2>().create<shared_ptr<c8> >());
 }
 
+#endif
 BOOST_AUTO_TEST_CASE(scope_deduction) {
     shared_ptr<c19> c19_ = injector<>().create<shared_ptr<c19> >();
     BOOST_CHECK(c19_->c1_ == c19_->c1__);
