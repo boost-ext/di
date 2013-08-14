@@ -314,8 +314,6 @@
                   , mpl::push_back<mpl::_1, binder<first<mpl::_2>, second<mpl::_2> > >
                 >::type
             >::type type;
-
-            typedef typename dependecies_impl<TGiven>::type dupa;
         };
 
         template<typename T>
