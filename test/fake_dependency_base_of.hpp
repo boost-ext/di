@@ -38,28 +38,18 @@ struct fake_dependency_base_of
     typedef TExpected expected;
     typedef TGiven given;
     typedef mpl::vector<TContext0, TContext1, TContext2> context;
-    typedef typename detail::dependency<
-        TScope
-      , TExpected
-      , TGiven
-      , typename mpl::if_<
-            mpl::empty<context>
-          , mpl::vector0<>
-          , context
-        >::type
-      , TBind
-    > type;
+    typedef fake_dependency_base_of type;
 
-    template<
-        typename Expected
-      , typename Given
+   template<
+        typename Expected = void
+      , typename Given = void
     >
     struct rebind
     {
         typedef fake_dependency_base_of<
             TScope
-          , Expected
-          , Given
+          , typename mpl::if_<is_same<Given, void>, TExpected, Expected>::type
+          , typename mpl::if_<is_same<Given, void>, TGiven, Given>::type
           , TContext0
           , TContext1
           , TContext2
@@ -71,12 +61,10 @@ struct fake_dependency_base_of
     {
         typedef TExpected type;
     };
-
 };
 
 } // namespace di
 } // namespace boost
 
 #endif
-
 

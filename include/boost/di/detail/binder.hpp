@@ -199,12 +199,12 @@ template<
   , typename TDeps
   , typename TExternals
   , typename TDefault =
-    dependency<
-        typename type_traits::scope_traits<T>::type
-      , mpl::_1
-      , mpl::_2
-      , mpl::_3
-    >
+        dependency<
+            typename type_traits::scope_traits<T>::type
+          , mpl::_1
+          , mpl::_2
+          , mpl::_3
+        >
 >
 struct binder_impl
     : aux::get_dependency_by_call_stack_order<

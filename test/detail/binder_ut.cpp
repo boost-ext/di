@@ -15,6 +15,7 @@
 #include <boost/type_traits/is_base_of.hpp>
 
 #include "boost/di/named.hpp"
+#include "fake_scope.hpp"
 #include "fake_dependency.hpp"
 #include "fake_dependency_base_of.hpp"
 #include "data.hpp"
@@ -22,8 +23,6 @@
 namespace boost {
 namespace di {
 namespace detail {
-
-struct fake_scope { };
 
 template<
     template<typename> class = std::allocator
