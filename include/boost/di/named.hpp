@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_NAMED_HPP
 #define BOOST_DI_NAMED_HPP
 
+#include <boost/preprocessor/cat.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/type_traits/is_polymorphic.hpp>
@@ -16,17 +17,35 @@
 
 #include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/type_traits/has_traits.hpp"
+#include "boost/di/ctor.hpp"
 #include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {
+
+namespace aux {
+
+template<typename, typename = void>
+class ctor
+{
+public:
+    BOOST_DI_CTOR(ctor);
+};
+
+template<typename T>
+class ctor<T, typename enable_if<type_traits::BOOST_PP_CAT(has_, BOOST_DI_CTOR_UNIQUE_NAME)<T> >::type>
+{
+    typedef typename T::BOOST_DI_CTOR_UNIQUE_NAME BOOST_DI_CTOR_UNIQUE_NAME;
+};
+
+} // namespace aux
 
 template<
     typename T = void
   , typename TName = void
   , typename = void
 >
-class named
+class named// : public aux::ctor<typename type_traits::make_plain<T>::type>
 {
 public:
     typedef typename type_traits::make_plain<T>::type value_type;
@@ -63,7 +82,7 @@ class named<
   , typename enable_if<
         is_polymorphic<T>
     >::type
->
+>// : public aux::ctor<typename type_traits::make_plain<T>::type>
 {
 public:
     typedef typename type_traits::make_plain<T>::type value_type;
@@ -81,11 +100,11 @@ class named<
   , typename enable_if<
         type_traits::has_element_type<T>
     >::type
->
+>// : public aux::ctor<typename type_traits::make_plain<T>::type>
 {
 public:
-    typedef named<typename type_traits::make_plain<T>::type, TName> element_type;
     typedef typename type_traits::make_plain<T>::type value_type;
+    typedef named<typename type_traits::make_plain<T>::type, TName> element_type;
     typedef TName name;
 
     named(T value = T(new typename T::element_type)) // non explicit

@@ -135,7 +135,7 @@ BOOST_AUTO_TEST_CASE(default_scope) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                fake_dependency_base_of<scopes::per_request<>, c1, c1>::type
+                fake_dependency_base_of<dummy, c1, c1>::type
             >
           , module::deps
         >::value
@@ -150,9 +150,9 @@ BOOST_AUTO_TEST_CASE(default_scope_many) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                fake_dependency_base_of<scopes::per_request<>, c1, c1>::type
-              , fake_dependency_base_of<scopes::per_request<>, c2, c2>::type
-              , fake_dependency_base_of<scopes::per_request<>, c3, c3>::type
+                fake_dependency_base_of<dummy, c1, c1>::type
+              , fake_dependency_base_of<dummy, c2, c2>::type
+              , fake_dependency_base_of<dummy, c3, c3>::type
             >
           , module::deps
         >::value
@@ -172,10 +172,10 @@ BOOST_AUTO_TEST_CASE(default_scope_bind) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                fake_dependency<scopes::per_request<>, if0, c0if0>::type
-              , fake_dependency_base_of<scopes::per_request<>, c1, c1>::type
-              , fake_dependency_base_of<scopes::per_request<>, named<c2, int>, c2>::type
-              , fake_dependency_base_of<scopes::per_request<>, c3, c3, call_stack<c4, c5> >::type
+                fake_dependency<dummy, if0, c0if0>::type
+              , fake_dependency_base_of<dummy, c1, c1>::type
+              , fake_dependency_base_of<dummy, named<c2, int>, c2>::type
+              , fake_dependency_base_of<dummy, c3, c3, call_stack<c4, c5> >::type
             >
           , module::deps
         >::value

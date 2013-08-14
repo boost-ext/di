@@ -44,8 +44,6 @@
     #include "boost/di/policy.hpp"
     #include "boost/di/config.hpp"
 
-//#include <boost/units/detail/utility.hpp>
-
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
         BOOST_DI_ITERATION_PARAMS(          \
             1                               \
@@ -274,11 +272,11 @@
 
             template<
                 typename T
-              , typename TCallStack = mpl::vector0<>
+              , typename TCallStack = mpl::vector1<typename type_traits::make_plain<T>::type>
             >
             struct dependecies_impl
                 : mpl::fold<
-                      ctor<T>
+                      ctor<typename binder<T, TCallStack>::given>
                     , mpl::vector0<>
                     , mpl::copy<
                           mpl::joint_view<
@@ -312,10 +310,12 @@
             typedef typename unique<
                 typename mpl::fold<
                     typename dependecies_impl<TGiven>::type
-                  , mpl::vector1<binder<TGiven, mpl::vector0<> > >
+                  , mpl::vector1<typename binder<TGiven, mpl::vector0<> >::type >
                   , mpl::push_back<mpl::_1, binder<first<mpl::_2>, second<mpl::_2> > >
                 >::type
             >::type type;
+
+            typedef typename dependecies_impl<TGiven>::type dupa;
         };
 
         template<typename T>
@@ -333,9 +333,6 @@
         template<typename T>
         T create() {
             TPool<typename all_deps<T>::type> deps_;
-
-/*            std::cout << units::detail::demangle(typeid(typename deps::type).name()) << std::endl;*/
-            /*std::cout << units::detail::demangle(typeid(typename all_deps<T>::type).name()) << std::endl;*/
 
             BOOST_MPL_ASSERT((mpl::is_sequence<typename verify_policies<T>::type>));
 

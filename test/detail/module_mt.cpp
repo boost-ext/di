@@ -628,7 +628,7 @@ BOOST_AUTO_TEST_CASE(scope_auto_deduction) {
             mpl::pair<c18, scopes::per_request<> >
           , mpl::pair<c0, scopes::per_request<> >
           , mpl::pair<shared_ptr<c1>, scopes::singleton<> >
-          , mpl::pair<c3&, scopes::singleton<> >
+          , mpl::pair<c3&, scopes::external>
         >
     > visitor;
 
