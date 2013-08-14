@@ -40,7 +40,7 @@
     #include "boost/di/detail/binder.hpp"
     #include "boost/di/detail/creator.hpp"
     #include "boost/di/detail/visitor.hpp"
-    #include "boost/di/scopes/singleton.hpp"
+    #include "boost/di/scopes/external.hpp"
     #include "boost/di/policy.hpp"
     #include "boost/di/config.hpp"
 
@@ -63,7 +63,7 @@
     template<typename T>
     struct dependency_impl
         : dependency<
-            scopes::singleton<>
+            scopes::external
           , typename T::element_type
           , typename type_traits::value_type<typename T::element_type>::type
           , typename T::context

@@ -28,6 +28,10 @@
     #define BOOST_DI_CTOR_UNIQUE_NAME boost_di_ctor
 #endif
 
+#if !defined(BOOST_DI_NO_CXX11_FEATURES) /*temporary*/
+    #define BOOST_DI_NO_CXX11_FEATURES
+#endif
+
 #if defined(BOOST_NO_VARIADIC_TEMPLATES) ||                 \
     defined(BOOST_NO_RVALUE_REFERENCES)  ||                 \
     defined(BOOST_DI_NO_CXX11_FEATURES)
