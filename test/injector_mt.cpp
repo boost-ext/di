@@ -199,7 +199,6 @@ void check(const shared_ptr<c8>& c8_) {
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-#if 0
 typedef mpl::vector<
     injector<generic_module_1>
   , injector<BOOST_TYPEOF(fusion_module_1)>
@@ -398,7 +397,6 @@ BOOST_AUTO_TEST_CASE(pre_installed_fusion_module_install_generic_module) {
     injector<BOOST_TYPEOF(fusion_module_2)> injector_(fusion_module_2);
     check(injector_.install<generic_module_2>().create<shared_ptr<c8> >());
 }
-#endif
 
 BOOST_AUTO_TEST_CASE(scope_deduction) {
     shared_ptr<c19> c19_ = injector<>().create<shared_ptr<c19> >();

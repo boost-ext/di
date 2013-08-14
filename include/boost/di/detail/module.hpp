@@ -31,6 +31,7 @@
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/insert.hpp>
     #include <boost/mpl/joint_view.hpp>
+    #include <boost/mpl/pair.hpp>
 
     #include "boost/di/type_traits/has_traits.hpp"
     #include "boost/di/type_traits/value_type.hpp"
@@ -276,31 +277,44 @@
               , typename TCallStack = mpl::vector0<>
             >
             struct dependecies_impl
-                : unique<
-                      typename mpl::fold<
-                          ctor<T>
-                        , mpl::vector0<>
-                        , mpl::copy<
-                              mpl::joint_view<
-                                  mpl::vector1<binder<mpl::_2, TCallStack> >
-                                , dependecies_impl<
-                                      mpl::_2
-                                    , mpl::push_back<
-                                          TCallStack
-                                        , type_traits::make_plain<mpl::_2>
-                                      >
+                : mpl::fold<
+                      ctor<T>
+                    , mpl::vector0<>
+                    , mpl::copy<
+                          mpl::joint_view<
+                              mpl::vector1<mpl::pair<mpl::_2, TCallStack> >
+                            , dependecies_impl<
+                                  mpl::_2
+                                , mpl::push_back<
+                                      TCallStack
+                                    , type_traits::make_plain<mpl::_2>
                                   >
                               >
-                            , mpl::back_inserter<mpl::_1>
                           >
-                      >::type
+                        , mpl::back_inserter<mpl::_1>
+                      >
                   >
             { };
 
+            template<typename T>
+            struct first
+            {
+                typedef typename T::first type;
+            };
+
+            template<typename T>
+            struct second
+            {
+                typedef typename T::second type;
+            };
+
         public:
-            typedef typename mpl::push_back<
-                typename dependecies_impl<TGiven>::type
-              , binder<TGiven, mpl::vector0<> >
+            typedef typename unique<
+                typename mpl::fold<
+                    typename dependecies_impl<TGiven>::type
+                  , mpl::vector1<binder<TGiven, mpl::vector0<> > >
+                  , mpl::push_back<mpl::_1, binder<first<mpl::_2>, second<mpl::_2> > >
+                >::type
             >::type type;
         };
 

@@ -27,7 +27,7 @@ test-suite di-test :
     #[ run detail/binder_ut.cpp ]
     #[ run detail/creator_ut.cpp ]
     #[ run detail/dependency_ut.cpp ]
-    [ run detail/module_mt.cpp ]
+    #[ run detail/module_mt.cpp ]
     #[ run detail/pool_ut.cpp ]
     #[ run detail/visitor_ut.cpp ]
     #[ run policies/check_for_binding_correctness_ut.cpp ]
