@@ -408,13 +408,10 @@ BOOST_AUTO_TEST_CASE(scope_deduction_if) {
     BOOST_CHECK(c20_->if0_ == c20_->if0__);
 }
 
-#if 0
 BOOST_AUTO_TEST_CASE(std_shared_ptr_std_unique_ptr) {
-    std::shared_ptr<c21> c21_ = injector<>().create<std::shared_ptr<c21> >();
+    std::shared_ptr<c21> c21_ = injector<generic_module_c0if0>().create<std::shared_ptr<c21> >();
     BOOST_CHECK(c21_->if0__ == c21_->if0__);
 }
-
-#endif
 
 } // namespace di
 } // namespace boost
