@@ -29,11 +29,15 @@ struct bind
     : concepts::bind<TExpected, TGiven>
 { };
 
-template<typename TName, int Value = 0>
-struct bind_int : bind<int, mpl::int_<Value> >::template in_name<TName> { };
+template<typename TName, int Value = 0, typename CallStack = mpl::vector0<> >
+struct bind_int
+    : bind<int, mpl::int_<Value> >::template in_name<TName>::template in_call<CallStack>
+{ };
 
-template<typename TName, typename TStr = mpl::string<> >
-struct bind_string : bind<std::string, TStr>::template in_name<TName> { };
+template<typename TName, typename TStr = mpl::string<>, typename CallStack = mpl::vector0<> >
+struct bind_string
+    : bind<std::string, TStr>::template in_name<TName>::template in_call<CallStack>
+{ };
 
 template<typename TExpected, typename TGiven = TExpected>
 struct singleton

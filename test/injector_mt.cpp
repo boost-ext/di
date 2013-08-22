@@ -30,8 +30,8 @@ typedef generic_module<
       , bind<c2if0>::in_call<c7>
       , bind<int, mpl::int_<1> >
       , bind<int, mpl::int_<2> >::in_call<c8>
-      , bind<int, mpl::int_<3> >::in_name<mpl::string<'1'> >::in_call<call_stack<c7, c6, c4> >
-      , bind<int, mpl::int_<4> >::in_name<mpl::string<'2'> >::in_call<call_stack<c7, c6, c4> >
+      , bind_int<mpl::string<'1'>, 3, call_stack<c7, c6, c4> >
+      , bind_int<mpl::string<'2'>, 4, call_stack<c7, c6, c4> >
       , bind<int, mpl::int_<5> >::in_call<c2>
     >
 > generic_module_1;
