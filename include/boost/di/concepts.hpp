@@ -65,6 +65,21 @@ struct per_requests
     : scope<scopes::per_request<> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
 { };
 
+template<typename TExpected, typename TGiven = TExpected>
+struct deduce_
+    : scope<dummy>::bind<bind<TExpected, TGiven> >
+{ };
+
+template<typename T>
+struct deduce_<T, T>
+    : scope<dummy>::bind<T>
+{ };
+
+template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
+struct deduce
+    : scope<dummy>::bind<BOOST_DI_TYPES_PASS_MPL(T)>
+{ };
+
 template<typename T>
 struct external
     : concepts::externals<T>
@@ -83,11 +98,6 @@ struct annotate
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 struct call_stack
     : mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-{ };
-
-template<typename TExpected, typename TGiven = TExpected>
-struct deduced
-    : scope<dummy>::bind<bind<TExpected, TGiven> >
 { };
 
 } // namespace di
