@@ -33,9 +33,9 @@ public:
 };
 
 template<typename T>
-class ctor<T, typename enable_if<type_traits::BOOST_PP_CAT(has_, BOOST_DI_CTOR_UNIQUE_NAME)<T> >::type>
+class ctor<T, typename enable_if<type_traits::BOOST_PP_CAT(has_, BOOST_DI_CONSTRUCTOR)<T> >::type>
 {
-    typedef typename T::BOOST_DI_CTOR_UNIQUE_NAME BOOST_DI_CTOR_UNIQUE_NAME;
+    typedef typename T::BOOST_DI_CONSTRUCTOR BOOST_DI_CONSTRUCTOR;
 };
 
 } // namespace aux

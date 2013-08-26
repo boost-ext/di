@@ -24,8 +24,16 @@
     #define BOOST_DI_CTOR_CFG_VA_ARGS
 #endif
 
-#if !defined(BOOST_DI_CTOR_UNIQUE_NAME)
-    #define BOOST_DI_CTOR_UNIQUE_NAME boost_di_ctor
+#if !defined(BOOST_DI_CONSTRUCTOR)
+    #define BOOST_DI_CONSTRUCTOR boost_di_constructor
+#endif
+
+#if !defined(BOOST_DI_CTOR_SET)
+    #define BOOST_DI_CTOR_SET boost_di_set
+#endif
+
+#if !defined(BOOST_DI_CREATE)
+    #define BOOST_DI_CREATE boost_di_create
 #endif
 
 #if !defined(BOOST_DI_NO_CXX11_FEATURES) /*temporary*/

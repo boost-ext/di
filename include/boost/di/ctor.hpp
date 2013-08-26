@@ -16,26 +16,20 @@
         #pragma GCC system_header
     #endif
 
-    #define BOOST_DI_CTOR_TRAITS(...)       \
-        struct BOOST_DI_CTOR_UNIQUE_NAME    \
-        {                                   \
-            static void ctor(__VA_ARGS__);  \
-        }
+    #define BOOST_DI_CTOR_TRAITS(...)                   \
+        static void BOOST_DI_CONSTRUCTOR(__VA_ARGS__)   \
 
-    #define BOOST_DI_CTOR(type, ...)        \
-        BOOST_DI_CTOR_TRAITS(__VA_ARGS__);  \
+    #define BOOST_DI_CTOR(type, ...)                    \
+        BOOST_DI_CTOR_TRAITS(__VA_ARGS__);              \
         type(__VA_ARGS__)
 
 #elif defined(BOOST_DI_CTOR_CFG_BRACKET)
 
-    #define BOOST_DI_CTOR_TRAITS(Params)    \
-        struct BOOST_DI_CTOR_UNIQUE_NAME    \
-        {                                   \
-            static void ctor Params;        \
-        }
+    #define BOOST_DI_CTOR_TRAITS(Params)                \
+        static void BOOST_DI_CONSTRUCTOR Params         \
 
-    #define BOOST_DI_CTOR(type, params)     \
-        BOOST_DI_CTOR_TRAITS(params);       \
+    #define BOOST_DI_CTOR(type, params)                 \
+        BOOST_DI_CTOR_TRAITS(params);                   \
         type params
 
 #else

@@ -34,9 +34,17 @@ struct ctor_traits
 template<typename T>
 struct ctor_traits<
     T
-  , typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_CTOR_UNIQUE_NAME)<T> >::type
+  , typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_CONSTRUCTOR)<T> >::type
 >
-    : parameter_types<BOOST_TYPEOF_TPL(&T::BOOST_DI_CTOR_UNIQUE_NAME::ctor)>::type
+    : parameter_types<BOOST_TYPEOF_TPL(&T::BOOST_DI_CONSTRUCTOR)>::type
+{ };
+
+template<typename T>
+struct ctor_traits<
+    T
+  , typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_CREATE)<T> >::type
+>
+    : parameter_types<BOOST_TYPEOF_TPL(&T::BOOST_DI_CREATE)>::type
 { };
 
 } // namespace type_traits

@@ -11,8 +11,16 @@ namespace di = boost::di;
 
 namespace {
 
-struct c0
-{ };
+struct i
+{
+    virtual ~i(){};
+    virtual void dummy() = 0;
+};
+
+struct impl : i
+{
+    void dummy() {}
+};
 
 struct c
 {
@@ -29,17 +37,7 @@ enum eid
 class i_factory
 {
 public:
-    BOOST_DI_CTOR(factory, eid id)
-        : id(id)
-    { }
-
-    i* create(di::creator& creator) const {
-        switch(id) {
-            default: return nullptr;
-            case e1: return creator.create<c1*>();
-            case e2: return creator.create<c2*>();
-        }
-
+    i* BOOST_DI_CREATE(int) const {
         return nullptr;
     }
 
@@ -51,22 +49,13 @@ private:
 
 int main()
 {
-    eid id = e2;
-
     typedef di::generic_module<
-        i_factory // or bind<i, factory>
-      , external<eid>
+        di::bind<i, i_factory>
     > generic_module;
 
-    generic_module generic_module_(
-        generic_module::set<eid>(id)
-    );
+    di::injector<generic_module> injector;
 
-    assert(dynamic_cast<c1generic_module_.create<c>();
-
-    id = e1;
-
-    generic_module_.create<c>();
+    injector.create<c>();
 
     return 0;
 }

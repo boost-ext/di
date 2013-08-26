@@ -19,26 +19,31 @@ namespace type_traits {
 
 struct empty
 {
-    struct BOOST_DI_CTOR_UNIQUE_NAME
-    {
-        static void ctor();
-    };
+    static void BOOST_DI_CONSTRUCTOR();
 };
 
 struct int_double
 {
-    struct BOOST_DI_CTOR_UNIQUE_NAME
-    {
-        static void ctor(int, double);
-    };
+    static void BOOST_DI_CONSTRUCTOR(int, double);
 };
 
 struct extensions
 {
-    struct BOOST_DI_CTOR_UNIQUE_NAME
-    {
-        static void ctor(char*, const int&);
-    };
+    static void BOOST_DI_CONSTRUCTOR(char*, const int&);
+};
+
+struct create
+{
+    int BOOST_DI_CREATE() {
+        return 0;
+    }
+};
+
+struct create_extensions
+{
+    int BOOST_DI_CREATE(int, double) {
+        return 0;
+    }
 };
 
 BOOST_AUTO_TEST_CASE(basic) {
@@ -46,6 +51,10 @@ BOOST_AUTO_TEST_CASE(basic) {
     BOOST_CHECK((mpl::equal<mpl::vector0<>, ctor_traits<empty>::type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector2<int, double>, ctor_traits<int_double>::type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector2<char*, const int&>, ctor_traits<extensions>::type>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector0<>, ctor_traits<create>::type>::value));
+    //BOOST_CHECK((mpl::equal<int, ctor_traits<create>::result_type>::value));
+    //BOOST_CHECK((mpl::equal<mpl::vector2<int, double>, ctor_traits<create_extensions>::type>::value));
+    //BOOST_CHECK((mpl::equal<int, ctor_traits<create_extensions>::result_type>::value));
 }
 
 } // namespace type_traits
