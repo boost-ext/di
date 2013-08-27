@@ -376,6 +376,7 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr_base_of_explicit_value) {
     BOOST_CHECK_EQUAL(i, *obj.i);
 }
 
+#if 0
 BOOST_AUTO_TEST_CASE(named_shared_ptr_if) {
     module<
         mpl::vector<
@@ -409,6 +410,7 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr_if_with_not_trivial_ctor) {
     BOOST_CHECK_EQUAL(i, if0_->i);
     BOOST_CHECK_EQUAL(0.0, if0_->d);
 }
+#endif
 
 BOOST_AUTO_TEST_CASE(externals_create_by_explicit_value) {
     const int i = 42;

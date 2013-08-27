@@ -33,9 +33,15 @@ struct fake_dependency
     typedef TExpected expected;
     typedef TGiven given;
     typedef mpl::vector<TContext0, TContext1, TContext2> context;
-    typedef fake_dependency type;
+    typedef typename detail::dependency<
+        TScope
+      , TExpected
+      , TGiven
+      , typename mpl::if_<mpl::empty<context>, mpl::vector0<>, context>::type
+      , TBind
+    > type;
 
-   template<
+    template<
         typename Expected = void
       , typename Given = void
       , typename Context = void
