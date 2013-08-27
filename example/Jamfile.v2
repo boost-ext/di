@@ -32,6 +32,7 @@ test-suite di_test :
     [ run provider.cpp ]
     [ run session_scope.cpp ]
     #[ run setter.cpp ]
+    [ run testing.cpp ]
     [ run text_visitor.cpp ]
     [ run uml_visitor.cpp ]
 ;
