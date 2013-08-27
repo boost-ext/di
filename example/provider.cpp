@@ -4,9 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <iostream>
-#include <boost/shared_ptr.hpp>
-#include <boost/mpl/int.hpp>
+#include <cassert>
+#include <memory>
 #include <boost/di.hpp>
 
 namespace di = boost::di;
@@ -28,9 +27,9 @@ struct transaction
 
 struct usage
 {
-    BOOST_DI_CTOR(usage, boost::shared_ptr<di::provider<int>> p) {
-        std::cout << p->get() << std::endl; // 0
-        std::cout << p->get() << std::endl; // 1
+    BOOST_DI_CTOR(usage, std::unique_ptr<di::provider<int>> p) {
+        assert(p->get() == 1);
+        assert(p->get() == 2);
     }
 };
 

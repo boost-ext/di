@@ -4,8 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <iostream>
-#include <boost/mpl/int.hpp>
+#include <cassert>
 #include <boost/mpl/string.hpp>
 #include <boost/di.hpp>
 
@@ -21,7 +20,8 @@ public:
       , di::named<int, mpl::string<'1'>> i1
       , di::named<int, mpl::string<'2'>> i2
     ) : i1(i1), i2(i2) {
-        std::clog << "i1:" << i1 << ", i2: " << i2 << std::endl;
+        assert(i1 == 42);
+        assert(i2 == 87);
     }
 
 private:
@@ -34,12 +34,12 @@ private:
 int main()
 {
     typedef di::generic_module<
-        di::bind<int, mpl::int_<42>>::in_name<mpl::string<'1'>>
-      , di::bind<int, mpl::int_<87>>::in_name<mpl::string<'2'>>
+        di::bind_int<mpl::string<'1'>, 42>
+      , di::bind_int<mpl::string<'2'>, 87>
     > module;
 
     di::injector<module> injector;
-    injector.create<named>(); //i1: 42, i2: 87
+    injector.create<named>();
 
     return 0;
 }
