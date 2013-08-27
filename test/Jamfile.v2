@@ -30,9 +30,10 @@ test-suite di-test :
     [ compile-fail injector_binding_mt_fail.cpp ]
     [ compile-fail injector_singleton_by_copy_mt_fail.cpp ]
 
+    [ run type_traits/create_traits_ut.cpp ]
+    [ run type_traits/ctor_traits_ut.cpp ]
     [ run type_traits/make_plain_ut.cpp ]
     [ run type_traits/value_type_ut.cpp ]
-    [ run type_traits/ctor_traits_ut.cpp ]
     [ run detail/binder_ut.cpp ]
     [ run detail/creator_ut.cpp ]
     [ run detail/dependency_ut.cpp ]
