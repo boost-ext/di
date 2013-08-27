@@ -21,15 +21,19 @@ template<typename>
 struct parameter_types
 {
     typedef mpl::vector0<> type;
-    typedef void result_type;
 };
 
-#define BOOST_PP_LOCAL_MACRO(n)                                     \
-    template<typename R, BOOST_PP_ENUM_PARAMS(n, typename Arg)>     \
-    struct parameter_types<R(*)(BOOST_PP_ENUM_PARAMS(n, Arg))>      \
-    {                                                               \
-        typedef mpl::vector##n<BOOST_PP_ENUM_PARAMS(n, Arg)> type;  \
-        typedef R result_type;                                      \
+#define BOOST_PP_LOCAL_MACRO(n)                                             \
+    template<typename R, BOOST_PP_ENUM_PARAMS(n, typename Arg)>             \
+    struct parameter_types<R(*)(BOOST_PP_ENUM_PARAMS(n, Arg))>              \
+    {                                                                       \
+        typedef mpl::vector##n<BOOST_PP_ENUM_PARAMS(n, Arg)> type;          \
+    };                                                                      \
+                                                                            \
+    template<typename R, typename C, BOOST_PP_ENUM_PARAMS(n, typename Arg)> \
+    struct parameter_types<R(C::*)(BOOST_PP_ENUM_PARAMS(n, Arg))>           \
+    {                                                                       \
+        typedef mpl::vector##n<BOOST_PP_ENUM_PARAMS(n, Arg)> type;          \
     };
 
 #define BOOST_PP_LOCAL_LIMITS (1, BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE)

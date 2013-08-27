@@ -25,7 +25,7 @@ struct impl : i
 struct c
 {
     BOOST_DI_CTOR(c, boost::shared_ptr<i> i) {
-
+        std::cout << i.get() << std::endl;
     }
 };
 
@@ -37,24 +37,24 @@ enum eid
 class i_factory
 {
 public:
-    i* BOOST_DI_CREATE(int) const {
-        return nullptr;
+    i* BOOST_DI_CREATE() {
+        //std::cout << i << std::endl;
+        return new impl();
     }
-
-private:
-    eid id;
 };
 
 } // namespace
 
 int main()
 {
-    typedef di::generic_module<
-        di::bind<i, i_factory>
-    > generic_module;
+    auto module = di::fusion_module<>()(
+        di::deduce<
+            di::bind<i, i_factory>
+        >()
+      , di::bind<int>::to(11)
+    );
 
-    di::injector<generic_module> injector;
-
+    di::injector<decltype(module)> injector(module);
     injector.create<c>();
 
     return 0;

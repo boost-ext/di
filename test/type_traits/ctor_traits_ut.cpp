@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE(basic) {
     BOOST_CHECK((mpl::equal<mpl::vector2<char*, const int&>, ctor_traits<extensions>::type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector0<>, ctor_traits<create>::type>::value));
     //BOOST_CHECK((mpl::equal<int, ctor_traits<create>::result_type>::value));
-    //BOOST_CHECK((mpl::equal<mpl::vector2<int, double>, ctor_traits<create_extensions>::type>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector2<int, double>, ctor_traits<create_extensions>::type>::value));
     //BOOST_CHECK((mpl::equal<int, ctor_traits<create_extensions>::result_type>::value));
 }
 

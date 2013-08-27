@@ -12,10 +12,12 @@
     #include <memory>
     #include <cassert>
     #include <boost/preprocessor/iteration/iterate.hpp>
+    #include <boost/utility/enable_if.hpp>
     #include <boost/shared_ptr.hpp>
     #include <boost/make_shared.hpp>
     #include <boost/mpl/assert.hpp>
 
+    #include "boost/di/type_traits/has_traits.hpp"
     #include "boost/di/named.hpp"
     #include "boost/di/config.hpp"
 
@@ -82,8 +84,22 @@
         #endif
 
             result_type& create() {
+                return create_impl<TGiven>();
+            }
+
+            template<typename T>
+            result_type& create_impl(typename disable_if<BOOST_PP_CAT(type_traits::has_, BOOST_DI_CREATE)<T> >::type* = 0) {
                 if (!object_) {
-                    object_.reset(new TGiven());
+                    object_.reset(new T());
+                }
+
+                return *this;
+            }
+
+            template<typename T>
+            result_type& create_impl(typename enable_if<BOOST_PP_CAT(type_traits::has_, BOOST_DI_CREATE)<T> >::type* = 0) {
+                if (!object_) {
+                    object_.reset(T().BOOST_DI_CREATE());
                 }
 
                 return *this;
@@ -92,7 +108,7 @@
             #include BOOST_PP_ITERATE()
 
         private:
-            shared_ptr<TGiven> object_;
+            shared_ptr<TExpected> object_;
         };
     };
 
@@ -106,8 +122,22 @@
 
     template<BOOST_DI_TYPES(Args)>
     result_type& create(BOOST_DI_ARGS(Args, args)) {
+        return create_impl<TGiven>(BOOST_DI_ARGS_FORWARD(args));
+    }
+
+    template<typename T, BOOST_DI_TYPES(Args)>
+    result_type& create_impl(BOOST_DI_ARGS(Args, args), typename disable_if<BOOST_PP_CAT(type_traits::has_, BOOST_DI_CREATE)<T> >::type* = 0) {
         if (!object_) {
-            object_.reset(new TGiven(BOOST_DI_ARGS_FORWARD(args)));
+            object_.reset(new T(BOOST_DI_ARGS_FORWARD(args)));
+        }
+
+        return *this;
+    }
+
+    template<typename T, BOOST_DI_TYPES(Args)>
+    result_type& create_impl(BOOST_DI_ARGS(Args, args), typename enable_if<BOOST_PP_CAT(type_traits::has_, BOOST_DI_CREATE)<T> >::type* = 0) {
+        if (!object_) {
+            object_.reset(T().BOOST_DI_CREATE(BOOST_DI_ARGS_FORWARD(args)));
         }
 
         return *this;
