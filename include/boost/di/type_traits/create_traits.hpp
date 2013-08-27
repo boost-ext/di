@@ -1,0 +1,62 @@
+//
+// Copyright (c) 2012 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#if !BOOST_PP_IS_ITERATING
+
+    #ifndef BOOST_DI_TYPE_TRAITS_CREATE_TRAITS_HPP
+    #define BOOST_DI_TYPE_TRAITS_CREATE_TRAITS_HPP
+
+    #include <boost/preprocessor/iteration/iterate.hpp>
+    #include <boost/preprocessor/cat.hpp>
+    #include <boost/utility/enable_if.hpp>
+
+    #include "boost/di/type_traits/has_traits.hpp"
+    #include "boost/di/config.hpp"
+
+    #define BOOST_PP_ITERATION_PARAMS_1 (               \
+        BOOST_DI_ITERATION_PARAMS(                      \
+            1                                           \
+          , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE          \
+          , "boost/di/type_traits/create_traits.hpp"    \
+        )                                               \
+    )
+
+    namespace boost {
+    namespace di {
+    namespace type_traits {
+
+    template<typename TExpected, typename TGiven>
+    TExpected* create_traits(typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_CREATE)<TGiven> >::type* = 0) {
+        return TGiven().BOOST_DI_CREATE();
+    }
+
+    template<typename TExpected, typename TGiven>
+    TExpected* create_traits(typename disable_if<BOOST_PP_CAT(has_, BOOST_DI_CREATE)<TGiven> >::type* = 0) {
+        return new TGiven();
+    }
+
+    #include BOOST_PP_ITERATE()
+
+    } // namespace type_traits
+    } // namespace di
+    } // namespace boost
+
+    #endif
+
+#else
+
+    template<typename TExpected, typename TGiven, BOOST_DI_TYPES(Args)>
+    TExpected* create_traits(BOOST_DI_ARGS(Args, args), typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_CREATE)<TGiven> >::type* = 0) {
+        return TGiven().BOOST_DI_CREATE(BOOST_DI_ARGS_FORWARD(args));
+    }
+
+    template<typename TExpected, typename TGiven, BOOST_DI_TYPES(Args)>
+    TExpected* create_traits(BOOST_DI_ARGS(Args, args), typename disable_if<BOOST_PP_CAT(has_, BOOST_DI_CREATE)<TGiven> >::type* = 0) {
+        return new TGiven(BOOST_DI_ARGS_FORWARD(args));
+    }
+
+#endif
+

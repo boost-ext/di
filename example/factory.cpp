@@ -4,10 +4,13 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#include <cassert>
 #include <boost/shared_ptr.hpp>
+#include <boost/mpl/int.hpp>
 #include <boost/di.hpp>
 
-namespace di = boost::di;
+namespace di  = boost::di;
+namespace mpl = boost::mpl;
 
 namespace {
 
@@ -17,7 +20,12 @@ struct i
     virtual void dummy() = 0;
 };
 
-struct impl : i
+struct impl1 : i
+{
+    void dummy() {}
+};
+
+struct impl2 : i
 {
     void dummy() {}
 };
@@ -25,7 +33,8 @@ struct impl : i
 struct c
 {
     BOOST_DI_CTOR(c, boost::shared_ptr<i> i) {
-        std::cout << i.get() << std::endl;
+        assert(i.get());
+        assert(dynamic_cast<impl1*>(i.get()));
     }
 };
 
@@ -37,24 +46,28 @@ enum eid
 class i_factory
 {
 public:
-    i* BOOST_DI_CREATE() {
-        //std::cout << i << std::endl;
-        return new impl();
+    i* BOOST_DI_CREATE(eid id) {
+        switch(id) {
+            case e1: return new impl1();
+            case e2: return new impl2();
+        }
+
+        return nullptr;
     }
 };
 
 } // namespace
 
-int main()
-{
-    auto module = di::fusion_module<>()(
-        di::deduce<
-            di::bind<i, i_factory>
-        >()
-      , di::bind<int>::to(11)
+int main() {
+    using module = di::generic_module<
+        di::bind<i, i_factory>
+      , di::external<eid>
+    >;
+
+    di::injector<module> injector(
+        module(module::set<eid>(e1))
     );
 
-    di::injector<decltype(module)> injector(module);
     injector.create<c>();
 
     return 0;

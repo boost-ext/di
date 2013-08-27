@@ -25,6 +25,7 @@
     #include <boost/typeof/typeof.hpp>
     #include <boost/preprocessor/repetition/enum_params.hpp>
 
+    #include "boost/di/type_traits/create_traits.hpp"
     #include "boost/di/named.hpp"
     #include "boost/di/config.hpp"
 
@@ -187,7 +188,7 @@
             }
 
             static TGiven* create_impl() {
-                return new TGiven();
+                return type_traits::create_traits<TGiven, TGiven>();
             }
 
             #include BOOST_PP_ITERATE()
@@ -268,7 +269,7 @@
 
     template<BOOST_DI_TYPES(Args)>
     static TGiven* create_impl(BOOST_DI_ARGS(Args, args)) {
-        return new TGiven(BOOST_DI_ARGS_FORWARD(args));
+        return type_traits::create_traits<TExpected, TGiven>(BOOST_DI_ARGS_FORWARD(args));
     }
 
 #endif
