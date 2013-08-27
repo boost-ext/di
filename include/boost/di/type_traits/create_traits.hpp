@@ -29,12 +29,14 @@
     namespace type_traits {
 
     template<typename TExpected, typename TGiven>
-    TExpected* create_traits(typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_CREATE)<TGiven> >::type* = 0) {
+    typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_CREATE)<TGiven>, TExpected*>::type
+    create_traits() {
         return TGiven().BOOST_DI_CREATE();
     }
 
     template<typename TExpected, typename TGiven>
-    TExpected* create_traits(typename disable_if<BOOST_PP_CAT(has_, BOOST_DI_CREATE)<TGiven> >::type* = 0) {
+    typename disable_if<BOOST_PP_CAT(has_, BOOST_DI_CREATE)<TGiven>, TExpected*>::type
+    create_traits() {
         return new TGiven();
     }
 
@@ -49,12 +51,14 @@
 #else
 
     template<typename TExpected, typename TGiven, BOOST_DI_TYPES(Args)>
-    TExpected* create_traits(BOOST_DI_ARGS(Args, args), typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_CREATE)<TGiven> >::type* = 0) {
+    typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_CREATE)<TGiven>, TExpected*>::type
+    create_traits(BOOST_DI_ARGS(Args, args)) {
         return TGiven().BOOST_DI_CREATE(BOOST_DI_ARGS_FORWARD(args));
     }
 
     template<typename TExpected, typename TGiven, BOOST_DI_TYPES(Args)>
-    TExpected* create_traits(BOOST_DI_ARGS(Args, args), typename disable_if<BOOST_PP_CAT(has_, BOOST_DI_CREATE)<TGiven> >::type* = 0) {
+    typename disable_if<BOOST_PP_CAT(has_, BOOST_DI_CREATE)<TGiven>, TExpected*>::type
+    create_traits(BOOST_DI_ARGS(Args, args)) {
         return new TGiven(BOOST_DI_ARGS_FORWARD(args));
     }
 
