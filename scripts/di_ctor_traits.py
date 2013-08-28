@@ -56,10 +56,9 @@ class ctor_traits_generator:
     def __get_ctors(self, node, ctors, class_decl = ""):
         name = str(node.displayname, self.encode)
         if node.kind == CursorKind.CONSTRUCTOR:
-            spelling = str(node.spelling, self.encode)
-            ctors.append(
-                ctor_trait(class_decl, name[len(node.spelling) + 1 : -1])
-            )
+            args = name[len(node.spelling) + 1 : -1]
+            if args != "":
+                ctors.append(ctor_trait(class_decl, args))
         elif node.kind in [CursorKind.CLASS_DECL, CursorKind.NAMESPACE]:
             class_decl = class_decl == "" and name or class_decl + (name == "" and "" or "::") + name
             if class_decl.startswith(self.decl):
@@ -93,15 +92,14 @@ class ctor_traits_generator:
     def generate(self):
         ctors = []
         self.__get_ctors(self.cursor, ctors)
-        with open(self.ctor_traits_file_hpp, 'w') as file:
-            for ctor in ctors:
+        if len(ctors) > 0:
+            with open(self.ctor_traits_file_hpp, 'w') as file:
                 file.write(self.file_template_hpp % {
                     'file' : self.ctor_traits_file_hpp,
                     'guard' : self.ctor_traits_file_hpp.replace('.', '_').upper(),
                     'includes' : self.includes[:-1],
                     'ctor_traits' : ''.join(ctor.to_string() for ctor in ctors)[:-2]
                 })
-
         return 0
 
 def main(args):
