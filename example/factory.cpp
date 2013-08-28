@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <cassert>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <boost/mpl/int.hpp>
 #include <boost/di.hpp>
 
@@ -32,7 +32,7 @@ struct impl2 : i
 
 struct c
 {
-    BOOST_DI_CTOR(c, boost::shared_ptr<i> i) {
+    BOOST_DI_CTOR(c, std::shared_ptr<i> i) {
         assert(i.get());
         assert(dynamic_cast<impl1*>(i.get()));
     }

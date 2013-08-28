@@ -28,10 +28,6 @@
     #define BOOST_DI_CONSTRUCTOR boost_di_constructor
 #endif
 
-#if !defined(BOOST_DI_SET)
-    #define BOOST_DI_SET boost_di_set
-#endif
-
 #if !defined(BOOST_DI_CREATE)
     #define BOOST_DI_CREATE boost_di_create
 #endif

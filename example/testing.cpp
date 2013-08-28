@@ -40,8 +40,7 @@ using module = di::generic_module<
 
 } // namespace ut
 
-int main()
-{
+int main() {
     di::injector<> injector;
 
     //code
