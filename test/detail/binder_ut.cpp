@@ -20,8 +20,6 @@
 #include "fake_dependency_base_of.hpp"
 #include "data.hpp"
 
-
-#include <boost/units/detail/utility.hpp>
 namespace boost {
 namespace di {
 namespace detail {
