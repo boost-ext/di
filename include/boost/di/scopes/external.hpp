@@ -150,24 +150,7 @@
         typedef T element_type;
         typedef TContext context;
 
-        class from
-        {
-        public:
-            template<typename TValue>
-            inline static convertible_any to(const TValue& value) {
-                return convertible_any(value);
-            }
 
-            template<typename TValue>
-            inline static convertible_any to(TValue& value) {
-                return convertible_any(value);
-            }
-
-            template<typename TValue>
-            inline static convertible_any to(shared_ptr<TValue> value) {
-                return convertible_any(value);
-            }
-        };
 
         convertible_any(const object_type& object) // non explicit
             : convertible_any_(object)
@@ -231,25 +214,6 @@
         typedef convertible_any type;
         typedef T element_type;
         typedef TContext context;
-
-        class from
-        {
-        public:
-            template<typename TValue>
-            inline static convertible_any to(const TValue& value) {
-                return convertible_any(value);
-            }
-
-            template<typename TValue>
-            inline static convertible_any to(TValue& value) {
-                return convertible_any(value);
-            }
-
-            template<typename TValue>
-            inline static convertible_any to(shared_ptr<TValue> value) {
-                return convertible_any(value);
-            }
-        };
 
         convertible_any(object_type object) // non explicit
             : convertible_any_(object)

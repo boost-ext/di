@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_CONCEPTS_ANNOTATE_HPP
 #define BOOST_DI_CONCEPTS_ANNOTATE_HPP
 
+#include <boost/shared_ptr.hpp>
 #include <boost/none_t.hpp>
 #include <boost/mpl/vector.hpp>
 
@@ -55,6 +56,42 @@ struct annotate<none_t>
           , mpl::or_<is_base_of<mpl::_1, TExpected>, is_same<mpl::_1, TExpected> >
         >
         to(const TValue& value) {
+            return detail::dependency<
+                scopes::external
+              , TExpected
+              , TValue
+              , TContext
+              , mpl::or_<is_base_of<mpl::_1, TExpected>, is_same<mpl::_1, TExpected> >
+            >(value);
+        }
+
+        template<typename TValue>
+        static detail::dependency<
+            scopes::external
+          , TExpected
+          , TValue
+          , TContext
+          , mpl::or_<is_base_of<mpl::_1, TExpected>, is_same<mpl::_1, TExpected> >
+        >
+        to(TValue& value) {
+            return detail::dependency<
+                scopes::external
+              , TExpected
+              , TValue
+              , TContext
+              , mpl::or_<is_base_of<mpl::_1, TExpected>, is_same<mpl::_1, TExpected> >
+            >(value);
+        }
+
+        template<typename TValue>
+        static detail::dependency<
+            scopes::external
+          , TExpected
+          , TValue
+          , TContext
+          , mpl::or_<is_base_of<mpl::_1, TExpected>, is_same<mpl::_1, TExpected> >
+        >
+        to(boost::shared_ptr<TValue> value) {
             return detail::dependency<
                 scopes::external
               , TExpected

@@ -48,12 +48,7 @@
 
     template<
         typename TDeps
-      , typename _1 =
-            mpl::if_<
-                  type_traits::has_element_type<mpl::_1> //is external
-                , derived<mpl::_1>
-                , mpl::_1
-            >
+      , typename _1 = derived<mpl::_1>
     >
     struct generic_deps
         : mpl::transform<
@@ -106,15 +101,12 @@
             TExternal
           , T
           , typename enable_if<
-                mpl::and_<
-                    type_traits::has_name<TExternal>
-                  , type_traits::has_element_type<TExternal>
-                >
+                is_same<typename TExternal::derived::scope, scopes::external>
             >::type
         >
             : mpl::or_<
                   is_same<typename TExternal::name, T>
-                , is_same<typename TExternal::element_type, T>
+                , is_same<typename TExternal::derived::expected, T>
               >
         { };
 

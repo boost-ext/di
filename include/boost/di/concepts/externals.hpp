@@ -12,8 +12,8 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/transform.hpp>
 
-#include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/external.hpp"
+#include "boost/di/detail/dependency.hpp"
 #include "boost/di/concepts/annotate.hpp"
 #include "boost/di/config.hpp"
 
@@ -21,40 +21,42 @@ namespace boost {
 namespace di {
 namespace concepts {
 
-//namespace detail {
+namespace detail {
 
-//template<typename T, typename Enable = void>
-//struct make_annotation
-//{
-    //typedef typename annotate<scopes::convertible_any<T> >::template with<> type;
-//};
+template<typename T, typename Enable = void>
+struct make_annotation
+{
+    typedef typename annotate<
+        ::boost::di::detail::dependency<
+            scopes::external
+          , T
+          , T
+          , mpl::vector0<>
+          , mpl::or_<is_base_of<mpl::_1, T>, is_same<mpl::_1, T> >
+        >
+    >::template with<> type;
+};
 
-//template<typename T>
-//struct make_annotation<
-    //T
-  //, typename enable_if<is_base_of<annotate<>::with<>, T> >::type
-//>
-//{
-    //typedef typename T::template
-        //rebind<scopes::singleton<> >::type dependency;
+template<typename T>
+struct make_annotation<
+    T
+  , typename enable_if<is_base_of<annotate<>::with<>, T> >::type
+>
+{
+    typedef typename T::template
+        rebind<scopes::external>::type dependency;
 
-    //typedef scopes::convertible_any<
-        //typename dependency::expected
-      //, typename dependency::context
-    //> external;
+    typedef typename annotate<dependency>::template with<typename T::name> type;
+};
 
-    //typedef typename annotate<external>::template
-        //with<typename T::name> type;
-//};
-
-//} // namespace detail
+} // namespace detail
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-struct externals : mpl::vector0<>
-    //: mpl::transform<
-          //mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-        //, detail::make_annotation<mpl::_1>
-      //>::type
+struct externals
+    : mpl::transform<
+          mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+        , detail::make_annotation<mpl::_1>
+      >::type
 { };
 
 } // namespace concepts
