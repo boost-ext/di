@@ -25,7 +25,7 @@ test-suite di_test :
     [ run externals.cpp ]
     [ run factory.cpp ]
     #[ run fusion_module.cpp ]
-    #[ run generic_module.cpp ]
+    [ run generic_module.cpp ]
     [ run hello_world.cpp ]
     #[ run injector.cpp ]
     [ run named.cpp ]
