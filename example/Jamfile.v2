@@ -18,7 +18,7 @@ project di :
 ;
 
 test-suite di_test :
-    [ run main.cpp ]
+    [ run externals.cpp ]
     #[ run check_for_creation_by_smart_ptr_policy.cpp ]
     #[ run concepts.cpp ]
     #[ run ctor.cpp ]
