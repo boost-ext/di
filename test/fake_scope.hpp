@@ -32,10 +32,10 @@
         struct entry { };
         struct exit { };
 
-        template<typename T, typename U>
+        template<typename T, typename>
         struct scope
         {
-            typedef scopes::convertible_any<U> result_type; //TODO fake_variant
+            typedef T result_type;
 
             void call(const entry&) {
                 entry_calls()++;

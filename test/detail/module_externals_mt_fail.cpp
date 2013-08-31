@@ -20,15 +20,14 @@ namespace di {
 namespace detail {
 
 BOOST_AUTO_TEST_CASE(module_externals_fail) {
-    scopes::convertible_any<int> i_(42);
+    dependency<scopes::external, int, int> i_(42);
 
     module<
-        mpl::vector0<>
-      , mpl::vector<
-            scopes::convertible_any<int>
-          , scopes::convertible_any<double>
+        mpl::vector<
+            dependency<scopes::external, int, int>
+          , dependency<scopes::external, double, double>
         >
-    > module_(i_);
+    > module_(i_); // missing double external
 
     module_.create<c14>();
 }
