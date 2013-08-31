@@ -37,7 +37,6 @@
     namespace di {
     namespace scopes {
 
-#if 0
     namespace aux {
 
     template<typename T, typename = void>
@@ -62,6 +61,7 @@
 
     } // namespace aux
 
+#if 0
     template<
         typename T
       , typename TContext = mpl::vector0<>
@@ -149,8 +149,6 @@
         typedef convertible_any type;
         typedef T element_type;
         typedef TContext context;
-
-
 
         convertible_any(const object_type& object) // non explicit
             : convertible_any_(object)
@@ -260,31 +258,25 @@
         >
         class scope
         {
-            //typedef variant<
-                //TExpected&
-              //, const TExpected&
-              //, shared_ptr<TExpected>
-            //> value_type;
-            typedef TExpected value_type;
+            typedef variant<
+                TExpected&
+              , const TExpected&
+              , shared_ptr<TExpected>
+            > value_type;
 
         public:
             typedef scope result_type;
 
             operator TExpected() const {
-                //return boost::get<TExpected>(object_);
-                return object_;
+                return boost::get<TExpected>(object_);
             }
 
-            scope() {
-                object_ = 42;
-            }// = delete
-
-            explicit scope(const value_type& value)
+            template<typename T>
+            explicit scope(const T& value)
                 : object_(value)
             { }
 
             result_type& create() {
-                std::cout << "dupa" << std::endl;
                 return *this;
             }
 
@@ -302,11 +294,6 @@
     #endif
 
 #else
-
-    //template<BOOST_DI_TYPES(Args)>
-    //result_type create(BOOST_DI_ARGS(Args, args)) {
-        //return shared_ptr<TGiven>();
-    //}
 
 #endif
 
