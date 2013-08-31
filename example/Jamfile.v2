@@ -24,7 +24,7 @@ test-suite di_test :
     [ run deduce_scope.cpp ]
     [ run externals.cpp ]
     [ run factory.cpp ]
-    #[ run fusion_module.cpp ]
+    [ run fusion_module.cpp ]
     [ run generic_module.cpp ]
     [ run hello_world.cpp ]
     #[ run injector.cpp ]

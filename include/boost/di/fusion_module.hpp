@@ -10,6 +10,7 @@
     #define BOOST_DI_FUSION_MODULE_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
+    #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/fold.hpp>
     #include <boost/mpl/copy.hpp>
@@ -19,6 +20,7 @@
 
     #include "boost/di/type_traits/has_traits.hpp"
     #include "boost/di/detail/module.hpp"
+    #include "boost/di/detail/pool.hpp"
     #include "boost/di/concepts.hpp"
     #include "boost/di/config.hpp"
 
@@ -33,23 +35,28 @@
     namespace boost {
     namespace di {
 
-    namespace aux {
-
-    template<typename TDeps>
-    struct fusion_deps
-        : mpl::fold<
-              TDeps
-            , mpl::vector0<>
-            , mpl::push_back<mpl::_1, mpl::_2>
-          >::type
-    { };
-
-    } // namespace aux
-
     template<typename TDeps = mpl::vector0<> >
     class fusion_module
-        : public detail::module<typename aux::fusion_deps<TDeps>::type>
+        : public detail::module<TDeps>
     {
+        template<typename TSeq>
+        struct fusion_deps
+            : mpl::fold<
+                  TSeq
+                , mpl::vector0<>
+                , mpl::if_<
+                      type_traits::has_context<mpl::_2>
+                    , mpl::push_back<mpl::_1, mpl::_2>
+                    , mpl::_1
+                  >
+              >::type
+        { };
+
+        template<typename TSeq, typename TPool>
+        fusion_module<TSeq> create_fusion_module(const TPool&, typename boost::enable_if_c<mpl::size<TSeq>::value == 0>::type* = 0) const {
+            return fusion_module<TSeq>();
+        }
+
     public:
         fusion_module() { }
 
@@ -67,18 +74,35 @@
 
 #else
 
+//private:
     template<BOOST_DI_TYPES(Args)>
     explicit fusion_module(BOOST_DI_ARGS(Args, args))
-        : detail::module<typename aux::fusion_deps<TDeps>::type>
-        //: detail::module<TDeps>
+        : detail::module<TDeps>
         (BOOST_DI_ARGS_FORWARD(args))
     { }
 
+    template<typename TSeq, typename TPool>
+    fusion_module<TSeq> create_fusion_module(const TPool& pool, typename boost::enable_if_c<mpl::size<TSeq>::value == BOOST_PP_ITERATION()>::type* = 0) const {
+
+        #define BOOST_DI_GET(z, n, _) BOOST_PP_COMMA_IF(n) pool.template get<typename boost::mpl::at_c<TSeq, n>::type>()
+
+        return fusion_module<TSeq>(
+            BOOST_PP_REPEAT(
+                BOOST_PP_ITERATION()
+              , BOOST_DI_GET
+              , ~
+            )
+        );
+
+        #undef BOOST_DI_GET
+    }
+
+public:
     template<BOOST_DI_TYPES(Args)>
-    fusion_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >
+    fusion_module<typename fusion_deps<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type>
     operator()(BOOST_DI_ARGS(Args, args)) const {
-        return fusion_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >(
-            BOOST_DI_ARGS_FORWARD(args));
+        detail::pool<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > pool(BOOST_DI_ARGS_FORWARD(args));
+        return create_fusion_module<typename fusion_deps<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type>(pool);
     }
 
 #endif
