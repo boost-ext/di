@@ -13,8 +13,11 @@
 
 // modules
 #include "boost/di/injector.hpp"
+#include "boost/di/make_injector.hpp"
 #include "boost/di/generic_module.hpp"
+#include "boost/di/make_generic_module.hpp"
 #include "boost/di/fusion_module.hpp"
+#include "boost/di/make_fusion_module.hpp"
 
 // concepts
 #include "boost/di/concepts.hpp"

@@ -10,7 +10,6 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-#include "fake_pool.hpp"
 #include "fake_binder.hpp"
 
 namespace boost {
@@ -26,16 +25,11 @@ struct fake_dependency
     typedef mpl::vector0<> context;
     typedef void scope;
     typedef is_same<mpl::_1, T> bind;
+    typedef T result_type;
 
-    T create(const fake_pool&) {
+    T create() {
         return value;
     }
-
-    template<typename>
-    struct result_type
-    {
-        typedef T type;
-    };
 };
 
 template<typename T>
@@ -47,13 +41,12 @@ BOOST_AUTO_TEST_CASE(creator_simple) {
     const int i = 42;
 
     typedef fake_dependency<int, i> dependency_type;
-    fake_pool pool_;
     entries<dependency_type> entries_;
 
     BOOST_CHECK_EQUAL(i, (
         creator<
             fake_binder<dependency_type>
-        >::execute<int, mpl::vector0<> >(entries_, pool_)
+        >::execute<int, mpl::vector0<> >(entries_)
     ));
 }
 

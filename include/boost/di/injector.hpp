@@ -43,7 +43,7 @@
                 mpl::if_<
                     mpl::is_sequence<boost::mpl::_2>
                   , mpl::_2
-                  , typename mpl::vector<boost::mpl::_2>::type
+                  , typename mpl::vector1<boost::mpl::_2>::type
                 >
               , mpl::back_inserter<boost::mpl::_1>
             >

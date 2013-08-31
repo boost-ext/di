@@ -22,7 +22,6 @@ BOOST_AUTO_TEST_CASE(clear) {
             mpl::true_
           , check_for_creation_ownership::verify<
                 mpl::vector0<>
-              , mpl::vector0<>
               , int
               , false
             >::type
@@ -34,7 +33,6 @@ BOOST_AUTO_TEST_CASE(clear) {
             mpl::true_
           , check_for_creation_ownership::verify<
                 mpl::vector0<>
-              , mpl::vector0<>
               , int*
               , false
             >::type
@@ -46,7 +44,6 @@ BOOST_AUTO_TEST_CASE(clear) {
             mpl::true_
           , check_for_creation_ownership::verify<
                 mpl::vector0<>
-              , mpl::vector0<>
               , const int*
               , false
             >::type
@@ -58,7 +55,6 @@ BOOST_AUTO_TEST_CASE(clear) {
             mpl::true_
           , check_for_creation_ownership::verify<
                 mpl::vector0<>
-              , mpl::vector0<>
               , shared_ptr<int>
               , false
             >::type
@@ -72,7 +68,6 @@ BOOST_AUTO_TEST_CASE(not_clear) {
             mpl::false_
           , check_for_creation_ownership::verify<
                 mpl::vector0<>
-              , mpl::vector0<>
               , int&
               , false
             >::type
@@ -84,7 +79,6 @@ BOOST_AUTO_TEST_CASE(not_clear) {
             mpl::false_
           , check_for_creation_ownership::verify<
                 mpl::vector0<>
-              , mpl::vector0<>
               , const int&
               , false
             >::type

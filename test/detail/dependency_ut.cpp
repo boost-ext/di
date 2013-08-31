@@ -24,7 +24,7 @@ struct fake_scope
     template<typename T, typename U>
     struct scope
     {
-        typedef scopes::convertible_any<U> result_type;
+        typedef shared_ptr<T> result_type;
 
         result_type create() {
             return result_type(make_shared<T>(value));
@@ -37,13 +37,6 @@ struct other_fake_scope { };
 template<typename T, typename>
 struct fake_fixed_value
 { };
-
-template<
-    typename T
-  , typename TContext = mpl::vector0<>
-  , typename = void
->
-class fake_external { };
 
 template<typename TTypes, int value = 0>
 struct fake_pool
@@ -72,7 +65,6 @@ BOOST_AUTO_TEST_CASE(rebind_scope) {
               , int
               , mpl::vector0<>
               , is_same<mpl::_1, int>
-              , fake_external
             >
           , dependency<
                 mpl::_1
@@ -80,7 +72,6 @@ BOOST_AUTO_TEST_CASE(rebind_scope) {
               , int
               , mpl::vector0<>
               , is_same<mpl::_1, int>
-              , fake_external
             >::rebind<other_fake_scope>::type
         >::value
     ));
@@ -95,7 +86,6 @@ BOOST_AUTO_TEST_CASE(rebind_type) {
               , int
               , mpl::vector0<>
               , is_same<mpl::_1, int>
-              , fake_external
             >
           , dependency<
                 void
@@ -103,26 +93,9 @@ BOOST_AUTO_TEST_CASE(rebind_type) {
               , mpl::_2
               , mpl::_3
               , is_same<mpl::_1, int>
-              , fake_external
             >::rebind<double, int, mpl::vector0<> >::type
         >::value
     ));
-}
-
-BOOST_AUTO_TEST_CASE(create_by_pool) {
-    const int i = 42;
-    dependency<fake_scope<>, int> dependency_;
-    fake_pool<mpl::vector<scopes::convertible_any<int> >, i> pool_;
-
-    BOOST_CHECK_EQUAL(i, static_cast<int>(dependency_.create(pool_)));
-}
-
-BOOST_AUTO_TEST_CASE(create_by_scope) {
-    const int i = 42;
-    dependency<fake_scope<i>, int> dependency_;
-    fake_pool<mpl::vector0<> > pool_;
-
-    BOOST_CHECK_EQUAL(i, static_cast<int>(dependency_.create(pool_)));
 }
 
 } // namespace detail
