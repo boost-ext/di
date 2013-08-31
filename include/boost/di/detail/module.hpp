@@ -325,7 +325,7 @@
         : deps_(BOOST_PP_ENUM_BINARY_PARAMS(
               BOOST_PP_ITERATION()
             , args
-            , .deps1 BOOST_PP_INTERCEPT
+            , .deps_ BOOST_PP_INTERCEPT
           ))
     { }
 

@@ -43,10 +43,9 @@ struct make_annotation<
   , typename enable_if<is_base_of<annotate<>::with<>, T> >::type
 >
 {
-    typedef typename T::template
-        rebind<scopes::external>::type dependency;
-
-    typedef typename annotate<dependency>::template with<typename T::name> type;
+    typedef typename annotate<
+        typename T::template rebind<scopes::external>::type
+    >::template with<typename T::name> type;
 };
 
 } // namespace detail

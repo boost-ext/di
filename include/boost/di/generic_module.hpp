@@ -48,7 +48,12 @@
 
     template<
         typename TDeps
-      , typename _1 = derived<mpl::_1>
+      , typename _1 =
+            mpl::if_<
+                  type_traits::has_name<mpl::_1> // is annotate
+                , derived<mpl::_1>
+                , mpl::_1
+            >
     >
     struct generic_deps
         : mpl::transform<
