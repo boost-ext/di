@@ -25,7 +25,13 @@ struct allocator
 };
 
 struct trivial_ctor
-{ };
+{
+    trivial_ctor()
+        : i(0)
+    { }
+
+    int i;
+};
 
 struct default_ctor
 {
@@ -209,49 +215,48 @@ BOOST_AUTO_TEST_CASE(pool_of_pools) {
     );
 }
 
-BOOST_AUTO_TEST_CASE(same_arg_for_all_types) {
-    const int i = 42;
-    pool<mpl::vector<custom_ctor, custom_ctor_other> > pool_(cref(i));
+BOOST_AUTO_TEST_CASE(pool_from_other_empty_pool) {
+    pool<mpl::vector<> > pool_empty_;
+    pool<mpl::vector<default_ctor> > pool_(pool_empty_);
 
-    BOOST_CHECK_EQUAL(i, pool_.get<custom_ctor>().i);
-    BOOST_CHECK_EQUAL(i, pool_.get<custom_ctor_other>().i);
+    BOOST_CHECK_EQUAL(0, pool_.get<default_ctor>().i);
 }
 
-BOOST_AUTO_TEST_CASE(subset) {
-    typedef allocator<trivial_ctor> trivial_ctor_type;
-    typedef allocator<default_ctor> default_ctor_type;
-    typedef allocator<custom_ctor> custom_ctor_type;
-
+BOOST_AUTO_TEST_CASE(pool_from_other_subset_pool) {
     typedef pool<
         mpl::vector<
-            trivial_ctor_type
-          , default_ctor_type
-          , custom_ctor_type
+            trivial_ctor
+          , default_ctor
+          , custom_ctor
         >
     > pool_all_type;
 
     typedef pool<
         mpl::vector<
-            trivial_ctor_type
-          , custom_ctor_type
+            trivial_ctor
+          , custom_ctor
         >
     > pool_subset_type;
 
-    trivial_ctor_type trivial_ctor_(new trivial_ctor);
-    default_ctor_type default_ctor_(new default_ctor);
-    custom_ctor_type custom_ctor_(new custom_ctor(0));
+    trivial_ctor trivial_ctor_;
+    custom_ctor custom_ctor_(42);
 
-    pool_all_type pool_all_(default_ctor_, trivial_ctor_, custom_ctor_);
-    pool_subset_type pool_subset_(cref(pool_all_));
+    pool_subset_type pool_subset_(trivial_ctor_, custom_ctor_);
+    pool_all_type pool_all_(pool_subset_);
 
     BOOST_CHECK_EQUAL(
-        trivial_ctor_.object
-      , pool_subset_.get<trivial_ctor_type>().object
+        trivial_ctor_.i
+      , pool_all_.get<trivial_ctor>().i
     );
 
     BOOST_CHECK_EQUAL(
-        custom_ctor_.object
-      , pool_subset_.get<custom_ctor_type>().object
+        0
+      , pool_all_.get<default_ctor>().i
+    );
+
+    BOOST_CHECK_EQUAL(
+        custom_ctor_.i
+      , pool_all_.get<custom_ctor>().i
     );
 }
 

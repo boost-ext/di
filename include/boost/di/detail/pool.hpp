@@ -14,7 +14,6 @@
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/preprocessor/punctuation/comma_if.hpp>
     #include <boost/utility/enable_if.hpp>
-    #include <boost/ref.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/fold.hpp>
     #include <boost/mpl/copy.hpp>
@@ -54,7 +53,7 @@
         pool() { }
 
         template<typename T>
-        explicit pool(const reference_wrapper<T>&)
+        explicit pool(const pool<T>&)
         { }
 
         template<typename T>
@@ -137,6 +136,12 @@
         #define BOOST_DI_CTOR_INITLIST_IMPL(_, n, types)                    \
             BOOST_PP_COMMA_IF(n) mpl::at_c<types, n>::type(                 \
                 p.get<typename mpl::at_c<types, n>::type>())
+
+        template<typename T>
+        explicit pool(
+            const pool<T>&
+          , typename enable_if_c<mpl::size<T>::value == 0>::type* = 0)
+        { }
 
         #define BOOST_PP_LOCAL_MACRO(n)                                     \
             template<typename T>                                            \
