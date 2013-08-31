@@ -41,7 +41,7 @@ struct c4
 
 int main()
 {
-    di::injector<c0if0>().create<c4>();
+    di::generic_module<c0if0>().create<c4>();
 
     return 0;
 }
