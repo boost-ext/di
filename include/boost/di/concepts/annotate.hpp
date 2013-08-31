@@ -11,6 +11,7 @@
 #include <boost/mpl/vector.hpp>
 
 #include "boost/di/scopes/external.hpp"
+#include "boost/di/detail/dependency.hpp"
 
 namespace boost {
 namespace di {
@@ -41,16 +42,28 @@ struct annotate<none_t>
     template<
         typename TExpected
       , typename TContext = mpl::vector0<>
-      , template<
-            typename
-          , typename
-          , typename = void
-        > class TExternal = scopes::convertible_any
     >
     struct with_
         : with<>
-        , TExternal<TExpected, TContext>::from
-    { };
+    {
+        template<typename TValue>
+        static detail::dependency<
+            scopes::external
+          , TExpected
+          , TValue
+          , TContext
+          , mpl::or_<is_base_of<mpl::_1, TExpected>, is_same<mpl::_1, TExpected> >
+        >
+        to(const TValue& value) {
+            return detail::dependency<
+                scopes::external
+              , TExpected
+              , TValue
+              , TContext
+              , mpl::or_<is_base_of<mpl::_1, TExpected>, is_same<mpl::_1, TExpected> >
+            >(value);
+        }
+    };
 };
 
 } // namespace concepts

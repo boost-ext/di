@@ -56,49 +56,19 @@
     namespace di {
     namespace detail {
 
-    namespace aux {
-
-    template<typename T>
-    struct dependency_impl
-        : dependency<
-            scopes::external
-          , typename T::element_type
-          , typename type_traits::value_type<typename T::element_type>::type
-          , typename T::context
-        >
-    { };
-
-    } // namespace aux
-
     template<
         typename TDeps = mpl::vector0<>
-      , typename TExternals = TDeps
-      , template<
-            typename
-          , typename
-        > class TBinder = binder
-      , template<
-            typename
-          , typename = void
-        > class TPool = pool
-      , template<
-            typename
-        > class TCreator = creator
-      , template<
-            typename
-        > class TVisitor = visitor
-      , template<
-            typename
-        > class TDependency = aux::dependency_impl
+      , template<typename> class TBinder = binder
+      , template<typename, typename = void> class TPool = pool
+      , template<typename> class TCreator = creator
+      , template<typename> class TVisitor = visitor
     >
     class module
     {
         template<
             typename
-          , typename
-          , template<typename, typename> class
-          , template<typename, typename> class
           , template<typename> class
+          , template<typename, typename> class
           , template<typename> class
           , template<typename> class
         > friend class module;
@@ -139,26 +109,6 @@
             typedef typename T::deps type;
         };
 
-        template<
-            typename T
-          , typename = void
-        >
-        struct externals_impl
-        {
-            typedef mpl::vector<T> type;
-        };
-
-        template<typename T>
-        struct externals_impl<
-            T
-          , typename enable_if<
-                type_traits::has_externals<T>
-            >::type
-        >
-        {
-            typedef mpl::vector<typename T::externals> type;
-        };
-
     public:
         struct policies
             : mpl::fold<
@@ -172,35 +122,13 @@
               >::type
         { };
 
-        typedef TPool<
-            typename mpl::fold<
-                TExternals
-              , mpl::vector0<>
-              , mpl::copy<
-                    externals_impl<mpl::_2>
-                  , mpl::back_inserter<boost::mpl::_1>
-                >
-            >::type
-        > externals;
-
         struct deps
             : mpl::remove_if<
                   typename mpl::fold<
                       typename mpl::fold<
                           typename mpl::fold<
                               TDeps
-                            , typename mpl::fold<
-                                  typename externals::types
-                                , mpl::vector0<>
-                                , mpl::if_<
-                                      type_traits::has_element_type<mpl::_2>
-                                    , mpl::push_back<
-                                          mpl::_1
-                                        , TDependency<mpl::_2>
-                                      >
-                                    , mpl::_1
-                                  >
-                              >::type
+                            , mpl::vector0<>
                             , mpl::copy<
                                   deps_impl<mpl::_2>
                                 , mpl::back_inserter<boost::mpl::_1>
@@ -212,20 +140,17 @@
                     , mpl::vector0<>
                     , mpl::push_back<mpl::_1, mpl::_2>
                   >::type
-                , mpl::or_<
-                      type_traits::has_policy_type<mpl::_1>
-                    , type_traits::has_element_type<mpl::_1>
-                  >
+                , type_traits::has_policy_type<mpl::_1>
               >::type
         { };
 
     private:
         template<typename T, typename TPolicy>
         struct verify_policies_impl
-            : TPolicy::template verify<deps, TExternals, T>::type
+            : TPolicy::template verify<deps, T>::type
         { };
 
-        template<typename T>
+       template<typename T>
         struct verify_policies
             : mpl::transform<
                   policies
@@ -233,7 +158,7 @@
               >::type
         { };
 
-        typedef TBinder<deps, TExternals> binder_type;
+        typedef TBinder<deps> binder_type;
 
         template<typename Sequence>
         struct unique
@@ -330,12 +255,12 @@
 
         template<typename T>
         T create() {
-            TPool<typename all_deps<T>::type> deps_;
+            TPool<typename all_deps<T>::type> deps(deps_);
 
             BOOST_MPL_ASSERT((mpl::is_sequence<typename verify_policies<T>::type>));
 
             return TCreator<binder_type>::template
-                execute<T, mpl::vector0<> >(deps_, externals_);
+                execute<T, mpl::vector0<> >(deps);
         }
 
         template<typename T, typename Visitor>
@@ -380,7 +305,7 @@
             call_impl<Scope, typename mpl::pop_front<Deps>::type>(action, deps);
         }
 
-        externals externals_;
+        TPool<deps> deps_;
     };
 
     } // namespace detail
@@ -397,10 +322,10 @@
       , typename enable_if<
             is_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >
         >::type* = 0)
-        : externals_(BOOST_PP_ENUM_BINARY_PARAMS(
+        : deps_(BOOST_PP_ENUM_BINARY_PARAMS(
               BOOST_PP_ITERATION()
             , args
-            , .externals_ BOOST_PP_INTERCEPT
+            , .deps1 BOOST_PP_INTERCEPT
           ))
     { }
 
@@ -410,7 +335,7 @@
       , typename disable_if<
             is_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >
         >::type* = 0)
-        : externals_(BOOST_DI_ARGS_FORWARD(args))
+        : deps_(BOOST_DI_ARGS_FORWARD(args))
     { }
 
 #endif

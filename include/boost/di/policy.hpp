@@ -21,12 +21,11 @@ class policy
 {
     template<
         typename TDeps
-      , typename TExternals
       , typename T
       , typename TPolicy
     >
     struct verify_impl
-        : TPolicy::template verify<TDeps, TExternals, T>::type
+        : TPolicy::template verify<TDeps, T>::type
     { };
 
 public:
@@ -35,14 +34,13 @@ public:
 
     template<
         typename TDeps
-      , typename TExternals
       , typename T
     >
     struct verify
         : mpl::fold<
               policy_type
             , mpl::void_
-            , verify_impl<TDeps, TExternals, T, mpl::_2>
+            , verify_impl<TDeps, T, mpl::_2>
           >::type
     {
         typedef verify type;

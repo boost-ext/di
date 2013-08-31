@@ -47,13 +47,9 @@
     public:
         template<
             typename TDeps
-          , typename TExternals
           , typename TGiven
           , bool Assert = true
-          , template<
-                typename
-              , typename
-            > class TBinder = detail::binder
+          , template<typename> class TBinder = detail::binder
           , template<
                 typename
               , typename = void
@@ -94,16 +90,10 @@
             >
             struct circular_dependencies
                : circular_dependencies_impl<
-                      typename TBinder<
-                          TDeps
-                        , TExternals
-                      >::template impl<T, TCallStack>::type
+                      typename TBinder<TDeps>::template impl<T, TCallStack>::type
                     , typename mpl::push_back<
                           TCallStack
-                        , typename TBinder<
-                              TDeps
-                            , TExternals
-                          >::template impl<T, TCallStack>::type::given
+                        , typename TBinder<TDeps>::template impl<T, TCallStack>::type::given
                       >::type
                   >
             { };

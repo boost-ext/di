@@ -32,7 +32,7 @@
     namespace boost {
     namespace di {
 
-    class dummy
+    class dummy /* TODO: should be deduce*/
     {
     public:
         template<typename, typename>
@@ -50,16 +50,10 @@
       , typename TGiven = TExpected
       , typename TContext = mpl::vector0<>
       , typename TBind = is_same<mpl::_1, TExpected>
-      , template<
-            typename
-          , typename
-          , typename = void
-        > class TExternal = scopes::convertible_any
     >
     class dependency
     {
         typedef typename TScope::template scope<TExpected, TGiven> scope_type;
-        typedef TExternal<TExpected, TContext> external_type;
 
     public:
         typedef dependency type;
@@ -68,58 +62,18 @@
         typedef TGiven given;
         typedef TContext context;
         typedef TBind bind;
-
-    private:
-        template<typename TExternals>
-        struct is_scope_type
-            : mpl::not_<
-                  mpl::contains<
-                      typename TExternals::types
-                    , external_type
-                  >
-              >
-        { };
-
-        template<typename TExternals>
-        struct is_external_type
-            : mpl::contains<
-                  typename TExternals::types
-                , external_type
-              >
-        { };
+        typedef typename scope_type::result_type result_type;
 
     public:
-        template<typename TExternals, typename = void>
-        struct result_type
-        {
-            typedef external_type type;
-        };
+        dependency() { }
 
-        template<typename TExternals>
-        struct result_type<
-            TExternals
-          , typename enable_if<is_scope_type<TExternals> >::type
-        >
-        {
-            typedef typename scope_type::result_type type;
-        };
+        template<typename T>
+        explicit dependency(const T& obj)
+            : scope_(scope_type(obj))
+        { }
 
-        template<typename TExternals>
-        typename enable_if<
-            is_scope_type<TExternals>
-          , typename result_type<TExternals>::type
-        >::type
-        create(const TExternals&) {
+        result_type create() {
             return scope_.create();
-        }
-
-        template<typename TExternals>
-        typename enable_if<
-            is_external_type<TExternals>
-          , typename result_type<TExternals>::type
-        >::type
-        create(const TExternals& externals) {
-            return externals.template get<typename result_type<TExternals>::type>();
         }
 
         template<typename TAction>
@@ -136,7 +90,6 @@
               , TGiven
               , TContext
               , TBind
-              , TExternal
             > type;
         };
 
@@ -151,11 +104,6 @@
       , typename TGiven
       , typename TContext
       , typename TBind
-      , template<
-            typename
-          , typename
-          , typename
-        > class TExternal
     >
     class dependency<
         mpl::_1
@@ -163,7 +111,6 @@
       , TGiven
       , TContext
       , TBind
-      , TExternal
     >
     {
     public:
@@ -176,7 +123,6 @@
               , TGiven
               , TContext
               , TBind
-              , TExternal
             > type;
         };
     };
@@ -184,11 +130,6 @@
     template<
         typename TScope
       , typename TBind
-      , template<
-            typename
-          , typename
-          , typename
-        > class TExternal
     >
     class dependency<
         TScope
@@ -196,7 +137,6 @@
       , mpl::_2
       , mpl::_3
       , TBind
-      , TExternal
     >
     {
     public:
@@ -213,7 +153,6 @@
               , TGiven
               , TContext
               , TBind
-              , TExternal
             > type;
         };
     };
@@ -226,22 +165,9 @@
 
 #else
 
-    template<typename TExternals, BOOST_DI_TYPES(Args)>
-    typename enable_if<
-        is_scope_type<TExternals>
-      , typename result_type<TExternals>::type
-    >::type
-    create(const TExternals&, BOOST_DI_ARGS(Args, args)) {
+    template<BOOST_DI_TYPES(Args)>
+    result_type create(BOOST_DI_ARGS(Args, args)) {
         return scope_.create(BOOST_DI_ARGS_FORWARD(args));
-    }
-
-    template<typename TExternals, BOOST_DI_TYPES(Args)>
-    typename enable_if<
-        is_external_type<TExternals>
-      , typename result_type<TExternals>::type
-    >::type
-    create(const TExternals& externals, BOOST_DI_ARGS_NOT_USED(Args)) {
-        return externals.template get<typename result_type<TExternals>::type>();
     }
 
 #endif

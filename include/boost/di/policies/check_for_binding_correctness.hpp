@@ -34,7 +34,6 @@ public:
     template<
         typename TDeps
       , typename
-      , typename
       , bool Assert = true
       , template<
             typename

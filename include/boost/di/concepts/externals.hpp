@@ -21,40 +21,40 @@ namespace boost {
 namespace di {
 namespace concepts {
 
-namespace detail {
+//namespace detail {
 
-template<typename T, typename Enable = void>
-struct make_annotation
-{
-    typedef typename annotate<scopes::convertible_any<T> >::template with<> type;
-};
+//template<typename T, typename Enable = void>
+//struct make_annotation
+//{
+    //typedef typename annotate<scopes::convertible_any<T> >::template with<> type;
+//};
 
-template<typename T>
-struct make_annotation<
-    T
-  , typename enable_if<is_base_of<annotate<>::with<>, T> >::type
->
-{
-    typedef typename T::template
-        rebind<scopes::singleton<> >::type dependency;
+//template<typename T>
+//struct make_annotation<
+    //T
+  //, typename enable_if<is_base_of<annotate<>::with<>, T> >::type
+//>
+//{
+    //typedef typename T::template
+        //rebind<scopes::singleton<> >::type dependency;
 
-    typedef scopes::convertible_any<
-        typename dependency::expected
-      , typename dependency::context
-    > external;
+    //typedef scopes::convertible_any<
+        //typename dependency::expected
+      //, typename dependency::context
+    //> external;
 
-    typedef typename annotate<external>::template
-        with<typename T::name> type;
-};
+    //typedef typename annotate<external>::template
+        //with<typename T::name> type;
+//};
 
-} // namespace detail
+//} // namespace detail
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-struct externals
-    : mpl::transform<
-          mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-        , detail::make_annotation<mpl::_1>
-      >::type
+struct externals : mpl::vector0<>
+    //: mpl::transform<
+          //mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+        //, detail::make_annotation<mpl::_1>
+      //>::type
 { };
 
 } // namespace concepts

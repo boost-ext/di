@@ -33,36 +33,9 @@
     namespace boost {
     namespace di {
 
-    namespace aux {
-
-    template<typename TDeps>
-    struct fusion_deps
-        : mpl::fold<
-              TDeps
-            , mpl::vector0<>
-            , mpl::copy<
-                  mpl::if_<
-                      mpl::is_sequence<mpl::_2>
-                    , mpl::_2
-                    , mpl::if_<
-                          type_traits::has_element_type<mpl::_2>
-                        , mpl::_2
-                        , deduce_<mpl::_2>
-                      >
-                  >
-                , mpl::back_inserter<mpl::_1>
-              >
-          >::type
-    { };
-
-    } // namespace aux
-
     template<typename TDeps = mpl::vector0<> >
     class fusion_module
-        : public detail::module<
-              typename aux::fusion_deps<TDeps>::type
-            , TDeps
-          >
+        : public detail::module<TDeps>
     {
     public:
         fusion_module() { }
@@ -83,10 +56,7 @@
 
     template<BOOST_DI_TYPES(Args)>
     explicit fusion_module(BOOST_DI_ARGS(Args, args))
-        : detail::module<
-              typename aux::fusion_deps<TDeps>::type
-            , TDeps
-          >
+        : detail::module<TDeps>
         (BOOST_DI_ARGS_FORWARD(args))
     { }
 

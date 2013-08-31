@@ -74,7 +74,7 @@
 #else
     #define n BOOST_PP_ITERATION()
 
-    #define BOOST_DI_DERIVES_IMPL(_, n, types)                          \
+    #define BOOST_DI_DERIVES_IMPL(_, n, types)                              \
         BOOST_PP_COMMA_IF(n) public mpl::at_c<types, n>::type
 
     template<typename TTypes>
@@ -121,27 +121,33 @@
 
         pool() { }
 
-        #define BOOST_DI_CTOR_INITLIST_IMPL(_, n, na)                   \
+        #define BOOST_DI_CTOR_INITLIST_IMPL(_, n, na)                       \
             BOOST_PP_COMMA_IF(n) Args##n(args##n)
 
-        #define BOOST_PP_LOCAL_MACRO(n)                                 \
-            template<BOOST_DI_TYPES_IMPL(n, Args)>                      \
-            explicit pool(BOOST_DI_ARGS_IMPL(n, Args, args))            \
-                : BOOST_PP_REPEAT(n, BOOST_DI_CTOR_INITLIST_IMPL, ~)    \
+        #define BOOST_PP_LOCAL_MACRO(n)                                     \
+            template<BOOST_DI_TYPES_IMPL(n, Args)>                          \
+            explicit pool(BOOST_DI_ARGS_IMPL(n, Args, args))                \
+                : BOOST_PP_REPEAT(n, BOOST_DI_CTOR_INITLIST_IMPL, ~)        \
             { }
 
         #define BOOST_PP_LOCAL_LIMITS (1, n)
         #include BOOST_PP_LOCAL_ITERATE()
         #undef BOOST_DI_CTOR_INITLIST_IMPL
 
-        #define BOOST_DI_CTOR_INITLIST_IMPL(_, n, types)                \
-            BOOST_PP_COMMA_IF(n) mpl::at_c<types, n>::type(arg)
+        #define BOOST_DI_CTOR_INITLIST_IMPL(_, n, types)                    \
+            BOOST_PP_COMMA_IF(n) mpl::at_c<types, n>::type(                 \
+                p.get<typename mpl::at_c<types, n>::type>())
 
-        template<typename T>
-        explicit pool(const reference_wrapper<T>& arg)
-            : BOOST_PP_REPEAT(n, BOOST_DI_CTOR_INITLIST_IMPL, TTypes)
-        { }
+        #define BOOST_PP_LOCAL_MACRO(n)                                     \
+            template<typename T>                                            \
+            explicit pool(                                                  \
+                const pool<T>& p                                            \
+              , typename enable_if_c<mpl::size<T>::value == n>::type* = 0)  \
+                : BOOST_PP_REPEAT(n, BOOST_DI_CTOR_INITLIST_IMPL, T)        \
+            { }
 
+        #define BOOST_PP_LOCAL_LIMITS (1, n)
+        #include BOOST_PP_LOCAL_ITERATE()
         #undef BOOST_DI_CTOR_INITLIST_IMPL
 
         template<typename T>

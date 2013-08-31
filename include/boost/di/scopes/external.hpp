@@ -37,6 +37,7 @@
     namespace di {
     namespace scopes {
 
+#if 0
     namespace aux {
 
     template<typename T, typename = void>
@@ -284,6 +285,7 @@
     private:
         object_type convertible_any_;
     };
+#endif
 
     class external
     {
@@ -294,14 +296,38 @@
         >
         class scope
         {
-        public:
-            typedef convertible_any<TExpected> result_type;
+            //typedef variant<
+                //TExpected&
+              //, const TExpected&
+              //, shared_ptr<TExpected>
+            //> value_type;
+            typedef TExpected value_type;
 
-            result_type create() {
-                return shared_ptr<TGiven>();
+        public:
+            typedef scope result_type;
+
+            operator TExpected() const {
+                //return boost::get<TExpected>(object_);
+                return object_;
+            }
+
+            scope() {
+                object_ = 42;
+            }// = delete
+
+            explicit scope(const value_type& value)
+                : object_(value)
+            { }
+
+            result_type& create() {
+                std::cout << "dupa" << std::endl;
+                return *this;
             }
 
             #include BOOST_PP_ITERATE()
+
+        private:
+            value_type object_;
         };
     };
 
@@ -313,10 +339,10 @@
 
 #else
 
-    template<BOOST_DI_TYPES(Args)>
-    result_type create(BOOST_DI_ARGS(Args, args)) {
-        return shared_ptr<TGiven>();
-    }
+    //template<BOOST_DI_TYPES(Args)>
+    //result_type create(BOOST_DI_ARGS(Args, args)) {
+        //return shared_ptr<TGiven>();
+    //}
 
 #endif
 

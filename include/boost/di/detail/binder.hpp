@@ -125,13 +125,13 @@ struct less_context_size
 
 template<
     typename TCallStack
-  , typename TSeq
+  , typename TDeps
   , typename TCond
 >
 struct sort_dependencies_by_call_stack_order
     : mpl::sort<
           typename mpl::fold<
-              mpl::filter_view<TSeq, type_traits::has_context<mpl::_1> >
+              TDeps
             , mpl::vector0<>
             , mpl::if_<
                   TCond
@@ -145,7 +145,7 @@ struct sort_dependencies_by_call_stack_order
 
 template<
     typename TCallStack
-  , typename TSeq
+  , typename TDeps
   , typename TDefault
   , typename TCond =
         for_each_context<
@@ -159,7 +159,7 @@ struct get_dependency_by_call_stack_order
               typename mpl::push_back<
                   typename sort_dependencies_by_call_stack_order<
                       TCallStack
-                    , TSeq
+                    , TDeps
                     , TCond
                   >::type
                 , TDefault
@@ -170,7 +170,7 @@ struct get_dependency_by_call_stack_order
 
 template<
     typename TGiven
-  , typename TExternals
+  , typename TDeps
   , typename TCallStack
   , typename TDefault
 >
@@ -180,7 +180,7 @@ struct make_default_dependency
         , typename type_traits::value_type<TGiven>::type
         , typename get_dependency_by_call_stack_order<
               TCallStack
-            , TExternals
+            , TDeps
             , empty_context
           >::type::context
       >
@@ -197,7 +197,6 @@ template<
     typename T
   , typename TCallStack
   , typename TDeps
-  , typename TExternals
   , typename TDefault =
         dependency<
             typename type_traits::scope_traits<T>::type
@@ -212,7 +211,7 @@ struct binder_impl
         , TDeps
         , typename aux::make_default_dependency<
               typename type_traits::make_plain<T>::type
-            , TExternals
+            , TDeps
             , TCallStack
             , TDefault
           >::type
@@ -226,13 +225,12 @@ struct binder_impl
                 , aux::make_context<mpl::_2>
               >
           >
-      >::type::template rebind<typename type_traits::scope_traits<T>::type>::type
+      >::type::template rebind<
+          typename type_traits::scope_traits<T>::type
+      >::type
 { };
 
-template<
-    typename TDeps = mpl::vector0<>
-  , typename TExternals = mpl::vector0<>
->
+template<typename TDeps = mpl::vector0<> >
 struct binder
 {
     typedef binder type;
@@ -242,7 +240,7 @@ struct binder
       , typename TCallStack
     >
     struct impl
-        : binder_impl<T, TCallStack, TDeps, TExternals>
+        : binder_impl<T, TCallStack, TDeps>
     { };
 };
 
