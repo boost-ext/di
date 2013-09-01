@@ -140,7 +140,7 @@
         template<typename T>
         explicit pool(
             const pool<T>&
-          , typename enable_if_c<mpl::size<T>::value == 0>::type* = 0)
+          , typename enable_if_c<mpl::size<typename pool<T>::types>::value == 0>::type* = 0)
         { }
 
         #define BOOST_PP_LOCAL_MACRO(n)                                     \
