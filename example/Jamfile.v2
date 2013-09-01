@@ -20,23 +20,22 @@ project di :
 ;
 
 test-suite di_test :
-    [ run t.cpp ]
-    #[ run check_for_creation_by_smart_ptr_policy.cpp ]
-    #[ run concepts.cpp ]
-    #[ run ctor.cpp ]
-    #[ run deduce_scope.cpp ]
-    #[ run externals.cpp ]
-    #[ run factory.cpp ]
-    #[ run fusion_module.cpp ]
-    #[ run generic_module.cpp ]
-    #[ run hello_world.cpp ]
-    #[ run injector.cpp ]
-    #[ run named.cpp ]
-    ##[ run pool_allocator.cpp ] # undefined reference to boost::system
-    #[ run provider.cpp ]
-    #[ run session_scope.cpp ]
-    #[ run testing.cpp ]
-    #[ run text_visitor.cpp ]
-    #[ run uml_visitor.cpp ]
+    [ run check_for_creation_by_smart_ptr_policy.cpp ]
+    [ run concepts.cpp ]
+    [ run ctor.cpp ]
+    [ run deduce_scope.cpp ]
+    [ run externals.cpp ]
+    [ run factory.cpp ]
+    [ run fusion_module.cpp ]
+    [ run generic_module.cpp ]
+    [ run hello_world.cpp ]
+    [ run injector.cpp ]
+    [ run named.cpp ]
+    #[ run pool_allocator.cpp ] # undefined reference to boost::system
+    [ run provider.cpp ]
+    [ run session_scope.cpp ]
+    [ run testing.cpp ]
+    [ run text_visitor.cpp ]
+    [ run uml_visitor.cpp ]
 ;
 

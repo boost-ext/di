@@ -69,8 +69,8 @@
               >::type
         { };
 
-        template<typename TSeq, typename TPool>
-        fusion_module<TSeq> create_fusion_module(const TPool&, typename boost::enable_if_c<mpl::size<TSeq>::value == 0>::type* = 0) const {
+        template<typename TSeq, typename TExt, typename TPool>
+        fusion_module<TSeq> create_fusion_module(const TPool&, typename boost::enable_if_c<mpl::size<TExt>::value == 0>::type* = 0) const {
             return fusion_module<TSeq>();
         }
 

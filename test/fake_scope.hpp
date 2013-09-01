@@ -32,10 +32,30 @@
         struct entry { };
         struct exit { };
 
+        template<typename T>
+        class convertible
+        {
+        public:
+            explicit convertible(shared_ptr<T> obj)
+                : obj_(obj)
+            { }
+
+            operator shared_ptr<T>() const {
+                return obj_;
+            }
+
+            operator T() const {
+                return *obj_;
+            }
+
+        private:
+            shared_ptr<T> obj_;
+        };
+
         template<typename T, typename>
         struct scope
         {
-            typedef T result_type;
+            typedef convertible<T> result_type;
 
             void call(const entry&) {
                 entry_calls()++;
