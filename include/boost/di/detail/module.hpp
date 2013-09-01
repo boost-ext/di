@@ -125,7 +125,7 @@
         struct deps
             : mpl::remove_if<
                   typename mpl::fold<
-                      typename mpl::fold<
+                      typename mpl::fold<//unique
                           typename mpl::fold<
                               TDeps
                             , mpl::vector0<>
@@ -305,7 +305,8 @@
             call_impl<Scope, typename mpl::pop_front<Deps>::type>(action, deps);
         }
 
-        TPool<deps> deps_;
+        typedef TPool<typename deps::type> pool;
+        pool deps_;
     };
 
     } // namespace detail
@@ -322,11 +323,17 @@
       , typename enable_if<
             is_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >
         >::type* = 0)
-        : deps_(BOOST_PP_ENUM_BINARY_PARAMS(
+        : deps_(
+            TPool< mpl::vector<
+                BOOST_PP_ENUM_BINARY_PARAMS(
+                BOOST_PP_ITERATION()
+              , typename Args
+              , ::pool BOOST_PP_INTERCEPT)
+            > >(BOOST_PP_ENUM_BINARY_PARAMS(
               BOOST_PP_ITERATION()
             , args
-            , .deps_ BOOST_PP_INTERCEPT
-          ))
+            , .deps_ BOOST_PP_INTERCEPT))
+          )
     { }
 
     template<BOOST_DI_TYPES(Args)>

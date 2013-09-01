@@ -27,7 +27,7 @@ test-suite di_test :
     [ run fusion_module.cpp ]
     [ run generic_module.cpp ]
     [ run hello_world.cpp ]
-    #[ run injector.cpp ]
+    [ run injector.cpp ]
     [ run named.cpp ]
     #[ run pool_allocator.cpp ] # undefined reference to boost::system
     [ run provider.cpp ]
