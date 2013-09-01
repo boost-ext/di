@@ -24,6 +24,7 @@
     #include "boost/di/concepts.hpp"
     #include "boost/di/config.hpp"
 
+#include <boost/units/detail/utility.hpp>
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
         BOOST_DI_ITERATION_PARAMS(          \
             1                               \
@@ -49,6 +50,22 @@
                     , mpl::push_back<mpl::_1, mpl::_2>
                     , mpl::_1
                   >
+              >::type
+        { };
+
+        template<typename TSeq>
+        struct ddd
+            : mpl::fold<
+                TSeq
+              , mpl::vector0<>
+              , mpl::copy<
+                    mpl::if_<
+                        mpl::is_sequence<boost::mpl::_2>
+                      , mpl::_2
+                      , typename mpl::vector1<boost::mpl::_2>::type
+                    >
+                  , mpl::back_inserter<boost::mpl::_1>
+                >
               >::type
         { };
 
@@ -81,10 +98,10 @@
         (BOOST_DI_ARGS_FORWARD(args))
     { }
 
-    template<typename TSeq, typename TPool>
-    fusion_module<TSeq> create_fusion_module(const TPool& pool, typename boost::enable_if_c<mpl::size<TSeq>::value == BOOST_PP_ITERATION()>::type* = 0) const {
+    template<typename TSeq, typename TExt, typename TPool>
+    fusion_module<TSeq> create_fusion_module(const TPool& pool, typename boost::enable_if_c<mpl::size<TExt>::value == BOOST_PP_ITERATION()>::type* = 0) const {
 
-        #define BOOST_DI_GET(z, n, _) BOOST_PP_COMMA_IF(n) pool.template get<typename boost::mpl::at_c<TSeq, n>::type>()
+        #define BOOST_DI_GET(z, n, _) BOOST_PP_COMMA_IF(n) pool.template get<typename boost::mpl::at_c<TExt, n>::type>()
 
         return fusion_module<TSeq>(
             BOOST_PP_REPEAT(
@@ -99,10 +116,13 @@
 
 public:
     template<BOOST_DI_TYPES(Args)>
-    fusion_module<typename fusion_deps<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type>
+    fusion_module<typename ddd<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type>
     operator()(BOOST_DI_ARGS(Args, args)) const {
         detail::pool<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > pool(BOOST_DI_ARGS_FORWARD(args));
-        return create_fusion_module<typename fusion_deps<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type>(pool);
+        return create_fusion_module<
+            typename ddd<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type
+          , typename fusion_deps<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type
+        >(pool);
     }
 
 #endif
