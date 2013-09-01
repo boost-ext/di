@@ -50,11 +50,6 @@ struct bind
     typedef typename T::bind type;
 };
 
-struct empty_context
-{
-    typedef mpl::vector0<> context;
-};
-
 template<typename TCallStack, typename TContext>
 struct equal_call_stack
     : mpl::equal<
@@ -169,21 +164,11 @@ struct get_dependency_by_call_stack_order
 { };
 
 template<
-    typename TGiven
-  , typename TDeps
-  , typename TCallStack
+    typename T
   , typename TDefault
 >
 struct make_default_dependency
-    : TDefault::template rebind<
-          TGiven
-        , typename type_traits::value_type<TGiven>::type
-        , typename get_dependency_by_call_stack_order<
-              TCallStack
-            , TDeps
-            , empty_context
-          >::type::context
-      >
+    : TDefault::template rebind<T, typename type_traits::value_type<T>::type >
 { };
 
 template<typename TBind, typename T>
@@ -202,7 +187,6 @@ template<
             typename type_traits::scope_traits<T>::type
           , mpl::_1
           , mpl::_2
-          , mpl::_3
         >
 >
 struct binder_impl
@@ -211,8 +195,6 @@ struct binder_impl
         , TDeps
         , typename aux::make_default_dependency<
               typename type_traits::make_plain<T>::type
-            , TDeps
-            , TCallStack
             , TDefault
           >::type
         , mpl::and_<

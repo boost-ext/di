@@ -105,12 +105,13 @@ public:
 template<
     typename TScope
   , typename TBind
+  , typename TContext
 >
 class dependency<
     TScope
   , mpl::_1
   , mpl::_2
-  , mpl::_3
+  , TContext
   , TBind
 >
 {
@@ -118,7 +119,6 @@ public:
     template<
         typename TExpected
       , typename TGiven
-      , typename TContext
     >
     struct rebind
     {

@@ -324,15 +324,17 @@
             is_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >
         >::type* = 0)
         : deps_(
-            TPool< mpl::vector<
-                BOOST_PP_ENUM_BINARY_PARAMS(
+              TPool<
+                  mpl::vector<
+                      BOOST_PP_ENUM_BINARY_PARAMS(
+                          BOOST_PP_ITERATION()
+                        , typename Args
+                        , ::pool BOOST_PP_INTERCEPT)
+                  >
+              >(BOOST_PP_ENUM_BINARY_PARAMS(
                 BOOST_PP_ITERATION()
-              , typename Args
-              , ::pool BOOST_PP_INTERCEPT)
-            > >(BOOST_PP_ENUM_BINARY_PARAMS(
-              BOOST_PP_ITERATION()
-            , args
-            , .deps_ BOOST_PP_INTERCEPT))
+              , args
+              , .deps_ BOOST_PP_INTERCEPT))
           )
     { }
 
