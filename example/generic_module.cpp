@@ -68,16 +68,16 @@ int main()
 
     {
         typedef di::generic_module<
-            di::singletons<
+            di::singleton<
                 c1
             >
-          , di::per_requests<
+          , di::per_request<
                 c0
               , mpl::int_<42>
               , di::bind<int, mpl::int_<87>>::in_name<name>
               , di::bind<c01>::in_call<di::call_stack<c2, c1>>
             >
-          , di::externals<
+          , di::external<
                 double
               , di::annotate<di::bind<double>::in_call<c0>>::with<double_name>
               , c3
@@ -99,7 +99,7 @@ int main()
     {
         struct generic_module_
             : di::generic_module<
-                  di::singletons<
+                  di::singleton<
                       c1
                   >
                 , di::per_request<
@@ -108,14 +108,14 @@ int main()
                 , di::scope<di::scopes::per_request<>>::bind<
                       mpl::int_<42>
                   >
-                , di::per_requests<
+                , di::per_request<
                       di::bind<int, mpl::int_<87>>::in_name<name>
                     , di::bind<c01>::in_call<di::call_stack<c2, c1>>
                   >
                 , di::external<
                       double
                   >
-                , di::externals<
+                , di::external<
                       di::annotate<di::bind<double>::in_call<c0>>::with<double_name>
                     , c3
                     , c4

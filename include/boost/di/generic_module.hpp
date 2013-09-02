@@ -46,6 +46,11 @@
         typedef typename T::derived type;
     };
 
+    template<typename T>
+    struct default_scope
+        : scope<dummy>::bind<T>
+    { };
+
     template<
         typename TDeps
       , typename _1 =
@@ -64,7 +69,7 @@
                       mpl::if_<
                           mpl::is_sequence<mpl::_2>
                         , mpl::_2
-                        , deduce_<mpl::_2>
+                        , default_scope<bind<mpl::_2> >
                       >
                     , mpl::back_inserter<mpl::_1>
                   >

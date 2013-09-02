@@ -7,13 +7,16 @@
 #ifndef BOOST_DI_CONCEPTS_HPP
 #define BOOST_DI_CONCEPTS_HPP
 
-#include <boost/mpl/string.hpp>
+#include <string>
+#include <boost/mpl/int.hpp>
 #include "boost/di/concepts/annotate.hpp"
 #include "boost/di/concepts/bind.hpp"
 #include "boost/di/concepts/externals.hpp"
 #include "boost/di/concepts/scope.hpp"
 #include "boost/di/scopes/per_request.hpp"
 #include "boost/di/scopes/singleton.hpp"
+#include "boost/di/detail/dependency.hpp"
+#include "boost/di/named.hpp"
 #include "boost/di/config.hpp"
 
 namespace boost {
@@ -29,54 +32,24 @@ struct bind
     : concepts::bind<TExpected, TGiven>
 { };
 
-template<typename TName, int Value = 0, typename CallStack = mpl::vector0<> >
+template<int N>
 struct bind_int
-    : bind<int, mpl::int_<Value> >::template in_name<TName>::template in_call<CallStack>
+    : bind<int, mpl::int_<N> >
 { };
 
-template<typename TName, typename TStr = mpl::string<>, typename CallStack = mpl::vector0<> >
+template<typename T>
 struct bind_string
-    : bind<std::string, TStr>::template in_name<TName>::template in_call<CallStack>
-{ };
-
-template<typename TExpected, typename TGiven = TExpected>
-struct singleton
-    : scope<scopes::singleton<> >::bind<bind<TExpected, TGiven> >
-{ };
-
-template<typename T>
-struct singleton<T, T>
-    : scope<scopes::singleton<> >::bind<T>
-{ };
-
-template<typename TExpected, typename TGiven = TExpected>
-struct per_request
-    : scope<scopes::per_request<> >::bind<bind<TExpected, TGiven> >
-{ };
-
-template<typename T>
-struct per_request<T, T>
-    : scope<scopes::per_request<> >::bind<T>
+    : bind<std::string, T>
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-struct singletons
+struct singleton
     : scope<scopes::singleton<> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-struct per_requests
+struct per_request
     : scope<scopes::per_request<> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
-{ };
-
-template<typename TExpected, typename TGiven = TExpected>
-struct deduce_
-    : scope<dummy>::bind<bind<TExpected, TGiven> >
-{ };
-
-template<typename T>
-struct deduce_<T, T>
-    : scope<dummy>::bind<T>
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
@@ -84,13 +57,8 @@ struct deduce
     : scope<dummy>::bind<BOOST_DI_TYPES_PASS_MPL(T)>
 { };
 
-template<typename T>
-struct external
-    : concepts::externals<T>
-{ };
-
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-struct externals
+struct external
     : concepts::externals<BOOST_DI_TYPES_PASS_MPL(T)>
 { };
 

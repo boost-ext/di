@@ -25,8 +25,8 @@ public:
     }
 
 private:
-    int i1;
-    int i2;
+    int i1 = 0;
+    int i2 = 0;
 };
 
 } // namespace
@@ -34,8 +34,10 @@ private:
 int main()
 {
     typedef di::generic_module<
-        di::bind_int<mpl::string<'1'>, 42>
-      , di::bind_int<mpl::string<'2'>, 87>
+        di::per_request<
+            di::bind_int<42>::in_name<mpl::string<'1'>>
+          , di::bind_int<87>::in_name<mpl::string<'2'>>
+      >
     > module;
 
     di::injector<module> injector;

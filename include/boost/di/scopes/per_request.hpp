@@ -16,15 +16,9 @@
     #include <boost/bind.hpp>
     #include <boost/mpl/string.hpp>
     #include <boost/utility/enable_if.hpp>
-    #include <boost/mpl/aux_/yes_no.hpp>
-    #include <boost/mpl/bool.hpp>
-    #include <boost/mpl/void.hpp>
-    #include <boost/mpl/if.hpp>
-    #include <boost/type_traits/is_arithmetic.hpp>
-    #include <boost/non_type.hpp>
-    #include <boost/typeof/typeof.hpp>
     #include <boost/preprocessor/repetition/enum_params.hpp>
 
+    #include "boost/di/type_traits/has_traits.hpp"
     #include "boost/di/type_traits/create_traits.hpp"
     #include "boost/di/named.hpp"
     #include "boost/di/config.hpp"
@@ -48,35 +42,6 @@
     >
     class per_request
     {
-        template<
-            typename TDerived
-          , typename = void
-        >
-        class has_value
-        {
-            struct helper { static int value; };
-            struct base
-                : helper
-                , mpl::if_<
-                      is_arithmetic<TDerived>
-                    , mpl::void_
-                    , TDerived
-                  >::type
-            { };
-
-            template<typename T>
-            static mpl::aux::no_tag deduce(non_type<const int*, &T::value>*);
-
-            template<typename>
-            static mpl::aux::yes_tag deduce(...);
-
-        public:
-            BOOST_STATIC_CONSTANT(
-                bool
-              , value = sizeof(deduce<base>(0)) == sizeof(mpl::aux::yes_tag)
-            );
-        };
-
         template<
             typename
           , typename = void
@@ -105,7 +70,7 @@
         class explicit_impl<
             T
           , typename enable_if<
-                has_value<T>
+                type_traits::has_value<T>
             >::type
         >
             : public mpl::true_

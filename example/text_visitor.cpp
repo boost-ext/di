@@ -53,10 +53,10 @@ public:
 int main()
 {
     typedef di::generic_module<
-        di::per_requests<
+        di::per_request<
             mpl::int_<42>
         >
-      , di::singletons<
+      , di::singleton<
             c0
         >
     > module;

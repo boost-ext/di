@@ -56,21 +56,21 @@ int main()
 {
     {
         typedef di::generic_module<
-            di::singletons<
+            di::singleton<
                 c2, c3, c4
             >
-          , di::per_requests<
+          , di::per_request<
                 c0if0
               , di::bind<c1if0>::in_call<c3>
             >
         > generic_module;
 
         BOOST_AUTO(fusion_module, di::fusion_module<>()(
-            di::singletons<
+            di::singleton<
                 c1
             >()
-          , di::per_requests<
-                di::bind<int, mpl::int_<1>>
+          , di::per_request<
+                di::bind_int<1>
             >()
         ));
 
@@ -82,21 +82,21 @@ int main()
 
     {
         typedef di::generic_module<
-            di::singletons<
+            di::singleton<
                 c2, c3, c4
             >,
-            di::per_requests<
+            di::per_request<
                 c0if0
               , di::bind<c0if0>::in_call<c3>
             >
         > generic_module;
 
         auto fusion_module = di::fusion_module<>()(
-            di::singletons<
+            di::singleton<
                 c1
             >()
-          , di::per_requests<
-                di::bind<int, mpl::int_<1>>
+          , di::per_request<
+                di::bind_int<1>
             >()
         );
 
@@ -108,21 +108,21 @@ int main()
 
     {
         typedef di::generic_module<
-            di::singletons<
+            di::singleton<
                 c2, c3, c4
             >,
-            di::per_requests<
+            di::per_request<
                 c0if0
               , di::bind<c1if0>::in_call<c3>
             >
         > generic_module;
 
         auto fusion_module = di::fusion_module<>()(
-            di::singletons<
+            di::singleton<
                 c1
             >()
-          , di::per_requests<
-                di::bind<int, mpl::int_<1>>
+          , di::per_request<
+                di::bind_int<1>
             >()
         );
 

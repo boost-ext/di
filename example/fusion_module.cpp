@@ -67,10 +67,10 @@ int main()
 
     {
         BOOST_AUTO(fusion_module, di::fusion_module<>()(
-            di::singletons<
+            di::singleton<
                 c1
             >()
-          , di::per_requests<
+          , di::per_request<
                 c0
               , mpl::int_<42>
               , di::bind<int, mpl::int_<87>>::in_name<name>
@@ -88,7 +88,7 @@ int main()
 
     {
         auto fusion_module = di::fusion_module<>()(
-            di::singletons<
+            di::singleton<
                 c1
             >()
           , di::per_request<
@@ -97,7 +97,7 @@ int main()
           , di::scope<di::scopes::per_request<>>::bind<
                 mpl::int_<42>
             >()
-          , di::per_requests<
+          , di::per_request<
                 di::bind<int, mpl::int_<87>>::in_name<name>
               , di::bind<c01>::in_call<di::call_stack<c2, c1>>
             >()

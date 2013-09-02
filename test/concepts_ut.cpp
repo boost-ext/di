@@ -17,7 +17,7 @@ namespace di {
 class c{};
 
 BOOST_AUTO_TEST_CASE(create) {
-    typedef per_requests<
+    typedef per_request<
         int
       , bind<int, mpl::int_<42> >
       , bind<c>

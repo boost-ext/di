@@ -133,7 +133,7 @@ public:
 int main()
 {
     typedef di::generic_module<
-        di::singletons<
+        di::singleton<
             di::bind<i0, c0>
         >
     > module;

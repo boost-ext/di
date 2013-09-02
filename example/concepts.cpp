@@ -92,28 +92,25 @@ int main()
 {
     {
         typedef di::generic_module<
-            c0 // per_request
-          , di::bind<int, mpl::int_<42>>::in_call<c1> // per_request
+            c0 // deduce
+          , di::bind<int, mpl::int_<42>>::in_call<c1>
           , di::singleton<
                 c1
             >
-          , di::per_request<
-                c2
-            >
-          , di::singletons<
+          , di::singleton<
                 c3, c4
             >
-          , di::per_requests<
+          , di::per_request<
                 c5, c6
             >
           , di::external<
                 int
             >
-          , di::externals<
+          , di::external<
                 double
               , di::annotate<di::bind<double>::in_call<c1, c2>>::with<name1>
             >
-          , di::per_requests<
+          , di::per_request<
                 impl
               , mpl::string<'s'>
               , di::bind<i, impl1>
@@ -121,7 +118,7 @@ int main()
               , di::bind<i, impl3>::in_call<c6>
               , di::bind<i, impl4>::in_call<di::call_stack<c8, c7>>::in_name<name3>
             >
-          , di::singletons<
+          , di::singleton<
                 di::bind<c9>::in_call<c10, c11, di::call_stack<c13, c12>>
             >
         > generic_module;
@@ -137,13 +134,13 @@ int main()
           , di::per_request<
                 c2
             >()
-          , di::singletons<
+          , di::singleton<
                 c3, c4
             >()
-          , di::per_requests<
+          , di::per_request<
                 c5, c6
             >()
-          , di::per_requests<
+          , di::per_request<
                 impl
               , mpl::string<'s'>
               , di::bind<i, impl1>
@@ -151,7 +148,7 @@ int main()
               , di::bind<i, impl3>::in_call<c6>
               , di::bind<i, impl4>::in_call<di::call_stack<c8, c7>>::in_name<name3>
             >()
-          , di::singletons<
+          , di::singleton<
                 di::bind<c9>::in_call<c10, c11, di::call_stack<c13, c12>>
             >()
           , di::bind<int>::to(0)

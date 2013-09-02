@@ -7,9 +7,13 @@
 #ifndef BOOST_DI_TYPE_TRAITS_HAS_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_HAS_TRAITS_HPP
 
-#include <boost/mpl/has_xxx.hpp>
+#include <boost/type_traits/is_arithmetic.hpp>
+#include <boost/non_type.hpp>
 #include <boost/typeof/typeof.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/mpl/aux_/yes_no.hpp>
+#include <boost/mpl/void.hpp>
+#include <boost/mpl/has_xxx.hpp>
 
 #include "boost/di/config.hpp"
 
@@ -34,7 +38,10 @@ class BOOST_PP_CAT(has_, BOOST_DI_CONSTRUCTOR)
     template<typename>   static mpl::aux::no_tag  test(...);
 
 public:
-    static const bool value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag);
+    BOOST_STATIC_CONSTANT(
+        bool
+      , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
+    );
 };
 
 template<typename T>
@@ -44,7 +51,33 @@ class BOOST_PP_CAT(has_, BOOST_DI_CREATE)
     template<typename>   static mpl::aux::no_tag  test(...);
 
 public:
-    static const bool value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag);
+    BOOST_STATIC_CONSTANT(
+        bool
+      , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
+    );
+};
+
+template<typename T>
+class has_value
+{
+    struct helper { static int value; };
+    struct base
+        : helper
+        , mpl::if_<
+              is_arithmetic<T>
+            , mpl::void_
+            , T
+          >::type
+    { };
+
+    template<typename C> static mpl::aux::no_tag  test(non_type<const int*, &C::value>*);
+    template<typename>   static mpl::aux::yes_tag test(...);
+
+public:
+    BOOST_STATIC_CONSTANT(
+        bool
+      , value = sizeof(test<base>(0)) == sizeof(mpl::aux::yes_tag)
+    );
 };
 
 } // namespace type_traits

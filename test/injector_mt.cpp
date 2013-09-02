@@ -21,36 +21,36 @@ namespace boost {
 namespace di {
 
 typedef generic_module<
-    singletons<
+    singleton<
         c3
     >
-  , per_requests<
+  , per_request<
         c0if0
       , bind<c1if0>::in_call<call_stack<c6, c5> >
       , bind<c2if0>::in_call<c7>
       , bind<int, mpl::int_<1> >
       , bind<int, mpl::int_<2> >::in_call<c8>
-      , bind_int<mpl::string<'1'>, 3, call_stack<c7, c6, c4> >
-      , bind_int<mpl::string<'2'>, 4, call_stack<c7, c6, c4> >
+      , bind_int<3>::in_name<mpl::string<'1'> >::in_call<call_stack<c7, c6, c4> >
+      , bind_int<4>::in_name<mpl::string<'2'> >::in_call<call_stack<c7, c6, c4> >
       , bind<int, mpl::int_<5> >::in_call<c2>
     >
 > generic_module_1;
 
 typedef generic_module<
-    singletons<
+    singleton<
         c3
     >
-  , per_requests<
+  , per_request<
         bind<int, mpl::int_<0> >::in_name<mpl::string<'1'> >
       , bind<int, mpl::int_<1> >
     >
 > generic_module_2;
 
 typedef generic_module<
-    singletons<
+    singleton<
         c0if0
     >
-  , per_requests<
+  , per_request<
         bind<int, mpl::int_<2> >::in_call<c8>
       , bind<int, mpl::int_<3> >::in_name<mpl::string<'2'> >
     >
@@ -61,27 +61,27 @@ typedef generic_module<
 > generic_module_custom_scope;
 
 typedef generic_module<
-    per_requests<
+    per_request<
         transaction_provider
       , mpl::int_<0>
     >
 > generic_module_provider;
 
 typedef generic_module<
-    singletons<
+    singleton<
         c0if0
     >
-  , externals<
+  , external<
         int
       , double
     >
 > generic_module_externals;
 
 struct generic_module_externals_ctor : generic_module<
-    singletons<
+    singleton<
         c0if0
     >
-  , externals<
+  , external<
         int
       , double
     >
@@ -93,7 +93,7 @@ struct generic_module_externals_ctor : generic_module<
 };
 
 typedef generic_module<
-   externals<
+   external<
         double
       , if0
       , annotate<bind<int>::in_name<mpl::string<'1'> >::in_call<call_stack<c7, c6, c4> > >::with<a>
@@ -106,10 +106,10 @@ typedef generic_module<
 > generic_module_c0if0;
 
 BOOST_AUTO(fusion_module_1, fusion_module<>()(
-    singletons<
+    singleton<
         c3
     >()
-  , per_requests<
+  , per_request<
         c0if0
       , bind<c1if0>::in_call<call_stack<c6, c5> >
       , bind<c2if0>::in_call<c7>
@@ -122,20 +122,20 @@ BOOST_AUTO(fusion_module_1, fusion_module<>()(
 ));
 
 BOOST_AUTO(fusion_module_2, fusion_module<>()(
-    singletons<
+    singleton<
         c0if0
     >()
-  , per_requests<
+  , per_request<
         bind<int, mpl::int_<2> >::in_call<c8>
       , bind<int, mpl::int_<3> >::in_name<mpl::string<'2'> >
     >()
 ));
 
 BOOST_AUTO(fusion_module_3, fusion_module<>()(
-    singletons<
+    singleton<
         c3
     >()
-  , per_requests<
+  , per_request<
         bind<int, mpl::int_<0> >::in_name<mpl::string<'1'> >
       , bind<int, mpl::int_<1> >
     >()
@@ -146,13 +146,13 @@ BOOST_AUTO(fusion_module_custom_scope, fusion_module<>()(
 ));
 
 BOOST_AUTO(fusion_module_provider, fusion_module<>()(
-    per_requests<
+    per_request<
         transaction_provider, mpl::int_<0>
     >()
 ));
 
 BOOST_AUTO(fusion_module_externals, fusion_module<>()(
-    singletons<
+    singleton<
         c0if0
     >()
   , bind<int>::to(42)
