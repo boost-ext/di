@@ -235,7 +235,7 @@
             typedef typename unique<
                 typename mpl::fold<
                     typename dependecies_impl<TGiven>::type
-                  , mpl::vector1<typename binder<TGiven, mpl::vector0<> >::type >
+                  , mpl::vector1<typename binder<TGiven, mpl::vector0<> >::type>
                   , mpl::push_back<mpl::_1, binder<first<mpl::_2>, second<mpl::_2> > >
                 >::type
             >::type type;

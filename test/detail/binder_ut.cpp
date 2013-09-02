@@ -147,6 +147,22 @@ BOOST_AUTO_TEST_CASE(if_base) {
     ));
 }
 
+BOOST_AUTO_TEST_CASE(if_external) {
+    BOOST_CHECK((
+        is_same<
+            fake_dependency<fake_scope, if0, if0>::type
+          , binder_impl<
+                if0
+              , mpl::vector0<>
+              , mpl::vector<
+                    fake_dependency<fake_scope, if0, if0>
+                >
+              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+            >::type
+        >::value
+    ));
+}
+
 BOOST_AUTO_TEST_CASE(context) {
     BOOST_CHECK((
         is_same<
