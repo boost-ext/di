@@ -19,7 +19,7 @@ project di :
         <define>DDI_FUNCTION_ARITY_LIMIT_SIZE=4
         <define>BOOST_TEST_MODULE=di_test
         <define>BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
-        <define>BOOST_MPL_LIMIT_VECTOR_SIZE=40
+        <define>BOOST_MPL_LIMIT_VECTOR_SIZE=30
 ;
 
 test-suite di-test :
@@ -50,8 +50,8 @@ test-suite di-test :
     #[ run scopes/singleton_ut.cpp ]
     #[ run ctor_bracket_ut.cpp ]
     #[ run ctor_va_args_ut.cpp ]
-    ##[ run fusion_module_ut.cpp ]
-    ##[ run generic_module_ut.cpp ]
+    #[ run fusion_module_ut.cpp ]
+    #[ run generic_module_ut.cpp ]
     #[ run injector_mt.cpp ]
     #[ run named_ut.cpp ]
 ;

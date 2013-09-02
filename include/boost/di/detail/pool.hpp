@@ -140,15 +140,23 @@
         template<typename T>
         explicit pool(
             const pool<T>&
-          , typename enable_if_c<mpl::size<typename pool<T>::types>::value == 0>::type* = 0)
+          , typename enable_if_c<
+                mpl::size<typename pool<T>::types>::value == 0
+            >::type* = 0)
         { }
 
         #define BOOST_PP_LOCAL_MACRO(n)                                     \
             template<typename T>                                            \
             explicit pool(                                                  \
                 const pool<T>& p                                            \
-              , typename enable_if_c<mpl::size<typename pool<T>::types>::value == n>::type* = 0)  \
-                : BOOST_PP_REPEAT(n, BOOST_DI_CTOR_INITLIST_IMPL, typename pool<T>::types)        \
+              , typename enable_if_c<                                       \
+                    mpl::size<typename pool<T>::types>::value == n          \
+                >::type* = 0)                                               \
+                : BOOST_PP_REPEAT(                                          \
+                      n                                                     \
+                    , BOOST_DI_CTOR_INITLIST_IMPL                           \
+                    , typename pool<T>::types                               \
+                  )                                                         \
             { }
 
         #define BOOST_PP_LOCAL_LIMITS (1, n)

@@ -438,7 +438,6 @@ BOOST_AUTO_TEST_CASE(externals_create_by_explicit_value) {
     BOOST_CHECK_EQUAL("s", obj.s);
 }
 
-#if 0
 BOOST_AUTO_TEST_CASE(externals_create_with_non_trivial_ctor) {
     const int i = 42;
     const double d = 21.0;
@@ -458,7 +457,6 @@ BOOST_AUTO_TEST_CASE(externals_create_with_non_trivial_ctor) {
     BOOST_CHECK_EQUAL(d, obj.d);
     BOOST_CHECK_EQUAL(c, obj.c);
 }
-#endif
 
 BOOST_AUTO_TEST_CASE(externals_create_with_attributes) {
     const int i1 = 42;
