@@ -35,39 +35,39 @@ struct named
 
 BOOST_AUTO_TEST_CASE(arithmetic_value) {
     const int i = 42;
-    BOOST_CHECK_EQUAL(i, static_cast<int>(convertible_any<int>(i)));
+    BOOST_CHECK_EQUAL(i, static_cast<int>(external::scope<int>(i).create()));
 }
 
 BOOST_AUTO_TEST_CASE(arithmetic_with_value_type) {
     const int i = 42;
-    BOOST_CHECK_EQUAL(i, static_cast<int>(convertible_any<named<int> >(i)));
+    BOOST_CHECK_EQUAL(i, static_cast<int>(external::scope<named<int> >(i).create()));
 }
 
 BOOST_AUTO_TEST_CASE(string_value) {
     const std::string s = "string";
-    BOOST_CHECK_EQUAL(s, static_cast<const std::string&>(convertible_any<std::string>(s)));
+    BOOST_CHECK_EQUAL(s, static_cast<const std::string&>(external::scope<std::string>(s).create()));
 }
 
 BOOST_AUTO_TEST_CASE(string_with_value_type) {
     const std::string s = "string";
-    BOOST_CHECK_EQUAL(s, static_cast<const std::string&>(convertible_any<named<std::string> >(s)));
+    BOOST_CHECK_EQUAL(s, static_cast<const std::string&>(external::scope<named<std::string> >(s).create()));
 }
 
 BOOST_AUTO_TEST_CASE(variant_ref) {
     c c_;
-    c& c_ref_ = convertible_any<c>(c_);
+    c& c_ref_ = external::scope<c>(c_).create();
     BOOST_CHECK_EQUAL(&c_, &c_ref_);
 }
 
 BOOST_AUTO_TEST_CASE(variant_const_ref) {
     c c_;
-    const c& const_c_ref_ = convertible_any<c>(c_);
+    const c& const_c_ref_ = external::scope<c>(c_).create();
     BOOST_CHECK_EQUAL(&c_, &const_c_ref_);
 }
 
 BOOST_AUTO_TEST_CASE(variant_shared_ptr) {
     shared_ptr<c> c_(new c);
-    shared_ptr<c> sp_c = convertible_any<c>(c_);
+    shared_ptr<c> sp_c = external::scope<c>(c_).create();
     BOOST_CHECK_EQUAL(c_, sp_c);
 }
 
@@ -79,14 +79,14 @@ BOOST_AUTO_TEST_CASE(variant_function) {
         static int f() { return i;}
     };
     f_type f_(&c::f);
-    BOOST_CHECK_EQUAL(i, static_cast<const f_type&>(convertible_any<f_type>(f_))());
+    BOOST_CHECK_EQUAL(i, static_cast<const f_type&>(external::scope<f_type>(f_).create())());
 }
 
 BOOST_AUTO_TEST_CASE(named_int) {
     const int i = 42;
-    convertible_any<named<int> > variant_(i);
+    external::scope<named<int> > variant_(i);
 
-    BOOST_CHECK_EQUAL(i, static_cast<int>(variant_));
+    BOOST_CHECK_EQUAL(i, static_cast<int>(variant_.create()));
 }
 
 BOOST_AUTO_TEST_CASE(named_shared_ptr) {
@@ -97,9 +97,9 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr) {
     shared_ptr<c2_t> c2_(new c2_t(make_shared<int>(87)));
 
     BOOST_CHECK((
-        *static_cast<shared_ptr<c1_t> >(convertible_any<c1_t>(c1_))->i
+        *static_cast<shared_ptr<c1_t> >(external::scope<c1_t>(c1_).create())->i
         !=
-        *static_cast<shared_ptr<c2_t> >(convertible_any<c2_t>(c2_))->i
+        *static_cast<shared_ptr<c2_t> >(external::scope<c2_t>(c2_).create())->i
     ));
 }
 
@@ -108,21 +108,21 @@ BOOST_AUTO_TEST_CASE(context) {
     shared_ptr<c> c2_(new c);
 
     BOOST_CHECK((
-        static_cast<int>(convertible_any<int, a>(87))
+        static_cast<int>(external::scope<int, a>(87))
         !=
-        static_cast<int>(convertible_any<int, b>(42))
+        static_cast<int>(external::scope<int, b>(42))
     ));
 
     BOOST_CHECK((
-        static_cast<shared_ptr<c> >(convertible_any<c, a>(c1_))
+        static_cast<shared_ptr<c> >(external::scope<c, a>(c1_).create())
         !=
-        static_cast<shared_ptr<c> >(convertible_any<c, b>(c2_))
+        static_cast<shared_ptr<c> >(external::scope<c, b>(c2_).create())
     ));
 }
 
 BOOST_AUTO_TEST_CASE(if_shared_ptr) {
     shared_ptr<c0if0> c0_(new c0if0);
-    shared_ptr<if0> c1_ = convertible_any<if0>(c0_);
+    shared_ptr<if0> c1_ = external::scope<if0>(c0_).create();
     BOOST_CHECK_EQUAL(c0_, c1_);
 }
 

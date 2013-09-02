@@ -44,7 +44,7 @@ test-suite di-test :
     [ run policies/check_for_binding_correctness_ut.cpp ]
     [ run policies/check_for_creation_ownership_ut.cpp ]
     [ run policies/check_for_circular_dependencies_ut.cpp ]
-    #[ run scopes/external_ut.cpp ]
+    [ run scopes/external_ut.cpp ]
     [ run scopes/per_request_ut.cpp ]
     [ run scopes/singleton_ut.cpp ]
     [ run ctor_bracket_ut.cpp ]
