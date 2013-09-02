@@ -91,9 +91,9 @@ BOOST_AUTO_TEST_CASE(rebind_type) {
                 void
               , mpl::_1
               , mpl::_2
-              , mpl::_3
+              , mpl::vector0<>
               , is_same<mpl::_1, int>
-            >::rebind<double, int, mpl::vector0<> >::type
+            >::rebind<double, int>::type
         >::value
     ));
 }

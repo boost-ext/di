@@ -31,7 +31,7 @@ test-suite di_test :
     [ run hello_world.cpp ]
     [ run injector.cpp ]
     [ run named.cpp ]
-    #[ run pool_allocator.cpp ] # undefined reference to boost::system
+    [ run pool_allocator.cpp ]
     [ run provider.cpp ]
     [ run session_scope.cpp ]
     [ run testing.cpp ]
