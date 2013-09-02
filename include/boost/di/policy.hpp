@@ -29,8 +29,7 @@ class policy
     { };
 
 public:
-    typedef policy type;
-    typedef mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> policy_type;
+    typedef policy policy_type;
 
     template<
         typename TDeps
@@ -38,7 +37,7 @@ public:
     >
     struct verify
         : mpl::fold<
-              policy_type
+              mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
             , mpl::void_
             , verify_impl<TDeps, T, mpl::_2>
           >::type
