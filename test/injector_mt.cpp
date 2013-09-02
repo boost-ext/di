@@ -93,8 +93,7 @@ struct generic_module_externals_ctor : generic_module<
 };
 
 typedef generic_module<
-    bind<if0, c3if0>
-  , externals<
+   externals<
         double
       , if0
       , annotate<bind<int>::in_name<mpl::string<'1'> >::in_call<call_stack<c7, c6, c4> > >::with<a>
@@ -336,6 +335,8 @@ BOOST_AUTO_TEST_CASE(externals_mix) {
         )
       , fusion_module_externals_1
     );
+
+    typedef BOOST_TYPEOF(injector_) inj;
 
     shared_ptr<c8> c8_ = injector_.create<shared_ptr<c8> >();
 

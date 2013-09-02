@@ -36,10 +36,10 @@ test-suite di-test :
     #[ run type_traits/ctor_traits_ut.cpp ]
     #[ run type_traits/make_plain_ut.cpp ]
     #[ run type_traits/value_type_ut.cpp ]
-    [ run detail/binder_ut.cpp ]
+    #[ run detail/binder_ut.cpp ]
     #[ run detail/creator_ut.cpp ]
     #[ run detail/dependency_ut.cpp ]
-    ##[ run detail/module_mt.cpp ]
+    [ run detail/module_mt.cpp ]
     #[ run detail/pool_ut.cpp ]
     #[ run detail/visitor_ut.cpp ]
     #[ run policies/check_for_binding_correctness_ut.cpp ]
@@ -52,7 +52,7 @@ test-suite di-test :
     #[ run ctor_va_args_ut.cpp ]
     ##[ run fusion_module_ut.cpp ]
     ##[ run generic_module_ut.cpp ]
-    [ run injector_mt.cpp ]
+    #[ run injector_mt.cpp ]
     #[ run named_ut.cpp ]
 ;
 
