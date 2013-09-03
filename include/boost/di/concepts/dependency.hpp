@@ -122,7 +122,8 @@ public:
 template<
     typename TExpected
   , typename TGiven
-  , typename TContext , typename TBind
+  , typename TContext
+  , typename TBind
 >
 class dependency<
     mpl::_1
