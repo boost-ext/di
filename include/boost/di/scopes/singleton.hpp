@@ -71,6 +71,16 @@
                 return object_;
             }
 
+            template<typename I>
+            operator weak_ptr<I>() const {
+                return object_;
+            }
+
+            template<typename I, typename TName>
+            operator named<weak_ptr<I>, TName>() const {
+                return object_;
+            }
+
         #if !defined(BOOST_NO_CXX11_SMART_PTR)
             template<typename I>
             operator std::shared_ptr<I>() const {
@@ -79,7 +89,23 @@
 
             template<typename I, typename TName>
             operator named<std::shared_ptr<I>, TName>() const {
-                return named<std::shared_ptr<I>, TName>(std::shared_ptr<I>(object_.get(), empty_deleter()));
+                return named<std::shared_ptr<I>, TName>(
+                    std::shared_ptr<I>(object_.get(), empty_deleter())
+                );
+            }
+
+            template<typename I>
+            operator std::weak_ptr<I>() const {
+                return std::weak_ptr<I>(
+                    std::shared_ptr<I>(object_.get(), empty_deleter())
+                );
+            }
+
+            template<typename I, typename TName>
+            operator named<std::weak_ptr<I>, TName>() const {
+                return named<std::weak_ptr<I>, TName>(
+                    std::weak_ptr<I>(std::shared_ptr<I>(object_.get(), empty_deleter()))
+                );
             }
         #endif
 
