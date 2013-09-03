@@ -106,6 +106,7 @@
 
             void call(const session_exit&) {
                 in_scope_ = false;
+                object().reset();
             }
 
         private:

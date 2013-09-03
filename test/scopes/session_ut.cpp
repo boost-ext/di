@@ -8,7 +8,6 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "fake_allocator.hpp"
 #include "data.hpp"
 
 namespace boost {
@@ -71,6 +70,22 @@ BOOST_AUTO_TEST_CASE(create_args) {
         static_cast<shared_ptr<c2> >(
             session2.create<int, double, char>(0, 0.0, '0'))
     ));
+}
+
+BOOST_AUTO_TEST_CASE(call) {
+    session<>::scope<int> session_;
+
+    session_.call(session_entry());
+    BOOST_CHECK((shared_ptr<int>() != static_cast<shared_ptr<int> >(session_.create())));
+
+    session_.call(session_exit());
+    BOOST_CHECK((shared_ptr<int>() == static_cast<shared_ptr<int> >(session_.create())));
+
+    session_.call(session_entry());
+    BOOST_CHECK((shared_ptr<int>() != static_cast<shared_ptr<int> >(session_.create())));
+
+    session_.call(session_exit());
+    BOOST_CHECK((shared_ptr<int>() == static_cast<shared_ptr<int> >(session_.create())));
 }
 
 } // namespace scopes
