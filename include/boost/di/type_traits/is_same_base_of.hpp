@@ -16,14 +16,13 @@ namespace boost {
 namespace di {
 namespace type_traits {
 
-template<typename T>
+template<typename T, typename U = mpl::_1>
 struct is_same_base_of
-{
-    typedef mpl::or_<
-        is_base_of<mpl::_1, T>
-      , is_same<mpl::_1, T>
-    > type;
-};
+    : mpl::or_<
+        is_base_of<U, T>
+      , is_same<U, T>
+    >
+{ };
 
 } // namespace type_traits
 } // namespace di
