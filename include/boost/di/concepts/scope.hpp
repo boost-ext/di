@@ -44,11 +44,6 @@ class scope
         : T::template rebind<U>::other
     { };
 
-    template<typename T>
-    struct is_dependency
-        : type_traits::has_context<T>
-    { };
-
     template<
         typename T
       , BOOST_DI_TYPES_DEFAULT_MPL(T)
@@ -60,7 +55,7 @@ class scope
             , mpl::push_back<
                   mpl::_1
                 , mpl::if_<
-                      is_dependency<mpl::_2>
+                      type_traits::has_context<mpl::_2>
                     , rebind<mpl::_2, TScope>
                     , rebind<T, TScope>
                   >
@@ -75,7 +70,7 @@ public:
       , typename TContext = mpl::vector0<>
     >
     struct dependency_impl
-        : dependency<
+        : TDependency<
                mpl::_1
              , TExpected
              , TGiven
@@ -87,7 +82,7 @@ public:
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     struct bind
         : get_dependencies<
-              //TDependency<TScope, mpl::_2>
+              //TDependency<mpl::_1, mpl::_2>
               dependency_impl<mpl::_2, mpl::_2>
             , BOOST_DI_TYPES_PASS_MPL(T)
           >
