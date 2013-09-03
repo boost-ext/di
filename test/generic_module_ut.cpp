@@ -12,9 +12,10 @@
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
-#include "boost/di/scopes/external.hpp"
-#include "boost/di/scopes/singleton.hpp"
+#include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/per_request.hpp"
+#include "boost/di/scopes/singleton.hpp"
+#include "boost/di/scopes/external.hpp"
 #include "boost/di/named.hpp"
 #include "boost/di/concepts.hpp"
 
@@ -135,7 +136,7 @@ BOOST_AUTO_TEST_CASE(default_scope) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                fake_dependency_base_of<dummy, c1, c1>::type
+                fake_dependency_base_of<scopes::deduce, c1, c1>::type
             >
           , module::deps
         >::value
@@ -150,9 +151,9 @@ BOOST_AUTO_TEST_CASE(default_scope_many) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                fake_dependency_base_of<dummy, c1, c1>::type
-              , fake_dependency_base_of<dummy, c2, c2>::type
-              , fake_dependency_base_of<dummy, c3, c3>::type
+                fake_dependency_base_of<scopes::deduce, c1, c1>::type
+              , fake_dependency_base_of<scopes::deduce, c2, c2>::type
+              , fake_dependency_base_of<scopes::deduce, c3, c3>::type
             >
           , module::deps
         >::value
@@ -172,10 +173,10 @@ BOOST_AUTO_TEST_CASE(default_scope_bind) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                fake_dependency<dummy, if0, c0if0>::type
-              , fake_dependency_base_of<dummy, c1, c1>::type
-              , fake_dependency_base_of<dummy, named<c2, int>, c2>::type
-              , fake_dependency_base_of<dummy, c3, c3, call_stack<c4, c5> >::type
+                fake_dependency<scopes::deduce, if0, c0if0>::type
+              , fake_dependency_base_of<scopes::deduce, c1, c1>::type
+              , fake_dependency_base_of<scopes::deduce, named<c2, int>, c2>::type
+              , fake_dependency_base_of<scopes::deduce, c3, c3, call_stack<c4, c5> >::type
             >
           , module::deps
         >::value
@@ -465,7 +466,7 @@ BOOST_AUTO_TEST_CASE(multiple_calls) {
         contains_all<
             mpl::vector<
                 fake_dependency_base_of<scopes::singleton<>, c0, c0, c1, call_stack<c2, c3>, c4>::type
-              , fake_dependency_base_of<dummy, c5, c5, int, double>::type
+              , fake_dependency_base_of<scopes::deduce, c5, c5, int, double>::type
             >
           , module::deps
         >::value

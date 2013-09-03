@@ -33,6 +33,9 @@
     namespace di {
     namespace scopes {
 
+    class session_entry { };
+    class session_exit { };
+
     template<
         template<
             typename
@@ -55,6 +58,10 @@
 
         public:
             typedef scope result_type;
+
+            scope()
+                : in_scope_(false)
+            { }
 
             template<typename I, typename TName>
             operator named<I, TName>() const {
@@ -84,7 +91,7 @@
         #endif
 
             result_type& create() {
-                if (!object()) {
+                if (in_scope_ && !object()) {
                     object().reset(type_traits::create_traits<TExpected, TGiven>());
                 }
 
@@ -93,11 +100,21 @@
 
             #include BOOST_PP_ITERATE()
 
+            void call(const session_entry&) {
+                in_scope_ = true;
+            }
+
+            void call(const session_exit&) {
+                in_scope_ = false;
+            }
+
         private:
             static shared_ptr<TExpected>& object() {
                 static shared_ptr<TExpected> object;
                 return object;
             }
+
+            bool in_scope_;
         };
     };
 
@@ -111,7 +128,7 @@
 
     template<BOOST_DI_TYPES(Args)>
     result_type& create(BOOST_DI_ARGS(Args, args)) {
-        if (!object()) {
+        if (in_scope_ && !object()) {
             object().reset(
                 type_traits::create_traits<TExpected, TGiven>(BOOST_DI_ARGS_FORWARD(args))
             );

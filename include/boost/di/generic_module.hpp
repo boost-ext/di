@@ -23,6 +23,7 @@
     #include <boost/mpl/back_inserter.hpp>
 
     #include "boost/di/type_traits/has_traits.hpp"
+    #include "boost/di/scopes/deduce.hpp"
     #include "boost/di/detail/module.hpp"
     #include "boost/di/concepts.hpp"
     #include "boost/di/config.hpp"
@@ -48,7 +49,7 @@
 
     template<typename T>
     struct default_scope
-        : scope<dummy>::bind<T>
+        : scope<scopes::deduce>::bind<T>
     { };
 
     template<

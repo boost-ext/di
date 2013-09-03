@@ -13,20 +13,11 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/placeholders.hpp>
 
+#include <boost/di/scopes/deduce.hpp>
 #include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {
-
-class dummy /* TODO: should be deduce*/
-{
-public:
-    template<typename, typename>
-    class scope {
-    public:
-        typedef scope result_type;
-    };
-};
 
 namespace detail {
 
@@ -62,7 +53,7 @@ public:
     struct rebind
     {
         typedef dependency<
-            typename mpl::if_<is_same<TScope, dummy>, T, TScope>::type
+            typename mpl::if_<is_same<TScope, scopes::deduce>, T, TScope>::type
           , TExpected
           , TGiven
           , TContext
