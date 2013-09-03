@@ -15,6 +15,7 @@
 #include "boost/di/concepts/scope.hpp"
 #include "boost/di/scopes/per_request.hpp"
 #include "boost/di/scopes/singleton.hpp"
+#include "boost/di/scopes/session.hpp"
 #include "boost/di/detail/dependency.hpp"
 #include "boost/di/named.hpp"
 #include "boost/di/config.hpp"
