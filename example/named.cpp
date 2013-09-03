@@ -34,10 +34,8 @@ private:
 int main()
 {
     typedef di::generic_module<
-        di::per_request<
-            di::bind_int<42>::in_name<mpl::string<'1'>>
-          , di::bind_int<87>::in_name<mpl::string<'2'>>
-      >
+        di::bind_int<42>::in_name<mpl::string<'1'>>
+      , di::bind_int<87>::in_name<mpl::string<'2'>>
     > module;
 
     di::injector<module> injector;

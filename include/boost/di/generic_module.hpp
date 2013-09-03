@@ -69,7 +69,7 @@
                       mpl::if_<
                           mpl::is_sequence<mpl::_2>
                         , mpl::_2
-                        , default_scope<bind<mpl::_2> >
+                        , default_scope<mpl::_2>
                       >
                     , mpl::back_inserter<mpl::_1>
                   >

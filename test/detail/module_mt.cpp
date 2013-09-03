@@ -497,7 +497,7 @@ BOOST_AUTO_TEST_CASE(create_string_boost_function_ptr) {
         mpl::vector<
             fake_dependency_base_of<scopes::per_request<>, int, mpl::int_<i2> >::type
           , fake_dependency_base_of<scopes::per_request<>, std::string, mpl::string<'s'> >::type
-         , fake_dependency<scopes::external, function<int()> >::type
+          , fake_dependency<scopes::external, function<int()> >::type
         >
     > module_(i_);
 

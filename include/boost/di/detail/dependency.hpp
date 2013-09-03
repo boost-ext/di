@@ -10,16 +10,9 @@
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/mpl/assert.hpp>
-#include <boost/mpl/and.hpp>
-#include <boost/mpl/not.hpp>
-#include <boost/mpl/bool.hpp>
 #include <boost/mpl/vector.hpp>
-#include <boost/mpl/contains.hpp>
 #include <boost/mpl/placeholders.hpp>
 
-#include "boost/di/type_traits/has_traits.hpp"
-#include "boost/di/scopes/external.hpp"
 #include "boost/di/config.hpp"
 
 namespace boost {
@@ -47,25 +40,6 @@ template<
 class dependency : public TScope::template scope<TExpected, TGiven>
 {
     typedef typename TScope::template scope<TExpected, TGiven> scope_type;
-
-    //template<typename T, typename = void>
-    //struct check_binding
-        //: mpl::true_
-    //{ };
-
-    //template<typename T>
-    //struct check_binding<T, typename enable_if<is_arithmetic<T> >::type>
-        //: mpl::false_
-    //{
-        ////external
-        //BOOST_MPL_ASSERT_MSG(
-            //type_traits::has_value<TGiven>::value
-          //, ARITHMETIC_TYPE_WITHOUT_VALUE
-          //, (TExpected, TGiven)
-        //);
-    //};
-
-    //BOOST_MPL_ASSERT((typename check_binding<TExpected>::value));
 
 public:
     typedef dependency type;

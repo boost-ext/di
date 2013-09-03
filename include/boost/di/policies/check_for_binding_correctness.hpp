@@ -19,14 +19,35 @@
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/is_sequence.hpp>
 #include <boost/mpl/back.hpp>
+#include <boost/mpl/bool.hpp>
 #include <boost/mpl/assert.hpp>
 
 #include "boost/di/type_traits/make_plain.hpp"
+#include "boost/di/type_traits/has_traits.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 
 namespace boost {
 namespace di {
 namespace policies {
+
+    //template<typename T, typename = void>
+    //struct check_binding
+        //: mpl::true_
+    //{ };
+
+    //template<typename T>
+    //struct check_binding<T, typename enable_if<is_arithmetic<T> >::type>
+        //: mpl::false_
+    //{
+        ////external
+        //BOOST_MPL_ASSERT_MSG(
+            //type_traits::has_value<TGiven>::value
+          //, ARITHMETIC_TYPE_WITHOUT_VALUE
+          //, (TExpected, TGiven)
+        //);
+    //};
+
+    //BOOST_MPL_ASSERT((typename check_binding<TExpected>::value));
 
 class check_for_binding_correctness
 {
