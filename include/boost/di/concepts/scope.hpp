@@ -45,6 +45,20 @@ class scope
     { };
 
     template<
+        typename TExpected
+      , typename TGiven = TExpected
+      , typename TContext = mpl::vector0<>
+    >
+    struct dependency
+        : TDependency<
+               mpl::_1
+             , TExpected
+             , TGiven
+             , TContext
+          >
+    { };
+
+    template<
         typename T
       , BOOST_DI_TYPES_DEFAULT_MPL(T)
     >
@@ -64,26 +78,10 @@ class scope
     { };
 
 public:
-    template<
-        typename TExpected
-      , typename TGiven
-      , typename TContext = mpl::vector0<>
-    >
-    struct dependency_impl
-        : TDependency<
-               mpl::_1
-             , TExpected
-             , TGiven
-             , TContext
-             , type_traits::is_same_base_of<TExpected>
-          >
-    { };
-
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     struct bind
         : get_dependencies<
-              //TDependency<mpl::_1, mpl::_2>
-              dependency_impl<mpl::_2, mpl::_2>
+              dependency<mpl::_2>
             , BOOST_DI_TYPES_PASS_MPL(T)
           >
     { };
@@ -91,34 +89,29 @@ public:
     template<typename TExpected>
     struct bind<TExpected, BOOST_DI_TYPES_MPL_NA(1)>
         : get_dependencies<
-              dependency_impl<mpl::_2, mpl::_2>
-              //TDependency<TScope, mpl::_2>
+              dependency<mpl::_2>
             , TExpected
           >
     {
         template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
         struct in_call
             : get_dependencies<
-                  dependency_impl<mpl::_2, mpl::_2, mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
-                  //TDependency<
-                      //TScope
-                    //, mpl::_2
-                    //, mpl::_2
-                    //, mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-                  //>
+                  dependency<
+                      mpl::_2
+                    , mpl::_2
+                    , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+                  >
                 , TExpected
               >
         {
             template<typename TName>
             struct in_name
                 : get_dependencies<
-                      dependency_impl<TNamed<mpl::_2, TName>, mpl::_2, mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
-                      //TDependency<
-                          //TScope
-                        //, TNamed<mpl::_2, TName>
-                        //, mpl::_2
-                        //, mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-                      //>
+                      dependency<
+                          TNamed<mpl::_2, TName>
+                        , mpl::_2
+                        , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+                      >
                     , TExpected
                   >
             { };
@@ -127,21 +120,21 @@ public:
         template<typename TName>
         struct in_name
             : get_dependencies<
-                  dependency_impl<TNamed<mpl::_2, TName>, mpl::_2>
-                  //TDependency<TScope, TNamed<mpl::_2, TName>, mpl::_2>
+                  dependency<
+                      TNamed<mpl::_2, TName>
+                    , mpl::_2
+                  >
                 , TExpected
               >
         {
             template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
             struct in_call
                 : get_dependencies<
-                        dependency_impl<TNamed<mpl::_2, TName>, mpl::_2, mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>>
-                      //TDependency<
-                          //TScope
-                        //, TNamed<mpl::_2, TName>
-                        //, mpl::_2
-                        //, mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-                      //>
+                      dependency<
+                          TNamed<mpl::_2, TName>
+                        , mpl::_2
+                        , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+                      >
                     , TExpected
                   >
             { };

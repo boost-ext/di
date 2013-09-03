@@ -159,11 +159,11 @@
 
         typedef TBinder<deps> binder_type;
 
-        template<typename Sequence>
+        template<typename TSeq>
         struct unique
             : mpl::fold<
                 typename mpl::fold<
-                    Sequence,
+                    TSeq,
                     mpl::set0<>,
                     mpl::insert<mpl::_1, mpl::_2 >
                 >::type,
