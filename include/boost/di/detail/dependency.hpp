@@ -16,6 +16,9 @@
 #include <boost/di/scopes/deduce.hpp>
 #include "boost/di/config.hpp"
 
+#include <boost/di/scopes/external.hpp>
+#include <boost/di/type_traits/is_same_base_of.hpp>
+
 namespace boost {
 namespace di {
 
@@ -60,6 +63,60 @@ public:
           , TBind
         > type;
     };
+
+    template<typename TValue>
+    static dependency<
+        scopes::external
+      , TExpected
+      , TValue
+      , TContext
+      , type_traits::is_same_base_of<TExpected>
+    >
+    to(const TValue& value) {
+        return dependency<
+            scopes::external
+          , TExpected
+          , TValue
+          , TContext
+          , type_traits::is_same_base_of<TExpected>
+        >(value);
+    }
+
+    template<typename TValue>
+    static dependency<
+        scopes::external
+      , TExpected
+      , TValue
+      , TContext
+      , type_traits::is_same_base_of<TExpected>
+    >
+    to(TValue& value) {
+        return detail::dependency<
+            scopes::external
+          , TExpected
+          , TValue
+          , TContext
+          , type_traits::is_same_base_of<TExpected>
+        >(value);
+    }
+
+    template<typename TValue>
+    static dependency<
+        scopes::external
+      , TExpected
+      , TValue
+      , TContext
+      , type_traits::is_same_base_of<TExpected>
+    >
+    to(boost::shared_ptr<TValue> value) {
+        return dependency<
+            scopes::external
+          , TExpected
+          , TValue
+          , TContext
+          , type_traits::is_same_base_of<TExpected>
+        >(value);
+    }
 };
 
 template<
@@ -87,6 +144,60 @@ public:
           , TBind
         > type;
     };
+
+    template<typename TValue>
+    static dependency<
+        scopes::external
+      , TExpected
+      , TValue
+      , TContext
+      , type_traits::is_same_base_of<TExpected>
+    >
+    to(const TValue& value) {
+        return dependency<
+            scopes::external
+          , TExpected
+          , TValue
+          , TContext
+          , type_traits::is_same_base_of<TExpected>
+        >(value);
+    }
+
+    template<typename TValue>
+    static dependency<
+        scopes::external
+      , TExpected
+      , TValue
+      , TContext
+      , type_traits::is_same_base_of<TExpected>
+    >
+    to(TValue& value) {
+        return detail::dependency<
+            scopes::external
+          , TExpected
+          , TValue
+          , TContext
+          , type_traits::is_same_base_of<TExpected>
+        >(value);
+    }
+
+    template<typename TValue>
+    static dependency<
+        scopes::external
+      , TExpected
+      , TValue
+      , TContext
+      , type_traits::is_same_base_of<TExpected>
+    >
+    to(boost::shared_ptr<TValue> value) {
+        return dependency<
+            scopes::external
+          , TExpected
+          , TValue
+          , TContext
+          , type_traits::is_same_base_of<TExpected>
+        >(value);
+    }
 };
 
 template<

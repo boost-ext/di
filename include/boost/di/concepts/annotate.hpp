@@ -48,59 +48,7 @@ struct annotate<none_t>
     struct with_
         : with<>
     {
-        template<typename TValue>
-        static detail::dependency<
-            scopes::external
-          , TExpected
-          , TValue
-          , TContext
-          , type_traits::is_same_base_of<TExpected>
-        >
-        to(const TValue& value) {
-            return detail::dependency<
-                scopes::external
-              , TExpected
-              , TValue
-              , TContext
-              , type_traits::is_same_base_of<TExpected>
-            >(value);
-        }
 
-        template<typename TValue>
-        static detail::dependency<
-            scopes::external
-          , TExpected
-          , TValue
-          , TContext
-          , type_traits::is_same_base_of<TExpected>
-        >
-        to(TValue& value) {
-            return detail::dependency<
-                scopes::external
-              , TExpected
-              , TValue
-              , TContext
-              , type_traits::is_same_base_of<TExpected>
-            >(value);
-        }
-
-        template<typename TValue>
-        static detail::dependency<
-            scopes::external
-          , TExpected
-          , TValue
-          , TContext
-          , type_traits::is_same_base_of<TExpected>
-        >
-        to(boost::shared_ptr<TValue> value) {
-            return detail::dependency<
-                scopes::external
-              , TExpected
-              , TValue
-              , TContext
-              , type_traits::is_same_base_of<TExpected>
-            >(value);
-        }
     };
 };
 
