@@ -18,16 +18,16 @@ struct c2
 {
     BOOST_DI_CTOR(c2, boost::shared_ptr<c1> sp) {
         if (sp) {
-            std::clog << "in session scope" << std::endl;
+            std::clog << "in custom scope" << std::endl;
         } else {
-            std::clog << "not in session scope" << std::endl;
+            std::clog << "not in custom scope" << std::endl;
         }
     }
 };
 
 } // namespace
 
-class session_scope
+class custom_scope
 {
 public:
     class entry { };
@@ -81,17 +81,17 @@ public:
 int main()
 {
     typedef di::generic_module<
-        di::scope<session_scope>::bind<
+        di::scope<custom_scope>::bind<
             c1
         >
     > module;
 
     di::injector<module> injector;
 
-    injector.create<c2>(); // not in session scope
-    injector.call<session_scope>(session_scope::entry());
-    injector.create<c2>(); // in session scope
-    injector.call<session_scope>(session_scope::exit());
-    injector.create<c2>(); // not in session scope
+    injector.create<c2>(); // not in custom scope
+    injector.call<custom_scope>(custom_scope::entry());
+    injector.create<c2>(); // in custom scope
+    injector.call<custom_scope>(custom_scope::exit());
+    injector.create<c2>(); // not in custom scope
 }
 

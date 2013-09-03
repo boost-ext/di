@@ -33,7 +33,7 @@ test-suite di_test :
     [ run named.cpp ]
     [ run pool_allocator.cpp ]
     [ run provider.cpp ]
-    [ run session_scope.cpp ]
+    [ run custom_scope.cpp ]
     [ run testing.cpp ]
     [ run text_visitor.cpp ]
     [ run uml_visitor.cpp ]
