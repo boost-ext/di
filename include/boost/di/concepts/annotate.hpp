@@ -40,16 +40,6 @@ struct annotate<none_t>
         typedef none_t derived;
         typedef TName name;
     };
-
-    template<
-        typename TExpected
-      , typename TContext = mpl::vector0<>
-    >
-    struct with_
-        : with<>
-    {
-
-    };
 };
 
 } // namespace concepts

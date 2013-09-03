@@ -41,10 +41,7 @@ struct bind
         , TExpected
         , TGiven
       >
-    , annotate<>::with_<
-          TExpected
-        , mpl::vector0<>
-      >
+    , annotate<>::with<>
 {
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     struct in_call
@@ -54,10 +51,7 @@ struct bind
             , TGiven
             , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
           >
-        , annotate<>::with_<
-              TExpected
-            , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-          >
+        , annotate<>::with<>
     {
         template<typename TName>
         struct in_name
@@ -67,10 +61,7 @@ struct bind
                 , TGiven
                 , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
               >
-            , annotate<>::with_<
-                  TNamed<TExpected, TName>
-                , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-              >
+            , annotate<>::with<>
         { };
     };
 
@@ -81,9 +72,7 @@ struct bind
             , TNamed<TExpected, TName>
             , TGiven
           >
-        , annotate<>::with_<
-              TNamed<TExpected, TName>
-          >
+        , annotate<>::with<>
     {
         template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
         struct in_call
@@ -93,10 +82,7 @@ struct bind
                 , TGiven
                 , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
               >
-            , annotate<>::with_<
-                  TNamed<TExpected, TName>
-                , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-              >
+            , annotate<>::with<>
         { };
     };
 };
