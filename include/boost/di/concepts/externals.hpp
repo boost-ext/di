@@ -44,7 +44,7 @@ struct make_annotation<
 >
 {
     typedef typename annotate<
-        typename T::template rebind<scopes::external>::type
+        typename T::template rebind<scopes::external>::other
     >::template with<typename T::name> type;
 };
 

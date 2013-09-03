@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE(rebind_scope) {
               , int
               , mpl::vector0<>
               , is_same<mpl::_1, int>
-            >::rebind<other_fake_scope>::type
+            >::rebind<other_fake_scope>::other
         >::value
     ));
 }
@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE(rebind_type) {
               , mpl::_2
               , mpl::vector0<>
               , is_same<mpl::_1, int>
-            >::rebind<double, int>::type
+            >::rebind<double, int>::other
         >::value
     ));
 }

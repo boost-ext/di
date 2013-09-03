@@ -55,7 +55,7 @@ struct fake_dependency
           , TContext0
           , TContext1
           , TContext2
-        > type;
+        > other;
     };
 
     template<typename>

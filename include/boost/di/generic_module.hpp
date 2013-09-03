@@ -42,9 +42,9 @@
     namespace aux {
 
     template<typename T>
-    struct derived
+    struct element_type
     {
-        typedef typename T::derived type;
+        typedef typename T::element_type type;
     };
 
     template<typename T>
@@ -57,7 +57,7 @@
       , typename _1 =
             mpl::if_<
                   type_traits::has_name<mpl::_1> // is annotate
-                , derived<mpl::_1>
+                , element_type<mpl::_1>
                 , mpl::_1
             >
     >
@@ -112,12 +112,12 @@
             TExternal
           , T
           , typename enable_if<
-                is_same<typename TExternal::derived::scope, scopes::external>
+                is_same<typename TExternal::element_type::scope, scopes::external>
             >::type
         >
             : mpl::or_<
                   is_same<typename TExternal::name, T>
-                , is_same<typename TExternal::derived::expected, T>
+                , is_same<typename TExternal::element_type::expected, T>
               >
         { };
 
@@ -133,7 +133,7 @@
                       find_external_type<T>
                     , mpl::end<annotations>
                   >
-                , typename find_external_type<T>::type::derived
+                , typename find_external_type<T>::type::element_type
               >
         { };
 
@@ -146,21 +146,21 @@
         static typename disable_if_external_not_found<T>::type
         set(const TValue& value) {
             typedef typename find_external_type<T>::type annotation;
-            return typename annotation::derived(value);
+            return typename annotation::element_type(value);
         }
 
         template<typename T, typename TValue>
         static typename disable_if_external_not_found<T>::type
         set(TValue& value) {
             typedef typename find_external_type<T>::type annotation;
-            return typename annotation::derived(value);
+            return typename annotation::element_type(value);
         }
 
         template<typename T, typename TValue>
         static typename disable_if_external_not_found<T>::type
         set(shared_ptr<TValue> value) {
             typedef typename find_external_type<T>::type annotation;
-            return typename annotation::derived(value);
+            return typename annotation::element_type(value);
         }
     };
 

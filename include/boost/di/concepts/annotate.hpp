@@ -8,7 +8,6 @@
 #define BOOST_DI_CONCEPTS_ANNOTATE_HPP
 
 #include <boost/shared_ptr.hpp>
-#include <boost/none_t.hpp>
 #include <boost/mpl/vector.hpp>
 
 #include "boost/di/type_traits/is_same_base_of.hpp"
@@ -19,25 +18,23 @@ namespace boost {
 namespace di {
 namespace concepts {
 
-template<typename TDerived = none_t>
+template<typename T = void>
 struct annotate
 {
     template<typename TName = void>
-    struct with
-        : TDerived
+    struct with : T
     {
-        typedef TDerived derived;
+        typedef T element_type;
         typedef TName name;
     };
 };
 
 template<>
-struct annotate<none_t>
+struct annotate<void>
 {
     template<typename TName = void>
     struct with
     {
-        typedef none_t derived;
         typedef TName name;
     };
 };

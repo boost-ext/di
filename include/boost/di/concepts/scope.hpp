@@ -28,12 +28,24 @@ namespace concepts {
 
 template<
     typename TScope
+  , template<
+        typename
+      , typename T
+      , typename = T
+      , typename = mpl::vector0<>
+      , typename = type_traits::is_same_base_of<T>
+    > class TDependency
+  , template<
+        typename
+      , typename
+      , typename = void
+    > class TNamed
 >
 class scope
 {
     template<typename TRebind, typename T>
     struct rebind
-        : TRebind::template rebind<T>
+        : TRebind::template rebind<T>::other
     { };
 
 public:

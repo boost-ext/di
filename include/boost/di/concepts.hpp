@@ -44,7 +44,7 @@ struct bind_string
 
 template<typename TScope>
 struct scope
-    : concepts::scope<TScope>
+    : concepts::scope<TScope, detail::dependency, named>
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>

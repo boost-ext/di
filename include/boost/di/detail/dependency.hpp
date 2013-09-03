@@ -61,7 +61,7 @@ public:
           , TGiven
           , TContext
           , TBind
-        > type;
+        > other;
     };
 
     template<typename TValue>
@@ -142,7 +142,7 @@ public:
           , TGiven
           , TContext
           , TBind
-        > type;
+        > other;
     };
 
     template<typename TValue>
@@ -226,7 +226,7 @@ public:
           , TGiven
           , TContext
           , TBind
-        > type;
+        > other;
     };
 };
 

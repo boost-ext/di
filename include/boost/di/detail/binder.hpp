@@ -168,7 +168,10 @@ template<
   , typename TDefault
 >
 struct make_default_dependency
-    : TDefault::template rebind<T, typename type_traits::value_type<T>::type >
+    : TDefault::template rebind<
+          T
+        , typename type_traits::value_type<T>::type
+      >::other
 { };
 
 template<typename TBind, typename T>
@@ -209,7 +212,7 @@ struct binder_impl
           >
       >::type::template rebind<
           typename type_traits::scope_traits<T>::type
-      >::type
+      >::other
 { };
 
 template<typename TDeps = mpl::vector0<> >

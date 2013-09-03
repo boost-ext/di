@@ -63,7 +63,7 @@ struct fake_dependency_base_of
           , TContext0
           , TContext1
           , TContext2
-        > type;
+        > other;
     };
 
     template<typename>
