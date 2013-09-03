@@ -24,14 +24,12 @@
 namespace boost {
 namespace di {
 
-template<typename TScope>
-struct scope
-    : concepts::scope<TScope>
-{ };
-
-template<typename TExpected, typename TGiven = TExpected>
+template<
+    typename TExpected
+  , typename TGiven = TExpected
+>
 struct bind
-    : concepts::bind<TExpected, TGiven>
+    : concepts::bind<TExpected, TGiven, detail::dependency, named>
 { };
 
 template<int N>
@@ -42,6 +40,11 @@ struct bind_int
 template<typename T>
 struct bind_string
     : bind<std::string, T>
+{ };
+
+template<typename TScope>
+struct scope
+    : concepts::scope<TScope>
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
