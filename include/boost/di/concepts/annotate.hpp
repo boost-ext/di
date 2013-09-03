@@ -11,6 +11,7 @@
 #include <boost/none_t.hpp>
 #include <boost/mpl/vector.hpp>
 
+#include "boost/di/type_traits/is_same_base_of.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/detail/dependency.hpp"
 
@@ -53,7 +54,7 @@ struct annotate<none_t>
           , TExpected
           , TValue
           , TContext
-          , mpl::or_<is_base_of<mpl::_1, TExpected>, is_same<mpl::_1, TExpected> >
+          , type_traits::is_same_base_of<TExpected>
         >
         to(const TValue& value) {
             return detail::dependency<
@@ -61,7 +62,7 @@ struct annotate<none_t>
               , TExpected
               , TValue
               , TContext
-              , mpl::or_<is_base_of<mpl::_1, TExpected>, is_same<mpl::_1, TExpected> >
+              , type_traits::is_same_base_of<TExpected>
             >(value);
         }
 
@@ -71,7 +72,7 @@ struct annotate<none_t>
           , TExpected
           , TValue
           , TContext
-          , mpl::or_<is_base_of<mpl::_1, TExpected>, is_same<mpl::_1, TExpected> >
+          , type_traits::is_same_base_of<TExpected>
         >
         to(TValue& value) {
             return detail::dependency<
@@ -79,7 +80,7 @@ struct annotate<none_t>
               , TExpected
               , TValue
               , TContext
-              , mpl::or_<is_base_of<mpl::_1, TExpected>, is_same<mpl::_1, TExpected> >
+              , type_traits::is_same_base_of<TExpected>
             >(value);
         }
 
@@ -89,7 +90,7 @@ struct annotate<none_t>
           , TExpected
           , TValue
           , TContext
-          , mpl::or_<is_base_of<mpl::_1, TExpected>, is_same<mpl::_1, TExpected> >
+          , type_traits::is_same_base_of<TExpected>
         >
         to(boost::shared_ptr<TValue> value) {
             return detail::dependency<
@@ -97,7 +98,7 @@ struct annotate<none_t>
               , TExpected
               , TValue
               , TContext
-              , mpl::or_<is_base_of<mpl::_1, TExpected>, is_same<mpl::_1, TExpected> >
+              , type_traits::is_same_base_of<TExpected>
             >(value);
         }
     };

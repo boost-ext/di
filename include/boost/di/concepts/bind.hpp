@@ -27,11 +27,7 @@ template<
       , typename T
       , typename = T
       , typename = mpl::vector0<>
-      , typename = //typename type_traits::is_same_base_of<T>::type
-             mpl::or_<
-                  is_base_of<mpl::_1, T>
-                , is_same<mpl::_1, T>
-              >
+      , typename = type_traits::is_same_base_of<T>
     > class TDependency
   , template<
         typename
