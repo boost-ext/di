@@ -7,19 +7,13 @@
 #ifndef BOOST_DI_CONCEPTS_SCOPE_HPP
 #define BOOST_DI_CONCEPTS_SCOPE_HPP
 
-#include <boost/type_traits/is_base_of.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/if.hpp>
-#include <boost/mpl/or.hpp>
-#include <boost/mpl/identity.hpp>
 #include <boost/mpl/push_back.hpp>
 
-#include "boost/di/concepts/dependency.hpp"
-#include "boost/di/concepts/bind.hpp"
+#include "boost/di/type_traits/is_same_base_of.hpp"
 #include "boost/di/concepts/annotate.hpp"
-#include "boost/di/named.hpp"
 #include "boost/di/config.hpp"
 
 namespace boost {
@@ -43,9 +37,57 @@ template<
 >
 class scope
 {
-    template<typename TRebind, typename T>
+    template<
+        typename T
+      , typename U
+    >
+    struct rebind_impl
+        : T::template rebind<U>::other
+    { };
+
+    template<
+        typename T
+      , typename U
+      , typename = void
+    >
     struct rebind
-        : TRebind::template rebind<T>::other
+        : rebind_impl<T, U>::type
+    { };
+
+    template<
+        typename T
+      , typename U
+    >
+    struct rebind<
+        T
+      , U
+      , typename enable_if<type_traits::has_name<T> >::type
+    >
+        : rebind_impl<T, U>::type
+    { };
+
+    template<typename T>
+    struct is_dependency
+        : type_traits::has_context<T>
+    { };
+
+    template<
+        typename T
+      , BOOST_DI_TYPES_DEFAULT_MPL(T)
+    >
+    struct get_dependencies
+        : mpl::fold<
+              mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+            , mpl::vector0<>
+            , mpl::push_back<
+                  mpl::_1
+                , mpl::if_<
+                      is_dependency<mpl::_2>
+                    , rebind<mpl::_2, TScope>
+                    , rebind<T, TScope>
+                  >
+              >
+        >::type
     { };
 
 public:

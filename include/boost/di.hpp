@@ -11,20 +11,23 @@
 #include "boost/di/ctor.hpp"
 #include "boost/di/config.hpp"
 
-// modules
-#include "boost/di/injector.hpp"
-#include "boost/di/make_injector.hpp"
-#include "boost/di/generic_module.hpp"
-#include "boost/di/make_generic_module.hpp"
-#include "boost/di/fusion_module.hpp"
-#include "boost/di/make_fusion_module.hpp"
-
 // concepts
 #include "boost/di/concepts.hpp"
 
 // scopes
+#include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/per_request.hpp"
 #include "boost/di/scopes/singleton.hpp"
+#include "boost/di/scopes/external.hpp"
+
+// modules
+#include "boost/di/injector.hpp"
+#include "boost/di/generic_module.hpp"
+#include "boost/di/fusion_module.hpp"
+
+#include "boost/di/make_injector.hpp"
+#include "boost/di/make_generic_module.hpp"
+#include "boost/di/make_fusion_module.hpp"
 
 // utilities
 #include "boost/di/named.hpp"

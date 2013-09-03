@@ -18,7 +18,6 @@
 #include "boost/di/config.hpp"
 
 #include <boost/di/scopes/external.hpp>
-#include <boost/di/type_traits/is_same_base_of.hpp>
 
 namespace boost {
 namespace di {
@@ -70,7 +69,7 @@ public:
       , TExpected
       , TValue
       , TContext
-      , type_traits::is_same_base_of<TExpected>
+      , TBind
     >
     to(const TValue& value) {
         return dependency<
@@ -78,7 +77,7 @@ public:
           , TExpected
           , TValue
           , TContext
-          , type_traits::is_same_base_of<TExpected>
+          , TBind
         >(value);
     }
 
@@ -88,7 +87,7 @@ public:
       , TExpected
       , TValue
       , TContext
-      , type_traits::is_same_base_of<TExpected>
+      , TBind
     >
     to(TValue& value) {
         return dependency<
@@ -96,7 +95,7 @@ public:
           , TExpected
           , TValue
           , TContext
-          , type_traits::is_same_base_of<TExpected>
+          , TBind
         >(value);
     }
 
@@ -106,7 +105,7 @@ public:
       , TExpected
       , TValue
       , TContext
-      , type_traits::is_same_base_of<TExpected>
+      , TBind
     >
     to(boost::shared_ptr<TValue> value) {
         return dependency<
@@ -114,7 +113,7 @@ public:
           , TExpected
           , TValue
           , TContext
-          , type_traits::is_same_base_of<TExpected>
+          , TBind
         >(value);
     }
 };
@@ -152,7 +151,7 @@ public:
       , TExpected
       , TValue
       , TContext
-      , type_traits::is_same_base_of<TExpected>
+      , TBind
     >
     to(const TValue& value) {
         return dependency<
@@ -160,7 +159,7 @@ public:
           , TExpected
           , TValue
           , TContext
-          , type_traits::is_same_base_of<TExpected>
+          , TBind
         >(value);
     }
 
@@ -170,7 +169,7 @@ public:
       , TExpected
       , TValue
       , TContext
-      , type_traits::is_same_base_of<TExpected>
+      , TBind
     >
     to(TValue& value) {
         return dependency<
@@ -178,7 +177,7 @@ public:
           , TExpected
           , TValue
           , TContext
-          , type_traits::is_same_base_of<TExpected>
+          , TBind
         >(value);
     }
 
@@ -188,7 +187,7 @@ public:
       , TExpected
       , TValue
       , TContext
-      , type_traits::is_same_base_of<TExpected>
+      , TBind
     >
     to(boost::shared_ptr<TValue> value) {
         return dependency<
@@ -196,7 +195,7 @@ public:
           , TExpected
           , TValue
           , TContext
-          , type_traits::is_same_base_of<TExpected>
+          , TBind
         >(value);
     }
 };
