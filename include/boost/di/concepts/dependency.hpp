@@ -4,10 +4,11 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_DETAIL_DEPENDENCY_HPP
-#define BOOST_DI_DETAIL_DEPENDENCY_HPP
+#ifndef BOOST_DI_CONCEPTS_DEPENDENCY_HPP
+#define BOOST_DI_CONCEPTS_DEPENDENCY_HPP
 
 #include <boost/preprocessor/iteration/iterate.hpp>
+#include <boost/shared_ptr.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
@@ -21,8 +22,7 @@
 
 namespace boost {
 namespace di {
-
-namespace detail {
+namespace concepts {
 
 template<
     typename TScope
@@ -91,7 +91,7 @@ public:
       , type_traits::is_same_base_of<TExpected>
     >
     to(TValue& value) {
-        return detail::dependency<
+        return dependency<
             scopes::external
           , TExpected
           , TValue
@@ -172,7 +172,7 @@ public:
       , type_traits::is_same_base_of<TExpected>
     >
     to(TValue& value) {
-        return detail::dependency<
+        return dependency<
             scopes::external
           , TExpected
           , TValue
@@ -230,7 +230,7 @@ public:
     };
 };
 
-} // namespace detail
+} // namespace concepts
 } // namespace di
 } // namespace boost
 

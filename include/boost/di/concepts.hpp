@@ -11,13 +11,13 @@
 #include <boost/mpl/int.hpp>
 #include "boost/di/concepts/annotate.hpp"
 #include "boost/di/concepts/bind.hpp"
+#include "boost/di/concepts/dependency.hpp"
 #include "boost/di/concepts/externals.hpp"
 #include "boost/di/concepts/scope.hpp"
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/per_request.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/session.hpp"
-#include "boost/di/detail/dependency.hpp"
 #include "boost/di/named.hpp"
 #include "boost/di/config.hpp"
 
@@ -29,7 +29,7 @@ template<
   , typename TGiven = TExpected
 >
 struct bind
-    : concepts::bind<TExpected, TGiven, detail::dependency, named>
+    : concepts::bind<TExpected, TGiven, concepts::dependency, named>
 { };
 
 template<int N>
@@ -44,7 +44,7 @@ struct bind_string
 
 template<typename TScope>
 struct scope
-    : concepts::scope<TScope, detail::dependency, named>
+    : concepts::scope<TScope, concepts::dependency, named>
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>

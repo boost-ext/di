@@ -35,7 +35,6 @@
 
     #include "boost/di/type_traits/has_traits.hpp"
     #include "boost/di/type_traits/value_type.hpp"
-    #include "boost/di/detail/dependency.hpp"
     #include "boost/di/detail/pool.hpp"
     #include "boost/di/detail/binder.hpp"
     #include "boost/di/detail/creator.hpp"

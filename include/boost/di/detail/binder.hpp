@@ -31,10 +31,10 @@
 #include <boost/mpl/minus.hpp>
 #include <boost/mpl/filter_view.hpp>
 
-#include "boost/di/detail/dependency.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/type_traits/value_type.hpp"
 #include "boost/di/type_traits/scope_traits.hpp"
+#include "boost/di/concepts/dependency.hpp"
 
 #include "boost/di/concepts.hpp"
 
@@ -186,7 +186,7 @@ template<
   , typename TCallStack
   , typename TDeps
   , typename TDefault =
-        dependency<
+        concepts::dependency<
             typename type_traits::scope_traits<T>::type
           , mpl::_1
           , mpl::_2

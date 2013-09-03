@@ -12,8 +12,9 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/transform.hpp>
 
+#include "boost/di/type_traits/is_same_base_of.hpp"
 #include "boost/di/scopes/external.hpp"
-#include "boost/di/detail/dependency.hpp"
+#include "boost/di/concepts/dependency.hpp"
 #include "boost/di/concepts/annotate.hpp"
 #include "boost/di/config.hpp"
 
@@ -27,12 +28,12 @@ template<typename T, typename Enable = void>
 struct make_annotation
 {
     typedef typename annotate<
-        ::boost::di::detail::dependency<
+        dependency<
             scopes::external
           , T
           , T
           , mpl::vector0<>
-          , mpl::or_<is_base_of<mpl::_1, T>, is_same<mpl::_1, T> >
+          , type_traits::is_same_base_of<T>
         >
     >::template with<> type;
 };

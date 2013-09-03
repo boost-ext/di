@@ -23,15 +23,16 @@ project di :
 ;
 
 test-suite di-test :
-    #[ compile-fail detail/module_externals_mt_fail.cpp ]
-    #[ compile-fail detail/module_policy_mt_fail.cpp ]
-##[ compile-fail policies/check_for_binding_correctness_ctor_mt_fail.cpp ]
-##    [ compile-fail policies/check_for_binding_correctness_value_mt_fail.cpp ]
-    #[ compile-fail policies/check_for_creation_ownership_mt_fail.cpp ]
-    #[ compile-fail policies/check_for_circular_dependencies_mt_fail.cpp ]
-    #[ compile-fail injector_policy_mt_fail.cpp ]
-    #[ compile-fail injector_singleton_by_copy_mt_fail.cpp ]
+    [ compile-fail detail/module_externals_mt_fail.cpp ]
+    [ compile-fail detail/module_policy_mt_fail.cpp ]
+#[ compile-fail policies/check_for_binding_correctness_ctor_mt_fail.cpp ]
+#    [ compile-fail policies/check_for_binding_correctness_value_mt_fail.cpp ]
+    [ compile-fail policies/check_for_creation_ownership_mt_fail.cpp ]
+    [ compile-fail policies/check_for_circular_dependencies_mt_fail.cpp ]
+    [ compile-fail injector_policy_mt_fail.cpp ]
+    [ compile-fail injector_singleton_by_copy_mt_fail.cpp ]
 
+    [ run concepts/dependency_ut.cpp ]
     [ run type_traits/create_traits_ut.cpp ]
     [ run type_traits/ctor_traits_ut.cpp ]
     [ run type_traits/is_same_base_of_ut.cpp ]
@@ -39,7 +40,6 @@ test-suite di-test :
     [ run type_traits/value_type_ut.cpp ]
     [ run detail/binder_ut.cpp ]
     [ run detail/creator_ut.cpp ]
-    [ run detail/dependency_ut.cpp ]
     [ run detail/module_mt.cpp ]
     [ run detail/pool_ut.cpp ]
     [ run detail/visitor_ut.cpp ]

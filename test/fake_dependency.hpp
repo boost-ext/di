@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_FAKE_DEPENDENCY_HPP
 #define BOOST_DI_FAKE_DEPENDENCY_HPP
 
-#include "boost/di/detail/dependency.hpp"
+#include "boost/di/concepts/dependency.hpp"
 
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/vector.hpp>
@@ -33,7 +33,7 @@ struct fake_dependency
     typedef TExpected expected;
     typedef TGiven given;
     typedef mpl::vector<TContext0, TContext1, TContext2> context;
-    typedef typename detail::dependency<
+    typedef typename concepts::dependency<
         TScope
       , TExpected
       , TGiven

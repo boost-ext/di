@@ -16,7 +16,7 @@
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/push_back.hpp>
 
-#include "boost/di/detail/dependency.hpp"
+#include "boost/di/concepts/dependency.hpp"
 #include "boost/di/concepts/bind.hpp"
 #include "boost/di/concepts/annotate.hpp"
 #include "boost/di/named.hpp"
@@ -54,8 +54,8 @@ public:
       , typename TGiven
       , typename TContext = mpl::vector0<>
     >
-    struct dependency
-        : di::detail::dependency<
+    struct dependency_impl
+        : dependency<
                mpl::_1
              , TExpected
              , TGiven
@@ -81,7 +81,7 @@ public:
                   >
                 , mpl::push_back<
                       mpl::_1
-                    , rebind<dependency<mpl::_2, mpl::_2>, TScope>
+                    , rebind<dependency_impl<mpl::_2, mpl::_2>, TScope>
                   >
               >
           >::type
@@ -101,7 +101,7 @@ public:
                   >
                 , mpl::push_back<
                       mpl::_1
-                    , rebind<dependency<mpl::_2, mpl::_2>, TScope>
+                    , rebind<dependency_impl<mpl::_2, mpl::_2>, TScope>
                   >
               >
           >::type
@@ -121,7 +121,7 @@ public:
                     , mpl::push_back<
                           mpl::_1
                         , rebind<
-                              dependency<
+                              dependency_impl<
                                   mpl::_2
                                 , mpl::_2
                                 , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
@@ -147,7 +147,7 @@ public:
                         , mpl::push_back<
                               mpl::_1
                             , rebind<
-                                  dependency<
+                                  dependency_impl<
                                       named<mpl::_2, TName>
                                     , mpl::_2
                                     , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
@@ -175,7 +175,7 @@ public:
                     , mpl::push_back<
                           mpl::_1
                         , rebind<
-                              dependency<
+                              dependency_impl<
                                   named<mpl::_2, TName>
                                 , mpl::_2
                               >
@@ -200,7 +200,7 @@ public:
                         , mpl::push_back<
                               mpl::_1
                             , rebind<
-                                  dependency<
+                                  dependency_impl<
                                       named<mpl::_2, TName>
                                     , mpl::_2
                                     , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>

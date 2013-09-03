@@ -7,13 +7,6 @@
 #ifndef BOOST_DI_CONCEPTS_ANNOTATE_HPP
 #define BOOST_DI_CONCEPTS_ANNOTATE_HPP
 
-#include <boost/shared_ptr.hpp>
-#include <boost/mpl/vector.hpp>
-
-#include "boost/di/type_traits/is_same_base_of.hpp"
-#include "boost/di/scopes/external.hpp"
-#include "boost/di/detail/dependency.hpp"
-
 namespace boost {
 namespace di {
 namespace concepts {
