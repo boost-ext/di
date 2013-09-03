@@ -43,8 +43,8 @@ struct bind_string
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-struct singleton
-    : scope<scopes::singleton<> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
+struct deduce
+    : scope<dummy>::bind<BOOST_DI_TYPES_PASS_MPL(T)>
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
@@ -53,8 +53,13 @@ struct per_request
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-struct deduce
-    : scope<dummy>::bind<BOOST_DI_TYPES_PASS_MPL(T)>
+struct singleton
+    : scope<scopes::singleton<> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
+{ };
+
+template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
+struct session
+    : scope<scopes::session<> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
