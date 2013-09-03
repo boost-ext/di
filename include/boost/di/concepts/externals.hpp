@@ -41,7 +41,7 @@ struct make_annotation
 template<typename T>
 struct make_annotation<
     T
-  , typename enable_if<is_base_of<annotate<>::with<>, T> >::type
+  , typename enable_if<type_traits::has_context<T>>::type
 >
 {
     typedef typename annotate<

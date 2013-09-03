@@ -11,7 +11,6 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/or.hpp>
 
-#include "boost/di/concepts/annotate.hpp"
 #include "boost/di/type_traits/is_same_base_of.hpp"
 #include "boost/di/config.hpp"
 
@@ -41,7 +40,6 @@ struct bind
         , TExpected
         , TGiven
       >
-    , annotate<>::with<>
 {
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     struct in_call
@@ -51,7 +49,6 @@ struct bind
             , TGiven
             , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
           >
-        , annotate<>::with<>
     {
         template<typename TName>
         struct in_name
@@ -61,7 +58,6 @@ struct bind
                 , TGiven
                 , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
               >
-            , annotate<>::with<>
         { };
     };
 
@@ -72,7 +68,6 @@ struct bind
             , TNamed<TExpected, TName>
             , TGiven
           >
-        , annotate<>::with<>
     {
         template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
         struct in_call
@@ -82,7 +77,6 @@ struct bind
                 , TGiven
                 , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
               >
-            , annotate<>::with<>
         { };
     };
 };

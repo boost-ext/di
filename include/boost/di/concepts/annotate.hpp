@@ -11,23 +11,13 @@ namespace boost {
 namespace di {
 namespace concepts {
 
-template<typename T = void>
+template<typename T>
 struct annotate
 {
     template<typename TName = void>
     struct with : T
     {
         typedef T element_type;
-        typedef TName name;
-    };
-};
-
-template<>
-struct annotate<void>
-{
-    template<typename TName = void>
-    struct with
-    {
         typedef TName name;
     };
 };

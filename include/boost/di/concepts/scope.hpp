@@ -13,7 +13,6 @@
 #include <boost/mpl/push_back.hpp>
 
 #include "boost/di/type_traits/is_same_base_of.hpp"
-#include "boost/di/concepts/annotate.hpp"
 #include "boost/di/config.hpp"
 
 namespace boost {
@@ -41,29 +40,8 @@ class scope
         typename T
       , typename U
     >
-    struct rebind_impl
-        : T::template rebind<U>::other
-    { };
-
-    template<
-        typename T
-      , typename U
-      , typename = void
-    >
     struct rebind
-        : rebind_impl<T, U>::type
-    { };
-
-    template<
-        typename T
-      , typename U
-    >
-    struct rebind<
-        T
-      , U
-      , typename enable_if<type_traits::has_name<T> >::type
-    >
-        : rebind_impl<T, U>::type
+        : T::template rebind<U>::other
     { };
 
     template<typename T>
@@ -102,157 +80,75 @@ public:
              , TExpected
              , TGiven
              , TContext
-             , mpl::or_<
-                  is_base_of<mpl::_1, TExpected>
-                , is_same<mpl::_1, TExpected>
-               >
+             , type_traits::is_same_base_of<TExpected>
           >
-        , annotate<>::with<>
     { };
 
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     struct bind
-        : mpl::fold<
-              mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-            , mpl::vector0<>
-            , mpl::if_<
-                  is_base_of<annotate<>::with<>, mpl::_2>
-                , mpl::push_back<
-                      mpl::_1
-                    , rebind<mpl::_2, TScope>
-                  >
-                , mpl::push_back<
-                      mpl::_1
-                    , rebind<dependency_impl<mpl::_2, mpl::_2>, TScope>
-                  >
-              >
-          >::type
-        , annotate<>::with<>
+        : get_dependencies<
+              //TDependency<TScope, mpl::_2>
+              dependency_impl<mpl::_2, mpl::_2>
+            , BOOST_DI_TYPES_PASS_MPL(T)
+          >
     { };
 
     template<typename TExpected>
     struct bind<TExpected, BOOST_DI_TYPES_MPL_NA(1)>
-        : mpl::fold<
-              mpl::vector1<TExpected>
-            , mpl::vector0<>
-            , mpl::if_<
-                  is_base_of<annotate<>::with<>, mpl::_2>
-                , mpl::push_back<
-                      mpl::_1
-                    , rebind<mpl::_2, TScope>
-                  >
-                , mpl::push_back<
-                      mpl::_1
-                    , rebind<dependency_impl<mpl::_2, mpl::_2>, TScope>
-                  >
-              >
-          >::type
-        , annotate<>::with<>
+        : get_dependencies<
+              dependency_impl<mpl::_2, mpl::_2>
+              //TDependency<TScope, mpl::_2>
+            , TExpected
+          >
     {
         template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
         struct in_call
-            : mpl::fold<
-                  mpl::vector1<TExpected>
-                , mpl::vector0<>
-                , mpl::if_<
-                      is_base_of<annotate<>::with<>, mpl::_2>
-                    , mpl::push_back<
-                          mpl::_1
-                        , rebind<mpl::_2, TScope>
-                      >
-                    , mpl::push_back<
-                          mpl::_1
-                        , rebind<
-                              dependency_impl<
-                                  mpl::_2
-                                , mpl::_2
-                                , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-                              >
-                            , TScope
-                          >
-                      >
-                  >
-              >::type
-            , annotate<>::with<>
+            : get_dependencies<
+                  dependency_impl<mpl::_2, mpl::_2, mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
+                  //TDependency<
+                      //TScope
+                    //, mpl::_2
+                    //, mpl::_2
+                    //, mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+                  //>
+                , TExpected
+              >
         {
             template<typename TName>
             struct in_name
-                : mpl::fold<
-                      mpl::vector1<TExpected>
-                    , mpl::vector0<>
-                    , mpl::if_<
-                          is_base_of<annotate<>::with<>, mpl::_2>
-                        , mpl::push_back<
-                              mpl::_1
-                            , rebind<mpl::_2, TScope>
-                          >
-                        , mpl::push_back<
-                              mpl::_1
-                            , rebind<
-                                  dependency_impl<
-                                      named<mpl::_2, TName>
-                                    , mpl::_2
-                                    , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-                                  >
-                                , TScope
-                              >
-                          >
-                      >
-                  >::type
-                , annotate<>::with<>
+                : get_dependencies<
+                      dependency_impl<TNamed<mpl::_2, TName>, mpl::_2, mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
+                      //TDependency<
+                          //TScope
+                        //, TNamed<mpl::_2, TName>
+                        //, mpl::_2
+                        //, mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+                      //>
+                    , TExpected
+                  >
             { };
         };
 
         template<typename TName>
         struct in_name
-            : mpl::fold<
-                  mpl::vector1<TExpected>
-                , mpl::vector0<>
-                , mpl::if_<
-                      is_base_of<annotate<>::with<>, mpl::_2>
-                    , mpl::push_back<
-                          mpl::_1
-                        , rebind<mpl::_2, TScope>
-                      >
-                    , mpl::push_back<
-                          mpl::_1
-                        , rebind<
-                              dependency_impl<
-                                  named<mpl::_2, TName>
-                                , mpl::_2
-                              >
-                            , TScope
-                          >
-                      >
-                  >
-              >::type
-            , annotate<>::with<>
+            : get_dependencies<
+                  dependency_impl<TNamed<mpl::_2, TName>, mpl::_2>
+                  //TDependency<TScope, TNamed<mpl::_2, TName>, mpl::_2>
+                , TExpected
+              >
         {
             template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
             struct in_call
-                : mpl::fold<
-                      mpl::vector1<TExpected>
-                    , mpl::vector0<>
-                    , mpl::if_<
-                          is_base_of<annotate<>::with<>, mpl::_2>
-                        , mpl::push_back<
-                              mpl::_1
-                            , rebind<mpl::_2, TScope>
-                          >
-                        , mpl::push_back<
-                              mpl::_1
-                            , rebind<
-                                  dependency_impl<
-                                      named<mpl::_2, TName>
-                                    , mpl::_2
-                                    , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-                                  >
-                                , TScope
-                              >
-                          >
-                      >
-                  >::type
-                , annotate<>::with<>
+                : get_dependencies<
+                        dependency_impl<TNamed<mpl::_2, TName>, mpl::_2, mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>>
+                      //TDependency<
+                          //TScope
+                        //, TNamed<mpl::_2, TName>
+                        //, mpl::_2
+                        //, mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+                      //>
+                    , TExpected
+                  >
             { };
         };
     };

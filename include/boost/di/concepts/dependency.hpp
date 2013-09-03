@@ -133,6 +133,8 @@ class dependency<
 >
 {
 public:
+    typedef TContext context;
+
     template<typename TScope>
     struct rebind
     {
@@ -214,6 +216,8 @@ class dependency<
 >
 {
 public:
+    typedef TContext context;
+
     template<
         typename TExpected
       , typename TGiven
