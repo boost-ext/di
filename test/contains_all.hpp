@@ -15,6 +15,7 @@
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/empty.hpp>
 #include <boost/mpl/push_back.hpp>
 
 namespace boost {
