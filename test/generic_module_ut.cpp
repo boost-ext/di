@@ -491,14 +491,14 @@ BOOST_AUTO_TEST_CASE(external_base) {
         >::value
     ));
 
-    BOOST_CHECK((
-        contains_all<
-            mpl::vector<
-                scopes::convertible_any<c1>
-            >
-          , module::external::types
-        >::value
-    ));
+    //BOOST_CHECK((
+        //contains_all<
+            //mpl::vector<
+                //scopes::convertible_any<c1>
+            //>
+          //, module::external::types
+        //>::value
+    //));
 }
 
 BOOST_AUTO_TEST_CASE(external_mix) {
@@ -522,16 +522,16 @@ BOOST_AUTO_TEST_CASE(external_mix) {
         >::value
     ));
 
-    BOOST_CHECK((
-        contains_all<
-            mpl::vector<
-                scopes::convertible_any<c1>
-              , scopes::convertible_any<c2>
-              , scopes::convertible_any<c3>
-            >
-          , module::external::types
-        >::value
-    ));
+    //BOOST_CHECK((
+        //contains_all<
+            //mpl::vector<
+                //scopes::convertible_any<c1>
+              //, scopes::convertible_any<c2>
+              //, scopes::convertible_any<c3>
+            //>
+          //, module::external::types
+        //>::value
+    //));
 }
 
 BOOST_AUTO_TEST_CASE(external_bind) {
@@ -558,17 +558,17 @@ BOOST_AUTO_TEST_CASE(external_bind) {
         >::value
     ));
 
-    BOOST_CHECK((
-        contains_all<
-            mpl::vector<
-                scopes::convertible_any<int>
-              , scopes::convertible_any<named<c1, int> >
-              , scopes::convertible_any<c2, mpl::vector<c1> >
-              , scopes::convertible_any<named<c3, double>, mpl::vector<c4, c5> >
-            >
-          , module::external::types
-        >::value
-    ));
+    //BOOST_CHECK((
+        //contains_all<
+            //mpl::vector<
+                //scopes::convertible_any<int>
+              //, scopes::convertible_any<named<c1, int> >
+              //, scopes::convertible_any<c2, mpl::vector<c1> >
+              //, scopes::convertible_any<named<c3, double>, mpl::vector<c4, c5> >
+            //>
+          //, module::external::types
+        //>::value
+    //));
 }
 
 BOOST_AUTO_TEST_CASE(set_instance_int) {

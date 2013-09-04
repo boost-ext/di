@@ -48,6 +48,18 @@ template<
 class dependency
     : public detail::scope_traits<TScope>::type::template scope<TExpected, TGiven>
 {
+    template<typename T>
+    struct external
+    {
+        typedef dependency<
+            scopes::external,
+            TExpected
+          , T
+          , TContext
+          , TBind
+        > type;
+    };
+
 public:
     typedef dependency type;
     typedef typename detail::scope_traits<TScope>::type scope;
@@ -79,59 +91,21 @@ public:
         > other;
     };
 
-    template<typename TValue>
-    static dependency<
-        scopes::external
-      , TExpected
-      , TValue
-      , TContext
-      , TBind
-    >
-    to(const TValue& value) {
-        return dependency<
-            scopes::external
-          , TExpected
-          , TValue
-          , TContext
-          , TBind
-        >(value);
+    template<typename T>
+    static typename external<T>::type to(const T& obj) {
+        return typename external<T>::type(obj);
     }
 
-    template<typename TValue>
-    static dependency<
-        scopes::external
-      , TExpected
-      , TValue
-      , TContext
-      , TBind
-    >
-    to(TValue& value) {
-        return dependency<
-            scopes::external
-          , TExpected
-          , TValue
-          , TContext
-          , TBind
-        >(value);
-    }
+    template<typename T>
+    static typename external<T>::type to(T& obj) {
+        return typename external<T>::type(obj);
+     }
 
-    template<typename TValue>
-    static dependency<
-        scopes::external
-      , TExpected
-      , TValue
-      , TContext
-      , TBind
-    >
-    to(shared_ptr<TValue> value) {
-        return dependency<
-            scopes::external
-          , TExpected
-          , TValue
-          , TContext
-          , TBind
-        >(value);
-    }
+    template<typename T>
+    static typename external<T>::type to(shared_ptr<T> obj) {
+        return typename external<T>::type(obj);
+     }
+
 };
 
 } // namespace concepts
