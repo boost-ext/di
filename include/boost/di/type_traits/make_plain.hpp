@@ -12,14 +12,15 @@
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/utility/enable_if.hpp>
-
-#include "boost/di/type_traits/has_traits.hpp"
+#include <boost/mpl/has_xxx.hpp>
 
 namespace boost {
 namespace di {
 namespace type_traits {
 
-namespace aux {
+namespace detail {
+
+BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
 template<typename T>
 struct remove_accessors
@@ -39,22 +40,20 @@ struct deref_element_type
 template<typename T>
 struct deref_element_type<
     T
-  , typename enable_if<
-        has_element_type<T>
-    >::type
+  , typename enable_if<has_element_type<T> >::type
 >
 {
     typedef typename T::element_type type;
 };
 
-} // namespace aux
+} // namespace detail
 
 template<typename TElement>
 struct make_plain
-    : aux::deref_element_type<
-        typename aux::remove_accessors<
-            typename aux::deref_element_type<
-                typename aux::remove_accessors<TElement>::type
+    : detail::deref_element_type<
+        typename detail::remove_accessors<
+            typename detail::deref_element_type<
+                typename detail::remove_accessors<TElement>::type
             >::type
         >::type
     >

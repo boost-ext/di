@@ -32,8 +32,8 @@
     #include <boost/mpl/insert.hpp>
     #include <boost/mpl/joint_view.hpp>
     #include <boost/mpl/pair.hpp>
+    #include <boost/mpl/has_xxx.hpp>
 
-    #include "boost/di/type_traits/has_traits.hpp"
     #include "boost/di/type_traits/value_type.hpp"
     #include "boost/di/detail/pool.hpp"
     #include "boost/di/detail/binder.hpp"
@@ -64,6 +64,9 @@
     >
     class module
     {
+        BOOST_MPL_HAS_XXX_TRAIT_DEF(deps)
+        BOOST_MPL_HAS_XXX_TRAIT_DEF(policy_type)
+
         template<
             typename
           , template<typename> class
@@ -80,7 +83,7 @@
                       TSeq
                     , mpl::int_<0>
                     , mpl::if_<
-                          type_traits::has_deps<mpl::_2>
+                          has_deps<mpl::_2>
                         , mpl::next<mpl::_1>
                         , mpl::_1
                       >
@@ -100,9 +103,7 @@
         template<typename T>
         struct deps_impl<
             T
-          , typename enable_if<
-                type_traits::has_deps<T>
-            >::type
+          , typename enable_if<has_deps<T> >::type
         >
         {
             typedef typename T::deps type;
@@ -114,7 +115,7 @@
                   TDeps
                 , mpl::vector0<>
                 , mpl::if_<
-                      type_traits::has_policy_type<mpl::_2>
+                      has_policy_type<mpl::_2>
                     , mpl::push_back<mpl::_1, mpl::_2>
                     , mpl::_1
                   >
@@ -139,7 +140,7 @@
                     , mpl::vector0<>
                     , mpl::push_back<mpl::_1, mpl::_2>
                   >::type
-                , type_traits::has_policy_type<mpl::_1>
+                , has_policy_type<mpl::_1>
               >::type
         { };
 

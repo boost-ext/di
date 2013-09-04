@@ -11,6 +11,7 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/transform.hpp>
+#include <boost/mpl/has_xxx.hpp>
 
 #include "boost/di/type_traits/is_same_base_of.hpp"
 #include "boost/di/scopes/external.hpp"
@@ -23,6 +24,8 @@ namespace di {
 namespace concepts {
 
 namespace detail {
+
+BOOST_MPL_HAS_XXX_TRAIT_DEF(context)
 
 template<typename T, typename Enable = void>
 struct make_annotation
@@ -39,10 +42,7 @@ struct make_annotation
 };
 
 template<typename T>
-struct make_annotation<
-    T
-  , typename enable_if<type_traits::has_context<T>>::type
->
+struct make_annotation<T, typename enable_if<has_context<T>>::type>
 {
     typedef typename annotate<
         typename T::template rebind<scopes::external>::other

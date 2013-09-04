@@ -20,8 +20,8 @@
     #include <boost/mpl/back_inserter.hpp>
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/size.hpp>
+    #include <boost/mpl/has_xxx.hpp>
 
-    #include "boost/di/type_traits/has_traits.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
@@ -87,6 +87,8 @@
             , TTypes
           )
     {
+        BOOST_MPL_HAS_XXX_TRAIT_DEF(types)
+
         template<typename T, typename = void>
         struct types_impl
         {
@@ -96,9 +98,7 @@
         template<typename T>
         struct types_impl<
             T
-          , typename enable_if<
-                type_traits::has_types<T>
-            >::type
+          , typename enable_if<has_types<T> >::type
         >
         {
             typedef typename T::types type;

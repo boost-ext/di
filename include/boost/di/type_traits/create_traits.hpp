@@ -13,7 +13,7 @@
     #include <boost/preprocessor/cat.hpp>
     #include <boost/utility/enable_if.hpp>
 
-    #include "boost/di/type_traits/has_traits.hpp"
+    #include "boost/di/type_traits/ctor_traits.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (               \

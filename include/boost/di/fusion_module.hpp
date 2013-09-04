@@ -17,8 +17,8 @@
     #include <boost/mpl/if.hpp>
     #include <boost/mpl/back_inserter.hpp>
     #include <boost/mpl/placeholders.hpp>
+    #include <boost/mpl/has_xxx.hpp>
 
-    #include "boost/di/type_traits/has_traits.hpp"
     #include "boost/di/detail/module.hpp"
     #include "boost/di/detail/pool.hpp"
     #include "boost/di/concepts.hpp"
@@ -39,13 +39,15 @@
     class fusion_module
         : public detail::module<TDeps>
     {
+        BOOST_MPL_HAS_XXX_TRAIT_DEF(context)
+
         template<typename TSeq>
         struct fusion_deps
             : mpl::fold<
                   TSeq
                 , mpl::vector0<>
                 , mpl::if_<
-                      type_traits::has_context<mpl::_2>
+                      has_context<mpl::_2>
                     , mpl::push_back<mpl::_1, mpl::_2>
                     , mpl::_1
                   >

@@ -10,9 +10,9 @@
 #include <boost/preprocessor/cat.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/mpl/aux_/yes_no.hpp>
 
 #include "boost/di/type_traits/parameter_types.hpp"
-#include "boost/di/type_traits/has_traits.hpp"
 #include "boost/di/config.hpp"
 
 namespace boost {
@@ -25,6 +25,32 @@ struct ctor_traits
 };
 
 namespace type_traits {
+
+template<typename T>
+class BOOST_PP_CAT(has_, BOOST_DI_CONSTRUCTOR)
+{
+    template<typename C> static mpl::aux::yes_tag test(BOOST_TYPEOF(&C::BOOST_DI_CONSTRUCTOR));
+    template<typename>   static mpl::aux::no_tag  test(...);
+
+public:
+    BOOST_STATIC_CONSTANT(
+        bool
+      , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
+    );
+};
+
+template<typename T>
+class BOOST_PP_CAT(has_, BOOST_DI_CREATE)
+{
+    template<typename C> static mpl::aux::yes_tag test(BOOST_TYPEOF(&C::BOOST_DI_CREATE));
+    template<typename>   static mpl::aux::no_tag  test(...);
+
+public:
+    BOOST_STATIC_CONSTANT(
+        bool
+      , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
+    );
+};
 
 template<typename T, typename = void>
 struct ctor_traits

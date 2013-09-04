@@ -9,12 +9,13 @@
 
 #include <string>
 #include <boost/utility/enable_if.hpp>
-
-#include "boost/di/type_traits/has_traits.hpp"
+#include <boost/mpl/has_xxx.hpp>
 
 namespace boost {
 namespace di {
 namespace type_traits {
+
+BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
 
 template<typename T, typename = void>
 struct value_type

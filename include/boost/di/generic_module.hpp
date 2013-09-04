@@ -21,8 +21,8 @@
     #include <boost/mpl/begin_end.hpp>
     #include <boost/mpl/is_sequence.hpp>
     #include <boost/mpl/back_inserter.hpp>
+    #include <boost/mpl/has_xxx.hpp>
 
-    #include "boost/di/type_traits/has_traits.hpp"
     #include "boost/di/scopes/deduce.hpp"
     #include "boost/di/detail/module.hpp"
     #include "boost/di/concepts.hpp"
@@ -39,7 +39,9 @@
     namespace boost {
     namespace di {
 
-    namespace aux {
+    namespace detail {
+
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
 
     template<typename T>
     struct element_type
@@ -56,7 +58,7 @@
         typename TDeps
       , typename _1 =
             mpl::if_<
-                  type_traits::has_name<mpl::_1> // is annotate
+                  has_name<mpl::_1> // is annotate
                 , element_type<mpl::_1>
                 , mpl::_1
             >
@@ -79,18 +81,18 @@
           >::type
     { };
 
-    } // namespace aux
+    } // namespace detail
 
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     class generic_module
         : public detail::module<
-              typename aux::generic_deps<
+              typename detail::generic_deps<
                   mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
               >::type
           >
     {
         struct annotations
-            : aux::generic_deps<
+            : detail::generic_deps<
                   mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>, mpl::_1
               >
         { };
@@ -174,7 +176,7 @@
     template<BOOST_DI_TYPES(Args)>
     explicit generic_module(BOOST_DI_ARGS(Args, args))
         : detail::module<
-              typename aux::generic_deps<
+              typename detail::generic_deps<
                   mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
               >::type
           >

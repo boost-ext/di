@@ -11,14 +11,17 @@
 
     #include <string>
     #include <boost/preprocessor/iteration/iterate.hpp>
+    #include <boost/preprocessor/repetition/enum_params.hpp>
     #include <boost/shared_ptr.hpp>
     #include <boost/function.hpp>
     #include <boost/bind.hpp>
-    #include <boost/mpl/string.hpp>
+    #include <boost/non_type.hpp>
     #include <boost/utility/enable_if.hpp>
-    #include <boost/preprocessor/repetition/enum_params.hpp>
+    #include <boost/mpl/string.hpp>
+    #include <boost/mpl/if.hpp>
+    #include <boost/mpl/aux_/yes_no.hpp>
+    #include <boost/mpl/void.hpp>
 
-    #include "boost/di/type_traits/has_traits.hpp"
     #include "boost/di/type_traits/create_traits.hpp"
     #include "boost/di/named.hpp"
     #include "boost/di/config.hpp"
@@ -42,6 +45,29 @@
     >
     class per_request
     {
+        template<typename T>
+        class has_value
+        {
+            struct helper { static int value; };
+            struct base
+                : helper
+                , mpl::if_<
+                      is_arithmetic<T>
+                    , mpl::void_
+                    , T
+                  >::type
+            { };
+
+            template<typename C> static mpl::aux::no_tag  test(non_type<const int*, &C::value>*);
+            template<typename>   static mpl::aux::yes_tag test(...);
+
+        public:
+            BOOST_STATIC_CONSTANT(
+                bool
+              , value = sizeof(test<base>(0)) == sizeof(mpl::aux::yes_tag)
+            );
+        };
+
         template<
             typename
           , typename = void
@@ -69,9 +95,7 @@
         >
         class explicit_impl<
             T
-          , typename enable_if<
-                type_traits::has_value<T>
-            >::type
+          , typename enable_if<has_value<T> >::type
         >
             : public mpl::true_
         {

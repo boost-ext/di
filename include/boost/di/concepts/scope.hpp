@@ -11,6 +11,7 @@
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/push_back.hpp>
+#include <boost/mpl/has_xxx.hpp>
 
 #include "boost/di/type_traits/is_same_base_of.hpp"
 #include "boost/di/config.hpp"
@@ -36,6 +37,8 @@ template<
 >
 class scope
 {
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(context)
+
     template<
         typename T
       , typename U
@@ -69,7 +72,7 @@ class scope
             , mpl::push_back<
                   mpl::_1
                 , mpl::if_<
-                      type_traits::has_context<mpl::_2>
+                      has_context<mpl::_2>
                     , rebind<mpl::_2, TScope>
                     , rebind<T, TScope>
                   >

@@ -19,9 +19,9 @@
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/or.hpp>
     #include <boost/mpl/and.hpp>
+    #include <boost/mpl/has_xxx.hpp>
 
     #include "boost/di/type_traits/value_type.hpp"
-    #include "boost/di/type_traits/has_traits.hpp"
     #include "boost/di/named.hpp"
     #include "boost/di/config.hpp"
 
@@ -39,6 +39,10 @@
 
     class external
     {
+        BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
+        BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
+        BOOST_MPL_HAS_XXX_TRAIT_DEF(result_type)
+
         template<typename T, typename = void>
         struct plain_type
         {
@@ -50,8 +54,8 @@
             T
           , typename enable_if<
                 mpl::and_<
-                    type_traits::has_name<T>
-                  , type_traits::has_value_type<T>
+                    has_name<T>
+                  , has_value_type<T>
                 >
             >::type
         >
@@ -194,7 +198,7 @@
                 mpl::or_<
                     is_same<typename type_traits::value_type<TExpected>::type, std::string>
                   , is_arithmetic<typename type_traits::value_type<TExpected>::type>
-                  , type_traits::has_result_type<typename type_traits::value_type<TExpected>::type>
+                  , has_result_type<typename type_traits::value_type<TExpected>::type>
                 >
             >::type
         >
