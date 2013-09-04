@@ -27,7 +27,7 @@ namespace detail {
 
 BOOST_MPL_HAS_XXX_TRAIT_DEF(context)
 
-template<typename T, typename Enable = void>
+template<typename T, typename = void>
 struct make_annotation
 {
     typedef typename annotate<

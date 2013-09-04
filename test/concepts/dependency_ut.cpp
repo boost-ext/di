@@ -75,27 +75,6 @@ BOOST_AUTO_TEST_CASE(rebind_scope) {
     ));
 }
 
-/*BOOST_AUTO_TEST_CASE(rebind_type) {*/
-    //BOOST_CHECK((
-        //is_same<
-            //dependency<
-                //void
-              //, double
-              //, int
-              //, mpl::vector0<>
-              //, is_same<mpl::_1, int>
-            //>
-          //, dependency<
-                //void
-              //, mpl::_1
-              //, mpl::_2
-              //, mpl::vector0<>
-              //, is_same<mpl::_1, int>
-            //>::rebind<double, int>::other
-        //>::value
-    //));
-/*}*/
-
 } // namespace concepts
 } // namespace di
 } // namespace boost
