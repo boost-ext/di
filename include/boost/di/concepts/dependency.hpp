@@ -105,7 +105,6 @@ public:
     static typename external<T>::type to(shared_ptr<T> obj) {
         return typename external<T>::type(obj);
     }
-
 };
 
 } // namespace concepts
