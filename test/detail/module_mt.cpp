@@ -5,6 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include "boost/di/detail/module.hpp"
+#include <memory>
 
 #include <boost/test/unit_test.hpp>
 #include <boost/shared_ptr.hpp>
@@ -39,14 +40,14 @@ BOOST_AUTO_TEST_CASE(create_using_copy) {
 
 BOOST_AUTO_TEST_CASE(create_using_ptr) {
     module<> module_;
-    c0* obj = module_.create<c0*>();
-    BOOST_CHECK(obj);
+    std::auto_ptr<c0> obj(module_.create<c0*>());
+    BOOST_CHECK(obj.get());
 }
 
 BOOST_AUTO_TEST_CASE(create_using_const_ptr) {
     module<> module_;
-    const c0* obj = module_.create<const c0*>();
-    BOOST_CHECK(obj);
+    std::auto_ptr<const c0> obj(module_.create<const c0*>());
+    BOOST_CHECK(obj.get());
 }
 
 BOOST_AUTO_TEST_CASE(create_using_shared_ptr) {

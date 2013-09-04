@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE(empty) {
                 int
               , mpl::vector0<>
               , mpl::vector0<>
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, int>
             >::type
         >::value
     ));
@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE(one) {
               , mpl::vector<
                     fake_dependency<fake_scope, int>
                 >
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, int>
             >::type
         >::value
     ));
@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE(found) {
                   , fake_dependency<fake_scope, float>
                   , fake_dependency<fake_scope, double>
                 >
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, void>
             >::type
         >::value
     ));
@@ -89,7 +89,7 @@ BOOST_AUTO_TEST_CASE(found_allocator) {
                   , fake_dependency<fake_scope_allocator<>, float>
                   , fake_dependency<fake_scope_allocator<>, double>
                 >
-              , fake_dependency<fake_scope_allocator<>, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope_allocator<>, void>
             >::type
         >::value
     ));
@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE(found_many) {
                   , fake_dependency<fake_scope, float>
                   , fake_dependency<fake_scope, float>
                 >
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, void>
             >::type
         >::value
     ));
@@ -125,7 +125,7 @@ BOOST_AUTO_TEST_CASE(not_found) {
                   , fake_dependency<fake_scope, float>
                   , fake_dependency<fake_scope, float>
                 >
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, double>
             >::type
         >::value
     ));
@@ -141,7 +141,7 @@ BOOST_AUTO_TEST_CASE(if_base) {
               , mpl::vector<
                     fake_dependency<fake_scope, if0, c0if0>
                 >
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, void>
             >::type
         >::value
     ));
@@ -157,7 +157,7 @@ BOOST_AUTO_TEST_CASE(if_external) {
               , mpl::vector<
                     fake_dependency<fake_scope, if0, if0>
                 >
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, void>
             >::type
         >::value
     ));
@@ -174,7 +174,7 @@ BOOST_AUTO_TEST_CASE(context) {
                     fake_dependency<fake_scope, int, int, mpl::vector<a> >
                   , fake_dependency<fake_scope, int, int, mpl::vector<a, b> >
                 >
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, void>
             >::type
         >::value
     ));
@@ -190,7 +190,7 @@ BOOST_AUTO_TEST_CASE(context_if) {
               , mpl::vector<
                     fake_dependency<fake_scope, if0, c0if0>
                 >
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, void>
             >::type
         >::value
     ));
@@ -208,7 +208,7 @@ BOOST_AUTO_TEST_CASE(context_many) {
                   , fake_dependency<fake_scope, int, int, mpl::vector<a> >
                   , fake_dependency<fake_scope, int, int, mpl::vector<a, b> >
                 >
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, void>
             >::type
         >::value
     ));
@@ -226,7 +226,7 @@ BOOST_AUTO_TEST_CASE(context_many_end) {
                   , fake_dependency<fake_scope, int, int, mpl::vector<b> >
                   , fake_dependency<fake_scope, int, int, mpl::vector<a, b> >
                 >
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, void>
             >::type
         >::value
     ));
@@ -243,7 +243,7 @@ BOOST_AUTO_TEST_CASE(context_not_found) {
                     fake_dependency<fake_scope, int, int, mpl::vector<b> >
                   , fake_dependency<fake_scope, int, int, mpl::vector<a, b> >
                 >
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, int>
             >::type
         >::value
     ));
@@ -262,7 +262,7 @@ BOOST_AUTO_TEST_CASE(context_other_types) {
                   , fake_dependency<fake_scope, float, float, mpl::vector<a, b> >
                   , fake_dependency<fake_scope, double>
                 >
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, void>
             >::type
         >::value
     ));
@@ -286,7 +286,7 @@ BOOST_AUTO_TEST_CASE(context_long_with_order) {
                   , fake_dependency<fake_scope, int, int, mpl::vector<a, a, a> >
                   , fake_dependency<fake_scope, int, int, mpl::vector<c> >
                 >
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, void>
             >::type
         >::value
     ));
@@ -310,7 +310,7 @@ BOOST_AUTO_TEST_CASE(context_long_with_order_empty_call_stack) {
                   , fake_dependency<fake_scope, int, int, mpl::vector<a, a, a> >
                   , fake_dependency<fake_scope, int, int, mpl::vector<c> >
                 >
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, void>
             >::type
         >::value
     ));
@@ -334,7 +334,7 @@ BOOST_AUTO_TEST_CASE(context_long_with_order_diff_call_stack) {
                   , fake_dependency<fake_scope, int, int, mpl::vector<a, a, a> >
                   , fake_dependency<fake_scope, int, int, mpl::vector<c> >
                 >
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, void>
             >::type
         >::value
     ));
@@ -358,7 +358,7 @@ BOOST_AUTO_TEST_CASE(context_long_with_order_short_call_stack) {
                   , fake_dependency<fake_scope, int, int, mpl::vector<a, a, a> >
                   , fake_dependency<fake_scope, int, int, mpl::vector<c> >
                 >
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, void>
             >::type
         >::value
     ));
@@ -382,7 +382,7 @@ BOOST_AUTO_TEST_CASE(context_long_with_order_to_long_call_stack) {
                   , fake_dependency<fake_scope, int, int, mpl::vector<a, a, a> >
                   , fake_dependency<fake_scope, int, int, mpl::vector<c> >
                 >
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, void>
             >::type
         >::value
     ));
@@ -398,7 +398,7 @@ BOOST_AUTO_TEST_CASE(base_of_fail) {
               , mpl::vector<
                     fake_dependency_base_of<fake_scope, a>
                 >
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, i>
             >::type
         >::value
     ));
@@ -414,7 +414,7 @@ BOOST_AUTO_TEST_CASE(base_of_successful) {
               , mpl::vector<
                     fake_dependency_base_of<fake_scope, impl>
                 >
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, void>
             >::type
         >::value
     ));
@@ -430,7 +430,7 @@ BOOST_AUTO_TEST_CASE(complex_type) {
               , mpl::vector<
                     fake_dependency<fake_scope, int>
                 >
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, void>
             >::type
         >::value
     ));
@@ -444,7 +444,7 @@ BOOST_AUTO_TEST_CASE(named_type) {
                 named<shared_ptr<int>, mpl::_1>
               , mpl::vector0<>
               , mpl::vector0<>
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, named<int, mpl::_1>, int>
             >::type
         >::value
     ));
@@ -460,7 +460,7 @@ BOOST_AUTO_TEST_CASE(call_call_stack) {
               , mpl::vector<
                     fake_dependency<fake_scope, int, int, c1, mpl::vector<c2> >
                 >
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, void>
             >::type
         >::value
     ));
@@ -481,7 +481,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(multiple_calls, TContext, multiple_calls_t) {
               , mpl::vector<
                     fake_dependency<fake_scope, int, int, c1, mpl::vector<c2, c3> >
                 >
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, void>
             >::type
         >::value
     ));
@@ -505,7 +505,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(multiple_calls_many, TContext, multiple_calls_many
               , mpl::vector<
                     fake_dependency<fake_scope, int, int, c1, c5, mpl::vector<c3, c4> >
                 >
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, void>
             >::type
         >::value
     ));
@@ -527,7 +527,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(multiple_calls_not_found, TContext, multiple_calls
               , mpl::vector<
                     fake_dependency<fake_scope, int, int, c1, c5, mpl::vector<c3, c4> >
                 >
-              , fake_dependency<fake_scope, mpl::_1, mpl::_2>
+              , fake_dependency<fake_scope, int, int>
             >::type
         >::value
     ));

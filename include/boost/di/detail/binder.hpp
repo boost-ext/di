@@ -163,17 +163,6 @@ struct get_dependency_by_call_stack_order
       >::type
 { };
 
-template<
-    typename T
-  , typename TDefault
->
-struct make_default_dependency
-    : TDefault::template rebind<
-          T
-        , typename type_traits::value_type<T>::type
-      >::other
-{ };
-
 template<typename TBind, typename T>
 struct comparator
     : mpl::apply<TBind, T>::type
@@ -188,18 +177,17 @@ template<
   , typename TDefault =
         concepts::dependency<
             typename type_traits::scope_traits<T>::type
-          , mpl::_1
-          , mpl::_2
+          , typename type_traits::make_plain<T>::type
+          , typename type_traits::value_type<
+                typename type_traits::make_plain<T>::type
+            >::type
         >
 >
 struct binder_impl
     : aux::get_dependency_by_call_stack_order<
           TCallStack
         , TDeps
-        , typename aux::make_default_dependency<
-              typename type_traits::make_plain<T>::type
-            , TDefault
-          >::type
+        , TDefault
         , mpl::and_<
               aux::comparator<
                   aux::bind<mpl::_2>

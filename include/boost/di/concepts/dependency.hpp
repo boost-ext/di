@@ -134,38 +134,6 @@ public:
     }
 };
 
-template<
-    typename TScope
-  , typename TBind
-  , typename TContext
->
-class dependency<
-    TScope
-  , mpl::_1
-  , mpl::_2
-  , TContext
-  , TBind
->
-{
-public:
-    typedef TContext context;
-
-    template<
-        typename TExpected
-      , typename TGiven
-    >
-    struct rebind
-    {
-        typedef dependency<
-            TScope
-          , TExpected
-          , TGiven
-          , TContext
-          , TBind
-        > other;
-    };
-};
-
 } // namespace concepts
 } // namespace di
 } // namespace boost
