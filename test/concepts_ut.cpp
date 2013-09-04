@@ -9,12 +9,10 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <boost/units/detail/utility.hpp>
-
 namespace boost {
 namespace di {
 
-class c{};
+class c{ };
 
 BOOST_AUTO_TEST_CASE(create) {
     typedef per_request<
@@ -22,10 +20,6 @@ BOOST_AUTO_TEST_CASE(create) {
       , bind<int, mpl::int_<42> >
       , bind<c>
     >::type concept;
-
-    std::cout << units::detail::demangle(typeid(concept).name()) << std::endl;
-
-    BOOST_CHECK(0);
 }
 
 } // namespace di

@@ -47,7 +47,7 @@ double double_value::value = 0;
 BOOST_AUTO_TEST_CASE(create) {
     struct module
         : generic_module<
-              per_requests<
+              per_request<
                   c0if0
               >
           >
@@ -74,7 +74,7 @@ BOOST_AUTO_TEST_CASE(create) {
 BOOST_AUTO_TEST_CASE(visit) {
     struct module
         : generic_module<
-              per_requests<
+              per_request<
                   transaction_provider
                 , mpl::int_<0>
               >
@@ -224,7 +224,7 @@ BOOST_AUTO_TEST_CASE(one_scope) {
 BOOST_AUTO_TEST_CASE(one_scope_alias) {
     struct module
         : generic_module<
-              singletons<
+              singleton<
                   c0if0
               >
           >
@@ -257,10 +257,10 @@ BOOST_AUTO_TEST_CASE(one_scope_direct) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(many_singletons) {
+BOOST_AUTO_TEST_CASE(many_singleton) {
     struct module
         : generic_module<
-              singletons<
+              singleton<
                 c1, c2, c3
               >
           >
@@ -281,10 +281,10 @@ BOOST_AUTO_TEST_CASE(many_singletons) {
 BOOST_AUTO_TEST_CASE(many_scopes) {
     struct module
         : generic_module<
-              singletons<
+              singleton<
                   c1, c2
               >
-            , per_requests<
+            , per_request<
                   c3, c4
               >
           >
@@ -340,7 +340,7 @@ BOOST_AUTO_TEST_CASE(in_name) {
 BOOST_AUTO_TEST_CASE(in_name_in_call) {
     struct module
         : generic_module<
-              singletons<
+              singleton<
                   bind<c1>::in_name<int>::in_call<double>
                 , bind<c2>::in_name<double>::in_call<int>
               >
@@ -361,7 +361,7 @@ BOOST_AUTO_TEST_CASE(in_name_in_call) {
 BOOST_AUTO_TEST_CASE(in_call_in_name) {
     struct module
         : generic_module<
-              singletons<
+              singleton<
                   bind<c1>::in_call<double>::in_name<int>
                 , bind<c2>::in_call<int>::in_name<double>
               >
@@ -382,7 +382,7 @@ BOOST_AUTO_TEST_CASE(in_call_in_name) {
 BOOST_AUTO_TEST_CASE(bind_if) {
     struct module
         : generic_module<
-              singletons<
+              singleton<
                   bind<if0, c0if0>
               >
           >
@@ -401,13 +401,13 @@ BOOST_AUTO_TEST_CASE(bind_if) {
 BOOST_AUTO_TEST_CASE(mix) {
     struct module
         : generic_module<
-              singletons<
+              singleton<
                   bind<if0, c0if0>
                 , c1
                 , bind<c2>::in_name<int>
                 , bind<c3>::in_call<call_stack<c4, c5> >
               >
-            , per_requests<
+            , per_request<
                 c6
               >
             , singleton<c7>::in_name<double>::in_call<c1>
@@ -432,7 +432,7 @@ BOOST_AUTO_TEST_CASE(mix) {
 BOOST_AUTO_TEST_CASE(named_in_call) {
     struct module
         : generic_module<
-              per_requests<
+              per_request<
                   bind<int, mpl::int_<1> >
                 , bind<int, mpl::int_<4> >::in_name<mpl::string<'2'> >::in_call<call_stack<c7, c6, c4> >
                 , bind<int, mpl::int_<5> >::in_call<c2>
@@ -455,7 +455,7 @@ BOOST_AUTO_TEST_CASE(named_in_call) {
 BOOST_AUTO_TEST_CASE(multiple_calls) {
     struct module
         : generic_module<
-              singletons<
+              singleton<
                   bind<c0>::in_call<c1, call_stack<c2, c3>, c4 >
               >
             , bind<c5>::in_call<int, double>
@@ -473,10 +473,10 @@ BOOST_AUTO_TEST_CASE(multiple_calls) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(externals_base) {
+BOOST_AUTO_TEST_CASE(external_base) {
     struct module
         : generic_module<
-              externals<
+              external<
                   c1
               >
           >
@@ -496,15 +496,15 @@ BOOST_AUTO_TEST_CASE(externals_base) {
             mpl::vector<
                 scopes::convertible_any<c1>
             >
-          , module::externals::types
+          , module::external::types
         >::value
     ));
 }
 
-BOOST_AUTO_TEST_CASE(externals_mix) {
+BOOST_AUTO_TEST_CASE(external_mix) {
     struct module
         : generic_module<
-              externals<
+              external<
                   c1, c2
               >
             , external<c3>
@@ -529,15 +529,15 @@ BOOST_AUTO_TEST_CASE(externals_mix) {
               , scopes::convertible_any<c2>
               , scopes::convertible_any<c3>
             >
-          , module::externals::types
+          , module::external::types
         >::value
     ));
 }
 
-BOOST_AUTO_TEST_CASE(externals_bind) {
+BOOST_AUTO_TEST_CASE(external_bind) {
     struct module
         : generic_module<
-              externals<
+              external<
                   int
                 , bind<c1>::in_name<int>
                 , bind<c2>::in_call<c1>
@@ -566,7 +566,7 @@ BOOST_AUTO_TEST_CASE(externals_bind) {
               , scopes::convertible_any<c2, mpl::vector<c1> >
               , scopes::convertible_any<named<c3, double>, mpl::vector<c4, c5> >
             >
-          , module::externals::types
+          , module::external::types
         >::value
     ));
 }
@@ -576,7 +576,7 @@ BOOST_AUTO_TEST_CASE(set_instance_int) {
 
     struct module
         : generic_module<
-              externals<
+              external<
                   int
               >
           >
@@ -591,7 +591,7 @@ BOOST_AUTO_TEST_CASE(set_instance_annotate_in_in_call) {
 
     struct module
         : generic_module<
-              externals<
+              external<
                   annotate<bind<int>::in_call<c1, c2> >::with<a>
                 , annotate<bind<int>::in_call<c3, c4> >::with<b>
               >
@@ -608,7 +608,7 @@ BOOST_AUTO_TEST_CASE(set_instance_annotate_in_name) {
 
     struct module
         : generic_module<
-              externals<
+              external<
                   annotate<bind<int>::in_name<float> >::with<a>
                 , annotate<bind<int>::in_name<double> >::with<b>
               >
@@ -625,7 +625,7 @@ BOOST_AUTO_TEST_CASE(set_instance_annotatein_name_in_call) {
 
     struct module
         : generic_module<
-              externals<
+              external<
                   annotate<bind<int>::in_call<c1, c2>::in_name<float> >::with<a>
                 , annotate<bind<int>::in_name<double>::in_call<c3, c4> >::with<b>
               >
@@ -643,7 +643,7 @@ BOOST_AUTO_TEST_CASE(set_instance_mix) {
 
     struct module
         : generic_module<
-              externals<
+              external<
                   int
                 , annotate<bind<int>::in_name<float> >::with<a>
                 , annotate<bind<int>::in_call<c1, c2>::in_name<float> >::with<b>
@@ -661,7 +661,7 @@ BOOST_AUTO_TEST_CASE(set_if) {
 
     struct module
         : generic_module<
-              externals<
+              external<
                   if0
               >
           >
@@ -699,7 +699,7 @@ BOOST_AUTO_TEST_CASE(set_variant_ref) {
     c14& c14_ref = c14_;
 
     typedef generic_module<
-        externals<
+        external<
             c3, c14
         >
     > module;
@@ -726,7 +726,7 @@ BOOST_AUTO_TEST_CASE(set_variant_no_copy) {
     c14 c14_(i, d);
 
     typedef generic_module<
-        externals<
+        external<
             c3, c14
         >
     > module;
@@ -758,12 +758,12 @@ BOOST_AUTO_TEST_CASE(fixed_value) {
     BOOST_CHECK_EQUAL(double_value::value, module_.create<double>());
 }
 
-BOOST_AUTO_TEST_CASE(ctor_with_externals) {
+BOOST_AUTO_TEST_CASE(ctor_with_external) {
     const int i = 42;
     const double d = 87.0;
 
     typedef generic_module<
-        externals<
+        external<
             int
           , double
         >
@@ -778,7 +778,7 @@ BOOST_AUTO_TEST_CASE(ctor_with_externals) {
     BOOST_CHECK_EQUAL(d, module_.create<double>());
 }
 
-BOOST_AUTO_TEST_CASE(ctor_with_externals_shared_ptr) {
+BOOST_AUTO_TEST_CASE(ctor_with_external_shared_ptr) {
     const int i = 42;
     shared_ptr<int_value> v(new int_value(i));
 
@@ -795,12 +795,12 @@ BOOST_AUTO_TEST_CASE(ctor_with_externals_shared_ptr) {
     BOOST_CHECK_EQUAL(i, module_.create<int_value>().i);
 }
 
-BOOST_AUTO_TEST_CASE(externals_annotate) {
+BOOST_AUTO_TEST_CASE(external_annotate) {
     const int i = 42;
 
     typedef generic_module<
         bind<int, mpl::int_<0> >
-      , externals<
+      , external<
             annotate<bind<int>::in_call<c14> >::with<a>
         >
     > module;
