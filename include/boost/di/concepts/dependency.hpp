@@ -15,9 +15,9 @@
 #include <boost/mpl/placeholders.hpp>
 
 #include <boost/di/scopes/deduce.hpp>
+#include <boost/di/scopes/external.hpp>
 #include "boost/di/config.hpp"
 
-#include <boost/di/scopes/external.hpp>
 
 namespace boost {
 namespace di {
@@ -107,7 +107,7 @@ public:
       , TContext
       , TBind
     >
-    to(boost::shared_ptr<TValue> value) {
+    to(shared_ptr<TValue> value) {
         return dependency<
             scopes::external
           , TExpected
@@ -130,11 +130,9 @@ class dependency<
   , TGiven
   , TContext
   , TBind
->
+> : public dependency<scopes::deduce, TExpected, TGiven, TContext, TBind>
 {
 public:
-    typedef TContext context;
-
     template<typename TScope>
     struct rebind
     {
@@ -146,60 +144,6 @@ public:
           , TBind
         > other;
     };
-
-    template<typename TValue>
-    static dependency<
-        scopes::external
-      , TExpected
-      , TValue
-      , TContext
-      , TBind
-    >
-    to(const TValue& value) {
-        return dependency<
-            scopes::external
-          , TExpected
-          , TValue
-          , TContext
-          , TBind
-        >(value);
-    }
-
-    template<typename TValue>
-    static dependency<
-        scopes::external
-      , TExpected
-      , TValue
-      , TContext
-      , TBind
-    >
-    to(TValue& value) {
-        return dependency<
-            scopes::external
-          , TExpected
-          , TValue
-          , TContext
-          , TBind
-        >(value);
-    }
-
-    template<typename TValue>
-    static dependency<
-        scopes::external
-      , TExpected
-      , TValue
-      , TContext
-      , TBind
-    >
-    to(boost::shared_ptr<TValue> value) {
-        return dependency<
-            scopes::external
-          , TExpected
-          , TValue
-          , TContext
-          , TBind
-        >(value);
-    }
 };
 
 template<

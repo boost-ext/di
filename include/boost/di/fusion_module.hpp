@@ -35,13 +35,19 @@
     namespace boost {
     namespace di {
 
-    template<typename TDeps = mpl::vector0<> >
+    template<
+        typename TDeps = mpl::vector0<>
+      , template<typename, typename = void> class TPool = detail::pool
+    >
     class fusion_module
         : public detail::module<TDeps>
     {
         BOOST_MPL_HAS_XXX_TRAIT_DEF(context)
 
-        template<typename> friend class fusion_module;
+        template<
+            typename
+          , template<typename, typename = void> class
+        > friend class fusion_module;
 
         template<typename TSeq>
         struct externals
@@ -72,11 +78,11 @@
               >::type
         { };
 
-        template<typename TSeq, typename TExternals, typename TPool>
-        fusion_module<TSeq> create_fusion_module(
-            const TPool&
+        template<typename TSeq, typename TExternals, typename T>
+        fusion_module<TSeq, TPool> create_fusion_module(
+            const T&
           , typename boost::enable_if_c<mpl::size<TExternals>::value == 0>::type* = 0) const {
-            return fusion_module<TSeq>();
+            return fusion_module<TSeq, TPool>();
         }
 
     public:
@@ -84,8 +90,8 @@
 
         #include BOOST_PP_ITERATE()
 
-        fusion_module<> operator()() const {
-            return fusion_module<>();
+        fusion_module<mpl::vector0<>, TPool> operator()() const {
+            return fusion_module<mpl::vector0<>, TPool>();
         }
     };
 
@@ -103,18 +109,20 @@ private:
         (BOOST_DI_ARGS_FORWARD(args))
     { }
 
-    template<typename TSeq, typename TExternals, typename TPool>
-    fusion_module<TSeq> create_fusion_module(
-        const TPool& pool
-      , typename boost::enable_if_c<mpl::size<TExternals>::value == BOOST_PP_ITERATION()>::type* = 0) const {
+    template<typename TSeq, typename TExternals, typename T>
+    fusion_module<TSeq, TPool> create_fusion_module(
+        const T& pool
+      , typename boost::enable_if_c<
+            mpl::size<TExternals>::value == BOOST_PP_ITERATION()
+        >::type* = 0) const {
 
-        #define BOOST_DI_GET(z, n, _)                                           \
-            BOOST_PP_COMMA_IF(n)                                                \
-            pool.template get<                                                  \
-                typename boost::mpl::at_c<TExternals, n>::type                  \
+        #define BOOST_DI_GET(z, n, _)                           \
+            BOOST_PP_COMMA_IF(n)                                \
+            pool.template get<                                  \
+                typename boost::mpl::at_c<TExternals, n>::type  \
             >()
 
-        return fusion_module<TSeq>(
+        return fusion_module<TSeq, TPool>(
             BOOST_PP_REPEAT(
                 BOOST_PP_ITERATION()
               , BOOST_DI_GET
@@ -127,9 +135,9 @@ private:
 
 public:
     template<BOOST_DI_TYPES(Args)>
-    fusion_module<typename flatten<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type>
+    fusion_module<typename flatten<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type, TPool>
     operator()(BOOST_DI_ARGS(Args, args)) const {
-        detail::pool<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > pool(BOOST_DI_ARGS_FORWARD(args));
+        TPool<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > pool(BOOST_DI_ARGS_FORWARD(args));
         return create_fusion_module<
             typename flatten<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type
           , typename externals<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type
