@@ -18,10 +18,25 @@
 #include <boost/di/scopes/external.hpp>
 #include "boost/di/config.hpp"
 
-
 namespace boost {
 namespace di {
 namespace concepts {
+
+namespace detail {
+
+template<typename T>
+struct scope_traits
+{
+    typedef T type;
+};
+
+template<>
+struct scope_traits<mpl::_1>
+{
+    typedef scopes::deduce type;
+};
+
+} // namespace detail
 
 template<
     typename TScope
@@ -30,32 +45,33 @@ template<
   , typename TContext = mpl::vector0<>
   , typename TBind = is_same<mpl::_1, TExpected>
 >
-class dependency : public TScope::template scope<TExpected, TGiven>
+class dependency
+    : public detail::scope_traits<TScope>::type::template scope<TExpected, TGiven>
 {
-    typedef typename TScope::template scope<TExpected, TGiven> scope_type;
-
 public:
     typedef dependency type;
-    typedef TScope scope;
+    typedef typename detail::scope_traits<TScope>::type scope;
     typedef TExpected expected;
     typedef TGiven given;
     typedef TContext context;
     typedef TBind bind;
-    typedef typename scope_type::result_type result_type;
 
-public:
     dependency() { }
 
     template<typename T>
     explicit dependency(const T& obj)
-        : scope_type(obj)
+        : detail::scope_traits<TScope>::type::template scope<TExpected, TGiven>(obj)
     { }
 
     template<typename T>
     struct rebind
     {
         typedef dependency<
-            typename mpl::if_<is_same<TScope, scopes::deduce>, T, TScope>::type
+            typename mpl::if_<
+                is_same<scope, scopes::deduce>
+              , T
+              , scope
+            >::type
           , TExpected
           , TGiven
           , TContext
@@ -116,34 +132,6 @@ public:
           , TBind
         >(value);
     }
-};
-
-template<
-    typename TExpected
-  , typename TGiven
-  , typename TContext
-  , typename TBind
->
-class dependency<
-    mpl::_1
-  , TExpected
-  , TGiven
-  , TContext
-  , TBind
-> : public dependency<scopes::deduce, TExpected, TGiven, TContext, TBind>
-{
-public:
-    template<typename TScope>
-    struct rebind
-    {
-        typedef dependency<
-            TScope
-          , TExpected
-          , TGiven
-          , TContext
-          , TBind
-        > other;
-    };
 };
 
 template<
