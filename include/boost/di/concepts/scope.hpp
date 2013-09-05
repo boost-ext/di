@@ -11,6 +11,7 @@
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/push_back.hpp>
+#include <boost/mpl/lambda.hpp>
 #include <boost/mpl/has_xxx.hpp>
 
 #include "boost/di/type_traits/is_same_base_of.hpp"
@@ -27,7 +28,9 @@ template<
       , typename T
       , typename = T
       , typename = mpl::vector0<>
-      , typename = type_traits::is_same_base_of<T>
+      , typename = typename mpl::lambda<
+            type_traits::is_same_base_of<T>
+        >::type
     > class TDependency
   , template<
         typename

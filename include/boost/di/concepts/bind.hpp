@@ -10,6 +10,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/or.hpp>
+#include <boost/mpl/lambda.hpp>
 
 #include "boost/di/type_traits/is_same_base_of.hpp"
 #include "boost/di/config.hpp"
@@ -26,7 +27,9 @@ template<
       , typename T
       , typename = T
       , typename = mpl::vector0<>
-      , typename = type_traits::is_same_base_of<T>
+      , typename = typename mpl::lambda<
+            type_traits::is_same_base_of<T>
+        >::type
     > class TDependency
   , template<
         typename
