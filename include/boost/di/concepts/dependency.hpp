@@ -13,6 +13,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/placeholders.hpp>
+#include <boost/mpl/lambda.hpp>
 
 #include <boost/di/scopes/deduce.hpp>
 #include <boost/di/scopes/external.hpp>
@@ -43,7 +44,9 @@ template<
   , typename TExpected
   , typename TGiven = TExpected
   , typename TContext = mpl::vector0<>
-  , typename TBind = is_same<mpl::_1, TExpected>
+  , typename TBind = typename mpl::lambda<
+        is_same<mpl::_1, TExpected>
+    >::type
 >
 class dependency
     : public detail::scope_traits<TScope>::type::template scope<TExpected, TGiven>

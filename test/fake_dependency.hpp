@@ -14,6 +14,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/empty.hpp>
 #include <boost/mpl/or.hpp>
+#include <boost/mpl/lambda.hpp>
 
 namespace boost {
 namespace di {
@@ -25,7 +26,9 @@ template<
   , typename TContext0 = mpl::na
   , typename TContext1 = mpl::na
   , typename TContext2 = mpl::na
-  , typename TBind = is_same<mpl::_1, TExpected>
+  , typename TBind = typename mpl::lambda<
+        is_same<mpl::_1, TExpected>
+    >::type
 >
 struct fake_dependency
 {
