@@ -514,7 +514,6 @@ BOOST_AUTO_TEST_CASE(external_mix) {
     ));
 }
 
-#if 0
 BOOST_AUTO_TEST_CASE(external_bind) {
     struct module
         : generic_module<
@@ -539,7 +538,6 @@ BOOST_AUTO_TEST_CASE(external_bind) {
         >::value
     ));
 }
-#endif
 
 BOOST_AUTO_TEST_CASE(set_instance_int) {
     const int i = 42;

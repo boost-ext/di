@@ -12,7 +12,6 @@
 #include "boost/di/concepts/annotate.hpp"
 #include "boost/di/concepts/bind.hpp"
 #include "boost/di/concepts/dependency.hpp"
-#include "boost/di/concepts/externals.hpp"
 #include "boost/di/concepts/scope.hpp"
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/per_request.hpp"
@@ -69,7 +68,7 @@ struct session
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 struct external
-    : concepts::externals<BOOST_DI_TYPES_PASS_MPL(T)>
+    : scope<scopes::external>::bind<BOOST_DI_TYPES_PASS_MPL(T)>
 { };
 
 template<typename T>

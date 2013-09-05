@@ -15,8 +15,9 @@ template<typename T>
 struct annotate
 {
     template<typename TName = void>
-    struct with : T
+    struct with
     {
+        typedef with type;
         typedef T element_type;
         typedef TName name;
     };
