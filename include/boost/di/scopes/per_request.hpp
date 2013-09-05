@@ -252,7 +252,10 @@
 
     template<BOOST_DI_TYPES(Args)>
     result_type& create(BOOST_DI_ARGS(Args, args)) {
-        object_ = bind(&scope::create_impl<BOOST_DI_TYPES_PASS(Args)>, BOOST_DI_ARGS_FORWARD(args));
+        object_ = bind(
+            &scope::create_impl<BOOST_DI_TYPES_PASS(Args)>
+          , BOOST_DI_ARGS_FORWARD(args)
+        );
         return *this;
     }
 
