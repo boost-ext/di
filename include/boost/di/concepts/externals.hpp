@@ -26,7 +26,7 @@ namespace concepts {
 
 namespace detail {
 
-BOOST_MPL_HAS_XXX_TRAIT_DEF(context)
+BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
 
 template<typename T, typename = void>
 struct make_annotation
@@ -45,7 +45,7 @@ struct make_annotation
 };
 
 template<typename T>
-struct make_annotation<T, typename enable_if<has_context<T>>::type>
+struct make_annotation<T, typename enable_if<has_name<T> >::type>
 {
     typedef typename annotate<
         typename T::template rebind<scopes::external>::other

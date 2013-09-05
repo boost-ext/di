@@ -173,7 +173,7 @@ BOOST_AUTO_TEST_CASE(default_scope_bind) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                fake_dependency<scopes::deduce, if0, c0if0>::type
+                fake_dependency_base_of<scopes::deduce, if0, c0if0>::type
               , fake_dependency_base_of<scopes::deduce, c1, c1>::type
               , fake_dependency_base_of<scopes::deduce, named<c2, int>, c2>::type
               , fake_dependency_base_of<scopes::deduce, c3, c3, call_stack<c4, c5> >::type
@@ -391,7 +391,7 @@ BOOST_AUTO_TEST_CASE(bind_if) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                fake_dependency<scopes::singleton<>, if0, c0if0>::type
+                fake_dependency_base_of<scopes::singleton<>, if0, c0if0>::type
             >
           , module::deps
         >::value
@@ -417,7 +417,7 @@ BOOST_AUTO_TEST_CASE(mix) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                fake_dependency<scopes::singleton<>, if0, c0if0>::type
+                fake_dependency_base_of<scopes::singleton<>, if0, c0if0>::type
               , fake_dependency_base_of<scopes::singleton<>, c1, c1>::type
               , fake_dependency_base_of<scopes::singleton<>, named<c2, int>, c2>::type
               , fake_dependency_base_of<scopes::singleton<>, c3, c3, call_stack<c4, c5> >::type
@@ -485,20 +485,11 @@ BOOST_AUTO_TEST_CASE(external_base) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                fake_dependency<scopes::external, c1, c1>::type
+                fake_dependency_base_of<scopes::external, c1, c1>::type
             >
           , module::deps
         >::value
     ));
-
-    //BOOST_CHECK((
-        //contains_all<
-            //mpl::vector<
-                //scopes::convertible_any<c1>
-            //>
-          //, module::external::types
-        //>::value
-    //));
 }
 
 BOOST_AUTO_TEST_CASE(external_mix) {
@@ -514,26 +505,16 @@ BOOST_AUTO_TEST_CASE(external_mix) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                fake_dependency<scopes::external, c1, c1>::type
-              , fake_dependency<scopes::external, c2, c2>::type
-              , fake_dependency<scopes::external, c3, c3>::type
+                fake_dependency_base_of<scopes::external, c1, c1>::type
+              , fake_dependency_base_of<scopes::external, c2, c2>::type
+              , fake_dependency_base_of<scopes::external, c3, c3>::type
             >
           , module::deps
         >::value
     ));
-
-    //BOOST_CHECK((
-        //contains_all<
-            //mpl::vector<
-                //scopes::convertible_any<c1>
-              //, scopes::convertible_any<c2>
-              //, scopes::convertible_any<c3>
-            //>
-          //, module::external::types
-        //>::value
-    //));
 }
 
+#if 0
 BOOST_AUTO_TEST_CASE(external_bind) {
     struct module
         : generic_module<
@@ -549,27 +530,16 @@ BOOST_AUTO_TEST_CASE(external_bind) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                fake_dependency<scopes::external, int, int>::type
-              , fake_dependency<scopes::external, named<c1, int>, c1>::type
-              , fake_dependency<scopes::external, c2, c2, c1>::type
-              , fake_dependency<scopes::external, named<c3, double>, c3, c4, c5>::type
+                fake_dependency_base_of<scopes::external, int, int>::type
+              , fake_dependency_base_of<scopes::external, named<c1, int>, c1>::type
+              , fake_dependency_base_of<scopes::external, c2, c2, c1>::type
+              , fake_dependency_base_of<scopes::external, named<c3, double>, c3, c4, c5>::type
             >
           , module::deps
         >::value
     ));
-
-    //BOOST_CHECK((
-        //contains_all<
-            //mpl::vector<
-                //scopes::convertible_any<int>
-              //, scopes::convertible_any<named<c1, int> >
-              //, scopes::convertible_any<c2, mpl::vector<c1> >
-              //, scopes::convertible_any<named<c3, double>, mpl::vector<c4, c5> >
-            //>
-          //, module::external::types
-        //>::value
-    //));
 }
+#endif
 
 BOOST_AUTO_TEST_CASE(set_instance_int) {
     const int i = 42;
