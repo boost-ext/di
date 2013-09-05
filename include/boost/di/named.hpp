@@ -17,37 +17,19 @@
 #include <boost/mpl/has_xxx.hpp>
 
 #include "boost/di/type_traits/make_plain.hpp"
-#include "boost/di/ctor.hpp"
 #include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {
 
-namespace detail {
-
 BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
-
-template<typename, typename = void>
-class ctor
-{
-public:
-    BOOST_DI_CTOR(ctor);
-};
-
-template<typename T>
-class ctor<T, typename enable_if<type_traits::BOOST_PP_CAT(has_, BOOST_DI_CONSTRUCTOR)<T> >::type>
-{
-    typedef typename T::BOOST_DI_CONSTRUCTOR BOOST_DI_CONSTRUCTOR;
-};
-
-} // namespace detail
 
 template<
     typename T = void
   , typename TName = void
   , typename = void
 >
-class named// : public detail::ctor<typename type_traits::make_plain<T>::type>
+class named
 {
 public:
     typedef typename type_traits::make_plain<T>::type value_type;
@@ -84,7 +66,7 @@ class named<
   , typename enable_if<
         is_polymorphic<T>
     >::type
->// : public detail::ctor<typename type_traits::make_plain<T>::type>
+>
 {
 public:
     typedef typename type_traits::make_plain<T>::type value_type;
@@ -99,8 +81,8 @@ template<
 class named<
     T
   , TName
-  , typename enable_if<detail::has_element_type<T> >::type
->// : public detail::ctor<typename type_traits::make_plain<T>::type>
+  , typename enable_if<has_element_type<T> >::type
+>
 {
 public:
     typedef typename type_traits::make_plain<T>::type value_type;

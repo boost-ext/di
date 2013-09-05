@@ -63,7 +63,7 @@
         { };
 
         template<typename TSeq>
-        struct flatten
+        struct concepts
             : mpl::fold<
                 TSeq
               , mpl::vector0<>
@@ -135,11 +135,11 @@ private:
 
 public:
     template<BOOST_DI_TYPES(Args)>
-    fusion_module<typename flatten<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type, TPool>
+    fusion_module<typename concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type, TPool>
     operator()(BOOST_DI_ARGS(Args, args)) const {
         TPool<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > pool(BOOST_DI_ARGS_FORWARD(args));
         return create_fusion_module<
-            typename flatten<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type
+            typename concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type
           , typename externals<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type
         >(pool);
     }

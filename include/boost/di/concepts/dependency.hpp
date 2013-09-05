@@ -49,7 +49,8 @@ template<
     >::type
 >
 class dependency
-    : public detail::scope_traits<TScope>::type::template scope<TExpected, TGiven>
+    : public detail::scope_traits<TScope>::type::template
+          scope<TExpected, TGiven>
 {
     template<typename T>
     struct external
