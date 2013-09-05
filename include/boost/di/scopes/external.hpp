@@ -64,10 +64,10 @@
         };
 
         template<typename>
-        class convertible_any_impl;
+        class convertible;
 
         template<typename TDest>
-        class convertible_any_impl<TDest&>
+        class convertible<TDest&>
             : public static_visitor<TDest&>
         {
         public:
@@ -88,7 +88,7 @@
         };
 
         template<typename TDest>
-        class convertible_any_impl<TDest*>
+        class convertible<TDest*>
             : public static_visitor<TDest*>
         {
         public:
@@ -109,7 +109,7 @@
         };
 
         template<typename TDest>
-        class convertible_any_impl<shared_ptr<TDest> >
+        class convertible<shared_ptr<TDest> >
             : public static_visitor<shared_ptr<TDest> >
         {
         public:
@@ -152,24 +152,24 @@
 
             operator object_type&() const {
                 return apply_visitor(
-                    convertible_any_impl<object_type&>(), object_);
+                    convertible<object_type&>(), object_);
             }
 
             operator object_type*() const {
                 return apply_visitor(
-                    convertible_any_impl<object_type*>(), object_);
+                    convertible<object_type*>(), object_);
             }
 
             template<typename I>
             operator shared_ptr<I>() const {
                 return apply_visitor(
-                    convertible_any_impl<shared_ptr<object_type> >(), object_);
+                    convertible<shared_ptr<object_type> >(), object_);
             }
 
             template<typename I, typename TName>
             operator named<shared_ptr<I>, TName>() const {
                 return apply_visitor(
-                    convertible_any_impl<shared_ptr<object_type> >(), object_);
+                    convertible<shared_ptr<object_type> >(), object_);
             }
 
             template<typename T>
