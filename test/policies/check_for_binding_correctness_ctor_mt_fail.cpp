@@ -19,7 +19,7 @@ BOOST_AUTO_TEST_CASE(check_for_binding_correctness_fail) {
     injector<
         policy<check_for_binding_correctness>
       , generic_module<
-            bind<double>::in_call<c3>
+            bind_int<int, int> //arithmetic type without value
         >
     > injector;
 

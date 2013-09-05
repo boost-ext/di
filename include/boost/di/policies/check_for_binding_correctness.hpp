@@ -29,25 +29,6 @@ namespace boost {
 namespace di {
 namespace policies {
 
-    //template<typename T, typename = void>
-    //struct check_binding
-        //: mpl::true_
-    //{ };
-
-    //template<typename T>
-    //struct check_binding<T, typename enable_if<is_arithmetic<T> >::type>
-        //: mpl::false_
-    //{
-        ////external
-        //BOOST_MPL_ASSERT_MSG(
-            //type_traits::has_value<TGiven>::value
-          //, ARITHMETIC_TYPE_WITHOUT_VALUE
-          //, (TExpected, TGiven)
-        //);
-    //};
-
-    //BOOST_MPL_ASSERT((typename check_binding<TExpected>::value));
-
 class check_for_binding_correctness
 {
 public:
