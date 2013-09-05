@@ -69,11 +69,11 @@
               , mpl::vector0<>
               , mpl::copy<
                     mpl::if_<
-                        mpl::is_sequence<boost::mpl::_2>
+                        mpl::is_sequence<mpl::_2>
                       , mpl::_2
-                      , mpl::vector1<boost::mpl::_2>
+                      , mpl::vector1<mpl::_2>
                     >
-                  , mpl::back_inserter<boost::mpl::_1>
+                  , mpl::back_inserter<mpl::_1>
                 >
               >::type
         { };
@@ -81,7 +81,7 @@
         template<typename TSeq, typename TExternals, typename T>
         fusion_module<TSeq, TPool> create_fusion_module(
             const T&
-          , typename boost::enable_if_c<mpl::size<TExternals>::value == 0>::type* = 0) const {
+          , typename enable_if_c<mpl::size<TExternals>::value == 0>::type* = 0) const {
             return fusion_module<TSeq, TPool>();
         }
 
@@ -112,14 +112,14 @@ private:
     template<typename TSeq, typename TExternals, typename T>
     fusion_module<TSeq, TPool> create_fusion_module(
         const T& pool
-      , typename boost::enable_if_c<
+      , typename enable_if_c<
             mpl::size<TExternals>::value == BOOST_PP_ITERATION()
         >::type* = 0) const {
 
         #define BOOST_DI_GET(z, n, _)                           \
             BOOST_PP_COMMA_IF(n)                                \
             pool.template get<                                  \
-                typename boost::mpl::at_c<TExternals, n>::type  \
+                typename mpl::at_c<TExternals, n>::type  \
             >()
 
         return fusion_module<TSeq, TPool>(
