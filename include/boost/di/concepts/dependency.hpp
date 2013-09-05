@@ -72,7 +72,7 @@ public:
 
     template<typename T>
     explicit dependency(const T& obj)
-        : detail::scope_traits<TScope>::type::template scope<TExpected, TGiven>(obj)
+        : scope::template scope<TExpected, TGiven>(obj)
     { }
 
     template<typename T>
