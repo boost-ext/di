@@ -28,11 +28,11 @@ typedef generic_module<
         c0if0
       , bind<c1if0>::in_call<call_stack<c6, c5> >
       , bind<c2if0>::in_call<c7>
-      , bind<int, mpl::int_<1> >
-      , bind<int, mpl::int_<2> >::in_call<c8>
+      , bind_int<1>
+      , bind_int<2>::in_call<c8>
       , bind_int<3>::in_name<mpl::string<'1'> >::in_call<call_stack<c7, c6, c4> >
       , bind_int<4>::in_name<mpl::string<'2'> >::in_call<call_stack<c7, c6, c4> >
-      , bind<int, mpl::int_<5> >::in_call<c2>
+      , bind_int<5>::in_call<c2>
     >
 > generic_module_1;
 
@@ -41,8 +41,8 @@ typedef generic_module<
         c3
     >
   , per_request<
-        bind<int, mpl::int_<0> >::in_name<mpl::string<'1'> >
-      , bind<int, mpl::int_<1> >
+        bind_int<0>::in_name<mpl::string<'1'> >
+      , bind_int<1>
     >
 > generic_module_2;
 
@@ -51,8 +51,8 @@ typedef generic_module<
         c0if0
     >
   , per_request<
-        bind<int, mpl::int_<2> >::in_call<c8>
-      , bind<int, mpl::int_<3> >::in_name<mpl::string<'2'> >
+        bind_int<2>::in_call<c8>
+      , bind_int<3>::in_name<mpl::string<'2'> >
     >
 > generic_module_3;
 
@@ -113,11 +113,11 @@ BOOST_AUTO(fusion_module_1, fusion_module<>()(
         c0if0
       , bind<c1if0>::in_call<call_stack<c6, c5> >
       , bind<c2if0>::in_call<c7>
-      , bind<int, mpl::int_<1> >
-      , bind<int, mpl::int_<2> >::in_call<c8>
-      , bind<int, mpl::int_<3> >::in_name<mpl::string<'1'> >::in_call<call_stack<c7, c6, c4> >
-      , bind<int, mpl::int_<4> >::in_name<mpl::string<'2'> >::in_call<call_stack<c7, c6, c4> >
-      , bind<int, mpl::int_<5> >::in_call<c2>
+      , bind_int<1>
+      , bind_int<2>::in_call<c8>
+      , bind_int<3>::in_name<mpl::string<'1'> >::in_call<call_stack<c7, c6, c4> >
+      , bind_int<4>::in_name<mpl::string<'2'> >::in_call<call_stack<c7, c6, c4> >
+      , bind_int<5>::in_call<c2>
     >()
 ));
 
@@ -126,8 +126,8 @@ BOOST_AUTO(fusion_module_2, fusion_module<>()(
         c0if0
     >()
   , per_request<
-        bind<int, mpl::int_<2> >::in_call<c8>
-      , bind<int, mpl::int_<3> >::in_name<mpl::string<'2'> >
+        bind_int<2>::in_call<c8>
+      , bind_int<3>::in_name<mpl::string<'2'> >
     >()
 ));
 
@@ -136,8 +136,8 @@ BOOST_AUTO(fusion_module_3, fusion_module<>()(
         c3
     >()
   , per_request<
-        bind<int, mpl::int_<0> >::in_name<mpl::string<'1'> >
-      , bind<int, mpl::int_<1> >
+        bind_int<0>::in_name<mpl::string<'1'> >
+      , bind_int<1>
     >()
 ));
 

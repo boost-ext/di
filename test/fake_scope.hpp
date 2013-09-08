@@ -16,12 +16,12 @@
     #include "boost/di/scopes/external.hpp"
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (       \
-        BOOST_DI_ITERATION_PARAMS(              \
-            1                                   \
-          , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE  \
-          , "fake_scope.hpp"                    \
-        )                                       \
+    #define BOOST_PP_ITERATION_PARAMS_1 (   \
+        BOOST_DI_ITERATION_PARAMS(          \
+            1                               \
+          , BOOST_DI_LIMIT_SIZE             \
+          , "fake_scope.hpp"                \
+        )                                   \
     )
 
     namespace boost {

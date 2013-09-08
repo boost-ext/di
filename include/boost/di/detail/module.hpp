@@ -46,7 +46,7 @@
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
         BOOST_DI_ITERATION_PARAMS(          \
             1                               \
-          , BOOST_MPL_LIMIT_VECTOR_SIZE     \
+          , BOOST_DI_LIMIT_SIZE             \
           , "boost/di/detail/module.hpp"    \
         )                                   \
     )

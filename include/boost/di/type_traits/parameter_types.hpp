@@ -36,7 +36,7 @@ struct parameter_types
         typedef mpl::vector##n<BOOST_PP_ENUM_PARAMS(n, Arg)> type;          \
     };
 
-#define BOOST_PP_LOCAL_LIMITS (1, BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE)
+#define BOOST_PP_LOCAL_LIMITS (1, BOOST_DI_LIMIT_SIZE)
 #include BOOST_PP_LOCAL_ITERATE()
 
 } // namespace type_traits

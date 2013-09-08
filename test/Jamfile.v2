@@ -17,7 +17,6 @@ project di :
         <toolset>gcc:<cxxflags>-Wno-unused-local-typedefs
         <toolset>gcc:<cxxflags>-ftemplate-depth-1024
         <define>BOOST_TEST_MODULE=di_test
-        <define>BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE=4
 ;
 
 test-suite di-test :

@@ -34,8 +34,8 @@
     defined(BOOST_NO_RVALUE_REFERENCES)  ||                 \
    !defined(BOOST_DI_ENABLE_CXX11_FEATURES)
 
-    #if !defined(BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE)
-        #define BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE BOOST_MPL_LIMIT_VECTOR_SIZE
+    #if !defined(BOOST_DI_LIMIT_SIZE)
+        #define BOOST_DI_LIMIT_SIZE BOOST_MPL_LIMIT_VECTOR_SIZE
     #endif
 
     #define BOOST_DI_ITERATION_PARAMS(start, limit, file)   \
@@ -101,27 +101,27 @@
 
     #define BOOST_DI_TYPES_DEFAULT_MPL(TArg)                \
          BOOST_DI_TYPES_DEFAULT_IMPL(                       \
-             BOOST_MPL_LIMIT_VECTOR_SIZE                    \
+             BOOST_DI_LIMIT_SIZE                            \
            , TArg                                           \
            , ::boost::mpl::na                               \
          )
 
     #define BOOST_DI_TYPES_MPL(TArg)                        \
          BOOST_DI_TYPES_IMPL(                               \
-             BOOST_MPL_LIMIT_VECTOR_SIZE                    \
+             BOOST_DI_LIMIT_SIZE                            \
            , TArg                                           \
          )
 
     #define BOOST_DI_TYPES_MPL_NA(count)                    \
          BOOST_DI_ARGS_NA_IMPL(                             \
-             BOOST_MPL_LIMIT_VECTOR_SIZE                    \
+             BOOST_DI_LIMIT_SIZE                            \
            , count                                          \
            , ::boost::mpl::na                               \
          )
 
     #define BOOST_DI_TYPES_PASS_MPL(TArg)                   \
          BOOST_DI_TYPES_PASS_IMPL(                          \
-             BOOST_MPL_LIMIT_VECTOR_SIZE                    \
+             BOOST_DI_LIMIT_SIZE                            \
            , TArg                                           \
          )
 
@@ -168,8 +168,8 @@
 
 #else
 
-    #undef BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE
-    #define BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE 0 // infinity
+    #undef BOOST_DI_LIMIT_SIZE
+    #define BOOST_DI_LIMIT_SIZE 0 // infinity
 
     #define BOOST_DI_ITERATION_PARAMS(start, limit, file)   \
          3, (0, 0, file)

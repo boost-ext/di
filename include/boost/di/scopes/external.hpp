@@ -25,12 +25,12 @@
     #include "boost/di/named.hpp"
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (       \
-        BOOST_DI_ITERATION_PARAMS(              \
-            1                                   \
-          , BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE  \
-          , "boost/di/scopes/external.hpp"      \
-        )                                       \
+    #define BOOST_PP_ITERATION_PARAMS_1 (   \
+        BOOST_DI_ITERATION_PARAMS(          \
+            1                               \
+          , BOOST_DI_LIMIT_SIZE             \
+          , "boost/di/scopes/external.hpp"  \
+        )                                   \
     )
 
     namespace boost {
