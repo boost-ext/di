@@ -18,27 +18,21 @@
 #include <boost/detail/workaround.hpp>
 #include <boost/config.hpp>
 
-#if !defined(BOOST_DI_CTOR_CFG_VA_ARGS) &&                  \
-    !defined(BOOST_DI_CTOR_CFG_BRACKET)
-
+#if !defined(BOOST_DI_CTOR_CFG_VA_ARGS) && !defined(BOOST_DI_CTOR_CFG_BRACKET)
     #define BOOST_DI_CTOR_CFG_VA_ARGS
 #endif
 
 #if !defined(BOOST_DI_CONSTRUCTOR)
-    #define BOOST_DI_CONSTRUCTOR boost_di_constructor
+    #define BOOST_DI_CONSTRUCTOR boost_di_constructor__
 #endif
 
 #if !defined(BOOST_DI_CREATE)
-    #define BOOST_DI_CREATE boost_di_create
-#endif
-
-#if !defined(BOOST_DI_NO_CXX11_FEATURES) /*temporary*/
-    #define BOOST_DI_NO_CXX11_FEATURES
+    #define BOOST_DI_CREATE boost_di_create__
 #endif
 
 #if defined(BOOST_NO_VARIADIC_TEMPLATES) ||                 \
     defined(BOOST_NO_RVALUE_REFERENCES)  ||                 \
-    defined(BOOST_DI_NO_CXX11_FEATURES)
+   !defined(BOOST_DI_ENABLE_CXX11_FEATURES)
 
     #if !defined(BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE)
         #define BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE BOOST_MPL_LIMIT_VECTOR_SIZE

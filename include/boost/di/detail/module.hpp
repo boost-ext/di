@@ -10,8 +10,12 @@
     #define BOOST_DI_DETAIL_MODULE_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
+    #include <boost/preprocessor/repetition/enum_binary_params.hpp>
+    #include <boost/preprocessor/facilities/intercept.hpp>
+    #include <boost/preprocessor/punctuation/comma_if.hpp>
     #include <boost/type_traits/is_same.hpp>
     #include <boost/utility/enable_if.hpp>
+    #include <boost/typeof/typeof.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/assert.hpp>
     #include <boost/mpl/is_sequence.hpp>
@@ -20,6 +24,7 @@
     #include <boost/mpl/if.hpp>
     #include <boost/mpl/set.hpp>
     #include <boost/mpl/remove_if.hpp>
+    #include <boost/mpl/count_if.hpp>
     #include <boost/mpl/pop_front.hpp>
     #include <boost/mpl/front.hpp>
     #include <boost/mpl/not.hpp>
@@ -70,102 +75,88 @@
         > friend class module;
 
         template<typename TSeq>
-        struct is_module
-            : mpl::equal_to<
-                  mpl::size<TSeq>
-                , typename mpl::fold<
+        struct unique
+            : mpl::fold<
+                  typename mpl::fold<
                       TSeq
-                    , mpl::int_<0>
-                    , mpl::if_<
-                          has_deps<mpl::_2>
-                        , mpl::next<mpl::_1>
-                        , mpl::_1
-                      >
+                    , mpl::set0<>
+                    , mpl::insert<mpl::_1, mpl::_2 >
                   >::type
+                , mpl::vector0<>
+                , mpl::push_back<mpl::_1, mpl::_2>
               >
         { };
 
         template<
-            typename T
-          , typename = void
+            typename TSeq
+          , typename TLambda
         >
-        struct deps_impl
-        {
-            typedef mpl::vector<T> type;
-        };
+        struct get_types
+            : mpl::remove_if<TSeq, TLambda>::type
+        { };
 
         template<typename T>
-        struct deps_impl<
-            T
-          , typename enable_if<has_deps<T> >::type
-        >
+        struct deps_type
         {
             typedef typename T::deps type;
         };
 
-    public:
-        struct policies
-            : mpl::fold<
-                  TDeps
-                , mpl::vector0<>
-                , mpl::if_<
-                      has_policy_type<mpl::_2>
-                    , mpl::push_back<mpl::_1, mpl::_2>
-                    , mpl::_1
-                  >
+        template<typename TSeq>
+        struct is_module
+            : mpl::equal_to<
+                  mpl::size<TSeq>
+                , mpl::count_if<TSeq, has_deps<mpl::_> >
               >::type
         { };
-
-        struct deps
-            : mpl::remove_if<
-                  typename mpl::fold<
-                      typename mpl::fold<//unique
-                          typename mpl::fold<
-                              TDeps
-                            , mpl::vector0<>
-                            , mpl::copy<
-                                  deps_impl<mpl::_2>
-                                , mpl::back_inserter<mpl::_1>
-                              >
-                          >::type
-                        , mpl::set0<>
-                        , mpl::insert<mpl::_1, mpl::_2>
-                      >::type
-                    , mpl::vector0<>
-                    , mpl::push_back<mpl::_1, mpl::_2>
-                  >::type
-                , has_policy_type<mpl::_1>
-              >::type
-        { };
-
-    private:
-        template<typename T, typename TPolicy>
-        struct verify_policies_impl
-            : TPolicy::template verify<deps, T>::type
-        { };
-
-       template<typename T>
-        struct verify_policies
-            : mpl::transform<
-                  policies
-                , verify_policies_impl<T, mpl::_1>
-              >::type
-        { };
-
-        typedef TBinder<deps> binder_type;
 
         template<typename TSeq>
-        struct unique
-            : mpl::fold<
-                typename mpl::fold<
-                    TSeq,
-                    mpl::set0<>,
-                    mpl::insert<mpl::_1, mpl::_2 >
-                >::type,
-                mpl::vector0<>,
-                mpl::push_back<mpl::_1, mpl::_2>
-            >
+        struct get_deps
+            : unique<
+                  typename mpl::fold<
+                      get_types<TSeq, has_policy_type<mpl::_> >
+                    , mpl::vector0<>
+                    , mpl::copy<
+                          mpl::if_<
+                              has_deps<mpl::_2>
+                            , deps_type<mpl::_2>
+                            , mpl::vector1<mpl::_2>
+                          >
+                        , mpl::back_inserter<mpl::_1>
+                      >
+                  >::type
+              >::type
         { };
+
+        template<
+            typename TSeq
+          , typename T
+          , typename TPolicy
+        >
+        struct verify_policies_impl
+            : TPolicy::template verify<TSeq, T>::type
+        { };
+
+        template<
+            typename TPolicies
+          , typename TSeq
+          , typename T
+        >
+        struct verify_policies
+            : mpl::is_sequence<
+                  typename mpl::transform<
+                      TPolicies
+                    , verify_policies_impl<TSeq, T, mpl::_1>
+                  >::type
+              >
+        { };
+
+
+    public:
+        typedef get_types<TDeps, mpl::not_<has_policy_type<mpl::_> > > policies;
+        typedef get_deps<TDeps> deps;
+
+    private:
+        typedef TBinder<deps> binder_type;
 
         template<
             typename TGiven
@@ -241,7 +232,6 @@
                 mpl::joint_view<deps, typename dependecies<T>::type>
             >
         { };
-
     public:
         module() { }
 
@@ -249,17 +239,16 @@
 
         template<typename T>
         T create() {
+            BOOST_MPL_ASSERT((typename verify_policies<policies, deps, T>::type));
+
             TPool<typename all_deps<T>::type> deps(deps_);
-
-            BOOST_MPL_ASSERT((mpl::is_sequence<typename verify_policies<T>::type>));
-
             return TCreator<binder_type>::template
                 execute<T, mpl::vector0<> >(deps);
         }
 
         template<typename T, typename Visitor>
         void visit(const Visitor& visitor) {
-            BOOST_MPL_ASSERT((mpl::is_sequence<typename verify_policies<T>::type>));
+            BOOST_MPL_ASSERT((typename verify_policies<policies, deps, T>::type));
 
             TVisitor<binder_type>::template
                 execute<T, mpl::vector0<> >(visitor);
@@ -299,8 +288,7 @@
             call_impl<Scope, typename mpl::pop_front<Deps>::type>(action, deps);
         }
 
-        typedef TPool<typename deps::type> pool;
-        pool deps_;
+        TPool<deps> deps_;
     };
 
     } // namespace detail
@@ -311,33 +299,24 @@
 
 #else
 
-    template<BOOST_DI_TYPES(Args)>
-    explicit module(
-        BOOST_DI_ARGS(Args, args)
-      , typename enable_if<
-            is_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >
-        >::type* = 0)
-        : deps_(
-              TPool<
-                  mpl::vector<
-                      BOOST_PP_ENUM_BINARY_PARAMS(
-                          BOOST_PP_ITERATION()
-                        , typename Args
-                        , ::pool BOOST_PP_INTERCEPT)
-                  >
-              >(BOOST_PP_ENUM_BINARY_PARAMS(
-                BOOST_PP_ITERATION()
-              , args
-              , .deps_ BOOST_PP_INTERCEPT))
-          )
-    { }
+    #define BOOST_DI_GET_DEPS(_, n, args) \
+        BOOST_PP_COMMA_IF(n) BOOST_TYPEOF(args##n.deps_)
 
     template<BOOST_DI_TYPES(Args)>
     explicit module(
         BOOST_DI_ARGS(Args, args)
-      , typename disable_if<
-            is_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >
-        >::type* = 0)
+      , typename enable_if<is_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >::type* = 0)
+        : deps_(TPool<mpl::vector<BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_GET_DEPS, args)> >(
+              BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), args, .deps_ BOOST_PP_INTERCEPT))
+          )
+    { }
+
+    #undef BOOST_DI_GET_DEPS
+
+    template<BOOST_DI_TYPES(Args)>
+    explicit module(
+        BOOST_DI_ARGS(Args, args)
+      , typename disable_if<is_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >::type* = 0)
         : deps_(BOOST_DI_ARGS_FORWARD(args))
     { }
 
