@@ -127,6 +127,21 @@
               >::type
         { };
 
+        template<typename T>
+        struct ctor
+            : type_traits::ctor_traits<typename type_traits::make_plain<T>::type>::type
+        { };
+
+        template<
+            typename T
+          , typename TCallStack
+          , typename TBind
+        >
+        struct binder
+            : TBind::template impl<T, TCallStack>::type
+        { };
+
+
         template<
             typename TSeq
           , typename T
@@ -150,70 +165,43 @@
               >
         { };
 
-
     public:
         typedef get_types<TDeps, mpl::not_<has_policy_type<mpl::_> > > policies;
         typedef get_deps<TDeps> deps;
 
     private:
-        typedef TBinder<deps> binder_type;
-
         template<
-            typename TGiven
-          , template<
-                typename
-              , typename = void
-            > class TCtorTraits = type_traits::ctor_traits
+            typename T
+          , typename TBind
+          , typename TCallStack = mpl::vector1<typename type_traits::make_plain<T>::type>
         >
-        class dependecies
-        {
-            template<typename T>
-            struct ctor
-                : TCtorTraits<typename type_traits::make_plain<T>::type>::type
-            { };
-
-            template<
-                typename T
-              , typename TCallStack
-            >
-            struct binder
-                : binder_type::template impl<T, TCallStack>::type
-            { };
-
-            template<
-                typename T
-              , typename TCallStack = mpl::vector1<typename type_traits::make_plain<T>::type>
-            >
-            struct deps_impl
-                : unique<
-                      typename mpl::fold<
-                          ctor<typename binder<T, TCallStack>::given>
-                        , mpl::vector1<typename binder<TGiven, mpl::vector0<> >::type>
-                        , mpl::copy<
-                              mpl::joint_view<
-                                  mpl::vector1<binder<mpl::_2, TCallStack> >
-                                , deps_impl<
-                                      mpl::_2
-                                    , mpl::push_back<
-                                          TCallStack
-                                        , type_traits::make_plain<mpl::_2>
-                                      >
+        struct deps_impl
+            : unique<
+                  typename mpl::fold<
+                      ctor<typename binder<T, TCallStack, TBind>::given>
+                    , mpl::vector0<>
+                    , mpl::copy<
+                          mpl::joint_view<
+                              mpl::vector1<binder<mpl::_2, TCallStack, TBind> >
+                            , deps_impl<
+                                  mpl::_2
+                                , TBind
+                                , mpl::push_back<
+                                      TCallStack
+                                    , type_traits::make_plain<mpl::_2>
                                   >
                               >
-                            , mpl::back_inserter<mpl::_1>
                           >
-                      >::type
+                        , mpl::back_inserter<mpl::_1>
+                      >
                   >::type
-            { };
-
-        public:
-            typedef typename deps_impl<TGiven>::type type;
-        };
+              >::type
+        { };
 
         template<typename T>
         struct all_deps
             : unique<
-                mpl::joint_view<deps, typename dependecies<T>::type>
+                mpl::joint_view<deps, mpl::joint_view<mpl::vector1<typename binder<T, mpl::vector0<>, TBinder<deps> >::type>, typename deps_impl<T, TBinder<deps> >::type> >
             >
         { };
 
@@ -226,16 +214,16 @@
         T create() {
             BOOST_MPL_ASSERT((typename verify_policies<policies, deps, T>::type));
 
-            TPool<typename all_deps<T>::type> deps(deps_);
-            return TCreator<binder_type>::template
-                execute<T, mpl::vector0<> >(deps);
+            TPool<typename all_deps<T>::type> depsf(deps_);
+            return TCreator<TBinder<deps> >::template
+                execute<T, mpl::vector0<> >(depsf);
         }
 
         template<typename T, typename Visitor>
         void visit(const Visitor& visitor) {
             BOOST_MPL_ASSERT((typename verify_policies<policies, deps, T>::type));
 
-            TVisitor<binder_type>::template
+            TVisitor<TBinder<deps> >::template
                 execute<T, mpl::vector0<> >(visitor);
         }
 
