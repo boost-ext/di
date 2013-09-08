@@ -184,46 +184,30 @@
                 typename T
               , typename TCallStack = mpl::vector1<typename type_traits::make_plain<T>::type>
             >
-            struct dependecies_impl
-                : mpl::fold<
-                      ctor<typename binder<T, TCallStack>::given>
-                    , mpl::vector0<>
-                    , mpl::copy<
-                          mpl::joint_view<
-                              mpl::vector1<mpl::pair<mpl::_2, TCallStack> >
-                            , dependecies_impl<
-                                  mpl::_2
-                                , mpl::push_back<
-                                      TCallStack
-                                    , type_traits::make_plain<mpl::_2>
+            struct deps_impl
+                : unique<
+                      typename mpl::fold<
+                          ctor<typename binder<T, TCallStack>::given>
+                        , mpl::vector1<typename binder<TGiven, mpl::vector0<> >::type>
+                        , mpl::copy<
+                              mpl::joint_view<
+                                  mpl::vector1<binder<mpl::_2, TCallStack> >
+                                , deps_impl<
+                                      mpl::_2
+                                    , mpl::push_back<
+                                          TCallStack
+                                        , type_traits::make_plain<mpl::_2>
+                                      >
                                   >
                               >
+                            , mpl::back_inserter<mpl::_1>
                           >
-                        , mpl::back_inserter<mpl::_1>
-                      >
-                  >
+                      >::type
+                  >::type
             { };
 
-            template<typename T>
-            struct first
-            {
-                typedef typename T::first type;
-            };
-
-            template<typename T>
-            struct second
-            {
-                typedef typename T::second type;
-            };
-
         public:
-            typedef typename unique<
-                typename mpl::fold<
-                    typename dependecies_impl<TGiven>::type
-                  , mpl::vector1<typename binder<TGiven, mpl::vector0<> >::type>
-                  , mpl::push_back<mpl::_1, binder<first<mpl::_2>, second<mpl::_2> > >
-                >::type
-            >::type type;
+            typedef typename deps_impl<TGiven>::type type;
         };
 
         template<typename T>
@@ -232,6 +216,7 @@
                 mpl::joint_view<deps, typename dependecies<T>::type>
             >
         { };
+
     public:
         module() { }
 
