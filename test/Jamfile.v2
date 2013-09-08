@@ -13,13 +13,11 @@ project di :
         <include>../include
         <library>/boost/test//boost_unit_test_framework/<link>static
         <warnings>all
-        <cxxflags>-std=c++11
-        <cxxflags>-Wno-unused-local-typedefs
-        <cxxflags>-ftemplate-depth=1024
-        <define>DDI_FUNCTION_ARITY_LIMIT_SIZE=4
+        <toolset>gcc:<cxxflags>-std=c++11
+        <toolset>gcc:<cxxflags>-Wno-unused-local-typedefs
+        <toolset>gcc:<cxxflags>-ftemplate-depth-1024
         <define>BOOST_TEST_MODULE=di_test
-        <define>BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
-        <define>BOOST_MPL_LIMIT_VECTOR_SIZE=30
+        <define>BOOST_DI_FUNCTION_ARITY_LIMIT_SIZE=4
 ;
 
 test-suite di-test :

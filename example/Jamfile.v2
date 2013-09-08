@@ -11,12 +11,8 @@ project di :
     requirements
         <include>../include
         <warnings>all
-        <cxxflags>-std=c++11
-        <cxxflags>-Wno-unused-local-typedefs
-        <cxxflags>-ftemplate-depth=1024
-        <define>BOOST_DI_NO_CXX11_FEATURES
-        <define>BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
-        <define>BOOST_MPL_LIMIT_VECTOR_SIZE=30
+        <toolset>gcc:<cxxflags>-std=c++11
+        <toolset>gcc:<cxxflags>-Wno-unused-local-typedefs
 ;
 
 test-suite di_test :
