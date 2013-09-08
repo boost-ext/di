@@ -418,16 +418,16 @@ BOOST_AUTO_TEST_CASE(externals_create_by_explicit_value) {
     const double d = 21.0;
     const char c = 'x';
 
-    fake_dependency<scopes::external, int>::type i_(i);
-    fake_dependency<scopes::external, double>::type d_(d);
-    fake_dependency<scopes::external, char>::type c_(c);
+    fake_dependency<scopes::external<>, int>::type i_(i);
+    fake_dependency<scopes::external<>, double>::type d_(d);
+    fake_dependency<scopes::external<>, char>::type c_(c);
 
     module<
         mpl::vector<
             fake_dependency<scopes::per_request<>, std::string, mpl::string<'s'> >::type
-          , fake_dependency<scopes::external, int>::type
-          , fake_dependency<scopes::external, double>::type
-          , fake_dependency<scopes::external, char>::type
+          , fake_dependency<scopes::external<>, int>::type
+          , fake_dependency<scopes::external<>, double>::type
+          , fake_dependency<scopes::external<>, char>::type
         >
     > module_(i_, d_, c_);
 
@@ -444,11 +444,11 @@ BOOST_AUTO_TEST_CASE(externals_create_with_non_trivial_ctor) {
     const double d = 21.0;
     const char c = 'x';
 
-    fake_dependency<scopes::external, c2>::type c2_(make_shared<c2>(i, d, c));
+    fake_dependency<scopes::external<>, c2>::type c2_(make_shared<c2>(i, d, c));
 
     module<
         mpl::vector<
-            fake_dependency<scopes::external, c2>::type
+            fake_dependency<scopes::external<>, c2>::type
         >
     > module_(c2_);
 
@@ -466,15 +466,15 @@ BOOST_AUTO_TEST_CASE(externals_create_with_attributes) {
     typedef named<int, mpl::string<'1'> > named1;
     typedef named<int, mpl::string<'2'> > named2;
 
-    fake_dependency<scopes::external, named1>::type i1_(i1);
-    fake_dependency<scopes::external, named2>::type i2_(i2);
+    fake_dependency<scopes::external<>, named1>::type i1_(i1);
+    fake_dependency<scopes::external<>, named2>::type i2_(i2);
 
     module<
         mpl::vector<
             fake_dependency<scopes::per_request<>, named1, int>::type
           , fake_dependency<scopes::per_request<>, named2, int>::type
-          , fake_dependency<scopes::external, named1>::type
-          , fake_dependency<scopes::external, named2>::type
+          , fake_dependency<scopes::external<>, named1>::type
+          , fake_dependency<scopes::external<>, named2>::type
         >
     > module_(i1_, i2_);
 
@@ -492,13 +492,13 @@ BOOST_AUTO_TEST_CASE(create_string_boost_function_ptr) {
         static int f() { return i1; }
     };
 
-    fake_dependency<scopes::external, function<int()> >::type i_(&c::f);
+    fake_dependency<scopes::external<>, function<int()> >::type i_(&c::f);
 
     module<
         mpl::vector<
             fake_dependency_base_of<scopes::per_request<>, int, mpl::int_<i2> >::type
           , fake_dependency_base_of<scopes::per_request<>, std::string, mpl::string<'s'> >::type
-          , fake_dependency<scopes::external, function<int()> >::type
+          , fake_dependency<scopes::external<>, function<int()> >::type
         >
     > module_(i_);
 
@@ -608,11 +608,11 @@ BOOST_AUTO_TEST_CASE(policies_mix_join_many) {
 BOOST_AUTO_TEST_CASE(scope_auto_deduction) {
 
     c3 c3_;
-    fake_dependency<scopes::external, c3>::type e3(c3_);
+    fake_dependency<scopes::external<>, c3>::type e3(c3_);
 
     module<
         mpl::vector<
-            fake_dependency<scopes::external, c3>::type
+            fake_dependency<scopes::external<>, c3>::type
         >
     > module_(e3);
 
@@ -621,7 +621,7 @@ BOOST_AUTO_TEST_CASE(scope_auto_deduction) {
             mpl::pair<c18, scopes::per_request<> >
           , mpl::pair<c0, scopes::per_request<> >
           , mpl::pair<shared_ptr<c1>, scopes::singleton<> >
-          , mpl::pair<c3&, scopes::external>
+          , mpl::pair<c3&, scopes::external<> >
         >
     > visitor;
 

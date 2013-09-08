@@ -51,7 +51,6 @@ struct plain_type<
     typedef typename T::value_type type;
 };
 
-} // namespace detail
 
 template<typename>
 class convertible_any_impl;
@@ -127,7 +126,7 @@ template<
 >
 class convertible_any
 {
-    typedef typename detail::plain_type<T>::type object_type;
+    typedef typename plain_type<T>::type object_type;
 
     typedef variant<
         object_type&
@@ -170,13 +169,13 @@ class convertible_any<
         mpl::or_<
             is_same<typename type_traits::value_type<T>::type, std::string>
           , is_arithmetic<typename type_traits::value_type<T>::type>
-          , detail::has_result_type<typename type_traits::value_type<T>::type>
+          , has_result_type<typename type_traits::value_type<T>::type>
         >
     >::type
 >
 {
     typedef typename type_traits::value_type<T>::type value_type;
-    typedef typename detail::plain_type<value_type>::type object_type;
+    typedef typename plain_type<value_type>::type object_type;
 
 public:
     template<typename TValue>
@@ -208,6 +207,18 @@ public:
 
 private:
     value_type object_;
+};
+
+} // namespace detail
+
+template<typename T>
+class convertible_any : public detail::convertible_any<T>
+{
+public:
+    template<typename TValue>
+    explicit convertible_any(const TValue& value)
+        : detail::convertible_any<T>(value)
+    { }
 };
 
 } // namespace convertibles

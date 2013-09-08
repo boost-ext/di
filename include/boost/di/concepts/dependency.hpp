@@ -56,7 +56,7 @@ class dependency
     struct external
     {
         typedef dependency<
-            scopes::external,
+            scopes::external<>,
             TExpected
           , T
           , TContext

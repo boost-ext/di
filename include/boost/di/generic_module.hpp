@@ -114,7 +114,7 @@
             TExternal
           , T
           , typename enable_if<
-                is_same<typename TExternal::element_type::scope, scopes::external>
+                is_same<typename TExternal::element_type::scope, scopes::external<> >
             >::type
         >
             : mpl::or_<

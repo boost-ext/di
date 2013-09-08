@@ -68,7 +68,7 @@ struct session
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 struct external
-    : scope<scopes::external>::bind<BOOST_DI_TYPES_PASS_MPL(T)>
+    : scope<scopes::external<> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
 { };
 
 template<typename T>

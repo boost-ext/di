@@ -80,16 +80,16 @@ class scope
     { };
 
     template<typename T>
-    struct rebind<T, scopes::external, typename enable_if<is_annotation<T> >::type>
+    struct rebind<T, scopes::external<>, typename enable_if<is_annotation<T> >::type>
         : annotate<
-              typename T::element_type::template rebind<scopes::external>::other
+              typename T::element_type::template rebind<scopes::external<> >::other
           >::template with<typename T::name>::type
     { };
 
     template<typename T>
-    struct rebind<T, scopes::external, typename disable_if<is_annotation<T> >::type>
+    struct rebind<T, scopes::external<>, typename disable_if<is_annotation<T> >::type>
         : annotate<
-              typename T::template rebind<scopes::external>::other
+              typename T::template rebind<scopes::external<> >::other
           >::template with<>::type
     { };
 

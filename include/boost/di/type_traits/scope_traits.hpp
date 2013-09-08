@@ -28,7 +28,7 @@ struct scope_traits
 template<typename T>
 struct scope_traits<T&>
 {
-    typedef scopes::external type;
+    typedef scopes::external<> type;
 };
 
 template<typename T>

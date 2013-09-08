@@ -485,7 +485,7 @@ BOOST_AUTO_TEST_CASE(external_base) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                fake_dependency_base_of<scopes::external, c1, c1>::type
+                fake_dependency_base_of<scopes::external<>, c1, c1>::type
             >
           , module::deps
         >::value
@@ -505,9 +505,9 @@ BOOST_AUTO_TEST_CASE(external_mix) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                fake_dependency_base_of<scopes::external, c1, c1>::type
-              , fake_dependency_base_of<scopes::external, c2, c2>::type
-              , fake_dependency_base_of<scopes::external, c3, c3>::type
+                fake_dependency_base_of<scopes::external<>, c1, c1>::type
+              , fake_dependency_base_of<scopes::external<>, c2, c2>::type
+              , fake_dependency_base_of<scopes::external<>, c3, c3>::type
             >
           , module::deps
         >::value
@@ -529,10 +529,10 @@ BOOST_AUTO_TEST_CASE(external_bind) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                fake_dependency_base_of<scopes::external, int, int>::type
-              , fake_dependency_base_of<scopes::external, named<c1, int>, c1>::type
-              , fake_dependency_base_of<scopes::external, c2, c2, c1>::type
-              , fake_dependency_base_of<scopes::external, named<c3, double>, c3, c4, c5>::type
+                fake_dependency_base_of<scopes::external<>, int, int>::type
+              , fake_dependency_base_of<scopes::external<>, named<c1, int>, c1>::type
+              , fake_dependency_base_of<scopes::external<>, c2, c2, c1>::type
+              , fake_dependency_base_of<scopes::external<>, named<c3, double>, c3, c4, c5>::type
             >
           , module::deps
         >::value
