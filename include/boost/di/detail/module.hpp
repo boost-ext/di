@@ -14,6 +14,7 @@
     #include <boost/preprocessor/facilities/intercept.hpp>
     #include <boost/preprocessor/punctuation/comma_if.hpp>
     #include <boost/type_traits/is_same.hpp>
+    #include <boost/type_traits/is_base_of.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/typeof/typeof.hpp>
     #include <boost/mpl/vector.hpp>
@@ -64,7 +65,6 @@
     class module
     {
         BOOST_MPL_HAS_XXX_TRAIT_DEF(deps)
-        BOOST_MPL_HAS_XXX_TRAIT_DEF(policy_type)
 
         template<
             typename
@@ -113,7 +113,7 @@
         struct get_deps
             : unique<
                   typename mpl::fold<
-                      get_types<TSeq, has_policy_type<mpl::_> >
+                      get_types<TSeq, is_base_of<detail::policy_impl, mpl::_> >
                     , mpl::vector0<>
                     , mpl::copy<
                           mpl::if_<
@@ -141,35 +141,6 @@
             : TBind::template impl<T, TCallStack>::type
         { };
 
-
-        template<
-            typename TSeq
-          , typename T
-          , typename TPolicy
-        >
-        struct verify_policies_impl
-            : TPolicy::template verify<TSeq, T>::type
-        { };
-
-        template<
-            typename TPolicies
-          , typename TSeq
-          , typename T
-        >
-        struct verify_policies
-            : mpl::is_sequence<
-                  typename mpl::transform<
-                      TPolicies
-                    , verify_policies_impl<TSeq, T, mpl::_1>
-                  >::type
-              >
-        { };
-
-    public:
-        typedef get_types<TDeps, mpl::not_<has_policy_type<mpl::_> > > policies;
-        typedef get_deps<TDeps> deps;
-
-    private:
         template<
             typename T
           , typename TBind
@@ -198,14 +169,33 @@
               >::type
         { };
 
-        template<typename T>
-        struct all_deps
-            : unique<
-                mpl::joint_view<deps, mpl::joint_view<mpl::vector1<typename binder<T, mpl::vector0<>, TBinder<deps> >::type>, typename deps_impl<T, TBinder<deps> >::type> >
-            >
+        template<
+            typename TSeq
+          , typename T
+          , typename TPolicy
+        >
+        struct verify_policies_impl
+            : TPolicy::template verify<TSeq, T>::type
+        { };
+
+        template<
+            typename TPolicies
+          , typename TSeq
+          , typename T
+        >
+        struct verify_policies
+            : mpl::is_sequence<
+                  typename mpl::transform<
+                      TPolicies
+                    , verify_policies_impl<TSeq, T, mpl::_1>
+                  >::type
+              >
         { };
 
     public:
+        typedef get_types<TDeps, mpl::not_<is_base_of<detail::policy_impl, mpl::_> > > policies;
+        typedef get_deps<TDeps> deps;
+
         module() { }
 
         #include BOOST_PP_ITERATE()
@@ -214,9 +204,20 @@
         T create() {
             BOOST_MPL_ASSERT((typename verify_policies<policies, deps, T>::type));
 
-            TPool<typename all_deps<T>::type> depsf(deps_);
+            TPool<
+                typename unique<
+                    mpl::joint_view<
+                        deps
+                      , mpl::joint_view<
+                            mpl::vector1<typename binder<T, mpl::vector0<>, TBinder<deps> >::type>
+                          , typename deps_impl<T, TBinder<deps> >::type
+                        >
+                    >
+                >::type
+            > deps_(this->deps_);
+
             return TCreator<TBinder<deps> >::template
-                execute<T, mpl::vector0<> >(depsf);
+                execute<T, mpl::vector0<> >(deps_);
         }
 
         template<typename T, typename Visitor>

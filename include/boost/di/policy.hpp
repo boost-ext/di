@@ -16,8 +16,10 @@
 namespace boost {
 namespace di {
 
+namespace detail { class policy_impl { }; } // namespace detail
+
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-class policy
+class policy : detail::policy_impl
 {
     template<
         typename TDeps
@@ -29,8 +31,6 @@ class policy
     { };
 
 public:
-    typedef policy policy_type;
-
     template<
         typename TDeps
       , typename T
