@@ -24,7 +24,7 @@ class convertible_shared
 
 public:
     bool operator!() const {
-        return object_;
+        return !object_;
     }
 
     void reset(T* ptr) {
