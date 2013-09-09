@@ -116,11 +116,9 @@ private:
             mpl::size<TExternals>::value == BOOST_PP_ITERATION()
         >::type* = 0) const {
 
-        #define BOOST_DI_GET(z, n, _)                           \
-            BOOST_PP_COMMA_IF(n)                                \
-            pool.template get<                                  \
-                typename mpl::at_c<TExternals, n>::type  \
-            >()
+        #define BOOST_DI_GET(z, n, _)                                   \
+            BOOST_PP_COMMA_IF(n)                                        \
+            pool.template get<typename mpl::at_c<TExternals, n>::type>()
 
         return fusion_module<TSeq, TPool>(
             BOOST_PP_REPEAT(
