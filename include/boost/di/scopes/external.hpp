@@ -27,7 +27,7 @@
     namespace scopes {
 
     template<
-        template<typename> class convertible = convertibles::convertible_any
+        template<typename> class TConvertible = convertibles::convertible_any
         //creator
     >
     class external
@@ -37,14 +37,14 @@
             typename TExpected
           , typename = TExpected
         >
-        class scope : public convertible<TExpected>
+        class scope : public TConvertible<TExpected>
         {
         public:
             typedef scope result_type;
 
             template<typename T>
             explicit scope(const T& value)
-                : convertible<TExpected>(value)
+                : TConvertible<TExpected>(value)
             { }
 
             result_type& create() {

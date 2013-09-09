@@ -89,10 +89,10 @@
 
         template<
             typename TSeq
-          , typename TLambda
+          , typename TCond
         >
         struct get_types
-            : mpl::remove_if<TSeq, TLambda>::type
+            : mpl::remove_if<TSeq, TCond>::type
         { };
 
         template<typename T>

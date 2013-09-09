@@ -98,9 +98,7 @@
       , typename TDeps
     >
     static typename enable_if_c<
-        mpl::size<typename ctor<TDependency>::type>::value
-        ==
-        BOOST_PP_ITERATION()
+        mpl::size<typename ctor<TDependency>::type>::value == BOOST_PP_ITERATION()
       , typename TDependency::result_type
     >::type execute_impl(TDeps& deps) {
 

@@ -108,9 +108,9 @@ BOOST_AUTO_TEST_CASE(context) {
     shared_ptr<c> c2_(new c);
 
     BOOST_CHECK((
-        static_cast<int>(external<>::scope<int, a>(87))
+        static_cast<int>(external<>::scope<int, a>(87).create())
         !=
-        static_cast<int>(external<>::scope<int, b>(42))
+        static_cast<int>(external<>::scope<int, b>(42).create())
     ));
 
     BOOST_CHECK((
