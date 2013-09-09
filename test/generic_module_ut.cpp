@@ -550,7 +550,7 @@ BOOST_AUTO_TEST_CASE(set_instance_int) {
           >
     { };
 
-    BOOST_CHECK_EQUAL(i, static_cast<int>(module::set<int>(i)));
+    BOOST_CHECK_EQUAL(i, static_cast<int>(module::set<int>(i).create()));
 }
 
 BOOST_AUTO_TEST_CASE(set_instance_annotate_in_in_call) {
@@ -566,8 +566,8 @@ BOOST_AUTO_TEST_CASE(set_instance_annotate_in_in_call) {
           >
     { };
 
-    BOOST_CHECK_EQUAL(i1, static_cast<int>(module::set<a>(i1)));
-    BOOST_CHECK_EQUAL(i2, static_cast<int>(module::set<b>(i2)));
+    BOOST_CHECK_EQUAL(i1, static_cast<int>(module::set<a>(i1).create()));
+    BOOST_CHECK_EQUAL(i2, static_cast<int>(module::set<b>(i2).create()));
 }
 
 BOOST_AUTO_TEST_CASE(set_instance_annotate_in_name) {
@@ -583,8 +583,8 @@ BOOST_AUTO_TEST_CASE(set_instance_annotate_in_name) {
           >
     { };
 
-    BOOST_CHECK_EQUAL(i1, static_cast<int>(module::set<a>(i1)));
-    BOOST_CHECK_EQUAL(i2, static_cast<int>(module::set<b>(i2)));
+    BOOST_CHECK_EQUAL(i1, static_cast<int>(module::set<a>(i1).create()));
+    BOOST_CHECK_EQUAL(i2, static_cast<int>(module::set<b>(i2).create()));
 }
 
 BOOST_AUTO_TEST_CASE(set_instance_annotatein_name_in_call) {
@@ -600,8 +600,8 @@ BOOST_AUTO_TEST_CASE(set_instance_annotatein_name_in_call) {
           >
     { };
 
-    BOOST_CHECK_EQUAL(i1, static_cast<int>(module::set<a>(i1)));
-    BOOST_CHECK_EQUAL(i2, static_cast<int>(module::set<b>(i2)));
+    BOOST_CHECK_EQUAL(i1, static_cast<int>(module::set<a>(i1).create()));
+    BOOST_CHECK_EQUAL(i2, static_cast<int>(module::set<b>(i2).create()));
 }
 
 BOOST_AUTO_TEST_CASE(set_instance_mix) {
@@ -619,9 +619,9 @@ BOOST_AUTO_TEST_CASE(set_instance_mix) {
           >
     { };
 
-    BOOST_CHECK_EQUAL(i1, static_cast<int>(module::set<int>(i1)));
-    BOOST_CHECK_EQUAL(i2, static_cast<int>(module::set<a>(i2)));
-    BOOST_CHECK_EQUAL(i3, static_cast<int>(module::set<b>(i3)));
+    BOOST_CHECK_EQUAL(i1, static_cast<int>(module::set<int>(i1).create()));
+    BOOST_CHECK_EQUAL(i2, static_cast<int>(module::set<a>(i2).create()));
+    BOOST_CHECK_EQUAL(i3, static_cast<int>(module::set<b>(i3).create()));
 }
 
 BOOST_AUTO_TEST_CASE(set_if) {
@@ -637,7 +637,7 @@ BOOST_AUTO_TEST_CASE(set_if) {
 
     BOOST_CHECK_EQUAL(
         c0if0_
-      , static_cast<shared_ptr<if0> >(module::set<if0>(c0if0_))
+      , static_cast<shared_ptr<if0> >(module::set<if0>(c0if0_).create())
     );
 }
 

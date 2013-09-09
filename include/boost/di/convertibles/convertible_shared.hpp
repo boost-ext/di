@@ -31,6 +31,10 @@ public:
         object_.reset(ptr);
     }
 
+    void reset() {
+        object_.reset();
+    }
+
     template<typename I, typename TName>
     operator named<I, TName>() const {
         return object_;

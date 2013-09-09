@@ -37,21 +37,24 @@
             typename TExpected
           , typename = TExpected
         >
-        class scope : public TConvertible<TExpected>
+        class scope
         {
         public:
-            typedef scope result_type;
+            typedef TConvertible<TExpected> result_type;
 
             template<typename T>
             explicit scope(const T& value)
-                : TConvertible<TExpected>(value)
+                : object_(value)
             { }
 
-            result_type& create() {
-                return *this;
+            result_type create() {
+                return object_;
             }
 
             #include BOOST_PP_ITERATE()
+
+        private:
+            result_type object_;
         };
     };
 
@@ -64,8 +67,8 @@
 #else
 
     template<BOOST_DI_TYPES(Args)>
-    result_type& create(BOOST_DI_ARGS_NOT_USED(Args)) {
-        return *this;
+    result_type create(BOOST_DI_ARGS_NOT_USED(Args)) {
+        return object_;
     }
 
 #endif
