@@ -31,13 +31,12 @@ struct pool_allocator
 
 int main()
 {
-    typedef di::generic_module<
+    using module = di::module<
         di::scope<di::scopes::per_request<pool_allocator>>::bind<
             c
         >
-    > module;
+    >;
 
-    di::injector<module> injector;
-    injector.create<c1>();
+    di::injector<module>().create<c1>();
 }
 

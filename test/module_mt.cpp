@@ -10,7 +10,7 @@
 
 #include "boost/di/module.hpp"
 #include "boost/di/concepts.hpp"
-//#include "boost/di/make_module.hpp"
+#include "boost/di/make_module.hpp"
 
 #include "data.hpp"
 
@@ -22,8 +22,7 @@ BOOST_AUTO_TEST_CASE(module_) {
         c0if0
     >;
 
-    //auto fm = make_module(
-    auto fm = module2<>()(
+    auto fm = make_module(
         m()
       , bind<int>::to(42)
     );

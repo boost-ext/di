@@ -60,6 +60,22 @@
           >
     { };
 
+    template<typename TSeq>
+    struct concepts2
+        : mpl::fold<
+            TSeq
+          , mpl::vector0<>
+          , mpl::copy<
+                mpl::if_<
+                    mpl::is_sequence<mpl::_2>
+                  , mpl::_2
+                  , mpl::vector1<mpl::_2>
+                >
+              , mpl::back_inserter<mpl::_1>
+            >
+          >::type
+    { };
+
     template<
         typename TDeps = mpl::vector0<>
       , template<typename, typename = void> class TPool = detail::pool
@@ -87,21 +103,6 @@
               >::type
         { };
 
-        template<typename TSeq>
-        struct concepts
-            : mpl::fold<
-                TSeq
-              , mpl::vector0<>
-              , mpl::copy<
-                    mpl::if_<
-                        mpl::is_sequence<mpl::_2>
-                      , mpl::_2
-                      , mpl::vector1<mpl::_2>
-                    >
-                  , mpl::back_inserter<mpl::_1>
-                >
-              >::type
-        { };
 
         template<typename TSeq, typename TExternals, typename T>
         module2<TSeq, TPool> create_module2(
@@ -158,11 +159,11 @@ private:
 
 public:
     template<BOOST_DI_TYPES(Args)>
-    module2<typename concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type, TPool>
+    module2<typename concepts2<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type, TPool>
     operator()(BOOST_DI_ARGS(Args, args)) const {
         TPool<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > pool(BOOST_DI_ARGS_FORWARD(args));
         return create_module2<
-            typename concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type
+            typename concepts2<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type
           , typename externals<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type
         >(pool);
     }
