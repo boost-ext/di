@@ -19,16 +19,30 @@ namespace boost {
 namespace di {
 
 BOOST_AUTO_TEST_CASE(injector_) {
-    using m = module<
+typedef module<
+
+   //per_request<
+        bind_int<0>
+      , bind_int<1>
+    //>
+> module_2;
+    typedef module<
         c0if0
-    >;
+    > mm;
+
+    //auto mm = module2<>()(
+        //singleton<
+            //c0if0
+        //>()
+    //);
 
     //auto mod = make_module(m());
 
-    //injector<> inj;
-    //inj.install(mod);
+    injector<> inj;
+    inj.install(module_2());
 
-    //make_injector(mod);
+    //auto inj = make_injector(mod);
+    //make_injector(m());
 
     //shared_ptr<c5> c5_ = inj.create<shared_ptr<c5>>();
     //BOOST_CHECK_EQUAL(42, c5_->c2_->i);
