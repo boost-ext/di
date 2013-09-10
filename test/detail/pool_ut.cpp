@@ -10,6 +10,7 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
 
+#include <boost/units/detail/utility.hpp>
 namespace boost {
 namespace di {
 namespace detail {
@@ -258,6 +259,25 @@ BOOST_AUTO_TEST_CASE(pool_from_other_subset_pool) {
         custom_ctor_.i
       , pool_all_.get<custom_ctor>().i
     );
+}
+
+BOOST_AUTO_TEST_CASE(pool_from_pool_pool) {
+    typedef pool<
+        mpl::vector<
+            custom_ctor
+          //, default_ctor
+          //, trivial_ctor
+        >
+    > pool_type;
+
+    typedef pool<mpl::vector<pool_type> > pool_pool_type;
+
+    pool_type p1(custom_ctor(0));
+    //pool_pool_type p2(p1);
+
+    std::cout << units::detail::demangle(typeid(pool_pool_type::types::type).name()) << std::endl;
+
+    //BOOST_CHECK(0);
 }
 
 } // namespace detail
