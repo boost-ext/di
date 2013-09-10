@@ -51,9 +51,9 @@ test-suite di-test :
     #[ run ctor_va_args_ut.cpp ]
     #[ run concepts_ut.cpp ]
     #[ run fusion_module_ut.cpp ]
-    #[ run generic_module_ut.cpp ]
     #[ run injector_mt.cpp ]
     [ run module_mt.cpp ]
+    [ run module_ut.cpp ]
     #[ run named_ut.cpp ]
 ;
 

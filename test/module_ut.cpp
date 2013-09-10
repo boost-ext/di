@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/generic_module.hpp"
+#include "boost/di/module.hpp"
 
 #include <boost/test/unit_test.hpp>
 #include <boost/shared_ptr.hpp>
@@ -15,7 +15,6 @@
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/per_request.hpp"
 #include "boost/di/scopes/singleton.hpp"
-#include "boost/di/scopes/external.hpp"
 #include "boost/di/named.hpp"
 #include "boost/di/concepts.hpp"
 
@@ -45,8 +44,8 @@ struct double_value
 double double_value::value = 0;
 
 BOOST_AUTO_TEST_CASE(create) {
-    struct module
-        : generic_module<
+    struct module_type
+        : module<
               per_request<
                   c0if0
               >
@@ -72,8 +71,8 @@ BOOST_AUTO_TEST_CASE(create) {
 }
 
 BOOST_AUTO_TEST_CASE(visit) {
-    struct module
-        : generic_module<
+    struct module_type
+        : module<
               per_request<
                   transaction_provider
                 , mpl::int_<0>
@@ -97,8 +96,8 @@ BOOST_AUTO_TEST_CASE(call) {
     fake_scope::entry_calls() = 0;
     fake_scope::exit_calls() = 0;
 
-    struct module
-        : generic_module<
+    struct module_type
+        : module<
               scope<fake_scope>::bind<c0if0>
           >
     { } module_;
@@ -116,21 +115,21 @@ BOOST_AUTO_TEST_CASE(call) {
 }
 
 BOOST_AUTO_TEST_CASE(empty) {
-    struct module
-       : generic_module<>
+    struct module_type
+       : module<>
     { };
 
     BOOST_CHECK((
         contains_all<
             mpl::vector0<>
-          , module::deps
+          , module_type::deps
         >::value
     ));
 }
 
-BOOST_AUTO_TEST_CASE(default_scope) {
-    struct module
-        : generic_module<c1>
+BOOST_AUTO_TEST_CASE(default_scope_deduce) {
+    struct module_type
+        : module<c1>
     { };
 
     BOOST_CHECK((
@@ -138,14 +137,14 @@ BOOST_AUTO_TEST_CASE(default_scope) {
             mpl::vector<
                 fake_dependency_base_of<scopes::deduce, c1, c1>::type
             >
-          , module::deps
+          , module_type::deps
         >::value
     ));
 }
 
 BOOST_AUTO_TEST_CASE(default_scope_many) {
-    struct module
-        : generic_module<c1, c2, c3>
+    struct module_type
+        : module<c1, c2, c3>
     { };
 
     BOOST_CHECK((
@@ -155,14 +154,14 @@ BOOST_AUTO_TEST_CASE(default_scope_many) {
               , fake_dependency_base_of<scopes::deduce, c2, c2>::type
               , fake_dependency_base_of<scopes::deduce, c3, c3>::type
             >
-          , module::deps
+          , module_type::deps
         >::value
     ));
 }
 
 BOOST_AUTO_TEST_CASE(default_scope_bind) {
-    struct module
-        : generic_module<
+    struct module_type
+        : module<
               bind<if0, c0if0>
             , c1
             , bind<c2>::in_name<int>
@@ -178,14 +177,14 @@ BOOST_AUTO_TEST_CASE(default_scope_bind) {
               , fake_dependency_base_of<scopes::deduce, named<c2, int>, c2>::type
               , fake_dependency_base_of<scopes::deduce, c3, c3, call_stack<c4, c5> >::type
             >
-          , module::deps
+          , module_type::deps
         >::value
     ));
 }
 
 BOOST_AUTO_TEST_CASE(custom_scope) {
-    struct module
-        : generic_module<
+    struct module_type
+        : module<
               scope<fake_scope>::bind<
                   c0if0
               >
@@ -197,14 +196,14 @@ BOOST_AUTO_TEST_CASE(custom_scope) {
             mpl::vector<
                 fake_dependency_base_of<fake_scope, c0if0, c0if0>::type
             >
-          , module::deps
+          , module_type::deps
         >::value
     ));
 }
 
 BOOST_AUTO_TEST_CASE(one_scope) {
-    struct module
-        : generic_module<
+    struct module_type
+        : module<
               scope<scopes::singleton<> >::bind<
                   c0if0
               >
@@ -216,14 +215,14 @@ BOOST_AUTO_TEST_CASE(one_scope) {
             mpl::vector<
                 fake_dependency_base_of<scopes::singleton<>, c0if0, c0if0>::type
             >
-          , module::deps
+          , module_type::deps
         >::value
     ));
 }
 
 BOOST_AUTO_TEST_CASE(one_scope_alias) {
-    struct module
-        : generic_module<
+    struct module_type
+        : module<
               singleton<
                   c0if0
               >
@@ -235,14 +234,14 @@ BOOST_AUTO_TEST_CASE(one_scope_alias) {
             mpl::vector<
                 fake_dependency_base_of<scopes::singleton<>, c0if0, c0if0>::type
             >
-          , module::deps
+          , module_type::deps
         >::value
     ));
 }
 
 BOOST_AUTO_TEST_CASE(one_scope_direct) {
-    struct module
-        : generic_module<
+    struct module_type
+        : module<
               singleton<c0if0>
           >
     { };
@@ -252,14 +251,14 @@ BOOST_AUTO_TEST_CASE(one_scope_direct) {
             mpl::vector<
                 fake_dependency_base_of<scopes::singleton<>, c0if0, c0if0>::type
             >
-          , module::deps
+          , module_type::deps
         >::value
     ));
 }
 
 BOOST_AUTO_TEST_CASE(many_singleton) {
-    struct module
-        : generic_module<
+    struct module_type
+        : module<
               singleton<
                 c1, c2, c3
               >
@@ -273,14 +272,14 @@ BOOST_AUTO_TEST_CASE(many_singleton) {
               , fake_dependency_base_of<scopes::singleton<>, c2, c2>::type
               , fake_dependency_base_of<scopes::singleton<>, c3, c3>::type
             >
-          , module::deps
+          , module_type::deps
         >::value
     ));
 }
 
 BOOST_AUTO_TEST_CASE(many_scopes) {
-    struct module
-        : generic_module<
+    struct module_type
+        : module<
               singleton<
                   c1, c2
               >
@@ -298,14 +297,14 @@ BOOST_AUTO_TEST_CASE(many_scopes) {
               , fake_dependency_base_of<scopes::per_request<>, c3, c3>::type
               , fake_dependency_base_of<scopes::per_request<>, c4, c4>::type
             >,
-            module::deps
+            module_type::deps
         >::value
     ));
 }
 
 BOOST_AUTO_TEST_CASE(in_call) {
-    struct module
-        : generic_module<
+    struct module_type
+        : module<
               per_request<c1>::in_call<c2>
           >
     { };
@@ -315,14 +314,14 @@ BOOST_AUTO_TEST_CASE(in_call) {
             mpl::vector<
                 fake_dependency_base_of<scopes::per_request<>, c1, c1, c2>::type
             >
-          , module::deps
+          , module_type::deps
         >::value
     ));
 }
 
 BOOST_AUTO_TEST_CASE(in_name) {
-    struct module
-        : generic_module<
+    struct module_type
+        : module<
               singleton<c1>::in_name<int>
           >
     { };
@@ -332,14 +331,14 @@ BOOST_AUTO_TEST_CASE(in_name) {
             mpl::vector<
                 fake_dependency_base_of<scopes::singleton<>, named<c1, int>, c1>::type
             >
-          , module::deps
+          , module_type::deps
         >::value
     ));
 }
 
 BOOST_AUTO_TEST_CASE(in_name_in_call) {
-    struct module
-        : generic_module<
+    struct module_type
+        : module<
               singleton<
                   bind<c1>::in_name<int>::in_call<double>
                 , bind<c2>::in_name<double>::in_call<int>
@@ -353,14 +352,14 @@ BOOST_AUTO_TEST_CASE(in_name_in_call) {
                 fake_dependency_base_of<scopes::singleton<>, named<c1, int>, c1, double>::type
               , fake_dependency_base_of<scopes::singleton<>, named<c2, double>, c2, int>::type
             >,
-            module::deps
+            module_type::deps
         >::value
     ));
 }
 
 BOOST_AUTO_TEST_CASE(in_call_in_name) {
-    struct module
-        : generic_module<
+    struct module_type
+        : module<
               singleton<
                   bind<c1>::in_call<double>::in_name<int>
                 , bind<c2>::in_call<int>::in_name<double>
@@ -374,14 +373,14 @@ BOOST_AUTO_TEST_CASE(in_call_in_name) {
                 fake_dependency_base_of<scopes::singleton<>, named<c1, int>, c1, double>::type
               , fake_dependency_base_of<scopes::singleton<>, named<c2, double>, c2, int>::type
             >
-          , module::deps
+          , module_type::deps
         >::value
     ));
 }
 
 BOOST_AUTO_TEST_CASE(bind_if) {
-    struct module
-        : generic_module<
+    struct module_type
+        : module<
               singleton<
                   bind<if0, c0if0>
               >
@@ -393,14 +392,14 @@ BOOST_AUTO_TEST_CASE(bind_if) {
             mpl::vector<
                 fake_dependency_base_of<scopes::singleton<>, if0, c0if0>::type
             >
-          , module::deps
+          , module_type::deps
         >::value
     ));
 }
 
 BOOST_AUTO_TEST_CASE(mix) {
-    struct module
-        : generic_module<
+    struct module_type
+        : module<
               singleton<
                   bind<if0, c0if0>
                 , c1
@@ -424,14 +423,14 @@ BOOST_AUTO_TEST_CASE(mix) {
               , fake_dependency_base_of<scopes::per_request<>, c6, c6>::type
               , fake_dependency_base_of<scopes::singleton<>, named<c7, double>, c7, c1>::type
             >
-          , module::deps
+          , module_type::deps
         >::value
     ));
 }
 
 BOOST_AUTO_TEST_CASE(named_in_call) {
-    struct module
-        : generic_module<
+    struct module_type
+        : module<
               per_request<
                   bind<int, mpl::int_<1> >
                 , bind<int, mpl::int_<4> >::in_name<mpl::string<'2'> >::in_call<call_stack<c7, c6, c4> >
@@ -447,14 +446,14 @@ BOOST_AUTO_TEST_CASE(named_in_call) {
               , fake_dependency_base_of<scopes::per_request<>, named<int, mpl::string<'2'> >, mpl::int_<4>, call_stack<c7, c6, c4> >::type
               , fake_dependency_base_of<scopes::per_request<>, int, mpl::int_<5>, c2>::type
             >
-          , module::deps
+          , module_type::deps
         >::value
     ));
 }
 
 BOOST_AUTO_TEST_CASE(multiple_calls) {
-    struct module
-        : generic_module<
+    struct module_type
+        : module<
               singleton<
                   bind<c0>::in_call<c1, call_stack<c2, c3>, c4 >
               >
@@ -468,316 +467,9 @@ BOOST_AUTO_TEST_CASE(multiple_calls) {
                 fake_dependency_base_of<scopes::singleton<>, c0, c0, c1, call_stack<c2, c3>, c4>::type
               , fake_dependency_base_of<scopes::deduce, c5, c5, int, double>::type
             >
-          , module::deps
+          , module_type::deps
         >::value
     ));
-}
-
-BOOST_AUTO_TEST_CASE(external_base) {
-    struct module
-        : generic_module<
-              external<
-                  c1
-              >
-          >
-    { };
-
-    BOOST_CHECK((
-        contains_all<
-            mpl::vector<
-                fake_dependency_base_of<scopes::external<>, c1, c1>::type
-            >
-          , module::deps
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(external_mix) {
-    struct module
-        : generic_module<
-              external<
-                  c1, c2
-              >
-            , external<c3>
-          >
-    { };
-
-    BOOST_CHECK((
-        contains_all<
-            mpl::vector<
-                fake_dependency_base_of<scopes::external<>, c1, c1>::type
-              , fake_dependency_base_of<scopes::external<>, c2, c2>::type
-              , fake_dependency_base_of<scopes::external<>, c3, c3>::type
-            >
-          , module::deps
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(external_bind) {
-    struct module
-        : generic_module<
-              external<
-                  int
-                , bind<c1>::in_name<int>
-                , bind<c2>::in_call<c1>
-                , bind<c3>::in_name<double>::in_call<c4, c5>
-              >
-          >
-    { };
-
-    BOOST_CHECK((
-        contains_all<
-            mpl::vector<
-                fake_dependency_base_of<scopes::external<>, int, int>::type
-              , fake_dependency_base_of<scopes::external<>, named<c1, int>, c1>::type
-              , fake_dependency_base_of<scopes::external<>, c2, c2, c1>::type
-              , fake_dependency_base_of<scopes::external<>, named<c3, double>, c3, c4, c5>::type
-            >
-          , module::deps
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(set_instance_int) {
-    const int i = 42;
-
-    struct module
-        : generic_module<
-              external<
-                  int
-              >
-          >
-    { };
-
-    BOOST_CHECK_EQUAL(i, static_cast<int>(module::set<int>(i).create()));
-}
-
-BOOST_AUTO_TEST_CASE(set_instance_annotate_in_in_call) {
-    const int i1 = 42;
-    const int i2 = 43;
-
-    struct module
-        : generic_module<
-              external<
-                  annotate<bind<int>::in_call<c1, c2> >::with<a>
-                , annotate<bind<int>::in_call<c3, c4> >::with<b>
-              >
-          >
-    { };
-
-    BOOST_CHECK_EQUAL(i1, static_cast<int>(module::set<a>(i1).create()));
-    BOOST_CHECK_EQUAL(i2, static_cast<int>(module::set<b>(i2).create()));
-}
-
-BOOST_AUTO_TEST_CASE(set_instance_annotate_in_name) {
-    const int i1 = 42;
-    const int i2 = 43;
-
-    struct module
-        : generic_module<
-              external<
-                  annotate<bind<int>::in_name<float> >::with<a>
-                , annotate<bind<int>::in_name<double> >::with<b>
-              >
-          >
-    { };
-
-    BOOST_CHECK_EQUAL(i1, static_cast<int>(module::set<a>(i1).create()));
-    BOOST_CHECK_EQUAL(i2, static_cast<int>(module::set<b>(i2).create()));
-}
-
-BOOST_AUTO_TEST_CASE(set_instance_annotatein_name_in_call) {
-    const int i1 = 42;
-    const int i2 = 43;
-
-    struct module
-        : generic_module<
-              external<
-                  annotate<bind<int>::in_call<c1, c2>::in_name<float> >::with<a>
-                , annotate<bind<int>::in_name<double>::in_call<c3, c4> >::with<b>
-              >
-          >
-    { };
-
-    BOOST_CHECK_EQUAL(i1, static_cast<int>(module::set<a>(i1).create()));
-    BOOST_CHECK_EQUAL(i2, static_cast<int>(module::set<b>(i2).create()));
-}
-
-BOOST_AUTO_TEST_CASE(set_instance_mix) {
-    const int i1 = 42;
-    const int i2 = 43;
-    const int i3 = 44;
-
-    struct module
-        : generic_module<
-              external<
-                  int
-                , annotate<bind<int>::in_name<float> >::with<a>
-                , annotate<bind<int>::in_call<c1, c2>::in_name<float> >::with<b>
-              >
-          >
-    { };
-
-    BOOST_CHECK_EQUAL(i1, static_cast<int>(module::set<int>(i1).create()));
-    BOOST_CHECK_EQUAL(i2, static_cast<int>(module::set<a>(i2).create()));
-    BOOST_CHECK_EQUAL(i3, static_cast<int>(module::set<b>(i3).create()));
-}
-
-BOOST_AUTO_TEST_CASE(set_if) {
-    shared_ptr<if0> c0if0_(new c0if0);
-
-    struct module
-        : generic_module<
-              external<
-                  if0
-              >
-          >
-    { };
-
-    BOOST_CHECK_EQUAL(
-        c0if0_
-      , static_cast<shared_ptr<if0> >(module::set<if0>(c0if0_).create())
-    );
-}
-
-BOOST_AUTO_TEST_CASE(set_variant_shared_ptr) {
-    shared_ptr<c3> c3_(new c3);
-
-    typedef generic_module<
-        external<c3>
-    > module;
-
-    module module_(
-        module::set<c3>(c3_)
-    );
-
-    c4 c4_ = module_.create<c4>();
-
-    BOOST_CHECK_EQUAL(c3_, c4_.c3_);
-}
-
-BOOST_AUTO_TEST_CASE(set_variant_ref) {
-    const int i = 42;
-    const double d = 87.0;
-    c3 c3_(i);
-    c14 c14_(i, d);
-
-    const c3& c3_const_ref = c3_;
-    c14& c14_ref = c14_;
-
-    typedef generic_module<
-        external<
-            c3, c14
-        >
-    > module;
-
-    module module_(
-        module::set<c3>(c3_const_ref)
-      , module::set<c14>(c14_ref)
-    );
-
-    shared_ptr<c16> c16_ = module_.create<shared_ptr<c16> >();
-
-    BOOST_CHECK(&c3_const_ref == &c16_->c3_);
-    BOOST_CHECK(&c14_ref == &c16_->c14_);
-
-    BOOST_CHECK_EQUAL(c3_.i, c16_->c3_.i);
-    BOOST_CHECK_EQUAL(c14_.i, c16_->c14_.i);
-    BOOST_CHECK_EQUAL(c14_.d, c16_->c14_.d);
-}
-
-BOOST_AUTO_TEST_CASE(set_variant_no_copy) {
-    const int i = 42;
-    const double d = 87.0;
-    c3 c3_(i);
-    c14 c14_(i, d);
-
-    typedef generic_module<
-        external<
-            c3, c14
-        >
-    > module;
-
-    module module_(
-        module::set<c3>(c3_)
-      , module::set<c14>(c14_)
-    );
-
-    shared_ptr<c16> c16_ = module_.create<shared_ptr<c16> >();
-
-    BOOST_CHECK(&c3_ == &c16_->c3_);
-    BOOST_CHECK(&c14_ == &c16_->c14_);
-
-    BOOST_CHECK_EQUAL(c3_.i, c16_->c3_.i);
-    BOOST_CHECK_EQUAL(c14_.i, c16_->c14_.i);
-    BOOST_CHECK_EQUAL(c14_.d, c16_->c14_.d);
-}
-
-BOOST_AUTO_TEST_CASE(fixed_value) {
-    double_value::value = 42.0;
-
-    struct module
-        : generic_module<
-              bind<double, double_value>
-          >
-    { } module_;
-
-    BOOST_CHECK_EQUAL(double_value::value, module_.create<double>());
-}
-
-BOOST_AUTO_TEST_CASE(ctor_with_external) {
-    const int i = 42;
-    const double d = 87.0;
-
-    typedef generic_module<
-        external<
-            int
-          , double
-        >
-    > module;
-
-    module module_(
-        module::set<int>(i),
-        module::set<double>(d)
-    );
-
-    BOOST_CHECK_EQUAL(i, module_.create<int>());
-    BOOST_CHECK_EQUAL(d, module_.create<double>());
-}
-
-BOOST_AUTO_TEST_CASE(ctor_with_external_shared_ptr) {
-    const int i = 42;
-    shared_ptr<int_value> v(new int_value(i));
-
-    typedef generic_module<
-        external<
-            int_value
-        >
-    > module;
-
-    module module_(
-        module::set<int_value>(v)
-    );
-
-    BOOST_CHECK_EQUAL(i, module_.create<int_value>().i);
-}
-
-BOOST_AUTO_TEST_CASE(external_annotate) {
-    const int i = 42;
-
-    typedef generic_module<
-        bind<int, mpl::int_<0> >
-      , external<
-            annotate<bind<int>::in_call<c14> >::with<a>
-        >
-    > module;
-
-    module module_(
-        module::set<a>(i)
-    );
-
-    BOOST_CHECK_EQUAL(i, module_.create<c14>().i);
 }
 
 } // namespace di
