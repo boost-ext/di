@@ -22,8 +22,7 @@
 
 // modules
 #include "boost/di/injector.hpp"
-#include "boost/di/generic_module.hpp"
-#include "boost/di/fusion_module.hpp"
+#include "boost/di/module.hpp"
 
 #include "boost/di/make_module.hpp"
 #include "boost/di/make_injector.hpp"
