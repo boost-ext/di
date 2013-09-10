@@ -9,7 +9,6 @@
 
 #include <string>
 #include <boost/mpl/int.hpp>
-#include "boost/di/concepts/annotate.hpp"
 #include "boost/di/concepts/bind.hpp"
 #include "boost/di/concepts/dependency.hpp"
 #include "boost/di/concepts/scope.hpp"
@@ -64,16 +63,6 @@ struct singleton
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 struct session
     : scope<scopes::session<> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
-{ };
-
-template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-struct external
-    : scope<scopes::external<> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
-{ };
-
-template<typename T>
-struct annotate
-    : concepts::annotate<T>
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>

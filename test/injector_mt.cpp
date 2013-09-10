@@ -10,8 +10,7 @@
 #include <boost/test/test_case_template.hpp>
 #include <boost/mpl/vector.hpp>
 
-#include "boost/di/generic_module.hpp"
-#include "boost/di/fusion_module.hpp"
+#include "boost/di/module.hpp"
 
 #include "fake_visitor.hpp"
 #include "fake_scope.hpp"
@@ -20,7 +19,7 @@
 namespace boost {
 namespace di {
 
-typedef generic_module<
+typedef module<
     singleton<
         c3
     >
@@ -34,9 +33,9 @@ typedef generic_module<
       , bind_int<4>::in_name<mpl::string<'2'> >::in_call<call_stack<c7, c6, c4> >
       , bind_int<5>::in_call<c2>
     >
-> generic_module_1;
+> module_1;
 
-typedef generic_module<
+typedef module<
     singleton<
         c3
     >
@@ -44,9 +43,9 @@ typedef generic_module<
         bind_int<0>::in_name<mpl::string<'1'> >
       , bind_int<1>
     >
-> generic_module_2;
+> module_2;
 
-typedef generic_module<
+typedef module<
     singleton<
         c0if0
     >
@@ -54,58 +53,24 @@ typedef generic_module<
         bind_int<2>::in_call<c8>
       , bind_int<3>::in_name<mpl::string<'2'> >
     >
-> generic_module_3;
+> module_3;
 
-typedef generic_module<
+typedef module<
     scope<fake_scope>::bind<c3>
-> generic_module_custom_scope;
+> module_custom_scope;
 
-typedef generic_module<
+typedef module<
     per_request<
         transaction_provider
       , mpl::int_<0>
     >
-> generic_module_provider;
+> module_provider;
 
-typedef generic_module<
-    singleton<
-        c0if0
-    >
-  , external<
-        int
-      , double
-    >
-> generic_module_externals;
-
-struct generic_module_externals_ctor : generic_module<
-    singleton<
-        c0if0
-    >
-  , external<
-        int
-      , double
-    >
->
-{
-    generic_module_externals_ctor(int i, double d)
-        : generic_module(set<int>(i), set<double>(d))
-    { }
-};
-
-typedef generic_module<
-   external<
-        double
-      , if0
-      , annotate<bind<int>::in_name<mpl::string<'1'> >::in_call<call_stack<c7, c6, c4> > >::with<a>
-      , annotate<bind<int>::in_call<c8> >::with<b>
-    >
-> generic_module_externals_1;
-
-typedef generic_module<
+typedef module<
     c0if0
-> generic_module_c0if0;
+> module_c0if0;
 
-BOOST_AUTO(fusion_module_1, fusion_module<>()(
+BOOST_AUTO(module2_1, module2<>()(
     singleton<
         c3
     >()
@@ -121,7 +86,7 @@ BOOST_AUTO(fusion_module_1, fusion_module<>()(
     >()
 ));
 
-BOOST_AUTO(fusion_module_2, fusion_module<>()(
+BOOST_AUTO(module2_2, module2<>()(
     singleton<
         c0if0
     >()
@@ -131,7 +96,7 @@ BOOST_AUTO(fusion_module_2, fusion_module<>()(
     >()
 ));
 
-BOOST_AUTO(fusion_module_3, fusion_module<>()(
+BOOST_AUTO(module2_3, module2<>()(
     singleton<
         c3
     >()
@@ -141,17 +106,17 @@ BOOST_AUTO(fusion_module_3, fusion_module<>()(
     >()
 ));
 
-BOOST_AUTO(fusion_module_custom_scope, fusion_module<>()(
+BOOST_AUTO(module2_custom_scope, module2<>()(
     scope<fake_scope>::bind<c3>()
 ));
 
-BOOST_AUTO(fusion_module_provider, fusion_module<>()(
+BOOST_AUTO(module2_provider, module2<>()(
     per_request<
         transaction_provider, mpl::int_<0>
     >()
 ));
 
-BOOST_AUTO(fusion_module_externals, fusion_module<>()(
+BOOST_AUTO(module2_externals, module2<>()(
     singleton<
         c0if0
     >()
@@ -159,12 +124,12 @@ BOOST_AUTO(fusion_module_externals, fusion_module<>()(
   , bind<double>::to(87.0)
 ));
 
-BOOST_AUTO(fusion_module_externals_1, fusion_module<>()(
+BOOST_AUTO(module2_externals_1, module2<>()(
     bind<int>::to(42)
   , bind<int>::in_call<c2>::to(87)
 ));
 
-BOOST_AUTO(fusion_module_c0if0, fusion_module<>()(
+BOOST_AUTO(module2_c0if0, module2<>()(
     deduce<c0if0>()
 ));
 
@@ -203,8 +168,8 @@ void check(const shared_ptr<c8>& c8_) {
 }
 
 typedef mpl::vector<
-    injector<generic_module_1>
-  , injector<BOOST_TYPEOF(fusion_module_1)>
+    injector<module_1>
+  , injector<BOOST_TYPEOF(module2_1)>
 > one_module_types;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(one_module, TInjector, one_module_types) {
@@ -213,10 +178,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(one_module, TInjector, one_module_types) {
 }
 
 typedef mpl::vector<
-    injector<generic_module_2, generic_module_3>
-  , injector<generic_module_3, generic_module_2>
-  , injector<BOOST_TYPEOF(fusion_module_2), BOOST_TYPEOF(fusion_module_3)>
-  , injector<BOOST_TYPEOF(fusion_module_3), BOOST_TYPEOF(fusion_module_2)>
+    injector<module_2, module_3>
+  , injector<module_3, module_2>
+  , injector<BOOST_TYPEOF(module2_2), BOOST_TYPEOF(module2_3)>
+  , injector<BOOST_TYPEOF(module2_3), BOOST_TYPEOF(module2_2)>
 > many_modules_types;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(many_modules, TInjector, many_modules_types) {
@@ -225,8 +190,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(many_modules, TInjector, many_modules_types) {
 }
 
 typedef mpl::vector<
-    injector<generic_module_2, BOOST_TYPEOF(fusion_module_2)>
-  , injector<BOOST_TYPEOF(fusion_module_2), generic_module_2>
+    injector<module_2, BOOST_TYPEOF(module2_2)>
+  , injector<BOOST_TYPEOF(module2_2), module_2>
 > mix_modules_types;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(mix_modules, TInjector, mix_modules_types) {
@@ -235,8 +200,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(mix_modules, TInjector, mix_modules_types) {
 }
 
 typedef mpl::vector<
-    injector<generic_module_provider>
-  , injector<BOOST_TYPEOF(fusion_module_provider)>
+    injector<module_provider>
+  , injector<BOOST_TYPEOF(module2_provider)>
 > basic_provider_types;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(basic_provider, TInjector, basic_provider_types) {
@@ -246,8 +211,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(basic_provider, TInjector, basic_provider_types) {
 }
 
 typedef mpl::vector<
-    injector<generic_module_provider>
-  , injector<BOOST_TYPEOF(fusion_module_provider)>
+    injector<module_provider>
+  , injector<BOOST_TYPEOF(module2_provider)>
 > basic_visitor_types;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(basic_visitor, TInjector, basic_visitor_types) {
@@ -266,8 +231,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(basic_visitor, TInjector, basic_visitor_types) {
 }
 
 typedef mpl::vector<
-    injector<generic_module_custom_scope>
-  , injector<BOOST_TYPEOF(fusion_module_custom_scope)>
+    injector<module_custom_scope>
+  , injector<BOOST_TYPEOF(module2_custom_scope)>
 > basic_call_types;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(basic_call, TInjector, basic_call_types) {
@@ -285,55 +250,39 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(basic_call, TInjector, basic_call_types) {
     BOOST_CHECK(!injector.template create<shared_ptr<c3> >());
 }
 
-BOOST_AUTO_TEST_CASE(basic_generic_module_externals) {
-    injector<generic_module_externals> injector_(
-        generic_module_externals(
-            generic_module_externals::set<int>(42)
-          , generic_module_externals::set<double>(87.0)
-        )
-    );
-
+BOOST_AUTO_TEST_CASE(basic_module2_externals) {
+    injector<BOOST_TYPEOF(module2_externals)> injector_(module2_externals);
     shared_ptr<c9> c9_ = injector_.create<shared_ptr<c9> >();
 
     BOOST_CHECK_EQUAL(42, c9_->i);
     BOOST_CHECK_EQUAL(87.0, c9_->d);
 }
 
-BOOST_AUTO_TEST_CASE(ctor_generic_module_externals) {
-    injector<generic_module_externals_ctor> injector_(
-        generic_module_externals_ctor(42, 87.0)
-    );
-
-    shared_ptr<c9> c9_ = injector_.create<shared_ptr<c9> >();
-
-    BOOST_CHECK_EQUAL(42, c9_->i);
-    BOOST_CHECK_EQUAL(87.0, c9_->d);
-}
-
-BOOST_AUTO_TEST_CASE(basic_fusion_module_externals) {
-    injector<BOOST_TYPEOF(fusion_module_externals)> injector_(fusion_module_externals);
-    shared_ptr<c9> c9_ = injector_.create<shared_ptr<c9> >();
-
-    BOOST_CHECK_EQUAL(42, c9_->i);
-    BOOST_CHECK_EQUAL(87.0, c9_->d);
-}
-
+#if 0
 BOOST_AUTO_TEST_CASE(externals_mix) {
     shared_ptr<c3if0> c3if0_(new c3if0(67, 78.0));
 
-    typedef generic_module_externals_1 generic_module;
+    typedef module_externals_1 module;
+typedef module<
+   external<
+        double
+      , if0
+      , annotate<bind<int>::in_name<mpl::string<'1'> >::in_call<call_stack<c7, c6, c4> > >::with<a>
+      , annotate<bind<int>::in_call<c8> >::with<b>
+    >
+> module_externals_1;
 
     injector<
-        BOOST_TYPEOF(fusion_module_externals_1)
-      , generic_module_externals_1
+        BOOST_TYPEOF(module2_externals_1)
+      , module_externals_1
     > injector_(
-        generic_module(
-            generic_module::set<a>(3.0)
-          , generic_module::set<b>(4.0)
-          , generic_module::set<if0>(c3if0_)
-          , generic_module::set<double>(7.0)
+        module(
+            module::set<a>(3.0)
+          , module::set<b>(4.0)
+          , module::set<if0>(c3if0_)
+          , module::set<double>(7.0)
         )
-      , fusion_module_externals_1
+      , module2_externals_1
     );
 
     typedef BOOST_TYPEOF(injector_) inj;
@@ -351,56 +300,57 @@ BOOST_AUTO_TEST_CASE(externals_mix) {
     BOOST_CHECK_EQUAL(78.0, dynamic_cast<c3if0&>(*c8_->c7_->c6_->c5_.if0_).d);
     BOOST_CHECK_EQUAL(67, dynamic_cast<c3if0&>(*c8_->c7_->if0_).i);
 }
+#endif
 
 BOOST_AUTO_TEST_CASE(ctor) {
-    injector<BOOST_TYPEOF(fusion_module_1)> injector(fusion_module_1);
+    injector<BOOST_TYPEOF(module2_1)> injector(module2_1);
     check(injector.create<c8>());
 }
 
 BOOST_AUTO_TEST_CASE(ctor_mix) {
-    injector<generic_module_2, BOOST_TYPEOF(fusion_module_2)> injector(fusion_module_2);
+    injector<module_2, BOOST_TYPEOF(module2_2)> injector(module2_2);
     check(injector.create<shared_ptr<c8> >());
 }
 
 BOOST_AUTO_TEST_CASE(ctor_mix_order) {
-    injector<BOOST_TYPEOF(fusion_module_2), generic_module_2> injector(fusion_module_2);
+    injector<BOOST_TYPEOF(module2_2), module_2> injector(module2_2);
     check(injector.create<shared_ptr<c8> >());
 }
 
 BOOST_AUTO_TEST_CASE(ctor_mix_explicit) {
     injector<
-        generic_module_2
-      , BOOST_TYPEOF(fusion_module_2)
-    > injector(generic_module_2(), fusion_module_2);
+        module_2
+      , BOOST_TYPEOF(module2_2)
+    > injector(module_2(), module2_2);
     check(injector.create<shared_ptr<c8> >());
 }
 
 BOOST_AUTO_TEST_CASE(ctor_mix_explicit_order) {
     injector<
-        BOOST_TYPEOF(fusion_module_2)
-      , generic_module_2
-    > injector(fusion_module_2, generic_module_2());
+        BOOST_TYPEOF(module2_2)
+      , module_2
+    > injector(module2_2, module_2());
     check(injector.create<shared_ptr<c8> >());
 }
 
 BOOST_AUTO_TEST_CASE(install) {
     injector<> injector_;
-    check(injector_.install(generic_module_2(), generic_module_3()).create<shared_ptr<c8> >());
+    check(injector_.install(module_2(), module_3()).create<shared_ptr<c8> >());
 }
 
 BOOST_AUTO_TEST_CASE(install_mix) {
     injector<> injector_;
-    check(injector_.install(generic_module_2(), fusion_module_2).create<shared_ptr<c8> >());
+    check(injector_.install(module_2(), module2_2).create<shared_ptr<c8> >());
 }
 
-BOOST_AUTO_TEST_CASE(pre_installed_generic_module_install_fusion_module) {
-    injector<generic_module_2> injector_;
-    check(injector_.install(fusion_module_2).create<shared_ptr<c8> >());
+BOOST_AUTO_TEST_CASE(pre_installed_module_install_module2) {
+    injector<module_2> injector_;
+    check(injector_.install(module2_2).create<shared_ptr<c8> >());
 }
 
-BOOST_AUTO_TEST_CASE(pre_installed_fusion_module_install_generic_module) {
-    injector<BOOST_TYPEOF(fusion_module_2)> injector_(fusion_module_2);
-    check(injector_.install<generic_module_2>().create<shared_ptr<c8> >());
+BOOST_AUTO_TEST_CASE(pre_installed_module2_install_module) {
+    injector<BOOST_TYPEOF(module2_2)> injector_(module2_2);
+    check(injector_.install<module_2>().create<shared_ptr<c8> >());
 }
 
 BOOST_AUTO_TEST_CASE(scope_deduction) {
@@ -409,8 +359,8 @@ BOOST_AUTO_TEST_CASE(scope_deduction) {
 }
 
 typedef mpl::vector<
-    injector<generic_module_c0if0>
-  , injector<BOOST_TYPEOF(fusion_module_c0if0)>
+    injector<module_c0if0>
+  , injector<BOOST_TYPEOF(module2_c0if0)>
 > deduce_modules_types;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(scope_deduction_if, TInjector, deduce_modules_types) {

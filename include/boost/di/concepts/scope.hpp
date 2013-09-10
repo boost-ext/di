@@ -15,8 +15,6 @@
 #include <boost/mpl/lambda.hpp>
 #include <boost/mpl/has_xxx.hpp>
 
-#include "boost/di/scopes/external.hpp"
-#include "boost/di/concepts/annotate.hpp"
 #include "boost/di/type_traits/is_same_base_of.hpp"
 #include "boost/di/config.hpp"
 
@@ -44,7 +42,6 @@ template<
 class scope
 {
     BOOST_MPL_HAS_XXX_TRAIT_DEF(context)
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
 
     template<
         typename TExpected
@@ -65,11 +62,6 @@ class scope
         : has_context<T>
     { };
 
-    template<typename T>
-    struct is_annotation
-        : has_name<T>
-    { };
-
     template<
         typename T
       , typename U
@@ -77,20 +69,6 @@ class scope
     >
     struct rebind
         : T::template rebind<U>::other
-    { };
-
-    template<typename T>
-    struct rebind<T, scopes::external<>, typename enable_if<is_annotation<T> >::type>
-        : annotate<
-              typename T::element_type::template rebind<scopes::external<> >::other
-          >::template with<typename T::name>::type
-    { };
-
-    template<typename T>
-    struct rebind<T, scopes::external<>, typename disable_if<is_annotation<T> >::type>
-        : annotate<
-              typename T::template rebind<scopes::external<> >::other
-          >::template with<>::type
     { };
 
     template<
@@ -104,10 +82,7 @@ class scope
             , mpl::push_back<
                   mpl::_1
                 , mpl::if_<
-                      mpl::or_<
-                          is_dependency<mpl::_2>
-                        , is_annotation<mpl::_2>
-                      >
+                      is_dependency<mpl::_2>
                     , rebind<mpl::_2, TScope>
                     , rebind<T, TScope>
                   >
