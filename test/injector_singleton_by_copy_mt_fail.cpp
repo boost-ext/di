@@ -8,7 +8,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "boost/di/generic_module.hpp"
+#include "boost/di/module.hpp"
 #include "data.hpp"
 
 namespace boost {
@@ -16,7 +16,7 @@ namespace di {
 
 BOOST_AUTO_TEST_CASE(singleton_by_copy_fail) {
     injector<
-        generic_module<
+        module<
             c0if0
           , singleton<
                 c6
