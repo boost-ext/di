@@ -24,19 +24,6 @@ BOOST_AUTO_TEST_CASE(create) {
     >::type concept;
 }
 
-BOOST_AUTO_TEST_CASE(externals) {
-    //typedef external<
-        ////bind<int>::in_call<c4>
-        ////annotate<int>::with<void>
-        //int
-     //, annotate< bind<c1>::in_call<c2> >::with<void>
-    //>::type concept;
-
-    //std::cout << boost::units::detail::demangle(typeid(concept).name()) << std::endl;
-
-    //BOOST_CHECK(0);
-}
-
 BOOST_AUTO_TEST_CASE(def_scope) {
     typedef per_request<
         int

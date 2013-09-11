@@ -7,8 +7,8 @@
 #include "boost/di/concepts.hpp"
 
 #include <boost/test/unit_test.hpp>
+#include <boost/shared_ptr.hpp>
 
-#include "boost/di/module.hpp"
 #include "boost/di/concepts.hpp"
 #include "boost/di/make_module.hpp"
 
@@ -17,17 +17,26 @@
 namespace boost {
 namespace di {
 
-BOOST_AUTO_TEST_CASE(module_) {
-    using m = module<
+BOOST_AUTO_TEST_CASE(make_module_ctor) {
+    using module_c0 = module<
         c0if0
     >;
 
-    auto fm = make_module(
-        m()
+    shared_ptr<c5> c5_ = module_c0().create<shared_ptr<c5>>();
+    BOOST_CHECK_EQUAL(0, c5_->c2_->i);
+}
+
+BOOST_AUTO_TEST_CASE(make_module_by_value) {
+    using module_c0 = module<
+        c0if0
+    >;
+
+    auto module_c0_int_ = make_module(
+        module_c0()
       , bind<int>::to(42)
     );
 
-    shared_ptr<c5> c5_ = fm.create<shared_ptr<c5>>();
+    shared_ptr<c5> c5_ = module_c0_int_.create<shared_ptr<c5>>();
     BOOST_CHECK_EQUAL(42, c5_->c2_->i);
 }
 

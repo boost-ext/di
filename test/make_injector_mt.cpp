@@ -7,9 +7,9 @@
 #include "boost/di/concepts.hpp"
 
 #include <boost/test/unit_test.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include "boost/di/concepts.hpp"
-#include "boost/di/module.hpp"
 #include "boost/di/make_injector.hpp"
 #include "boost/di/make_module.hpp"
 
@@ -18,34 +18,37 @@
 namespace boost {
 namespace di {
 
-BOOST_AUTO_TEST_CASE(injector_) {
-typedef module<
+using module_c0 = module<
+    c0if0
+>;
 
-   //per_request<
-        bind_int<0>
-      //, bind_int<1>
-    //>
-> module_2;
-    typedef module<
-        c0if0
-    > mm;
+auto module_c0_int_ = make_module(
+    module_c0()
+  , bind<int>::to(42)
+);
 
-    //auto mm = module2<>()(
-        //singleton<
-            //c0if0
-        //>()
-    //);
+BOOST_AUTO_TEST_CASE(injector_ctor) {
+    injector<module_c0> inj;
+    shared_ptr<c5> c5_ = inj.create<shared_ptr<c5>>();
+    BOOST_CHECK_EQUAL(0, c5_->c2_->i);
+}
 
-    //auto mod = make_module(m());
-
+BOOST_AUTO_TEST_CASE(injector_install_by_value) {
     injector<> inj;
-    inj.install(module_2());
+    shared_ptr<c5> c5_ = inj.install(module_c0()).create<shared_ptr<c5>>();
+    BOOST_CHECK_EQUAL(0, c5_->c2_->i);
+}
 
-    //auto inj = make_injector(mod);
-    //make_injector(m());
+BOOST_AUTO_TEST_CASE(injector_install_by_ref) {
+    injector<> inj;
+    shared_ptr<c5> c5_ = inj.install(module_c0_int_).create<shared_ptr<c5>>();
+    BOOST_CHECK_EQUAL(42, c5_->c2_->i);
+}
 
-    //shared_ptr<c5> c5_ = inj.create<shared_ptr<c5>>();
-    //BOOST_CHECK_EQUAL(42, c5_->c2_->i);
+BOOST_AUTO_TEST_CASE(make_injector_module) {
+    auto inj = make_injector(module_c0_int_);
+    shared_ptr<c5> c5_ = inj.create<shared_ptr<c5>>();
+    BOOST_CHECK_EQUAL(42, c5_->c2_->i);
 }
 
 } // namespace di
