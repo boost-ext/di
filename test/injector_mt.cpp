@@ -10,7 +10,7 @@
 #include <boost/test/test_case_template.hpp>
 #include <boost/mpl/vector.hpp>
 
-#include "boost/di/module.hpp"
+#include "boost/di/make_module.hpp"
 
 #include "fake_visitor.hpp"
 #include "fake_scope.hpp"
@@ -19,119 +19,119 @@
 namespace boost {
 namespace di {
 
-typedef module<
+using module_1 = module<
     singleton<
         c3
     >
   , per_request<
         c0if0
-      , bind<c1if0>::in_call<call_stack<c6, c5> >
+      , bind<c1if0>::in_call<call_stack<c6, c5>>
       , bind<c2if0>::in_call<c7>
       , bind_int<1>
       , bind_int<2>::in_call<c8>
-      , bind_int<3>::in_name<mpl::string<'1'> >::in_call<call_stack<c7, c6, c4> >
-      , bind_int<4>::in_name<mpl::string<'2'> >::in_call<call_stack<c7, c6, c4> >
+      , bind_int<3>::in_name<mpl::string<'1'>>::in_call<call_stack<c7, c6, c4>>
+      , bind_int<4>::in_name<mpl::string<'2'>>::in_call<call_stack<c7, c6, c4>>
       , bind_int<5>::in_call<c2>
     >
-> module_1;
+>;
 
-typedef module<
+using module_2 = module<
     singleton<
         c3
     >
   , per_request<
-        bind_int<0>::in_name<mpl::string<'1'> >
+        bind_int<0>::in_name<mpl::string<'1'>>
       , bind_int<1>
     >
-> module_2;
+>;
 
-typedef module<
+using module_3 = module<
     singleton<
         c0if0
     >
   , per_request<
         bind_int<2>::in_call<c8>
-      , bind_int<3>::in_name<mpl::string<'2'> >
+      , bind_int<3>::in_name<mpl::string<'2'>>
     >
-> module_3;
+>;
 
-typedef module<
+using module_custom_scope = module<
     scope<fake_scope>::bind<c3>
-> module_custom_scope;
+>;
 
-typedef module<
+using module_provider = module<
     per_request<
         transaction_provider
       , mpl::int_<0>
     >
-> module_provider;
+>;
 
-typedef module<
+using module_c0if0 = module<
     c0if0
-> module_c0if0;
+> ;
 
-BOOST_AUTO(module2_1, module2<>()(
+auto module2_1 = make_module(
     singleton<
         c3
     >()
   , per_request<
         c0if0
-      , bind<c1if0>::in_call<call_stack<c6, c5> >
+      , bind<c1if0>::in_call<call_stack<c6, c5>>
       , bind<c2if0>::in_call<c7>
       , bind_int<1>
       , bind_int<2>::in_call<c8>
-      , bind_int<3>::in_name<mpl::string<'1'> >::in_call<call_stack<c7, c6, c4> >
-      , bind_int<4>::in_name<mpl::string<'2'> >::in_call<call_stack<c7, c6, c4> >
+      , bind_int<3>::in_name<mpl::string<'1'>>::in_call<call_stack<c7, c6, c4>>
+      , bind_int<4>::in_name<mpl::string<'2'>>::in_call<call_stack<c7, c6, c4>>
       , bind_int<5>::in_call<c2>
     >()
-));
+);
 
-BOOST_AUTO(module2_2, module2<>()(
+auto module2_2 = make_module(
     singleton<
         c0if0
     >()
   , per_request<
         bind_int<2>::in_call<c8>
-      , bind_int<3>::in_name<mpl::string<'2'> >
+      , bind_int<3>::in_name<mpl::string<'2'>>
     >()
-));
+);
 
-BOOST_AUTO(module2_3, module2<>()(
+auto module2_3 = make_module(
     singleton<
         c3
     >()
   , per_request<
-        bind_int<0>::in_name<mpl::string<'1'> >
+        bind_int<0>::in_name<mpl::string<'1'>>
       , bind_int<1>
     >()
-));
+);
 
-BOOST_AUTO(module2_custom_scope, module2<>()(
+auto module2_custom_scope = make_module(
     scope<fake_scope>::bind<c3>()
-));
+);
 
-BOOST_AUTO(module2_provider, module2<>()(
+auto module2_provider = make_module(
     per_request<
         transaction_provider, mpl::int_<0>
     >()
-));
+);
 
-BOOST_AUTO(module2_externals, module2<>()(
+auto module2_externals = make_module(
     singleton<
         c0if0
     >()
   , bind<int>::to(42)
   , bind<double>::to(87.0)
-));
+);
 
-BOOST_AUTO(module2_externals_1, module2<>()(
+auto module2_externals_1 = make_module(
     bind<int>::to(42)
   , bind<int>::in_call<c2>::to(87)
-));
+);
 
-BOOST_AUTO(module2_c0if0, module2<>()(
+auto module2_c0if0 = make_module(
     deduce<c0if0>()
-));
+);
 
 void check(const c8& c8_) {
     BOOST_CHECK(c8_.c1_ == c8_.c7_->c6_->c5_.c1_);
@@ -167,42 +167,42 @@ void check(const shared_ptr<c8>& c8_) {
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-typedef mpl::vector<
+using one_module_types = mpl::vector<
     injector<module_1>
   , injector<BOOST_TYPEOF(module2_1)>
-> one_module_types;
+>;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(one_module, TInjector, one_module_types) {
     TInjector injector;
     check(injector.template create<c8>());
 }
 
-typedef mpl::vector<
+using many_modules_types = mpl::vector<
     injector<module_2, module_3>
   , injector<module_3, module_2>
   , injector<BOOST_TYPEOF(module2_2), BOOST_TYPEOF(module2_3)>
   , injector<BOOST_TYPEOF(module2_3), BOOST_TYPEOF(module2_2)>
-> many_modules_types;
+>;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(many_modules, TInjector, many_modules_types) {
     TInjector injector;
-    check(injector.template create<shared_ptr<c8> >());
+    check(injector.template create<shared_ptr<c8>>());
 }
 
-typedef mpl::vector<
+using mix_modules_types = mpl::vector<
     injector<module_2, BOOST_TYPEOF(module2_2)>
   , injector<BOOST_TYPEOF(module2_2), module_2>
-> mix_modules_types;
+> ;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(mix_modules, TInjector, mix_modules_types) {
     TInjector injector;
-    check(injector.template create<shared_ptr<c8> >());
+    check(injector.template create<shared_ptr<c8>>());
 }
 
-typedef mpl::vector<
+using basic_provider_types = mpl::vector<
     injector<module_provider>
   , injector<BOOST_TYPEOF(module2_provider)>
-> basic_provider_types;
+>;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(basic_provider, TInjector, basic_provider_types) {
     TInjector injector;
@@ -210,10 +210,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(basic_provider, TInjector, basic_provider_types) {
     BOOST_CHECK(obj.p->get().get() != obj.p->get().get());
 }
 
-typedef mpl::vector<
+using basic_visitor_types = mpl::vector<
     injector<module_provider>
   , injector<BOOST_TYPEOF(module2_provider)>
-> basic_visitor_types;
+>;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(basic_visitor, TInjector, basic_visitor_types) {
     TInjector injector;
@@ -221,7 +221,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(basic_visitor, TInjector, basic_visitor_types) {
     fake_visitor<
         mpl::vector<
             transaction_usage
-          , shared_ptr<provider<shared_ptr<transaction> > >
+          , shared_ptr<provider<shared_ptr<transaction>>>
           , shared_ptr<c3>
           , int
         >
@@ -230,10 +230,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(basic_visitor, TInjector, basic_visitor_types) {
     injector.template visit<transaction_usage>(visitor);
 }
 
-typedef mpl::vector<
+using basic_call_types =mpl::vector<
     injector<module_custom_scope>
   , injector<BOOST_TYPEOF(module2_custom_scope)>
-> basic_call_types;
+>;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(basic_call, TInjector, basic_call_types) {
     fake_scope::entry_calls() = 0;
@@ -241,18 +241,18 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(basic_call, TInjector, basic_call_types) {
 
     TInjector injector;
 
-    BOOST_CHECK(!injector.template create<shared_ptr<c3> >());
+    BOOST_CHECK(!injector.template create<shared_ptr<c3>>());
 
     injector.template call<fake_scope>(fake_scope::entry());
-    BOOST_CHECK(injector.template create<shared_ptr<c3> >());
+    BOOST_CHECK(injector.template create<shared_ptr<c3>>());
 
     injector.template call<fake_scope>(fake_scope::exit());
-    BOOST_CHECK(!injector.template create<shared_ptr<c3> >());
+    BOOST_CHECK(!injector.template create<shared_ptr<c3>>());
 }
 
 BOOST_AUTO_TEST_CASE(basic_module2_externals) {
     injector<BOOST_TYPEOF(module2_externals)> injector_(module2_externals);
-    shared_ptr<c9> c9_ = injector_.create<shared_ptr<c9> >();
+    shared_ptr<c9> c9_ = injector_.create<shared_ptr<c9>>();
 
     BOOST_CHECK_EQUAL(42, c9_->i);
     BOOST_CHECK_EQUAL(87.0, c9_->d);
@@ -267,8 +267,8 @@ typedef module<
    external<
         double
       , if0
-      , annotate<bind<int>::in_name<mpl::string<'1'> >::in_call<call_stack<c7, c6, c4> > >::with<a>
-      , annotate<bind<int>::in_call<c8> >::with<b>
+      , annotate<bind<int>::in_name<mpl::string<'1'>>::in_call<call_stack<c7, c6, c4>>>::with<a>
+      , annotate<bind<int>::in_call<c8>>::with<b>
     >
 > module_externals_1;
 
@@ -287,7 +287,7 @@ typedef module<
 
     typedef BOOST_TYPEOF(injector_) inj;
 
-    shared_ptr<c8> c8_ = injector_.create<shared_ptr<c8> >();
+    shared_ptr<c8> c8_ = injector_.create<shared_ptr<c8>>();
 
     BOOST_CHECK_EQUAL(4, c8_->i);
     BOOST_CHECK_EQUAL(3, c8_->c7_->c6_->c4_->i1);
@@ -309,12 +309,12 @@ BOOST_AUTO_TEST_CASE(ctor) {
 
 BOOST_AUTO_TEST_CASE(ctor_mix) {
     injector<module_2, BOOST_TYPEOF(module2_2)> injector(module2_2);
-    check(injector.create<shared_ptr<c8> >());
+    check(injector.create<shared_ptr<c8>>());
 }
 
 BOOST_AUTO_TEST_CASE(ctor_mix_order) {
     injector<BOOST_TYPEOF(module2_2), module_2> injector(module2_2);
-    check(injector.create<shared_ptr<c8> >());
+    check(injector.create<shared_ptr<c8>>());
 }
 
 BOOST_AUTO_TEST_CASE(ctor_mix_explicit) {
@@ -322,7 +322,7 @@ BOOST_AUTO_TEST_CASE(ctor_mix_explicit) {
         module_2
       , BOOST_TYPEOF(module2_2)
     > injector(module_2(), module2_2);
-    check(injector.create<shared_ptr<c8> >());
+    check(injector.create<shared_ptr<c8>>());
 }
 
 BOOST_AUTO_TEST_CASE(ctor_mix_explicit_order) {
@@ -330,48 +330,48 @@ BOOST_AUTO_TEST_CASE(ctor_mix_explicit_order) {
         BOOST_TYPEOF(module2_2)
       , module_2
     > injector(module2_2, module_2());
-    check(injector.create<shared_ptr<c8> >());
+    check(injector.create<shared_ptr<c8>>());
 }
 
 BOOST_AUTO_TEST_CASE(install) {
     injector<> injector_;
-    check(injector_.install(module_2(), module_3()).create<shared_ptr<c8> >());
+    check(injector_.install(module_2(), module_3()).create<shared_ptr<c8>>());
 }
 
 BOOST_AUTO_TEST_CASE(install_mix) {
     injector<> injector_;
-    check(injector_.install(module_2(), module2_2).create<shared_ptr<c8> >());
+    check(injector_.install(module_2(), module2_2).create<shared_ptr<c8>>());
 }
 
 BOOST_AUTO_TEST_CASE(pre_installed_module_install_module2) {
     injector<module_2> injector_;
-    check(injector_.install(module2_2).create<shared_ptr<c8> >());
+    check(injector_.install(module2_2).create<shared_ptr<c8>>());
 }
 
 BOOST_AUTO_TEST_CASE(pre_installed_module2_install_module) {
     injector<BOOST_TYPEOF(module2_2)> injector_(module2_2);
-    check(injector_.install<module_2>().create<shared_ptr<c8> >());
+    check(injector_.install<module_2>().create<shared_ptr<c8>>());
 }
 
 BOOST_AUTO_TEST_CASE(scope_deduction) {
-    shared_ptr<c19> c19_ = injector<>().create<shared_ptr<c19> >();
+    shared_ptr<c19> c19_ = injector<>().create<shared_ptr<c19>>();
     BOOST_CHECK(c19_->c1_ == c19_->c1__);
 }
 
-typedef mpl::vector<
+using deduce_modules_types = mpl::vector<
     injector<module_c0if0>
   , injector<BOOST_TYPEOF(module2_c0if0)>
-> deduce_modules_types;
+>;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(scope_deduction_if, TInjector, deduce_modules_types) {
     TInjector injector;
-    shared_ptr<c20> c20_ = injector.template create<shared_ptr<c20> >();
+    shared_ptr<c20> c20_ = injector.template create<shared_ptr<c20>>();
     BOOST_CHECK(c20_->if0_ == c20_->if0__);
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(std_shared_ptr_std_unique_ptr, TInjector, deduce_modules_types) {
     TInjector injector;
-    std::shared_ptr<c21> c21_ = injector.template create<std::shared_ptr<c21> >();
+    std::shared_ptr<c21> c21_ = injector.template create<std::shared_ptr<c21>>();
     BOOST_CHECK(c21_->if0__ == c21_->if0__);
 }
 
