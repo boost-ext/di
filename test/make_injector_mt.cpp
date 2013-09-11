@@ -23,7 +23,7 @@ typedef module<
 
    //per_request<
         bind_int<0>
-      , bind_int<1>
+      //, bind_int<1>
     //>
 > module_2;
     typedef module<

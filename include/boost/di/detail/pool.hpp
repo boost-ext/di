@@ -40,6 +40,8 @@
     namespace di {
     namespace detail {
 
+    class init { };
+
     template<
         typename TTypes = mpl::vector0<>
       , typename = void
@@ -53,7 +55,7 @@
         pool() { }
 
         template<typename T>
-        explicit pool(const pool<T>&)
+        explicit pool(const pool<T>&, const init&)
         { }
 
         template<typename T>
@@ -140,6 +142,7 @@
         template<typename T>
         explicit pool(
             const pool<T>&
+          , const init&
           , typename enable_if_c<
                 mpl::size<typename pool<T>::types>::value == 0
             >::type* = 0)
@@ -149,6 +152,7 @@
             template<typename T>                                        \
             explicit pool(                                              \
                 const pool<T>& p                                        \
+              , const init&                                             \
               , typename enable_if_c<                                   \
                     mpl::size<typename pool<T>::types>::value == n      \
                 >::type* = 0)                                           \

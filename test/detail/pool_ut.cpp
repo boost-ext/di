@@ -10,7 +10,6 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
 
-#include <boost/units/detail/utility.hpp>
 namespace boost {
 namespace di {
 namespace detail {
@@ -216,14 +215,14 @@ BOOST_AUTO_TEST_CASE(pool_of_pools) {
     );
 }
 
-BOOST_AUTO_TEST_CASE(pool_from_other_empty_pool) {
+BOOST_AUTO_TEST_CASE(init_pool_from_other_empty_pool) {
     pool<mpl::vector<> > pool_empty_;
-    pool<mpl::vector<default_ctor> > pool_(pool_empty_);
+    pool<mpl::vector<default_ctor> > pool_(pool_empty_, init());
 
     BOOST_CHECK_EQUAL(0, pool_.get<default_ctor>().i);
 }
 
-BOOST_AUTO_TEST_CASE(pool_from_other_subset_pool) {
+BOOST_AUTO_TEST_CASE(init_pool_from_other_subset_pool) {
     typedef pool<
         mpl::vector<
             trivial_ctor
@@ -243,7 +242,7 @@ BOOST_AUTO_TEST_CASE(pool_from_other_subset_pool) {
     custom_ctor custom_ctor_(42);
 
     pool_subset_type pool_subset_(trivial_ctor_, custom_ctor_);
-    pool_all_type pool_all_(pool_subset_);
+    pool_all_type pool_all_(pool_subset_, init());
 
     BOOST_CHECK_EQUAL(
         trivial_ctor_.i
@@ -261,23 +260,30 @@ BOOST_AUTO_TEST_CASE(pool_from_other_subset_pool) {
     );
 }
 
-BOOST_AUTO_TEST_CASE(pool_from_pool_pool) {
-    typedef pool<
-        mpl::vector<
-            custom_ctor
-          //, default_ctor
-          //, trivial_ctor
-        >
-    > pool_type;
-
+BOOST_AUTO_TEST_CASE(pool_from_pool_of_pools) {
+    typedef pool<mpl::vector<custom_ctor> > pool_type;
     typedef pool<mpl::vector<pool_type> > pool_pool_type;
+    const int i = 42;
 
-    pool_type p1(custom_ctor(0));
-    //pool_pool_type p2(p1);
+    custom_ctor ctor(i);
+    pool_type p1(ctor);
+    pool_pool_type p2(p1);
 
-    std::cout << units::detail::demangle(typeid(pool_pool_type::types::type).name()) << std::endl;
+    BOOST_CHECK_EQUAL(i, p2.get<custom_ctor>().i);
+}
 
-    //BOOST_CHECK(0);
+BOOST_AUTO_TEST_CASE(pool_from_pool_of_pools_many) {
+    typedef pool<mpl::vector<custom_ctor, default_ctor> > pool_type;
+    typedef pool<mpl::vector<pool_type> > pool_pool_type;
+    const int i = 42;
+
+    custom_ctor c(i);
+    default_ctor d;
+    pool_type p1(c, d);
+    pool_pool_type p2(p1);
+
+    BOOST_CHECK_EQUAL(i, p2.get<custom_ctor>().i);
+    BOOST_CHECK_EQUAL(0, p2.get<default_ctor>().i);
 }
 
 } // namespace detail

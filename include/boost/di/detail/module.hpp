@@ -214,7 +214,7 @@
                         >
                     >
                 >::type
-            > deps_(this->deps_);
+            > deps_(this->deps_, init());
 
             return TCreator<TBinder<deps> >::template
                 execute<T, mpl::vector0<> >(deps_);
@@ -282,6 +282,7 @@
       , typename enable_if<is_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >::type* = 0)
         : deps_(TPool<mpl::vector<BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_GET_DEPS, args)> >(
               BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), args, .deps_ BOOST_PP_INTERCEPT))
+            , init()
           )
     { }
 
