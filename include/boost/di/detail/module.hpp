@@ -67,7 +67,6 @@
     class module
     {
         BOOST_MPL_HAS_XXX_TRAIT_DEF(deps)
-        BOOST_MPL_HAS_XXX_TRAIT_DEF(context)
 
         template<
             typename
@@ -76,11 +75,6 @@
           , template<typename> class
           , template<typename> class
         > friend class module;
-
-        template<typename T>
-        struct is_dependency
-            : has_context<T>
-        { };
 
         template<typename TSeq>
         struct unique
