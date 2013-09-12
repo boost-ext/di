@@ -39,28 +39,6 @@ BOOST_AUTO_TEST_CASE(create_args) {
     ));
 }
 
-#if 0
-BOOST_AUTO_TEST_CASE(create_allocator) {
-    allocate_calls = 0;
-    deallocate_calls = 0;
-
-    struct deallocate
-    {
-        ~deallocate() {
-            BOOST_CHECK_EQUAL(1, deallocate_calls);
-        }
-    } deallocate_;
-
-    singleton<fake_allocator>::scope<int> singleton_;
-    singleton_.create<int>(0);
-
-    BOOST_CHECK_EQUAL(1, allocate_calls);
-    BOOST_CHECK_EQUAL(0, deallocate_calls);
-
-    (void)deallocate_;
-}
-#endif
-
 } // namespace scopes
 } // namespace di
 } // namespace boost

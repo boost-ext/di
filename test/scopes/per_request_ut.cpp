@@ -65,19 +65,6 @@ BOOST_AUTO_TEST_CASE(create_value_has_value_type) {
     BOOST_CHECK_EQUAL(d, (per_request<>::scope<double, double_value>().create()));
 }
 
-#if 0
-BOOST_AUTO_TEST_CASE(create_allocator) {
-    allocate_calls = 0;
-    deallocate_calls = 0;
-
-    per_request<fake_allocator>::scope<int> per_request_;
-    per_request_.create<int>(0);
-
-    BOOST_CHECK_EQUAL(1, allocate_calls);
-    BOOST_CHECK_EQUAL(1, deallocate_calls);
-}
-#endif
-
 } // namespace scopes
 } // namespace di
 } // namespace boost
