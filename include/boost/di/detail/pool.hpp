@@ -150,9 +150,14 @@
         #include BOOST_PP_LOCAL_ITERATE()
         #undef BOOST_DI_CTOR_INITLIST_IMPL
 
-        #define BOOST_DI_CTOR_INITLIST_IMPL(_, n, na)                \
-            BOOST_PP_COMMA_IF(n) mpl::at_c<typename pool<T, I>::types, n>::type(             \
-                p.get<typename mpl::at_c<typename pool<T, I>::types, n>::type>())
+        #define BOOST_DI_CTOR_INITLIST_IMPL(_, n, na)                   \
+            BOOST_PP_COMMA_IF(n)                                        \
+            mpl::at_c<typename pool<T, I>::types, n>::type(             \
+                p.get<typename mpl::at_c<                               \
+                    typename pool<T, I>::types                          \
+                  , n                                                   \
+                >::type>()                                              \
+            )
 
         template<typename T, typename I>
         explicit pool(
@@ -164,17 +169,17 @@
         { }
 
         #define BOOST_PP_LOCAL_MACRO(n)                                 \
-            template<typename T, typename I>                                        \
+            template<typename T, typename I>                            \
             explicit pool(                                              \
-                const pool<T, I>& p                                        \
+                const pool<T, I>& p                                     \
               , const init&                                             \
               , typename enable_if_c<                                   \
-                    mpl::size<typename pool<T, I>::types>::value == n      \
+                    mpl::size<typename pool<T, I>::types>::value == n   \
                 >::type* = 0)                                           \
                 : BOOST_PP_REPEAT(                                      \
                       n                                                 \
                     , BOOST_DI_CTOR_INITLIST_IMPL                       \
-                    , ~\
+                    , ~                                                 \
                   )                                                     \
             { }
 

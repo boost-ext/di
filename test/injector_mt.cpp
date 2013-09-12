@@ -8,6 +8,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
+#include <boost/make_shared.hpp>
 #include <boost/mpl/vector.hpp>
 
 #include "boost/di/make_module.hpp"
@@ -116,6 +117,13 @@ auto module2_provider = make_module(
     >()
 );
 
+auto module_externals = make_module(
+    bind<double>::to(7.0)
+  , bind<if0>::to(boost::make_shared<c3if0>(67, 78.0))
+  , bind<int>::in_name<mpl::string<'1'>>::in_call<call_stack<c7, c6, c4>>::to(3)
+  , bind<int>::in_call<c8>::to(4)
+);
+
 auto module2_externals = make_module(
     singleton<
         c0if0
@@ -169,7 +177,7 @@ void check(const shared_ptr<c8>& c8_) {
 
 using one_module_types = mpl::vector<
     injector<module_1>
-  , injector<BOOST_TYPEOF(module2_1)>
+  , injector<decltype(module2_1)>
 >;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(one_module, TInjector, one_module_types) {
@@ -180,8 +188,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(one_module, TInjector, one_module_types) {
 using many_modules_types = mpl::vector<
     injector<module_2, module_3>
   , injector<module_3, module_2>
-  , injector<BOOST_TYPEOF(module2_2), BOOST_TYPEOF(module2_3)>
-  , injector<BOOST_TYPEOF(module2_3), BOOST_TYPEOF(module2_2)>
+  , injector<decltype(module2_2), decltype(module2_3)>
+  , injector<decltype(module2_3), decltype(module2_2)>
 >;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(many_modules, TInjector, many_modules_types) {
@@ -190,8 +198,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(many_modules, TInjector, many_modules_types) {
 }
 
 using mix_modules_types = mpl::vector<
-    injector<module_2, BOOST_TYPEOF(module2_2)>
-  , injector<BOOST_TYPEOF(module2_2), module_2>
+    injector<module_2, decltype(module2_2)>
+  , injector<decltype(module2_2), module_2>
 > ;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(mix_modules, TInjector, mix_modules_types) {
@@ -201,7 +209,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(mix_modules, TInjector, mix_modules_types) {
 
 using basic_provider_types = mpl::vector<
     injector<module_provider>
-  , injector<BOOST_TYPEOF(module2_provider)>
+  , injector<decltype(module2_provider)>
 >;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(basic_provider, TInjector, basic_provider_types) {
@@ -212,7 +220,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(basic_provider, TInjector, basic_provider_types) {
 
 using basic_visitor_types = mpl::vector<
     injector<module_provider>
-  , injector<BOOST_TYPEOF(module2_provider)>
+  , injector<decltype(module2_provider)>
 >;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(basic_visitor, TInjector, basic_visitor_types) {
@@ -232,7 +240,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(basic_visitor, TInjector, basic_visitor_types) {
 
 using basic_call_types =mpl::vector<
     injector<module_custom_scope>
-  , injector<BOOST_TYPEOF(module2_custom_scope)>
+  , injector<decltype(module2_custom_scope)>
 >;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(basic_call, TInjector, basic_call_types) {
@@ -251,41 +259,18 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(basic_call, TInjector, basic_call_types) {
 }
 
 BOOST_AUTO_TEST_CASE(basic_module2_externals) {
-    injector<BOOST_TYPEOF(module2_externals)> injector_(module2_externals);
+    injector<decltype(module2_externals)> injector_(module2_externals);
     shared_ptr<c9> c9_ = injector_.create<shared_ptr<c9>>();
 
     BOOST_CHECK_EQUAL(42, c9_->i);
     BOOST_CHECK_EQUAL(87.0, c9_->d);
 }
 
-#if 0
 BOOST_AUTO_TEST_CASE(externals_mix) {
-    shared_ptr<c3if0> c3if0_(new c3if0(67, 78.0));
-
-    typedef module_externals_1 module;
-typedef module<
-   external<
-        double
-      , if0
-      , annotate<bind<int>::in_name<mpl::string<'1'>>::in_call<call_stack<c7, c6, c4>>>::with<a>
-      , annotate<bind<int>::in_call<c8>>::with<b>
-    >
-> module_externals_1;
-
     injector<
-        BOOST_TYPEOF(module2_externals_1)
-      , module_externals_1
-    > injector_(
-        module(
-            module::set<a>(3.0)
-          , module::set<b>(4.0)
-          , module::set<if0>(c3if0_)
-          , module::set<double>(7.0)
-        )
-      , module2_externals_1
-    );
-
-    typedef BOOST_TYPEOF(injector_) inj;
+        decltype(module_externals)
+      , decltype(module2_externals)
+    > injector_(module2_externals, module_externals);
 
     shared_ptr<c8> c8_ = injector_.create<shared_ptr<c8>>();
 
@@ -300,34 +285,33 @@ typedef module<
     BOOST_CHECK_EQUAL(78.0, dynamic_cast<c3if0&>(*c8_->c7_->c6_->c5_.if0_).d);
     BOOST_CHECK_EQUAL(67, dynamic_cast<c3if0&>(*c8_->c7_->if0_).i);
 }
-#endif
 
 BOOST_AUTO_TEST_CASE(ctor) {
-    injector<BOOST_TYPEOF(module2_1)> injector(module2_1);
+    injector<decltype(module2_1)> injector(module2_1);
     check(injector.create<c8>());
 }
 
 BOOST_AUTO_TEST_CASE(ctor_mix) {
-    injector<module_2, BOOST_TYPEOF(module2_2)> injector(module2_2);
+    injector<module_2, decltype(module2_2)> injector(module2_2);
     check(injector.create<shared_ptr<c8>>());
 }
 
 BOOST_AUTO_TEST_CASE(ctor_mix_order) {
-    injector<BOOST_TYPEOF(module2_2), module_2> injector(module2_2);
+    injector<decltype(module2_2), module_2> injector(module2_2);
     check(injector.create<shared_ptr<c8>>());
 }
 
 BOOST_AUTO_TEST_CASE(ctor_mix_explicit) {
     injector<
         module_2
-      , BOOST_TYPEOF(module2_2)
+      , decltype(module2_2)
     > injector(module_2(), module2_2);
     check(injector.create<shared_ptr<c8>>());
 }
 
 BOOST_AUTO_TEST_CASE(ctor_mix_explicit_order) {
     injector<
-        BOOST_TYPEOF(module2_2)
+        decltype(module2_2)
       , module_2
     > injector(module2_2, module_2());
     check(injector.create<shared_ptr<c8>>());
@@ -349,7 +333,7 @@ BOOST_AUTO_TEST_CASE(pre_installed_module_install_module2) {
 }
 
 BOOST_AUTO_TEST_CASE(pre_installed_module2_install_module) {
-    injector<BOOST_TYPEOF(module2_2)> injector_(module2_2);
+    injector<decltype(module2_2)> injector_(module2_2);
     check(injector_.install<module_2>().create<shared_ptr<c8>>());
 }
 
@@ -360,7 +344,7 @@ BOOST_AUTO_TEST_CASE(scope_deduction) {
 
 using deduce_modules_types = mpl::vector<
     injector<module_c0if0>
-  , injector<BOOST_TYPEOF(module2_c0if0)>
+  , injector<decltype(module2_c0if0)>
 >;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(scope_deduction_if, TInjector, deduce_modules_types) {
