@@ -25,7 +25,6 @@
 #include "contains_all.hpp"
 #include "data.hpp"
 
-#include <boost/units/detail/utility.hpp>
 namespace boost {
 namespace di {
 
@@ -474,11 +473,11 @@ BOOST_AUTO_TEST_CASE(multiple_calls) {
 }
 
 BOOST_AUTO_TEST_CASE(create_module) {
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         per_request<
             c0if0
         >()
-    ));
+    );
 
     shared_ptr<c8> c8_ = module_.create<shared_ptr<c8> >();
 
@@ -499,11 +498,11 @@ BOOST_AUTO_TEST_CASE(create_module) {
 }
 
 BOOST_AUTO_TEST_CASE(visit_module) {
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         per_request<
             transaction_provider, mpl::int_<0>
         >()
-    ));
+    );
 
     fake_visitor<
         mpl::vector<
@@ -521,9 +520,9 @@ BOOST_AUTO_TEST_CASE(call_module) {
     fake_scope::entry_calls() = 0;
     fake_scope::exit_calls() = 0;
 
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         scope<fake_scope>::bind<c0if0>()
-    ));
+    );
 
     BOOST_CHECK_EQUAL(0, fake_scope::entry_calls());
     BOOST_CHECK_EQUAL(0, fake_scope::exit_calls());
@@ -538,8 +537,8 @@ BOOST_AUTO_TEST_CASE(call_module) {
 }
 
 BOOST_AUTO_TEST_CASE(empty_module) {
-    BOOST_AUTO(module_, module<>()());
-    typedef BOOST_TYPEOF(module_) module_t;
+    auto module_ = module<>()();
+    typedef decltype(module_) module_t;
 
     BOOST_CHECK((
         contains_all<
@@ -549,14 +548,14 @@ BOOST_AUTO_TEST_CASE(empty_module) {
     ));
 }
 
-#if 0
 BOOST_AUTO_TEST_CASE(default_scope_bind_module) {
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
           bind<if0, c0if0>()
         , bind<c2>::in_name<int>()
-        , bind<c3>::in_call<call_stack<c4, c5> >()));
+        , bind<c3>::in_call<call_stack<c4, c5> >()
+    );
 
-    typedef BOOST_TYPEOF(module_) module_t;
+    typedef decltype(module_) module_t;
 
     BOOST_CHECK((
         contains_all<
@@ -568,19 +567,16 @@ BOOST_AUTO_TEST_CASE(default_scope_bind_module) {
           , module_t::deps
         >::value
     ));
-
-    std::cout << boost::units::detail::demangle(typeid(module_t::deps::type).name()) << std::endl;
 }
-#endif
 
 BOOST_AUTO_TEST_CASE(one_scope_module) {
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         scope<scopes::singleton<> >::bind<
             c0if0
         >()
-    ));
+    );
 
-    typedef BOOST_TYPEOF(module_) module_t;
+    typedef decltype(module_) module_t;
 
     BOOST_CHECK((
         contains_all<
@@ -593,13 +589,13 @@ BOOST_AUTO_TEST_CASE(one_scope_module) {
 }
 
 BOOST_AUTO_TEST_CASE(one_scope_alias_module) {
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         singleton<
             c0if0
         >()
-    ));
+    );
 
-    typedef BOOST_TYPEOF(module_) module_t;
+    typedef decltype(module_) module_t;
 
     BOOST_CHECK((
         contains_all<
@@ -612,11 +608,11 @@ BOOST_AUTO_TEST_CASE(one_scope_alias_module) {
 }
 
 BOOST_AUTO_TEST_CASE(one_scope_direct_module) {
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         singleton<c0if0>()
-    ));
+    );
 
-    typedef BOOST_TYPEOF(module_) module_t;
+    typedef decltype(module_) module_t;
 
     BOOST_CHECK((
         contains_all<
@@ -629,11 +625,11 @@ BOOST_AUTO_TEST_CASE(one_scope_direct_module) {
 }
 
 BOOST_AUTO_TEST_CASE(custom_scope_module) {
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         scope<fake_scope>::bind<c0if0>()
-    ));
+    );
 
-    typedef BOOST_TYPEOF(module_) module_t;
+    typedef decltype(module_) module_t;
 
     BOOST_CHECK((
         contains_all<
@@ -646,13 +642,13 @@ BOOST_AUTO_TEST_CASE(custom_scope_module) {
 }
 
 BOOST_AUTO_TEST_CASE(many_singleton_module) {
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         singleton<
             c1, c2, c3
         >()
-    ));
+    );
 
-    typedef BOOST_TYPEOF(module_) module_t;
+    typedef decltype(module_) module_t;
 
     BOOST_CHECK((
         contains_all<
@@ -667,16 +663,16 @@ BOOST_AUTO_TEST_CASE(many_singleton_module) {
 }
 
 BOOST_AUTO_TEST_CASE(many_scopes_module) {
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         singleton<
           c1, c2
         >()
       , per_request<
           c3, c4
         >()
-    ));
+    );
 
-    typedef BOOST_TYPEOF(module_) module_t;
+    typedef decltype(module_) module_t;
 
     BOOST_CHECK((
         contains_all<
@@ -692,11 +688,11 @@ BOOST_AUTO_TEST_CASE(many_scopes_module) {
 }
 
 BOOST_AUTO_TEST_CASE(in_call_module) {
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         per_request<c1>::in_call<c2>()
-    ));
+    );
 
-    typedef BOOST_TYPEOF(module_) module_t;
+    typedef decltype(module_) module_t;
 
     BOOST_CHECK((
         contains_all<
@@ -709,11 +705,11 @@ BOOST_AUTO_TEST_CASE(in_call_module) {
 }
 
 BOOST_AUTO_TEST_CASE(in_name_module) {
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         singleton<c1>::in_name<int>()
-    ));
+    );
 
-    typedef BOOST_TYPEOF(module_) module_t;
+    typedef decltype(module_) module_t;
 
     BOOST_CHECK((
         contains_all<
@@ -726,14 +722,14 @@ BOOST_AUTO_TEST_CASE(in_name_module) {
 }
 
 BOOST_AUTO_TEST_CASE(in_namein_call) {
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         singleton<
             bind<c1>::in_name<int>::in_call<double>
           , bind<c2>::in_name<double>::in_call<int>
         >()
-    ));
+    );
 
-    typedef BOOST_TYPEOF(module_) module_t;
+    typedef decltype(module_) module_t;
 
     BOOST_CHECK((
         contains_all<
@@ -747,14 +743,14 @@ BOOST_AUTO_TEST_CASE(in_namein_call) {
 }
 
 BOOST_AUTO_TEST_CASE(in_call_in_name_module) {
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         singleton<
             bind<c1>::in_call<double>::in_name<int>
           , bind<c2>::in_call<int>::in_name<double>
         >()
-    ));
+    );
 
-    typedef BOOST_TYPEOF(module_) module_t;
+    typedef decltype(module_) module_t;
 
     BOOST_CHECK((
         contains_all<
@@ -768,13 +764,13 @@ BOOST_AUTO_TEST_CASE(in_call_in_name_module) {
 }
 
 BOOST_AUTO_TEST_CASE(bind_if_module) {
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         singleton<
             bind<if0, c0if0>
         >()
-    ));
+    );
 
-    typedef BOOST_TYPEOF(module_) module_t;
+    typedef decltype(module_) module_t;
 
     BOOST_CHECK((
         contains_all<
@@ -787,7 +783,7 @@ BOOST_AUTO_TEST_CASE(bind_if_module) {
 }
 
 BOOST_AUTO_TEST_CASE(mix_module) {
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         singleton<
             bind<if0, c0if0>
           , c1
@@ -798,9 +794,9 @@ BOOST_AUTO_TEST_CASE(mix_module) {
             c6
         >()
       , singleton<c7>::in_name<double>::in_call<c1>()
-    ));
+    );
 
-    typedef BOOST_TYPEOF(module_) module_t;
+    typedef decltype(module_) module_t;
 
     BOOST_CHECK((
         contains_all<
@@ -818,15 +814,15 @@ BOOST_AUTO_TEST_CASE(mix_module) {
 }
 
 BOOST_AUTO_TEST_CASE(named_in_call_module) {
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         per_request<
             bind<int, mpl::int_<1> >
           , bind<int, mpl::int_<4> >::in_name<mpl::string<'2'> >::in_call<call_stack<c7, c6, c4> >
           , bind<int, mpl::int_<5> >::in_call<c2>
         >()
-    ));
+    );
 
-    typedef BOOST_TYPEOF(module_) module_t;
+    typedef decltype(module_) module_t;
 
     BOOST_CHECK((
         contains_all<
@@ -840,16 +836,15 @@ BOOST_AUTO_TEST_CASE(named_in_call_module) {
     ));
 }
 
-#if 0
 BOOST_AUTO_TEST_CASE(multiple_calls_module) {
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         singleton<
             bind<c0>::in_call<c1, call_stack<c2, c3>, c4 >
         >()
       , bind<c5>::in_call<int, double>()
-    ));
+    );
 
-    typedef BOOST_TYPEOF(module_) module_t;
+    typedef decltype(module_) module_t;
 
     BOOST_CHECK((
         contains_all<
@@ -861,16 +856,15 @@ BOOST_AUTO_TEST_CASE(multiple_calls_module) {
         >::value
     ));
 }
-#endif
 
 BOOST_AUTO_TEST_CASE(to_basic) {
     const int i = 42;
     const int d = 87.0;
 
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         bind<int>::to(i)
       , bind<double>::to(d)
-    ));
+    );
 
     c14 c14_ = module_.create<c14>();
 
@@ -882,10 +876,10 @@ BOOST_AUTO_TEST_CASE(to_in_name) {
     const int i1 = 42;
     const int i2 = 87;
 
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         bind<int>::in_name<mpl::string<'1'> >::to(i1)
       , bind<int>::in_name<mpl::string<'2'> >::to(i2)
-    ));
+    );
 
     c10 c10_ = module_.create<c10>();
 
@@ -896,9 +890,9 @@ BOOST_AUTO_TEST_CASE(to_in_name) {
 BOOST_AUTO_TEST_CASE(to_in_call) {
     const int i = 42;
 
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         bind<int>::in_call<c3>::to(i)
-    ));
+    );
 
     c4 c4_ = module_.create<c4>();
 
@@ -907,16 +901,15 @@ BOOST_AUTO_TEST_CASE(to_in_call) {
     BOOST_CHECK_EQUAL(0, c4_.i2);
 }
 
-#if 0
 BOOST_AUTO_TEST_CASE(to_in_call_in_name) {
     const int i1 = 42;
     const int i2 = 87;
 
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         bind<int>::in_call<c4>::in_name<mpl::string<'1'> >::to(i1)
       , bind<int>::in_call<c4>::in_name<mpl::string<'2'> >::to(i2)
       , bind<c0if0>()
-    ));
+    );
 
     c6 c6_ = module_.create<c6>();
 
@@ -928,27 +921,26 @@ BOOST_AUTO_TEST_CASE(to_in_name_in_call) {
     const int i1 = 42;
     const int i2 = 87;
 
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         bind<int>::in_name<mpl::string<'1'> >::in_call<c4>::to(i1)
       , bind<int>::in_name<mpl::string<'2'> >::in_call<c4>::to(i2)
       , bind<c0if0>()
-    ));
+    );
 
     c6 c6_ = module_.create<c6>();
 
     BOOST_CHECK_EQUAL(i1, c6_.c4_->i1);
     BOOST_CHECK_EQUAL(i2, c6_.c4_->i2);
 }
-#endif
 
 BOOST_AUTO_TEST_CASE(to_in_call_with_global) {
     const int i1 = 42;
     const int i2 = 87;
 
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         bind<int>::in_call<c3>::to(i1)
       , bind<int>::to(i2)
-    ));
+    );
 
     c4 c4_ = module_.create<c4>();
 
@@ -957,14 +949,13 @@ BOOST_AUTO_TEST_CASE(to_in_call_with_global) {
     BOOST_CHECK_EQUAL(0, c4_.i2);
 }
 
-#if 0
 BOOST_AUTO_TEST_CASE(to_in_call_stack) {
     const int i = 42;
 
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         bind<int>::in_call<call_stack<c4, c3> >::to(i)
       , bind<c0if0>()
-    ));
+    );
 
     c6 c6_ = module_.create<c6>();
 
@@ -972,14 +963,13 @@ BOOST_AUTO_TEST_CASE(to_in_call_stack) {
     BOOST_CHECK_EQUAL(0, c6_.c4_->i1);
     BOOST_CHECK_EQUAL(0, c6_.c4_->i2);
 }
-#endif
 
 BOOST_AUTO_TEST_CASE(to_variant_shared_ptr) {
     shared_ptr<c3> c3_(new c3);
 
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         bind<c3>::to(c3_)
-    ));
+    );
 
     c4 c4_ = module_.create<c4>();
 
@@ -995,10 +985,10 @@ BOOST_AUTO_TEST_CASE(to_variant_ref) {
     const c3& c3_const_ref = c3_;
     c14& c14_ref = c14_;
 
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         bind<c3>::to(c3_const_ref)
       , bind<c14>::to(c14_ref)
-    ));
+    );
 
     shared_ptr<c16> c16_ = module_.create<shared_ptr<c16> >();
 
@@ -1016,10 +1006,10 @@ BOOST_AUTO_TEST_CASE(to_variant_no_copy) {
     c3 c3_(i);
     c14 c14_(i, d);
 
-    BOOST_AUTO(module_, module<>()(
+    auto module_ = module<>()(
         bind<c3>::to(c3_)
       , bind<c14>::to(c14_)
-    ));
+    );
 
     shared_ptr<c16> c16_ = module_.create<shared_ptr<c16> >();
 

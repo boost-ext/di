@@ -17,22 +17,28 @@ BOOST_AUTO_TEST_CASE(tefdsst) {
         c0if0
     >;
 
-auto m2 = make_module(
-    singleton<
-        c0if0
-    >()
-  , bind<int>::to(42)
-  , bind<double>::to(87.0)
-);
+//auto m2 = make_module(
+    //singleton<
+        //c0if0
+    //>()
+  //, bind<int>::to(42)
+  //, bind<double>::to(87.0)
+//);
 
-    auto m = module<>()(
-        module_c0()
-      , bind<int>::to(32)
+    BOOST_AUTO(module_, module<>()(
+          bind<if0, c0if0>()
+         //bind<c2>::in_name<int>()
+        //, bind<c3>::in_call<call_stack<c4, c5> >())
+    ));
 
-      //,singleton<c0if0>()
-    );
+    //auto m = module<>()(
+        //module_c0()
+      //, bind<int>::to(32)
 
-    typedef decltype(m) mm;
+      ////,singleton<c0if0>()
+    //);
+
+    typedef decltype(module_) mm;
 
     //injector<decltype(m2)> injector_(m2);
     //shared_ptr<c9> c9_ = injector_.create<shared_ptr<c9>>();

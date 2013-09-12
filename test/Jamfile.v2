@@ -20,13 +20,13 @@ project di :
 ;
 
 test-suite di-test :
-    #[ compile-fail detail/module_externals_mt_fail.cpp ]
-    #[ compile-fail detail/module_policy_mt_fail.cpp ]
-    #[ compile-fail policies/check_for_binding_correctness_mt_fail.cpp ]
-    #[ compile-fail policies/check_for_creation_ownership_mt_fail.cpp ]
-    #[ compile-fail policies/check_for_circular_dependencies_mt_fail.cpp ]
-    #[ compile-fail injector_policy_mt_fail.cpp ]
-    #[ compile-fail injector_singleton_by_copy_mt_fail.cpp ]
+    [ compile-fail detail/module_externals_mt_fail.cpp ]
+    [ compile-fail detail/module_policy_mt_fail.cpp ]
+    [ compile-fail policies/check_for_binding_correctness_mt_fail.cpp ]
+    [ compile-fail policies/check_for_creation_ownership_mt_fail.cpp ]
+    [ compile-fail policies/check_for_circular_dependencies_mt_fail.cpp ]
+    [ compile-fail injector_policy_mt_fail.cpp ]
+    [ compile-fail injector_singleton_by_copy_mt_fail.cpp ]
 
     [ run concepts/dependency_ut.cpp ]
     [ run type_traits/create_traits_ut.cpp ]

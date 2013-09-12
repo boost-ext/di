@@ -34,6 +34,7 @@
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/insert.hpp>
     #include <boost/mpl/joint_view.hpp>
+    #include <boost/mpl/contains.hpp>
     #include <boost/mpl/pair.hpp>
     #include <boost/mpl/has_xxx.hpp>
 
@@ -299,7 +300,7 @@
     explicit module(
         BOOST_DI_ARGS(Args, args)
       , typename disable_if<is_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >::type* = 0)
-        : deps_(TPool<mpl::vector<BOOST_DI_TYPES_PASS(Args)>, mpl::not_<is_dependency<mpl::_1> > >(
+        : deps_(TPool<mpl::vector<BOOST_DI_TYPES_PASS(Args)>, mpl::not_<mpl::contains<deps, mpl::_1> > >(
               BOOST_DI_ARGS_FORWARD(args))
             , init()
           )
