@@ -15,6 +15,7 @@
     #include <boost/preprocessor/punctuation/comma_if.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/vector.hpp>
+    #include <boost/mpl/apply.hpp>
     #include <boost/mpl/fold.hpp>
     #include <boost/mpl/copy.hpp>
     #include <boost/mpl/back_inserter.hpp>
@@ -42,15 +43,21 @@
 
     class init { };
 
+    template<typename T>
+    struct never
+        : mpl::false_
+    { };
+
     template<
-        typename TTypes = mpl::vector0<>
+        typename TSeq = mpl::vector0<>
+      , typename TIgnore = never<mpl::_1>
       , typename = void
     >
     class pool
     {
     public:
         typedef pool type;
-        typedef TTypes types;
+        typedef TSeq types;
 
         pool() { }
 
@@ -78,32 +85,40 @@
     #define BOOST_DI_DERIVES_IMPL(_, n, types)                          \
         BOOST_PP_COMMA_IF(n) public mpl::at_c<types, n>::type
 
-    template<typename TTypes>
+    template<
+        typename TSeq
+      , typename TIgnore
+    >
     class pool<
-        TTypes
-      , typename enable_if_c<mpl::size<TTypes>::value == n>::type
+        TSeq
+      , TIgnore
+      , typename enable_if_c<mpl::size<TSeq>::value == n>::type
     >
         : BOOST_PP_REPEAT(
               n
             , BOOST_DI_DERIVES_IMPL
-            , TTypes
+            , TSeq
           )
     {
         BOOST_MPL_HAS_XXX_TRAIT_DEF(types)
 
         template<typename T, typename = void>
-        struct types_impl
+        struct pool_type
         {
             typedef mpl::vector<T> type;
         };
 
         template<typename T>
-        struct types_impl<
-            T
-          , typename enable_if<has_types<T> >::type
-        >
+        struct pool_type<T, typename enable_if<has_types<T> >::type>
         {
             typedef typename T::types type;
+        };
+
+        template<typename T>
+        struct pool_type<T, typename enable_if<
+            typename mpl::apply<TIgnore, T>::type>::type>
+        {
+            typedef void type; // ignore type
         };
 
     public:
@@ -111,10 +126,10 @@
 
         struct types
             : mpl::fold<
-                  TTypes
+                  TSeq
                 , mpl::vector0<>
                 , mpl::copy<
-                      types_impl<mpl::_2>
+                      pool_type<mpl::_2>
                     , mpl::back_inserter<mpl::_1>
                   >
               >::type
@@ -135,31 +150,31 @@
         #include BOOST_PP_LOCAL_ITERATE()
         #undef BOOST_DI_CTOR_INITLIST_IMPL
 
-        #define BOOST_DI_CTOR_INITLIST_IMPL(_, n, types)                \
-            BOOST_PP_COMMA_IF(n) mpl::at_c<types, n>::type(             \
-                p.get<typename mpl::at_c<types, n>::type>())
+        #define BOOST_DI_CTOR_INITLIST_IMPL(_, n, na)                \
+            BOOST_PP_COMMA_IF(n) mpl::at_c<typename pool<T, I>::types, n>::type(             \
+                p.get<typename mpl::at_c<typename pool<T, I>::types, n>::type>())
 
-        template<typename T>
+        template<typename T, typename I>
         explicit pool(
-            const pool<T>&
+            const pool<T, I>&
           , const init&
           , typename enable_if_c<
-                mpl::size<typename pool<T>::types>::value == 0
+                mpl::size<typename pool<T, I>::types>::value == 0
             >::type* = 0)
         { }
 
         #define BOOST_PP_LOCAL_MACRO(n)                                 \
-            template<typename T>                                        \
+            template<typename T, typename I>                                        \
             explicit pool(                                              \
-                const pool<T>& p                                        \
+                const pool<T, I>& p                                        \
               , const init&                                             \
               , typename enable_if_c<                                   \
-                    mpl::size<typename pool<T>::types>::value == n      \
+                    mpl::size<typename pool<T, I>::types>::value == n      \
                 >::type* = 0)                                           \
                 : BOOST_PP_REPEAT(                                      \
                       n                                                 \
                     , BOOST_DI_CTOR_INITLIST_IMPL                       \
-                    , typename pool<T>::types                           \
+                    , ~\
                   )                                                     \
             { }
 

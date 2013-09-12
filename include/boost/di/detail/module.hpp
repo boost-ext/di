@@ -23,6 +23,7 @@
     #include <boost/mpl/fold.hpp>
     #include <boost/mpl/transform.hpp>
     #include <boost/mpl/if.hpp>
+    #include <boost/mpl/not.hpp>
     #include <boost/mpl/set.hpp>
     #include <boost/mpl/remove_if.hpp>
     #include <boost/mpl/count_if.hpp>
@@ -58,21 +59,27 @@
     template<
         typename TDeps = mpl::vector0<>
       , template<typename> class TBinder = binder
-      , template<typename, typename = void> class TPool = pool
+      , template<typename, typename = never<mpl::_1>, typename = void> class TPool = pool
       , template<typename> class TCreator = creator
       , template<typename> class TVisitor = visitor
     >
     class module
     {
         BOOST_MPL_HAS_XXX_TRAIT_DEF(deps)
+        BOOST_MPL_HAS_XXX_TRAIT_DEF(context)
 
         template<
             typename
           , template<typename> class
-          , template<typename, typename> class
+          , template<typename, typename, typename> class
           , template<typename> class
           , template<typename> class
         > friend class module;
+
+        template<typename T>
+        struct is_dependency
+            : has_context<T>
+        { };
 
         template<typename TSeq>
         struct unique
@@ -292,7 +299,10 @@
     explicit module(
         BOOST_DI_ARGS(Args, args)
       , typename disable_if<is_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >::type* = 0)
-        : deps_(BOOST_DI_ARGS_FORWARD(args))
+        : deps_(TPool<mpl::vector<BOOST_DI_TYPES_PASS(Args)>, mpl::not_<is_dependency<mpl::_1> > >(
+              BOOST_DI_ARGS_FORWARD(args))
+            , init()
+          )
     { }
 
 #endif

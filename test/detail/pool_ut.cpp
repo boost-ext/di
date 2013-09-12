@@ -260,6 +260,35 @@ BOOST_AUTO_TEST_CASE(init_pool_from_other_subset_pool) {
     );
 }
 
+struct ignored
+{
+    typedef void ignore;
+};
+
+BOOST_MPL_HAS_XXX_TRAIT_DEF(ignore)
+
+BOOST_AUTO_TEST_CASE(init_pool_from_other_subset_pool_with_ignore) {
+    typedef pool<
+        mpl::vector<
+            trivial_ctor
+          , default_ctor
+          , custom_ctor
+        >
+    > pool_all_type;
+
+    typedef pool<
+        mpl::vector<
+            trivial_ctor
+          , custom_ctor
+          , ignored
+        >
+      , has_ignore<mpl::_1>
+    > pool_subset_type;
+
+    pool_subset_type pool_subset_(trivial_ctor(), custom_ctor(0), ignored());
+    pool_all_type pool_all_(pool_subset_, init());
+}
+
 BOOST_AUTO_TEST_CASE(pool_from_pool_of_pools) {
     typedef pool<mpl::vector<custom_ctor> > pool_type;
     typedef pool<mpl::vector<pool_type> > pool_pool_type;
