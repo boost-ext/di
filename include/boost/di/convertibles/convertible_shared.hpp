@@ -20,7 +20,17 @@ namespace convertibles {
 template<typename T>
 class convertible_shared
 {
-    struct empty_deleter { void operator()(void*) { } };
+    template<typename U>
+    class holder
+    {
+    public:
+        explicit holder(boost::shared_ptr<U> object)
+            : object_(object)
+        { }
+
+    private:
+        boost::shared_ptr<U> object_;
+    };
 
 public:
     bool operator!() const {
@@ -63,27 +73,29 @@ public:
 #if !defined(BOOST_NO_CXX11_SMART_PTR)
     template<typename I>
     operator std::shared_ptr<I>() const {
-        return std::shared_ptr<I>(object_.get(), empty_deleter());
+        std::shared_ptr<holder<T> > sp = std::make_shared<holder<T> >(object_);
+        return std::shared_ptr<T>(sp, object_.get());
     }
 
     template<typename I, typename TName>
     operator named<std::shared_ptr<I>, TName>() const {
+        std::shared_ptr<holder<T> > sp = std::make_shared<holder<T> >(object_);
         return named<std::shared_ptr<I>, TName>(
-            std::shared_ptr<I>(object_.get(), empty_deleter())
+            std::shared_ptr<T>(sp, object_.get())
         );
     }
 
     template<typename I>
     operator std::weak_ptr<I>() const {
-        return std::weak_ptr<I>(
-            std::shared_ptr<I>(object_.get(), empty_deleter())
-        );
+        std::shared_ptr<holder<T> > sp = std::make_shared<holder<T> >(object_);
+        return std::weak_ptr<I>(std::shared_ptr<T>(sp, object_.get()));
     }
 
     template<typename I, typename TName>
     operator named<std::weak_ptr<I>, TName>() const {
+        std::shared_ptr<holder<T> > sp = std::make_shared<holder<T> >(object_);
         return named<std::weak_ptr<I>, TName>(
-            std::weak_ptr<I>(std::shared_ptr<I>(object_.get(), empty_deleter()))
+            std::weak_ptr<I>(std::shared_ptr<T>(sp, object_.get()))
         );
     }
 #endif
