@@ -25,7 +25,7 @@
     namespace boost {
     namespace di {
 
-    detail::module<> make_module() {
+    module<> make_module() {
         return module<>()();
     }
 
@@ -39,9 +39,9 @@
 #else
 
     template<BOOST_DI_TYPES(Args)>
-    detail::module<typename module<BOOST_DI_TYPES_PASS(Args)>::deps>
+    module<typename detail::concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type>
     make_module(BOOST_DI_ARGS(Args, args)) {
-        return detail::module<typename module<BOOST_DI_TYPES_PASS(Args)>::deps>(
+        return module<typename detail::concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type>(
             BOOST_DI_ARGS_FORWARD(args)
         );
     }

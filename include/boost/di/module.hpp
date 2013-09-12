@@ -39,6 +39,8 @@
     namespace boost {
     namespace di {
 
+    namespace detail {
+
     template<typename T>
     struct default_scope
         : scope<scopes::deduce>::bind<T>
@@ -46,30 +48,41 @@
 
     BOOST_MPL_HAS_XXX_TRAIT_DEF(deps)
 
+    template<typename TSeq>
+    struct concepts
+        : mpl::fold<
+              TSeq
+            , mpl::vector0<>
+            , mpl::copy<
+                  mpl::if_<
+                      mpl::is_sequence<mpl::_2>
+                    , mpl::_2
+                    , mpl::if_<
+                          has_deps<mpl::_2>
+                        , mpl::vector1<mpl::_2>
+                        , default_scope<mpl::_2>
+                      >
+                  >
+                , mpl::back_inserter<mpl::_1>
+              >
+          >::type
+    { };
+
+    } // namespace detail
+
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     class module
         : public detail::module<
-              typename mpl::fold<
+              typename detail::concepts<
                   mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-                , mpl::vector0<>
-                , mpl::copy<
-                      mpl::if_<
-                          mpl::is_sequence<mpl::_2>
-                        , mpl::_2
-                        , mpl::if_<
-                              has_deps<mpl::_2>
-                            , mpl::vector1<mpl::_2>
-                            , default_scope<mpl::_2>
-                          >
-                      >
-                    , mpl::back_inserter<mpl::_1>
-                  >
               >::type
           >
     {
     public:
-        detail::module<> operator()() const {
-            return detail::module<>();
+        module() { }
+
+        module<> operator()() const {
+            return module<>();
         }
 
         #include BOOST_PP_ITERATE()
@@ -82,9 +95,19 @@
 
 #else
     template<BOOST_DI_TYPES(Args)>
-    detail::module<typename module<BOOST_DI_TYPES_PASS(Args)>::deps>
+    explicit module(BOOST_DI_ARGS(Args, args))
+        : detail::module<
+              typename detail::concepts<
+                  mpl::vector<BOOST_DI_TYPES_PASS(T)>
+              >::type
+          >
+        (BOOST_DI_ARGS_FORWARD(args))
+    { }
+
+    template<BOOST_DI_TYPES(Args)>
+    module<typename detail::concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type>
     operator()(BOOST_DI_ARGS(Args, args)) const {
-        return detail::module<typename module<BOOST_DI_TYPES_PASS(Args)>::deps>(
+        return module<typename detail::concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type>(
             BOOST_DI_ARGS_FORWARD(args)
         );
     }
