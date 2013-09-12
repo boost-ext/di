@@ -16,8 +16,8 @@ namespace di {
 namespace policies {
 
 BOOST_AUTO_TEST_CASE(check_for_circular_dependencies_fail) {
-    injector<policy<check_for_circular_dependencies> > injector;
-    injector.create<cd5>();
+    injector<policy<check_for_circular_dependencies> > injector_;
+    injector_.create<cd5>();
 }
 
 } // namespace policies

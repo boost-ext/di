@@ -11,45 +11,67 @@
 
 #include "boost/di/concepts.hpp"
 #include "boost/di/make_injector.hpp"
-#include "boost/di/make_module.hpp"
 
 #include "data.hpp"
 
 namespace boost {
 namespace di {
 
-using module_c0 = module<
-    c0if0
->;
+BOOST_AUTO_TEST_CASE(make_injector_ctor) {
+    using injector_c0 = injector<
+        c0if0
+    >;
 
-auto module_c0_int_ = make_module(
-    module_c0()
-  , bind<int>::to(42)
-);
-
-BOOST_AUTO_TEST_CASE(injector_ctor) {
-    injector<module_c0> inj;
-    shared_ptr<c5> c5_ = inj.create<shared_ptr<c5>>();
+    shared_ptr<c5> c5_ = injector_c0().create<shared_ptr<c5>>();
     BOOST_CHECK_EQUAL(0, c5_->c2_->i);
 }
 
-BOOST_AUTO_TEST_CASE(injector_install_by_value) {
-    injector<> inj;
-    shared_ptr<c5> c5_ = inj.install(module_c0()).create<shared_ptr<c5>>();
-    BOOST_CHECK_EQUAL(0, c5_->c2_->i);
-}
+BOOST_AUTO_TEST_CASE(make_injector_by_value) {
+    using injector_c0 = injector<
+        c0if0
+    >;
 
-BOOST_AUTO_TEST_CASE(injector_install_by_ref) {
-    injector<> inj;
-    shared_ptr<c5> c5_ = inj.install(module_c0_int_).create<shared_ptr<c5>>();
+    auto injector_c0_int_ = make_injector(
+        injector_c0()
+      , bind<int>::to(42)
+    );
+
+    shared_ptr<c5> c5_ = injector_c0_int_.create<shared_ptr<c5>>();
     BOOST_CHECK_EQUAL(42, c5_->c2_->i);
 }
 
-BOOST_AUTO_TEST_CASE(make_injector_module) {
-    auto inj = make_injector(module_c0_int_);
-    shared_ptr<c5> c5_ = inj.create<shared_ptr<c5>>();
-    BOOST_CHECK_EQUAL(42, c5_->c2_->i);
-}
+//using injector_c0 = injector<
+    //c0if0
+//>;
+
+//auto injector_c0_int_ = make_injector(
+    //injector_c0()
+  //, bind<int>::to(42)
+//);
+
+//BOOST_AUTO_TEST_CASE(injector_ctor) {
+    //injector<injector_c0> inj;
+    //shared_ptr<c5> c5_ = inj.create<shared_ptr<c5>>();
+    //BOOST_CHECK_EQUAL(0, c5_->c2_->i);
+//}
+
+//BOOST_AUTO_TEST_CASE(injector_install_by_value) {
+    //injector<> inj;
+    //shared_ptr<c5> c5_ = inj.install(injector_c0()).create<shared_ptr<c5>>();
+    //BOOST_CHECK_EQUAL(0, c5_->c2_->i);
+//}
+
+//BOOST_AUTO_TEST_CASE(injector_install_by_ref) {
+    //injector<> inj;
+    //shared_ptr<c5> c5_ = inj.install(injector_c0_int_).create<shared_ptr<c5>>();
+    //BOOST_CHECK_EQUAL(42, c5_->c2_->i);
+//}
+
+//BOOST_AUTO_TEST_CASE(make_injector_injector) {
+    //auto inj = make_injector(injector_c0_int_);
+    //shared_ptr<c5> c5_ = inj.create<shared_ptr<c5>>();
+    //BOOST_CHECK_EQUAL(42, c5_->c2_->i);
+//}
 
 } // namespace di
 } // namespace boost

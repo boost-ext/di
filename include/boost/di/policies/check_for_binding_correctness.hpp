@@ -36,17 +36,13 @@ public:
         typename TDeps
       , typename
       , bool Assert = true
-      , template<
-            typename
-          , typename = void
-        > class TCtorTraits = type_traits::ctor_traits
     >
     class verify
     {
         template<typename T>
         struct ctor
             : mpl::transform<
-                  TCtorTraits<T>
+                  type_traits::ctor_traits<T>
                 , type_traits::make_plain<mpl::_1>
               >::type
         { };

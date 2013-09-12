@@ -26,7 +26,7 @@
     namespace di {
 
     injector<> make_injector() {
-        return injector<>();
+        return injector<>()();
     }
 
     #include BOOST_PP_ITERATE()
@@ -39,8 +39,13 @@
 #else
 
     template<BOOST_DI_TYPES(Args)>
-    injector<BOOST_DI_TYPES_PASS(Args)> make_injector(BOOST_DI_ARGS(Args, args)) {
-        return injector<BOOST_DI_TYPES_PASS(Args)>(BOOST_DI_ARGS_FORWARD(args));
+    injector<
+        typename detail::concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type
+    >
+    make_injector(BOOST_DI_ARGS(Args, args)) {
+        return injector<
+            typename detail::concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type
+        >(BOOST_DI_ARGS_FORWARD(args));
     }
 
 #endif

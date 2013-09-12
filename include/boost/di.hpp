@@ -20,11 +20,8 @@
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/external.hpp"
 
-// modules
+// injector
 #include "boost/di/injector.hpp"
-#include "boost/di/module.hpp"
-
-#include "boost/di/make_module.hpp"
 #include "boost/di/make_injector.hpp"
 
 // utilities

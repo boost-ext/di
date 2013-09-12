@@ -18,12 +18,12 @@ namespace policies {
 BOOST_AUTO_TEST_CASE(check_for_binding_correctness_fail) {
     injector<
         policy<check_for_binding_correctness>
-      , module<
+      , injector<
             bind<double>::in_call<c3>
         >
-    > injector;
+    > injector_;
 
-    injector.create<c3>();
+    injector_.create<c3>();
 }
 
 } // namespace policies
