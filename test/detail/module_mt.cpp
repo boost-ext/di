@@ -459,7 +459,7 @@ BOOST_AUTO_TEST_CASE(externals_create_with_non_trivial_ctor) {
     BOOST_CHECK_EQUAL(c, obj.c);
 }
 
-BOOST_AUTO_TEST_CASE(externals_create_with_attributes) {
+BOOST_AUTO_TEST_CASE(externals_create_with_names) {
     const int i1 = 42;
     const int i2 = 87;
 

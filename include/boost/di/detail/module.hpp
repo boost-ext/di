@@ -34,6 +34,7 @@
     #include <boost/mpl/filter_view.hpp>
     #include <boost/mpl/contains.hpp>
     #include <boost/mpl/pair.hpp>
+    #include <boost/mpl/has_xxx.hpp>
 
     #include "boost/di/detail/pool.hpp"
     #include "boost/di/detail/binder.hpp"
@@ -76,6 +77,8 @@
     >
     class module : public TPool<get_deps<TDeps> >
     {
+        BOOST_MPL_HAS_XXX_TRAIT_DEF(types)
+
         template<
             typename
           , template<typename> class
@@ -99,7 +102,9 @@
 
         template<typename T>
         struct ctor
-            : type_traits::ctor_traits<typename type_traits::make_plain<T>::type>::type
+            : type_traits::ctor_traits<
+                  typename type_traits::make_plain<T>::type
+              >::type
         { };
 
         template<
@@ -114,7 +119,8 @@
         template<
             typename T
           , typename TBind
-          , typename TCallStack = mpl::vector1<typename type_traits::make_plain<T>::type>
+          , typename TCallStack =
+                mpl::vector1<typename type_traits::make_plain<T>::type>
         >
         struct deps_impl
             : unique<
@@ -162,8 +168,10 @@
               >
         { };
 
+        typedef is_base_of<detail::policy_impl, mpl::_> is_policy;
+
     public:
-        typedef get_types<TDeps, mpl::not_<is_base_of<detail::policy_impl, mpl::_> > > policies;
+        typedef get_types<TDeps, mpl::not_<is_policy> > policies;
         typedef get_deps<TDeps> deps;
 
         module() { }
@@ -186,7 +194,7 @@
                 >
             >::type deps_t;
 
-            TPool<deps_t> deps_(static_cast<TPool<get_deps<TDeps> >&>(*this), init());
+            TPool<deps_t> deps_(static_cast<TPool<deps>&>(*this), init());
 
             return TCreator<TBinder<deps> >::template
                 execute<T, mpl::vector0<> >(deps_);
@@ -233,8 +241,6 @@
             static_cast<type&>(deps).call(action);
             call_impl<Scope, typename mpl::pop_front<Deps>::type>(action, deps);
         }
-
-        BOOST_MPL_HAS_XXX_TRAIT_DEF(types)
     };
 
     } // namespace detail
@@ -247,13 +253,17 @@
 
     template<BOOST_DI_TYPES(Args)>
     explicit module(BOOST_DI_ARGS(Args, args))
-        : TPool<get_deps<TDeps> >(
-              TPool<mpl::vector<BOOST_DI_TYPES_PASS(Args)>, mpl::not_<
-                mpl::or_<
-                    mpl::contains<get_deps<TDeps>, mpl::_>
-                  , has_types<mpl::_>
-                > >
-                >(BOOST_DI_ARGS_FORWARD(args)), init()
+        : TPool<deps>(
+              TPool<
+                  mpl::vector<BOOST_DI_TYPES_PASS(Args)>
+                , mpl::not_<
+                      mpl::or_<
+                          mpl::contains<deps, mpl::_>
+                        , has_types<mpl::_>
+                      >
+                  >
+              >(BOOST_DI_ARGS_FORWARD(args))
+            , init()
           )
     { }
 

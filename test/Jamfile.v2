@@ -28,7 +28,7 @@ test-suite di-test :
     #[ compile-fail injector_policy_mt_fail.cpp ]
     #[ compile-fail injector_singleton_by_copy_mt_fail.cpp ]
 
-    #[ run concepts/dependency_ut.cpp ]
+#    [ run concepts/dependency_ut.cpp ]
     #[ run type_traits/create_traits_ut.cpp ]
     #[ run type_traits/ctor_traits_ut.cpp ]
     #[ run type_traits/is_same_base_of_ut.cpp ]
@@ -51,7 +51,7 @@ test-suite di-test :
     #[ run ctor_va_args_ut.cpp ]
     [ run injector_mt.cpp ]
     #[ run injector_ut.cpp ]
-    [ run make_injector_mt.cpp ]
+    #[ run make_injector_mt.cpp ]
     #[ run named_ut.cpp ]
 ;
 
