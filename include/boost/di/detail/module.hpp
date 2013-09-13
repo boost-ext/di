@@ -60,12 +60,15 @@
       , typename TCond
     >
     struct get_types
-        : mpl::remove_if<TSeq, TCond>::type
+        : mpl::remove_if<TSeq, mpl::not_<TCond> >::type
     { };
 
     template<typename TSeq>
     struct get_deps
-        : get_types<TSeq, is_base_of<detail::policy_impl, mpl::_> >::type
+        : get_types<
+              TSeq
+            , mpl::not_<is_base_of<detail::policy_impl, mpl::_> >
+          >::type
     { };
 
     template<
@@ -171,7 +174,7 @@
         typedef is_base_of<detail::policy_impl, mpl::_> is_policy;
 
     public:
-        typedef get_types<TDeps, mpl::not_<is_policy> > policies;
+        typedef get_types<TDeps, is_policy> policies;
         typedef get_deps<TDeps> deps;
 
         module() { }

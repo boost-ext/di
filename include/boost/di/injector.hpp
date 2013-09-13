@@ -13,6 +13,7 @@
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/preprocessor/punctuation/comma_if.hpp>
     #include <boost/utility/enable_if.hpp>
+    #include <boost/type_traits/is_base_of.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/joint_view.hpp>
     #include <boost/mpl/fold.hpp>
@@ -26,6 +27,7 @@
     #include "boost/di/detail/module.hpp"
     #include "boost/di/detail/pool.hpp"
     #include "boost/di/scopes/deduce.hpp"
+    #include "boost/di/policy.hpp"
     #include "boost/di/concepts.hpp"
     #include "boost/di/config.hpp"
 
@@ -67,7 +69,11 @@
                     , mpl::if_<
                           has_deps<mpl::_2>
                         , deps<mpl::_2>
-                        , default_scope<mpl::_2>
+                        , mpl::if_<
+                              is_base_of<detail::policy_impl, mpl::_2>
+                            , mpl::vector1<mpl::_2>
+                            , default_scope<mpl::_2>
+                          >
                       >
                   >
                 , mpl::back_inserter<mpl::_1>
