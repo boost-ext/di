@@ -47,6 +47,8 @@
                 : object_(value)
             { }
 
+            scope(){}
+
             result_type create() {
                 return object_;
             }

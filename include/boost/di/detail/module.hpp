@@ -55,13 +55,21 @@
     namespace detail {
 
     template<
+        typename TSeq
+      , typename TCond
+    >
+    struct get_types
+        : mpl::remove_if<TSeq, TCond>::type
+    { };
+
+    template<
         typename TDeps = mpl::vector0<>
       , template<typename> class TBinder = binder
       , template<typename, typename = never<mpl::_1>, typename = void> class TPool = pool
       , template<typename> class TCreator = creator
       , template<typename> class TVisitor = visitor
     >
-    class module
+    class module : public TPool<typename get_types<TDeps, is_base_of<detail::policy_impl, mpl::_> >::type , mpl::not_<mpl::contains<typename get_types<TDeps, is_base_of<detail::policy_impl, mpl::_> >::type, mpl::_> > >
     {
         template<
             typename
@@ -84,13 +92,13 @@
               >
         { };
 
-        template<
-            typename TSeq
-          , typename TCond
-        >
-        struct get_types
-            : mpl::remove_if<TSeq, TCond>::type
-        { };
+        //template<
+            //typename TSeq
+          //, typename TCond
+        //>
+        //struct get_types
+            //: mpl::remove_if<TSeq, TCond>::type
+        /*{ };*/
 
         template<typename T>
         struct ctor
@@ -161,9 +169,6 @@
         typedef get_types<TDeps, mpl::not_<is_base_of<detail::policy_impl, mpl::_> > > policies;
         typedef get_types<TDeps, is_base_of<detail::policy_impl, mpl::_> > deps;
 
-        //wknd
-        typedef get_types<TDeps, is_base_of<detail::policy_impl, mpl::_> > types;
-
         module() { }
 
         #include BOOST_PP_ITERATE()
@@ -172,66 +177,65 @@
         T create() {
             BOOST_MPL_ASSERT((typename verify_policies<policies, deps, T>::type));
 
-            TPool<
-                typename unique<
-                    mpl::joint_view<
-                        deps
-                      , mpl::joint_view<
-                            mpl::vector1<typename binder<T, mpl::vector0<>, TBinder<deps> >::type>
-                          , typename deps_impl<T, TBinder<deps> >::type
-                        >
+            typedef typename unique<
+                mpl::joint_view<
+                    typename deps::type
+                  , mpl::joint_view<
+                        mpl::vector1<typename binder<T, mpl::vector0<>, TBinder<typename deps::type> >::type>
+                      , typename deps_impl<T, TBinder<typename deps::type> >::type
                     >
-                >::type
-            > deps_(this->deps_, init());
+                >
+            >::type deps_t;
 
-            return TCreator<TBinder<deps> >::template
+            TPool<deps_t> deps_(static_cast<TPool<typename get_types<TDeps, is_base_of<detail::policy_impl, mpl::_> >::type , mpl::not_<mpl::contains<typename get_types<TDeps, is_base_of<detail::policy_impl, mpl::_> >::type, mpl::_> > >&>(*this), init());
+
+            return TCreator<TBinder<typename deps::type> >::template
                 execute<T, mpl::vector0<> >(deps_);
         }
 
-        template<typename T, typename Visitor>
-        void visit(const Visitor& visitor) {
-            BOOST_MPL_ASSERT((typename verify_policies<policies, deps, T>::type));
+        //template<typename T, typename Visitor>
+        //void visit(const Visitor& visitor) {
+            //BOOST_MPL_ASSERT((typename verify_policies<policies, deps, T>::type));
 
-            TVisitor<TBinder<deps> >::template
-                execute<T, mpl::vector0<> >(visitor);
-        }
+            //TVisitor<TBinder<deps> >::template
+                //execute<T, mpl::vector0<> >(visitor);
+        //}
 
-        template<typename Scope, typename Action>
-        void call(const Action& action) {
-            TPool<deps> deps_;
-            call_impl<Scope, deps>(action, deps_);
-        }
+        //template<typename Scope, typename Action>
+        //void call(const Action& action) {
+            //TPool<deps> deps_;
+            //call_impl<Scope, deps>(action, deps_);
+        /*}*/
 
     private:
-        template<
-            typename Scope
-          , typename Deps
-          , typename Action
-          , typename T
-        >
-        typename enable_if<mpl::empty<Deps> >::type
-        call_impl(const Action&, T&) { }
+/*        template<*/
+            //typename Scope
+          //, typename Deps
+          //, typename Action
+          //, typename T
+        //>
+        //typename enable_if<mpl::empty<Deps> >::type
+        //call_impl(const Action&, T&) { }
 
-        template<
-            typename Scope
-          , typename Deps
-          , typename Action
-          , typename T
-        >
-        typename enable_if<
-            mpl::and_<
-                mpl::not_<mpl::empty<Deps> >
-              , is_same<typename mpl::front<Deps>::type::scope, Scope>
-            >
-        >::type
-        call_impl(const Action& action, T& deps) {
-            typedef typename mpl::front<Deps>::type type;
-            static_cast<type&>(deps).call(action);
-            call_impl<Scope, typename mpl::pop_front<Deps>::type>(action, deps);
-        }
+        //template<
+            //typename Scope
+          //, typename Deps
+          //, typename Action
+          //, typename T
+        //>
+        //typename enable_if<
+            //mpl::and_<
+                //mpl::not_<mpl::empty<Deps> >
+              //, is_same<typename mpl::front<Deps>::type::scope, Scope>
+            //>
+        //>::type
+        //call_impl(const Action& action, T& deps) {
+            //typedef typename mpl::front<Deps>::type type;
+            //static_cast<type&>(deps).call(action);
+            //call_impl<Scope, typename mpl::pop_front<Deps>::type>(action, deps);
+        /*}*/
 
-        TPool<deps> deps_;
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(deps)
+        //TPool<deps, mpl::not_<mpl::contains<deps, mpl::_> > > deps_;
     };
 
     } // namespace detail
@@ -244,12 +248,8 @@
 
     template<BOOST_DI_TYPES(Args)>
     explicit module(BOOST_DI_ARGS(Args, args))
-        //: deps_(TPool<mpl::vector<BOOST_DI_TYPES_PASS(Args)>, mpl::not_<mpl::contains<
-                //mpl::joint_view<
-                    //deps
-                  //, mpl::filter_view<mpl::vector<BOOST_DI_TYPES_PASS(Args)>, has_deps<mpl::_> >
-                //>
-                //, mpl::_> > >(BOOST_DI_ARGS_FORWARD(args)), init())
+        : TPool<typename get_types<TDeps, is_base_of<detail::policy_impl, mpl::_> >::type , mpl::not_<mpl::contains<typename get_types<TDeps, is_base_of<detail::policy_impl, mpl::_> >::type, mpl::_> > >(
+              TPool<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >(BOOST_DI_ARGS_FORWARD(args)), init())
     { }
 
 #endif

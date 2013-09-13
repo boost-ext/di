@@ -23,6 +23,10 @@ BOOST_AUTO_TEST_CASE(make_injector_ctor) {
         c0if0
     >;
 
+    auto f = make_injector(
+            bind<int>::to(32)
+    );
+
     using injector_c1 = injector<
         per_request<
             double
@@ -31,12 +35,12 @@ BOOST_AUTO_TEST_CASE(make_injector_ctor) {
     >;
 
     auto m = injector_c0();
-    injector<injector_c0, singleton<int>, injector_c1> inj(m);
+    injector<injector_c0, per_request<int>, injector_c1, decltype(f)> inj(m, f);
     using inj_t = decltype(inj);
 
     std::cout << "dupa: " << boost::units::detail::demangle(typeid(inj_t::deps::type).name()) << std::endl;
 
-    //shared_ptr<c5> c5_ = injector_c0().create<shared_ptr<c5>>();
+    shared_ptr<c5> c5_ = inj.create<shared_ptr<c5>>();
     //BOOST_CHECK_EQUAL(0, c5_->c2_->i);
     BOOST_CHECK(0);
 }

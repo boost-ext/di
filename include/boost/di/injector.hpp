@@ -14,6 +14,7 @@
     #include <boost/preprocessor/punctuation/comma_if.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/vector.hpp>
+    #include <boost/mpl/joint_view.hpp>
     #include <boost/mpl/fold.hpp>
     #include <boost/mpl/copy.hpp>
     #include <boost/mpl/if.hpp>
@@ -36,6 +37,7 @@
         )                                   \
     )
 
+#include <boost/units/detail/utility.hpp>
     namespace boost {
     namespace di {
 
@@ -53,10 +55,22 @@
     };
 
     BOOST_MPL_HAS_XXX_TRAIT_DEF(deps)
+        template<typename TSeq>
+        struct unique
+            : mpl::fold<
+                  typename mpl::fold<
+                      TSeq
+                    , mpl::set0<>
+                    , mpl::insert<mpl::_1, mpl::_2 >
+                  >::type
+                , mpl::vector0<>
+                , mpl::push_back<mpl::_1, mpl::_2>
+              >
+        { };
 
     template<typename TSeq>
     struct concepts
-        : mpl::fold<
+        : /*unique<typename*/ mpl::fold<
               TSeq
             , mpl::vector0<>
             , mpl::copy<
@@ -72,6 +86,7 @@
                 , mpl::back_inserter<mpl::_1>
               >
           >::type
+          //>
     { };
 
     } // namespace detail
@@ -102,9 +117,9 @@
 #else
     template<BOOST_DI_TYPES(Args)>
     explicit injector(BOOST_DI_ARGS(Args, args))
-        : detail::module<
+      : detail::module<
               typename detail::concepts<
-                  mpl::vector<BOOST_DI_TYPES_PASS(T)>
+                     mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
               >::type
           >
         (BOOST_DI_ARGS_FORWARD(args))
