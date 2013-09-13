@@ -176,63 +176,65 @@
         T create() {
             BOOST_MPL_ASSERT((typename verify_policies<policies, deps, T>::type));
 
+            typedef typename binder<T, mpl::vector0<>, TBinder<deps> >::type binder_t;
+
             typedef typename unique<
                 mpl::joint_view<
-                    typename deps::type
+                    deps
                   , mpl::joint_view<
-                        mpl::vector1<typename binder<T, mpl::vector0<>, TBinder<typename deps::type> >::type>
-                      , typename deps_impl<T, TBinder<typename deps::type> >::type
+                        mpl::vector1<binder_t>
+                      , typename deps_impl<T, TBinder<deps> >::type
                     >
                 >
             >::type deps_t;
 
             TPool<deps_t> deps_(static_cast<pool_t&>(*this), init());
 
-            return TCreator<TBinder<typename deps::type> >::template
+            return TCreator<TBinder<deps> >::template
                 execute<T, mpl::vector0<> >(deps_);
         }
 
-        //template<typename T, typename Visitor>
-        //void visit(const Visitor& visitor) {
-            //BOOST_MPL_ASSERT((typename verify_policies<policies, deps, T>::type));
+        template<typename T, typename Visitor>
+        void visit(const Visitor& visitor) {
+            BOOST_MPL_ASSERT((typename verify_policies<policies, deps, T>::type));
 
-            //TVisitor<TBinder<deps> >::template
-                //execute<T, mpl::vector0<> >(visitor);
-        //}
+            TVisitor<TBinder<deps> >::template
+                execute<T, mpl::vector0<> >(visitor);
+        }
 
-        //template<typename Scope, typename Action>
-        //void call(const Action& action) {
-            //TPool<deps> deps_;
-            //call_impl<Scope, deps>(action, deps_);
-        /*}*/
+        template<typename Scope, typename Action>
+        void call(const Action& action) {
+            TPool<deps> deps_;
+            call_impl<Scope, deps>(action, deps_);
+        }
 
     private:
-/*        template<*/
-            //typename Scope
-          //, typename Deps
-          //, typename Action
-          //, typename T
-        //>
-        //typename enable_if<mpl::empty<Deps> >::type
-        //call_impl(const Action&, T&) { }
+        template<
+            typename Scope
+          , typename Deps
+          , typename Action
+          , typename T
+        >
+        typename enable_if<mpl::empty<Deps> >::type
+        call_impl(const Action&, T&) { }
 
-        //template<
-            //typename Scope
-          //, typename Deps
-          //, typename Action
-          //, typename T
-        //>
-        //typename enable_if<
-            //mpl::and_<
-                //mpl::not_<mpl::empty<Deps> >
-              //, is_same<typename mpl::front<Deps>::type::scope, Scope>
-            //>
-        //>::type
-        //call_impl(const Action& action, T& deps) {
-            //typedef typename mpl::front<Deps>::type type;
-            //static_cast<type&>(deps).call(action);
-            //call_impl<Scope, typename mpl::pop_front<Deps>::type>(action, deps);
-        /*}*/
+        template<
+            typename Scope
+          , typename Deps
+          , typename Action
+          , typename T
+        >
+        typename enable_if<
+            mpl::and_<
+                mpl::not_<mpl::empty<Deps> >
+              , is_same<typename mpl::front<Deps>::type::scope, Scope>
+            >
+        >::type
+        call_impl(const Action& action, T& deps) {
+            typedef typename mpl::front<Deps>::type type;
+            static_cast<type&>(deps).call(action);
+            call_impl<Scope, typename mpl::pop_front<Deps>::type>(action, deps);
+        }
     };
 
     } // namespace detail
