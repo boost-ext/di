@@ -328,20 +328,20 @@ BOOST_AUTO_TEST_CASE(install) {
     check(injector_(injector_2(), injector_3()).create<shared_ptr<c8>>());
 }
 
-/*BOOST_AUTO_TEST_CASE(install_mix) {*/
-    //injector<> injector_;
-    //check(injector_(injector_2(), injector2_2).create<shared_ptr<c8>>());
-//}
+BOOST_AUTO_TEST_CASE(install_mix) {
+    injector<> injector_;
+    check(injector_(injector_2(), injector2_2).create<shared_ptr<c8>>());
+}
 
-//BOOST_AUTO_TEST_CASE(pre_installed_injector_install_injector2) {
-    //injector<injector_2> injector_;
-    //check(injector_(injector2_2).create<shared_ptr<c8>>());
-/*}*/
+BOOST_AUTO_TEST_CASE(pre_installed_injector_install_injector2) {
+    injector<injector_2> injector_;
+    check(injector_(injector2_2).create<shared_ptr<c8>>());
+}
 
-//BOOST_AUTO_TEST_CASE(pre_installed_injector2_install_injector) {
-    //injector<decltype(injector2_2)> injector_(injector2_2);
-    //check(injector_.install<injector_2>().create<shared_ptr<c8>>());
-//}
+BOOST_AUTO_TEST_CASE(pre_installed_injector2_install_injector) {
+    injector<decltype(injector2_2)> injector_(injector2_2);
+    check(injector_(injector_2()).create<shared_ptr<c8>>());
+}
 
 BOOST_AUTO_TEST_CASE(scope_deduction) {
     shared_ptr<c19> c19_ = injector<>().create<shared_ptr<c19>>();

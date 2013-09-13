@@ -85,6 +85,13 @@
               >::type
           >
     {
+        typedef mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> deps_t;
+
+        template<typename TSeq = mpl::vector0<> >
+        struct joint_concepts
+            : detail::concepts<mpl::joint_view<deps_t, TSeq> >::type
+        { };
+
     public:
         injector() { }
 
@@ -103,21 +110,15 @@
 #else
     template<BOOST_DI_TYPES(Args)>
     explicit injector(BOOST_DI_ARGS(Args, args))
-      : detail::module<
-            typename detail::concepts<
-                mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-            >::type
-        >(BOOST_DI_ARGS_FORWARD(args))
+        : detail::module<typename joint_concepts<>::type>(BOOST_DI_ARGS_FORWARD(args))
     { }
 
     template<BOOST_DI_TYPES(Args)>
-    injector<typename detail::concepts<
-        mpl::vector<BOOST_DI_TYPES_PASS(Args)>
-    >::type>
+    injector<joint_concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >
     operator()(BOOST_DI_ARGS(Args, args)) const {
-        return injector<typename detail::concepts<
-            mpl::vector<BOOST_DI_TYPES_PASS(Args)>
-        >::type>(BOOST_DI_ARGS_FORWARD(args));
+        return injector<joint_concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >(
+            BOOST_DI_ARGS_FORWARD(args)
+        );
     }
 
 #endif
