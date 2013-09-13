@@ -52,16 +52,11 @@ public:
 
 int main()
 {
-    typedef di::generic_module<
-        di::per_request<
-            mpl::int_<42>
-        >
-      , di::singleton<
-            c0
-        >
-    > module;
+    di::injector<
+        di::bind_int<42>
+      , c0
+    > injector;
 
-    di::injector<module> injector;
     injector.visit<c3>(text_visitor());
 
     return 0;

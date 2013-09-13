@@ -93,10 +93,7 @@
         template<
             typename T
         >
-        class explicit_impl<
-            T
-          , typename enable_if<has_value<T> >::type
-        >
+        class explicit_impl<T, typename enable_if<has_value<T> >::type>
             : public mpl::true_
         {
         public:

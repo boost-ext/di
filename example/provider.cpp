@@ -37,11 +37,10 @@ struct usage
 
 int main()
 {
-    typedef di::generic_module<
+    typedef di::injector<
         transaction
-    > module;
+    > injector;
 
-    di::injector<module> injector;
     injector.create<usage>();
 }
 

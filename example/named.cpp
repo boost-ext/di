@@ -33,12 +33,11 @@ private:
 
 int main()
 {
-    typedef di::generic_module<
+    typedef di::injector<
         di::bind_int<42>::in_name<mpl::string<'1'>>
       , di::bind_int<87>::in_name<mpl::string<'2'>>
-    > module;
+    > injector;
 
-    di::injector<module> injector;
     injector.create<named>();
 
     return 0;

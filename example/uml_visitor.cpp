@@ -132,13 +132,7 @@ public:
 
 int main()
 {
-    typedef di::generic_module<
-        di::singleton<
-            di::bind<i0, c0>
-        >
-    > module;
-
-    di::injector<module> injector;
+    di::injector<c0> injector;
 
     std::stringstream stream;
     injector.visit<c3>(uml_visitor<plant_uml>(stream));
