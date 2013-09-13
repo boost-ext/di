@@ -15,7 +15,6 @@
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/push_back.hpp>
-    #include <boost/mpl/placeholders.hpp>
 
     #include "boost/di/config.hpp"
     #include "boost/di/type_traits/ctor_traits.hpp"

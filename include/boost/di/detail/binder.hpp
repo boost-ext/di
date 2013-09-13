@@ -31,7 +31,6 @@
 #include <boost/mpl/less.hpp>
 #include <boost/mpl/min_max.hpp>
 #include <boost/mpl/minus.hpp>
-#include <boost/mpl/filter_view.hpp>
 #include <boost/mpl/has_xxx.hpp>
 
 #include "boost/di/type_traits/make_plain.hpp"
@@ -157,11 +156,7 @@ template<
     typename TCallStack
   , typename TDeps
   , typename TDefault
-  , typename TCond =
-        for_each_context<
-            TCallStack
-          , make_context<mpl::_2>
-        >
+  , typename TCond
 >
 struct get_dependency_by_call_stack_order
     : mpl::deref<
