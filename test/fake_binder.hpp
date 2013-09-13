@@ -17,7 +17,7 @@ struct fake_binder
         typename
       , typename
     >
-    struct impl
+    struct get_dependency
     {
         typedef T type;
     };

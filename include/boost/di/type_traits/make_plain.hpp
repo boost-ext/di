@@ -38,10 +38,7 @@ struct deref_element_type
 };
 
 template<typename T>
-struct deref_element_type<
-    T
-  , typename enable_if<has_element_type<T> >::type
->
+struct deref_element_type<T, typename enable_if<has_element_type<T> >::type>
 {
     typedef typename T::element_type type;
 };

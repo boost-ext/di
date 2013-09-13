@@ -20,6 +20,8 @@
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/and.hpp>
+#include <boost/mpl/or.hpp>
+#include <boost/mpl/not.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/deref.hpp>
@@ -30,13 +32,12 @@
 #include <boost/mpl/min_max.hpp>
 #include <boost/mpl/minus.hpp>
 #include <boost/mpl/filter_view.hpp>
+#include <boost/mpl/has_xxx.hpp>
 
 #include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/type_traits/value_type.hpp"
 #include "boost/di/type_traits/scope_traits.hpp"
 #include "boost/di/concepts/dependency.hpp"
-
-#include "boost/di/concepts.hpp"
 
 namespace boost {
 namespace di {
@@ -110,11 +111,25 @@ struct get_longest_context_size
       >::type
 { };
 
+BOOST_MPL_HAS_XXX_TRAIT_DEF(is_priority)
+
 template<typename T1, typename T2>
 struct less_context_size
-    : mpl::less<
-         get_longest_context_size<make_context<T2> >
-       , get_longest_context_size<make_context<T1> >
+    : mpl::or_<
+          mpl::less<
+              get_longest_context_size<make_context<T2> >
+            , get_longest_context_size<make_context<T1> >
+          >
+        , mpl::and_<
+              mpl::equal<
+                  get_longest_context_size<make_context<T2> >
+                , get_longest_context_size<make_context<T1> >
+              >
+            , mpl::and_<
+                  mpl::not_<has_is_priority<typename T2::scope> >
+                , has_is_priority<typename T1::scope>
+              >
+          >
       >
 { };
 
@@ -212,7 +227,7 @@ struct binder
         typename T
       , typename TCallStack
     >
-    struct impl
+    struct get_dependency
         : binder_impl<T, TCallStack, TDeps>
     { };
 };

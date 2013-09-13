@@ -113,7 +113,7 @@
           , typename TBind
         >
         struct binder
-            : TBind::template impl<T, TCallStack>::type
+            : TBind::template get_dependency<T, TCallStack>::type
         { };
 
         template<

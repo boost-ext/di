@@ -57,7 +57,7 @@ using injector_3 = injector<
 >;
 
 using injector_custom_scope = injector<
-    scope<fake_scope>::bind<c3>
+    scope<fake_scope<>>::bind<c3>
 >;
 
 using injector_provider = injector<
@@ -108,7 +108,7 @@ auto injector2_3 = make_injector(
 );
 
 auto injector2_custom_scope = make_injector(
-    scope<fake_scope>::bind<c3>()
+    scope<fake_scope<>>::bind<c3>()
 );
 
 auto injector2_provider = make_injector(
@@ -250,17 +250,17 @@ using basic_call_types = mpl::vector<
 >;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(basic_call, TInjector, basic_call_types) {
-    fake_scope::entry_calls() = 0;
-    fake_scope::exit_calls() = 0;
+    fake_scope<>::entry_calls() = 0;
+    fake_scope<>::exit_calls() = 0;
 
     TInjector injector;
 
     BOOST_CHECK(!injector.template create<shared_ptr<c3>>());
 
-    injector.template call<fake_scope>(fake_scope::entry());
+    injector.template call<fake_scope<>>(fake_scope<>::entry());
     BOOST_CHECK(injector.template create<shared_ptr<c3>>());
 
-    injector.template call<fake_scope>(fake_scope::exit());
+    injector.template call<fake_scope<>>(fake_scope<>::exit());
     BOOST_CHECK(!injector.template create<shared_ptr<c3>>());
 }
 

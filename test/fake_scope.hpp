@@ -27,7 +27,18 @@
     namespace boost {
     namespace di {
 
-    struct fake_scope
+    template<bool = false>
+    struct priority_impl
+    { };
+
+    template<>
+    struct priority_impl<true>
+    {
+        typedef void is_priority;
+    };
+
+    template<bool Priority = false>
+    struct fake_scope : priority_impl<Priority>
     {
         struct entry { };
         struct exit { };

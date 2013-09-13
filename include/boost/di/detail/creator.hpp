@@ -53,7 +53,7 @@
           , typename TCallStack
         >
         struct binder
-            : TBinder::template impl<T, TCallStack>::type
+            : TBinder::template get_dependency<T, TCallStack>::type
         { };
 
     public:

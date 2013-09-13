@@ -35,7 +35,9 @@ struct fake_dependency
     typedef TBind bind;
     typedef TExpected expected;
     typedef TGiven given;
+    typedef TScope scope;
     typedef mpl::vector<TContext0, TContext1, TContext2> context;
+
     typedef typename concepts::dependency<
         TScope
       , TExpected
@@ -43,6 +45,7 @@ struct fake_dependency
       , typename mpl::if_<mpl::empty<context>, mpl::vector0<>, context>::type
       , TBind
     > type;
+
 
     template<
         typename Expected = void

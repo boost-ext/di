@@ -93,25 +93,25 @@ BOOST_AUTO_TEST_CASE(visit) {
 }
 
 BOOST_AUTO_TEST_CASE(call) {
-    fake_scope::entry_calls() = 0;
-    fake_scope::exit_calls() = 0;
+    fake_scope<>::entry_calls() = 0;
+    fake_scope<>::exit_calls() = 0;
 
     struct injector_type
         : injector<
-              scope<fake_scope>::bind<c0if0>
+              scope<fake_scope<>>::bind<c0if0>
           >
     { } injector_;
 
-    BOOST_CHECK_EQUAL(0, fake_scope::entry_calls());
-    BOOST_CHECK_EQUAL(0, fake_scope::exit_calls());
+    BOOST_CHECK_EQUAL(0, fake_scope<>::entry_calls());
+    BOOST_CHECK_EQUAL(0, fake_scope<>::exit_calls());
 
-    injector_.call<fake_scope>(fake_scope::entry());
-    BOOST_CHECK_EQUAL(1, fake_scope::entry_calls());
-    BOOST_CHECK_EQUAL(0, fake_scope::exit_calls());
+    injector_.call<fake_scope<>>(fake_scope<>::entry());
+    BOOST_CHECK_EQUAL(1, fake_scope<>::entry_calls());
+    BOOST_CHECK_EQUAL(0, fake_scope<>::exit_calls());
 
-    injector_.call<fake_scope>(fake_scope::exit());
-    BOOST_CHECK_EQUAL(1, fake_scope::entry_calls());
-    BOOST_CHECK_EQUAL(1, fake_scope::exit_calls());
+    injector_.call<fake_scope<>>(fake_scope<>::exit());
+    BOOST_CHECK_EQUAL(1, fake_scope<>::entry_calls());
+    BOOST_CHECK_EQUAL(1, fake_scope<>::exit_calls());
 }
 
 BOOST_AUTO_TEST_CASE(empty) {
@@ -185,7 +185,7 @@ BOOST_AUTO_TEST_CASE(default_scope_bind) {
 BOOST_AUTO_TEST_CASE(custom_scope) {
     struct injector_type
         : injector<
-              scope<fake_scope>::bind<
+              scope<fake_scope<>>::bind<
                   c0if0
               >
           >
@@ -194,7 +194,7 @@ BOOST_AUTO_TEST_CASE(custom_scope) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                fake_dependency_base_of<fake_scope, c0if0, c0if0>::type
+                fake_dependency_base_of<fake_scope<>, c0if0, c0if0>::type
             >
           , injector_type::deps
         >::value
@@ -517,23 +517,23 @@ BOOST_AUTO_TEST_CASE(visit_injector) {
 }
 
 BOOST_AUTO_TEST_CASE(call_injector) {
-    fake_scope::entry_calls() = 0;
-    fake_scope::exit_calls() = 0;
+    fake_scope<>::entry_calls() = 0;
+    fake_scope<>::exit_calls() = 0;
 
     auto injector_ = injector<>()(
-        scope<fake_scope>::bind<c0if0>()
+        scope<fake_scope<>>::bind<c0if0>()
     );
 
-    BOOST_CHECK_EQUAL(0, fake_scope::entry_calls());
-    BOOST_CHECK_EQUAL(0, fake_scope::exit_calls());
+    BOOST_CHECK_EQUAL(0, fake_scope<>::entry_calls());
+    BOOST_CHECK_EQUAL(0, fake_scope<>::exit_calls());
 
-    injector_.call<fake_scope>(fake_scope::entry());
-    BOOST_CHECK_EQUAL(1, fake_scope::entry_calls());
-    BOOST_CHECK_EQUAL(0, fake_scope::exit_calls());
+    injector_.call<fake_scope<>>(fake_scope<>::entry());
+    BOOST_CHECK_EQUAL(1, fake_scope<>::entry_calls());
+    BOOST_CHECK_EQUAL(0, fake_scope<>::exit_calls());
 
-    injector_.call<fake_scope>(fake_scope::exit());
-    BOOST_CHECK_EQUAL(1, fake_scope::entry_calls());
-    BOOST_CHECK_EQUAL(1, fake_scope::exit_calls());
+    injector_.call<fake_scope<>>(fake_scope<>::exit());
+    BOOST_CHECK_EQUAL(1, fake_scope<>::entry_calls());
+    BOOST_CHECK_EQUAL(1, fake_scope<>::exit_calls());
 }
 
 BOOST_AUTO_TEST_CASE(empty_injector) {
@@ -626,7 +626,7 @@ BOOST_AUTO_TEST_CASE(one_scope_direct_injector) {
 
 BOOST_AUTO_TEST_CASE(custom_scope_injector) {
     auto injector_ = injector<>()(
-        scope<fake_scope>::bind<c0if0>()
+        scope<fake_scope<>>::bind<c0if0>()
     );
 
     typedef decltype(injector_) injector_t;
@@ -634,7 +634,7 @@ BOOST_AUTO_TEST_CASE(custom_scope_injector) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                fake_dependency_base_of<fake_scope, c0if0, c0if0>::type
+                fake_dependency_base_of<fake_scope<>, c0if0, c0if0>::type
             >
           , injector_t::deps
         >::value
