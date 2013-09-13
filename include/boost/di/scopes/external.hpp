@@ -33,6 +33,8 @@
     class external
     {
     public:
+        typedef void is_priority;
+
         template<
             typename TExpected
           , typename = TExpected
