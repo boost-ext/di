@@ -61,7 +61,9 @@ public:
 
         template<typename T>
         struct ctor
-            : type_traits::ctor_traits<typename type_traits::make_plain<T>::type>::type
+            : type_traits::ctor_traits<
+                  typename type_traits::make_plain<T>::type
+              >::type
         { };
 
         template<
@@ -76,7 +78,8 @@ public:
         template<
             typename T
           , typename TBind
-          , typename TCallStack = mpl::vector1<typename type_traits::make_plain<T>::type>
+          , typename TCallStack =
+                mpl::vector1<typename type_traits::make_plain<T>::type>
           , typename = void
         >
         struct deps
@@ -105,7 +108,12 @@ public:
           , typename TBind
           , typename TCallStack
         >
-        struct deps<T, TBind, TCallStack, typename disable_if<is_unique_call_stack<TCallStack> >::type>
+        struct deps<
+            T
+          , TBind
+          , TCallStack
+          , typename disable_if<is_unique_call_stack<TCallStack> >::type
+        >
         {
             BOOST_MPL_ASSERT_MSG(
                 !Assert
