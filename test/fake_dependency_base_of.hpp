@@ -72,12 +72,10 @@ struct fake_dependency_base_of
     {
         typedef TExpected type;
     };
-
 };
 
 } // namespace di
 } // namespace boost
 
 #endif
-
 

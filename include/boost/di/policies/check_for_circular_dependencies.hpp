@@ -85,20 +85,17 @@ public:
         struct deps
             : mpl::fold<
                   ctor<typename binder<T, TCallStack, TBind>::given>
-                , mpl::vector0<>
-                , mpl::copy<
-                      mpl::joint_view<
-                          mpl::vector1<binder<mpl::_2, TCallStack, TBind> >
-                        , deps<
-                              mpl::_2
-                            , TBind
-                            , mpl::push_back<
-                                  TCallStack
-                                , type_traits::make_plain<mpl::_2>
-                              >
+                , mpl::true_
+                , mpl::and_<
+                      mpl::_1
+                    , deps<
+                          mpl::_2
+                        , TBind
+                        , mpl::push_back<
+                              TCallStack
+                            , type_traits::make_plain<mpl::_2>
                           >
                       >
-                    , mpl::back_inserter<mpl::_1>
                   >
               >::type
         { };
@@ -114,6 +111,7 @@ public:
           , TCallStack
           , typename disable_if<is_unique_call_stack<TCallStack> >::type
         >
+            : mpl::false_
         {
             BOOST_MPL_ASSERT_MSG(
                 !Assert

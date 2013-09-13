@@ -46,7 +46,6 @@ struct fake_dependency
       , TBind
     > type;
 
-
     template<
         typename Expected = void
       , typename Given = void
