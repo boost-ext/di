@@ -69,7 +69,7 @@ using injector_provider = injector<
 
 using injector_c0if0 = injector<
     c0if0
-> ;
+>;
 
 auto injector2_1 = make_injector(
     singleton<
@@ -120,6 +120,12 @@ auto injector2_provider = make_injector(
 auto injector_externals = make_injector(
     bind<double>::to(7.0)
   , bind<if0>::to(boost::make_shared<c3if0>(67, 78.0))
+  , bind<int>::in_name<mpl::string<'1'>>::in_call<call_stack<c7, c6, c4>>::to(3)
+  , bind<int>::in_call<c8>::to(4)
+);
+
+auto injector_externals_1 = make_injector(
+    bind<if0>::to(boost::make_shared<c3if0>(67, 78.0))
   , bind<int>::in_name<mpl::string<'1'>>::in_call<call_stack<c7, c6, c4>>::to(3)
   , bind<int>::in_call<c8>::to(4)
 );
@@ -200,7 +206,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(many_injectors, TInjector, many_injectors_types) {
 using mix_injectors_types = mpl::vector<
     injector<injector_2, decltype(injector2_2)>
   , injector<decltype(injector2_2), injector_2>
-> ;
+>;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(mix_injectors, TInjector, mix_injectors_types) {
     TInjector injector;
@@ -266,12 +272,11 @@ BOOST_AUTO_TEST_CASE(basic_injector2_externals) {
     BOOST_CHECK_EQUAL(87.0, c9_->d);
 }
 
-#if 0
 BOOST_AUTO_TEST_CASE(externals_mix) {
     injector<
-        decltype(injector_externals)
+        decltype(injector_externals_1)
       , decltype(injector2_externals)
-    > injector_(injector2_externals, injector_externals);
+    > injector_(injector2_externals, injector_externals_1);
 
     shared_ptr<c8> c8_ = injector_.create<shared_ptr<c8>>();
 
@@ -279,29 +284,28 @@ BOOST_AUTO_TEST_CASE(externals_mix) {
     BOOST_CHECK_EQUAL(3, c8_->c7_->c6_->c4_->i1);
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c4_->i2);
     BOOST_CHECK_EQUAL(42, c8_->c7_->c6_->c3_->i);
-    BOOST_CHECK_EQUAL(87, c8_->c7_->c6_->c5_.c2_->i);
-    BOOST_CHECK_EQUAL(7.0, c8_->c7_->c6_->c5_.c2_->d);
+    BOOST_CHECK_EQUAL(42, c8_->c7_->c6_->c5_.c2_->i);
+    BOOST_CHECK_EQUAL(87.0, c8_->c7_->c6_->c5_.c2_->d);
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
     BOOST_CHECK_EQUAL(67, dynamic_cast<c3if0&>(*c8_->c7_->c6_->c5_.if0_).i);
     BOOST_CHECK_EQUAL(78.0, dynamic_cast<c3if0&>(*c8_->c7_->c6_->c5_.if0_).d);
     BOOST_CHECK_EQUAL(67, dynamic_cast<c3if0&>(*c8_->c7_->if0_).i);
 }
-#endif
 
 BOOST_AUTO_TEST_CASE(ctor) {
     injector<decltype(injector2_1)> injector(injector2_1);
     check(injector.create<c8>());
 }
 
-/*BOOST_AUTO_TEST_CASE(ctor_mix) {*/
-    //injector<injector_2, decltype(injector2_2)> injector(injector2_2);
-    //check(injector.create<shared_ptr<c8>>());
-//}
+BOOST_AUTO_TEST_CASE(ctor_mix) {
+    injector<injector_2, decltype(injector2_2)> injector(injector2_2);
+    check(injector.create<shared_ptr<c8>>());
+}
 
-//BOOST_AUTO_TEST_CASE(ctor_mix_order) {
-    //injector<decltype(injector2_2), injector_2> injector(injector2_2);
-    //check(injector.create<shared_ptr<c8>>());
-/*}*/
+BOOST_AUTO_TEST_CASE(ctor_mix_order) {
+    injector<decltype(injector2_2), injector_2> injector(injector2_2);
+    check(injector.create<shared_ptr<c8>>());
+}
 
 BOOST_AUTO_TEST_CASE(ctor_mix_explicit) {
     injector<
