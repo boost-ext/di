@@ -46,6 +46,12 @@
         : scope<scopes::deduce>::bind<T>
     { };
 
+    template<typename T>
+    struct deps
+    {
+        typedef typename T::deps type;
+    };
+
     BOOST_MPL_HAS_XXX_TRAIT_DEF(deps)
 
     template<typename TSeq>
@@ -59,7 +65,7 @@
                     , mpl::_2
                     , mpl::if_<
                           has_deps<mpl::_2>
-                        , mpl::vector1<mpl::_2>
+                        , deps<mpl::_2>
                         , default_scope<mpl::_2>
                       >
                   >

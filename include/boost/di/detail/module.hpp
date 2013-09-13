@@ -10,9 +10,6 @@
     #define BOOST_DI_DETAIL_MODULE_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
-    #include <boost/preprocessor/repetition/enum_binary_params.hpp>
-    #include <boost/preprocessor/facilities/intercept.hpp>
-    #include <boost/preprocessor/punctuation/comma_if.hpp>
     #include <boost/type_traits/is_same.hpp>
     #include <boost/type_traits/is_base_of.hpp>
     #include <boost/utility/enable_if.hpp>
@@ -34,9 +31,9 @@
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/insert.hpp>
     #include <boost/mpl/joint_view.hpp>
+    #include <boost/mpl/filter_view.hpp>
     #include <boost/mpl/contains.hpp>
     #include <boost/mpl/pair.hpp>
-    #include <boost/mpl/has_xxx.hpp>
 
     #include "boost/di/detail/pool.hpp"
     #include "boost/di/detail/binder.hpp"
@@ -66,8 +63,6 @@
     >
     class module
     {
-        BOOST_MPL_HAS_XXX_TRAIT_DEF(deps)
-
         template<
             typename
           , template<typename> class
@@ -95,38 +90,6 @@
         >
         struct get_types
             : mpl::remove_if<TSeq, TCond>::type
-        { };
-
-        template<typename T>
-        struct deps_type
-        {
-            typedef typename T::deps type;
-        };
-
-        template<typename TSeq>
-        struct is_module
-            : mpl::equal_to<
-                  mpl::size<TSeq>
-                , mpl::count_if<TSeq, has_deps<mpl::_> >
-              >::type
-        { };
-
-        template<typename TSeq>
-        struct get_deps
-            : unique<
-                  typename mpl::fold<
-                      get_types<TSeq, is_base_of<detail::policy_impl, mpl::_> >
-                    , mpl::vector0<>
-                    , mpl::copy<
-                          mpl::if_<
-                              has_deps<mpl::_2>
-                            , deps_type<mpl::_2>
-                            , mpl::vector1<mpl::_2>
-                          >
-                        , mpl::back_inserter<mpl::_1>
-                      >
-                  >::type
-              >::type
         { };
 
         template<typename T>
@@ -196,7 +159,10 @@
 
     public:
         typedef get_types<TDeps, mpl::not_<is_base_of<detail::policy_impl, mpl::_> > > policies;
-        typedef get_deps<TDeps> deps;
+        typedef get_types<TDeps, is_base_of<detail::policy_impl, mpl::_> > deps;
+
+        //wknd
+        typedef get_types<TDeps, is_base_of<detail::policy_impl, mpl::_> > types;
 
         module() { }
 
@@ -265,6 +231,7 @@
         }
 
         TPool<deps> deps_;
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(deps)
     };
 
     } // namespace detail
@@ -275,29 +242,14 @@
 
 #else
 
-    #define BOOST_DI_GET_DEPS(_, n, args) \
-        BOOST_PP_COMMA_IF(n) BOOST_TYPEOF(args##n.deps_)
-
     template<BOOST_DI_TYPES(Args)>
-    explicit module(
-        BOOST_DI_ARGS(Args, args)
-      , typename enable_if<is_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >::type* = 0)
-        : deps_(TPool<mpl::vector<BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_GET_DEPS, args)> >(
-              BOOST_PP_ENUM_BINARY_PARAMS(BOOST_PP_ITERATION(), args, .deps_ BOOST_PP_INTERCEPT))
-            , init()
-          )
-    { }
-
-    #undef BOOST_DI_GET_DEPS
-
-    template<BOOST_DI_TYPES(Args)>
-    explicit module(
-        BOOST_DI_ARGS(Args, args)
-      , typename disable_if<is_module<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >::type* = 0)
-        : deps_(TPool<mpl::vector<BOOST_DI_TYPES_PASS(Args)>, mpl::not_<mpl::contains<deps, mpl::_1> > >(
-              BOOST_DI_ARGS_FORWARD(args))
-            , init()
-          )
+    explicit module(BOOST_DI_ARGS(Args, args))
+        //: deps_(TPool<mpl::vector<BOOST_DI_TYPES_PASS(Args)>, mpl::not_<mpl::contains<
+                //mpl::joint_view<
+                    //deps
+                  //, mpl::filter_view<mpl::vector<BOOST_DI_TYPES_PASS(Args)>, has_deps<mpl::_> >
+                //>
+                //, mpl::_> > >(BOOST_DI_ARGS_FORWARD(args)), init())
     { }
 
 #endif

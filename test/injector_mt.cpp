@@ -238,7 +238,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(basic_visitor, TInjector, basic_visitor_types) {
     injector.template visit<transaction_usage>(visitor);
 }
 
-using basic_call_types =mpl::vector<
+using basic_call_types = mpl::vector<
     injector<injector_custom_scope>
   , injector<decltype(injector2_custom_scope)>
 >;

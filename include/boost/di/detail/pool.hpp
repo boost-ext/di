@@ -154,8 +154,8 @@
             BOOST_PP_COMMA_IF(n)                                        \
             mpl::at_c<typename pool<T, I>::types, n>::type(             \
                 p.get<typename mpl::at_c<                               \
-                    typename pool<T, I>::types                          \
-                  , n                                                   \
+                      typename pool<T, I>::types                        \
+                    , n                                                 \
                 >::type>()                                              \
             )
 

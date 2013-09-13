@@ -315,6 +315,31 @@ BOOST_AUTO_TEST_CASE(pool_from_pool_of_pools_many) {
     BOOST_CHECK_EQUAL(0, p2.get<default_ctor>().i);
 }
 
+template<typename T1, typename T2>
+class base : public T1, public T2
+{
+public:
+    typedef mpl::vector<T1, T2> types;
+};
+
+BOOST_AUTO_TEST_CASE(pool_flatten) {
+    typedef pool<mpl::vector<trivial_ctor, custom_ctor, default_ctor> > pool_flatten_type;
+    typedef pool<mpl::vector<custom_ctor, base<trivial_ctor, default_ctor> > > pool_type;
+    const int i = 42;
+
+    custom_ctor c(i);
+    default_ctor d;
+    trivial_ctor t;
+    base<trivial_ctor, default_ctor> b;
+
+    pool_type p1(c, b);
+    pool_flatten_type p2(p1, init());
+
+    BOOST_CHECK_EQUAL(i, p2.get<custom_ctor>().i);
+    BOOST_CHECK_EQUAL(0, p2.get<default_ctor>().i);
+    BOOST_CHECK_EQUAL(0, p2.get<trivial_ctor>().i);
+}
+
 } // namespace detail
 } // namespace di
 } // namespace boost
