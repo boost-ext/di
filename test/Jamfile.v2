@@ -49,7 +49,7 @@ test-suite di-test :
     #[ run concepts_ut.cpp ]
     #[ run ctor_bracket_ut.cpp ]
     #[ run ctor_va_args_ut.cpp ]
-    #[ run injector_mt.cpp ]
+    [ run injector_mt.cpp ]
     #[ run injector_ut.cpp ]
     [ run make_injector_mt.cpp ]
     #[ run named_ut.cpp ]

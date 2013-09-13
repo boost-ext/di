@@ -74,10 +74,8 @@
       , template<typename> class TCreator = creator
       , template<typename> class TVisitor = visitor
     >
-    class module : public TPool<get_deps<TDeps>, mpl::not_<mpl::contains<get_deps<TDeps>, mpl::_> > >
+    class module : public TPool<get_deps<TDeps> >
     {
-        typedef TPool<get_deps<TDeps>, mpl::not_<mpl::contains<get_deps<TDeps>, mpl::_> > > pool_t;
-
         template<
             typename
           , template<typename> class
@@ -188,7 +186,7 @@
                 >
             >::type deps_t;
 
-            TPool<deps_t> deps_(static_cast<pool_t&>(*this), init());
+            TPool<deps_t> deps_(static_cast<TPool<get_deps<TDeps> >&>(*this), init());
 
             return TCreator<TBinder<deps> >::template
                 execute<T, mpl::vector0<> >(deps_);
@@ -235,6 +233,8 @@
             static_cast<type&>(deps).call(action);
             call_impl<Scope, typename mpl::pop_front<Deps>::type>(action, deps);
         }
+
+        BOOST_MPL_HAS_XXX_TRAIT_DEF(types)
     };
 
     } // namespace detail
@@ -247,7 +247,14 @@
 
     template<BOOST_DI_TYPES(Args)>
     explicit module(BOOST_DI_ARGS(Args, args))
-        : pool_t(TPool<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >(BOOST_DI_ARGS_FORWARD(args)), init())
+        : TPool<get_deps<TDeps> >(
+              TPool<mpl::vector<BOOST_DI_TYPES_PASS(Args)>, mpl::not_<
+                mpl::or_<
+                    mpl::contains<get_deps<TDeps>, mpl::_>
+                  , has_types<mpl::_>
+                > >
+                >(BOOST_DI_ARGS_FORWARD(args)), init()
+          )
     { }
 
 #endif

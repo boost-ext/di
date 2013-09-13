@@ -37,7 +37,6 @@
         )                                   \
     )
 
-#include <boost/units/detail/utility.hpp>
     namespace boost {
     namespace di {
 
@@ -55,22 +54,10 @@
     };
 
     BOOST_MPL_HAS_XXX_TRAIT_DEF(deps)
-        template<typename TSeq>
-        struct unique
-            : mpl::fold<
-                  typename mpl::fold<
-                      TSeq
-                    , mpl::set0<>
-                    , mpl::insert<mpl::_1, mpl::_2 >
-                  >::type
-                , mpl::vector0<>
-                , mpl::push_back<mpl::_1, mpl::_2>
-              >
-        { };
 
     template<typename TSeq>
     struct concepts
-        : /*unique<typename*/ mpl::fold<
+        : mpl::fold<
               TSeq
             , mpl::vector0<>
             , mpl::copy<
@@ -86,7 +73,6 @@
                 , mpl::back_inserter<mpl::_1>
               >
           >::type
-          //>
     { };
 
     } // namespace detail
@@ -118,11 +104,10 @@
     template<BOOST_DI_TYPES(Args)>
     explicit injector(BOOST_DI_ARGS(Args, args))
       : detail::module<
-              typename detail::concepts<
-                     mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-              >::type
-          >
-        (BOOST_DI_ARGS_FORWARD(args))
+            typename detail::concepts<
+                mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+            >::type
+        >(BOOST_DI_ARGS_FORWARD(args))
     { }
 
     template<BOOST_DI_TYPES(Args)>
