@@ -62,6 +62,11 @@
         : mpl::remove_if<TSeq, TCond>::type
     { };
 
+    template<typename TSeq>
+    struct get_deps
+        : get_types<TSeq, is_base_of<detail::policy_impl, mpl::_> >::type
+    { };
+
     template<
         typename TDeps = mpl::vector0<>
       , template<typename> class TBinder = binder
@@ -69,8 +74,10 @@
       , template<typename> class TCreator = creator
       , template<typename> class TVisitor = visitor
     >
-    class module : public TPool<typename get_types<TDeps, is_base_of<detail::policy_impl, mpl::_> >::type , mpl::not_<mpl::contains<typename get_types<TDeps, is_base_of<detail::policy_impl, mpl::_> >::type, mpl::_> > >
+    class module : public TPool<get_deps<TDeps>, mpl::not_<mpl::contains<get_deps<TDeps>, mpl::_> > >
     {
+        typedef TPool<get_deps<TDeps>, mpl::not_<mpl::contains<get_deps<TDeps>, mpl::_> > > pool_t;
+
         template<
             typename
           , template<typename> class
@@ -91,14 +98,6 @@
                 , mpl::push_back<mpl::_1, mpl::_2>
               >
         { };
-
-        //template<
-            //typename TSeq
-          //, typename TCond
-        //>
-        //struct get_types
-            //: mpl::remove_if<TSeq, TCond>::type
-        /*{ };*/
 
         template<typename T>
         struct ctor
@@ -167,7 +166,7 @@
 
     public:
         typedef get_types<TDeps, mpl::not_<is_base_of<detail::policy_impl, mpl::_> > > policies;
-        typedef get_types<TDeps, is_base_of<detail::policy_impl, mpl::_> > deps;
+        typedef get_deps<TDeps> deps;
 
         module() { }
 
@@ -187,7 +186,7 @@
                 >
             >::type deps_t;
 
-            TPool<deps_t> deps_(static_cast<TPool<typename get_types<TDeps, is_base_of<detail::policy_impl, mpl::_> >::type , mpl::not_<mpl::contains<typename get_types<TDeps, is_base_of<detail::policy_impl, mpl::_> >::type, mpl::_> > >&>(*this), init());
+            TPool<deps_t> deps_(static_cast<pool_t&>(*this), init());
 
             return TCreator<TBinder<typename deps::type> >::template
                 execute<T, mpl::vector0<> >(deps_);
@@ -234,8 +233,6 @@
             //static_cast<type&>(deps).call(action);
             //call_impl<Scope, typename mpl::pop_front<Deps>::type>(action, deps);
         /*}*/
-
-        //TPool<deps, mpl::not_<mpl::contains<deps, mpl::_> > > deps_;
     };
 
     } // namespace detail
@@ -248,8 +245,7 @@
 
     template<BOOST_DI_TYPES(Args)>
     explicit module(BOOST_DI_ARGS(Args, args))
-        : TPool<typename get_types<TDeps, is_base_of<detail::policy_impl, mpl::_> >::type , mpl::not_<mpl::contains<typename get_types<TDeps, is_base_of<detail::policy_impl, mpl::_> >::type, mpl::_> > >(
-              TPool<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >(BOOST_DI_ARGS_FORWARD(args)), init())
+        : pool_t(TPool<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >(BOOST_DI_ARGS_FORWARD(args)), init())
     { }
 
 #endif
