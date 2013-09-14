@@ -949,6 +949,7 @@ BOOST_AUTO_TEST_CASE(to_in_call_with_global) {
     BOOST_CHECK_EQUAL(0, c4_.i2);
 }
 
+#if 0
 BOOST_AUTO_TEST_CASE(to_in_call_stack) {
     const int i = 42;
 
@@ -963,6 +964,7 @@ BOOST_AUTO_TEST_CASE(to_in_call_stack) {
     BOOST_CHECK_EQUAL(0, c6_.c4_->i1);
     BOOST_CHECK_EQUAL(0, c6_.c4_->i2);
 }
+#endif
 
 BOOST_AUTO_TEST_CASE(to_variant_shared_ptr) {
     shared_ptr<c3> c3_(new c3);

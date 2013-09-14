@@ -79,7 +79,6 @@ public:
     { }
 
     operator T() const { return value_; }
-    operator T&() { return value_; }
 
     value_type* operator->() const { return value_.get(); }
     value_type& operator*() const { return *value_; }

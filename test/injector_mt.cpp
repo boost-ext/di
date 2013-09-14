@@ -359,11 +359,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(scope_deduction_if, TInjector, deduce_injectors_ty
     BOOST_CHECK(c20_->if0_ == c20_->if0__);
 }
 
+#if 0
 BOOST_AUTO_TEST_CASE_TEMPLATE(std_shared_ptr_std_unique_ptr, TInjector, deduce_injectors_types) {
     TInjector injector;
     std::shared_ptr<c21> c21_ = injector.template create<std::shared_ptr<c21>>();
     BOOST_CHECK(c21_->if0__ == c21_->if0__);
 }
+#endif
 
 } // namespace di
 } // namespace boost
