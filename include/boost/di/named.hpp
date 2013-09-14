@@ -60,13 +60,7 @@ template<
     typename T
   , typename TName
 >
-class named<
-    T
-  , TName
-  , typename enable_if<
-        is_polymorphic<T>
-    >::type
->
+class named<T, TName, typename enable_if<is_polymorphic<T> >::type>
 {
 public:
     typedef typename type_traits::make_plain<T>::type value_type;
@@ -78,18 +72,15 @@ template<
     typename T
   , typename TName
 >
-class named<
-    T
-  , TName
-  , typename enable_if<has_element_type<T> >::type
->
+class named<T, TName, typename enable_if<has_element_type<T> >::type>
 {
+    typedef typename T::element_type et;
 public:
     typedef typename type_traits::make_plain<T>::type value_type;
     typedef named<typename type_traits::make_plain<T>::type, TName> element_type;
     typedef TName name;
 
-    named(T value = T(new typename T::element_type)) // non explicit
+   named(T value = T(new typename T::element_type)) // non explicit
         : value_(value)
     { }
 
