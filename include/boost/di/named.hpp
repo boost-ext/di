@@ -7,14 +7,9 @@
 #ifndef BOOST_DI_NAMED_HPP
 #define BOOST_DI_NAMED_HPP
 
-#include <boost/preprocessor/cat.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/make_shared.hpp>
 #include <boost/type_traits/is_polymorphic.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/type_traits/is_base_of.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/mpl/has_xxx.hpp>
 
 #include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/config.hpp"
@@ -74,13 +69,12 @@ template<
 >
 class named<T, TName, typename enable_if<has_element_type<T> >::type>
 {
-    typedef typename T::element_type et;
 public:
     typedef typename type_traits::make_plain<T>::type value_type;
     typedef named<typename type_traits::make_plain<T>::type, TName> element_type;
     typedef TName name;
 
-   named(T value = T(new typename T::element_type)) // non explicit
+    named(T value = T(new typename T::element_type)) // non explicit
         : value_(value)
     { }
 

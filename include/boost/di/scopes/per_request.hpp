@@ -13,6 +13,7 @@
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/enum_params.hpp>
     #include <boost/shared_ptr.hpp>
+    #include <boost/make_shared.hpp>
     #include <boost/function.hpp>
     #include <boost/bind.hpp>
     #include <boost/non_type.hpp>
@@ -258,7 +259,7 @@
 
     template<BOOST_DI_TYPES(Args)>
     static TGiven* create_impl(BOOST_DI_ARGS(Args, args)) {
-        return type_traits::create_traits<TExpected, TGiven>(BOOST_DI_ARGS_FORWARD(args));
+        return type_traits::create_traits<TGiven, TGiven>(BOOST_DI_ARGS_FORWARD(args));
     }
 
 #endif

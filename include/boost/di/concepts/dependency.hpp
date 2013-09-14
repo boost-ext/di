@@ -37,6 +37,18 @@ struct scope_traits<mpl::_1>
     typedef scopes::deduce type;
 };
 
+template<typename T>
+struct named_traits
+{
+    typedef T type;
+};
+
+template<typename T, typename TName>
+struct named_traits<named<T, TName> >
+{
+    typedef T type;
+};
+
 } // namespace detail
 
 template<
@@ -50,7 +62,7 @@ template<
 >
 class dependency
     : public detail::scope_traits<TScope>::type::template
-          scope<TExpected, TGiven>
+          scope<typename detail::named_traits<TExpected>::type, TGiven>
 {
     template<typename T>
     struct external
@@ -76,7 +88,7 @@ public:
 
     template<typename T>
     explicit dependency(const T& obj)
-        : scope::template scope<TExpected, TGiven>(obj)
+        : scope::template scope<typename detail::named_traits<TExpected>::type, TGiven>(obj)
     { }
 
     template<typename T>
