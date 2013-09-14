@@ -153,7 +153,7 @@
         #define BOOST_DI_CTOR_INITLIST_IMPL(_, n, na)                   \
             BOOST_PP_COMMA_IF(n)                                        \
             mpl::at_c<typename pool<T, I>::types, n>::type(             \
-                p.get<typename mpl::at_c<                               \
+                p.template get<typename mpl::at_c<                      \
                       typename pool<T, I>::types                        \
                     , n                                                 \
                 >::type>()                                              \
