@@ -238,11 +238,5 @@
 
 #endif
 
-#if BOOST_WORKAROUND(BOOST_MSVC, < 1700)
-    #define BOOST_DI_TEMPLATE_QUALIFIER
-#else
-    #define BOOST_DI_TEMPLATE_QUALIFIER template
-#endif
-
 #endif
 

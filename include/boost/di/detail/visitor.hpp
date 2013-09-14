@@ -113,8 +113,9 @@
         BOOST_PP_ITERATION()
     >::type execute_impl(const TVisitor& visitor) {
 
-        visitor.BOOST_DI_TEMPLATE_QUALIFIER
-            operator()<dependency_impl<T, TCallStack, TDependency> >();
+        visitor.template operator()<
+            dependency_impl<T, TCallStack, TDependency>
+        >();
 
         #define BOOST_DI_VISITOR_EXECUTE(z, n, _)       \
             execute<                                    \
