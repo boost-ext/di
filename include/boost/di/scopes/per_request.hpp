@@ -13,6 +13,7 @@
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/enum_params.hpp>
     #include <boost/shared_ptr.hpp>
+    #include <boost/scoped_ptr.hpp>
     #include <boost/make_shared.hpp>
     #include <boost/function.hpp>
     #include <boost/bind.hpp>
@@ -119,12 +120,14 @@
             }
 
             operator TGiven() const {
-                return *object_(); //TODO delete
+                scoped_ptr<TGiven> ptr(object_());
+                return *ptr;
             }
 
             template<typename I, typename TName>
             operator named<I, TName>() const {
-                return *object_(); //TODO delete
+                scoped_ptr<TGiven> ptr(object_());
+                return *ptr;
             }
 
             template<typename I>
