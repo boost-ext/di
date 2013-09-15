@@ -256,6 +256,11 @@
 
 #else
 
+    //bind<...>, etc.   -> ignore
+    //policy<...>       -> ignore
+    //module<....>      -> get all dependencies from the module
+    //dependency<....>  -> pass
+
     template<BOOST_DI_TYPES(Args)>
     explicit module(BOOST_DI_ARGS(Args, args))
         : TPool<deps>(

@@ -13,7 +13,7 @@ project di :
         <include>../include
         <library>/boost/test//boost_unit_test_framework/<link>static
         <define>BOOST_TEST_MODULE=di_test
-        #<warnings>all
+        <warnings>all
 
         <toolset>gcc:<cxxflags>-std=c++11
         <toolset>gcc:<cxxflags>-Wno-unused-local-typedefs
