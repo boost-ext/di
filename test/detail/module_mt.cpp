@@ -492,8 +492,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(externals_create_priority, TModule, externals_prio
 }
 
 BOOST_AUTO_TEST_CASE(create_string_boost_function_ptr) {
-    const int i1 = 42;
-    const int i2 = 87;
+    static const int i1 = 42;
+    static const int i2 = 87;
     struct c
     {
         static int f() { return i1; }

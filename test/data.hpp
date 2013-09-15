@@ -59,8 +59,8 @@ struct c3if0 : if0
 
     virtual void dummy() { }
 
-    int i;
-    double d;
+    int i = 0;
+    double d = 0.0;
 };
 
 struct c0
@@ -83,9 +83,9 @@ struct c2
         : i(i), d(d), c(c)
     { }
 
-    int i;
-    double d;
-    char c;
+    int i = 0;
+    double d = 0.0;
+    char c = 0;
 };
 
 struct c3
@@ -96,7 +96,7 @@ struct c3
         : i(i)
     { }
 
-    int i;
+    int i = 0;
 };
 
 struct c4
@@ -110,8 +110,8 @@ struct c4
     { }
 
     shared_ptr<c3> c3_;
-    int i1;
-    int i2;
+    int i1 = 0;
+    int i2 = 0;
 };
 
 struct c5
@@ -171,7 +171,7 @@ struct c8
     shared_ptr<c7> c7_;
     c0 c0_;
     shared_ptr<c1> c1_;
-    int i;
+    int i = 0;
 };
 
 struct c9 : c2
@@ -199,8 +199,8 @@ struct c10
         : i1(i1), i2(i2)
     { }
 
-    int i1;
-    int i2;
+    int i1 = 0;
+    int i2 = 0;
 };
 
 struct c11
@@ -246,8 +246,8 @@ struct c14
         : i(i), d(d)
     { }
 
-    int i;
-    double d;
+    int i = 0;
+    double d = 0.0;
 };
 
 struct c15
@@ -379,7 +379,7 @@ struct transaction
         : i(i)
     { }
 
-    int i;
+    int i = 0;
 };
 
 struct transaction_provider

@@ -18,9 +18,20 @@
 #include <boost/detail/workaround.hpp>
 #include <boost/config.hpp>
 
+#if defined(BOOST_NO_CXX11_SMART_PTR) && __clang_major__ >= 3 &&  __clang_minor__ >= 2
+    #undef BOOST_NO_CXX11_SMART_PTR
+#endif
+
 #if !defined(BOOST_DI_CTOR_CFG_VA_ARGS) && !defined(BOOST_DI_CTOR_CFG_BRACKET)
     #define BOOST_DI_CTOR_CFG_VA_ARGS
 #endif
+
+#if BOOST_WORKAROUND(BOOST_MSVC, < 1700)
+    #define BOOST_DI_TEMPLATE_QUALIFIER
+#else
+    #define BOOST_DI_TEMPLATE_QUALIFIER template
+#endif
+
 
 #if !defined(BOOST_DI_CONSTRUCTOR)
     #define BOOST_DI_CONSTRUCTOR boost_di_constructor__
@@ -166,12 +177,6 @@
 
 //-----------------------------------------------------------
 
-#endif
-
-#if BOOST_WORKAROUND(BOOST_MSVC, < 1700)
-    #define BOOST_DI_TEMPLATE_QUALIFIER
-#else
-    #define BOOST_DI_TEMPLATE_QUALIFIER template
 #endif
 
 #endif

@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE(variant_shared_ptr) {
 }
 
 BOOST_AUTO_TEST_CASE(variant_function) {
-    const int i = 42;
+    static const int i = 42;
     typedef function<int()> f_type;
     struct c
     {

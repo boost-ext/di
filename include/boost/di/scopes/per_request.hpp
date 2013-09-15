@@ -153,7 +153,7 @@
         #if !defined(BOOST_NO_CXX11_SMART_PTR)
             template<typename I>
             operator std::shared_ptr<I>() const {
-                return object_();
+                return std::shared_ptr<I>(object_());
             }
 
             template<typename I, typename TName>
