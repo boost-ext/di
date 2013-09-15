@@ -74,7 +74,11 @@
     template<
         typename TDeps = mpl::vector0<>
       , template<typename> class TBinder = binder
-      , template<typename, typename = never<mpl::_1>, typename = void> class TPool = pool
+      , template<
+            typename
+          , typename = ::boost::di::detail::never< ::boost::mpl::_1 >
+          , typename = void
+        > class TPool = pool
       , template<typename> class TCreator = creator
       , template<typename> class TVisitor = visitor
     >

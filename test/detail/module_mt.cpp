@@ -491,6 +491,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(externals_create_priority, TModule, externals_prio
     BOOST_CHECK_EQUAL(i2, obj.i2);
 }
 
+#if 0
 BOOST_AUTO_TEST_CASE(create_string_boost_function_ptr) {
     static const int i1 = 42;
     static const int i2 = 87;
@@ -515,6 +516,7 @@ BOOST_AUTO_TEST_CASE(create_string_boost_function_ptr) {
     BOOST_CHECK_EQUAL(i2, obj.c3_.i);
     BOOST_CHECK_EQUAL("s", obj.s_);
 }
+#endif
 
 BOOST_AUTO_TEST_CASE(visit) {
     module<

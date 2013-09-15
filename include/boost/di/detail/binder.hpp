@@ -185,7 +185,7 @@ template<
   , typename TCallStack
   , typename TDeps
   , typename TDefault =
-        concepts::dependency<
+        ::boost::di::concepts::dependency<
             typename type_traits::scope_traits<T>::type
           , typename type_traits::make_plain<T>::type
           , typename type_traits::value_type<

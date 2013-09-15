@@ -68,7 +68,7 @@ struct c0
     //trivial ctor
 };
 
-struct c1 : noncopyable
+struct c1 : private noncopyable
 {
     explicit c1(int = 0) { }
 };
@@ -291,7 +291,7 @@ struct c17
     std::string s_;
 };
 
-struct c18
+struct c18 : private noncopyable
 {
     BOOST_DI_CTOR(c18
         , c0 c0_ // per_request

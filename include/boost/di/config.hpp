@@ -13,25 +13,34 @@
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/preprocessor/arithmetic/sub.hpp>
+#include <boost/typeof/typeof.hpp>
 #include <boost/mpl/limits/vector.hpp>
 #include <boost/mpl/aux_/na_fwd.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/config.hpp>
 
-#if defined(BOOST_NO_CXX11_SMART_PTR) && __clang_major__ >= 3 &&  __clang_minor__ >= 2
+//-----------------------------------------------------------
+
+#if defined(BOOST_NO_CXX11_SMART_PTR) &&                    \
+    __clang_major__ >= 3 &&                                 \
+    __clang_minor__ >= 2
     #undef BOOST_NO_CXX11_SMART_PTR
 #endif
 
-#if !defined(BOOST_DI_CTOR_CFG_VA_ARGS) && !defined(BOOST_DI_CTOR_CFG_BRACKET)
-    #define BOOST_DI_CTOR_CFG_VA_ARGS
-#endif
-
-#if BOOST_WORKAROUND(BOOST_MSVC, < 1700)
+#if defined(BOOST_MSVC)
     #define BOOST_DI_TEMPLATE_QUALIFIER
+    #define BOOST_DI_TYPEOF(type) decltype(type)
 #else
     #define BOOST_DI_TEMPLATE_QUALIFIER template
+    #define BOOST_DI_TYPEOF(type) BOOST_TYPEOF_TPL(&type)
 #endif
 
+//-----------------------------------------------------------
+
+#if !defined(BOOST_DI_CTOR_CFG_VA_ARGS) &&                  \
+    !defined(BOOST_DI_CTOR_CFG_BRACKET)
+    #define BOOST_DI_CTOR_CFG_VA_ARGS
+#endif
 
 #if !defined(BOOST_DI_CONSTRUCTOR)
     #define BOOST_DI_CONSTRUCTOR boost_di_constructor__

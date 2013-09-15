@@ -40,6 +40,58 @@
     namespace di {
     namespace scopes {
 
+    template<typename T>
+    class has_value
+    {
+        struct helper { static int value; };
+        struct base
+            : helper
+            , mpl::if_<
+                  is_arithmetic<T>
+                , mpl::void_
+                , T
+              >::type
+        { };
+
+        template<typename C> static mpl::aux::no_tag  test(non_type<const int*, &C::value>*);
+        template<typename>   static mpl::aux::yes_tag test(...);
+
+    public:
+        BOOST_STATIC_CONSTANT(
+            bool
+          , value = sizeof(test<base>(0)) == sizeof(mpl::aux::yes_tag)
+        );
+    };
+
+    template<typename, typename = void>
+    class explicit_impl
+        : public mpl::false_
+    { };
+
+    template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, int C)>
+    class explicit_impl<
+        mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)>
+    >
+        : public mpl::true_
+    {
+    public:
+        inline static std::string create() {
+            return mpl::c_str<
+                mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)>
+            >::value;
+        }
+    };
+
+    template<typename T>
+    class explicit_impl<T, typename enable_if<has_value<T> >::type>
+        : public mpl::true_
+    {
+    public:
+        inline static BOOST_TYPEOF_TPL(T::value) create() {
+            return T::value;
+        }
+    };
+
     template<
         template<
             typename
@@ -47,73 +99,77 @@
     >
     class per_request
     {
-        template<typename T>
-        class has_value
-        {
-            struct helper { static int value; };
-            struct base
-                : helper
-                , mpl::if_<
-                      is_arithmetic<T>
-                    , mpl::void_
-                    , T
-                  >::type
-            { };
-
-            template<typename C> static mpl::aux::no_tag  test(non_type<const int*, &C::value>*);
-            template<typename>   static mpl::aux::yes_tag test(...);
-
-        public:
-            BOOST_STATIC_CONSTANT(
-                bool
-              , value = sizeof(test<base>(0)) == sizeof(mpl::aux::yes_tag)
-            );
-        };
-
-        template<
-            typename
-          , typename = void
-        >
-        class explicit_impl
-            : public mpl::false_
-        { };
-
-        template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, int C)>
-        class explicit_impl<
-            mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)>
-        >
-            : public mpl::true_
-        {
-        public:
-            inline static std::string create() {
-                return mpl::c_str<
-                    mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)>
-                >::value;
-            }
-        };
-
-        template<
-            typename T
-        >
-        class explicit_impl<T, typename enable_if<has_value<T> >::type>
-            : public mpl::true_
-        {
-        public:
-            inline static BOOST_TYPEOF_TPL(T::value) create() {
-                return T::value;
-            }
-        };
-
     public:
+        template<typename, typename, bool>
+        class scope_impl;
+
         template<
             typename TExpected
           , typename TGiven = TExpected
-          , typename = void
         >
         class scope
+            : public scope_impl<TExpected, TGiven, explicit_impl<TGiven>::type::value>
+        { };
+
+        template<
+            typename TExpected
+          , typename TGiven
+        >
+        class scope_impl<TExpected, TGiven, true>
+        {
+            typedef BOOST_TYPEOF_TPL(explicit_impl<TGiven>::create()) T;
+
+        public:
+            typedef scope_impl result_type;
+
+            operator T() const {
+                return object_();
+            }
+
+            template<typename TName>
+            operator named<T, TName>() const {
+                return object_();
+            }
+
+            template<typename TName>
+            operator shared_ptr<T>() const {
+                return make_shared<T>(object_());
+            }
+
+            template<typename TName>
+            operator named<shared_ptr<T>, TName>() const {
+                return make_shared<T>(object_());
+            }
+
+        #if !defined(BOOST_NO_CXX11_SMART_PTR)
+            template<typename TName>
+            operator std::shared_ptr<T>() const {
+                return std::make_shared<T>(object_());
+            }
+
+            template<typename TName>
+            operator named<std::shared_ptr<T>, TName>() const {
+                return std::make_shared<T>(object_());
+            }
+        #endif
+
+            result_type& create() {
+                object_ = ::boost::bind(&explicit_impl<TGiven>::create);
+                return *this;
+            }
+
+        private:
+            function<T()> object_;
+        };
+
+        template<
+            typename TExpected
+          , typename TGiven
+        >
+        class scope_impl<TExpected, TGiven, false>
         {
         public:
-            typedef scope result_type;
+            typedef scope_impl result_type;
 
             operator TGiven*() const {
                 return object_();
@@ -173,7 +229,9 @@
         #endif
 
             result_type& create() {
-                object_ = bind(static_cast<TGiven*(*)()>(&scope::create_impl));
+                object_ = ::boost::bind(
+                    static_cast<TGiven*(*)()>(&scope_impl::create_impl)
+                );
                 return *this;
             }
 
@@ -185,61 +243,6 @@
 
         private:
             function<TGiven*()> object_;
-        };
-
-        template<
-            typename TExpected
-          , typename TGiven
-        >
-        class scope<
-            TExpected
-          , TGiven
-          , typename enable_if<explicit_impl<TGiven> >::type
-        >
-        {
-            typedef BOOST_TYPEOF_TPL(explicit_impl<TGiven>::create()) T;
-
-        public:
-            typedef scope result_type;
-
-            operator T() const {
-                return object_();
-            }
-
-            template<typename TName>
-            operator named<T, TName>() const {
-                return object_();
-            }
-
-            template<typename TName>
-            operator shared_ptr<T>() const {
-                return make_shared<T>(object_());
-            }
-
-            template<typename TName>
-            operator named<shared_ptr<T>, TName>() const {
-                return make_shared<T>(object_());
-            }
-
-        #if !defined(BOOST_NO_CXX11_SMART_PTR)
-            template<typename TName>
-            operator std::shared_ptr<T>() const {
-                return std::make_shared<T>(object_());
-            }
-
-            template<typename TName>
-            operator named<std::shared_ptr<T>, TName>() const {
-                return std::make_shared<T>(object_());
-            }
-        #endif
-
-            result_type& create() {
-                object_ = bind(&explicit_impl<TGiven>::create);
-                return *this;
-            }
-
-        private:
-            function<T()> object_;
         };
     };
 
@@ -253,8 +256,8 @@
 
     template<BOOST_DI_TYPES(Args)>
     result_type& create(BOOST_DI_ARGS(Args, args)) {
-        object_ = bind(
-            &scope::create_impl<BOOST_DI_TYPES_PASS(Args)>
+        object_ = ::boost::bind(
+            &scope_impl::create_impl<BOOST_DI_TYPES_PASS(Args)>
           , BOOST_DI_ARGS_FORWARD(args)
         );
         return *this;

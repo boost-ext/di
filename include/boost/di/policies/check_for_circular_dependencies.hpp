@@ -33,6 +33,21 @@ namespace boost {
 namespace di {
 namespace policies {
 
+template<typename TCallStack>
+struct is_unique_call_stack
+    : mpl::bool_<
+          static_cast<std::size_t>(mpl::accumulate<
+              typename mpl::transform<
+                  TCallStack
+                , mpl::count<TCallStack, mpl::_>
+              >::type
+            , mpl::int_<0>
+            , mpl::plus<mpl::_1, mpl::_2>
+          >::type::value
+        ) == mpl::size<TCallStack>::value
+      >
+{ };
+
 class check_for_circular_dependencies
 {
 public:
@@ -44,21 +59,6 @@ public:
     >
     class verify
     {
-        template<typename TCallStack>
-        struct is_unique_call_stack
-            : mpl::bool_<
-                  static_cast<std::size_t>(mpl::accumulate<
-                      typename mpl::transform<
-                          TCallStack
-                        , mpl::count<TCallStack, mpl::_>
-                      >::type
-                    , mpl::int_<0>
-                    , mpl::plus<mpl::_1, mpl::_2>
-                  >::type::value
-                ) == mpl::size<TCallStack>::value
-              >
-        { };
-
         template<typename T>
         struct ctor
             : type_traits::ctor_traits<

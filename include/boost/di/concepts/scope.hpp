@@ -28,9 +28,9 @@ template<
         typename
       , typename T
       , typename = T
-      , typename = mpl::vector0<>
-      , typename = typename mpl::lambda<
-            type_traits::is_same_base_of<T>
+      , typename = ::boost::mpl::vector0<>
+      , typename = typename ::boost::mpl::lambda<
+            ::boost::di::type_traits::is_same_base_of<T>
         >::type
     > class TDependency
   , template<

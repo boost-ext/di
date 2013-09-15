@@ -71,6 +71,7 @@ BOOST_AUTO_TEST_CASE(variant_shared_ptr) {
     BOOST_CHECK_EQUAL(c_, sp_c);
 }
 
+#if 0
 BOOST_AUTO_TEST_CASE(variant_function) {
     static const int i = 42;
     typedef function<int()> f_type;
@@ -81,6 +82,7 @@ BOOST_AUTO_TEST_CASE(variant_function) {
     f_type f_(&c::f);
     BOOST_CHECK_EQUAL(i, static_cast<const f_type&>(external<>::scope<f_type>(f_).create())());
 }
+#endif
 
 BOOST_AUTO_TEST_CASE(named_int) {
     const int i = 42;
