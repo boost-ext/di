@@ -80,8 +80,6 @@
     >
     class module : public TPool<get_deps<TDeps> >
     {
-        BOOST_MPL_HAS_XXX_TRAIT_DEF(types)
-
         template<
             typename
           , template<typename> class

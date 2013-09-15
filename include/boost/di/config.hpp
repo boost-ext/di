@@ -166,76 +166,12 @@
 
 //-----------------------------------------------------------
 
+#endif
+
+#if BOOST_WORKAROUND(BOOST_MSVC, < 1700)
+    #define BOOST_DI_TEMPLATE_QUALIFIER
 #else
-
-    #undef BOOST_DI_LIMIT_SIZE
-    #define BOOST_DI_LIMIT_SIZE 0 // infinity
-
-    #define BOOST_DI_ITERATION_PARAMS(start, limit, file)   \
-         3, (0, 0, file)
-
-//-----------------------------------------------------------
-
-    #define BOOST_DI_TYPES_DEFAULT_IMPL(limit, TArgs, TNa)  \
-         typename... TArgs
-
-    #define BOOST_DI_TYPES_IMPL(limit, TArgs)               \
-         typename... TArgs
-
-    #define BOOST_DI_TYPES_PASS_IMPL(limit, args)           \
-         args...
-
-    #define BOOST_DI_ARGS_IMPL(limit, TArgs, args)          \
-         TArgs&&... args
-
-    #define BOOST_DI_ARGS_NA_IMPL(limit, count, TNa)        \
-         // empty
-
-    #define BOOST_DI_ARGS_NOT_USED_IMPL(limit, TArgs)       \
-         TArgs&&...
-
-    #define BOOST_DI_ARGS_PASS_IMPL(limit, args)            \
-         args
-
-    #define BOOST_DI_ARGS_FORWARD_IMPL(limit, args)         \
-         std::forward(args)...
-
-//-----------------------------------------------------------
-
-    #define BOOST_DI_TYPES_DEFAULT_MPL(TArgs)               \
-         BOOST_DI_TYPES_DEFAULT_IMPL(~, TArgs, ~)
-
-    #define BOOST_DI_TYPES_MPL(TArgs)                       \
-         BOOST_DI_TYPES_IMPL(~, TArgs)
-
-    #define BOOST_DI_TYPES_MPL_NA(count)                    \
-         //empty
-
-    #define BOOST_DI_TYPES_PASS_MPL(TArgs)                  \
-         BOOST_DI_TYPES_PASS_IMPL(~, TArgs)
-
-//-----------------------------------------------------------
-
-    #define BOOST_DI_TYPES(TArgs)                           \
-         BOOST_DI_TYPES_IMPL(~, TArgs)
-
-    #define BOOST_DI_TYPES_PASS(args)                       \
-         BOOST_DI_TYPES_PASS_IMPL(~, args)
-
-    #define BOOST_DI_ARGS(TArgs, args)                      \
-         BOOST_DI_ARGS_IMPL(~, TArgs, args)
-
-    #define BOOST_DI_ARGS_NOT_USED(TArgs)                   \
-         BOOST_DI_ARGS_NOT_USED_IMPL(~, TArgs)
-
-    #define BOOST_DI_ARGS_PASS(args)                        \
-         BOOST_DI_ARGS_PASS_IMPL(~, args)
-
-    #define BOOST_DI_ARGS_FORWARD(args)                     \
-         BOOST_DI_ARGS_FORWARD_IMPL(~, args)
-
-//-----------------------------------------------------------
-
+    #define BOOST_DI_TEMPLATE_QUALIFIER template
 #endif
 
 #endif

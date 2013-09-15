@@ -41,6 +41,8 @@
     namespace di {
     namespace detail {
 
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(types)
+
     class init { };
 
     template<typename T>
@@ -100,8 +102,6 @@
             , TSeq
           )
     {
-        BOOST_MPL_HAS_XXX_TRAIT_DEF(types)
-
         template<typename T, typename = void>
         struct pool_type
         {

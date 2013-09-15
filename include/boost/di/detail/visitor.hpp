@@ -31,18 +31,12 @@
     namespace di {
     namespace detail {
 
-    template<
-        typename TBinder
-      , template<
-            typename
-          , typename = void
-        > class TCtorTraits = type_traits::ctor_traits
-    >
-    class visitor_impl
+    template<typename TBinder>
+    class visitor
     {
         template<typename TDependency>
         struct ctor
-            : TCtorTraits<typename TDependency::given>::type
+            : type_traits::ctor_traits<typename TDependency::given>::type
         { };
 
         template<
@@ -88,11 +82,6 @@
         #include BOOST_PP_ITERATE()
     };
 
-    template<typename TBinder>
-    struct visitor
-        : visitor_impl<TBinder>
-    { };
-
     } // namespace detail
     } // namespace di
     } // namespace boost
@@ -113,7 +102,7 @@
         BOOST_PP_ITERATION()
     >::type execute_impl(const TVisitor& visitor) {
 
-        visitor.template operator()<
+        visitor.BOOST_DI_TEMPLATE_QUALIFIER operator()<
             dependency_impl<T, TCallStack, TDependency>
         >();
 

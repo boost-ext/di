@@ -59,4 +59,3 @@ BOOST_AUTO_TEST_CASE(create) {
 } // namespace di
 } // namespace boost
 
-

@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE(variant_function) {
     typedef function<int()> f_type;
     struct c
     {
-        static int f() { return i;}
+        static int f() { return i; }
     };
     f_type f_(&c::f);
     BOOST_CHECK_EQUAL(i, static_cast<const f_type&>(external<>::scope<f_type>(f_).create())());

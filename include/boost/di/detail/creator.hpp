@@ -32,18 +32,12 @@
     namespace di {
     namespace detail {
 
-    template<
-        typename TBinder
-      , template<
-            typename
-          , typename = void
-        > class TCtorTraits = type_traits::ctor_traits
-    >
-    class creator_impl
+    template<typename TBinder>
+    class creator
     {
         template<typename TDependency>
         struct ctor
-            : TCtorTraits<typename TDependency::given>::type
+            : type_traits::ctor_traits<typename TDependency::given>::type
         { };
 
         template<
@@ -75,11 +69,6 @@
     private:
         #include BOOST_PP_ITERATE()
     };
-
-    template<typename TBinder>
-    struct creator
-        : creator_impl<TBinder>
-    { };
 
     } // namespace detail
     } // namespace di
