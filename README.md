@@ -1,6 +1,6 @@
 **C++ Dependency Injection Framework**
 
-### Example / Motivation Example
+### Motivation Example
 
 ```cpp
 #include <boost/di.hpp>
