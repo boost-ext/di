@@ -12,7 +12,7 @@ struct impl : i { };
 struct c
 {
     BOOST_DI_CTOR(c,
-        std::shared_ptr<i> p1       // i->impl, p1 == hello_world.p1
+        boost::shared_ptr<i> p1     // i->impl, p1 == hello_world.p1
       , double p2                   // p2 = 0.0
     );
 };
