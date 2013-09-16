@@ -74,10 +74,12 @@
     template<typename T>
     struct is_explicit
     {
-        static const bool value =
-            BOOST_PP_CAT(has_, BOOST_DI_CREATE)<T>::value or
-            has_value<T>::value or
-            is_mpl_string<T>::value;
+        BOOST_STATIC_CONSTANT(
+            bool
+          , value = BOOST_PP_CAT(has_, BOOST_DI_CREATE)<T>::value ||
+                    has_value<T>::value ||
+                    is_mpl_string<T>::value;
+        );
     };
 
     template<typename TExpected, typename TGiven>

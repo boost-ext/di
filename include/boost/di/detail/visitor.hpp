@@ -52,7 +52,7 @@
           , typename TCallStack
           , typename TDependency
         >
-        struct dependency_impl
+        struct dependency
         {
             typedef T type;
             typedef TCallStack context;
@@ -103,7 +103,7 @@
     >::type execute_impl(const TVisitor& visitor) {
 
         visitor.BOOST_DI_TEMPLATE_QUALIFIER operator()<
-            dependency_impl<T, TCallStack, TDependency>
+            dependency<T, TCallStack, TDependency>
         >();
 
         #define BOOST_DI_VISITOR_EXECUTE(z, n, _)       \

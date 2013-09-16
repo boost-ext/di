@@ -850,7 +850,7 @@ BOOST_AUTO_TEST_CASE(multiple_calls_injector) {
 
 BOOST_AUTO_TEST_CASE(to_basic) {
     const int i = 42;
-    const int d = 87.0;
+    const double d = 87.0;
 
     auto injector_ = injector<>()(
         bind<int>::to(i)
