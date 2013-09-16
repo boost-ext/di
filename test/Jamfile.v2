@@ -52,12 +52,12 @@ test-suite di-test :
     [ run make_injector_mt.cpp ]
     [ run named_ut.cpp ]
 
-    #[ compile-fail detail/module_externals_mt_fail.cpp ]
-    #[ compile-fail detail/module_policy_mt_fail.cpp ]
-    #[ compile-fail policies/check_for_binding_correctness_mt_fail.cpp ]
-    #[ compile-fail policies/check_for_creation_ownership_mt_fail.cpp ]
-    #[ compile-fail policies/check_for_circular_dependencies_mt_fail.cpp ]
-    #[ compile-fail injector_policy_mt_fail.cpp ]
-    #[ compile-fail injector_singleton_by_copy_mt_fail.cpp ]
+    [ compile-fail detail/module_externals_mt_fail.cpp ]
+    [ compile-fail detail/module_policy_mt_fail.cpp ]
+    [ compile-fail policies/check_for_binding_correctness_mt_fail.cpp ]
+    [ compile-fail policies/check_for_creation_ownership_mt_fail.cpp ]
+    [ compile-fail policies/check_for_circular_dependencies_mt_fail.cpp ]
+    [ compile-fail injector_policy_mt_fail.cpp ]
+    [ compile-fail injector_singleton_by_copy_mt_fail.cpp ]
 ;
 
