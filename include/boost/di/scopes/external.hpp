@@ -28,7 +28,6 @@
 
     template<
         template<typename> class TConvertible = convertibles::convertible_any
-        //creator
     >
     class external
     {
