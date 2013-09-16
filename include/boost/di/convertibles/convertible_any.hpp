@@ -8,6 +8,7 @@
 #define BOOST_DI_CONVERTIBLES_CONVERTIBLE_ANY_HPP
 
 #include <boost/shared_ptr.hpp>
+#include <boost/weak_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/variant.hpp>
 #include <boost/type_traits/is_arithmetic.hpp>

@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(arithmetic_value) {
 
 BOOST_AUTO_TEST_CASE(arithmetic_with_value_type) {
     const int i = 42;
-    BOOST_CHECK_EQUAL(i, static_cast<int>(external<>::scope<named<int> >(i).create()));
+    BOOST_CHECK_EQUAL(i, static_cast<int>(external<>::scope<named<int>>(i).create()));
 }
 
 BOOST_AUTO_TEST_CASE(string_value) {
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE(string_value) {
 
 BOOST_AUTO_TEST_CASE(string_with_value_type) {
     const std::string s = "string";
-    BOOST_CHECK_EQUAL(s, static_cast<const std::string&>(external<>::scope<named<std::string> >(s).create()));
+    BOOST_CHECK_EQUAL(s, static_cast<const std::string&>(external<>::scope<named<std::string>>(s).create()));
 }
 
 BOOST_AUTO_TEST_CASE(variant_ref) {
@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE(variant_function) {
 
 BOOST_AUTO_TEST_CASE(named_int) {
     const int i = 42;
-    external<>::scope<named<int> > variant_(i);
+    external<>::scope<named<int>> variant_(i);
 
     BOOST_CHECK_EQUAL(i, static_cast<int>(variant_.create()));
 }
@@ -99,9 +99,9 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr) {
     shared_ptr<c2_t> c2_(new c2_t(make_shared<int>(87)));
 
     BOOST_CHECK((
-        *static_cast<shared_ptr<c1_t> >(external<>::scope<c1_t>(c1_).create())->i
+        *static_cast<shared_ptr<c1_t>>(external<>::scope<c1_t>(c1_).create())->i
         !=
-        *static_cast<shared_ptr<c2_t> >(external<>::scope<c2_t>(c2_).create())->i
+        *static_cast<shared_ptr<c2_t>>(external<>::scope<c2_t>(c2_).create())->i
     ));
 }
 
@@ -116,9 +116,9 @@ BOOST_AUTO_TEST_CASE(context) {
     ));
 
     BOOST_CHECK((
-        static_cast<shared_ptr<c> >(external<>::scope<c, a>(c1_).create())
+        static_cast<shared_ptr<c>>(external<>::scope<c, a>(c1_).create())
         !=
-        static_cast<shared_ptr<c> >(external<>::scope<c, b>(c2_).create())
+        static_cast<shared_ptr<c>>(external<>::scope<c, b>(c2_).create())
     ));
 }
 

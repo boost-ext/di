@@ -27,10 +27,10 @@ BOOST_AUTO_TEST_CASE(create) {
     per_request<>::scope<int> per_request_;
 
     BOOST_CHECK((
-        static_cast<shared_ptr<int> >(
+        static_cast<shared_ptr<int>>(
             per_request_.create())
         !=
-        static_cast<shared_ptr<int> >(
+        static_cast<shared_ptr<int>>(
             per_request_.create())
     ));
 }
@@ -39,29 +39,29 @@ BOOST_AUTO_TEST_CASE(create_args) {
     per_request<>::scope<c2> per_request_;
 
     BOOST_CHECK((
-        static_cast<shared_ptr<c2> >(
+        static_cast<shared_ptr<c2>>(
             per_request_.create<int, double, char>(0, 0.0, '0'))
         !=
-        static_cast<shared_ptr<c2> >(
+        static_cast<shared_ptr<c2>>(
             per_request_.create<int, double, char>(0, 0.0, '0'))
     ));
 }
 
 BOOST_AUTO_TEST_CASE(create_value_mpl_int) {
     const int i = 42;
-    BOOST_CHECK_EQUAL(0, (per_request<>::scope<int, mpl::int_<0> >().create()));
-    BOOST_CHECK_EQUAL(i, (per_request<>::scope<int, mpl::int_<i> >().create()));
+    BOOST_CHECK_EQUAL(0, static_cast<int>(per_request<>::scope<int, mpl::int_<0>>().create()));
+    BOOST_CHECK_EQUAL(i, static_cast<int>(per_request<>::scope<int, mpl::int_<i>>().create()));
 }
 
 BOOST_AUTO_TEST_CASE(create_value_mpl_string) {
     BOOST_CHECK_EQUAL("s", static_cast<std::string>(
-        (per_request<>::scope<std::string, mpl::string<'s'> >().create())));
+        (per_request<>::scope<std::string, mpl::string<'s'>>().create())));
 }
 
 BOOST_AUTO_TEST_CASE(create_value_has_value_type) {
     const double d = 42.0;
     double_value::value = d;
-    BOOST_CHECK_EQUAL(d, (per_request<>::scope<double, double_value>().create()));
+    BOOST_CHECK_EQUAL(d, static_cast<double>(per_request<>::scope<double, double_value>().create()));
 }
 
 } // namespace scopes

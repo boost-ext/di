@@ -18,10 +18,10 @@ BOOST_AUTO_TEST_CASE(create) {
     singleton<>::scope<int> singleton_;
 
     BOOST_CHECK((
-        static_cast<shared_ptr<int> >(
+        static_cast<shared_ptr<int>>(
             singleton_.create())
         ==
-        static_cast<shared_ptr<int> >(
+        static_cast<shared_ptr<int>>(
             singleton_.create())
     ));
 }
@@ -30,10 +30,10 @@ BOOST_AUTO_TEST_CASE(create_args) {
     singleton<>::scope<c2> singleton_;
 
     BOOST_CHECK((
-        static_cast<shared_ptr<c2> >(
+        static_cast<shared_ptr<c2>>(
             singleton_.create<int, double, char>(0, 0.0, '0'))
         ==
-        static_cast<shared_ptr<c2> >(
+        static_cast<shared_ptr<c2>>(
             singleton_.create<int, double, char>(0, 0.0, '0'))
     ));
 }
