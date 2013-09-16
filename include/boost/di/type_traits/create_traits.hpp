@@ -72,7 +72,7 @@
     { };
 
     template<typename T>
-    struct is_special
+    struct is_explicit
     {
         static const bool value =
             BOOST_PP_CAT(has_, BOOST_DI_CREATE)<T>::value or
@@ -87,7 +87,7 @@
     }
 
     template<typename TExpected, typename TGiven>
-    typename disable_if<is_special<TGiven>, TExpected*>::type
+    typename disable_if<is_explicit<TGiven>, TExpected*>::type
     create_traits() {
         return new TGiven();
     }

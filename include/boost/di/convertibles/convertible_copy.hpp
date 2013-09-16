@@ -12,6 +12,8 @@
 #include <boost/weak_ptr.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <boost/function.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/is_polymorphic.hpp>
 
 #include "boost/di/named.hpp"
 
@@ -19,23 +21,55 @@ namespace boost {
 namespace di {
 namespace convertibles {
 
-template<typename T>
-class convertible_copy
+template<
+    typename T
+  , typename = void
+>
+class convertible_copy_impl
 {
     typedef function<T*()> object_t;
 
 public:
-    explicit convertible_copy(const object_t& object)
+    explicit convertible_copy_impl(const object_t& object)
         : object_(object)
     { }
 
-    operator T*() const {
-        return object_();
-    }
+protected:
+    object_t object_;
+};
+
+template<typename T>
+class convertible_copy_impl<T, typename disable_if<is_polymorphic<T> >::type>
+{
+    typedef function<T*()> object_t;
+
+public:
+    explicit convertible_copy_impl(const object_t& object)
+        : object_(object)
+    { }
 
     operator T() const {
         scoped_ptr<T> ptr(object_());
         return *ptr;
+    }
+
+protected:
+    object_t object_;
+};
+
+template<typename T>
+class convertible_copy : public convertible_copy_impl<T>
+{
+    using convertible_copy_impl<T>::object_;
+
+public:
+    template<typename I>
+    explicit convertible_copy(const I& object)
+        : convertible_copy_impl<T>(object)
+    { }
+
+    operator T*() const {
+        return object_();
     }
 
     template<typename I, typename TName>
@@ -85,9 +119,6 @@ public:
         return named<std::unique_ptr<I>, TName>(object_());
     }
 #endif
-
-private:
-    function<T*()> object_;
 };
 
 } // namespace convertibles
