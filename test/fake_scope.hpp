@@ -6,113 +6,88 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef BOOST_DI_FAKE_SCOPE_HPP
-    #define BOOST_DI_FAKE_SCOPE_HPP
+#include <utility>
+#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 
-    #include <boost/preprocessor/iteration/iterate.hpp>
-    #include <boost/shared_ptr.hpp>
-    #include <boost/make_shared.hpp>
+#include "boost/di/scopes/external.hpp"
+#include "boost/di/config.hpp"
 
-    #include "boost/di/scopes/external.hpp"
-    #include "boost/di/config.hpp"
+namespace boost {
+namespace di {
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (   \
-        BOOST_DI_ITERATION_PARAMS(          \
-            1                               \
-          , BOOST_DI_LIMIT_SIZE             \
-          , "fake_scope.hpp"                \
-        )                                   \
-    )
+template<bool = false>
+struct priority_impl
+{ };
 
-    namespace boost {
-    namespace di {
+template<>
+struct priority_impl<true>
+{
+    typedef void is_priority;
+};
 
-    template<bool = false>
-    struct priority_impl
-    { };
+template<bool Priority = false>
+struct fake_scope : priority_impl<Priority>
+{
+    struct entry { };
+    struct exit { };
 
-    template<>
-    struct priority_impl<true>
+    template<typename T>
+    class convertible
     {
-        typedef void is_priority;
-    };
+    public:
+        convertible(shared_ptr<T> obj) // non explicit
+            : obj_(obj)
+        { }
 
-    template<bool Priority = false>
-    struct fake_scope : priority_impl<Priority>
-    {
-        struct entry { };
-        struct exit { };
-
-        template<typename T>
-        class convertible
-        {
-        public:
-            explicit convertible(shared_ptr<T> obj)
-                : obj_(obj)
-            { }
-
-            operator shared_ptr<T>() const {
-                return obj_;
-            }
-
-            operator T() const {
-                return *obj_;
-            }
-
-        private:
-            shared_ptr<T> obj_;
-        };
-
-        template<typename T, typename>
-        struct scope
-        {
-            typedef convertible<T> result_type;
-
-            void call(const entry&) {
-                entry_calls()++;
-            }
-
-            void call(const exit&) {
-                exit_calls()++;
-            }
-
-            result_type create() {
-                if (entry_calls() > exit_calls()) {
-                    return result_type(make_shared<T>());
-                }
-
-                return result_type(shared_ptr<T>());
-            }
-
-            #include BOOST_PP_ITERATE()
-        };
-
-        static int& entry_calls() {
-            static int calls;
-            return calls;
+        operator shared_ptr<T>() const {
+            return obj_;
         }
 
-        static int& exit_calls() {
-            static int calls;
-            return calls;
+        operator T() const {
+            return *obj_;
+        }
+
+    private:
+        shared_ptr<T> obj_;
+    };
+
+    template<typename T, typename>
+    struct scope
+    {
+        typedef convertible<T> result_type;
+
+        void call(const entry&) {
+            entry_calls()++;
+        }
+
+        void call(const exit&) {
+            exit_calls()++;
+        }
+
+        template<typename... Args>
+        result_type create(Args&&... args) {
+            if (entry_calls() > exit_calls()) {
+                return make_shared<T>(std::forward<Args>(args)...);
+            }
+
+            return result_type(shared_ptr<T>());
         }
     };
 
-    } // namespace di
-    } // namespace boost
-
-    #endif
-
-#else
-
-    template<BOOST_DI_TYPES(Args)>
-    result_type create(BOOST_DI_ARGS(Args, args)) {
-        if (entry_calls() > exit_calls()) {
-            return result_type(shared_ptr<T>(new T(BOOST_DI_ARGS_FORWARD(args))));
-        }
-
-        return result_type(shared_ptr<T>());
+    static int& entry_calls() {
+        static int calls;
+        return calls;
     }
+
+    static int& exit_calls() {
+        static int calls;
+        return calls;
+    }
+};
+
+} // namespace di
+} // namespace boost
 
 #endif
 

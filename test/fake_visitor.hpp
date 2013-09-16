@@ -21,9 +21,7 @@
 namespace boost {
 namespace di {
 
-template<
-    typename TSeq = mpl::vector0<>
->
+template<typename TSeq = mpl::vector0<>>
 class fake_visitor
 {
     BOOST_MPL_HAS_XXX_TRAIT_DEF(first)
@@ -55,17 +53,17 @@ public:
 
 private:
     template<typename Seq>
-    void verify(int = 0, typename enable_if<mpl::empty<Seq> >::type* = 0) { }
+    void verify(int = 0, typename enable_if<mpl::empty<Seq>>::type* = 0) { }
 
     template<typename Seq>
-    void verify(int i = 0, typename disable_if<mpl::empty<Seq> >::type* = 0) {
+    void verify(int i = 0, typename disable_if<mpl::empty<Seq>>::type* = 0) {
         typedef typename mpl::front<Seq>::type type;
         verify_impl<type>(i);
         verify<typename mpl::pop_front<Seq>::type>(i + 1);
     }
 
     template<typename T>
-    typename enable_if<has_first<T> >::type verify_impl(int i) {
+    typename enable_if<has_first<T>>::type verify_impl(int i) {
         BOOST_CHECK_EQUAL(
             typeid(typename T::first).name()
           , visits.at(i).type
@@ -78,7 +76,7 @@ private:
     }
 
     template<typename T>
-    typename disable_if<has_first<T> >::type verify_impl(int i) {
+    typename disable_if<has_first<T>>::type verify_impl(int i) {
         BOOST_CHECK_EQUAL(
             typeid(T).name()
           , visits.at(i).type

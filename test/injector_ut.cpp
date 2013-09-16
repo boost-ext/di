@@ -28,15 +28,6 @@
 namespace boost {
 namespace di {
 
-struct int_value
-{
-    explicit int_value(int i)
-        : i(i)
-    { }
-
-    int i;
-};
-
 struct double_value
 {
     static double value;
@@ -1022,6 +1013,16 @@ BOOST_AUTO_TEST_CASE(to_variant_no_copy) {
     BOOST_CHECK_EQUAL(c3_.i, c16_->c3_.i);
     BOOST_CHECK_EQUAL(c14_.i, c16_->c14_.i);
     BOOST_CHECK_EQUAL(c14_.d, c16_->c14_.d);
+}
+
+BOOST_AUTO_TEST_CASE(fixed_value) {
+    double_value::value = 42.0;
+
+    auto injector_ = injector<>()(
+        bind<double, double_value>()
+    );
+
+    BOOST_CHECK_EQUAL(double_value::value, injector_.create<double>());
 }
 
 } // namespace di

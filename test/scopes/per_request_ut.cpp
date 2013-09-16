@@ -11,7 +11,6 @@
 #include <boost/mpl/equal.hpp>
 #include <cstdlib>
 
-#include "fake_allocator.hpp"
 #include "data.hpp"
 
 namespace boost {

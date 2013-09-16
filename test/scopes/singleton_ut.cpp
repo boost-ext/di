@@ -8,7 +8,6 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "fake_allocator.hpp"
 #include "data.hpp"
 
 namespace boost {
