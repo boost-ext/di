@@ -18,6 +18,12 @@ namespace boost {
 namespace di {
 namespace policies {
 
+/**
+ * @code
+ * injector_.create<const c1&>();
+ * injector_.create<c1&>();
+ * @endcode
+ */
 class check_for_creation_ownership
 {
 public:

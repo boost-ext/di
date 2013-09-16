@@ -48,6 +48,14 @@ struct is_unique_call_stack
       >
 { };
 
+/**
+ *@code
+ * struct cd2;
+ * struct cd1 { cd1(cd2*); };
+ * struct cd2 { cd2(cd1*); };
+ * make_injector().create<cd1>();
+ *@endcode
+ */
 class check_for_circular_dependencies
 {
 public:

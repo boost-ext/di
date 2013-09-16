@@ -29,6 +29,12 @@ namespace boost {
 namespace di {
 namespace policies {
 
+/**
+ * @code
+ * struct c { c(int); };
+ * bind<double>::in_call<c>();
+ * @endcode
+ */
 class check_for_binding_correctness
 {
 public:
