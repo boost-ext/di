@@ -34,7 +34,7 @@
     )
 
     #if defined(__GNUC__) && (__GNUC__ >= 4)
-    #    pragma GCC diagnostic ignored "-Wreorder"
+        #pragma GCC diagnostic ignored "-Wreorder"
     #endif
 
     namespace boost {
