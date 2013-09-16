@@ -103,13 +103,13 @@ class convertible_any_impl<shared_ptr<TDest> >
 {
 public:
     template<typename TSrc>
-    shared_ptr<TDest> operator()(const TSrc& object) const {
+    shared_ptr<TDest> operator()(const TSrc&) const {
         //return shared_ptr<TSrc>(new TSrc(object));
         return shared_ptr<TDest>();
     }
 
     template<typename TSrc>
-    shared_ptr<TDest> operator()(TSrc& object) const {
+    shared_ptr<TDest> operator()(TSrc&) const {
         //return shared_ptr<TSrc>(new TSrc(&object));
         return shared_ptr<TDest>();
     }

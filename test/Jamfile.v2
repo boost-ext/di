@@ -16,10 +16,13 @@ project di :
         <warnings>all
 
         <toolset>gcc:<cxxflags>-std=c++11
-        <toolset>gcc:<cxxflags>-Wno-unused-local-typedefs
+        <toolset>gcc:<cxxflags>-Wextra
+        <toolset>gcc:<cxxflags>-pedantic
         <toolset>gcc:<cxxflags>-ftemplate-depth-1024
 
         <toolset>clang:<cxxflags>-std=c++11
+        <toolset>clang:<cxxflags>-Wextra
+        <toolset>clang:<cxxflags>-pedantic
 ;
 
 test-suite di-test :
