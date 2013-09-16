@@ -11,14 +11,14 @@ namespace boost {
 namespace di {
 namespace scopes {
 
+/**
+ * virtual scope -> converted to the other scope
+ */
 class deduce
 {
 public:
     template<typename, typename>
-    class scope {
-    public:
-        typedef scope result_type;
-    };
+    class scope { };
 };
 
 } // namespace scopes

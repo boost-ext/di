@@ -51,8 +51,7 @@
 #endif
 
 #if defined(BOOST_NO_VARIADIC_TEMPLATES) ||                 \
-    defined(BOOST_NO_RVALUE_REFERENCES)  ||                 \
-   !defined(BOOST_DI_ENABLE_CXX11_FEATURES)
+    defined(BOOST_NO_RVALUE_REFERENCES)                     \
 
     #if !defined(BOOST_DI_LIMIT_SIZE)
         #define BOOST_DI_LIMIT_SIZE BOOST_MPL_LIMIT_VECTOR_SIZE
