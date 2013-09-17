@@ -6,7 +6,10 @@
 //
 #include "boost/di/type_traits/create_traits.hpp"
 
+#include <memory>
 #include <boost/test/unit_test.hpp>
+#include <boost/mpl/int.hpp>
+#include <boost/mpl/string.hpp>
 
 #include "boost/di/config.hpp"
 #include "boost/di/ctor.hpp"
@@ -40,17 +43,31 @@ struct factory_ext
     }
 };
 
-BOOST_AUTO_TEST_CASE(create) {
-    shared_ptr<empty> empty_(create_traits<empty, empty>());
+BOOST_AUTO_TEST_CASE(create_empty) {
+    std::unique_ptr<empty> empty_(create_traits<empty, empty>());
     BOOST_CHECK(empty_.get());
+}
 
-    shared_ptr<ctor> ctor_(create_traits<ctor, ctor, int, double>(42, 42.0));
+BOOST_AUTO_TEST_CASE(create_ctor) {
+    std::unique_ptr<ctor> ctor_(create_traits<ctor, ctor, int, double>(42, 42.0));
     BOOST_CHECK(ctor_.get());
+}
 
-    shared_ptr<int> factory_(create_traits<int, factory>());
+BOOST_AUTO_TEST_CASE(create_int_value) {
+    std::unique_ptr<int> i(create_traits<int, mpl::int_<42> >());
+    BOOST_CHECK_EQUAL(42, *i);
+}
+
+BOOST_AUTO_TEST_CASE(create_string_value) {
+    std::unique_ptr<std::string> s(create_traits<std::string, mpl::string<'s'> >());
+    BOOST_CHECK_EQUAL("s", *s);
+}
+
+BOOST_AUTO_TEST_CASE(create_factory) {
+    std::unique_ptr<int> factory_(create_traits<int, factory>());
     BOOST_CHECK(!factory_.get());
 
-    shared_ptr<int> factory_ext_(create_traits<int, factory_ext, int>(42));
+    std::unique_ptr<int> factory_ext_(create_traits<int, factory_ext, int>(42));
     BOOST_CHECK(factory_ext_.get());
     BOOST_CHECK_EQUAL(42, *factory_ext_);
 }
