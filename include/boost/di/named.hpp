@@ -31,31 +31,33 @@ public:
     typedef named<value_type, TName> element_type;
     typedef TName name;
 
-    named(T value = T()) // non explicit
-        : value_(value)
+    named(T object = T()) // non explicit
+        : object_(object)
     { }
 
-    named(const shared_ptr<T>& value) // non explicit
-        : value_(*value)
+    named(const shared_ptr<T>& object) // non explicit
+        : object_(*object)
     { }
 
     operator T() const {
-        return value_;
+        return object_;
     }
 
     operator T&() {
-        return value_;
+        return object_;
     }
 
 private:
-    T value_;
+    T object_;
 };
 
 template<
     typename T
   , typename TName
 >
-class named<T, TName, typename enable_if<is_polymorphic<T> >::type>
+class named<T, TName, typename enable_if<
+    is_polymorphic<typename type_traits::remove_accessors<T>::type> >::type
+>
 {
 public:
     typedef typename type_traits::make_plain<T>::type value_type;
@@ -67,25 +69,29 @@ template<
     typename T
   , typename TName
 >
-class named<T, TName, typename enable_if<has_element_type<T> >::type>
+class named<T, TName, typename enable_if<
+    has_element_type<typename type_traits::remove_accessors<T>::type> >::type
+ >
 {
+    typedef typename type_traits::remove_accessors<T>::type object_type;
+
 public:
     typedef typename type_traits::make_plain<T>::type value_type;
     typedef named<typename type_traits::make_plain<T>::type, TName> element_type;
     typedef TName name;
 
-    named(T value = T(new typename T::element_type)) // non explicit
-        : value_(value)
+    named(T object = T(new typename T::element_type)) // non explicit
+        : object_(object)
     { }
 
-    operator T() const { return value_; }
+    operator T() const { return object_; }
 
-    value_type* operator->() const { return value_.get(); }
-    value_type& operator*() const { return *value_; }
-    value_type* get() const { return value_.get(); }
+    value_type* operator->() const { return object_.get(); }
+    value_type& operator*() const { return *object_; }
+    value_type* get() const { return object_.get(); }
 
 private:
-    T value_;
+    object_type object_;
 };
 
 } // namespace di

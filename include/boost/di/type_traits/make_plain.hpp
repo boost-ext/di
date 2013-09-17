@@ -18,8 +18,6 @@ namespace boost {
 namespace di {
 namespace type_traits {
 
-namespace detail {
-
 BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
 template<typename T>
@@ -43,14 +41,12 @@ struct deref_element_type<T, typename enable_if<has_element_type<T> >::type>
     typedef typename T::element_type type;
 };
 
-} // namespace detail
-
 template<typename TElement>
 struct make_plain
-    : detail::deref_element_type<
-        typename detail::remove_accessors<
-            typename detail::deref_element_type<
-                typename detail::remove_accessors<TElement>::type
+    : deref_element_type<
+        typename remove_accessors<
+            typename deref_element_type<
+                typename remove_accessors<TElement>::type
             >::type
         >::type
     >

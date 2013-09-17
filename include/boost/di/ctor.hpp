@@ -10,9 +10,14 @@
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/config.hpp"
 
+#ifdef BOOST_MSVC
+    #pragma warning(push)
+    #pragma warning(disable:4822) // local class member function does not have a body
+#endif
+
 #if defined(BOOST_DI_CTOR_CFG_VA_ARGS)
 
-    #if defined(__GNUC__) && (__GNUC__ >= 4)
+   #if defined(__GNUC__) && (__GNUC__ >= 4)
         #pragma GCC system_header
     #endif
 
@@ -34,6 +39,10 @@
 
 #else
     #error BOOST_DI_CTOR not defined
+#endif
+
+#ifdef BOOST_MSVC
+#pragma warning(pop)
 #endif
 
 #endif

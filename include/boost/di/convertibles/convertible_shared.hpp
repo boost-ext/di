@@ -9,6 +9,7 @@
 
 #include <memory>
 #include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 #include <boost/weak_ptr.hpp>
 
 #include "boost/di/named.hpp"
@@ -25,15 +26,21 @@ class convertible_shared
     class sp_holder
     {
     public:
-        explicit sp_holder(boost::shared_ptr<U> object)
+        explicit sp_holder(shared_ptr<U> object)
             : object_(object)
         { }
 
     private:
-        boost::shared_ptr<U> object_;
+        shared_ptr<U> object_;
     };
 
 public:
+    explicit convertible_shared(shared_ptr<T> object)
+        : object_(object)
+    { }
+
+    convertible_shared() { }
+
     bool operator!() const {
         return !object_;
     }
