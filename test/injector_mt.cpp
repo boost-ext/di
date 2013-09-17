@@ -265,7 +265,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(basic_call, TInjector, basic_call_types) {
 
 BOOST_AUTO_TEST_CASE(basic_injector2_externals) {
     injector<decltype(injector2_externals)> injector_(injector2_externals);
-    shared_ptr<c9> c9_ = injector_.create<shared_ptr<c9>>();
+    auto c9_ = injector_.create<shared_ptr<c9>>();
 
     BOOST_CHECK_EQUAL(42, c9_->i);
     BOOST_CHECK_EQUAL(87.0, c9_->d);
@@ -277,7 +277,7 @@ BOOST_AUTO_TEST_CASE(externals_mix) {
       , decltype(injector2_externals)
     > injector_(injector2_externals, injector_externals_1);
 
-    shared_ptr<c8> c8_ = injector_.create<shared_ptr<c8>>();
+    auto c8_ = injector_.create<shared_ptr<c8>>();
 
     BOOST_CHECK_EQUAL(4, c8_->i);
     BOOST_CHECK_EQUAL(3, c8_->c7_->c6_->c4_->i1);
@@ -343,8 +343,13 @@ BOOST_AUTO_TEST_CASE(pre_installed_injector2_install_injector) {
 }
 
 BOOST_AUTO_TEST_CASE(scope_deduction) {
-    shared_ptr<c19> c19_ = injector<>().create<shared_ptr<c19>>();
+    auto c19_ = injector<>().create<shared_ptr<c19>>();
     BOOST_CHECK(c19_->c1_ == c19_->c1__);
+}
+
+BOOST_AUTO_TEST_CASE(scope_deduction_named_shared_ptr) {
+    auto c22_ = injector<>().create<shared_ptr<c22>>();
+    BOOST_CHECK(c22_->i == c22_->c11_->i);
 }
 
 using deduce_injectors_types = mpl::vector<
@@ -354,13 +359,13 @@ using deduce_injectors_types = mpl::vector<
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(scope_deduction_if, TInjector, deduce_injectors_types) {
     TInjector injector;
-    shared_ptr<c20> c20_ = injector.template create<shared_ptr<c20>>();
+    auto c20_ = injector.template create<shared_ptr<c20>>();
     BOOST_CHECK(c20_->if0_ == c20_->if0__);
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(std_shared_ptr_std_unique_ptr, TInjector, deduce_injectors_types) {
     TInjector injector;
-    std::shared_ptr<c21> c21_ = injector.template create<std::shared_ptr<c21>>();
+    auto c21_ = injector.template create<std::shared_ptr<c21>>();
     BOOST_CHECK(c21_->if0__ == c21_->if0__);
 }
 
