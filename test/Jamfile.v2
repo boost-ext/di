@@ -28,10 +28,24 @@ rule run-cpp11 ( src ) {
     ] ;
 }
 
+rule run-cpp03 ( src ) {
+    return [ run $(src) : : :
+        <toolset>gcc:<cxxflags>-std=c++03
+        <toolset>clang:<cxxflags>-std=c++03
+    ] ;
+}
+
 rule compile-fail-cpp11 ( src ) {
     return [ compile-fail $(src) :
         <toolset>gcc:<cxxflags>-std=c++11
         <toolset>clang:<cxxflags>-std=c++11
+    ] ;
+}
+
+rule compile-fail-cpp03 ( src ) {
+    return [ compile-fail $(src) :
+        <toolset>gcc:<cxxflags>-std=c++03
+        <toolset>clang:<cxxflags>-std=c++03
     ] ;
 }
 
@@ -82,7 +96,7 @@ test-suite "injector" :
 ;
 
 test-suite "injector / C++ 03" :
-    [ run injector_mt_03.cpp ]
+    [ run-cpp03 injector_mt_03.cpp ]
 ;
 
 test-suite "compile fail" :
