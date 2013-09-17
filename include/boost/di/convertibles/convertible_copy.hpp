@@ -88,18 +88,18 @@ public:
         return shared_ptr<I>(object_());
     }
 
-    std::auto_ptr<T> convert() const {
-        return std::auto_ptr<T>(object_());
-    }
-
     template<typename I>
     operator std::auto_ptr<I>&() const {
-        return *(new std::auto_ptr<I>(object_()));
+        static std::auto_ptr<I> s_object_;
+        s_object_.reset(object_());
+        return s_object_;
     }
 
     template<typename I, typename TName>
     operator named<std::auto_ptr<I>, TName>() const {
-        return std::auto_ptr<I>(object_());
+        static std::auto_ptr<I> s_object_;
+        s_object_.reset(object_());
+        return s_object_;
     }
 
 #if !defined(BOOST_NO_CXX11_SMART_PTR)
