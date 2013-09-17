@@ -26,6 +26,11 @@ BOOST_AUTO_TEST_CASE(make_injector_ctor) {
     BOOST_CHECK_EQUAL(0, c5_->c2_->i);
 }
 
+BOOST_AUTO_TEST_CASE(make_injector_empty) {
+    auto injector_empty = make_injector();
+    BOOST_CHECK_EQUAL(0, injector_empty.create<c3>().i);
+}
+
 BOOST_AUTO_TEST_CASE(make_injector_by_value) {
     using injector_c0 = injector<
         c0if0
