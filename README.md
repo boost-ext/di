@@ -54,7 +54,8 @@ int main() {
  + minimal overhead / compile time approach
 
 ### Tested
- + GCC 4.8.1 / MinGW 4.8.1
+ + GCC 4.7.3/4.8.1
  + Clang 3.2/3.3
+ + MinGW 4.7.3/4.8.1
  + Visual Studio 2013 RC
 

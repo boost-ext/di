@@ -78,7 +78,7 @@
             bool
           , value = BOOST_PP_CAT(has_, BOOST_DI_CREATE)<T>::value ||
                     has_value<T>::value ||
-                    is_mpl_string<T>::value;
+                    is_mpl_string<T>::value
         );
     };
 
