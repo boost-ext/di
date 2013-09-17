@@ -88,9 +88,13 @@ public:
         return shared_ptr<I>(object_());
     }
 
+    std::auto_ptr<T> convert() const {
+        return std::auto_ptr<T>(object_());
+    }
+
     template<typename I>
-    operator std::auto_ptr<I>() const {
-        return std::auto_ptr<I>(object_());
+    operator std::auto_ptr<I>&() const {
+        return *(new std::auto_ptr<I>(object_()));
     }
 
     template<typename I, typename TName>

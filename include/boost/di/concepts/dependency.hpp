@@ -14,6 +14,7 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/lambda.hpp>
+#include <boost/mpl/has_xxx.hpp>
 
 #include <boost/di/scopes/deduce.hpp>
 #include <boost/di/scopes/external.hpp>
@@ -37,16 +38,18 @@ struct scope_traits<mpl::_1>
     typedef scopes::deduce type;
 };
 
-template<typename T>
+BOOST_MPL_HAS_XXX_TRAIT_DEF(named_type)
+
+template<typename T, typename = void>
 struct named_traits
 {
     typedef T type;
 };
 
-template<typename T, typename TName>
-struct named_traits<named<T, TName> >
+template<typename T>
+struct named_traits<T, typename enable_if<has_named_type<T> >::type>
 {
-    typedef T type;
+    typedef typename T::named_type type;
 };
 
 } // namespace detail
@@ -88,7 +91,9 @@ public:
 
     template<typename T>
     explicit dependency(const T& obj)
-        : scope::template scope<typename detail::named_traits<TExpected>::type, TGiven>(obj)
+        : scope::template scope<
+              typename detail::named_traits<TExpected>::type, TGiven
+          >(obj)
     { }
 
     template<typename T>

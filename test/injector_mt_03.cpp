@@ -20,10 +20,9 @@ namespace {
 struct i { virtual ~i() { } virtual void dummy() = 0; };
 struct impl : i { virtual void dummy() { } };
 struct c1 { BOOST_DI_CTOR(c1, int i_) : i_(i_) { } int i_; };
-struct c2 { BOOST_DI_CTOR(c2, shared_ptr<c1> c1_, std::auto_ptr<i> i_) : c1_(c1_), i_(i_) { } shared_ptr<c1> c1_; std::auto_ptr<i> i_; };
+struct c2 { BOOST_DI_CTOR(c2, shared_ptr<c1> c1_, std::auto_ptr<i> p_) : c1_(c1_), p_(p_) { } shared_ptr<c1> c1_; std::auto_ptr<i> p_; };
 struct c3 { BOOST_DI_CTOR(c3, shared_ptr<c1> c1_, shared_ptr<c2> c2_) : c1_(c1_), c2_(c2_) { } shared_ptr<c1> c1_; shared_ptr<c2> c2_; };
 
-//struct c4 { BOOST_DI_CTOR(c4, std::auto_ptr<i> i_) {}};
 } // namespace
 
 BOOST_AUTO_TEST_CASE(create) {
@@ -40,8 +39,12 @@ BOOST_AUTO_TEST_CASE(create) {
       , per_request<c2>()
     ));
 
-    //shared_ptr<c3> c3_ = inj.create<shared_ptr<c3> >();
-    //inj.create<shared_ptr<c4> >();
+    shared_ptr<c3> c3_ = inj.create<shared_ptr<c3> >();
+
+    BOOST_CHECK(c3_->c1_ == c3_->c2_->c1_);
+    BOOST_CHECK_EQUAL(i, c3_->c1_->i_);
+    BOOST_CHECK_EQUAL(i, c3_->c2_->c1_->i_);
+    BOOST_CHECK(dynamic_cast<impl*>(c3_->c2_->p_.get()));
 }
 
 } // namespace di

@@ -20,13 +20,14 @@ namespace di {
 BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
 template<
-    typename T = void
+    typename T
   , typename TName = void
   , typename = void
 >
 class named
 {
 public:
+    typedef typename type_traits::remove_accessors<T>::type named_type;
     typedef typename type_traits::make_plain<T>::type value_type;
     typedef named<value_type, TName> element_type;
     typedef TName name;
@@ -60,6 +61,7 @@ class named<T, TName, typename enable_if<
 >
 {
 public:
+    typedef typename type_traits::remove_accessors<T>::type named_type;
     typedef typename type_traits::make_plain<T>::type value_type;
     typedef named<value_type, TName> element_type;
     typedef TName name;
@@ -73,9 +75,8 @@ class named<T, TName, typename enable_if<
     has_element_type<typename type_traits::remove_accessors<T>::type> >::type
  >
 {
-    typedef typename type_traits::remove_accessors<T>::type object_type;
-
 public:
+    typedef typename type_traits::remove_accessors<T>::type named_type;
     typedef typename type_traits::make_plain<T>::type value_type;
     typedef named<typename type_traits::make_plain<T>::type, TName> element_type;
     typedef TName name;
@@ -91,7 +92,7 @@ public:
     value_type* get() const { return object_.get(); }
 
 private:
-    object_type object_;
+    named_type object_;
 };
 
 } // namespace di
