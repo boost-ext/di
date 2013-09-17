@@ -34,6 +34,7 @@
 #include "boost/di/policies/check_for_circular_dependencies.hpp"
 #include "boost/di/policies/check_for_creation_ownership.hpp"
 #include "boost/di/policies/check_for_not_safe_arguments.hpp"
+#include "boost/di/policies/check_for_undefined_behaviors.hpp"
 
 #endif
 
