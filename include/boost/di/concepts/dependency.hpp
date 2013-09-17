@@ -18,6 +18,7 @@
 
 #include <boost/di/scopes/deduce.hpp>
 #include <boost/di/scopes/external.hpp>
+#include <boost/di/type_traits/make_plain.hpp>
 #include "boost/di/config.hpp"
 
 namespace boost {
@@ -49,7 +50,9 @@ struct named_traits
 template<typename T>
 struct named_traits<T, typename enable_if<has_named_type<T> >::type>
 {
-    typedef typename T::named_type type;
+    typedef typename type_traits::remove_accessors<
+        typename T::named_type
+    >::type type;
 };
 
 } // namespace detail

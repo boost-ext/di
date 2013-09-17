@@ -8,18 +8,22 @@
 #define BOOST_DI_TYPE_TRAITS_SCOPE_TRAITS_HPP
 
 #include <memory>
-#include <boost/config.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/mpl/has_xxx.hpp>
 
 #include "boost/di/scopes/per_request.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/external.hpp"
+#include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {
 namespace type_traits {
 
-template<typename T>
+BOOST_MPL_HAS_XXX_TRAIT_DEF(named_type)
+
+template<typename T, typename = void>
 struct scope_traits
 {
     typedef scopes::per_request<> type;
@@ -56,7 +60,7 @@ struct scope_traits<std::auto_ptr<T> >
 };
 
 template<typename T>
-struct scope_traits<boost::shared_ptr<T> >
+struct scope_traits<shared_ptr<T> >
 {
     typedef scopes::singleton<> type;
 };
@@ -92,6 +96,12 @@ struct scope_traits<const T&&>
 };
 
 #endif
+
+template<typename T>
+struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
+{
+    typedef typename scope_traits<typename T::named_type>::type type;
+};
 
 } // namespace type_traits
 } // namespace di

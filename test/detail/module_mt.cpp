@@ -511,6 +511,28 @@ BOOST_AUTO_TEST_CASE(visit) {
     module_.visit<transaction_usage>(visitor);
 }
 
+BOOST_AUTO_TEST_CASE(visit_external) {
+    c3 c3_;
+    fake_dependency<scopes::external<>, c3>::type e3(c3_);
+
+    module<
+        mpl::vector<
+            fake_dependency<scopes::external<>, c3>::type
+        >
+    > module_(e3);
+
+    fake_visitor<
+        mpl::vector<
+            mpl::pair<c18, scopes::per_request<>>
+          , mpl::pair<c0, scopes::per_request<>>
+          , mpl::pair<shared_ptr<c1>, scopes::singleton<>>
+          , mpl::pair<c3&, scopes::external<>>
+        >
+    > visitor;
+
+    module_.visit<c18>(visitor);
+}
+
 BOOST_AUTO_TEST_CASE(call) {
     fake_scope<>::entry_calls() = 0;
     fake_scope<>::exit_calls() = 0;
@@ -585,29 +607,6 @@ BOOST_AUTO_TEST_CASE(policies_mix_join_many) {
             >::policies::type
         >::value
     ));
-}
-
-BOOST_AUTO_TEST_CASE(scope_auto_deduction) {
-
-    c3 c3_;
-    fake_dependency<scopes::external<>, c3>::type e3(c3_);
-
-    module<
-        mpl::vector<
-            fake_dependency<scopes::external<>, c3>::type
-        >
-    > module_(e3);
-
-    fake_visitor<
-        mpl::vector<
-            mpl::pair<c18, scopes::per_request<>>
-          , mpl::pair<c0, scopes::per_request<>>
-          , mpl::pair<shared_ptr<c1>, scopes::singleton<>>
-          , mpl::pair<c3&, scopes::external<>>
-        >
-    > visitor;
-
-    module_.visit<c18>(visitor);
 }
 
 } // namespace detail

@@ -60,6 +60,8 @@ test-suite "type traits" :
     [ run-cpp11 type_traits/ctor_traits_ut.cpp ]
     [ run-cpp11 type_traits/is_same_base_of_ut.cpp ]
     [ run-cpp11 type_traits/make_plain_ut.cpp ]
+    [ run-cpp11 type_traits/remove_accessors_ut.cpp ]
+    [ run-cpp11 type_traits/scope_traits_ut.cpp ]
     [ run-cpp11 type_traits/value_type_ut.cpp ]
 ;
 
@@ -99,13 +101,13 @@ test-suite "injector / C++ 03" :
     [ run-cpp03 injector_mt_03.cpp ]
 ;
 
-test-suite "compile fail" :
-    [ compile-fail-cpp11 detail/module_externals_mt_fail.cpp ]
-    [ compile-fail-cpp11 detail/module_policy_mt_fail.cpp ]
-    [ compile-fail-cpp11 policies/check_for_binding_correctness_mt_fail.cpp ]
-    [ compile-fail-cpp11 policies/check_for_creation_ownership_mt_fail.cpp ]
-    [ compile-fail-cpp11 policies/check_for_circular_dependencies_mt_fail.cpp ]
-    [ compile-fail-cpp11 injector_policy_mt_fail.cpp ]
-    [ compile-fail-cpp11 injector_singleton_by_copy_mt_fail.cpp ]
-;
+#test-suite "compile fail" :
+    #[ compile-fail-cpp11 detail/module_externals_mt_fail.cpp ]
+    #[ compile-fail-cpp11 detail/module_policy_mt_fail.cpp ]
+    #[ compile-fail-cpp11 policies/check_for_binding_correctness_mt_fail.cpp ]
+    #[ compile-fail-cpp11 policies/check_for_creation_ownership_mt_fail.cpp ]
+    #[ compile-fail-cpp11 policies/check_for_circular_dependencies_mt_fail.cpp ]
+    #[ compile-fail-cpp11 injector_policy_mt_fail.cpp ]
+    #[ compile-fail-cpp11 injector_singleton_by_copy_mt_fail.cpp ]
+#;
 

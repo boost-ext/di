@@ -12,6 +12,7 @@
 #include <boost/utility/enable_if.hpp>
 
 #include "boost/di/type_traits/make_plain.hpp"
+#include "boost/di/type_traits/remove_accessors.hpp"
 #include "boost/di/config.hpp"
 
 namespace boost {
@@ -27,7 +28,7 @@ template<
 class named
 {
 public:
-    typedef typename type_traits::remove_accessors<T>::type named_type;
+    typedef T named_type;
     typedef typename type_traits::make_plain<T>::type value_type;
     typedef named<value_type, TName> element_type;
     typedef TName name;
@@ -57,7 +58,7 @@ class named<T, TName, typename enable_if<
 >
 {
 public:
-    typedef typename type_traits::remove_accessors<T>::type named_type;
+    typedef T named_type;
     typedef typename type_traits::make_plain<T>::type value_type;
     typedef named<value_type, TName> element_type;
     typedef TName name;
@@ -71,8 +72,10 @@ class named<T, TName, typename enable_if<
     has_element_type<typename type_traits::remove_accessors<T>::type> >::type
 >
 {
+    typedef typename type_traits::remove_accessors<T>::type object_type;
+
 public:
-    typedef typename type_traits::remove_accessors<T>::type named_type;
+    typedef T named_type;
     typedef typename type_traits::make_plain<T>::type value_type;
     typedef named<typename type_traits::make_plain<T>::type, TName> element_type;
     typedef TName name;
@@ -88,7 +91,7 @@ public:
     value_type* get() const { return object_.get(); }
 
 private:
-    named_type object_;
+    object_type object_;
 };
 
 } // namespace di
