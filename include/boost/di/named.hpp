@@ -32,12 +32,8 @@ public:
     typedef named<value_type, TName> element_type;
     typedef TName name;
 
-    named(T object = T()) // non explicit
+    named(T object) // non explicit
         : object_(object)
-    { }
-
-    named(const shared_ptr<T>& object) // non explicit
-        : object_(*object)
     { }
 
     operator T() const {
@@ -73,7 +69,7 @@ template<
 >
 class named<T, TName, typename enable_if<
     has_element_type<typename type_traits::remove_accessors<T>::type> >::type
- >
+>
 {
 public:
     typedef typename type_traits::remove_accessors<T>::type named_type;
@@ -81,7 +77,7 @@ public:
     typedef named<typename type_traits::make_plain<T>::type, TName> element_type;
     typedef TName name;
 
-    named(T object = T(new typename T::element_type)) // non explicit
+    named(T object) // non explicit
         : object_(object)
     { }
 

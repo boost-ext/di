@@ -90,14 +90,14 @@ public:
 
     template<typename I>
     operator std::auto_ptr<I>&() const {
-        static std::auto_ptr<I> s_object_;
+        static std::auto_ptr<I> s_object_; // not thread safe
         s_object_.reset(object_());
         return s_object_;
     }
 
     template<typename I, typename TName>
     operator named<std::auto_ptr<I>, TName>() const {
-        static std::auto_ptr<I> s_object_;
+        static std::auto_ptr<I> s_object_; // not thread safe
         s_object_.reset(object_());
         return s_object_;
     }

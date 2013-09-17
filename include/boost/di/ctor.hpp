@@ -11,7 +11,6 @@
 #include "boost/di/config.hpp"
 
 #ifdef BOOST_MSVC
-    #pragma warning(push)
     #pragma warning(disable:4822) // local class member function does not have a body
 #endif
 
@@ -39,10 +38,6 @@
 
 #else
     #error BOOST_DI_CTOR not defined
-#endif
-
-#ifdef BOOST_MSVC
-#pragma warning(pop)
 #endif
 
 #endif
