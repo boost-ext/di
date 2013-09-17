@@ -42,7 +42,7 @@
     injector<typename detail::concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type>
     make_injector(BOOST_DI_ARGS(Args, args)) {
         return injector<typename detail::concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type>(
-            BOOST_DI_ARGS_FORWARD(args)
+            BOOST_DI_ARGS_PASS(args)
         );
     }
 

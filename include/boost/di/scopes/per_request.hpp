@@ -68,7 +68,7 @@
     result_type create(BOOST_DI_ARGS(Args, args)) {
         return result_type(::boost::bind(
             &type_traits::create_traits<TExpected, TGiven, BOOST_DI_TYPES_PASS(Args)>
-          , BOOST_DI_ARGS_FORWARD(args)
+          , BOOST_DI_ARGS_PASS(args)
         ));
     }
 

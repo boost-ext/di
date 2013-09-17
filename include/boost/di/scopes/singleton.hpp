@@ -68,7 +68,7 @@
     result_type create(BOOST_DI_ARGS(Args, args)) {
         if (!object_) {
             object_.reset(
-                type_traits::create_traits<TExpected, TGiven>(BOOST_DI_ARGS_FORWARD(args))
+                type_traits::create_traits<TExpected, TGiven>(BOOST_DI_ARGS_PASS(args))
             );
         }
         return object_;

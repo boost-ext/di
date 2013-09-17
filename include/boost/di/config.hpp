@@ -21,7 +21,8 @@
 
 #if defined(BOOST_NO_CXX11_SMART_PTR) &&                \
     __clang_major__ >= 3 &&                             \
-    __clang_minor__ >= 2
+    __clang_minor__ >= 2 &&                             \
+    __cplusplus >= 201100L
     #undef BOOST_NO_CXX11_SMART_PTR
 #endif
 
@@ -108,12 +109,6 @@
      )
 
 #define BOOST_DI_ARGS_PASS(arg)                         \
-     BOOST_PP_ENUM_PARAMS(                              \
-         BOOST_PP_ITERATION()                           \
-       , arg                                            \
-     )
-
-#define BOOST_DI_ARGS_FORWARD(arg)                      \
      BOOST_PP_ENUM_PARAMS(                              \
          BOOST_PP_ITERATION()                           \
        , arg                                            \

@@ -7,57 +7,91 @@
 
 import testing ;
 
-project di :
+project :
     requirements
         <include>.
         <include>../include
         <library>/boost/test//boost_unit_test_framework/<link>static
         <define>BOOST_TEST_MODULE=di_test
         <warnings>all
-
-        <toolset>gcc:<cxxflags>-std=c++11
         <toolset>gcc:<cxxflags>-Wextra
         <toolset>gcc:<cxxflags>-pedantic
         <toolset>gcc:<cxxflags>-ftemplate-depth-1024
-
-        <toolset>clang:<cxxflags>-std=c++11
         <toolset>clang:<cxxflags>-Wextra
         <toolset>clang:<cxxflags>-pedantic
 ;
 
-test-suite di-test :
-    [ run concepts/dependency_ut.cpp ]
-    [ run type_traits/create_traits_ut.cpp ]
-    [ run type_traits/ctor_traits_ut.cpp ]
-    [ run type_traits/is_same_base_of_ut.cpp ]
-    [ run type_traits/make_plain_ut.cpp ]
-    [ run type_traits/value_type_ut.cpp ]
-    [ run detail/binder_ut.cpp ]
-    [ run detail/creator_ut.cpp ]
-    [ run detail/module_mt.cpp ]
-    [ run detail/pool_ut.cpp ]
-    [ run detail/visitor_ut.cpp ]
-    [ run policies/check_for_binding_correctness_ut.cpp ]
-    [ run policies/check_for_creation_ownership_ut.cpp ]
-    [ run policies/check_for_circular_dependencies_ut.cpp ]
-    [ run scopes/external_ut.cpp ]
-    [ run scopes/per_request_ut.cpp ]
-    [ run scopes/session_ut.cpp ]
-    [ run scopes/singleton_ut.cpp ]
-    [ run concepts_ut.cpp ]
-    [ run ctor_bracket_ut.cpp ]
-    [ run ctor_va_args_ut.cpp ]
-    [ run injector_mt.cpp ]
-    [ run injector_ut.cpp ]
-    [ run make_injector_mt.cpp ]
-    [ run named_ut.cpp ]
+rule run-cpp11 ( src ) {
+    return [ run $(src) : : :
+        <toolset>gcc:<cxxflags>-std=c++11
+        <toolset>clang:<cxxflags>-std=c++11
+    ] ;
+}
 
-    [ compile-fail detail/module_externals_mt_fail.cpp ]
-    [ compile-fail detail/module_policy_mt_fail.cpp ]
-    [ compile-fail policies/check_for_binding_correctness_mt_fail.cpp ]
-    [ compile-fail policies/check_for_creation_ownership_mt_fail.cpp ]
-    [ compile-fail policies/check_for_circular_dependencies_mt_fail.cpp ]
-    [ compile-fail injector_policy_mt_fail.cpp ]
-    [ compile-fail injector_singleton_by_copy_mt_fail.cpp ]
+rule compile-fail-cpp11 ( src ) {
+    return [ compile-fail $(src) :
+        <toolset>gcc:<cxxflags>-std=c++11
+        <toolset>clang:<cxxflags>-std=c++11
+    ] ;
+}
+
+test-suite "concepts" :
+    [ run-cpp11 concepts/dependency_ut.cpp ]
+    [ run-cpp11 concepts_ut.cpp ]
+    [ run-cpp11 named_ut.cpp ]
+;
+
+test-suite "type traits" :
+    [ run-cpp11 type_traits/create_traits_ut.cpp ]
+    [ run-cpp11 type_traits/ctor_traits_ut.cpp ]
+    [ run-cpp11 type_traits/is_same_base_of_ut.cpp ]
+    [ run-cpp11 type_traits/make_plain_ut.cpp ]
+    [ run-cpp11 type_traits/value_type_ut.cpp ]
+;
+
+test-suite "implementation detail" :
+    [ run-cpp11 detail/binder_ut.cpp ]
+    [ run-cpp11 detail/creator_ut.cpp ]
+    [ run-cpp11 detail/module_mt.cpp ]
+    [ run-cpp11 detail/pool_ut.cpp ]
+    [ run-cpp11 detail/visitor_ut.cpp ]
+;
+
+test-suite "policies" :
+    [ run-cpp11 policies/check_for_binding_correctness_ut.cpp ]
+    [ run-cpp11 policies/check_for_creation_ownership_ut.cpp ]
+    [ run-cpp11 policies/check_for_circular_dependencies_ut.cpp ]
+;
+
+test-suite "scopes" :
+    [ run-cpp11 scopes/external_ut.cpp ]
+    [ run-cpp11 scopes/per_request_ut.cpp ]
+    [ run-cpp11 scopes/session_ut.cpp ]
+    [ run-cpp11 scopes/singleton_ut.cpp ]
+;
+
+test-suite "ctors" :
+    [ run-cpp11 ctor_bracket_ut.cpp ]
+    [ run-cpp11 ctor_va_args_ut.cpp ]
+;
+
+test-suite "injector" :
+    [ run-cpp11 injector_mt.cpp ]
+    [ run-cpp11 injector_ut.cpp ]
+    [ run-cpp11 make_injector_mt.cpp ]
+;
+
+test-suite "injector / C++ 03" :
+    [ run injector_mt_03.cpp ]
+;
+
+test-suite "compile fail" :
+    [ compile-fail-cpp11 detail/module_externals_mt_fail.cpp ]
+    [ compile-fail-cpp11 detail/module_policy_mt_fail.cpp ]
+    [ compile-fail-cpp11 policies/check_for_binding_correctness_mt_fail.cpp ]
+    [ compile-fail-cpp11 policies/check_for_creation_ownership_mt_fail.cpp ]
+    [ compile-fail-cpp11 policies/check_for_circular_dependencies_mt_fail.cpp ]
+    [ compile-fail-cpp11 injector_policy_mt_fail.cpp ]
+    [ compile-fail-cpp11 injector_singleton_by_copy_mt_fail.cpp ]
 ;
 

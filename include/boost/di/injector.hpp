@@ -116,14 +116,14 @@
 #else
     template<BOOST_DI_TYPES(Args)>
     explicit injector(BOOST_DI_ARGS(Args, args))
-        : detail::module<typename joint_concepts<>::type>(BOOST_DI_ARGS_FORWARD(args))
+        : detail::module<typename joint_concepts<>::type>(BOOST_DI_ARGS_PASS(args))
     { }
 
     template<BOOST_DI_TYPES(Args)>
     injector<joint_concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >
     operator()(BOOST_DI_ARGS(Args, args)) const {
         return injector<joint_concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >(
-            BOOST_DI_ARGS_FORWARD(args)
+            BOOST_DI_ARGS_PASS(args)
         );
     }
 

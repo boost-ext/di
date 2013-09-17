@@ -5,13 +5,12 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include "boost/di/injector.hpp"
+#include "boost/di/make_injector.hpp"
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/mpl/vector.hpp>
-
-#include "boost/di/make_injector.hpp"
 
 #include "fake_visitor.hpp"
 #include "fake_scope.hpp"
@@ -119,13 +118,13 @@ auto injector2_provider = make_injector(
 
 auto injector_externals = make_injector(
     bind<double>::to(7.0)
-  , bind<if0>::to(boost::make_shared<c3if0>(67, 78.0))
+  , bind<if0>::to(make_shared<c3if0>(67, 78.0))
   , bind<int>::in_name<mpl::string<'1'>>::in_call<call_stack<c7, c6, c4>>::to(3)
   , bind<int>::in_call<c8>::to(4)
 );
 
 auto injector_externals_1 = make_injector(
-    bind<if0>::to(boost::make_shared<c3if0>(67, 78.0))
+    bind<if0>::to(make_shared<c3if0>(67, 78.0))
   , bind<int>::in_name<mpl::string<'1'>>::in_call<call_stack<c7, c6, c4>>::to(3)
   , bind<int>::in_call<c8>::to(4)
 );

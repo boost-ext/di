@@ -119,13 +119,13 @@
     template<typename TExpected, typename TGiven, BOOST_DI_TYPES(Args)>
     typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_CREATE)<TGiven>, TExpected*>::type
     create_traits(BOOST_DI_ARGS(Args, args)) {
-        return TGiven().BOOST_DI_CREATE(BOOST_DI_ARGS_FORWARD(args));
+        return TGiven().BOOST_DI_CREATE(BOOST_DI_ARGS_PASS(args));
     }
 
     template<typename TExpected, typename TGiven, BOOST_DI_TYPES(Args)>
     typename disable_if<BOOST_PP_CAT(has_, BOOST_DI_CREATE)<TGiven>, TExpected*>::type
     create_traits(BOOST_DI_ARGS(Args, args)) {
-        return new TGiven(BOOST_DI_ARGS_FORWARD(args));
+        return new TGiven(BOOST_DI_ARGS_PASS(args));
     }
 
 #endif

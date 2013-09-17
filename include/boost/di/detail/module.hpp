@@ -272,7 +272,7 @@
                         , has_types<mpl::_>
                       >
                   >
-              >(BOOST_DI_ARGS_FORWARD(args))
+              >(BOOST_DI_ARGS_PASS(args))
             , init()
           )
     { }
