@@ -29,7 +29,9 @@ struct hello_world
 
 int main() {
     using injector = di::injector<
-        impl // -> di::deduce<di::bind<i, impl>> -> di::singleton<di::bind<i, impl>>
+        impl // -> di::bind<i, impl>
+             // -> di::deduce<di::bind<i, impl>>
+             // -> di::singleton<di::bind<i, impl>>
     >;
 
     auto app = injector().create<hello_world>();
