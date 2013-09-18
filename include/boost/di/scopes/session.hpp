@@ -36,10 +36,7 @@
     class session
     {
     public:
-        template<
-            typename TExpected
-          , typename TGiven = TExpected
-        >
+        template<typename TExpected, typename TGiven = TExpected>
         class scope
         {
         public:

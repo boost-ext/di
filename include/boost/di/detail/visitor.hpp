@@ -39,10 +39,7 @@
             : type_traits::ctor_traits<typename TDependency::given>::type
         { };
 
-        template<
-            typename T
-          , typename TCallStack
-        >
+        template<typename T, typename TCallStack>
         struct binder
             : TBinder::template get_dependency<T, TCallStack>::type
         { };
@@ -88,7 +85,7 @@
 
     #endif
 
-#else
+else
 
     template<
         typename T

@@ -34,10 +34,7 @@
     public:
         typedef void is_priority;
 
-        template<
-            typename TExpected
-          , typename = TExpected
-        >
+        template<typename TExpected, typename = TExpected>
         class scope
         {
         public:
