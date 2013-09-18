@@ -27,6 +27,8 @@ template<
 >
 class named
 {
+    typedef typename type_traits::remove_accessors<T>::type object_type;
+
 public:
     typedef T named_type;
     typedef typename type_traits::make_plain<T>::type value_type;
@@ -46,7 +48,7 @@ public:
     }
 
 private:
-    T object_;
+    object_type object_;
 };
 
 template<
