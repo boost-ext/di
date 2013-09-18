@@ -8,8 +8,6 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "data.hpp"
-
 namespace boost {
 namespace di {
 namespace scopes {
