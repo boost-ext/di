@@ -16,7 +16,7 @@
 
 #if defined(BOOST_DI_CTOR_CFG_VA_ARGS)
 
-   #if defined(__GNUC__) && (__GNUC__ >= 4)
+    #if defined(__GNUC__) && (__GNUC__ >= 4)
         #pragma GCC system_header
     #endif
 

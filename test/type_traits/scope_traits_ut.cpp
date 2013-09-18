@@ -12,6 +12,11 @@
 
 #include "boost/di/named.hpp"
 
+#if defined(__GNUC__) && (__GNUC__ >= 4)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations" // std::auto_ptr
+#endif
+
 namespace boost {
 namespace di {
 namespace type_traits {
@@ -50,6 +55,10 @@ BOOST_AUTO_TEST_CASE(basic) {
     BOOST_CHECK((is_same<scopes::per_request<>, scope_traits<named<const int&&>>::type>::value));
 #endif
 }
+
+#if defined(__GNUC__) && (__GNUC__ >= 4)
+    #pragma GCC diagnostic pop
+#endif
 
 } // namespace type_traits
 } // namespace di

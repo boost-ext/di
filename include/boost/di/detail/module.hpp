@@ -112,7 +112,7 @@
         public:
             BOOST_STATIC_CONSTANT(
                 bool
-              , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
+              , value = sizeof(test<base>(0)) == sizeof(mpl::aux::yes_tag)
             );
         };
 
@@ -243,31 +243,22 @@
         }
 
     private:
-        template<
-            typename TSeq
-          , typename TAction
-        >
-        typename enable_if<mpl::empty<TSeq> >::type
-        call_impl(const TAction&) { }
+        template<typename TSeq, typename TAction>
+        typename enable_if<mpl::empty<TSeq> >::type call_impl(const TAction&) { }
 
-        template<
-            typename TSeq
-          , typename TAction
-          , typename T = typename mpl::front<TSeq>::type
-        >
-        typename disable_if<mpl::empty<TSeq> >::type
-        call_impl(const TAction& action, typename enable_if<has_call<T, TAction> >::type* = 0) {
-            static_cast<T&>(static_cast<TPool<deps>&>(*this)).call(action);
+        template<typename TSeq, typename TAction>
+        typename disable_if<mpl::empty<TSeq> >::type call_impl(
+            const TAction& action
+          , typename enable_if<has_call<typename mpl::front<TSeq>::type, TAction> >::type* = 0) {
+            typedef typename mpl::front<TSeq>::type type;
+            static_cast<type&>(static_cast<TPool<deps>&>(*this)).call(action);
             call_impl<typename mpl::pop_front<TSeq>::type>(action);
         }
 
-        template<
-            typename TSeq
-          , typename TAction
-          , typename T = typename mpl::front<TSeq>::type
-        >
-        typename disable_if<mpl::empty<TSeq> >::type
-        call_impl(const TAction& action, typename disable_if<has_call<T, TAction> >::type* = 0) {
+        template<typename TSeq, typename TAction>
+        typename disable_if<mpl::empty<TSeq> >::type call_impl(
+            const TAction& action
+          , typename disable_if<has_call<typename mpl::front<TSeq>::type, TAction> >::type* = 0) {
             call_impl<typename mpl::pop_front<TSeq>::type>(action);
         }
     };
