@@ -41,9 +41,9 @@
     template<typename T>
     class has_value
     {
-        struct value { static int value; };
+        struct base_value { static int value; };
         struct base
-            : value
+            : base_value
             , mpl::if_<
                   is_arithmetic<T>
                 , mpl::void_
