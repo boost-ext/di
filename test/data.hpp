@@ -358,6 +358,36 @@ struct c22
     shared_ptr<c11> c11_;
 };
 
+struct c23
+{
+    BOOST_DI_CTOR(c23
+        , shared_ptr<if0> if0_
+    )
+        : if0_(if0_)
+    { }
+
+    shared_ptr<if0> if0_;
+};
+
+enum eid
+{
+    e0 = 1
+  , e1 = 2
+};
+
+class if0_factory
+{
+public:
+    if0* BOOST_DI_CREATE(eid id) {
+        switch(id) {
+            case e0: return new c0if0();
+            case e1: return new c1if0();
+        }
+
+        return nullptr;
+    }
+};
+
 struct cd2;
 struct cd5;
 

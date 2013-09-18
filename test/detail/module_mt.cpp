@@ -555,6 +555,40 @@ BOOST_AUTO_TEST_CASE(call) {
     BOOST_CHECK_EQUAL(1, fake_scope<>::exit_calls());
 }
 
+using factory_module = module<
+    mpl::vector<
+       fake_dependency<scopes::deduce, if0, if0_factory>::type
+     , fake_dependency<scopes::external<>, eid>::type
+    >
+>;
+
+BOOST_AUTO_TEST_CASE(create_factory_e0) {
+    fake_dependency<scopes::external<>, eid>::type eid_(e0);
+    factory_module module_(eid_);
+
+    auto c23_ = module_.create<shared_ptr<c23>>();
+
+    BOOST_CHECK(dynamic_cast<c0if0*>(c23_->if0_.get()));
+}
+
+BOOST_AUTO_TEST_CASE(create_factory_e1) {
+    fake_dependency<scopes::external<>, eid>::type eid_(e1);
+    factory_module module_(eid_);
+
+    auto c23_ = module_.create<shared_ptr<c23>>();
+
+    BOOST_CHECK(dynamic_cast<c1if0*>(c23_->if0_.get()));
+}
+
+BOOST_AUTO_TEST_CASE(create_factory_null) {
+    fake_dependency<scopes::external<>, eid>::type eid_(static_cast<eid>(0));
+    factory_module module_(eid_);
+
+    auto c23_ = module_.create<shared_ptr<c23>>();
+
+    BOOST_CHECK(nullptr == c23_->if0_.get());
+}
+
 BOOST_AUTO_TEST_CASE(policies) {
     BOOST_CHECK((
         contains_all<
