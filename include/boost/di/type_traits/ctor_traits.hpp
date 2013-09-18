@@ -28,7 +28,7 @@ namespace type_traits {
 template<typename T>
 class BOOST_PP_CAT(has_, BOOST_DI_CONSTRUCTOR)
 {
-    template<typename C> static mpl::aux::yes_tag test(BOOST_DI_TYPEOF(C::BOOST_DI_CONSTRUCTOR));
+    template<typename U> static mpl::aux::yes_tag test(BOOST_DI_TYPEOF(U::BOOST_DI_CONSTRUCTOR));
     template<typename>   static mpl::aux::no_tag  test(...);
 
 public:
@@ -41,7 +41,7 @@ public:
 template<typename T>
 class BOOST_PP_CAT(has_, BOOST_DI_CREATE)
 {
-    template<typename C> static mpl::aux::yes_tag test(BOOST_DI_TYPEOF(C::BOOST_DI_CREATE));
+    template<typename U> static mpl::aux::yes_tag test(BOOST_DI_TYPEOF(U::BOOST_DI_CREATE));
     template<typename>   static mpl::aux::no_tag  test(...);
 
 public:

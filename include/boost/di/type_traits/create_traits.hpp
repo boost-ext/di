@@ -41,9 +41,9 @@
     template<typename T>
     class has_value
     {
-        struct helper { static int value; };
+        struct value { static int value; };
         struct base
-            : helper
+            : value
             , mpl::if_<
                   is_arithmetic<T>
                 , mpl::void_
@@ -51,7 +51,7 @@
               >::type
         { };
 
-        template<typename C> static mpl::aux::no_tag  test(non_type<const int*, &C::value>*);
+        template<typename U> static mpl::aux::no_tag  test(non_type<const int*, &U::value>*);
         template<typename>   static mpl::aux::yes_tag test(...);
 
     public:

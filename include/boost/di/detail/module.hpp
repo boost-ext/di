@@ -14,6 +14,7 @@
     #include <boost/type_traits/is_base_of.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/typeof/typeof.hpp>
+    #include <boost/non_type.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/assert.hpp>
     #include <boost/mpl/is_sequence.hpp>
@@ -96,11 +97,17 @@
         template<typename T, typename TAction>
         class has_call
         {
-            template<typename C>
-            static mpl::aux::yes_tag test(non_type<void (T::*)(const TAction&), &C::call>*);
+            struct base_call { void call(const TAction&) { } };
+            struct base : T, base_call { };
+
+            template<typename U>
+            static mpl::aux::no_tag test(
+                U*
+              , non_type<void (base_call::*)(const TAction&), &U::call>* = 0
+            );
 
             template<typename>
-            static mpl::aux::no_tag  test(...);
+            static mpl::aux::yes_tag test(...);
 
         public:
             BOOST_STATIC_CONSTANT(
@@ -246,23 +253,21 @@
         template<
             typename TSeq
           , typename TAction
-          , typename T = typename mpl::front<TSeq>::type::scope::template scope<int, int>
+          , typename T = typename mpl::front<TSeq>::type
         >
         typename disable_if<mpl::empty<TSeq> >::type
         call_impl(const TAction& action, typename enable_if<has_call<T, TAction> >::type* = 0) {
-            static_cast<typename mpl::front<TSeq>::type&>(static_cast<TPool<deps>&>(*this)).call(action);
+            static_cast<T&>(static_cast<TPool<deps>&>(*this)).call(action);
             call_impl<typename mpl::pop_front<TSeq>::type>(action);
         }
 
         template<
             typename TSeq
           , typename TAction
-          , typename T = typename mpl::front<TSeq>::type::scope::template scope<int, int>
-          //, typename T = typename mpl::front<TSeq>::type
+          , typename T = typename mpl::front<TSeq>::type
         >
         typename disable_if<mpl::empty<TSeq> >::type
         call_impl(const TAction& action, typename disable_if<has_call<T, TAction> >::type* = 0) {
-            std::cout << "jasia: " << has_call<T, TAction>::value << std::endl;
             call_impl<typename mpl::pop_front<TSeq>::type>(action);
         }
     };
