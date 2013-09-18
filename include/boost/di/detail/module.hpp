@@ -34,6 +34,7 @@
     #include <boost/mpl/filter_view.hpp>
     #include <boost/mpl/contains.hpp>
     #include <boost/mpl/pair.hpp>
+    #include <boost/mpl/aux_/yes_no.hpp>
     #include <boost/mpl/has_xxx.hpp>
 
     #include "boost/di/detail/pool.hpp"
@@ -91,6 +92,22 @@
           , template<typename> class
           , template<typename> class
         > friend class module;
+
+        template<typename T, typename TAction>
+        class has_call
+        {
+            template<typename C>
+            static mpl::aux::yes_tag test(non_type<void (T::*)(const TAction&), &C::call>*);
+
+            template<typename>
+            static mpl::aux::no_tag  test(...);
+
+        public:
+            BOOST_STATIC_CONSTANT(
+                bool
+              , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
+            );
+        };
 
         template<typename TSeq>
         struct unique
@@ -213,38 +230,40 @@
                 execute<T, mpl::vector0<> >(visitor);
         }
 
-        template<typename Scope, typename Action>
-        void call(const Action& action) {
-            TPool<deps> deps_;
-            call_impl<Scope, deps>(action, deps_);
+        template<typename TAction>
+        void call(const TAction& action) {
+            call_impl<deps>(action);
         }
 
     private:
         template<
-            typename Scope
-          , typename Deps
-          , typename Action
-          , typename T
+            typename TSeq
+          , typename TAction
         >
-        typename enable_if<mpl::empty<Deps> >::type
-        call_impl(const Action&, T&) { }
+        typename enable_if<mpl::empty<TSeq> >::type
+        call_impl(const TAction&) { }
 
         template<
-            typename Scope
-          , typename Deps
-          , typename Action
-          , typename T
+            typename TSeq
+          , typename TAction
+          , typename T = typename mpl::front<TSeq>::type::scope::template scope<int, int>
         >
-        typename enable_if<
-            mpl::and_<
-                mpl::not_<mpl::empty<Deps> >
-              , is_same<typename mpl::front<Deps>::type::scope, Scope>
-            >
-        >::type
-        call_impl(const Action& action, T& deps) {
-            typedef typename mpl::front<Deps>::type type;
-            static_cast<type&>(deps).call(action);
-            call_impl<Scope, typename mpl::pop_front<Deps>::type>(action, deps);
+        typename disable_if<mpl::empty<TSeq> >::type
+        call_impl(const TAction& action, typename enable_if<has_call<T, TAction> >::type* = 0) {
+            static_cast<typename mpl::front<TSeq>::type&>(static_cast<TPool<deps>&>(*this)).call(action);
+            call_impl<typename mpl::pop_front<TSeq>::type>(action);
+        }
+
+        template<
+            typename TSeq
+          , typename TAction
+          , typename T = typename mpl::front<TSeq>::type::scope::template scope<int, int>
+          //, typename T = typename mpl::front<TSeq>::type
+        >
+        typename disable_if<mpl::empty<TSeq> >::type
+        call_impl(const TAction& action, typename disable_if<has_call<T, TAction> >::type* = 0) {
+            std::cout << "jasia: " << has_call<T, TAction>::value << std::endl;
+            call_impl<typename mpl::pop_front<TSeq>::type>(action);
         }
     };
 

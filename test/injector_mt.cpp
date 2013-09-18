@@ -256,10 +256,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(basic_call, TInjector, basic_call_types) {
 
     BOOST_CHECK(!injector.template create<shared_ptr<c3>>());
 
-    injector.template call<fake_scope<>>(fake_scope<>::entry());
+    injector.template call(fake_scope_entry());
     BOOST_CHECK(injector.template create<shared_ptr<c3>>());
 
-    injector.template call<fake_scope<>>(fake_scope<>::exit());
+    injector.template call(fake_scope_exit());
     BOOST_CHECK(!injector.template create<shared_ptr<c3>>());
 }
 
@@ -367,6 +367,33 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_shared_ptr_std_unique_ptr, TInjector, deduce_i
     TInjector injector;
     auto c21_ = injector.template create<std::shared_ptr<c21>>();
     BOOST_CHECK(c21_->if0__ == c21_->if0__);
+}
+
+BOOST_AUTO_TEST_CASE(session_scope) {
+    injector<
+        session<c0if0>
+    > injector_;
+
+    {
+    auto c20_ = injector_.create<c20>();
+    BOOST_CHECK(nullptr == c20_.if0_.get());
+    BOOST_CHECK(nullptr == c20_.if0__.get());
+    }
+
+    {
+    injector_.call(scopes::session_entry());
+    auto c20_ = injector_.create<c20>();
+    BOOST_CHECK(dynamic_cast<c0if0*>(c20_.if0_.get()));
+    BOOST_CHECK(dynamic_cast<c0if0*>(c20_.if0__.get()));
+    BOOST_CHECK(c20_.if0_ == c20_.if0__);
+    }
+
+    {
+    injector_.call(scopes::session_exit());
+    auto c20_ = injector_.create<c20>();
+    BOOST_CHECK(nullptr == c20_.if0_.get());
+    BOOST_CHECK(nullptr == c20_.if0__.get());
+    }
 }
 
 } // namespace di

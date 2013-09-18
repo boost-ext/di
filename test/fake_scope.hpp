@@ -26,12 +26,12 @@ struct priority_impl<true>
     typedef void is_priority;
 };
 
+struct fake_scope_entry { };
+struct fake_scope_exit { };
+
 template<bool Priority = false>
 struct fake_scope : priority_impl<Priority>
 {
-    struct entry { };
-    struct exit { };
-
     template<typename T>
     class convertible
     {
@@ -57,11 +57,11 @@ struct fake_scope : priority_impl<Priority>
     {
         typedef convertible<T> result_type;
 
-        void call(const entry&) {
+        void call(const fake_scope_entry&) {
             entry_calls()++;
         }
 
-        void call(const exit&) {
+        void call(const fake_scope_exit&) {
             exit_calls()++;
         }
 

@@ -96,11 +96,11 @@ BOOST_AUTO_TEST_CASE(call) {
     BOOST_CHECK_EQUAL(0, fake_scope<>::entry_calls());
     BOOST_CHECK_EQUAL(0, fake_scope<>::exit_calls());
 
-    injector_.call<fake_scope<>>(fake_scope<>::entry());
+    injector_.call(fake_scope_entry());
     BOOST_CHECK_EQUAL(1, fake_scope<>::entry_calls());
     BOOST_CHECK_EQUAL(0, fake_scope<>::exit_calls());
 
-    injector_.call<fake_scope<>>(fake_scope<>::exit());
+    injector_.call(fake_scope_exit());
     BOOST_CHECK_EQUAL(1, fake_scope<>::entry_calls());
     BOOST_CHECK_EQUAL(1, fake_scope<>::exit_calls());
 }
@@ -518,11 +518,11 @@ BOOST_AUTO_TEST_CASE(call_injector) {
     BOOST_CHECK_EQUAL(0, fake_scope<>::entry_calls());
     BOOST_CHECK_EQUAL(0, fake_scope<>::exit_calls());
 
-    injector_.call<fake_scope<>>(fake_scope<>::entry());
+    injector_.call(fake_scope_entry());
     BOOST_CHECK_EQUAL(1, fake_scope<>::entry_calls());
     BOOST_CHECK_EQUAL(0, fake_scope<>::exit_calls());
 
-    injector_.call<fake_scope<>>(fake_scope<>::exit());
+    injector_.call(fake_scope_exit());
     BOOST_CHECK_EQUAL(1, fake_scope<>::entry_calls());
     BOOST_CHECK_EQUAL(1, fake_scope<>::exit_calls());
 }
