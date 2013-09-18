@@ -103,7 +103,7 @@
             template<typename U>
             static mpl::aux::no_tag test(
                 U*
-              , non_type<void (base_call::*)(const TAction&), &U::call>* = 0
+              , non_type<void (base_call::*)(const TAction&), &U::call>*
             );
 
             template<typename>
