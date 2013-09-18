@@ -17,11 +17,48 @@ namespace di {
 
 namespace {
 
-struct i { virtual ~i() { } virtual void dummy() = 0; };
-struct impl : i { virtual void dummy() { } };
-struct c1 { BOOST_DI_CTOR(c1, int i_) : i_(i_) { } int i_; };
-struct c2 { BOOST_DI_CTOR(c2, shared_ptr<c1> c1_, std::auto_ptr<i> p_) : c1_(c1_), p_(p_) { } shared_ptr<c1> c1_; std::auto_ptr<i> p_; };
-struct c3 { BOOST_DI_CTOR(c3, shared_ptr<c1> c1_, shared_ptr<c2> c2_) : c1_(c1_), c2_(c2_) { } shared_ptr<c1> c1_; shared_ptr<c2> c2_; };
+struct i
+{
+    virtual ~i() { }
+    virtual void dummy() = 0;
+};
+
+struct impl : i
+{
+    virtual void dummy() { }
+};
+
+struct c1
+{
+    BOOST_DI_CTOR(c1, int i_)
+        : i_(i_)
+    { }
+
+    int i_;
+};
+
+struct c2
+{
+    BOOST_DI_CTOR(c2
+        , shared_ptr<c1> c1_
+        , std::auto_ptr<i> p_)
+      : c1_(c1_), p_(p_)
+    { }
+
+    shared_ptr<c1> c1_; std::auto_ptr<i> p_;
+};
+
+struct c3
+{
+    BOOST_DI_CTOR(c3
+        , shared_ptr<c1> c1_
+        , shared_ptr<c2> c2_)
+      : c1_(c1_), c2_(c2_)
+    { }
+
+    shared_ptr<c1> c1_;
+    shared_ptr<c2> c2_;
+};
 
 } // namespace
 
