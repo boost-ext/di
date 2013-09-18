@@ -256,10 +256,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(basic_call, TInjector, basic_call_types) {
 
     BOOST_CHECK(!injector.template create<shared_ptr<c3>>());
 
-    injector.template call(fake_scope_entry());
+    injector.call(fake_scope_entry());
     BOOST_CHECK(injector.template create<shared_ptr<c3>>());
 
-    injector.template call(fake_scope_exit());
+    injector.call(fake_scope_exit());
     BOOST_CHECK(!injector.template create<shared_ptr<c3>>());
 }
 
