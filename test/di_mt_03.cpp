@@ -5,6 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <memory>
+#include <boost/shared_ptr.hpp>
+#include <boost/typeof/typeof.hpp>
 #include "boost/di.hpp"
 
 #include <boost/test/unit_test.hpp>
@@ -26,11 +28,12 @@ struct impl : i
 
 struct c1
 {
-    BOOST_DI_CTOR(c1, int i_)
-        : i_(i_)
+    BOOST_DI_CTOR(explicit c1, int i_ = 0, double d_ = 0.0)
+        : i_(i_), d_(d_)
     { }
 
     int i_;
+    double d_;
 };
 
 struct c2
@@ -49,35 +52,52 @@ struct c3
 {
     BOOST_DI_CTOR(c3
         , boost::shared_ptr<c1> c1_
-        , boost::shared_ptr<c2> c2_)
-      : c1_(c1_), c2_(c2_)
+        , boost::shared_ptr<c2> c2_
+        , c1 c1__)
+      : c1_(c1_),c2_(c2_), c1__(c1__)
     { }
 
     boost::shared_ptr<c1> c1_;
     boost::shared_ptr<c2> c2_;
+    c1 c1__;
 };
 
 } // namespace
 
-BOOST_AUTO_TEST_CASE(create) {
+BOOST_AUTO_TEST_CASE(create_complex) {
     const int i = 42;
+    const int d = 42.0;
 
     typedef di::injector<
-        impl
-      , di::singleton<c1>
-    > injector_base;
+        di::policy<
+            di::policies::check_for_binding_correctness
+        >
+      , impl
+    > injector_c0;
 
-    BOOST_AUTO(inj, make_injector(
-        injector_base()
-      , di::bind<int>::to(i)
-      , di::per_request<c2>()
+    BOOST_AUTO(injector_c1, di::make_injector(
+        di::policy<
+            di::policies::check_for_circular_dependencies
+        >()
+      , di::bind_int<i>()
     ));
 
-    boost::shared_ptr<c3> c3_ = inj.create<boost::shared_ptr<c3> >();
+    BOOST_AUTO(injector_, make_injector(
+        injector_c0()
+      , di::per_request<c2>()
+      , injector_c1
+      , di::bind<double>::to(d)
+    ));
 
-    BOOST_CHECK(c3_->c1_ == c3_->c2_->c1_);
-    BOOST_CHECK_EQUAL(i, c3_->c1_->i_);
-    BOOST_CHECK_EQUAL(i, c3_->c2_->c1_->i_);
+    boost::shared_ptr<c3> c3_ = injector_.create<boost::shared_ptr<c3> >();
+
     BOOST_CHECK(dynamic_cast<impl*>(c3_->c2_->p_.get()));
+    BOOST_CHECK_EQUAL(c3_->c1_.get(), c3_->c2_->c1_.get());
+    BOOST_CHECK_EQUAL(i, c3_->c1_->i_);
+    BOOST_CHECK_EQUAL(d, c3_->c1_->d_);
+    BOOST_CHECK_EQUAL(i, c3_->c1__.i_);
+    BOOST_CHECK_EQUAL(d, c3_->c1__.d_);
+    BOOST_CHECK_EQUAL(i, c3_->c2_->c1_->i_);
+    BOOST_CHECK_EQUAL(d, c3_->c2_->c1_->d_);
 }
 
