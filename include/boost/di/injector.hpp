@@ -19,6 +19,7 @@
     #include <boost/mpl/fold.hpp>
     #include <boost/mpl/copy.hpp>
     #include <boost/mpl/if.hpp>
+    #include <boost/mpl/and.hpp>
     #include <boost/mpl/back_inserter.hpp>
     #include <boost/mpl/is_sequence.hpp>
     #include <boost/mpl/placeholders.hpp>
@@ -49,13 +50,20 @@
         : scope<scopes::deduce>::bind<T>
     { };
 
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(deps)
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(policies)
+
     template<typename T>
     struct deps
     {
         typedef typename T::deps type;
     };
 
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(deps)
+    template<typename T>
+    struct policies
+    {
+        typedef typename T::policies type;
+    };
 
     template<typename TSeq>
     struct concepts
@@ -67,8 +75,8 @@
                       mpl::is_sequence<mpl::_2>
                     , mpl::_2
                     , mpl::if_<
-                          has_deps<mpl::_2>
-                        , deps<mpl::_2>
+                          mpl::and_<has_deps<mpl::_2>, has_policies<mpl::_2> >
+                        , mpl::joint_view<deps<mpl::_2>, policies<mpl::_2> >
                         , mpl::if_<
                               is_base_of<detail::policy_impl, mpl::_2>
                             , mpl::vector1<mpl::_2>
