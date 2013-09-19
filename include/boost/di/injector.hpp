@@ -99,11 +99,14 @@
               >::type
           >
     {
-        typedef mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> deps_t;
-
         template<typename TSeq = mpl::vector0<> >
         struct joint_concepts
-            : detail::concepts<mpl::joint_view<deps_t, TSeq> >::type
+            : detail::concepts<
+                  mpl::joint_view<
+                      mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+                    , TSeq
+                  >
+              >::type
         { };
 
     public:
