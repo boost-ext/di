@@ -958,7 +958,7 @@ BOOST_AUTO_TEST_CASE(to_in_call_stack) {
     BOOST_CHECK_EQUAL(0, c6_.c4_->i2);
 }
 
-BOOST_AUTO_TEST_CASE(to_variant_shared_ptr) {
+BOOST_AUTO_TEST_CASE(to_shared_ptr) {
     shared_ptr<c3> c3_(new c3);
 
     auto injector_ = injector<>()(
@@ -970,7 +970,7 @@ BOOST_AUTO_TEST_CASE(to_variant_shared_ptr) {
     BOOST_CHECK_EQUAL(c3_, c4_.c3_);
 }
 
-BOOST_AUTO_TEST_CASE(to_variant_ref) {
+BOOST_AUTO_TEST_CASE(to_ref) {
     const int i = 42;
     const double d = 87.0;
     c3 c3_(i);
@@ -994,7 +994,7 @@ BOOST_AUTO_TEST_CASE(to_variant_ref) {
     BOOST_CHECK_EQUAL(c14_.d, c16_->c14_.d);
 }
 
-BOOST_AUTO_TEST_CASE(to_variant_no_copy) {
+BOOST_AUTO_TEST_CASE(to_ref_no_copy) {
     const int i = 42;
     const double d = 87.0;
     c3 c3_(i);

@@ -11,7 +11,7 @@
 
     #include <boost/preprocessor/iteration/iterate.hpp>
 
-    #include "boost/di/convertibles/convertible_any.hpp"
+    #include "boost/di/convertibles/convertible_ref.hpp"
     #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
@@ -27,7 +27,7 @@
     namespace scopes {
 
     template<
-        template<typename> class TConvertible = convertibles::convertible_any
+        template<typename> class TConvertible = convertibles::convertible_ref_const
     >
     class external
     {
@@ -42,6 +42,16 @@
 
             template<typename T>
             explicit scope(const T& value)
+                : object_(value)
+            { }
+
+            template<typename T>
+            explicit scope(T& value)
+                : object_(value)
+            { }
+
+            template<typename T>
+            explicit scope(shared_ptr<T> value)
                 : object_(value)
             { }
 

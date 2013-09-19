@@ -19,6 +19,8 @@
 #include <boost/di/scopes/deduce.hpp>
 #include <boost/di/scopes/external.hpp>
 #include <boost/di/type_traits/make_plain.hpp>
+#include <boost/di/convertibles/convertible_ref.hpp>
+#include <boost/di/convertibles/convertible_shared.hpp>
 #include "boost/di/config.hpp"
 
 namespace boost {
@@ -70,11 +72,11 @@ class dependency
     : public detail::scope_traits<TScope>::type::template
           scope<typename detail::named_traits<TExpected>::type, TGiven>
 {
-    template<typename T>
+    template<typename T, template<typename> class TConvertible>
     struct external
     {
         typedef dependency<
-            scopes::external<>,
+            scopes::external<TConvertible>,
             TExpected
           , T
           , TContext
@@ -100,6 +102,21 @@ public:
     { }
 
     template<typename T>
+    explicit dependency(T& obj)
+        : scope::template scope<
+              typename detail::named_traits<TExpected>::type, TGiven
+          >(obj)
+    { }
+
+
+    template<typename T>
+    explicit dependency(shared_ptr<T> obj)
+        : scope::template scope<
+              typename detail::named_traits<TExpected>::type, TGiven
+          >(obj)
+    { }
+
+    template<typename T>
     struct rebind
     {
         typedef dependency<
@@ -116,18 +133,18 @@ public:
     };
 
     template<typename T>
-    static typename external<T>::type to(const T& obj) {
-        return typename external<T>::type(obj);
+    static typename external<T, convertibles::convertible_ref_const>::type to(const T& obj) {
+        return typename external<T, convertibles::convertible_ref_const>::type(obj);
     }
 
     template<typename T>
-    static typename external<T>::type to(T& obj) {
-        return typename external<T>::type(obj);
+    static typename external<T, convertibles::convertible_ref>::type to(T& obj) {
+        return typename external<T, convertibles::convertible_ref>::type(obj);
     }
 
     template<typename T>
-    static typename external<T>::type to(shared_ptr<T> obj) {
-        return typename external<T>::type(obj);
+    static typename external<T, convertibles::convertible_shared>::type to(shared_ptr<T> obj) {
+        return typename external<T, convertibles::convertible_shared>::type(obj);
     }
 };
 

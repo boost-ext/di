@@ -442,19 +442,20 @@ BOOST_AUTO_TEST_CASE(externals_create_with_non_trivial_ctor) {
     const double d = 21.0;
     const char c = 'x';
 
-    fake_dependency<scopes::external<>, c2>::type c2_(make_shared<c2>(i, d, c));
+    using external_shared = scopes::external<convertibles::convertible_shared>;
+    fake_dependency<external_shared, c2>::type c2_(make_shared<c2>(i, d, c));
 
     module<
         mpl::vector<
-            fake_dependency<scopes::external<>, c2>::type
+            fake_dependency<external_shared, c2>::type
         >
     > module_(c2_);
 
-    c2 obj = module_.create<c2>();
+    auto obj = module_.create<shared_ptr<c2>>();
 
-    BOOST_CHECK_EQUAL(i, obj.i);
-    BOOST_CHECK_EQUAL(d, obj.d);
-    BOOST_CHECK_EQUAL(c, obj.c);
+    BOOST_CHECK_EQUAL(i, obj->i);
+    BOOST_CHECK_EQUAL(d, obj->d);
+    BOOST_CHECK_EQUAL(c, obj->c);
 }
 
 using externals_priority_t = mpl::vector<
