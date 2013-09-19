@@ -4,15 +4,17 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/concepts.hpp"
+#include "boost/di/make_injector.hpp"
 
 #include <boost/test/unit_test.hpp>
 #include <boost/shared_ptr.hpp>
 
 #include "boost/di/concepts.hpp"
-#include "boost/di/make_injector.hpp"
+#include "boost/di/policies/check_for_binding_correctness.hpp"
+#include "boost/di/policies/check_for_circular_dependencies.hpp"
 
 #include "data.hpp"
+#include "contains_all.hpp"
 
 namespace boost {
 namespace di {
@@ -32,17 +34,93 @@ BOOST_AUTO_TEST_CASE(empty) {
 }
 
 BOOST_AUTO_TEST_CASE(by_value) {
+    const int i = 42;
     using injector_c0 = injector<
         c0if0
     >;
 
     auto injector_c0_int_ = make_injector(
         injector_c0()
-      , bind<int>::to(42)
+      , bind<int>::to(i)
     );
 
     shared_ptr<c5> c5_ = injector_c0_int_.create<shared_ptr<c5>>();
-    BOOST_CHECK_EQUAL(42, c5_->c2_->i);
+    BOOST_CHECK_EQUAL(i, c5_->c2_->i);
+}
+
+BOOST_AUTO_TEST_CASE(with_policy) {
+    const int i = 42;
+
+    auto injector_ = make_injector(
+        bind_int<i>()
+      , policy<
+            policies::check_for_binding_correctness
+          , policies::check_for_circular_dependencies
+        >()
+    );
+
+    BOOST_CHECK_EQUAL(i, injector_.create<c3>().i);
+}
+
+BOOST_AUTO_TEST_CASE(with_policy_seperate) {
+    const int i = 42;
+
+    auto injector_ = make_injector(
+        policy<policies::check_for_binding_correctness>()
+      , bind_int<i>()
+      , policy<policies::check_for_circular_dependencies>()
+    );
+
+    BOOST_CHECK_EQUAL(i, injector_.create<c3>().i);
+}
+
+BOOST_AUTO_TEST_CASE(mix) {
+    const int i = 42;
+    const int d = 42.0;
+
+    using injector_c0 = injector<
+        c0if0
+      , bind_int<i>
+    >;
+
+    auto injector_c1 = make_injector(
+        policy<
+            policies::check_for_circular_dependencies
+        >()
+      , singleton<
+            c1
+        >()
+    );
+
+    auto injector_ = make_injector(
+        injector_c0()
+      , per_request<
+            c2
+        >()
+      , policy<
+            policies::check_for_binding_correctness
+        >()
+      , injector_c1
+      , bind<double>::to(d)
+    );
+
+    auto c5_ = injector_.create<shared_ptr<c5>>();
+
+    typedef decltype(injector_) injector_t;
+    BOOST_CHECK((
+        contains_all<
+            mpl::vector<
+                policy<policies::check_for_binding_correctness>
+              , policy<policies::check_for_circular_dependencies>
+            >
+          , injector_t::policies::type
+        >::value
+    ));
+
+    BOOST_CHECK(dynamic_cast<c0if0*>(c5_->if0_.get()));
+    BOOST_CHECK_EQUAL(i, c5_->c2_->i);
+    BOOST_CHECK_EQUAL(d, c5_->c2_->d);
+    BOOST_CHECK_EQUAL(0, c5_->c2_->c);
 }
 
 BOOST_AUTO_TEST_CASE(factory) {

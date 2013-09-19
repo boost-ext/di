@@ -22,10 +22,7 @@
 namespace boost {
 namespace di {
 
-template<
-    typename TExpected
-  , typename TGiven = TExpected
->
+template<typename TExpected, typename TGiven = TExpected>
 struct bind
     : concepts::bind<TExpected, TGiven, concepts::dependency, named>
 { };

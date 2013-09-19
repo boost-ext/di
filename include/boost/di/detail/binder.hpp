@@ -42,8 +42,6 @@ namespace boost {
 namespace di {
 namespace detail {
 
-namespace aux {
-
 template<typename T>
 struct bind
 {
@@ -178,8 +176,6 @@ struct comparator
     : mpl::apply<TBind, T>::type
 { };
 
-} // namespace aux
-
 template<
     typename T
   , typename TCallStack
@@ -194,18 +190,18 @@ template<
         >
 >
 struct binder_impl
-    : aux::get_dependency_by_call_stack_order<
+    : get_dependency_by_call_stack_order<
           TCallStack
         , TDeps
         , TDefault
         , mpl::and_<
-              aux::comparator<
-                  aux::bind<mpl::_2>
+              comparator<
+                  bind<mpl::_2>
                 , typename type_traits::make_plain<T>::type
               >
-            , aux::for_each_context<
+            , for_each_context<
                   TCallStack
-                , aux::make_context<mpl::_2>
+                , make_context<mpl::_2>
               >
           >
       >::type::template rebind<
