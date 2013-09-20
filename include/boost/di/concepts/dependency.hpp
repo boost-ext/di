@@ -135,27 +135,27 @@ public:
     };
 
     template<typename T>
-    static typename external<T, TExpected, convertibles::convertible_value>::type
+    static typename external<TExpected, T, convertibles::convertible_value>::type
     to(const T& obj, typename enable_if<is_arithmetic<T> >::type* = 0) {
-        return typename external<T, TExpected, convertibles::convertible_value>::type(obj);
+        return typename external<TExpected, T, convertibles::convertible_value>::type(obj);
     }
 
     template<typename T>
-    static typename external<T, const TExpected, convertibles::convertible_ref>::type
+    static typename external<const TExpected, T, convertibles::convertible_ref>::type
     to(const T& obj, typename disable_if<is_arithmetic<T> >::type* = 0) {
-        return typename external<T, const TExpected, convertibles::convertible_ref>::type(obj);
+        return typename external<const TExpected, T, convertibles::convertible_ref>::type(obj);
     }
 
     template<typename T>
-    static typename external<T, TExpected, convertibles::convertible_ref>::type
+    static typename external<TExpected, T, convertibles::convertible_ref>::type
     to(T& obj) {
-        return typename external<T, TExpected, convertibles::convertible_ref>::type(obj);
+        return typename external<TExpected, T, convertibles::convertible_ref>::type(obj);
     }
 
     template<typename T>
-    static typename external<T, TExpected, convertibles::convertible_shared>::type
+    static typename external<TExpected, T, convertibles::convertible_shared>::type
     to(shared_ptr<T> obj) {
-        return typename external<T, TExpected, convertibles::convertible_shared>::type(obj);
+        return typename external<TExpected, T, convertibles::convertible_shared>::type(obj);
     }
 };
 
