@@ -21,8 +21,6 @@ BOOST_AUTO_TEST_CASE(named_int_value) {
     typedef named<int, a> named_type;
     named_type named_(i);
 
-    BOOST_CHECK((is_same<int, named_type::value_type>::value));
-    BOOST_CHECK((is_same<named<int, a>, named_type::element_type>::value));
     BOOST_CHECK_EQUAL(i, named_);
 }
 
@@ -43,8 +41,6 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr) {
     shared_ptr<int> i_(new int(i));
     named_type named_(i_);
 
-    BOOST_CHECK((is_same<int, named_type::value_type>::value));
-    BOOST_CHECK((is_same<named<int, a>, named_type::element_type>::value));
     BOOST_CHECK_EQUAL(i, *named_);
     BOOST_CHECK_EQUAL(i_.get(), named_.get());
 }

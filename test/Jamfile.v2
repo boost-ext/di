@@ -52,7 +52,14 @@ rule compile-fail-cpp03 ( src ) {
 test-suite "concepts" :
     [ run-cpp11 concepts/dependency_ut.cpp ]
     [ run-cpp11 concepts_ut.cpp ]
-    #[ run-cpp11 named_ut.cpp ]
+    [ run-cpp11 named_ut.cpp ]
+;
+
+test-suite "convertibles" :
+    [ run-cpp11 convertibles/convertible_copy_ut.cpp ]
+    [ run-cpp11 convertibles/convertible_ref_ut.cpp ]
+    [ run-cpp11 convertibles/convertible_shared_ut.cpp ]
+    [ run-cpp11 convertibles/convertible_value_ut.cpp ]
 ;
 
 test-suite "type traits" :
