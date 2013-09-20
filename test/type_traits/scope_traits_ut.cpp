@@ -56,11 +56,11 @@ BOOST_AUTO_TEST_CASE(basic) {
 #endif
 }
 
-#if defined(__GNUC__) && (__GNUC__ >= 4)
-    #pragma GCC diagnostic pop
-#endif
-
 } // namespace type_traits
 } // namespace di
 } // namespace boost
+
+#if defined(__GNUC__) && (__GNUC__ >= 4)
+    #pragma GCC diagnostic pop
+#endif
 

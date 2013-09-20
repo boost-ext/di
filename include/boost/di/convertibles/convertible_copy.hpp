@@ -92,12 +92,14 @@ public:
         return s_object_;
     }
 
+#if 0
     template<typename I, typename TName>
     operator named<std::auto_ptr<I>, TName>() const {
         static std::auto_ptr<I> s_object_; // not thread safe
         s_object_.reset(object_());
         return s_object_;
     }
+#endif
 
 #if !defined(BOOST_NO_CXX11_SMART_PTR)
     template<typename I>
