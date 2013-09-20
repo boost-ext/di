@@ -13,7 +13,41 @@ namespace boost {
 namespace di {
 namespace convertibles {
 
-BOOST_AUTO_TEST_CASE(empty) { }
+BOOST_AUTO_TEST_CASE(copy_ctor) {
+    int i = 42;
+    convertible_ref<int> ref_i(i);
+    convertible_ref<int> ref(ref_i);
+
+    BOOST_CHECK_EQUAL(ref_i, ref);
+}
+
+BOOST_AUTO_TEST_CASE(to_ref) {
+    int i = 42;
+    int& i_ref = i;
+    int& object_ref = convertible_ref<int>(i_ref);
+    BOOST_CHECK_EQUAL(i, object_ref);
+}
+
+BOOST_AUTO_TEST_CASE(to_named) {
+    int i = 42;
+    int& i_ref = i;
+    named<int> object_ref = convertible_ref<int>(i_ref);
+    BOOST_CHECK_EQUAL(i, object_ref);
+}
+
+BOOST_AUTO_TEST_CASE(to_const_ref) {
+    const int i = 42;
+    const int& i_ref = i;
+    const int& object_ref = convertible_ref<const int>(i_ref);
+    BOOST_CHECK_EQUAL(i, object_ref);
+}
+
+BOOST_AUTO_TEST_CASE(to_const_named_ref) {
+    const int i = 42;
+    const int& i_ref = i;
+    named<const int> object_ref = convertible_ref<const int>(i_ref);
+    BOOST_CHECK_EQUAL(i, object_ref);
+}
 
 } // namespace convertibles
 } // namespace di

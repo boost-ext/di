@@ -53,11 +53,6 @@ public:
         object_.reset(ptr);
     }
 
-    template<typename I, typename TName>
-    operator named<I, TName>() const {
-        return object_;
-    }
-
     template<typename I>
     operator shared_ptr<I>() const {
         return object_;
