@@ -35,22 +35,22 @@ class convertible_shared
     };
 
 public:
-    explicit convertible_shared(shared_ptr<T> object)
+    convertible_shared() { }
+
+    explicit convertible_shared(shared_ptr<T> object) //external
         : object_(object)
     { }
-
-    convertible_shared() { }
 
     bool operator!() const {
         return !object_;
     }
 
-    void reset(T* ptr) {
-        object_.reset(ptr);
-    }
-
     void reset() {
         object_.reset();
+    }
+
+    void reset(T* ptr) {
+        object_.reset(ptr);
     }
 
     template<typename I, typename TName>
