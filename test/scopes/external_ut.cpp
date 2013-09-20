@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE(from_ref) {
 
 BOOST_AUTO_TEST_CASE(from_const_ref) {
     c c_;
-    const c& const_c_ref_ = external<convertibles::convertible_ref_const>::scope<c>(c_).create();
+    const c& const_c_ref_ = external<convertibles::convertible_ref>::scope<const c>(c_).create();
     BOOST_CHECK_EQUAL(&c_, &const_c_ref_);
 }
 

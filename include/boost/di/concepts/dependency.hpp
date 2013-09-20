@@ -10,8 +10,10 @@
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/type_traits/is_same.hpp>
+#include <boost/type_traits/is_arithmetic.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/lambda.hpp>
 #include <boost/mpl/has_xxx.hpp>
@@ -72,13 +74,20 @@ class dependency
     : public detail::scope_traits<TScope>::type::template
           scope<typename detail::named_traits<TExpected>::type, TGiven>
 {
-    template<typename T, template<typename> class TConvertible>
+    typedef typename detail::scope_traits<TScope>::type::template
+        scope<typename detail::named_traits<TExpected>::type, TGiven> scope_type;
+
+    template<
+        typename T
+      , typename U
+      , template<typename> class TConvertible
+    >
     struct external
     {
         typedef dependency<
             scopes::external<TConvertible>,
-            TExpected
-          , T
+            T
+          , U
           , TContext
           , TBind
         > type;
@@ -96,24 +105,17 @@ public:
 
     template<typename T>
     explicit dependency(const T& obj)
-        : scope::template scope<
-              typename detail::named_traits<TExpected>::type, TGiven
-          >(obj)
+        : scope_type(obj)
     { }
 
     template<typename T>
     explicit dependency(T& obj)
-        : scope::template scope<
-              typename detail::named_traits<TExpected>::type, TGiven
-          >(obj)
+        : scope_type(obj)
     { }
-
 
     template<typename T>
     explicit dependency(shared_ptr<T> obj)
-        : scope::template scope<
-              typename detail::named_traits<TExpected>::type, TGiven
-          >(obj)
+        : scope_type(obj)
     { }
 
     template<typename T>
@@ -133,18 +135,27 @@ public:
     };
 
     template<typename T>
-    static typename external<T, convertibles::convertible_ref_const>::type to(const T& obj) {
-        return typename external<T, convertibles::convertible_ref_const>::type(obj);
+    static typename external<T, TExpected, convertibles::convertible_value>::type
+    to(const T& obj, typename enable_if<is_arithmetic<T> >::type* = 0) {
+        return typename external<T, TExpected, convertibles::convertible_value>::type(obj);
     }
 
     template<typename T>
-    static typename external<T, convertibles::convertible_ref>::type to(T& obj) {
-        return typename external<T, convertibles::convertible_ref>::type(obj);
+    static typename external<T, const TExpected, convertibles::convertible_ref>::type
+    to(const T& obj, typename disable_if<is_arithmetic<T> >::type* = 0) {
+        return typename external<T, const TExpected, convertibles::convertible_ref>::type(obj);
     }
 
     template<typename T>
-    static typename external<T, convertibles::convertible_shared>::type to(shared_ptr<T> obj) {
-        return typename external<T, convertibles::convertible_shared>::type(obj);
+    static typename external<T, TExpected, convertibles::convertible_ref>::type
+    to(T& obj) {
+        return typename external<T, TExpected, convertibles::convertible_ref>::type(obj);
+    }
+
+    template<typename T>
+    static typename external<T, TExpected, convertibles::convertible_shared>::type
+    to(shared_ptr<T> obj) {
+        return typename external<T, TExpected, convertibles::convertible_shared>::type(obj);
     }
 };
 
