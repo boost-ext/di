@@ -57,10 +57,7 @@
     namespace di {
     namespace detail {
 
-    template<
-        typename TSeq
-      , typename TCond
-    >
+    template<typename TSeq, typename TCond>
     struct get_types
         : mpl::remove_if<TSeq, mpl::not_<TCond> >::type
     { };

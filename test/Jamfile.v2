@@ -52,7 +52,7 @@ rule compile-fail-cpp03 ( src ) {
 test-suite "concepts" :
     [ run-cpp11 concepts/dependency_ut.cpp ]
     [ run-cpp11 concepts_ut.cpp ]
-    [ run-cpp11 named_ut.cpp ]
+    #[ run-cpp11 named_ut.cpp ]
 ;
 
 test-suite "type traits" :
@@ -62,7 +62,6 @@ test-suite "type traits" :
     [ run-cpp11 type_traits/make_plain_ut.cpp ]
     [ run-cpp11 type_traits/remove_accessors_ut.cpp ]
     [ run-cpp11 type_traits/scope_traits_ut.cpp ]
-    [ run-cpp11 type_traits/value_type_ut.cpp ]
 ;
 
 test-suite "implementation detail" :

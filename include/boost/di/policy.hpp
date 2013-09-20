@@ -31,10 +31,7 @@ class policy : detail::policy_impl
     { };
 
 public:
-    template<
-        typename TDeps
-      , typename T
-    >
+    template<typename TDeps, typename T>
     struct verify
         : mpl::fold<
               mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>

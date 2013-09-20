@@ -21,10 +21,7 @@ namespace boost {
 namespace di {
 namespace convertibles {
 
-template<
-    typename T
-  , typename = void
->
+template<typename T, typename = void>
 class convertible_copy_impl
 {
     typedef function<T*()> object_t;

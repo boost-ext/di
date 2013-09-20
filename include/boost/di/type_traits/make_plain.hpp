@@ -16,26 +16,38 @@ namespace boost {
 namespace di {
 namespace type_traits {
 
+template<typename>
+struct make_plain;
+
 BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
+BOOST_MPL_HAS_XXX_TRAIT_DEF(named_type)
 
 template<typename T, typename = void>
-struct deref_element_type
+struct deref_type
 {
     typedef T type;
 };
 
 template<typename T>
-struct deref_element_type<T, typename enable_if<has_element_type<T> >::type>
+struct deref_type<T, typename enable_if<has_element_type<T> >::type>
 {
     typedef typename T::element_type type;
 };
 
-template<typename TElement>
+template<typename T>
+struct deref_type<T, typename enable_if<has_named_type<T> >::type>
+{
+    typedef typename T::template rebind<
+        typename make_plain<typename T::named_type>::type
+    >::other type;
+};
+
+template<typename T>
 struct make_plain
-    : deref_element_type<
+    : deref_type<
         typename remove_accessors<
-            typename deref_element_type<
-                typename remove_accessors<TElement>::type
+            typename deref_type<
+                typename remove_accessors<T>::type
             >::type
         >::type
     >

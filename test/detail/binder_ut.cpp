@@ -461,7 +461,7 @@ BOOST_AUTO_TEST_CASE(complex_type) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(named_type) {
+BOOST_AUTO_TEST_CASE(named_int_type) {
     BOOST_CHECK((
         is_same<
             fake_dependency<fake_scope<>, named<int, mpl::_1>, int>::type

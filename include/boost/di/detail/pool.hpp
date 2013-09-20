@@ -87,10 +87,7 @@
     #define BOOST_DI_DERIVES_IMPL(_, n, types) \
         BOOST_PP_COMMA_IF(n) public mpl::at_c<types, n>::type
 
-    template<
-        typename TSeq
-      , typename TIgnore
-    >
+    template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == n>::type>
         : BOOST_PP_REPEAT(
               n

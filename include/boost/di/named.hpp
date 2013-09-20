@@ -31,9 +31,13 @@ class named
 
 public:
     typedef T named_type;
-    typedef typename type_traits::make_plain<T>::type value_type;
-    typedef named<value_type, TName> element_type;
     typedef TName name;
+
+    template<typename U>
+    struct rebind
+    {
+        typedef named<U, TName> other;
+    };
 
     named(T object) // non explicit
         : object_(object)
@@ -61,9 +65,13 @@ class named<T, TName, typename enable_if<
 {
 public:
     typedef T named_type;
-    typedef typename type_traits::make_plain<T>::type value_type;
-    typedef named<value_type, TName> element_type;
     typedef TName name;
+
+    template<typename U>
+    struct rebind
+    {
+        typedef named<U, TName> other;
+    };
 };
 
 template<
@@ -75,12 +83,17 @@ class named<T, TName, typename enable_if<
 >
 {
     typedef typename type_traits::remove_accessors<T>::type object_type;
+    typedef typename type_traits::make_plain<T>::type value_type;
 
 public:
     typedef T named_type;
-    typedef typename type_traits::make_plain<T>::type value_type;
-    typedef named<typename type_traits::make_plain<T>::type, TName> element_type;
     typedef TName name;
+
+    template<typename U>
+    struct rebind
+    {
+        typedef named<U, TName> other;
+    };
 
     named(T object) // non explicit
         : object_(object)

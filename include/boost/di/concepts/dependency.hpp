@@ -72,10 +72,14 @@ template<
 >
 class dependency
     : public detail::scope_traits<TScope>::type::template
-          scope<typename detail::named_traits<TExpected>::type, TGiven>
+          scope<typename detail::named_traits<TExpected>::type
+              , typename detail::named_traits<TGiven>::type
+          >
 {
     typedef typename detail::scope_traits<TScope>::type::template
-        scope<typename detail::named_traits<TExpected>::type, TGiven> scope_type;
+        scope<typename detail::named_traits<TExpected>::type
+            , typename detail::named_traits<TGiven>::type
+        > scope_type;
 
     template<
         typename T
@@ -85,8 +89,8 @@ class dependency
     struct external
     {
         typedef dependency<
-            scopes::external<TConvertible>,
-            T
+            scopes::external<TConvertible>
+          , T
           , U
           , TContext
           , TBind
@@ -96,8 +100,8 @@ class dependency
 public:
     typedef dependency type;
     typedef typename detail::scope_traits<TScope>::type scope;
-    typedef TExpected expected;
-    typedef TGiven given;
+    typedef typename detail::named_traits<TExpected>::type expected;
+    typedef typename detail::named_traits<TGiven>::type given;
     typedef TContext context;
     typedef TBind bind;
 
@@ -125,7 +129,7 @@ public:
             typename mpl::if_<
                 is_same<scope, scopes::deduce>
               , T
-              , scope
+              , TScope
             >::type
           , TExpected
           , TGiven
@@ -135,27 +139,27 @@ public:
     };
 
     template<typename T>
-    static typename external<TExpected, T, convertibles::convertible_value>::type
+    static typename external<expected, T, convertibles::convertible_value>::type
     to(const T& obj, typename enable_if<is_arithmetic<T> >::type* = 0) {
-        return typename external<TExpected, T, convertibles::convertible_value>::type(obj);
+        return typename external<expected, T, convertibles::convertible_value>::type(obj);
     }
 
     template<typename T>
-    static typename external<const TExpected, T, convertibles::convertible_ref>::type
+    static typename external<const expected, T, convertibles::convertible_ref>::type
     to(const T& obj, typename disable_if<is_arithmetic<T> >::type* = 0) {
-        return typename external<const TExpected, T, convertibles::convertible_ref>::type(obj);
+        return typename external<const expected, T, convertibles::convertible_ref>::type(obj);
     }
 
     template<typename T>
-    static typename external<TExpected, T, convertibles::convertible_ref>::type
+    static typename external<expected, T, convertibles::convertible_ref>::type
     to(T& obj) {
-        return typename external<TExpected, T, convertibles::convertible_ref>::type(obj);
+        return typename external<expected, T, convertibles::convertible_ref>::type(obj);
     }
 
     template<typename T>
-    static typename external<TExpected, T, convertibles::convertible_shared>::type
+    static typename external<expected, T, convertibles::convertible_shared>::type
     to(shared_ptr<T> obj) {
-        return typename external<TExpected, T, convertibles::convertible_shared>::type(obj);
+        return typename external<expected, T, convertibles::convertible_shared>::type(obj);
     }
 };
 

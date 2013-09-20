@@ -34,7 +34,6 @@
 #include <boost/mpl/has_xxx.hpp>
 
 #include "boost/di/type_traits/make_plain.hpp"
-#include "boost/di/type_traits/value_type.hpp"
 #include "boost/di/type_traits/scope_traits.hpp"
 #include "boost/di/concepts/dependency.hpp"
 
@@ -81,10 +80,7 @@ struct make_context
       >::type
 { };
 
-template<
-    typename TCallStack
-  , typename TContext
->
+template<typename TCallStack, typename TContext>
 struct for_each_context
     : mpl::fold<
           TContext
@@ -184,9 +180,6 @@ template<
         ::boost::di::concepts::dependency<
             typename type_traits::scope_traits<T>::type
           , typename type_traits::make_plain<T>::type
-          , typename type_traits::value_type<
-                typename type_traits::make_plain<T>::type
-            >::type
         >
 >
 struct binder_impl
@@ -214,10 +207,7 @@ struct binder
 {
     typedef binder type;
 
-    template<
-        typename T
-      , typename TCallStack
-    >
+    template<typename T, typename TCallStack>
     struct get_dependency
         : binder_impl<T, TCallStack, TDeps>
     { };
