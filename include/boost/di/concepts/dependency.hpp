@@ -64,6 +64,20 @@ struct named_traits<T, typename enable_if<has_named_type<T> >::type>
 } // namespace detail
 
 template<
+    typename TExpected
+  , typename TGiven
+  , typename TScope
+>
+struct scope_type
+{
+    typedef typename detail::scope_traits<TScope>::type::template
+        scope<typename detail::named_traits<TExpected>::type
+            , typename detail::named_traits<TGiven>::type
+        >
+    type;
+};
+
+template<
     typename TScope
   , typename TExpected
   , typename TGiven = TExpected
@@ -72,17 +86,9 @@ template<
         is_same<mpl::_1, TExpected>
     >::type
 >
-class dependency
-    : public detail::scope_traits<TScope>::type::template
-          scope<typename detail::named_traits<TExpected>::type
-              , typename detail::named_traits<TGiven>::type
-          >
+class dependency : public scope_type<TExpected, TGiven, TScope>::type
 {
-    typedef typename detail::scope_traits<TScope>::type::template
-        scope<typename detail::named_traits<TExpected>::type
-            , typename detail::named_traits<TGiven>::type
-        > scope_type;
-
+    typedef typename scope_type<TExpected, TGiven, TScope>::type scope_type;
     typedef scopes::external<convertibles::convertible_ref> ref_type;
     typedef scopes::external<convertibles::convertible_shared> shared_type;
     typedef scopes::external<convertibles::convertible_value> value_type;
