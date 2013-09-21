@@ -83,15 +83,19 @@ class dependency
             , typename detail::named_traits<TGiven>::type
         > scope_type;
 
+    typedef scopes::external<convertibles::convertible_ref> ref_type;
+    typedef scopes::external<convertibles::convertible_shared> shared_type;
+    typedef scopes::external<convertibles::convertible_value> value_type;
+
     template<
         typename T
       , typename U
-      , template<typename> class TConvertible
+      , typename TConvertible
     >
     struct external
     {
         typedef dependency<
-            scopes::external<TConvertible>
+            TConvertible
           , T
           , U
           , TContext
@@ -131,34 +135,34 @@ public:
     };
 
     template<typename T>
-    static typename external<expected, T, convertibles::convertible_value>::type
+    static typename external<expected, T, value_type>::type
     to(const T& obj, typename enable_if<is_arithmetic<T> >::type* = 0) {
-        return typename external<expected, T, convertibles::convertible_value>::type(obj);
+        return typename external<expected, T, value_type>::type(obj);
     }
 
     template<typename T>
-    static typename external<const expected, T, convertibles::convertible_ref>::type
+    static typename external<const expected, T, ref_type>::type
     to(const T& obj, typename disable_if<is_arithmetic<T> >::type* = 0) {
-        return typename external<const expected, T, convertibles::convertible_ref>::type(cref(obj));
+        return typename external<const expected, T, ref_type>::type(cref(obj));
     }
 
     template<typename T>
-    static typename external<expected, T, convertibles::convertible_ref>::type
+    static typename external<expected, T, ref_type>::type
     to(T& obj) {
-        return typename external<expected, T, convertibles::convertible_ref>::type(ref(obj));
+        return typename external<expected, T, ref_type>::type(ref(obj));
     }
 
     template<typename T>
-    static typename external<expected, T, convertibles::convertible_shared>::type
+    static typename external<expected, T, shared_type>::type
     to(shared_ptr<T> obj) {
-        return typename external<expected, T, convertibles::convertible_shared>::type(obj);
+        return typename external<expected, T, shared_type>::type(obj);
     }
 
 #if !defined(BOOST_NO_CXX11_SMART_PTR)
     template<typename T>
-    static typename external<expected, T, convertibles::convertible_shared>::type
+    static typename external<expected, T, shared_type>::type
     to(std::shared_ptr<T> obj) {
-        return typename external<expected, T, convertibles::convertible_shared>::type(obj);
+        return typename external<expected, T, shared_type>::type(obj);
     }
 #endif
 };
