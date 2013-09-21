@@ -14,15 +14,20 @@ namespace boost {
 namespace di {
 namespace convertibles {
 
+const int i = 42;
+
 BOOST_AUTO_TEST_CASE(to_value) {
-    const int i = 42;
     int object = convertible_value<int>(42);
     BOOST_CHECK_EQUAL(i, object);
 }
 
 BOOST_AUTO_TEST_CASE(to_named_value) {
-    const int i = 42;
     named<int> object = convertible_value<int>(42);
+    BOOST_CHECK_EQUAL(i, object);
+}
+
+BOOST_AUTO_TEST_CASE(to_move) {
+    int&& object = convertible_value<int>(42);
     BOOST_CHECK_EQUAL(i, object);
 }
 

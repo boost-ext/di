@@ -10,6 +10,7 @@
     #define BOOST_DI_SCOPES_EXTERNAL_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
+    #include <memory>
 
     #include "boost/di/convertibles/convertible_value.hpp"
     #include "boost/di/config.hpp"
@@ -41,18 +42,8 @@
             typedef TConvertible<TExpected> result_type;
 
             template<typename T>
-            explicit scope(const T& value)
-                : object_(value)
-            { }
-
-            template<typename T>
-            explicit scope(T& value)
-                : object_(value)
-            { }
-
-            template<typename T>
-            explicit scope(shared_ptr<T> value)
-                : object_(value)
+            explicit scope(const T& object)
+                : object_(object)
             { }
 
             result_type create() {

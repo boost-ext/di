@@ -8,6 +8,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/ref.hpp>
 
 #include "boost/di/convertibles/convertible_ref.hpp"
 #include "boost/di/convertibles/convertible_shared.hpp"
@@ -30,13 +31,13 @@ BOOST_AUTO_TEST_CASE(from_string) {
 
 BOOST_AUTO_TEST_CASE(from_ref) {
     c c_;
-    c& c_ref_ = external<convertibles::convertible_ref>::scope<c>(c_).create();
+    c& c_ref_ = external<convertibles::convertible_ref>::scope<c>(ref(c_)).create();
     BOOST_CHECK_EQUAL(&c_, &c_ref_);
 }
 
 BOOST_AUTO_TEST_CASE(from_const_ref) {
     c c_;
-    const c& const_c_ref_ = external<convertibles::convertible_ref>::scope<const c>(c_).create();
+    const c& const_c_ref_ = external<convertibles::convertible_ref>::scope<const c>(cref(c_)).create();
     BOOST_CHECK_EQUAL(&c_, &const_c_ref_);
 }
 

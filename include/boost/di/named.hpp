@@ -39,7 +39,7 @@ public:
         typedef named<U, TName> other;
     };
 
-    named(T object) // non explicit
+    named(T object = T()) // non explicit
         : object_(object)
     { }
 
@@ -95,7 +95,7 @@ public:
         typedef named<U, TName> other;
     };
 
-    named(T object) // non explicit
+    named(T object = T()) // non explicit
         : object_(object)
     { }
 

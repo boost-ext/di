@@ -22,24 +22,33 @@ namespace convertibles {
 template<typename T>
 class convertible_shared
 {
-    template<typename U>
+    template<typename U, typename TShared = shared_ptr<U> >
     class sp_holder
     {
     public:
-        explicit sp_holder(shared_ptr<U> object)
+        explicit sp_holder(TShared object)
             : object_(object)
         { }
 
     private:
-        shared_ptr<U> object_;
+        TShared object_;
     };
 
 public:
     convertible_shared() { }
 
-    explicit convertible_shared(shared_ptr<T> object) //external
+    explicit convertible_shared(shared_ptr<T> object)
         : object_(object)
     { }
+
+#if !defined(BOOST_NO_CXX11_SMART_PTR)
+    explicit convertible_shared(std::shared_ptr<T> object)
+    {
+        shared_ptr<sp_holder<T, std::shared_ptr<T> > > sp =
+            make_shared<sp_holder<T, std::shared_ptr<T> > >(object);
+        object_ = shared_ptr<T>(sp, object.get());
+    }
+#endif
 
     bool operator!() const {
         return !object_;
@@ -70,7 +79,7 @@ public:
 
     template<typename I, typename TName>
     operator named<weak_ptr<I>, TName>() const {
-        return object_;
+        return named<weak_ptr<I> >(object_);
     }
 
 #if !defined(BOOST_NO_CXX11_SMART_PTR)

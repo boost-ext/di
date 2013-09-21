@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_CONVERTIBLES_CONVERTIBLE_REF_HPP
 #define BOOST_DI_CONVERTIBLES_CONVERTIBLE_REF_HPP
 
+#include <boost/ref.hpp>
 #include "boost/di/named.hpp"
 
 namespace boost {
@@ -17,12 +18,8 @@ template<typename T>
 class convertible_ref
 {
 public:
-    explicit convertible_ref(T& object)
+    explicit convertible_ref(const reference_wrapper<T>& object)
         : object_(object)
-    { }
-
-    convertible_ref(const convertible_ref& copy)
-        : object_(copy.object_)
     { }
 
     operator T&() const {
@@ -31,11 +28,11 @@ public:
 
     template<typename I, typename TName>
     operator named<I, TName>() const {
-        return object_;
+        return named<I, TName>(object_);
     }
 
 private:
-    T& object_;
+    reference_wrapper<T> object_;
 };
 
 } // namespace convertibles

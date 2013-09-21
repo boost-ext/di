@@ -7,8 +7,10 @@
 #ifndef BOOST_DI_CONCEPTS_DEPENDENCY_HPP
 #define BOOST_DI_CONCEPTS_DEPENDENCY_HPP
 
+#include <memory>
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/ref.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_arithmetic.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -113,16 +115,6 @@ public:
     { }
 
     template<typename T>
-    explicit dependency(T& obj)
-        : scope_type(obj)
-    { }
-
-    template<typename T>
-    explicit dependency(shared_ptr<T> obj)
-        : scope_type(obj)
-    { }
-
-    template<typename T>
     struct rebind
     {
         typedef dependency<
@@ -147,13 +139,13 @@ public:
     template<typename T>
     static typename external<const expected, T, convertibles::convertible_ref>::type
     to(const T& obj, typename disable_if<is_arithmetic<T> >::type* = 0) {
-        return typename external<const expected, T, convertibles::convertible_ref>::type(obj);
+        return typename external<const expected, T, convertibles::convertible_ref>::type(cref(obj));
     }
 
     template<typename T>
     static typename external<expected, T, convertibles::convertible_ref>::type
     to(T& obj) {
-        return typename external<expected, T, convertibles::convertible_ref>::type(obj);
+        return typename external<expected, T, convertibles::convertible_ref>::type(ref(obj));
     }
 
     template<typename T>
@@ -161,6 +153,14 @@ public:
     to(shared_ptr<T> obj) {
         return typename external<expected, T, convertibles::convertible_shared>::type(obj);
     }
+
+#if !defined(BOOST_NO_CXX11_SMART_PTR)
+    template<typename T>
+    static typename external<expected, T, convertibles::convertible_shared>::type
+    to(std::shared_ptr<T> obj) {
+        return typename external<expected, T, convertibles::convertible_shared>::type(obj);
+    }
+#endif
 };
 
 } // namespace concepts

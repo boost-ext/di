@@ -7,6 +7,7 @@
 #include "boost/di/injector.hpp"
 
 #include <boost/test/unit_test.hpp>
+#include <memory>
 #include <boost/shared_ptr.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_base_of.hpp>
@@ -968,6 +969,18 @@ BOOST_AUTO_TEST_CASE(to_shared_ptr) {
     c4 c4_ = injector_.create<c4>();
 
     BOOST_CHECK_EQUAL(c3_, c4_.c3_);
+}
+
+BOOST_AUTO_TEST_CASE(to_std_shared_ptr) {
+    std::shared_ptr<c3> c3_(new c3);
+
+    auto injector_ = injector<>()(
+        bind<c3>::to(c3_)
+    );
+
+    c4 c4_ = injector_.create<c4>();
+
+    BOOST_CHECK_EQUAL(c3_.get(), c4_.c3_.get());
 }
 
 BOOST_AUTO_TEST_CASE(to_ref) {

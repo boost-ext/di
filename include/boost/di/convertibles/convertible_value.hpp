@@ -7,7 +7,9 @@
 #ifndef BOOST_DI_CONVERTIBLES_CONVERTIBLE_VALUE_HPP
 #define BOOST_DI_CONVERTIBLES_CONVERTIBLE_VALUE_HPP
 
+#include <utility>
 #include "boost/di/named.hpp"
+#include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {
@@ -24,6 +26,12 @@ public:
     operator T() const {
         return value_;
     }
+
+#if defined(BOOST_HAS_RVALUE_REFERENCES)
+    operator T&&() const {
+        return std::move(value_);
+    }
+#endif
 
     template<typename I, typename TName>
     operator named<I, TName>() const {

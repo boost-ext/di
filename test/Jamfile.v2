@@ -121,7 +121,3 @@ test-suite "compile fail" :
     [ compile-fail-cpp11 injector_singleton_by_copy_mt_fail.cpp ]
 ;
 
-#test-suite "di ctor traits script" :
-    #[ run-python scripts/di_ctor_traits_mt.py ]
-#;
-
