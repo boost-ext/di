@@ -65,7 +65,7 @@ struct c3
 
 BOOST_AUTO_TEST_CASE(create_complex) {
     const int i = 42;
-    const int d = 42.0;
+    const double d = 42.0;
 
     using injector_c0 = di::injector<
         di::policy<

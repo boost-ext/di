@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE(with_policy_seperate) {
 
 BOOST_AUTO_TEST_CASE(mix) {
     const int i = 42;
-    const int d = 42.0;
+    const double d = 42.0;
 
     using injector_c0 = injector<
         c0if0

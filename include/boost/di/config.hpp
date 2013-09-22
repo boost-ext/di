@@ -13,7 +13,6 @@
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/preprocessor/arithmetic/sub.hpp>
-#include <boost/typeof/typeof.hpp>
 #include <boost/mpl/limits/vector.hpp>
 #include <boost/mpl/aux_/na_fwd.hpp>
 #include <boost/detail/workaround.hpp>
@@ -28,10 +27,8 @@
 
 #if defined(BOOST_MSVC)
     #define BOOST_DI_TEMPLATE_QUALIFIER
-    #define BOOST_DI_TYPEOF(type) decltype(type)
 #else
     #define BOOST_DI_TEMPLATE_QUALIFIER template
-    #define BOOST_DI_TYPEOF(type) BOOST_TYPEOF_TPL(&type)
 #endif
 
 #if !defined(BOOST_DI_CTOR_CFG_VA_ARGS) &&              \
