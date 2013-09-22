@@ -25,6 +25,7 @@ rule run-cpp11 ( src ) {
     return [ run $(src) : : :
         <toolset>gcc:<cxxflags>-std=c++11
         <toolset>clang:<cxxflags>-std=c++11
+        <toolset>intel:<cxxflags>-std=c++11
     ] ;
 }
 
@@ -32,6 +33,7 @@ rule run-cpp03 ( src ) {
     return [ run $(src) : : :
         <toolset>gcc:<cxxflags>-std=c++03
         <toolset>clang:<cxxflags>-std=c++03
+        <toolset>intel:<cxxflags>-std=gnu++98
     ] ;
 }
 
@@ -39,6 +41,7 @@ rule compile-fail-cpp11 ( src ) {
     return [ compile-fail $(src) :
         <toolset>gcc:<cxxflags>-std=c++11
         <toolset>clang:<cxxflags>-std=c++11
+        <toolset>intel:<cxxflags>-std=c++11
     ] ;
 }
 
@@ -46,6 +49,7 @@ rule compile-fail-cpp03 ( src ) {
     return [ compile-fail $(src) :
         <toolset>gcc:<cxxflags>-std=c++03
         <toolset>clang:<cxxflags>-std=c++03
+        <toolset>intel:<cxxflags>-std=gnu++98
     ] ;
 }
 
@@ -107,9 +111,13 @@ test-suite "di" :
     [ run-cpp11 di_mt.cpp ]
 ;
 
-test-suite "di / C++ 03" :
+test-suite "di / C++ 98/03" :
     [ run-cpp03 di_mt_03.cpp ]
 ;
+
+#test-suite "di / no standard" :
+    #[ run di_mt_03.cpp ]
+#;
 
 test-suite "compile fail" :
     [ compile-fail-cpp11 detail/module_externals_mt_fail.cpp ]

@@ -13,10 +13,7 @@ namespace di {
 template<typename T>
 struct fake_binder
 {
-    template<
-        typename
-      , typename
-    >
+    template<typename, typename>
     struct get_dependency
     {
         typedef T type;

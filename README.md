@@ -58,6 +58,7 @@ int main() {
 ### Tested
  + GCC 4.7.3/4.8.1
  + Clang 3.2/3.3
+ + Intel C++ 14.0.0
  + MinGW 4.7.3/4.8.1
  + Visual Studio 2013 RC
 

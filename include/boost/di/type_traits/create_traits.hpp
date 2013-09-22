@@ -14,7 +14,7 @@
     #include <boost/preprocessor/repetition/enum_params.hpp>
     #include <boost/preprocessor/cat.hpp>
     #include <boost/utility/enable_if.hpp>
-    #include <boost/type_traits/is_arithmetic.hpp>
+    #include <boost/type_traits/is_class.hpp>
     #include <boost/non_type.hpp>
     #include <boost/mpl/string.hpp>
     #include <boost/mpl/if.hpp>
@@ -41,23 +41,20 @@
     template<typename T>
     class has_value
     {
-        struct base_value { static int value; };
-        struct base
-            : base_value
-            , mpl::if_<
-                  is_arithmetic<T>
-                , mpl::void_
-                , T
-              >::type
-        { };
+        struct none { };
+        struct ambiguator { int value; };
 
-        template<typename U> static mpl::aux::no_tag  test(non_type<const int*, &U::value>*);
-        template<typename>   static mpl::aux::yes_tag test(...);
+        struct combined : mpl::if_<is_class<T>, T, none>::type, ambiguator { };
+        static combined* make();
+
+        template<typename U>
+        static mpl::aux::no_tag check(U*, non_type<int ambiguator::*, &U::value>* = 0);
+        static mpl::aux::yes_tag check(...);
 
     public:
         BOOST_STATIC_CONSTANT(
-            bool
-          , value = sizeof(test<base>(0)) == sizeof(mpl::aux::yes_tag)
+           bool
+         , value = sizeof(check(make())) == sizeof(mpl::aux::yes_tag)
         );
     };
 
