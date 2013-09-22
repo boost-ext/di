@@ -14,11 +14,7 @@ project :
         <library>/boost/test//boost_unit_test_framework/<link>static
         <define>BOOST_TEST_MODULE=di_test
         <warnings>all
-        <toolset>gcc:<cxxflags>-Wextra
-        <toolset>gcc:<cxxflags>-pedantic
         <toolset>gcc:<cxxflags>-ftemplate-depth-1024
-        <toolset>clang:<cxxflags>-Wextra
-        <toolset>clang:<cxxflags>-pedantic
 ;
 
 rule run-cpp11 ( src ) {

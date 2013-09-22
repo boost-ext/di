@@ -44,7 +44,7 @@ public:
     }
 
     template<typename T>
-    void operator()() const {
+    void operator()(const T&) const {
         visits.push_back(element(
             typeid(typename T::type).name()
           , typeid(typename T::scope).name()

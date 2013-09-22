@@ -15,7 +15,6 @@
 #include <boost/preprocessor/arithmetic/sub.hpp>
 #include <boost/mpl/limits/vector.hpp>
 #include <boost/mpl/aux_/na_fwd.hpp>
-#include <boost/detail/workaround.hpp>
 #include <boost/config.hpp>
 
 #if defined(BOOST_NO_CXX11_SMART_PTR) &&                \
@@ -23,12 +22,6 @@
     __clang_minor__ >= 2 &&                             \
     __cplusplus >= 201100L
     #undef BOOST_NO_CXX11_SMART_PTR
-#endif
-
-#if defined(BOOST_MSVC)
-    #define BOOST_DI_TEMPLATE_QUALIFIER
-#else
-    #define BOOST_DI_TEMPLATE_QUALIFIER template
 #endif
 
 #if !defined(BOOST_DI_CTOR_CFG_VA_ARGS) &&              \
