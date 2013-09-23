@@ -114,7 +114,7 @@
                   typename mpl::fold<
                       TSeq
                     , mpl::set0<>
-                    , mpl::insert<mpl::_1, mpl::_2 >
+                    , mpl::insert<mpl::_1, mpl::_2>
                   >::type
                 , mpl::vector0<>
                 , mpl::push_back<mpl::_1, mpl::_2>
