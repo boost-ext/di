@@ -14,38 +14,38 @@ project :
         <library>/boost/test//boost_unit_test_framework/<link>static
         <define>BOOST_TEST_MODULE=di_test
         <warnings>all
-        <toolset>gcc:<cxxflags>-ftemplate-depth-1024
+        <toolset>gcc:<cxxflags>"-ftemplate-depth-1024"
 ;
 
 rule run-cpp11 ( src ) {
     return [ run $(src) : : :
-        <toolset>gcc:<cxxflags>-std=c++11
-        <toolset>clang:<cxxflags>-std=c++11
-        <toolset>intel:<cxxflags>-std=c++11
+        <toolset>gcc:<cxxflags>"-std=c++11 -include config.hpp"
+        <toolset>clang:<cxxflags>"-std=c++11 -include config.hpp"
+        <toolset>intel:<cxxflags>"-std=c++11 -include config.hpp"
     ] ;
 }
 
 rule run-cpp03 ( src ) {
     return [ run $(src) : : :
-        <toolset>gcc:<cxxflags>-std=c++03
-        <toolset>clang:<cxxflags>-std=c++03
-        <toolset>intel:<cxxflags>-std=gnu++98
+        <toolset>gcc:<cxxflags>"-std=c++03 -include config.hpp"
+        <toolset>clang:<cxxflags>"-std=c++03 -include config.hpp"
+        <toolset>intel:<cxxflags>"-std=gnu++98 -include config.hpp"
     ] ;
 }
 
 rule compile-fail-cpp11 ( src ) {
     return [ compile-fail $(src) :
-        <toolset>gcc:<cxxflags>-std=c++11
-        <toolset>clang:<cxxflags>-std=c++11
-        <toolset>intel:<cxxflags>-std=c++11
+        <toolset>gcc:<cxxflags>"-std=c++11 -include config.hpp"
+        <toolset>clang:<cxxflags>"-std=c++11 -include config.hpp"
+        <toolset>intel:<cxxflags>"-std=c++11 -include config.hpp"
     ] ;
 }
 
 rule compile-fail-cpp03 ( src ) {
     return [ compile-fail $(src) :
-        <toolset>gcc:<cxxflags>-std=c++03
-        <toolset>clang:<cxxflags>-std=c++03
-        <toolset>intel:<cxxflags>-std=gnu++98
+        <toolset>gcc:<cxxflags>"-std=c++03 -include config.hpp"
+        <toolset>clang:<cxxflags>"-std=c++03 -include config.hpp"
+        <toolset>intel:<cxxflags>"-std=gnu++98 -include config.hpp"
     ] ;
 }
 
