@@ -12,7 +12,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/has_xxx.hpp>
 
-#include "boost/di/type_traits/make_plain.hpp" // named_type
+#include "boost/di/type_traits/make_plain.hpp" // has_named_type
 #include "boost/di/scopes/per_request.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/external.hpp"

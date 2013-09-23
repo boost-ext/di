@@ -89,13 +89,13 @@
         template<typename T, typename TAction>
         class has_call
         {
-            struct base_call { void call(const TAction&) { } };
-            struct base : T, base_call { };
+            struct base_impl { void call(const TAction&) { } };
+            struct base : T, base_impl { base() { } };
 
             template<typename U>
             static mpl::aux::no_tag test(
                 U*
-              , non_type<void (base_call::*)(const TAction&), &U::call>*
+              , non_type<void (base_impl::*)(const TAction&), &U::call>* = 0
             );
 
             template<typename>
