@@ -4,44 +4,50 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_TYPE_TRAITS_PARAMETER_TYPES_HPP
-#define BOOST_DI_TYPE_TRAITS_PARAMETER_TYPES_HPP
+#if !BOOST_PP_IS_ITERATING
 
-#include <boost/preprocessor/iteration/local.hpp>
-#include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/mpl/vector.hpp>
+    #ifndef BOOST_DI_TYPE_TRAITS_PARAMETER_TYPES_HPP
+    #define BOOST_DI_TYPE_TRAITS_PARAMETER_TYPES_HPP
 
-#include "boost/di/config.hpp"
+    #include <boost/preprocessor/iteration/iterate.hpp>
+    #include <boost/mpl/vector.hpp>
 
-namespace boost {
-namespace di {
-namespace type_traits {
+    #include "boost/di/config.hpp"
 
-template<typename>
-struct parameter_types
-{
-    typedef mpl::vector0<> type;
-};
+    #define BOOST_PP_ITERATION_PARAMS_1 ( \
+        BOOST_DI_ITERATION_PARAMS(1, "boost/di/type_traits/parameter_types.hpp"))
 
-#define BOOST_PP_LOCAL_MACRO(n)                                             \
-    template<typename R, BOOST_PP_ENUM_PARAMS(n, typename Arg)>             \
-    struct parameter_types<R(*)(BOOST_PP_ENUM_PARAMS(n, Arg))>              \
-    {                                                                       \
-        typedef mpl::vector##n<BOOST_PP_ENUM_PARAMS(n, Arg)> type;          \
-    };                                                                      \
-                                                                            \
-    template<typename R, typename C, BOOST_PP_ENUM_PARAMS(n, typename Arg)> \
-    struct parameter_types<R(C::*)(BOOST_PP_ENUM_PARAMS(n, Arg))>           \
-    {                                                                       \
-        typedef mpl::vector##n<BOOST_PP_ENUM_PARAMS(n, Arg)> type;          \
+    namespace boost {
+    namespace di {
+    namespace type_traits {
+
+    template<typename>
+    struct parameter_types
+    {
+        typedef mpl::vector0<> type;
     };
 
-#define BOOST_PP_LOCAL_LIMITS (1, BOOST_DI_LIMIT_SIZE)
-#include BOOST_PP_LOCAL_ITERATE()
+    #include BOOST_PP_ITERATE()
 
-} // namespace type_traits
-} // namespace di
-} // namespace boost
+    } // namespace type_traits
+    } // namespace di
+    } // namespace boost
+
+    #endif
+
+#else
+
+    template<typename R, BOOST_DI_TYPES(Args)>                  \
+    struct parameter_types<R(*)(BOOST_DI_TYPES_PASS(Args))>     \
+    {                                                           \
+        typedef mpl::vector<BOOST_DI_TYPES_PASS(Args)> type;    \
+    };
+
+    template<typename R, typename T, BOOST_DI_TYPES(Args)>      \
+    struct parameter_types<R(T::*)(BOOST_DI_TYPES_PASS(Args))>  \
+    {                                                           \
+        typedef mpl::vector<BOOST_DI_TYPES_PASS(Args)> type;    \
+    };
 
 #endif
 

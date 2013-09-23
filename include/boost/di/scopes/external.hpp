@@ -15,13 +15,8 @@
     #include "boost/di/convertibles/convertible_value.hpp"
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (   \
-        BOOST_DI_ITERATION_PARAMS(          \
-            1                               \
-          , BOOST_DI_LIMIT_SIZE             \
-          , "boost/di/scopes/external.hpp"  \
-        )                                   \
-    )
+    #define BOOST_PP_ITERATION_PARAMS_1 ( \
+        BOOST_DI_ITERATION_PARAMS(1, "boost/di/scopes/external.hpp"))
 
     namespace boost {
     namespace di {

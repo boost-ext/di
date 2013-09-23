@@ -17,13 +17,8 @@
     #include "boost/di/named.hpp"
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (       \
-        BOOST_DI_ITERATION_PARAMS(              \
-            1                                   \
-          , BOOST_DI_LIMIT_SIZE                 \
-          , "boost/di/scopes/per_request.hpp"   \
-        )                                       \
-    )
+    #define BOOST_PP_ITERATION_PARAMS_1 ( \
+        BOOST_DI_ITERATION_PARAMS(1, "boost/di/scopes/per_request.hpp"))
 
     namespace boost {
     namespace di {

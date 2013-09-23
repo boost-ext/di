@@ -7,21 +7,11 @@
 #ifndef BOOST_DI_CTOR_HPP
 #define BOOST_DI_CTOR_HPP
 
+#include "boost/di/config.hpp"
+#include "boost/di/type_traits/ctor_traits.hpp" // di::ctor_traits<...>
+
 #ifdef BOOST_MSVC
     #pragma warning(disable:4822) // local class member function does not have a body
-#endif
-
-#if !defined(BOOST_DI_CTOR_CFG_VA_ARGS) &&              \
-    !defined(BOOST_DI_CTOR_CFG_BRACKET)
-    #define BOOST_DI_CTOR_CFG_VA_ARGS
-#endif
-
-#if !defined(BOOST_DI_CONSTRUCTOR)
-    #define BOOST_DI_CONSTRUCTOR boost_di_constructor__
-#endif
-
-#if !defined(BOOST_DI_CREATE)
-    #define BOOST_DI_CREATE boost_di_create__
 #endif
 
 #if defined(BOOST_DI_CTOR_CFG_VA_ARGS)
@@ -49,8 +39,6 @@
 #else
     #error BOOST_DI_CTOR not defined
 #endif
-
-#include "boost/di/type_traits/ctor_traits.hpp" // di::ctor_traits<...>
 
 #endif
 

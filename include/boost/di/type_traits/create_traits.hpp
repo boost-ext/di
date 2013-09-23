@@ -24,15 +24,10 @@
     #include <boost/mpl/void.hpp>
 
     #include "boost/di/type_traits/ctor_traits.hpp"
-    #include "boost/di/ctor.hpp"
+    #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (               \
-        BOOST_DI_ITERATION_PARAMS(                      \
-            1                                           \
-          , BOOST_DI_LIMIT_SIZE                         \
-          , "boost/di/type_traits/create_traits.hpp"    \
-        )                                               \
-    )
+    #define BOOST_PP_ITERATION_PARAMS_1 ( \
+        BOOST_DI_ITERATION_PARAMS(1, "boost/di/type_traits/create_traits.hpp"))
 
     namespace boost {
     namespace di {

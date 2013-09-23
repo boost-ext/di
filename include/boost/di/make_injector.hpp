@@ -14,13 +14,8 @@
     #include "boost/di/injector.hpp"
     #include "boost/di/config.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (   \
-        BOOST_DI_ITERATION_PARAMS(          \
-            1                               \
-          , BOOST_DI_LIMIT_SIZE             \
-          , "boost/di/make_injector.hpp"    \
-        )                                   \
-    )
+    #define BOOST_PP_ITERATION_PARAMS_1 ( \
+        BOOST_DI_ITERATION_PARAMS(1, "boost/di/make_injector.hpp"))
 
     namespace boost {
     namespace di {

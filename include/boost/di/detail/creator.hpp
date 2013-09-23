@@ -20,13 +20,8 @@
     #include "boost/di/config.hpp"
     #include "boost/di/type_traits/ctor_traits.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (   \
-        BOOST_DI_ITERATION_PARAMS(          \
-            0                               \
-          , BOOST_DI_LIMIT_SIZE             \
-          , "boost/di/detail/creator.hpp"   \
-        )                                   \
-    )
+    #define BOOST_PP_ITERATION_PARAMS_1 ( \
+        BOOST_DI_ITERATION_PARAMS(0, "boost/di/detail/creator.hpp"))
 
     namespace boost {
     namespace di {
