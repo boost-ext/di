@@ -13,6 +13,7 @@
 #include <boost/typeof/typeof.hpp>
 #include <boost/non_type.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/void.hpp>
 #include <boost/mpl/aux_/yes_no.hpp>
 
 #include "boost/di/type_traits/parameter_types.hpp"
@@ -33,40 +34,48 @@ namespace type_traits {
 template<typename T>
 class BOOST_PP_CAT(has_, BOOST_DI_CONSTRUCTOR)
 {
-    struct none { };
-    struct ambiguator { void BOOST_DI_CONSTRUCTOR(...) { } };
-
-    struct combined : mpl::if_<is_class<T>, T, none>::type, ambiguator { };
-    static combined* make();
+    struct base_impl { void BOOST_DI_CONSTRUCTOR(...) { } };
+    struct base
+        : base_impl
+        , mpl::if_<is_class<T>, T, mpl::void_>::type
+    { base() { } };
 
     template<typename U>
-    static mpl::aux::no_tag check(U*, non_type<void(ambiguator::*)(...), &U::BOOST_DI_CONSTRUCTOR>* = 0);
-    static mpl::aux::yes_tag check(...);
+    static mpl::aux::no_tag test(
+        U*
+      , non_type<void (base_impl::*)(...), &U::BOOST_DI_CONSTRUCTOR>* = 0
+    );
+
+    static mpl::aux::yes_tag test(...);
 
 public:
     BOOST_STATIC_CONSTANT(
-       bool
-     , value = sizeof(check(make())) == sizeof(mpl::aux::yes_tag)
+        bool
+      , value = sizeof(test((base*)(0))) == sizeof(mpl::aux::yes_tag)
     );
 };
 
 template<typename T>
 class BOOST_PP_CAT(has_, BOOST_DI_CREATE)
 {
-    struct none { };
-    struct ambiguator { void BOOST_DI_CREATE(...) { } };
-
-    struct combined : mpl::if_<is_class<T>, T, none>::type, ambiguator { };
-    static combined* make();
+    struct base_impl { void BOOST_DI_CREATE(...) { } };
+    struct base
+        : base_impl
+        , mpl::if_<is_class<T>, T, mpl::void_>::type
+    { base() { } };
 
     template<typename U>
-    static mpl::aux::no_tag check(U*, non_type<void(ambiguator::*)(...), &U::BOOST_DI_CREATE>* = 0);
-    static mpl::aux::yes_tag check(...);
+    static mpl::aux::no_tag test(
+        U*
+      , non_type<void (base_impl::*)(...), &U::BOOST_DI_CREATE>* = 0
+    );
+
+    static mpl::aux::yes_tag test(...);
 
 public:
     BOOST_STATIC_CONSTANT(
-       bool
-     , value = sizeof(check(make())) == sizeof(mpl::aux::yes_tag)
+        bool
+      , value = sizeof(test((base*)(0))) == sizeof(mpl::aux::yes_tag)
     );
 };
 

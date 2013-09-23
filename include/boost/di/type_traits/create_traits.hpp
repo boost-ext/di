@@ -20,8 +20,8 @@
     #include <boost/mpl/if.hpp>
     #include <boost/mpl/bool.hpp>
     #include <boost/mpl/or.hpp>
-    #include <boost/mpl/aux_/yes_no.hpp>
     #include <boost/mpl/void.hpp>
+    #include <boost/mpl/aux_/yes_no.hpp>
 
     #include "boost/di/type_traits/ctor_traits.hpp"
     #include "boost/di/config.hpp"
@@ -36,20 +36,24 @@
     template<typename T>
     class has_value
     {
-        struct none { };
-        struct ambiguator { int value; };
-
-        struct combined : mpl::if_<is_class<T>, T, none>::type, ambiguator { };
-        static combined* make();
+        struct base_impl { int value; };
+        struct base
+            : base_impl
+            , mpl::if_<is_class<T>, T, mpl::void_>::type
+        { base() { } };
 
         template<typename U>
-        static mpl::aux::no_tag check(U*, non_type<int ambiguator::*, &U::value>* = 0);
-        static mpl::aux::yes_tag check(...);
+        static mpl::aux::no_tag test(
+            U*
+          , non_type<int base_impl::*, &U::value>* = 0
+        );
+
+        static mpl::aux::yes_tag test(...);
 
     public:
         BOOST_STATIC_CONSTANT(
-           bool
-         , value = sizeof(check(make())) == sizeof(mpl::aux::yes_tag)
+            bool
+          , value = sizeof(test((base*)(0))) == sizeof(mpl::aux::yes_tag)
         );
     };
 
