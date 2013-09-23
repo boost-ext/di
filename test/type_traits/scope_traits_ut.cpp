@@ -17,6 +17,11 @@
     #pragma GCC diagnostic ignored "-Wdeprecated-declarations" // std::auto_ptr
 #endif
 
+#if defined(__INTEL_COMPILER)
+    #pragma warning push
+    #pragma warning(disable:1478) //class "std::auto_ptr<...>" was declared deprecated
+#endif
+
 namespace boost {
 namespace di {
 namespace type_traits {
@@ -62,5 +67,9 @@ BOOST_AUTO_TEST_CASE(basic) {
 
 #if defined(__GNUC__) && (__GNUC__ >= 4)
     #pragma GCC diagnostic pop
+#endif
+
+#if defined(__INTEL_COMPILER)
+    #pragma warning pop
 #endif
 

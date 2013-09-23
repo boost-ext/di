@@ -14,6 +14,10 @@
     #pragma warning(disable:4822) // local class member function does not have a body
 #endif
 
+#if defined(__INTEL_COMPILER)
+    #pragma warning(disable:177) //function "boost_di_constructor__" was declared but never referenced
+#endif
+
 #if defined(BOOST_DI_CTOR_CFG_VA_ARGS)
 
     #if defined(__GNUC__) && (__GNUC__ >= 4)
