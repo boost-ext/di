@@ -24,7 +24,7 @@
     #include <boost/mpl/void.hpp>
 
     #include "boost/di/type_traits/ctor_traits.hpp"
-    #include "boost/di/config.hpp"
+    #include "boost/di/ctor.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (               \
         BOOST_DI_ITERATION_PARAMS(                      \

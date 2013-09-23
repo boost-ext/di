@@ -6,7 +6,6 @@
 //
 #include <memory>
 #include <boost/shared_ptr.hpp>
-#include <boost/typeof/typeof.hpp>
 #include "boost/di.hpp"
 
 #include <boost/test/unit_test.hpp>
@@ -32,20 +31,20 @@ struct c1
         : i_(i_), d_(d_)
     { }
 
-    int i_;
-    double d_;
+    int i_ = 0;
+    double d_ = 0.0;
 };
 
 struct c2
 {
     BOOST_DI_CTOR(c2
-        , boost::shared_ptr<c1> c1_
-        , std::auto_ptr<i> p_)
-      : c1_(c1_), p_(p_)
+        , std::shared_ptr<c1> c1_
+        , std::unique_ptr<i> p_)
+      : c1_(c1_), p_(std::move(p_))
     { }
 
-    boost::shared_ptr<c1> c1_;
-    std::auto_ptr<i> p_;
+    std::shared_ptr<c1> c1_;
+    std::unique_ptr<i> p_;
 };
 
 struct c3
@@ -68,28 +67,28 @@ BOOST_AUTO_TEST_CASE(create_complex) {
     const int i = 42;
     const double d = 42.0;
 
-    typedef di::injector<
+    using injector_c0 = di::injector<
         di::policy<
             di::policies::check_for_binding_correctness
         >
       , impl
-    > injector_c0;
+    >;
 
-    BOOST_AUTO(injector_c1, di::make_injector(
+    auto injector_c1 = di::make_injector(
         di::policy<
             di::policies::check_for_circular_dependencies
         >()
       , di::bind_int<i>()
-    ));
+    );
 
-    BOOST_AUTO(injector_, make_injector(
+    auto injector_ = make_injector(
         injector_c0()
       , di::per_request<c2>()
       , injector_c1
       , di::bind<double>::to(d)
-    ));
+    );
 
-    boost::shared_ptr<c3> c3_ = injector_.create<boost::shared_ptr<c3> >();
+    auto c3_ = injector_.create<boost::shared_ptr<c3>>();
 
     BOOST_CHECK(dynamic_cast<impl*>(c3_->c2_->p_.get()));
     BOOST_CHECK_EQUAL(c3_->c1_.get(), c3_->c2_->c1_.get());

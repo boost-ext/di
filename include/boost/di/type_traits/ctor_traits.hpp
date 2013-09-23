@@ -16,7 +16,7 @@
 #include <boost/mpl/aux_/yes_no.hpp>
 
 #include "boost/di/type_traits/parameter_types.hpp"
-#include "boost/di/config.hpp"
+#include "boost/di/ctor.hpp"
 
 namespace boost {
 namespace di {

@@ -103,17 +103,17 @@ test-suite "injector" :
     [ run-cpp11 make_injector_mt.cpp ]
 ;
 
-test-suite "di" :
-    [ run-cpp11 di_mt.cpp ]
+test-suite "di / C++ 11" :
+    [ run-cpp11 di_mt_11.cpp ]
 ;
 
 test-suite "di / C++ 98/03" :
     [ run-cpp03 di_mt_03.cpp ]
 ;
 
-#test-suite "di / no standard" :
-    #[ run di_mt_03.cpp ]
-#;
+test-suite "di / default" :
+    [ run di_mt.cpp ]
+;
 
 test-suite "compile fail" :
     [ compile-fail-cpp11 detail/module_externals_mt_fail.cpp ]
