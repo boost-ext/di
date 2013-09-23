@@ -1,4 +1,4 @@
-﻿[library Boost.DI
+﻿[library Boost.DI (Dependency Injection)
     [authors [Jusiak, Krzysztof]]
     [copyright 2012-2013 Krzysztof Jusiak]
     [license
