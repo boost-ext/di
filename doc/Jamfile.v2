@@ -5,20 +5,18 @@
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
 
-import docutils ;
-import path ;
+using quickbook ;
 
-sources = [ path.glob . : *.rst ] ;
-bases = $(sources:S=) ;
-stylesheet = "--stylesheet=rst.css" ;
-
-for local b in $(bases)
-{
-    html $(b) : $(b).rst :
-        <docutils-html>"/usr/bin/rst2html.py -gdt --link-stylesheet --traceback --trim-footnote-reference-space --footnote-references=superscript "$(stylesheet)
+xml di : di.qbk ;
+boostbook standalone
+    :
+        di
+    :
+        <xsl:param>boost.root=../../../..
+        <xsl:param>nav.layout=none
+        <xsl:param>navig.graphics=0
     ;
-}
 
-alias htmls : $(bases) ;
-stage html : $(bases) ;
+install html : ../../../doc/src/boostbook.css ;
+install ../ : ../../../boost.png ;
 
