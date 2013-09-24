@@ -60,8 +60,7 @@ struct visitor
     }
 };
 
-int main()
-{
+int main() {
     boost::shared_ptr<c3> c3_(new c3);
     c4 c4_;
 

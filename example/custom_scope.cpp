@@ -78,8 +78,7 @@ public:
     };
 };
 
-int main()
-{
+int main() {
     using injector_t = di::injector<
         di::scope<custom_scope>::bind<
             c1

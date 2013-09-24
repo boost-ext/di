@@ -56,8 +56,7 @@ public:
     { };
 };
 
-int main()
-{
+int main() {
     di::injector<di::policy<check_for_creation_by_smart_ptr>> injector;
     injector.create<boost::shared_ptr<c>>();
     //injector.create<c>(); //compile error (CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED)

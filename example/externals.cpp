@@ -20,8 +20,7 @@ struct c
 
 } // namespace
 
-int main()
-{
+int main() {
     auto injector = di::make_injector(
         di::bind<int>::to(42)
     );

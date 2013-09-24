@@ -44,8 +44,7 @@ struct ctor_traits<c3>
 } // namespace di
 } // namespace boost
 
-int main()
-{
+int main() {
     di::injector<> injector;
     injector.create<c0>();
     injector.create<c1>();
