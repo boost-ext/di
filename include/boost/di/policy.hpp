@@ -8,8 +8,7 @@
 #define BOOST_DI_POLICY_HPP
 
 #include <boost/mpl/vector.hpp>
-#include <boost/mpl/fold.hpp>
-#include <boost/mpl/void.hpp>
+#include <boost/mpl/transform.hpp>
 
 #include "boost/di/detail/meta.hpp"
 
@@ -33,10 +32,9 @@ class policy : detail::policy_impl
 public:
     template<typename TDeps, typename T>
     struct verify
-        : mpl::fold<
+        : mpl::transform<
               mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-            , mpl::void_
-            , verify_impl<TDeps, T, mpl::_2>
+            , verify_impl<TDeps, T, mpl::_>
           >::type
     {
         typedef verify type;

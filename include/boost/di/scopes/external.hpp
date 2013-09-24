@@ -9,8 +9,6 @@
     #ifndef BOOST_DI_SCOPES_EXTERNAL_HPP
     #define BOOST_DI_SCOPES_EXTERNAL_HPP
 
-    #include <memory>
-
     #include "boost/di/detail/meta.hpp"
     #include "boost/di/convertibles/convertible_value.hpp"
 
