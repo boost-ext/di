@@ -25,12 +25,12 @@
     #include <boost/mpl/placeholders.hpp>
     #include <boost/mpl/has_xxx.hpp>
 
+    #include "boost/di/detail/meta.hpp"
     #include "boost/di/detail/module.hpp"
     #include "boost/di/detail/pool.hpp"
     #include "boost/di/scopes/deduce.hpp"
     #include "boost/di/policy.hpp"
     #include "boost/di/concepts.hpp"
-    #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 (   \
         BOOST_DI_ITERATION_PARAMS(1, "boost/di/injector.hpp"))

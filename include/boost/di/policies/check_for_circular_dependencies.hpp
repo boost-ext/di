@@ -24,7 +24,6 @@
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/assert.hpp>
 
-#include "boost/di/config.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/detail/binder.hpp"

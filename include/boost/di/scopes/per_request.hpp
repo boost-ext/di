@@ -9,13 +9,12 @@
     #ifndef BOOST_DI_SCOPES_PER_REQUEST_HPP
     #define BOOST_DI_SCOPES_PER_REQUEST_HPP
 
-    #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/bind.hpp>
 
+    #include "boost/di/detail/meta.hpp"
     #include "boost/di/convertibles/convertible_copy.hpp"
     #include "boost/di/type_traits/create_traits.hpp"
     #include "boost/di/named.hpp"
-    #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 ( \
         BOOST_DI_ITERATION_PARAMS(1, "boost/di/scopes/per_request.hpp"))

@@ -9,11 +9,10 @@
     #ifndef BOOST_DI_SCOPES_EXTERNAL_HPP
     #define BOOST_DI_SCOPES_EXTERNAL_HPP
 
-    #include <boost/preprocessor/iteration/iterate.hpp>
     #include <memory>
 
+    #include "boost/di/detail/meta.hpp"
     #include "boost/di/convertibles/convertible_value.hpp"
-    #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 ( \
         BOOST_DI_ITERATION_PARAMS(1, "boost/di/scopes/external.hpp"))

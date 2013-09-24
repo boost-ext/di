@@ -16,7 +16,7 @@
 #include "boost/di/scopes/per_request.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/external.hpp"
-#include "boost/di/config.hpp"
+#include "boost/config.hpp"
 
 namespace boost {
 namespace di {

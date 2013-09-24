@@ -18,7 +18,6 @@
 
 #include "boost/di/type_traits/parameter_types.hpp"
 #include "boost/di/ctor.hpp"
-#include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {

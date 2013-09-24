@@ -4,15 +4,13 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <boost/preprocessor/iteration/iterate.hpp>
-
 #if !BOOST_PP_IS_ITERATING
 
     #ifndef BOOST_DI_MAKE_INJECTOR_HPP
     #define BOOST_DI_MAKE_INJECTOR_HPP
 
+    #include "boost/di/detail/meta.hpp"
     #include "boost/di/injector.hpp"
-    #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 ( \
         BOOST_DI_ITERATION_PARAMS(1, "boost/di/make_injector.hpp"))

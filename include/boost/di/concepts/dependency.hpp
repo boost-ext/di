@@ -20,12 +20,11 @@
 #include <boost/mpl/lambda.hpp>
 #include <boost/mpl/has_xxx.hpp>
 
-#include <boost/di/scopes/deduce.hpp>
-#include <boost/di/scopes/external.hpp>
 #include <boost/di/type_traits/make_plain.hpp>
 #include <boost/di/convertibles/convertible_ref.hpp>
 #include <boost/di/convertibles/convertible_shared.hpp>
-#include "boost/di/config.hpp"
+#include <boost/di/scopes/deduce.hpp>
+#include <boost/di/scopes/external.hpp>
 
 namespace boost {
 namespace di {

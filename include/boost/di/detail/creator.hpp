@@ -9,7 +9,6 @@
     #ifndef BOOST_DI_DETAIL_CREATOR_HPP
     #define BOOST_DI_DETAIL_CREATOR_HPP
 
-    #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/preprocessor/punctuation/comma_if.hpp>
     #include <boost/utility/enable_if.hpp>
@@ -17,7 +16,6 @@
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/push_back.hpp>
 
-    #include "boost/di/config.hpp"
     #include "boost/di/type_traits/ctor_traits.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 ( \

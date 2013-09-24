@@ -9,6 +9,7 @@
 
 #include <string>
 #include <boost/mpl/int.hpp>
+#include "boost/di/detail/meta.hpp"
 #include "boost/di/concepts/bind.hpp"
 #include "boost/di/concepts/dependency.hpp"
 #include "boost/di/concepts/scope.hpp"
@@ -17,7 +18,6 @@
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/session.hpp"
 #include "boost/di/named.hpp"
-#include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {

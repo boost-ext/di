@@ -9,10 +9,9 @@
     #ifndef BOOST_DI_TYPE_TRAITS_PARAMETER_TYPES_HPP
     #define BOOST_DI_TYPE_TRAITS_PARAMETER_TYPES_HPP
 
-    #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/mpl/vector.hpp>
 
-    #include "boost/di/config.hpp"
+    #include "boost/di/detail/meta.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 ( \
         BOOST_DI_ITERATION_PARAMS(1, "boost/di/type_traits/parameter_types.hpp"))

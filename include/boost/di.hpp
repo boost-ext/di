@@ -9,7 +9,6 @@
 
 // core
 #include "boost/di/ctor.hpp"
-#include "boost/di/config.hpp"
 
 // concepts
 #include "boost/di/concepts.hpp"

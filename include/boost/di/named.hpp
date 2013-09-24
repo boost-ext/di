@@ -13,7 +13,6 @@
 
 #include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/type_traits/remove_accessors.hpp"
-#include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {

@@ -15,8 +15,8 @@
 #include <boost/mpl/lambda.hpp>
 #include <boost/mpl/has_xxx.hpp>
 
+#include "boost/di/detail/meta.hpp"
 #include "boost/di/type_traits/is_same_base_of.hpp"
-#include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {

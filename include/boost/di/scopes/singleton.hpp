@@ -9,11 +9,9 @@
     #ifndef BOOST_DI_SCOPES_SINGLETON_HPP
     #define BOOST_DI_SCOPES_SINGLETON_HPP
 
-    #include <boost/preprocessor/iteration/iterate.hpp>
-
+    #include "boost/di/detail/meta.hpp"
     #include "boost/di/convertibles/convertible_shared.hpp"
     #include "boost/di/type_traits/create_traits.hpp"
-    #include "boost/di/config.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 ( \
         BOOST_DI_ITERATION_PARAMS(1, "boost/di/scopes/singleton.hpp"))

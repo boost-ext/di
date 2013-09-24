@@ -11,7 +11,6 @@
 #include <boost/make_shared.hpp>
 
 #include "boost/di/scopes/external.hpp"
-#include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {

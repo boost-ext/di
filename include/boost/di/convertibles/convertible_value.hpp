@@ -9,7 +9,7 @@
 
 #include <utility>
 #include "boost/di/named.hpp"
-#include "boost/di/config.hpp"
+#include "boost/config.hpp"
 
 namespace boost {
 namespace di {

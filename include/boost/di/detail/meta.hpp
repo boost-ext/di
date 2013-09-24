@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_CONFIG_HPP
-#define BOOST_DI_CONFIG_HPP
+#ifndef BOOST_DI_DETAIL_META_HPP
+#define BOOST_DI_DETAIL_META_HPP
 
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
@@ -15,20 +15,6 @@
 #include <boost/preprocessor/arithmetic/sub.hpp>
 #include <boost/mpl/limits/vector.hpp>
 #include <boost/mpl/aux_/na.hpp>
-#include <boost/config.hpp>
-
-#if !defined(BOOST_DI_CTOR_CFG_VA_ARGS) &&          \
-    !defined(BOOST_DI_CTOR_CFG_BRACKET)
-    #define BOOST_DI_CTOR_CFG_VA_ARGS
-#endif
-
-#if !defined(BOOST_DI_CONSTRUCTOR)
-    #define BOOST_DI_CONSTRUCTOR boost_di_constructor__
-#endif
-
-#if !defined(BOOST_DI_CREATE)
-    #define BOOST_DI_CREATE boost_di_create__
-#endif
 
 #define BOOST_DI_ITERATION_PARAMS(start, file)      \
      3, (start, BOOST_MPL_LIMIT_VECTOR_SIZE, file)
