@@ -6,7 +6,6 @@
 //
 #include <cassert>
 #include <memory>
-#include <boost/mpl/int.hpp>
 #include <boost/di.hpp>
 
 namespace di  = boost::di;
@@ -59,13 +58,9 @@ public:
 } // namespace
 
 int main() {
-    using module = di::generic_module<
-        di::bind<i, i_factory>
-      , di::external<eid>
-    >;
-
-    di::injector<module> injector(
-        module(module::set<eid>(e1))
+    auto injector = di::make_injector(
+        di::bind<eid>::to(e1)
+      , di::bind<i, i_factory>()
     );
 
     injector.create<c>();

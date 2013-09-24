@@ -99,7 +99,7 @@ public:
     }
 
     template<typename T>
-    void operator()() const {
+    void operator()(const T&) const {
         std::size_t call_stack_size = mpl::size<typename T::context>::value;
 
         while (!context_.empty() && context_.back().context_size >= call_stack_size) {
@@ -130,8 +130,7 @@ public:
     mutable std::vector<dependency> context_;
 };
 
-int main()
-{
+int main() {
     di::injector<c0> injector;
 
     std::stringstream stream;

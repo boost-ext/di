@@ -41,7 +41,7 @@ class text_visitor
 {
 public:
     template<typename T>
-    void operator()() const {
+    void operator()(const T&) const {
         int size = mpl::size<typename T::context>::value;
         while(--size) {
             std::cout << "\t";
@@ -50,8 +50,7 @@ public:
     }
 };
 
-int main()
-{
+int main() {
     di::injector<
         di::bind_int<42>
       , c0

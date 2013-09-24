@@ -31,14 +31,11 @@ private:
 
 } // namespace
 
-int main()
-{
-    typedef di::injector<
+int main() {
+    di::injector<
         di::bind_int<42>::in_name<mpl::string<'1'>>
       , di::bind_int<87>::in_name<mpl::string<'2'>>
-    > injector;
-
-    injector.create<named>();
+    >().create<named>();
 
     return 0;
 }

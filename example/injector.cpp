@@ -4,9 +4,10 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#include <typeinfo>
+#include <iostream>
 #include <boost/shared_ptr.hpp>
 #include <boost/mpl/int.hpp>
-#include <boost/mpl/string.hpp>
 #include <boost/di.hpp>
 
 namespace mpl = boost::mpl;
@@ -14,124 +15,75 @@ namespace di  = boost::di;
 
 namespace {
 
-struct if0
+struct name { };
+
+struct i0 { virtual ~i0() { }; };
+
+struct c0 : i0
 {
-    virtual ~if0() { }
-    virtual void dummy() = 0;
+    BOOST_DI_CTOR(c0, di::named<int, name>, double) { }
 };
 
-struct c0if0 : if0
-{
-    virtual void dummy() { }
-};
-
-struct c1if0 : if0
-{
-    virtual void dummy() { }
-};
+struct c01 : i0 { };
 
 struct c1
 {
-    explicit c1(int = 0) { }
+    BOOST_DI_CTOR(c1, boost::shared_ptr<i0>) { }
 };
 
 struct c2
 {
-    BOOST_DI_CTOR(c2, int, double, char) { }
+    BOOST_DI_CTOR(c2, boost::shared_ptr<c1>, int, double, char) { }
 };
 
-struct c3
-{
-    BOOST_DI_CTOR(explicit c3, boost::shared_ptr<if0>) { }
-};
+struct c3 { };
+struct c4 { };
 
-struct c4
+struct c5
 {
-    BOOST_DI_CTOR(c4, boost::shared_ptr<c3>) { }
+    BOOST_DI_CTOR(c5
+        , boost::shared_ptr<c1>
+        , c2
+        , boost::shared_ptr<i0>
+        , boost::shared_ptr<c3>
+        , boost::shared_ptr<c4>
+    ) { }
 };
 
 } // namespace
 
+struct visitor
+{
+    template<typename T>
+    void operator()() const {
+        std::clog << typeid(typename T::type).name() << std::endl;
+    }
+};
+
 int main()
 {
-    {
-        typedef di::generic_module<
-            di::singleton<
-                c2, c3, c4
-            >
-          , di::per_request<
-                c0if0
-              , di::bind<c1if0>::in_call<c3>
-            >
-        > generic_module;
+    boost::shared_ptr<c3> c3_(new c3);
+    c4 c4_;
 
-        BOOST_AUTO(fusion_module, di::fusion_module<>()(
-            di::singleton<
-                c1
-            >()
-          , di::per_request<
-                di::bind_int<1>
-            >()
-        ));
+    auto injector = di::make_injector(
+        di::singleton<
+            c1
+        >()
+      , di::per_request<
+            c0
+        >()
+      , di::scope<di::scopes::per_request<>>::bind_int<42>()
+      , di::per_request<
+            di::bind_int<87>::in_name<name>
+          , di::bind<c01>::in_call<di::call_stack<c2, c1>>
+        >()
+      , di::bind<double>::to(42.0)
+      , di::bind<double>::in_call<c0>::to(87.0)
+      , di::bind<c3>::to(c3_)
+      , di::bind<c4>::to(c4_)
+    );
 
-        di::injector<generic_module, BOOST_TYPEOF(fusion_module)> injector;
-
-        boost::shared_ptr<c4> c4_ = injector.create<boost::shared_ptr<c4>>();
-        (void)c4_;
-    }
-
-    {
-        typedef di::generic_module<
-            di::singleton<
-                c2, c3, c4
-            >,
-            di::per_request<
-                c0if0
-              , di::bind<c0if0>::in_call<c3>
-            >
-        > generic_module;
-
-        auto fusion_module = di::fusion_module<>()(
-            di::singleton<
-                c1
-            >()
-          , di::per_request<
-                di::bind_int<1>
-            >()
-        );
-
-        di::injector<generic_module, decltype(fusion_module)> injector;
-
-        boost::shared_ptr<c4> c4_ = injector.create<boost::shared_ptr<c4>>();
-        (void)c4_;
-    }
-
-    {
-        typedef di::generic_module<
-            di::singleton<
-                c2, c3, c4
-            >,
-            di::per_request<
-                c0if0
-              , di::bind<c1if0>::in_call<c3>
-            >
-        > generic_module;
-
-        auto fusion_module = di::fusion_module<>()(
-            di::singleton<
-                c1
-            >()
-          , di::per_request<
-                di::bind_int<1>
-            >()
-        );
-
-        auto injector = di::injector<>().install(generic_module(), fusion_module);
-
-        boost::shared_ptr<c4> c4_ = injector.create<boost::shared_ptr<c4>>();
-        (void)c4_;
-    }
-
-    return 0;
+    injector.create<c5>();
+    injector.visit<c5>(visitor());
 }
 

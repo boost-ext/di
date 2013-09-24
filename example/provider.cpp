@@ -35,12 +35,11 @@ struct usage
 
 } // namespace
 
-int main()
-{
-    typedef di::injector<
+int main() {
+    using injector_t = di::injector<
         transaction
-    > injector;
+    >;
 
-    injector.create<usage>();
+    injector_t().create<usage>();
 }
 

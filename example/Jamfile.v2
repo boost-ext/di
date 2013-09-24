@@ -11,27 +11,30 @@ project di :
     requirements
         <include>../include
         <warnings>all
-        <toolset>gcc:<cxxflags>-std=c++11
-        <toolset>gcc:<cxxflags>-Wno-unused-local-typedefs
 ;
 
-test-suite di_test :
-    [ run check_for_creation_by_smart_ptr_policy.cpp ]
-    [ run concepts.cpp ]
-    [ run ctor.cpp ]
-    [ run deduce_scope.cpp ]
-    [ run externals.cpp ]
-    [ run factory.cpp ]
-    [ run fusion_module.cpp ]
-    [ run generic_module.cpp ]
-    [ run hello_world.cpp ]
-    [ run injector.cpp ]
-    [ run named.cpp ]
-    [ run pool_allocator.cpp ]
-    [ run provider.cpp ]
-    [ run custom_scope.cpp ]
-    [ run testing.cpp ]
-    [ run text_visitor.cpp ]
-    [ run uml_visitor.cpp ]
+rule run-cpp11 ( src ) {
+    return [ run $(src) : : :
+        <toolset>gcc:<cxxflags>"-std=c++11"
+        <toolset>clang:<cxxflags>"-std=c++11"
+        <toolset>intel:<cxxflags>"-std=c++11"
+    ] ;
+}
+
+test-suite "di" :
+    [ run-cpp11 check_for_creation_by_smart_ptr_policy.cpp ]
+    [ run-cpp11 concepts.cpp ]
+    [ run-cpp11 ctor.cpp ]
+    [ run-cpp11 custom_scope.cpp ]
+    #[ run-cpp11 deduce_scope.cpp ]
+    [ run-cpp11 externals.cpp ]
+    #[ run-cpp11 factory.cpp ]
+    #[ run-cpp11 hello_world.cpp ]
+    #[ run-cpp11 injector.cpp ]
+    [ run-cpp11 named.cpp ]
+    #[ run-cpp11 provider.cpp ]
+    #[ run-cpp11 testing.cpp ]
+    [ run-cpp11 text_visitor.cpp ]
+    [ run-cpp11 uml_visitor.cpp ]
 ;
 

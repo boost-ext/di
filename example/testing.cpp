@@ -24,9 +24,7 @@ struct app
     BOOST_DI_CTOR(app, std::unique_ptr<i>) { }
 };
 
-using module = di::generic_module<
-    impl
->;
+using injector_t = di::injector<impl>;
 
 } // namespace
 
@@ -34,9 +32,7 @@ namespace ut {
 
 struct fake : i { };
 
-using module = di::generic_module<
-    fake
->;
+using injector_t = di::injector<fake>;
 
 } // namespace ut
 
@@ -45,12 +41,12 @@ int main() {
 
     //code
     {
-    injector.create<app<module>>();
+    injector.create<app<injector_t>>();
     }
 
     //test
     {
-    injector.create<app<ut::module>>();
+    injector.create<app<ut::injector_t>>();
     }
 
     return 0;

@@ -80,18 +80,18 @@ public:
 
 int main()
 {
-    typedef di::generic_module<
+    using injector_t = di::injector<
         di::scope<custom_scope>::bind<
             c1
         >
-    > module;
+    >;;
 
-    di::injector<module> injector;
+    di::injector<injector_t> injector;
 
     injector.create<c2>(); // not in custom scope
-    injector.call<custom_scope>(custom_scope::entry());
+    injector.call(custom_scope::entry());
     injector.create<c2>(); // in custom scope
-    injector.call<custom_scope>(custom_scope::exit());
+    injector.call(custom_scope::exit());
     injector.create<c2>(); // not in custom scope
 }
 

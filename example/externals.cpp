@@ -6,7 +6,6 @@
 //
 #include <cassert>
 #include <boost/di.hpp>
-#include <boost/units/detail/utility.hpp>
 
 namespace di = boost::di;
 
@@ -15,8 +14,7 @@ namespace {
 struct c
 {
     BOOST_DI_CTOR(c, int i) {
-        std::cout << "i:= " << i << std::endl;
-        assert(i == 32);
+        assert(i == 42);
     }
 };
 
@@ -24,24 +22,10 @@ struct c
 
 int main()
 {
-    {
-    using module_t = di::generic_module<
-        di::external<int>
-    >;
-
-    module_t module(module_t::set<int>(32));
-    module.create<c>();
-    }
-
-    {
-    auto module =  di::fusion_module<>()(
-        di::bind<int>::to(32)
+    auto injector = di::make_injector(
+        di::bind<int>::to(42)
     );
 
-    using m = decltype(module);
-    std::cout << boost::units::detail::demangle(typeid(m::deps::type).name()) << std::endl;
-    module.create<c>();
-    }
-
+    injector.create<c>();
 }
 
