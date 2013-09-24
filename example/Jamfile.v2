@@ -15,9 +15,9 @@ project di :
 
 rule run-cpp11 ( src ) {
     return [ run $(src) : : :
-        <toolset>gcc:<cxxflags>"-std=c++11"
-        <toolset>clang:<cxxflags>"-std=c++11"
-        <toolset>intel:<cxxflags>"-std=c++11"
+        <toolset>gcc:<cxxflags>"-std=c++11 -include ../test/config.hpp"
+        <toolset>clang:<cxxflags>"-std=c++11 -include ../test/config.hpp"
+        <toolset>intel:<cxxflags>"-std=c++11 -include ../test/config.hpp"
     ] ;
 }
 
@@ -26,14 +26,14 @@ test-suite "di" :
     [ run-cpp11 concepts.cpp ]
     [ run-cpp11 ctor.cpp ]
     [ run-cpp11 custom_scope.cpp ]
-    #[ run-cpp11 deduce_scope.cpp ]
+    [ run-cpp11 deduce_scope.cpp ]
     [ run-cpp11 externals.cpp ]
-    #[ run-cpp11 factory.cpp ]
-    #[ run-cpp11 hello_world.cpp ]
-    #[ run-cpp11 injector.cpp ]
+    [ run-cpp11 factory.cpp ]
+    [ run-cpp11 hello_world.cpp ]
+    [ run-cpp11 injector.cpp ]
     [ run-cpp11 named.cpp ]
-    #[ run-cpp11 provider.cpp ]
-    #[ run-cpp11 testing.cpp ]
+    [ run-cpp11 provider.cpp ]
+    [ run-cpp11 testing.cpp ]
     [ run-cpp11 text_visitor.cpp ]
     [ run-cpp11 uml_visitor.cpp ]
 ;

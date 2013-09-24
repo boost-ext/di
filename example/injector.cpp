@@ -46,7 +46,7 @@ struct c5
         , c2
         , boost::shared_ptr<i0>
         , boost::shared_ptr<c3>
-        , boost::shared_ptr<c4>
+        , c4&
     ) { }
 };
 
@@ -55,7 +55,7 @@ struct c5
 struct visitor
 {
     template<typename T>
-    void operator()() const {
+    void operator()(const T&) const {
         std::clog << typeid(typename T::type).name() << std::endl;
     }
 };
@@ -72,7 +72,9 @@ int main()
       , di::per_request<
             c0
         >()
-      , di::scope<di::scopes::per_request<>>::bind_int<42>()
+      , di::scope<di::scopes::per_request<>>::bind<
+            di::bind_int<42>
+        >()
       , di::per_request<
             di::bind_int<87>::in_name<name>
           , di::bind<c01>::in_call<di::call_stack<c2, c1>>

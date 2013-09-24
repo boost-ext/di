@@ -15,10 +15,10 @@ struct i { virtual ~i() { } };
 struct impl : i { };
 struct c
 {
-    BOOST_DI_CTOR(c,
-        boost::shared_ptr<i> p1     // i->impl, p1 == hello_world.p1
+    BOOST_DI_CTOR(c
+      , boost::shared_ptr<i> p1     // i->impl, p1 == hello_world.p1
       , double p2                   // p2 = 0.0
-    );
+    ) { }
 };
 
 struct hello_world
