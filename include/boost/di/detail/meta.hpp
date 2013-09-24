@@ -16,8 +16,8 @@
 #include <boost/mpl/limits/vector.hpp>
 #include <boost/mpl/aux_/na.hpp>
 
-#define BOOST_DI_ITERATION_PARAMS(start, file)      \
-     3, (start, BOOST_MPL_LIMIT_VECTOR_SIZE, file)
+#define BOOST_DI_ITERATION_PARAMS(begin, file)      \
+     3, (begin, BOOST_MPL_LIMIT_VECTOR_SIZE, file)
 
 #define BOOST_DI_TYPES_DEFAULT_MPL(T)               \
      BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(           \
@@ -32,11 +32,11 @@
        , typename T                                 \
      )
 
-#define BOOST_DI_TYPES_MPL_NA(count)                \
+#define BOOST_DI_TYPES_MPL_NA(N)                    \
      BOOST_PP_ENUM_PARAMS(                          \
          BOOST_PP_SUB(                              \
              BOOST_MPL_LIMIT_VECTOR_SIZE            \
-           , count                                  \
+           , N                                      \
          )                                          \
        , ::boost::mpl::na BOOST_PP_INTERCEPT        \
      )
