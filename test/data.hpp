@@ -416,6 +416,34 @@ struct cd5
     BOOST_DI_CTOR(cd5, cd4*) { };
 };
 
+struct ub1
+{
+    BOOST_DI_CTOR(ub1, int i_)
+        : i_(i_)
+    { };
+
+    int i_ = 0;
+};
+
+struct ub2
+{
+    BOOST_DI_CTOR(ub2, shared_ptr<ub1> ub1_)
+        : ub1_(ub1_)
+    { }
+
+    shared_ptr<ub1> ub1_;
+};
+
+struct ub3
+{
+    BOOST_DI_CTOR(ub3, shared_ptr<ub1> ub1_, shared_ptr<ub2> ub2_)
+        : ub1_(ub1_), ub2_(ub2_)
+    { }
+
+    shared_ptr<ub1> ub1_;
+    shared_ptr<ub2> ub2_;
+};
+
 struct transaction
 {
     transaction(int i)

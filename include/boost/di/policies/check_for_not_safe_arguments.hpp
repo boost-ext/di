@@ -1,6 +1,7 @@
 /**
  * @code
  * struct c { c(int*); };
+ * @endcode
  *
  * @code
  * singleton<int>

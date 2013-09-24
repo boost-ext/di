@@ -10,9 +10,6 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
-#include <boost/mpl/copy.hpp>
-#include <boost/mpl/back_inserter.hpp>
-#include <boost/mpl/joint_view.hpp>
 #include <boost/mpl/count.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/plus.hpp>
@@ -20,7 +17,6 @@
 #include <boost/mpl/accumulate.hpp>
 #include <boost/mpl/transform.hpp>
 #include <boost/mpl/size.hpp>
-#include <boost/mpl/at.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/assert.hpp>
 
