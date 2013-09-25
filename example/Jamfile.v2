@@ -22,7 +22,7 @@ rule run-cpp11 ( src ) {
 }
 
 test-suite "di" :
-    [ run-cpp11 check_for_creation_by_smart_ptr_policy.cpp ]
+    [ run-cpp11 creation_by_smart_ptr_policy.cpp ]
     [ run-cpp11 concepts.cpp ]
     [ run-cpp11 ctor.cpp ]
     [ run-cpp11 custom_scope.cpp ]

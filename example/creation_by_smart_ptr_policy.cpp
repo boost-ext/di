@@ -23,7 +23,7 @@ struct c
 
 } // namespace
 
-class check_for_creation_by_smart_ptr
+class creation_by_smart_ptr
 {
     BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
@@ -43,10 +43,7 @@ public:
         );
     };
 
-    template<
-        typename TDeps
-      , typename TGiven
-    >
+    template<typename TDeps, typename TGiven>
     class verify<
         TDeps
       , TGiven
@@ -57,7 +54,7 @@ public:
 };
 
 int main() {
-    di::injector<di::policy<check_for_creation_by_smart_ptr>> injector;
+    di::injector<di::policy<creation_by_smart_ptr>> injector;
     injector.create<boost::shared_ptr<c>>();
     //injector.create<c>(); //compile error (CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED)
 
