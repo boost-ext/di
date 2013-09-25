@@ -13,42 +13,62 @@
 #include "data.hpp"
 #include "fake_dependency.hpp"
 #include "fake_dependency_base_of.hpp"
-
-#include <boost/di.hpp>
-
-#include <boost/units/detail/utility.hpp>
+#include "contains_all.hpp"
 
 namespace boost {
 namespace di {
 namespace policies {
 
-BOOST_AUTO_TEST_CASE(basic) {
+BOOST_AUTO_TEST_CASE(none_singletons) {
+    BOOST_CHECK((
+        contains_all<
+            mpl::vector<>
+          , check_for_undefined_behaviors::verify<
+                mpl::vector<
+                    fake_dependency<scopes::per_request<>, int, mpl::int_<42>, ub1>::type
+                  , fake_dependency_base_of<scopes::per_request<>, ub1>::type
+                >
+              , ub3
+              , false
+            >::type
+        >::value
+    ));
+}
 
-    detail::module<
-        mpl::vector<
-            fake_dependency<scopes::per_request<>, int, mpl::int_<42>, mpl::vector<ub2, ub1>>::type
-          , fake_dependency_base_of<scopes::singleton<>, ub1>::type
-        >
-    > m;
+BOOST_AUTO_TEST_CASE(with_call) {
+    BOOST_CHECK((
+        contains_all<
+            mpl::vector<
+                ub1
+            >
+          , check_for_undefined_behaviors::verify<
+                mpl::vector<
+                    fake_dependency<scopes::per_request<>, int, mpl::int_<42>, ub1>::type
+                  , fake_dependency_base_of<scopes::singleton<>, ub1>::type
+                >
+              , ub3
+              , false
+            >::type
+        >::value
+    ));
+}
 
-    auto mm = m.create<ub3>();
-
-    std::cout << mm.ub1_->i_ << std::endl;
-    std::cout << mm.ub2_->ub1_->i_ << std::endl;
-    BOOST_CHECK_EQUAL(mm.ub1_->i_, mm.ub2_->ub1_->i_);
-
-    using m_t = check_for_undefined_behaviors::verify<
-        mpl::vector<
-            fake_dependency<scopes::per_request<>, int, mpl::int_<42>, mpl::vector<ub2, ub1>>::type
-          , fake_dependency_base_of<scopes::singleton<>, ub1>::type
-        >
-      , ub3
-    >;
-
-    using mm_t = decltype(mm);
-
-    std::cout << units::detail::demangle(typeid(m_t::s::type).name()) << std::endl;
-    BOOST_CHECK(false);
+BOOST_AUTO_TEST_CASE(with_call_stack) {
+    BOOST_CHECK((
+        contains_all<
+            mpl::vector<
+                ub1
+            >
+          , check_for_undefined_behaviors::verify<
+                mpl::vector<
+                    fake_dependency<scopes::per_request<>, int, mpl::int_<42>, mpl::vector<ub2, ub1>>::type
+                  , fake_dependency_base_of<scopes::singleton<>, ub1>::type
+                >
+              , ub3
+              , false
+            >::type
+        >::value
+    ));
 }
 
 } // namespace policies
