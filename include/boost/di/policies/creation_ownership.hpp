@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_POLICIES_CHECK_FOR_CREATION_OWNERSHIP_HPP
-#define BOOST_DI_POLICIES_CHECK_FOR_CREATION_OWNERSHIP_HPP
+#ifndef BOOST_DI_POLICIES_CREATION_OWNERSHIP_HPP
+#define BOOST_DI_POLICIES_CREATION_OWNERSHIP_HPP
 
 #include <boost/mpl/bool.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -22,7 +22,7 @@ namespace policies {
  * injector_.create<c1&>();
  * @endcode
  */
-class check_for_creation_ownership
+class creation_ownership
 {
 public:
     template<

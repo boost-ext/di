@@ -12,7 +12,7 @@
     #include <boost/bind.hpp>
 
     #include "boost/di/detail/meta.hpp"
-    #include "boost/di/convertibles/convertible_copy.hpp"
+    #include "boost/di/convertibles/copy.hpp"
     #include "boost/di/type_traits/create_traits.hpp"
     #include "boost/di/named.hpp"
 
@@ -24,7 +24,7 @@
     namespace scopes {
 
     template<
-        template<typename> class TConvertible = convertibles::convertible_copy
+        template<typename> class TConvertible = convertibles::copy
     >
     class per_request
     {

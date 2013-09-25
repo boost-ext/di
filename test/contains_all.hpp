@@ -40,10 +40,7 @@ struct contains_all
       >
 { };
 
-template<
-    typename TSrc
-  , typename TDst
->
+template<typename TSrc, typename TDst>
 struct contains_all<
     TSrc
   , TDst

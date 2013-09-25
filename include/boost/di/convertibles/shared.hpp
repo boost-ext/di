@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_CONVERTIBLES_CONVERTIBLE_SHARED_HPP
-#define BOOST_DI_CONVERTIBLES_CONVERTIBLE_SHARED_HPP
+#ifndef BOOST_DI_CONVERTIBLES_SHARED_HPP
+#define BOOST_DI_CONVERTIBLES_SHARED_HPP
 
 #include <memory>
 #include <boost/shared_ptr.hpp>
@@ -20,7 +20,7 @@ namespace di {
 namespace convertibles {
 
 template<typename T>
-class convertible_shared
+class shared
 {
     template<typename U, typename TShared = shared_ptr<U> >
     class sp_holder
@@ -35,14 +35,14 @@ class convertible_shared
     };
 
 public:
-    convertible_shared() { }
+    shared() { }
 
-    explicit convertible_shared(shared_ptr<T> object)
+    explicit shared(shared_ptr<T> object)
         : object_(object)
     { }
 
 #if !defined(BOOST_NO_CXX11_SMART_PTR)
-    explicit convertible_shared(std::shared_ptr<T> object)
+    explicit shared(std::shared_ptr<T> object)
     {
         shared_ptr<sp_holder<T, std::shared_ptr<T> > > sp =
             make_shared<sp_holder<T, std::shared_ptr<T> > >(object);

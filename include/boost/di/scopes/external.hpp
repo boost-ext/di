@@ -10,7 +10,7 @@
     #define BOOST_DI_SCOPES_EXTERNAL_HPP
 
     #include "boost/di/detail/meta.hpp"
-    #include "boost/di/convertibles/convertible_value.hpp"
+    #include "boost/di/convertibles/value.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 ( \
         BOOST_DI_ITERATION_PARAMS(1, "boost/di/scopes/external.hpp"))
@@ -20,7 +20,7 @@
     namespace scopes {
 
     template<
-        template<typename> class TConvertible = convertibles::convertible_value
+        template<typename> class TConvertible = convertibles::value
     >
     class external
     {

@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_CONVERTIBLES_CONVERTIBLE_COPY_HPP
-#define BOOST_DI_CONVERTIBLES_CONVERTIBLE_COPY_HPP
+#ifndef BOOST_DI_CONVERTIBLES_COPY_HPP
+#define BOOST_DI_CONVERTIBLES_COPY_HPP
 
 #include <memory>
 #include <boost/shared_ptr.hpp>
@@ -22,12 +22,12 @@ namespace di {
 namespace convertibles {
 
 template<typename T, typename = void>
-class convertible_copy_impl
+class copy_impl
 {
     typedef function<T*()> object_t;
 
 public:
-    explicit convertible_copy_impl(const object_t& object)
+    explicit copy_impl(const object_t& object)
         : object_(object)
     { }
 
@@ -36,12 +36,12 @@ protected:
 };
 
 template<typename T>
-class convertible_copy_impl<T, typename disable_if<is_polymorphic<T> >::type>
+class copy_impl<T, typename disable_if<is_polymorphic<T> >::type>
 {
     typedef function<T*()> object_t;
 
 public:
-    explicit convertible_copy_impl(const object_t& object)
+    explicit copy_impl(const object_t& object)
         : object_(object)
     { }
 
@@ -55,14 +55,14 @@ protected:
 };
 
 template<typename T>
-class convertible_copy : public convertible_copy_impl<T>
+class copy : public copy_impl<T>
 {
-    using convertible_copy_impl<T>::object_;
+    using copy_impl<T>::object_;
 
 public:
     template<typename I>
-    explicit convertible_copy(const I& object)
-        : convertible_copy_impl<T>(object)
+    explicit copy(const I& object)
+        : copy_impl<T>(object)
     { }
 
     operator T*() const {

@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/convertibles/convertible_value.hpp"
+#include "boost/di/convertibles/value.hpp"
 
 #include <boost/test/unit_test.hpp>
 
@@ -17,17 +17,17 @@ namespace convertibles {
 const int i = 42;
 
 BOOST_AUTO_TEST_CASE(to_value) {
-    int object = convertible_value<int>(42);
+    int object = value<int>(42);
     BOOST_CHECK_EQUAL(i, object);
 }
 
 BOOST_AUTO_TEST_CASE(to_named_value) {
-    named<int> object = convertible_value<int>(42);
+    named<int> object = value<int>(42);
     BOOST_CHECK_EQUAL(i, object);
 }
 
 BOOST_AUTO_TEST_CASE(to_move) {
-    int&& object = convertible_value<int>(42);
+    int&& object = value<int>(42);
     BOOST_CHECK_EQUAL(i, object);
 }
 

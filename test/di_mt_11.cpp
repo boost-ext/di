@@ -69,14 +69,14 @@ BOOST_AUTO_TEST_CASE(create_complex) {
 
     using injector_c0 = di::injector<
         di::policy<
-            di::policies::check_for_binding_correctness
+            di::policies::binding_correctness
         >
       , impl
     >;
 
     auto injector_c1 = di::make_injector(
         di::policy<
-            di::policies::check_for_circular_dependencies
+            di::policies::circular_dependencies
         >()
       , di::bind_int<i>()
     );

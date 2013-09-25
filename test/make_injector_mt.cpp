@@ -10,8 +10,8 @@
 #include <boost/shared_ptr.hpp>
 
 #include "boost/di/concepts.hpp"
-#include "boost/di/policies/check_for_binding_correctness.hpp"
-#include "boost/di/policies/check_for_circular_dependencies.hpp"
+#include "boost/di/policies/binding_correctness.hpp"
+#include "boost/di/policies/circular_dependencies.hpp"
 
 #include "data.hpp"
 #include "contains_all.hpp"
@@ -54,8 +54,8 @@ BOOST_AUTO_TEST_CASE(with_policy) {
     auto injector_ = make_injector(
         bind_int<i>()
       , policy<
-            policies::check_for_binding_correctness
-          , policies::check_for_circular_dependencies
+            policies::binding_correctness
+          , policies::circular_dependencies
         >()
     );
 
@@ -66,9 +66,9 @@ BOOST_AUTO_TEST_CASE(with_policy_seperate) {
     const int i = 42;
 
     auto injector_ = make_injector(
-        policy<policies::check_for_binding_correctness>()
+        policy<policies::binding_correctness>()
       , bind_int<i>()
-      , policy<policies::check_for_circular_dependencies>()
+      , policy<policies::circular_dependencies>()
     );
 
     BOOST_CHECK_EQUAL(i, injector_.create<c3>().i);
@@ -85,7 +85,7 @@ BOOST_AUTO_TEST_CASE(mix) {
 
     auto injector_c1 = make_injector(
         policy<
-            policies::check_for_circular_dependencies
+            policies::circular_dependencies
         >()
       , singleton<
             c1
@@ -98,7 +98,7 @@ BOOST_AUTO_TEST_CASE(mix) {
             c2
         >()
       , policy<
-            policies::check_for_binding_correctness
+            policies::binding_correctness
         >()
       , injector_c1
       , bind<double>::to(d)
@@ -110,8 +110,8 @@ BOOST_AUTO_TEST_CASE(mix) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                policy<policies::check_for_binding_correctness>
-              , policy<policies::check_for_circular_dependencies>
+                policy<policies::binding_correctness>
+              , policy<policies::circular_dependencies>
             >
           , injector_t::policies::type
         >::value

@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_CONVERTIBLES_CONVERTIBLE_VALUE_HPP
-#define BOOST_DI_CONVERTIBLES_CONVERTIBLE_VALUE_HPP
+#ifndef BOOST_DI_CONVERTIBLES_VALUE_HPP
+#define BOOST_DI_CONVERTIBLES_VALUE_HPP
 
 #include <utility>
 #include "boost/di/named.hpp"
@@ -16,10 +16,10 @@ namespace di {
 namespace convertibles {
 
 template<typename T>
-class convertible_value
+class value
 {
 public:
-    explicit convertible_value(T value)
+    explicit value(T value)
         : value_(value)
     { }
 

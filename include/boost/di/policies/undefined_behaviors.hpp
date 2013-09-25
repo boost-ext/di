@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_POLICIES_CHECK_FOR_UNDEFINED_BEHAVIORS_HPP
-#define BOOST_DI_POLICIES_CHECK_FOR_UNDEFINED_BEHAVIORS_HPP
+#ifndef BOOST_DI_POLICIES_UNDEFINED_BEHAVIORS_HPP
+#define BOOST_DI_POLICIES_UNDEFINED_BEHAVIORS_HPP
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
@@ -44,7 +44,7 @@ namespace policies {
  * >().create<c>();
  * @endcode
  */
-class check_for_undefined_behaviors
+class undefined_behaviors
 {
     template<typename>
     struct is_singleton

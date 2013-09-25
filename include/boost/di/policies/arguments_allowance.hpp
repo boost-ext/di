@@ -13,3 +13,10 @@
  * @endcode
  */
 
+/*allow_smart_ptrs*/
+//allow_refs
+//allow_const_refs
+//allow_ptrs
+//allow_copies
+/*allow_rvalue_refs*/
+

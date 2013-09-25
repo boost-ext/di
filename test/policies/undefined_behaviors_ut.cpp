@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/policies/check_for_undefined_behaviors.hpp"
+#include "boost/di/policies/undefined_behaviors.hpp"
 
 #include <boost/test/unit_test.hpp>
 #include <boost/type_traits/is_base_of.hpp>
@@ -23,7 +23,7 @@ BOOST_AUTO_TEST_CASE(none_singletons) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<>
-          , check_for_undefined_behaviors::verify<
+          , undefined_behaviors::verify<
                 mpl::vector<
                     fake_dependency<scopes::per_request<>, int, mpl::int_<42>, ub1>::type
                   , fake_dependency_base_of<scopes::per_request<>, ub1>::type
@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE(with_call) {
             mpl::vector<
                 ub1
             >
-          , check_for_undefined_behaviors::verify<
+          , undefined_behaviors::verify<
                 mpl::vector<
                     fake_dependency<scopes::per_request<>, int, mpl::int_<42>, ub1>::type
                   , fake_dependency_base_of<scopes::singleton<>, ub1>::type
@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE(with_call_stack) {
             mpl::vector<
                 ub1
             >
-          , check_for_undefined_behaviors::verify<
+          , undefined_behaviors::verify<
                 mpl::vector<
                     fake_dependency<scopes::per_request<>, int, mpl::int_<42>, mpl::vector<ub2, ub1>>::type
                   , fake_dependency_base_of<scopes::singleton<>, ub1>::type

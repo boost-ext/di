@@ -8,7 +8,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "boost/di/policies/check_for_creation_ownership.hpp"
+#include "boost/di/policies/creation_ownership.hpp"
 #include "data.hpp"
 
 namespace boost {
@@ -17,7 +17,7 @@ namespace detail {
 
 BOOST_AUTO_TEST_CASE(module_policy_fail) {
     module<
-        mpl::vector<policy<policies::check_for_creation_ownership> >
+        mpl::vector<policy<policies::creation_ownership> >
     >().create<const c1&>();
 }
 

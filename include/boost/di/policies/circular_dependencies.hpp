@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_POLICIES_CHECK_FOR_CIRCULAR_DEPENDENCIES_HPP
-#define BOOST_DI_POLICIES_CHECK_FOR_CIRCULAR_DEPENDENCIES_HPP
+#ifndef BOOST_DI_POLICIES_CIRCULAR_DEPENDENCIES_HPP
+#define BOOST_DI_POLICIES_CIRCULAR_DEPENDENCIES_HPP
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
@@ -51,7 +51,7 @@ struct is_unique_call_stack
  * make_injector().create<cd1>();
  *@endcode
  */
-class check_for_circular_dependencies
+class circular_dependencies
 {
 public:
     template<

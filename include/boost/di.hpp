@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_HPP
 #define BOOST_DI_HPP
 
-// core
+// ctor
 #include "boost/di/ctor.hpp"
 
 // concepts
@@ -15,9 +15,10 @@
 
 // scopes
 #include "boost/di/scopes/deduce.hpp"
-#include "boost/di/scopes/per_request.hpp"
-#include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/external.hpp"
+#include "boost/di/scopes/per_request.hpp"
+#include "boost/di/scopes/session.hpp"
+#include "boost/di/scopes/singleton.hpp"
 
 // injector
 #include "boost/di/injector.hpp"
@@ -29,11 +30,11 @@
 
 // policies
 #include "boost/di/policy.hpp"
-#include "boost/di/policies/check_for_binding_correctness.hpp"
-#include "boost/di/policies/check_for_circular_dependencies.hpp"
-#include "boost/di/policies/check_for_creation_ownership.hpp"
-#include "boost/di/policies/check_for_not_safe_arguments.hpp"
-#include "boost/di/policies/check_for_undefined_behaviors.hpp"
+#include "boost/di/policies/arguments_allowance.hpp"
+#include "boost/di/policies/binding_correctness.hpp"
+#include "boost/di/policies/circular_dependencies.hpp"
+#include "boost/di/policies/creation_ownership.hpp"
+#include "boost/di/policies/undefined_behaviors.hpp"
 
 #endif
 

@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_POLICIES_CHECK_FOR_BINDING_CORRECTNESS_HPP
-#define BOOST_DI_POLICIES_CHECK_FOR_BINDING_CORRECTNESS_HPP
+#ifndef BOOST_DI_POLICIES_BINDING_CORRECTNESS_HPP
+#define BOOST_DI_POLICIES_BINDING_CORRECTNESS_HPP
 
 #include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -35,7 +35,7 @@ namespace policies {
  * bind<double>::in_call<c>();
  * @endcode
  */
-class check_for_binding_correctness
+class binding_correctness
 {
 public:
     template<
@@ -75,10 +75,7 @@ public:
               >::type
         { };
 
-        template<
-            typename TCtor
-          , typename TDependency
-        >
+        template<typename TCtor, typename TDependency>
         struct comparator
             : mpl::count_if<
                   TCtor
@@ -86,10 +83,7 @@ public:
               >::type
         { };
 
-        template<
-            typename TDependency
-          , typename TResult
-        >
+        template<typename TDependency, typename TResult>
         struct for_each_context
             : mpl::fold<
                   context<TDependency>

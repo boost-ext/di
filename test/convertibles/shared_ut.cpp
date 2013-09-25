@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/convertibles/convertible_shared.hpp"
+#include "boost/di/convertibles/shared.hpp"
 
 #include <boost/test/unit_test.hpp>
 #include <memory>
@@ -17,13 +17,13 @@ namespace convertibles {
 
 BOOST_AUTO_TEST_CASE(to_shared_ptr) {
     shared_ptr<int> i(new int(42));
-    shared_ptr<int> object = convertible_shared<int>(i);
+    shared_ptr<int> object = shared<int>(i);
     BOOST_CHECK_EQUAL(i, object);
 }
 
 BOOST_AUTO_TEST_CASE(to_named_shared_ptr) {
     shared_ptr<int> i(new int(42));
-    named<shared_ptr<int>> object = convertible_shared<int>(i);
+    named<shared_ptr<int>> object = shared<int>(i);
     BOOST_CHECK_EQUAL(i, static_cast<shared_ptr<int>>(object));
 }
 
@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE(to_weak_ptr) {
 
     {
     shared_ptr<int> i(new int(42));
-    object = convertible_shared<int>(i);
+    object = shared<int>(i);
     auto object_ = object.lock();
     BOOST_CHECK_EQUAL(i, object_);
     }
@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(to_named_weak_ptr) {
 
     {
     shared_ptr<int> i(new int(42));
-    object = convertible_shared<int>(i);
+    object = shared<int>(i);
     auto object_ = static_cast<weak_ptr<int>>(object).lock();
     BOOST_CHECK_EQUAL(i, object_);
     }
@@ -57,13 +57,13 @@ BOOST_AUTO_TEST_CASE(to_named_weak_ptr) {
 
 BOOST_AUTO_TEST_CASE(to_std_shared_ptr) {
     std::shared_ptr<int> i(new int(42));
-    std::shared_ptr<int> object = convertible_shared<int>(i);
+    std::shared_ptr<int> object = shared<int>(i);
     BOOST_CHECK_EQUAL(i, object);
 }
 
 BOOST_AUTO_TEST_CASE(to_named_std_shared_ptr) {
     std::shared_ptr<int> i(new int(42));
-    named<std::shared_ptr<int>> object = convertible_shared<int>(i);
+    named<std::shared_ptr<int>> object = shared<int>(i);
     BOOST_CHECK_EQUAL(i, static_cast<std::shared_ptr<int>>(object));
 }
 
@@ -73,7 +73,7 @@ BOOST_AUTO_TEST_CASE(to_std_weak_ptr) {
 
     {
     std::shared_ptr<int> i(new int(42));
-    object = convertible_shared<int>(i);
+    object = shared<int>(i);
     auto object_ = object.lock();
     BOOST_CHECK_EQUAL(i, object_);
     }
@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE(to_named_std_weak_ptr) {
 
     {
     std::shared_ptr<int> i(new int(42));
-    object = convertible_shared<int>(i);
+    object = shared<int>(i);
     auto object_ = static_cast<std::weak_ptr<int>>(object).lock();
     BOOST_CHECK_EQUAL(i, object_);
     }

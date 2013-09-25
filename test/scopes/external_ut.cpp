@@ -10,8 +10,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/ref.hpp>
 
-#include "boost/di/convertibles/convertible_ref.hpp"
-#include "boost/di/convertibles/convertible_shared.hpp"
+#include "boost/di/convertibles/ref.hpp"
+#include "boost/di/convertibles/shared.hpp"
 
 #include "data.hpp"
 
@@ -31,19 +31,19 @@ BOOST_AUTO_TEST_CASE(from_string) {
 
 BOOST_AUTO_TEST_CASE(from_ref) {
     c c_;
-    c& c_ref_ = external<convertibles::convertible_ref>::scope<c>(ref(c_)).create();
+    c& c_ref_ = external<convertibles::ref>::scope<c>(boost::ref(c_)).create();
     BOOST_CHECK_EQUAL(&c_, &c_ref_);
 }
 
 BOOST_AUTO_TEST_CASE(from_const_ref) {
     c c_;
-    const c& const_c_ref_ = external<convertibles::convertible_ref>::scope<const c>(cref(c_)).create();
+    const c& const_c_ref_ = external<convertibles::ref>::scope<const c>(boost::cref(c_)).create();
     BOOST_CHECK_EQUAL(&c_, &const_c_ref_);
 }
 
 BOOST_AUTO_TEST_CASE(from_shared_ptr) {
     shared_ptr<c> c_(new c);
-    shared_ptr<c> sp_c = external<convertibles::convertible_shared>::scope<c>(c_).create();
+    shared_ptr<c> sp_c = external<convertibles::shared>::scope<c>(c_).create();
     BOOST_CHECK_EQUAL(c_, sp_c);
 }
 
@@ -58,15 +58,15 @@ BOOST_AUTO_TEST_CASE(from_context) {
     ));
 
     BOOST_CHECK((
-        static_cast<shared_ptr<c>>(external<convertibles::convertible_shared>::scope<c, a>(c1_).create())
+        static_cast<shared_ptr<c>>(external<convertibles::shared>::scope<c, a>(c1_).create())
         !=
-        static_cast<shared_ptr<c>>(external<convertibles::convertible_shared>::scope<c, b>(c2_).create())
+        static_cast<shared_ptr<c>>(external<convertibles::shared>::scope<c, b>(c2_).create())
     ));
 }
 
 BOOST_AUTO_TEST_CASE(from_if_shared_ptr) {
     shared_ptr<c0if0> c0_(new c0if0);
-    shared_ptr<if0> c1_ = external<convertibles::convertible_shared>::scope<if0>(c0_).create();
+    shared_ptr<if0> c1_ = external<convertibles::shared>::scope<if0>(c0_).create();
     BOOST_CHECK_EQUAL(c0_, c1_);
 }
 

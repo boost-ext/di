@@ -21,8 +21,8 @@
 #include <boost/mpl/has_xxx.hpp>
 
 #include <boost/di/type_traits/make_plain.hpp>
-#include <boost/di/convertibles/convertible_ref.hpp>
-#include <boost/di/convertibles/convertible_shared.hpp>
+#include <boost/di/convertibles/ref.hpp>
+#include <boost/di/convertibles/shared.hpp>
 #include <boost/di/scopes/deduce.hpp>
 #include <boost/di/scopes/external.hpp>
 
@@ -88,9 +88,9 @@ template<
 class dependency : public scope_type<TExpected, TGiven, TScope>::type
 {
     typedef typename scope_type<TExpected, TGiven, TScope>::type scope_type;
-    typedef scopes::external<convertibles::convertible_ref> ref_type;
-    typedef scopes::external<convertibles::convertible_shared> shared_type;
-    typedef scopes::external<convertibles::convertible_value> value_type;
+    typedef scopes::external<convertibles::ref> ref_type;
+    typedef scopes::external<convertibles::shared> shared_type;
+    typedef scopes::external<convertibles::value> value_type;
 
     template<
         typename T
@@ -148,13 +148,13 @@ public:
     template<typename T>
     static typename external<const expected, T, ref_type>::type
     to(const T& obj, typename disable_if<is_arithmetic<T> >::type* = 0) {
-        return typename external<const expected, T, ref_type>::type(cref(obj));
+        return typename external<const expected, T, ref_type>::type(boost::cref(obj));
     }
 
     template<typename T>
     static typename external<expected, T, ref_type>::type
     to(T& obj) {
-        return typename external<expected, T, ref_type>::type(ref(obj));
+        return typename external<expected, T, ref_type>::type(boost::ref(obj));
     }
 
     template<typename T>

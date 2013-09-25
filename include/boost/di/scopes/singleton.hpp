@@ -10,7 +10,7 @@
     #define BOOST_DI_SCOPES_SINGLETON_HPP
 
     #include "boost/di/detail/meta.hpp"
-    #include "boost/di/convertibles/convertible_shared.hpp"
+    #include "boost/di/convertibles/shared.hpp"
     #include "boost/di/type_traits/create_traits.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 ( \
@@ -21,7 +21,7 @@
     namespace scopes {
 
     template<
-        template<typename> class TConvertible = convertibles::convertible_shared
+        template<typename> class TConvertible = convertibles::shared
     >
     class singleton
     {
