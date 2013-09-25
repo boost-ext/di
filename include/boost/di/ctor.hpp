@@ -19,7 +19,7 @@
     #define BOOST_DI_CREATE boost_di_create__
 #endif
 
-#ifdef BOOST_MSVC
+#if defined(BOOST_MSVC)
     #pragma warning(disable:4822) // local class member function does not have a body
 #endif
 
