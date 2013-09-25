@@ -17,7 +17,7 @@ namespace detail {
 
 BOOST_AUTO_TEST_CASE(module_policy_fail) {
     module<
-        mpl::vector<policy<policies::creation_ownership> >
+        mpl::vector<policies::creation_ownership>
     >().create<const c1&>();
 }
 

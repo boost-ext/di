@@ -16,7 +16,7 @@ namespace di {
 namespace policies {
 
 BOOST_AUTO_TEST_CASE(creation_ownership_fail) {
-    injector<policy<creation_ownership> > injector_;
+    injector<creation_ownership> injector_;
     injector_.create<const c1&>();
 }
 

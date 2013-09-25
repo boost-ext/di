@@ -28,6 +28,8 @@ class creation_by_smart_ptr
     BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
 public:
+    typedef creation_by_smart_ptr is_policy;
+
     template<
         typename TDeps
       , typename TGiven
@@ -54,7 +56,7 @@ public:
 };
 
 int main() {
-    di::injector<di::policy<creation_by_smart_ptr>> injector;
+    di::injector<creation_by_smart_ptr> injector;
     injector.create<boost::shared_ptr<c>>();
     //injector.create<c>(); //compile error (CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED)
 

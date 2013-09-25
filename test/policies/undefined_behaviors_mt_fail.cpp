@@ -17,7 +17,7 @@ namespace policies {
 
 BOOST_AUTO_TEST_CASE(undefined_behaviors_fail) {
     injector<
-        policy<undefined_behaviors>
+        undefined_behaviors
       , bind_int<42>::in_call<ub1>
     > injector_;
 
