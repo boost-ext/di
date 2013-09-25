@@ -23,9 +23,7 @@
     namespace di {
     namespace scopes {
 
-    template<
-        template<typename> class TConvertible = convertibles::copy
-    >
+    template<template<typename> class TConvertible = convertibles::copy>
     class per_request
     {
     public:

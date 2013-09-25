@@ -54,6 +54,8 @@ struct is_unique_call_stack
 class circular_dependencies
 {
 public:
+    typedef circular_dependencies is_policy;
+
     template<
         typename TDeps
       , typename TGiven

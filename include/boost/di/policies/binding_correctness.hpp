@@ -38,6 +38,8 @@ namespace policies {
 class binding_correctness
 {
 public:
+    typedef binding_correctness is_policy;
+
     template<
         typename TDeps
       , typename

@@ -594,11 +594,11 @@ BOOST_AUTO_TEST_CASE(policies) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                policy<fake_policy<0>>
+                fake_policy<0>
             >
           , module<
                 mpl::vector<
-                    policy<fake_policy<0>>
+                    fake_policy<0>
                 >
             >::policies::type
         >::value
@@ -609,15 +609,14 @@ BOOST_AUTO_TEST_CASE(policies_mix) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                policy<
-                    fake_policy<0>
-                  , fake_policy<1>
-                >
+                fake_policy<0>
+              , fake_policy<1>
             >
           , module<
                 mpl::vector<
                     fake_dependency_base_of<scopes::per_request<>, int, mpl::int_<0>>::type
-                  , policy<fake_policy<0>, fake_policy<1>>
+                  , fake_policy<0>
+                  , fake_policy<1>
                 >
             >::policies::type
         >::value
@@ -628,16 +627,18 @@ BOOST_AUTO_TEST_CASE(policies_mix_join_many) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                policy<fake_policy<0>, fake_policy<1>>
-              , policy<fake_policy<2>>
-              , policy<fake_policy<3>>
+                fake_policy<0>
+              , fake_policy<1>
+              , fake_policy<2>
+              , fake_policy<3>
             >
           , module<
                 mpl::vector<
-                    policy<fake_policy<0>, fake_policy<1>>
-                  , policy<fake_policy<2>>
+                    fake_policy<0>
+                  , fake_policy<1>
+                  , fake_policy<2>
                   , fake_dependency_base_of<scopes::per_request<>, int, mpl::int_<0>>::type
-                  , policy<fake_policy<3>>
+                  , fake_policy<3>
                 >
             >::policies::type
         >::value

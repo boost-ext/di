@@ -192,6 +192,8 @@ class undefined_behaviors
     };
 
 public:
+    typedef undefined_behaviors is_policy;
+
     template<
         typename TDeps
       , typename TGiven

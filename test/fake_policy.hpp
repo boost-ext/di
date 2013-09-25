@@ -16,6 +16,8 @@ template<int>
 class fake_policy
 {
 public:
+    typedef fake_policy is_policy;
+
     template<
         typename TDeps
       , typename TExternals

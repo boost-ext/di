@@ -20,9 +20,7 @@
     namespace di {
     namespace scopes {
 
-    template<
-        template<typename> class TConvertible = convertibles::shared
-    >
+    template<template<typename> class TConvertible = convertibles::shared>
     class singleton
     {
     public:

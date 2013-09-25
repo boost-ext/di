@@ -25,6 +25,8 @@ namespace policies {
 class creation_ownership
 {
 public:
+    typedef creation_ownership is_policy;
+
     template<
         typename TDeps
       , typename TGiven

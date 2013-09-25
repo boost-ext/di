@@ -71,7 +71,6 @@ test-suite "type traits" :
     [ run-cpp11 type_traits/scope_traits_ut.cpp ]
 ;
 
-
 test-suite "implementation detail" :
     [ run-cpp11 detail/binder_ut.cpp ]
     [ run-cpp11 detail/creator_ut.cpp ]

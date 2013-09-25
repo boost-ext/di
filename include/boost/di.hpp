@@ -29,7 +29,6 @@
 #include "boost/di/provider.hpp"
 
 // policies
-#include "boost/di/policy.hpp"
 #include "boost/di/policies/arguments_allowance.hpp"
 #include "boost/di/policies/binding_correctness.hpp"
 #include "boost/di/policies/circular_dependencies.hpp"

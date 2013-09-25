@@ -23,9 +23,7 @@
     class session_entry { };
     class session_exit { };
 
-    template<
-        template<typename> class TConvertible = convertibles::shared
-    >
+    template<template<typename> class TConvertible = convertibles::shared>
     class session
     {
     public:

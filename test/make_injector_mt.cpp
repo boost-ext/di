@@ -30,6 +30,15 @@ BOOST_AUTO_TEST_CASE(ctor) {
 
 BOOST_AUTO_TEST_CASE(empty) {
     auto injector_empty = make_injector();
+
+    using injector_t = decltype(injector_empty);
+    BOOST_CHECK((
+        contains_all<
+            mpl::vector<>
+          , injector_t::policies::type
+        >::value
+    ));
+
     BOOST_CHECK_EQUAL(0, injector_empty.create<c3>().i);
 }
 
@@ -53,11 +62,20 @@ BOOST_AUTO_TEST_CASE(with_policy) {
 
     auto injector_ = make_injector(
         bind_int<i>()
-      , policy<
-            policies::binding_correctness
-          , policies::circular_dependencies
-        >()
+      , policies::binding_correctness()
+      , policies::circular_dependencies()
     );
+
+    using injector_t = decltype(injector_);
+    BOOST_CHECK((
+        contains_all<
+            mpl::vector<
+                policies::binding_correctness
+              , policies::circular_dependencies
+            >
+          , injector_t::policies::type
+        >::value
+    ));
 
     BOOST_CHECK_EQUAL(i, injector_.create<c3>().i);
 }
@@ -66,10 +84,21 @@ BOOST_AUTO_TEST_CASE(with_policy_seperate) {
     const int i = 42;
 
     auto injector_ = make_injector(
-        policy<policies::binding_correctness>()
+        policies::binding_correctness()
       , bind_int<i>()
-      , policy<policies::circular_dependencies>()
+      , policies::circular_dependencies()
     );
+
+    using injector_t = decltype(injector_);
+    BOOST_CHECK((
+        contains_all<
+            mpl::vector<
+                policies::binding_correctness
+              , policies::circular_dependencies
+            >
+          , injector_t::policies::type
+        >::value
+    ));
 
     BOOST_CHECK_EQUAL(i, injector_.create<c3>().i);
 }
@@ -84,9 +113,7 @@ BOOST_AUTO_TEST_CASE(mix) {
     >;
 
     auto injector_c1 = make_injector(
-        policy<
-            policies::circular_dependencies
-        >()
+        policies::circular_dependencies()
       , singleton<
             c1
         >()
@@ -97,21 +124,19 @@ BOOST_AUTO_TEST_CASE(mix) {
       , per_request<
             c2
         >()
-      , policy<
-            policies::binding_correctness
-        >()
+      , policies::binding_correctness()
       , injector_c1
       , bind<double>::to(d)
     );
 
     auto c5_ = injector_.create<shared_ptr<c5>>();
 
-    typedef decltype(injector_) injector_t;
+    using injector_t = decltype(injector_);
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                policy<policies::binding_correctness>
-              , policy<policies::circular_dependencies>
+                policies::binding_correctness
+              , policies::circular_dependencies
             >
           , injector_t::policies::type
         >::value

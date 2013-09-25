@@ -13,7 +13,6 @@
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/preprocessor/punctuation/comma_if.hpp>
     #include <boost/utility/enable_if.hpp>
-    #include <boost/type_traits/is_base_of.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/joint_view.hpp>
     #include <boost/mpl/fold.hpp>
@@ -29,10 +28,9 @@
     #include "boost/di/detail/module.hpp"
     #include "boost/di/detail/pool.hpp"
     #include "boost/di/scopes/deduce.hpp"
-    #include "boost/di/policy.hpp"
     #include "boost/di/concepts.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 (   \
+    #define BOOST_PP_ITERATION_PARAMS_1 ( \
         BOOST_DI_ITERATION_PARAMS(1, "boost/di/injector.hpp"))
 
     namespace boost {
@@ -73,7 +71,7 @@
                           mpl::and_<has_deps<mpl::_2>, has_policies<mpl::_2> >
                         , mpl::joint_view<deps<mpl::_2>, policies<mpl::_2> >
                         , mpl::if_<
-                              is_base_of<detail::policy_impl, mpl::_2>
+                              has_is_policy<mpl::_2>
                             , mpl::vector1<mpl::_2>
                             , default_scope<mpl::_2>
                           >

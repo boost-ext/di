@@ -19,9 +19,7 @@
     namespace di {
     namespace scopes {
 
-    template<
-        template<typename> class TConvertible = convertibles::value
-    >
+    template<template<typename> class TConvertible = convertibles::value>
     class external
     {
     public:

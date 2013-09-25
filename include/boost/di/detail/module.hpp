@@ -10,47 +10,44 @@
     #define BOOST_DI_DETAIL_MODULE_HPP
 
     #include <boost/preprocessor/iteration/iterate.hpp>
-    #include <boost/type_traits/is_same.hpp>
-    #include <boost/type_traits/is_base_of.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/typeof/typeof.hpp>
     #include <boost/non_type.hpp>
     #include <boost/mpl/vector.hpp>
-    #include <boost/mpl/assert.hpp>
     #include <boost/mpl/is_sequence.hpp>
     #include <boost/mpl/fold.hpp>
+    #include <boost/mpl/bool.hpp>
     #include <boost/mpl/transform.hpp>
     #include <boost/mpl/if.hpp>
     #include <boost/mpl/not.hpp>
     #include <boost/mpl/set.hpp>
     #include <boost/mpl/remove_if.hpp>
-    #include <boost/mpl/count_if.hpp>
     #include <boost/mpl/pop_front.hpp>
     #include <boost/mpl/front.hpp>
     #include <boost/mpl/not.hpp>
-    #include <boost/mpl/equal_to.hpp>
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/insert.hpp>
     #include <boost/mpl/joint_view.hpp>
-    #include <boost/mpl/filter_view.hpp>
     #include <boost/mpl/contains.hpp>
-    #include <boost/mpl/pair.hpp>
     #include <boost/mpl/aux_/yes_no.hpp>
     #include <boost/mpl/has_xxx.hpp>
+    #include <boost/mpl/assert.hpp>
 
     #include "boost/di/detail/meta.hpp"
     #include "boost/di/detail/pool.hpp"
     #include "boost/di/detail/binder.hpp"
     #include "boost/di/detail/creator.hpp"
     #include "boost/di/detail/visitor.hpp"
-    #include "boost/di/policy.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 ( \
         BOOST_DI_ITERATION_PARAMS(1, "boost/di/detail/module.hpp"))
 
     namespace boost {
     namespace di {
+
     namespace detail {
+
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(is_policy)
 
     template<typename TSeq, typename TCond>
     struct get_types
@@ -61,7 +58,7 @@
     struct get_deps
         : get_types<
               TSeq
-            , mpl::not_<is_base_of<detail::policy_impl, mpl::_> >
+            , mpl::not_<has_is_policy<mpl::_> >
           >::type
     { };
 
@@ -189,11 +186,9 @@
               >
         { };
 
-        typedef is_base_of<detail::policy_impl, mpl::_> is_policy;
-
     public:
-        typedef get_types<TDeps, is_policy> policies;
         typedef get_deps<TDeps> deps;
+        typedef get_types<TDeps, has_is_policy<mpl::_> > policies;
 
         module() { }
 
