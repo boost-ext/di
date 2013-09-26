@@ -97,8 +97,6 @@ struct allow_copies
  * arguments_permission<allow_refs>
  * struct c { c(int*); }; // error
  * @endcode
- *
- * @endcode
  */
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 class arguments_permission
