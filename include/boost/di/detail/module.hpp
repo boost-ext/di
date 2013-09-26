@@ -168,7 +168,7 @@
           , typename T
           , typename TPolicy
         >
-        struct verify_policies_impl
+        struct verify_policy
             : TPolicy::template verify<TSeq, T>::type
         { };
 
@@ -181,7 +181,7 @@
             : mpl::is_sequence<
                   typename mpl::transform<
                       TPolicies
-                    , verify_policies_impl<TSeq, T, mpl::_1>
+                    , verify_policy<TSeq, T, mpl::_1>
                   >::type
               >
         { };
