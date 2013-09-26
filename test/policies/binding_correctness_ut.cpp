@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE(not_correct_call_stack) {
             >
           , binding_correctness::verify<
                 mpl::vector<
-                    fake_dependency<none_t, a, a, mpl::vector<c1, c2> >
+                    fake_dependency<none_t, a, a, mpl::vector<c1, c2>>
                 >
               , none_t
               , false
@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE(correct_many) {
             mpl::vector0<>
           , binding_correctness::verify<
                 mpl::vector<
-                    fake_dependency<none_t, int, int, mpl::vector<c1, c3> >
+                    fake_dependency<none_t, int, int, mpl::vector<c1, c3>>
                   , fake_dependency<none_t, int, int, c9, c14>
                 >
               , none_t
