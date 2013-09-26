@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/policies/undefined_behaviors.hpp"
+#include "boost/di/policies/binding_correctness.hpp"
 
 #include <boost/test/unit_test.hpp>
 #include "boost/di.hpp"
@@ -17,7 +17,7 @@ namespace policies {
 
 BOOST_AUTO_TEST_CASE(undefined_behaviors_fail) {
     injector<
-        undefined_behaviors
+        binding_correctness
       , bind_int<42>::in_call<ub1>
     > injector_;
 
@@ -27,5 +27,4 @@ BOOST_AUTO_TEST_CASE(undefined_behaviors_fail) {
 } // namespace policies
 } // namespace di
 } // namespace boost
-
 

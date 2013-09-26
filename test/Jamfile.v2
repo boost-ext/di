@@ -83,7 +83,6 @@ test-suite "policies" :
     [ run-cpp11 policies/binding_correctness_ut.cpp ]
     [ run-cpp11 policies/creation_ownership_ut.cpp ]
     [ run-cpp11 policies/circular_dependencies_ut.cpp ]
-    [ run-cpp11 policies/undefined_behaviors_ut.cpp ]
 ;
 
 test-suite "scopes" :
@@ -120,9 +119,9 @@ test-suite "compile fail" :
     [ compile-fail-cpp11 detail/module_externals_mt_fail.cpp ]
     [ compile-fail-cpp11 detail/module_policy_mt_fail.cpp ]
     [ compile-fail-cpp11 policies/binding_correctness_mt_fail.cpp ]
+    [ compile-fail-cpp11 policies/binding_correctness_ub_mt_fail.cpp ]
     [ compile-fail-cpp11 policies/circular_dependencies_mt_fail.cpp ]
     [ compile-fail-cpp11 policies/creation_ownership_mt_fail.cpp ]
-    [ compile-fail-cpp11 policies/undefined_behaviors_mt_fail.cpp ]
     [ compile-fail-cpp11 injector_policy_mt_fail.cpp ]
     [ compile-fail-cpp11 injector_singleton_by_copy_mt_fail.cpp ]
 ;
