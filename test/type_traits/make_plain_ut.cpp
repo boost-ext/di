@@ -29,15 +29,15 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(basic, T, make_plain_t) {
     BOOST_CHECK((is_same<T, typename make_plain<const T>::type>::value));
     BOOST_CHECK((is_same<T, typename make_plain<const T&>::type>::value));
     BOOST_CHECK((is_same<T, typename make_plain<T&>::type>::value));
-    BOOST_CHECK((is_same<T, typename make_plain<shared_ptr<T> >::type>::value));
+    BOOST_CHECK((is_same<T, typename make_plain<shared_ptr<T>>::type>::value));
     BOOST_CHECK((is_same<T, typename make_plain<const shared_ptr<T>&>::type>::value));
     BOOST_CHECK((is_same<T, typename make_plain<shared_ptr<T>&>::type>::value));
     BOOST_CHECK((is_same<T, typename make_plain<volatile T>::type>::value));
-    BOOST_CHECK((is_same<named<T, mpl::_1>, typename make_plain<named<T, mpl::_1> >::type>::value));
-    BOOST_CHECK((is_same<named<T, mpl::_1>, typename make_plain<named<shared_ptr<T>, mpl::_1> >::type>::value));
-    BOOST_CHECK((is_same<named<T, mpl::_1>, typename make_plain<named<const shared_ptr<T>&, mpl::_1> >::type>::value));
-    BOOST_CHECK((is_same<named<T, mpl::_1>, typename make_plain<shared_ptr<named<const shared_ptr<T>&, mpl::_1> > >::type>::value));
-    BOOST_CHECK((is_same<named<T, mpl::_1>, typename make_plain<const shared_ptr<named<const shared_ptr<T>&, mpl::_1> >&>::type>::value));
+    BOOST_CHECK((is_same<named<T, mpl::_1>, typename make_plain<named<T, mpl::_1>>::type>::value));
+    BOOST_CHECK((is_same<named<T, mpl::_1>, typename make_plain<named<shared_ptr<T>, mpl::_1>>::type>::value));
+    BOOST_CHECK((is_same<named<T, mpl::_1>, typename make_plain<named<const shared_ptr<T>&, mpl::_1>>::type>::value));
+    BOOST_CHECK((is_same<named<T, mpl::_1>, typename make_plain<shared_ptr<named<const shared_ptr<T>&, mpl::_1>>>::type>::value));
+    BOOST_CHECK((is_same<named<T, mpl::_1>, typename make_plain<const shared_ptr<named<const shared_ptr<T>&, mpl::_1>>&>::type>::value));
 }
 
 #if defined(BOOST_HAS_RVALUE_REFERENCES)

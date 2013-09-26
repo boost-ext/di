@@ -53,12 +53,12 @@ BOOST_AUTO_TEST_CASE(create_ctor) {
 }
 
 BOOST_AUTO_TEST_CASE(create_int_value) {
-    std::unique_ptr<int> i(create_traits<int, mpl::int_<42> >());
+    std::unique_ptr<int> i(create_traits<int, mpl::int_<42>>());
     BOOST_CHECK_EQUAL(42, *i);
 }
 
 BOOST_AUTO_TEST_CASE(create_string_value) {
-    std::unique_ptr<std::string> s(create_traits<std::string, mpl::string<'s'> >());
+    std::unique_ptr<std::string> s(create_traits<std::string, mpl::string<'s'>>());
     BOOST_CHECK_EQUAL("s", *s);
 }
 

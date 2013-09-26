@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(basic) {
     typedef fake_binder<dependency_type> binder_type;
 
     visitor_mock<int> visitor_mock;
-    visitor<binder_type>::execute<int, mpl::vector0<> >(visitor_mock);
+    visitor<binder_type>::execute<int, mpl::vector0<>>(visitor_mock);
 }
 
 } // namespace detail

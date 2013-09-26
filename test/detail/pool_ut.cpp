@@ -61,7 +61,7 @@ struct custom_ctor_other
 };
 
 BOOST_AUTO_TEST_CASE(empty) {
-    typedef pool<mpl::vector0<> > pool_type;
+    typedef pool<mpl::vector0<>> pool_type;
 
     pool_type pool_;
 
@@ -185,9 +185,9 @@ BOOST_AUTO_TEST_CASE(get) {
 BOOST_AUTO_TEST_CASE(pool_of_pools) {
     typedef allocator<trivial_ctor> trivial_ctor_type;
     typedef allocator<default_ctor> default_ctor_type;
-    typedef pool<mpl::vector<default_ctor_type> > pool_1_type;
-    typedef pool<mpl::vector<trivial_ctor_type> > pool_2_type;
-    typedef pool<mpl::vector<pool_1_type, pool_2_type> > pool_type;
+    typedef pool<mpl::vector<default_ctor_type>> pool_1_type;
+    typedef pool<mpl::vector<trivial_ctor_type>> pool_2_type;
+    typedef pool<mpl::vector<pool_1_type, pool_2_type>> pool_type;
     default_ctor_type default_ctor_(new default_ctor);
     trivial_ctor_type trivial_ctor_(new trivial_ctor);
 
@@ -216,8 +216,8 @@ BOOST_AUTO_TEST_CASE(pool_of_pools) {
 }
 
 BOOST_AUTO_TEST_CASE(init_pool_from_other_empty_pool) {
-    pool<mpl::vector<> > pool_empty_;
-    pool<mpl::vector<default_ctor> > pool_(pool_empty_, init());
+    pool<mpl::vector<>> pool_empty_;
+    pool<mpl::vector<default_ctor>> pool_(pool_empty_, init());
 
     BOOST_CHECK_EQUAL(0, pool_.get<default_ctor>().i);
 }
@@ -290,8 +290,8 @@ BOOST_AUTO_TEST_CASE(init_pool_from_other_subset_pool_with_ignore) {
 }
 
 BOOST_AUTO_TEST_CASE(pool_from_pool_of_pools) {
-    typedef pool<mpl::vector<custom_ctor> > pool_type;
-    typedef pool<mpl::vector<pool_type> > pool_pool_type;
+    typedef pool<mpl::vector<custom_ctor>> pool_type;
+    typedef pool<mpl::vector<pool_type>> pool_pool_type;
     const int i = 42;
 
     custom_ctor ctor(i);
@@ -302,8 +302,8 @@ BOOST_AUTO_TEST_CASE(pool_from_pool_of_pools) {
 }
 
 BOOST_AUTO_TEST_CASE(pool_from_pool_of_pools_many) {
-    typedef pool<mpl::vector<custom_ctor, default_ctor> > pool_type;
-    typedef pool<mpl::vector<pool_type> > pool_pool_type;
+    typedef pool<mpl::vector<custom_ctor, default_ctor>> pool_type;
+    typedef pool<mpl::vector<pool_type>> pool_pool_type;
     const int i = 42;
 
     custom_ctor c(i);
@@ -323,8 +323,8 @@ public:
 };
 
 BOOST_AUTO_TEST_CASE(pool_flatten) {
-    typedef pool<mpl::vector<trivial_ctor, custom_ctor, default_ctor> > pool_flatten_type;
-    typedef pool<mpl::vector<custom_ctor, base<trivial_ctor, default_ctor> > > pool_type;
+    typedef pool<mpl::vector<trivial_ctor, custom_ctor, default_ctor>> pool_flatten_type;
+    typedef pool<mpl::vector<custom_ctor, base<trivial_ctor, default_ctor>>> pool_type;
     const int i = 42;
 
     custom_ctor c(i);

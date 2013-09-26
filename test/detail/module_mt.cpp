@@ -481,8 +481,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(externals_create_priority, TModule, externals_prio
     const int i1 = 42;
     const int i2 = 87;
 
-    fake_dependency<scopes::external<>, named<int, mpl::string<'1'> >>::type i1_(i1);
-    fake_dependency<scopes::external<>, named<int, mpl::string<'2'> >>::type i2_(i2);
+    fake_dependency<scopes::external<>, named<int, mpl::string<'1'>>>::type i1_(i1);
+    fake_dependency<scopes::external<>, named<int, mpl::string<'2'>>>::type i2_(i2);
 
     TModule module_(i1_, i2_);
 
