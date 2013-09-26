@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_POLICIES_BINDING_CORRECTNESS_HPP
 #define BOOST_DI_POLICIES_BINDING_CORRECTNESS_HPP
 
-#include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
@@ -28,10 +27,10 @@
 #include <boost/mpl/empty.hpp>
 #include <boost/mpl/assert.hpp>
 
+#include "boost/di/detail/binder.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/scopes/singleton.hpp"
-#include "boost/di/detail/binder.hpp"
 
 namespace boost {
 namespace di {
