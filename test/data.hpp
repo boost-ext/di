@@ -8,6 +8,7 @@
 #define BOOST_DI_DATA_HPP
 
 #include <memory>
+#include <string>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/noncopyable.hpp>
@@ -367,6 +368,16 @@ struct c23
     { }
 
     shared_ptr<if0> if0_;
+};
+
+struct c24
+{
+    BOOST_DI_CTOR(c24
+        , c2
+        , shared_ptr<int>
+        , double*
+        , const std::string&
+    ) { }
 };
 
 enum eid

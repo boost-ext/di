@@ -51,6 +51,12 @@ namespace policies {
  *   , singleton<s>
  * >().create<c>();
  * @endcode
+ *
+ * @code
+ * singleton<int>
+ * struct c { c(int&); }; // only c -> not ok
+ * struct d { d(shared_ptr<int>); }; c and d -> ok
+ * @endcode
  */
 class binding_correctness
 {

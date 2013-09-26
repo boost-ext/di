@@ -4,13 +4,17 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_POLICIES_ARGUMENTS_ALLOWANCE_HPP
-#define BOOST_DI_POLICIES_ARGUMENTS_ALLOWANCE_HPP
+#ifndef BOOST_DI_POLICIES_ARGUMENTS_PERMISSION_HPP
+#define BOOST_DI_POLICIES_ARGUMENTS_PERMISSION_HPP
 
 #include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/is_reference.hpp>
+#include <boost/type_traits/is_rvalue_reference.hpp>
+#include <boost/type_traits/is_pointer.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/count_if.hpp>
+#include <boost/mpl/bool.hpp>
 #include <boost/mpl/empty.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/not.hpp>
@@ -47,43 +51,60 @@ struct allow_smart_ptrs
 
 struct allow_refs
 {
-    template<typename>
-    struct allow
-        : mpl::false_
-    { };
-
     template<typename T>
-    struct allow<T&>
-        : mpl::true_
+    struct allow
+        : is_reference<T>
     { };
 };
 
-struct allow_const_refs { };
-struct allow_rvalue_refs { };
-struct allow_ptrs { };
-struct allow_const_ptrs { };
-struct allow_copies { };
+struct allow_rvalue_refs
+{
+    template<typename T>
+    struct allow
+        : is_rvalue_reference<T>
+    { };
+};
+
+struct allow_ptrs
+{
+    template<typename T>
+    struct allow
+        : is_pointer<T>
+    { };
+};
+
+struct allow_copies
+{
+    template<typename T>
+    struct allow
+        : mpl::and_<
+               mpl::not_<is_reference<T> >
+             , mpl::not_<is_pointer<T> >
+             , mpl::not_<is_rvalue_reference<T> >
+             , mpl::not_<has_element_type<T> >
+          >
+    { };
+};
 
 /**
  * @code
- * struct c { c(int*); };
+ * arguments_permission<>
+ * struct c { c(int*); }; // error
+ *
+ * arguments_permission<allow_ptrs>
+ * struct c { c(int*); }; // ok
+ *
+ * arguments_permission<allow_refs>
+ * struct c { c(int*); }; // error
  * @endcode
  *
- * @code
- * singleton<int>
- * struct c { c(int&); }; // not ok
- *
- * singleton<int>
- * struct c { c(int&); }; // ok
- * struct d { d(shared_ptr<int>); }; // ok
  * @endcode
  */
-
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-class arguments_allowance
+class arguments_permission
 {
 public:
-    typedef arguments_allowance is_policy;
+    typedef arguments_permission is_policy;
 
     template<typename T>
     struct ctor
@@ -103,16 +124,19 @@ public:
 
     template<typename TAllow, typename T>
     struct is_allowed_impl
-        : mpl::true_
+        : TAllow::template allow<T>
     { };
 
-    template<typename T>
+    template<
+        typename T
+      , typename TAllows = mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+    >
     struct is_allowed
         : mpl::bool_<
-              (mpl::count_if<
-                  mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+              mpl::count_if<
+                  TAllows
                 , is_allowed_impl<mpl::_, T>
-              >::value) != 0
+              >::value != 0
           >
     { };
 
@@ -130,8 +154,8 @@ public:
                   mpl::joint_view<
                       mpl::if_<
                           is_allowed<mpl::_2>
-                        , mpl::vector1<mpl::_2>
                         , mpl::_2 // ignore
+                        , mpl::vector1<mpl::_2>
                       >
                     , arguments<
                           mpl::_2
@@ -147,6 +171,16 @@ public:
           >
     { };
 
+    template<typename T, bool Assert>
+    struct verify_impl : T
+    {
+        BOOST_MPL_ASSERT_MSG(
+            !Assert || mpl::empty<T>::value
+          , ARGUMENTS_NOT_PERMITTED
+          , (T)
+        );
+    };
+
     template<
         typename TDeps
       , typename TGiven
@@ -154,7 +188,7 @@ public:
       , template<typename> class TBinder = detail::binder
     >
     struct verify
-        : arguments<TGiven, TBinder<TDeps> >::type
+        : verify_impl<typename arguments<TGiven, TBinder<TDeps> >::type, Assert>
     { };
 };
 
