@@ -101,9 +101,6 @@ struct allow_copies
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 class arguments_permission
 {
-public:
-    typedef arguments_permission is_policy;
-
     template<typename T>
     struct ctor
         : type_traits::ctor_traits<
@@ -144,7 +141,7 @@ public:
       , typename TCallStack =
             mpl::vector1<typename type_traits::make_plain<T>::type>
     >
-    struct arguments
+    struct arguments_permission_impl
         : mpl::fold<
               ctor<typename binder<T, TCallStack, TBind>::given>
             , mpl::vector0<>
@@ -155,7 +152,7 @@ public:
                         , mpl::_2 // ignore
                         , mpl::vector1<mpl::_2>
                       >
-                    , arguments<
+                    , arguments_permission_impl<
                           mpl::_2
                         , TBind
                         , mpl::push_back<
@@ -169,24 +166,30 @@ public:
           >
     { };
 
-    template<typename T, bool Assert>
+    template<typename T, typename TAssert>
     struct verify_impl : T
     {
         BOOST_MPL_ASSERT_MSG(
-            !Assert || mpl::empty<T>::value
+            !TAssert::value || mpl::empty<T>::value
           , ARGUMENTS_NOT_PERMITTED
           , (T)
         );
     };
 
+public:
+    typedef arguments_permission is_policy;
+
     template<
         typename TDeps
       , typename TGiven
-      , bool Assert = true
+      , typename TAssert = mpl::true_
       , template<typename> class TBinder = detail::binder
     >
     struct verify
-        : verify_impl<typename arguments<TGiven, TBinder<TDeps> >::type, Assert>
+        : verify_impl<
+              typename arguments_permission_impl<TGiven, TBinder<TDeps> >::type
+            , TAssert
+          >
     { };
 };
 

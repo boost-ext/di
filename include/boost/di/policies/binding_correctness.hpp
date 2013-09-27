@@ -60,9 +60,6 @@ namespace policies {
  */
 class binding_correctness
 {
-public:
-    typedef binding_correctness is_policy;
-
     template<typename>
     struct is_singleton
         : mpl::false_
@@ -252,13 +249,13 @@ public:
 
     template<
         typename TDeps
-      , bool Assert
+      , typename TAssert
       , typename T = typename binding_impl<TDeps>::type
     >
     struct binding : T
     {
        BOOST_MPL_ASSERT_MSG(
-            !Assert || mpl::empty<T>::value
+            !TAssert::value || mpl::empty<T>::value
           , BINDING_DECLARATION_IS_NOT_CORRECT
           , (T)
         );
@@ -268,7 +265,7 @@ public:
         typename TDeps
       , typename TGiven
       , typename TBinder
-      , bool Assert
+      , typename TAssert
       , typename T = typename undefined_behavior_impl<
             typename deps<TGiven, TBinder>::type
         >::type
@@ -276,22 +273,25 @@ public:
     struct undefined_behavior : T
     {
         BOOST_MPL_ASSERT_MSG(
-            !Assert || mpl::empty<T>::value
+            !TAssert::value || mpl::empty<T>::value
           , ARGUMENTS_EVALUTION_ORDER_UNDEFINED_BEHAVIOR
           , (T)
         );
     };
 
+public:
+    typedef binding_correctness is_policy;
+
     template<
         typename TDeps
       , typename TGiven
-      , bool Assert = true
+      , typename TAssert = mpl::true_
       , template<typename> class TBinder = detail::binder
     >
     struct verify
         : mpl::joint_view<
-              binding<TDeps, Assert>
-            , undefined_behavior<TDeps, TGiven, TBinder<TDeps>, Assert>
+              binding<TDeps, TAssert>
+            , undefined_behavior<TDeps, TGiven, TBinder<TDeps>, TAssert>
           >
     { };
 };

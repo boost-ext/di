@@ -53,81 +53,83 @@ struct is_unique_call_stack
  */
 class circular_dependencies
 {
+    template<typename T>
+    struct ctor
+        : type_traits::ctor_traits<
+              typename type_traits::make_plain<T>::type
+          >::type
+    { };
+
+    template<
+        typename T
+      , typename TCallStack
+      , typename TBind
+    >
+    struct binder
+        : TBind::template get_dependency<T, TCallStack>::type
+    { };
+
+    template<
+        typename T
+      , typename TBind
+      , typename TAssert
+      , typename TCallStack =
+            mpl::vector1<typename type_traits::make_plain<T>::type>
+      , typename = void
+    >
+    struct circular_dependencies_impl
+        : mpl::fold<
+              ctor<typename binder<T, TCallStack, TBind>::given>
+            , mpl::true_
+            , mpl::and_<
+                  mpl::_1
+                , circular_dependencies_impl<
+                      mpl::_2
+                    , TBind
+                    , TAssert
+                    , mpl::push_back<
+                          TCallStack
+                        , type_traits::make_plain<mpl::_2>
+                      >
+                  >
+              >
+          >
+    { };
+
+    template<
+        typename T
+      , typename TBind
+      , typename TAssert
+      , typename TCallStack
+    >
+    struct circular_dependencies_impl<
+        T
+      , TBind
+      , TAssert
+      , TCallStack
+      , typename disable_if<is_unique_call_stack<TCallStack> >::type
+    >
+        : mpl::false_
+    {
+       BOOST_MPL_ASSERT_MSG(
+            !TAssert::value
+          , CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED
+          , (T, TCallStack)
+        );
+    };
+
 public:
     typedef circular_dependencies is_policy;
 
     template<
         typename TDeps
       , typename TGiven
-      , bool Assert = true
+      , typename TAssert = mpl::true_
       , template<typename> class TBinder = detail::binder
     >
-    class verify
-    {
-        template<typename T>
-        struct ctor
-            : type_traits::ctor_traits<
-                  typename type_traits::make_plain<T>::type
-              >::type
-        { };
-
-        template<
-            typename T
-          , typename TCallStack
-          , typename TBind
-        >
-        struct binder
-            : TBind::template get_dependency<T, TCallStack>::type
-        { };
-
-        template<
-            typename T
-          , typename TBind
-          , typename TCallStack =
-                mpl::vector1<typename type_traits::make_plain<T>::type>
-          , typename = void
-        >
-        struct deps
-            : mpl::fold<
-                  ctor<typename binder<T, TCallStack, TBind>::given>
-                , mpl::true_
-                , mpl::and_<
-                      mpl::_1
-                    , deps<
-                          mpl::_2
-                        , TBind
-                        , mpl::push_back<
-                              TCallStack
-                            , type_traits::make_plain<mpl::_2>
-                          >
-                      >
-                  >
-              >::type
-        { };
-
-        template<
-            typename T
-          , typename TBind
-          , typename TCallStack
-        >
-        struct deps<
-            T
-          , TBind
-          , TCallStack
-          , typename disable_if<is_unique_call_stack<TCallStack> >::type
-        >
-            : mpl::false_
-        {
-            BOOST_MPL_ASSERT_MSG(
-                !Assert
-              , CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED
-              , (T, TCallStack)
-            );
-        };
-
-    public:
-        typedef typename deps<TGiven, TBinder<TDeps> >::type type;
-    };
+    struct verify
+        : circular_dependencies_impl<TGiven, TBinder<TDeps>, TAssert>
+    { };
 };
 
 } // namespace policies

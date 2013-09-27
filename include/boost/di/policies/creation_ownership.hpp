@@ -7,9 +7,9 @@
 #ifndef BOOST_DI_POLICIES_CREATION_OWNERSHIP_HPP
 #define BOOST_DI_POLICIES_CREATION_OWNERSHIP_HPP
 
-#include <boost/mpl/bool.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_reference.hpp>
+#include <boost/mpl/bool.hpp>
 #include <boost/mpl/assert.hpp>
 
 namespace boost {
@@ -30,28 +30,28 @@ public:
     template<
         typename TDeps
       , typename TGiven
-      , bool Assert = true
+      , typename TAssert = mpl::true_
       , typename = void
     >
-    class verify
-        : public mpl::true_
+    struct verify
+        : mpl::true_
     { };
 
     template<
         typename TDeps
       , typename TGiven
-      , bool Assert
+      , typename TAssert
     >
-    class verify<
+    struct verify<
         TDeps
       , TGiven
-      , Assert
+      , TAssert
       , typename enable_if<is_reference<TGiven> >::type
     >
-        : public mpl::false_
+        : mpl::false_
     {
        BOOST_MPL_ASSERT_MSG(
-            !Assert
+            !TAssert::value
           , CREATION_OWNERSHIP_IS_NOT_CLEAR
           , (TGiven)
         );

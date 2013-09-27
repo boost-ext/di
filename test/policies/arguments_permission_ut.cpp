@@ -23,7 +23,7 @@ BOOST_AUTO_TEST_CASE(none) {
           , arguments_permission<>::verify<
                 mpl::vector0<>
               , c2
-              , false
+              , mpl::false_
             >::type
          >::value
     ));
@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE(allow_requires) {
           , arguments_permission<allow_copies>::verify<
                 mpl::vector0<>
               , c2
-              , false
+              , mpl::false_
             >::type
          >::value
     ));
@@ -49,7 +49,7 @@ BOOST_AUTO_TEST_CASE(allow_some_of_requirements) {
           , arguments_permission<allow_ptrs, allow_copies>::verify<
                 mpl::vector0<>
               , c24
-              , false
+              , mpl::false_
             >::type
          >::value
     ));
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(allow_some_of_requirements_order) {
           , arguments_permission<allow_copies, allow_ptrs>::verify<
                 mpl::vector0<>
               , c24
-              , false
+              , mpl::false_
             >::type
          >::value
     ));
@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_CASE(allow_all_of_requirements) {
             >::verify<
                 mpl::vector0<>
               , c24
-              , false
+              , mpl::false_
             >::type
          >::value
     ));

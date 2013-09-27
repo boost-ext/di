@@ -26,7 +26,7 @@ BOOST_AUTO_TEST_CASE(empty) {
           , binding_correctness::verify<
                 mpl::vector0<>
               , none_t
-              , false
+              , mpl::false_
             >::type
          >::value
     ));
@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(not_correct) {
                     fake_dependency<none_t, a, a, c2>
                 >
               , none_t
-              , false
+              , mpl::false_
             >::type
          >::value
     ));
@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE(not_correct_call_stack) {
                     fake_dependency<none_t, a, a, mpl::vector<c1, c2>>
                 >
               , none_t
-              , false
+              , mpl::false_
             >::type
          >::value
     ));
@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE(correct_many) {
                   , fake_dependency<none_t, int, int, c9, c14>
                 >
               , none_t
-              , false
+              , mpl::false_
             >::type
          >::value
     ));
@@ -92,7 +92,7 @@ BOOST_AUTO_TEST_CASE(none_singletons) {
                   , fake_dependency_base_of<scopes::per_request<>, ub1>::type
                 >
               , ub3
-              , false
+              , mpl::false_
             >::type
         >::value
     ));
@@ -110,7 +110,7 @@ BOOST_AUTO_TEST_CASE(with_call) {
                   , fake_dependency_base_of<scopes::singleton<>, ub1>::type
                 >
               , ub3
-              , false
+              , mpl::false_
             >::type
         >::value
     ));
@@ -128,7 +128,7 @@ BOOST_AUTO_TEST_CASE(with_call_stack) {
                   , fake_dependency_base_of<scopes::singleton<>, ub1>::type
                 >
               , ub3
-              , false
+              , mpl::false_
             >::type
         >::value
     ));
