@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="./doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.0">
 <link rel="home" href="index.html" title="Chapter&#160;1.&#160;Boost.DI (Dependency Injection) 1.0">
+<link rel="next" href="di/hello.html" title="Hello World">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -16,7 +17,7 @@
 <td align="center"><a href="./more/index.htm">More</a></td>
 </tr></table>
 <hr>
-<div class="spirit-nav"></div>
+<div class="spirit-nav"><a accesskey="n" href="di/hello.html"><img src="./doc/src/images/next.png" alt="Next"></a></div>
 <div class="chapter">
 <div class="titlepage"><div>
 <div><h2 class="title">
@@ -32,93 +33,104 @@
       </p>
 </div></div>
 </div></div>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
-        *C++ Dependency Injection Framework**
-      </li></ul></div>
-<p>
-    Motivation Example
-  </p>
-<div class="orderedlist"><ol class="orderedlist" type="1">
-<li class="listitem">
-        Features
-        <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem">
-              supports dependency injection by constructors
-            </li>
-<li class="listitem">
-              supports scopes (deduce, per_request, singleton, session) + custom
-              scopes
-            </li>
-<li class="listitem">
-              supports scope deduction from parameter (by default, ex: shared_ptr
-              -&gt; singleton, unique_ptr, lvalue -&gt; per_request)
-            </li>
-<li class="listitem">
-              supports C++03 and C++11 standard
-            </li>
-<li class="listitem">
-              supports c++11 smart pointers, rvalue references and combinations between
-              boost and std smart pointers
-            </li>
-<li class="listitem">
-              supports named parameters (named&lt;int, my_int&gt;&gt;
-            </li>
-<li class="listitem">
-              supports creation of dynamic dependent factories
-            </li>
-<li class="listitem">
-              supports binding external values (passed by the client)
-            </li>
-<li class="listitem">
-              supports generation of constructor traits via python script using clang
-              (to avoid using BOOST_DI_CTOR macro)
-            </li>
-<li class="listitem">
-              supports compile time policies (circular dependencies, creation ownership,
-              not safe arguments, undefined behaviors)
-            </li>
-<li class="listitem">
-              supports module structure (injectors might be used separately or together)
-            </li>
-<li class="listitem">
-              supports run time visitor through the objection creation (ex: for generation
-              UML diagrams)
-            </li>
-<li class="listitem">
-              supports mocks testing facilities (ex: to create mock hierarchy)
-            </li>
-<li class="listitem">
-              minimal overhead / compile time approach
-            </li>
-</ul></div>
-      </li>
-<li class="listitem">
-        Tested
-        <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem">
-              GCC 4.7.3/4.8.1
-            </li>
-<li class="listitem">
-              Clang 3.2/3.3
-            </li>
-<li class="listitem">
-              Intel C++ 14.0.0
-            </li>
-<li class="listitem">
-              MinGW 4.7.3/4.8.1
-            </li>
-<li class="listitem">
-              Visual Studio 2013 RC
-            </li>
-</ul></div>
-      </li>
-</ol></div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl class="toc">
+<dt><span class="section"><a href="index.html#di.moti">Motivation</a></span></dt>
+<dd><dl><dt><span class="section"><a href="index.html#di.moti.features">Features</a></span></dt></dl></dd>
+<dt><span class="section"><a href="di/hello.html">Hello World</a></span></dt>
+<dt><span class="section"><a href="di/ctor.html">Construction</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="di/ctor.html#di.ctor.def_boost_di_ctor">BOOST_DI_CTOR</a></span></dt>
+<dt><span class="section"><a href="di/ctor.html#di.ctor.def_boost_di_ctor_traits">BOOST_DI_CTOR_TRAITS</a></span></dt>
+<dt><span class="section"><a href="di/ctor.html#di.ctor.boost_di_ctor_traits">di::ctor_traits</a></span></dt>
+<dt><span class="section"><a href="di/ctor.html#di.ctor.di_ctor_traits_py">di_ctor_traits.py</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="di/concepts.html">Concepts</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="di/concepts.html#di.concepts.bind">bind</a></span></dt>
+<dt><span class="section"><a href="di/concepts.html#di.concepts.scope">scope</a></span></dt>
+<dt><span class="section"><a href="di/concepts.html#di.concepts.named">named</a></span></dt>
+<dt><span class="section"><a href="di/concepts.html#di.concepts.named0">provider</a></span></dt>
+<dt><span class="section"><a href="di/concepts.html#di.concepts.creator">creator</a></span></dt>
+<dt><span class="section"><a href="di/concepts.html#di.concepts.visitor">visitor</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="di/scopes.html">Scopes</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="di/scopes.html#di.scopes.deduce">deduce</a></span></dt>
+<dt><span class="section"><a href="di/scopes.html#di.scopes.per_request">per_request</a></span></dt>
+<dt><span class="section"><a href="di/scopes.html#di.scopes.singleton">singleton</a></span></dt>
+<dt><span class="section"><a href="di/scopes.html#di.scopes.session">session</a></span></dt>
+<dt><span class="section"><a href="di/scopes.html#di.scopes.custom_scope">custom_scope</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="di/policies.html">Policies</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="di/policies.html#di.policies.arguments_permission">arguments_permission</a></span></dt>
+<dt><span class="section"><a href="di/policies.html#di.policies.binding_correctness">binding_correctness</a></span></dt>
+<dt><span class="section"><a href="di/policies.html#di.policies.circular_dependencies">circular_dependencies</a></span></dt>
+<dt><span class="section"><a href="di/policies.html#di.policies.creation_ownership">creation_ownership</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="di/injector.html">Injector</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="di/injector.html#di.injector.make_injector">make_injector</a></span></dt>
+<dt><span class="section"><a href="di/injector.html#di.injector.factory">factory</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="di/testing.html">Testing</a></span></dt>
+<dt><span class="section"><a href="di/tweaking.html">Tweaking</a></span></dt>
+<dt><span class="section"><a href="di/reference.html">Reference</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="di/reference.html#di.reference.concepts">Header &lt;boost/di/concepts.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="di/reference.html#di.reference.concepts0">Header &lt;boost/di/ctor.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="di/reference.html#di.reference.concepts1">Header &lt;boost/di/injector.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="di/reference.html#di.reference.concepts2">Header &lt;boost/di/make_injector.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="di/reference.html#di.reference.concepts3">Header &lt;boost/di/named.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="di/reference.html#di.reference.concepts4">Header &lt;boost/di/provider.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="di/reference.html#di.reference.concepts5">Header &lt;boost/di/scopes/deduce.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="di/reference.html#di.reference.concepts6">Header &lt;boost/di/scopes/external.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="di/reference.html#di.reference.concepts7">Header &lt;boost/di/scopes/per_request.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="di/reference.html#di.reference.concepts8">Header &lt;boost/di/scopes/session.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="di/reference.html#di.reference.concepts9">Header &lt;boost/di/scopes/singleton.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="di/reference.html#di.reference.concepts10">Header &lt;boost/di/policies/arguments_permission.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="di/reference.html#di.reference.concepts11">Header &lt;boost/di/policies/binding_correctness.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="di/reference.html#di.reference.concepts12">Header &lt;boost/di/policies/circular_dependencies.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="di/reference.html#di.reference.concepts13">Header &lt;boost/di/policies/creation_ownership.hpp&gt;</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="di/tested.html">Tested</a></span></dt>
+<dt><span class="section"><a href="di/acknowledgements.html">Acknowledgements</a></span></dt>
+</dl>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="di.moti"></a><a class="link" href="index.html#di.moti" title="Motivation">Motivation</a>
+</h2></div></div></div>
+<div class="toc"><dl class="toc"><dt><span class="section"><a href="index.html#di.moti.features">Features</a></span></dt></dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="di.moti.features"></a><a class="link" href="index.html#di.moti.features" title="Features">Features</a>
+</h3></div></div></div>
+<pre class="programlisting"><span class="special">*</span> <span class="identifier">supports</span> <span class="identifier">dependency</span> <span class="identifier">injection</span> <span class="identifier">by</span> <span class="identifier">constructors</span>
+<span class="special">*</span> <span class="identifier">supports</span> <span class="identifier">scopes</span> <span class="special">(</span><span class="identifier">deduce</span><span class="special">,</span> <span class="identifier">per_request</span><span class="special">,</span> <span class="identifier">singleton</span><span class="special">,</span> <span class="identifier">session</span><span class="special">)</span> <span class="special">+</span> <span class="identifier">custom</span> <span class="identifier">scopes</span>
+<span class="special">*</span> <span class="identifier">supports</span> <span class="identifier">scope</span> <span class="identifier">deduction</span> <span class="identifier">from</span> <span class="identifier">parameter</span> <span class="special">(</span><span class="identifier">by</span> <span class="keyword">default</span><span class="special">,</span> <span class="identifier">ex</span><span class="special">:</span> <span class="identifier">shared_ptr</span> <span class="special">-&gt;</span> <span class="identifier">singleton</span><span class="special">,</span> <span class="identifier">unique_ptr</span><span class="special">,</span> <span class="identifier">lvalue</span> <span class="special">-&gt;</span> <span class="identifier">per_request</span><span class="special">)</span>
+<span class="special">*</span> <span class="identifier">supports</span> <span class="identifier">C</span><span class="special">++</span><span class="number">03</span> <span class="keyword">and</span> <span class="identifier">C</span><span class="special">++</span><span class="number">11</span> <span class="identifier">standard</span>
+<span class="special">*</span> <span class="identifier">supports</span> <span class="identifier">c</span><span class="special">++</span><span class="number">11</span> <span class="identifier">smart</span> <span class="identifier">pointers</span><span class="special">,</span> <span class="identifier">rvalue</span> <span class="identifier">references</span> <span class="keyword">and</span> <span class="identifier">combinations</span> <span class="identifier">between</span> <span class="identifier">boost</span> <span class="keyword">and</span> <span class="identifier">std</span> <span class="identifier">smart</span> <span class="identifier">pointers</span>
+<span class="special">*</span> <span class="identifier">supports</span> <span class="identifier">named</span> <span class="identifier">parameters</span> <span class="special">(</span><span class="identifier">named</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">my_int</span><span class="special">&gt;&gt;</span>
+<span class="special">*</span> <span class="identifier">supports</span> <span class="identifier">creation</span> <span class="identifier">of</span> <span class="identifier">dynamic</span> <span class="identifier">dependent</span> <span class="identifier">factories</span>
+<span class="special">*</span> <span class="identifier">supports</span> <span class="identifier">binding</span> <span class="identifier">external</span> <span class="identifier">values</span> <span class="special">(</span><span class="identifier">passed</span> <span class="identifier">by</span> <span class="identifier">the</span> <span class="identifier">client</span><span class="special">)</span>
+<span class="special">*</span> <span class="identifier">supports</span> <span class="identifier">generation</span> <span class="identifier">of</span> <span class="identifier">constructor</span> <span class="identifier">traits</span> <span class="identifier">via</span> <span class="identifier">python</span> <span class="identifier">script</span> <span class="keyword">using</span> <span class="identifier">clang</span> <span class="special">(</span><span class="identifier">to</span> <span class="identifier">avoid</span> <span class="keyword">using</span> <span class="identifier">BOOST_DI_CTOR</span> <span class="identifier">macro</span><span class="special">)</span>
+<span class="special">*</span> <span class="identifier">supports</span> <span class="identifier">compile</span> <span class="identifier">time</span> <span class="identifier">policies</span> <span class="special">(</span><span class="identifier">circular</span> <span class="identifier">dependencies</span><span class="special">,</span> <span class="identifier">creation</span> <span class="identifier">ownership</span><span class="special">,</span> <span class="keyword">not</span> <span class="identifier">safe</span> <span class="identifier">arguments</span><span class="special">,</span> <span class="identifier">undefined</span> <span class="identifier">behaviors</span><span class="special">)</span>
+<span class="special">*</span> <span class="identifier">supports</span> <span class="identifier">module</span> <span class="identifier">structure</span> <span class="special">(</span><span class="identifier">injectors</span> <span class="identifier">might</span> <span class="identifier">be</span> <span class="identifier">used</span> <span class="identifier">separately</span> <span class="keyword">or</span> <span class="identifier">together</span><span class="special">)</span>
+<span class="special">*</span> <span class="identifier">supports</span> <span class="identifier">run</span> <span class="identifier">time</span> <span class="identifier">visitor</span> <span class="identifier">through</span> <span class="identifier">the</span> <span class="identifier">objection</span> <span class="identifier">creation</span> <span class="special">(</span><span class="identifier">ex</span><span class="special">:</span> <span class="keyword">for</span> <span class="identifier">generation</span> <span class="identifier">UML</span> <span class="identifier">diagrams</span><span class="special">)</span>
+<span class="special">*</span> <span class="identifier">supports</span> <span class="identifier">mocks</span> <span class="identifier">testing</span> <span class="identifier">facilities</span> <span class="special">(</span><span class="identifier">ex</span><span class="special">:</span> <span class="identifier">to</span> <span class="identifier">create</span> <span class="identifier">mock</span> <span class="identifier">hierarchy</span><span class="special">)</span>
+<span class="special">*</span> <span class="identifier">minimal</span> <span class="identifier">overhead</span> <span class="special">/</span> <span class="identifier">compile</span> <span class="identifier">time</span> <span class="identifier">approach</span>
+</pre>
+</div>
+</div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: September 27, 2013 at 10:32:25 GMT</small></p></td>
+<td align="left"><p><small>Last revised: September 27, 2013 at 15:13:40 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>
-<div class="spirit-nav"></div>
+<div class="spirit-nav"><a accesskey="n" href="di/hello.html"><img src="./doc/src/images/next.png" alt="Next"></a></div>
 </body>
 </html>
