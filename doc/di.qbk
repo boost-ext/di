@@ -21,11 +21,106 @@
     [source-mode c++]
 ]
 
-**C++ Dependency Injection Framework**
+[c++]
 
-Motivation Example
+[section:moti Motivation]
+[endsect]
 
-# Features
+[section:hello Hello World]
+[endsect]
+
+[section:ctor Construction]
+
+[section:def_boost_di_ctor BOOST_DI_CTOR]
+[endsect]
+
+[section:def_boost_di_ctor_traits BOOST_DI_CTOR_TRAITS]
+[endsect]
+
+[section:boost_di_ctor_traits di::ctor_traits]
+[endsect]
+
+[section:di_ctor_traits_py di_ctor_traits.py]
+[endsect]
+
+[endsect]
+
+[section:concepts Concepts]
+
+[section:bind bind]
+[endsect]
+
+[section:scope scope]
+[endsect]
+
+[section:named named]
+[endsect]
+
+[section:named provider]
+[endsect]
+
+[section:creator creator]
+[endsect]
+
+[section:visitor visitor]
+text visitor
+uml visitor
+[endsect]
+
+[endsect]
+
+[section:scopes Scopes]
+
+[section:deduce deduce]
+[endsect]
+
+[section:per_request per_request]
+[endsect]
+
+[section:singleton singleton]
+[endsect]
+
+[section:session session]
+[endsect]
+
+[section:custom_scope custom_scope]
+[endsect]
+
+[endsect]
+
+[section:policies Policies]
+
+[section:arguments_permission arguments_permission]
+[endsect]
+
+[section:binding_correctness binding_correctness]
+[endsect]
+
+[section:circular_dependencies circular_dependencies]
+[endsect]
+
+[section:creation_ownership creation_ownership]
+[endsect]
+
+[endsect]
+
+[section:injector Injector]
+
+[section:make_injector make_injector]
+[endsect]
+
+[section:factory factory]
+[endsect]
+
+[endsect]
+
+[section:testing Testing]
+[endsect]
+
+[section:tweaking Tweaking]
+[endsect]
+
+[section:features Features]
  * supports dependency injection by constructors
  * supports scopes (deduce, per\_request, singleton, session) + custom scopes
  * supports scope deduction from parameter (by default, ex: shared\_ptr -> singleton, unique\_ptr, lvalue -> per\_request)
@@ -40,11 +135,16 @@ Motivation Example
  * supports run time visitor through the objection creation (ex: for generation UML diagrams)
  * supports mocks testing facilities (ex: to create mock hierarchy)
  * minimal overhead / compile time approach
+[endsect]
 
-# Tested
+[section:tested Tested]
  * GCC 4.7.3/4.8.1
  * Clang 3.2/3.3
  * Intel C++ 14.0.0
  * MinGW 4.7.3/4.8.1
  * Visual Studio 2013 RC
+[endsect]
+
+[section:acknowledgements Acknowledgements]
+[endsect]
 
