@@ -17,9 +17,9 @@ namespace convertibles {
 BOOST_AUTO_TEST_CASE(copy_ctor) {
     int i = 42;
     ref<int> ref_i(boost::ref(i));
-    ref<int> ref(ref_i);
+    ref<int> object_ref(ref_i);
 
-    BOOST_CHECK_EQUAL(ref_i, ref);
+    BOOST_CHECK_EQUAL(ref_i, object_ref);
 }
 
 BOOST_AUTO_TEST_CASE(to_ref) {
