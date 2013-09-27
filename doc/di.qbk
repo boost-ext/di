@@ -24,8 +24,6 @@
 [c++]
 
 [section:moti Motivation]
-
-[section:features Features]
  * supports dependency injection by constructors
  * supports scopes (deduce, per_request, singleton, session) + custom scopes
  * supports scope deduction from parameter (by default, ex: shared_ptr -> singleton, unique_ptr, lvalue -> per_request)
@@ -42,8 +40,6 @@
  * minimal overhead / compile time approach
 [endsect]
 
-[endsect]
-
 [section:hello Hello World]
 [endsect]
 
@@ -53,6 +49,13 @@
 [endsect]
 
 [section:def_boost_di_ctor_traits BOOST_DI_CTOR_TRAITS]
+[endsect]
+
+[section:def_boost_di_create BOOST_DI_CREATE]
+
+[section:factory factory]
+[endsect]
+
 [endsect]
 
 [section:boost_di_ctor_traits di::ctor_traits]
@@ -71,18 +74,13 @@
 [section:scope scope]
 [endsect]
 
+[section:scope call_stack]
+[endsect]
+
 [section:named named]
 [endsect]
 
 [section:named provider]
-[endsect]
-
-[section:creator creator]
-[endsect]
-
-[section:visitor visitor]
-text visitor
-uml visitor
 [endsect]
 
 [endsect]
@@ -124,10 +122,18 @@ uml visitor
 
 [section:injector Injector]
 
-[section:make_injector make_injector]
+[section:create create]
 [endsect]
 
-[section:factory factory]
+[section:visit visit]
+text visitor
+uml visitor
+[endsect]
+
+[section:call call]
+[endsect]
+
+[section:make_injector make_injector]
 [endsect]
 
 [endsect]
@@ -136,9 +142,13 @@ uml visitor
 [endsect]
 
 [section:tweaking Tweaking]
+    -DBOOST_MPL_CFG_NO_PREPROCESSED_HEADERS -DBOOST_MPL_LIMIT_VECTOR_SIZE=30
 [endsect]
 
 [section:reference Reference]
+
+[section:concepts Header <boost/di.hpp>]
+[endsect]
 
 [section:concepts Header <boost/di/concepts.hpp>]
 [endsect]
@@ -193,8 +203,5 @@ uml visitor
  * Intel C++ 14.0.0
  * MinGW 4.7.3/4.8.1
  * Visual Studio 2013 RC
-[endsect]
-
-[section:acknowledgements Acknowledgements]
 [endsect]
 
