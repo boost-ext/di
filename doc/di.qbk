@@ -24,6 +24,24 @@
 [c++]
 
 [section:moti Motivation]
+
+[section:features Features]
+ * supports dependency injection by constructors
+ * supports scopes (deduce, per_request, singleton, session) + custom scopes
+ * supports scope deduction from parameter (by default, ex: shared_ptr -> singleton, unique_ptr, lvalue -> per_request)
+ * supports C++03 and C++11 standard
+ * supports c++11 smart pointers, rvalue references and combinations between boost and std smart pointers
+ * supports named parameters (named<int, my_int>>
+ * supports creation of dynamic dependent factories
+ * supports binding external values (passed by the client)
+ * supports generation of constructor traits via python script using clang (to avoid using BOOST_DI_CTOR macro)
+ * supports compile time policies (circular dependencies, creation ownership, not safe arguments, undefined behaviors)
+ * supports module structure (injectors might be used separately or together)
+ * supports run time visitor through the objection creation (ex: for generation UML diagrams)
+ * supports mocks testing facilities (ex: to create mock hierarchy)
+ * minimal overhead / compile time approach
+[endsect]
+
 [endsect]
 
 [section:hello Hello World]
@@ -120,21 +138,53 @@ uml visitor
 [section:tweaking Tweaking]
 [endsect]
 
-[section:features Features]
- * supports dependency injection by constructors
- * supports scopes (deduce, per\_request, singleton, session) + custom scopes
- * supports scope deduction from parameter (by default, ex: shared\_ptr -> singleton, unique\_ptr, lvalue -> per\_request)
- * supports C++03 and C++11 standard
- * supports c++11 smart pointers, rvalue references and combinations between boost and std smart pointers
- * supports named parameters (named<int, my\_int>>
- * supports creation of dynamic dependent factories
- * supports binding external values (passed by the client)
- * supports generation of constructor traits via python script using clang (to avoid using BOOST\_DI\_CTOR macro)
- * supports compile time policies (circular dependencies, creation ownership, not safe arguments, undefined behaviors)
- * supports module structure (injectors might be used separately or together)
- * supports run time visitor through the objection creation (ex: for generation UML diagrams)
- * supports mocks testing facilities (ex: to create mock hierarchy)
- * minimal overhead / compile time approach
+[section:reference Reference]
+
+[section:concepts Header <boost/di/concepts.hpp>]
+[endsect]
+
+[section:concepts Header <boost/di/ctor.hpp>]
+[endsect]
+
+[section:concepts Header <boost/di/injector.hpp>]
+[endsect]
+
+[section:concepts Header <boost/di/make_injector.hpp>]
+[endsect]
+
+[section:concepts Header <boost/di/named.hpp>]
+[endsect]
+
+[section:concepts Header <boost/di/provider.hpp>]
+[endsect]
+
+[section:concepts Header <boost/di/scopes/deduce.hpp>]
+[endsect]
+
+[section:concepts Header <boost/di/scopes/external.hpp>]
+[endsect]
+
+[section:concepts Header <boost/di/scopes/per_request.hpp>]
+[endsect]
+
+[section:concepts Header <boost/di/scopes/session.hpp>]
+[endsect]
+
+[section:concepts Header <boost/di/scopes/singleton.hpp>]
+[endsect]
+
+[section:concepts Header <boost/di/policies/arguments_permission.hpp>]
+[endsect]
+
+[section:concepts Header <boost/di/policies/binding_correctness.hpp>]
+[endsect]
+
+[section:concepts Header <boost/di/policies/circular_dependencies.hpp>]
+[endsect]
+
+[section:concepts Header <boost/di/policies/creation_ownership.hpp>]
+[endsect]
+
 [endsect]
 
 [section:tested Tested]
