@@ -11,7 +11,5 @@ xml di : di.qbk ;
 
 boostbook standalone : di :
     <xsl:param>boost.root=.
-    #<xsl:param>nav.layout=none
-    #<xsl:param>navig.graphics=0
 ;
 
