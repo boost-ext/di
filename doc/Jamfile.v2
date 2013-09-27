@@ -8,15 +8,10 @@
 using quickbook ;
 
 xml di : di.qbk ;
-boostbook standalone
-    :
-        di
-    :
-        <xsl:param>boost.root=../../../..
-        <xsl:param>nav.layout=none
-        <xsl:param>navig.graphics=0
-    ;
 
-install html : ../../../doc/src/boostbook.css ;
-install ../ : ../../../boost.png ;
+boostbook standalone : di :
+    <xsl:param>boost.root=.
+    #<xsl:param>nav.layout=none
+    #<xsl:param>navig.graphics=0
+;
 
