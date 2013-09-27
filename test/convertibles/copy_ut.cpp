@@ -61,37 +61,31 @@ BOOST_AUTO_TEST_CASE(to_auto_ptr) {
     BOOST_CHECK_EQUAL(i, *object);
 }
 
-#if 0
 BOOST_AUTO_TEST_CASE(to_named_auto_ptr) {
     const int i = 42;
     named<std::auto_ptr<int>> object = copy<int>(return_i);
     BOOST_CHECK_EQUAL(i, *object);
 }
-#endif
 
 BOOST_AUTO_TEST_CASE(to_std_shared_ptr) {
     std::shared_ptr<int> object = copy<int>(return_i);
     BOOST_CHECK_EQUAL(i, *object);
 }
 
-#if 0
 BOOST_AUTO_TEST_CASE(to_named_std_shared_ptr) {
-    named<std::unique_ptr<int>> object = copy<int>(return_i);
+    named<std::shared_ptr<int>> object = copy<int>(return_i);
     BOOST_CHECK_EQUAL(i, *object);
 }
-#endif
 
 BOOST_AUTO_TEST_CASE(to_unique_ptr) {
     std::unique_ptr<int> object = copy<int>(return_i);
     BOOST_CHECK_EQUAL(i, *object);
 }
 
-#if 0
 BOOST_AUTO_TEST_CASE(to_named_unique_ptr) {
     named<std::unique_ptr<int>> object = copy<int>(return_i);
     BOOST_CHECK_EQUAL(i, *object);
 }
-#endif
 
 } // namespace convertibles
 } // namespace di

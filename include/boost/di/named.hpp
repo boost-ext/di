@@ -98,11 +98,23 @@ public:
         : object_(object)
     { }
 
+    named(typename object_type::element_type* ptr) // non explicit
+        : object_(ptr)
+    { }
+
     operator T() const { return object_; }
 
     value_type* operator->() const { return object_.get(); }
     value_type& operator*() const { return *object_; }
     value_type* get() const { return object_.get(); }
+
+    void reset() {
+        object_.reset();
+    }
+
+    void reset(typename object_type::element_type* ptr) {
+        object_.reset(ptr);
+    }
 
 private:
     object_type object_;

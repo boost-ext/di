@@ -6,6 +6,7 @@
 //
 #include "boost/di/named.hpp"
 
+#include <memory>
 #include <boost/test/unit_test.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
@@ -43,6 +44,31 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr) {
 
     BOOST_CHECK_EQUAL(i, *named_);
     BOOST_CHECK_EQUAL(i_.get(), named_.get());
+}
+
+BOOST_AUTO_TEST_CASE(named_smart_ptr) {
+    const int i = 42;
+    int* ptr = new int(i);
+    named<std::unique_ptr<int>> named_(ptr);
+    BOOST_CHECK_EQUAL(i, *named_);
+    BOOST_CHECK_EQUAL(ptr, named_.get());
+}
+
+BOOST_AUTO_TEST_CASE(named_smart_ptr_reset) {
+    const int i = 42;
+    int* ptr = new int(i);
+    named<std::unique_ptr<int>> named_(ptr);
+    named_.reset();
+    BOOST_CHECK(nullptr == named_.get());
+}
+
+BOOST_AUTO_TEST_CASE(named_smart_ptr_reset_ptr) {
+    const int i = 42;
+    int* ptr = new int(i);
+    named<std::unique_ptr<int>> named_(nullptr);
+    named_.reset(ptr);
+    BOOST_CHECK_EQUAL(i, *named_);
+    BOOST_CHECK_EQUAL(ptr, named_.get());
 }
 
 } // namespace di
