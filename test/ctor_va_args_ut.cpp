@@ -12,12 +12,23 @@
 namespace boost {
 namespace di {
 
-BOOST_AUTO_TEST_CASE(empty) {
+BOOST_AUTO_TEST_CASE(empty_ctor) {
     struct c
     {
-        BOOST_DI_CTOR_TRAITS(void);
+        BOOST_DI_CTOR(c, void) { }
+    };
+
+    c c_;
+}
+
+BOOST_AUTO_TEST_CASE(empty_traits) {
+    struct c
+    {
+        BOOST_DI_CTOR_TRAITS();
         c() { }
     };
+
+    c c_;
 }
 
 BOOST_AUTO_TEST_CASE(explicit_with_default) {
@@ -29,7 +40,7 @@ BOOST_AUTO_TEST_CASE(explicit_with_default) {
             : i(i)
         { }
 
-        int i;
+        int i = 0;
     };
 
     c c_;
@@ -44,8 +55,8 @@ BOOST_AUTO_TEST_CASE(params) {
             : i(i), d(d)
         { }
 
-        int i;
-        double d;
+        int i = 0;
+        double d = 0.0;
     };
 
     const int i = 1;
@@ -69,14 +80,40 @@ BOOST_AUTO_TEST_CASE(traits) {
             : i(i), d(d)
         { }
 
-        int i;
-        double d;
+        int i = 0;
+        double d = 0.0;
     };
 
     c c_(i, d);
 
     BOOST_CHECK_EQUAL(i, c_.i);
     BOOST_CHECK_EQUAL(d, c_.d);
+}
+
+BOOST_AUTO_TEST_CASE(inheriting_ctors) {
+    const int i = 1;
+    const double d = 2.0;
+
+    struct c0
+    {
+        BOOST_DI_CTOR(c0, int i, double d)
+            : i(i), d(d)
+        { }
+
+        int i = 0;
+        double d = 0.0;
+    };
+
+    struct c1 : public c0
+    {
+        using c0::c0;
+    };
+
+    c1 c1_(i, d);
+
+
+    BOOST_CHECK_EQUAL(i, c1_.i);
+    BOOST_CHECK_EQUAL(d, c1_.d);
 }
 
 } // namespace di
