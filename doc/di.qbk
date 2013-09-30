@@ -22,62 +22,295 @@
 ]
 
 [section Introduction]
+
+features
+
+ supports dependency injection by constructors
+ supports scopes (deduce, per_request, singleton, session) + custom scopes
+ supports scope deduction from parameter (by default, ex: shared_ptr -> singleton, unique_ptr, lvalue -> per_request)
+ supports C++03 and C++11 standard
+ supports c++11 smart pointers, rvalue references and combinations between boost and std smart pointers
+ supports named parameters (named<int, my_int>>
+ supports creation of dynamic dependent factories
+ supports binding external values (passed by the client)
+ supports generation of constructor traits via python script using clang (to avoid using BOOST_DI_CTOR macro)
+ supports compile time policies (circular dependencies, creation ownership, not safe arguments, undefined behaviors)
+ supports module structure (injectors might be used separately or together)
+ supports run time visitor through the objection creation (ex: for generation UML diagrams)
+ supports mocks testing facilities (ex: to create mock hierarchy)
+ minimal overhead / compile time approach
+
 [endsect]
 
 [section Hello World]
+
+    #include <boost/di.hpp>
+
+    namespace di = boost::di;
+
+    namespace {
+    struct i { virtual ~i() { } };
+    struct impl : i { };
+    struct c
+    {
+        BOOST_DI_CTOR(c
+          , boost::shared_ptr<i> p1     // i->impl, p1 == hello_world.p1
+          , double p2                   // p2 = 0.0
+        ) { }
+    };
+
+    struct hello_world
+    {
+        BOOST_DI_CTOR(hello_world
+            , std::shared_ptr<i> p1     // i->impl
+            , std::unique_ptr<i> p3     // i->impl, p3 != p1 != c.p1
+            , c p4                      // by value
+            , int p5                    // p5 = 0
+        ) { }
+    };
+    } // namespace
+
+    int main() {
+        using injector_t = di::injector<
+            impl // -> di::bind<i, impl>
+                 // -> di::deduce<di::bind<i, impl>>
+                 // -> di::singleton<di::bind<i, impl>>
+        >;
+
+        injector_t().create<hello_world>();
+    }
+
 [endsect]
 
-[section Construction]
+[section Examples]
 
-[section BOOST_DI_CTOR]
+[section c++ 98/03 standard]
 [endsect]
 
-[section BOOST_DI_CTOR_TRAITS]
+[section c++ 11 standard]
 [endsect]
 
-[section BOOST_DI_CREATE]
+[section boost and smart pointers]
+[endsect]
+
+[section binding concepts]
+[endsect]
+
+[section policies]
+[endsect]
+
+[section custom policy]
+[endsect]
+
+[section scopes / deduce / per_request / singleton / session]
+[endsect]
+
+[section custom scope]
+[endsect]
+
+[section ctor]
+[endsect]
 
 [section factory]
 [endsect]
 
+[section externals]
 [endsect]
 
-[section di::ctor_traits]
+[section injector/make injector]
 [endsect]
 
-[section di_ctor_traits.py]
+[section named parameters]
 [endsect]
 
+[section provider]
 [endsect]
 
-[section Injector]
-
-[section create]
+[section testing]
 [endsect]
 
-[section visit]
-text visitor
-uml visitor
-[endsect]
-
-[section call]
-[endsect]
-
-[section make_injector]
+[section visitor / text visitor]
 [endsect]
 
 [endsect]
 
 [section Concepts]
 
-[section bind]
+[section constructor]
+
+[section BOOST_DI_CTOR]
+
+[table BOOST_DI_CTOR
+    [
+        [
+            struct c {
+                BOOST_DI_CTOR(c, int i = 0, double = 0.0) { }
+            };
+        ]
+        [
+            struct c {
+                static void boost_di_ctor__(int i = 0, double = 0.0);
+                c(int i = 0, double = 0.0) { }
+            };
+        ]
+    ]
+]
+
 [endsect]
 
-[section scope]
+[section BOOST_DI_CTOR_TRAITS]
+
+[table BOOST_DI_CTOR_TRAITS
+    [
+        [
+            struct c {
+                BOOST_DI_CTOR_TRAITS(int, named<double,  my_name>);
+                c(int, double) { }
+            };
+        ]
+        [
+            struct c {
+                static void boost_di_ctor__(int, named<double, my_name>);
+                c(int, double) { }
+            };
+        ]
+    ]
+]
+
 [endsect]
 
-[section call_stack]
+[section BOOST_DI_CREATE]
+
+[table BOOST_DI_CREATE
+    [
+        [
+            struct i_factory {
+                i* BOOST_DI_CREATE(int i) {
+                    if (i) {
+                        return new impl();
+                    }
+
+                    return nullptr;
+                }
+            };
+        ]
+        [
+            struct i_factory {
+                i* boost_di_create__(int i) {
+                    if (i) {
+                        return new impl();
+                    }
+
+                    return nullptr;
+                }
+            };
+        ]
+    ]
+]
+
+    class i_factory
+    {
+    public:
+        i* BOOST_DI_CREATE(eid id) {
+            switch(id) {
+                case e1: return new impl1();
+                case e2: return new impl2();
+            }
+
+            return nullptr;
+        }
+    };
+
+    int main() {
+        auto injector = di::make_injector(
+            di::bind<eid>::to(e1)
+          , di::bind<i, i_factory>()
+        );
+
+        injector.create<c>();
+
+        return 0;
+    }
+
 [endsect]
+
+[section di::ctor_traits]
+
+    struct c
+    {
+        c(int, int) { }
+    };
+
+    namespace boost {
+    namespace di {
+
+    template<>
+    struct ctor_traits<c>
+    {
+        static void ctor(int, di::named<int, name>);
+    };
+
+    } // namespace di
+    } // namespace boost
+
+    injector.create<c>();
+
+[endsect]
+
+[section di_ctor_traits.py]
+
+usage
+    Usage: di_ctor_traits.py [options] files...
+
+    Options:
+      -h, --help                show this help message and exit
+      -o FILE, --output=FILE    output file (default='di_ctor_traits.hpp')
+      -l LIMIT, --limit=LIMIT   limit to constructors within declaration (default='')
+
+example
+    ./di_ctor_traits.py file1.hpp file2.hpp -o di_ctor_traits.hpp -l "namespace" -- -D PROJECT -Iproject/include
+
+    class c
+    {
+    public:
+        c(int);
+    };
+
+    /*
+     * file generated by di_ctor_traits: di_ctor_traits.hpp
+     */
+    #ifndef DI_CTOR_TRAITS_HPP
+    #define DI_CTOR_TRAITS_HPP
+
+    #include "..."
+
+    namespace boost {
+    namespace di {
+
+    template<>
+    struct ctor_traits<c>
+    {
+        static void ctor(int);
+    };
+
+    } // namespace di
+    } // namespace boost
+
+    #endif // DI_CTOR_TRAITS_HPP
+
+[endsect]
+
+[endsect]
+
+[section binding]
+[endsect]
+
+[section injector]
+[endsect]
+
+[endsect]
+
+[section Utilities]
 
 [section named]
 [endsect]
@@ -89,10 +322,80 @@ uml visitor
 
 [section Scopes]
 
+    namespace boost {
+    namespace di {
+    namespace scopes {
+
+    class scope {
+    public:
+        template<typename T, typename = T>
+        class scope {
+        public:
+            typedef unspecified result_type;
+            // typedef unspecified is_priority;
+
+            template<typename... T>
+            result_type create(const T&...);
+        };
+    };
+
+    } // namespace scopes
+    } // namespace di
+    } // namespace boost
+
 [section deduce]
+
+Synopsis
+
+    class deduce {
+    public:
+        template<typename T, typename = T>
+        class scope;
+    };
+
+Description
+
+
+Header
+
+    #include <boost/di/scopes/deduce.hpp>
+
+Example
+
+    using injector_t = injector<impl>;
+    assert(injector_t().create<impl2>());
+
+
+    injector<
+        bind<i, impl>
+    >;
+
+    injector<
+        scope<deduce>::bind<
+            bind<i, impl>
+        >
+    >;
+
+[endsect]
+
+[section external]
+
+    auto injector = make_injector(
+        bind<int>::to(0)
+      , bind<int>::in_call<some_class>::to(1)
+      , bind<int>::in_call<some_class>::in_name<some_name>::to(2)
+    );
+
+
 [endsect]
 
 [section per_request]
+
+    auto injector = make_injector(
+        per_request<int>
+      , per_request<
+    );
+
 [endsect]
 
 [section singleton]
@@ -101,10 +404,38 @@ uml visitor
 [section session]
 [endsect]
 
-[section external]
-[endsect]
-
 [section custom_scope]
+
+    struct entry { };
+    struct exit { };
+
+    struct custom_scope {
+        template<typename T, typename>
+        struct scope
+        {
+            typedef T result_type;
+            //typedef scope is_priority;
+
+            void call(const entry&);
+            void call(const exit&);
+
+            template<typename... Args>
+            result_type create(Args&&... args);
+        };
+    };
+
+    using injector_t = injector<
+        scope<custom_scope>::bind<
+            types...
+        >
+    >;
+
+    injector_t injector;
+
+    injector.call(entry());
+    injector.create<type>();
+    injector.call(exit());
+
 [endsect]
 
 [endsect]
@@ -112,27 +443,69 @@ uml visitor
 [section Policies]
 
 [section arguments_permission]
+
+    injector<arguments_permission<>>().create<int>(); // compile fail
+    injector<arguments_permission<allow_copies>>().create<int>(); // ok
+    injector<arguments_permission<allow_copies, allow_ptrs>>().create<int*>(); // ok
+
 [endsect]
 
 [section binding_correctness]
+
+    struct c {
+        BOOST_DI_CTOR(c, int);
+    };
+
+    injector<
+        binding_correctness
+      , injector<
+            bind<double>::in_call<c>
+        >
+    >().create<c>; // error -> double is not an argument of 'c' constructor
+
+    struct s { s(int); };
+    struct k { k(shared_ptr<s>); };
+    struct c { c(shared_ptr<s>, shared_ptr<k>); }; //arguments evaluation order is not specified
+    injector<
+        bind<int>::in_call<s>::to(i)
+      , singleton<s>
+    >().create<c>();
+
 [endsect]
 
 [section circular_dependencies]
+
+    struct cd2;
+    struct cd1 { cd1(cd2*); };
+    struct cd2 { cd2(cd1*); };
+    make_injector().create<cd1>(); //error
+
 [endsect]
 
 [section creation_ownership]
-[endsect]
+
+    injector_.create<const c1&>(); //error
+    injector_.create<c1&>(); //error
 
 [endsect]
 
-[section Testing]
 [endsect]
 
-[section Tweaking]
-    -DBOOST_MPL_CFG_NO_PREPROCESSED_HEADERS -DBOOST_MPL_LIMIT_VECTOR_SIZE=30
+[section Configuration]
+    BOOST_MPL_LIMIT_VECTOR_SIZE
     BOOST_DI_CTOR_CFG_VA_ARGS || BOOST_DI_CTOR_CFG_BRACKET
     #define BOOST_DI_CONSTRUCTOR boost_di_constructor__
     #define BOOST_DI_CREATE boost_di_create__
+[endsect]
+
+[section Tested/Supported Compilers]
+
+* GCC 4.7.3/4.8.1
+* Clang 3.2/3.3
+* Intel C++ 14.0.0
+* MinGW 4.7.3/4.8.1
+* Visual Studio 2013 RC
+
 [endsect]
 
 [section Reference]
@@ -166,6 +539,259 @@ This header exists simply as a convenience to the user, including all of the hea
     #include "boost/di/policies/binding_correctness.hpp"
     #include "boost/di/policies/circular_dependencies.hpp"
     #include "boost/di/policies/creation_ownership.hpp"
+
+[endsect]
+
+[section Header <boost/di/concepts/bind.hpp>]
+
+    namespace boost {
+    namespace di {
+    namespace concepts {
+
+    template<
+        typename TExpected
+      , typename TGiven
+    >
+    struct bind {
+        template<typename... T>
+        struct in_call {
+            template<TName>
+            struct in_name;
+        };
+
+        template<TName>
+        struct in_name {
+            template<typename... T>
+            struct in_call;
+        };
+    };
+
+    } // namespace concepts
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/concepts/dependency.hpp>]
+
+    namespace boost {
+    namespace di {
+    namespace concepts {
+
+    template<
+        typename TScope
+      , typename TExpected
+      , typename TGiven = TExpected
+      , typename TContext = mpl::vector0<>
+      , typename TBind = typename mpl::lambda<
+            is_same<mpl::_1, TExpected>
+        >::type
+    >
+    class dependency {
+    public:
+        typedef dependency type;
+        typedef typename TScope scope;
+        typedef typename TExpected expected;
+        typedef typename TGiven given;
+        typedef TContext context;
+        typedef TBind bind;
+
+        template<typename T>
+        struct rebind {
+            typedef dependency<T, TExpected, TGiven, TContext, TBind> other;
+        };
+
+        dependency() { }
+
+        template<typename T>
+        explicit dependency(const T&);
+
+        template<typename T>
+        dependency<T> to(const T&);
+
+        template<typename T>
+        dependency<T> to(T&);
+
+        template<typename T>
+        dependency<T> to(shared_ptr<T>);
+
+        template<typename T>
+        dependency<T> to(std::shared_ptr<T>);
+    };
+
+    } // namespace concepts
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/concepts/scope.hpp>]
+
+    namespace boost {
+    namespace di {
+    namespace concepts {
+
+    template<typename TScope>
+    struct scope {
+        template<typename... T>
+        struct bind {
+            template<TName>
+            struct in_name;
+        };
+
+        template<T>
+        struct bind {
+            template<typename... T>
+            struct in_call {
+                template<TName>
+                struct in_name;
+            };
+
+            template<typename TName>
+            struct in_name {
+                template<typename... T>
+                struct in_call;
+            };
+        };
+    };
+
+    } // namespace concepts
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/convertibles/copy.hpp>]
+
+    namespace boost {
+    namespace di {
+    namespace concepts {
+
+    template<typename T>
+    struct copy {
+        template<typename I>
+        explicit copy(const I&);
+
+        operator T*() const;
+
+        template<typename I, typename TName>
+        operator named<I, TName>() const;
+
+        template<typename I>
+        operator shared_ptr<I>() const;
+
+        template<typename I, typename TName>
+        operator named<shared_ptr<I>, TName>() const;
+
+        template<typename I>
+        operator std::auto_ptr<I>&() const;
+
+        template<typename I, typename TName>
+        operator named<std::auto_ptr<I>, TName>&() const;
+
+        template<typename I>
+        operator std::shared_ptr<I>() const;
+
+        template<typename I, typename TName>
+        operator named<std::shared_ptr<I>, TName>() const;
+
+        template<typename I>
+        operator std::unique_ptr<I>() const;
+
+        template<typename I, typename TName>
+        operator named<std::unique_ptr<I>, TName>() const;
+    };
+
+    } // namespace concepts
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/convertibles/ref.hpp>]
+
+    namespace boost {
+    namespace di {
+    namespace concepts {
+
+    template<typename T>
+    struct ref {
+        explicit ref(const reference_wrapper<T>&);
+
+        operator T&() const;
+
+        template<typename I, typename TName>
+        operator named<I, TName>() const;
+    };
+
+    } // namespace concepts
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/convertibles/shared.hpp>]
+
+    namespace boost {
+    namespace di {
+    namespace concepts {
+
+    template<typename T>
+    struct shared {
+        shared() { }
+        explicit shared(shared_ptr<T>);
+        explicit shared(std::shared_ptr<T>);
+
+        bool operator!() const;
+
+        void reset();
+
+        void reset(T*);
+
+        template<typename I>
+        operator shared_ptr<I>() const;
+
+        template<typename I, typename TName>
+        operator named<shared_ptr<I>, TName>() const;
+
+        template<typename I>
+        operator weak_ptr<I>() const;
+
+        template<typename I, typename TName>
+        operator named<weak_ptr<I>, TName>() const;
+
+        template<typename I>
+        operator std::shared_ptr<I>() const;
+
+        template<typename I, typename TName>
+        operator named<std::shared_ptr<I>, TName>() const;
+    };
+
+    } // namespace concepts
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/convertibles/value.hpp>]
+
+    namespace boost {
+    namespace di {
+    namespace concepts {
+
+    template<typename T>
+    struct value {
+        explicit value(T);
+
+        operator T() const;
+        operator T&&() const;
+        template<typename I, typename TName>
+        operator named<I, TName>() const;
+    };
+
+    } // namespace concepts
+    } // namespace di
+    } // namespace boost
 
 [endsect]
 
@@ -502,7 +1128,6 @@ This header exists simply as a convenience to the user, including all of the hea
     namespace di {
     namespace policies {
 
-    template<typename... T>
     class binding_correctness {
     public:
         typedef unspecified is_policy;
@@ -523,7 +1148,6 @@ This header exists simply as a convenience to the user, including all of the hea
     namespace di {
     namespace policies {
 
-    template<typename... T>
     class circular_dependencies {
     public:
         typedef unspecified is_policy;
@@ -544,7 +1168,6 @@ This header exists simply as a convenience to the user, including all of the hea
     namespace di {
     namespace policies {
 
-    template<typename... T>
     class creation_ownership {
     public:
         typedef unspecified is_policy;
@@ -557,16 +1180,6 @@ This header exists simply as a convenience to the user, including all of the hea
     } // namespace di
     } // namespace boost
 
-[endsect]
-
-[endsect]
-
-[section Tested/Supported by compilers]
-* GCC 4.7.3/4.8.1
-* Clang 3.2/3.3
-* Intel C++ 14.0.0
-* MinGW 4.7.3/4.8.1
-* Visual Studio 2013 RC
 [endsect]
 
 [endsect]

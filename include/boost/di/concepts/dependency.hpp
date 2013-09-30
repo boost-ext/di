@@ -116,13 +116,6 @@ public:
     typedef TContext context;
     typedef TBind bind;
 
-    dependency() { }
-
-    template<typename T>
-    explicit dependency(const T& obj)
-        : scope_type(obj)
-    { }
-
     template<typename T>
     struct rebind
     {
@@ -138,6 +131,13 @@ public:
           , TBind
         > other;
     };
+
+    dependency() { }
+
+    template<typename T>
+    explicit dependency(const T& obj)
+        : scope_type(obj)
+    { }
 
     template<typename T>
     static typename external<expected, T, value_type>::type
