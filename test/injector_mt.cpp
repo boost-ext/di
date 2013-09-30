@@ -363,6 +363,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_shared_ptr_std_unique_ptr, TInjector, deduce_i
     BOOST_CHECK(c21_->if0__ == c21_->if0__);
 }
 
+BOOST_AUTO_TEST_CASE(boost_std_smart_ptr) {
+    auto c25_ = injector<>().create<c25>();
+    BOOST_CHECK(c25_.s1_.get() == c25_.s2_.get());
+    BOOST_CHECK(nullptr != c25_.w1_.lock());
+}
+
 BOOST_AUTO_TEST_CASE(session_scope) {
     injector<
         session<c0if0>

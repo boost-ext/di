@@ -10,6 +10,7 @@
 #include <memory>
 #include <string>
 #include <boost/shared_ptr.hpp>
+#include <boost/weak_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/function.hpp>
@@ -378,6 +379,21 @@ struct c24
         , double*
         , const std::string&
     ) { }
+};
+
+struct c25
+{
+    BOOST_DI_CTOR(c25
+        , std::shared_ptr<int> s1_
+        , boost::shared_ptr<int> s2_
+        , boost::weak_ptr<int> w1_
+    )
+        : s1_(s1_), s2_(s2_), w1_(w1_)
+    { }
+
+    std::shared_ptr<int> s1_;
+    boost::shared_ptr<int> s2_;
+    boost::weak_ptr<int> w1_;
 };
 
 enum eid

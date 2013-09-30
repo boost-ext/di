@@ -9,6 +9,7 @@
 
 #include <memory>
 #include <boost/shared_ptr.hpp>
+#include <boost/weak_ptr.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/has_xxx.hpp>
 
@@ -64,10 +65,22 @@ struct scope_traits<shared_ptr<T> >
     typedef scopes::singleton<> type;
 };
 
+template<typename T>
+struct scope_traits<weak_ptr<T> >
+{
+    typedef scopes::singleton<> type;
+};
+
 #if !defined(BOOST_NO_CXX11_SMART_PTR)
 
 template<typename T>
 struct scope_traits<std::shared_ptr<T> >
+{
+    typedef scopes::singleton<> type;
+};
+
+template<typename T>
+struct scope_traits<std::weak_ptr<T> >
 {
     typedef scopes::singleton<> type;
 };

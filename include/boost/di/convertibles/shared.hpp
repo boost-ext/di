@@ -96,20 +96,6 @@ public:
             std::shared_ptr<T>(sp, object_.get())
         );
     }
-
-    template<typename I>
-    operator std::weak_ptr<I>() const {
-        std::shared_ptr<sp_holder<T> > sp = std::make_shared<sp_holder<T> >(object_);
-        return std::weak_ptr<I>(std::shared_ptr<T>(sp, object_.get()));
-    }
-
-    template<typename I, typename TName>
-    operator named<std::weak_ptr<I>, TName>() const {
-        std::shared_ptr<sp_holder<T> > sp = std::make_shared<sp_holder<T> >(object_);
-        return named<std::weak_ptr<I>, TName>(
-            std::weak_ptr<I>(std::shared_ptr<T>(sp, object_.get()))
-        );
-    }
 #endif
 
 private:
