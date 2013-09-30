@@ -42,7 +42,9 @@ features
 
 [endsect]
 
-[section Hello World]
+[section Examples]
+
+[section hello world]
 
     #include <boost/di.hpp>
 
@@ -81,8 +83,6 @@ features
     }
 
 [endsect]
-
-[section Examples]
 
 [section c++ 98/03 standard]
 [endsect]
