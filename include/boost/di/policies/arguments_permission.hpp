@@ -91,11 +91,12 @@ struct allow_copies
  * arguments_permission<>
  * struct c { c(int*); }; // error
  *
+ * arguments_permission<allow_refs>
+ * struct c { c(int*); }; // error
+ *
  * arguments_permission<allow_ptrs>
  * struct c { c(int*); }; // ok
  *
- * arguments_permission<allow_refs>
- * struct c { c(int*); }; // error
  * @endcode
  */
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
