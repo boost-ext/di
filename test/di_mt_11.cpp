@@ -87,6 +87,11 @@ BOOST_AUTO_TEST_CASE(create_complex) {
       , di::per_request<c2>()
       , injector_c1
       , di::bind<double>::to(d)
+      , di::policies::arguments_permission<
+            di::policies::allow_smart_ptrs
+          , di::policies::allow_copies
+          , di::policies::allow_refs
+        >()
     );
 
     auto c3_ = injector_.create<boost::shared_ptr<c3>>();
