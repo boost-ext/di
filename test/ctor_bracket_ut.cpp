@@ -90,6 +90,28 @@ BOOST_AUTO_TEST_CASE(traits) {
     BOOST_CHECK_EQUAL(d, c_.d);
 }
 
+BOOST_AUTO_TEST_CASE(function) {
+    const int i = 1;
+    const double d = 2.0;
+
+    struct c
+    {
+        static void BOOST_DI_CONSTRUCTOR(int i, double d);
+
+        c(int i, double d)
+            : i(i), d(d)
+        { }
+
+        int i = 0;
+        double d = 0.0;
+    };
+
+    c c_(i, d);
+
+    BOOST_CHECK_EQUAL(i, c_.i);
+    BOOST_CHECK_EQUAL(d, c_.d);
+}
+
 BOOST_AUTO_TEST_CASE(inheriting_ctors) {
     const int i = 1;
     const double d = 2.0;

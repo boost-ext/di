@@ -7,16 +7,20 @@
 #ifndef BOOST_DI_CTOR_HPP
 #define BOOST_DI_CTOR_HPP
 
-#if !defined(BOOST_DI_CTOR_CFG_VA_ARGS) && !defined(BOOST_DI_CTOR_CFG_BRACKET)
-    #define BOOST_DI_CTOR_CFG_VA_ARGS
-#endif
-
 #if !defined(BOOST_DI_CONSTRUCTOR)
     #define BOOST_DI_CONSTRUCTOR boost_di_constructor__
 #endif
 
 #if !defined(BOOST_DI_CREATE)
     #define BOOST_DI_CREATE boost_di_create__
+#endif
+
+#if !defined(BOOST_DI_CTOR_CFG_VA_ARGS) && !defined(BOOST_DI_CTOR_CFG_BRACKET)
+    #if __cplusplus >= 201100L
+        #define BOOST_DI_CTOR_CFG_VA_ARGS
+    #else
+        #define BOOST_DI_CTOR_CFG_BRACKET
+    #endif
 #endif
 
 #if defined(BOOST_MSVC)
@@ -29,10 +33,6 @@
 
 #if defined(BOOST_DI_CTOR_CFG_VA_ARGS)
 
-    #if defined(__GNUC__) && (__GNUC__ >= 4)
-        #pragma GCC system_header
-    #endif
-
     #define BOOST_DI_CTOR_TRAITS(...)                   \
         static void BOOST_DI_CONSTRUCTOR(__VA_ARGS__)   \
 
@@ -40,7 +40,7 @@
         BOOST_DI_CTOR_TRAITS(__VA_ARGS__);              \
         type(__VA_ARGS__)
 
-#elif defined(BOOST_DI_CTOR_CFG_BRACKET)
+#else
 
     #define BOOST_DI_CTOR_TRAITS(Params)                \
         static void BOOST_DI_CONSTRUCTOR Params         \
@@ -49,8 +49,6 @@
         BOOST_DI_CTOR_TRAITS(params);                   \
         type params
 
-#else
-    #error BOOST_DI_CTOR not defined
 #endif
 
 #include "boost/di/type_traits/ctor_traits.hpp" // di::ctor_traits<...>

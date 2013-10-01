@@ -27,7 +27,13 @@ struct c2
 
 struct c3
 {
-    c3(int, int) { }
+    static void BOOST_DI_CONSTRUCTOR(int, di::named<int, name>);
+    c3(int, int = 0) { }
+};
+
+struct c4
+{
+    c4(int, int) { }
 };
 
 } // namespace
@@ -36,7 +42,7 @@ namespace boost {
 namespace di {
 
 template<>
-struct ctor_traits<c3>
+struct ctor_traits<c4>
 {
     static void ctor(int, di::named<int, name>);
 };
@@ -50,5 +56,6 @@ int main() {
     injector.create<c1>();
     injector.create<c2>();
     injector.create<c3>();
+    injector.create<c4>();
 }
 

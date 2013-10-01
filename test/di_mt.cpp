@@ -8,6 +8,7 @@
 #include <vector>
 #include <boost/shared_ptr.hpp>
 #include <boost/typeof/typeof.hpp>
+#define BOOST_DI_CTOR_CFG_VA_ARGS
 #include "boost/di.hpp"
 
 #include <boost/test/unit_test.hpp>
