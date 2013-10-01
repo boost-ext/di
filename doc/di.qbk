@@ -580,7 +580,7 @@ Example
     #define BOOST_DI_CREATE boost_di_create__
 [endsect]
 
-[section Integration with Boost Libraries]
+[section Integration with Boost libraries]
 
 [section Boost Meta State Machine]
 [endsect]
