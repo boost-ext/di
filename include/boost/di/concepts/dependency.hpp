@@ -92,20 +92,10 @@ class dependency : public scope_type<TExpected, TGiven, TScope>::type
     typedef scopes::external<convertibles::shared> shared_type;
     typedef scopes::external<convertibles::value> value_type;
 
-    template<
-        typename T
-      , typename U
-      , typename TConvertible
-    >
+    template<typename T, typename U, typename S>
     struct external
     {
-        typedef dependency<
-            TConvertible
-          , T
-          , U
-          , TContext
-          , TBind
-        > type;
+        typedef dependency<S, T, U, TContext, TBind> type;
     };
 
 public:
