@@ -249,7 +249,10 @@ auto billingService = make_injector(config()).create<RealBillingService>();
 
 [section Concepts]
 
-[section constructor]
+[section constructor injection]
+
+Constructor injection is straightforward. Because Java technology guarantees constructor invocation, you don't need to worry about objects arriving in an uninitialized state — whether or not Guice creates them. You can also mark your fields final.
+According to the Guice best practices guide, constructor injection is the preferred way to ask for your dependencies
 
 [section BOOST_DI_CTOR]
 
