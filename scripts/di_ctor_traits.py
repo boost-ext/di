@@ -15,6 +15,7 @@ file_template_hpp = """\
 #ifndef %(guard)s
 #define %(guard)s
 
+#include <boost/di/ctor.hpp>
 %(includes)s
 
 namespace boost {
@@ -45,7 +46,7 @@ class ctor_trait:
     def to_string(self):
         ctor = []
         ctor.append(
-            "template<>\nstruct ctor_traits<%(name)s>\n{\n    static void ctor(%(args)s);\n};\n\n" % {
+            "template<>\nstruct ctor_traits<%(name)s>\n{\n    BOOST_DI_CTOR_TRAITS(%(args)s);\n};\n\n" % {
             'name' : self.name,
             'args' : self.args
         })

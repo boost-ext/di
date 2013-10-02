@@ -4,6 +4,7 @@
 #ifndef DI_CTOR_TRAITS_HPP
 #define DI_CTOR_TRAITS_HPP
 
+#include <boost/di/ctor.hpp>
 #include "given/ctors.hpp"
 
 namespace boost {
@@ -12,13 +13,13 @@ namespace di {
 template<>
 struct ctor_traits<n::a>
 {
-    static void ctor(int);
+    BOOST_DI_CTOR_TRAITS(int);
 };
 
 template<>
 struct ctor_traits<n::n1::b>
 {
-    static void ctor(int, double, const std::string &);
+    BOOST_DI_CTOR_TRAITS(int, double, const std::string &);
 };
 
 } // namespace di

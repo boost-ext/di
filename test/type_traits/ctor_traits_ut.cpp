@@ -29,7 +29,7 @@ struct int_double
 
 struct extensions
 {
-    static void BOOST_DI_CONSTRUCTOR(char*, const int&);
+    BOOST_DI_CTOR_TRAITS(char*, const int&);
 };
 
 struct create

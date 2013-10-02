@@ -511,7 +511,7 @@ struct transaction_usage
 template<>
 struct ctor_traits<c14>
 {
-    static void ctor(int, double);
+    BOOST_DI_CTOR_TRAITS(int, double);
 };
 
 } // namespace di

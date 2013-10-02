@@ -44,7 +44,7 @@ namespace di {
 template<>
 struct ctor_traits<c4>
 {
-    static void ctor(int, di::named<int, name>);
+    BOOST_DI_CTOR_TRAITS(int, di::named<int, name>);
 };
 
 } // namespace di

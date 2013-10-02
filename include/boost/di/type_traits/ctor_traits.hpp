@@ -25,7 +25,7 @@ namespace di {
 template<typename>
 struct ctor_traits
 {
-    static void ctor(); //trivial ctor
+    static void BOOST_DI_CONSTRUCTOR(); //trivial ctor
 };
 
 namespace type_traits {
@@ -80,7 +80,7 @@ public:
 
 template<typename T, typename = void>
 struct ctor_traits
-    : parameter_types<BOOST_TYPEOF_TPL(&di::ctor_traits<T>::ctor)>::type
+    : parameter_types<BOOST_TYPEOF_TPL(&di::ctor_traits<T>::BOOST_DI_CONSTRUCTOR)>::type
 { };
 
 template<typename T>
