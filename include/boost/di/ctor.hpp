@@ -16,7 +16,7 @@
 #endif
 
 #if !defined(BOOST_DI_CTOR_CFG_VA_ARGS) && !defined(BOOST_DI_CTOR_CFG_BRACKET)
-    #if __cplusplus >= 201100L
+    #if (__cplusplus >= 201100L)
         #define BOOST_DI_CTOR_CFG_VA_ARGS
     #else
         #define BOOST_DI_CTOR_CFG_BRACKET

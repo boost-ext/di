@@ -112,6 +112,7 @@ BOOST_AUTO_TEST_CASE(function) {
     BOOST_CHECK_EQUAL(d, c_.d);
 }
 
+#if !defined(__INTEL_COMPILER)
 BOOST_AUTO_TEST_CASE(inheriting_ctors) {
     const int i = 1;
     const double d = 2.0;
@@ -137,6 +138,7 @@ BOOST_AUTO_TEST_CASE(inheriting_ctors) {
     BOOST_CHECK_EQUAL(i, c1_.i);
     BOOST_CHECK_EQUAL(d, c1_.d);
 }
+#endif
 
 } // namespace di
 } // namespace boost

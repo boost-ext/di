@@ -39,9 +39,7 @@ struct c1
 
 struct c2
 {
-    BOOST_DI_CTOR(c2
-        , (boost::shared_ptr<c1> c1_
-        , std::auto_ptr<i> p_))
+    BOOST_DI_CTOR(c2, (boost::shared_ptr<c1> c1_, std::auto_ptr<i> p_))
       : c1_(c1_), p_(p_)
     { }
 
@@ -51,11 +49,12 @@ struct c2
 
 struct c3
 {
-    BOOST_DI_CTOR(c3
-        , (boost::shared_ptr<c1> c1_
-        , boost::shared_ptr<c2> c2_
-        , c1 c1__
-        , const std::vector<int>& v_))
+    BOOST_DI_CTOR(c3, (
+        boost::shared_ptr<c1> c1_
+      , boost::shared_ptr<c2> c2_
+      , c1 c1__
+      , const std::vector<int>& v_)
+    )
       : c1_(c1_),c2_(c2_), c1__(c1__), v_(v_)
     { }
 
