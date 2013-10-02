@@ -11,15 +11,21 @@ namespace boost {
 namespace di {
 
 template<>
-struct ctor_traits<n::a>
+struct ctor_traits< ::n::a >
 {
     BOOST_DI_CTOR_TRAITS(int);
 };
 
 template<>
-struct ctor_traits<n::n1::b>
+struct ctor_traits< ::n::n1::b >
 {
     BOOST_DI_CTOR_TRAITS(int, double, const std::string &);
+};
+
+template<>
+struct ctor_traits< ::n::c >
+{
+    BOOST_DI_CTOR_TRAITS(int, double, float);
 };
 
 } // namespace di

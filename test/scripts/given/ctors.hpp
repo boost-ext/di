@@ -17,5 +17,13 @@ public:
 };
 
 } // namespace n1
+
+struct c
+{
+    c(int = 0);
+    c(int, double);
+    c(int, double, float f);
+};
+
 } // namespace n
 

@@ -39,14 +39,15 @@ if sys.version_info < (3, 0):
         return __builtin__.bytes(object)
 
 class ctor_trait:
-    def __init__(self, name, args):
+    def __init__(self, name, args, args_len):
         self.name = name
         self.args = args
+        self.args_len = args_len
 
     def to_string(self):
         ctor = []
         ctor.append(
-            "template<>\nstruct ctor_traits<%(name)s>\n{\n    BOOST_DI_CTOR_TRAITS(%(args)s);\n};\n\n" % {
+            "template<>\nstruct ctor_traits< ::%(name)s >\n{\n    BOOST_DI_CTOR_TRAITS(%(args)s);\n};\n\n" % {
             'name' : self.name,
             'args' : self.args
         })
@@ -58,9 +59,18 @@ class ctor_traits_generator:
         name = str(node.displayname, self.encode)
         if node.kind == CursorKind.CONSTRUCTOR:
             args = name[len(node.spelling) + 1 : -1]
+            args_len = len(list(node.get_arguments()))
             if args != "":
-                ctors.append(ctor_trait(class_decl, args))
-        elif node.kind in [CursorKind.CLASS_DECL, CursorKind.NAMESPACE]:
+                found = False
+                for i, item in enumerate(ctors):
+                    if class_decl == item.name:
+                        found = True
+                        if args_len > item.args_len:
+                            ctors[i] = ctor_trait(class_decl, args, args_len)
+                        break
+                if not found:
+                    ctors.append(ctor_trait(class_decl, args, args_len))
+        elif node.kind in [CursorKind.CLASS_DECL, CursorKind.STRUCT_DECL, CursorKind.NAMESPACE]:
             class_decl = class_decl == "" and name or class_decl + (name == "" and "" or "::") + name
             if class_decl.startswith(self.decl):
                 [self.__get_ctors(c, ctors, class_decl) for c in node.get_children()]

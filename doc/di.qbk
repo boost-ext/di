@@ -646,6 +646,9 @@ Example
 
 [endsect]
 
+[section Performance]
+[endsect]
+
 [section Reference]
 
 [section Header <boost/di.hpp>]
