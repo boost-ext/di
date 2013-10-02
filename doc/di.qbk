@@ -25,11 +25,14 @@
 
 [section Overview]
 
-[section Motivation]
-google guice, why di and not factories, motivation example
-[endsect]
+"Google Guice"
+"With dependency injection, objects accept dependencies in their constructors. To construct an object, you first build its dependencies. But to build each dependency, you need its dependencies, and so on. So when you build an object, you really need to build an object graph.
+Building object graphs by hand is labour intensive, error prone, and makes testing difficult. Instead, Guice can build the object graph for you. 
 
-[section Description]
+Motivation
+https://code.google.com/p/google-guice/wiki/Motivation
+
+Description
 
 * supports dependency injection by constructors
 * supports scopes (deduce, per_request, singleton, session) + custom scopes
@@ -46,7 +49,6 @@ google guice, why di and not factories, motivation example
 * supports mocks testing facilities (ex: to create mock hierarchy)
 * minimal overhead / compile time approach
 
-[endsect]
 
 [endsect]
 
@@ -69,6 +71,12 @@ Exception safety
 
 Thread Safety
 
+Configuration
+    BOOST_MPL_LIMIT_VECTOR_SIZE
+    BOOST_DI_CTOR_CFG_VA_ARGS || BOOST_DI_CTOR_CFG_BRACKET
+    #define BOOST_DI_CONSTRUCTOR boost_di_constructor__
+    #define BOOST_DI_CREATE boost_di_create__
+
 Tested Compilers
 
 * GCC 4.7.3/4.8.1
@@ -76,6 +84,29 @@ Tested Compilers
 * Intel C++ 14.0.0
 * MinGW 4.7.3/4.8.1
 * Visual Studio 2013 RC
+
+[endsect]
+
+
+[section Tutorial]
+But first, Guice needs to be configured to build the graph exactly as you want it.
+To illustrate, we'll start the RealBillingService class that accepts its dependent interfaces CreditCardProcessor and TransactionLog in its constructor. To make it explicit that the RealBillingService constructor is invoked by Guice, we add the BOOST_DI_CTOR:
+"
+
+configure:
+
+using config = injector<DatabaseTransactionLog>;
+or
+using config = injector<bind<TransactionLog, DatabaseTransactionLog>>;
+
+using config = injector<PaypalCreditCardProcessor>;
+or
+using config = injector<bind<CreditCardProcessor, PaypalCreditCardProcessor>>;
+
+The modules are the building blocks of an injector, which is Guice's object-graph builder
+
+auto billingService = config().create<RealBillingService>();
+auto billingService = make_injector(config()).create<RealBillingService>();
 
 [endsect]
 
@@ -175,7 +206,7 @@ Tested Compilers
 [note conversion between boost and std smart pointers cause overhead and weak ptr conversions aren't supported]
 [endsect]
 
-[section binding concepts]
+[section concepts]
 [endsect]
 
 [section policies]
@@ -385,14 +416,63 @@ example
 [endsect]
 
 [section binding]
+
+DI is designed to do popular things easy:
+
+bind<int>::in_call<c1, call_stack<c1, c2, c3>>()
+
+Binding Resolution
+
+The injector's process of resolving an injection request depends on the bindings and the annotations of the types involved. Here's how an injection request is resolved:
+
+Use explicit bindings.
+If the binding links to another, follow this resolution algorithm for that.
+If the binding specifies an instance, return that.
+If the binding specifies a provider, use that.
+Ask a parent injector. If this injector has a parent injector, ask that to resolve the binding. If it succeeds, use that. Otherwise proceed.
+Ask child injectors. If any child injector already has this binding, give up. A blacklist of bindings from child injectors is kept so injectors don't need to maintain references to their child injectors.
+Handle Provider injections. If the type is Provider<T>, resolve T instead, using the same binding annotation, if it exists.
+Convert constants. If there is a constant string bound with the same annotation, and a TypeConverter that supports this type, use the converted String.
+If the dependency has a binding annotation, give up. Guice will not create default bindings for annotated dependencies.
+If the dependency is an array or enum, give up.
+Handle TypeLiteral injections. If the type is TypeLiteral<T>, inject that value, using context for the value of the type parameter.
+Use resolution annotations. If the dependency's type has @ImplementedBy or @ProvidedBy, lookup the binding for the referenced type and use that.
+If the dependency is abstract or a non-static inner class, give up.
+Use a single @Inject or public no-arguments constructor.
+Validate bindings for all dependencies — the constructor's parameters, plus @Inject methods and fields of the type and all supertypes.
+Invoke the constructor.
+Inject all fields. Supertype fields are injected before subtype fields.
+Inject all methods. Supertype methods are injected before subtype methods.
 [endsect]
 
 [section injector]
 [endsect]
 
+[section named]
+[endsect]
+
+[section provider]
+[endsect]
+
 [endsect]
 
 [section Scopes]
+
+By default, DI returns a deduced instance each time it supplies a value
+
+table - scope_traits
+    per_request, T*, T
+    singleton, T*, T
+
+Applying scopes:
+
+make_injector(
+    singleton<impl>
+  , per_request<impl2>
+);
+
+Singletons:
+    has to be thread safe
 
     namespace boost {
     namespace di {
@@ -559,30 +639,6 @@ Example
     injector_.create<const c1&>(); //error
     injector_.create<c1&>(); //error
 
-[endsect]
-
-[endsect]
-
-[section Utilities]
-
-[section named]
-[endsect]
-
-[section provider]
-[endsect]
-
-[endsect]
-
-[section Configuration]
-    BOOST_MPL_LIMIT_VECTOR_SIZE
-    BOOST_DI_CTOR_CFG_VA_ARGS || BOOST_DI_CTOR_CFG_BRACKET
-    #define BOOST_DI_CONSTRUCTOR boost_di_constructor__
-    #define BOOST_DI_CREATE boost_di_create__
-[endsect]
-
-[section Integration with Boost libraries]
-
-[section Boost Meta State Machine]
 [endsect]
 
 [endsect]
@@ -1262,6 +1318,13 @@ This header exists simply as a convenience to the user, including all of the hea
 [endsect]
 
 [endsect]
+[endsect]
+
+[section Integration with Boost libraries]
+
+[section Boost Meta State Machine]
+[endsect]
+
 [endsect]
 
 [section Revision History]
