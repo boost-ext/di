@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(create) {
           >
     { } injector_;
 
-    shared_ptr<c8> c8_ = injector_.create<shared_ptr<c8>>();
+    auto c8_ = injector_.create<shared_ptr<c8>>();
 
     BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -471,7 +471,7 @@ BOOST_AUTO_TEST_CASE(create_injector) {
         >()
     );
 
-    shared_ptr<c8> c8_ = injector_.create<shared_ptr<c8>>();
+    auto c8_ = injector_.create<shared_ptr<c8>>();
 
     BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -858,7 +858,7 @@ BOOST_AUTO_TEST_CASE(to_basic) {
       , bind<double>::to(d)
     );
 
-    c14 c14_ = injector_.create<c14>();
+    auto c14_ = injector_.create<c14>();
 
     BOOST_CHECK_EQUAL(i, c14_.i);
     BOOST_CHECK_EQUAL(d, c14_.d);
@@ -873,7 +873,7 @@ BOOST_AUTO_TEST_CASE(to_in_name) {
       , bind<int>::in_name<mpl::string<'2'>>::to(i2)
     );
 
-    c10 c10_ = injector_.create<c10>();
+    auto c10_ = injector_.create<c10>();
 
     BOOST_CHECK_EQUAL(i1, c10_.i1);
     BOOST_CHECK_EQUAL(i2, c10_.i2);
@@ -886,7 +886,7 @@ BOOST_AUTO_TEST_CASE(to_in_call) {
         bind<int>::in_call<c3>::to(i)
     );
 
-    c4 c4_ = injector_.create<c4>();
+    auto c4_ = injector_.create<c4>();
 
     BOOST_CHECK_EQUAL(i, c4_.c3_->i);
     BOOST_CHECK_EQUAL(0, c4_.i1);
@@ -903,7 +903,7 @@ BOOST_AUTO_TEST_CASE(to_in_call_in_name) {
       , bind<c0if0>()
     );
 
-    c6 c6_ = injector_.create<c6>();
+    auto c6_ = injector_.create<c6>();
 
     BOOST_CHECK_EQUAL(i1, c6_.c4_->i1);
     BOOST_CHECK_EQUAL(i2, c6_.c4_->i2);
@@ -919,7 +919,7 @@ BOOST_AUTO_TEST_CASE(to_in_name_in_call) {
       , bind<c0if0>()
     );
 
-    c6 c6_ = injector_.create<c6>();
+    auto c6_ = injector_.create<c6>();
 
     BOOST_CHECK_EQUAL(i1, c6_.c4_->i1);
     BOOST_CHECK_EQUAL(i2, c6_.c4_->i2);
@@ -934,7 +934,7 @@ BOOST_AUTO_TEST_CASE(to_in_call_with_global) {
       , bind<int>::to(i2)
     );
 
-    c4 c4_ = injector_.create<c4>();
+    auto c4_ = injector_.create<c4>();
 
     BOOST_CHECK_EQUAL(i1, c4_.c3_->i);
     BOOST_CHECK_EQUAL(0, c4_.i1);
@@ -952,7 +952,7 @@ BOOST_AUTO_TEST_CASE(to_in_call_stack) {
       , bind<c0if0>()
     );
 
-    c6 c6_ = injector_.create<c6>();
+    auto c6_ = injector_.create<c6>();
 
     BOOST_CHECK_EQUAL(42, c6_.c4_->c3_->i);
     BOOST_CHECK_EQUAL(0, c6_.c4_->i1);
@@ -966,7 +966,7 @@ BOOST_AUTO_TEST_CASE(to_shared_ptr) {
         bind<c3>::to(c3_)
     );
 
-    c4 c4_ = injector_.create<c4>();
+    auto c4_ = injector_.create<c4>();
 
     BOOST_CHECK_EQUAL(c3_, c4_.c3_);
 }
@@ -978,7 +978,7 @@ BOOST_AUTO_TEST_CASE(to_std_shared_ptr) {
         bind<c3>::to(c3_)
     );
 
-    c4 c4_ = injector_.create<c4>();
+    auto c4_ = injector_.create<c4>();
 
     BOOST_CHECK_EQUAL(c3_.get(), c4_.c3_.get());
 }
@@ -997,7 +997,7 @@ BOOST_AUTO_TEST_CASE(to_ref) {
       , bind<c14>::to(c14_ref)
     );
 
-    shared_ptr<c16> c16_ = injector_.create<shared_ptr<c16>>();
+    auto c16_ = injector_.create<shared_ptr<c16>>();
 
     BOOST_CHECK(&c3_const_ref == &c16_->c3_);
     BOOST_CHECK(&c14_ref == &c16_->c14_);
@@ -1018,7 +1018,7 @@ BOOST_AUTO_TEST_CASE(to_ref_no_copy) {
       , bind<c14>::to(c14_)
     );
 
-    shared_ptr<c16> c16_ = injector_.create<shared_ptr<c16>>();
+    auto c16_ = injector_.create<shared_ptr<c16>>();
 
     BOOST_CHECK(&c3_ == &c16_->c3_);
     BOOST_CHECK(&c14_ == &c16_->c14_);

@@ -396,6 +396,17 @@ struct c25
     boost::weak_ptr<int> w1_;
 };
 
+struct c26
+{
+    BOOST_DI_CTOR(c26
+        , std::vector<boost::shared_ptr<if0>> v_
+    )
+        : v_(v_)
+    { }
+
+    std::vector<boost::shared_ptr<if0>> v_;
+};
+
 enum eid
 {
     e0 = 1
