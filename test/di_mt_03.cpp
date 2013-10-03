@@ -55,7 +55,7 @@ struct c3
       , c1 c1__
       , const std::vector<int>& v_)
     )
-      : c1_(c1_),c2_(c2_), c1__(c1__), v_(v_)
+      : c1_(c1_), c2_(c2_), c1__(c1__), v_(v_)
     { }
 
     boost::shared_ptr<c1> c1_;
