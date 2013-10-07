@@ -398,8 +398,8 @@ BOOST_AUTO_TEST_CASE(session_scope) {
 
 BOOST_AUTO_TEST_CASE(container) {
     using injector_t = injector<
-        bind_vector<if0>::to<c0if0, c1if0, c2if0>
-      //, bind_vector<int>::to<int_<42>>
+        bind_vector<if0, c0if0, c1if0, c2if0>
+      , bind_vector<int, int_<4>, int_<5>>
     >;
 
     auto c26_ = injector_t().create<c26>();

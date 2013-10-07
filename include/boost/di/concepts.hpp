@@ -78,8 +78,13 @@ struct bind_string
     : bind<std::string, T>
 { };
 
-template<typename TExpected>
+
+template<typename T, BOOST_DI_TYPES_DEFAULT_MPL(T)>
 struct bind_vector
+    : scope<scopes::deduce>::bind<
+         //bind<std::vector<T>, make_vector<T, mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> > >
+        bind<std::vector<shared_ptr<T> >, make_vector<T, mpl::vector<BOOST_DI_TYPES_PASS_MPL_WITH_TYPE(T, boost::shared_ptr)> > >
+      >
 {
     template<template<typename> class, typename, typename = void>
     struct make_vector;
@@ -99,14 +104,6 @@ struct bind_vector
 
     #define BOOST_PP_LOCAL_LIMITS (1, 5)
     #include BOOST_PP_LOCAL_ITERATE()
-
-    template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-    struct to
-        : scope<scopes::deduce>::bind<
-             bind<std::vector<TExpected>, make_vector1<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> > >
-           , bind<std::vector<shared_ptr<TExpected> >, make_vector<boost::shared_ptr, mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> > >
-          >
-    { };
 };
 
 } // namespace di

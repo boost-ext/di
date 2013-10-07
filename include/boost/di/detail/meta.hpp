@@ -11,6 +11,7 @@
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
+#include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/preprocessor/arithmetic/sub.hpp>
 #include <boost/mpl/limits/vector.hpp>
@@ -45,6 +46,16 @@
      BOOST_PP_ENUM_PARAMS(                          \
          BOOST_MPL_LIMIT_VECTOR_SIZE                \
        , T                                          \
+     )
+
+#define BOOST_DI_ADD_TYPE(~, n, type)               \
+    BOOST_PP_COMMA_IF(n) type##n>
+
+#define BOOST_DI_TYPES_PASS_MPL_WITH_TYPE(T, type)  \
+     BOOST_PP_REPEAT(                               \
+         BOOST_MPL_LIMIT_VECTOR_SIZE                \
+       , BOOST_DI_ADD_TYPE                          \
+       , type<T\
      )
 
 #define BOOST_DI_TYPES(T)                           \
