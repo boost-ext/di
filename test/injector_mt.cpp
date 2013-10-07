@@ -396,37 +396,18 @@ BOOST_AUTO_TEST_CASE(session_scope) {
     }
 }
 
-#if 0
-template<typename TExpected, typename... T>
-struct container : std::vector<boost::shared_ptr<TExpected>>
-{
-    BOOST_DI_CTOR(make_vector, boost::shared_ptr<T>... v)
-        : std::vector<boost::shared_ptr<TExpected>>{v...}
-    { }
-};
-
-template<typename TExpected>
-struct bind_container
-{
-    template<typename... T>
-    struct to
-        : bind<std::vector<boost::shared_ptr<TExpected> >, make_vector<TExpected, T...> >
-    { };
-};
-
-//value_type
-
 BOOST_AUTO_TEST_CASE(container) {
     using injector_t = injector<
-        //bind<container<c0if0, c1if0>>
-        bind_container<if0>::to<c0if0, c1if0, c2if0>
+        bind_vector<if0>::to<c0if0, c1if0, c2if0>
+      //, bind_vector<int>::to<int_<42>>
     >;
 
     auto c26_ = injector_t().create<c26>();
 
-    BOOST_CHECK_EQUAL(3, c26_.v_.size());
+    BOOST_CHECK_EQUAL(3, c26_.v1_.size());
+    BOOST_CHECK_EQUAL(1, c26_.v2_.size());
+    BOOST_CHECK_EQUAL(42, c26_.v2_[0]);
 }
-#endif
 
 } // namespace di
 } // namespace boost

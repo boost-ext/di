@@ -399,12 +399,14 @@ struct c25
 struct c26
 {
     BOOST_DI_CTOR(c26
-        , std::vector<boost::shared_ptr<if0>> v_
+        , std::vector<boost::shared_ptr<if0>> v1_
+        , std::vector<int> v2_
     )
-        : v_(v_)
+        : v1_(v1_), v2_(v2_)
     { }
 
-    std::vector<boost::shared_ptr<if0>> v_;
+    std::vector<boost::shared_ptr<if0>> v1_;
+    std::vector<int> v2_;
 };
 
 enum eid
