@@ -443,6 +443,10 @@ example
 
 [section binding]
 
+[section custom binding]
+BOOST_DI_CTOR_PROXY
+[endsect]
+
 DI is designed to do popular things easy:
 
 bind<int>::in_call<c1, call_stack<c1, c2, c3>>()

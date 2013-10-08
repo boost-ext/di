@@ -49,11 +49,11 @@ rule compile-fail-cpp03 ( src ) {
     ] ;
 }
 
-#test-suite "concepts" :
+test-suite "concepts" :
     #[ run-cpp11 concepts/dependency_ut.cpp ]
-    #[ run-cpp11 concepts_ut.cpp ]
+    [ run-cpp11 concepts_ut.cpp ]
     #[ run-cpp11 named_ut.cpp ]
-#;
+;
 
 #test-suite "convertibles" :
     #[ run-cpp11 convertibles/copy_ut.cpp ]
@@ -98,11 +98,11 @@ rule compile-fail-cpp03 ( src ) {
     #[ run-cpp11 ctor_va_args_ut.cpp ]
 #;
 
-test-suite "injector" :
-    [ run-cpp11 injector_mt.cpp ]
+#test-suite "injector" :
+    #[ run-cpp11 injector_mt.cpp ]
     #[ run-cpp11 injector_ut.cpp ]
     #[ run-cpp11 make_injector_mt.cpp ]
-;
+#;
 
 #test-suite "di / C++ 11" :
     #[ run-cpp11 di_mt_11.cpp ]

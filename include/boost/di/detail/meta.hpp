@@ -16,6 +16,7 @@
 #include <boost/preprocessor/arithmetic/sub.hpp>
 #include <boost/mpl/limits/vector.hpp>
 #include <boost/mpl/aux_/na.hpp>
+#include <boost/mpl/if.hpp>
 
 #define BOOST_DI_ITERATION_PARAMS(begin, file)      \
      3, (begin, BOOST_MPL_LIMIT_VECTOR_SIZE, file)
@@ -48,14 +49,19 @@
        , T                                          \
      )
 
-#define BOOST_DI_ADD_TYPE(~, n, type)               \
-    BOOST_PP_COMMA_IF(n) type##n>
+#define BOOST_DI_ADD_TYPE(z, n, t)                  \
+    BOOST_PP_COMMA_IF(n)                            \
+    typename ::boost::mpl::if_<                     \
+        ::boost::mpl::is_na<T##n>                   \
+      , ::boost::mpl::na                            \
+      , t<T##n>                                     \
+    >::type
 
 #define BOOST_DI_TYPES_PASS_MPL_WITH_TYPE(T, type)  \
      BOOST_PP_REPEAT(                               \
          BOOST_MPL_LIMIT_VECTOR_SIZE                \
        , BOOST_DI_ADD_TYPE                          \
-       , type<T\
+       , type                                       \
      )
 
 #define BOOST_DI_TYPES(T)                           \

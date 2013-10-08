@@ -10,8 +10,6 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include <boost/preprocessor/punctuation/comma_if.hpp>
-#include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/mpl/int.hpp>
 #include "boost/di/detail/meta.hpp"
 #include "boost/di/concepts/bind.hpp"
@@ -22,7 +20,7 @@
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/session.hpp"
 #include "boost/di/named.hpp"
-#include "boost/di/ctor.hpp"
+#include "boost/di/ctor_proxy.hpp"
 
 namespace boost {
 namespace di {
@@ -30,6 +28,7 @@ namespace di {
 template<int N>
 struct int_ : mpl::int_<N>
 {
+    int_(int){}
     operator int() const { return N; }
 };
 
@@ -70,7 +69,7 @@ struct bind
 
 template<int N>
 struct bind_int
-    : bind<int, int_<N> >
+    : bind<int, mpl::int_<N> >
 { };
 
 template<typename T>
@@ -78,33 +77,50 @@ struct bind_string
     : bind<std::string, T>
 { };
 
+#define BOOST_DI_CTOR_PROXY_VECTOR_PUSH_BACK(_, n, args) \
+    this->push_back(args##n);
+
+BOOST_DI_CTOR_PROXY(
+    make_vector
+  , std::vector<T>
+  , BOOST_DI_CTOR_PROXY_VECTOR_PUSH_BACK
+)
+
+#undef BOOST_DI_CTOR_PROXY_VECTOR_PUSH_BACK
 
 template<typename T, BOOST_DI_TYPES_DEFAULT_MPL(T)>
 struct bind_vector
     : scope<scopes::deduce>::bind<
-         //bind<std::vector<T>, make_vector<T, mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> > >
-        bind<std::vector<shared_ptr<T> >, make_vector<T, mpl::vector<BOOST_DI_TYPES_PASS_MPL_WITH_TYPE(T, boost::shared_ptr)> > >
+         bind<
+            std::vector<T>
+          , make_vector<T, mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
+         >
+/*       , bind<*/
+            //std::vector<shared_ptr<T> >
+          //, make_vector<
+                //shared_ptr<T>
+              //, mpl::vector<BOOST_DI_TYPES_PASS_MPL_WITH_TYPE(T, boost::shared_ptr)>
+            //>
+         //>
+
+//#if !defined(BOOST_NO_CXX11_SMART_PTR)
+       //, bind<
+            //std::vector<std::shared_ptr<T> >
+          //, make_vector<
+                //std::shared_ptr<T>
+              //, mpl::vector<BOOST_DI_TYPES_PASS_MPL_WITH_TYPE(T, std::shared_ptr)>
+            //>
+         //>
+       //, bind<
+            //std::vector<std::unique_ptr<T> >
+          //, make_vector<
+                //std::unique_ptr<T>
+              //, mpl::vector<BOOST_DI_TYPES_PASS_MPL_WITH_TYPE(T, std::unique_ptr)>
+            //>
+         //>
+/*#endif*/
       >
-{
-    template<template<typename> class, typename, typename = void>
-    struct make_vector;
-
-    #define CCC(_, n, na) BOOST_PP_COMMA_IF(n) T<typename mpl::at_c<TSeq, n>::type> args##n
-    #define DDD(_, n, na) this->push_back(args##n);
-
-    #define BOOST_PP_LOCAL_MACRO(n)                                         \
-        template<template<typename> class T, typename TSeq>
-        struct make_vector<T, TSeq, typename enable_if_c<mpl::size<TSeq>::value == n>::type>
-            : std::vector<T<TExpected> >
-        {
-            BOOST_DI_CTOR(make_vector, BOOST_PP_REPEAT(n, CCC, ~)) {
-                BOOST_PP_REPEAT(n, DDD, ~)
-            }
-        }
-
-    #define BOOST_PP_LOCAL_LIMITS (1, 5)
-    #include BOOST_PP_LOCAL_ITERATE()
-};
+{ };
 
 } // namespace di
 } // namespace boost

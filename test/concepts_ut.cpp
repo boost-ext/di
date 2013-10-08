@@ -14,6 +14,7 @@
 #include "fake_scope.hpp"
 #include "contains_all.hpp"
 
+#include <boost/units/detail/utility.hpp>
 namespace boost {
 namespace di {
 
@@ -168,6 +169,19 @@ BOOST_AUTO_TEST_CASE(bind_string_value_in_call) {
             >
         >::value
     ));
+}
+
+BOOST_AUTO_TEST_CASE(bind_vector_value) {
+    BOOST_CHECK((
+        contains_all<
+            bind_vector<int, int_<42>>
+          , mpl::vector<
+                fake_dependency_base_of<scopes::deduce, std::vector<int>, make_vector<int, mpl::vector<int_<42>>>>::type
+              //, fake_dependency_base_of<fake_scope<>, std::vector<boost::shared_ptr<int>>, make_vector<boost::shared_ptr<int>, boost::shared_ptr<int_<42>>>>::type
+            >
+        >::value
+    ));
+    std::cout << units::detail::demangle(typeid(bind_vector<int, int_<42>>::type).name()) << std::endl;
 }
 
 BOOST_AUTO_TEST_CASE(scope_deduce_empty) {

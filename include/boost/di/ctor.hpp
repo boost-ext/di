@@ -21,6 +21,10 @@
     #else
         #define BOOST_DI_CTOR_CFG_BRACKET
     #endif
+#else
+    #if defined(__GNUC__) && (__GNUC__ >= 4)
+        #pragma GCC diagnostic ignored "-Wvariadic-macros"
+    #endif
 #endif
 
 #if defined(BOOST_MSVC)
