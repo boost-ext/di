@@ -14,7 +14,6 @@
 #include "fake_scope.hpp"
 #include "contains_all.hpp"
 
-#include <boost/units/detail/utility.hpp>
 namespace boost {
 namespace di {
 
@@ -171,6 +170,7 @@ BOOST_AUTO_TEST_CASE(bind_string_value_in_call) {
     ));
 }
 
+#if 0
 BOOST_AUTO_TEST_CASE(bind_vector_value) {
     BOOST_CHECK((
         contains_all<
@@ -181,8 +181,8 @@ BOOST_AUTO_TEST_CASE(bind_vector_value) {
             >
         >::value
     ));
-    std::cout << units::detail::demangle(typeid(bind_vector<int, int_<42>>::type).name()) << std::endl;
 }
+#endif
 
 BOOST_AUTO_TEST_CASE(scope_deduce_empty) {
     BOOST_CHECK((

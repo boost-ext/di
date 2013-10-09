@@ -95,32 +95,35 @@ struct bind_vector
             std::vector<T>
           , make_vector<T, mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
          >
-/*       , bind<*/
-            //std::vector<shared_ptr<T> >
-          //, make_vector<
-                //shared_ptr<T>
-              //, mpl::vector<BOOST_DI_TYPES_PASS_MPL_WITH_TYPE(T, boost::shared_ptr)>
-            //>
-         //>
+       , bind<
+            std::vector<shared_ptr<T> >
+          , make_vector<
+                shared_ptr<T>
+              , mpl::vector<BOOST_DI_TYPES_PASS_MPL_WITH_TYPE(T, boost::shared_ptr)>
+            >
+         >
 
-//#if !defined(BOOST_NO_CXX11_SMART_PTR)
-       //, bind<
-            //std::vector<std::shared_ptr<T> >
-          //, make_vector<
-                //std::shared_ptr<T>
-              //, mpl::vector<BOOST_DI_TYPES_PASS_MPL_WITH_TYPE(T, std::shared_ptr)>
-            //>
-         //>
-       //, bind<
-            //std::vector<std::unique_ptr<T> >
-          //, make_vector<
-                //std::unique_ptr<T>
-              //, mpl::vector<BOOST_DI_TYPES_PASS_MPL_WITH_TYPE(T, std::unique_ptr)>
-            //>
-         //>
-/*#endif*/
+#if !defined(BOOST_NO_CXX11_SMART_PTR)
+       , bind<
+            std::vector<std::shared_ptr<T> >
+          , make_vector<
+                std::shared_ptr<T>
+              , mpl::vector<BOOST_DI_TYPES_PASS_MPL_WITH_TYPE(T, std::shared_ptr)>
+            >
+         >
+       , bind<
+            std::vector<std::unique_ptr<T> >
+          , make_vector<
+                std::unique_ptr<T>
+              , mpl::vector<BOOST_DI_TYPES_PASS_MPL_WITH_TYPE(T, std::unique_ptr)>
+            >
+         >
+#endif
       >
 { };
+
+//template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
+//struct bind_vector_int
 
 } // namespace di
 } // namespace boost
