@@ -90,7 +90,7 @@ BOOST_DI_CTOR_PROXY(
 
 template<typename T, BOOST_DI_TYPES_DEFAULT_MPL(T)>
 struct bind_vector
-    : scope<scopes::deduce>::bind<
+    : scope<mpl::_1>::bind<
          bind<
             std::vector<T>
           , make_vector<T, mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
@@ -122,8 +122,8 @@ struct bind_vector
       >
 { };
 
-//template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-//struct bind_vector_int
+/*template<int value, int*/
+//struct bind_vector_iint
 
 } // namespace di
 } // namespace boost

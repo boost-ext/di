@@ -7,16 +7,19 @@
 #ifndef BOOST_DI_POLICIES_ARGUMENTS_PERMISSION_HPP
 #define BOOST_DI_POLICIES_ARGUMENTS_PERMISSION_HPP
 
+#include <string>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_reference.hpp>
 #include <boost/type_traits/is_rvalue_reference.hpp>
 #include <boost/type_traits/is_pointer.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/count_if.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/empty.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/joint_view.hpp>
@@ -27,6 +30,7 @@
 
 #include "boost/di/detail/meta.hpp"
 #include "boost/di/detail/binder.hpp"
+#include "boost/di/type_traits/remove_accessors.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
 
@@ -86,6 +90,24 @@ struct allow_copies
     { };
 };
 
+BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
+
+template<typename T>
+struct value_type
+{
+    typedef typename T::value_type type;
+};
+
+template<typename, typename, typename = void>
+struct is_allowed_nested_impl
+    : mpl::true_
+{ };
+
+template<typename TAllow, typename T>
+struct is_allowed_nested_impl<TAllow, T, typename enable_if<has_value_type<T> >::type>
+    : TAllow::template allow<typename value_type<T>::type>
+{ };
+
 /**
  * @code
  * arguments_permission<>
@@ -118,9 +140,16 @@ class arguments_permission
         : TBind::template get_dependency<T, TCallStack>::type
     { };
 
-    template<typename TAllow, typename T>
+    template<
+        typename TAllow
+      , typename T
+      , typename TPlain = typename type_traits::remove_accessors<T>::type
+    >
     struct is_allowed_impl
-        : TAllow::template allow<T>
+        : mpl::and_<
+              typename TAllow::template allow<T>
+            , is_allowed_nested_impl<TAllow, TPlain>
+          >
     { };
 
     template<

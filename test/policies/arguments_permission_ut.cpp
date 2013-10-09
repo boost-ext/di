@@ -83,6 +83,21 @@ BOOST_AUTO_TEST_CASE(allow_all_of_requirements) {
     ));
 }
 
+BOOST_AUTO_TEST_CASE(disallow_within_nested_type) {
+    BOOST_CHECK((
+        contains_all<
+            mpl::vector<std::vector<int*>, double*>
+          , arguments_permission<
+                allow_copies, allow_refs, allow_smart_ptrs
+            >::verify<
+                mpl::vector0<>
+              , c24
+              , mpl::false_
+            >::type
+         >::value
+    ));
+}
+
 } // namespace policies
 } // namespace di
 } // namespace boost
