@@ -49,11 +49,11 @@ rule compile-fail-cpp03 ( src ) {
     ] ;
 }
 
-test-suite "concepts" :
+#test-suite "concepts" :
     #[ run-cpp11 concepts/dependency_ut.cpp ]
-    [ run-cpp11 concepts_ut.cpp ]
+    #[ run-cpp11 concepts_ut.cpp ]
     #[ run-cpp11 named_ut.cpp ]
-;
+#;
 
 #test-suite "convertibles" :
     #[ run-cpp11 convertibles/copy_ut.cpp ]
@@ -79,12 +79,12 @@ test-suite "concepts" :
     #[ run-cpp11 detail/visitor_ut.cpp ]
 #;
 
-#test-suite "policies" :
-    #[ run-cpp11 policies/arguments_permission_ut.cpp ]
+test-suite "policies" :
+    [ run-cpp11 policies/arguments_permission_ut.cpp ]
     #[ run-cpp11 policies/binding_correctness_ut.cpp ]
     #[ run-cpp11 policies/creation_ownership_ut.cpp ]
     #[ run-cpp11 policies/circular_dependencies_ut.cpp ]
-#;
+;
 
 #test-suite "scopes" :
     #[ run-cpp11 scopes/external_ut.cpp ]
