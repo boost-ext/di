@@ -18,18 +18,6 @@ namespace convertibles {
 template<typename T>
 class shared
 {
-    template<typename U, typename TShared = shared_ptr<U> >
-    class sp_holder
-    {
-    public:
-        explicit sp_holder(TShared object)
-            : object_(object)
-        { }
-
-    private:
-        TShared object_;
-    };
-
 public:
     shared() { }
 

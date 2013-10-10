@@ -31,13 +31,13 @@ const int i = 42;
 auto return_i = []{ return new int(i); };
 
 BOOST_AUTO_TEST_CASE(to_interface) {
-    std::unique_ptr<interface> object =
+    unique_ptr<interface> object =
         copy<interface>([]{ return new implementation(); });
     BOOST_CHECK(dynamic_cast<implementation*>(object.get()));
 }
 
 BOOST_AUTO_TEST_CASE(to_ptr) {
-    std::unique_ptr<int> object = copy<int>(return_i);
+    unique_ptr<int> object = copy<int>(return_i);
     BOOST_CHECK_EQUAL(i, *object);
 }
 
@@ -57,33 +57,33 @@ BOOST_AUTO_TEST_CASE(to_named_shared_ptr) {
 }
 
 BOOST_AUTO_TEST_CASE(to_auto_ptr) {
-    std::auto_ptr<int> object = copy<int>(return_i);
+    auto_ptr<int> object = copy<int>(return_i);
     BOOST_CHECK_EQUAL(i, *object);
 }
 
 BOOST_AUTO_TEST_CASE(to_named_auto_ptr) {
     const int i = 42;
-    named<std::auto_ptr<int>> object = copy<int>(return_i);
+    named<auto_ptr<int>> object = copy<int>(return_i);
     BOOST_CHECK_EQUAL(i, *object);
 }
 
 BOOST_AUTO_TEST_CASE(to_std_shared_ptr) {
-    std::shared_ptr<int> object = copy<int>(return_i);
+    shared_ptr<int> object = copy<int>(return_i);
     BOOST_CHECK_EQUAL(i, *object);
 }
 
 BOOST_AUTO_TEST_CASE(to_named_std_shared_ptr) {
-    named<std::shared_ptr<int>> object = copy<int>(return_i);
+    named<shared_ptr<int>> object = copy<int>(return_i);
     BOOST_CHECK_EQUAL(i, *object);
 }
 
 BOOST_AUTO_TEST_CASE(to_unique_ptr) {
-    std::unique_ptr<int> object = copy<int>(return_i);
+    unique_ptr<int> object = copy<int>(return_i);
     BOOST_CHECK_EQUAL(i, *object);
 }
 
 BOOST_AUTO_TEST_CASE(to_named_unique_ptr) {
-    named<std::unique_ptr<int>> object = copy<int>(return_i);
+    named<unique_ptr<int>> object = copy<int>(return_i);
     BOOST_CHECK_EQUAL(i, *object);
 }
 

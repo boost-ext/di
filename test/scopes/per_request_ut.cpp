@@ -6,11 +6,12 @@
 //
 #include "boost/di/scopes/per_request.hpp"
 
+#include <string>
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
-#include <cstdlib>
 
+#include "boost/di/memory.hpp"
 #include "data.hpp"
 
 namespace boost {

@@ -39,13 +39,13 @@ BOOST_AUTO_TEST_CASE(create_using_copy) {
 
 BOOST_AUTO_TEST_CASE(create_using_ptr) {
     module<> module_;
-    std::auto_ptr<c0> obj(module_.create<c0*>());
+    auto_ptr<c0> obj(module_.create<c0*>());
     BOOST_CHECK(obj.get());
 }
 
 BOOST_AUTO_TEST_CASE(create_using_const_ptr) {
     module<> module_;
-    std::auto_ptr<const c0> obj(module_.create<const c0*>());
+    auto_ptr<const c0> obj(module_.create<const c0*>());
     BOOST_CHECK(obj.get());
 }
 

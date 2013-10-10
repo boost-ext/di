@@ -53,50 +53,6 @@ BOOST_AUTO_TEST_CASE(to_named_weak_ptr) {
     BOOST_CHECK(!static_cast<weak_ptr<int>>(object).lock());
 }
 
-#if !defined(BOOST_NO_CXX11_SMART_PTR)
-
-BOOST_AUTO_TEST_CASE(to_std_shared_ptr) {
-    std::shared_ptr<int> i(new int(42));
-    std::shared_ptr<int> object = shared<int>(i);
-    BOOST_CHECK_EQUAL(i, object);
-}
-
-BOOST_AUTO_TEST_CASE(to_named_std_shared_ptr) {
-    std::shared_ptr<int> i(new int(42));
-    named<std::shared_ptr<int>> object = shared<int>(i);
-    BOOST_CHECK_EQUAL(i, static_cast<std::shared_ptr<int>>(object));
-}
-
-#if 0
-BOOST_AUTO_TEST_CASE(to_std_weak_ptr) {
-    std::weak_ptr<int> object;
-
-    {
-    std::shared_ptr<int> i(new int(42));
-    object = shared<int>(i);
-    auto object_ = object.lock();
-    BOOST_CHECK_EQUAL(i, object_);
-    }
-
-    BOOST_CHECK(!object.lock());
-}
-
-BOOST_AUTO_TEST_CASE(to_named_std_weak_ptr) {
-    named<std::weak_ptr<int>> object;
-
-    {
-    std::shared_ptr<int> i(new int(42));
-    object = shared<int>(i);
-    auto object_ = static_cast<std::weak_ptr<int>>(object).lock();
-    BOOST_CHECK_EQUAL(i, object_);
-    }
-
-    BOOST_CHECK(!static_cast<std::weak_ptr<int>>(object).lock());
-}
-#endif
-
-#endif
-
 } // namespace convertibles
 } // namespace di
 } // namespace boost

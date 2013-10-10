@@ -8,6 +8,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "boost/di/memory.hpp"
 #include "data.hpp"
 
 namespace boost {

@@ -24,11 +24,6 @@ namespace boost {
 namespace di {
 namespace detail {
 
-template<
-    template<typename> class = std::allocator
->
-struct fake_scope_allocator { };
-
 BOOST_AUTO_TEST_CASE(empty) {
     BOOST_CHECK((
         is_same<
@@ -72,24 +67,6 @@ BOOST_AUTO_TEST_CASE(found) {
                   , fake_dependency<fake_scope<>, double>
                 >
               , fake_dependency<fake_scope<>, void>
-            >::type
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(found_allocator) {
-    BOOST_CHECK((
-        is_same<
-            fake_dependency<fake_scope_allocator<>, float>::type
-          , binder_impl<
-                float
-              , mpl::vector0<>
-              , mpl::vector<
-                    fake_dependency<fake_scope_allocator<>, int>
-                  , fake_dependency<fake_scope_allocator<>, float>
-                  , fake_dependency<fake_scope_allocator<>, double>
-                >
-              , fake_dependency<fake_scope_allocator<>, void>
             >::type
         >::value
     ));
