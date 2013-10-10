@@ -4,11 +4,10 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <memory>
+#include <tr1/memory>
 #include <vector>
 #include <boost/shared_ptr.hpp>
 #include <boost/typeof/typeof.hpp>
-#define BOOST_DI_CTOR_CFG_VA_ARGS
 #include "boost/di.hpp"
 
 #include <boost/test/unit_test.hpp>
@@ -41,27 +40,27 @@ struct c1
 struct c2
 {
     BOOST_DI_CTOR(c2
-        , boost::shared_ptr<c1> c1_
+        , std::tr1::shared_ptr<c1> c1_
         , std::auto_ptr<i> p_)
       : c1_(c1_), p_(p_)
     { }
 
-    boost::shared_ptr<c1> c1_;
+    std::tr1::shared_ptr<c1> c1_;
     std::auto_ptr<i> p_;
 };
 
 struct c3
 {
     BOOST_DI_CTOR(c3
-        , boost::shared_ptr<c1> c1_
-        , boost::shared_ptr<c2> c2_
+        , std::tr1::shared_ptr<c1> c1_
+        , std::tr1::shared_ptr<c2> c2_
         , c1 c1__
         , const std::vector<int>& v_)
       : c1_(c1_), c2_(c2_), c1__(c1__), v_(v_)
     { }
 
-    boost::shared_ptr<c1> c1_;
-    boost::shared_ptr<c2> c2_;
+    std::tr1::shared_ptr<c1> c1_;
+    std::tr1::shared_ptr<c2> c2_;
     c1 c1__;
     std::vector<int> v_;
 };
@@ -99,7 +98,7 @@ BOOST_AUTO_TEST_CASE(create_complex) {
         >()
     ));
 
-    boost::shared_ptr<c3> c3_ = injector_.create<boost::shared_ptr<c3> >();
+    std::tr1::shared_ptr<c3> c3_ = injector_.create<std::tr1::shared_ptr<c3> >();
 
     BOOST_CHECK(dynamic_cast<impl*>(c3_->c2_->p_.get()));
     BOOST_CHECK_EQUAL(c3_->c1_.get(), c3_->c2_->c1_.get());

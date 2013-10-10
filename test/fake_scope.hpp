@@ -67,7 +67,7 @@ struct fake_scope : priority_impl<Priority>
         template<typename... Args>
         result_type create(Args&&... args) {
             if (entry_calls() > exit_calls()) {
-                return make_shared<T>(std::forward<Args>(args)...);
+                return shared_ptr<T>(new T(std::forward<Args>(args)...));
             }
 
             return result_type(shared_ptr<T>());

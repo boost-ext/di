@@ -7,9 +7,7 @@
 #ifndef BOOST_DI_TYPE_TRAITS_SCOPE_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_SCOPE_TRAITS_HPP
 
-#include <memory>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
+#include "boost/config.hpp"
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/has_xxx.hpp>
 
@@ -17,7 +15,7 @@
 #include "boost/di/scopes/per_request.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/external.hpp"
-#include "boost/config.hpp"
+#include "boost/di/memory.hpp"
 
 namespace boost {
 namespace di {
@@ -71,27 +69,11 @@ struct scope_traits<weak_ptr<T> >
     typedef scopes::singleton<> type;
 };
 
-#if !defined(BOOST_NO_CXX11_SMART_PTR)
-
 template<typename T>
-struct scope_traits<std::shared_ptr<T> >
-{
-    typedef scopes::singleton<> type;
-};
-
-template<typename T>
-struct scope_traits<std::weak_ptr<T> >
-{
-    typedef scopes::singleton<> type;
-};
-
-template<typename T>
-struct scope_traits<std::unique_ptr<T> >
+struct scope_traits<unique_ptr<T> >
 {
     typedef scopes::per_request<> type;
 };
-
-#endif
 
 #if !defined(BOOST_NO_RVALUE_REFERENCES)
 

@@ -7,14 +7,12 @@
 #ifndef BOOST_DI_CONVERTIBLES_COPY_HPP
 #define BOOST_DI_CONVERTIBLES_COPY_HPP
 
-#include <memory>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
-#include <boost/scoped_ptr.hpp>
 #include <boost/function.hpp>
+#include <boost/scoped_ptr.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_polymorphic.hpp>
 
+#include "boost/di/memory.hpp"
 #include "boost/di/named.hpp"
 
 namespace boost {
@@ -86,40 +84,28 @@ public:
     }
 
     template<typename I>
-    operator std::auto_ptr<I>&() const {
-        static std::auto_ptr<I> s_object_; // not thread safe
+    operator auto_ptr<I>&() const {
+        static auto_ptr<I> s_object_; // not thread safe
         s_object_.reset(object_());
         return s_object_;
     }
 
     template<typename I, typename TName>
-    operator named<std::auto_ptr<I>, TName>&() const {
-        static named<std::auto_ptr<I>, TName> s_object_;
+    operator named<auto_ptr<I>, TName>&() const {
+        static named<auto_ptr<I>, TName> s_object_;
         s_object_.reset(object_());
         return s_object_;
     }
 
-#if !defined(BOOST_NO_CXX11_SMART_PTR)
     template<typename I>
-    operator std::shared_ptr<I>() const {
-        return std::shared_ptr<I>(object_());
+    operator unique_ptr<I>() const {
+        return unique_ptr<I>(object_());
     }
 
     template<typename I, typename TName>
-    operator named<std::shared_ptr<I>, TName>() const {
-        return named<std::shared_ptr<I>, TName>(object_());
+    operator named<unique_ptr<I>, TName>() const {
+        return named<unique_ptr<I>, TName>(object_());
     }
-
-    template<typename I>
-    operator std::unique_ptr<I>() const {
-        return std::unique_ptr<I>(object_());
-    }
-
-    template<typename I, typename TName>
-    operator named<std::unique_ptr<I>, TName>() const {
-        return named<std::unique_ptr<I>, TName>(object_());
-    }
-#endif
 };
 
 } // namespace convertibles

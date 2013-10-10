@@ -9,7 +9,6 @@
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
-#include <boost/make_shared.hpp>
 #include <boost/mpl/vector.hpp>
 
 #include "fake_visitor.hpp"
@@ -117,13 +116,13 @@ auto injector_provider = make_injector(
 
 auto injector_externals = make_injector(
     bind<double>::to(7.0)
-  , bind<if0>::to(make_shared<c3if0>(67, 78.0))
+  , bind<if0>::to(shared_ptr<c3if0>(new c3if0(67, 78.0)))
   , bind<int>::in_name<mpl::string<'1'>>::in_call<call_stack<c7, c6, c4>>::to(3)
   , bind<int>::in_call<c8>::to(4)
 );
 
 auto injector_externals_1 = make_injector(
-    bind<if0>::to(make_shared<c3if0>(67, 78.0))
+    bind<if0>::to(shared_ptr<c3if0>(new c3if0(67, 78.0)))
   , bind<int>::in_name<mpl::string<'1'>>::in_call<call_stack<c7, c6, c4>>::to(3)
   , bind<int>::in_call<c8>::to(4)
 );
@@ -363,9 +362,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(std_shared_ptr_std_unique_ptr, TInjector, deduce_i
     BOOST_CHECK(c21_->if0__ == c21_->if0__);
 }
 
-BOOST_AUTO_TEST_CASE(boost_std_smart_ptr) {
+BOOST_AUTO_TEST_CASE(smart_ptr_weak_ptr) {
     auto c25_ = injector<>().create<c25>();
-    BOOST_CHECK(c25_.s1_.get() == c25_.s2_.get());
     BOOST_CHECK(nullptr != c25_.w1_.lock());
 }
 
@@ -396,19 +394,22 @@ BOOST_AUTO_TEST_CASE(session_scope) {
     }
 }
 
-BOOST_AUTO_TEST_CASE(bind_vector_value_and_smart_ptr) {
-    using injector_t = injector<
-        bind_vector<if0, c0if0, c1if0, c2if0>
-      , bind_vector<int, int_<4>, int_<2>>
-    >;
+/*BOOST_AUTO_TEST_CASE(bind_vector_value_and_smart_ptr) {*/
+    //using injector_t = injector<
+        //bind_vector<if0, c0if0, c1if0, c2if0>
+      //, bind_vector<int, int_<4>, int_<2>>
+    //>;
 
-    auto c26_ = injector_t().create<c26>();
+    //auto c26_ = injector_t().create<c26>();
 
-    BOOST_CHECK_EQUAL(3, c26_.v1_.size());
-    BOOST_CHECK_EQUAL(2, c26_.v2_.size());
-    BOOST_CHECK_EQUAL(4, c26_.v2_[0]);
-    BOOST_CHECK_EQUAL(2, c26_.v2_[1]);
-}
+    //BOOST_CHECK_EQUAL(3, c26_.v1_.size());
+    //BOOST_CHECK_EQUAL(2, c26_.v2_.size());
+    //BOOST_CHECK_EQUAL(4, c26_.v2_[0]);
+    //BOOST_CHECK_EQUAL(2, c26_.v2_[1]);
+/*}*/
+
+//BOOST_AUTO_TEST_CASE(more_than_10_arguments_ctor) {
+//}
 
 } // namespace di
 } // namespace boost

@@ -152,14 +152,6 @@ public:
     to(shared_ptr<T> obj) {
         return typename external<expected, T, shared_type>::type(obj);
     }
-
-#if !defined(BOOST_NO_CXX11_SMART_PTR)
-    template<typename T>
-    static typename external<expected, T, shared_type>::type
-    to(std::shared_ptr<T> obj) {
-        return typename external<expected, T, shared_type>::type(obj);
-    }
-#endif
 };
 
 } // namespace concepts

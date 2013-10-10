@@ -9,7 +9,6 @@
 
 #include <boost/test/unit_test.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/make_shared.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/string.hpp>
@@ -443,7 +442,7 @@ BOOST_AUTO_TEST_CASE(externals_create_with_non_trivial_ctor) {
     const char c = 'x';
 
     using external_shared = scopes::external<convertibles::shared>;
-    fake_dependency<external_shared, c2>::type c2_(make_shared<c2>(i, d, c));
+    fake_dependency<external_shared, c2>::type c2_(shared_ptr<c2>(new c2(i, d, c)));
 
     module<
         mpl::vector<

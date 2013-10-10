@@ -10,15 +10,13 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
-#include <boost/make_shared.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/function.hpp>
 #include <boost/mpl/string.hpp>
 #include "boost/di/ctor.hpp"
 #include "boost/di/named.hpp"
 #include "boost/di/provider.hpp"
+#include "boost/di/memory.hpp"
 
 namespace boost {
 namespace di {
@@ -338,14 +336,14 @@ struct c20
 struct c21
 {
     BOOST_DI_CTOR(c21
-        , std::shared_ptr<if0> if0_
-        , std::unique_ptr<if0> if0__
+        , shared_ptr<if0> if0_
+        , unique_ptr<if0> if0__
     )
         : if0_(if0_), if0__(std::move(if0__))
     { }
 
-    std::shared_ptr<if0> if0_;
-    std::unique_ptr<if0> if0__;
+    shared_ptr<if0> if0_;
+    unique_ptr<if0> if0__;
 };
 
 struct c22
@@ -386,28 +384,26 @@ struct c24
 struct c25
 {
     BOOST_DI_CTOR(c25
-        , std::shared_ptr<int> s1_
-        , boost::shared_ptr<int> s2_
-        , boost::weak_ptr<int> w1_
+        , shared_ptr<int> s1_
+        , weak_ptr<int> w1_
     )
-        : s1_(s1_), s2_(s2_), w1_(w1_)
+        : s1_(s1_), w1_(w1_)
     { }
 
-    std::shared_ptr<int> s1_;
-    boost::shared_ptr<int> s2_;
-    boost::weak_ptr<int> w1_;
+    shared_ptr<int> s1_;
+    weak_ptr<int> w1_;
 };
 
 struct c26
 {
     BOOST_DI_CTOR(c26
-        , std::vector<boost::shared_ptr<if0>> v1_
+        , std::vector<shared_ptr<if0>> v1_
         , std::vector<int> v2_
     )
         : v1_(v1_), v2_(v2_)
     { }
 
-    std::vector<boost::shared_ptr<if0>> v1_;
+    std::vector<shared_ptr<if0>> v1_;
     std::vector<int> v2_;
 };
 
@@ -506,7 +502,7 @@ struct transaction_provider
 
     virtual shared_ptr<transaction> get() const
     {
-        return make_shared<transaction>(c3_->i);
+        return shared_ptr<transaction>(new transaction(c3_->i));
     }
 
     shared_ptr<c3> c3_;

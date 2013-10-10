@@ -51,15 +51,15 @@ struct c2
 struct c3
 {
     BOOST_DI_CTOR(c3
-        , boost::shared_ptr<c1> c1_
-        , boost::shared_ptr<c2> c2_
+        , std::shared_ptr<c1> c1_
+        , std::shared_ptr<c2> c2_
         , c1 c1__
         , const std::vector<int>& v_)
       : c1_(c1_), c2_(c2_), c1__(c1__), v_(v_)
     { }
 
-    boost::shared_ptr<c1> c1_;
-    boost::shared_ptr<c2> c2_;
+    std::shared_ptr<c1> c1_;
+    std::shared_ptr<c2> c2_;
     c1 c1__;
     std::vector<int> v_;
 };
@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE(create_complex) {
         >()
     );
 
-    auto c3_ = injector_.create<boost::shared_ptr<c3>>();
+    auto c3_ = injector_.create<std::shared_ptr<c3>>();
 
     BOOST_CHECK(dynamic_cast<impl*>(c3_->c2_->p_.get()));
     BOOST_CHECK_EQUAL(c3_->c1_.get(), c3_->c2_->c1_.get());

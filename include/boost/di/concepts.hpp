@@ -21,6 +21,7 @@
 #include "boost/di/scopes/session.hpp"
 #include "boost/di/named.hpp"
 #include "boost/di/ctor_proxy.hpp"
+#include "boost/di/memory.hpp"
 
 namespace boost {
 namespace di {
@@ -102,23 +103,13 @@ struct bind_vector
               , mpl::vector<BOOST_DI_TYPES_PASS_MPL_WITH_TYPE(T, boost::shared_ptr)>
             >
          >
-
-#if !defined(BOOST_NO_CXX11_SMART_PTR)
        , bind<
-            std::vector<std::shared_ptr<T> >
+            std::vector<unique_ptr<T> >
           , make_vector<
-                std::shared_ptr<T>
-              , mpl::vector<BOOST_DI_TYPES_PASS_MPL_WITH_TYPE(T, std::shared_ptr)>
+                unique_ptr<T>
+              , mpl::vector<BOOST_DI_TYPES_PASS_MPL_WITH_TYPE(T, unique_ptr)>
             >
          >
-       , bind<
-            std::vector<std::unique_ptr<T> >
-          , make_vector<
-                std::unique_ptr<T>
-              , mpl::vector<BOOST_DI_TYPES_PASS_MPL_WITH_TYPE(T, std::unique_ptr)>
-            >
-         >
-#endif
       >
 { };
 
