@@ -18,6 +18,9 @@
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/mpl/if.hpp>
 
+//TODO
+#define BOOST_DI_LIMIT_SIZE BOOST_MPL_LIMIT_VECTOR_SIZE
+
 #define BOOST_DI_ITERATION_PARAMS(begin, file)      \
      3, (begin, BOOST_MPL_LIMIT_VECTOR_SIZE, file)
 

@@ -6,20 +6,19 @@
 //
 #include "boost/di/injector.hpp"
 
+#include <tr1/memory>
 #include <boost/test/unit_test.hpp>
-
-#include "data.hpp"
 
 namespace boost {
 namespace di {
 
-BOOST_AUTO_TEST_CASE(singleton_by_copy_fail) {
-    injector<
-        c0if0
-      , singleton<
-            c6
-        >
-    >().create<c15>();
+struct sp
+{
+    BOOST_DI_CTOR(sp, (boost::shared_ptr<int>)) { }
+};
+
+BOOST_AUTO_TEST_CASE(lack_of_shared_ptr_fail) {
+    injector<>().create<sp>();
 }
 
 } // namespace di

@@ -29,7 +29,7 @@ namespace di {
 template<int N>
 struct int_ : mpl::int_<N>
 {
-    int_(int){}
+    int_(int) { } // TODO
     operator int() const { return N; }
 };
 
@@ -91,7 +91,7 @@ BOOST_DI_CTOR_PROXY(
 
 template<typename T, BOOST_DI_TYPES_DEFAULT_MPL(T)>
 struct bind_vector
-    : scope<mpl::_1>::bind<
+    : scope<scopes::deduce>::bind<
          bind<
             std::vector<T>
           , make_vector<T, mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
@@ -100,7 +100,7 @@ struct bind_vector
             std::vector<shared_ptr<T> >
           , make_vector<
                 shared_ptr<T>
-              , mpl::vector<BOOST_DI_TYPES_PASS_MPL_WITH_TYPE(T, boost::shared_ptr)>
+              , mpl::vector<BOOST_DI_TYPES_PASS_MPL_WITH_TYPE(T, shared_ptr)>
             >
          >
        , bind<
@@ -112,9 +112,6 @@ struct bind_vector
          >
       >
 { };
-
-/*template<int value, int*/
-//struct bind_vector_iint
 
 } // namespace di
 } // namespace boost
