@@ -12,6 +12,8 @@
 #include "contains_all.hpp"
 #include "data.hpp"
 
+#include <boost/units/detail/utility.hpp>
+
 namespace boost {
 namespace di {
 namespace policies {
@@ -53,6 +55,12 @@ BOOST_AUTO_TEST_CASE(allow_some_of_requirements) {
             >::type
          >::value
     ));
+
+    std::cout << units::detail::demangle(typeid(arguments_permission<allow_ptrs, allow_copies>::verify<
+                mpl::vector0<>
+              , c24
+              , mpl::false_
+            >::type).name()) << std::endl;
 }
 
 BOOST_AUTO_TEST_CASE(allow_some_of_requirements_order) {

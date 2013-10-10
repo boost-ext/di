@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_POLICIES_ARGUMENTS_PERMISSION_HPP
 #define BOOST_DI_POLICIES_ARGUMENTS_PERMISSION_HPP
 
-#include <string>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_reference.hpp>
 #include <boost/type_traits/is_rvalue_reference.hpp>
@@ -90,24 +89,6 @@ struct allow_copies
     { };
 };
 
-BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
-
-template<typename T>
-struct value_type
-{
-    typedef typename T::value_type type;
-};
-
-template<typename, typename, typename = void>
-struct is_allowed_nested_impl
-    : mpl::true_
-{ };
-
-template<typename TAllow, typename T>
-struct is_allowed_nested_impl<TAllow, T, typename enable_if<has_value_type<T> >::type>
-    : TAllow::template allow<typename value_type<T>::type>
-{ };
-
 /**
  * @code
  * arguments_permission<>
@@ -118,6 +99,9 @@ struct is_allowed_nested_impl<TAllow, T, typename enable_if<has_value_type<T> >:
  *
  * arguments_permission<allow_ptrs>
  * struct c { c(int*); }; // ok
+ *
+ * arguments_permission<allow_copies>
+ * struct c { c(std::vector<int*>); }; // error
  *
  * @endcode
  */
@@ -140,15 +124,39 @@ class arguments_permission
         : TBind::template get_dependency<T, TCallStack>::type
     { };
 
-    template<
-        typename TAllow
-      , typename T
-      , typename TPlain = typename type_traits::remove_accessors<T>::type
-    >
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
+
+    template<typename T>
+    struct value_type
+    {
+        typedef typename T::value_type type;
+    };
+
+    template<typename TAllow, typename T>
     struct is_allowed_impl
-        : mpl::and_<
-              typename TAllow::template allow<T>
-            , is_allowed_nested_impl<TAllow, TPlain>
+        : TAllow::template allow<T>
+    { };
+
+    template<typename, typename, typename = void>
+    struct is_allowed_nested_impl
+        : mpl::true_
+    { };
+
+    template<typename TAllow, typename T>
+    struct is_allowed_nested_impl<TAllow, T, typename enable_if<has_value_type<T> >::type>
+        : TAllow::template allow<typename value_type<T>::type>
+    { };
+
+    template<
+        typename T
+      , typename TAllows = mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+    >
+    struct is_allowed_nested
+        : mpl::bool_<
+              mpl::count_if<
+                  TAllows
+                , is_allowed_nested_impl<mpl::_, typename type_traits::remove_accessors<T>::type>
+              >::value != 0
           >
     { };
 
@@ -160,7 +168,10 @@ class arguments_permission
         : mpl::bool_<
               mpl::count_if<
                   TAllows
-                , is_allowed_impl<mpl::_, T>
+                , mpl::and_<
+                      is_allowed_impl<mpl::_, T>
+                    , is_allowed_nested<T>
+                  >
               >::value != 0
           >
     { };

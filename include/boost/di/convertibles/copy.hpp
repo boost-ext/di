@@ -54,9 +54,6 @@ protected:
     object_t object_;
 };
 
-
-//special case for arithmetic values
-
 template<typename T>
 class copy : public copy_impl<T>
 {
