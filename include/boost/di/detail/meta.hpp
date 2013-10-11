@@ -8,6 +8,7 @@
 #define BOOST_DI_DETAIL_META_HPP
 
 #include <boost/preprocessor/iteration/iterate.hpp>
+#include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>

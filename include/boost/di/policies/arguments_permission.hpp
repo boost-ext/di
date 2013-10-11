@@ -155,7 +155,10 @@ class arguments_permission
         : mpl::bool_<
               mpl::count_if<
                   TAllows
-                , is_allowed_nested_impl<mpl::_, typename type_traits::remove_accessors<T>::type>
+                , is_allowed_nested_impl<
+                      mpl::_
+                    , typename type_traits::remove_accessors<T>::type
+                  >
               >::value != 0
           >
     { };

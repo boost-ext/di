@@ -58,8 +58,8 @@ class copy : public copy_impl<T>
     using copy_impl<T>::object_;
 
 public:
-    template<typename I>
-    explicit copy(const I& object)
+    template<typename U>
+    explicit copy(const U& object)
         : copy_impl<T>(object)
     { }
 
