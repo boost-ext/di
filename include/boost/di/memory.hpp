@@ -46,11 +46,9 @@
     namespace di {
 
     using std::auto_ptr;
+    template<typename> struct unique_ptr; // compile clean
     using std::tr1::shared_ptr;
     using std::tr1::weak_ptr;
-
-    template<typename>
-    struct unique_ptr;
 
     } // namespace di
     } // namespace boost
@@ -65,11 +63,9 @@
     namespace di {
 
     using std::auto_ptr;
+    template<typename> struct unique_ptr; // compile clean
     using boost::shared_ptr;
     using boost::weak_ptr;
-
-    template<typename>
-    struct unique_ptr;
 
     } // namespace di
     } // namespace boost

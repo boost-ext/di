@@ -6,8 +6,7 @@
 //
 #include <typeinfo>
 #include <iostream>
-#include <boost/shared_ptr.hpp>
-#include <boost/mpl/int.hpp>
+#include <memory>
 #include <boost/di.hpp>
 
 namespace mpl = boost::mpl;
@@ -28,12 +27,12 @@ struct c01 : i0 { };
 
 struct c1
 {
-    BOOST_DI_CTOR(c1, boost::shared_ptr<i0>) { }
+    BOOST_DI_CTOR(c1, std::shared_ptr<i0>) { }
 };
 
 struct c2
 {
-    BOOST_DI_CTOR(c2, boost::shared_ptr<c1>, int, double, char) { }
+    BOOST_DI_CTOR(c2, std::shared_ptr<c1>, int, double, char) { }
 };
 
 struct c3 { };
@@ -42,10 +41,10 @@ struct c4 { };
 struct c5
 {
     BOOST_DI_CTOR(c5
-        , boost::shared_ptr<c1>
+        , std::shared_ptr<c1>
         , c2
-        , boost::shared_ptr<i0>
-        , boost::shared_ptr<c3>
+        , std::shared_ptr<i0>
+        , std::shared_ptr<c3>
         , c4&
     ) { }
 };
@@ -61,7 +60,7 @@ struct visitor
 };
 
 int main() {
-    boost::shared_ptr<c3> c3_(new c3);
+    std::shared_ptr<c3> c3_(new c3);
     c4 c4_;
 
     auto injector = di::make_injector(

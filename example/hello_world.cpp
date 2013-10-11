@@ -5,7 +5,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <memory>
-#include <boost/shared_ptr.hpp>
 #include <boost/di.hpp>
 
 namespace di = boost::di;
@@ -16,7 +15,7 @@ struct impl : i { };
 struct c
 {
     BOOST_DI_CTOR(c
-      , boost::shared_ptr<i> p1     // i->impl, p1 == hello_world.p1
+      , std::shared_ptr<i> p1       // i->impl, p1 == hello_world.p1
       , double p2                   // p2 = 0.0
     ) { }
 };

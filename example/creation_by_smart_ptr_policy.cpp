@@ -35,8 +35,7 @@ public:
       , typename TGiven
       , typename = void
     >
-    class verify
-        : public mpl::false_
+    struct verify : mpl::false_
     {
        BOOST_MPL_ASSERT_MSG(
             false
@@ -46,18 +45,17 @@ public:
     };
 
     template<typename TDeps, typename TGiven>
-    class verify<
+    struct verify<
         TDeps
       , TGiven
       , typename boost::enable_if<has_element_type<TGiven>>::type
-    >
-        : public mpl::true_
+    > : mpl::true_
     { };
 };
 
 int main() {
     di::injector<creation_by_smart_ptr> injector;
-    injector.create<boost::shared_ptr<c>>();
+    injector.create<std::shared_ptr<c>>();
     //injector.create<c>(); //compile error (CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED)
 
     return 0;
