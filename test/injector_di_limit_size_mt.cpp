@@ -141,7 +141,7 @@ struct limit
     int i30;
 };
 
-BOOST_AUTO_TEST_CASE(args_arity_limit_size) {
+BOOST_AUTO_TEST_CASE(di_limit_size) {
     limit limit_ = injector<
         bind_int<1>::in_name<n1>
       , bind_int<2>::in_name<n2>

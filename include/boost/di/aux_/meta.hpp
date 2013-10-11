@@ -16,40 +16,40 @@
 #include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/preprocessor/arithmetic/sub.hpp>
 
-#if !defined(BOOST_DI_LIMIT_SIZE)
-    #define BOOST_DI_LIMIT_SIZE 20
-#endif
+#if defined(BOOST_DI_LIMIT_SIZE)
 
-#if !defined(BOOST_DI_CTOR_ARITY_LIMIT_SIZE)
-    #define BOOST_DI_CTOR_ARITY_LIMIT_SIZE 35
-#endif
+    #undef BOOST_MPL_LIMIT_VECTOR_SIZE
+    #define BOOST_MPL_LIMIT_VECTOR_SIZE BOOST_DI_LIMIT_SIZE
 
-#define BOOST_MPL_LIMIT_VECTOR_SIZE BOOST_DI_LIMIT_SIZE
+    #if (BOOST_MPL_LIMIT_VECTOR_SIZE <= 50)
+        #define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
+        #include <boost/mpl/vector.hpp>
+    #else
+        #include <boost/mpl/vector/vector50.hpp>
 
-#if (BOOST_MPL_LIMIT_VECTOR_SIZE <= 50)
-    #define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
-    #include <boost/mpl/vector.hpp>
+        namespace boost {
+        namespace mpl {
+        #define BOOST_PP_ITERATION_PARAMS_1 \
+            (3, (51, BOOST_MPL_LIMIT_VECTOR_SIZE, <boost/mpl/vector/aux_/numbered.hpp>))
+        #include BOOST_PP_ITERATE()
+        } // namespace mpl
+        } // namespace boost
+
+        #define BOOST_MPL_PREPROCESSING_MODE
+        #include <boost/mpl/vector.hpp>
+        #undef BOOST_MPL_PREPROCESSING_MODE
+    #endif
+
 #else
-    #include <boost/mpl/vector/vector50.hpp>
-
-    namespace boost {
-    namespace mpl {
-    #define BOOST_PP_ITERATION_PARAMS_1 \
-        (3, (51, BOOST_MPL_LIMIT_VECTOR_SIZE, <boost/mpl/vector/aux_/numbered.hpp>))
-    #include BOOST_PP_ITERATE()
-    } // namespace mpl
-    } // namespace boost
-
-    #define BOOST_MPL_PREPROCESSING_MODE
-    #include <boost/mpl/vector.hpp>
-    #undef BOOST_MPL_PREPROCESSING_MODE
+    #include <boost/mpl/limits/vector.hpp>
+    #define BOOST_DI_LIMIT_SIZE BOOST_MPL_LIMIT_VECTOR_SIZE
 #endif
 
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/mpl/if.hpp>
 
 #define BOOST_DI_ITERATION_PARAMS(begin, file)          \
-     3, (begin, BOOST_DI_CTOR_ARITY_LIMIT_SIZE, file)
+     3, (begin, BOOST_DI_LIMIT_SIZE, file)
 
 #define BOOST_DI_TYPES_DEFAULT_MPL(T)                   \
      BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(               \
@@ -89,7 +89,7 @@
 
 #define BOOST_DI_TYPES_PASS_MPL_WITH_TYPE(T, type)      \
      BOOST_PP_REPEAT(                                   \
-         BOOST_DI_CTOR_ARITY_LIMIT_SIZE                 \
+         BOOST_DI_LIMIT_SIZE                            \
        , BOOST_DI_ADD_TYPE                              \
        , type                                           \
      )
