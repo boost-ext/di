@@ -9,6 +9,12 @@
     #ifndef BOOST_DI_DETAIL_MODULE_HPP
     #define BOOST_DI_DETAIL_MODULE_HPP
 
+    #include "boost/di/aux_/meta.hpp"
+    #include "boost/di/detail/pool.hpp"
+    #include "boost/di/detail/binder.hpp"
+    #include "boost/di/detail/creator.hpp"
+    #include "boost/di/detail/visitor.hpp"
+
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/typeof/typeof.hpp>
@@ -32,12 +38,6 @@
     #include <boost/mpl/aux_/yes_no.hpp>
     #include <boost/mpl/has_xxx.hpp>
     #include <boost/mpl/assert.hpp>
-
-    #include "boost/di/detail/meta.hpp"
-    #include "boost/di/detail/pool.hpp"
-    #include "boost/di/detail/binder.hpp"
-    #include "boost/di/detail/creator.hpp"
-    #include "boost/di/detail/visitor.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 ( \
         BOOST_DI_ITERATION_PARAMS(1, "boost/di/detail/module.hpp"))

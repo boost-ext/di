@@ -7,8 +7,9 @@
 #ifndef BOOST_DI_CONVERTIBLES_REF_HPP
 #define BOOST_DI_CONVERTIBLES_REF_HPP
 
-#include <boost/ref.hpp>
 #include "boost/di/named.hpp"
+
+#include <boost/ref.hpp>
 
 namespace boost {
 namespace di {

@@ -7,6 +7,12 @@
 #ifndef BOOST_DI_POLICIES_ARGUMENTS_PERMISSION_HPP
 #define BOOST_DI_POLICIES_ARGUMENTS_PERMISSION_HPP
 
+#include "boost/di/aux_/meta.hpp"
+#include "boost/di/detail/binder.hpp"
+#include "boost/di/type_traits/remove_accessors.hpp"
+#include "boost/di/type_traits/ctor_traits.hpp"
+#include "boost/di/type_traits/make_plain.hpp"
+
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_reference.hpp>
 #include <boost/type_traits/is_rvalue_reference.hpp>
@@ -26,12 +32,6 @@
 #include <boost/mpl/back_inserter.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/has_xxx.hpp>
-
-#include "boost/di/detail/meta.hpp"
-#include "boost/di/detail/binder.hpp"
-#include "boost/di/type_traits/remove_accessors.hpp"
-#include "boost/di/type_traits/ctor_traits.hpp"
-#include "boost/di/type_traits/make_plain.hpp"
 
 namespace boost {
 namespace di {

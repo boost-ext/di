@@ -7,13 +7,13 @@
 #ifndef BOOST_DI_CONVERTIBLES_COPY_HPP
 #define BOOST_DI_CONVERTIBLES_COPY_HPP
 
+#include "boost/di/memory.hpp"
+#include "boost/di/named.hpp"
+
 #include <boost/function.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_polymorphic.hpp>
-
-#include "boost/di/memory.hpp"
-#include "boost/di/named.hpp"
 
 namespace boost {
 namespace di {

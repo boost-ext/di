@@ -9,6 +9,8 @@
     #ifndef BOOST_DI_DETAIL_POOL_HPP
     #define BOOST_DI_DETAIL_POOL_HPP
 
+    #include "boost/di/aux_/meta.hpp"
+
     #include <boost/preprocessor/iteration/local.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/preprocessor/punctuation/comma_if.hpp>
@@ -21,8 +23,6 @@
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/has_xxx.hpp>
-
-    #include "boost/di/detail/meta.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 ( \
         BOOST_DI_ITERATION_PARAMS(1, "boost/di/detail/pool.hpp"))

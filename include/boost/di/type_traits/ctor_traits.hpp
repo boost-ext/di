@@ -7,6 +7,9 @@
 #ifndef BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 
+#include "boost/di/type_traits/parameter_types.hpp"
+#include "boost/di/ctor.hpp"
+
 #include <boost/preprocessor/cat.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_class.hpp>
@@ -15,9 +18,6 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/void.hpp>
 #include <boost/mpl/aux_/yes_no.hpp>
-
-#include "boost/di/type_traits/parameter_types.hpp"
-#include "boost/di/ctor.hpp"
 
 namespace boost {
 namespace di {

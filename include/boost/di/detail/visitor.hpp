@@ -9,14 +9,14 @@
     #ifndef BOOST_DI_DETAIL_VISITOR_HPP
     #define BOOST_DI_DETAIL_VISITOR_HPP
 
+    #include "boost/di/aux_/meta.hpp"
+    #include "boost/di/type_traits/ctor_traits.hpp"
+
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/push_back.hpp>
-
-    #include "boost/di/detail/meta.hpp"
-    #include "boost/di/type_traits/ctor_traits.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 ( \
         BOOST_DI_ITERATION_PARAMS(0, "boost/di/detail/visitor.hpp"))

@@ -7,15 +7,15 @@
 #ifndef BOOST_DI_TYPE_TRAITS_SCOPE_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_SCOPE_TRAITS_HPP
 
-#include "boost/config.hpp"
-#include <boost/utility/enable_if.hpp>
-#include <boost/mpl/has_xxx.hpp>
-
 #include "boost/di/type_traits/make_plain.hpp" // has_named_type
 #include "boost/di/scopes/per_request.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/memory.hpp"
+
+#include <boost/config.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/mpl/has_xxx.hpp>
 
 namespace boost {
 namespace di {

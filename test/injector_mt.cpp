@@ -408,9 +408,6 @@ BOOST_AUTO_TEST_CASE(bind_vector_value_and_smart_ptr) {
     BOOST_CHECK_EQUAL(2, c26_.v2_[1]);
 }
 
-//BOOST_AUTO_TEST_CASE(more_than_10_arguments_ctor) {
-//}
-
 } // namespace di
 } // namespace boost
 

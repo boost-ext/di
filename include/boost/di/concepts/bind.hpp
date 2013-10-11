@@ -7,13 +7,13 @@
 #ifndef BOOST_DI_CONCEPTS_BIND_HPP
 #define BOOST_DI_CONCEPTS_BIND_HPP
 
+#include "boost/di/aux_/meta.hpp"
+#include "boost/di/type_traits/is_same_base_of.hpp"
+
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/lambda.hpp>
-
-#include "boost/di/detail/meta.hpp"
-#include "boost/di/type_traits/is_same_base_of.hpp"
 
 namespace boost {
 namespace di {

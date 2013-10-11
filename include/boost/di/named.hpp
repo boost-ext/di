@@ -7,12 +7,12 @@
 #ifndef BOOST_DI_NAMED_HPP
 #define BOOST_DI_NAMED_HPP
 
+#include "boost/di/type_traits/make_plain.hpp"
+#include "boost/di/type_traits/remove_accessors.hpp"
+
 #include <boost/shared_ptr.hpp>
 #include <boost/type_traits/is_polymorphic.hpp>
 #include <boost/utility/enable_if.hpp>
-
-#include "boost/di/type_traits/make_plain.hpp"
-#include "boost/di/type_traits/remove_accessors.hpp"
 
 namespace boost {
 namespace di {

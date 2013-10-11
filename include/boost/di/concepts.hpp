@@ -7,11 +7,7 @@
 #ifndef BOOST_DI_CONCEPTS_HPP
 #define BOOST_DI_CONCEPTS_HPP
 
-#include <memory>
-#include <string>
-#include <vector>
-#include <boost/mpl/int.hpp>
-#include "boost/di/detail/meta.hpp"
+#include "boost/di/aux_/meta.hpp"
 #include "boost/di/concepts/bind.hpp"
 #include "boost/di/concepts/dependency.hpp"
 #include "boost/di/concepts/scope.hpp"
@@ -22,6 +18,11 @@
 #include "boost/di/named.hpp"
 #include "boost/di/ctor_proxy.hpp"
 #include "boost/di/memory.hpp"
+
+#include <memory>
+#include <string>
+#include <vector>
+#include <boost/mpl/int.hpp>
 
 namespace boost {
 namespace di {

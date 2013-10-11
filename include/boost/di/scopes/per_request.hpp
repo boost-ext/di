@@ -9,7 +9,7 @@
     #ifndef BOOST_DI_SCOPES_PER_REQUEST_HPP
     #define BOOST_DI_SCOPES_PER_REQUEST_HPP
 
-    #include "boost/di/detail/meta.hpp"
+    #include "boost/di/aux_/meta.hpp"
     #include "boost/di/convertibles/copy.hpp"
     #include "boost/di/type_traits/create_traits.hpp"
     #include "boost/di/named.hpp"

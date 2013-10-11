@@ -7,6 +7,9 @@
 #ifndef BOOST_DI_CONCEPTS_SCOPE_HPP
 #define BOOST_DI_CONCEPTS_SCOPE_HPP
 
+#include "boost/di/aux_/meta.hpp"
+#include "boost/di/type_traits/is_same_base_of.hpp"
+
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
@@ -14,9 +17,6 @@
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/lambda.hpp>
 #include <boost/mpl/has_xxx.hpp>
-
-#include "boost/di/detail/meta.hpp"
-#include "boost/di/type_traits/is_same_base_of.hpp"
 
 namespace boost {
 namespace di {

@@ -9,7 +9,8 @@
 
 #include "boost/di/memory.hpp"
 #include "boost/di/named.hpp"
-#include "boost/config.hpp"
+
+#include <boost/config.hpp>
 
 namespace boost {
 namespace di {

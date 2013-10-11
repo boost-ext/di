@@ -7,6 +7,10 @@
 #ifndef BOOST_DI_POLICIES_CIRCULAR_DEPENDENCIES_HPP
 #define BOOST_DI_POLICIES_CIRCULAR_DEPENDENCIES_HPP
 
+#include "boost/di/detail/binder.hpp"
+#include "boost/di/type_traits/ctor_traits.hpp"
+#include "boost/di/type_traits/make_plain.hpp"
+
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
@@ -19,10 +23,6 @@
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/assert.hpp>
-
-#include "boost/di/detail/binder.hpp"
-#include "boost/di/type_traits/ctor_traits.hpp"
-#include "boost/di/type_traits/make_plain.hpp"
 
 namespace boost {
 namespace di {

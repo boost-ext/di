@@ -7,9 +7,10 @@
 #ifndef BOOST_DI_CONVERTIBLES_VALUE_HPP
 #define BOOST_DI_CONVERTIBLES_VALUE_HPP
 
-#include <utility>
 #include "boost/di/named.hpp"
-#include "boost/config.hpp"
+
+#include <utility>
+#include <boost/config.hpp>
 
 namespace boost {
 namespace di {

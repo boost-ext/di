@@ -9,6 +9,9 @@
     #ifndef BOOST_DI_TYPE_TRAITS_CREATE_TRAITS_HPP
     #define BOOST_DI_TYPE_TRAITS_CREATE_TRAITS_HPP
 
+    #include "boost/di/aux_/meta.hpp"
+    #include "boost/di/type_traits/ctor_traits.hpp"
+
     #include <string>
     #include <boost/preprocessor/repetition/enum_params.hpp>
     #include <boost/preprocessor/cat.hpp>
@@ -21,9 +24,6 @@
     #include <boost/mpl/or.hpp>
     #include <boost/mpl/void.hpp>
     #include <boost/mpl/aux_/yes_no.hpp>
-
-    #include "boost/di/detail/meta.hpp"
-    #include "boost/di/type_traits/ctor_traits.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 ( \
         BOOST_DI_ITERATION_PARAMS(1, "boost/di/type_traits/create_traits.hpp"))

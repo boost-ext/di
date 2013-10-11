@@ -102,7 +102,7 @@ test-suite "injector" :
     #[ run-cpp11 injector_mt.cpp ]
     #[ run-cpp11 injector_ut.cpp ]
     #[ run-cpp11 make_injector_mt.cpp ]
-    [ run injector_args_arity_limit_size_mt.cpp ]
+    [ run injector_args_arity_limit_size_mt.cpp : : : <define>BOOST_DI_LIMIT_SIZE=70 ]
 ;
 
 #test-suite "di / C++ 11" :

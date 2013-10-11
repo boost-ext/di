@@ -7,6 +7,10 @@
 #ifndef BOOST_DI_DETAIL_BINDER_HPP
 #define BOOST_DI_DETAIL_BINDER_HPP
 
+#include "boost/di/type_traits/make_plain.hpp"
+#include "boost/di/type_traits/scope_traits.hpp"
+#include "boost/di/concepts/dependency.hpp"
+
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/iterator_range.hpp>
@@ -32,10 +36,6 @@
 #include <boost/mpl/min_max.hpp>
 #include <boost/mpl/minus.hpp>
 #include <boost/mpl/has_xxx.hpp>
-
-#include "boost/di/type_traits/make_plain.hpp"
-#include "boost/di/type_traits/scope_traits.hpp"
-#include "boost/di/concepts/dependency.hpp"
 
 namespace boost {
 namespace di {

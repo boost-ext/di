@@ -9,7 +9,7 @@
     #ifndef BOOST_DI_SCOPES_SINGLETON_HPP
     #define BOOST_DI_SCOPES_SINGLETON_HPP
 
-    #include "boost/di/detail/meta.hpp"
+    #include "boost/di/aux_/meta.hpp"
     #include "boost/di/convertibles/shared.hpp"
     #include "boost/di/type_traits/create_traits.hpp"
 

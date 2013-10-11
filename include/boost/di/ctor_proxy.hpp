@@ -7,6 +7,8 @@
 #ifndef BOOST_DI_CTOR_PROXY_HPP
 #define BOOST_DI_CTOR_PROXY_HPP
 
+#include "boost/di/ctor.hpp"
+
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/at.hpp>
@@ -14,8 +16,6 @@
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/seq/elem.hpp>
-
-#include "boost/di/ctor.hpp"
 
 #define BOOST_DI_CTOR_PROXY_IMPL_ARGS(_, n, args)                       \
     BOOST_PP_COMMA_IF(n)                                                \

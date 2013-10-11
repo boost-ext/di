@@ -9,6 +9,12 @@
     #ifndef BOOST_DI_MODULE_HPP
     #define BOOST_DI_MODULE_HPP
 
+    #include "boost/di/aux_/meta.hpp"
+    #include "boost/di/detail/module.hpp"
+    #include "boost/di/detail/pool.hpp"
+    #include "boost/di/scopes/deduce.hpp"
+    #include "boost/di/concepts.hpp"
+
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/preprocessor/punctuation/comma_if.hpp>
@@ -23,12 +29,6 @@
     #include <boost/mpl/is_sequence.hpp>
     #include <boost/mpl/placeholders.hpp>
     #include <boost/mpl/has_xxx.hpp>
-
-    #include "boost/di/detail/meta.hpp"
-    #include "boost/di/detail/module.hpp"
-    #include "boost/di/detail/pool.hpp"
-    #include "boost/di/scopes/deduce.hpp"
-    #include "boost/di/concepts.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 ( \
         BOOST_DI_ITERATION_PARAMS(1, "boost/di/injector.hpp"))

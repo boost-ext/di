@@ -4,8 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
-#define BOOST_MPL_LIMIT_VECTOR_SIZE 50
 #include "boost/di/injector.hpp"
 #include "boost/di/named.hpp"
 
@@ -164,17 +162,17 @@ BOOST_AUTO_TEST_CASE(args_arity_limit_size) {
       , bind_int<17>::in_name<n17>
       , bind_int<18>::in_name<n18>
       , bind_int<19>::in_name<n19>
-      //, bind_int<20>::in_name<n20>
-      //, bind_int<21>::in_name<n21>
-      //, bind_int<22>::in_name<n22>
-      //, bind_int<23>::in_name<n23>
-      //, bind_int<24>::in_name<n24>
-      //, bind_int<25>::in_name<n25>
-      //, bind_int<26>::in_name<n26>
-      //, bind_int<27>::in_name<n27>
-      //, bind_int<28>::in_name<n28>
-      //, bind_int<29>::in_name<n29>
-      /*, bind_int<30>::in_name<n30>*/
+      , bind_int<20>::in_name<n20>
+      , bind_int<21>::in_name<n21>
+      , bind_int<22>::in_name<n22>
+      , bind_int<23>::in_name<n23>
+      , bind_int<24>::in_name<n24>
+      , bind_int<25>::in_name<n25>
+      , bind_int<26>::in_name<n26>
+      , bind_int<27>::in_name<n27>
+      , bind_int<28>::in_name<n28>
+      , bind_int<29>::in_name<n29>
+      , bind_int<30>::in_name<n30>
     >().create<limit>();
 
     BOOST_CHECK_EQUAL(1, limit_.i1);

@@ -7,6 +7,12 @@
 #ifndef BOOST_DI_CONCEPTS_DEPENDENCY_HPP
 #define BOOST_DI_CONCEPTS_DEPENDENCY_HPP
 
+#include "boost/di/type_traits/make_plain.hpp"
+#include "boost/di/convertibles/ref.hpp"
+#include "boost/di/convertibles/shared.hpp"
+#include "boost/di/scopes/deduce.hpp"
+#include "boost/di/scopes/external.hpp"
+
 #include <memory>
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/shared_ptr.hpp>
@@ -19,12 +25,6 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/lambda.hpp>
 #include <boost/mpl/has_xxx.hpp>
-
-#include <boost/di/type_traits/make_plain.hpp>
-#include <boost/di/convertibles/ref.hpp>
-#include <boost/di/convertibles/shared.hpp>
-#include <boost/di/scopes/deduce.hpp>
-#include <boost/di/scopes/external.hpp>
 
 namespace boost {
 namespace di {

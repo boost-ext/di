@@ -9,7 +9,7 @@
     #ifndef BOOST_DI_MAKE_INJECTOR_HPP
     #define BOOST_DI_MAKE_INJECTOR_HPP
 
-    #include "boost/di/detail/meta.hpp"
+    #include "boost/di/aux_/meta.hpp"
     #include "boost/di/injector.hpp"
 
     #define BOOST_PP_ITERATION_PARAMS_1 ( \
