@@ -24,9 +24,6 @@
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/has_xxx.hpp>
 
-    #define BOOST_PP_ITERATION_PARAMS_1 ( \
-        BOOST_DI_ITERATION_PARAMS(1, "boost/di/detail/pool.hpp"))
-
     #if defined(__GNUC__) && (__GNUC__ >= 4)
         #pragma GCC diagnostic ignored "-Wreorder"
     #endif
@@ -67,6 +64,8 @@
         }
     };
 
+    #define BOOST_PP_FILENAME_1 "boost/di/detail/pool.hpp"
+    #define BOOST_PP_ITERATION_LIMITS BOOST_DI_LIMITS_BEGIN(1)
     #include BOOST_PP_ITERATE()
 
     } // namespace detail

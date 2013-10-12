@@ -18,9 +18,6 @@
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/push_back.hpp>
 
-    #define BOOST_PP_ITERATION_PARAMS_1 ( \
-        BOOST_DI_ITERATION_PARAMS(0, "boost/di/detail/creator.hpp"))
-
     namespace boost {
     namespace di {
     namespace detail {
@@ -57,6 +54,8 @@
         }
 
     private:
+        #define BOOST_PP_FILENAME_1 "boost/di/detail/creator.hpp"
+        #define BOOST_PP_ITERATION_LIMITS BOOST_DI_LIMITS_BEGIN(0)
         #include BOOST_PP_ITERATE()
     };
 

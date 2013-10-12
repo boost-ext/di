@@ -25,9 +25,6 @@
     #include <boost/mpl/void.hpp>
     #include <boost/mpl/aux_/yes_no.hpp>
 
-    #define BOOST_PP_ITERATION_PARAMS_1 ( \
-        BOOST_DI_ITERATION_PARAMS(1, "boost/di/type_traits/create_traits.hpp"))
-
     namespace boost {
     namespace di {
     namespace type_traits {
@@ -101,6 +98,8 @@
         return new TExpected(mpl::c_str<TGiven>::value);
     }
 
+    #define BOOST_PP_FILENAME_1 "boost/di/type_traits/create_traits.hpp"
+    #define BOOST_PP_ITERATION_LIMITS BOOST_DI_LIMITS_BEGIN(1)
     #include BOOST_PP_ITERATE()
 
     } // namespace type_traits

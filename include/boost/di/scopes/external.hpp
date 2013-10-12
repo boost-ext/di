@@ -12,9 +12,6 @@
     #include "boost/di/aux_/meta.hpp"
     #include "boost/di/convertibles/value.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 ( \
-        BOOST_DI_ITERATION_PARAMS(1, "boost/di/scopes/external.hpp"))
-
     namespace boost {
     namespace di {
     namespace scopes {
@@ -40,6 +37,8 @@
                 return object_;
             }
 
+            #define BOOST_PP_FILENAME_1 "boost/di/scopes/external.hpp"
+            #define BOOST_PP_ITERATION_LIMITS BOOST_DI_LIMITS_BEGIN(1)
             #include BOOST_PP_ITERATE()
 
         private:

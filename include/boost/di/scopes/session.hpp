@@ -13,9 +13,6 @@
     #include "boost/di/type_traits/create_traits.hpp"
     #include "boost/di/convertibles/shared.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 ( \
-        BOOST_DI_ITERATION_PARAMS(1, "boost/di/scopes/session.hpp"))
-
     namespace boost {
     namespace di {
     namespace scopes {
@@ -53,6 +50,8 @@
                 return object();
             }
 
+            #define BOOST_PP_FILENAME_1 "boost/di/scopes/session.hpp"
+            #define BOOST_PP_ITERATION_LIMITS BOOST_DI_LIMITS_BEGIN(1)
             #include BOOST_PP_ITERATE()
 
         private:

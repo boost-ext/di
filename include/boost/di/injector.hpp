@@ -30,9 +30,6 @@
     #include <boost/mpl/placeholders.hpp>
     #include <boost/mpl/has_xxx.hpp>
 
-    #define BOOST_PP_ITERATION_PARAMS_1 ( \
-        BOOST_DI_ITERATION_PARAMS(1, "boost/di/injector.hpp"))
-
     namespace boost {
     namespace di {
 
@@ -109,6 +106,8 @@
             return injector<>();
         }
 
+        #define BOOST_PP_FILENAME_1 "boost/di/injector.hpp"
+        #define BOOST_PP_ITERATION_LIMITS BOOST_DI_LIMITS_BEGIN(1)
         #include BOOST_PP_ITERATE()
     };
 

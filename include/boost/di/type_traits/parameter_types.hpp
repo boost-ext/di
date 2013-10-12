@@ -13,9 +13,6 @@
 
     #include <boost/mpl/vector.hpp>
 
-    #define BOOST_PP_ITERATION_PARAMS_1 ( \
-        BOOST_DI_ITERATION_PARAMS(1, "boost/di/type_traits/parameter_types.hpp"))
-
     namespace boost {
     namespace di {
     namespace type_traits {
@@ -26,6 +23,8 @@
         typedef mpl::vector0<> type;
     };
 
+    #define BOOST_PP_FILENAME_1 "boost/di/type_traits/parameter_types.hpp"
+    #define BOOST_PP_ITERATION_LIMITS BOOST_DI_LIMITS_BEGIN(1)
     #include BOOST_PP_ITERATE()
 
     } // namespace type_traits

@@ -12,9 +12,6 @@
     #include "boost/di/aux_/meta.hpp"
     #include "boost/di/injector.hpp"
 
-    #define BOOST_PP_ITERATION_PARAMS_1 ( \
-        BOOST_DI_ITERATION_PARAMS(1, "boost/di/make_injector.hpp"))
-
     namespace boost {
     namespace di {
 
@@ -22,6 +19,8 @@
         return injector<>()();
     }
 
+    #define BOOST_PP_FILENAME_1 "boost/di/make_injector.hpp"
+    #define BOOST_PP_ITERATION_LIMITS BOOST_DI_LIMITS_BEGIN(1)
     #include BOOST_PP_ITERATE()
 
     } // namespace di
