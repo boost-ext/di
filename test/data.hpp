@@ -104,8 +104,8 @@ struct c4
 {
     BOOST_DI_CTOR(c4
         , shared_ptr<c3> c3_
-        , named<int, mpl::string<'1'>> i1
-        , named<int, mpl::string<'2'>> i2
+        , const named<int, mpl::string<'1'>>& i1
+        , const named<int, mpl::string<'2'>>& i2
     )
         : c3_(c3_), i1(i1), i2(i2)
     { }
@@ -192,8 +192,8 @@ struct c9 : c2
 struct c10
 {
     BOOST_DI_CTOR_TRAITS(
-        named<int, mpl::string<'1'>>
-      , named<int, mpl::string<'2'>>
+        const named<int, mpl::string<'1'>>&
+      , const named<int, mpl::string<'2'>>&
     );
 
     c10(int i1, int i2)
@@ -207,7 +207,7 @@ struct c10
 struct c11
 {
     BOOST_DI_CTOR(c11
-        , named<shared_ptr<int>, mpl::string<'1'>> i
+        , const named<shared_ptr<int>, mpl::string<'1'>>& i
     )
         : i(i)
     { }
@@ -218,8 +218,8 @@ struct c11
 struct c12
 {
     BOOST_DI_CTOR(c12
-        , named<shared_ptr<if0>, mpl::string<'1'>> if0_
-        , named<shared_ptr<c2>, mpl::string<'2'>> c2_
+        , const named<shared_ptr<if0>, mpl::string<'1'>>& if0_
+        , const named<shared_ptr<c2>, mpl::string<'2'>>& c2_
     )
         : if0_(if0_), c2_(c2_)
     { }
@@ -231,7 +231,7 @@ struct c12
 struct c13
 {
     BOOST_DI_CTOR(c13
-        , named<shared_ptr<if0>> if0_
+        , const named<shared_ptr<if0>>& if0_
         , c3 c3_
     )
         : if0_(if0_), c3_(c3_)
@@ -349,7 +349,7 @@ struct c21
 struct c22
 {
     BOOST_DI_CTOR(c22
-        , named<shared_ptr<int>, mpl::string<'1'>> i
+        , const named<shared_ptr<int>, mpl::string<'1'>>& i
         , shared_ptr<c11> c11_
     )
         : i(i), c11_(c11_)

@@ -9,6 +9,7 @@
 
 #include "boost/di/named.hpp"
 
+#include <boost/type.hpp>
 #include <boost/ref.hpp>
 
 namespace boost {
@@ -23,12 +24,13 @@ public:
         : object_(object)
     { }
 
-    operator T&() const {
+    template<typename I>
+    I& convert(const type<I&>&) const {
         return object_;
     }
 
     template<typename I, typename TName>
-    operator named<I, TName>() const {
+    named<I, TName> convert(const type<const named<I, TName>&>&) const {
         return named<I, TName>(object_);
     }
 

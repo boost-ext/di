@@ -10,6 +10,7 @@
 #include "boost/di/named.hpp"
 
 #include <utility>
+#include <boost/type.hpp>
 #include <boost/config.hpp>
 
 namespace boost {
@@ -24,18 +25,20 @@ public:
         : value_(value)
     { }
 
-    operator T() const {
+    template<typename I>
+    I convert(const type<I>&) const {
         return value_;
     }
 
 #if defined(BOOST_HAS_RVALUE_REFERENCES)
-    operator T&&() const {
+    template<typename I>
+    I&& convert(const type<I&&>&) const {
         return std::move(value_);
     }
 #endif
 
     template<typename I, typename TName>
-    operator named<I, TName>() const {
+    named<I, TName> convert(const type<const named<I, TName>&>&) const {
         return value_;
     }
 

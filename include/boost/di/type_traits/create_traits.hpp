@@ -15,10 +15,12 @@
     #include <string>
     #include <boost/preprocessor/repetition/enum_params.hpp>
     #include <boost/preprocessor/cat.hpp>
+    #include <boost/type.hpp>
+    #include <boost/non_type.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/type_traits/is_class.hpp>
-    #include <boost/non_type.hpp>
     #include <boost/mpl/string.hpp>
+    #include <boost/mpl/at.hpp>
     #include <boost/mpl/if.hpp>
     #include <boost/mpl/bool.hpp>
     #include <boost/mpl/or.hpp>
@@ -110,17 +112,36 @@
 
 #else
 
+    #define BOOST_DI_CONVERT(na, n, ctor)                       \
+        BOOST_PP_COMMA_IF(n)                                    \
+        args##n.template                                        \
+            convert(type<typename mpl::at_c<ctor, n>::type>())
+
     template<typename TExpected, typename TGiven, BOOST_DI_TYPES(Args)>
     typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_CREATE)<TGiven>, TExpected*>::type
     create_traits(BOOST_DI_ARGS(Args, args)) {
-        return TGiven().BOOST_DI_CREATE(BOOST_DI_ARGS_PASS(args));
+        return TGiven().BOOST_DI_CREATE(
+            BOOST_PP_REPEAT(
+                BOOST_PP_ITERATION()
+              , BOOST_DI_CONVERT
+              , typename ctor_traits<TGiven>::type
+            )
+        );
     }
 
     template<typename TExpected, typename TGiven, BOOST_DI_TYPES(Args)>
     typename disable_if<BOOST_PP_CAT(has_, BOOST_DI_CREATE)<TGiven>, TExpected*>::type
     create_traits(BOOST_DI_ARGS(Args, args)) {
-        return new TGiven(BOOST_DI_ARGS_PASS(args));
+        return new TGiven(
+            BOOST_PP_REPEAT(
+                BOOST_PP_ITERATION()
+              , BOOST_DI_CONVERT
+              , typename ctor_traits<TGiven>::type
+            )
+        );
     }
+
+    #undef BOOST_DI_CONVERT
 
 #endif
 

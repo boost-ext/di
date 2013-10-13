@@ -55,7 +55,7 @@ using injector_3_t = injector<
 >;
 
 using injector_custom_scope_t = injector<
-    scope<fake_scope<>>::bind<c3>
+    scope<fake_scope<>>::bind<c3, int>
 >;
 
 using injector_provider_t = injector<
@@ -105,7 +105,7 @@ auto injector_3 = make_injector(
 );
 
 auto injector_custom_scope = make_injector(
-    scope<fake_scope<>>::bind<c3>()
+    scope<fake_scope<>>::bind<c3, int>()
 );
 
 auto injector_provider = make_injector(
@@ -340,10 +340,10 @@ BOOST_AUTO_TEST_CASE(scope_deduction) {
     BOOST_CHECK(c19_->c1_ == c19_->c1__);
 }
 
-BOOST_AUTO_TEST_CASE(scope_deduction_named_shared_ptr) {
-    auto c22_ = injector<>().create<shared_ptr<c22>>();
-    BOOST_CHECK(c22_->i == c22_->c11_->i);
-}
+//BOOST_AUTO_TEST_CASE(scope_deduction_named_shared_ptr) {
+    //auto c22_ = injector<>().create<shared_ptr<c22>>();
+    //BOOST_CHECK(c22_->i == c22_->c11_->i);
+//}
 
 using deduce_injectors_types = mpl::vector<
     injector<injector_c0if0_t>
