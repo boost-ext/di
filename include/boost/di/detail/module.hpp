@@ -216,7 +216,7 @@
             std::cout << units::detail::demangle(typeid(deps_t).name()) << std::endl;
 
             return TCreator<TBinder<deps> >::template
-                execute<T, mpl::vector0<> >(deps_).convert(type<T>());
+                execute<T, mpl::vector0<> >(deps_)(type<T>());
         }
 
         template<typename T, typename Visitor>

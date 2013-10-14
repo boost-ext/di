@@ -32,60 +32,60 @@ public:
     { }
 
     template<typename I>
-    I convert(const type<I>&, typename disable_if<is_polymorphic<I> >::type* = 0) const {
+    I operator()(const type<I>&, typename disable_if<is_polymorphic<I> >::type* = 0) const {
         scoped_ptr<I> ptr(object_());
         return *ptr;
     }
 
     template<typename I>
-    const I convert(const type<const I>&, typename disable_if<is_polymorphic<I> >::type* = 0) const {
+    const I operator()(const type<const I>&, typename disable_if<is_polymorphic<I> >::type* = 0) const {
         scoped_ptr<I> ptr(object_());
         return *ptr;
     }
 
     template<typename I>
-    I* convert(const type<I*>&) const {
+    I* operator()(const type<I*>&) const {
         return object_();
     }
 
     template<typename I, typename TName>
-    named<I, TName> convert(const type<const named<I, TName>&>&) const {
+    named<I, TName> operator()(const type<const named<I, TName>&>&) const {
         scoped_ptr<I> ptr(object_());
         return *ptr;
     }
 
     template<typename I>
-    shared_ptr<I> convert(const type<shared_ptr<I> >&) const {
+    shared_ptr<I> operator()(const type<shared_ptr<I> >&) const {
         return shared_ptr<I>(object_());
     }
 
     template<typename I>
-    shared_ptr<I> convert(const type<const shared_ptr<I>&>&) const {
+    shared_ptr<I> operator()(const type<const shared_ptr<I>&>&) const {
         return shared_ptr<I>(object_());
     }
 
     template<typename I, typename TName>
-    I* convert(const type<const named<shared_ptr<I>, TName>&>&) const {
+    I* operator()(const type<const named<shared_ptr<I>, TName>&>&) const {
         return object_();
     }
 
     template<typename I>
-    auto_ptr<I> convert(const type<auto_ptr<I> >&) const {
+    auto_ptr<I> operator()(const type<auto_ptr<I> >&) const {
         return auto_ptr<I>(object_());
     }
 
     template<typename I, typename TName>
-    I* convert(const type<const named<auto_ptr<I>, TName>&>&) const {
+    I* operator()(const type<const named<auto_ptr<I>, TName>&>&) const {
         return object_();
     }
 
     template<typename I>
-    unique_ptr<I> convert(const type<unique_ptr<I> >&) const {
+    unique_ptr<I> operator()(const type<unique_ptr<I> >&) const {
         return unique_ptr<I>(object_());
     }
 
     template<typename I, typename TName>
-    I* convert(type<const named<unique_ptr<I>, TName>&>&) const {
+    I* operator()(type<const named<unique_ptr<I>, TName>&>&) const {
         return object_();
     }
 

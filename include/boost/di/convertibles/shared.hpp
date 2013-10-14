@@ -28,46 +28,46 @@ public:
     { }
 
     template<typename I>
-    shared_ptr<I> convert(const type<shared_ptr<I> >&) const {
+    shared_ptr<I> operator()(const type<shared_ptr<I> >&) const {
         return *this;
     }
 
     template<typename I>
-    shared_ptr<I> convert(const type<const shared_ptr<I>&>&) const {
+    shared_ptr<I> operator()(const type<const shared_ptr<I>&>&) const {
         return *this;
     }
 
     template<typename I, typename TName>
     named<shared_ptr<I>, TName>
-    convert(const type<named<shared_ptr<I>, TName> >&) const {
+    operator()(const type<named<shared_ptr<I>, TName> >&) const {
         return *this;
     }
 
     template<typename I, typename TName>
     named<shared_ptr<I>, TName>
-    convert(const type<named<const shared_ptr<I>&, TName> >&) const {
+    operator()(const type<named<const shared_ptr<I>&, TName> >&) const {
         return *this;
     }
 
     template<typename I>
-    weak_ptr<I> convert(const type<weak_ptr<I> >&) const {
+    weak_ptr<I> operator()(const type<weak_ptr<I> >&) const {
         return *this;
     }
 
     template<typename I>
-    weak_ptr<I> convert(const type<const weak_ptr<I>&>&) const {
+    weak_ptr<I> operator()(const type<const weak_ptr<I>&>&) const {
         return *this;
     }
 
     template<typename I, typename TName>
     named<weak_ptr<I>, TName>
-    convert(const type<const named<weak_ptr<I>, TName>&>&) const {
+    operator()(const type<const named<weak_ptr<I>, TName>&>&) const {
         return named<weak_ptr<I> >(*this);
     }
 
     template<typename I, typename TName>
     named<weak_ptr<I>, TName>
-    convert(const type<const named<const weak_ptr<I>&, TName>&>&) const {
+    operator()(const type<const named<const weak_ptr<I>&, TName>&>&) const {
         return named<weak_ptr<I> >(*this);
     }
 };

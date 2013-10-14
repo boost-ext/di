@@ -26,19 +26,19 @@ public:
     { }
 
     template<typename I>
-    I convert(const type<I>&) const {
+    I operator()(const type<I>&) const {
         return value_;
     }
 
 #if defined(BOOST_HAS_RVALUE_REFERENCES)
     template<typename I>
-    I&& convert(const type<I&&>&) const {
+    I&& operator()(const type<I&&>&) const {
         return std::move(value_);
     }
 #endif
 
     template<typename I, typename TName>
-    named<I, TName> convert(const type<const named<I, TName>&>&) const {
+    named<I, TName> operator()(const type<const named<I, TName>&>&) const {
         return value_;
     }
 

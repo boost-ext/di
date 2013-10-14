@@ -114,15 +114,11 @@
 
     #define BOOST_DI_CONVERT(na, n, ctor)                       \
         BOOST_PP_COMMA_IF(n)                                    \
-        args##n.template                                        \
-            convert(type<typename mpl::at_c<ctor, n>::type>())
+        args##n(type<typename mpl::at_c<ctor, n>::type>())
 
     template<typename TExpected, typename TGiven, BOOST_DI_TYPES(Args)>
     typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_CREATE)<TGiven>, TExpected*>::type
     create_traits(BOOST_DI_ARGS(Args, args)) {
-
-
-        //operator() instead of convert
         return TGiven().BOOST_DI_CREATE(
             BOOST_PP_REPEAT(
                 BOOST_PP_ITERATION()
