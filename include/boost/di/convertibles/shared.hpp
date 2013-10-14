@@ -10,6 +10,7 @@
 #include "boost/di/memory.hpp"
 #include "boost/di/named.hpp"
 
+#include <boost/type.hpp>
 #include <boost/config.hpp>
 
 namespace boost {
@@ -17,49 +18,58 @@ namespace di {
 namespace convertibles {
 
 template<typename T>
-class shared
+class shared : public shared_ptr<T>
 {
 public:
     shared() { }
 
-    explicit shared(shared_ptr<T> object)
-        : object_(object)
+    explicit shared(const shared_ptr<T>& object)
+        : shared_ptr<T>(object)
     { }
 
-    bool operator!() const {
-        return !object_;
-    }
-
-    void reset() {
-        object_.reset();
-    }
-
-    void reset(T* ptr) {
-        object_.reset(ptr);
+    template<typename I>
+    shared_ptr<I> operator()(const type<shared_ptr<I> >&) const {
+        return *this;
     }
 
     template<typename I>
-    operator shared_ptr<I>() const {
-        return object_;
+    shared_ptr<I> operator()(const type<const shared_ptr<I>&>&) const {
+        return *this;
     }
 
     template<typename I, typename TName>
-    operator named<shared_ptr<I>, TName>() const {
-        return object_;
+    named<shared_ptr<I>, TName>
+    operator()(const type<const named<shared_ptr<I>, TName>&>&) const {
+        return *this;
+    }
+
+    template<typename I, typename TName>
+    named<shared_ptr<I>, TName>
+    operator()(const type<const named<const shared_ptr<I>&, TName>&>&) const {
+        return *this;
     }
 
     template<typename I>
-    operator weak_ptr<I>() const {
-        return object_;
+    weak_ptr<I> operator()(const type<weak_ptr<I> >&) const {
+        return *this;
+    }
+
+    template<typename I>
+    weak_ptr<I> operator()(const type<const weak_ptr<I>&>&) const {
+        return *this;
     }
 
     template<typename I, typename TName>
-    operator named<weak_ptr<I>, TName>() const {
-        return named<weak_ptr<I> >(object_);
+    named<weak_ptr<I>, TName>
+    operator()(const type<const named<weak_ptr<I>, TName>&>&) const {
+        return named<weak_ptr<I> >(*this);
     }
 
-private:
-    shared_ptr<T> object_;
+    template<typename I, typename TName>
+    named<weak_ptr<I>, TName>
+    operator()(const type<const named<const weak_ptr<I>&, TName>&>&) const {
+        return named<weak_ptr<I> >(*this);
+    }
 };
 
 } // namespace convertibles

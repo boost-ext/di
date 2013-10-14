@@ -8,6 +8,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <memory>
+#include <boost/type.hpp>
 #include <boost/ref.hpp>
 
 namespace boost {
@@ -19,34 +20,34 @@ BOOST_AUTO_TEST_CASE(copy_ctor) {
     ref<int> ref_i(boost::ref(i));
     ref<int> object_ref(ref_i);
 
-    BOOST_CHECK_EQUAL(ref_i, object_ref);
+    BOOST_CHECK_EQUAL(ref_i(type<int&>()), object_ref(type<int&>()));
 }
 
 BOOST_AUTO_TEST_CASE(to_ref) {
     int i = 42;
     int& i_ref = i;
-    int& object_ref = ref<int>(boost::ref(i_ref));
+    int& object_ref(ref<int>(boost::ref(i_ref))(type<int&>()));
     BOOST_CHECK_EQUAL(i, object_ref);
 }
 
 BOOST_AUTO_TEST_CASE(to_named) {
     int i = 42;
     int& i_ref = i;
-    named<int> object_ref = ref<int>(boost::ref(i_ref));
+    named<int> object_ref(ref<int>(boost::ref(i_ref))(type<int&>()));
     BOOST_CHECK_EQUAL(i, object_ref);
 }
 
 BOOST_AUTO_TEST_CASE(to_const_ref) {
     const int i = 42;
     const int& i_ref = i;
-    const int& object_ref = ref<const int>(boost::cref(i_ref));
+    const int& object_ref(ref<const int>(boost::cref(i_ref))(type<const int&>()));
     BOOST_CHECK_EQUAL(i, object_ref);
 }
 
 BOOST_AUTO_TEST_CASE(to_const_named_ref) {
     const int i = 42;
     const int& i_ref = i;
-    named<const int> object_ref = ref<const int>(boost::cref(i_ref));
+    named<const int> object_ref(ref<const int>(boost::cref(i_ref))(type<const int&>()));
     BOOST_CHECK_EQUAL(i, object_ref);
 }
 

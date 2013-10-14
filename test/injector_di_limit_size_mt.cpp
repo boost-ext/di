@@ -46,36 +46,36 @@ struct n30 { };
 struct limit
 {
     BOOST_DI_CTOR(limit, (
-          named<int, n1> i1
-        , named<int, n2> i2
-        , named<int, n3> i3
-        , named<int, n4> i4
-        , named<int, n5> i5
-        , named<int, n6> i6
-        , named<int, n7> i7
-        , named<int, n8> i8
-        , named<int, n9> i9
-        , named<int, n10> i10
-        , named<int, n11> i11
-        , named<int, n12> i12
-        , named<int, n13> i13
-        , named<int, n14> i14
-        , named<int, n15> i15
-        , named<int, n16> i16
-        , named<int, n17> i17
-        , named<int, n18> i18
-        , named<int, n19> i19
-        , named<int, n20> i20
-        , named<int, n21> i21
-        , named<int, n22> i22
-        , named<int, n23> i23
-        , named<int, n24> i24
-        , named<int, n25> i25
-        , named<int, n26> i26
-        , named<int, n27> i27
-        , named<int, n28> i28
-        , named<int, n29> i29
-        , named<int, n30> i30
+          const named<int, n1>& i1
+        , const named<int, n2>& i2
+        , const named<int, n3>& i3
+        , const named<int, n4>& i4
+        , const named<int, n5>& i5
+        , const named<int, n6>& i6
+        , const named<int, n7>& i7
+        , const named<int, n8>& i8
+        , const named<int, n9>& i9
+        , const named<int, n10>& i10
+        , const named<int, n11>& i11
+        , const named<int, n12>& i12
+        , const named<int, n13>& i13
+        , const named<int, n14>& i14
+        , const named<int, n15>& i15
+        , const named<int, n16>& i16
+        , const named<int, n17>& i17
+        , const named<int, n18>& i18
+        , const named<int, n19>& i19
+        , const named<int, n20>& i20
+        , const named<int, n21>& i21
+        , const named<int, n22>& i22
+        , const named<int, n23>& i23
+        , const named<int, n24>& i24
+        , const named<int, n25>& i25
+        , const named<int, n26>& i26
+        , const named<int, n27>& i27
+        , const named<int, n28>& i28
+        , const named<int, n29>& i29
+        , const named<int, n30>& i30
     ))
         : i1(i1)
         , i2(i2)

@@ -14,6 +14,8 @@
 #include "boost/di/memory.hpp"
 #include "boost/di/ctor.hpp"
 
+#include "fake_convertible.hpp"
+
 namespace boost {
 namespace di {
 namespace type_traits {
@@ -49,7 +51,9 @@ BOOST_AUTO_TEST_CASE(create_empty) {
 }
 
 BOOST_AUTO_TEST_CASE(create_ctor) {
-    unique_ptr<ctor> ctor_(create_traits<ctor, ctor, int, double>(42, 42.0));
+    fake_convertible<int> i(42);
+    fake_convertible<double> d(42.0);
+    unique_ptr<ctor> ctor_(create_traits<ctor, ctor, decltype(i), decltype(d)>(i, d));
     BOOST_CHECK(ctor_.get());
 }
 
@@ -66,10 +70,14 @@ BOOST_AUTO_TEST_CASE(create_string_value) {
 BOOST_AUTO_TEST_CASE(create_factory) {
     unique_ptr<int> factory_(create_traits<int, factory>());
     BOOST_CHECK(!factory_.get());
+}
 
-    unique_ptr<int> factory_ext_(create_traits<int, factory_ext, int>(42));
+BOOST_AUTO_TEST_CASE(create_factory_ext) {
+    const int expected = 42;
+    fake_convertible<int> i(expected);
+    unique_ptr<int> factory_ext_(create_traits<int, factory_ext, decltype(i)>(i));
     BOOST_CHECK(factory_ext_.get());
-    BOOST_CHECK_EQUAL(42, *factory_ext_);
+    BOOST_CHECK_EQUAL(expected, *factory_ext_);
 }
 
 } // namespace type_traits

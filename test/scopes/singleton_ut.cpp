@@ -7,8 +7,10 @@
 #include "boost/di/scopes/singleton.hpp"
 
 #include <boost/test/unit_test.hpp>
+#include <boost/type.hpp>
 
 #include "boost/di/memory.hpp"
+#include "fake_convertible.hpp"
 #include "data.hpp"
 
 namespace boost {
@@ -19,23 +21,23 @@ BOOST_AUTO_TEST_CASE(create) {
     singleton<>::scope<int> singleton_;
 
     BOOST_CHECK((
-        static_cast<shared_ptr<int>>(
-            singleton_.create())
+        (singleton_.create())(type<shared_ptr<int>>())
         ==
-        static_cast<shared_ptr<int>>(
-            singleton_.create())
+        (singleton_.create())(type<shared_ptr<int>>())
     ));
 }
 
 BOOST_AUTO_TEST_CASE(create_args) {
     singleton<>::scope<c2> singleton_;
 
+    fake_convertible<int> i(0);
+    fake_convertible<double> d(0.0);
+    fake_convertible<char> c('0');
+
     BOOST_CHECK((
-        static_cast<shared_ptr<c2>>(
-            singleton_.create<int, double, char>(0, 0.0, '0'))
+        (singleton_.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<shared_ptr<c2>>())
         ==
-        static_cast<shared_ptr<c2>>(
-            singleton_.create<int, double, char>(0, 0.0, '0'))
+        (singleton_.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<shared_ptr<c2>>())
     ));
 }
 

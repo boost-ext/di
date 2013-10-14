@@ -109,7 +109,7 @@ test-suite "di / C++ 11" :
     [ run-cpp11 di_mt_11.cpp ]
 ;
 
-test-suite "di / C++ 98/03" :
+test-suite "di / c++ 98/03" :
     [ run-cpp03 di_mt_03.cpp ]
 ;
 

@@ -8,6 +8,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <boost/ref.hpp>
+#include <boost/type.hpp>
 
 #include "boost/di/convertibles/ref.hpp"
 #include "boost/di/convertibles/shared.hpp"
@@ -21,29 +22,29 @@ namespace scopes {
 
 BOOST_AUTO_TEST_CASE(from_arithmetic) {
     const int i = 42;
-    BOOST_CHECK_EQUAL(i, static_cast<int>(external<>::scope<int>(i).create()));
+    BOOST_CHECK_EQUAL(i, (external<>::scope<int>(i).create())(type<int>()));
 }
 
 BOOST_AUTO_TEST_CASE(from_string) {
     const std::string s = "string";
-    BOOST_CHECK_EQUAL(s, static_cast<const std::string&>(external<>::scope<std::string>(s).create()));
+    BOOST_CHECK_EQUAL(s, (external<>::scope<std::string>(s).create())(type<const std::string&>()));
 }
 
 BOOST_AUTO_TEST_CASE(from_ref) {
     c c_;
-    c& c_ref_ = external<convertibles::ref>::scope<c>(boost::ref(c_)).create();
+    c& c_ref_ = (external<convertibles::ref>::scope<c>(boost::ref(c_)).create())(type<c&>());
     BOOST_CHECK_EQUAL(&c_, &c_ref_);
 }
 
 BOOST_AUTO_TEST_CASE(from_const_ref) {
     c c_;
-    const c& const_c_ref_ = external<convertibles::ref>::scope<const c>(boost::cref(c_)).create();
+    const c& const_c_ref_ = (external<convertibles::ref>::scope<const c>(boost::cref(c_)).create())(type<const c&>());
     BOOST_CHECK_EQUAL(&c_, &const_c_ref_);
 }
 
 BOOST_AUTO_TEST_CASE(from_shared_ptr) {
     shared_ptr<c> c_(new c);
-    shared_ptr<c> sp_c = external<convertibles::shared>::scope<c>(c_).create();
+    shared_ptr<c> sp_c = (external<convertibles::shared>::scope<c>(c_).create())(type<shared_ptr<c>>());
     BOOST_CHECK_EQUAL(c_, sp_c);
 }
 
@@ -52,9 +53,9 @@ BOOST_AUTO_TEST_CASE(from_context) {
     shared_ptr<c> c2_(new c);
 
     BOOST_CHECK((
-        static_cast<int>(external<>::scope<int, a>(87).create())
+        (external<>::scope<int, a>(87).create())(type<int>())
         !=
-        static_cast<int>(external<>::scope<int, b>(42).create())
+        (external<>::scope<int, b>(42).create())(type<int>())
     ));
 
     BOOST_CHECK((

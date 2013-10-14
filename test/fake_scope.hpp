@@ -7,10 +7,10 @@
 #if !BOOST_PP_IS_ITERATING
 
 #include <utility>
+#include <boost/type.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/make_shared.hpp>
 
-#include "boost/di/scopes/external.hpp"
+#include "boost/di/type_traits/ctor_traits.hpp"
 
 namespace boost {
 namespace di {
@@ -39,12 +39,18 @@ struct fake_scope : priority_impl<Priority>
             : obj_(obj)
         { }
 
-        operator shared_ptr<T>() const {
+        template<typename I>
+        shared_ptr<I> operator()(const type<shared_ptr<I>>&) const {
             return obj_;
         }
 
-        operator T() const {
+        template<typename I>
+        I operator()(const type<I>&) const {
             return *obj_;
+        }
+
+        operator T() const {
+            return (*this)(type<T>());
         }
 
     private:
@@ -66,6 +72,7 @@ struct fake_scope : priority_impl<Priority>
 
         template<typename... Args>
         result_type create(Args&&... args) {
+            using ctor = typename type_traits::ctor_traits<T>::type;
             if (entry_calls() > exit_calls()) {
                 return shared_ptr<T>(new T(std::forward<Args>(args)...));
             }

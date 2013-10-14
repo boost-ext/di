@@ -16,9 +16,10 @@
     #include "boost/di/detail/visitor.hpp"
 
     #include <boost/preprocessor/iteration/iterate.hpp>
+    #include <boost/type.hpp>
+    #include <boost/non_type.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/typeof/typeof.hpp>
-    #include <boost/non_type.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/is_sequence.hpp>
     #include <boost/mpl/fold.hpp>
@@ -39,8 +40,6 @@
     #include <boost/mpl/has_xxx.hpp>
     #include <boost/mpl/assert.hpp>
 
-
-#include <boost/units/detail/utility.hpp>
     namespace boost {
     namespace di {
 
@@ -213,10 +212,8 @@
 
             TPool<deps_t> deps_(static_cast<TPool<deps>&>(*this), init());
 
-            std::cout << units::detail::demangle(typeid(deps_t).name()) << std::endl;
-
             return TCreator<TBinder<deps> >::template
-                execute<T, mpl::vector0<> >(deps_);
+                execute<T, mpl::vector0<> >(deps_)(type<T>());
         }
 
         template<typename T, typename Visitor>

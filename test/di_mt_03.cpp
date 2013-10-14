@@ -45,7 +45,8 @@ struct c2
 
     boost::shared_ptr<c1> c1_;
     std::auto_ptr<i> p_;
-};
+}
+;
 
 struct c3
 {
