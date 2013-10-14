@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(not_correct) {
             >
           , binding_correctness::verify<
                 mpl::vector<
-                    fake_dependency<none_t, a, a, c2>
+                    fake_dependency<none_t, a, a, void, c2>
                 >
               , none_t
               , mpl::false_
@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE(not_correct_call_stack) {
             >
           , binding_correctness::verify<
                 mpl::vector<
-                    fake_dependency<none_t, a, a, mpl::vector<c1, c2>>
+                    fake_dependency<none_t, a, a, void, mpl::vector<c1, c2>>
                 >
               , none_t
               , mpl::false_
@@ -72,8 +72,8 @@ BOOST_AUTO_TEST_CASE(correct_many) {
             mpl::vector0<>
           , binding_correctness::verify<
                 mpl::vector<
-                    fake_dependency<none_t, int, int, mpl::vector<c1, c3>>
-                  , fake_dependency<none_t, int, int, c9, c14>
+                    fake_dependency<none_t, int, int, void, mpl::vector<c1, c3>>
+                  , fake_dependency<none_t, int, int, void, c9, c14>
                 >
               , none_t
               , mpl::false_
@@ -88,7 +88,7 @@ BOOST_AUTO_TEST_CASE(none_singletons) {
             mpl::vector<>
           , binding_correctness::verify<
                 mpl::vector<
-                    fake_dependency<scopes::per_request<>, int, mpl::int_<42>, ub1>::type
+                    fake_dependency<scopes::per_request<>, int, mpl::int_<42>, void, ub1>::type
                   , fake_dependency_base_of<scopes::per_request<>, ub1>::type
                 >
               , ub3
@@ -106,7 +106,7 @@ BOOST_AUTO_TEST_CASE(with_call) {
             >
           , binding_correctness::verify<
                 mpl::vector<
-                    fake_dependency<scopes::per_request<>, int, mpl::int_<42>, ub1>::type
+                    fake_dependency<scopes::per_request<>, int, mpl::int_<42>, void, ub1>::type
                   , fake_dependency_base_of<scopes::singleton<>, ub1>::type
                 >
               , ub3
@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE(with_call_stack) {
             >
           , binding_correctness::verify<
                 mpl::vector<
-                    fake_dependency<scopes::per_request<>, int, mpl::int_<42>, mpl::vector<ub2, ub1>>::type
+                    fake_dependency<scopes::per_request<>, int, mpl::int_<42>, void, mpl::vector<ub2, ub1>>::type
                   , fake_dependency_base_of<scopes::singleton<>, ub1>::type
                 >
               , ub3

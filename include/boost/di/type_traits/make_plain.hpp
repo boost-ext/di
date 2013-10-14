@@ -37,9 +37,7 @@ struct deref_type<T, typename enable_if<has_element_type<T> >::type>
 template<typename T>
 struct deref_type<T, typename enable_if<has_named_type<T> >::type>
 {
-    typedef typename T::template rebind<
-        typename make_plain<typename T::named_type>::type
-    >::other type;
+    typedef typename make_plain<typename T::named_type>::type type;
 };
 
 template<typename T>

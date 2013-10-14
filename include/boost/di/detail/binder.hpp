@@ -9,6 +9,7 @@
 
 #include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/type_traits/scope_traits.hpp"
+#include "boost/di/type_traits/remove_accessors.hpp"
 #include "boost/di/concepts/dependency.hpp"
 
 #include <boost/mpl/vector.hpp>
@@ -167,9 +168,40 @@ struct get_dependency_by_call_stack_order
       >::type
 { };
 
-template<typename TBind, typename T>
+BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
+BOOST_MPL_HAS_XXX_TRAIT_DEF(named_type)
+
+template<typename T, typename = void>
+struct name
+{
+    typedef void type;
+};
+
+template<typename T>
+struct name<T, typename enable_if<
+    has_name<typename type_traits::remove_accessors<T>::type> >::type
+>
+{
+    typedef typename type_traits::remove_accessors<T>::type::name type;
+};
+
+template<typename T, typename = void>
+struct named
+{
+    typedef T type;
+};
+
+template<typename T>
+struct named<T, typename enable_if<
+    has_named_type<typename type_traits::remove_accessors<T>::type> >::type
+>
+{
+    typedef typename type_traits::remove_accessors<T>::type type;
+};
+
+template<typename TBind, typename T, typename TName>
 struct comparator
-    : mpl::apply<TBind, T>::type
+    : mpl::apply<TBind, T, TName>::type
 { };
 
 template<
@@ -178,7 +210,7 @@ template<
   , typename TDeps
   , typename TDefault =
         ::boost::di::concepts::dependency<
-            typename type_traits::scope_traits<T>::type
+            typename type_traits::scope_traits<typename named<T>::type>::type
           , typename type_traits::make_plain<T>::type
         >
 >
@@ -191,6 +223,7 @@ struct binder_impl
               comparator<
                   bind<mpl::_2>
                 , typename type_traits::make_plain<T>::type
+                , typename name<T>::type
               >
             , for_each_context<
                   TCallStack
@@ -198,7 +231,7 @@ struct binder_impl
               >
           >
       >::type::template rebind<
-          typename type_traits::scope_traits<T>::type
+          typename type_traits::scope_traits<typename named<T>::type>::type
       >::other
 { };
 

@@ -39,6 +39,8 @@
     #include <boost/mpl/has_xxx.hpp>
     #include <boost/mpl/assert.hpp>
 
+
+#include <boost/units/detail/utility.hpp>
     namespace boost {
     namespace di {
 
@@ -210,6 +212,8 @@
             >::type deps_t;
 
             TPool<deps_t> deps_(static_cast<TPool<deps>&>(*this), init());
+
+            std::cout << units::detail::demangle(typeid(deps_t).name()) << std::endl;
 
             return TCreator<TBinder<deps> >::template
                 execute<T, mpl::vector0<> >(deps_);

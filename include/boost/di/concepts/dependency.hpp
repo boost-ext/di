@@ -22,9 +22,9 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/and.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/lambda.hpp>
-#include <boost/mpl/has_xxx.hpp>
 
 namespace boost {
 namespace di {
@@ -44,22 +44,6 @@ struct scope_traits<mpl::_1>
     typedef scopes::deduce type;
 };
 
-BOOST_MPL_HAS_XXX_TRAIT_DEF(named_type)
-
-template<typename T, typename = void>
-struct named_traits
-{
-    typedef T type;
-};
-
-template<typename T>
-struct named_traits<T, typename enable_if<has_named_type<T> >::type>
-{
-    typedef typename type_traits::remove_accessors<
-        typename T::named_type
-    >::type type;
-};
-
 } // namespace detail
 
 template<
@@ -69,20 +53,21 @@ template<
 >
 struct scope_type
 {
-    typedef typename detail::scope_traits<TScope>::type::template
-        scope<typename detail::named_traits<TExpected>::type
-            , typename detail::named_traits<TGiven>::type
-        >
-    type;
+    typedef typename detail::scope_traits<TScope>::type::
+        template scope<TExpected,TGiven> type;
 };
 
 template<
     typename TScope
   , typename TExpected
   , typename TGiven = TExpected
+  , typename TName = void
   , typename TContext = mpl::vector0<>
   , typename TBind = typename mpl::lambda<
-        is_same<mpl::_1, TExpected>
+        mpl::and_<
+            is_same<TExpected, mpl::_1>
+          , is_same<TName, mpl::_2>
+        >
     >::type
 >
 class dependency : public scope_type<TExpected, TGiven, TScope>::type
@@ -95,14 +80,15 @@ class dependency : public scope_type<TExpected, TGiven, TScope>::type
     template<typename T, typename U, typename S>
     struct external
     {
-        typedef dependency<S, T, U, TContext, TBind> type;
+        typedef dependency<S, T, U, TName, TContext, TBind> type;
     };
 
 public:
     typedef dependency type;
     typedef typename detail::scope_traits<TScope>::type scope;
-    typedef typename detail::named_traits<TExpected>::type expected;
-    typedef typename detail::named_traits<TGiven>::type given;
+    typedef TExpected expected;
+    typedef TGiven given;
+    typedef TName name;
     typedef TContext context;
     typedef TBind bind;
 
@@ -117,6 +103,7 @@ public:
             >::type
           , TExpected
           , TGiven
+          , TName
           , TContext
           , TBind
         > other;

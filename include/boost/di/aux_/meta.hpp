@@ -22,7 +22,9 @@
     #define BOOST_MPL_LIMIT_VECTOR_SIZE BOOST_DI_LIMIT_SIZE
 
     #if (BOOST_MPL_LIMIT_VECTOR_SIZE <= 50)
-        #define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
+        #if !defined(BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS)
+            #define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
+        #endif
         #include <boost/mpl/vector.hpp>
     #else
         #include <boost/mpl/vector/vector50.hpp>

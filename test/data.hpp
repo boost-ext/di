@@ -207,7 +207,7 @@ struct c10
 struct c11
 {
     BOOST_DI_CTOR(c11
-        , named<shared_ptr<int>, mpl::string<'1'>> i
+        , const named<shared_ptr<int>, mpl::string<'1'>>& i
     )
         : i(i)
     { }
@@ -349,7 +349,7 @@ struct c21
 struct c22
 {
     BOOST_DI_CTOR(c22
-        , named<shared_ptr<int>, mpl::string<'1'>> i
+        , const named<shared_ptr<int>, mpl::string<'1'>>& i
         , shared_ptr<c11> c11_
     )
         : i(i), c11_(c11_)

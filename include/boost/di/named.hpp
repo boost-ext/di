@@ -32,12 +32,6 @@ public:
     typedef T named_type;
     typedef TName name;
 
-    template<typename U>
-    struct rebind
-    {
-        typedef named<U, TName> other;
-    };
-
     named(T object = T()) // non explicit
         : object_(object)
     { }
@@ -65,12 +59,6 @@ class named<T, TName, typename enable_if<
 public:
     typedef T named_type;
     typedef TName name;
-
-    template<typename U>
-    struct rebind
-    {
-        typedef named<U, TName> other;
-    };
 };
 
 template<
@@ -87,12 +75,6 @@ class named<T, TName, typename enable_if<
 public:
     typedef T named_type;
     typedef TName name;
-
-    template<typename U>
-    struct rebind
-    {
-        typedef named<U, TName> other;
-    };
 
     named(T object = T()) // non explicit
         : object_(object)

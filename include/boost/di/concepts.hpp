@@ -15,7 +15,6 @@
 #include "boost/di/scopes/per_request.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/session.hpp"
-#include "boost/di/named.hpp"
 #include "boost/di/ctor_proxy.hpp"
 #include "boost/di/memory.hpp"
 
@@ -41,7 +40,7 @@ struct call_stack
 
 template<typename TScope>
 struct scope
-    : concepts::scope<TScope, concepts::dependency, named>
+    : concepts::scope<TScope, concepts::dependency>
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
@@ -66,7 +65,7 @@ struct session
 
 template<typename TExpected, typename TGiven = TExpected>
 struct bind
-    : concepts::bind<TExpected, TGiven, concepts::dependency, named>
+    : concepts::bind<TExpected, TGiven, concepts::dependency>
 { };
 
 template<int N>

@@ -14,6 +14,7 @@
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
+#include <boost/mpl/joint_view.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/transform.hpp>
 #include <boost/mpl/if.hpp>
@@ -25,8 +26,8 @@
 #include <boost/mpl/is_sequence.hpp>
 #include <boost/mpl/back.hpp>
 #include <boost/mpl/set.hpp>
-#include <boost/mpl/joint_view.hpp>
 #include <boost/mpl/copy.hpp>
+#include <boost/mpl/apply.hpp>
 #include <boost/mpl/back_inserter.hpp>
 #include <boost/mpl/insert.hpp>
 #include <boost/mpl/empty.hpp>
@@ -192,11 +193,24 @@ class binding_correctness
           >
     { };
 
-    template<typename TCtor, typename TDependency>
+
+    template<typename TBind, typename T, typename TName>
     struct comparator
+        : mpl::apply<TBind, T, TName>::type
+    { };
+
+    template<
+        typename TCtor
+      , typename TDependency
+    >
+    struct ctor_has_type
         : mpl::count_if<
               TCtor
-            , typename TDependency::bind
+            , comparator<
+                  typename TDependency::bind
+                , mpl::_1
+                , typename TDependency::name
+              >
           >::type
     { };
 
@@ -222,7 +236,7 @@ class binding_correctness
               get_context<TDependency>
             , TResult
             , mpl::if_<
-                  comparator<
+                 ctor_has_type<
                       ctor<mpl::_2>
                     , TDependency
                   >

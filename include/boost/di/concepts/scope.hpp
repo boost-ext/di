@@ -28,16 +28,15 @@ template<
         typename
       , typename T
       , typename = T
+      , typename TName = void
       , typename = ::boost::mpl::vector0<>
       , typename = typename ::boost::mpl::lambda<
-            ::boost::di::type_traits::is_same_base_of<T>
+            ::boost::mpl::and_<
+                ::boost::di::type_traits::is_same_base_of<T, ::boost::mpl::_1>
+              , ::boost::is_same<TName, ::boost::mpl::_2>
+            >
         >::type
     > class TDependency
-  , template<
-        typename
-      , typename
-      , typename = void
-    > class TNamed
 >
 class scope
 {
@@ -46,6 +45,7 @@ class scope
     template<
         typename TExpected
       , typename TGiven = TExpected
+      , typename TName = void
       , typename TContext = mpl::vector0<>
     >
     struct dependency
@@ -53,6 +53,7 @@ class scope
                mpl::_1
              , TExpected
              , TGiven
+             , TName
              , TContext
           >
     { };
@@ -112,6 +113,7 @@ public:
                   dependency<
                       mpl::_2
                     , mpl::_2
+                    , void
                     , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
                   >
                 , TExpected
@@ -121,8 +123,9 @@ public:
             struct in_name
                 : get_dependencies<
                       dependency<
-                          TNamed<mpl::_2, TName>
+                          mpl::_2
                         , mpl::_2
+                        , TName
                         , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
                       >
                     , TExpected
@@ -134,8 +137,9 @@ public:
         struct in_name
             : get_dependencies<
                   dependency<
-                      TNamed<mpl::_2, TName>
+                      mpl::_2
                     , mpl::_2
+                    , TName
                   >
                 , TExpected
               >
@@ -144,8 +148,9 @@ public:
             struct in_call
                 : get_dependencies<
                       dependency<
-                          TNamed<mpl::_2, TName>
+                          mpl::_2
                         , mpl::_2
+                        , TName
                         , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
                       >
                     , TExpected

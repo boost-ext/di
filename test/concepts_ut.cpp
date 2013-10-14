@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_CASE(bind_int_value_in_name) {
                 bind_int<i>::in_name<void>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, named<int, void>, mpl::int_<i>>::type
+                fake_dependency_base_of<fake_scope<>, int, mpl::int_<i>, void>::type
             >
         >::value
     ));
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE(bind_int_value_in_call) {
                 bind_int<i>::in_call<c0>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, int, mpl::int_<i>, c0>::type
+                fake_dependency_base_of<fake_scope<>, int, mpl::int_<i>, void, c0>::type
             >
         >::value
     ));
@@ -80,7 +80,7 @@ BOOST_AUTO_TEST_CASE(bind_int_value_in_name_in_call) {
                 bind_int<i>::in_name<void>::in_call<c0>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, named<int, void>, mpl::int_<i>, c0>::type
+                fake_dependency_base_of<fake_scope<>, int, mpl::int_<i>, void, c0>::type
             >
         >::value
     ));
@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE(bind_int_value_in_call_in_name) {
                 bind_int<i>::in_call<c0>::in_name<void>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, named<int, void>, mpl::int_<i>, c0>::type
+                fake_dependency_base_of<fake_scope<>, int, mpl::int_<i>, void, c0>::type
             >
         >::value
     ));
@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE(bind_string_value_in_name) {
                 bind_string<s>::in_name<void>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, named<std::string, void>, s>::type
+                fake_dependency_base_of<fake_scope<>, std::string, s, void>::type
             >
         >::value
     ));
@@ -136,7 +136,7 @@ BOOST_AUTO_TEST_CASE(bind_string_value_in_name_in_call) {
                 bind_string<s>::in_name<void>::in_call<c0, c1>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, named<std::string, void>, s, c0, c1>::type
+                fake_dependency_base_of<fake_scope<>, std::string, s, void, c0, c1>::type
             >
         >::value
     ));
@@ -150,7 +150,7 @@ BOOST_AUTO_TEST_CASE(bind_string_value_in_call_in_name) {
                 bind_string<s>::in_call<c0, c1>::in_name<void>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, named<std::string, void>, s, c0, c1>::type
+                fake_dependency_base_of<fake_scope<>, std::string, s, void, c0, c1>::type
             >
         >::value
     ));
@@ -164,7 +164,7 @@ BOOST_AUTO_TEST_CASE(bind_string_value_in_call) {
                 bind_string<s>::in_call<c0>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, std::string, s, c0>::type
+                fake_dependency_base_of<fake_scope<>, std::string, s, void, c0>::type
             >
         >::value
     ));
@@ -322,7 +322,7 @@ BOOST_AUTO_TEST_CASE(scope_with_call_stack) {
                 bind<i, impl>::in_call<call_stack<c0, c1>>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, i, impl, call_stack<c0, c1>>::type
+                fake_dependency_base_of<fake_scope<>, i, impl, void, call_stack<c0, c1>>::type
             >
         >::value
     ));
