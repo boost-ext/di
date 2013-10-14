@@ -8,6 +8,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <memory>
+#include <boost/type.hpp>
 
 #include "boost/di/named.hpp"
 
@@ -17,13 +18,13 @@ namespace convertibles {
 
 BOOST_AUTO_TEST_CASE(to_shared_ptr) {
     shared_ptr<int> i(new int(42));
-    shared_ptr<int> object = shared<int>(i);
+    shared_ptr<int> object(shared<int>(i).convert(type<shared_ptr<int>>()));
     BOOST_CHECK_EQUAL(i, object);
 }
 
 BOOST_AUTO_TEST_CASE(to_named_shared_ptr) {
     shared_ptr<int> i(new int(42));
-    named<shared_ptr<int>> object = shared<int>(i);
+    named<shared_ptr<int>> object(shared<int>(i).convert(type<named<shared_ptr<int>>>()));
     BOOST_CHECK_EQUAL(i, static_cast<shared_ptr<int>>(object));
 }
 
@@ -32,7 +33,7 @@ BOOST_AUTO_TEST_CASE(to_weak_ptr) {
 
     {
     shared_ptr<int> i(new int(42));
-    object = shared<int>(i);
+    object = shared<int>(i).convert(type<weak_ptr<int>>());
     auto object_ = object.lock();
     BOOST_CHECK_EQUAL(i, object_);
     }
@@ -45,7 +46,7 @@ BOOST_AUTO_TEST_CASE(to_named_weak_ptr) {
 
     {
     shared_ptr<int> i(new int(42));
-    object = shared<int>(i);
+    object = shared<int>(i).convert(type<named<weak_ptr<int>>>());
     auto object_ = static_cast<weak_ptr<int>>(object).lock();
     BOOST_CHECK_EQUAL(i, object_);
     }

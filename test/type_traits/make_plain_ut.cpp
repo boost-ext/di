@@ -36,6 +36,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(basic, T, make_plain_t) {
     BOOST_CHECK((is_same<named<T, mpl::_1>, typename make_plain<named<T, mpl::_1>>::type>::value));
     BOOST_CHECK((is_same<named<T, mpl::_1>, typename make_plain<named<shared_ptr<T>, mpl::_1>>::type>::value));
     BOOST_CHECK((is_same<named<T, mpl::_1>, typename make_plain<named<const shared_ptr<T>&, mpl::_1>>::type>::value));
+    BOOST_CHECK((is_same<named<T, mpl::_1>, typename make_plain<const named<const shared_ptr<T>&, mpl::_1>&>::type>::value));
     BOOST_CHECK((is_same<named<T, mpl::_1>, typename make_plain<shared_ptr<named<const shared_ptr<T>&, mpl::_1>>>::type>::value));
     BOOST_CHECK((is_same<named<T, mpl::_1>, typename make_plain<const shared_ptr<named<const shared_ptr<T>&, mpl::_1>>&>::type>::value));
 }

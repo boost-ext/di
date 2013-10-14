@@ -8,6 +8,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <memory>
+#include <boost/type.hpp>
 #include <boost/shared_ptr.hpp>
 
 #include "boost/di/named.hpp"
@@ -31,59 +32,49 @@ const int i = 42;
 auto return_i = []{ return new int(i); };
 
 BOOST_AUTO_TEST_CASE(to_interface) {
-    unique_ptr<interface> object =
-        copy<interface>([]{ return new implementation(); });
+    unique_ptr<interface> object(
+        copy<interface>([]{ return new implementation(); }).convert(type<unique_ptr<interface>>()));
     BOOST_CHECK(dynamic_cast<implementation*>(object.get()));
 }
 
 BOOST_AUTO_TEST_CASE(to_ptr) {
-    unique_ptr<int> object = copy<int>(return_i);
+    unique_ptr<int> object(copy<int>(return_i).convert(type<int*>()));
     BOOST_CHECK_EQUAL(i, *object);
 }
 
 BOOST_AUTO_TEST_CASE(to_named) {
-    named<int> object = copy<int>(return_i);
+    named<int> object(copy<int>(return_i).convert(type<int>()));
     BOOST_CHECK_EQUAL(i, object);
 }
 
 BOOST_AUTO_TEST_CASE(to_shared_ptr) {
-    shared_ptr<int> object = copy<int>(return_i);
+    shared_ptr<int> object(copy<int>(return_i).convert(type<shared_ptr<int>>()));
     BOOST_CHECK_EQUAL(i, *object);
 }
 
 BOOST_AUTO_TEST_CASE(to_named_shared_ptr) {
-    named<shared_ptr<int>> object = copy<int>(return_i);
+    named<shared_ptr<int>> object(copy<int>(return_i).convert(type<shared_ptr<int>>()));
     BOOST_CHECK_EQUAL(i, *object);
 }
 
 BOOST_AUTO_TEST_CASE(to_auto_ptr) {
-    auto_ptr<int> object = copy<int>(return_i);
+    auto_ptr<int> object(copy<int>(return_i).convert(type<int*>()));
     BOOST_CHECK_EQUAL(i, *object);
 }
 
 BOOST_AUTO_TEST_CASE(to_named_auto_ptr) {
     const int i = 42;
-    named<auto_ptr<int>> object = copy<int>(return_i);
-    BOOST_CHECK_EQUAL(i, *object);
-}
-
-BOOST_AUTO_TEST_CASE(to_std_shared_ptr) {
-    shared_ptr<int> object = copy<int>(return_i);
-    BOOST_CHECK_EQUAL(i, *object);
-}
-
-BOOST_AUTO_TEST_CASE(to_named_std_shared_ptr) {
-    named<shared_ptr<int>> object = copy<int>(return_i);
+    named<auto_ptr<int>> object(copy<int>(return_i).convert(type<int*>()));
     BOOST_CHECK_EQUAL(i, *object);
 }
 
 BOOST_AUTO_TEST_CASE(to_unique_ptr) {
-    unique_ptr<int> object = copy<int>(return_i);
+    unique_ptr<int> object(copy<int>(return_i).convert(type<int*>()));
     BOOST_CHECK_EQUAL(i, *object);
 }
 
 BOOST_AUTO_TEST_CASE(to_named_unique_ptr) {
-    named<unique_ptr<int>> object = copy<int>(return_i);
+    named<unique_ptr<int>> object(copy<int>(return_i).convert(type<int*>()));
     BOOST_CHECK_EQUAL(i, *object);
 }
 

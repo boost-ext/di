@@ -38,12 +38,14 @@ public:
     }
 
     template<typename I, typename TName>
-    named<shared_ptr<I>, TName> convert(const type<named<shared_ptr<I>, TName> >&) const {
+    named<shared_ptr<I>, TName>
+    convert(const type<named<shared_ptr<I>, TName> >&) const {
         return *this;
     }
 
     template<typename I, typename TName>
-    named<shared_ptr<I>, TName> convert(const type<named<const shared_ptr<I>&, TName> >&) const {
+    named<shared_ptr<I>, TName>
+    convert(const type<named<const shared_ptr<I>&, TName> >&) const {
         return *this;
     }
 
@@ -58,12 +60,14 @@ public:
     }
 
     template<typename I, typename TName>
-    named<weak_ptr<I>, TName> convert(const type<const named<weak_ptr<I>, TName>&>&) const {
+    named<weak_ptr<I>, TName>
+    convert(const type<const named<weak_ptr<I>, TName>&>&) const {
         return named<weak_ptr<I> >(*this);
     }
 
     template<typename I, typename TName>
-    named<weak_ptr<I>, TName> convert(const type<const named<const weak_ptr<I>&, TName>&>&) const {
+    named<weak_ptr<I>, TName>
+    convert(const type<const named<const weak_ptr<I>&, TName>&>&) const {
         return named<weak_ptr<I> >(*this);
     }
 };

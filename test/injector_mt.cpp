@@ -178,6 +178,7 @@ using one_injector_types = mpl::vector<
   , injector<decltype(injector_1)>
 >;
 
+#if 0
 BOOST_AUTO_TEST_CASE_TEMPLATE(one_injector, TInjector, one_injector_types) {
     TInjector injector;
     check(injector.template create<c8>());
@@ -340,11 +341,14 @@ BOOST_AUTO_TEST_CASE(scope_deduction) {
     BOOST_CHECK(c19_->c1_ == c19_->c1__);
 }
 
-//BOOST_AUTO_TEST_CASE(scope_deduction_named_shared_ptr) {
-    //auto c22_ = injector<>().create<shared_ptr<c22>>();
-    //BOOST_CHECK(c22_->i == c22_->c11_->i);
-//}
+#endif
 
+BOOST_AUTO_TEST_CASE(scope_deduction_named_shared_ptr) {
+    auto c22_ = injector<>().create<shared_ptr<c22>>();
+    BOOST_CHECK(c22_->i == c22_->c11_->i);
+}
+
+#if 0
 using deduce_injectors_types = mpl::vector<
     injector<injector_c0if0_t>
   , injector<decltype(injector_c0if0)>
@@ -407,6 +411,8 @@ BOOST_AUTO_TEST_CASE(bind_vector_value_and_smart_ptr) {
     BOOST_CHECK_EQUAL(4, c26_.v2_[0]);
     BOOST_CHECK_EQUAL(2, c26_.v2_[1]);
 }
+
+#endif
 
 } // namespace di
 } // namespace boost
