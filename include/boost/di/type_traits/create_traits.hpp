@@ -120,6 +120,9 @@
     template<typename TExpected, typename TGiven, BOOST_DI_TYPES(Args)>
     typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_CREATE)<TGiven>, TExpected*>::type
     create_traits(BOOST_DI_ARGS(Args, args)) {
+
+
+        //operator() instead of convert
         return TGiven().BOOST_DI_CREATE(
             BOOST_PP_REPEAT(
                 BOOST_PP_ITERATION()
