@@ -112,8 +112,7 @@
 
 #else
 
-    #define BOOST_DI_CONVERT(na, n, ctor)                   \
-        BOOST_PP_COMMA_IF(n)                                \
+    #define BOOST_DI_CONVERT(na, n, ctor) BOOST_PP_COMMA_IF(n) \
         args##n(type<typename mpl::at_c<ctor, n>::type>())
 
     template<typename TExpected, typename TGiven, BOOST_DI_TYPES(Args)>
