@@ -15,6 +15,7 @@
 #include "boost/di/scopes/per_request.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/session.hpp"
+//#include "boost/di/scopes/thread.hpp"
 #include "boost/di/ctor_proxy.hpp"
 #include "boost/di/memory.hpp"
 
@@ -62,6 +63,11 @@ template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 struct session
     : scope<scopes::session<> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
 { };
+
+//template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
+//struct thread
+    //: scope<scopes::thread<> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
+//{ };
 
 template<typename TExpected, typename TGiven = TExpected>
 struct bind
