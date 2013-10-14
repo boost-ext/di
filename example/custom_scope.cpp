@@ -7,6 +7,7 @@
 #include <memory>
 #include <utility>
 #include <boost/shared_ptr.hpp>
+#include <boost/type.hpp>
 #include <boost/di.hpp>
 
 namespace di = boost::di;
@@ -44,8 +45,14 @@ public:
                 : object_(object)
             { }
 
-            operator std::shared_ptr<TExpected>() const {
+            template<typename I>
+            std::shared_ptr<I> operator()(const boost::type<std::shared_ptr<I>>&) const {
                 return object_;
+            }
+
+            template<typename I>
+            operator I() const {
+                return (*this)(boost::type<I>());
             }
 
             std::shared_ptr<TExpected> object_;

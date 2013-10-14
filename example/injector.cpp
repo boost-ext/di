@@ -20,7 +20,7 @@ struct i0 { virtual ~i0() { }; };
 
 struct c0 : i0
 {
-    BOOST_DI_CTOR(c0, di::named<int, name>, double) { }
+    BOOST_DI_CTOR(c0, const di::named<int, name>&, double) { }
 };
 
 struct c01 : i0 { };
