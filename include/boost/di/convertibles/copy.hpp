@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_CONVERTIBLES_COPY_HPP
 #define BOOST_DI_CONVERTIBLES_COPY_HPP
 
-#include "boost/di/memory.hpp"
+#include "boost/di/config.hpp"
 #include "boost/di/named.hpp"
 
 #include <boost/type.hpp>

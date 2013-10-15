@@ -16,7 +16,7 @@
 #include "boost/di/ctor.hpp"
 #include "boost/di/named.hpp"
 #include "boost/di/provider.hpp"
-#include "boost/di/memory.hpp"
+#include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {

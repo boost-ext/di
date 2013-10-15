@@ -13,7 +13,7 @@
 #include "boost/di/convertibles/ref.hpp"
 #include "boost/di/convertibles/shared.hpp"
 
-#include "boost/di/memory.hpp"
+#include "boost/di/config.hpp"
 #include "data.hpp"
 
 namespace boost {

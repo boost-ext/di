@@ -9,7 +9,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/type.hpp>
 
-#include "boost/di/memory.hpp"
+#include "boost/di/config.hpp"
 #include "fake_convertible.hpp"
 #include "data.hpp"
 

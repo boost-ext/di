@@ -17,7 +17,7 @@
 #include "boost/di/scopes/session.hpp"
 //#include "boost/di/scopes/thread.hpp"
 #include "boost/di/ctor_proxy.hpp"
-#include "boost/di/memory.hpp"
+#include "boost/di/config.hpp"
 
 #include <memory>
 #include <string>

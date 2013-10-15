@@ -10,7 +10,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-#include "boost/di/memory.hpp"
+#include "boost/di/config.hpp"
 #include "boost/di/named.hpp"
 
 namespace boost {
