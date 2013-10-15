@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_CONFIG_HPP
-#define BOOST_DI_CONFIG_HPP
+#ifndef BOOST_DI_AUX_MEMORY_HPP
+#define BOOST_DI_AUX_MEMORY_HPP
 
 #if !defined(BOOST_DI_STD_SMART_PTR) && \
     !defined(BOOST_DI_TR1_SMART_PTR) && \
@@ -70,33 +70,6 @@
     } // namespace di
     } // namespace boost
 
-#endif
-
-#if 0
-#if defined(BOOST_DI_STD_THREAD)
-    #include <thread>
-
-    namespace boost {
-    namespace di {
-
-    using ::std::this_thread::get_id;
-
-    } // namespace di
-    } // namespace boost
-
-#else
-
-    #include <boost/thread.hpp>
-
-    namespace boost {
-    namespace di {
-
-    using ::boost::this_thread::get_id;
-
-    } // namespace di
-    } // namespace boost
-
-#endif
 #endif
 
 #endif

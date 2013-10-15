@@ -8,6 +8,7 @@
 #define BOOST_DI_CONCEPTS_HPP
 
 #include "boost/di/aux_/meta.hpp"
+#include "boost/di/aux_/memory.hpp"
 #include "boost/di/concepts/bind.hpp"
 #include "boost/di/concepts/dependency.hpp"
 #include "boost/di/concepts/scope.hpp"
@@ -17,7 +18,6 @@
 #include "boost/di/scopes/session.hpp"
 //#include "boost/di/scopes/thread.hpp"
 #include "boost/di/ctor_proxy.hpp"
-#include "boost/di/config.hpp"
 
 #include <memory>
 #include <string>

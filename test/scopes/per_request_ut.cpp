@@ -11,7 +11,7 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
 
-#include "boost/di/config.hpp"
+#include "boost/di/aux_/memory.hpp"
 #include "fake_convertible.hpp"
 #include "data.hpp"
 

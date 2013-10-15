@@ -7,12 +7,12 @@
 #ifndef BOOST_DI_TYPE_TRAITS_SCOPE_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_SCOPE_TRAITS_HPP
 
+#include "boost/di/aux_/memory.hpp"
 #include "boost/di/type_traits/make_plain.hpp" // has_named_type
 #include "boost/di/type_traits/remove_accessors.hpp"
 #include "boost/di/scopes/per_request.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/external.hpp"
-#include "boost/di/config.hpp"
 
 #include <boost/config.hpp>
 #include <boost/utility/enable_if.hpp>

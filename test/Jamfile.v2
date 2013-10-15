@@ -89,6 +89,7 @@ test-suite "policies" :
 test-suite "scopes" :
     [ run-cpp11 scopes/external_ut.cpp ]
     [ run-cpp11 scopes/per_request_ut.cpp ]
+    [ run-cpp11 scopes/per_thread_ut.cpp ]
     [ run-cpp11 scopes/session_ut.cpp ]
     [ run-cpp11 scopes/singleton_ut.cpp ]
 ;
@@ -102,7 +103,7 @@ test-suite "injector" :
     [ run-cpp11 injector_mt.cpp ]
     [ run-cpp11 injector_ut.cpp ]
     [ run-cpp11 make_injector_mt.cpp ]
-    [ run injector_di_limit_size_mt.cpp : : : <define>BOOST_DI_LIMIT_SIZE=70 ]
+    [ run injector_limit_size_mt.cpp : : : <define>BOOST_MPL_LIMIT_VECTOR_SIZE=70 ]
 ;
 
 test-suite "di / C++ 11" :

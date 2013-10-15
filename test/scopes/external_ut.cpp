@@ -10,10 +10,10 @@
 #include <boost/ref.hpp>
 #include <boost/type.hpp>
 
+#include "boost/di/aux_/memory.hpp"
 #include "boost/di/convertibles/ref.hpp"
 #include "boost/di/convertibles/shared.hpp"
 
-#include "boost/di/config.hpp"
 #include "data.hpp"
 
 namespace boost {

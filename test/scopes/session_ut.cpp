@@ -10,7 +10,8 @@
 #include <boost/type.hpp>
 #include <boost/ref.hpp>
 
-#include "boost/di/config.hpp"
+#include "boost/di/aux_/memory.hpp"
+
 #include "fake_convertible.hpp"
 #include "data.hpp"
 

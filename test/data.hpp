@@ -13,10 +13,10 @@
 #include <boost/noncopyable.hpp>
 #include <boost/function.hpp>
 #include <boost/mpl/string.hpp>
+#include "boost/di/aux_/memory.hpp"
 #include "boost/di/ctor.hpp"
 #include "boost/di/named.hpp"
 #include "boost/di/provider.hpp"
-#include "boost/di/config.hpp"
 
 namespace boost {
 namespace di {

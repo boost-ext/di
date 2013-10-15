@@ -11,7 +11,7 @@
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/string.hpp>
 
-#include "boost/di/config.hpp"
+#include "boost/di/aux_/memory.hpp"
 #include "boost/di/ctor.hpp"
 
 #include "fake_convertible.hpp"

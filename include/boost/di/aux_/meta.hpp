@@ -7,6 +7,8 @@
 #ifndef BOOST_DI_AUX_META_HPP
 #define BOOST_DI_AUX_META_HPP
 
+#include "boost/di/aux_/limits/vector.hpp"
+
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
@@ -15,43 +17,11 @@
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/preprocessor/arithmetic/sub.hpp>
-
-#if defined(BOOST_DI_LIMIT_SIZE)
-
-    #undef BOOST_MPL_LIMIT_VECTOR_SIZE
-    #define BOOST_MPL_LIMIT_VECTOR_SIZE BOOST_DI_LIMIT_SIZE
-
-    #if (BOOST_MPL_LIMIT_VECTOR_SIZE <= 50)
-        #if !defined(BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS)
-            #define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
-        #endif
-        #include <boost/mpl/vector.hpp>
-    #else
-        #include <boost/mpl/vector/vector50.hpp>
-
-        namespace boost {
-        namespace mpl {
-            #define BOOST_PP_FILENAME_1 <boost/mpl/vector/aux_/numbered.hpp>
-            #define BOOST_PP_ITERATION_LIMITS (51, BOOST_MPL_LIMIT_VECTOR_SIZE)
-            #include BOOST_PP_ITERATE()
-        } // namespace mpl
-        } // namespace boost
-
-        #define BOOST_MPL_PREPROCESSING_MODE
-        #include <boost/mpl/vector.hpp>
-        #undef BOOST_MPL_PREPROCESSING_MODE
-    #endif
-
-#else
-    #include <boost/mpl/limits/vector.hpp>
-    #define BOOST_DI_LIMIT_SIZE BOOST_MPL_LIMIT_VECTOR_SIZE
-#endif
-
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/mpl/if.hpp>
 
 #define BOOST_DI_LIMITS_BEGIN(begin)                \
-    (begin, BOOST_DI_LIMIT_SIZE)
+    (begin, BOOST_MPL_LIMIT_VECTOR_SIZE)
 
 #define BOOST_DI_TYPES_DEFAULT_MPL(T)               \
      BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(           \
