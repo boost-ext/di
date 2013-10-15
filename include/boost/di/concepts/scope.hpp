@@ -14,10 +14,13 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/if.hpp>
-#include <boost/mpl/push_back.hpp>
+#include <boost/mpl/copy.hpp>
+#include <boost/mpl/joint_view.hpp>
+#include <boost/mpl/back_inserter.hpp>
 #include <boost/mpl/lambda.hpp>
 #include <boost/mpl/has_xxx.hpp>
 
+#include <boost/mpl/protect.hpp>
 namespace boost {
 namespace di {
 namespace concepts {
@@ -41,6 +44,7 @@ template<
 class scope
 {
     BOOST_MPL_HAS_XXX_TRAIT_DEF(context)
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(dependencies)
 
     template<
         typename TExpected
@@ -63,6 +67,12 @@ class scope
         : has_context<T>
     { };
 
+    template<typename T>
+    struct dependencies
+    {
+        typedef typename T::dependencies type;
+    };
+
     template<
         typename T
       , typename U
@@ -72,31 +82,34 @@ class scope
         : T::template rebind<U>::other
     { };
 
-    template<
-        typename T
-      , BOOST_DI_TYPES_DEFAULT_MPL(T)
-    >
+    template<typename T, typename TSeq>
     struct get_dependencies
         : mpl::fold<
-              mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+              TSeq
             , mpl::vector0<>
-            , mpl::push_back<
-                  mpl::_1
-                , mpl::if_<
+            , mpl::copy<
+                  mpl::if_<
                       is_dependency<mpl::_2>
-                    , rebind<mpl::_2, TScope>
-                    , rebind<T, TScope>
+                    , mpl::vector1<rebind<mpl::_2, TScope> >
+                    , mpl::if_<
+                          has_dependencies<mpl::_2>
+                        , get_dependencies<T, dependencies<mpl::_2> >
+                        , mpl::vector1<typename rebind<T, TScope>::type>
+                      >
                   >
+                , mpl::back_inserter<mpl::_1>
               >
         >::type
-    { };
+    {
+        typedef TSeq dependencies;
+    };
 
 public:
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     struct bind
         : get_dependencies<
               dependency<mpl::_2>
-            , BOOST_DI_TYPES_PASS_MPL(T)
+            , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
           >
     { };
 
@@ -104,7 +117,7 @@ public:
     struct bind<TExpected, BOOST_DI_TYPES_MPL_NA(1)>
         : get_dependencies<
               dependency<mpl::_2>
-            , TExpected
+            , mpl::vector1<TExpected>
           >
     {
         template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
@@ -116,7 +129,7 @@ public:
                     , void
                     , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
                   >
-                , TExpected
+                , mpl::vector1<TExpected>
               >
         {
             template<typename TName>
@@ -128,7 +141,7 @@ public:
                         , TName
                         , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
                       >
-                    , TExpected
+                    , mpl::vector1<TExpected>
                   >
             { };
         };
@@ -141,7 +154,7 @@ public:
                     , mpl::_2
                     , TName
                   >
-                , TExpected
+                , mpl::vector1<TExpected>
               >
         {
             template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
@@ -153,7 +166,7 @@ public:
                         , TName
                         , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
                       >
-                    , TExpected
+                    , mpl::vector1<TExpected>
                   >
             { };
         };

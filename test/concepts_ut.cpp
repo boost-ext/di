@@ -14,9 +14,11 @@
 #include "fake_scope.hpp"
 #include "contains_all.hpp"
 
+#include <boost/units/detail/utility.hpp>
 namespace boost {
 namespace di {
 
+#if 0
 BOOST_AUTO_TEST_CASE(bind_impl) {
     BOOST_CHECK((
         contains_all<
@@ -326,6 +328,21 @@ BOOST_AUTO_TEST_CASE(scope_with_call_stack) {
             >
         >::value
     ));
+}
+#endif
+
+BOOST_AUTO_TEST_CASE(scope_per_request) {
+    //per_thread priority ?
+
+    using t =
+    per_thread<
+        singleton<int>
+      //, per_request<double>
+    >;
+
+    std::cout << units::detail::demangle(typeid(t::type).name()) << std::endl;
+
+    BOOST_CHECK(false);
 }
 
 } // namespace di
