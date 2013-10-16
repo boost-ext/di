@@ -107,7 +107,7 @@ class scope
                   >
                 , mpl::back_inserter<mpl::_1>
               >
-        >::type
+          >::type
     {
         typedef TSeq dependencies;
     };
