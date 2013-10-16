@@ -18,7 +18,6 @@
 namespace boost {
 namespace di {
 
-#if 0
 BOOST_AUTO_TEST_CASE(bind_impl) {
     BOOST_CHECK((
         contains_all<
@@ -329,7 +328,6 @@ BOOST_AUTO_TEST_CASE(scope_with_call_stack) {
         >::value
     ));
 }
-#endif
 
 BOOST_AUTO_TEST_CASE(scope_per_request) {
     //per_thread priority ?

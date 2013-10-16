@@ -19,6 +19,15 @@
     namespace di {
     namespace scopes {
 
+    //struct session_entry
+    //{
+        //session_entry(thread::id id) // non explicit
+            //: id(id)
+        //{ }
+
+         //thread::id id;
+    //};
+
     template<typename TScope>
     class per_thread
     {
