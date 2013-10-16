@@ -340,7 +340,7 @@ BOOST_AUTO_TEST_CASE(scope_per_request) {
 
     std::cout << units::detail::demangle(typeid(t::type).name()) << std::endl;
 
-    BOOST_CHECK(false);
+    //BOOST_CHECK(false);
 }
 
 } // namespace di

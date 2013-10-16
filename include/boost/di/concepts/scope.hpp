@@ -120,12 +120,12 @@ public:
 
     template<typename TExpected>
     struct bind<TExpected, BOOST_DI_TYPES_MPL_NA(1)>
-        : get_dependencies<mpl::vector1<TExpected> >
+        : get_dependencies<mpl::vector<TExpected> >
     {
         template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
         struct in_call
             : get_dependencies<
-                  mpl::vector1<TExpected>
+                  mpl::vector<TExpected>
                 , void
                 , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
               >
@@ -133,7 +133,7 @@ public:
             template<typename TName>
             struct in_name
                 : get_dependencies<
-                      mpl::vector1<TExpected>
+                      mpl::vector<TExpected>
                     , TName
                     , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
                   >
@@ -143,14 +143,14 @@ public:
         template<typename TName>
         struct in_name
             : get_dependencies<
-                  mpl::vector1<TExpected>
+                  mpl::vector<TExpected>
                 , TName
               >
         {
             template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
             struct in_call
                 : get_dependencies<
-                      mpl::vector1<TExpected>
+                      mpl::vector<TExpected>
                     , TName
                     , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
                   >
