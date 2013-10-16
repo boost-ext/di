@@ -329,18 +329,62 @@ BOOST_AUTO_TEST_CASE(scope_with_call_stack) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(scope_per_request) {
-    //per_thread priority ?
+BOOST_AUTO_TEST_CASE(per_thread_empty) {
+    BOOST_CHECK((
+        contains_all<
+            per_thread<>::type
+          , mpl::vector<
+            >
+        >::value
+    ));
+}
 
-    using t =
-    per_thread<
-        singleton<int>
-      //, per_request<double>
-    >;
+BOOST_AUTO_TEST_CASE(per_thread_one) {
+    BOOST_CHECK((
+        contains_all<
+            per_thread<int>::type
+          , mpl::vector<
+                fake_dependency_base_of<scopes::per_thread<scopes::deduce>, int>::type
+            >
+        >::value
+    ));
+}
 
-    std::cout << units::detail::demangle(typeid(t::type).name()) << std::endl;
+BOOST_AUTO_TEST_CASE(per_thread_many) {
+    BOOST_CHECK((
+        contains_all<
+            per_thread<int, double, float>::type
+          , mpl::vector<
+                fake_dependency_base_of<scopes::per_thread<scopes::deduce>, int>::type
+              , fake_dependency_base_of<scopes::per_thread<scopes::deduce>, double>::type
+              , fake_dependency_base_of<scopes::per_thread<scopes::deduce>, float>::type
+            >
+        >::value
+    ));
+}
 
-    //BOOST_CHECK(false);
+BOOST_AUTO_TEST_CASE(per_thread_mix) {
+    BOOST_CHECK((
+        contains_all<
+            per_thread<
+                int
+              , bind<if0, c0if0>
+              , per_request<double>
+              , singleton<float, char>
+              , per_request<bind<c1>::in_name<float> >
+              , deduce<c2>::in_call<double>
+            >::type
+          , mpl::vector<
+                fake_dependency_base_of<scopes::per_thread<scopes::deduce>, int>::type
+              , fake_dependency_base_of<scopes::per_thread<scopes::deduce>, if0, c0if0>::type
+              , fake_dependency_base_of<scopes::per_thread<scopes::per_request<>>, double>::type
+              , fake_dependency_base_of<scopes::per_thread<scopes::singleton<>>, float>::type
+              , fake_dependency_base_of<scopes::per_thread<scopes::singleton<>>, char>::type
+              , fake_dependency_base_of<scopes::per_thread<scopes::per_request<>>, c1, c1, float>::type
+              , fake_dependency_base_of<scopes::per_thread<scopes::deduce>, c2, c2, void, double>::type
+            >
+        >::value
+    ));
 }
 
 } // namespace di

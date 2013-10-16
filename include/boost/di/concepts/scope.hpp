@@ -20,6 +20,8 @@
 #include <boost/mpl/lambda.hpp>
 #include <boost/mpl/has_xxx.hpp>
 
+#include <boost/di/scopes/per_request.hpp>
+
 namespace boost {
 namespace di {
 namespace concepts {
@@ -43,7 +45,7 @@ template<
 class scope
 {
     BOOST_MPL_HAS_XXX_TRAIT_DEF(context)
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(dependencies)
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(deps)
 
     template<
         typename TExpected
@@ -67,9 +69,27 @@ class scope
     { };
 
     template<typename T>
-    struct dependencies
+    struct deps
     {
-        typedef typename T::dependencies type;
+        typedef typename T::deps type;
+    };
+
+    template<typename T>
+    struct scope_
+    {
+        typedef typename T::scope type;
+    };
+
+    template<typename T>
+    struct name
+    {
+        typedef typename T::name type;
+    };
+
+    template<typename T>
+    struct call_stack
+    {
+        typedef typename T::call_stack type;
     };
 
     template<typename T, typename U>
@@ -81,26 +101,28 @@ class scope
         typename TSeq
       , typename TName = void
       , typename TCallStack = mpl::vector0<>
+      , typename T = TScope
     >
-    struct get_dependencies
+    struct get_deps
         : mpl::fold<
               TSeq
             , mpl::vector0<>
             , mpl::copy<
                   mpl::if_<
                       is_dependency<mpl::_2>
-                    , mpl::vector1<rebind<mpl::_2, TScope> >
+                    , mpl::vector1<rebind<mpl::_2, T> >
                     , mpl::if_<
-                          has_dependencies<mpl::_2>
-                        , get_dependencies<
-                              dependencies<mpl::_2>
-                            , TName
-                            , TCallStack
+                          has_deps<mpl::_2>
+                        , get_deps<
+                              deps<mpl::_2>
+                            , name<mpl::_2>
+                            , call_stack<mpl::_2>
+                            , rebind<TScope, scope_<mpl::_2> >
                           >
                         , mpl::vector1<
                               rebind<
                                   dependency<mpl::_2, mpl::_2, TName, TCallStack>
-                                , TScope
+                                , T
                               >
                           >
                       >
@@ -109,22 +131,25 @@ class scope
               >
           >::type
     {
-        typedef TSeq dependencies;
+        typedef TSeq deps;
+        typedef TName name;
+        typedef TCallStack call_stack;
+        typedef TScope scope;
     };
 
 public:
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     struct bind
-        : get_dependencies<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
+        : get_deps<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
     { };
 
     template<typename TExpected>
     struct bind<TExpected, BOOST_DI_TYPES_MPL_NA(1)>
-        : get_dependencies<mpl::vector<TExpected> >
+        : get_deps<mpl::vector<TExpected> >
     {
         template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
         struct in_call
-            : get_dependencies<
+            : get_deps<
                   mpl::vector<TExpected>
                 , void
                 , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
@@ -132,7 +157,7 @@ public:
         {
             template<typename TName>
             struct in_name
-                : get_dependencies<
+                : get_deps<
                       mpl::vector<TExpected>
                     , TName
                     , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
@@ -142,14 +167,14 @@ public:
 
         template<typename TName>
         struct in_name
-            : get_dependencies<
+            : get_deps<
                   mpl::vector<TExpected>
                 , TName
               >
         {
             template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
             struct in_call
-                : get_dependencies<
+                : get_deps<
                       mpl::vector<TExpected>
                     , TName
                     , mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>

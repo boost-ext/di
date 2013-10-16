@@ -17,8 +17,11 @@ namespace scopes {
 class deduce
 {
 public:
-    template<typename, typename>
-    class scope { };
+    template<typename T, typename = T>
+    struct scope
+    {
+        typedef T result_type;
+    };
 };
 
 } // namespace scopes

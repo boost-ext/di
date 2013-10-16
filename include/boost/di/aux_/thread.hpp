@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_AUX_THREAD_HPP
 #define BOOST_DI_AUX_THREAD_HPP
 
-#define BOOST_DI_STD_THREAD
+//#define BOOST_DI_STD_THREAD
 
 #if defined(BOOST_DI_STD_THREAD)
     #include <thread>

@@ -32,6 +32,8 @@
     class per_thread
     {
     public:
+        typedef per_thread type;
+
         template<typename TExpected, typename TGiven = TExpected>
         class scope
         {
@@ -56,6 +58,12 @@
         private:
             get_id_t get_id_;
             std::map<thread::id, scope_type> objects_;
+        };
+
+        template<typename T>
+        struct rebind
+        {
+            typedef per_thread<T> other;
         };
     };
 

@@ -56,7 +56,7 @@ struct per_request
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 struct per_thread
-    : scope<scopes::per_thread<scopes::per_request<> > >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
+    : scope<scopes::per_thread<scopes::deduce> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
