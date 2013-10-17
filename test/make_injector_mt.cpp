@@ -114,7 +114,7 @@ BOOST_AUTO_TEST_CASE(mix) {
 
     auto injector_c1 = make_injector(
         policies::circular_dependencies()
-      , singleton<
+      , scoped<
             c1
         >()
     );

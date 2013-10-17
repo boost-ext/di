@@ -14,7 +14,6 @@
 #include "fake_scope.hpp"
 #include "contains_all.hpp"
 
-#include <boost/units/detail/utility.hpp>
 namespace boost {
 namespace di {
 
@@ -250,34 +249,34 @@ BOOST_AUTO_TEST_CASE(scope_per_request_many) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(scope_singleton_empty) {
+BOOST_AUTO_TEST_CASE(scope_scoped_empty) {
     BOOST_CHECK((
         contains_all<
-            singleton<>::type
+            scoped<>::type
           , mpl::vector<>
         >::value
     ));
 }
 
-BOOST_AUTO_TEST_CASE(scope_singleton_one) {
+BOOST_AUTO_TEST_CASE(scope_scoped_one) {
     BOOST_CHECK((
         contains_all<
-            singleton<int>::type
+            scoped<int>::type
           , mpl::vector<
-                fake_dependency_base_of<scopes::singleton<>, int>::type
+                fake_dependency_base_of<scopes::scoped<>, int>::type
             >
         >::value
     ));
 }
 
-BOOST_AUTO_TEST_CASE(scope_singleton_many) {
+BOOST_AUTO_TEST_CASE(scope_scoped_many) {
     BOOST_CHECK((
         contains_all<
-            singleton<int, double, float>::type
+            scoped<int, double, float>::type
           , mpl::vector<
-                fake_dependency_base_of<scopes::singleton<>, int>::type
-              , fake_dependency_base_of<scopes::singleton<>, double>::type
-              , fake_dependency_base_of<scopes::singleton<>, float>::type
+                fake_dependency_base_of<scopes::scoped<>, int>::type
+              , fake_dependency_base_of<scopes::scoped<>, double>::type
+              , fake_dependency_base_of<scopes::scoped<>, float>::type
             >
         >::value
     ));
@@ -370,7 +369,7 @@ BOOST_AUTO_TEST_CASE(per_thread_mix) {
                 int
               , bind<if0, c0if0>
               , per_request<double>
-              , singleton<float, char>
+              , scoped<float, char>
               , per_request<bind<c1>::in_name<float> >
               , deduce<c2>::in_call<double>
             >::type
@@ -378,8 +377,8 @@ BOOST_AUTO_TEST_CASE(per_thread_mix) {
                 fake_dependency_base_of<scopes::per_thread<scopes::deduce>, int>::type
               , fake_dependency_base_of<scopes::per_thread<scopes::deduce>, if0, c0if0>::type
               , fake_dependency_base_of<scopes::per_thread<scopes::per_request<>>, double>::type
-              , fake_dependency_base_of<scopes::per_thread<scopes::singleton<>>, float>::type
-              , fake_dependency_base_of<scopes::per_thread<scopes::singleton<>>, char>::type
+              , fake_dependency_base_of<scopes::per_thread<scopes::scoped<>>, float>::type
+              , fake_dependency_base_of<scopes::per_thread<scopes::scoped<>>, char>::type
               , fake_dependency_base_of<scopes::per_thread<scopes::per_request<>>, c1, c1, float>::type
               , fake_dependency_base_of<scopes::per_thread<scopes::deduce>, c2, c2, void, double>::type
             >

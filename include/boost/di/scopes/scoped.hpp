@@ -6,11 +6,10 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef BOOST_DI_SCOPES_SINGLETON_HPP
-    #define BOOST_DI_SCOPES_SINGLETON_HPP
+    #ifndef BOOST_DI_SCOPES_SCOPED_HPP
+    #define BOOST_DI_SCOPES_SCOPED_HPP
 
     #include "boost/di/aux_/meta.hpp"
-    #include "boost/di/aux_/thread.hpp"
     #include "boost/di/convertibles/shared.hpp"
     #include "boost/di/type_traits/create_traits.hpp"
 
@@ -19,7 +18,7 @@
     namespace scopes {
 
     template<template<typename> class TConvertible = convertibles::shared>
-    class singleton
+    class scoped
     {
     public:
         template<typename TExpected, typename TGiven = TExpected>
@@ -29,25 +28,18 @@
             typedef TConvertible<TExpected> result_type;
 
             result_type create() {
-                scoped_lock lock(mutex_);
-                (void)lock;
-                if (!object()) {
-                    object().reset(type_traits::create_traits<TExpected, TGiven>());
+                if (!object_) {
+                    object_.reset(type_traits::create_traits<TExpected, TGiven>());
                 }
-                return object();
+                return object_;
             }
 
-            #define BOOST_PP_FILENAME_1 "boost/di/scopes/singleton.hpp"
+            #define BOOST_PP_FILENAME_1 "boost/di/scopes/scoped.hpp"
             #define BOOST_PP_ITERATION_LIMITS BOOST_DI_LIMITS_BEGIN(1)
             #include BOOST_PP_ITERATE()
 
         private:
-            static result_type& object() {
-                static result_type object;
-                return object;
-            }
-
-            mutex mutex_;
+            result_type object_;
         };
     };
 
@@ -61,15 +53,12 @@
 
     template<BOOST_DI_TYPES(Args)>
     result_type create(BOOST_DI_ARGS(Args, args)) {
-        scoped_lock lock(mutex_);
-        (void)lock;
-
-        if (!object()) {
-            object().reset(
+        if (!object_) {
+            object_.reset(
                 type_traits::create_traits<TExpected, TGiven>(BOOST_DI_ARGS_PASS(args))
             );
         }
-        return object();
+        return object_;
     }
 
 #endif

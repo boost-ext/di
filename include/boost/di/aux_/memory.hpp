@@ -7,6 +7,8 @@
 #ifndef BOOST_DI_AUX_MEMORY_HPP
 #define BOOST_DI_AUX_MEMORY_HPP
 
+#include <boost/config.hpp>
+
 #if !defined(BOOST_DI_STD_SMART_PTR) && \
     !defined(BOOST_DI_TR1_SMART_PTR) && \
     !defined(BOOST_DI_BOOST_SMART_PTR)

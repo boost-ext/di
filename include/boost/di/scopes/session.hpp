@@ -10,6 +10,7 @@
     #define BOOST_DI_SCOPES_SESSION_HPP
 
     #include "boost/di/aux_/meta.hpp"
+    #include "boost/di/aux_/thread.hpp"
     #include "boost/di/type_traits/create_traits.hpp"
     #include "boost/di/convertibles/shared.hpp"
 
@@ -35,15 +36,21 @@
             { }
 
             void call(const session_entry&) {
+                scoped_lock lock(mutex_);
+                (void)lock;
                 in_scope_ = true;
             }
 
             void call(const session_exit&) {
+                scoped_lock lock(mutex_);
+                (void)lock;
                 in_scope_ = false;
                 object().reset();
             }
 
             result_type create() {
+                scoped_lock lock(mutex_);
+                (void)lock;
                 if (in_scope_ && !object()) {
                     object().reset(type_traits::create_traits<TExpected, TGiven>());
                 }
@@ -61,6 +68,7 @@
             }
 
             bool in_scope_;
+            mutex mutex_;
         };
     };
 
@@ -74,6 +82,8 @@
 
     template<BOOST_DI_TYPES(Args)>
     result_type create(BOOST_DI_ARGS(Args, args)) {
+        scoped_lock lock(mutex_);
+        (void)lock;
         if (in_scope_ && !object()) {
             object().reset(
                 type_traits::create_traits<TExpected, TGiven>(BOOST_DI_ARGS_PASS(args))

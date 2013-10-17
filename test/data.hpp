@@ -296,7 +296,7 @@ struct c18 : private noncopyable
 {
     BOOST_DI_CTOR(c18
         , c0 c0_ // per_request
-        , shared_ptr<c1> c1_ // singleton
+        , shared_ptr<c1> c1_ // scoped
         , c3& c3_ // external
     )
         : c0_(c0_), c1_(c1_), c3_(c3_)

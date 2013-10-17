@@ -5,8 +5,12 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include "boost/di/policies/binding_correctness.hpp"
+#include "boost/di/scopes/scoped.hpp"
+#include "boost/di/scopes/session.hpp"
+#include "boost/di/scopes/singleton.hpp"
 
 #include <boost/test/unit_test.hpp>
+#include <boost/test/test_case_template.hpp>
 #include <boost/none_t.hpp>
 #include <boost/mpl/vector.hpp>
 
@@ -82,7 +86,7 @@ BOOST_AUTO_TEST_CASE(correct_many) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(none_singletons) {
+BOOST_AUTO_TEST_CASE(none_scopeds) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<>
@@ -98,16 +102,22 @@ BOOST_AUTO_TEST_CASE(none_singletons) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(with_call) {
+using scope_types = mpl::vector<
+    scopes::scoped<>
+  , scopes::session<>
+  , scopes::singleton<>
+>;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(with_call, TScope, scope_types) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
                 ub1
             >
-          , binding_correctness::verify<
+          , typename binding_correctness::verify<
                 mpl::vector<
                     fake_dependency<scopes::per_request<>, int, mpl::int_<42>, void, ub1>::type
-                  , fake_dependency_base_of<scopes::singleton<>, ub1>::type
+                  , typename fake_dependency_base_of<TScope, ub1>::type
                 >
               , ub3
               , mpl::false_
@@ -116,16 +126,16 @@ BOOST_AUTO_TEST_CASE(with_call) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(with_call_stack) {
+BOOST_AUTO_TEST_CASE_TEMPLATE(with_call_stack, TScope, scope_types) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
                 ub1
             >
-          , binding_correctness::verify<
+          , typename binding_correctness::verify<
                 mpl::vector<
                     fake_dependency<scopes::per_request<>, int, mpl::int_<42>, void, mpl::vector<ub2, ub1>>::type
-                  , fake_dependency_base_of<scopes::singleton<>, ub1>::type
+                  , typename fake_dependency_base_of<TScope, ub1>::type
                 >
               , ub3
               , mpl::false_

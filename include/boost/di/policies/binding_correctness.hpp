@@ -10,7 +10,9 @@
 #include "boost/di/detail/binder.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
+#include "boost/di/scopes/scoped.hpp"
 #include "boost/di/scopes/singleton.hpp"
+#include "boost/di/scopes/session.hpp"
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
@@ -62,12 +64,22 @@ namespace policies {
 class binding_correctness
 {
     template<typename>
-    struct is_singleton
+    struct is_shared
         : mpl::false_
     { };
 
     template<template<typename> class TConvertible>
-    struct is_singleton<scopes::singleton<TConvertible> >
+    struct is_shared<scopes::scoped<TConvertible> >
+        : mpl::true_
+    { };
+
+    template<template<typename> class TConvertible>
+    struct is_shared<scopes::singleton<TConvertible> >
+        : mpl::true_
+    { };
+
+    template<template<typename> class TConvertible>
+    struct is_shared<scopes::session<TConvertible> >
         : mpl::true_
     { };
 
@@ -150,7 +162,7 @@ class binding_correctness
               TDeps
             , mpl::vector0<>
             , mpl::if_<
-                  is_singleton<scope<mpl::_2> >
+                  is_shared<scope<mpl::_2> >
                 , mpl::push_back<mpl::_1, expected<mpl::_2> >
                 , mpl::_1
               >

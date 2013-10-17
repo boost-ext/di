@@ -13,6 +13,7 @@ namespace scopes {
 
 /**
  * virtual scope -> converted to the other scope
+ * accordingly to the given type using scope_traits
  */
 class deduce
 {

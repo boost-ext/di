@@ -19,14 +19,25 @@
     namespace di {
     namespace scopes {
 
-    //struct session_entry
-    //{
-        //session_entry(thread::id id) // non explicit
-            //: id(id)
-        //{ }
+    template<typename T>
+    struct per_thread_entry
+    {
+        per_thread_entry(thread::id id) // non explicit
+            : id(id)
+        { }
 
-         //thread::id id;
-    //};
+        thread::id id;
+    };
+
+    template<typename T>
+    struct per_thread_exit
+    {
+        per_thread_exit(thread::id id) // non explicit
+            : id(id)
+        { }
+
+         thread::id id;
+    };
 
     template<typename TScope>
     class per_thread
@@ -38,6 +49,7 @@
         class scope
         {
             typedef typename TScope::template scope<TExpected, TGiven> scope_type;
+            typedef std::map<thread::id, scope_type> objects_t;
             typedef function<thread::id()> get_id_t;
 
         public:
@@ -47,8 +59,18 @@
                 : get_id_(get_id)
             { }
 
+            template<typename T>
+            void call(const per_thread_entry<T>& entry) {
+                objects()[get_id_()].call(T());
+            }
+
+            template<typename T>
+            void call(const per_thread_exit<T>& exit) {
+                objects()[get_id_()].call(T());
+            }
+
             result_type create() {
-                return objects_[get_id_()].create();
+                return objects()[get_id_()].create();
             }
 
             #define BOOST_PP_FILENAME_1 "boost/di/scopes/per_thread.hpp"
@@ -56,8 +78,12 @@
             #include BOOST_PP_ITERATE()
 
         private:
+            static objects_t& objects() {
+                static objects_t objects;
+                return objects;
+            }
+
             get_id_t get_id_;
-            std::map<thread::id, scope_type> objects_;
         };
 
         template<typename T>
@@ -77,7 +103,7 @@
 
     template<BOOST_DI_TYPES(Args)>
     result_type create(BOOST_DI_ARGS(Args, args)) {
-        return objects_[get_id_()].create(BOOST_DI_ARGS_PASS(args));
+        return objects[get_id_()].create(BOOST_DI_ARGS_PASS(args));
     }
 
 #endif

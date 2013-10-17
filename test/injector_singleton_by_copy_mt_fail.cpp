@@ -13,10 +13,10 @@
 namespace boost {
 namespace di {
 
-BOOST_AUTO_TEST_CASE(singleton_by_copy_fail) {
+BOOST_AUTO_TEST_CASE(scoped_by_copy_fail) {
     injector<
         c0if0
-      , singleton<
+      , scoped<
             c6
         >
     >().create<c15>();

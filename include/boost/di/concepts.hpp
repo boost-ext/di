@@ -15,6 +15,7 @@
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/per_request.hpp"
 #include "boost/di/scopes/per_thread.hpp"
+#include "boost/di/scopes/scoped.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/session.hpp"
 #include "boost/di/ctor_proxy.hpp"
@@ -57,6 +58,11 @@ struct per_request
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 struct per_thread
     : scope<scopes::per_thread<scopes::deduce> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
+{ };
+
+template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
+struct scoped
+    : scope<scopes::scoped<> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>

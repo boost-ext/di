@@ -7,21 +7,35 @@
 #ifndef BOOST_DI_AUX_THREAD_HPP
 #define BOOST_DI_AUX_THREAD_HPP
 
-//#define BOOST_DI_STD_THREAD
+#include <boost/config.hpp>
+
+#if !defined(BOOST_DI_STD_THREAD) &&   \
+    !defined(BOOST_DI_BOOST_THREAD) && \
+    !defined(BOOST_DI_NO_THREAD)
+
+    #if (__cplusplus >= 201100L) || (_MSC_VER >= 1800)
+        #define BOOST_DI_STD_THREAD
+    #else
+        #define BOOST_DI_BOOST_THREAD
+    #endif
+#endif
 
 #if defined(BOOST_DI_STD_THREAD)
     #include <thread>
+    #include <mutex>
 
     namespace boost {
     namespace di {
 
     namespace this_thread = ::std::this_thread;
     using ::std::thread;
+    using ::std::mutex;
+    typedef ::std::lock_guard< ::std::mutex > scoped_lock;
 
     } // namespace di
     } // namespace boost
 
-#else
+#elif defined(BOOST_DI_BOOST_THREAD)
 
     #include <boost/thread.hpp>
 
@@ -30,6 +44,35 @@
 
     namespace this_thread = ::boost::this_thread;
     using ::boost::thread;
+    using ::boost::mutex;
+    typedef ::boost::lock_guard< ::boost::mutex > scoped_lock;
+
+    } // namespace di
+    } // namespace boost
+
+#else
+
+    namespace boost {
+    namespace di {
+
+    struct thread
+    {
+        struct id { };
+    };
+
+    struct mutex { };
+
+    template<typename T>
+    struct lock_guard
+    {
+        lock_guard(const T&);
+    };
+
+    typedef lock_guard<mutex> scoped_lock;
+
+    namespace this_thread {
+    thread::id get_id();
+    }
 
     } // namespace di
     } // namespace boost

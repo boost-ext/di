@@ -6,6 +6,7 @@
 //
 #include "boost/di/injector.hpp"
 #include "boost/di/make_injector.hpp"
+#include "boost/di/aux_/thread.hpp"
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
@@ -19,7 +20,7 @@ namespace boost {
 namespace di {
 
 using injector_1_t = injector<
-    singleton<
+    scoped<
         c3
     >
   , per_request<
@@ -35,7 +36,7 @@ using injector_1_t = injector<
 >;
 
 using injector_2_t = injector<
-    singleton<
+    scoped<
         c3
     >
   , per_request<
@@ -45,7 +46,7 @@ using injector_2_t = injector<
 >;
 
 using injector_3_t = injector<
-    singleton<
+    scoped<
         c0if0
     >
   , per_request<
@@ -69,7 +70,7 @@ using injector_c0if0_t = injector<
 >;
 
 auto injector_1 = make_injector(
-    singleton<
+    scoped<
         c3
     >()
   , per_request<
@@ -85,7 +86,7 @@ auto injector_1 = make_injector(
 );
 
 auto injector_2 = make_injector(
-    singleton<
+    scoped<
         c0if0
     >()
   , per_request<
@@ -95,7 +96,7 @@ auto injector_2 = make_injector(
 );
 
 auto injector_3 = make_injector(
-    singleton<
+    scoped<
         c3
     >()
   , per_request<
@@ -128,7 +129,7 @@ auto injector_externals_1 = make_injector(
 );
 
 auto injector_externals_2 = make_injector(
-    singleton<
+    scoped<
         c0if0
     >()
   , bind<int>::to(42)
@@ -392,6 +393,42 @@ BOOST_AUTO_TEST_CASE(session_scope) {
     BOOST_CHECK(nullptr == c20_.if0_.get());
     BOOST_CHECK(nullptr == c20_.if0__.get());
     }
+}
+
+BOOST_AUTO_TEST_CASE(per_thread_scope_singleton) {
+    std::vector<shared_ptr<c20>> v;
+    mutex m;
+
+    injector<
+        per_thread<
+            scoped<c0if0>
+        >
+    > injector_;
+
+    thread t1([&]{
+        scoped_lock l(m);
+        v.push_back(injector_.create<shared_ptr<c20>>());
+    });
+
+    thread t2([&]{
+        scoped_lock l(m);
+        v.push_back(injector_.create<shared_ptr<c20>>());
+    });
+    t1.join();
+    t2.join();
+
+    BOOST_CHECK_EQUAL(2, v.size());
+
+    BOOST_CHECK(dynamic_cast<c0if0*>(v[0]->if0_.get()));
+    BOOST_CHECK(dynamic_cast<c0if0*>(v[0]->if0__.get()));
+    BOOST_CHECK(v[0]->if0_ == v[0]->if0__);
+
+    BOOST_CHECK(dynamic_cast<c0if0*>(v[1]->if0_.get()));
+    BOOST_CHECK(dynamic_cast<c0if0*>(v[1]->if0__.get()));
+    BOOST_CHECK(v[1]->if0_ == v[1]->if0__);
+
+    BOOST_CHECK(v[0]->if0_ != v[1]->if0_);
+    BOOST_CHECK(v[0]->if0__ != v[1]->if0__);
 }
 
 BOOST_AUTO_TEST_CASE(bind_vector_value_and_smart_ptr) {
