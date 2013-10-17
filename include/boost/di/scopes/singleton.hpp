@@ -29,8 +29,8 @@
             typedef TConvertible<TExpected> result_type;
 
             result_type create() {
-                scoped_lock lock(mutex_);
-                (void)lock;
+                //scoped_lock lock(mutex_);
+                //(void)lock;
                 if (!object()) {
                     object().reset(type_traits::create_traits<TExpected, TGiven>());
                 }
@@ -47,7 +47,7 @@
                 return object;
             }
 
-            mutex mutex_;
+            //mutex mutex_;
         };
     };
 
@@ -61,8 +61,8 @@
 
     template<BOOST_DI_TYPES(Args)>
     result_type create(BOOST_DI_ARGS(Args, args)) {
-        scoped_lock lock(mutex_);
-        (void)lock;
+/*        scoped_lock lock(mutex_);*/
+        /*(void)lock;*/
 
         if (!object()) {
             object().reset(

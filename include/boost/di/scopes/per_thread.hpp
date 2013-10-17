@@ -103,7 +103,7 @@
 
     template<BOOST_DI_TYPES(Args)>
     result_type create(BOOST_DI_ARGS(Args, args)) {
-        return objects[get_id_()].create(BOOST_DI_ARGS_PASS(args));
+        return objects()[get_id_()].create(BOOST_DI_ARGS_PASS(args));
     }
 
 #endif
