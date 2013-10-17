@@ -15,7 +15,7 @@
 #include <boost/mpl/pair.hpp>
 
 #include "boost/di/scopes/unique.hpp"
-#include "boost/di/scopes/scoped.hpp"
+#include "boost/di/scopes/shared.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/concepts.hpp"
 #include "fake_dependency.hpp"
@@ -93,11 +93,11 @@ BOOST_AUTO_TEST_CASE(create_unique) {
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(create_unique_scoped) {
+BOOST_AUTO_TEST_CASE(create_unique_shared) {
     module<
         mpl::vector<
             fake_dependency<scopes::unique<>, if0, c0if0>::type
-          , fake_dependency<scopes::scoped<>, c3>::type
+          , fake_dependency<scopes::shared<>, c3>::type
         >
     > module_;
 
@@ -119,12 +119,12 @@ BOOST_AUTO_TEST_CASE(create_unique_scoped) {
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(create_scoped_context) {
+BOOST_AUTO_TEST_CASE(create_shared_context) {
     module<
         mpl::vector<
             fake_dependency<scopes::unique<>, if0, c0if0>::type
           , fake_dependency<scopes::unique<>, if0, c1if0, void, call_stack<c6, c5>>::type
-          , fake_dependency<scopes::scoped<>, c3>::type
+          , fake_dependency<scopes::shared<>, c3>::type
         >
     >
     module_;
@@ -147,13 +147,13 @@ BOOST_AUTO_TEST_CASE(create_scoped_context) {
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(create_unique_scoped_context_order) {
+BOOST_AUTO_TEST_CASE(create_unique_shared_context_order) {
     module<
         mpl::vector<
             fake_dependency<scopes::unique<>, if0, c0if0>::type
           , fake_dependency<scopes::unique<>, if0, c1if0, void, call_stack<c6, c5>>::type
           , fake_dependency<scopes::unique<>, if0, c2if0, void, c7>::type
-          , fake_dependency<scopes::scoped<>, c3>::type
+          , fake_dependency<scopes::shared<>, c3>::type
         >
     > module_;
 
@@ -175,13 +175,13 @@ BOOST_AUTO_TEST_CASE(create_unique_scoped_context_order) {
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(create_unique_scoped_context_mix) {
+BOOST_AUTO_TEST_CASE(create_unique_shared_context_mix) {
     module<
         mpl::vector<
             fake_dependency<scopes::unique<>, if0, c0if0>::type
           , fake_dependency<scopes::unique<>, if0, c1if0, void, call_stack<c6, c5>>::type
           , fake_dependency<scopes::unique<>, if0, c2if0, void, c7>::type
-          , fake_dependency<scopes::scoped<>, c3>::type
+          , fake_dependency<scopes::shared<>, c3>::type
           , fake_dependency<scopes::unique<>, int, mpl::int_<1>>::type
           , fake_dependency<scopes::unique<>, int, mpl::int_<2>, void, c8>::type
           , fake_dependency<scopes::unique<>, int, mpl::int_<3>, mpl::string<'1'>, call_stack<c7, c6, c4>>::type
@@ -208,10 +208,10 @@ BOOST_AUTO_TEST_CASE(create_unique_scoped_context_mix) {
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(create_scoped_impl) {
+BOOST_AUTO_TEST_CASE(create_shared_impl) {
     module<
         mpl::vector<
-            fake_dependency<scopes::scoped<>, if0, c0if0>::type
+            fake_dependency<scopes::shared<>, if0, c0if0>::type
         >
     > module_;
 
@@ -233,12 +233,12 @@ BOOST_AUTO_TEST_CASE(create_scoped_impl) {
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-BOOST_AUTO_TEST_CASE(create_scoped_many) {
+BOOST_AUTO_TEST_CASE(create_shared_many) {
     module<
         mpl::vector<
-            fake_dependency<scopes::scoped<>, if0, c0if0>::type
-          , fake_dependency<scopes::scoped<>, c3>::type
-          , fake_dependency<scopes::scoped<>, c1>::type
+            fake_dependency<scopes::shared<>, if0, c0if0>::type
+          , fake_dependency<scopes::shared<>, c3>::type
+          , fake_dependency<scopes::shared<>, c1>::type
         >
     > module_;
 
@@ -325,8 +325,8 @@ BOOST_AUTO_TEST_CASE(multiple_calls) {
     module<
         mpl::vector<
             fake_dependency_base_of<scopes::unique<>, c0if0, c0if0>::type
-          , fake_dependency_base_of<scopes::scoped<>, c3, c3, void, c15, call_stack<c6, c4>>::type
-          , fake_dependency_base_of<scopes::scoped<>, c3, c3, void, c6>::type
+          , fake_dependency_base_of<scopes::shared<>, c3, c3, void, c15, call_stack<c6, c4>>::type
+          , fake_dependency_base_of<scopes::shared<>, c3, c3, void, c6>::type
         >
     > module_;
 
@@ -524,7 +524,7 @@ BOOST_AUTO_TEST_CASE(visit_external) {
         mpl::vector<
             mpl::pair<c18, scopes::unique<>>
           , mpl::pair<c0, scopes::unique<>>
-          , mpl::pair<shared_ptr<c1>, scopes::scoped<>>
+          , mpl::pair<shared_ptr<c1>, scopes::shared<>>
           , mpl::pair<c3&, scopes::external<>>
         >
     > visitor;

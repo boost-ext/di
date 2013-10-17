@@ -11,7 +11,7 @@
 #include "boost/di/type_traits/make_plain.hpp" // has_named_type
 #include "boost/di/type_traits/remove_accessors.hpp"
 #include "boost/di/scopes/unique.hpp"
-#include "boost/di/scopes/scoped.hpp"
+#include "boost/di/scopes/shared.hpp"
 #include "boost/di/scopes/external.hpp"
 
 #include <boost/config.hpp>
@@ -61,13 +61,13 @@ struct scope_traits<std::auto_ptr<T> >
 template<typename T>
 struct scope_traits<shared_ptr<T> >
 {
-    typedef scopes::scoped<> type;
+    typedef scopes::shared<> type;
 };
 
 template<typename T>
 struct scope_traits<weak_ptr<T> >
 {
-    typedef scopes::scoped<> type;
+    typedef scopes::shared<> type;
 };
 
 template<typename T>

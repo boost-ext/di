@@ -30,7 +30,7 @@
     namespace this_thread = ::std::this_thread;
     using ::std::thread;
     using ::std::mutex;
-    typedef ::std::lock_guard< ::std::mutex > scoped_lock;
+    typedef ::std::lock_guard< ::std::mutex > shared_lock;
 
     } // namespace di
     } // namespace boost
@@ -45,7 +45,7 @@
     namespace this_thread = ::boost::this_thread;
     using ::boost::thread;
     using ::boost::mutex;
-    typedef ::boost::lock_guard< ::boost::mutex > scoped_lock;
+    typedef ::boost::lock_guard< ::boost::mutex > shared_lock;
 
     } // namespace di
     } // namespace boost
@@ -68,7 +68,7 @@
         lock_guard(const T&);
     };
 
-    typedef lock_guard<mutex> scoped_lock;
+    typedef lock_guard<mutex> shared_lock;
 
     namespace this_thread {
     thread::id get_id();

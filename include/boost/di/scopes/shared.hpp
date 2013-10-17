@@ -18,7 +18,7 @@
     namespace scopes {
 
     template<template<typename> class TConvertible = convertibles::shared>
-    class scoped
+    class shared
     {
     public:
         template<typename TExpected, typename TGiven = TExpected>
@@ -34,7 +34,7 @@
                 return object_;
             }
 
-            #define BOOST_PP_FILENAME_1 "boost/di/scopes/scoped.hpp"
+            #define BOOST_PP_FILENAME_1 "boost/di/scopes/shared.hpp"
             #define BOOST_PP_ITERATION_LIMITS BOOST_DI_LIMITS_BEGIN(1)
             #include BOOST_PP_ITERATE()
 

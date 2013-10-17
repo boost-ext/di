@@ -20,7 +20,7 @@ namespace boost {
 namespace di {
 
 using injector_1_t = injector<
-    scoped<
+    shared<
         c3
     >
   , unique<
@@ -36,7 +36,7 @@ using injector_1_t = injector<
 >;
 
 using injector_2_t = injector<
-    scoped<
+    shared<
         c3
     >
   , unique<
@@ -46,7 +46,7 @@ using injector_2_t = injector<
 >;
 
 using injector_3_t = injector<
-    scoped<
+    shared<
         c0if0
     >
   , unique<
@@ -70,7 +70,7 @@ using injector_c0if0_t = injector<
 >;
 
 auto injector_1 = make_injector(
-    scoped<
+    shared<
         c3
     >()
   , unique<
@@ -86,7 +86,7 @@ auto injector_1 = make_injector(
 );
 
 auto injector_2 = make_injector(
-    scoped<
+    shared<
         c0if0
     >()
   , unique<
@@ -96,7 +96,7 @@ auto injector_2 = make_injector(
 );
 
 auto injector_3 = make_injector(
-    scoped<
+    shared<
         c3
     >()
   , unique<
@@ -129,7 +129,7 @@ auto injector_externals_1 = make_injector(
 );
 
 auto injector_externals_2 = make_injector(
-    scoped<
+    shared<
         c0if0
     >()
   , bind<int>::to(42)
@@ -401,17 +401,17 @@ BOOST_AUTO_TEST_CASE(per_thread_scope_singleton) {
 
     injector<
         per_thread<
-            scoped<c0if0>
+            shared<c0if0>
         >
     > injector_;
 
     thread t1([&]{
-        scoped_lock l(m);
+        shared_lock l(m);
         v.push_back(injector_.create<shared_ptr<c20>>());
     });
 
     thread t2([&]{
-        scoped_lock l(m);
+        shared_lock l(m);
         v.push_back(injector_.create<shared_ptr<c20>>());
     });
     t1.join();

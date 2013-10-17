@@ -10,7 +10,7 @@
 #include "boost/di/detail/binder.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
-#include "boost/di/scopes/scoped.hpp"
+#include "boost/di/scopes/shared.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/session.hpp"
 
@@ -69,7 +69,7 @@ class binding_correctness
     { };
 
     template<template<typename> class TConvertible>
-    struct is_shared<scopes::scoped<TConvertible> >
+    struct is_shared<scopes::shared<TConvertible> >
         : mpl::true_
     { };
 

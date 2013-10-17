@@ -176,7 +176,7 @@ using scope_empty_types = mpl::vector<
     deduce<>
   , unique<>
   , per_thread<>
-  , scoped<>
+  , shared<>
   , singleton<>
   , session<>
 >;
@@ -194,7 +194,7 @@ using scope_one_types = mpl::vector<
     mpl::pair< scopes::deduce,                      deduce<int>        >
   , mpl::pair< scopes::unique<>,               unique<int>   >
   , mpl::pair< scopes::per_thread<scopes::deduce>,  per_thread<int>    >
-  , mpl::pair< scopes::scoped<>,                    scoped<int>        >
+  , mpl::pair< scopes::shared<>,                    shared<int>        >
   , mpl::pair< scopes::singleton<>,                 singleton<int>     >
   , mpl::pair< scopes::session<>,                   session<int>       >
 >;
@@ -214,7 +214,7 @@ using scope_many_types = mpl::vector<
     mpl::pair< scopes::deduce,                      deduce<int, double, float>        >
   , mpl::pair< scopes::unique<>,               unique<int, double, float>   >
   , mpl::pair< scopes::per_thread<scopes::deduce>,  per_thread<int, double, float>    >
-  , mpl::pair< scopes::scoped<>,                    scoped<int, double, float>        >
+  , mpl::pair< scopes::shared<>,                    shared<int, double, float>        >
   , mpl::pair< scopes::singleton<>,                 singleton<int, double, float>     >
   , mpl::pair< scopes::session<>,                   session<int, double, float>       >
 >;
@@ -252,7 +252,7 @@ BOOST_AUTO_TEST_CASE(per_thread_mix) {
                 int
               , bind<if0, c0if0>
               , unique<double>
-              , scoped<float, char>
+              , shared<float, char>
               , unique<bind<c1>::in_name<float> >
               , deduce<c2>::in_call<double>
             >::type
@@ -260,8 +260,8 @@ BOOST_AUTO_TEST_CASE(per_thread_mix) {
                 fake_dependency_base_of<scopes::per_thread<scopes::deduce>, int>::type
               , fake_dependency_base_of<scopes::per_thread<scopes::deduce>, if0, c0if0>::type
               , fake_dependency_base_of<scopes::per_thread<scopes::unique<>>, double>::type
-              , fake_dependency_base_of<scopes::per_thread<scopes::scoped<>>, float>::type
-              , fake_dependency_base_of<scopes::per_thread<scopes::scoped<>>, char>::type
+              , fake_dependency_base_of<scopes::per_thread<scopes::shared<>>, float>::type
+              , fake_dependency_base_of<scopes::per_thread<scopes::shared<>>, char>::type
               , fake_dependency_base_of<scopes::per_thread<scopes::unique<>>, c1, c1, float>::type
               , fake_dependency_base_of<scopes::per_thread<scopes::deduce>, c2, c2, void, double>::type
             >

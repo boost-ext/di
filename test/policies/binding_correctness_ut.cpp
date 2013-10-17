@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include "boost/di/policies/binding_correctness.hpp"
-#include "boost/di/scopes/scoped.hpp"
+#include "boost/di/scopes/shared.hpp"
 #include "boost/di/scopes/session.hpp"
 #include "boost/di/scopes/singleton.hpp"
 
@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE(correct_many) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(none_scopeds) {
+BOOST_AUTO_TEST_CASE(none_shareds) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<>
@@ -103,7 +103,7 @@ BOOST_AUTO_TEST_CASE(none_scopeds) {
 }
 
 using scope_types = mpl::vector<
-    scopes::scoped<>
+    scopes::shared<>
   , scopes::session<>
   , scopes::singleton<>
 >;
