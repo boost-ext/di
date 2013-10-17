@@ -395,23 +395,19 @@ BOOST_AUTO_TEST_CASE(session_scope) {
     }
 }
 
-BOOST_AUTO_TEST_CASE(thread_scope_singleton) {
+BOOST_AUTO_TEST_CASE(threadscope_singleton) {
     std::vector<shared_ptr<c20>> v;
     mutex m;
 
-    injector<
-        thread<
-            shared<c0if0>
-        >
-    > injector_;
+    injector<thread<shared<c0if0>>> injector_;
 
-    thread t1([&]{
-        shared_lock l(m);
+    di::thread t1([&]{
+        scoped_lock l(m);
         v.push_back(injector_.create<shared_ptr<c20>>());
     });
 
-    thread t2([&]{
-        shared_lock l(m);
+    di::thread t2([&]{
+        scoped_lock l(m);
         v.push_back(injector_.create<shared_ptr<c20>>());
     });
     t1.join();

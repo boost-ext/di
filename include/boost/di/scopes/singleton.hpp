@@ -30,7 +30,7 @@
 
             result_type create() {
                 if (!object()) {
-                    //shared_lock lock(mutex_);
+                    //scoped_lock lock(mutex_);
                     //(void)lock;
                     if (!object()) {
                         object().reset(type_traits::create_traits<TExpected, TGiven>());
@@ -64,7 +64,7 @@
     template<BOOST_DI_TYPES(Args)>
     result_type create(BOOST_DI_ARGS(Args, args)) {
         if (!object()) {
-            //shared_lock lock(mutex_);
+            //scoped_lock lock(mutex_);
             //(void)lock;
             if (!object()) {
                 object().reset(

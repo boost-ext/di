@@ -30,14 +30,16 @@
 
     namespace boost {
     namespace di {
+    namespace aux {
 
     using ::std::auto_ptr;
     using ::std::unique_ptr;
     using ::std::shared_ptr;
     using ::std::weak_ptr;
 
-    } // namespace di
+    } // namespace aux
     } // namespace boost
+    } // namespace di
 
 #elif defined(BOOST_DI_TR1_SMART_PTR)
 
@@ -46,14 +48,16 @@
 
     namespace boost {
     namespace di {
+    namespace aux {
 
     using ::std::auto_ptr;
     template<typename> struct unique_ptr; // compile clean
     using ::std::tr1::shared_ptr;
     using ::std::tr1::weak_ptr;
 
-    } // namespace di
+    } // namespace aux
     } // namespace boost
+    } // namespace di
 
 #else
 
@@ -63,14 +67,16 @@
 
     namespace boost {
     namespace di {
+    namespace aux {
 
     using ::std::auto_ptr;
     template<typename> struct unique_ptr; // compile clean
     using ::boost::shared_ptr;
     using ::boost::weak_ptr;
 
-    } // namespace di
+    } // namespace aux
     } // namespace boost
+    } // namespace di
 
 #endif
 

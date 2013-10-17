@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef BOOST_DI_SCOPES_SCOPED_HPP
-    #define BOOST_DI_SCOPES_SCOPED_HPP
+    #ifndef BOOST_DI_SCOPES_SHARED_HPP
+    #define BOOST_DI_SCOPES_SHARED_HPP
 
     #include "boost/di/aux_/meta.hpp"
     #include "boost/di/convertibles/shared.hpp"

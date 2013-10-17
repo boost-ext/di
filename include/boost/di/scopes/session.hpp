@@ -36,13 +36,13 @@
             { }
 
             void call(const session_entry&) {
-                //shared_lock lock(mutex_);
+                //scoped_lock lock(mutex_);
                 //(void)lock;
                 in_scope_ = true;
             }
 
             void call(const session_exit&) {
-                //shared_lock lock(mutex_);
+                //scoped_lock lock(mutex_);
                 //(void)lock;
                 in_scope_ = false;
                 object().reset();
@@ -50,7 +50,7 @@
 
             result_type create() {
                 if (in_scope_ && !object()) {
-                    //shared_lock lock(mutex_);
+                    //scoped_lock lock(mutex_);
                     //(void)lock;
                     if (in_scope_ && !object()) {
                         object().reset(type_traits::create_traits<TExpected, TGiven>());
@@ -85,7 +85,7 @@
     template<BOOST_DI_TYPES(Args)>
     result_type create(BOOST_DI_ARGS(Args, args)) {
         if (in_scope_ && !object()) {
-            //shared_lock lock(mutex_);
+            //scoped_lock lock(mutex_);
             //(void)lock;
             if (in_scope_ && !object()) {
                 object().reset(

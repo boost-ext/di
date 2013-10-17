@@ -20,23 +20,23 @@
     namespace scopes {
 
     template<typename T>
-    struct thread_entry
+    struct threadentry
     {
-        thread_entry(thread::id id) // non explicit
+        threadentry(aux::thread::id id) // non explicit
             : id(id)
         { }
 
-        thread::id id;
+        aux::thread::id id;
     };
 
     template<typename T>
-    struct thread_exit
+    struct threadexit
     {
-        thread_exit(thread::id id) // non explicit
+        threadexit(aux::thread::id id) // non explicit
             : id(id)
         { }
 
-         thread::id id;
+        aux::thread::id id;
     };
 
     template<typename TScope>
@@ -49,8 +49,8 @@
         class scope
         {
             typedef typename TScope::template scope<TExpected, TGiven> scope_type;
-            typedef std::map<thread::id, scope_type> objects_t;
-            typedef function<thread::id()> get_id_t;
+            typedef std::map<aux::thread::id, scope_type> objects_t;
+            typedef function<aux::thread::id()> get_id_t;
 
         public:
             typedef typename scope_type::result_type result_type;
@@ -60,12 +60,12 @@
             { }
 
             template<typename T>
-            void call(const thread_entry<T>& entry) {
+            void call(const threadentry<T>& entry) {
                 objects()[get_id_()].call(T());
             }
 
             template<typename T>
-            void call(const thread_exit<T>& exit) {
+            void call(const threadexit<T>& exit) {
                 objects()[get_id_()].call(T());
             }
 
