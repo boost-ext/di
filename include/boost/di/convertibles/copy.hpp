@@ -12,7 +12,6 @@
 
 #include <boost/type.hpp>
 #include <boost/function.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_polymorphic.hpp>
 
@@ -33,13 +32,13 @@ public:
 
     template<typename I>
     I operator()(const type<I>&, typename disable_if<is_polymorphic<I> >::type* = 0) const {
-        shared_ptr<I> ptr(object_());
+        aux::shared_ptr<I> ptr(object_());
         return *ptr;
     }
 
     template<typename I>
     const I operator()(const type<const I>&, typename disable_if<is_polymorphic<I> >::type* = 0) const {
-        shared_ptr<I> ptr(object_());
+        aux::shared_ptr<I> ptr(object_());
         return *ptr;
     }
 
@@ -50,42 +49,42 @@ public:
 
     template<typename I, typename TName>
     named<I, TName> operator()(const type<const named<I, TName>&>&) const {
-        shared_ptr<I> ptr(object_());
+        aux::shared_ptr<I> ptr(object_());
         return *ptr;
     }
 
     template<typename I>
-    shared_ptr<I> operator()(const type<shared_ptr<I> >&) const {
-        return shared_ptr<I>(object_());
+    aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const {
+        return aux::shared_ptr<I>(object_());
     }
 
     template<typename I>
-    shared_ptr<I> operator()(const type<const shared_ptr<I>&>&) const {
-        return shared_ptr<I>(object_());
+    aux::shared_ptr<I> operator()(const type<const aux::shared_ptr<I>&>&) const {
+        return aux::shared_ptr<I>(object_());
     }
 
     template<typename I, typename TName>
-    I* operator()(const type<const named<shared_ptr<I>, TName>&>&) const {
+    I* operator()(const type<const named<aux::shared_ptr<I>, TName>&>&) const {
         return object_();
     }
 
     template<typename I>
-    auto_ptr<I> operator()(const type<auto_ptr<I> >&) const {
-        return auto_ptr<I>(object_());
+    aux::auto_ptr<I> operator()(const type<aux::auto_ptr<I> >&) const {
+        return aux::auto_ptr<I>(object_());
     }
 
     template<typename I, typename TName>
-    I* operator()(const type<const named<auto_ptr<I>, TName>&>&) const {
+    I* operator()(const type<const named<aux::auto_ptr<I>, TName>&>&) const {
         return object_();
     }
 
     template<typename I>
-    unique_ptr<I> operator()(const type<unique_ptr<I> >&) const {
-        return unique_ptr<I>(object_());
+    aux::unique_ptr<I> operator()(const type<aux::unique_ptr<I> >&) const {
+        return aux::unique_ptr<I>(object_());
     }
 
     template<typename I, typename TName>
-    I* operator()(type<const named<unique_ptr<I>, TName>&>&) const {
+    I* operator()(type<const named<aux::unique_ptr<I>, TName>&>&) const {
         return object_();
     }
 

@@ -47,8 +47,8 @@ namespace policies {
  *
  * @code
  * struct s { s(int); };
- * struct k { k(shared_ptr<s>); };
- * struct c { c(shared_ptr<s>, shared_ptr<k>); }; //arguments evaluation order is not specified
+ * struct k { k(aux::shared_ptr<s>); };
+ * struct c { c(aux::shared_ptr<s>, aux::shared_ptr<k>); }; //arguments evaluation order is not specified
  * injector<
  *     bind<int>::in_call<s>::to(i)
  *   , singleton<s>
@@ -58,7 +58,7 @@ namespace policies {
  * @code
  * singleton<int>
  * struct c { c(int&); }; // only c -> not ok
- * struct d { d(shared_ptr<int>); }; c and d -> ok
+ * struct d { d(aux::shared_ptr<int>); }; c and d -> ok
  * @endcode
  */
 class binding_correctness

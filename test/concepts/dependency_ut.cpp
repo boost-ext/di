@@ -22,7 +22,7 @@ struct fake_scope
     template<typename T, typename U>
     struct scope
     {
-        typedef shared_ptr<T> result_type;
+        typedef aux::shared_ptr<T> result_type;
 
         result_type create() {
             return result_type(make_shared<T>(value));

@@ -7,7 +7,6 @@
 #include "boost/di/type_traits/scope_traits.hpp"
 
 #include <boost/test/unit_test.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/type_traits/is_same.hpp>
 
 #include "boost/di/aux_/memory.hpp"
@@ -30,22 +29,22 @@ BOOST_AUTO_TEST_CASE(basic) {
     BOOST_CHECK((is_same<scopes::unique<>, scope_traits<named<int*>>::type>::value));
     BOOST_CHECK((is_same<scopes::unique<>, scope_traits<const int*>::type>::value));
     BOOST_CHECK((is_same<scopes::unique<>, scope_traits<named<const int*>>::type>::value));
-    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<auto_ptr<int>>::type>::value));
-    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<named<auto_ptr<int>>>::type>::value));
-    BOOST_CHECK((is_same<scopes::shared<>, scope_traits<shared_ptr<int>>::type>::value));
-    BOOST_CHECK((is_same<scopes::shared<>, scope_traits<named<shared_ptr<int>>>::type>::value));
-    BOOST_CHECK((is_same<scopes::shared<>, scope_traits<weak_ptr<int>>::type>::value));
-    BOOST_CHECK((is_same<scopes::shared<>, scope_traits<named<weak_ptr<int>>>::type>::value));
+    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<aux::auto_ptr<int>>::type>::value));
+    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<named<aux::auto_ptr<int>>>::type>::value));
+    BOOST_CHECK((is_same<scopes::shared<>, scope_traits<aux::shared_ptr<int>>::type>::value));
+    BOOST_CHECK((is_same<scopes::shared<>, scope_traits<named<aux::shared_ptr<int>>>::type>::value));
+    BOOST_CHECK((is_same<scopes::shared<>, scope_traits<aux::weak_ptr<int>>::type>::value));
+    BOOST_CHECK((is_same<scopes::shared<>, scope_traits<named<aux::weak_ptr<int>>>::type>::value));
     BOOST_CHECK((is_same<scopes::external<>, scope_traits<int&>::type>::value));
     BOOST_CHECK((is_same<scopes::external<>, scope_traits<named<int&>>::type>::value));
 
 #if !defined(BOOST_NO_CXX11_SMART_PTR)
-    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<unique_ptr<int>>::type>::value));
-    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<named<unique_ptr<int>>>::type>::value));
-    BOOST_CHECK((is_same<scopes::shared<>, scope_traits<shared_ptr<int>>::type>::value));
-    BOOST_CHECK((is_same<scopes::shared<>, scope_traits<named<shared_ptr<int>>>::type>::value));
-    BOOST_CHECK((is_same<scopes::shared<>, scope_traits<weak_ptr<int>>::type>::value));
-    BOOST_CHECK((is_same<scopes::shared<>, scope_traits<named<weak_ptr<int>>>::type>::value));
+    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<aux::unique_ptr<int>>::type>::value));
+    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<named<aux::unique_ptr<int>>>::type>::value));
+    BOOST_CHECK((is_same<scopes::shared<>, scope_traits<aux::shared_ptr<int>>::type>::value));
+    BOOST_CHECK((is_same<scopes::shared<>, scope_traits<named<aux::shared_ptr<int>>>::type>::value));
+    BOOST_CHECK((is_same<scopes::shared<>, scope_traits<aux::weak_ptr<int>>::type>::value));
+    BOOST_CHECK((is_same<scopes::shared<>, scope_traits<named<aux::weak_ptr<int>>>::type>::value));
 #endif
 
 #if !defined(BOOST_NO_RVALUE_REFERENCES)

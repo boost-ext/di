@@ -18,57 +18,57 @@ namespace di {
 namespace convertibles {
 
 template<typename T>
-class shared : public shared_ptr<T>
+class shared : public aux::shared_ptr<T>
 {
 public:
     shared() { }
 
-    explicit shared(const shared_ptr<T>& object)
-        : shared_ptr<T>(object)
+    explicit shared(const aux::shared_ptr<T>& object)
+        : aux::shared_ptr<T>(object)
     { }
 
     template<typename I>
-    shared_ptr<I> operator()(const type<shared_ptr<I> >&) const {
+    aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const {
         return *this;
     }
 
     template<typename I>
-    shared_ptr<I> operator()(const type<const shared_ptr<I>&>&) const {
+    aux::shared_ptr<I> operator()(const type<const aux::shared_ptr<I>&>&) const {
         return *this;
     }
 
     template<typename I, typename TName>
-    named<shared_ptr<I>, TName>
-    operator()(const type<const named<shared_ptr<I>, TName>&>&) const {
+    named<aux::shared_ptr<I>, TName>
+    operator()(const type<const named<aux::shared_ptr<I>, TName>&>&) const {
         return *this;
     }
 
     template<typename I, typename TName>
-    named<shared_ptr<I>, TName>
-    operator()(const type<const named<const shared_ptr<I>&, TName>&>&) const {
+    named<aux::shared_ptr<I>, TName>
+    operator()(const type<const named<const aux::shared_ptr<I>&, TName>&>&) const {
         return *this;
     }
 
     template<typename I>
-    weak_ptr<I> operator()(const type<weak_ptr<I> >&) const {
+    aux::weak_ptr<I> operator()(const type<aux::weak_ptr<I> >&) const {
         return *this;
     }
 
     template<typename I>
-    weak_ptr<I> operator()(const type<const weak_ptr<I>&>&) const {
+    aux::weak_ptr<I> operator()(const type<const aux::weak_ptr<I>&>&) const {
         return *this;
     }
 
     template<typename I, typename TName>
-    named<weak_ptr<I>, TName>
-    operator()(const type<const named<weak_ptr<I>, TName>&>&) const {
-        return named<weak_ptr<I> >(*this);
+    named<aux::weak_ptr<I>, TName>
+    operator()(const type<const named<aux::weak_ptr<I>, TName>&>&) const {
+        return named<aux::weak_ptr<I> >(*this);
     }
 
     template<typename I, typename TName>
-    named<weak_ptr<I>, TName>
-    operator()(const type<const named<const weak_ptr<I>&, TName>&>&) const {
-        return named<weak_ptr<I> >(*this);
+    named<aux::weak_ptr<I>, TName>
+    operator()(const type<const named<const aux::weak_ptr<I>&, TName>&>&) const {
+        return named<aux::weak_ptr<I> >(*this);
     }
 };
 

@@ -55,7 +55,7 @@
         public:
             typedef typename scope_type::result_type result_type;
 
-            explicit scope(const get_id_t& get_id = &this_thread::get_id)
+            explicit scope(const get_id_t& get_id = &aux::this_thread::get_id)
                 : get_id_(get_id)
             { }
 

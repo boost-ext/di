@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(allow_requires) {
 BOOST_AUTO_TEST_CASE(allow_some_of_requirements) {
     BOOST_CHECK((
         contains_all<
-            mpl::vector<shared_ptr<int>, const std::string&>
+            mpl::vector<aux::shared_ptr<int>, const std::string&>
           , arguments_permission<allow_ptrs, allow_copies>::verify<
                 mpl::vector0<>
               , c24
@@ -58,7 +58,7 @@ BOOST_AUTO_TEST_CASE(allow_some_of_requirements) {
 BOOST_AUTO_TEST_CASE(allow_some_of_requirements_order) {
     BOOST_CHECK((
         contains_all<
-            mpl::vector<shared_ptr<int>, const std::string&>
+            mpl::vector<aux::shared_ptr<int>, const std::string&>
           , arguments_permission<allow_copies, allow_ptrs>::verify<
                 mpl::vector0<>
               , c24

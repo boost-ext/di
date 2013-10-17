@@ -14,10 +14,10 @@ namespace di {
 
 struct sp
 {
-    BOOST_DI_CTOR(sp, (boost::shared_ptr<int>)) { }
+    BOOST_DI_CTOR(sp, (boost::aux::shared_ptr<int>)) { }
 };
 
-BOOST_AUTO_TEST_CASE(lack_of_shared_ptr_fail) {
+BOOST_AUTO_TEST_CASE(lack_of_aux::shared_ptr_fail) {
     injector<>().create<sp>();
 }
 

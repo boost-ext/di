@@ -29,9 +29,9 @@ BOOST_AUTO_TEST_CASE(create) {
     unique<>::scope<int> unique_;
 
     BOOST_CHECK((
-        (unique_.create())(type<shared_ptr<int>>())
+        (unique_.create())(type<aux::shared_ptr<int>>())
         !=
-        (unique_.create())(type<shared_ptr<int>>())
+        (unique_.create())(type<aux::shared_ptr<int>>())
     ));
 }
 
@@ -43,9 +43,9 @@ BOOST_AUTO_TEST_CASE(create_args) {
     fake_convertible<char> c('0');
 
     BOOST_CHECK((
-        (unique_.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<shared_ptr<c2>>())
+        (unique_.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
         !=
-        (unique_.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<shared_ptr<c2>>())
+        (unique_.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
     ));
 }
 

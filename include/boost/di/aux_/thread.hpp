@@ -58,6 +58,7 @@
 
     namespace boost {
     namespace di {
+    namespace aux {
 
     struct thread
     {

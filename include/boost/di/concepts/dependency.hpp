@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_CONCEPTS_DEPENDENCY_HPP
 #define BOOST_DI_CONCEPTS_DEPENDENCY_HPP
 
+#include "boost/di/aux_/memory.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/convertibles/ref.hpp"
 #include "boost/di/convertibles/shared.hpp"
@@ -15,7 +16,6 @@
 
 #include <memory>
 #include <boost/preprocessor/iteration/iterate.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/ref.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_arithmetic.hpp>
@@ -143,7 +143,7 @@ public:
 
     template<typename T>
     static typename external<expected, T, shared_type>::type
-    to(shared_ptr<T> obj) {
+    to(aux::shared_ptr<T> obj) {
         return typename external<expected, T, shared_type>::type(obj);
     }
 };

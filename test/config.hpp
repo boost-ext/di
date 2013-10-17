@@ -17,11 +17,11 @@
 #endif
 
 #if defined(__GNUC__) && (__GNUC__ >= 4)
-    #pragma GCC diagnostic ignored "-Wdeprecated-declarations" // std::auto_ptr
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations" // std::aux::auto_ptr
 #endif
 
 #if defined(__INTEL_COMPILER)
-    #pragma warning(disable:1478) //class "std::auto_ptr<...>" was declared deprecated
+    #pragma warning(disable:1478) //class "std::aux::auto_ptr<...>" was declared deprecated
 #endif
 
 #endif

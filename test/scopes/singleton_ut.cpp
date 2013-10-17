@@ -24,21 +24,21 @@ BOOST_AUTO_TEST_CASE(create) {
     singleton<>::scope<int> singleton2;
 
     BOOST_CHECK((
-        (singleton1.create())(type<shared_ptr<int>>())
+        (singleton1.create())(type<aux::shared_ptr<int>>())
         ==
-        (singleton1.create())(type<shared_ptr<int>>())
+        (singleton1.create())(type<aux::shared_ptr<int>>())
     ));
 
     BOOST_CHECK((
-        (singleton2.create())(type<shared_ptr<int>>())
+        (singleton2.create())(type<aux::shared_ptr<int>>())
         ==
-        (singleton2.create())(type<shared_ptr<int>>())
+        (singleton2.create())(type<aux::shared_ptr<int>>())
     ));
 
     BOOST_CHECK((
-        (singleton1.create())(type<shared_ptr<int>>())
+        (singleton1.create())(type<aux::shared_ptr<int>>())
         ==
-        (singleton2.create())(type<shared_ptr<int>>())
+        (singleton2.create())(type<aux::shared_ptr<int>>())
     ));
 }
 
@@ -51,21 +51,21 @@ BOOST_AUTO_TEST_CASE(create_args) {
     fake_convertible<char> c('0');
 
     BOOST_CHECK((
-        (singleton1.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<shared_ptr<c2>>())
+        (singleton1.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
         ==
-        (singleton1.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<shared_ptr<c2>>())
+        (singleton1.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
     ));
 
     BOOST_CHECK((
-        (singleton2.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<shared_ptr<c2>>())
+        (singleton2.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
         ==
-        (singleton2.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<shared_ptr<c2>>())
+        (singleton2.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
     ));
 
     BOOST_CHECK((
-        (singleton1.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<shared_ptr<c2>>())
+        (singleton1.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
         ==
-        (singleton2.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<shared_ptr<c2>>())
+        (singleton2.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
     ));
 }
 

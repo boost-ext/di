@@ -8,7 +8,6 @@
 #include <memory>
 
 #include <boost/test/unit_test.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/string.hpp>
@@ -38,19 +37,19 @@ BOOST_AUTO_TEST_CASE(create_using_copy) {
 
 BOOST_AUTO_TEST_CASE(create_using_ptr) {
     module<> module_;
-    auto_ptr<c0> obj(module_.create<c0*>());
+    aux::auto_ptr<c0> obj(module_.create<c0*>());
     BOOST_CHECK(obj.get());
 }
 
 BOOST_AUTO_TEST_CASE(create_using_const_ptr) {
     module<> module_;
-    auto_ptr<const c0> obj(module_.create<const c0*>());
+    aux::auto_ptr<const c0> obj(module_.create<const c0*>());
     BOOST_CHECK(obj.get());
 }
 
 BOOST_AUTO_TEST_CASE(create_using_shared_ptr) {
     module<> module_;
-    shared_ptr<c0> obj = module_.create<shared_ptr<c0>>();
+    aux::shared_ptr<c0> obj = module_.create<aux::shared_ptr<c0>>();
     BOOST_CHECK(obj);
 }
 
@@ -60,7 +59,7 @@ BOOST_AUTO_TEST_CASE(create_default_ctor) {
 }
 
 BOOST_AUTO_TEST_CASE(create_noncopyable) {
-    module<>().create<shared_ptr<c1>>();
+    module<>().create<aux::shared_ptr<c1>>();
 }
 
 BOOST_AUTO_TEST_CASE(empty) {
@@ -75,7 +74,7 @@ BOOST_AUTO_TEST_CASE(create_unique) {
         >
     > module_;
 
-    shared_ptr<c8> c8_ = module_.create<shared_ptr<c8>>();
+    aux::shared_ptr<c8> c8_ = module_.create<aux::shared_ptr<c8>>();
 
     BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -101,7 +100,7 @@ BOOST_AUTO_TEST_CASE(create_unique_shared) {
         >
     > module_;
 
-    shared_ptr<c8> c8_ = module_.create<shared_ptr<c8>>();
+    aux::shared_ptr<c8> c8_ = module_.create<aux::shared_ptr<c8>>();
 
     BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -129,7 +128,7 @@ BOOST_AUTO_TEST_CASE(create_shared_context) {
     >
     module_;
 
-    shared_ptr<c8> c8_ = module_.create<shared_ptr<c8>>();
+    aux::shared_ptr<c8> c8_ = module_.create<aux::shared_ptr<c8>>();
 
     BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -157,7 +156,7 @@ BOOST_AUTO_TEST_CASE(create_unique_shared_context_order) {
         >
     > module_;
 
-    shared_ptr<c8> c8_ = module_.create<shared_ptr<c8>>();
+    aux::shared_ptr<c8> c8_ = module_.create<aux::shared_ptr<c8>>();
 
     BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -190,7 +189,7 @@ BOOST_AUTO_TEST_CASE(create_unique_shared_context_mix) {
         >
     > module_;
 
-    shared_ptr<c8> c8_ = module_.create<shared_ptr<c8>>();
+    aux::shared_ptr<c8> c8_ = module_.create<aux::shared_ptr<c8>>();
 
     BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -215,7 +214,7 @@ BOOST_AUTO_TEST_CASE(create_shared_impl) {
         >
     > module_;
 
-    shared_ptr<c8> c8_ = module_.create<shared_ptr<c8>>();
+    aux::shared_ptr<c8> c8_ = module_.create<aux::shared_ptr<c8>>();
 
     BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -242,7 +241,7 @@ BOOST_AUTO_TEST_CASE(create_shared_many) {
         >
     > module_;
 
-    shared_ptr<c8> c8_ = module_.create<shared_ptr<c8>>();
+    aux::shared_ptr<c8> c8_ = module_.create<aux::shared_ptr<c8>>();
 
     BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -303,7 +302,7 @@ BOOST_AUTO_TEST_CASE(base_of) {
         >
     > module_;
 
-    shared_ptr<c8> c8_ = module_.create<shared_ptr<c8>>();
+    aux::shared_ptr<c8> c8_ = module_.create<aux::shared_ptr<c8>>();
 
     BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -330,7 +329,7 @@ BOOST_AUTO_TEST_CASE(multiple_calls) {
         >
     > module_;
 
-    shared_ptr<c15> c15_ = module_.create<shared_ptr<c15>>();
+    aux::shared_ptr<c15> c15_ = module_.create<aux::shared_ptr<c15>>();
 
     BOOST_CHECK(c15_->c3_ == c15_->c6_.c4_->c3_); BOOST_CHECK(c15_->c3_ != c15_->c6_.c3_);
 }
@@ -441,7 +440,7 @@ BOOST_AUTO_TEST_CASE(externals_create_with_non_trivial_ctor) {
     const char c = 'x';
 
     using external_shared = scopes::external<convertibles::shared>;
-    fake_dependency<external_shared, c2>::type c2_(shared_ptr<c2>(new c2(i, d, c)));
+    fake_dependency<external_shared, c2>::type c2_(aux::shared_ptr<c2>(new c2(i, d, c)));
 
     module<
         mpl::vector<
@@ -449,7 +448,7 @@ BOOST_AUTO_TEST_CASE(externals_create_with_non_trivial_ctor) {
         >
     > module_(c2_);
 
-    auto obj = module_.create<shared_ptr<c2>>();
+    auto obj = module_.create<aux::shared_ptr<c2>>();
 
     BOOST_CHECK_EQUAL(i, obj->i);
     BOOST_CHECK_EQUAL(d, obj->d);
@@ -501,8 +500,8 @@ BOOST_AUTO_TEST_CASE(visit) {
     fake_visitor<
         mpl::vector<
             transaction_usage
-          , shared_ptr<provider<shared_ptr<transaction>>>
-          , shared_ptr<c3>
+          , aux::shared_ptr<provider<aux::shared_ptr<transaction>>>
+          , aux::shared_ptr<c3>
           , int
         >
     > visitor;
@@ -524,7 +523,7 @@ BOOST_AUTO_TEST_CASE(visit_external) {
         mpl::vector<
             mpl::pair<c18, scopes::unique<>>
           , mpl::pair<c0, scopes::unique<>>
-          , mpl::pair<shared_ptr<c1>, scopes::shared<>>
+          , mpl::pair<aux::shared_ptr<c1>, scopes::shared<>>
           , mpl::pair<c3&, scopes::external<>>
         >
     > visitor;
@@ -565,7 +564,7 @@ BOOST_AUTO_TEST_CASE(create_factory_e0) {
     fake_dependency<scopes::external<>, eid>::type eid_(e0);
     factory_module module_(eid_);
 
-    auto c23_ = module_.create<shared_ptr<c23>>();
+    auto c23_ = module_.create<aux::shared_ptr<c23>>();
 
     BOOST_CHECK(dynamic_cast<c0if0*>(c23_->if0_.get()));
 }
@@ -574,7 +573,7 @@ BOOST_AUTO_TEST_CASE(create_factory_e1) {
     fake_dependency<scopes::external<>, eid>::type eid_(e1);
     factory_module module_(eid_);
 
-    auto c23_ = module_.create<shared_ptr<c23>>();
+    auto c23_ = module_.create<aux::shared_ptr<c23>>();
 
     BOOST_CHECK(dynamic_cast<c1if0*>(c23_->if0_.get()));
 }
@@ -583,7 +582,7 @@ BOOST_AUTO_TEST_CASE(create_factory_null) {
     fake_dependency<scopes::external<>, eid>::type eid_(static_cast<eid>(0));
     factory_module module_(eid_);
 
-    auto c23_ = module_.create<shared_ptr<c23>>();
+    auto c23_ = module_.create<aux::shared_ptr<c23>>();
 
     BOOST_CHECK(nullptr == c23_->if0_.get());
 }

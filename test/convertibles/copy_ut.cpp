@@ -9,7 +9,6 @@
 #include <boost/test/unit_test.hpp>
 #include <memory>
 #include <boost/type.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include "boost/di/named.hpp"
 
@@ -32,13 +31,13 @@ const int i = 42;
 auto return_i = []{ return new int(i); };
 
 BOOST_AUTO_TEST_CASE(to_interface) {
-    unique_ptr<interface> object(
-        copy<interface>([]{ return new implementation(); })(type<unique_ptr<interface>>()));
+    aux::unique_ptr<interface> object(
+        copy<interface>([]{ return new implementation(); })(type<aux::unique_ptr<interface>>()));
     BOOST_CHECK(dynamic_cast<implementation*>(object.get()));
 }
 
 BOOST_AUTO_TEST_CASE(to_ptr) {
-    unique_ptr<int> object((copy<int>(return_i))(type<int*>()));
+    aux::unique_ptr<int> object((copy<int>(return_i))(type<int*>()));
     BOOST_CHECK_EQUAL(i, *object);
 }
 
@@ -48,33 +47,33 @@ BOOST_AUTO_TEST_CASE(to_named) {
 }
 
 BOOST_AUTO_TEST_CASE(to_shared_ptr) {
-    shared_ptr<int> object((copy<int>(return_i))(type<shared_ptr<int>>()));
+    aux::shared_ptr<int> object((copy<int>(return_i))(type<aux::shared_ptr<int>>()));
     BOOST_CHECK_EQUAL(i, *object);
 }
 
 BOOST_AUTO_TEST_CASE(to_named_shared_ptr) {
-    named<shared_ptr<int>> object((copy<int>(return_i))(type<shared_ptr<int>>()));
+    named<aux::shared_ptr<int>> object((copy<int>(return_i))(type<aux::shared_ptr<int>>()));
     BOOST_CHECK_EQUAL(i, *object);
 }
 
 BOOST_AUTO_TEST_CASE(to_auto_ptr) {
-    auto_ptr<int> object((copy<int>(return_i))(type<int*>()));
+    aux::auto_ptr<int> object((copy<int>(return_i))(type<int*>()));
     BOOST_CHECK_EQUAL(i, *object);
 }
 
 BOOST_AUTO_TEST_CASE(to_named_auto_ptr) {
     const int i = 42;
-    named<auto_ptr<int>> object((copy<int>(return_i))(type<int*>()));
+    named<aux::auto_ptr<int>> object((copy<int>(return_i))(type<int*>()));
     BOOST_CHECK_EQUAL(i, *object);
 }
 
 BOOST_AUTO_TEST_CASE(to_unique_ptr) {
-    unique_ptr<int> object((copy<int>(return_i))(type<int*>()));
+    aux::unique_ptr<int> object((copy<int>(return_i))(type<int*>()));
     BOOST_CHECK_EQUAL(i, *object);
 }
 
 BOOST_AUTO_TEST_CASE(to_named_unique_ptr) {
-    named<unique_ptr<int>> object((copy<int>(return_i))(type<int*>()));
+    named<aux::unique_ptr<int>> object((copy<int>(return_i))(type<int*>()));
     BOOST_CHECK_EQUAL(i, *object);
 }
 

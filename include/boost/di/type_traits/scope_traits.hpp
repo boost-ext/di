@@ -53,25 +53,25 @@ struct scope_traits<const T*>
 };
 
 template<typename T>
-struct scope_traits<std::auto_ptr<T> >
+struct scope_traits<aux::auto_ptr<T> >
 {
     typedef scopes::unique<> type;
 };
 
 template<typename T>
-struct scope_traits<shared_ptr<T> >
+struct scope_traits<aux::shared_ptr<T> >
 {
     typedef scopes::shared<> type;
 };
 
 template<typename T>
-struct scope_traits<weak_ptr<T> >
+struct scope_traits<aux::weak_ptr<T> >
 {
     typedef scopes::shared<> type;
 };
 
 template<typename T>
-struct scope_traits<unique_ptr<T> >
+struct scope_traits<aux::unique_ptr<T> >
 {
     typedef scopes::unique<> type;
 };

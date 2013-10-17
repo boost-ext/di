@@ -6,7 +6,6 @@
 //
 #include <tr1/memory>
 #include <vector>
-#include <boost/shared_ptr.hpp>
 #include <boost/typeof/typeof.hpp>
 #include "boost/di.hpp"
 

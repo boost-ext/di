@@ -6,7 +6,7 @@
 //
 #include <memory>
 #include <vector>
-#include <boost/shared_ptr.hpp>
+
 #include "boost/di.hpp"
 
 #include <boost/test/unit_test.hpp>

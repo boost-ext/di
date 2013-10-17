@@ -8,11 +8,12 @@
 
 #include <boost/test/unit_test.hpp>
 #include <memory>
-#include <boost/shared_ptr.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
+
+#include "boost/di/aux_/memory.hpp"
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/unique.hpp"
 #include "boost/di/scopes/shared.hpp"
@@ -43,7 +44,7 @@ BOOST_AUTO_TEST_CASE(create) {
           >
     { } injector_;
 
-    auto c8_ = injector_.create<shared_ptr<c8>>();
+    auto c8_ = injector_.create<aux::shared_ptr<c8>>();
 
     BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -74,8 +75,8 @@ BOOST_AUTO_TEST_CASE(visit) {
     fake_visitor<
         mpl::vector<
             transaction_usage
-          , shared_ptr<provider<shared_ptr<transaction>>>
-          , shared_ptr<c3>
+          , aux::shared_ptr<provider<aux::shared_ptr<transaction>>>
+          , aux::shared_ptr<c3>
           , int
         >
     > visitor;
@@ -470,7 +471,7 @@ BOOST_AUTO_TEST_CASE(create_injector) {
         >()
     );
 
-    auto c8_ = injector_.create<shared_ptr<c8>>();
+    auto c8_ = injector_.create<aux::shared_ptr<c8>>();
 
     BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -498,8 +499,8 @@ BOOST_AUTO_TEST_CASE(visit_injector) {
     fake_visitor<
         mpl::vector<
             transaction_usage
-          , shared_ptr<provider<shared_ptr<transaction>>>
-          , shared_ptr<c3>
+          , aux::shared_ptr<provider<aux::shared_ptr<transaction>>>
+          , aux::shared_ptr<c3>
           , int
         >
     > visitor;
@@ -959,7 +960,7 @@ BOOST_AUTO_TEST_CASE(to_in_call_stack) {
 }
 
 BOOST_AUTO_TEST_CASE(to_shared_ptr) {
-    shared_ptr<c3> c3_(new c3);
+    aux::shared_ptr<c3> c3_(new c3);
 
     auto injector_ = injector<>()(
         bind<c3>::to(c3_)
@@ -984,7 +985,7 @@ BOOST_AUTO_TEST_CASE(to_ref) {
       , bind<c14>::to(c14_ref)
     );
 
-    auto c16_ = injector_.create<shared_ptr<c16>>();
+    auto c16_ = injector_.create<aux::shared_ptr<c16>>();
 
     BOOST_CHECK(&c3_const_ref == &c16_->c3_);
     BOOST_CHECK(&c14_ref == &c16_->c14_);
@@ -1005,7 +1006,7 @@ BOOST_AUTO_TEST_CASE(to_ref_no_copy) {
       , bind<c14>::to(c14_)
     );
 
-    auto c16_ = injector_.create<shared_ptr<c16>>();
+    auto c16_ = injector_.create<aux::shared_ptr<c16>>();
 
     BOOST_CHECK(&c3_ == &c16_->c3_);
     BOOST_CHECK(&c14_ == &c16_->c14_);

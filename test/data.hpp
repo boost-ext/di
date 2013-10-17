@@ -103,14 +103,14 @@ struct c3
 struct c4
 {
     BOOST_DI_CTOR(c4
-        , shared_ptr<c3> c3_
+        , aux::shared_ptr<c3> c3_
         , const named<int, mpl::string<'1'>>& i1
         , const named<int, mpl::string<'2'>>& i2
     )
         : c3_(c3_), i1(i1), i2(i2)
     { }
 
-    shared_ptr<c3> c3_;
+    aux::shared_ptr<c3> c3_;
     int i1 = 0;
     int i2 = 0;
 };
@@ -118,60 +118,60 @@ struct c4
 struct c5
 {
     BOOST_DI_CTOR(c5
-        , shared_ptr<if0> if0_
-        , shared_ptr<c2> c2_
-        , shared_ptr<c1> c1_
+        , aux::shared_ptr<if0> if0_
+        , aux::shared_ptr<c2> c2_
+        , aux::shared_ptr<c1> c1_
     )
         : if0_(if0_), c2_(c2_), c1_(c1_)
     { }
 
-    shared_ptr<if0> if0_;
-    shared_ptr<c2> c2_;
-    shared_ptr<c1> c1_;
+    aux::shared_ptr<if0> if0_;
+    aux::shared_ptr<c2> c2_;
+    aux::shared_ptr<c1> c1_;
 };
 
 struct c6
 {
     BOOST_DI_CTOR(c6
-        , shared_ptr<c3> c3_
-        , shared_ptr<c4> c4_
+        , aux::shared_ptr<c3> c3_
+        , aux::shared_ptr<c4> c4_
         , c5 c5_
     )
         : c3_(c3_), c4_(c4_), c5_(c5_)
     { }
 
-    shared_ptr<c3> c3_;
-    shared_ptr<c4> c4_;
+    aux::shared_ptr<c3> c3_;
+    aux::shared_ptr<c4> c4_;
     c5 c5_;
 };
 
 struct c7
 {
     BOOST_DI_CTOR(c7
-        , shared_ptr<if0> if0_
-        , shared_ptr<c6> c6_
+        , aux::shared_ptr<if0> if0_
+        , aux::shared_ptr<c6> c6_
     )
         : if0_(if0_), c6_(c6_)
     { }
 
-    shared_ptr<if0> if0_;
-    shared_ptr<c6> c6_;
+    aux::shared_ptr<if0> if0_;
+    aux::shared_ptr<c6> c6_;
 };
 
 struct c8
 {
     BOOST_DI_CTOR(c8
-        , shared_ptr<c7> c7_
+        , aux::shared_ptr<c7> c7_
         , c0 c0_
-        , shared_ptr<c1> c1_
+        , aux::shared_ptr<c1> c1_
         , int i
     )
         : c7_(c7_), c0_(c0_), c1_(c1_), i(i)
     { }
 
-    shared_ptr<c7> c7_;
+    aux::shared_ptr<c7> c7_;
     c0 c0_;
-    shared_ptr<c1> c1_;
+    aux::shared_ptr<c1> c1_;
     int i = 0;
 };
 
@@ -207,37 +207,37 @@ struct c10
 struct c11
 {
     BOOST_DI_CTOR(c11
-        , const named<shared_ptr<int>, mpl::string<'1'>>& i
+        , const named<aux::shared_ptr<int>, mpl::string<'1'>>& i
     )
         : i(i)
     { }
 
-    shared_ptr<int> i;
+    aux::shared_ptr<int> i;
 };
 
 struct c12
 {
     BOOST_DI_CTOR(c12
-        , const named<shared_ptr<if0>, mpl::string<'1'>>& if0_
-        , const named<shared_ptr<c2>, mpl::string<'2'>>& c2_
+        , const named<aux::shared_ptr<if0>, mpl::string<'1'>>& if0_
+        , const named<aux::shared_ptr<c2>, mpl::string<'2'>>& c2_
     )
         : if0_(if0_), c2_(c2_)
     { }
 
-    shared_ptr<if0> if0_;
-    shared_ptr<c2> c2_;
+    aux::shared_ptr<if0> if0_;
+    aux::shared_ptr<c2> c2_;
 };
 
 struct c13
 {
     BOOST_DI_CTOR(c13
-        , const named<shared_ptr<if0>>& if0_
+        , const named<aux::shared_ptr<if0>>& if0_
         , c3 c3_
     )
         : if0_(if0_), c3_(c3_)
     { }
 
-    shared_ptr<if0> if0_;
+    aux::shared_ptr<if0> if0_;
     c3 c3_;
 };
 
@@ -254,13 +254,13 @@ struct c14
 struct c15
 {
     BOOST_DI_CTOR(c15
-        , shared_ptr<c3> c3_
+        , aux::shared_ptr<c3> c3_
         , c6 c6_
     )
         : c3_(c3_), c6_(c6_)
     { }
 
-    shared_ptr<c3> c3_;
+    aux::shared_ptr<c3> c3_;
     c6 c6_;
 };
 
@@ -296,85 +296,85 @@ struct c18 : private noncopyable
 {
     BOOST_DI_CTOR(c18
         , c0 c0_ // unique
-        , shared_ptr<c1> c1_ // shared
+        , aux::shared_ptr<c1> c1_ // shared
         , c3& c3_ // external
     )
         : c0_(c0_), c1_(c1_), c3_(c3_)
     { }
 
     c0 c0_;
-    shared_ptr<c1> c1_;
+    aux::shared_ptr<c1> c1_;
     c3& c3_;
 };
 
 struct c19
 {
     BOOST_DI_CTOR(c19
-        , shared_ptr<c1> c1_
-        , shared_ptr<c1> c1__
+        , aux::shared_ptr<c1> c1_
+        , aux::shared_ptr<c1> c1__
     )
         : c1_(c1_), c1__(c1__)
     { }
 
-    shared_ptr<c1> c1_;
-    shared_ptr<c1> c1__;
+    aux::shared_ptr<c1> c1_;
+    aux::shared_ptr<c1> c1__;
 };
 
 struct c20
 {
     BOOST_DI_CTOR(c20
-        , shared_ptr<if0> if0_
-        , shared_ptr<if0> if0__
+        , aux::shared_ptr<if0> if0_
+        , aux::shared_ptr<if0> if0__
     )
         : if0_(if0_), if0__(if0__)
     { }
 
-    shared_ptr<if0> if0_;
-    shared_ptr<if0> if0__;
+    aux::shared_ptr<if0> if0_;
+    aux::shared_ptr<if0> if0__;
 };
 
 struct c21
 {
     BOOST_DI_CTOR(c21
-        , shared_ptr<if0> if0_
-        , unique_ptr<if0> if0__
+        , aux::shared_ptr<if0> if0_
+        , aux::unique_ptr<if0> if0__
     )
         : if0_(if0_), if0__(std::move(if0__))
     { }
 
-    shared_ptr<if0> if0_;
-    unique_ptr<if0> if0__;
+    aux::shared_ptr<if0> if0_;
+    aux::unique_ptr<if0> if0__;
 };
 
 struct c22
 {
     BOOST_DI_CTOR(c22
-        , const named<shared_ptr<int>, mpl::string<'1'>>& i
-        , shared_ptr<c11> c11_
+        , const named<aux::shared_ptr<int>, mpl::string<'1'>>& i
+        , aux::shared_ptr<c11> c11_
     )
         : i(i), c11_(c11_)
     { }
 
-    shared_ptr<int> i;
-    shared_ptr<c11> c11_;
+    aux::shared_ptr<int> i;
+    aux::shared_ptr<c11> c11_;
 };
 
 struct c23
 {
     BOOST_DI_CTOR(c23
-        , shared_ptr<if0> if0_
+        , aux::shared_ptr<if0> if0_
     )
         : if0_(if0_)
     { }
 
-    shared_ptr<if0> if0_;
+    aux::shared_ptr<if0> if0_;
 };
 
 struct c24
 {
     BOOST_DI_CTOR(c24
         , c2
-        , shared_ptr<int>
+        , aux::shared_ptr<int>
         , double*
         , const std::string&
         , std::vector<int*>
@@ -384,26 +384,26 @@ struct c24
 struct c25
 {
     BOOST_DI_CTOR(c25
-        , shared_ptr<int> s1_
-        , weak_ptr<int> w1_
+        , aux::shared_ptr<int> s1_
+        , aux::weak_ptr<int> w1_
     )
         : s1_(s1_), w1_(w1_)
     { }
 
-    shared_ptr<int> s1_;
-    weak_ptr<int> w1_;
+    aux::shared_ptr<int> s1_;
+    aux::weak_ptr<int> w1_;
 };
 
 struct c26
 {
     BOOST_DI_CTOR(c26
-        , std::vector<shared_ptr<if0>> v1_
+        , std::vector<aux::shared_ptr<if0>> v1_
         , std::vector<int> v2_
     )
         : v1_(v1_), v2_(v2_)
     { }
 
-    std::vector<shared_ptr<if0>> v1_;
+    std::vector<aux::shared_ptr<if0>> v1_;
     std::vector<int> v2_;
 };
 
@@ -465,21 +465,21 @@ struct ub1
 
 struct ub2
 {
-    BOOST_DI_CTOR(ub2, shared_ptr<ub1> ub1_)
+    BOOST_DI_CTOR(ub2, aux::shared_ptr<ub1> ub1_)
         : ub1_(ub1_)
     { }
 
-    shared_ptr<ub1> ub1_;
+    aux::shared_ptr<ub1> ub1_;
 };
 
 struct ub3
 {
-    BOOST_DI_CTOR(ub3, shared_ptr<ub1> ub1_, shared_ptr<ub2> ub2_)
+    BOOST_DI_CTOR(ub3, aux::shared_ptr<ub1> ub1_, aux::shared_ptr<ub2> ub2_)
         : ub1_(ub1_), ub2_(ub2_)
     { }
 
-    shared_ptr<ub1> ub1_;
-    shared_ptr<ub2> ub2_;
+    aux::shared_ptr<ub1> ub1_;
+    aux::shared_ptr<ub2> ub2_;
 };
 
 struct transaction
@@ -492,31 +492,31 @@ struct transaction
 };
 
 struct transaction_provider
-    : provider<shared_ptr<transaction>>
+    : provider<aux::shared_ptr<transaction>>
 {
     BOOST_DI_CTOR(transaction_provider
-        , shared_ptr<c3> c3_
+        , aux::shared_ptr<c3> c3_
     )
         : c3_(c3_)
     { }
 
-    virtual shared_ptr<transaction> get() const
+    virtual aux::shared_ptr<transaction> get() const
     {
-        return shared_ptr<transaction>(new transaction(c3_->i));
+        return aux::shared_ptr<transaction>(new transaction(c3_->i));
     }
 
-    shared_ptr<c3> c3_;
+    aux::shared_ptr<c3> c3_;
 };
 
 struct transaction_usage
 {
     BOOST_DI_CTOR(transaction_usage
-        , shared_ptr<provider<shared_ptr<transaction>>> p
+        , aux::shared_ptr<provider<aux::shared_ptr<transaction>>> p
     )
         : p(p)
     { }
 
-    shared_ptr<provider<shared_ptr<transaction>>> p;
+    aux::shared_ptr<provider<aux::shared_ptr<transaction>>> p;
 };
 
 template<>

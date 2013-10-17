@@ -24,9 +24,9 @@ BOOST_AUTO_TEST_CASE(create_the_same_threadunique) {
     thread<unique<>>::scope<int> thread;
 
     BOOST_CHECK((
-        (thread.create())(type<shared_ptr<int>>())
+        (thread.create())(type<aux::shared_ptr<int>>())
         !=
-        (thread.create())(type<shared_ptr<int>>())
+        (thread.create())(type<aux::shared_ptr<int>>())
     ));
 }
 
@@ -38,9 +38,9 @@ BOOST_AUTO_TEST_CASE(create_the_same_threadunique_args) {
     thread<unique<>>::scope<c2> thread;
 
     BOOST_CHECK((
-        (thread.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<shared_ptr<c2>>())
+        (thread.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
         !=
-        (thread.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<shared_ptr<c2>>())
+        (thread.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
     ));
 }
 
@@ -48,9 +48,9 @@ BOOST_AUTO_TEST_CASE(create_the_same_threadshared) {
     thread<shared<>>::scope<int> thread;
 
     BOOST_CHECK((
-        (thread.create())(type<shared_ptr<int>>())
+        (thread.create())(type<aux::shared_ptr<int>>())
         ==
-        (thread.create())(type<shared_ptr<int>>())
+        (thread.create())(type<aux::shared_ptr<int>>())
     ));
 }
 
@@ -62,48 +62,48 @@ BOOST_AUTO_TEST_CASE(create_the_same_threadshared_args) {
     thread<shared<>>::scope<c2> thread;
 
     BOOST_CHECK((
-        (thread.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<shared_ptr<c2>>())
+        (thread.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
         ==
-        (thread.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<shared_ptr<c2>>())
+        (thread.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
     ));
 }
 
 BOOST_AUTO_TEST_CASE(create_different_threadunique) {
-    di::thread t1([]{});
-    di::thread t2([]{});
-    std::vector<di::thread::id> ids = { t1.get_id(), t2.get_id() };
+    aux::thread t1([]{});
+    aux::thread t2([]{});
+    std::vector<aux::thread::id> ids = { t1.get_id(), t2.get_id() };
     auto index = 0;
     thread<unique<>>::scope<int> thread([&]{ return ids[index++]; });
 
     BOOST_CHECK((
-        (thread.create())(type<shared_ptr<int>>())
+        (thread.create())(type<aux::shared_ptr<int>>())
         !=
-        (thread.create())(type<shared_ptr<int>>())
+        (thread.create())(type<aux::shared_ptr<int>>())
     ));
     t1.join();
     t2.join();
 }
 
 BOOST_AUTO_TEST_CASE(create_different_threadshared) {
-    di::thread t1([]{});
-    di::thread t2([]{});
-    std::vector<di::thread::id> ids = { t1.get_id(), t2.get_id() };
+    aux::thread t1([]{});
+    aux::thread t2([]{});
+    std::vector<aux::thread::id> ids = { t1.get_id(), t2.get_id() };
     auto index = 0;
     thread<shared<>>::scope<int> thread([&]{ return ids[index++]; });
 
     BOOST_CHECK((
-        (thread.create())(type<shared_ptr<int>>())
+        (thread.create())(type<aux::shared_ptr<int>>())
         !=
-        (thread.create())(type<shared_ptr<int>>())
+        (thread.create())(type<aux::shared_ptr<int>>())
     ));
     t1.join();
     t2.join();
 }
 
 BOOST_AUTO_TEST_CASE(create_different_threadunique_args) {
-    di::thread t1([]{});
-    di::thread t2([]{});
-    std::vector<di::thread::id> ids = { t1.get_id(), t2.get_id() };
+    aux::thread t1([]{});
+    aux::thread t2([]{});
+    std::vector<aux::thread::id> ids = { t1.get_id(), t2.get_id() };
     auto index = 0;
 
     fake_convertible<int> i(0);
@@ -113,18 +113,18 @@ BOOST_AUTO_TEST_CASE(create_different_threadunique_args) {
     thread<unique<>>::scope<c2> thread([&]{ return ids[index++]; });
 
     BOOST_CHECK((
-        (thread.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<shared_ptr<c2>>())
+        (thread.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
         !=
-        (thread.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<shared_ptr<c2>>())
+        (thread.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
     ));
     t1.join();
     t2.join();
 }
 
 BOOST_AUTO_TEST_CASE(create_different_threadshared_args) {
-    di::thread t1([]{});
-    di::thread t2([]{});
-    std::vector<di::thread::id> ids = { t1.get_id(), t2.get_id() };
+    aux::thread t1([]{});
+    aux::thread t2([]{});
+    std::vector<aux::thread::id> ids = { t1.get_id(), t2.get_id() };
     auto index = 0;
 
     fake_convertible<int> i(0);
@@ -134,9 +134,9 @@ BOOST_AUTO_TEST_CASE(create_different_threadshared_args) {
     thread<unique<>>::scope<c2> thread([&]{ return ids[index++]; });
 
     BOOST_CHECK((
-        (thread.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<shared_ptr<c2>>())
+        (thread.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
         !=
-        (thread.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<shared_ptr<c2>>())
+        (thread.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
     ));
     t1.join();
     t2.join();

@@ -8,8 +8,8 @@
 
 #include <utility>
 #include <boost/type.hpp>
-#include <boost/shared_ptr.hpp>
 
+#include "boost/di/aux_/memory.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 
 namespace boost {
@@ -35,12 +35,12 @@ struct fake_scope : priority_impl<Priority>
     class convertible
     {
     public:
-        convertible(shared_ptr<T> obj) // non explicit
+        convertible(aux::shared_ptr<T> obj) // non explicit
             : obj_(obj)
         { }
 
         template<typename I>
-        shared_ptr<I> operator()(const type<shared_ptr<I>>&) const {
+        aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I>>&) const {
             return obj_;
         }
 
@@ -54,7 +54,7 @@ struct fake_scope : priority_impl<Priority>
         }
 
     private:
-        shared_ptr<T> obj_;
+        aux::shared_ptr<T> obj_;
     };
 
     template<typename T, typename>
@@ -74,10 +74,10 @@ struct fake_scope : priority_impl<Priority>
         result_type create(Args&&... args) {
             using ctor = typename type_traits::ctor_traits<T>::type;
             if (entry_calls() > exit_calls()) {
-                return shared_ptr<T>(new T(std::forward<Args>(args)...));
+                return aux::shared_ptr<T>(new T(std::forward<Args>(args)...));
             }
 
-            return result_type(shared_ptr<T>());
+            return result_type(aux::shared_ptr<T>());
         }
     };
 

@@ -17,23 +17,23 @@ namespace di {
 namespace convertibles {
 
 BOOST_AUTO_TEST_CASE(to_shared_ptr) {
-    shared_ptr<int> i(new int(42));
-    shared_ptr<int> object((shared<int>(i))(type<shared_ptr<int>>()));
+    aux::shared_ptr<int> i(new int(42));
+    aux::shared_ptr<int> object((shared<int>(i))(type<aux::shared_ptr<int>>()));
     BOOST_CHECK_EQUAL(i, object);
 }
 
 BOOST_AUTO_TEST_CASE(to_named_shared_ptr) {
-    shared_ptr<int> i(new int(42));
-    named<shared_ptr<int>> object((shared<int>(i))(type<const named<shared_ptr<int>>&>()));
-    BOOST_CHECK_EQUAL(i, static_cast<shared_ptr<int>>(object));
+    aux::shared_ptr<int> i(new int(42));
+    named<aux::shared_ptr<int>> object((shared<int>(i))(type<const named<aux::shared_ptr<int>>&>()));
+    BOOST_CHECK_EQUAL(i, static_cast<aux::shared_ptr<int>>(object));
 }
 
 BOOST_AUTO_TEST_CASE(to_weak_ptr) {
-    weak_ptr<int> object;
+    aux::weak_ptr<int> object;
 
     {
-    shared_ptr<int> i(new int(42));
-    object = (shared<int>(i))(type<weak_ptr<int>>());
+    aux::shared_ptr<int> i(new int(42));
+    object = (shared<int>(i))(type<aux::weak_ptr<int>>());
     auto object_ = object.lock();
     BOOST_CHECK_EQUAL(i, object_);
     }
@@ -42,16 +42,16 @@ BOOST_AUTO_TEST_CASE(to_weak_ptr) {
 }
 
 BOOST_AUTO_TEST_CASE(to_named_weak_ptr) {
-    named<weak_ptr<int>> object;
+    named<aux::weak_ptr<int>> object;
 
     {
-    shared_ptr<int> i(new int(42));
-    object = (shared<int>(i))(type<const named<weak_ptr<int>>&>());
-    auto object_ = static_cast<weak_ptr<int>>(object).lock();
+    aux::shared_ptr<int> i(new int(42));
+    object = (shared<int>(i))(type<const named<aux::weak_ptr<int>>&>());
+    auto object_ = static_cast<aux::weak_ptr<int>>(object).lock();
     BOOST_CHECK_EQUAL(i, object_);
     }
 
-    BOOST_CHECK(!static_cast<weak_ptr<int>>(object).lock());
+    BOOST_CHECK(!static_cast<aux::weak_ptr<int>>(object).lock());
 }
 
 } // namespace convertibles

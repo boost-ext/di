@@ -9,11 +9,11 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
 #include <memory>
-#include <boost/shared_ptr.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 
+#include "boost/di/aux_/memory.hpp"
 #include "boost/di/named.hpp"
 #include "fake_scope.hpp"
 #include "fake_dependency.hpp"
@@ -427,7 +427,7 @@ BOOST_AUTO_TEST_CASE(complex_type) {
         is_same<
             fake_dependency<fake_scope<>, int>::type
           , binder_impl<
-                shared_ptr<int>
+                aux::shared_ptr<int>
               , mpl::vector0<>
               , mpl::vector<
                     fake_dependency<fake_scope<>, int>
@@ -443,7 +443,7 @@ BOOST_AUTO_TEST_CASE(named_int_type) {
         is_same<
             fake_dependency<fake_scope<>, named<int, mpl::_1>, int>::type
           , binder_impl<
-                named<shared_ptr<int>, mpl::_1>
+                named<aux::shared_ptr<int>, mpl::_1>
               , mpl::vector0<>
               , mpl::vector0<>
               , fake_dependency<fake_scope<>, named<int, mpl::_1>, int>

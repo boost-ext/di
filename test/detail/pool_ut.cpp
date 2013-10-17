@@ -6,6 +6,7 @@
 //
 #include "boost/di/detail/pool.hpp"
 
+#include "boost/di/aux_/memory.hpp"
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
@@ -21,7 +22,7 @@ struct allocator
         : object(object)
     { }
 
-    shared_ptr<T> object;
+    aux::shared_ptr<T> object;
 };
 
 struct trivial_ctor

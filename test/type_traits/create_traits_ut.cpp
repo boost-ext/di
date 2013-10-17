@@ -46,36 +46,36 @@ struct factory_ext
 };
 
 BOOST_AUTO_TEST_CASE(create_empty) {
-    unique_ptr<empty> empty_(create_traits<empty, empty>());
+    aux::unique_ptr<empty> empty_(create_traits<empty, empty>());
     BOOST_CHECK(empty_.get());
 }
 
 BOOST_AUTO_TEST_CASE(create_ctor) {
     fake_convertible<int> i(42);
     fake_convertible<double> d(42.0);
-    unique_ptr<ctor> ctor_(create_traits<ctor, ctor, decltype(i), decltype(d)>(i, d));
+    aux::unique_ptr<ctor> ctor_(create_traits<ctor, ctor, decltype(i), decltype(d)>(i, d));
     BOOST_CHECK(ctor_.get());
 }
 
 BOOST_AUTO_TEST_CASE(create_int_value) {
-    unique_ptr<int> i(create_traits<int, mpl::int_<42>>());
+    aux::unique_ptr<int> i(create_traits<int, mpl::int_<42>>());
     BOOST_CHECK_EQUAL(42, *i);
 }
 
 BOOST_AUTO_TEST_CASE(create_string_value) {
-    unique_ptr<std::string> s(create_traits<std::string, mpl::string<'s'>>());
+    aux::unique_ptr<std::string> s(create_traits<std::string, mpl::string<'s'>>());
     BOOST_CHECK_EQUAL("s", *s);
 }
 
 BOOST_AUTO_TEST_CASE(create_factory) {
-    unique_ptr<int> factory_(create_traits<int, factory>());
+    aux::unique_ptr<int> factory_(create_traits<int, factory>());
     BOOST_CHECK(!factory_.get());
 }
 
 BOOST_AUTO_TEST_CASE(create_factory_ext) {
     const int expected = 42;
     fake_convertible<int> i(expected);
-    unique_ptr<int> factory_ext_(create_traits<int, factory_ext, decltype(i)>(i));
+    aux::unique_ptr<int> factory_ext_(create_traits<int, factory_ext, decltype(i)>(i));
     BOOST_CHECK(factory_ext_.get());
     BOOST_CHECK_EQUAL(expected, *factory_ext_);
 }

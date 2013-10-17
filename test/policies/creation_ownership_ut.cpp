@@ -6,8 +6,8 @@
 //
 #include "boost/di/policies/creation_ownership.hpp"
 
+#include "boost/di/aux_/memory.hpp"
 #include <boost/test/unit_test.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/is_base_of.hpp>
@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_CASE(clear) {
             mpl::true_
           , creation_ownership::verify<
                 mpl::vector0<>
-              , shared_ptr<int>
+              , aux::shared_ptr<int>
               , mpl::false_
             >::type
         >::value

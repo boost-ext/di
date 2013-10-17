@@ -7,8 +7,8 @@
 #include "boost/di/make_injector.hpp"
 
 #include <boost/test/unit_test.hpp>
-#include <boost/shared_ptr.hpp>
 
+#include "boost/di/aux_/memory.hpp"
 #include "boost/di/concepts.hpp"
 #include "boost/di/policies/binding_correctness.hpp"
 #include "boost/di/policies/circular_dependencies.hpp"
@@ -24,7 +24,7 @@ BOOST_AUTO_TEST_CASE(ctor) {
         c0if0
     >;
 
-    shared_ptr<c5> c5_ = injector_c0().create<shared_ptr<c5>>();
+    aux::shared_ptr<c5> c5_ = injector_c0().create<aux::shared_ptr<c5>>();
     BOOST_CHECK_EQUAL(0, c5_->c2_->i);
 }
 
@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE(by_value) {
       , bind<int>::to(i)
     );
 
-    shared_ptr<c5> c5_ = injector_c0_int_.create<shared_ptr<c5>>();
+    aux::shared_ptr<c5> c5_ = injector_c0_int_.create<aux::shared_ptr<c5>>();
     BOOST_CHECK_EQUAL(i, c5_->c2_->i);
 }
 
@@ -129,7 +129,7 @@ BOOST_AUTO_TEST_CASE(mix) {
       , bind<double>::to(d)
     );
 
-    auto c5_ = injector_.create<shared_ptr<c5>>();
+    auto c5_ = injector_.create<aux::shared_ptr<c5>>();
 
     using injector_t = decltype(injector_);
     BOOST_CHECK((
