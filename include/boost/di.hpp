@@ -17,7 +17,7 @@
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/scopes/unique.hpp"
-#include "boost/di/scopes/per_thread.hpp"
+#include "boost/di/scopes/thread.hpp"
 #include "boost/di/scopes/session.hpp"
 #include "boost/di/scopes/singleton.hpp"
 

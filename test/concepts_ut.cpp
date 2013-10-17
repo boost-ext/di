@@ -175,7 +175,7 @@ BOOST_AUTO_TEST_CASE(bind_string_value_in_call) {
 using scope_empty_types = mpl::vector<
     deduce<>
   , unique<>
-  , per_thread<>
+  , thread<>
   , shared<>
   , singleton<>
   , session<>
@@ -193,7 +193,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(scope_empty, TScope, scope_empty_types) {
 using scope_one_types = mpl::vector<
     mpl::pair< scopes::deduce,                      deduce<int>        >
   , mpl::pair< scopes::unique<>,               unique<int>   >
-  , mpl::pair< scopes::per_thread<scopes::deduce>,  per_thread<int>    >
+  , mpl::pair< scopes::thread<scopes::deduce>,  thread<int>    >
   , mpl::pair< scopes::shared<>,                    shared<int>        >
   , mpl::pair< scopes::singleton<>,                 singleton<int>     >
   , mpl::pair< scopes::session<>,                   session<int>       >
@@ -213,7 +213,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(scope_one, T, scope_one_types) {
 using scope_many_types = mpl::vector<
     mpl::pair< scopes::deduce,                      deduce<int, double, float>        >
   , mpl::pair< scopes::unique<>,               unique<int, double, float>   >
-  , mpl::pair< scopes::per_thread<scopes::deduce>,  per_thread<int, double, float>    >
+  , mpl::pair< scopes::thread<scopes::deduce>,  thread<int, double, float>    >
   , mpl::pair< scopes::shared<>,                    shared<int, double, float>        >
   , mpl::pair< scopes::singleton<>,                 singleton<int, double, float>     >
   , mpl::pair< scopes::session<>,                   session<int, double, float>       >
@@ -245,10 +245,10 @@ BOOST_AUTO_TEST_CASE(scope_with_call_stack) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(per_thread_mix) {
+BOOST_AUTO_TEST_CASE(thread_mix) {
     BOOST_CHECK((
         contains_all<
-            per_thread<
+            thread<
                 int
               , bind<if0, c0if0>
               , unique<double>
@@ -257,13 +257,13 @@ BOOST_AUTO_TEST_CASE(per_thread_mix) {
               , deduce<c2>::in_call<double>
             >::type
           , mpl::vector<
-                fake_dependency_base_of<scopes::per_thread<scopes::deduce>, int>::type
-              , fake_dependency_base_of<scopes::per_thread<scopes::deduce>, if0, c0if0>::type
-              , fake_dependency_base_of<scopes::per_thread<scopes::unique<>>, double>::type
-              , fake_dependency_base_of<scopes::per_thread<scopes::shared<>>, float>::type
-              , fake_dependency_base_of<scopes::per_thread<scopes::shared<>>, char>::type
-              , fake_dependency_base_of<scopes::per_thread<scopes::unique<>>, c1, c1, float>::type
-              , fake_dependency_base_of<scopes::per_thread<scopes::deduce>, c2, c2, void, double>::type
+                fake_dependency_base_of<scopes::thread<scopes::deduce>, int>::type
+              , fake_dependency_base_of<scopes::thread<scopes::deduce>, if0, c0if0>::type
+              , fake_dependency_base_of<scopes::thread<scopes::unique<>>, double>::type
+              , fake_dependency_base_of<scopes::thread<scopes::shared<>>, float>::type
+              , fake_dependency_base_of<scopes::thread<scopes::shared<>>, char>::type
+              , fake_dependency_base_of<scopes::thread<scopes::unique<>>, c1, c1, float>::type
+              , fake_dependency_base_of<scopes::thread<scopes::deduce>, c2, c2, void, double>::type
             >
         >::value
     ));

@@ -14,7 +14,7 @@
 #include "boost/di/concepts/scope.hpp"
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/unique.hpp"
-#include "boost/di/scopes/per_thread.hpp"
+#include "boost/di/scopes/thread.hpp"
 #include "boost/di/scopes/shared.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/session.hpp"
@@ -60,8 +60,8 @@ struct unique
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-struct per_thread
-    : scope<scopes::per_thread<scopes::deduce> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
+struct thread
+    : scope<scopes::thread<scopes::deduce> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>

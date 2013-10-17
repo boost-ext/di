@@ -395,12 +395,12 @@ BOOST_AUTO_TEST_CASE(session_scope) {
     }
 }
 
-BOOST_AUTO_TEST_CASE(per_thread_scope_singleton) {
+BOOST_AUTO_TEST_CASE(thread_scope_singleton) {
     std::vector<shared_ptr<c20>> v;
     mutex m;
 
     injector<
-        per_thread<
+        thread<
             shared<c0if0>
         >
     > injector_;
