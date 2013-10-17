@@ -18,7 +18,6 @@
 #include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/preprocessor/arithmetic/sub.hpp>
 #include <boost/mpl/aux_/na.hpp>
-#include <boost/mpl/if.hpp>
 
 #define BOOST_DI_LIMITS_BEGIN(begin)                \
     (begin, BOOST_MPL_LIMIT_VECTOR_SIZE)
@@ -49,21 +48,6 @@
      BOOST_PP_ENUM_PARAMS(                          \
          BOOST_MPL_LIMIT_VECTOR_SIZE                \
        , T                                          \
-     )
-
-#define BOOST_DI_ADD_TYPE(z, n, t)                  \
-    BOOST_PP_COMMA_IF(n)                            \
-    typename ::boost::mpl::if_<                     \
-        ::boost::mpl::is_na<T##n>                   \
-      , ::boost::mpl::na                            \
-      , t<T##n>                                     \
-    >::type
-
-#define BOOST_DI_TYPES_PASS_MPL_WITH_TYPE(T, type)  \
-     BOOST_PP_REPEAT(                               \
-         BOOST_MPL_LIMIT_VECTOR_SIZE                \
-       , BOOST_DI_ADD_TYPE                          \
-       , type                                       \
      )
 
 #define BOOST_DI_TYPES(T)                           \

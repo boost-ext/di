@@ -49,10 +49,12 @@
             }
 
             result_type create() {
-                //scoped_lock lock(mutex_);
-                //(void)lock;
                 if (in_scope_ && !object()) {
-                    object().reset(type_traits::create_traits<TExpected, TGiven>());
+                    //scoped_lock lock(mutex_);
+                    //(void)lock;
+                    if (in_scope_ && !object()) {
+                        object().reset(type_traits::create_traits<TExpected, TGiven>());
+                    }
                 }
                 return object();
             }
@@ -82,12 +84,14 @@
 
     template<BOOST_DI_TYPES(Args)>
     result_type create(BOOST_DI_ARGS(Args, args)) {
-        //scoped_lock lock(mutex_);
-        //(void)lock;
         if (in_scope_ && !object()) {
-            object().reset(
-                type_traits::create_traits<TExpected, TGiven>(BOOST_DI_ARGS_PASS(args))
-            );
+            //scoped_lock lock(mutex_);
+            //(void)lock;
+            if (in_scope_ && !object()) {
+                object().reset(
+                    type_traits::create_traits<TExpected, TGiven>(BOOST_DI_ARGS_PASS(args))
+                );
+            }
         }
         return object();
     }

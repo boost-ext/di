@@ -18,7 +18,6 @@
 #include "boost/di/scopes/scoped.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/session.hpp"
-#include "boost/di/ctor_proxy.hpp"
 
 #include <memory>
 #include <string>
@@ -90,39 +89,8 @@ struct bind_string
     : bind<std::string, T>
 { };
 
-#define BOOST_DI_CTOR_PROXY_VECTOR_PUSH_BACK(_, n, args) \
-    this->push_back(args##n);
-
-BOOST_DI_CTOR_PROXY(
-    make_vector
-  , std::vector<T>
-  , BOOST_DI_CTOR_PROXY_VECTOR_PUSH_BACK
-)
-
-#undef BOOST_DI_CTOR_PROXY_VECTOR_PUSH_BACK
-
 template<typename T, BOOST_DI_TYPES_DEFAULT_MPL(T)>
 struct bind_vector
-    : scope<scopes::deduce>::bind<
-         bind<
-            std::vector<T>
-          , make_vector<T, mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
-         >
-       , bind<
-            std::vector<shared_ptr<T> >
-          , make_vector<
-                shared_ptr<T>
-              , mpl::vector<BOOST_DI_TYPES_PASS_MPL_WITH_TYPE(T, shared_ptr)>
-            >
-         >
-       , bind<
-            std::vector<unique_ptr<T> >
-          , make_vector<
-                unique_ptr<T>
-              , mpl::vector<BOOST_DI_TYPES_PASS_MPL_WITH_TYPE(T, unique_ptr)>
-            >
-         >
-      >
 { };
 
 } // namespace di
