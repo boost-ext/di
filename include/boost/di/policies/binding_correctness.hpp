@@ -64,22 +64,22 @@ namespace policies {
 class binding_correctness
 {
     template<typename>
-    struct is_shared
+    struct is_scope
         : mpl::false_
     { };
 
     template<template<typename> class TConvertible>
-    struct is_shared<scopes::shared<TConvertible> >
+    struct is_scope<scopes::shared<TConvertible> >
         : mpl::true_
     { };
 
     template<template<typename> class TConvertible>
-    struct is_shared<scopes::singleton<TConvertible> >
+    struct is_scope<scopes::singleton<TConvertible> >
         : mpl::true_
     { };
 
     template<template<typename> class TConvertible>
-    struct is_shared<scopes::session<TConvertible> >
+    struct is_scope<scopes::session<TConvertible> >
         : mpl::true_
     { };
 
@@ -162,7 +162,7 @@ class binding_correctness
               TDeps
             , mpl::vector0<>
             , mpl::if_<
-                  is_shared<scope<mpl::_2> >
+                  is_scope<scope<mpl::_2> >
                 , mpl::push_back<mpl::_1, expected<mpl::_2> >
                 , mpl::_1
               >

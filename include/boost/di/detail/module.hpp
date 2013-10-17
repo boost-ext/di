@@ -139,11 +139,11 @@
                 mpl::vector1<typename type_traits::make_plain<T>::type>
         >
         struct deps_impl
-            : unique<
-                  typename mpl::fold<
-                      ctor<typename binder<T, TCallStack, TBind>::given>
-                    , mpl::vector0<>
-                    , mpl::copy<
+            : mpl::fold<
+                  ctor<typename binder<T, TCallStack, TBind>::given>
+                , mpl::vector0<>
+                , unique<
+                      mpl::copy<
                           mpl::joint_view<
                               mpl::vector1<binder<mpl::_2, TCallStack, TBind> >
                             , deps_impl<
@@ -157,7 +157,7 @@
                           >
                         , mpl::back_inserter<mpl::_1>
                       >
-                  >::type
+                  >
               >::type
         { };
 
