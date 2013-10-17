@@ -20,7 +20,7 @@
 #include <boost/mpl/lambda.hpp>
 #include <boost/mpl/has_xxx.hpp>
 
-#include <boost/di/scopes/per_request.hpp>
+#include <boost/di/scopes/unique.hpp>
 
 namespace boost {
 namespace di {

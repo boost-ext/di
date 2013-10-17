@@ -20,18 +20,18 @@ namespace type_traits {
 struct c { };
 
 BOOST_AUTO_TEST_CASE(basic) {
-    BOOST_CHECK((is_same<scopes::per_request<>, scope_traits<int>::type>::value));
-    BOOST_CHECK((is_same<scopes::per_request<>, scope_traits<named<int>>::type>::value));
-    BOOST_CHECK((is_same<scopes::per_request<>, scope_traits<c>::type>::value));
-    BOOST_CHECK((is_same<scopes::per_request<>, scope_traits<named<c>>::type>::value));
-    BOOST_CHECK((is_same<scopes::per_request<>, scope_traits<const int&>::type>::value));
-    BOOST_CHECK((is_same<scopes::per_request<>, scope_traits<named<const int&>>::type>::value));
-    BOOST_CHECK((is_same<scopes::per_request<>, scope_traits<int*>::type>::value));
-    BOOST_CHECK((is_same<scopes::per_request<>, scope_traits<named<int*>>::type>::value));
-    BOOST_CHECK((is_same<scopes::per_request<>, scope_traits<const int*>::type>::value));
-    BOOST_CHECK((is_same<scopes::per_request<>, scope_traits<named<const int*>>::type>::value));
-    BOOST_CHECK((is_same<scopes::per_request<>, scope_traits<auto_ptr<int>>::type>::value));
-    BOOST_CHECK((is_same<scopes::per_request<>, scope_traits<named<auto_ptr<int>>>::type>::value));
+    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<int>::type>::value));
+    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<named<int>>::type>::value));
+    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<c>::type>::value));
+    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<named<c>>::type>::value));
+    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<const int&>::type>::value));
+    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<named<const int&>>::type>::value));
+    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<int*>::type>::value));
+    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<named<int*>>::type>::value));
+    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<const int*>::type>::value));
+    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<named<const int*>>::type>::value));
+    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<auto_ptr<int>>::type>::value));
+    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<named<auto_ptr<int>>>::type>::value));
     BOOST_CHECK((is_same<scopes::scoped<>, scope_traits<shared_ptr<int>>::type>::value));
     BOOST_CHECK((is_same<scopes::scoped<>, scope_traits<named<shared_ptr<int>>>::type>::value));
     BOOST_CHECK((is_same<scopes::scoped<>, scope_traits<weak_ptr<int>>::type>::value));
@@ -40,8 +40,8 @@ BOOST_AUTO_TEST_CASE(basic) {
     BOOST_CHECK((is_same<scopes::external<>, scope_traits<named<int&>>::type>::value));
 
 #if !defined(BOOST_NO_CXX11_SMART_PTR)
-    BOOST_CHECK((is_same<scopes::per_request<>, scope_traits<unique_ptr<int>>::type>::value));
-    BOOST_CHECK((is_same<scopes::per_request<>, scope_traits<named<unique_ptr<int>>>::type>::value));
+    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<unique_ptr<int>>::type>::value));
+    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<named<unique_ptr<int>>>::type>::value));
     BOOST_CHECK((is_same<scopes::scoped<>, scope_traits<shared_ptr<int>>::type>::value));
     BOOST_CHECK((is_same<scopes::scoped<>, scope_traits<named<shared_ptr<int>>>::type>::value));
     BOOST_CHECK((is_same<scopes::scoped<>, scope_traits<weak_ptr<int>>::type>::value));
@@ -49,10 +49,10 @@ BOOST_AUTO_TEST_CASE(basic) {
 #endif
 
 #if !defined(BOOST_NO_RVALUE_REFERENCES)
-    BOOST_CHECK((is_same<scopes::per_request<>, scope_traits<int&&>::type>::value));
-    BOOST_CHECK((is_same<scopes::per_request<>, scope_traits<named<int&&>>::type>::value));
-    BOOST_CHECK((is_same<scopes::per_request<>, scope_traits<const int&&>::type>::value));
-    BOOST_CHECK((is_same<scopes::per_request<>, scope_traits<named<const int&&>>::type>::value));
+    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<int&&>::type>::value));
+    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<named<int&&>>::type>::value));
+    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<const int&&>::type>::value));
+    BOOST_CHECK((is_same<scopes::unique<>, scope_traits<named<const int&&>>::type>::value));
 #endif
 }
 

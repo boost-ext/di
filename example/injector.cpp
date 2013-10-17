@@ -67,13 +67,13 @@ int main() {
         di::singleton<
             c1
         >()
-      , di::per_request<
+      , di::unique<
             c0
         >()
-      , di::scope<di::scopes::per_request<>>::bind<
+      , di::scope<di::scopes::unique<>>::bind<
             di::bind_int<42>
         >()
-      , di::per_request<
+      , di::unique<
             di::bind_int<87>::in_name<name>
           , di::bind<c01>::in_call<di::call_stack<c2, c1>>
         >()

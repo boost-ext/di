@@ -14,7 +14,7 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
 #include "boost/di/scopes/deduce.hpp"
-#include "boost/di/scopes/per_request.hpp"
+#include "boost/di/scopes/unique.hpp"
 #include "boost/di/scopes/scoped.hpp"
 #include "boost/di/concepts.hpp"
 
@@ -37,7 +37,7 @@ double double_value::value = 0;
 BOOST_AUTO_TEST_CASE(create) {
     struct injector_type
         : injector<
-              per_request<
+              unique<
                   c0if0
               >
           >
@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE(create) {
 BOOST_AUTO_TEST_CASE(visit) {
     struct injector_type
         : injector<
-              per_request<
+              unique<
                   transaction_provider
                 , mpl::int_<0>
               >
@@ -274,7 +274,7 @@ BOOST_AUTO_TEST_CASE(many_scopes) {
               scoped<
                   c1, c2
               >
-            , per_request<
+            , unique<
                   c3, c4
               >
           >
@@ -285,8 +285,8 @@ BOOST_AUTO_TEST_CASE(many_scopes) {
             mpl::vector<
                 fake_dependency_base_of<scopes::scoped<>, c1, c1>::type
               , fake_dependency_base_of<scopes::scoped<>, c2, c2>::type
-              , fake_dependency_base_of<scopes::per_request<>, c3, c3>::type
-              , fake_dependency_base_of<scopes::per_request<>, c4, c4>::type
+              , fake_dependency_base_of<scopes::unique<>, c3, c3>::type
+              , fake_dependency_base_of<scopes::unique<>, c4, c4>::type
             >,
             injector_type::deps
         >::value
@@ -296,14 +296,14 @@ BOOST_AUTO_TEST_CASE(many_scopes) {
 BOOST_AUTO_TEST_CASE(in_call) {
     struct injector_type
         : injector<
-              per_request<c1>::in_call<c2>
+              unique<c1>::in_call<c2>
           >
     { };
 
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                fake_dependency_base_of<scopes::per_request<>, c1, c1, void, c2>::type
+                fake_dependency_base_of<scopes::unique<>, c1, c1, void, c2>::type
             >
           , injector_type::deps
         >::value
@@ -397,7 +397,7 @@ BOOST_AUTO_TEST_CASE(mix) {
                 , bind<c2>::in_name<int>
                 , bind<c3>::in_call<call_stack<c4, c5>>
               >
-            , per_request<
+            , unique<
                 c6
               >
             , scoped<c7>::in_name<double>::in_call<c1>
@@ -411,7 +411,7 @@ BOOST_AUTO_TEST_CASE(mix) {
               , fake_dependency_base_of<scopes::scoped<>, c1, c1>::type
               , fake_dependency_base_of<scopes::scoped<>, c2, c2, int>::type
               , fake_dependency_base_of<scopes::scoped<>, c3, c3, void, call_stack<c4, c5>>::type
-              , fake_dependency_base_of<scopes::per_request<>, c6, c6>::type
+              , fake_dependency_base_of<scopes::unique<>, c6, c6>::type
               , fake_dependency_base_of<scopes::scoped<>, c7, c7, double, c1>::type
             >
           , injector_type::deps
@@ -422,7 +422,7 @@ BOOST_AUTO_TEST_CASE(mix) {
 BOOST_AUTO_TEST_CASE(named_in_call) {
     struct injector_type
         : injector<
-              per_request<
+              unique<
                   bind<int, mpl::int_<1>>
                 , bind<int, mpl::int_<4>>::in_name<mpl::string<'2'>>::in_call<call_stack<c7, c6, c4>>
                 , bind<int, mpl::int_<5>>::in_call<c2>
@@ -433,9 +433,9 @@ BOOST_AUTO_TEST_CASE(named_in_call) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                fake_dependency_base_of<scopes::per_request<>, int, mpl::int_<1>>::type
-              , fake_dependency_base_of<scopes::per_request<>, int, mpl::int_<4>, mpl::string<'2'>, call_stack<c7, c6, c4>>::type
-              , fake_dependency_base_of<scopes::per_request<>, int, mpl::int_<5>, void, c2>::type
+                fake_dependency_base_of<scopes::unique<>, int, mpl::int_<1>>::type
+              , fake_dependency_base_of<scopes::unique<>, int, mpl::int_<4>, mpl::string<'2'>, call_stack<c7, c6, c4>>::type
+              , fake_dependency_base_of<scopes::unique<>, int, mpl::int_<5>, void, c2>::type
             >
           , injector_type::deps
         >::value
@@ -465,7 +465,7 @@ BOOST_AUTO_TEST_CASE(multiple_calls) {
 
 BOOST_AUTO_TEST_CASE(create_injector) {
     auto injector_ = injector<>()(
-        per_request<
+        unique<
             c0if0
         >()
     );
@@ -490,7 +490,7 @@ BOOST_AUTO_TEST_CASE(create_injector) {
 
 BOOST_AUTO_TEST_CASE(visit_injector) {
     auto injector_ = injector<>()(
-        per_request<
+        unique<
             transaction_provider, mpl::int_<0>
         >()
     );
@@ -658,7 +658,7 @@ BOOST_AUTO_TEST_CASE(many_scopes_injector) {
         scoped<
           c1, c2
         >()
-      , per_request<
+      , unique<
           c3, c4
         >()
     );
@@ -670,8 +670,8 @@ BOOST_AUTO_TEST_CASE(many_scopes_injector) {
             mpl::vector<
                 fake_dependency_base_of<scopes::scoped<>, c1, c1>::type
               , fake_dependency_base_of<scopes::scoped<>, c2, c2>::type
-              , fake_dependency_base_of<scopes::per_request<>, c3, c3>::type
-              , fake_dependency_base_of<scopes::per_request<>, c4, c4>::type
+              , fake_dependency_base_of<scopes::unique<>, c3, c3>::type
+              , fake_dependency_base_of<scopes::unique<>, c4, c4>::type
             >,
             injector_t::deps
         >::value
@@ -680,7 +680,7 @@ BOOST_AUTO_TEST_CASE(many_scopes_injector) {
 
 BOOST_AUTO_TEST_CASE(in_call_injector) {
     auto injector_ = injector<>()(
-        per_request<c1>::in_call<c2>()
+        unique<c1>::in_call<c2>()
     );
 
     typedef decltype(injector_) injector_t;
@@ -688,7 +688,7 @@ BOOST_AUTO_TEST_CASE(in_call_injector) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                fake_dependency_base_of<scopes::per_request<>, c1, c1, void, c2>::type
+                fake_dependency_base_of<scopes::unique<>, c1, c1, void, c2>::type
             >
           , injector_t::deps
         >::value
@@ -781,7 +781,7 @@ BOOST_AUTO_TEST_CASE(mix_injector) {
           , bind<c2>::in_name<int>
           , bind<c3>::in_call<call_stack<c4, c5>>
         >()
-      , per_request<
+      , unique<
             c6
         >()
       , scoped<c7>::in_name<double>::in_call<c1>()
@@ -796,7 +796,7 @@ BOOST_AUTO_TEST_CASE(mix_injector) {
               , fake_dependency_base_of<scopes::scoped<>, c1, c1>::type
               , fake_dependency_base_of<scopes::scoped<>, c2, c2, int>::type
               , fake_dependency_base_of<scopes::scoped<>, c3, c3, void, call_stack<c4, c5>>::type
-              , fake_dependency_base_of<scopes::per_request<>, c6, c6>::type
+              , fake_dependency_base_of<scopes::unique<>, c6, c6>::type
               , fake_dependency_base_of<scopes::scoped<>, c7, c7, double, c1>::type
             >
           , injector_t::deps
@@ -806,7 +806,7 @@ BOOST_AUTO_TEST_CASE(mix_injector) {
 
 BOOST_AUTO_TEST_CASE(named_in_call_injector) {
     auto injector_ = injector<>()(
-        per_request<
+        unique<
             bind<int, mpl::int_<1>>
           , bind<int, mpl::int_<4>>::in_name<mpl::string<'2'>>::in_call<call_stack<c7, c6, c4>>
           , bind<int, mpl::int_<5>>::in_call<c2>
@@ -818,9 +818,9 @@ BOOST_AUTO_TEST_CASE(named_in_call_injector) {
     BOOST_CHECK((
         contains_all<
             mpl::vector<
-                fake_dependency_base_of<scopes::per_request<>, int, mpl::int_<1>>::type
-              , fake_dependency_base_of<scopes::per_request<>, int, mpl::int_<4>, mpl::string<'2'>, call_stack<c7, c6, c4>>::type
-              , fake_dependency_base_of<scopes::per_request<>, int, mpl::int_<5>, void, c2>::type
+                fake_dependency_base_of<scopes::unique<>, int, mpl::int_<1>>::type
+              , fake_dependency_base_of<scopes::unique<>, int, mpl::int_<4>, mpl::string<'2'>, call_stack<c7, c6, c4>>::type
+              , fake_dependency_base_of<scopes::unique<>, int, mpl::int_<5>, void, c2>::type
             >
           , injector_t::deps
         >::value
@@ -944,7 +944,7 @@ BOOST_AUTO_TEST_CASE(to_in_call_stack) {
     const int i = 42;
 
     auto injector_ = injector<>()(
-        per_request<
+        unique<
             c3
         >()
       , bind<int>::in_call<call_stack<c4, c3>>::to(i)

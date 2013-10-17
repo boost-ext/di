@@ -26,13 +26,13 @@
     class callback;
 
     #define BOOST_DI_CALLBACK
-    #define BOOST_PP_FILENAME_1 "boost/di/scopes/per_request.hpp"
+    #define BOOST_PP_FILENAME_1 "boost/di/scopes/unique.hpp"
     #define BOOST_PP_ITERATION_LIMITS BOOST_DI_LIMITS_BEGIN(0)
     #include BOOST_PP_ITERATE()
     #undef BOOST_DI_CALLBACK
 
     template<template<typename> class TConvertible = convertibles::copy>
-    class per_request
+    class unique
     {
     public:
         template<typename TExpected, typename TGiven = TExpected>
@@ -47,7 +47,7 @@
                 );
             }
 
-            #define BOOST_PP_FILENAME_1 "boost/di/scopes/per_request.hpp"
+            #define BOOST_PP_FILENAME_1 "boost/di/scopes/unique.hpp"
             #define BOOST_PP_ITERATION_LIMITS BOOST_DI_LIMITS_BEGIN(1)
             #include BOOST_PP_ITERATE()
         };

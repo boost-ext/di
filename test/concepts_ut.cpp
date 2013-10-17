@@ -174,7 +174,7 @@ BOOST_AUTO_TEST_CASE(bind_string_value_in_call) {
 
 using scope_empty_types = mpl::vector<
     deduce<>
-  , per_request<>
+  , unique<>
   , per_thread<>
   , scoped<>
   , singleton<>
@@ -192,7 +192,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(scope_empty, TScope, scope_empty_types) {
 
 using scope_one_types = mpl::vector<
     mpl::pair< scopes::deduce,                      deduce<int>        >
-  , mpl::pair< scopes::per_request<>,               per_request<int>   >
+  , mpl::pair< scopes::unique<>,               unique<int>   >
   , mpl::pair< scopes::per_thread<scopes::deduce>,  per_thread<int>    >
   , mpl::pair< scopes::scoped<>,                    scoped<int>        >
   , mpl::pair< scopes::singleton<>,                 singleton<int>     >
@@ -212,7 +212,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(scope_one, T, scope_one_types) {
 
 using scope_many_types = mpl::vector<
     mpl::pair< scopes::deduce,                      deduce<int, double, float>        >
-  , mpl::pair< scopes::per_request<>,               per_request<int, double, float>   >
+  , mpl::pair< scopes::unique<>,               unique<int, double, float>   >
   , mpl::pair< scopes::per_thread<scopes::deduce>,  per_thread<int, double, float>    >
   , mpl::pair< scopes::scoped<>,                    scoped<int, double, float>        >
   , mpl::pair< scopes::singleton<>,                 singleton<int, double, float>     >
@@ -251,18 +251,18 @@ BOOST_AUTO_TEST_CASE(per_thread_mix) {
             per_thread<
                 int
               , bind<if0, c0if0>
-              , per_request<double>
+              , unique<double>
               , scoped<float, char>
-              , per_request<bind<c1>::in_name<float> >
+              , unique<bind<c1>::in_name<float> >
               , deduce<c2>::in_call<double>
             >::type
           , mpl::vector<
                 fake_dependency_base_of<scopes::per_thread<scopes::deduce>, int>::type
               , fake_dependency_base_of<scopes::per_thread<scopes::deduce>, if0, c0if0>::type
-              , fake_dependency_base_of<scopes::per_thread<scopes::per_request<>>, double>::type
+              , fake_dependency_base_of<scopes::per_thread<scopes::unique<>>, double>::type
               , fake_dependency_base_of<scopes::per_thread<scopes::scoped<>>, float>::type
               , fake_dependency_base_of<scopes::per_thread<scopes::scoped<>>, char>::type
-              , fake_dependency_base_of<scopes::per_thread<scopes::per_request<>>, c1, c1, float>::type
+              , fake_dependency_base_of<scopes::per_thread<scopes::unique<>>, c1, c1, float>::type
               , fake_dependency_base_of<scopes::per_thread<scopes::deduce>, c2, c2, void, double>::type
             >
         >::value

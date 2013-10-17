@@ -96,7 +96,7 @@ int main() {
       , di::singleton<
             c3, c4
         >
-      , di::per_request<
+      , di::unique<
             impl
           , di::bind<i, impl1>
           , di::bind<i, impl2>::in_name<name2>
@@ -110,7 +110,7 @@ int main() {
 
     auto injector = di::make_injector(
         injector_t()
-      , di::per_request<c5>()
+      , di::unique<c5>()
       , di::bind<int>::to(42)
       , di::bind<double>::to(42.0)
       , di::bind<double>::in_call<c1, c2>::to(87.0)

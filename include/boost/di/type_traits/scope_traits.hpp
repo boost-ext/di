@@ -10,7 +10,7 @@
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/type_traits/make_plain.hpp" // has_named_type
 #include "boost/di/type_traits/remove_accessors.hpp"
-#include "boost/di/scopes/per_request.hpp"
+#include "boost/di/scopes/unique.hpp"
 #include "boost/di/scopes/scoped.hpp"
 #include "boost/di/scopes/external.hpp"
 
@@ -25,7 +25,7 @@ namespace type_traits {
 template<typename T, typename = void>
 struct scope_traits
 {
-    typedef scopes::per_request<> type;
+    typedef scopes::unique<> type;
 };
 
 template<typename T>
@@ -37,25 +37,25 @@ struct scope_traits<T&>
 template<typename T>
 struct scope_traits<const T&>
 {
-    typedef scopes::per_request<> type;
+    typedef scopes::unique<> type;
 };
 
 template<typename T>
 struct scope_traits<T*>
 {
-    typedef scopes::per_request<> type;
+    typedef scopes::unique<> type;
 };
 
 template<typename T>
 struct scope_traits<const T*>
 {
-    typedef scopes::per_request<> type;
+    typedef scopes::unique<> type;
 };
 
 template<typename T>
 struct scope_traits<std::auto_ptr<T> >
 {
-    typedef scopes::per_request<> type;
+    typedef scopes::unique<> type;
 };
 
 template<typename T>
@@ -73,7 +73,7 @@ struct scope_traits<weak_ptr<T> >
 template<typename T>
 struct scope_traits<unique_ptr<T> >
 {
-    typedef scopes::per_request<> type;
+    typedef scopes::unique<> type;
 };
 
 #if !defined(BOOST_NO_RVALUE_REFERENCES)
@@ -81,13 +81,13 @@ struct scope_traits<unique_ptr<T> >
 template<typename T>
 struct scope_traits<T&&>
 {
-    typedef scopes::per_request<> type;
+    typedef scopes::unique<> type;
 };
 
 template<typename T>
 struct scope_traits<const T&&>
 {
-    typedef scopes::per_request<> type;
+    typedef scopes::unique<> type;
 };
 
 #endif

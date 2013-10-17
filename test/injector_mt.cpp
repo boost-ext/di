@@ -23,7 +23,7 @@ using injector_1_t = injector<
     scoped<
         c3
     >
-  , per_request<
+  , unique<
         c0if0
       , bind<c1if0>::in_call<call_stack<c6, c5>>
       , bind<c2if0>::in_call<c7>
@@ -39,7 +39,7 @@ using injector_2_t = injector<
     scoped<
         c3
     >
-  , per_request<
+  , unique<
         bind_int<0>::in_name<mpl::string<'1'>>
       , bind_int<1>
     >
@@ -49,7 +49,7 @@ using injector_3_t = injector<
     scoped<
         c0if0
     >
-  , per_request<
+  , unique<
         bind_int<2>::in_call<c8>
       , bind_int<3>::in_name<mpl::string<'2'>>
     >
@@ -60,7 +60,7 @@ using injector_custom_scope_t = injector<
 >;
 
 using injector_provider_t = injector<
-    per_request<
+    unique<
         transaction_provider
     >
 >;
@@ -73,7 +73,7 @@ auto injector_1 = make_injector(
     scoped<
         c3
     >()
-  , per_request<
+  , unique<
         c0if0
       , bind<c1if0>::in_call<call_stack<c6, c5>>
       , bind<c2if0>::in_call<c7>
@@ -89,7 +89,7 @@ auto injector_2 = make_injector(
     scoped<
         c0if0
     >()
-  , per_request<
+  , unique<
         bind_int<2>::in_call<c8>
       , bind_int<3>::in_name<mpl::string<'2'>>
     >()
@@ -99,7 +99,7 @@ auto injector_3 = make_injector(
     scoped<
         c3
     >()
-  , per_request<
+  , unique<
         bind_int<0>::in_name<mpl::string<'1'>>
       , bind_int<1>
     >()
@@ -110,7 +110,7 @@ auto injector_custom_scope = make_injector(
 );
 
 auto injector_provider = make_injector(
-    per_request<
+    unique<
         transaction_provider, mpl::int_<0>
     >()
 );

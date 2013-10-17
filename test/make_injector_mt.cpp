@@ -121,7 +121,7 @@ BOOST_AUTO_TEST_CASE(mix) {
 
     auto injector_ = make_injector(
         injector_c0()
-      , per_request<
+      , unique<
             c2
         >()
       , policies::binding_correctness()

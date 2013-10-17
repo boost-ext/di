@@ -90,7 +90,7 @@ test-suite "policies" :
 
 test-suite "scopes" :
     [ run-cpp11 scopes/external_ut.cpp ]
-    [ run-cpp11 scopes/per_request_ut.cpp ]
+    [ run-cpp11 scopes/unique_ut.cpp ]
     [ run-cpp11 scopes/per_thread_ut.cpp ]
     [ run-cpp11 scopes/scoped_ut.cpp ]
     [ run-cpp11 scopes/session_ut.cpp ]

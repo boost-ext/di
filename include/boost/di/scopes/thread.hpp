@@ -20,9 +20,9 @@
     namespace scopes {
 
     template<typename T>
-    struct per_thread_entry
+    struct thread_entry
     {
-        per_thread_entry(thread::id id) // non explicit
+        thread_entry(thread::id id) // non explicit
             : id(id)
         { }
 
@@ -30,9 +30,9 @@
     };
 
     template<typename T>
-    struct per_thread_exit
+    struct thread_exit
     {
-        per_thread_exit(thread::id id) // non explicit
+        thread_exit(thread::id id) // non explicit
             : id(id)
         { }
 
@@ -40,10 +40,10 @@
     };
 
     template<typename TScope>
-    class per_thread
+    class thread
     {
     public:
-        typedef per_thread type;
+        typedef thread type;
 
         template<typename TExpected, typename TGiven = TExpected>
         class scope
@@ -60,12 +60,12 @@
             { }
 
             template<typename T>
-            void call(const per_thread_entry<T>& entry) {
+            void call(const thread_entry<T>& entry) {
                 objects()[get_id_()].call(T());
             }
 
             template<typename T>
-            void call(const per_thread_exit<T>& exit) {
+            void call(const thread_exit<T>& exit) {
                 objects()[get_id_()].call(T());
             }
 
@@ -73,7 +73,7 @@
                 return objects()[get_id_()].create();
             }
 
-            #define BOOST_PP_FILENAME_1 "boost/di/scopes/per_thread.hpp"
+            #define BOOST_PP_FILENAME_1 "boost/di/scopes/thread.hpp"
             #define BOOST_PP_ITERATION_LIMITS BOOST_DI_LIMITS_BEGIN(1)
             #include BOOST_PP_ITERATE()
 
@@ -89,7 +89,7 @@
         template<typename T>
         struct rebind
         {
-            typedef per_thread<T> other;
+            typedef thread<T> other;
         };
     };
 

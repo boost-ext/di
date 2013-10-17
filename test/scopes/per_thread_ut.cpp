@@ -10,7 +10,7 @@
 #include <vector>
 
 #include "boost/di/aux_/memory.hpp"
-#include "boost/di/scopes/per_request.hpp"
+#include "boost/di/scopes/unique.hpp"
 #include "boost/di/scopes/scoped.hpp"
 
 #include "fake_convertible.hpp"
@@ -20,8 +20,8 @@ namespace boost {
 namespace di {
 namespace scopes {
 
-BOOST_AUTO_TEST_CASE(create_the_same_thread_per_request) {
-    per_thread<per_request<>>::scope<int> per_thread_;
+BOOST_AUTO_TEST_CASE(create_the_same_thread_unique) {
+    per_thread<unique<>>::scope<int> per_thread_;
 
     BOOST_CHECK((
         (per_thread_.create())(type<shared_ptr<int>>())
@@ -30,12 +30,12 @@ BOOST_AUTO_TEST_CASE(create_the_same_thread_per_request) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(create_the_same_thread_per_request_args) {
+BOOST_AUTO_TEST_CASE(create_the_same_thread_unique_args) {
     fake_convertible<int> i(0);
     fake_convertible<double> d(0.0);
     fake_convertible<char> c('0');
 
-    per_thread<per_request<>>::scope<c2> per_thread_;
+    per_thread<unique<>>::scope<c2> per_thread_;
 
     BOOST_CHECK((
         (per_thread_.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<shared_ptr<c2>>())
@@ -68,12 +68,12 @@ BOOST_AUTO_TEST_CASE(create_the_same_thread_scoped_args) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(create_different_thread_per_request) {
+BOOST_AUTO_TEST_CASE(create_different_thread_unique) {
     thread t1([]{});
     thread t2([]{});
     std::vector<thread::id> ids = { t1.get_id(), t2.get_id() };
     auto index = 0;
-    per_thread<per_request<>>::scope<int> per_thread_([&]{ return ids[index++]; });
+    per_thread<unique<>>::scope<int> per_thread_([&]{ return ids[index++]; });
 
     BOOST_CHECK((
         (per_thread_.create())(type<shared_ptr<int>>())
@@ -100,7 +100,7 @@ BOOST_AUTO_TEST_CASE(create_different_thread_scoped) {
     t2.join();
 }
 
-BOOST_AUTO_TEST_CASE(create_different_thread_per_request_args) {
+BOOST_AUTO_TEST_CASE(create_different_thread_unique_args) {
     thread t1([]{});
     thread t2([]{});
     std::vector<thread::id> ids = { t1.get_id(), t2.get_id() };
@@ -110,7 +110,7 @@ BOOST_AUTO_TEST_CASE(create_different_thread_per_request_args) {
     fake_convertible<double> d(0.0);
     fake_convertible<char> c('0');
 
-    per_thread<per_request<>>::scope<c2> per_thread_([&]{ return ids[index++]; });
+    per_thread<unique<>>::scope<c2> per_thread_([&]{ return ids[index++]; });
 
     BOOST_CHECK((
         (per_thread_.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<shared_ptr<c2>>())
@@ -131,7 +131,7 @@ BOOST_AUTO_TEST_CASE(create_different_thread_scoped_args) {
     fake_convertible<double> d(0.0);
     fake_convertible<char> c('0');
 
-    per_thread<per_request<>>::scope<c2> per_thread_([&]{ return ids[index++]; });
+    per_thread<unique<>>::scope<c2> per_thread_([&]{ return ids[index++]; });
 
     BOOST_CHECK((
         (per_thread_.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<shared_ptr<c2>>())

@@ -13,7 +13,7 @@
 #include "boost/di/concepts/dependency.hpp"
 #include "boost/di/concepts/scope.hpp"
 #include "boost/di/scopes/deduce.hpp"
-#include "boost/di/scopes/per_request.hpp"
+#include "boost/di/scopes/unique.hpp"
 #include "boost/di/scopes/per_thread.hpp"
 #include "boost/di/scopes/scoped.hpp"
 #include "boost/di/scopes/singleton.hpp"
@@ -55,8 +55,8 @@ struct deduce
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-struct per_request
-    : scope<scopes::per_request<> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
+struct unique
+    : scope<scopes::unique<> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
