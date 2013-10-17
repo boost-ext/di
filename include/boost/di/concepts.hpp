@@ -30,8 +30,13 @@ namespace di {
 template<int N>
 struct int_ : mpl::int_<N>
 {
-    int_(int) { } // TODO
-    operator int() const { return N; }
+    explicit int_(int i = N)
+        : i(i)
+    { }
+
+    operator int() const { return i; }
+
+    int i;
 };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
@@ -81,7 +86,7 @@ struct bind
 
 template<int N>
 struct bind_int
-    : bind<int, mpl::int_<N> >
+    : bind<int, int_<N> >
 { };
 
 template<typename T>

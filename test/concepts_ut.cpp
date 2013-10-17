@@ -8,6 +8,8 @@
 #include <boost/mpl/int.hpp>
 
 #include <boost/test/unit_test.hpp>
+#include <boost/test/test_case_template.hpp>
+#include <boost/mpl/pair.hpp>
 
 #include "data.hpp"
 #include "fake_dependency_base_of.hpp"
@@ -38,7 +40,7 @@ BOOST_AUTO_TEST_CASE(bind_int_value) {
                 bind_int<i>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, int, mpl::int_<i>>::type
+                fake_dependency_base_of<fake_scope<>, int, int_<i>>::type
             >
         >::value
     ));
@@ -52,7 +54,7 @@ BOOST_AUTO_TEST_CASE(bind_int_value_in_name) {
                 bind_int<i>::in_name<void>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, int, mpl::int_<i>, void>::type
+                fake_dependency_base_of<fake_scope<>, int, int_<i>, void>::type
             >
         >::value
     ));
@@ -66,7 +68,7 @@ BOOST_AUTO_TEST_CASE(bind_int_value_in_call) {
                 bind_int<i>::in_call<c0>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, int, mpl::int_<i>, void, c0>::type
+                fake_dependency_base_of<fake_scope<>, int, int_<i>, void, c0>::type
             >
         >::value
     ));
@@ -80,7 +82,7 @@ BOOST_AUTO_TEST_CASE(bind_int_value_in_name_in_call) {
                 bind_int<i>::in_name<void>::in_call<c0>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, int, mpl::int_<i>, void, c0>::type
+                fake_dependency_base_of<fake_scope<>, int, int_<i>, void, c0>::type
             >
         >::value
     ));
@@ -94,7 +96,7 @@ BOOST_AUTO_TEST_CASE(bind_int_value_in_call_in_name) {
                 bind_int<i>::in_call<c0>::in_name<void>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, int, mpl::int_<i>, void, c0>::type
+                fake_dependency_base_of<fake_scope<>, int, int_<i>, void, c0>::type
             >
         >::value
     ));
@@ -170,146 +172,61 @@ BOOST_AUTO_TEST_CASE(bind_string_value_in_call) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(bind_vector_value) {
-    BOOST_CHECK((
-        contains_all<
-            bind_vector<int, int_<42>>
-          , mpl::vector<
-                fake_dependency_base_of<scopes::deduce, std::vector<int>, make_vector<int, mpl::vector<int_<42>>>>::type
-              , fake_dependency_base_of<scopes::deduce, std::vector<shared_ptr<int>>, make_vector<shared_ptr<int>, mpl::vector<shared_ptr<int_<42>>>>>::type
-              , fake_dependency_base_of<scopes::deduce, std::vector<unique_ptr<int>>, make_vector<unique_ptr<int>, mpl::vector<unique_ptr<int_<42>>>>>::type
-            >
-        >::value
-    ));
-}
+using scope_empty_types = mpl::vector<
+    deduce<>
+  , per_request<>
+  , per_thread<>
+  , scoped<>
+  , singleton<>
+  , session<>
+>;
 
-BOOST_AUTO_TEST_CASE(scope_deduce_empty) {
+BOOST_AUTO_TEST_CASE_TEMPLATE(scope_empty, TScope, scope_empty_types) {
     BOOST_CHECK((
         contains_all<
-            deduce<>::type
+            typename TScope::type
           , mpl::vector<>
         >::value
     ));
 }
 
-BOOST_AUTO_TEST_CASE(scope_deduce_one) {
+using scope_one_types = mpl::vector<
+    mpl::pair< scopes::deduce,                      deduce<int>        >
+  , mpl::pair< scopes::per_request<>,               per_request<int>   >
+  , mpl::pair< scopes::per_thread<scopes::deduce>,  per_thread<int>    >
+  , mpl::pair< scopes::scoped<>,                    scoped<int>        >
+  , mpl::pair< scopes::singleton<>,                 singleton<int>     >
+  , mpl::pair< scopes::session<>,                   session<int>       >
+>;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(scope_one, T, scope_one_types) {
     BOOST_CHECK((
         contains_all<
-            deduce<int>::type
+            typename mpl::second<T>::type
           , mpl::vector<
-                fake_dependency_base_of<scopes::deduce, int>::type
+                typename fake_dependency_base_of<typename mpl::first<T>::type, int>::type
             >
         >::value
     ));
 }
 
-BOOST_AUTO_TEST_CASE(scope_deduce_many) {
+using scope_many_types = mpl::vector<
+    mpl::pair< scopes::deduce,                      deduce<int, double, float>        >
+  , mpl::pair< scopes::per_request<>,               per_request<int, double, float>   >
+  , mpl::pair< scopes::per_thread<scopes::deduce>,  per_thread<int, double, float>    >
+  , mpl::pair< scopes::scoped<>,                    scoped<int, double, float>        >
+  , mpl::pair< scopes::singleton<>,                 singleton<int, double, float>     >
+  , mpl::pair< scopes::session<>,                   session<int, double, float>       >
+>;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(scope_many, T, scope_many_types) {
     BOOST_CHECK((
         contains_all<
-            deduce<int, double, float>::type
+            typename mpl::second<T>::type
           , mpl::vector<
-                fake_dependency_base_of<scopes::deduce, int>::type
-              , fake_dependency_base_of<scopes::deduce, double>::type
-              , fake_dependency_base_of<scopes::deduce, float>::type
-            >
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(scope_per_request_empty) {
-    BOOST_CHECK((
-        contains_all<
-            per_request<>::type
-          , mpl::vector<>
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(scope_per_request_one) {
-    BOOST_CHECK((
-        contains_all<
-            per_request<int>::type
-          , mpl::vector<
-                fake_dependency_base_of<scopes::per_request<>, int>::type
-            >
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(scope_per_request_many) {
-    BOOST_CHECK((
-        contains_all<
-            per_request<int, double, float>::type
-          , mpl::vector<
-                fake_dependency_base_of<scopes::per_request<>, int>::type
-              , fake_dependency_base_of<scopes::per_request<>, double>::type
-              , fake_dependency_base_of<scopes::per_request<>, float>::type
-            >
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(scope_scoped_empty) {
-    BOOST_CHECK((
-        contains_all<
-            scoped<>::type
-          , mpl::vector<>
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(scope_scoped_one) {
-    BOOST_CHECK((
-        contains_all<
-            scoped<int>::type
-          , mpl::vector<
-                fake_dependency_base_of<scopes::scoped<>, int>::type
-            >
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(scope_scoped_many) {
-    BOOST_CHECK((
-        contains_all<
-            scoped<int, double, float>::type
-          , mpl::vector<
-                fake_dependency_base_of<scopes::scoped<>, int>::type
-              , fake_dependency_base_of<scopes::scoped<>, double>::type
-              , fake_dependency_base_of<scopes::scoped<>, float>::type
-            >
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(scope_session_empty) {
-    BOOST_CHECK((
-        contains_all<
-            session<>::type
-          , mpl::vector<>
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(scope_session_one) {
-    BOOST_CHECK((
-        contains_all<
-            session<int>::type
-          , mpl::vector<
-                fake_dependency_base_of<scopes::session<>, int>::type
-            >
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(scope_session_many) {
-    BOOST_CHECK((
-        contains_all<
-            session<int, double, float>::type
-          , mpl::vector<
-                fake_dependency_base_of<scopes::session<>, int>::type
-              , fake_dependency_base_of<scopes::session<>, double>::type
-              , fake_dependency_base_of<scopes::session<>, float>::type
+                typename fake_dependency_base_of<typename mpl::first<T>::type, int>::type
+              , typename fake_dependency_base_of<typename mpl::first<T>::type, double>::type
+              , typename fake_dependency_base_of<typename mpl::first<T>::type, float>::type
             >
         >::value
     ));
@@ -323,40 +240,6 @@ BOOST_AUTO_TEST_CASE(scope_with_call_stack) {
             >
           , mpl::vector<
                 fake_dependency_base_of<fake_scope<>, i, impl, void, call_stack<c0, c1>>::type
-            >
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(per_thread_empty) {
-    BOOST_CHECK((
-        contains_all<
-            per_thread<>::type
-          , mpl::vector<
-            >
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(per_thread_one) {
-    BOOST_CHECK((
-        contains_all<
-            per_thread<int>::type
-          , mpl::vector<
-                fake_dependency_base_of<scopes::per_thread<scopes::deduce>, int>::type
-            >
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(per_thread_many) {
-    BOOST_CHECK((
-        contains_all<
-            per_thread<int, double, float>::type
-          , mpl::vector<
-                fake_dependency_base_of<scopes::per_thread<scopes::deduce>, int>::type
-              , fake_dependency_base_of<scopes::per_thread<scopes::deduce>, double>::type
-              , fake_dependency_base_of<scopes::per_thread<scopes::deduce>, float>::type
             >
         >::value
     ));
