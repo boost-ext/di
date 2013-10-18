@@ -7,6 +7,8 @@
 #ifndef BOOST_DI_SCOPES_DEDUCE_HPP
 #define BOOST_DI_SCOPES_DEDUCE_HPP
 
+#include <boost/none_t.hpp>
+
 namespace boost {
 namespace di {
 namespace scopes {
@@ -18,10 +20,10 @@ namespace scopes {
 class deduce
 {
 public:
-    template<typename T, typename = T>
+    template<typename, typename>
     struct scope
     {
-        typedef T result_type;
+        typedef none_t result_type;
     };
 };
 

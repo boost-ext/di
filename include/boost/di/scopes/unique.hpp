@@ -12,9 +12,9 @@
     #include "boost/di/aux_/meta.hpp"
     #include "boost/di/convertibles/copy.hpp"
     #include "boost/di/type_traits/create_traits.hpp"
+    #include "boost/di/type_traits/remove_accessors.hpp"
     #include "boost/di/named.hpp"
 
-    #include <boost/type_traits/remove_reference.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/preprocessor/punctuation/comma_if.hpp>
 
@@ -82,13 +82,18 @@
         {
             typedef R(*f_t)(BOOST_DI_TYPES_PASS(Args));
 
+            #define BOOST_DI_CALLBACK_TYPE_DECL(z, n, na) \
+                typedef typename type_traits::remove_accessors<Args##n>::type Args_t##n;
+            BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_CALLBACK_TYPE_DECL, ~)
+            #undef BOOST_DI_CALLBACK_TYPE_DECL
+
         public:
             #define BOOST_DI_CALLBACK_ARGS_PASS(z, n, na) \
                 BOOST_PP_COMMA_IF(n) args##n(args##n)
 
             callback(const f_t& f
                      BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
-                     BOOST_DI_ARGS(Args, args))
+                     BOOST_DI_ARGS(Args_t, args))
                 : f(f)
                   BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
                   BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_CALLBACK_ARGS_PASS, ~)
@@ -101,8 +106,7 @@
         private:
             f_t f;
 
-            #define BOOST_DI_CALLBACK_MEMBER_DECL(z, n, na) \
-                typename boost::remove_reference<Args##n>::type args##n;
+            #define BOOST_DI_CALLBACK_MEMBER_DECL(z, n, na) Args_t##n args##n;
             BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_CALLBACK_MEMBER_DECL, ~)
             #undef BOOST_DI_CALLBACK_MEMBER_DECL
         };

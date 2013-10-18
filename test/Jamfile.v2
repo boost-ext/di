@@ -119,6 +119,7 @@ test-suite "di / c++ 98/03" :
 
 test-suite "di / default" :
     [ run di_mt.cpp : : :
+        <toolset>gcc:<cxxflags>"-Wno-variadic-macros"
         <define>BOOST_DI_CTOR_CFG_VA_ARGS
         <define>BOOST_DI_TR1_SMART_PTR
         <define>BOOST_DI_NO_THREAD
