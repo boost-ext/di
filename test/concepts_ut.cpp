@@ -193,7 +193,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(scope_empty, TScope, scope_empty_types) {
 using scope_one_types = mpl::vector<
     mpl::pair< scopes::deduce,                      deduce<int>     >
   , mpl::pair< scopes::unique<>,                    unique<int>     >
-  , mpl::pair< scopes::thread<scopes::deduce>,      thread<int>    >
+  , mpl::pair< scopes::thread<scopes::deduce>,      thread<int>     >
   , mpl::pair< scopes::shared<>,                    shared<int>     >
   , mpl::pair< scopes::singleton<>,                 singleton<int>  >
   , mpl::pair< scopes::session<>,                   session<int>    >
@@ -213,7 +213,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(scope_one, T, scope_one_types) {
 using scope_many_types = mpl::vector<
     mpl::pair< scopes::deduce,                  deduce<int, double, float>      >
   , mpl::pair< scopes::unique<>,                unique<int, double, float>      >
-  , mpl::pair< scopes::thread<scopes::deduce>,  thread<int, double, float>     >
+  , mpl::pair< scopes::thread<scopes::deduce>,  thread<int, double, float>      >
   , mpl::pair< scopes::shared<>,                shared<int, double, float>      >
   , mpl::pair< scopes::singleton<>,             singleton<int, double, float>   >
   , mpl::pair< scopes::session<>,               session<int, double, float>     >

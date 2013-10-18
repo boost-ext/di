@@ -38,7 +38,7 @@ public:
 #endif
 
     template<typename I, typename TName>
-    named<I, TName> operator()(const type<const named<I, TName>&>&) const {
+    I operator()(const type<const named<I, TName>&>&) const {
         return value_;
     }
 

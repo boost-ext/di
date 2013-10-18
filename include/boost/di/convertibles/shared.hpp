@@ -38,14 +38,12 @@ public:
     }
 
     template<typename I, typename TName>
-    named<aux::shared_ptr<I>, TName>
-    operator()(const type<const named<aux::shared_ptr<I>, TName>&>&) const {
+    aux::shared_ptr<I> operator()(const type<const named<aux::shared_ptr<I>, TName>&>&) const {
         return *this;
     }
 
     template<typename I, typename TName>
-    named<aux::shared_ptr<I>, TName>
-    operator()(const type<const named<const aux::shared_ptr<I>&, TName>&>&) const {
+    aux::shared_ptr<I> operator()(const type<const named<const aux::shared_ptr<I>&, TName>&>&) const {
         return *this;
     }
 
@@ -60,15 +58,14 @@ public:
     }
 
     template<typename I, typename TName>
-    named<aux::weak_ptr<I>, TName>
-    operator()(const type<const named<aux::weak_ptr<I>, TName>&>&) const {
-        return named<aux::weak_ptr<I> >(*this);
+    aux::weak_ptr<I> operator()(const type<const named<aux::weak_ptr<I>, TName>&>&) const {
+        return aux::weak_ptr<I>(*this);
     }
 
     template<typename I, typename TName>
-    named<aux::weak_ptr<I>, TName>
+    aux::weak_ptr<I>
     operator()(const type<const named<const aux::weak_ptr<I>&, TName>&>&) const {
-        return named<aux::weak_ptr<I> >(*this);
+        return aux::weak_ptr<I>(*this);
     }
 };
 

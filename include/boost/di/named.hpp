@@ -25,7 +25,7 @@ template<
   , typename TName = void
   , typename = void
 >
-class named //: noncopyable
+class named : noncopyable
 {
     typedef typename type_traits::remove_accessors<T>::type object_type;
 
@@ -68,7 +68,7 @@ template<
 >
 class named<T, TName, typename enable_if<
     has_element_type<typename type_traits::remove_accessors<T>::type> >::type
->// : noncopyable
+> : noncopyable
 {
     typedef typename type_traits::remove_accessors<T>::type object_type;
     typedef typename type_traits::make_plain<T>::type value_type;
@@ -77,7 +77,9 @@ public:
     typedef T named_type;
     typedef TName name;
 
-    named(const object_type& object = T()) // non explicit
+    named() { }
+
+    named(const object_type& object) // non explicit
         : object_(object)
     { }
 

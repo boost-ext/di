@@ -18,17 +18,17 @@ namespace convertibles {
 const int i = 42;
 
 BOOST_AUTO_TEST_CASE(to_value) {
-    int object = (value<int>(42))(type<int>());
+    int object((value<int>(42))(type<int>()));
     BOOST_CHECK_EQUAL(i, object);
 }
 
 BOOST_AUTO_TEST_CASE(to_named_value) {
-    named<int> object = (value<int>(42))(type<int>());
+    named<int> object((value<int>(42))(type<int>()));
     BOOST_CHECK_EQUAL(i, object);
 }
 
 BOOST_AUTO_TEST_CASE(to_move) {
-    int&& object = (value<int>(42))(type<int>());
+    int&& object((value<int>(42))(type<int>()));
     BOOST_CHECK_EQUAL(i, object);
 }
 

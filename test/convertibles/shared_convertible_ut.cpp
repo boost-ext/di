@@ -10,6 +10,7 @@
 #include <memory>
 #include <boost/type.hpp>
 
+#include "boost/di/aux_/memory.hpp"
 #include "boost/di/named.hpp"
 
 namespace boost {
@@ -39,19 +40,6 @@ BOOST_AUTO_TEST_CASE(to_weak_ptr) {
     }
 
     BOOST_CHECK(!object.lock());
-}
-
-BOOST_AUTO_TEST_CASE(to_named_weak_ptr) {
-    named<aux::weak_ptr<int>> object;
-
-    {
-    aux::shared_ptr<int> i(new int(42));
-    object = (shared<int>(i))(type<const named<aux::weak_ptr<int>>&>());
-    auto object_ = static_cast<aux::weak_ptr<int>>(object).lock();
-    BOOST_CHECK_EQUAL(i, object_);
-    }
-
-    BOOST_CHECK(!static_cast<aux::weak_ptr<int>>(object).lock());
 }
 
 } // namespace convertibles

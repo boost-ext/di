@@ -12,6 +12,7 @@
 
 #include <boost/type.hpp>
 #include <boost/function.hpp>
+#include <boost/scoped_ptr.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_polymorphic.hpp>
 
@@ -32,13 +33,13 @@ public:
 
     template<typename I>
     I operator()(const type<I>&, typename disable_if<is_polymorphic<I> >::type* = 0) const {
-        aux::shared_ptr<I> ptr(object_());
+        scoped_ptr<I> ptr(object_());
         return *ptr;
     }
 
     template<typename I>
     const I operator()(const type<const I>&, typename disable_if<is_polymorphic<I> >::type* = 0) const {
-        aux::shared_ptr<I> ptr(object_());
+        scoped_ptr<I> ptr(object_());
         return *ptr;
     }
 
@@ -48,8 +49,8 @@ public:
     }
 
     template<typename I, typename TName>
-    named<I, TName> operator()(const type<const named<I, TName>&>&) const {
-        aux::shared_ptr<I> ptr(object_());
+    I operator()(const type<const named<I, TName>&>&) const {
+        scoped_ptr<I> ptr(object_());
         return *ptr;
     }
 
