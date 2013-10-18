@@ -11,6 +11,7 @@
 
     #include "boost/di/aux_/meta.hpp"
     #include "boost/di/aux_/thread.hpp"
+    #include "boost/di/aux_/memory.hpp"
     #include "boost/di/convertibles/shared.hpp"
     #include "boost/di/type_traits/create_traits.hpp"
 
@@ -28,10 +29,14 @@
         public:
             typedef TConvertible<TExpected> result_type;
 
+            scope()
+                : mutex_(new aux::mutex())
+            { }
+
             result_type create() {
                 if (!object()) {
-                    //aux::scoped_lock lock(mutex_);
-                    //(void)lock;
+                    aux::scoped_lock lock(*mutex_);
+                    (void)lock;
                     if (!object()) {
                         object().reset(type_traits::create_traits<TExpected, TGiven>());
                     }
@@ -49,7 +54,7 @@
                 return object;
             }
 
-            //aux::mutex mutex_;
+            aux::shared_ptr<aux::mutex> mutex_;
         };
     };
 
@@ -64,8 +69,8 @@
     template<BOOST_DI_TYPES(Args)>
     result_type create(BOOST_DI_ARGS(Args, args)) {
         if (!object()) {
-            //aux::scoped_lock lock(mutex_);
-            //(void)lock;
+            aux::scoped_lock lock(*mutex_);
+            (void)lock;
             if (!object()) {
                 object().reset(
                     type_traits::create_traits<TExpected, TGiven>(BOOST_DI_ARGS_PASS(args))
