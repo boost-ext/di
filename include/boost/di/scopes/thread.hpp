@@ -20,9 +20,9 @@
     namespace scopes {
 
     template<typename T>
-    struct threadentry
+    struct thread_entry
     {
-        threadentry(aux::thread::id id) // non explicit
+        thread_entry(aux::thread::id id) // non explicit
             : id(id)
         { }
 
@@ -30,9 +30,9 @@
     };
 
     template<typename T>
-    struct threadexit
+    struct thread_exit
     {
-        threadexit(aux::thread::id id) // non explicit
+        thread_exit(aux::thread::id id) // non explicit
             : id(id)
         { }
 
@@ -60,13 +60,13 @@
             { }
 
             template<typename T>
-            void call(const threadentry<T>& entry) {
-                objects()[get_id_()].call(T());
+            void call(const thread_entry<T>& entry) {
+                objects()[entry.id].call(T());
             }
 
             template<typename T>
-            void call(const threadexit<T>& exit) {
-                objects()[get_id_()].call(T());
+            void call(const thread_exit<T>& exit) {
+                objects()[exit.id].call(T());
             }
 
             result_type create() {

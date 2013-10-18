@@ -58,10 +58,10 @@ test-suite "concepts" :
 ;
 
 test-suite "convertibles" :
-    [ run-cpp11 convertibles/copy_ut.cpp ]
-    [ run-cpp11 convertibles/ref_ut.cpp ]
-    [ run-cpp11 convertibles/shared_ut.cpp ]
-    [ run-cpp11 convertibles/value_ut.cpp ]
+    [ run-cpp11 convertibles/copy_convertible_ut.cpp ]
+    [ run-cpp11 convertibles/ref_convertible_ut.cpp ]
+    [ run-cpp11 convertibles/shared_convertible_ut.cpp ]
+    [ run-cpp11 convertibles/value_convertible_ut.cpp ]
 ;
 
 test-suite "type traits" :
@@ -89,12 +89,12 @@ test-suite "policies" :
 ;
 
 test-suite "scopes" :
-    [ run-cpp11 scopes/external_ut.cpp ]
-    [ run-cpp11 scopes/session_ut.cpp ]
-    [ run-cpp11 scopes/shared_ut_.cpp ]
-    [ run-cpp11 scopes/singleton_ut.cpp ]
-    [ run-cpp11 scopes/thread_ut.cpp ]
-    [ run-cpp11 scopes/unique_ut.cpp ]
+    [ run-cpp11 scopes/external_scope_ut.cpp ]
+    [ run-cpp11 scopes/session_scope_ut.cpp ]
+    [ run-cpp11 scopes/shared_scope_ut.cpp ]
+    [ run-cpp11 scopes/singleton_scope_ut.cpp ]
+    [ run-cpp11 scopes/thread_scope_ut.cpp ]
+    [ run-cpp11 scopes/unique_scope_ut.cpp ]
 ;
 
 test-suite "ctors" :
