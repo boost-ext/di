@@ -44,7 +44,10 @@
 #elif defined(BOOST_DI_TR1_SMART_PTR)
 
     #include <memory>
-    #include <tr1/memory>
+
+    #if !defined(_MSC_VER)
+        #include <tr1/memory>
+    #endif
 
     namespace boost {
     namespace di {

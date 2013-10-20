@@ -43,7 +43,7 @@ template<
 class scope
 {
     BOOST_MPL_HAS_XXX_TRAIT_DEF(context)
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(concept)
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(concept_type)
 
     template<typename T, typename U>
     struct rebind
@@ -100,21 +100,21 @@ class scope
 
     template<typename T>
     struct is_concept
-        : has_concept<T>
+        : has_concept_type<T>
     { };
 
     template<typename T, typename U>
     struct make_concept
         : concept<
-              typename T::concept::deps
-            , typename T::concept::name
-            , typename T::concept::call_stack
-            , typename rebind<U, typename T::concept::scope>::type
+              typename T::concept_type::deps
+            , typename T::concept_type::name
+            , typename T::concept_type::call_stack
+            , typename rebind<U, typename T::concept_type::scope>::type
           >
     { };
 
     template<typename TConcept>
-    struct get_deps
+    struct get_dependencies
         : mpl::fold<
               typename TConcept::deps
             , mpl::vector0<>
@@ -124,7 +124,7 @@ class scope
                     , mpl::vector1<rebind<mpl::_2, typename TConcept::scope> >
                     , mpl::if_<
                           is_concept<mpl::_2>
-                        , get_deps<make_concept<mpl::_2, TScope> >
+                        , get_dependencies<make_concept<mpl::_2, TScope> >
                         , mpl::vector1<make_dependency<mpl::_2, TConcept> >
                       >
                   >
@@ -132,22 +132,22 @@ class scope
               >
           >::type
     {
-        typedef TConcept concept;
+        typedef TConcept concept_type;
     };
 
 public:
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     struct bind
-        : get_deps<concept<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> > >
+        : get_dependencies<concept<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> > >
     { };
 
     template<typename TExpected>
     struct bind<TExpected, BOOST_DI_TYPES_MPL_NA(1)>
-        : get_deps<concept<mpl::vector<TExpected> > >
+        : get_dependencies<concept<mpl::vector<TExpected> > >
     {
         template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
         struct in_call
-            : get_deps<
+            : get_dependencies<
                   concept<
                       mpl::vector<TExpected>
                     , void
@@ -157,7 +157,7 @@ public:
         {
             template<typename TName>
             struct in_name
-                : get_deps<
+                : get_dependencies<
                       concept<
                           mpl::vector<TExpected>
                         , TName
@@ -169,7 +169,7 @@ public:
 
         template<typename TName>
         struct in_name
-            : get_deps<
+            : get_dependencies<
                   concept<
                       mpl::vector<TExpected>
                     , TName
@@ -178,7 +178,7 @@ public:
         {
             template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
             struct in_call
-                : get_deps<
+                : get_dependencies<
                       concept<
                           mpl::vector<TExpected>
                         , TName

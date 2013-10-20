@@ -139,26 +139,26 @@
                 mpl::vector1<typename type_traits::make_plain<T>::type>
         >
         struct deps_impl
-            : mpl::fold<
+            : unique<
+                typename mpl::fold<
                   ctor<typename binder<T, TCallStack, TBind>::given>
                 , mpl::vector0<>
-                , unique<
-                      mpl::copy<
-                          mpl::joint_view<
-                              mpl::vector1<binder<mpl::_2, TCallStack, TBind> >
-                            , deps_impl<
-                                  mpl::_2
-                                , TBind
-                                , mpl::push_back<
-                                      TCallStack
-                                    , type_traits::make_plain<mpl::_2>
-                                  >
+                , mpl::copy<
+                      mpl::joint_view<
+                          mpl::vector1<binder<mpl::_2, TCallStack, TBind> >
+                        , deps_impl<
+                              mpl::_2
+                            , TBind
+                            , mpl::push_back<
+                                  TCallStack
+                                , type_traits::make_plain<mpl::_2>
                               >
                           >
-                        , mpl::back_inserter<mpl::_1>
                       >
+                    , mpl::back_inserter<mpl::_1>
                   >
               >::type
+          >::type
         { };
 
         template<
@@ -213,8 +213,9 @@
             TPool<deps_t> deps_(static_cast<TPool<deps>&>(*this), init());
 
             return TCreator<TBinder<deps> >::template
-                execute<T, mpl::vector0<> >(deps_)(type<T>());
+                execute<T, mpl::vector0<> >(deps_)(boost::type<T>());
         }
+
 
         template<typename T, typename Visitor>
         void visit(const Visitor& visitor) {

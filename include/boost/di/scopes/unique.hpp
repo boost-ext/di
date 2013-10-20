@@ -78,7 +78,12 @@
             BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
             BOOST_DI_TYPES(Args)
         >
+
+    #if defined(_MSC_VER)
+        class callback<R(BOOST_DI_TYPES_PASS(Args))>
+    #else
         class callback<R(*)(BOOST_DI_TYPES_PASS(Args))>
+    #endif
         {
             typedef R(*f_t)(BOOST_DI_TYPES_PASS(Args));
 

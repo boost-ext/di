@@ -414,7 +414,7 @@ BOOST_AUTO_TEST_CASE(threadscope_singleton) {
     t1.join();
     t2.join();
 
-    BOOST_CHECK_EQUAL(2, v.size());
+    BOOST_CHECK_EQUAL(2u, v.size());
 
     BOOST_CHECK(dynamic_cast<c0if0*>(v[0]->if0_.get()));
     BOOST_CHECK(dynamic_cast<c0if0*>(v[0]->if0__.get()));

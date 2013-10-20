@@ -38,12 +38,6 @@ public:
     }
 
     template<typename I>
-    const I operator()(const type<const I>&, typename disable_if<is_polymorphic<I> >::type* = 0) const {
-        scoped_ptr<I> ptr(object_());
-        return *ptr;
-    }
-
-    template<typename I>
     I* operator()(const type<I*>&) const {
         return object_();
     }

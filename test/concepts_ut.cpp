@@ -245,7 +245,7 @@ BOOST_AUTO_TEST_CASE(scope_with_call_stack) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(threadmix) {
+BOOST_AUTO_TEST_CASE(thread_mix) {
     BOOST_CHECK((
         contains_all<
             thread<

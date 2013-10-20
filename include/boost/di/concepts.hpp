@@ -30,13 +30,7 @@ namespace di {
 template<int N>
 struct int_ : mpl::int_<N>
 {
-    explicit int_(int i = N)
-        : i(i)
-    { }
-
-    operator int() const { return i; }
-
-    int i;
+    operator int() const { return N; }
 };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
@@ -92,10 +86,6 @@ struct bind_int
 template<typename T>
 struct bind_string
     : bind<std::string, T>
-{ };
-
-template<typename T, BOOST_DI_TYPES_DEFAULT_MPL(T)>
-struct bind_vector
 { };
 
 } // namespace di

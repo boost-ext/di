@@ -53,10 +53,10 @@ template<
   , typename TGiven
   , typename TScope
 >
-struct scope_type
+struct get_scope
 {
     typedef typename detail::scope_traits<TScope>::type::
-        template scope<TExpected,TGiven> type;
+        template scope<TExpected, TGiven> type;
 };
 
 template<
@@ -72,9 +72,9 @@ template<
         >
     >::type
 >
-class dependency : public scope_type<TExpected, TGiven, TScope>::type
+class dependency : public get_scope<TExpected, TGiven, TScope>::type
 {
-    typedef typename scope_type<TExpected, TGiven, TScope>::type scope_type;
+    typedef typename get_scope<TExpected, TGiven, TScope>::type scope_type;
     typedef scopes::external<convertibles::ref> ref_type;
     typedef scopes::external<convertibles::shared> shared_type;
     typedef scopes::external<convertibles::value> value_type;

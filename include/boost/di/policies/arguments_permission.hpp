@@ -38,6 +38,7 @@ namespace di {
 namespace policies {
 
 BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
+BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
 
 struct allow_smart_ptrs
 {
@@ -89,6 +90,27 @@ struct allow_copies
     { };
 };
 
+template<typename T>
+struct value_type
+{
+    typedef typename T::value_type type;
+};
+
+template<typename TAllow, typename T>
+struct is_allowed_impl
+    : TAllow::template allow<T>
+{ };
+
+template<typename, typename, typename = void>
+struct is_allowed_nested_impl
+    : mpl::true_
+{ };
+
+template<typename TAllow, typename T>
+struct is_allowed_nested_impl<TAllow, T, typename enable_if<has_value_type<T> >::type>
+    : TAllow::template allow<typename value_type<T>::type>
+{ };
+
 /**
  * @code
  * arguments_permission<>
@@ -122,29 +144,6 @@ class arguments_permission
     >
     struct binder
         : TBind::template get_dependency<T, TCallStack>::type
-    { };
-
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
-
-    template<typename T>
-    struct value_type
-    {
-        typedef typename T::value_type type;
-    };
-
-    template<typename TAllow, typename T>
-    struct is_allowed_impl
-        : TAllow::template allow<T>
-    { };
-
-    template<typename, typename, typename = void>
-    struct is_allowed_nested_impl
-        : mpl::true_
-    { };
-
-    template<typename TAllow, typename T>
-    struct is_allowed_nested_impl<TAllow, T, typename enable_if<has_value_type<T> >::type>
-        : TAllow::template allow<typename value_type<T>::type>
     { };
 
     template<
