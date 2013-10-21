@@ -45,7 +45,7 @@
 
     #include <memory>
 
-    #if !defined(_MSC_VER)
+    #if !defined(BOOST_MSVC)
         #include <tr1/memory>
     #endif
 
