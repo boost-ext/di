@@ -90,6 +90,8 @@ struct allow_copies
     { };
 };
 
+namespace detail {
+
 template<typename T>
 struct value_type
 {
@@ -110,6 +112,8 @@ template<typename TAllow, typename T>
 struct is_allowed_nested_impl<TAllow, T, typename enable_if<has_value_type<T> >::type>
     : TAllow::template allow<typename value_type<T>::type>
 { };
+
+} // namespace detail
 
 /**
  * @code
@@ -154,7 +158,7 @@ class arguments_permission
         : mpl::bool_<
               mpl::count_if<
                   TAllows
-                , is_allowed_nested_impl<
+                , detail::is_allowed_nested_impl<
                       mpl::_
                     , typename type_traits::remove_accessors<T>::type
                   >
@@ -171,7 +175,7 @@ class arguments_permission
               mpl::count_if<
                   TAllows
                 , mpl::and_<
-                      is_allowed_impl<mpl::_, T>
+                      detail::is_allowed_impl<mpl::_, T>
                     , is_allowed_nested<T>
                   >
               >::value != 0
@@ -226,7 +230,7 @@ public:
         typename TDeps
       , typename TGiven
       , typename TAssert = mpl::true_
-      , template<typename> class TBinder = detail::binder
+      , template<typename> class TBinder = di::detail::binder
     >
     struct verify
         : verify_impl<

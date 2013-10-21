@@ -28,6 +28,7 @@ namespace boost {
 namespace di {
 namespace policies {
 
+namespace detail {
 template<typename TCallStack>
 struct is_unique_call_stack
     : mpl::bool_<
@@ -42,6 +43,8 @@ struct is_unique_call_stack
         ) == mpl::size<TCallStack>::value
       >
 { };
+
+} // namespace detail
 
 /**
  *@code
@@ -107,7 +110,7 @@ class circular_dependencies
       , TBind
       , TAssert
       , TCallStack
-      , typename disable_if<is_unique_call_stack<TCallStack> >::type
+      , typename disable_if<detail::is_unique_call_stack<TCallStack> >::type
     >
         : mpl::false_
     {
@@ -125,7 +128,7 @@ public:
         typename TDeps
       , typename TGiven
       , typename TAssert = mpl::true_
-      , template<typename> class TBinder = detail::binder
+      , template<typename> class TBinder = di::detail::binder
     >
     struct verify
         : circular_dependencies_impl<TGiven, TBinder<TDeps>, TAssert>
