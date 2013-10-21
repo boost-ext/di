@@ -51,18 +51,20 @@ BOOST_AUTO_TEST_CASE(create_args) {
 
 BOOST_AUTO_TEST_CASE(create_value_mpl_int) {
     const int i = 42;
-    BOOST_CHECK_EQUAL(0, (unique<>::scope<int, mpl::int_<0>>().create())(type<int>()));
-    BOOST_CHECK_EQUAL(i, (unique<>::scope<int, mpl::int_<i>>().create())(type<int>()));
+    auto i_ = unique<>::scope<int, mpl::int_<i>>().create();
+    BOOST_CHECK_EQUAL(i, i_(type<int>()));
 }
 
 BOOST_AUTO_TEST_CASE(create_value_mpl_string) {
-    BOOST_CHECK_EQUAL("s", (unique<>::scope<std::string, mpl::string<'s'>>().create())(type<std::string>()));
+    auto s_ = unique<>::scope<std::string, mpl::string<'s'>>().create();
+    BOOST_CHECK_EQUAL("s", s_(type<std::string>()));
 }
 
 BOOST_AUTO_TEST_CASE(create_value_has_value_type) {
     const double d = 42.0;
     double_value::value = d;
-    BOOST_CHECK_EQUAL(d, (unique<>::scope<double, double_value>().create())(type<double>()));
+    auto d_ = unique<>::scope<double, double_value>().create();
+    BOOST_CHECK_EQUAL(d, d_(type<double>()));
 }
 
 } // namespace scopes
