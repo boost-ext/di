@@ -23,7 +23,7 @@ class shared : public aux::shared_ptr<T>
 public:
     shared() { }
 
-    explicit shared(const aux::shared_ptr<T>& object)
+    shared(const aux::shared_ptr<T>& object) // non explicit
         : aux::shared_ptr<T>(object)
     { }
 

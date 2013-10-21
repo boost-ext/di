@@ -12,9 +12,9 @@
     #include "boost/di/aux_/meta.hpp"
     #include "boost/di/convertibles/copy.hpp"
     #include "boost/di/type_traits/create_traits.hpp"
-    #include "boost/di/type_traits/remove_accessors.hpp"
     #include "boost/di/named.hpp"
 
+    #include <boost/preprocessor/cat.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/preprocessor/punctuation/comma_if.hpp>
 
@@ -42,8 +42,8 @@
             typedef TConvertible<TExpected> result_type;
 
             result_type create() {
-                return result_type(make_callback(
-                    &type_traits::create_traits<TExpected, TGiven>)
+                return callback0<TExpected*>(
+                    &type_traits::create_traits<TExpected, TGiven>
                 );
             }
 
@@ -61,13 +61,15 @@
 
 #else
 
+    #define n BOOST_PP_ITERATION()
+
     #if !defined(BOOST_DI_CALLBACK)
 
         template<BOOST_DI_TYPES(Args)>
         result_type create(BOOST_DI_ARGS(Args, args)) {
-            return result_type(make_callback(
+            return BOOST_PP_CAT(callback, n)<TExpected*, BOOST_DI_TYPES_PASS(Args)>(
                 &type_traits::create_traits<TExpected, TGiven, BOOST_DI_TYPES_PASS(Args)>
-              , BOOST_DI_ARGS_PASS(args))
+              , BOOST_DI_ARGS_PASS(args)
             );
         }
 
@@ -75,33 +77,24 @@
 
         template<
             typename R
-            BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
+            BOOST_PP_COMMA_IF(n)
             BOOST_DI_TYPES(Args)
         >
-
-    #if defined(_MSC_VER)
-        class callback<R(BOOST_DI_TYPES_PASS(Args))>
-    #else
-        class callback<R(*)(BOOST_DI_TYPES_PASS(Args))>
-    #endif
+        class BOOST_PP_CAT(callback, n)
         {
-            typedef R(*f_t)(BOOST_DI_TYPES_PASS(Args));
-
-            #define BOOST_DI_CALLBACK_TYPE_DECL(z, n, na) \
-                typedef typename type_traits::remove_accessors<Args##n>::type Args_t##n;
-            BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_CALLBACK_TYPE_DECL, ~)
-            #undef BOOST_DI_CALLBACK_TYPE_DECL
+            typedef R(*f_t)(BOOST_DI_ARGS_NOT_USED(Args));
 
         public:
             #define BOOST_DI_CALLBACK_ARGS_PASS(z, n, na) \
                 BOOST_PP_COMMA_IF(n) args##n(args##n)
 
-            callback(const f_t& f
-                     BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
-                     BOOST_DI_ARGS(Args_t, args))
-                : f(f)
-                  BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
-                  BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_CALLBACK_ARGS_PASS, ~)
+            BOOST_PP_CAT(callback, n)(
+                const f_t& f
+                BOOST_PP_COMMA_IF(n)
+                BOOST_DI_ARGS(Args, args)
+            ) : f(f)
+                BOOST_PP_COMMA_IF(n)
+                BOOST_PP_REPEAT(n, BOOST_DI_CALLBACK_ARGS_PASS, ~)
             { }
 
             #undef BOOST_DI_CALLBACK_ARGS_PASS
@@ -111,27 +104,14 @@
         private:
             f_t f;
 
-            #define BOOST_DI_CALLBACK_MEMBER_DECL(z, n, na) Args_t##n args##n;
-            BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_CALLBACK_MEMBER_DECL, ~)
+            #define BOOST_DI_CALLBACK_MEMBER_DECL(z, n, na) Args##n args##n;
+            BOOST_PP_REPEAT(n, BOOST_DI_CALLBACK_MEMBER_DECL, ~)
             #undef BOOST_DI_CALLBACK_MEMBER_DECL
         };
 
-        template<
-            typename F
-            BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
-            BOOST_DI_TYPES(Args)
-        >
-        callback<F> make_callback(const F& f
-                                  BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
-                                  BOOST_DI_ARGS(Args, args)) {
-            return callback<F>(
-                f
-                BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
-                BOOST_DI_ARGS_PASS(args)
-            );
-        }
-
     #endif
+
+    #undef n
 
 #endif
 

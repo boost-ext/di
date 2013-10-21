@@ -27,7 +27,7 @@ class copy
 
 public:
     template<typename I>
-    explicit copy(const I& object)
+    copy(const I& object) // non explicit
         : object_(object)
     { }
 

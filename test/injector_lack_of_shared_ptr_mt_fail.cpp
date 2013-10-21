@@ -6,7 +6,14 @@
 //
 #include "boost/di/injector.hpp"
 
-#include <tr1/memory>
+#include <boost/config.hpp>
+
+#if !defined(BOOST_MSVC)
+    #include <tr1/memory>
+#else
+    #include <memory>
+#endif
+
 #include <boost/test/unit_test.hpp>
 
 namespace boost {
