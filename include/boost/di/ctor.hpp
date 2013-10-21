@@ -7,6 +7,8 @@
 #ifndef BOOST_DI_CTOR_HPP
 #define BOOST_DI_CTOR_HPP
 
+#include <boost/config.hpp>
+
 #if !defined(BOOST_DI_CONSTRUCTOR)
     #define BOOST_DI_CONSTRUCTOR boost_di_constructor_
 #endif
@@ -16,13 +18,13 @@
 #endif
 
 #if !defined(BOOST_DI_CTOR_CFG_VA_ARGS) && !defined(BOOST_DI_CTOR_CFG_BRACKET)
-    #if (__cplusplus >= 201100L) || (_MSC_VER >= 1800)
+    #if (__cplusplus >= 201100L) || defined(BOOST_MSVC)
         #define BOOST_DI_CTOR_CFG_VA_ARGS
     #else
         #define BOOST_DI_CTOR_CFG_BRACKET
     #endif
 #else
-    #if defined(__GNUC__) && (__GNUC__ >= 4)
+    #if defined(BOOST_GCC)
         #pragma GCC diagnostic ignored "-Wvariadic-macros"
     #endif
 #endif
@@ -31,7 +33,7 @@
     #pragma warning(disable:4822) // local class member function does not have a body
 #endif
 
-#if defined(__INTEL_COMPILER)
+#if defined(BOOST_INTEL)
     #pragma warning(disable:177) //function "..." was declared but never referenced
 #endif
 

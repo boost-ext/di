@@ -8,6 +8,7 @@
 #include "boost/di/ctor.hpp"
 
 #include <boost/test/unit_test.hpp>
+#include <boost/config.hpp>
 
 namespace boost {
 namespace di {
@@ -112,7 +113,7 @@ BOOST_AUTO_TEST_CASE(function) {
     BOOST_CHECK_EQUAL(d, c_.d);
 }
 
-#if !defined(__INTEL_COMPILER) && !defined(_MSC_VER)
+#if !defined(BOOST_INTEL) && !defined(BOOST_MSVC)
 BOOST_AUTO_TEST_CASE(inheriting_ctors) {
     const int i = 1;
     const double d = 2.0;
