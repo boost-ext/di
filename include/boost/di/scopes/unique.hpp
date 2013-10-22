@@ -12,7 +12,6 @@
     #include "boost/di/aux_/meta.hpp"
     #include "boost/di/convertibles/copy.hpp"
     #include "boost/di/type_traits/create_traits.hpp"
-    #include "boost/di/type_traits/remove_accessors.hpp"
     #include "boost/di/named.hpp"
 
     #include <boost/preprocessor/cat.hpp>
@@ -43,8 +42,8 @@
             typedef TConvertible<TExpected> result_type;
 
             result_type create() {
-                return result_type(callback0<TExpected*>(
-                    &type_traits::create_traits<TExpected, TGiven>)
+                return callback0<TExpected*>(
+                    &type_traits::create_traits<TExpected, TGiven>
                 );
             }
 
@@ -68,9 +67,9 @@
 
         template<BOOST_DI_TYPES(Args)>
         result_type create(BOOST_DI_ARGS(Args, args)) {
-            return result_type(BOOST_PP_CAT(callback, n)<TExpected*, BOOST_DI_TYPES_PASS(Args)>(
+            return BOOST_PP_CAT(callback, n)<TExpected*, BOOST_DI_TYPES_PASS(Args)>(
                 &type_traits::create_traits<TExpected, TGiven, BOOST_DI_TYPES_PASS(Args)>
-              , BOOST_DI_ARGS_PASS(args))
+              , BOOST_DI_ARGS_PASS(args)
             );
         }
 
@@ -83,12 +82,7 @@
         >
         class BOOST_PP_CAT(callback, n)
         {
-            typedef R(*f_t)(BOOST_DI_TYPES_PASS(Args));
-
-            #define BOOST_DI_CALLBACK_TYPE_DECL(z, n, na) \
-                typedef typename type_traits::remove_accessors<Args##n>::type Args_t##n;
-            BOOST_PP_REPEAT(n, BOOST_DI_CALLBACK_TYPE_DECL, ~)
-            #undef BOOST_DI_CALLBACK_TYPE_DECL
+            typedef R(*f_t)(BOOST_DI_ARGS_NOT_USED(Args));
 
         public:
             #define BOOST_DI_CALLBACK_ARGS_PASS(z, n, na) \
@@ -110,7 +104,7 @@
         private:
             f_t f;
 
-            #define BOOST_DI_CALLBACK_MEMBER_DECL(z, n, na) Args_t##n args##n;
+            #define BOOST_DI_CALLBACK_MEMBER_DECL(z, n, na) Args##n args##n;
             BOOST_PP_REPEAT(n, BOOST_DI_CALLBACK_MEMBER_DECL, ~)
             #undef BOOST_DI_CALLBACK_MEMBER_DECL
         };

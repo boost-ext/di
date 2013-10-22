@@ -18,9 +18,9 @@ namespace type_traits {
 template<typename T>
 struct remove_accessors
     : remove_cv<
-          typename remove_pointer<
-              typename remove_reference<T>::type
-          >::type
+         typename remove_pointer<
+             typename remove_reference<T>::type
+         >::type
       >
 { };
 

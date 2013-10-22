@@ -20,7 +20,7 @@ template<typename T>
 class ref
 {
 public:
-    explicit ref(const reference_wrapper<T>& object)
+    ref(const reference_wrapper<T>& object) // non explicit
         : object_(object)
     { }
 

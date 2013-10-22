@@ -312,7 +312,7 @@ public:
         typename TDeps
       , typename TGiven
       , typename TAssert = mpl::true_
-      , template<typename> class TBinder = detail::binder
+      , template<typename> class TBinder = di::detail::binder
     >
     struct verify
         : mpl::joint_view<

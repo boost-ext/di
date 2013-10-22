@@ -104,7 +104,7 @@ BOOST_AUTO_TEST_CASE(create_complex) {
     BOOST_CHECK_EQUAL(d, c3_->c1__.d_);
     BOOST_CHECK_EQUAL(i, c3_->c2_->c1_->i_);
     BOOST_CHECK_EQUAL(d, c3_->c2_->c1_->d_);
-    BOOST_CHECK_EQUAL(3, v.size());
+    BOOST_CHECK_EQUAL(3u, v.size());
     BOOST_CHECK_EQUAL(v.size(), c3_->v_.size());
     BOOST_CHECK_EQUAL(v[0], c3_->v_[0]);
     BOOST_CHECK_EQUAL(v[1], c3_->v_[1]);

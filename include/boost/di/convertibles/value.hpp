@@ -21,7 +21,7 @@ template<typename T>
 class value
 {
 public:
-    explicit value(T value)
+    value(T value) // non explicit
         : value_(value)
     { }
 

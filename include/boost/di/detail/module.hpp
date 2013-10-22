@@ -216,7 +216,6 @@
                 execute<T, mpl::vector0<> >(deps_)(boost::type<T>());
         }
 
-
         template<typename T, typename Visitor>
         void visit(const Visitor& visitor) {
             BOOST_MPL_ASSERT((typename verify_policies<policies, deps, T>::type));
