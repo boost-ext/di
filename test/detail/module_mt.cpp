@@ -25,7 +25,6 @@
 #include "contains_all.hpp"
 #include "data.hpp"
 
-#include <boost/units/detail/utility.hpp>
 namespace boost {
 namespace di {
 namespace detail {

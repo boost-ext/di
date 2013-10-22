@@ -86,6 +86,7 @@ test-suite "policies" :
     [ run-cpp11 policies/binding_correctness_ut.cpp ]
     [ run-cpp11 policies/creation_ownership_ut.cpp ]
     [ run-cpp11 policies/circular_dependencies_ut.cpp ]
+    [ run-cpp11 policies/scopes_permission_ut.cpp ]
 ;
 
 test-suite "scopes" :
@@ -137,6 +138,7 @@ test-suite "compile fail" :
     [ compile-fail-cpp11 policies/binding_correctness_ub_mt_fail.cpp ]
     [ compile-fail-cpp11 policies/circular_dependencies_mt_fail.cpp ]
     [ compile-fail-cpp11 policies/creation_ownership_mt_fail.cpp ]
+    #[ compile-fail-cpp11 policies/scopes_permission_mt_fail.cpp ]
     [ compile-fail-cpp11 injector_policy_mt_fail.cpp ]
     [ compile-fail-cpp11 injector_singleton_by_copy_mt_fail.cpp ]
     [ compile-fail       injector_lack_of_shared_ptr_mt_fail.cpp : <define>BOOST_DI_TR1_SMART_PTR ]
