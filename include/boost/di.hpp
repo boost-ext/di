@@ -16,10 +16,11 @@
 // scopes
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/external.hpp"
-#include "boost/di/scopes/unique.hpp"
-#include "boost/di/scopes/thread.hpp"
 #include "boost/di/scopes/session.hpp"
+#include "boost/di/scopes/shared.hpp"
 #include "boost/di/scopes/singleton.hpp"
+#include "boost/di/scopes/thread.hpp"
+#include "boost/di/scopes/unique.hpp"
 
 // injector
 #include "boost/di/injector.hpp"
@@ -34,6 +35,7 @@
 #include "boost/di/policies/binding_correctness.hpp"
 #include "boost/di/policies/circular_dependencies.hpp"
 #include "boost/di/policies/creation_ownership.hpp"
+#include "boost/di/policies/scopes_permission.hpp"
 
 #endif
 

@@ -23,10 +23,6 @@
     #else
         #define BOOST_DI_CTOR_CFG_BRACKET
     #endif
-#else
-    #if defined(BOOST_GCC)
-        #pragma GCC diagnostic ignored "-Wvariadic-macros"
-    #endif
 #endif
 
 #if defined(BOOST_MSVC)
@@ -38,6 +34,9 @@
 #endif
 
 #if defined(BOOST_DI_CTOR_CFG_VA_ARGS)
+    #if defined(BOOST_GCC) || defined(BOOST_CLANG)
+        #pragma GCC diagnostic ignored "-Wvariadic-macros"
+    #endif
 
     #define BOOST_DI_CTOR_TRAITS(...)                   \
         static void BOOST_DI_CONSTRUCTOR(__VA_ARGS__)   \
@@ -45,16 +44,13 @@
     #define BOOST_DI_CTOR(type, ...)                    \
         BOOST_DI_CTOR_TRAITS(__VA_ARGS__);              \
         type(__VA_ARGS__)
-
 #else
-
     #define BOOST_DI_CTOR_TRAITS(Params)                \
         static void BOOST_DI_CONSTRUCTOR Params         \
 
     #define BOOST_DI_CTOR(type, params)                 \
         BOOST_DI_CTOR_TRAITS(params);                   \
         type params
-
 #endif
 
 #include "boost/di/type_traits/ctor_traits.hpp" // di::ctor_traits<...>

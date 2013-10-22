@@ -210,6 +210,7 @@
                 >
             >::type deps_t;
 
+            //deps copy - thread safe
             TPool<deps_t> deps_(static_cast<TPool<deps>&>(*this), init());
 
             return TCreator<TBinder<deps> >::template

@@ -16,11 +16,11 @@
     #undef BOOST_NO_CXX11_SMART_PTR
 #endif
 
-#if defined(__GNUC__) && (__GNUC__ >= 4)
+#if defined(BOOST_GCC) || defined(BOOST_CLANG)
     #pragma GCC diagnostic ignored "-Wdeprecated-declarations" // std::aux::auto_ptr
 #endif
 
-#if defined(__INTEL_COMPILER)
+#if defined(BOOST_INTEL)
     #pragma warning(disable:1478) //class "std::aux::auto_ptr<...>" was declared deprecated
 #endif
 

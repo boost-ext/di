@@ -25,7 +25,7 @@
     #include <boost/mpl/has_xxx.hpp>
     #include <boost/config.hpp>
 
-    #if defined(BOOST_GCC)
+    #if defined(BOOST_GCC) || defined(BOOST_CLANG)
         #pragma GCC diagnostic ignored "-Wreorder"
     #endif
 
