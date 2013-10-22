@@ -51,13 +51,13 @@ struct allow_scope
  * scopes_permission<>
  * bind<deduce<int>>      // error
  *
- * arguments_permission<allow_scope<scopes::unique>>
+ * scopes_permission<allow_scope<scopes::unique>>
  * bind<unique<int>>      // ok
  *
  * @endcode
  */
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-class arguments_permission
+class scopes_permission
 {
     template<typename T>
     struct ctor
@@ -136,7 +136,7 @@ class arguments_permission
       , typename TCallStack =
             mpl::vector1<typename type_traits::make_plain<T>::type>
     >
-    struct arguments_permission_impl
+    struct scopes_permission_impl
         : mpl::fold<
               ctor<typename binder<T, TCallStack, TBind>::given>
             , mpl::vector0<>
@@ -147,7 +147,7 @@ class arguments_permission
                         , mpl::_2 // ignore
                         , mpl::vector1<mpl::_2>
                       >
-                    , arguments_permission_impl<
+                    , scopes_permission_impl<
                           mpl::_2
                         , TBind
                         , mpl::push_back<
@@ -172,7 +172,7 @@ class arguments_permission
     };
 
 public:
-    typedef arguments_permission is_policy;
+    typedef scopes_permission is_policy;
 
     template<
         typename TDeps
@@ -182,7 +182,7 @@ public:
     >
     struct verify
         : verify_impl<
-              typename arguments_permission_impl<TGiven, TBinder<TDeps> >::type
+              typename scopes_permission_impl<TGiven, TBinder<TDeps> >::type
             , TAssert
           >
     { };
