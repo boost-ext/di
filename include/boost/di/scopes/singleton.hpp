@@ -15,6 +15,8 @@
     #include "boost/di/convertibles/shared.hpp"
     #include "boost/di/type_traits/create_traits.hpp"
 
+    #include <boost/mpl/int.hpp>
+
     namespace boost {
     namespace di {
     namespace scopes {
@@ -23,6 +25,8 @@
     class singleton
     {
     public:
+        typedef mpl::int_<0> priority;
+
         template<typename TExpected, typename TGiven = TExpected>
         class scope
         {

@@ -14,6 +14,7 @@
 
     #include <map>
     #include <boost/function.hpp>
+    #include <boost/mpl/int.hpp>
 
     namespace boost {
     namespace di {
@@ -44,6 +45,7 @@
     {
     public:
         typedef thread type;
+        typedef mpl::int_<1> priority;
 
         template<typename TExpected, typename TGiven = TExpected>
         class scope

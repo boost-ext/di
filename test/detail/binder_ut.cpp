@@ -367,19 +367,26 @@ BOOST_AUTO_TEST_CASE(context_long_with_order_to_long_call_stack) {
 
 using context_priority_t = mpl::vector<
     mpl::vector<
-        fake_dependency<fake_scope<true>, int, int>
-      , fake_dependency<fake_scope<false>, int, int>
+        fake_dependency<fake_scope<1>, int, int>
+      , fake_dependency<fake_scope<0>, int, int>
+      , fake_dependency<fake_scope<3>, int, int>
     >
   , mpl::vector<
-        fake_dependency<fake_scope<false>, int, int>
-      , fake_dependency<fake_scope<true>, int, int>
+        fake_dependency<fake_scope<0>, int, int>
+      , fake_dependency<fake_scope<1>, int, int>
+      , fake_dependency<fake_scope<3>, int, int>
+    >
+  , mpl::vector<
+        fake_dependency<fake_scope<3>, int, int>
+      , fake_dependency<fake_scope<1>, int, int>
+      , fake_dependency<fake_scope<0>, int, int>
     >
 >;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(context_priority, TDeps, context_priority_t) {
     BOOST_CHECK((
         is_same<
-            fake_dependency<fake_scope<true>, int>::type
+            fake_dependency<fake_scope<3>, int>::type
           , typename binder_impl<
                 int
               , mpl::vector<>

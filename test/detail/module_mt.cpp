@@ -25,6 +25,7 @@
 #include "contains_all.hpp"
 #include "data.hpp"
 
+#include <boost/units/detail/utility.hpp>
 namespace boost {
 namespace di {
 namespace detail {
@@ -470,6 +471,26 @@ using externals_priority_t = mpl::vector<
           , fake_dependency<scopes::external<>, int, int, mpl::string<'2'>>::type
           , fake_dependency<scopes::unique<>, int, int, mpl::string<'1'>>::type
           , fake_dependency<scopes::unique<>, int, int, mpl::string<'2'>>::type
+        >
+    >
+  , module<
+        mpl::vector<
+            fake_dependency<scopes::thread<scopes::deduce>, int, int, mpl::string<'1'>>::type
+          , fake_dependency<scopes::thread<scopes::deduce>, int, int, mpl::string<'2'>>::type
+          , fake_dependency<scopes::unique<>, int, int, mpl::string<'1'>>::type
+          , fake_dependency<scopes::unique<>, int, int, mpl::string<'2'>>::type
+          , fake_dependency<scopes::external<>, int, int, mpl::string<'1'>>::type
+          , fake_dependency<scopes::external<>, int, int, mpl::string<'2'>>::type
+        >
+    >
+  , module<
+        mpl::vector<
+            fake_dependency<scopes::external<>, int, int, mpl::string<'1'>>::type
+          , fake_dependency<scopes::external<>, int, int, mpl::string<'2'>>::type
+          , fake_dependency<scopes::unique<>, int, int, mpl::string<'1'>>::type
+          , fake_dependency<scopes::unique<>, int, int, mpl::string<'2'>>::type
+          , fake_dependency<scopes::thread<scopes::deduce>, int, int, mpl::string<'1'>>::type
+          , fake_dependency<scopes::thread<scopes::deduce>, int, int, mpl::string<'2'>>::type
         >
     >
 >;

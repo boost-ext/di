@@ -15,22 +15,14 @@
 namespace boost {
 namespace di {
 
-template<bool = false>
-struct priority_impl
-{ };
-
-template<>
-struct priority_impl<true>
-{
-    typedef void is_priority;
-};
-
 struct fake_scope_entry { };
 struct fake_scope_exit { };
 
-template<bool Priority = false>
-struct fake_scope : priority_impl<Priority>
+template<int Priority = 0>
+struct fake_scope
 {
+    typedef mpl::int_<Priority> priority;
+
     template<typename T>
     class convertible
     {

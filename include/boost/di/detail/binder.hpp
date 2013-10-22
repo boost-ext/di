@@ -105,7 +105,11 @@ struct get_longest_context_size
       >::type
 { };
 
-BOOST_MPL_HAS_XXX_TRAIT_DEF(is_priority)
+template<typename T>
+struct priority
+{
+    typedef typename T::priority type;
+};
 
 template<typename T1, typename T2>
 struct less_context_size
@@ -119,9 +123,9 @@ struct less_context_size
                   get_longest_context_size<make_context<T2> >
                 , get_longest_context_size<make_context<T1> >
               >
-            , mpl::and_<
-                  mpl::not_<has_is_priority<typename T2::scope> >
-                , has_is_priority<typename T1::scope>
+            , mpl::less<
+                 typename priority<typename T2::scope>::type
+               , typename priority<typename T1::scope>::type
               >
           >
       >

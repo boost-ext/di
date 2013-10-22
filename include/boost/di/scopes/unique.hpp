@@ -17,6 +17,7 @@
     #include <boost/preprocessor/cat.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/preprocessor/punctuation/comma_if.hpp>
+    #include <boost/mpl/int.hpp>
 
     namespace boost {
     namespace di {
@@ -35,6 +36,8 @@
     class unique
     {
     public:
+        typedef mpl::int_<0> priority;
+
         template<typename TExpected, typename TGiven = TExpected>
         class scope
         {

@@ -20,7 +20,7 @@
     class external
     {
     public:
-        typedef void is_priority;
+        typedef mpl::int_<2> priority;
 
         template<typename TExpected, typename = TExpected>
         class scope
