@@ -9,7 +9,7 @@
 
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
-#include "boost/di/convertibles/ref.hpp"
+#include "boost/di/convertibles/reference.hpp"
 #include "boost/di/convertibles/shared.hpp"
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/external.hpp"
@@ -75,7 +75,7 @@ template<
 class dependency : public get_scope<TExpected, TGiven, TScope>::type
 {
     typedef typename get_scope<TExpected, TGiven, TScope>::type scope_type;
-    typedef scopes::external<convertibles::ref> ref_type;
+    typedef scopes::external<convertibles::reference> ref_type;
     typedef scopes::external<convertibles::shared> shared_type;
     typedef scopes::external<convertibles::value> value_type;
 

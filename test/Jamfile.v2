@@ -59,7 +59,7 @@ test-suite "concepts" :
 
 test-suite "convertibles" :
     [ run-cpp11 convertibles/copy_convertible_ut.cpp ]
-    #[ run-cpp11 convertibles/ref_convertible_ut.cpp ]
+    [ run-cpp11 convertibles/reference_convertible_ut.cpp ]
     [ run-cpp11 convertibles/shared_convertible_ut.cpp ]
     [ run-cpp11 convertibles/value_convertible_ut.cpp ]
 ;
@@ -106,7 +106,6 @@ test-suite "injector" :
     [ run-cpp11 injector_mt.cpp ]
     [ run-cpp11 injector_ut.cpp ]
     [ run-cpp11 make_injector_mt.cpp ]
-    [ run injector_limit_size_mt.cpp : : :  ]
     #[ run injector_limit_size_mt.cpp : : :
         #<define>BOOST_DI_CTOR_CFG_BRACKET
         #<define>BOOST_MPL_LIMIT_VECTOR_SIZE=70

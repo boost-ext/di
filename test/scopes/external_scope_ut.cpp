@@ -11,7 +11,7 @@
 #include <boost/type.hpp>
 
 #include "boost/di/aux_/memory.hpp"
-#include "boost/di/convertibles/ref.hpp"
+#include "boost/di/convertibles/reference.hpp"
 #include "boost/di/convertibles/shared.hpp"
 
 #include "data.hpp"
@@ -32,13 +32,13 @@ BOOST_AUTO_TEST_CASE(from_string) {
 
 BOOST_AUTO_TEST_CASE(from_ref) {
     c c_;
-    c& c_ref_ = (external<convertibles::ref>::scope<c>(boost::ref(c_)).create())(type<c&>());
+    c& c_ref_ = (external<convertibles::reference>::scope<c>(boost::ref(c_)).create())(type<c&>());
     BOOST_CHECK_EQUAL(&c_, &c_ref_);
 }
 
 BOOST_AUTO_TEST_CASE(from_const_ref) {
     c c_;
-    const c& const_c_ref_ = (external<convertibles::ref>::scope<const c>(boost::cref(c_)).create())(type<const c&>());
+    const c& const_c_ref_ = (external<convertibles::reference>::scope<const c>(boost::cref(c_)).create())(type<const c&>());
     BOOST_CHECK_EQUAL(&c_, &const_c_ref_);
 }
 

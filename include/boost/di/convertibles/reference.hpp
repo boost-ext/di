@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_CONVERTIBLES_REF_HPP
-#define BOOST_DI_CONVERTIBLES_REF_HPP
+#ifndef BOOST_DI_CONVERTIBLES_REFERENCE_HPP
+#define BOOST_DI_CONVERTIBLES_REFERENCE_HPP
 
 #include "boost/di/named.hpp"
 
@@ -17,10 +17,10 @@ namespace di {
 namespace convertibles {
 
 template<typename T>
-class ref
+class reference
 {
 public:
-    ref(const reference_wrapper<T>& object) // non explicit
+    reference(const reference_wrapper<T>& object) // non explicit
         : object_(object)
     { }
 

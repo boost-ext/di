@@ -14,7 +14,6 @@
     #include <boost/preprocessor/iteration/local.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/preprocessor/punctuation/comma_if.hpp>
-    #include <boost/config.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/apply.hpp>
@@ -24,6 +23,7 @@
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/has_xxx.hpp>
+    #include <boost/config.hpp>
 
     #if defined(BOOST_GCC)
         #pragma GCC diagnostic ignored "-Wreorder"

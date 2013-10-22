@@ -13,7 +13,7 @@
     !defined(BOOST_DI_BOOST_THREAD) && \
     !defined(BOOST_DI_NO_THREAD)
 
-    #if (__cplusplus >= 201100L) || (_MSC_VER >= 1800)
+    #if (__cplusplus >= 201100L) || defined(BOOST_MSVC)
         #define BOOST_DI_STD_THREAD
     #else
         #define BOOST_DI_BOOST_THREAD
