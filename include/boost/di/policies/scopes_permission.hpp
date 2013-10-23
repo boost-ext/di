@@ -42,10 +42,10 @@ struct allow_scope
 /**
  * @code
  * scopes_permission<>
- * bind<deduce<int>>      // error
+ * bind<deduce<int>> // error
  *
  * scopes_permission<allow_scope<scopes::unique>>
- * bind<unique<int>>      // ok
+ * bind<unique<int>> // ok
  *
  * @endcode
  */
