@@ -10,6 +10,8 @@
     #define BOOST_DI_DETAIL_MODULE_HPP
 
     #include "boost/di/aux_/meta.hpp"
+    #include "boost/di/aux_/memory.hpp"
+    #include "boost/di/aux_/thread.hpp"
     #include "boost/di/detail/pool.hpp"
     #include "boost/di/detail/binder.hpp"
     #include "boost/di/detail/creator.hpp"
@@ -18,6 +20,7 @@
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/type.hpp>
     #include <boost/non_type.hpp>
+    #include <boost/noncopyable.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/typeof/typeof.hpp>
     #include <boost/mpl/vector.hpp>
@@ -71,7 +74,7 @@
       , template<typename> class TCreator = creator
       , template<typename> class TVisitor = visitor
     >
-    class module : public TPool<get_deps<TDeps> >
+    class module : boost::noncopyable, public TPool<get_deps<TDeps> >
     {
         template<
             typename
@@ -188,7 +191,9 @@
         typedef get_deps<TDeps> deps;
         typedef get_types<TDeps, has_is_policy<mpl::_> > policies;
 
-        module() { }
+        module()
+            : mutex_(new aux::mutex())
+        { }
 
         #define BOOST_PP_FILENAME_1 "boost/di/detail/module.hpp"
         #define BOOST_PP_ITERATION_LIMITS BOOST_DI_LIMITS_BEGIN(1)
@@ -210,8 +215,8 @@
                 >
             >::type deps_t;
 
-            //deps copy - thread safe
             TPool<deps_t> deps_(static_cast<TPool<deps>&>(*this), init());
+            call_impl<deps_t>(deps_, mutex_);
 
             return TCreator<TBinder<deps> >::template
                 execute<T, mpl::vector0<> >(deps_)(boost::type<T>());
@@ -227,28 +232,32 @@
 
         template<typename TAction>
         void call(const TAction& action) {
-            call_impl<deps>(action);
+            call_impl<deps>(static_cast<TPool<deps>&>(*this), action);
         }
 
     private:
-        template<typename TSeq, typename TAction>
-        typename enable_if<mpl::empty<TSeq> >::type call_impl(const TAction&) { }
+        template<typename TSeq, typename T, typename TAction>
+        typename enable_if<mpl::empty<TSeq> >::type call_impl(T&, const TAction&) { }
 
-        template<typename TSeq, typename TAction>
+        template<typename TSeq, typename T, typename TAction>
         typename disable_if<mpl::empty<TSeq> >::type call_impl(
-            const TAction& action
+            T& deps
+          , const TAction& action
           , typename enable_if<has_call<typename mpl::front<TSeq>::type, TAction> >::type* = 0) {
             typedef typename mpl::front<TSeq>::type type;
-            static_cast<type&>(static_cast<TPool<deps>&>(*this)).call(action);
-            call_impl<typename mpl::pop_front<TSeq>::type>(action);
+            static_cast<type&>(deps).call(action);
+            call_impl<typename mpl::pop_front<TSeq>::type>(deps, action);
         }
 
-        template<typename TSeq, typename TAction>
+        template<typename TSeq, typename T, typename TAction>
         typename disable_if<mpl::empty<TSeq> >::type call_impl(
-            const TAction& action
+            T& deps
+          , const TAction& action
           , typename disable_if<has_call<typename mpl::front<TSeq>::type, TAction> >::type* = 0) {
-            call_impl<typename mpl::pop_front<TSeq>::type>(action);
+            call_impl<typename mpl::pop_front<TSeq>::type>(deps, action);
         }
+
+        aux::shared_ptr<aux::mutex> mutex_;
     };
 
     } // namespace detail
@@ -278,6 +287,7 @@
               >(BOOST_DI_ARGS_PASS(args))
             , init()
           )
+        , mutex_(new aux::mutex())
     { }
 
 #endif

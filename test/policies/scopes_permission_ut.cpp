@@ -15,6 +15,7 @@
 #include "contains_all.hpp"
 #include "data.hpp"
 
+#include <boost/units/detail/utility.hpp>
 namespace boost {
 namespace di {
 namespace policies {
@@ -34,7 +35,6 @@ BOOST_AUTO_TEST_CASE(value) {
          >::value
     ));
 }
-#endif
 
 BOOST_AUTO_TEST_CASE(none) {
     BOOST_CHECK((
@@ -67,6 +67,60 @@ BOOST_AUTO_TEST_CASE(allow_requires) {
          >::value
     ));
 }
+#endif
+
+BOOST_AUTO_TEST_CASE(allow_some_of_requirements_order) {
+/*    BOOST_CHECK((*/
+        //contains_all<
+            //mpl::vector<
+                //mpl::pair<aux::shared_ptr<int>, scopes::shared<>>
+            //>
+          //, scopes_permission<
+                ////allow_scope<scopes::unique<>>
+            //>::verify<
+                //mpl::vector0<>
+              //, c24
+              //, mpl::false_
+            //>::type
+         //>::value
+    /*));*/
+
+    std::cout << units::detail::demangle(typeid(
+       di::detail::binder<>::get_dependency<shared_ptr<int>, mpl::vector0<>>::type
+    ).name()) << std::endl;
+}
+
+#if 0
+BOOST_AUTO_TEST_CASE(allow_all_of_requirements) {
+    BOOST_CHECK((
+        contains_all<
+            mpl::vector0<>
+          , scopes_permission<
+                allow_copies, allow_ptrs, allow_smart_ptrs, allow_refs
+            >::verify<
+                mpl::vector0<>
+              , c24
+              , mpl::false_
+            >::type
+         >::value
+    ));
+}
+
+BOOST_AUTO_TEST_CASE(disallow_within_nested_type) {
+    BOOST_CHECK((
+        contains_all<
+            mpl::vector<std::vector<int*>, double*>
+          , scopes_permission<
+                allow_copies, allow_refs, allow_smart_ptrs
+            >::verify<
+                mpl::vector0<>
+              , c24
+              , mpl::false_
+            >::type
+         >::value
+    ));
+}
+#endif
 
 } // namespace policies
 } // namespace di

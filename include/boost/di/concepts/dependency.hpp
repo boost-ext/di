@@ -103,7 +103,7 @@ public:
     struct rebind
     {
         typedef dependency<
-            typename mpl::if_<
+           typename mpl::if_<
                 is_same<scope, scopes::deduce>
               , T
               , TScope

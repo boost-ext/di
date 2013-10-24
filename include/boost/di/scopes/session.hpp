@@ -15,6 +15,7 @@
     #include "boost/di/type_traits/create_traits.hpp"
     #include "boost/di/convertibles/shared.hpp"
 
+    #include <cassert>
     #include <boost/mpl/int.hpp>
 
     namespace boost {
@@ -37,29 +38,31 @@
             typedef TConvertible<TExpected> result_type;
 
             scope()
-                : in_scope_(false), mutex_(new aux::mutex())
+                : in_scope_(false)
             { }
 
+            void call(const aux::shared_ptr<aux::mutex>& mutex) {
+                mutex_ = mutex;
+            }
+
             void call(const session_entry&) {
-                aux::scoped_lock lock(*mutex_);
-                (void)lock;
                 in_scope_ = true;
             }
 
             void call(const session_exit&) {
+                in_scope_ = false;
+                assert(mutex_.get());
                 aux::scoped_lock lock(*mutex_);
                 (void)lock;
-                in_scope_ = false;
                 object().reset();
             }
 
             result_type create() {
+                assert(mutex_.get());
+                aux::scoped_lock lock(*mutex_);
+                (void)lock;
                 if (in_scope_ && !object()) {
-                    aux::scoped_lock lock(*mutex_);
-                    (void)lock;
-                    if (in_scope_ && !object()) {
-                        object().reset(type_traits::create_traits<TExpected, TGiven>());
-                    }
+                    object().reset(type_traits::create_traits<TExpected, TGiven>());
                 }
                 return object();
             }
@@ -89,14 +92,13 @@
 
     template<BOOST_DI_TYPES(Args)>
     result_type create(BOOST_DI_ARGS(Args, args)) {
+        assert(mutex_.get());
+        aux::scoped_lock lock(*mutex_);
+        (void)lock;
         if (in_scope_ && !object()) {
-            aux::scoped_lock lock(*mutex_);
-            (void)lock;
-            if (in_scope_ && !object()) {
-                object().reset(
-                    type_traits::create_traits<TExpected, TGiven>(BOOST_DI_ARGS_PASS(args))
-                );
-            }
+            object().reset(
+                type_traits::create_traits<TExpected, TGiven>(BOOST_DI_ARGS_PASS(args))
+            );
         }
         return object();
     }

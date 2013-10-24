@@ -51,28 +51,12 @@
         class scope
         {
             typedef typename TScope::template scope<TExpected, TGiven> scope_type;
-            typedef std::map<aux::thread::id, scope_type> objects_t;
-            typedef function<aux::thread::id()> get_id_t;
 
         public:
             typedef typename scope_type::result_type result_type;
 
-            explicit scope(const get_id_t& get_id = &aux::this_thread::get_id)
-                : get_id_(get_id)
-            { }
-
-            template<typename T>
-            void call(const thread_entry<T>& entry) {
-                objects()[entry.id].call(T());
-            }
-
-            template<typename T>
-            void call(const thread_exit<T>& exit) {
-                objects()[exit.id].call(T());
-            }
-
             result_type create() {
-                return objects()[get_id_()].create();
+                return object_.create();
             }
 
             #define BOOST_PP_FILENAME_1 "boost/di/scopes/thread.hpp"
@@ -80,12 +64,7 @@
             #include BOOST_PP_ITERATE()
 
         private:
-            static objects_t& objects() {
-                static objects_t objects;
-                return objects;
-            }
-
-            get_id_t get_id_;
+            aux::tss<scope_type> object_;
         };
 
         template<typename T>
@@ -105,7 +84,7 @@
 
     template<BOOST_DI_TYPES(Args)>
     result_type create(BOOST_DI_ARGS(Args, args)) {
-        return objects()[get_id_()].create(BOOST_DI_ARGS_PASS(args));
+        return object_.create(BOOST_DI_ARGS_PASS(args));
     }
 
 #endif

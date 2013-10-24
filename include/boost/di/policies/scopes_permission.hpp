@@ -18,9 +18,12 @@
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/count_if.hpp>
 #include <boost/mpl/bool.hpp>
+#include <boost/mpl/equal_to.hpp>
 #include <boost/mpl/empty.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/and.hpp>
 #include <boost/mpl/push_back.hpp>
+#include <boost/mpl/size.hpp>
 #include <boost/mpl/joint_view.hpp>
 #include <boost/mpl/copy.hpp>
 #include <boost/mpl/back_inserter.hpp>
@@ -52,10 +55,22 @@ struct allow_scope
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 class scopes_permission
 {
-    template<typename T>
+    template<
+        typename T
+      , typename TCallStackSize
+      , typename TCtor =
+            typename type_traits::ctor_traits<
+                typename type_traits::make_plain<T>::type
+            >::type
+    >
     struct ctor
-        : type_traits::ctor_traits<
-              typename type_traits::make_plain<T>::type
+        : mpl::if_<
+              mpl::and_<
+                  mpl::empty<TCtor>
+                , mpl::equal_to<TCallStackSize, mpl::int_<1> >
+              >
+            , mpl::vector1<T>
+            , TCtor
           >::type
     { };
 
@@ -94,7 +109,7 @@ class scopes_permission
     >
     struct scopes_permission_impl
         : mpl::fold<
-              ctor<typename binder<T, TCallStack, TBind>::given>
+              ctor<typename binder<T, TCallStack, TBind>::given, mpl::size<TCallStack> >
             , mpl::vector0<>
             , mpl::copy<
                   mpl::joint_view<

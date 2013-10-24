@@ -214,7 +214,8 @@ template<
   , typename TDeps
   , typename TDefault =
         ::boost::di::concepts::dependency<
-            typename type_traits::scope_traits<typename named<T>::type>::type
+            //typename type_traits::scope_traits<typename named<T>::type>::type
+            typename type_traits::scope_traits<T>::type
           , typename type_traits::make_plain<T>::type
         >
 >
@@ -234,16 +235,14 @@ struct binder_impl
                 , make_context<mpl::_2>
               >
           >
-      >::type::template rebind<
-          typename type_traits::scope_traits<typename named<T>::type>::type
-      >::other
+      >::type/*::template rebind<*/
+          //typename type_traits::scope_traits<typename named<T>::type>::type
+      /*>::other*/
 { };
 
 template<typename TDeps = mpl::vector0<> >
 struct binder
 {
-    typedef binder type;
-
     template<typename T, typename TCallStack>
     struct get_dependency
         : binder_impl<T, TCallStack, TDeps>

@@ -15,6 +15,7 @@
     #include "boost/di/convertibles/shared.hpp"
     #include "boost/di/type_traits/create_traits.hpp"
 
+    #include <cassert>
     #include <boost/mpl/int.hpp>
 
     namespace boost {
@@ -33,17 +34,16 @@
         public:
             typedef TConvertible<TExpected> result_type;
 
-            scope()
-                : mutex_(new aux::mutex())
-            { }
+            void call(const aux::shared_ptr<aux::mutex>& mutex) {
+                mutex_ = mutex;
+            }
 
             result_type create() {
+                assert(mutex.get());
+                aux::scoped_lock lock(*mutex_);
+                (void)lock;
                 if (!object()) {
-                    aux::scoped_lock lock(*mutex_);
-                    (void)lock;
-                    if (!object()) {
-                        object().reset(type_traits::create_traits<TExpected, TGiven>());
-                    }
+                    object().reset(type_traits::create_traits<TExpected, TGiven>());
                 }
                 return object();
             }
@@ -72,14 +72,13 @@
 
     template<BOOST_DI_TYPES(Args)>
     result_type create(BOOST_DI_ARGS(Args, args)) {
+        assert(mutex.get());
+        aux::scoped_lock lock(*mutex_);
+        (void)lock;
         if (!object()) {
-            aux::scoped_lock lock(*mutex_);
-            (void)lock;
-            if (!object()) {
-                object().reset(
-                    type_traits::create_traits<TExpected, TGiven>(BOOST_DI_ARGS_PASS(args))
-                );
-            }
+            object().reset(
+                type_traits::create_traits<TExpected, TGiven>(BOOST_DI_ARGS_PASS(args))
+            );
         }
         return object();
     }

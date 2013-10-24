@@ -16,6 +16,19 @@ namespace boost {
 namespace di {
 namespace policies {
 
+BOOST_AUTO_TEST_CASE(value) {
+    BOOST_CHECK((
+        contains_all<
+            mpl::vector<int>
+          , arguments_permission<>::verify<
+                mpl::vector0<>
+              , int
+              , mpl::false_
+            >::type
+         >::value
+    ));
+}
+
 BOOST_AUTO_TEST_CASE(none) {
     BOOST_CHECK((
         contains_all<

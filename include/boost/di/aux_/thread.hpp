@@ -29,8 +29,16 @@
     namespace aux {
 
     namespace this_thread = ::std::this_thread;
+
     using ::std::thread;
     using ::std::mutex;
+
+    template<typename T>
+    struct tss
+    {
+        typedef thread_local aux::shared_ptr<T> type;
+    };
+
     typedef ::std::lock_guard< ::std::mutex > scoped_lock;
 
     } // namespace aux
@@ -40,6 +48,7 @@
 #elif defined(BOOST_DI_BOOST_THREAD)
 
     #include <boost/thread.hpp>
+    #include <boost/thread/tss.hpp>
 
     namespace boost {
     namespace di {
@@ -48,6 +57,7 @@
     namespace this_thread = ::boost::this_thread;
     using ::boost::thread;
     using ::boost::mutex;
+    using ::boost::thread_specific_ptr;
     typedef ::boost::lock_guard< ::boost::mutex > scoped_lock;
 
     } // namespace aux
@@ -66,6 +76,8 @@
     };
 
     struct mutex { };
+
+    struct thread_specific_ptr { };
 
     template<typename T>
     struct lock_guard
