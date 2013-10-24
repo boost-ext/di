@@ -34,9 +34,9 @@
     using ::std::mutex;
 
     template<typename T>
-    struct tss
+    struct thread_specific_ptr
     {
-        typedef thread_local aux::shared_ptr<T> type;
+        //typedef aux::shared_ptr<T> type;
     };
 
     typedef ::std::lock_guard< ::std::mutex > scoped_lock;

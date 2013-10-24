@@ -20,7 +20,6 @@
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/type.hpp>
     #include <boost/non_type.hpp>
-    #include <boost/noncopyable.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/typeof/typeof.hpp>
     #include <boost/mpl/vector.hpp>
@@ -74,7 +73,7 @@
       , template<typename> class TCreator = creator
       , template<typename> class TVisitor = visitor
     >
-    class module : boost::noncopyable, public TPool<get_deps<TDeps> >
+    class module : public TPool<get_deps<TDeps> >
     {
         template<
             typename
@@ -244,8 +243,7 @@
             T& deps
           , const TAction& action
           , typename enable_if<has_call<typename mpl::front<TSeq>::type, TAction> >::type* = 0) {
-            typedef typename mpl::front<TSeq>::type type;
-            static_cast<type&>(deps).call(action);
+            static_cast<typename mpl::front<TSeq>::type&>(deps).call(action);
             call_impl<typename mpl::pop_front<TSeq>::type>(deps, action);
         }
 

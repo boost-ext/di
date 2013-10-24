@@ -39,7 +39,7 @@
             }
 
             result_type create() {
-                assert(mutex.get());
+                assert(mutex_.get());
                 aux::scoped_lock lock(*mutex_);
                 (void)lock;
                 if (!object()) {
@@ -72,7 +72,7 @@
 
     template<BOOST_DI_TYPES(Args)>
     result_type create(BOOST_DI_ARGS(Args, args)) {
-        assert(mutex.get());
+        assert(mutex_.get());
         aux::scoped_lock lock(*mutex_);
         (void)lock;
         if (!object()) {

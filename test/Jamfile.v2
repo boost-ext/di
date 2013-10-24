@@ -73,13 +73,13 @@ rule compile-fail-cpp03 ( src ) {
     #[ run-cpp11 type_traits/scope_traits_ut.cpp ]
 #;
 
-#test-suite "implementation detail" :
+test-suite "implementation detail" :
     #[ run-cpp11 detail/binder_ut.cpp ]
     #[ run-cpp11 detail/creator_ut.cpp ]
-    #[ run-cpp11 detail/module_mt.cpp ]
+    [ run-cpp11 detail/module_mt.cpp ]
     #[ run-cpp11 detail/pool_ut.cpp ]
     #[ run-cpp11 detail/visitor_ut.cpp ]
-#;
+;
 
 test-suite "policies" :
     #[ run-cpp11 policies/arguments_permission_ut.cpp ]
@@ -103,15 +103,15 @@ test-suite "policies" :
     #[ run-cpp11 ctor_va_args_ut.cpp ]
 #;
 
-#test-suite "injector" :
-    #[ run-cpp11 injector_mt.cpp ]
-    #[ run-cpp11 injector_ut.cpp ]
-    #[ run-cpp11 make_injector_mt.cpp ]
-    ##[ run injector_limit_size_mt.cpp : : :
-        ##<define>BOOST_DI_CTOR_CFG_BRACKET
-        ##<define>BOOST_MPL_LIMIT_VECTOR_SIZE=70
-    ##]
-#;
+test-suite "injector" :
+    [ run-cpp11 injector_mt.cpp ]
+    [ run-cpp11 injector_ut.cpp ]
+    [ run-cpp11 make_injector_mt.cpp ]
+    #[ run injector_limit_size_mt.cpp : : :
+        #<define>BOOST_DI_CTOR_CFG_BRACKET
+        #<define>BOOST_MPL_LIMIT_VECTOR_SIZE=70
+    #]
+;
 
 #test-suite "di / C++ 11" :
     #[ run-cpp11 di_mt_11.cpp ]

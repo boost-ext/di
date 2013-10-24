@@ -64,7 +64,7 @@
             #include BOOST_PP_ITERATE()
 
         private:
-            aux::tss<scope_type> object_;
+            aux::thread_specific_ptr<scope_type> object_;
         };
 
         template<typename T>
