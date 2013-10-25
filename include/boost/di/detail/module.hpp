@@ -20,6 +20,7 @@
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/type.hpp>
     #include <boost/non_type.hpp>
+    #include <boost/type_traits/is_same.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/typeof/typeof.hpp>
     #include <boost/mpl/vector.hpp>
@@ -46,6 +47,38 @@
     namespace di {
 
     namespace detail {
+
+    template<typename T>
+    class has_call_impl
+    {
+        struct base_impl { void call() { } };
+        struct base : T, base_impl { base() { } };
+
+        template<typename U>
+        static mpl::aux::no_tag test(
+            U*
+          , non_type<void (base_impl::*)(), &U::call>* = 0
+        );
+
+        template<typename>
+        static mpl::aux::yes_tag test(...);
+
+    public:
+        BOOST_STATIC_CONSTANT(
+            bool
+          , value = sizeof(test<base>(0)) == sizeof(mpl::aux::yes_tag)
+        );
+    };
+
+    template<typename T, typename, typename = void>
+    struct has_call
+        : mpl::false_
+    { };
+
+    template<typename T, typename TAction>
+    struct has_call<T, TAction, typename enable_if_c<has_call_impl<T>::value>::type>
+        : is_same<BOOST_TYPEOF_TPL(&T::call), void(T::*)(const TAction&)>
+    { };
 
     BOOST_MPL_HAS_XXX_TRAIT_DEF(is_policy)
 
@@ -82,28 +115,6 @@
           , template<typename> class
           , template<typename> class
         > friend class module;
-
-        template<typename T, typename TAction>
-        class has_call
-        {
-            struct base_impl { void call(const TAction&) { } };
-            struct base : T, base_impl { base() { } };
-
-            template<typename U>
-            static mpl::aux::no_tag test(
-                U*
-              , non_type<void (base_impl::*)(const TAction&), &U::call>* = 0
-            );
-
-            template<typename>
-            static mpl::aux::yes_tag test(...);
-
-        public:
-            BOOST_STATIC_CONSTANT(
-                bool
-              , value = sizeof(test<base>(0)) == sizeof(mpl::aux::yes_tag)
-            );
-        };
 
         template<typename TSeq>
         struct unique
@@ -142,25 +153,25 @@
         >
         struct deps_impl
             : unique<
-                typename mpl::fold<
-                  ctor<typename binder<T, TCallStack, TBind>::given>
-                , mpl::vector0<>
-                , mpl::copy<
-                      mpl::joint_view<
-                          mpl::vector1<binder<mpl::_2, TCallStack, TBind> >
-                        , deps_impl<
-                              mpl::_2
-                            , TBind
-                            , mpl::push_back<
-                                  TCallStack
-                                , type_traits::make_plain<mpl::_2>
+                  typename mpl::fold<
+                      ctor<typename binder<T, TCallStack, TBind>::given>
+                    , mpl::vector0<>
+                    , mpl::copy<
+                          mpl::joint_view<
+                              mpl::vector1<binder<mpl::_2, TCallStack, TBind> >
+                            , deps_impl<
+                                  mpl::_2
+                                , TBind
+                                , mpl::push_back<
+                                      TCallStack
+                                    , type_traits::make_plain<mpl::_2>
+                                  >
                               >
                           >
+                        , mpl::back_inserter<mpl::_1>
                       >
-                    , mpl::back_inserter<mpl::_1>
-                  >
+                  >::type
               >::type
-          >::type
         { };
 
         template<
