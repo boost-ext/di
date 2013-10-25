@@ -92,11 +92,11 @@ struct scope_traits<const T&&>
 
 #endif
 
-/*template<typename T>*/
-//struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
-//{
-    //typedef typename scope_traits<typename T::named_type>::type type;
-/*};*/
+template<typename T>
+struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
+{
+    typedef typename scope_traits<typename T::named_type>::type type;
+};
 
 } // namespace type_traits
 } // namespace di
