@@ -28,15 +28,28 @@
     namespace di {
     namespace aux {
 
-    namespace this_thread = ::std::this_thread;
-
     using ::std::thread;
     using ::std::mutex;
 
     template<typename T>
-    struct thread_specific_ptr
+    class thread_specific_ptr
     {
-        //typedef aux::shared_ptr<T> type;
+    public:
+        void reset(T*) { }
+
+        bool get() const {
+            return false;
+        }
+
+        T* operator->() const {
+            return &instance();
+        }
+
+    private:
+        static T& instance() {
+            static thread_local T object_;
+            return object_;
+        }
     };
 
     typedef ::std::lock_guard< ::std::mutex > scoped_lock;
@@ -54,10 +67,10 @@
     namespace di {
     namespace aux {
 
-    namespace this_thread = ::boost::this_thread;
     using ::boost::thread;
     using ::boost::mutex;
     using ::boost::thread_specific_ptr;
+
     typedef ::boost::lock_guard< ::boost::mutex > scoped_lock;
 
     } // namespace aux
@@ -70,13 +83,9 @@
     namespace di {
     namespace aux {
 
-    struct thread
-    {
-        struct id { };
-    };
-
     struct mutex { };
 
+    template<typename T>
     struct thread_specific_ptr { };
 
     template<typename T>
@@ -86,10 +95,6 @@
     };
 
     typedef lock_guard<mutex> scoped_lock;
-
-    namespace this_thread {
-    thread::id get_id();
-    }
 
     } // namespace aux
     } // namespace boost

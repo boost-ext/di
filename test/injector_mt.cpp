@@ -396,7 +396,6 @@ BOOST_AUTO_TEST_CASE(session_scope) {
     }
 }
 
-#if 0
 BOOST_AUTO_TEST_CASE(thread_local_scope) {
     std::vector<aux::shared_ptr<c20>> v;
     aux::mutex m;
@@ -428,7 +427,6 @@ BOOST_AUTO_TEST_CASE(thread_local_scope) {
     BOOST_CHECK(v[0]->if0_ != v[1]->if0_);
     BOOST_CHECK(v[0]->if0__ != v[1]->if0__);
 }
-#endif
 
 } // namespace di
 } // namespace boost

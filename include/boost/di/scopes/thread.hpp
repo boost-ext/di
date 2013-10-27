@@ -20,26 +20,6 @@
     namespace di {
     namespace scopes {
 
-    template<typename T>
-    struct thread_entry
-    {
-        thread_entry(aux::thread::id id) // non explicit
-            : id(id)
-        { }
-
-        aux::thread::id id;
-    };
-
-    template<typename T>
-    struct thread_exit
-    {
-        thread_exit(aux::thread::id id) // non explicit
-            : id(id)
-        { }
-
-        aux::thread::id id;
-    };
-
     template<typename TScope>
     class thread
     {
@@ -55,8 +35,15 @@
         public:
             typedef typename scope_type::result_type result_type;
 
+            scope()
+                : object_(new aux::thread_specific_ptr<scope_type>())
+            { }
+
             result_type create() {
-                return object_.create();
+                if (!object_->get()) {
+                    object_->reset(new scope_type());
+                }
+                return (*object_)->create();
             }
 
             #define BOOST_PP_FILENAME_1 "boost/di/scopes/thread.hpp"
@@ -64,7 +51,7 @@
             #include BOOST_PP_ITERATE()
 
         private:
-            aux::thread_specific_ptr<scope_type> object_;
+            aux::shared_ptr<aux::thread_specific_ptr<scope_type> > object_;
         };
 
         template<typename T>
@@ -84,7 +71,10 @@
 
     template<BOOST_DI_TYPES(Args)>
     result_type create(BOOST_DI_ARGS(Args, args)) {
-        return object_.create(BOOST_DI_ARGS_PASS(args));
+        if (!object_->get()) {
+            object_->reset(new scope_type());
+        }
+        return (*object_)->create(BOOST_DI_ARGS_PASS(args));
     }
 
 #endif
