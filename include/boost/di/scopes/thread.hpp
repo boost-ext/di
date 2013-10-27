@@ -11,6 +11,7 @@
 
     #include "boost/di/aux_/meta.hpp"
     #include "boost/di/aux_/thread.hpp"
+    #include "boost/di/aux_/memory.hpp"
 
     #include <map>
     #include <boost/function.hpp>

@@ -11,6 +11,7 @@
 #include <boost/ref.hpp>
 
 #include "boost/di/aux_/memory.hpp"
+#include "boost/di/aux_/thread.hpp"
 
 #include "fake_convertible.hpp"
 #include "data.hpp"
@@ -20,8 +21,13 @@ namespace di {
 namespace scopes {
 
 BOOST_AUTO_TEST_CASE(create) {
+    aux::shared_ptr<aux::mutex> m(new aux::mutex);
+
     singleton<>::scope<int> singleton1;
+    singleton1.call(m);
+
     singleton<>::scope<int> singleton2;
+    singleton2.call(m);
 
     BOOST_CHECK((
         (singleton1.create())(type<aux::shared_ptr<int>>())
@@ -43,8 +49,13 @@ BOOST_AUTO_TEST_CASE(create) {
 }
 
 BOOST_AUTO_TEST_CASE(create_args) {
+    aux::shared_ptr<aux::mutex> m(new aux::mutex);
+
     singleton<>::scope<c2> singleton1;
+    singleton1.call(m);
+
     singleton<>::scope<c2> singleton2;
+    singleton2.call(m);
 
     fake_convertible<int> i(0);
     fake_convertible<double> d(0.0);

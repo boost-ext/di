@@ -404,11 +404,13 @@ BOOST_AUTO_TEST_CASE(thread_local_scope) {
 
     aux::thread t1([&]{
         aux::scoped_lock l(m);
+        (void)l;
         v.push_back(injector_.create<aux::shared_ptr<c20>>());
     });
 
     aux::thread t2([&]{
         aux::scoped_lock l(m);
+        (void)l;
         v.push_back(injector_.create<aux::shared_ptr<c20>>());
     });
     t1.join();
