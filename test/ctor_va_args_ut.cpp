@@ -113,7 +113,7 @@ BOOST_AUTO_TEST_CASE(function) {
     BOOST_CHECK_EQUAL(d, c_.d);
 }
 
-#if !defined(BOOST_INTEL) && !defined(BOOST_MSVC)
+#if !defined(BOOST_INTEL) && !defined(BOOST_MSVC) && !(defined(BOOST_GCC) && (BOOST_GCC < 40800))
 BOOST_AUTO_TEST_CASE(inheriting_ctors) {
     const int i = 1;
     const double d = 2.0;

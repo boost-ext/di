@@ -10,6 +10,7 @@ import testing ;
 project di :
     requirements
         <include>../include
+        <library>../../thread/build//boost_thread
         <warnings>all
 ;
 
