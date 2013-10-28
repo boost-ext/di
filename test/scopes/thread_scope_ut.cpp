@@ -80,13 +80,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(create_different_thread_scope, TScope, different_t
     aux::mutex m;
     typename thread<TScope>::template scope<int> thread;
 
-    thread t1([&]{
+    boost::thread t1([&]{
         aux::scoped_lock l(m);
         (void)l;
         v.push_back((thread.create())(type<aux::shared_ptr<int>>()));
     });
 
-    thread t2([&]{
+    boost::thread t2([&]{
         aux::scoped_lock l(m);
         (void)l;
         v.push_back((thread.create())(type<aux::shared_ptr<int>>()));
@@ -108,13 +108,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(create_different_thread_scope_args, TScope, differ
     fake_convertible<double> d(0.0);
     fake_convertible<char> c('0');
 
-    thread t1([&]{
+    boost::thread t1([&]{
         aux::scoped_lock l(m);
         (void)l;
         v.push_back((thread.template create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>()));
     });
 
-    thread t2([&]{
+    boost::thread t2([&]{
         aux::scoped_lock l(m);
         (void)l;
         v.push_back((thread.template create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>()));

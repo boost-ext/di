@@ -37,17 +37,12 @@
         void reset(T*) { }
 
         bool get() const {
-            return false;
+            return true;
         }
 
         T* operator->() const {
-            return &instance();
-        }
-
-    private:
-        static T& instance() {
             static thread_local T object_;
-            return object_;
+            return &object_;
         }
     };
 

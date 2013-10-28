@@ -403,13 +403,13 @@ BOOST_AUTO_TEST_CASE(thread_local_scope) {
 
     injector<thread<shared<c0if0>>> injector_;
 
-    thread t1([&]{
+    boost::thread t1([&]{
         aux::scoped_lock l(m);
         (void)l;
         v.push_back(injector_.create<aux::shared_ptr<c20>>());
     });
 
-    thread t2([&]{
+    boost::thread t2([&]{
         aux::scoped_lock l(m);
         (void)l;
         v.push_back(injector_.create<aux::shared_ptr<c20>>());

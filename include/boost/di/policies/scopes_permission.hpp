@@ -101,6 +101,12 @@ class scopes_permission
           >
     { };
 
+    template<typename T>
+    struct scope
+    {
+        typedef typename T::scope type;
+    };
+
     template<
         typename T
       , typename TBind
@@ -115,13 +121,13 @@ class scopes_permission
                   mpl::joint_view<
                       mpl::if_<
                           is_allowed<
-                              typename binder<mpl::_2, TCallStack, TBind>::scope
+                              scope<binder<mpl::_2, TCallStack, TBind> >
                           >
                         , mpl::_2 // ignore
                         , mpl::vector1<
                               mpl::pair<
                                   mpl::_2
-                                , binder<mpl::_2, TCallStack, TBind>
+                                , scope<binder<mpl::_2, TCallStack, TBind> >
                               >
                           >
                       >
@@ -144,7 +150,7 @@ class scopes_permission
     {
         BOOST_MPL_ASSERT_MSG(
             !TAssert::value || mpl::empty<T>::value
-          , ARGUMENTS_NOT_PERMITTED
+          , SCOPE_NOT_PERMITTED
           , (T)
         );
     };
