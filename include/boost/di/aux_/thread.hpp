@@ -28,7 +28,6 @@
     namespace di {
     namespace aux {
 
-    using ::std::thread;
     using ::std::mutex;
 
     template<typename T>
@@ -67,7 +66,6 @@
     namespace di {
     namespace aux {
 
-    using ::boost::thread;
     using ::boost::mutex;
     using ::boost::thread_specific_ptr;
 
@@ -85,7 +83,7 @@
 
     struct mutex { };
 
-    template<typename T>
+    template<typename>
     struct thread_specific_ptr { };
 
     template<typename T>

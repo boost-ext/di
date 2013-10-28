@@ -20,7 +20,6 @@ namespace boost {
 namespace di {
 namespace policies {
 
-#if 0
 BOOST_AUTO_TEST_CASE(value) {
     BOOST_CHECK((
         contains_all<
@@ -67,27 +66,28 @@ BOOST_AUTO_TEST_CASE(allow_requires) {
          >::value
     ));
 }
-#endif
 
 BOOST_AUTO_TEST_CASE(allow_some_of_requirements_order) {
-/*    BOOST_CHECK((*/
-        //contains_all<
-            //mpl::vector<
-                //mpl::pair<aux::shared_ptr<int>, scopes::shared<>>
-            //>
-          //, scopes_permission<
-                ////allow_scope<scopes::unique<>>
-            //>::verify<
-                //mpl::vector0<>
-              //, c24
-              //, mpl::false_
-            //>::type
-         //>::value
-    /*));*/
+    BOOST_CHECK((
+        contains_all<
+            mpl::vector<
+                mpl::pair<aux::shared_ptr<int>, scopes::shared<>>
+            >
+          , scopes_permission<
+                //allow_scope<scopes::unique<>>
+            >::verify<
+                mpl::vector0<>
+              , c24
+              , mpl::false_
+            >::type
+         >::value
+    ));
 
-    std::cout << units::detail::demangle(typeid(
-       di::detail::binder<>::get_dependency<shared_ptr<int>, mpl::vector0<>>::type
+   std::cout << units::detail::demangle(typeid(
+        boost::di::concepts::dependency<boost::di::scopes::shared<boost::di::convertibles::shared>, int, int, void>::scope
     ).name()) << std::endl;
+
+    BOOST_CHECK(false);
 }
 
 #if 0

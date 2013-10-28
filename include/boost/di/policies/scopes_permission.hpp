@@ -121,7 +121,7 @@ class scopes_permission
                         , mpl::vector1<
                               mpl::pair<
                                   mpl::_2
-                                , typename binder<mpl::_2, TCallStack, TBind>::scope
+                                , binder<mpl::_2, TCallStack, TBind>
                               >
                           >
                       >

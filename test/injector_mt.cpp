@@ -12,6 +12,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
 #include <boost/mpl/vector.hpp>
+#include <boost/thread.hpp>
 
 #include "fake_visitor.hpp"
 #include "fake_scope.hpp"
@@ -402,13 +403,13 @@ BOOST_AUTO_TEST_CASE(thread_local_scope) {
 
     injector<thread<shared<c0if0>>> injector_;
 
-    aux::thread t1([&]{
+    thread t1([&]{
         aux::scoped_lock l(m);
         (void)l;
         v.push_back(injector_.create<aux::shared_ptr<c20>>());
     });
 
-    aux::thread t2([&]{
+    thread t2([&]{
         aux::scoped_lock l(m);
         (void)l;
         v.push_back(injector_.create<aux::shared_ptr<c20>>());
