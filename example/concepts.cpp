@@ -27,12 +27,12 @@ struct c0 { };
 
 struct c1
 {
-    BOOST_DI_CTOR(c1, int, di::named<double, name1>) { }
+    BOOST_DI_CTOR(c1, int, const di::named<double, name1>&) { }
 };
 
 struct c2
 {
-    BOOST_DI_CTOR(c2, di::named<double, name1>, c1) { }
+    BOOST_DI_CTOR(c2, const di::named<double, name1>&, c1) { }
 };
 
 struct c3
@@ -40,7 +40,7 @@ struct c3
     BOOST_DI_CTOR(c3
       , std::string
       , boost::shared_ptr<i>
-      , di::named<boost::shared_ptr<i>, name2>
+      , const di::named<boost::shared_ptr<i>, name2>&
     ) { }
 };
 
@@ -53,7 +53,7 @@ struct c6
 
 struct c7
 {
-    BOOST_DI_CTOR(c7, di::named<boost::shared_ptr<i>, name3>) { }
+    BOOST_DI_CTOR(c7, const di::named<boost::shared_ptr<i>, name3>&) { }
 };
 
 struct c8
