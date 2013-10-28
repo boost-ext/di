@@ -9,19 +9,10 @@
 
 #include <boost/config.hpp>
 
-#if !defined(BOOST_DI_STD_THREAD) &&                            \
-    !defined(BOOST_DI_BOOST_THREAD) &&                          \
+#if !defined(BOOST_DI_STD_THREAD) &&    \
+    !defined(BOOST_DI_BOOST_THREAD) &&  \
     !defined(BOOST_DI_NO_THREAD)
-
-    #if (__cplusplus >= 201100L) &&                             \
-        (!defined(BOOST_GCC) || (BOOST_GCC >= 40800)) &&        \
-        (!defined(BOOST_CLANG) ||                               \
-        ((__clang_major__ >= 3 && __clang_minor__ >= 3))) ||    \
-        defined(BOOST_MSVC)
-        #define BOOST_DI_STD_THREAD
-    #else
-        #define BOOST_DI_BOOST_THREAD
-    #endif
+    #define BOOST_DI_BOOST_THREAD
 #endif
 
 #if defined(BOOST_DI_STD_THREAD)
