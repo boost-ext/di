@@ -399,6 +399,7 @@ BOOST_AUTO_TEST_CASE(session_scope) {
 
 BOOST_AUTO_TEST_CASE(thread_local_scope) {
     std::vector<aux::shared_ptr<c20>> v;
+    std::vector<aux::shared_ptr<c20>> vt;
     aux::mutex m;
 
     injector<thread<shared<c0if0>>> injector_;
@@ -407,12 +408,14 @@ BOOST_AUTO_TEST_CASE(thread_local_scope) {
         aux::scoped_lock l(m);
         (void)l;
         v.push_back(injector_.create<aux::shared_ptr<c20>>());
+        vt.push_back(injector_.create<aux::shared_ptr<c20>>());
     });
 
     boost::thread t2([&]{
         aux::scoped_lock l(m);
         (void)l;
         v.push_back(injector_.create<aux::shared_ptr<c20>>());
+        vt.push_back(injector_.create<aux::shared_ptr<c20>>());
     });
     t1.join();
     t2.join();
@@ -429,6 +432,11 @@ BOOST_AUTO_TEST_CASE(thread_local_scope) {
 
     BOOST_CHECK(v[0]->if0_ != v[1]->if0_);
     BOOST_CHECK(v[0]->if0__ != v[1]->if0__);
+
+    BOOST_CHECK_EQUAL(2u, vt.size());
+
+    BOOST_CHECK(v[0] != vt[0]);
+    BOOST_CHECK(v[1] != vt[1]);
 }
 
 } // namespace di
