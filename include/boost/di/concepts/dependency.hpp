@@ -14,8 +14,6 @@
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/external.hpp"
 
-#include <memory>
-#include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/ref.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_arithmetic.hpp>

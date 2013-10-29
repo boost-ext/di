@@ -19,9 +19,7 @@
 #include "boost/di/scopes/thread.hpp"
 #include "boost/di/scopes/unique.hpp"
 
-#include <memory>
 #include <string>
-#include <vector>
 #include <boost/mpl/int.hpp>
 
 namespace boost {
