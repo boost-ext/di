@@ -15,7 +15,7 @@
     namespace boost {
     namespace di {
 
-    injector<> make_injector() {
+    inline injector<> make_injector() {
         return injector<>()();
     }
 
@@ -32,7 +32,7 @@
 
     template<BOOST_DI_TYPES(Args)>
     injector<typename detail::concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type>
-    make_injector(BOOST_DI_ARGS(Args, args)) {
+    inline make_injector(BOOST_DI_ARGS(Args, args)) {
         return injector<typename detail::concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type>(
             BOOST_DI_ARGS_PASS(args)
         );
