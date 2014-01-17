@@ -64,7 +64,7 @@ int main() {
     c4 c4_;
 
     auto injector = di::make_injector(
-        di::singleton<
+        di::shared<
             c1
         >()
       , di::unique<

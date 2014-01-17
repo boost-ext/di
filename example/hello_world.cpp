@@ -35,7 +35,7 @@ int main() {
     using injector_t = di::injector<
         impl // -> di::bind<i, impl>
              // -> di::deduce<di::bind<i, impl>>
-             // -> di::singleton<di::bind<i, impl>>
+             // -> di::shared<di::bind<i, impl>>
     >;
 
     injector_t().create<hello_world>();

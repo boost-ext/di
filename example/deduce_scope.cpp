@@ -12,8 +12,8 @@ namespace di = boost::di;
 namespace {
 struct if0 { virtual ~if0() { } virtual void dummy() = 0; };
 struct c0if0 : if0 { virtual void dummy() { } };
-struct c2 { BOOST_DI_CTOR(c2, std::shared_ptr<if0> /*singleton*/) { } };
-struct c3 { BOOST_DI_CTOR(c3, std::shared_ptr<if0> /*singleton*/) { } };
+struct c2 { BOOST_DI_CTOR(c2, std::shared_ptr<if0> /*shared*/) { } };
+struct c3 { BOOST_DI_CTOR(c3, std::shared_ptr<if0> /*shared*/) { } };
 struct c4 { BOOST_DI_CTOR(c4, std::unique_ptr<c2> /*unique*/, std::unique_ptr<c3> /*unique*/) { } };
 } // namespace
 
