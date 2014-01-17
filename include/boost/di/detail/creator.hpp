@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012-2013 Krzysztof Jusiak (krzysztof at jusiak dot net)
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -12,7 +12,7 @@
     #include "boost/di/type_traits/ctor_traits.hpp"
 
     #include <boost/preprocessor/repetition/repeat.hpp>
-    #include <boost/preprocessor/punctuation/comma_if.hpp>
+    #include <boost/type_traits/is_base_of.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/at.hpp>
@@ -40,9 +40,10 @@
             typename T
           , typename TCallStack
           , typename TDeps
+          , typename TCleanup
         >
         static typename binder<T, TCallStack>::result_type
-        execute(TDeps& deps) {
+        execute(TDeps& deps, TCleanup& cleanup) {
             return execute_impl<
                 T
               , typename mpl::push_back<
@@ -50,14 +51,45 @@
                   , typename binder<T, TCallStack>::given
                 >::type
               , binder<T, TCallStack>
-            >(deps);
+            >(deps, cleanup);
         }
 
     private:
         #define BOOST_PP_FILENAME_1 "boost/di/detail/creator.hpp"
         #define BOOST_PP_ITERATION_LIMITS BOOST_DI_LIMITS_BEGIN(0)
         #include BOOST_PP_ITERATE()
-    };
+
+		template<
+			typename TDependency
+		  , typename TDeps
+		  , typename TCleanup
+		>
+		static typename enable_if<is_base_of<TDependency, TDeps>, TDependency&>::type
+		acquire(TDeps& deps, TCleanup&) {
+			return static_cast<TDependency&>(deps);
+		}
+
+		template<
+			typename TDependency
+		  , typename TDeps
+		  , typename TCleanup
+		>
+		static typename disable_if<is_base_of<TDependency, TDeps>, TDependency&>::type
+		acquire(TDeps&, TCleanup& cleanup) {
+		    static TDependency* dependency = 0;
+			if (!dependency) {
+				dependency = new TDependency();
+				struct deleter {
+					static void delete_ptr() {
+						delete dependency;
+						dependency = 0;
+					}
+				};
+				cleanup.push_back(&deleter::delete_ptr);
+			}
+            return *dependency;
+    	}
+	};
 
     } // namespace detail
     } // namespace di
@@ -72,11 +104,12 @@
       , typename TCallStack
       , typename TDependency
       , typename TDeps
+      , typename TCleanup
     >
     static typename enable_if_c<
         mpl::size<typename ctor<TDependency>::type>::value == BOOST_PP_ITERATION()
       , typename TDependency::result_type
-    >::type execute_impl(TDeps& deps) {
+    >::type execute_impl(TDeps& deps, TCleanup& cleanup) {
 
         #define BOOST_DI_CREATOR_EXECUTE(z, n, _)       \
             BOOST_PP_COMMA_IF(n)                        \
@@ -86,9 +119,9 @@
                   , n                                   \
                 >::type                                 \
               , TCallStack                              \
-            >(deps)
+            >(deps, cleanup)
 
-        return static_cast<typename TDependency::type&>(deps).create(
+        return acquire<typename TDependency::type>(deps, cleanup).create(
             BOOST_PP_REPEAT(
                 BOOST_PP_ITERATION()
               , BOOST_DI_CREATOR_EXECUTE

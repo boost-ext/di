@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012-2013 Krzysztof Jusiak (krzysztof at jusiak dot net)
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -11,7 +11,6 @@
 
     #include "boost/di/aux_/meta.hpp"
     #include "boost/di/aux_/memory.hpp"
-    #include "boost/di/aux_/thread.hpp"
     #include "boost/di/type_traits/create_traits.hpp"
     #include "boost/di/convertibles/shared.hpp"
 
@@ -41,30 +40,20 @@
                 : in_scope_(false)
             { }
 
-            void call(const aux::shared_ptr<aux::mutex>& mutex) {
-                mutex_ = mutex;
-            }
-
             void call(const session_entry&) {
                 in_scope_ = true;
             }
 
             void call(const session_exit&) {
                 in_scope_ = false;
-                assert(mutex_.get());
-                aux::scoped_lock lock(*mutex_);
-                (void)lock;
-                object().reset();
+                object_.reset();
             }
 
             result_type create() {
-                assert(mutex_.get());
-                aux::scoped_lock lock(*mutex_);
-                (void)lock;
-                if (in_scope_ && !object()) {
-                    object().reset(type_traits::create_traits<TExpected, TGiven>());
+                if (in_scope_ && !object_) {
+                    object_.reset(type_traits::create_traits<TExpected, TGiven>());
                 }
-                return object();
+                return object_;
             }
 
             #define BOOST_PP_FILENAME_1 "boost/di/scopes/session.hpp"
@@ -72,13 +61,8 @@
             #include BOOST_PP_ITERATE()
 
         private:
-            static result_type& object() {
-                static result_type object;
-                return object;
-            }
-
+            result_type object_;
             bool in_scope_;
-            aux::shared_ptr<aux::mutex> mutex_;
         };
     };
 
@@ -92,15 +76,12 @@
 
     template<BOOST_DI_TYPES(Args)>
     result_type create(BOOST_DI_ARGS(Args, args)) {
-        assert(mutex_.get());
-        aux::scoped_lock lock(*mutex_);
-        (void)lock;
-        if (in_scope_ && !object()) {
-            object().reset(
+        if (in_scope_ && !object_) {
+            object_.reset(
                 type_traits::create_traits<TExpected, TGiven>(BOOST_DI_ARGS_PASS(args))
             );
         }
-        return object();
+        return object_;
     }
 
 #endif

@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012-2013 Krzysztof Jusiak (krzysztof at jusiak dot net)
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -175,9 +175,7 @@ BOOST_AUTO_TEST_CASE(bind_string_value_in_call) {
 using scope_empty_types = mpl::vector<
     deduce<>
   , unique<>
-  , thread<>
   , shared<>
-  , singleton<>
   , session<>
 >;
 
@@ -193,9 +191,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(scope_empty, TScope, scope_empty_types) {
 using scope_one_types = mpl::vector<
     mpl::pair< scopes::deduce,                      deduce<int>     >
   , mpl::pair< scopes::unique<>,                    unique<int>     >
-  , mpl::pair< scopes::thread<scopes::deduce>,      thread<int>     >
   , mpl::pair< scopes::shared<>,                    shared<int>     >
-  , mpl::pair< scopes::singleton<>,                 singleton<int>  >
   , mpl::pair< scopes::session<>,                   session<int>    >
 >;
 
@@ -213,9 +209,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(scope_one, T, scope_one_types) {
 using scope_many_types = mpl::vector<
     mpl::pair< scopes::deduce,                  deduce<int, double, float>      >
   , mpl::pair< scopes::unique<>,                unique<int, double, float>      >
-  , mpl::pair< scopes::thread<scopes::deduce>,  thread<int, double, float>      >
   , mpl::pair< scopes::shared<>,                shared<int, double, float>      >
-  , mpl::pair< scopes::singleton<>,             singleton<int, double, float>   >
   , mpl::pair< scopes::session<>,               session<int, double, float>     >
 >;
 
@@ -240,30 +234,6 @@ BOOST_AUTO_TEST_CASE(scope_with_call_stack) {
             >
           , mpl::vector<
                 fake_dependency_base_of<fake_scope<>, i, impl, void, call_stack<c0, c1>>::type
-            >
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(thread_mix) {
-    BOOST_CHECK((
-        contains_all<
-            thread<
-                int
-              , bind<if0, c0if0>
-              , unique<double>
-              , shared<float, char>
-              , unique<bind<c1>::in_name<float> >
-              , deduce<c2>::in_call<double>
-            >::type
-          , mpl::vector<
-                fake_dependency_base_of<scopes::thread<scopes::deduce>, int>::type
-              , fake_dependency_base_of<scopes::thread<scopes::deduce>, if0, c0if0>::type
-              , fake_dependency_base_of<scopes::thread<scopes::unique<>>, double>::type
-              , fake_dependency_base_of<scopes::thread<scopes::shared<>>, float>::type
-              , fake_dependency_base_of<scopes::thread<scopes::shared<>>, char>::type
-              , fake_dependency_base_of<scopes::thread<scopes::unique<>>, c1, c1, float>::type
-              , fake_dependency_base_of<scopes::thread<scopes::deduce>, c2, c2, void, double>::type
             >
         >::value
     ));

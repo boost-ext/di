@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012-2013 Krzysztof Jusiak (krzysztof at jusiak dot net)
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -15,8 +15,6 @@
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/session.hpp"
 #include "boost/di/scopes/shared.hpp"
-#include "boost/di/scopes/singleton.hpp"
-#include "boost/di/scopes/thread.hpp"
 #include "boost/di/scopes/unique.hpp"
 
 #include <string>
@@ -28,7 +26,9 @@ namespace di {
 template<int N>
 struct int_ : mpl::int_<N>
 {
-    operator int() const { return N; }
+    operator int() const {
+        return N;
+    }
 };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
@@ -52,18 +52,8 @@ struct unique
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-struct thread
-    : scope<scopes::thread<scopes::deduce> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
-{ };
-
-template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 struct shared
     : scope<scopes::shared<> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
-{ };
-
-template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-struct singleton
-    : scope<scopes::singleton<> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>

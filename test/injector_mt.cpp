@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012-2013 Krzysztof Jusiak (krzysztof at jusiak dot net)
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -7,12 +7,10 @@
 #include "boost/di/injector.hpp"
 #include "boost/di/make_injector.hpp"
 #include "boost/di/aux_/memory.hpp"
-#include "boost/di/aux_/thread.hpp"
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
 #include <boost/mpl/vector.hpp>
-#include <boost/thread.hpp>
 
 #include "fake_visitor.hpp"
 #include "fake_scope.hpp"
@@ -389,54 +387,60 @@ BOOST_AUTO_TEST_CASE(session_scope) {
     BOOST_CHECK(c20_.if0_ == c20_.if0__);
     }
 
-    {
-    injector_.call(scopes::session_exit());
-    auto c20_ = injector_.create<c20>();
-    BOOST_CHECK(nullptr == c20_.if0_.get());
-    BOOST_CHECK(nullptr == c20_.if0__.get());
-    }
+	{
+	injector_.call(scopes::session_exit());
+	auto c20_ = injector_.create<c20>();
+	BOOST_CHECK(nullptr == c20_.if0_.get());
+	BOOST_CHECK(nullptr == c20_.if0__.get());
+	}
 }
 
-BOOST_AUTO_TEST_CASE(thread_local_scope) {
-    std::vector<aux::shared_ptr<c20>> v;
-    std::vector<aux::shared_ptr<c20>> vt;
-    aux::mutex m;
+BOOST_AUTO_TEST_CASE(scoped_injector_create) {
+	aux::shared_ptr<int> i1;
+	aux::shared_ptr<int> i2;
+	aux::shared_ptr<int> i3;
 
-    injector<thread<shared<c0if0>>> injector_;
+	{
+	injector<shared<int>> i;
 
-    boost::thread t1([&]{
-        aux::scoped_lock l(m);
-        (void)l;
-        v.push_back(injector_.create<aux::shared_ptr<c20>>());
-        vt.push_back(injector_.create<aux::shared_ptr<c20>>());
-    });
+	i1 = i.create<aux::shared_ptr<int>>();
+	i2 = i.create<aux::shared_ptr<int>>();
 
-    boost::thread t2([&]{
-        aux::scoped_lock l(m);
-        (void)l;
-        v.push_back(injector_.create<aux::shared_ptr<c20>>());
-        vt.push_back(injector_.create<aux::shared_ptr<c20>>());
-    });
-    t1.join();
-    t2.join();
+	BOOST_CHECK(i1 == i2);
+	}
 
-    BOOST_CHECK_EQUAL(2u, v.size());
+	{
+	injector<shared<int>> i;
 
-    BOOST_CHECK(dynamic_cast<c0if0*>(v[0]->if0_.get()));
-    BOOST_CHECK(dynamic_cast<c0if0*>(v[0]->if0__.get()));
-    BOOST_CHECK(v[0]->if0_ == v[0]->if0__);
+	i3 = i.create<aux::shared_ptr<int>>();
 
-    BOOST_CHECK(dynamic_cast<c0if0*>(v[1]->if0_.get()));
-    BOOST_CHECK(dynamic_cast<c0if0*>(v[1]->if0__.get()));
-    BOOST_CHECK(v[1]->if0_ == v[1]->if0__);
+	BOOST_CHECK(i3 != i1);
+	BOOST_CHECK(i3 != i2);
+	}
+}
 
-    BOOST_CHECK(v[0]->if0_ != v[1]->if0_);
-    BOOST_CHECK(v[0]->if0__ != v[1]->if0__);
+BOOST_AUTO_TEST_CASE(scoped_injector_create_with_deduced_scope) {
+	aux::shared_ptr<c27> i1;
+	aux::shared_ptr<c27> i2;
+	aux::shared_ptr<c27> i3;
 
-    BOOST_CHECK_EQUAL(2u, vt.size());
+	{
+	injector<> i;
 
-    BOOST_CHECK(v[0] != vt[0]);
-    BOOST_CHECK(v[1] != vt[1]);
+	i1 = i.create<aux::shared_ptr<c27>>();
+	i2 = i.create<aux::shared_ptr<c27>>();
+
+	BOOST_CHECK(i1->d_ == i2->d_);
+	}
+
+	{
+	injector<> i;
+
+	i3 = i.create<aux::shared_ptr<c27>>();
+
+	BOOST_CHECK(i3->d_ != i1->d_);
+	BOOST_CHECK(i3->d_ != i2->d_);
+	}
 }
 
 } // namespace di

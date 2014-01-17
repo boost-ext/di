@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012-2013 Krzysztof Jusiak (krzysztof at jusiak dot net)
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -11,12 +11,12 @@
 
     #include "boost/di/aux_/meta.hpp"
     #include "boost/di/aux_/memory.hpp"
-    #include "boost/di/aux_/thread.hpp"
     #include "boost/di/detail/pool.hpp"
     #include "boost/di/detail/binder.hpp"
     #include "boost/di/detail/creator.hpp"
     #include "boost/di/detail/visitor.hpp"
 
+	#include <vector>
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/type.hpp>
     #include <boost/non_type.hpp>
@@ -35,7 +35,6 @@
     #include <boost/mpl/front.hpp>
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/insert.hpp>
-    #include <boost/mpl/joint_view.hpp>
     #include <boost/mpl/contains.hpp>
     #include <boost/mpl/aux_/yes_no.hpp>
     #include <boost/mpl/has_xxx.hpp>
@@ -171,35 +170,6 @@
         { };
 
         template<
-            typename T
-          , typename TBind
-          , typename TCallStack =
-                mpl::vector1<typename type_traits::make_plain<T>::type>
-        >
-        struct deps_impl
-            : unique<
-                  typename mpl::fold<
-                      ctor<typename binder<T, TCallStack, TBind>::given>
-                    , mpl::vector0<>
-                    , mpl::copy<
-                          mpl::joint_view<
-                              mpl::vector1<binder<mpl::_2, TCallStack, TBind> >
-                            , deps_impl<
-                                  mpl::_2
-                                , TBind
-                                , mpl::push_back<
-                                      TCallStack
-                                    , type_traits::make_plain<mpl::_2>
-                                  >
-                              >
-                          >
-                        , mpl::back_inserter<mpl::_1>
-                      >
-                  >::type
-              >::type
-        { };
-
-        template<
             typename TSeq
           , typename T
           , typename TPolicy
@@ -226,9 +196,13 @@
         typedef get_deps<TDeps> deps;
         typedef get_types<TDeps, has_is_policy<mpl::_> > policies;
 
-        module()
-            : mutex_(new aux::mutex())
-        { }
+        module() { }
+
+		~module() {
+			for (int i = 0; i < cleanup.size(); ++i) {
+				cleanup[i]();
+			}
+		}
 
         #define BOOST_PP_FILENAME_1 "boost/di/detail/module.hpp"
         #define BOOST_PP_ITERATION_LIMITS BOOST_DI_LIMITS_BEGIN(1)
@@ -238,23 +212,8 @@
         T create() {
             BOOST_MPL_ASSERT((typename verify_policies<policies, deps, T>::type));
 
-            typedef typename binder<T, mpl::vector0<>, TBinder<deps> >::type binder_t;
-
-            typedef typename unique<
-                mpl::joint_view<
-                    deps
-                  , mpl::joint_view<
-                        mpl::vector1<binder_t>
-                      , typename deps_impl<T, TBinder<deps> >::type
-                    >
-                >
-            >::type deps_t;
-
-            TPool<deps_t> deps_(static_cast<TPool<deps>&>(*this), init());
-            call_impl<deps_t>(deps_, mutex_);
-
             return TCreator<TBinder<deps> >::template
-                execute<T, mpl::vector0<> >(deps_)(boost::type<T>());
+                execute<T, mpl::vector0<> >(static_cast<TPool<deps>&>(*this), cleanup)(boost::type<T>());
         }
 
         template<typename T, typename Visitor>
@@ -267,7 +226,6 @@
 
         template<typename TAction>
         void call(const TAction& action) {
-            call_impl<deps>(static_cast<TPool<deps>&>(*this), mutex_);
             call_impl<deps>(static_cast<TPool<deps>&>(*this), action);
         }
 
@@ -292,7 +250,7 @@
             call_impl<typename mpl::pop_front<TSeq>::type>(deps, action);
         }
 
-        aux::shared_ptr<aux::mutex> mutex_;
+        std::vector<void(*)()> cleanup;
     };
 
     } // namespace detail
@@ -322,7 +280,6 @@
               >(BOOST_DI_ARGS_PASS(args))
             , init()
           )
-        , mutex_(new aux::mutex())
     { }
 
 #endif

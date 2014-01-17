@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012-2013 Krzysztof Jusiak (krzysztof at jusiak dot net)
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -474,9 +474,7 @@ using externals_priority_t = mpl::vector<
     >
   , module<
         mpl::vector<
-            fake_dependency<scopes::thread<scopes::deduce>, int, int, mpl::string<'1'>>::type
-          , fake_dependency<scopes::thread<scopes::deduce>, int, int, mpl::string<'2'>>::type
-          , fake_dependency<scopes::unique<>, int, int, mpl::string<'1'>>::type
+            fake_dependency<scopes::unique<>, int, int, mpl::string<'1'>>::type
           , fake_dependency<scopes::unique<>, int, int, mpl::string<'2'>>::type
           , fake_dependency<scopes::external<>, int, int, mpl::string<'1'>>::type
           , fake_dependency<scopes::external<>, int, int, mpl::string<'2'>>::type
@@ -488,8 +486,6 @@ using externals_priority_t = mpl::vector<
           , fake_dependency<scopes::external<>, int, int, mpl::string<'2'>>::type
           , fake_dependency<scopes::unique<>, int, int, mpl::string<'1'>>::type
           , fake_dependency<scopes::unique<>, int, int, mpl::string<'2'>>::type
-          , fake_dependency<scopes::thread<scopes::deduce>, int, int, mpl::string<'1'>>::type
-          , fake_dependency<scopes::thread<scopes::deduce>, int, int, mpl::string<'2'>>::type
         >
     >
 >;

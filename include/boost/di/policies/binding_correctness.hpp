@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012-2013 Krzysztof Jusiak (krzysztof at jusiak dot net)
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -11,7 +11,6 @@
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/scopes/shared.hpp"
-#include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/session.hpp"
 
 #include <boost/utility/enable_if.hpp>
@@ -51,12 +50,12 @@ namespace policies {
  * struct c { c(aux::shared_ptr<s>, aux::shared_ptr<k>); }; //arguments evaluation order is not specified
  * injector<
  *     bind<int>::in_call<s>::to(i)
- *   , singleton<s>
+ *   , shared<s>
  * >().create<c>();
  * @endcode
  *
  * @code
- * singleton<int>
+ * shared<int>
  * struct c { c(int&); }; // only c -> not ok
  * struct d { d(aux::shared_ptr<int>); }; c and d -> ok
  * @endcode
@@ -70,11 +69,6 @@ class binding_correctness
 
     template<template<typename> class TConvertible>
     struct is_scope<scopes::shared<TConvertible> >
-        : mpl::true_
-    { };
-
-    template<template<typename> class TConvertible>
-    struct is_scope<scopes::singleton<TConvertible> >
         : mpl::true_
     { };
 

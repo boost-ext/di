@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012-2013 Krzysztof Jusiak (krzysztof at jusiak dot net)
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -405,6 +405,15 @@ struct c26
 
     std::vector<aux::shared_ptr<if0>> v1_;
     std::vector<int> v2_;
+};
+
+struct c27
+{
+	BOOST_DI_CTOR(c27, aux::shared_ptr<double> d)
+		: d_(d)
+	{ }
+
+	aux::shared_ptr<double> d_;
 };
 
 enum eid
