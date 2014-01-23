@@ -25,8 +25,6 @@
 #if defined(BOOST_DI_STD_SMART_PTR)
 
     #include <memory>
-    #include <boost/shared_ptr.hpp>
-    #include <boost/weak_ptr.hpp>
 
     namespace boost {
     namespace di {
