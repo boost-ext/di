@@ -54,30 +54,6 @@ public:
     );
 };
 
-template<typename T>
-class BOOST_PP_CAT(has_, BOOST_DI_CREATE)
-{
-    struct base_impl { void BOOST_DI_CREATE(...) { } };
-    struct base
-        : base_impl
-        , mpl::if_<is_class<T>, T, mpl::void_>::type
-    { base() { } };
-
-    template<typename U>
-    static mpl::aux::no_tag test(
-        U*
-      , non_type<void (base_impl::*)(...), &U::BOOST_DI_CREATE>* = 0
-    );
-
-    static mpl::aux::yes_tag test(...);
-
-public:
-    BOOST_STATIC_CONSTANT(
-        bool
-      , value = sizeof(test((base*)(0))) == sizeof(mpl::aux::yes_tag)
-    );
-};
-
 template<typename T, typename = void>
 struct ctor_traits
     : parameter_types<BOOST_TYPEOF_TPL(&di::ctor_traits<T>::BOOST_DI_CONSTRUCTOR)>::type
@@ -86,11 +62,6 @@ struct ctor_traits
 template<typename T>
 struct ctor_traits<T, typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_CONSTRUCTOR)<T> >::type>
     : parameter_types<BOOST_TYPEOF_TPL(&T::BOOST_DI_CONSTRUCTOR)>::type
-{ };
-
-template<typename T>
-struct ctor_traits<T, typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_CREATE)<T> >::type>
-    : parameter_types<BOOST_TYPEOF_TPL(&T::BOOST_DI_CREATE)>::type
 { };
 
 } // namespace type_traits

@@ -25,8 +25,28 @@ class a { };
 class b { };
 class c { };
 class d { };
-class i { };
-class impl : public i { };
+
+struct i
+{
+    virtual ~i() { }
+    virtual void dummy() = 0;
+};
+
+struct impl : public i
+{
+    BOOST_DI_CTOR(impl, int i)
+        : i(i)
+    { }
+
+    void dummy() override { }
+
+    int i = 0;
+};
+
+struct fake : public i
+{
+    void dummy() override { }
+};
 
 struct if0
 {
@@ -36,17 +56,17 @@ struct if0
 
 struct c0if0 : if0
 {
-    virtual void dummy() { }
+    void dummy() override { }
 };
 
 struct c1if0 : if0
 {
-    virtual void dummy() { }
+    void dummy() override { }
 };
 
 struct c2if0 : if0
 {
-    virtual void dummy() { }
+    void dummy() override { }
 };
 
 struct c3if0 : if0
@@ -58,7 +78,7 @@ struct c3if0 : if0
         : i(i), d(d)
     { }
 
-    virtual void dummy() { }
+    void dummy() override { }
 
     int i = 0;
     double d = 0.0;
@@ -422,19 +442,6 @@ enum eid
   , e1 = 2
 };
 
-class if0_factory
-{
-public:
-    if0* BOOST_DI_CREATE(eid id) {
-        switch(id) {
-            case e0: return new c0if0();
-            case e1: return new c1if0();
-        }
-
-        return nullptr;
-    }
-};
-
 struct cd2;
 struct cd5;
 
@@ -509,7 +516,7 @@ struct transaction_provider
         : c3_(c3_)
     { }
 
-    virtual aux::shared_ptr<transaction> get() const
+    aux::shared_ptr<transaction> get() const override
     {
         return aux::shared_ptr<transaction>(new transaction(c3_->i));
     }

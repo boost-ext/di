@@ -70,17 +70,9 @@
     {
         BOOST_STATIC_CONSTANT(
             bool
-          , value = BOOST_PP_CAT(has_, BOOST_DI_CREATE)<T>::value ||
-                    has_value<T>::value ||
-                    is_mpl_string<T>::value
+          , value = has_value<T>::value || is_mpl_string<T>::value
         );
     };
-
-    template<typename TExpected, typename TGiven>
-    typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_CREATE)<TGiven>, TExpected*>::type
-    create_traits() {
-        return TGiven().BOOST_DI_CREATE();
-    }
 
     template<typename TExpected, typename TGiven>
     typename disable_if<is_explicit<TGiven>, TExpected*>::type
@@ -116,20 +108,7 @@
         args##n(type<typename mpl::at_c<ctor, n>::type>())
 
     template<typename TExpected, typename TGiven, BOOST_DI_TYPES(Args)>
-    typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_CREATE)<TGiven>, TExpected*>::type
-    create_traits(BOOST_DI_ARGS(Args, args)) {
-        return TGiven().BOOST_DI_CREATE(
-            BOOST_PP_REPEAT(
-                BOOST_PP_ITERATION()
-              , BOOST_DI_CONVERT
-              , typename ctor_traits<TGiven>::type
-            )
-        );
-    }
-
-    template<typename TExpected, typename TGiven, BOOST_DI_TYPES(Args)>
-    typename disable_if<BOOST_PP_CAT(has_, BOOST_DI_CREATE)<TGiven>, TExpected*>::type
-    create_traits(BOOST_DI_ARGS(Args, args)) {
+    TExpected* create_traits(BOOST_DI_ARGS(Args, args)) {
         return new TGiven(
             BOOST_PP_REPEAT(
                 BOOST_PP_ITERATION()

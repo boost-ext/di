@@ -13,10 +13,6 @@
     #define BOOST_DI_CONSTRUCTOR boost_di_constructor_
 #endif
 
-#if !defined(BOOST_DI_CREATE)
-    #define BOOST_DI_CREATE boost_di_create_
-#endif
-
 #if !defined(BOOST_DI_CTOR_CFG_VA_ARGS) && !defined(BOOST_DI_CTOR_CFG_BRACKET)
     #if (__cplusplus >= 201100L) || defined(BOOST_MSVC)
         #define BOOST_DI_CTOR_CFG_VA_ARGS

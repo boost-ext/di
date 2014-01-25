@@ -22,7 +22,7 @@ struct c0 : i0 { };
 
 struct c1
 {
-    BOOST_DI_CTOR(c1, boost::shared_ptr<i0>) { }
+    BOOST_DI_CTOR(c1, std::shared_ptr<i0>) { }
 };
 
 struct c2
@@ -32,7 +32,7 @@ struct c2
 
 struct c3
 {
-    BOOST_DI_CTOR(c3, boost::shared_ptr<c1>, boost::shared_ptr<c2>) { }
+    BOOST_DI_CTOR(c3, std::shared_ptr<c1>, std::shared_ptr<c2>) { }
 };
 
 } // namespace
@@ -62,9 +62,9 @@ int main() {
 }
 
 // (anonymous namespace)::c3
-// 	boost::shared_ptr<(anonymous namespace)::c1>
-// 		boost::shared_ptr<(anonymous namespace)::i0>
-// 	boost::shared_ptr<(anonymous namespace)::c2>
+// 	std::shared_ptr<(anonymous namespace)::c1>
+// 		std::shared_ptr<(anonymous namespace)::i0>
+// 	std::shared_ptr<(anonymous namespace)::c2>
 // 		int
 // 		double
 // 		char

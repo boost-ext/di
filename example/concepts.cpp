@@ -39,7 +39,7 @@ struct c3
 {
     BOOST_DI_CTOR(c3
       , std::string
-      , boost::shared_ptr<i>
+      , std::shared_ptr<i>
       , const di::named<boost::shared_ptr<i>, name2>&
     ) { }
 };
@@ -48,17 +48,17 @@ struct c4 { };
 struct c5 { };
 struct c6
 {
-    BOOST_DI_CTOR(c6, boost::shared_ptr<i>) { }
+    BOOST_DI_CTOR(c6, std::shared_ptr<i>) { }
 };
 
 struct c7
 {
-    BOOST_DI_CTOR(c7, const di::named<boost::shared_ptr<i>, name3>&) { }
+    BOOST_DI_CTOR(c7, const di::named<std::shared_ptr<i>, name3>&) { }
 };
 
 struct c8
 {
-    BOOST_DI_CTOR(c8, std::string, boost::shared_ptr<i>, c7) { }
+    BOOST_DI_CTOR(c8, std::string, std::shared_ptr<i>, c7) { }
 };
 
 struct c9 { };
@@ -80,7 +80,7 @@ struct c12
 
 struct c13
 {
-    BOOST_DI_CTOR(c13, boost::shared_ptr<c12>) { }
+    BOOST_DI_CTOR(c13, std::shared_ptr<c12>) { }
 };
 
 } // namespace
