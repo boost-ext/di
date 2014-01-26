@@ -58,8 +58,7 @@ public:
     { }
 
     template<typename T>
-    T create() const
-    {
+    T create() const {
         auto common = di::make_injector(
             di::bind<int>::to(static_cast<int>(id))
         );
