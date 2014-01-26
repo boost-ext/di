@@ -13,11 +13,15 @@
 #include "boost/di/convertibles/shared.hpp"
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/external.hpp"
+#include "boost/di/type_traits/parameter_types.hpp"
 
 #include <boost/ref.hpp>
+#include <boost/non_type.hpp>
+#include <boost/typeof/typeof.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_arithmetic.hpp>
 #include <boost/type_traits/is_enum.hpp>
+#include <boost/type_traits/is_class.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/if.hpp>
@@ -25,6 +29,8 @@
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/lambda.hpp>
+#include <boost/mpl/void.hpp>
+#include <boost/mpl/aux_/yes_no.hpp>
 
 namespace boost {
 namespace di {
@@ -84,8 +90,58 @@ class dependency : public get_scope<TExpected, TGiven, TScope>::type
     };
 
     template<typename T>
+    class has_call_operator
+    {
+        struct base_impl { void operator()(...) { } };
+        struct base
+            : base_impl
+            , mpl::if_<is_class<T>, T, mpl::void_>::type
+        { base() { } };
+
+        template<typename U>
+        static mpl::aux::no_tag test(
+            U*
+          , non_type<void (base_impl::*)(...), &U::operator()>* = 0
+        );
+
+        static mpl::aux::yes_tag test(...);
+
+    public:
+        BOOST_STATIC_CONSTANT(
+            bool
+          , value = sizeof(test((base*)(0))) == sizeof(mpl::aux::yes_tag)
+        );
+    };
+
+    template<typename T>
     struct is_number
         : mpl::or_<is_arithmetic<T>, is_enum<T> >
+    { };
+
+    template<typename T>
+    struct get_convertible_impl;
+
+    template<typename T>
+    struct get_convertible_impl<T&>
+    {
+        typedef ref_type type;
+    };
+
+    template<typename T>
+    struct get_convertible_impl<aux::shared_ptr<T> >
+    {
+        typedef shared_type type;
+    };
+
+    template<typename T, typename = void>
+    struct get_convertible
+    {
+        typedef T type;
+    };
+
+    template<typename T>
+    struct get_convertible<T, typename enable_if<has_call_operator<T> >::type>
+        : get_convertible_impl<typename type_traits::parameter_types<BOOST_TYPEOF_TPL(&T::operator())>::result_type>
     { };
 
 public:
@@ -123,14 +179,23 @@ public:
 
     template<typename T>
     static typename external<expected, T, value_type>::type
-    to(const T& obj, typename enable_if<is_number<T> >::type* = 0) {
+    to(const T& obj, typename enable_if<is_number<T> >::type* = 0
+                   , typename disable_if<has_call_operator<T> >::type* = 0) {
         return typename external<expected, T, value_type>::type(obj);
     }
 
     template<typename T>
     static typename external<const expected, T, ref_type>::type
-    to(const T& obj, typename disable_if<is_number<T> >::type* = 0) {
+    to(const T& obj, typename disable_if<is_number<T> >::type* = 0
+                   , typename disable_if<has_call_operator<T> >::type* = 0) {
         return typename external<const expected, T, ref_type>::type(boost::cref(obj));
+    }
+
+    template<typename T>
+    static typename external<expected, T, typename get_convertible<T>::type>::type
+    to(const T& obj, typename enable_if<has_call_operator<T> >::type* = 0
+                   , typename disable_if<is_number<T> >::type* = 0) {
+        return typename external<expected, T, typename get_convertible<T>::type>::type(obj);
     }
 
     template<typename T>

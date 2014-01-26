@@ -18,8 +18,26 @@
     namespace type_traits {
 
     template<typename>
-    struct parameter_types
+    struct parameter_types;
+
+    template<typename R>
+    struct parameter_types<R(*)()>
     {
+        typedef R result_type;
+        typedef mpl::vector0<> type;
+    };
+
+    template<typename R, typename T>
+    struct parameter_types<R(T::*)()>
+    {
+        typedef R result_type;
+        typedef mpl::vector0<> type;
+    };
+
+    template<typename R, typename T>
+    struct parameter_types<R(T::*)() const>
+    {
+        typedef R result_type;
         typedef mpl::vector0<> type;
     };
 
@@ -35,16 +53,25 @@
 
 #else
 
-    template<typename R, BOOST_DI_TYPES(Args)>                  \
-    struct parameter_types<R(*)(BOOST_DI_TYPES_PASS(Args))>     \
-    {                                                           \
-        typedef mpl::vector<BOOST_DI_TYPES_PASS(Args)> type;    \
+    template<typename R, BOOST_DI_TYPES(Args)>                          \
+    struct parameter_types<R(*)(BOOST_DI_TYPES_PASS(Args))>             \
+    {                                                                   \
+        typedef R result_type;                                          \
+        typedef mpl::vector<BOOST_DI_TYPES_PASS(Args)> type;            \
     };
 
-    template<typename R, typename T, BOOST_DI_TYPES(Args)>      \
-    struct parameter_types<R(T::*)(BOOST_DI_TYPES_PASS(Args))>  \
-    {                                                           \
-        typedef mpl::vector<BOOST_DI_TYPES_PASS(Args)> type;    \
+    template<typename R, typename T, BOOST_DI_TYPES(Args)>              \
+    struct parameter_types<R(T::*)(BOOST_DI_TYPES_PASS(Args))>          \
+    {                                                                   \
+        typedef R result_type;                                          \
+        typedef mpl::vector<BOOST_DI_TYPES_PASS(Args)> type;            \
+    };
+
+    template<typename R, typename T, BOOST_DI_TYPES(Args)>              \
+    struct parameter_types<R(T::*)(BOOST_DI_TYPES_PASS(Args)) const>    \
+    {                                                                   \
+        typedef R result_type;                                          \
+        typedef mpl::vector<BOOST_DI_TYPES_PASS(Args)> type;            \
     };
 
 #endif

@@ -76,7 +76,7 @@ public:
                 }
 
                 return nullptr;
-            }())
+            })
         );
 
         return injector.template create<T>();

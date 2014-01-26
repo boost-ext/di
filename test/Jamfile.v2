@@ -67,6 +67,7 @@ test-suite "type traits" :
     [ run-cpp11 type_traits/ctor_traits_ut.cpp ]
     [ run-cpp11 type_traits/is_same_base_of_ut.cpp ]
     [ run-cpp11 type_traits/make_plain_ut.cpp ]
+    [ run-cpp11 type_traits/parameter_types_ut.cpp ]
     [ run-cpp11 type_traits/remove_accessors_ut.cpp ]
     [ run-cpp11 type_traits/scope_traits_ut.cpp ]
 ;

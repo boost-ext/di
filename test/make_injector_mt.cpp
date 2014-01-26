@@ -191,7 +191,7 @@ BOOST_AUTO_TEST_CASE(runtime_factory_fake) {
             }
 
             return common.create<aux::shared_ptr<impl>>();
-        }())
+        })
     );
 
     auto i_ = all.create<aux::shared_ptr<i>>();
