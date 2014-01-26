@@ -81,6 +81,7 @@ public:
         return injector.template create<T>();
     }
 
+private:
     eid& id;
 };
 
