@@ -20,6 +20,9 @@
 
     namespace boost {
     namespace di {
+
+    struct none { };
+
     namespace detail {
 
     template<typename TBinder>
@@ -35,6 +38,26 @@
             : TBinder::template get_dependency<T, TCallStack>::type
         { };
 
+        template<
+            typename TCallStack
+          , typename TDeps
+          , typename TCleanup
+        >
+        struct eager_creator
+        {
+            eager_creator(TDeps& deps, TCleanup& cleanup)
+                : deps_(deps), cleanup_(cleanup)
+            { }
+
+            template<typename T>
+            operator T() const {
+                return creator::execute<T, TCallStack>(deps_, cleanup_)(boost::type<T>());
+            }
+
+            TDeps& deps_;
+            TCleanup& cleanup_;
+        };
+
     public:
         template<
             typename T
@@ -42,8 +65,19 @@
           , typename TDeps
           , typename TCleanup
         >
+        static eager_creator<TCallStack, TDeps, TCleanup>
+        execute(TDeps& deps, TCleanup& cleanup, typename enable_if<is_same<T, none>>::type* = 0) {
+            return eager_creator<TCallStack, TDeps, TCleanup>(deps, cleanup);
+        }
+
+        template<
+            typename T
+          , typename TCallStack
+          , typename TDeps
+          , typename TCleanup
+        >
         static typename binder<T, TCallStack>::result_type
-        execute(TDeps& deps, TCleanup& cleanup) {
+        execute(TDeps& deps, TCleanup& cleanup, typename disable_if<is_same<T, none>>::type* = 0) {
             return execute_impl<
                 T
               , typename mpl::push_back<
