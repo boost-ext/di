@@ -198,7 +198,7 @@
         module() { }
 
 		~module() {
-			for (int i = 0; i < cleanup.size(); ++i) {
+			for (std::size_t i = 0; i < cleanup.size(); ++i) {
 				cleanup[i]();
 			}
 		}
@@ -212,7 +212,7 @@
             BOOST_MPL_ASSERT((typename verify_policies<policies, deps, T>::type));
 
             return TCreator<TBinder<deps> >::template
-                execute<T, mpl::vector0<> >(static_cast<TPool<deps>&>(*this), cleanup)(boost::type<T>());
+                execute<T, mpl::vector0<> >(static_cast<TPool<deps>&>(*this), cleanup);
         }
 
         template<typename T, typename Visitor>

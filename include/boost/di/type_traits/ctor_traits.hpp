@@ -7,26 +7,56 @@
 #ifndef BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 
-#include "boost/di/type_traits/parameter_types.hpp"
 #include "boost/di/ctor.hpp"
+#include "boost/di/type_traits/parameter_types.hpp"
+#include "boost/di/type_traits/has_ctor.hpp"
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_class.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/non_type.hpp>
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/fold.hpp>
+#include <boost/mpl/range_c.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/void.hpp>
+#include <boost/mpl/int.hpp>
+#include <boost/mpl/push_back.hpp>
 #include <boost/mpl/aux_/yes_no.hpp>
 
 namespace boost {
 namespace di {
 
-template<typename>
-struct ctor_traits
+struct any_type { };
+
+template<typename T>
+struct get_int
 {
-    static void BOOST_DI_CONSTRUCTOR(); //trivial ctor
+	typedef mpl::int_<T::value> type;
 };
+
+template<typename T>
+struct get_
+	: mpl::fold<
+		mpl::range_c<int, 1, BOOST_MPL_LIMIT_VECTOR_SIZE>
+	  , mpl::int_<0>
+	  , mpl::if_<
+			type_traits::has_ctor<T, get_int<mpl::_2> >
+		  , mpl::_2
+		  , mpl::_1
+		>
+	  >::type
+{ };
+
+template<typename T>
+struct ctor_traits
+	: mpl::fold<
+		  mpl::range_c<int, 0, get_<T>::value>
+		, mpl::vector0<>
+		, mpl::push_back<mpl::_1, any_type>
+	  >
+{ };
 
 namespace type_traits {
 
@@ -56,12 +86,17 @@ public:
 
 template<typename T, typename = void>
 struct ctor_traits
-    : parameter_types<BOOST_TYPEOF_TPL(&di::ctor_traits<T>::BOOST_DI_CONSTRUCTOR)>::type
+	: di::ctor_traits<T>::type
+{ };
+
+template<typename T>
+struct ctor_traits<T, typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_CONSTRUCTOR)<di::ctor_traits<T> > >::type>
+	: parameter_types<BOOST_TYPEOF_TPL(&di::ctor_traits<T>::BOOST_DI_CONSTRUCTOR)>::type
 { };
 
 template<typename T>
 struct ctor_traits<T, typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_CONSTRUCTOR)<T> >::type>
-    : parameter_types<BOOST_TYPEOF_TPL(&T::BOOST_DI_CONSTRUCTOR)>::type
+	: parameter_types<BOOST_TYPEOF_TPL(&T::BOOST_DI_CONSTRUCTOR)>::type
 { };
 
 } // namespace type_traits

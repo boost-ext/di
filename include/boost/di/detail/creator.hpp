@@ -20,9 +20,6 @@
 
     namespace boost {
     namespace di {
-
-    struct none { };
-
     namespace detail {
 
     template<typename TBinder>
@@ -39,7 +36,8 @@
         { };
 
         template<
-            typename TCallStack
+            typename T
+          , typename TCallStack
           , typename TDeps
           , typename TCleanup
         >
@@ -49,9 +47,14 @@
                 : deps_(deps), cleanup_(cleanup)
             { }
 
-            template<typename T>
-            operator T() const {
-                return creator::execute<T, TCallStack>(deps_, cleanup_)(boost::type<T>());
+            template<
+                typename U
+              //, typename = typename disable_if<is_same<U, T> >::type
+            >
+            operator U() const {
+                return creator::execute_impl<U, TCallStack, binder<U, TCallStack> >(
+                    deps_, cleanup_)(boost::type<U>()
+                );
             }
 
             TDeps& deps_;
@@ -65,27 +68,9 @@
           , typename TDeps
           , typename TCleanup
         >
-        static eager_creator<TCallStack, TDeps, TCleanup>
-        execute(TDeps& deps, TCleanup& cleanup, typename enable_if<is_same<T, none>>::type* = 0) {
-            return eager_creator<TCallStack, TDeps, TCleanup>(deps, cleanup);
-        }
-
-        template<
-            typename T
-          , typename TCallStack
-          , typename TDeps
-          , typename TCleanup
-        >
-        static typename binder<T, TCallStack>::result_type
-        execute(TDeps& deps, TCleanup& cleanup, typename disable_if<is_same<T, none>>::type* = 0) {
-            return execute_impl<
-                T
-              , typename mpl::push_back<
-                    TCallStack
-                  , typename binder<T, TCallStack>::given
-                >::type
-              , binder<T, TCallStack>
-            >(deps, cleanup);
+        static eager_creator<T, TCallStack, TDeps, TCleanup>
+        execute(TDeps& deps, TCleanup& cleanup) {
+            return eager_creator<T, TCallStack, TDeps, TCleanup>(deps, cleanup);
         }
 
     private:
@@ -110,18 +95,18 @@
 		>
 		static typename disable_if<is_base_of<TDependency, TDeps>, TDependency&>::type
 		acquire(TDeps&, TCleanup& cleanup) {
-		    static TDependency* dependency = 0;
-			if (!dependency) {
-				dependency = new TDependency();
+		    static TDependency* dep = 0;
+			if (!dep) {
+				dep = new TDependency();
 				struct deleter {
 					static void delete_ptr() {
-						delete dependency;
-						dependency = 0;
+						//delete dep;
+						//dep = 0;
 					}
 				};
-				cleanup.push_back(&deleter::delete_ptr);
+				//cleanup.push_back(&deleter::delete_ptr);
 			}
-            return *dependency;
+            return *dep;
     	}
 	};
 
