@@ -65,13 +65,11 @@ struct named2<T, typename enable_if<
                 : deps_(deps), cleanup_(cleanup)
             { }
 
-//eager_creator<std::shared_ptr<boost::di::c27>, std::shared_ptr<boost::di::c27>
-
             template<
                 typename U
 			  , typename NU = typename named2<U>::type
 			  , typename PU = typename type_traits::make_plain<U>::type
-			  , typename = typename disable_if<type_traits::is_same_base_of<plain_t, PU> >::type
+			  , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
             >
             operator U() const {
                 return creator::execute_impl<NU, SS, TCallStack, binder<U, TCallStack> >(

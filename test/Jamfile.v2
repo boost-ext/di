@@ -101,7 +101,7 @@ rule compile-fail-cpp03 ( src ) {
 #;
 
 test-suite "injector" :
-    #[ run-cpp11 injector_mt.cpp ]
+    [ run-cpp11 injector_mt.cpp ]
     #[ run-cpp11 injector_ut.cpp ]
     #[ run-cpp11 make_injector_mt.cpp ]
     #[ run injector_limit_size_mt.cpp : : :

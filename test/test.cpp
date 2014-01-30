@@ -25,6 +25,8 @@ class b1
 {
 public:
     explicit b1(int) {}
+    b1(const b1&) {}
+    b1(b1&&) {}
 };
 
 class b2
@@ -53,16 +55,16 @@ public:
 		//: i(i), d(d), a_(a_)
 	/*{ }*/
 
-	c(b0, b1, int i, const double& d, aux::shared_ptr<ii> q, float f, aux::shared_ptr<ii> q2, a a_, named<int, float> n, std::string s)
-		: i(i), d(d), q(q), q2(q2), f(f), a_(a_)
-	{ }
+    c(b0, b1, int i, const double& d, aux::shared_ptr<ii> q, float f, aux::shared_ptr<ii> q2, a a_, named<int, float> n, const std::string&)
+        : i(i), d(d), q(q), q2(q2), f(f), a_(a_)
+    { }
 
     int i = 0;
     double d = 0.0;
     aux::shared_ptr<ii> q;
     aux::shared_ptr<ii> q2;
-	float f = 0.0;
-	a a_;
+    float f = 0.0;
+    a a_;
 };
 
 BOOST_AUTO_TEST_CASE(blah) {
@@ -75,14 +77,14 @@ BOOST_AUTO_TEST_CASE(blah) {
 
     auto c_ = i.create<c>();
 
-	BOOST_CHECK_EQUAL(42, c_.i);
-	BOOST_CHECK_EQUAL(87.0, c_.d);
-	BOOST_CHECK_EQUAL(12.0, c_.f);
-	BOOST_CHECK(dynamic_cast<impl*>(c_.q.get()));
-	BOOST_CHECK_EQUAL(c_.q, c_.q2);
-	BOOST_CHECK_EQUAL(c_.q, c_.q2);
-	BOOST_CHECK_EQUAL(42, c_.a_.i);
-	BOOST_CHECK_EQUAL(87.0, c_.a_.d);
+    BOOST_CHECK_EQUAL(42, c_.i);
+    BOOST_CHECK_EQUAL(87.0, c_.d);
+    BOOST_CHECK_EQUAL(12.0, c_.f);
+    BOOST_CHECK(dynamic_cast<impl*>(c_.q.get()));
+    BOOST_CHECK_EQUAL(c_.q, c_.q2);
+    BOOST_CHECK_EQUAL(c_.q, c_.q2);
+    BOOST_CHECK_EQUAL(42, c_.a_.i);
+    BOOST_CHECK_EQUAL(87.0, c_.a_.d);
 }
 
 } // namespace di
