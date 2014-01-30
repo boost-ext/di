@@ -72,8 +72,12 @@ struct named2<T, typename enable_if<
 			  , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
             >
             operator U() const {
-                return creator::execute_impl<NU, SS, TCallStack, binder<U, TCallStack> >(
-                    deps_, cleanup_)(boost::type<NU>());
+                return creator::execute_impl<
+                    NU
+                  , SS
+                  , typename mpl::push_back<TCallStack, PU>::type
+                  , binder<U, TCallStack>
+                >(deps_, cleanup_)(boost::type<NU>());
             }
 
             TDeps& deps_;
@@ -94,8 +98,12 @@ struct named2<T, typename enable_if<
 
             template< typename U >
             operator U() const {
-                return creator::execute_impl<U, mpl::false_, TCallStack, binder<U, TCallStack> >(
-                    deps_, cleanup_)(boost::type<U>());
+                return creator::execute_impl<
+                    U
+                  , mpl::false_
+                  , typename mpl::push_back<TCallStack, typename binder<T, TCallStack>::given>::type
+                  , binder<U, TCallStack>
+                >(deps_, cleanup_)(boost::type<U>());
             }
 
             TDeps& deps_;
@@ -142,11 +150,11 @@ struct named2<T, typename enable_if<
 				dep = new TDependency();
 				struct deleter {
 					static void delete_ptr() {
-						//delete dep;
-						//dep = 0;
+                        delete dep;
+                        dep = 0;
 					}
 				};
-				//cleanup.push_back(&deleter::delete_ptr);
+                cleanup.push_back(&deleter::delete_ptr);
 			}
             return *dep;
     	}

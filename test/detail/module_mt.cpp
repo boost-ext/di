@@ -274,22 +274,22 @@ BOOST_AUTO_TEST_CASE(ctor_trait) {
     BOOST_CHECK_EQUAL(0.0, obj.d);
 }
 
-BOOST_AUTO_TEST_CASE(class_ctor_traits) {
-    const int i1 = 42;
-    const int i2 = 87;
+//BOOST_AUTO_TEST_CASE(class_ctor_traits) {
+    //const int i1 = 42;
+    //const int i2 = 87;
 
-    module<
-        mpl::vector<
-            fake_dependency<scopes::unique<>, int, mpl::int_<i1>, mpl::string<'1'>>::type
-          , fake_dependency<scopes::unique<>, int, mpl::int_<i2>, mpl::string<'2'>>::type
-        >
-    > module_;
+    //module<
+        //mpl::vector<
+            //fake_dependency<scopes::unique<>, int, mpl::int_<i1>, mpl::string<'1'>>::type
+          //, fake_dependency<scopes::unique<>, int, mpl::int_<i2>, mpl::string<'2'>>::type
+        //>
+    //> module_;
 
-    c10 obj = module_.create<c10>();
+    //c10 obj = module_.create<c10>();
 
-    BOOST_CHECK_EQUAL(i1, obj.i1);
-    BOOST_CHECK_EQUAL(i2, obj.i2);
-}
+    //BOOST_CHECK_EQUAL(i1, obj.i1);
+    //BOOST_CHECK_EQUAL(i2, obj.i2);
+//}
 
 BOOST_AUTO_TEST_CASE(base_of) {
     module<
@@ -505,47 +505,47 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(externals_create_priority, TModule, externals_prio
     BOOST_CHECK_EQUAL(i2, obj.i2);
 }
 
-BOOST_AUTO_TEST_CASE(visit) {
-    module<
-        mpl::vector<
-            fake_dependency_base_of<scopes::unique<>, transaction_provider, transaction_provider>::type
-          , fake_dependency_base_of<scopes::unique<>, int, mpl::int_<0>>::type
-        >
-    > module_;
+//BOOST_AUTO_TEST_CASE(visit) {
+    //module<
+        //mpl::vector<
+            //fake_dependency_base_of<scopes::unique<>, transaction_provider, transaction_provider>::type
+          //, fake_dependency_base_of<scopes::unique<>, int, mpl::int_<0>>::type
+        //>
+    //> module_;
 
-    fake_visitor<
-        mpl::vector<
-            transaction_usage
-          , aux::shared_ptr<provider<aux::shared_ptr<transaction>>>
-          , aux::shared_ptr<c3>
-          , int
-        >
-    > visitor;
+    //fake_visitor<
+        //mpl::vector<
+            //transaction_usage
+          //, aux::shared_ptr<provider<aux::shared_ptr<transaction>>>
+          //, aux::shared_ptr<c3>
+          //, int
+        //>
+    //> visitor;
 
-    module_.visit<transaction_usage>(visitor);
-}
+    //module_.visit<transaction_usage>(visitor);
+//}
 
-BOOST_AUTO_TEST_CASE(visit_external) {
-    c3 c3_;
-    fake_dependency<scopes::external<>, c3>::type e3(c3_);
+//BOOST_AUTO_TEST_CASE(visit_external) {
+    //c3 c3_;
+    //fake_dependency<scopes::external<>, c3>::type e3(c3_);
 
-    module<
-        mpl::vector<
-            fake_dependency<scopes::external<>, c3>::type
-        >
-    > module_(e3);
+    //module<
+        //mpl::vector<
+            //fake_dependency<scopes::external<>, c3>::type
+        //>
+    //> module_(e3);
 
-    fake_visitor<
-        mpl::vector<
-            mpl::pair<c18, scopes::unique<>>
-          , mpl::pair<c0, scopes::unique<>>
-          , mpl::pair<aux::shared_ptr<c1>, scopes::shared<>>
-          , mpl::pair<c3&, scopes::external<>>
-        >
-    > visitor;
+    //fake_visitor<
+        //mpl::vector<
+            //mpl::pair<c18, scopes::unique<>>
+          //, mpl::pair<c0, scopes::unique<>>
+          //, mpl::pair<aux::shared_ptr<c1>, scopes::shared<>>
+          //, mpl::pair<c3&, scopes::external<>>
+        //>
+    //> visitor;
 
-    module_.visit<c18>(visitor);
-}
+    //module_.visit<c18>(visitor);
+//}
 
 BOOST_AUTO_TEST_CASE(call) {
     fake_scope<>::entry_calls() = 0;

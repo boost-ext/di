@@ -2,18 +2,10 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "data.hpp"
+
 namespace boost {
 namespace di {
-
-template<>
-struct ctor_traits<std::basic_string<char>>
-{
-    //BOOST_DI_CTOR_TRAITS(const char*);
-    BOOST_DI_CTOR_TRAITS();
-};
-
-struct ii { virtual ~ii() { } };
-struct impl : ii { };
 
 class b0
 {
@@ -36,10 +28,10 @@ public:
     b2(T) {}
 };
 
-class a
+class aa
 {
 public:
-	a(int i, double d)
+	aa(int i, double d)
 		: i(i), d(d)
 	{ }
 
@@ -47,7 +39,7 @@ public:
 	double d = 0.0;
 };
 
-class c
+class cc
 {
 public:
    /* BOOST_DI_INJECT(c, int i, double d, a a_)*/
@@ -55,29 +47,38 @@ public:
 		//: i(i), d(d), a_(a_)
 	/*{ }*/
 
-    c(b0, b1, int i, const double& d, aux::shared_ptr<ii> q, float f, aux::shared_ptr<ii> q2, a a_, named<int, float> n, const std::string&)
-        : i(i), d(d), q(q), q2(q2), f(f), a_(a_)
+    cc(b0, b1, int i_, const double& d, aux::shared_ptr<i> q, float f, aux::shared_ptr<i> q2, aa a_, named<int, float> n, const std::string&)
+        : i_(i_), d(d), q(q), q2(q2), f(f), a_(a_)
     { }
 
-    int i = 0;
+    int i_ = 0;
     double d = 0.0;
-    aux::shared_ptr<ii> q;
-    aux::shared_ptr<ii> q2;
+    aux::shared_ptr<i> q;
+    aux::shared_ptr<i> q2;
     float f = 0.0;
-    a a_;
+    aa a_;
 };
 
+BOOST_AUTO_TEST_CASE(ehh) {
+    auto c8_ = injector<
+        c0if0
+      , bind_int<2>::in_call<c8>
+    >().create<c8>();
+
+    BOOST_CHECK_EQUAL(c8_.i, 2);
+}
+
 BOOST_AUTO_TEST_CASE(blah) {
-    auto i = make_injector(
+    auto inj = make_injector(
         bind<int>::to(42)
       , bind<double>::to(87.0)
       , bind<float>::to(12.0)
-      , bind<ii, impl>()
+      , bind<i, impl>()
     );
 
-    auto c_ = i.create<c>();
+    auto c_ = inj.create<cc>();
 
-    BOOST_CHECK_EQUAL(42, c_.i);
+    BOOST_CHECK_EQUAL(42, c_.i_);
     BOOST_CHECK_EQUAL(87.0, c_.d);
     BOOST_CHECK_EQUAL(12.0, c_.f);
     BOOST_CHECK(dynamic_cast<impl*>(c_.q.get()));
