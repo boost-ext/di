@@ -25,7 +25,7 @@ template<
   , typename TName = void
   , typename = void
 >
-class named : noncopyable
+class named //: noncopyable
 {
     typedef typename type_traits::remove_accessors<T>::type object_type;
 
@@ -55,7 +55,7 @@ template<
 >
 class named<T, TName, typename enable_if<
     is_polymorphic<typename type_traits::remove_accessors<T>::type> >::type
-> : noncopyable
+>// : noncopyable
 {
 public:
     typedef T named_type;
@@ -68,7 +68,7 @@ template<
 >
 class named<T, TName, typename enable_if<
     has_element_type<typename type_traits::remove_accessors<T>::type> >::type
-> : noncopyable
+>// : noncopyable
 {
     typedef typename type_traits::remove_accessors<T>::type object_type;
     typedef typename type_traits::make_plain<T>::type value_type;

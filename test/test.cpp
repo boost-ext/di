@@ -5,13 +5,33 @@
 namespace boost {
 namespace di {
 
+template<>
+struct ctor_traits<std::basic_string<char>>
+{
+    //BOOST_DI_CTOR_TRAITS(const char*);
+    BOOST_DI_CTOR_TRAITS();
+};
+
 struct ii { virtual ~ii() { } };
 struct impl : ii { };
 
-class b
+class b0
 {
 public:
-    b(int) {}
+    b0(int) {}
+};
+
+class b1
+{
+public:
+    explicit b1(int) {}
+};
+
+class b2
+{
+public:
+	template<typename T> //not working
+    b2(T) {}
 };
 
 class a
@@ -33,7 +53,7 @@ public:
 		//: i(i), d(d), a_(a_)
 	/*{ }*/
 
-	c(int i, const double& d, aux::shared_ptr<ii> q, float f, aux::shared_ptr<ii> q2, a a_)//, const named<int, float>& n)
+	c(b0, b1, int i, const double& d, aux::shared_ptr<ii> q, float f, aux::shared_ptr<ii> q2, a a_, named<int, float> n, std::string s)
 		: i(i), d(d), q(q), q2(q2), f(f), a_(a_)
 	{ }
 
@@ -55,14 +75,14 @@ BOOST_AUTO_TEST_CASE(blah) {
 
     auto c_ = i.create<c>();
 
-    BOOST_CHECK_EQUAL(42, c_.i);
-    BOOST_CHECK_EQUAL(87.0, c_.d);
-    BOOST_CHECK_EQUAL(12.0, c_.f);
-    BOOST_CHECK(dynamic_cast<impl*>(c_.q.get()));
-    BOOST_CHECK_EQUAL(c_.q, c_.q2);
-    BOOST_CHECK_EQUAL(c_.q, c_.q2);
-    BOOST_CHECK_EQUAL(42, c_.a_.i);
-    BOOST_CHECK_EQUAL(87.0, c_.a_.d);
+	BOOST_CHECK_EQUAL(42, c_.i);
+	BOOST_CHECK_EQUAL(87.0, c_.d);
+	BOOST_CHECK_EQUAL(12.0, c_.f);
+	BOOST_CHECK(dynamic_cast<impl*>(c_.q.get()));
+	BOOST_CHECK_EQUAL(c_.q, c_.q2);
+	BOOST_CHECK_EQUAL(c_.q, c_.q2);
+	BOOST_CHECK_EQUAL(42, c_.a_.i);
+	BOOST_CHECK_EQUAL(87.0, c_.a_.d);
 }
 
 } // namespace di

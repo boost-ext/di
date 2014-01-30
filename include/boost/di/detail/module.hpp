@@ -212,7 +212,7 @@
             BOOST_MPL_ASSERT((typename verify_policies<policies, deps, T>::type));
 
             return TCreator<TBinder<deps> >::template
-                execute<T, mpl::vector0<> >(static_cast<TPool<deps>&>(*this), cleanup);
+                execute<T, mpl::true_, mpl::vector0<> >(static_cast<TPool<deps>&>(*this), cleanup);
         }
 
         template<typename T, typename Visitor>

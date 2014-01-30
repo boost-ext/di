@@ -26,6 +26,10 @@ class b { };
 class c { };
 class d { };
 
+#undef BOOST_DI_CTOR
+
+#define BOOST_DI_CTOR(type, ...) type(__VA_ARGS__)
+
 struct i
 {
     virtual ~i() { }
@@ -539,6 +543,13 @@ template<>
 struct ctor_traits<c14>
 {
     BOOST_DI_CTOR_TRAITS(int, double);
+};
+
+template<>
+struct ctor_traits<std::basic_string<char>>
+{
+    //BOOST_DI_CTOR_TRAITS(const char*);
+    BOOST_DI_CTOR_TRAITS();
 };
 
 } // namespace di

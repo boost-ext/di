@@ -60,9 +60,9 @@ using injector_custom_scope_t = injector<
 >;
 
 using injector_provider_t = injector<
-    unique<
-        transaction_provider
-    >
+	unique<
+		transaction_provider
+	>
 >;
 
 using injector_c0if0_t = injector<
@@ -207,7 +207,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(mix_injectors, TInjector, mix_injectors_types) {
 }
 
 using basic_provider_types = mpl::vector<
-    injector<injector_provider_t>
+	injector<injector_provider_t>
   , injector<decltype(injector_provider)>
 >;
 
