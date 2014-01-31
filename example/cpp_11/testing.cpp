@@ -21,7 +21,7 @@ struct impl : i { };
 template<typename Config>
 struct app
 {
-    BOOST_DI_CTOR(app, std::unique_ptr<i>) { }
+    BOOST_DI_INJECT(app, std::unique_ptr<i>) { }
 };
 
 using injector_t = di::injector<impl>;

@@ -27,17 +27,17 @@ struct c0 { };
 
 struct c1
 {
-    BOOST_DI_CTOR(c1, int, const di::named<double, name1>&) { }
+    BOOST_DI_INJECT(c1, int, const di::named<double, name1>&) { }
 };
 
 struct c2
 {
-    BOOST_DI_CTOR(c2, const di::named<double, name1>&, c1) { }
+    BOOST_DI_INJECT(c2, const di::named<double, name1>&, c1) { }
 };
 
 struct c3
 {
-    BOOST_DI_CTOR(c3
+    BOOST_DI_INJECT(c3
       , std::string
       , std::shared_ptr<i>
       , const di::named<boost::shared_ptr<i>, name2>&
@@ -48,39 +48,39 @@ struct c4 { };
 struct c5 { };
 struct c6
 {
-    BOOST_DI_CTOR(c6, std::shared_ptr<i>) { }
+    BOOST_DI_INJECT(c6, std::shared_ptr<i>) { }
 };
 
 struct c7
 {
-    BOOST_DI_CTOR(c7, const di::named<std::shared_ptr<i>, name3>&) { }
+    BOOST_DI_INJECT(c7, const di::named<std::shared_ptr<i>, name3>&) { }
 };
 
 struct c8
 {
-    BOOST_DI_CTOR(c8, std::string, std::shared_ptr<i>, c7) { }
+    BOOST_DI_INJECT(c8, std::string, std::shared_ptr<i>, c7) { }
 };
 
 struct c9 { };
 
 struct c10
 {
-    BOOST_DI_CTOR(c10, c9, c8) { }
+    BOOST_DI_INJECT(c10, c9, c8) { }
 };
 
 struct c11
 {
-    BOOST_DI_CTOR(c11, c9, c10) { }
+    BOOST_DI_INJECT(c11, c9, c10) { }
 };
 
 struct c12
 {
-    BOOST_DI_CTOR(c12, c9, c11) { }
+    BOOST_DI_INJECT(c12, c9, c11) { }
 };
 
 struct c13
 {
-    BOOST_DI_CTOR(c13, std::shared_ptr<c12>) { }
+    BOOST_DI_INJECT(c13, std::shared_ptr<c12>) { }
 };
 
 } // namespace

@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#define BOOST_DI_CTOR_CFG_BRACKET
-#include "boost/di/ctor.hpp"
+#define BOOST_DI_INJECT_CFG_BRACKET
+#include "boost/di/inject.hpp"
 
 #include <boost/test/unit_test.hpp>
 #include <boost/config.hpp>
@@ -16,7 +16,7 @@ namespace di {
 BOOST_AUTO_TEST_CASE(empty) {
     struct c
     {
-        BOOST_DI_CTOR(c, ()) { }
+        BOOST_DI_INJECT(c, ()) { }
     };
 
     c c_;
@@ -25,7 +25,7 @@ BOOST_AUTO_TEST_CASE(empty) {
 BOOST_AUTO_TEST_CASE(empty_traits) {
     struct c
     {
-        BOOST_DI_CTOR_TRAITS(());
+        BOOST_DI_INJECT_TRAITS(());
         c() { }
     };
 
@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE(explicit_with_default) {
     {
         enum { DEFAULT = 42 };
 
-        BOOST_DI_CTOR(explicit c, (int i = DEFAULT))
+        BOOST_DI_INJECT(explicit c, (int i = DEFAULT))
             : i(i)
         { }
 
@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_CASE(params) {
 
     struct c
     {
-        BOOST_DI_CTOR(c, (int i, double d))
+        BOOST_DI_INJECT(c, (int i, double d))
             : i(i), d(d)
         { }
 
@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE(traits) {
 
     struct c
     {
-        BOOST_DI_CTOR_TRAITS((int i, double d));
+        BOOST_DI_INJECT_TRAITS((int i, double d));
 
         c(int i, double d)
             : i(i), d(d)
@@ -97,7 +97,7 @@ BOOST_AUTO_TEST_CASE(function) {
 
     struct c
     {
-        static void BOOST_DI_CONSTRUCTOR(int i, double d);
+        static void BOOST_DI_INJECTOR(int i, double d);
 
         c(int i, double d)
             : i(i), d(d)
@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE(inheriting_ctors) {
 
     struct c0
     {
-        BOOST_DI_CTOR(c0, (int i, double d))
+        BOOST_DI_INJECT(c0, (int i, double d))
             : i(i), d(d)
         { }
 

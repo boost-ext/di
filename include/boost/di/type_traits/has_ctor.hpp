@@ -10,9 +10,10 @@
     #define BOOST_DI_TYPE_TRAITS_HAS_CTOR_HPP
 
     #include "boost/di/aux_/meta.hpp"
+    #include "boost/di/type_traits/make_plain.hpp"
+    #include "boost/di/type_traits/is_same_base_of.hpp"
 
 	#include <boost/typeof/typeof.hpp>
-	#include <boost/type_traits/is_same.hpp>
 	#include <boost/utility/enable_if.hpp>
 	#include <boost/mpl/aux_/yes_no.hpp>
 
@@ -28,9 +29,12 @@
     {
         struct any_type
         {
+			typedef typename type_traits::make_plain<T>::type plain_t;
+
             template<
                 typename U
-              , typename = typename disable_if<is_same<U, T> >::type
+			  , typename PU = typename type_traits::make_plain<U>::type
+			  , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
             >
             operator U() const;
         };

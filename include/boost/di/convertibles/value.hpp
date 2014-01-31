@@ -42,6 +42,11 @@ public:
         return value_;
     }
 
+	template<typename I>
+	operator I() const {
+		return (*this)(type<I>());
+	}
+
 private:
     T value_;
 };

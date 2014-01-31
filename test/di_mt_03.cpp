@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#define BOOST_DI_CTOR_CFG_BRACKET
+#define BOOST_DI_INJECT_CFG_BRACKET
 
 #include <memory>
 #include <vector>
@@ -31,7 +31,7 @@ struct impl : i
 
 struct c1
 {
-    BOOST_DI_CTOR(explicit c1, (int i_ = 0, double d_ = 0.0))
+    BOOST_DI_INJECT(explicit c1, (int i_ = 0, double d_ = 0.0))
         : i_(i_), d_(d_)
     { }
 
@@ -41,7 +41,7 @@ struct c1
 
 struct c2
 {
-    BOOST_DI_CTOR(c2, (boost::shared_ptr<c1> c1_, std::auto_ptr<i> p_))
+    BOOST_DI_INJECT(c2, (boost::shared_ptr<c1> c1_, std::auto_ptr<i> p_))
       : c1_(c1_), p_(p_)
     { }
 
@@ -52,7 +52,7 @@ struct c2
 
 struct c3
 {
-    BOOST_DI_CTOR(c3, (
+    BOOST_DI_INJECT(c3, (
         boost::shared_ptr<c1> c1_
       , boost::shared_ptr<c2> c2_
       , c1 c1__

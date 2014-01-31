@@ -9,7 +9,9 @@
     #ifndef BOOST_DI_DETAIL_CREATOR_HPP
     #define BOOST_DI_DETAIL_CREATOR_HPP
 
+    #include "boost/di/aux_/meta.hpp"
     #include "boost/di/type_traits/ctor_traits.hpp"
+    #include "boost/di/type_traits/make_plain.hpp"
     #include "boost/di/type_traits/is_same_base_of.hpp"
 
     #include <boost/preprocessor/repetition/repeat.hpp>
@@ -22,20 +24,6 @@
     namespace boost {
     namespace di {
     namespace detail {
-
-template<typename T, typename = void>
-struct named2
-{
-    typedef T type;
-};
-
-template<typename T>
-struct named2<T, typename enable_if<
-    has_named_type<typename type_traits::remove_accessors<T>::type> >::type
->
-{
-    typedef typename type_traits::remove_accessors<typename T::named_type>::type type;
-};
 
     template<typename TBinder>
     class creator
@@ -52,76 +40,101 @@ struct named2<T, typename enable_if<
 
         template<
             typename T
-          , typename SS
+          , typename TCallStack
+          , typename TDependency
+        >
+        struct dependency
+        {
+            typedef T type;
+            typedef TCallStack context;
+            typedef typename TDependency::given given;
+            typedef typename TDependency::expected expected;
+            typedef typename TDependency::scope scope;
+        };
+
+        template<
+            typename T
           , typename TCallStack
           , typename TDeps
           , typename TCleanup
+          , typename TVisitor
         >
-        struct eager_creator
+        class eager_creator
         {
 			typedef typename type_traits::make_plain<T>::type plain_t;
 
-            eager_creator(TDeps& deps, TCleanup& cleanup)
-                : deps_(deps), cleanup_(cleanup)
+			template<typename U, typename = void>
+			struct named_type
+			{
+				typedef U type;
+			};
+
+			template<typename U>
+			struct named_type<U, typename enable_if<
+				has_named_type<typename type_traits::remove_accessors<U>::type> >::type
+			>
+			{
+				typedef typename type_traits::remove_accessors<typename U::named_type>::type type;
+			};
+
+		public:
+            eager_creator(TDeps& deps, TCleanup& cleanup, const TVisitor& visitor)
+                : deps_(deps), cleanup_(cleanup), visitor_(visitor)
             { }
 
             template<
                 typename U
-			  , typename NU = typename named2<U>::type
+			  , typename NU = typename named_type<U>::type
 			  , typename PU = typename type_traits::make_plain<U>::type
 			  , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
             >
             operator U() const {
                 return creator::execute_impl<
                     NU
-                  , SS
                   , typename mpl::push_back<TCallStack, PU>::type
                   , binder<U, TCallStack>
-                >(deps_, cleanup_)(boost::type<NU>());
+                >(deps_, cleanup_, visitor_)(boost::type<NU>());
             }
 
+		private:
             TDeps& deps_;
             TCleanup& cleanup_;
-        };
-
-        template<
-            typename T
-          , typename TCallStack
-          , typename TDeps
-          , typename TCleanup
-        >
-        struct eager_creator<T, mpl::true_, TCallStack, TDeps, TCleanup>
-        {
-            eager_creator(TDeps& deps, TCleanup& cleanup)
-                : deps_(deps), cleanup_(cleanup)
-            { }
-
-            template< typename U >
-            operator U() const {
-                return creator::execute_impl<
-                    U
-                  , mpl::false_
-                  , typename mpl::push_back<TCallStack, typename binder<T, TCallStack>::given>::type
-                  , binder<U, TCallStack>
-                >(deps_, cleanup_)(boost::type<U>());
-            }
-
-            TDeps& deps_;
-            TCleanup& cleanup_;
+            const TVisitor& visitor_;
         };
 
     public:
         template<
             typename T
-          , typename SS
+          , typename TParent
           , typename TCallStack
           , typename TDeps
           , typename TCleanup
+          , typename TVisitor
         >
-        static eager_creator<T, SS, TCallStack, TDeps, TCleanup>
-        execute(TDeps& deps, TCleanup& cleanup) {
-            return eager_creator<T, SS, TCallStack, TDeps, TCleanup>(deps, cleanup);
+        static eager_creator<TParent, TCallStack, TDeps, TCleanup, TVisitor>
+        execute(TDeps& deps, TCleanup& cleanup, const TVisitor& visitor, typename enable_if<is_same<T, any_type>>::type* = 0) {
+            return eager_creator<TParent, TCallStack, TDeps, TCleanup, TVisitor>(deps, cleanup, visitor);
         }
+
+        template<
+            typename T
+          , typename
+          , typename TCallStack
+          , typename TDeps
+          , typename TCleanup
+          , typename TVisitor
+        >
+        static typename binder<T, TCallStack>::result_type
+		execute(TDeps& deps, TCleanup& cleanup, const TVisitor& visitor, typename disable_if<is_same<T, any_type>>::type* = 0) {
+            return execute_impl<
+                T
+              , typename mpl::push_back<
+                    TCallStack
+                  , typename binder<T, TCallStack>::given
+                >::type
+              , binder<T, TCallStack>
+            >(deps, cleanup, visitor);
+		}
 
     private:
         #define BOOST_PP_FILENAME_1 "boost/di/detail/creator.hpp"
@@ -158,28 +171,6 @@ struct named2<T, typename enable_if<
 			}
             return *dep;
     	}
-
-		template<typename C, typename T, typename = void>
-		struct ccc_impl
-		{
-			typedef C type;
-		};
-
-		template<typename C, typename T>
-		struct ccc_impl<C, T, typename enable_if<is_same<T, any_type> >::type>
-		{
-			typedef C type;
-		};
-
-		template<typename T, typename TDependency, int n>
-		struct ccc
-        	: ccc_impl<T, typename mpl::at_c<
-                    typename ctor<TDependency>::type
-                  , n
-			  >::type
-			>
-		{ };
-
 	};
 
     } // namespace detail
@@ -192,24 +183,29 @@ struct named2<T, typename enable_if<
 
     template<
         typename T
-      , typename SS
       , typename TCallStack
       , typename TDependency
       , typename TDeps
       , typename TCleanup
+      , typename TVisitor
     >
     static typename enable_if_c<
         mpl::size<typename ctor<TDependency>::type>::value == BOOST_PP_ITERATION()
       , typename TDependency::result_type
-    >::type execute_impl(TDeps& deps, TCleanup& cleanup) {
+    >::type execute_impl(TDeps& deps, TCleanup& cleanup, const TVisitor& visitor) {
+
+		(visitor)(dependency<T, TCallStack, TDependency>());
 
         #define BOOST_DI_CREATOR_EXECUTE(z, n, _)       \
             BOOST_PP_COMMA_IF(n)                        \
             execute<                                    \
-		typename ccc<T, TDependency, n>::type \
-		, SS \
+			   typename mpl::at_c< 						\
+				   typename ctor<TDependency>::type 	\
+				 , n 									\
+			   >::type 									\
+			  , T 										\
               , TCallStack                              \
-            >(deps, cleanup)
+            >(deps, cleanup, visitor)
 
         return acquire<typename TDependency::type>(deps, cleanup).create(
             BOOST_PP_REPEAT(

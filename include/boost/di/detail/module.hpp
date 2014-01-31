@@ -14,7 +14,6 @@
     #include "boost/di/detail/pool.hpp"
     #include "boost/di/detail/binder.hpp"
     #include "boost/di/detail/creator.hpp"
-    #include "boost/di/detail/visitor.hpp"
 
 	#include <vector>
     #include <boost/preprocessor/iteration/iterate.hpp>
@@ -67,7 +66,6 @@
           , typename = void
         > class TPool = pool
       , template<typename> class TCreator = creator
-      , template<typename> class TVisitor = visitor
     >
     class module : public TPool<get_deps<TDeps> >
     {
@@ -75,7 +73,6 @@
             typename
           , template<typename> class
           , template<typename, typename, typename> class
-          , template<typename> class
           , template<typename> class
         > friend class module;
 
@@ -191,6 +188,13 @@
               >
         { };
 
+		class empty_visitor
+		{
+		public:
+			template<typename T>
+			void operator()(const T&) const { }
+		};
+
     public:
         typedef get_deps<TDeps> deps;
         typedef get_types<TDeps, has_is_policy<mpl::_> > policies;
@@ -212,15 +216,15 @@
             BOOST_MPL_ASSERT((typename verify_policies<policies, deps, T>::type));
 
             return TCreator<TBinder<deps> >::template
-                execute<T, mpl::true_, mpl::vector0<> >(static_cast<TPool<deps>&>(*this), cleanup);
+                execute<T, T, mpl::vector0<> >(static_cast<TPool<deps>&>(*this), cleanup, empty_visitor());
         }
 
         template<typename T, typename Visitor>
-        void visit(const Visitor& visitor) {
+        T visit(const Visitor& visitor) {
             BOOST_MPL_ASSERT((typename verify_policies<policies, deps, T>::type));
 
-            TVisitor<TBinder<deps> >::template
-                execute<T, mpl::vector0<> >(visitor);
+            return TCreator<TBinder<deps> >::template
+                execute<T, T, mpl::vector0<> >(static_cast<TPool<deps>&>(*this), cleanup, visitor);
         }
 
         template<typename TAction>

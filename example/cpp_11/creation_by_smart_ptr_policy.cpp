@@ -18,7 +18,7 @@ namespace {
 
 struct c
 {
-    BOOST_DI_CTOR(c, int, double, char) { }
+    BOOST_DI_INJECT(c, int, double, char) { }
 };
 
 } // namespace

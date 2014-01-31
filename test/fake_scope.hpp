@@ -41,8 +41,9 @@ struct fake_scope
             return *obj_;
         }
 
-        operator T() const {
-            return (*this)(type<T>());
+		template<typename I>
+        operator I() const {
+            return (*this)(type<I>());
         }
 
     private:

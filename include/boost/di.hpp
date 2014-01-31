@@ -8,7 +8,7 @@
 #define BOOST_DI_HPP
 
 // ctor
-#include "boost/di/ctor.hpp"
+#include "boost/di/inject.hpp"
 
 // concepts
 #include "boost/di/concepts.hpp"

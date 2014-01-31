@@ -18,55 +18,71 @@ namespace di {
 namespace convertibles {
 
 template<typename T>
-class shared : public aux::shared_ptr<T>
+class shared
 {
 public:
     shared() { }
 
     shared(const aux::shared_ptr<T>& object) // non explicit
-        : aux::shared_ptr<T>(object)
+        : object_(object)
     { }
+
+	bool operator!() const {
+		return !object_;
+	}
+
+	void reset(T* ptr = 0) {
+		return object_.reset(ptr);
+	}
 
     template<typename I>
     aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const {
-        return *this;
+        return object_;
     }
 
     template<typename I>
     aux::shared_ptr<I> operator()(const type<const aux::shared_ptr<I>&>&) const {
-        return *this;
+        return object_;
     }
 
     template<typename I, typename TName>
     aux::shared_ptr<I> operator()(const type<const named<aux::shared_ptr<I>, TName>&>&) const {
-        return *this;
+        return object_;
     }
 
     template<typename I, typename TName>
     aux::shared_ptr<I> operator()(const type<const named<const aux::shared_ptr<I>&, TName>&>&) const {
-        return *this;
+        return object_;
     }
 
     template<typename I>
     aux::weak_ptr<I> operator()(const type<aux::weak_ptr<I> >&) const {
-        return *this;
+        return object_;
     }
 
     template<typename I>
     aux::weak_ptr<I> operator()(const type<const aux::weak_ptr<I>&>&) const {
-        return *this;
+        return object_;
     }
 
     template<typename I, typename TName>
     aux::weak_ptr<I> operator()(const type<const named<aux::weak_ptr<I>, TName>&>&) const {
-        return aux::weak_ptr<I>(*this);
+        return aux::weak_ptr<I>(object_);
     }
 
     template<typename I, typename TName>
     aux::weak_ptr<I>
     operator()(const type<const named<const aux::weak_ptr<I>&, TName>&>&) const {
-        return aux::weak_ptr<I>(*this);
+        return aux::weak_ptr<I>(object_);
     }
+
+	template<typename I>
+	operator I() const {
+		return (*this)(type<I>());
+	}
+
+private:
+	aux::shared_ptr<T> object_;
 };
 
 } // namespace convertibles

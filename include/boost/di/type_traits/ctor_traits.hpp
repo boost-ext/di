@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 
-#include "boost/di/ctor.hpp"
+#include "boost/di/inject.hpp"
 #include "boost/di/type_traits/parameter_types.hpp"
 #include "boost/di/type_traits/has_ctor.hpp"
 
@@ -61,9 +61,9 @@ struct ctor_traits
 namespace type_traits {
 
 template<typename T>
-class BOOST_PP_CAT(has_, BOOST_DI_CONSTRUCTOR)
+class BOOST_PP_CAT(has_, BOOST_DI_INJECTOR)
 {
-    struct base_impl { void BOOST_DI_CONSTRUCTOR(...) { } };
+    struct base_impl { void BOOST_DI_INJECTOR(...) { } };
     struct base
         : base_impl
         , mpl::if_<is_class<T>, T, mpl::void_>::type
@@ -72,7 +72,7 @@ class BOOST_PP_CAT(has_, BOOST_DI_CONSTRUCTOR)
     template<typename U>
     static mpl::aux::no_tag test(
         U*
-      , non_type<void (base_impl::*)(...), &U::BOOST_DI_CONSTRUCTOR>* = 0
+      , non_type<void (base_impl::*)(...), &U::BOOST_DI_INJECTOR>* = 0
     );
 
     static mpl::aux::yes_tag test(...);
@@ -90,13 +90,13 @@ struct ctor_traits
 { };
 
 template<typename T>
-struct ctor_traits<T, typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_CONSTRUCTOR)<di::ctor_traits<T> > >::type>
-	: parameter_types<BOOST_TYPEOF_TPL(&di::ctor_traits<T>::BOOST_DI_CONSTRUCTOR)>::type
+struct ctor_traits<T, typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_INJECTOR)<di::ctor_traits<T> > >::type>
+	: parameter_types<BOOST_TYPEOF_TPL(&di::ctor_traits<T>::BOOST_DI_INJECTOR)>::type
 { };
 
 template<typename T>
-struct ctor_traits<T, typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_CONSTRUCTOR)<T> >::type>
-	: parameter_types<BOOST_TYPEOF_TPL(&T::BOOST_DI_CONSTRUCTOR)>::type
+struct ctor_traits<T, typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_INJECTOR)<T> >::type>
+	: parameter_types<BOOST_TYPEOF_TPL(&T::BOOST_DI_INJECTOR)>::type
 { };
 
 } // namespace type_traits

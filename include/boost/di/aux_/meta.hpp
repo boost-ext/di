@@ -7,8 +7,6 @@
 #ifndef BOOST_DI_AUX_META_HPP
 #define BOOST_DI_AUX_META_HPP
 
-#include "boost/di/aux_/limits/vector.hpp"
-
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>

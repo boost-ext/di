@@ -12,7 +12,7 @@
 #include <boost/mpl/string.hpp>
 
 #include "boost/di/aux_/memory.hpp"
-#include "boost/di/ctor.hpp"
+#include "boost/di/inject.hpp"
 
 #include "fake_convertible.hpp"
 
@@ -24,7 +24,7 @@ struct empty { };
 
 struct ctor
 {
-    BOOST_DI_CTOR(ctor, int i, double d) {
+    BOOST_DI_INJECT(ctor, int i, double d) {
         BOOST_CHECK_EQUAL(42, i);
         BOOST_CHECK_EQUAL(42.0, d);
     }

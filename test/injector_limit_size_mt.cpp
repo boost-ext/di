@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/injector.hpp"
+#include "boost/di/injeinject.hpp"
 #include "boost/di/named.hpp"
 
 #include <boost/test/unit_test.hpp>
@@ -45,7 +45,7 @@ struct n30 { };
 
 struct limit
 {
-    BOOST_DI_CTOR(limit, (
+    BOOST_DI_INJECT(limit, (
           const named<int, n1>& i1
         , const named<int, n2>& i2
         , const named<int, n3>& i3

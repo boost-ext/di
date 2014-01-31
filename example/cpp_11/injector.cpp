@@ -20,19 +20,19 @@ struct i0 { virtual ~i0() { }; };
 
 struct c0 : i0
 {
-    BOOST_DI_CTOR(c0, const di::named<int, name>&, double) { }
+    BOOST_DI_INJECT(c0, const di::named<int, name>&, double) { }
 };
 
 struct c01 : i0 { };
 
 struct c1
 {
-    BOOST_DI_CTOR(c1, std::shared_ptr<i0>) { }
+    BOOST_DI_INJECT(c1, std::shared_ptr<i0>) { }
 };
 
 struct c2
 {
-    BOOST_DI_CTOR(c2, std::shared_ptr<c1>, int, double, char) { }
+    BOOST_DI_INJECT(c2, std::shared_ptr<c1>, int, double, char) { }
 };
 
 struct c3 { };
@@ -40,7 +40,7 @@ struct c4 { };
 
 struct c5
 {
-    BOOST_DI_CTOR(c5
+    BOOST_DI_INJECT(c5
         , std::shared_ptr<c1>
         , c2
         , std::shared_ptr<i0>

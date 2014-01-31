@@ -35,7 +35,7 @@ struct impl : i
 
 struct c1
 {
-    BOOST_DI_CTOR(explicit c1, int i_ = 0, double d_ = 0.0)
+    BOOST_DI_INJECT(explicit c1, int i_ = 0, double d_ = 0.0)
         : i_(i_), d_(d_)
     { }
 
@@ -45,7 +45,7 @@ struct c1
 
 struct c2
 {
-    BOOST_DI_CTOR(c2
+    BOOST_DI_INJECT(c2
         , std::tr1::shared_ptr<c1> c1_
         , std::auto_ptr<i> p_)
       : c1_(c1_), p_(p_)
@@ -57,7 +57,7 @@ struct c2
 
 struct c3
 {
-    BOOST_DI_CTOR(c3
+    BOOST_DI_INJECT(c3
         , std::tr1::shared_ptr<c1> c1_
         , std::tr1::shared_ptr<c2> c2_
         , c1 c1__
