@@ -26,10 +26,6 @@ class b { };
 class c { };
 class d { };
 
-#undef BOOST_DI_INJECT
-
-#define BOOST_DI_INJECT(type, ...) type(__VA_ARGS__)
-
 struct i
 {
     virtual ~i() { }

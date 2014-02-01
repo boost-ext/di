@@ -223,7 +223,6 @@ BOOST_AUTO_TEST_CASE(named_ref) {
     { } injector_;
 
     auto c8_ = injector_.create<aux::shared_ptr<c8>>();
-
 }
 
 BOOST_AUTO_TEST_CASE(aaab) {

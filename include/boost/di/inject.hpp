@@ -10,7 +10,7 @@
 #include <boost/config.hpp>
 
 #if !defined(BOOST_DI_INJECTOR)
-    #define BOOST_DI_INJECTOR boost_di_injector_
+    #define BOOST_DI_INJECTOR boost_di_injector__
 #endif
 
 #if !defined(BOOST_DI_INJECT_CFG_VA_ARGS) && !defined(BOOST_DI_INJECT_CFG_BRACKET)
@@ -34,19 +34,25 @@
         #pragma GCC diagnostic ignored "-Wvariadic-macros"
     #endif
 
-    #define BOOST_DI_INJECT_TRAITS(...)                 \
-        static void BOOST_DI_INJECTOR(__VA_ARGS__)   	\
+    #define BOOST_DI_INJECT_TRAITS(...)             \
+        static void BOOST_DI_INJECTOR(__VA_ARGS__)
 
-    #define BOOST_DI_INJECT(type, ...)                  \
-        BOOST_DI_INJECT_TRAITS(__VA_ARGS__);            \
-        type(__VA_ARGS__)
+    #if !defined(BOOST_DI_INJECT)
+        #define BOOST_DI_INJECT(type, ...)          \
+            BOOST_DI_INJECT_TRAITS(__VA_ARGS__);    \
+            type(__VA_ARGS__)
+    #endif
+
 #else
-    #define BOOST_DI_INJECT_TRAITS(Params)              \
-        static void BOOST_DI_INJECTOR Params         	\
+    #define BOOST_DI_INJECT_TRAITS(Params)          \
+        static void BOOST_DI_INJECTOR Params
 
-    #define BOOST_DI_INJECT(type, params)               \
-        BOOST_DI_INJECT_TRAITS(params);                 \
-        type params
+    #if !defined(BOOST_DI_INJECT)
+        #define BOOST_DI_INJECT(type, params)       \
+            BOOST_DI_INJECT_TRAITS(params);         \
+            type params
+    #endif
+
 #endif
 
 #include "boost/di/type_traits/ctor_traits.hpp" // di::ctor_traits<...>

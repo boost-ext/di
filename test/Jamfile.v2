@@ -50,33 +50,33 @@ rule compile-fail-cpp03 ( src ) {
 }
 
 test-suite "concepts" :
-    [ run-cpp11 concepts/dependency_ut.cpp ]
-    [ run-cpp11 concepts_ut.cpp ]
-    [ run-cpp11 named_ut.cpp ]
+    #[ run-cpp11 concepts/dependency_ut.cpp ]
+    #[ run-cpp11 concepts_ut.cpp ]
+    #[ run-cpp11 named_ut.cpp ]
 ;
 
 test-suite "convertibles" :
-    [ run-cpp11 convertibles/copy_convertible_ut.cpp ]
-    [ run-cpp11 convertibles/reference_convertible_ut.cpp ]
-    [ run-cpp11 convertibles/shared_convertible_ut.cpp ]
-    [ run-cpp11 convertibles/value_convertible_ut.cpp ]
+    #[ run-cpp11 convertibles/copy_convertible_ut.cpp ]
+    #[ run-cpp11 convertibles/reference_convertible_ut.cpp ]
+    #[ run-cpp11 convertibles/shared_convertible_ut.cpp ]
+    #[ run-cpp11 convertibles/value_convertible_ut.cpp ]
 ;
 
 test-suite "type traits" :
-    [ run-cpp11 type_traits/create_traits_ut.cpp ]
-    [ run-cpp11 type_traits/ctor_traits_ut.cpp ]
-    [ run-cpp11 type_traits/is_same_base_of_ut.cpp ]
-    [ run-cpp11 type_traits/make_plain_ut.cpp ]
-    [ run-cpp11 type_traits/parameter_types_ut.cpp ]
-    [ run-cpp11 type_traits/remove_accessors_ut.cpp ]
-    [ run-cpp11 type_traits/scope_traits_ut.cpp ]
+    #[ run-cpp11 type_traits/create_traits_ut.cpp ]
+    #[ run-cpp11 type_traits/ctor_traits_ut.cpp ]
+    #[ run-cpp11 type_traits/is_same_base_of_ut.cpp ]
+    #[ run-cpp11 type_traits/make_plain_ut.cpp ]
+    #[ run-cpp11 type_traits/parameter_types_ut.cpp ]
+    #[ run-cpp11 type_traits/remove_accessors_ut.cpp ]
+    #[ run-cpp11 type_traits/scope_traits_ut.cpp ]
 ;
 
 test-suite "implementation detail" :
-    [ run-cpp11 detail/binder_ut.cpp ]
-    [ run-cpp11 detail/creator_ut.cpp ]
-    [ run-cpp11 detail/module_mt.cpp ]
-    [ run-cpp11 detail/pool_ut.cpp ]
+    #[ run-cpp11 detail/binder_ut.cpp ]
+    #[ run-cpp11 detail/creator_ut.cpp ]
+    #[ run-cpp11 detail/module_mt.cpp ]
+    #[ run-cpp11 detail/pool_ut.cpp ]
 ;
 
 test-suite "policies" :
@@ -88,21 +88,21 @@ test-suite "policies" :
 ;
 
 test-suite "scopes" :
-    [ run-cpp11 scopes/external_scope_ut.cpp ]
-    [ run-cpp11 scopes/session_scope_ut.cpp ]
-    [ run-cpp11 scopes/shared_scope_ut.cpp ]
-    [ run-cpp11 scopes/unique_scope_ut.cpp ]
+    #[ run-cpp11 scopes/external_scope_ut.cpp ]
+    #[ run-cpp11 scopes/session_scope_ut.cpp ]
+    #[ run-cpp11 scopes/shared_scope_ut.cpp ]
+    #[ run-cpp11 scopes/unique_scope_ut.cpp ]
 ;
 
 test-suite "ctors" :
-    [ run-cpp11 ctor_bracket_ut.cpp ]
-    [ run-cpp11 ctor_va_args_ut.cpp ]
+    #[ run-cpp11 ctor_bracket_ut.cpp ]
+    #[ run-cpp11 ctor_va_args_ut.cpp ]
 ;
 
 test-suite "injector" :
-    [ run-cpp11 injector_mt.cpp ]
-    [ run-cpp11 injector_ut.cpp ]
-	[ run-cpp11 make_injector_mt.cpp ]
+    #[ run-cpp11 injector_mt.cpp ]
+    #[ run-cpp11 injector_ut.cpp ]
+	#[ run-cpp11 make_injector_mt.cpp ]
     #[ run injector_limit_size_mt.cpp : : :
         #<define>BOOST_DI_CTOR_CFG_BRACKET
         #<define>BOOST_MPL_LIMIT_VECTOR_SIZE=70
@@ -110,7 +110,7 @@ test-suite "injector" :
 ;
 
 test-suite "di / C++ 11" :
-    [ run-cpp11 di_mt_11.cpp ]
+    #[ run-cpp11 di_mt_11.cpp ]
 ;
 
 #test-suite "di / c++ 98/03" :
@@ -126,7 +126,7 @@ test-suite "di / C++ 11" :
 #;
 #
 test-suite "di / playground" :
-    [ run-cpp11 test.cpp ]
+    #[ run-cpp11 test.cpp ]
 ;
 
 #test-suite "compile fail" :
@@ -142,4 +142,18 @@ test-suite "di / playground" :
     #[ compile-fail-cpp11 injector_shared_by_copy_mt_fail.cpp ]
     #[ compile-fail       injector_lack_of_shared_ptr_mt_fail.cpp : <define>BOOST_DI_TR1_SMART_PTR ]
 #;
+
+rule run-cpp ( src : std : di_inject ) {
+    return [ run $(src) : : :
+        <toolset>gcc:<cxxflags>"-std=$(std) -include config.hpp"
+        <toolset>clang:<cxxflags>"-std=$(std) -include config.hpp"
+        <toolset>intel:<cxxflags>"-std=$(std) -include config.hpp"
+        <define>\"$(di_inject)\"
+    ] ;
+}
+
+test-suite "play" :
+    #[ run-cpp test.cpp : c++11 : "BOOST_DI_INJECT(type, ...) = type(__VA_ARGS__)" ]
+    [ run-cpp test.cpp : c++11 : "BOOST_DI_BLAH" ]
+;
 

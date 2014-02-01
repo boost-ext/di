@@ -144,7 +144,7 @@
           , typename TVisitor
         >
         static eager_creator<TParent, TCallStack, TDeps, TCleanup, TVisitor>
-        execute(TDeps& deps, TCleanup& cleanup, const TVisitor& visitor, typename enable_if<is_same<T, any_type>>::type* = 0) {
+        execute(TDeps& deps, TCleanup& cleanup, const TVisitor& visitor, typename enable_if<is_same<T, any_type> >::type* = 0) {
             return eager_creator<TParent, TCallStack, TDeps, TCleanup, TVisitor>(deps, cleanup, visitor);
         }
 
@@ -157,7 +157,7 @@
           , typename TVisitor
         >
         static typename binder<T, TCallStack>::result_type
-		execute(TDeps& deps, TCleanup& cleanup, const TVisitor& visitor, typename disable_if<is_same<T, any_type>>::type* = 0) {
+		execute(TDeps& deps, TCleanup& cleanup, const TVisitor& visitor, typename disable_if<is_same<T, any_type> >::type* = 0) {
             return execute_impl<
                 T
               , typename mpl::push_back<
