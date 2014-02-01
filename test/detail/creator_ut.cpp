@@ -12,6 +12,7 @@
 #include <boost/type_traits/is_same.hpp>
 
 #include "fake_binder.hpp"
+#include "fake_visitor.hpp"
 
 namespace boost {
 namespace di {
@@ -48,7 +49,7 @@ BOOST_AUTO_TEST_CASE(creator_simple) {
     BOOST_CHECK_EQUAL(i, (
 		creator<
 			fake_binder<dependency_type>
-		>::execute<int, mpl::vector0<>>(entries_, cleanup_)
+		>::execute<int, void, mpl::vector0<>>(entries_, cleanup_, fake_visitor<>())
 	));
 }
 

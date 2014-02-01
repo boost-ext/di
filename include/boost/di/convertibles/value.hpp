@@ -44,6 +44,7 @@ public:
 
     template<typename I>
     const aux::shared_ptr<I>& operator()(const type<const aux::shared_ptr<I>& >&) {
+        //dirty wknd
         auto* f = new aux::shared_ptr<I>(new I(value_));
         return *f;
     }

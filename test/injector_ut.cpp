@@ -489,24 +489,25 @@ BOOST_AUTO_TEST_CASE(create_injector) {
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-//BOOST_AUTO_TEST_CASE(visit_injector) {
-    //auto injector_ = injector<>()(
-        //unique<
-            //transaction_provider, mpl::int_<0>
-        //>()
-    //);
+BOOST_AUTO_TEST_CASE(visit_injector) {
+    auto injector_ = injector<>()(
+        unique<
+            transaction_provider
+          , mpl::int_<0>
+        >()
+    );
 
-    //fake_visitor<
-        //mpl::vector<
-            //transaction_usage
-          //, aux::shared_ptr<provider<aux::shared_ptr<transaction>>>
-          //, aux::shared_ptr<c3>
-          //, int
-        //>
-    //> visitor;
+    fake_visitor<
+        mpl::vector<
+            transaction_usage
+          , aux::shared_ptr<provider<aux::shared_ptr<transaction>>>
+          , aux::shared_ptr<c3>
+          , int
+        >
+    > visitor;
 
-    //injector_.visit<transaction_usage>(visitor);
-//}
+    injector_.visit<transaction_usage>(visitor);
+}
 
 BOOST_AUTO_TEST_CASE(call_injector) {
     fake_scope<>::entry_calls() = 0;

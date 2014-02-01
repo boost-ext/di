@@ -170,13 +170,14 @@ using injector_provider_t = injector<
 
 struct cx
 {
-    cx(int i, int& e, double* p, aux::shared_ptr<float> s, const aux::shared_ptr<float>& s2)
-        : i_(i), e_(e), p_(p), s_(s), s2_(s2)
+    cx(int i, int& e, double* p, const double* p2, aux::shared_ptr<float> s, const aux::shared_ptr<float>& s2)
+        : i_(i), e_(e), p_(p), p2_(p2), s_(s), s2_(s2)
     { }
 
     int i_;
     int& e_;
     double* p_;
+    const double* p2_;
     aux::shared_ptr<float> s_;
     aux::shared_ptr<float> s2_;
 };
@@ -208,6 +209,7 @@ BOOST_AUTO_TEST_CASE(basic_visitor) {
     BOOST_CHECK_EQUAL(i, obj.i_);
     BOOST_CHECK_EQUAL(i, obj.e_);
     BOOST_CHECK_EQUAL(12.0, *obj.p_);
+    BOOST_CHECK_EQUAL(12.0, *obj.p2_);
     BOOST_CHECK_EQUAL(87.0, *obj.s_);
 }
 
@@ -238,7 +240,6 @@ BOOST_AUTO_TEST_CASE(aaab) {
     BOOST_CHECK_EQUAL(i, c14_.i);
     BOOST_CHECK_EQUAL(d, c14_.d);
 }
-
 
 } // namespace di
 } // namespace boost
