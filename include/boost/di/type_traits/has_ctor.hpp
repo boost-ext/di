@@ -13,6 +13,7 @@
     #include "boost/di/type_traits/make_plain.hpp"
     #include "boost/di/type_traits/is_same_base_of.hpp"
 
+    #include <boost/config.hpp>
 	#include <boost/typeof/typeof.hpp>
 	#include <boost/utility/enable_if.hpp>
 	#include <boost/mpl/aux_/yes_no.hpp>
@@ -33,8 +34,10 @@
 
             template<
                 typename U
+            #if !defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
 			  , typename PU = typename type_traits::make_plain<U>::type
 			  , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
+            #endif
             >
             operator U() const;
         };
@@ -70,7 +73,9 @@
 		struct any_type
         {
             template<typename U> operator U&() const;
+        #if defined(BOOST_HAS_RVALUE_REFERENCES)
             template<typename U> operator U&&() const;
+        #endif
             template<typename U> operator U();
         };
 

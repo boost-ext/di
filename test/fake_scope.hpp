@@ -8,6 +8,8 @@
 
 #include <utility>
 #include <boost/type.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"

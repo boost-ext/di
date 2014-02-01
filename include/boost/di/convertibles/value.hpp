@@ -33,7 +33,7 @@ public:
 
     template<typename I>
     I& operator()(const type<I&>&) const {
-        auto* f = new I(value_);
+        I* f = new I(value_);
         return *f;
     }
 
@@ -51,7 +51,7 @@ public:
     template<typename I>
     const aux::shared_ptr<I>& operator()(const type<const aux::shared_ptr<I>& >&) {
         //dirty wknd
-        auto* f = new aux::shared_ptr<I>(new I(value_));
+        aux::shared_ptr<I>* f = new aux::shared_ptr<I>(new I(value_));
         return *f;
     }
 

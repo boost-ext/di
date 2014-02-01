@@ -14,6 +14,7 @@
     #include "boost/di/type_traits/make_plain.hpp"
     #include "boost/di/type_traits/is_same_base_of.hpp"
 
+    #include <boost/config.hpp>
     #include <boost/type.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/type_traits/is_base_of.hpp>
@@ -88,11 +89,18 @@
 
             template<
                 typename U
+            #if !defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
               , typename NU = typename named_type<U>::type
               , typename PU = typename type_traits::make_plain<U>::type
               , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
+            #endif
             >
             operator U() {
+                #if defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
+                    typedef typename named_type<U>::type NU;
+                    typedef typename type_traits::make_plain<U>::type PU;
+                #endif
+
                 return creator::execute_impl<
                     NU
                   , typename mpl::push_back<TCallStack, PU>::type
@@ -102,11 +110,19 @@
 
             template<
                 typename U
+
+            #if !defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
               , typename NU = typename named_type<U>::type
               , typename PU = typename type_traits::make_plain<U>::type
               , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
+            #endif
             >
             operator const U&() const {
+                #if defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
+                    typedef typename named_type<U>::type NU;
+                    typedef typename type_traits::make_plain<U>::type PU;
+                #endif
+
                 return creator::execute_impl<
                     const U&
                   , typename mpl::push_back<TCallStack, PU>::type
@@ -116,11 +132,18 @@
 
             template<
                 typename U
+            #if !defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
               , typename NU = typename named_type<U>::type
               , typename PU = typename type_traits::make_plain<U>::type
               , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
+            #endif
             >
             operator U&() const {
+                #if defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
+                    typedef typename named_type<U>::type NU;
+                    typedef typename type_traits::make_plain<U>::type PU;
+                #endif
+
                 return creator::execute_impl<
                     U&
                   , typename mpl::push_back<TCallStack, PU>::type

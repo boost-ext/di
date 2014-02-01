@@ -113,6 +113,7 @@ struct c3
 {
     BOOST_DI_INJECT(explicit c3
         , int i = 0
+        , int = 0
     )
         : i(i)
     { }

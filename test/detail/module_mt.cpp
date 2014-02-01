@@ -540,7 +540,6 @@ BOOST_AUTO_TEST_CASE(visit_external) {
             mpl::pair<c18, scopes::unique<>>
           , mpl::pair<c0, scopes::unique<>>
           , mpl::pair<aux::shared_ptr<c1>, scopes::shared<>>
-          //diff between inject and ctor
           , mpl::pair<int, scopes::unique<>>
           , mpl::pair<c3&, scopes::external<>>
         >

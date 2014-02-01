@@ -98,7 +98,7 @@ test-suite "ctors" :
 ;
 
 test-suite "injector" :
-    #[ run-test c++11 : injector_mt.cpp ]
+    [ run-test c++11 : injector_mt.cpp ]
     [ run-test c++11 : injector_mt.cpp : ctor_injector_mt ]
     [ run-test c++11 : injector_ut.cpp ]
     [ run-test c++11 : injector_ut.cpp : ctor_injector_ut ]
