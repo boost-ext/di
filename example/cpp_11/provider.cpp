@@ -27,7 +27,7 @@ struct transaction
 
 struct usage
 {
-    BOOST_DI_INJECT(usage, std::unique_ptr<di::provider<int>> p) {
+    usage(std::unique_ptr<di::provider<int>> p) {
         assert(p->get() == 1);
         assert(p->get() == 2);
     }

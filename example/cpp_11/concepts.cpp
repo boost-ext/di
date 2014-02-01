@@ -25,63 +25,26 @@ struct impl4 : i { };
 
 struct c0 { };
 
-struct c1
-{
-    BOOST_DI_INJECT(c1, int, const di::named<double, name1>&) { }
-};
-
-struct c2
-{
-    BOOST_DI_INJECT(c2, const di::named<double, name1>&, c1) { }
-};
-
+struct c1 { c1(int, di::named<double, name1>) { } };
+struct c2 { c2(di::named<double, name1>, c1) { } };
 struct c3
 {
-    BOOST_DI_INJECT(c3
-      , std::string
+    c3(
+        std::string
       , std::shared_ptr<i>
       , const di::named<boost::shared_ptr<i>, name2>&
     ) { }
 };
-
 struct c4 { };
 struct c5 { };
-struct c6
-{
-    BOOST_DI_INJECT(c6, std::shared_ptr<i>) { }
-};
-
-struct c7
-{
-    BOOST_DI_INJECT(c7, const di::named<std::shared_ptr<i>, name3>&) { }
-};
-
-struct c8
-{
-    BOOST_DI_INJECT(c8, std::string, std::shared_ptr<i>, c7) { }
-};
-
+struct c6 { c6(std::shared_ptr<i>) { } };
+struct c7 { c7(di::named<std::shared_ptr<i>, name3>) { } };
+struct c8 { c8(std::string, std::shared_ptr<i>, c7) { } };
 struct c9 { };
-
-struct c10
-{
-    BOOST_DI_INJECT(c10, c9, c8) { }
-};
-
-struct c11
-{
-    BOOST_DI_INJECT(c11, c9, c10) { }
-};
-
-struct c12
-{
-    BOOST_DI_INJECT(c12, c9, c11) { }
-};
-
-struct c13
-{
-    BOOST_DI_INJECT(c13, std::shared_ptr<c12>) { }
-};
+struct c10 { c10(c9, c8) { } };
+struct c11 { c11(c9, c10) { } };
+struct c12 { c12(c9, c11) { } };
+struct c13 { c13(std::shared_ptr<c12>) { } };
 
 } // namespace
 

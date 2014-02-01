@@ -11,17 +11,13 @@ namespace di = boost::di;
 
 namespace {
 
-struct i
-{
-    virtual ~i() { }
-};
-
+struct i { virtual ~i() { } };
 struct impl : i { };
 
 template<typename Config>
 struct app
 {
-    BOOST_DI_INJECT(app, std::unique_ptr<i>) { }
+    app(std::unique_ptr<i>) { }
 };
 
 using injector_t = di::injector<impl>;

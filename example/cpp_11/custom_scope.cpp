@@ -18,7 +18,7 @@ struct c1 { };
 
 struct c2
 {
-    BOOST_DI_INJECT(c2, std::shared_ptr<c1> sp) {
+    c2(std::shared_ptr<c1> sp) {
         if (sp) {
             std::clog << "in custom scope" << std::endl;
         } else {

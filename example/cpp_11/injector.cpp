@@ -17,35 +17,20 @@ namespace {
 struct name { };
 
 struct i0 { virtual ~i0() { }; };
-
-struct c0 : i0
-{
-    BOOST_DI_INJECT(c0, const di::named<int, name>&, double) { }
-};
-
+struct c0 : i0 { c0(di::named<int, name>, double) { } };
 struct c01 : i0 { };
-
-struct c1
-{
-    BOOST_DI_INJECT(c1, std::shared_ptr<i0>) { }
-};
-
-struct c2
-{
-    BOOST_DI_INJECT(c2, std::shared_ptr<c1>, int, double, char) { }
-};
-
+struct c1 { c1(std::shared_ptr<i0>) { } };
+struct c2 { c2(std::shared_ptr<c1>, int, double, char) { } };
 struct c3 { };
 struct c4 { };
-
 struct c5
 {
-    BOOST_DI_INJECT(c5
-        , std::shared_ptr<c1>
-        , c2
-        , std::shared_ptr<i0>
-        , std::shared_ptr<c3>
-        , c4&
+    c5(
+        std::shared_ptr<c1>
+      , c2
+      , std::shared_ptr<i0>
+      , std::shared_ptr<c3>
+      , c4&
     ) { }
 };
 

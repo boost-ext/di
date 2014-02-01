@@ -13,28 +13,34 @@ project di :
         <warnings>all
 ;
 
-rule run-cpp11 ( src ) {
-    return [ run $(src) : : :
-        <toolset>gcc:<cxxflags>"-std=c++11 -include ../test/config.hpp"
-        <toolset>clang:<cxxflags>"-std=c++11 -include ../test/config.hpp"
-        <toolset>intel:<cxxflags>"-std=c++11 -include ../test/config.hpp"
-    ] ;
+rule run-test ( std : src ) {
+    run $(src) : : :
+        <toolset>gcc:<cxxflags>"-std=$(std) -include ../test/config.hpp"
+        <toolset>clang:<cxxflags>"-std=$(std) -include ../test/config.hpp"
+        <toolset>intel:<cxxflags>"-std=$(std) -include ../test/config.hpp"
+    ;
 }
 
-test-suite "di" :
-    [ run-cpp11 creation_by_smart_ptr_policy.cpp ]
-    [ run-cpp11 concepts.cpp ]
-    [ run-cpp11 ctor.cpp ]
-    [ run-cpp11 custom_scope.cpp ]
-    [ run-cpp11 deduce_scope.cpp ]
-    [ run-cpp11 externals.cpp ]
-    [ run-cpp11 factory.cpp ]
-    [ run-cpp11 hello_world.cpp ]
-    [ run-cpp11 injector.cpp ]
-    [ run-cpp11 named.cpp ]
-    [ run-cpp11 provider.cpp ]
-    [ run-cpp11 testing.cpp ]
-    [ run-cpp11 text_visitor.cpp ]
-    [ run-cpp11 uml_visitor.cpp ]
+test-suite "di / c++ 03" :
+;
+
+test-suite "di / c++ 11" :
+    [ run-test c++11 : cpp_11/concepts.cpp ]
+    #[ run-test c++11 : cpp_11/creation_by_smart_ptr_policy.cpp ]
+    [ run-test c++11 : cpp_11/inject.cpp ]
+    [ run-test c++11 : cpp_11/custom_scope.cpp ]
+    [ run-test c++11 : cpp_11/deduce_scope.cpp ]
+    [ run-test c++11 : cpp_11/externals.cpp ]
+    [ run-test c++11 : cpp_11/factory.cpp ]
+    [ run-test c++11 : cpp_11/hello_world.cpp ]
+    [ run-test c++11 : cpp_11/injector.cpp ]
+    [ run-test c++11 : cpp_11/named.cpp ]
+    [ run-test c++11 : cpp_11/provider.cpp ]
+    [ run-test c++11 : cpp_11/testing.cpp ]
+    [ run-test c++11 : cpp_11/text_visitor.cpp ]
+    [ run-test c++11 : cpp_11/uml_visitor.cpp ]
+;
+
+test-suite "di / c++ 14" :
 ;
 

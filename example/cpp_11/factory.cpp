@@ -21,7 +21,7 @@ struct i
 
 struct impl1 : i
 {
-    BOOST_DI_INJECT(impl1, int i) {
+    impl1(int i) {
         assert(i == 1);
     }
 
@@ -30,7 +30,7 @@ struct impl1 : i
 
 struct impl2 : i
 {
-    BOOST_DI_INJECT(impl2, int i) {
+    impl2(int i) {
         assert(i == 2);
     }
 
@@ -40,7 +40,7 @@ struct impl2 : i
 template<typename T>
 struct c
 {
-    BOOST_DI_INJECT(c, std::shared_ptr<i> i) {
+    c(std::shared_ptr<i> i) {
         assert(i.get());
         assert(dynamic_cast<T*>(i.get()));
     }

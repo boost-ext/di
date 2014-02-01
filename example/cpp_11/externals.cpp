@@ -13,7 +13,7 @@ namespace {
 
 struct c
 {
-    BOOST_DI_INJECT(c, int i) {
+    c(int i) {
         assert(i == 42);
     }
 };

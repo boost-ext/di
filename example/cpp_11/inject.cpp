@@ -12,22 +12,25 @@ namespace {
 
 struct name { };
 
-struct c0 { };
+struct c0
+{
+    c0(int, di::named<int, name> = 0) { }
+};
 
 struct c1
 {
-    BOOST_DI_INJECT(c1, int, const di::named<int, name>& = 0) { }
+    BOOST_DI_INJECT(c1, int, di::named<int, name> = 0) { }
 };
 
 struct c2
 {
-    BOOST_DI_INJECT_TRAITS(int, const di::named<int, name>&);
+    BOOST_DI_INJECT_TRAITS(int, di::named<int, name>);
     c2(int, int = 0) { }
 };
 
 struct c3
 {
-    static void BOOST_DI_INJECTOR(int, const di::named<int, name>&);
+    static void BOOST_DI_INJECTOR(int, di::named<int, name>);
     c3(int, int = 0) { }
 };
 
@@ -44,7 +47,7 @@ namespace di {
 template<>
 struct ctor_traits<c4>
 {
-    BOOST_DI_INJECT_TRAITS(int, const di::named<int, name>&);
+    BOOST_DI_INJECT_TRAITS(int, di::named<int, name>);
 };
 
 } // namespace di
