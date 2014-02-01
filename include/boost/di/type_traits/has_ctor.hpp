@@ -67,7 +67,12 @@
 	template<typename T>
 	class has_ctor<T, mpl::int_<BOOST_PP_ITERATION()> >
 	{
-		struct any_type { template<typename U> operator U() const; };
+		struct any_type
+        {
+            template<typename U> operator U&() const;
+            template<typename U> operator U&&() const;
+            template<typename U> operator U();
+        };
 
 		template<typename U>
 		static mpl::aux::yes_tag test(

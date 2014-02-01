@@ -168,21 +168,77 @@ using injector_provider_t = injector<
 	>
 >;
 
+struct cx
+{
+    cx(int i, int& e, double* p, aux::shared_ptr<float> s, const aux::shared_ptr<float>& s2)
+        : i_(i), e_(e), p_(p), s_(s), s2_(s2)
+    { }
+
+    int i_;
+    int& e_;
+    double* p_;
+    aux::shared_ptr<float> s_;
+    aux::shared_ptr<float> s2_;
+};
+
 BOOST_AUTO_TEST_CASE(basic_visitor) {
-	injector_provider_t injector;
+    //injector_provider_t injector;
 
-	fake_visitor<
-		mpl::vector<
-			transaction_usage
-		  , aux::shared_ptr<provider<aux::shared_ptr<transaction>>>
-		  , aux::shared_ptr<c3>
-		  , int
-		>
-	> visitor;
+    //fake_visitor<
+        //mpl::vector<
+            //transaction_usage
+          //, aux::shared_ptr<provider<aux::shared_ptr<transaction>>>
+          //, aux::shared_ptr<c3>
+          //, int
+        //>
+    //> visitor;
 
-	//injector.visit<c18>(visitor);
-	//injector.create<c18*>();
+    //injector.visit<c18>(visitor);
+
+    int i = 42;
+
+    auto obj = make_injector(
+        bind<int>::to(i)
+      , bind<double>::to(12.0)
+      , bind<float>::to(87.0)
+    ).create<cx>();
+
+    //i = 32;
+
+    BOOST_CHECK_EQUAL(i, obj.i_);
+    BOOST_CHECK_EQUAL(i, obj.e_);
+    BOOST_CHECK_EQUAL(12.0, *obj.p_);
+    BOOST_CHECK_EQUAL(87.0, *obj.s_);
 }
+
+BOOST_AUTO_TEST_CASE(named_ref) {
+    struct injector_type
+        : injector<
+              unique<
+                  c0if0
+              >
+          >
+    { } injector_;
+
+    auto c8_ = injector_.create<aux::shared_ptr<c8>>();
+
+}
+
+BOOST_AUTO_TEST_CASE(aaab) {
+    const int i = 42;
+    const double d = 87.0;
+
+    auto injector_ = injector<>()(
+        bind<int>::to(i)
+      , bind<double>::to(d)
+    );
+
+    auto c14_ = injector_.create<c14>();
+
+    BOOST_CHECK_EQUAL(i, c14_.i);
+    BOOST_CHECK_EQUAL(d, c14_.d);
+}
+
 
 } // namespace di
 } // namespace boost

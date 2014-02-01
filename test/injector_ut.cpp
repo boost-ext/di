@@ -62,27 +62,27 @@ BOOST_AUTO_TEST_CASE(create) {
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-//BOOST_AUTO_TEST_CASE(visit) {
-    //struct injector_type
-        //: injector<
-              //unique<
-                  //transaction_provider
-                //, mpl::int_<0>
-              //>
-          //>
-    //{ } injector_;
+BOOST_AUTO_TEST_CASE(visit) {
+    struct injector_type
+        : injector<
+              unique<
+                  transaction_provider
+                , mpl::int_<0>
+              >
+          >
+    { } injector_;
 
-    //fake_visitor<
-        //mpl::vector<
-            //transaction_usage
-          //, aux::shared_ptr<provider<aux::shared_ptr<transaction>>>
-          //, aux::shared_ptr<c3>
-          //, int
-        //>
-    //> visitor;
+    fake_visitor<
+        mpl::vector<
+            transaction_usage
+          , aux::shared_ptr<provider<aux::shared_ptr<transaction>>>
+          , aux::shared_ptr<c3>
+          , int
+        >
+    > visitor;
 
-    //injector_.visit<transaction_usage>(visitor);
-//}
+    injector_.visit<transaction_usage>(visitor);
+}
 
 BOOST_AUTO_TEST_CASE(call) {
     fake_scope<>::entry_calls() = 0;
@@ -971,50 +971,50 @@ BOOST_AUTO_TEST_CASE(to_shared_ptr) {
     BOOST_CHECK_EQUAL(c3_, c4_.c3_);
 }
 
-//BOOST_AUTO_TEST_CASE(to_ref) {
-    //const int i = 42;
-    //const double d = 87.0;
-    //c3 c3_(i);
-    //c14 c14_(i, d);
+BOOST_AUTO_TEST_CASE(to_ref) {
+    const int i = 42;
+    const double d = 87.0;
+    c3 c3_(i);
+    c14 c14_(i, d);
 
-    //const c3& c3_const_ref = c3_;
-    //c14& c14_ref = c14_;
+    const c3& c3_const_ref = c3_;
+    c14& c14_ref = c14_;
 
-    //auto injector_ = injector<>()(
-        //bind<c3>::to(c3_const_ref)
-      //, bind<c14>::to(c14_ref)
-    //);
+    auto injector_ = injector<>()(
+        bind<c3>::to(c3_const_ref)
+      , bind<c14>::to(c14_ref)
+    );
 
-    //auto c16_ = injector_.create<aux::shared_ptr<c16>>();
+    auto c16_ = injector_.create<aux::shared_ptr<c16>>();
 
-    //BOOST_CHECK(&c3_const_ref == &c16_->c3_);
-    //BOOST_CHECK(&c14_ref == &c16_->c14_);
+    BOOST_CHECK(&c3_const_ref == &c16_->c3_);
+    BOOST_CHECK(&c14_ref == &c16_->c14_);
 
-    //BOOST_CHECK_EQUAL(c3_.i, c16_->c3_.i);
-    //BOOST_CHECK_EQUAL(c14_.i, c16_->c14_.i);
-    //BOOST_CHECK_EQUAL(c14_.d, c16_->c14_.d);
-//}
+    BOOST_CHECK_EQUAL(c3_.i, c16_->c3_.i);
+    BOOST_CHECK_EQUAL(c14_.i, c16_->c14_.i);
+    BOOST_CHECK_EQUAL(c14_.d, c16_->c14_.d);
+}
 
-//BOOST_AUTO_TEST_CASE(to_ref_no_copy) {
-    //const int i = 42;
-    //const double d = 87.0;
-    //c3 c3_(i);
-    //c14 c14_(i, d);
+BOOST_AUTO_TEST_CASE(to_ref_no_copy) {
+    const int i = 42;
+    const double d = 87.0;
+    c3 c3_(i);
+    c14 c14_(i, d);
 
-    //auto injector_ = injector<>()(
-        //bind<c3>::to(c3_)
-      //, bind<c14>::to(c14_)
-    //);
+    auto injector_ = injector<>()(
+        bind<c3>::to(c3_)
+      , bind<c14>::to(c14_)
+    );
 
-    //auto c16_ = injector_.create<aux::shared_ptr<c16>>();
+    auto c16_ = injector_.create<aux::shared_ptr<c16>>();
 
-    //BOOST_CHECK(&c3_ == &c16_->c3_);
-    //BOOST_CHECK(&c14_ == &c16_->c14_);
+    BOOST_CHECK(&c3_ == &c16_->c3_);
+    BOOST_CHECK(&c14_ == &c16_->c14_);
 
-    //BOOST_CHECK_EQUAL(c3_.i, c16_->c3_.i);
-    //BOOST_CHECK_EQUAL(c14_.i, c16_->c14_.i);
-    //BOOST_CHECK_EQUAL(c14_.d, c16_->c14_.d);
-//}
+    BOOST_CHECK_EQUAL(c3_.i, c16_->c3_.i);
+    BOOST_CHECK_EQUAL(c14_.i, c16_->c14_.i);
+    BOOST_CHECK_EQUAL(c14_.d, c16_->c14_.d);
+}
 
 BOOST_AUTO_TEST_CASE(fixed_value) {
     double_value::value = 42.0;

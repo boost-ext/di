@@ -64,7 +64,7 @@ rule compile-fail-cpp03 ( src ) {
 
 test-suite "type traits" :
     #[ run-cpp11 type_traits/create_traits_ut.cpp ]
-	#[ run-cpp11 type_traits/ctor_traits_ut.cpp ]
+    [ run-cpp11 type_traits/ctor_traits_ut.cpp ]
     #[ run-cpp11 type_traits/is_same_base_of_ut.cpp ]
     #[ run-cpp11 type_traits/make_plain_ut.cpp ]
     #[ run-cpp11 type_traits/parameter_types_ut.cpp ]
@@ -75,7 +75,7 @@ test-suite "type traits" :
 test-suite "implementation detail" :
     #[ run-cpp11 detail/binder_ut.cpp ]
     #[ run-cpp11 detail/creator_ut.cpp ]
-	[ run-cpp11 detail/module_mt.cpp ]
+	#[ run-cpp11 detail/module_mt.cpp ]
     #[ run-cpp11 detail/pool_ut.cpp ]
 ;
 
@@ -100,9 +100,9 @@ test-suite "implementation detail" :
 #;
 
 test-suite "injector" :
-	[ run-cpp11 injector_mt.cpp ]
-	[ run-cpp11 injector_ut.cpp ]
-	[ run-cpp11 make_injector_mt.cpp ]
+    #[ run-cpp11 injector_mt.cpp ]
+    #[ run-cpp11 injector_ut.cpp ]
+	#[ run-cpp11 make_injector_mt.cpp ]
     #[ run injector_limit_size_mt.cpp : : :
         #<define>BOOST_DI_CTOR_CFG_BRACKET
         #<define>BOOST_MPL_LIMIT_VECTOR_SIZE=70
@@ -110,7 +110,7 @@ test-suite "injector" :
 ;
 
 test-suite "di / C++ 11" :
-	[ run-cpp11 di_mt_11.cpp ]
+	#[ run-cpp11 di_mt_11.cpp ]
 ;
 
 #test-suite "di / c++ 98/03" :
@@ -126,7 +126,7 @@ test-suite "di / C++ 11" :
 #;
 #
 test-suite "di / playground" :
-	#[ run-cpp11 test.cpp ]
+    [ run-cpp11 test.cpp ]
 ;
 
 #test-suite "compile fail" :

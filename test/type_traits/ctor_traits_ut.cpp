@@ -14,8 +14,8 @@
 
 #include "boost/di/inject.hpp"
 #include "boost/di/named.hpp"
+#include "boost/di/aux_/memory.hpp"
 
-#include <boost/units/detail/utility.hpp>
 namespace boost {
 namespace di {
 namespace type_traits {
@@ -45,9 +45,9 @@ struct ctor2
 	ctor2(char*, const int&);
 };
 
-struct ctor2_ref
+struct ctor_complex
 {
-	ctor2_ref(int, int&);
+    ctor_complex(int, double&, aux::shared_ptr<int>, float&&, const char*, const std::string&, void*) { }
 };
 
 struct ctor_inject_named
@@ -67,7 +67,7 @@ BOOST_AUTO_TEST_CASE(ctor) {
     BOOST_CHECK((mpl::equal<mpl::vector2<char*, const int&>, ctor_traits<extensions>::type>::value));
 	BOOST_CHECK((mpl::equal<mpl::vector1<any_type>, ctor_traits<ctor1>::type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector2<any_type, any_type>, ctor_traits<ctor2>::type>::value));
-	BOOST_CHECK((mpl::equal<mpl::vector2<any_type, any_type>, ctor_traits<ctor2_ref>::type>::value));
+	BOOST_CHECK((mpl::equal<mpl::vector<any_type, any_type, any_type, any_type, any_type, any_type, any_type>, ctor_traits<ctor_complex>::type>::value));
     BOOST_CHECK((mpl::equal<
 		mpl::vector2<
 			const named<int, mpl::string<'1'>>&

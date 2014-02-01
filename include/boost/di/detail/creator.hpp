@@ -84,16 +84,44 @@
 
             template<
                 typename U
-			  , typename NU = typename named_type<U>::type
-			  , typename PU = typename type_traits::make_plain<U>::type
-			  , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
+              , typename NU = typename named_type<U>::type
+              , typename PU = typename type_traits::make_plain<U>::type
+              , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
             >
-            operator U() const {
+            operator U() {
                 return creator::execute_impl<
                     NU
                   , typename mpl::push_back<TCallStack, PU>::type
                   , binder<U, TCallStack>
                 >(deps_, cleanup_, visitor_)(boost::type<NU>());
+            }
+
+            template<
+                typename U
+              , typename NU = typename named_type<U>::type
+              , typename PU = typename type_traits::make_plain<U>::type
+              , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
+            >
+            operator const U&() const {
+                return creator::execute_impl<
+                    const U&
+                  , typename mpl::push_back<TCallStack, PU>::type
+                  , binder<const U&, TCallStack>
+                >(deps_, cleanup_, visitor_)(boost::type<const NU&>());
+            }
+
+            template<
+                typename U
+              , typename NU = typename named_type<U>::type
+              , typename PU = typename type_traits::make_plain<U>::type
+              , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
+            >
+            operator U&() const {
+                return creator::execute_impl<
+                    U&
+                  , typename mpl::push_back<TCallStack, PU>::type
+                  , binder<U&, TCallStack>
+                >(deps_, cleanup_, visitor_)(boost::type<NU&>());
             }
 
 		private:
