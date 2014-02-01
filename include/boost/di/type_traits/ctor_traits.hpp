@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 
+#include "boost/di/aux_/meta.hpp"
 #include "boost/di/inject.hpp"
 #include "boost/di/type_traits/parameter_types.hpp"
 #include "boost/di/type_traits/has_ctor.hpp"
@@ -39,7 +40,7 @@ struct get_int
 template<typename T>
 struct get_
 	: mpl::fold<
-		mpl::range_c<int, 1, BOOST_MPL_LIMIT_VECTOR_SIZE>
+		mpl::range_c<int, 1, BOOST_DI_CTOR_LIMIT_SIZE + 1>
 	  , mpl::int_<0>
 	  , mpl::if_<
 			type_traits::has_ctor<T, get_int<mpl::_2> >

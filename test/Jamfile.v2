@@ -16,25 +16,28 @@ project :
         <define>BOOST_TEST_MODULE=di_test
 ;
 
-rule run-test ( std : src : ctor * ) {
-    common_toolset =
-        <toolset>gcc:<cxxflags>"-std=$(std) -include config.hpp"
-        <toolset>gcc:<cxxflags>"-ftemplate-depth-1024"
-        <toolset>clang:<cxxflags>"-std=$(std) -include config.hpp"
-        <toolset>intel:<cxxflags>"-std=$(std) -include config.hpp"
-    ;
+rule run-test ( std * : src : ctor * : defines * ) {
+    common_toolset = ;
+
+    if $(std) {
+        common_toolset +=
+            <toolset>gcc:<cxxflags>"-std=$(std) -include config.hpp"
+            <toolset>clang:<cxxflags>"-std=$(std) -include config.hpp"
+            <toolset>intel:<cxxflags>"-std=$(std) -include config.hpp"
+        ;
+    }
 
     if $(ctor) {
-        run $(src) : : : $(common_toolset) <define>"\"BOOST_DI_INJECT(type, ...) = type(__VA_ARGS__)\"" : $(ctor) ;
+        run $(src) : : : $(common_toolset) <define>"\"BOOST_DI_INJECT(type, ...) = type(__VA_ARGS__)\"" $(defines) : $(ctor) ;
     } else {
-        run $(src) : : : $(common_toolset) ;
+        run $(src) : : : $(common_toolset) $(defines) ;
     }
 }
 
 rule compile-fail-test ( std : src : ctor * ) {
     common_toolset =
-        <toolset>gcc:<cxxflags>"-std=$(std) -include config.hpp"
         <toolset>gcc:<cxxflags>"-ftemplate-depth-1024"
+        <toolset>gcc:<cxxflags>"-std=$(std) -include config.hpp"
         <toolset>clang:<cxxflags>"-std=$(std) -include config.hpp"
         <toolset>intel:<cxxflags>"-std=$(std) -include config.hpp"
     ;
@@ -104,10 +107,10 @@ test-suite "injector" :
     [ run-test c++11 : injector_ut.cpp : ctor_injector_ut ]
     [ run-test c++11 : make_injector_mt.cpp ]
     [ run-test c++11 : make_injector_mt.cpp : ctor_make_injector_mt ]
-    #[ run injector_limit_size_mt.cpp : : :
-        #<define>BOOST_DI_CTOR_CFG_BRACKET
-        #<define>BOOST_MPL_LIMIT_VECTOR_SIZE=70
-    #]
+    [ run-test c++11 : injector_limit_size_mt.cpp : :
+        <define>BOOST_DI_CTOR_LIMIT_SIZE=30
+        <define>BOOST_MPL_LIMIT_VECTOR_SIZE=50
+    ]
 ;
 
 test-suite "di / c++ 11" :

@@ -18,36 +18,14 @@
 #include <boost/mpl/limits/vector.hpp>
 #include <boost/mpl/aux_/na.hpp>
 
+// ctor
+
+#if !defined(BOOST_DI_CTOR_LIMIT_SIZE)
+    #define BOOST_DI_CTOR_LIMIT_SIZE 10
+#endif
+
 #define BOOST_DI_LIMITS_BEGIN(begin)            \
-    (begin, BOOST_MPL_LIMIT_VECTOR_SIZE)
-
-#define BOOST_DI_TYPES_DEFAULT_MPL(T)           \
-     BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(       \
-         BOOST_MPL_LIMIT_VECTOR_SIZE            \
-       , typename T                             \
-       , ::boost::mpl::na                       \
-     )
-
-#define BOOST_DI_TYPES_MPL(T)                   \
-     BOOST_PP_ENUM_PARAMS(                      \
-         BOOST_MPL_LIMIT_VECTOR_SIZE            \
-       , typename T                             \
-     )
-
-#define BOOST_DI_TYPES_MPL_NA(N)                \
-     BOOST_PP_ENUM_PARAMS(                      \
-         BOOST_PP_SUB(                          \
-             BOOST_MPL_LIMIT_VECTOR_SIZE        \
-           , N                                  \
-         )                                      \
-       , ::boost::mpl::na BOOST_PP_INTERCEPT    \
-     )
-
-#define BOOST_DI_TYPES_PASS_MPL(T)              \
-     BOOST_PP_ENUM_PARAMS(                      \
-         BOOST_MPL_LIMIT_VECTOR_SIZE            \
-       , T                                      \
-     )
+    (begin, BOOST_DI_CTOR_LIMIT_SIZE)
 
 #define BOOST_DI_TYPES(T)                       \
      BOOST_PP_ENUM_PARAMS(                      \
@@ -79,6 +57,36 @@
      BOOST_PP_ENUM_PARAMS(                      \
          BOOST_PP_ITERATION()                   \
        , arg                                    \
+     )
+
+// di
+
+#define BOOST_DI_TYPES_DEFAULT_MPL(T)           \
+     BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(       \
+         BOOST_MPL_LIMIT_VECTOR_SIZE            \
+       , typename T                             \
+       , ::boost::mpl::na                       \
+     )
+
+#define BOOST_DI_TYPES_MPL(T)                   \
+     BOOST_PP_ENUM_PARAMS(                      \
+         BOOST_MPL_LIMIT_VECTOR_SIZE            \
+       , typename T                             \
+     )
+
+#define BOOST_DI_TYPES_MPL_NA(N)                \
+     BOOST_PP_ENUM_PARAMS(                      \
+         BOOST_PP_SUB(                          \
+             BOOST_MPL_LIMIT_VECTOR_SIZE        \
+           , N                                  \
+         )                                      \
+       , ::boost::mpl::na BOOST_PP_INTERCEPT    \
+     )
+
+#define BOOST_DI_TYPES_PASS_MPL(T)              \
+     BOOST_PP_ENUM_PARAMS(                      \
+         BOOST_MPL_LIMIT_VECTOR_SIZE            \
+       , T                                      \
      )
 
 #endif
