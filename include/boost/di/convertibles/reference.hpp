@@ -35,7 +35,7 @@ public:
     }
 
     template<typename I, typename TName>
-    named<I, TName> operator()(const type<const named<I, TName>&>&) const {
+    named<I, TName> operator()(const type<named<I, TName> >&) const {
         return named<I, TName>(object_);
     }
 

@@ -46,12 +46,12 @@ public:
     }
 
     template<typename I, typename TName>
-    aux::shared_ptr<I> operator()(const type<const named<aux::shared_ptr<I>, TName>&>&) const {
+    aux::shared_ptr<I> operator()(const type<named<aux::shared_ptr<I>, TName> >&) const {
         return object_;
     }
 
     template<typename I, typename TName>
-    aux::shared_ptr<I> operator()(const type<const named<const aux::shared_ptr<I>&, TName>&>&) const {
+    aux::shared_ptr<I> operator()(const type<named<const aux::shared_ptr<I>&, TName> >&) const {
         return object_;
     }
 
@@ -66,13 +66,13 @@ public:
     }
 
     template<typename I, typename TName>
-    aux::weak_ptr<I> operator()(const type<const named<aux::weak_ptr<I>, TName>&>&) const {
+    aux::weak_ptr<I> operator()(const type<named<aux::weak_ptr<I>, TName> >&) const {
         return aux::weak_ptr<I>(object_);
     }
 
     template<typename I, typename TName>
     aux::weak_ptr<I>
-    operator()(const type<const named<const aux::weak_ptr<I>&, TName>&>&) const {
+    operator()(const type<named<const aux::weak_ptr<I>&, TName> >&) const {
         return aux::weak_ptr<I>(object_);
     }
 

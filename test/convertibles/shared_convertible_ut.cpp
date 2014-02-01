@@ -25,7 +25,7 @@ BOOST_AUTO_TEST_CASE(to_shared_ptr) {
 
 BOOST_AUTO_TEST_CASE(to_named_shared_ptr) {
     aux::shared_ptr<int> i(new int(42));
-    named<aux::shared_ptr<int>> object((shared<int>(i))(type<const named<aux::shared_ptr<int>>&>()));
+    named<aux::shared_ptr<int>> object((shared<int>(i))(type<named<aux::shared_ptr<int>>>()));
     BOOST_CHECK_EQUAL(i, static_cast<aux::shared_ptr<int>>(object));
 }
 

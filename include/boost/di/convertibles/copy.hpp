@@ -43,7 +43,7 @@ public:
     }
 
     template<typename I, typename TName>
-    I operator()(const type<const named<I, TName>&>&) const {
+    I operator()(const type<named<I, TName> >&) const {
         scoped_ptr<I> ptr(object_());
         return *ptr;
     }
@@ -59,7 +59,7 @@ public:
     }
 
     template<typename I, typename TName>
-    I* operator()(const type<const named<aux::shared_ptr<I>, TName>&>&) const {
+    I* operator()(const type<named<aux::shared_ptr<I>, TName> >&) const {
         return object_();
     }
 
@@ -69,7 +69,7 @@ public:
     }
 
     template<typename I, typename TName>
-    I* operator()(const type<const named<aux::auto_ptr<I>, TName>&>&) const {
+    I* operator()(const type<named<aux::auto_ptr<I>, TName> >&) const {
         return object_();
     }
 
@@ -79,14 +79,14 @@ public:
     }
 
     template<typename I, typename TName>
-    I* operator()(type<const named<aux::unique_ptr<I>, TName>&>&) const {
+    I* operator()(type<named<aux::unique_ptr<I>, TName> >&) const {
         return object_();
     }
 
-	template<typename I>
-	operator I() const {
-		return (*this)(type<I>());
-	}
+    template<typename I>
+    operator I() const {
+        return (*this)(type<I>());
+    }
 
 private:
     object_t object_;
