@@ -31,6 +31,12 @@ public:
         return value_;
     }
 
+    template<typename I>
+    I& operator()(const type<I&>&) const {
+        auto* f = new I(value_);
+        return *f;
+    }
+
     template<typename I, typename TName>
     I operator()(const type<named<I, TName>&>&) const {
         return value_;
