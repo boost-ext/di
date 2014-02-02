@@ -115,10 +115,12 @@ test-suite "injector" :
 
 test-suite "di / c++ 11" :
     [ run-test c++11 : di_mt_11.cpp ]
+    [ run-test c++11 : di_mt_11.cpp : ctor_dt_mt_11 ]
 ;
 
 test-suite "di / c++ 98/03" :
     #[ run-test c++03 : di_mt_03.cpp ]
+    #[ run-test c++03 : di_mt_03.cpp : ctor_dt_mt_03 ]
 ;
 
 test-suite "di / default" :

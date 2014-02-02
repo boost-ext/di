@@ -47,8 +47,7 @@ struct c2
 
     boost::shared_ptr<c1> c1_;
     std::auto_ptr<i> p_;
-}
-;
+};
 
 struct c3
 {
@@ -83,8 +82,9 @@ BOOST_AUTO_TEST_CASE(create_complex) {
     > injector_c0;
 
     BOOST_AUTO(injector_c1, di::make_injector(
-        //di::policies::circular_dependencies()
-       di::bind_int<i>()
+        di::policies::circular_dependencies()
+      , di::bind_int<i>()
+      , di::bind<std::vector<int> >::to(v)
     ));
 
     BOOST_AUTO(injector_, make_injector(
@@ -92,12 +92,11 @@ BOOST_AUTO_TEST_CASE(create_complex) {
       , di::unique<c2>()
       , injector_c1
       , di::bind<double>::to(d)
-      , di::bind<std::vector<int> >::to(v)
-      //, di::policies::arguments_permission<
-            //di::policies::allow_smart_ptrs
-          //, di::policies::allow_copies
-          //, di::policies::allow_refs
-        //>()
+      , di::policies::arguments_permission<
+            di::policies::allow_smart_ptrs
+          , di::policies::allow_copies
+          , di::policies::allow_refs
+        >()
     ));
 
     boost::shared_ptr<c3> c3_ = injector_.create<boost::shared_ptr<c3> >();
