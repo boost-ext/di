@@ -35,7 +35,7 @@ struct impl : i
 
 struct c1
 {
-    BOOST_DI_INJECT(explicit c1, int i_ = 0, double d_ = 0.0)
+    explicit c1(int i_ = 0, double d_ = 0.0)
         : i_(i_), d_(d_)
     { }
 
@@ -45,9 +45,7 @@ struct c1
 
 struct c2
 {
-    BOOST_DI_INJECT(c2
-        , std::tr1::shared_ptr<c1> c1_
-        , std::auto_ptr<i> p_)
+    c2(std::tr1::shared_ptr<c1> c1_, std::auto_ptr<i> p_)
       : c1_(c1_), p_(p_)
     { }
 
@@ -57,11 +55,12 @@ struct c2
 
 struct c3
 {
-    BOOST_DI_INJECT(c3
-        , std::tr1::shared_ptr<c1> c1_
-        , std::tr1::shared_ptr<c2> c2_
-        , c1 c1__
-        , const std::vector<int>& v_)
+    c3(
+        std::tr1::shared_ptr<c1> c1_
+      , std::tr1::shared_ptr<c2> c2_
+      , c1 c1__
+      , const std::vector<int>& v_
+    )
       : c1_(c1_), c2_(c2_), c1__(c1__), v_(v_)
     { }
 
@@ -82,13 +81,13 @@ BOOST_AUTO_TEST_CASE(create_complex) {
     v.push_back(3);
 
     typedef di::injector<
-        di::policies::binding_correctness()
-      , impl
+        //di::policies::binding_correctness()
+       impl
     > injector_c0;
 
     BOOST_AUTO(injector_c1, di::make_injector(
-        di::policies::circular_dependencies()
-      , di::bind_int<i>()
+        //di::policies::circular_dependencies()
+       di::bind_int<i>()
     ));
 
     BOOST_AUTO(injector_, make_injector(
@@ -97,11 +96,11 @@ BOOST_AUTO_TEST_CASE(create_complex) {
       , injector_c1
       , di::bind<double>::to(d)
       , di::bind<std::vector<int> >::to(v)
-      , di::policies::arguments_permission<
-            di::policies::allow_smart_ptrs
-          , di::policies::allow_copies
-          , di::policies::allow_refs
-        >()
+      //, di::policies::arguments_permission<
+            //di::policies::allow_smart_ptrs
+          //, di::policies::allow_copies
+          //, di::policies::allow_refs
+        //>()
     ));
 
     std::tr1::shared_ptr<c3> c3_ = injector_.create<std::tr1::shared_ptr<c3> >();

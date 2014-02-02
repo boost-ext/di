@@ -53,8 +53,8 @@ struct ctor_complex
 struct ctor_inject_named
 {
     BOOST_DI_INJECT_TRAITS(
-        const named<int, mpl::string<'1'>>&
-      , const named<int, mpl::string<'2'>>&
+        named<int, mpl::string<'1'>>
+      , named<int, mpl::string<'2'>>
     );
 
     ctor_inject_named(int, int);
@@ -70,8 +70,8 @@ BOOST_AUTO_TEST_CASE(ctor) {
 	BOOST_CHECK((mpl::equal<mpl::vector<any_type, any_type, any_type, any_type, any_type, any_type, any_type>, ctor_traits<ctor_complex>::type>::value));
     BOOST_CHECK((mpl::equal<
 		mpl::vector2<
-			const named<int, mpl::string<'1'>>&
-		  , const named<int, mpl::string<'2'>>&
+			named<int, mpl::string<'1'>>
+		  , named<int, mpl::string<'2'>>
 		>
 	  , ctor_traits<ctor_inject_named>::type>::value
 	));

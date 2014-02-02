@@ -121,13 +121,12 @@ test-suite "di / c++ 98/03" :
     #[ run-test c++03 : di_mt_03.cpp ]
 ;
 
-#test-suite "di / default" :
-    #[ run di_mt.cpp : : :
+test-suite "di / default" :
+    #[ run-test : di_mt.cpp : :
         #<toolset>gcc:<cxxflags>"-Wno-variadic-macros"
-        #<define>BOOST_DI_CTOR_CFG_VA_ARGS
         #<define>BOOST_DI_TR1_SMART_PTR
     #]
-#;
+;
 
 #test-suite "compile fail" :
     #[ compile-fail-cpp11 detail/module_externals_mt_fail.cpp ]
