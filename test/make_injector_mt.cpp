@@ -16,7 +16,6 @@
 #include "data.hpp"
 #include "contains_all.hpp"
 
-#include <boost/units/detail/utility.hpp>
 namespace boost {
 namespace di {
 
@@ -195,9 +194,9 @@ BOOST_AUTO_TEST_CASE(runtime_factory_fake) {
         })
     );
 
-    //auto i_ = all.create<aux::shared_ptr<i>>();
+    auto i_ = all.create<aux::shared_ptr<i>>();
 
-    //BOOST_CHECK(dynamic_cast<fake*>(i_.get()));
+    BOOST_CHECK(dynamic_cast<fake*>(i_.get()));
 }
 
 } // namespace di
