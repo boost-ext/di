@@ -96,8 +96,8 @@
 // assert
 
 #if !defined(BOOST_DI_ASSERT_MSG)
-    #define BOOST_DI_ASSERT_MSG(c, msg, types)  \
-        BOOST_MPL_ASSERT_MSG(c, msg, types)
+    #define BOOST_DI_ASSERT_MSG(c, msg, type)   \
+        BOOST_MPL_ASSERT_MSG(c, msg, (type))
 #endif
 
 #endif

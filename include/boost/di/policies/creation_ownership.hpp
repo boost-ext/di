@@ -54,6 +54,12 @@ public:
           , (TGiven)
         );
     };
+
+    template<
+        typename TDeps
+      , typename T
+    >
+    static void assert_policy() { };
 };
 
 } // namespace policies

@@ -107,6 +107,8 @@ class dependency : public get_scope<TExpected, TGiven, TScope>::type
         static mpl::aux::yes_tag test(...);
 
     public:
+        typedef has_call_operator type;
+
         BOOST_STATIC_CONSTANT(
             bool
           , value = sizeof(test((base*)(0))) == sizeof(mpl::aux::yes_tag)

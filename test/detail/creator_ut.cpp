@@ -38,7 +38,9 @@ struct fake_dependency
 template<typename T>
 struct entries
     : T
-{ };
+{
+    typedef mpl::vector<T> types;
+};
 
 BOOST_AUTO_TEST_CASE(creator_simple) {
     const int i = 42;

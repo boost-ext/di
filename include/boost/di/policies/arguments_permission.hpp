@@ -8,32 +8,19 @@
 #define BOOST_DI_POLICIES_ARGUMENTS_PERMISSION_HPP
 
 #include "boost/di/aux_/meta.hpp"
-#include "boost/di/detail/binder.hpp"
 #include "boost/di/type_traits/remove_accessors.hpp"
-#include "boost/di/type_traits/ctor_traits.hpp"
-#include "boost/di/type_traits/make_plain.hpp"
 
 #include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_reference.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/is_rvalue_reference.hpp>
 #include <boost/type_traits/is_pointer.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/vector.hpp>
-#include <boost/mpl/fold.hpp>
 #include <boost/mpl/count_if.hpp>
 #include <boost/mpl/bool.hpp>
-#include <boost/mpl/empty.hpp>
-#include <boost/mpl/equal_to.hpp>
-#include <boost/mpl/if.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
-#include <boost/mpl/size.hpp>
-#include <boost/mpl/push_back.hpp>
-#include <boost/mpl/joint_view.hpp>
-#include <boost/mpl/copy.hpp>
-#include <boost/mpl/back_inserter.hpp>
-#include <boost/mpl/assert.hpp>
 #include <boost/mpl/has_xxx.hpp>
 
 namespace boost {
@@ -183,8 +170,8 @@ public:
     >
     static void assert_policy() {
         BOOST_DI_ASSERT_MSG(
-            !is_allowed<T>::value
-          , ARGUMENTS_NOT_PERMITTED
+            is_allowed<T>::value
+          , ARGUMENT_NOT_PERMITTED
           , T
         );
     };

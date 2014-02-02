@@ -46,7 +46,12 @@
     template<typename T>
     class has_assert_policy
     {
-        struct base_impl { static void assert_policy() { }; };
+        struct base_impl
+        {
+            static void assert_policy() { };
+            void operator()(...) { }
+        };
+
         struct base
             : base_impl
             , mpl::if_<is_class<T>, T, mpl::void_>::type
@@ -58,14 +63,22 @@
           , non_type<void(*)(), &U::assert_policy>* = 0
         );
 
+        template<typename U>
+        static mpl::aux::no_tag test_call(
+            U*
+          , non_type<void (base_impl::*)(...), &U::operator()>* = 0
+        );
+
         static mpl::aux::yes_tag test(...);
+        static mpl::aux::yes_tag test_call(...);
 
     public:
         typedef has_assert_policy type;
 
         BOOST_STATIC_CONSTANT(
             bool
-          , value = sizeof(test((base*)(0))) == sizeof(mpl::aux::yes_tag)
+          , value = sizeof(test((base*)(0))) == sizeof(mpl::aux::yes_tag) &&
+                    sizeof(test_call((base*)(0))) == sizeof(mpl::aux::no_tag)
         );
     };
 

@@ -168,6 +168,12 @@ public:
             , TAssert
           >
     { };
+
+    template<
+        typename TDeps
+      , typename T
+    >
+    static void assert_policy() { };
 };
 
 } // namespace policies

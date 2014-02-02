@@ -312,6 +312,12 @@ public:
             , undefined_behavior<TDeps, TGiven, TBinder<TDeps>, TAssert>
           >
     { };
+
+    template<
+        typename TDeps
+      , typename T
+    >
+    static void assert_policy() { };
 };
 
 } // namespace policies

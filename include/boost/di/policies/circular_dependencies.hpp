@@ -131,6 +131,12 @@ public:
     struct verify
         : circular_dependencies_impl<TGiven, TBinder<TDeps>, TAssert>
     { };
+
+    template<
+        typename TDeps
+      , typename T
+    >
+    static void assert_policy() { };
 };
 
 } // namespace policies

@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_CASE(value) {
         )
       , assert_exception
       , [](const assert_exception& e) {
-            return e.get_msg() == "ARGUMENTS_NOT_PERMITTED" &&
+            return e.get_msg() == "ARGUMENT_NOT_PERMITTED" &&
                    e.get_type() == typeid(int);
         }
     );
@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(none) {
         )
       , assert_exception
       , [](const assert_exception& e) {
-            return e.get_msg() == "ARGUMENTS_NOT_PERMITTED" &&
+            return e.get_msg() == "ARGUMENT_NOT_PERMITTED" &&
                    e.get_type() == typeid(c2);
         }
     );
@@ -158,7 +158,7 @@ BOOST_AUTO_TEST_CASE(disallow_nested_type_copy) {
         )
       , assert_exception
       , [](const assert_exception& e) {
-            return e.get_msg() == "ARGUMENTS_NOT_PERMITTED" &&
+            return e.get_msg() == "ARGUMENT_NOT_PERMITTED" &&
                    e.get_type() == typeid(std::vector<int*>);
         }
     );
@@ -174,7 +174,7 @@ BOOST_AUTO_TEST_CASE(disallow_nested_type_nested_ptr) {
         )
       , assert_exception
       , [](const assert_exception& e) {
-            return e.get_msg() == "ARGUMENTS_NOT_PERMITTED" &&
+            return e.get_msg() == "ARGUMENT_NOT_PERMITTED" &&
                    e.get_type() == typeid(std::vector<int*>);
         }
     );

@@ -7,10 +7,15 @@
 #ifndef BOOST_DI_FAKE_POOL_HPP
 #define BOOST_DI_FAKE_POOL_HPP
 
+#include <boost/mpl/vector.hpp>
+
 namespace boost {
 namespace di {
 
-struct fake_pool { };
+struct fake_pool
+{
+    typedef mpl::vector0<> types;
+};
 
 } // namespace di
 } // namespace boost
