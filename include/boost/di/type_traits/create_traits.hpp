@@ -103,7 +103,7 @@
     }
 
     #define BOOST_PP_FILENAME_1 "boost/di/type_traits/create_traits.hpp"
-    #define BOOST_PP_ITERATION_LIMITS BOOST_DI_LIMITS_BEGIN(1)
+    #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM(1)
     #include BOOST_PP_ITERATE()
 
     } // namespace type_traits

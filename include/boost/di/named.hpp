@@ -11,7 +11,6 @@
 #include "boost/di/type_traits/remove_accessors.hpp"
 
 #include <utility>
-#include <boost/noncopyable.hpp>
 #include <boost/type_traits/is_polymorphic.hpp>
 #include <boost/utility/enable_if.hpp>
 
@@ -25,7 +24,7 @@ template<
   , typename TName = void
   , typename = void
 >
-class named //: noncopyable
+class named
 {
     typedef typename type_traits::remove_accessors<T>::type object_type;
 
@@ -55,7 +54,7 @@ template<
 >
 class named<T, TName, typename enable_if<
     is_polymorphic<typename type_traits::remove_accessors<T>::type> >::type
->// : noncopyable
+>
 {
 public:
     typedef T named_type;
@@ -68,7 +67,7 @@ template<
 >
 class named<T, TName, typename enable_if<
     has_element_type<typename type_traits::remove_accessors<T>::type> >::type
->// : noncopyable
+>
 {
     typedef typename type_traits::remove_accessors<T>::type object_type;
     typedef typename type_traits::make_plain<T>::type value_type;

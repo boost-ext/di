@@ -28,7 +28,10 @@
     namespace di {
     namespace detail {
 
-    template<typename TBinder>
+    template<
+        typename TBinder
+      , typename TPolicies
+    >
     class creator
     {
         template<typename TDependency>
@@ -62,6 +65,7 @@
           , typename TCallStack
           , typename TDeps
           , typename TCleanup
+          , typename TRefs
           , typename TVisitor
         >
         class eager_creator
@@ -83,8 +87,8 @@
 			};
 
 		public:
-            eager_creator(TDeps& deps, TCleanup& cleanup, const TVisitor& visitor)
-                : deps_(deps), cleanup_(cleanup), visitor_(visitor)
+            eager_creator(TDeps& deps, TCleanup& cleanup, TRefs& refs, const TVisitor& visitor)
+                : deps_(deps), cleanup_(cleanup), refs_(refs), visitor_(visitor)
             { }
 
             template<
@@ -105,7 +109,7 @@
                     NU
                   , typename mpl::push_back<TCallStack, PU>::type
                   , binder<U, TCallStack>
-                >(deps_, cleanup_, visitor_)(boost::type<NU>());
+                >(deps_, cleanup_, refs_, visitor_)(boost::type<NU>());
             }
 
             template<
@@ -127,7 +131,7 @@
                     const U&
                   , typename mpl::push_back<TCallStack, PU>::type
                   , binder<const U&, TCallStack>
-                >(deps_, cleanup_, visitor_)(boost::type<const NU&>());
+                >(deps_, cleanup_, refs_, visitor_)(boost::type<const NU&>());
             }
 
             template<
@@ -148,12 +152,13 @@
                     U&
                   , typename mpl::push_back<TCallStack, PU>::type
                   , binder<U&, TCallStack>
-                >(deps_, cleanup_, visitor_)(boost::type<NU&>());
+                >(deps_, cleanup_, refs_, visitor_)(boost::type<NU&>());
             }
 
 		private:
             TDeps& deps_;
             TCleanup& cleanup_;
+            TRefs& refs_;
             const TVisitor& visitor_;
         };
 
@@ -164,11 +169,12 @@
           , typename TCallStack
           , typename TDeps
           , typename TCleanup
+          , typename TRefs
           , typename TVisitor
         >
-        static eager_creator<TParent, TCallStack, TDeps, TCleanup, TVisitor>
-        execute(TDeps& deps, TCleanup& cleanup, const TVisitor& visitor, typename enable_if<is_same<T, any_type> >::type* = 0) {
-            return eager_creator<TParent, TCallStack, TDeps, TCleanup, TVisitor>(deps, cleanup, visitor);
+        static eager_creator<TParent, TCallStack, TDeps, TCleanup, TRefs, TVisitor>
+        execute(TDeps& deps, TCleanup& cleanup, TRefs& refs, const TVisitor& visitor, typename enable_if<is_same<T, any_type> >::type* = 0) {
+            return eager_creator<TParent, TCallStack, TDeps, TCleanup, TRefs, TVisitor>(deps, cleanup, refs, visitor);
         }
 
         template<
@@ -177,10 +183,11 @@
           , typename TCallStack
           , typename TDeps
           , typename TCleanup
+          , typename TRefs
           , typename TVisitor
         >
-        static typename binder<T, TCallStack>::result_type
-		execute(TDeps& deps, TCleanup& cleanup, const TVisitor& visitor, typename disable_if<is_same<T, any_type> >::type* = 0) {
+        static const typename binder<T, TCallStack>::result_type&
+		execute(TDeps& deps, TCleanup& cleanup, TRefs& refs, const TVisitor& visitor, typename disable_if<is_same<T, any_type> >::type* = 0) {
             return execute_impl<
                 T
               , typename mpl::push_back<
@@ -188,12 +195,12 @@
                   , typename binder<T, TCallStack>::given
                 >::type
               , binder<T, TCallStack>
-            >(deps, cleanup, visitor);
+            >(deps, cleanup, refs, visitor);
 		}
 
     private:
         #define BOOST_PP_FILENAME_1 "boost/di/detail/creator.hpp"
-        #define BOOST_PP_ITERATION_LIMITS BOOST_DI_LIMITS_BEGIN(0)
+        #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM(0)
         #include BOOST_PP_ITERATE()
 
 		template<
@@ -242,12 +249,13 @@
       , typename TDependency
       , typename TDeps
       , typename TCleanup
+      , typename TRefs
       , typename TVisitor
     >
     static typename enable_if_c<
         mpl::size<typename ctor<TDependency>::type>::value == BOOST_PP_ITERATION()
-      , typename TDependency::result_type
-    >::type execute_impl(TDeps& deps, TCleanup& cleanup, const TVisitor& visitor) {
+      , const typename TDependency::result_type&
+    >::type execute_impl(TDeps& deps, TCleanup& cleanup, TRefs& refs, const TVisitor& visitor) {
 
 		(visitor)(dependency<T, TCallStack, TDependency>());
 
@@ -260,15 +268,38 @@
 			   >::type 									\
 			  , T 										\
               , TCallStack                              \
-            >(deps, cleanup, visitor)
+            >(deps, cleanup, refs, visitor)
 
-        return acquire<typename TDependency::type>(deps, cleanup).create(
-            BOOST_PP_REPEAT(
-                BOOST_PP_ITERATION()
-              , BOOST_DI_CREATOR_EXECUTE
-              , ~
+        typedef typename TDependency::result_type result_type;
+
+        result_type* convertible = new result_type(
+            acquire<typename TDependency::type>(deps, cleanup).create(
+                BOOST_PP_REPEAT(
+                    BOOST_PP_ITERATION()
+                  , BOOST_DI_CREATOR_EXECUTE
+                  , ~
+                )
             )
         );
+
+        class deleter
+        {
+        public:
+            explicit deleter(result_type* ptr)
+                : ptr_(ptr)
+            { }
+
+            void operator()() {
+                delete this->ptr_;
+            }
+
+        private:
+            result_type* ptr_;
+        };
+
+        refs.push_back(deleter(convertible));
+
+        return *convertible;
 
         #undef BOOST_DI_CREATOR_EXECUTE
     }

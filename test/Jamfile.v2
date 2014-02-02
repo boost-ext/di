@@ -34,9 +34,8 @@ rule run-test ( std * : src : ctor * : defines * ) {
     }
 }
 
-rule compile-fail-test ( std : src : ctor * ) {
+rule compile-fail-test ( std * : src : ctor * ) {
     common_toolset =
-        <toolset>gcc:<cxxflags>"-ftemplate-depth-1024"
         <toolset>gcc:<cxxflags>"-std=$(std) -include config.hpp"
         <toolset>clang:<cxxflags>"-std=$(std) -include config.hpp"
         <toolset>intel:<cxxflags>"-std=$(std) -include config.hpp"
@@ -129,10 +128,11 @@ test-suite "di / default" :
     #]
 ;
 
-#test-suite "compile fail" :
+test-suite "compile fail" :
     #[ compile-fail-cpp11 detail/module_externals_mt_fail.cpp ]
     #[ compile-fail-cpp11 detail/module_policy_mt_fail.cpp ]
-    #[ compile-fail-cpp11 policies/arguments_permission_mt_fail.cpp ]
+    [ compile-fail-test  c++11 : policies/arguments_permission_mt_fail.cpp ]
+    #[ compile-fail-test  c++11 : policies/arguments_permission_mt_fail.cpp : ctor_arguments_permission_mt_fail ]
     #[ compile-fail-cpp11 policies/binding_correctness_mt_fail.cpp ]
     #[ compile-fail-cpp11 policies/binding_correctness_ub_mt_fail.cpp ]
     #[ compile-fail-cpp11 policies/circular_dependencies_mt_fail.cpp ]
@@ -141,5 +141,5 @@ test-suite "di / default" :
     #[ compile-fail-cpp11 injector_policy_mt_fail.cpp ]
     #[ compile-fail-cpp11 injector_shared_by_copy_mt_fail.cpp ]
     #[ compile-fail       injector_lack_of_shared_ptr_mt_fail.cpp : <define>BOOST_DI_TR1_SMART_PTR ]
-#;
+;
 

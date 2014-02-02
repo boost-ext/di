@@ -56,7 +56,7 @@
     };
 
 	#define BOOST_PP_FILENAME_1 "boost/di/type_traits/has_ctor.hpp"
-    #define BOOST_PP_ITERATION_LIMITS BOOST_DI_LIMITS_BEGIN(2)
+    #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM(2)
     #include BOOST_PP_ITERATE()
 
     } // namespace type_traits

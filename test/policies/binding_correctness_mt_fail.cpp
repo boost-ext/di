@@ -17,10 +17,10 @@ namespace policies {
 
 BOOST_AUTO_TEST_CASE(binding_correctness_fail) {
     injector<
-        binding_correctness
-      , injector<
-            bind<double>::in_call<c3>
-        >
+        //binding_correctness
+      //, injector<
+            //bind<double>::in_call<c3>
+        //>
     > injector_;
 
     injector_.create<c3>();

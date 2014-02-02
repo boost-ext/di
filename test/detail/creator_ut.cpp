@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <boost/test/unit_test.hpp>
+#include <boost/function.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_same.hpp>
 
@@ -44,12 +45,14 @@ BOOST_AUTO_TEST_CASE(creator_simple) {
 
     typedef fake_dependency<int, i> dependency_type;
     entries<dependency_type> entries_;
-	std::vector<void(*)()> cleanup_;
+	std::vector<function<void()>> cleanup_;
+	std::vector<function<void()>> refs_;
 
     BOOST_CHECK_EQUAL(i, (
 		creator<
 			fake_binder<dependency_type>
-		>::execute<int, void, mpl::vector0<>>(entries_, cleanup_, fake_visitor<>())
+          , mpl::vector0<>
+		>::execute<int, void, mpl::vector0<>>(entries_, cleanup_, refs_, fake_visitor<>())
 	));
 }
 

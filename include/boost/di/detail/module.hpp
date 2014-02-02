@@ -17,6 +17,7 @@
 
 	#include <vector>
     #include <boost/preprocessor/iteration/iterate.hpp>
+    #include <boost/function.hpp>
     #include <boost/type.hpp>
     #include <boost/non_type.hpp>
     #include <boost/type_traits/is_same.hpp>
@@ -65,7 +66,7 @@
           , typename = ::boost::di::detail::never< ::boost::mpl::_1 >
           , typename = void
         > class TPool = pool
-      , template<typename> class TCreator = creator
+      , template<typename, typename> class TCreator = creator
     >
     class module : public TPool<get_deps<TDeps> >
     {
@@ -73,7 +74,7 @@
             typename
           , template<typename> class
           , template<typename, typename, typename> class
-          , template<typename> class
+          , template<typename, typename> class
         > friend class module;
 
         template<typename T>
@@ -165,29 +166,6 @@
             : TBind::template get_dependency<T, TCallStack>::type
         { };
 
-        template<
-            typename TSeq
-          , typename T
-          , typename TPolicy
-        >
-        struct verify_policy
-            : TPolicy::template verify<TSeq, T>::type
-        { };
-
-        template<
-            typename TPolicies
-          , typename TSeq
-          , typename T
-        >
-        struct verify_policies
-            : mpl::is_sequence<
-                  typename mpl::transform<
-                      TPolicies
-                    , verify_policy<TSeq, T, mpl::_1>
-                  >::type
-              >
-        { };
-
 		class empty_visitor
 		{
 		public:
@@ -195,36 +173,46 @@
 			void operator()(const T&) const { }
 		};
 
+        class keeper
+        {
+        public:
+            ~keeper() {
+                for (std::size_t i = 0; i < data_.size(); ++i) {
+                    data_[i]();
+                }
+            }
+
+            template<typename T>
+            void push_back(const T& object) {
+                data_.push_back(object);
+            }
+
+        private:
+            std::vector<function<void()> > data_;
+        };
+
     public:
         typedef get_deps<TDeps> deps;
         typedef get_types<TDeps, has_is_policy<mpl::_> > policies;
 
         module() { }
 
-		~module() {
-			for (std::size_t i = 0; i < cleanup.size(); ++i) {
-				cleanup[i]();
-			}
-		}
-
         #define BOOST_PP_FILENAME_1 "boost/di/detail/module.hpp"
-        #define BOOST_PP_ITERATION_LIMITS BOOST_DI_LIMITS_BEGIN(1)
+        #define BOOST_PP_ITERATION_LIMITS BOOST_DI_TYPES_MPL_LIMIT_FROM(1)
         #include BOOST_PP_ITERATE()
 
         template<typename T>
         T create() {
-            BOOST_MPL_ASSERT((typename verify_policies<policies, deps, T>::type));
-
-            return TCreator<TBinder<deps> >::template
-                execute<T, T, mpl::vector0<> >(static_cast<TPool<deps>&>(*this), cleanup, empty_visitor())(boost::type<T>());
+            keeper refs_;
+            return TCreator<TBinder<deps>, policies>::template
+                execute<T, T, mpl::vector0<> >(static_cast<TPool<deps>&>(*this), cleanup_, refs_, empty_visitor())(boost::type<T>());
         }
 
         template<typename T, typename Visitor>
         T visit(const Visitor& visitor) {
-            BOOST_MPL_ASSERT((typename verify_policies<policies, deps, T>::type));
-
-            return TCreator<TBinder<deps> >::template
-                execute<T, T, mpl::vector0<> >(static_cast<TPool<deps>&>(*this), cleanup, visitor);
+            keeper refs_;
+            return TCreator<TBinder<deps>, policies>::template
+                execute<T, T, mpl::vector0<> >(static_cast<TPool<deps>&>(*this), cleanup_, refs_, visitor)(boost::type<T>());
         }
 
         template<typename TAction>
@@ -253,7 +241,7 @@
             call_impl<typename mpl::pop_front<TSeq>::type>(deps, action);
         }
 
-        std::vector<void(*)()> cleanup;
+        keeper cleanup_;
     };
 
     } // namespace detail

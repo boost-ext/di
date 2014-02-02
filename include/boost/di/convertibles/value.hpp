@@ -33,15 +33,13 @@ public:
 
     template<typename I>
     I& operator()(const type<I&>&) const {
-        I* f = new I(value_);
-        return *f;
+        return value_;
     }
 
     template<typename I, typename TName>
     I operator()(const type<named<I, TName>&>&) const {
         return value_;
     }
-
 
     template<typename I>
     aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) {
@@ -50,9 +48,7 @@ public:
 
     template<typename I>
     const aux::shared_ptr<I>& operator()(const type<const aux::shared_ptr<I>& >&) {
-        //dirty wknd
-        aux::shared_ptr<I>* f = new aux::shared_ptr<I>(new I(value_));
-        return *f;
+        return aux::shared_ptr<I>(new I(value_));
     }
 
     template<typename I>
@@ -73,7 +69,7 @@ public:
     }
 
 private:
-    T value_;
+    mutable T value_;
 };
 
 } // namespace convertibles

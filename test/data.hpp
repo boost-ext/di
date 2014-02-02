@@ -398,7 +398,6 @@ struct c24
         , aux::shared_ptr<int>
         , double*
         , const std::string&
-        , std::vector<int*>
     ) { }
 };
 

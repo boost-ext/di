@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_HPP
 #define BOOST_DI_HPP
 
-// ctor
+// inject
 #include "boost/di/inject.hpp"
 
 // concepts

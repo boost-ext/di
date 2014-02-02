@@ -24,7 +24,7 @@
     #define BOOST_DI_CTOR_LIMIT_SIZE 10
 #endif
 
-#define BOOST_DI_LIMITS_BEGIN(begin)            \
+#define BOOST_DI_CTOR_LIMIT_FROM(begin)         \
     (begin, BOOST_DI_CTOR_LIMIT_SIZE)
 
 #define BOOST_DI_TYPES(T)                       \
@@ -60,6 +60,9 @@
      )
 
 // di
+
+#define BOOST_DI_TYPES_MPL_LIMIT_FROM(begin)    \
+    (begin, BOOST_MPL_LIMIT_VECTOR_SIZE)
 
 #define BOOST_DI_TYPES_DEFAULT_MPL(T)           \
      BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(       \
