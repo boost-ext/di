@@ -65,6 +65,7 @@ test-suite "convertibles" :
 test-suite "type traits" :
     [ run-test c++11 : type_traits/create_traits_ut.cpp ]
     [ run-test c++11 : type_traits/ctor_traits_ut.cpp ]
+    [ run-test c++11 : type_traits/has_ctor_ut.cpp ]
     [ run-test c++11 : type_traits/is_same_base_of_ut.cpp ]
     [ run-test c++11 : type_traits/make_plain_ut.cpp ]
     [ run-test c++11 : type_traits/parameter_types_ut.cpp ]
@@ -95,9 +96,9 @@ test-suite "scopes" :
     [ run-test c++11 : scopes/unique_scope_ut.cpp ]
 ;
 
-test-suite "ctors" :
-    [ run-test c++11 : ctor_bracket_ut.cpp ]
-    [ run-test c++11 : ctor_va_args_ut.cpp ]
+test-suite "injects" :
+    [ run-test c++11 : inject_bracket_ut.cpp ]
+    [ run-test c++11 : inject_va_args_ut.cpp ]
 ;
 
 test-suite "injector" :
