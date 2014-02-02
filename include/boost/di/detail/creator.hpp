@@ -74,14 +74,13 @@
             T* ptr_;
         };
 
-
         BOOST_MPL_HAS_XXX_TRAIT_DEF(named_type)
 
         template<
             typename T
           , typename TCallStack
           , typename TDeps
-          , typename TCleanup
+          , typename Tscopes
           , typename TRefs
           , typename TVisitor
         >
@@ -104,8 +103,8 @@
 			};
 
 		public:
-            eager_creator(TDeps& deps, TCleanup& cleanup, TRefs& refs, const TVisitor& visitor)
-                : deps_(deps), cleanup_(cleanup), refs_(refs), visitor_(visitor)
+            eager_creator(TDeps& deps, Tscopes& scopes, TRefs& refs, const TVisitor& visitor)
+                : deps_(deps), scopes_(scopes), refs_(refs), visitor_(visitor)
             { }
 
             template<
@@ -126,7 +125,7 @@
                     NU
                   , typename mpl::push_back<TCallStack, PU>::type
                   , binder<U, TCallStack>
-                >(deps_, cleanup_, refs_, visitor_)(boost::type<NU>());
+                >(deps_, scopes_, refs_, visitor_)(boost::type<NU>());
             }
 
             template<
@@ -148,7 +147,7 @@
                     const U&
                   , typename mpl::push_back<TCallStack, PU>::type
                   , binder<const U&, TCallStack>
-                >(deps_, cleanup_, refs_, visitor_)(boost::type<const NU&>());
+                >(deps_, scopes_, refs_, visitor_)(boost::type<const NU&>());
             }
 
             template<
@@ -169,12 +168,12 @@
                     U&
                   , typename mpl::push_back<TCallStack, PU>::type
                   , binder<U&, TCallStack>
-                >(deps_, cleanup_, refs_, visitor_)(boost::type<NU&>());
+                >(deps_, scopes_, refs_, visitor_)(boost::type<NU&>());
             }
 
 		private:
             TDeps& deps_;
-            TCleanup& cleanup_;
+            Tscopes& scopes_;
             TRefs& refs_;
             const TVisitor& visitor_;
         };
@@ -185,26 +184,26 @@
           , typename TParent
           , typename TCallStack
           , typename TDeps
-          , typename TCleanup
+          , typename Tscopes
           , typename TRefs
           , typename TVisitor
         >
-        static eager_creator<TParent, TCallStack, TDeps, TCleanup, TRefs, TVisitor>
-        execute(TDeps& deps, TCleanup& cleanup, TRefs& refs, const TVisitor& visitor, typename enable_if<is_same<T, any_type> >::type* = 0) {
-            return eager_creator<TParent, TCallStack, TDeps, TCleanup, TRefs, TVisitor>(deps, cleanup, refs, visitor);
+        static eager_creator<TParent, TCallStack, TDeps, Tscopes, TRefs, TVisitor>
+        execute(TDeps& deps, Tscopes& scopes, TRefs& refs, const TVisitor& visitor, typename enable_if<is_same<T, any_type> >::type* = 0) {
+            return eager_creator<TParent, TCallStack, TDeps, Tscopes, TRefs, TVisitor>(deps, scopes, refs, visitor);
         }
 
         template<
             typename T
-          , typename
+          , typename // parent, to delete copy/move ctor, not needed
           , typename TCallStack
           , typename TDeps
-          , typename TCleanup
+          , typename Tscopes
           , typename TRefs
           , typename TVisitor
         >
         static const typename binder<T, TCallStack>::result_type&
-		execute(TDeps& deps, TCleanup& cleanup, TRefs& refs, const TVisitor& visitor, typename disable_if<is_same<T, any_type> >::type* = 0) {
+		execute(TDeps& deps, Tscopes& scopes, TRefs& refs, const TVisitor& visitor, typename disable_if<is_same<T, any_type> >::type* = 0) {
             return execute_impl<
                 T
               , typename mpl::push_back<
@@ -212,7 +211,7 @@
                   , typename binder<T, TCallStack>::given
                 >::type
               , binder<T, TCallStack>
-            >(deps, cleanup, refs, visitor);
+            >(deps, scopes, refs, visitor);
 		}
 
     private:
@@ -223,20 +222,20 @@
 		template<
 			typename TDependency
 		  , typename TDeps
-		  , typename TCleanup
+		  , typename Tscopes
 		>
 		static typename enable_if<is_base_of<TDependency, TDeps>, TDependency&>::type
-		acquire(TDeps& deps, TCleanup&) {
+		acquire(TDeps& deps, Tscopes&) {
 			return static_cast<TDependency&>(deps);
 		}
 
 		template<
 			typename TDependency
 		  , typename TDeps
-		  , typename TCleanup
+		  , typename Tscopes
 		>
 		static typename disable_if<is_base_of<TDependency, TDeps>, TDependency&>::type
-		acquire(TDeps&, TCleanup& cleanup) {
+		acquire(TDeps&, Tscopes& scopes) {
 		    static TDependency* dep = 0;
 			if (!dep) {
 				dep = new TDependency();
@@ -246,10 +245,20 @@
                         dep = 0;
 					}
 				};
-                cleanup.push_back(&deleter::delete_ptr);
+                scopes.push_back(&deleter::delete_ptr);
 			}
             return *dep;
     	}
+
+        template<typename TSeq, typename TDeps, typename T>
+        static typename enable_if<mpl::empty<TSeq> >::type assert_policies() { }
+
+        template<typename TSeq, typename TDeps, typename T>
+        static typename disable_if<mpl::empty<TSeq> >::type assert_policies() {
+            typedef typename mpl::front<TSeq>::type policy;
+            policy::template assert_policy<TDeps, T>();
+            assert_policies<typename mpl::pop_front<TSeq>::type, TDeps, T>();
+        }
 	};
 
     } // namespace detail
@@ -265,15 +274,15 @@
       , typename TCallStack
       , typename TDependency
       , typename TDeps
-      , typename TCleanup
+      , typename Tscopes
       , typename TRefs
       , typename TVisitor
     >
     static typename enable_if_c<
         mpl::size<typename ctor<TDependency>::type>::value == BOOST_PP_ITERATION()
       , const typename TDependency::result_type&
-    >::type execute_impl(TDeps& deps, TCleanup& cleanup, TRefs& refs, const TVisitor& visitor) {
-
+    >::type execute_impl(TDeps& deps, Tscopes& scopes, TRefs& refs, const TVisitor& visitor) {
+        assert_policies<TPolicies, typename TDeps::types, T>();
 		(visitor)(dependency<T, TCallStack, TDependency>());
 
         typedef typename TDependency::result_type convertible_type;
@@ -287,11 +296,11 @@
 			   >::type 									\
 			  , T 										\
               , TCallStack                              \
-            >(deps, cleanup, refs, visitor)
+            >(deps, scopes, refs, visitor)
 
         convertible_type* convertible =
             new convertible_type(
-                acquire<typename TDependency::type>(deps, cleanup).create(
+                acquire<typename TDependency::type>(deps, scopes).create(
                     BOOST_PP_REPEAT(
                         BOOST_PP_ITERATION()
                       , BOOST_DI_CREATOR_EXECUTE

@@ -25,12 +25,11 @@ struct c3 { };
 struct c4 { };
 struct c5
 {
-    c5(
-        std::shared_ptr<c1>
-      , c2
-      , std::shared_ptr<i0>
-      , std::shared_ptr<c3>
-      , c4&
+    c5(std::shared_ptr<c1>
+     , c2
+     , std::shared_ptr<i0>
+     , std::shared_ptr<c3>
+     , c4&
     ) { }
 };
 

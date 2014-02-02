@@ -14,19 +14,18 @@ struct i { virtual ~i() { } };
 struct impl : i { };
 struct c
 {
-    c(
-        std::shared_ptr<i> p1       // i->impl, p1 == hello_world.p1
-      , double p2                   // p2 = 0.0
-    ) { }
+    c(std::shared_ptr<i> p1         // i->impl, p1 == hello_world.p1
+    , double p2)                    // p2 = 0.0
+    { }
 };
 
 struct hello_world
 {
     hello_world(
-          std::shared_ptr<i> p1     // i->impl
-        , std::unique_ptr<i> p3     // i->impl, p3 != p1 != c.p1
-        , c p4                      // by value
-        , int p5                    // p5 = 0
+        std::shared_ptr<i> p1       // i->impl
+      , std::unique_ptr<i> p3       // i->impl, p3 != p1 != c.p1
+      , c p4                        // by value
+      , int p5                      // p5 = 0
     ) { }
 };
 } // namespace

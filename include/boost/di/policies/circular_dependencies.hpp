@@ -122,8 +122,6 @@ class circular_dependencies
     };
 
 public:
-    typedef circular_dependencies is_policy;
-
     template<
         typename TDeps
       , typename TGiven

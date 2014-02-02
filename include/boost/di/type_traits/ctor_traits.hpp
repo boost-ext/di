@@ -79,6 +79,8 @@ class BOOST_PP_CAT(has_, BOOST_DI_INJECTOR)
     static mpl::aux::yes_tag test(...);
 
 public:
+    typedef BOOST_PP_CAT(has_, BOOST_DI_INJECTOR) type;
+
     BOOST_STATIC_CONSTANT(
         bool
       , value = sizeof(test((base*)(0))) == sizeof(mpl::aux::yes_tag)

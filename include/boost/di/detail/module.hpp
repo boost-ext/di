@@ -43,7 +43,31 @@
     namespace di {
     namespace detail {
 
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(is_policy)
+    template<typename T>
+    class has_assert_policy
+    {
+        struct base_impl { static void assert_policy() { }; };
+        struct base
+            : base_impl
+            , mpl::if_<is_class<T>, T, mpl::void_>::type
+        { base() { } };
+
+        template<typename U>
+        static mpl::aux::no_tag test(
+            U*
+          , non_type<void(*)(), &U::assert_policy>* = 0
+        );
+
+        static mpl::aux::yes_tag test(...);
+
+    public:
+        typedef has_assert_policy type;
+
+        BOOST_STATIC_CONSTANT(
+            bool
+          , value = sizeof(test((base*)(0))) == sizeof(mpl::aux::yes_tag)
+        );
+    };
 
     template<typename TSeq, typename TCond>
     struct get_types
@@ -54,7 +78,7 @@
     struct get_deps
         : get_types<
               TSeq
-            , mpl::not_<has_is_policy<mpl::_> >
+            , mpl::not_<has_assert_policy<mpl::_> >
           >::type
     { };
 
@@ -93,6 +117,8 @@
             static mpl::aux::yes_tag test(...);
 
         public:
+            typedef has_call_impl type;
+
             BOOST_STATIC_CONSTANT(
                 bool
               , value = sizeof(test<base>(0)) == sizeof(mpl::aux::yes_tag)
@@ -131,6 +157,8 @@
             { };
 
         public :
+            typedef has_call type;
+
             BOOST_STATIC_CONSTANT(
                 bool
               , value = base_call<mpl::bool_<has_call_impl<T>::value> >::value
@@ -193,7 +221,7 @@
 
     public:
         typedef get_deps<TDeps> deps;
-        typedef get_types<TDeps, has_is_policy<mpl::_> > policies;
+        typedef get_types<TDeps, has_assert_policy<mpl::_> > policies;
 
         module() { }
 
@@ -205,14 +233,14 @@
         T create() {
             keeper refs_;
             return TCreator<TBinder<deps>, policies>::template
-                execute<T, T, mpl::vector0<> >(static_cast<TPool<deps>&>(*this), cleanup_, refs_, empty_visitor())(boost::type<T>());
+                execute<T, T, mpl::vector0<> >(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
         }
 
         template<typename T, typename Visitor>
         T visit(const Visitor& visitor) {
             keeper refs_;
             return TCreator<TBinder<deps>, policies>::template
-                execute<T, T, mpl::vector0<> >(static_cast<TPool<deps>&>(*this), cleanup_, refs_, visitor)(boost::type<T>());
+                execute<T, T, mpl::vector0<> >(static_cast<TPool<deps>&>(*this), scopes_, refs_, visitor)(boost::type<T>());
         }
 
         template<typename TAction>
@@ -241,7 +269,7 @@
             call_impl<typename mpl::pop_front<TSeq>::type>(deps, action);
         }
 
-        keeper cleanup_;
+        keeper scopes_;
     };
 
     } // namespace detail

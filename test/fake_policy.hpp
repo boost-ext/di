@@ -16,15 +16,11 @@ template<int>
 class fake_policy
 {
 public:
-    typedef fake_policy is_policy;
-
     template<
         typename TDeps
-      , typename TExternals
-      , typename TGiven
+      , typename T
     >
-    class verify
-        : public mpl::true_
+    void assert_policy()
     { };
 };
 

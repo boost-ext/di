@@ -1278,10 +1278,8 @@ This header exists simply as a convenience to the user, including all of the hea
     template<typename... T>
     class arguments_permission {
     public:
-        typedef unspecified is_policy;
-
-        template<typename TDeps, typename TGiven>
-        struct verify;
+        template<typename TDeps, typename T>
+        void assert_policy() { }
     };
 
     } // namespace policies
@@ -1298,9 +1296,8 @@ This header exists simply as a convenience to the user, including all of the hea
 
     class binding_correctness {
     public:
-        typedef unspecified is_policy;
-
-        template<typename TDeps, typename TGiven>
+        template<typename TDeps, typename T>
+        void assert_policy() { }
         struct verify;
     };
 
@@ -1318,10 +1315,8 @@ This header exists simply as a convenience to the user, including all of the hea
 
     class circular_dependencies {
     public:
-        typedef unspecified is_policy;
-
         template<typename TDeps, typename TGiven>
-        struct verify;
+        void assert_policy() { }
     };
 
     } // namespace policies
@@ -1338,10 +1333,8 @@ This header exists simply as a convenience to the user, including all of the hea
 
     class creation_ownership {
     public:
-        typedef unspecified is_policy;
-
         template<typename TDeps, typename TGiven>
-        struct verify;
+        void assert_policy() { }
     };
 
     } // namespace policies

@@ -156,8 +156,6 @@ class scopes_permission
     };
 
 public:
-    typedef scopes_permission is_policy;
-
     template<
         typename TDeps
       , typename TGiven

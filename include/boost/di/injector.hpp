@@ -68,7 +68,7 @@
                           mpl::and_<has_deps<mpl::_2>, has_policies<mpl::_2> >
                         , mpl::joint_view<deps<mpl::_2>, policies<mpl::_2> >
                         , mpl::if_<
-                              has_is_policy<mpl::_2>
+                              has_assert_policy<mpl::_2>
                             , mpl::vector1<mpl::_2>
                             , default_scope<mpl::_2>
                           >

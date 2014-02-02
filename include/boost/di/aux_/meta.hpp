@@ -17,6 +17,7 @@
 #include <boost/preprocessor/arithmetic/sub.hpp>
 #include <boost/mpl/limits/vector.hpp>
 #include <boost/mpl/aux_/na.hpp>
+#include <boost/mpl/assert.hpp>
 
 // ctor
 
@@ -91,6 +92,13 @@
          BOOST_MPL_LIMIT_VECTOR_SIZE            \
        , T                                      \
      )
+
+// assert
+
+#if !defined(BOOST_DI_ASSERT_MSG)
+    #define BOOST_DI_ASSERT_MSG(c, msg, types)  \
+        BOOST_MPL_ASSERT_MSG(c, msg, types)
+#endif
 
 #endif
 

@@ -138,34 +138,6 @@ class arguments_permission
 {
     template<
         typename T
-      , typename TCallStackSize
-      , typename TCtor =
-            typename type_traits::ctor_traits<
-                typename type_traits::make_plain<T>::type
-            >::type
-    >
-    struct ctor
-        : mpl::if_<
-              mpl::and_<
-                  mpl::empty<TCtor>
-                , mpl::equal_to<TCallStackSize, mpl::int_<1> >
-              >
-            , mpl::vector1<T>
-            , TCtor
-          >::type
-    { };
-
-    template<
-        typename T
-      , typename TCallStack
-      , typename TBind
-    >
-    struct binder
-        : TBind::template get_dependency<T, TCallStack>::type
-    { };
-
-    template<
-        typename T
       , typename TAllows = mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
     >
     struct is_allowed_nested
@@ -196,62 +168,18 @@ class arguments_permission
           >
     { };
 
-    template<
-        typename T
-      , typename TBind
-      , typename TCallStack =
-            mpl::vector1<typename type_traits::make_plain<T>::type>
-    >
-    struct arguments_permission_impl
-        : mpl::fold<
-              ctor<typename binder<T, TCallStack, TBind>::given, mpl::size<TCallStack> >
-            , mpl::vector0<>
-            , mpl::copy<
-                  mpl::joint_view<
-                      mpl::if_<
-                          is_allowed<mpl::_2>
-                        , mpl::_2 // ignore
-                        , mpl::vector1<mpl::_2>
-                      >
-                    , arguments_permission_impl<
-                          mpl::_2
-                        , TBind
-                        , mpl::push_back<
-                              TCallStack
-                            , type_traits::make_plain<mpl::_2>
-                          >
-                      >
-                  >
-                , mpl::back_inserter<mpl::_1>
-              >
-          >
-    { };
-
-    template<typename T, typename TAssert>
-    struct verify_impl : T
-    {
-        BOOST_MPL_ASSERT_MSG(
-            !TAssert::value || mpl::empty<T>::value
-          , ARGUMENTS_NOT_PERMITTED
-          , (T)
-        );
-    };
-
 public:
-    typedef arguments_permission is_policy;
-
     template<
         typename TDeps
-      , typename TGiven
-      , typename TAssert = mpl::true_
-      , template<typename> class TBinder = di::detail::binder
+      , typename T
     >
-    struct verify
-        : verify_impl<
-              typename arguments_permission_impl<TGiven, TBinder<TDeps> >::type
-            , TAssert
-          >
-    { };
+    static void assert_policy() {
+        BOOST_DI_ASSERT_MSG(
+            !is_allowed<T>::value
+          , ARGUMENTS_NOT_PERMITTED
+          , T
+        );
+    };
 };
 
 } // namespace policies
