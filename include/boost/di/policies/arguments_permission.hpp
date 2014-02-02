@@ -15,6 +15,7 @@
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_reference.hpp>
+#include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/is_rvalue_reference.hpp>
 #include <boost/type_traits/is_pointer.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -60,6 +61,17 @@ struct allow_refs
     template<typename T>
     struct allow
         : is_reference<T>
+    { };
+};
+
+struct allow_const_refs
+{
+    template<typename T>
+    struct allow
+        : mpl::and_<
+              is_const<typename remove_reference<T>::type>
+            , is_reference<T>
+          >
     { };
 };
 
@@ -136,14 +148,13 @@ struct is_allowed_nested_impl<TAllow, T, typename enable_if<has_value_type<T> >:
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 class arguments_permission
 {
-    template<
-        typename T
-      , typename TAllows = mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-    >
+    typedef mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> allows_type;
+
+    template<typename T>
     struct is_allowed_nested
         : mpl::bool_<
               mpl::count_if<
-                  TAllows
+                  allows_type
                 , detail::is_allowed_nested_impl<
                       mpl::_
                     , typename type_traits::remove_accessors<T>::type
@@ -152,14 +163,11 @@ class arguments_permission
           >
     { };
 
-    template<
-        typename T
-      , typename TAllows = mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-    >
+    template<typename T>
     struct is_allowed
         : mpl::bool_<
               mpl::count_if<
-                  TAllows
+                  allows_type
                 , mpl::and_<
                       detail::is_allowed_impl<mpl::_, T>
                     , is_allowed_nested<T>

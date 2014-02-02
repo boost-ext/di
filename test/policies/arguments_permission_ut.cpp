@@ -31,100 +31,154 @@ BOOST_AUTO_TEST_CASE(value) {
                    e.get_type() == typeid(int);
         }
     );
-
-    //BOOST_CHECK((
-        //contains_all<
-            //mpl::vector<int>
-          //, arguments_permission<>::verify<
-                //mpl::vector0<>
-              //, int
-              //, mpl::false_
-            //>::type
-         //>::value
-    //));
 }
 
-//BOOST_AUTO_TEST_CASE(none) {
-    //BOOST_CHECK((
-        //contains_all<
-            //mpl::vector<int, double, char>
-          //, arguments_permission<>::verify<
-                //mpl::vector0<>
-              //, c2
-              //, mpl::false_
-            //>::type
-         //>::value
-    //));
-//}
+BOOST_AUTO_TEST_CASE(none) {
+    BOOST_REQUIRE_EXCEPTION(
+        (
+            arguments_permission<>::assert_policy<
+                mpl::vector0<>
+              , c2
+            >()
+        )
+      , assert_exception
+      , [](const assert_exception& e) {
+            return e.get_msg() == "ARGUMENTS_NOT_PERMITTED" &&
+                   e.get_type() == typeid(c2);
+        }
+    );
+}
 
-//BOOST_AUTO_TEST_CASE(allow_requires) {
-    //BOOST_CHECK((
-        //contains_all<
-            //mpl::vector0<>
-          //, arguments_permission<allow_copies>::verify<
-                //mpl::vector0<>
-              //, c2
-              //, mpl::false_
-            //>::type
-         //>::value
-    //));
-//}
+BOOST_AUTO_TEST_CASE(allow_copy) {
+    BOOST_CHECK_NO_THROW(
+        (
+            arguments_permission<allow_copies>::assert_policy<
+                mpl::vector0<>
+              , c2
+            >()
+        )
+    );
+}
 
-//BOOST_AUTO_TEST_CASE(allow_some_of_requirements) {
-    //BOOST_CHECK((
-        //contains_all<
-            //mpl::vector<aux::shared_ptr<int>, const std::string&>
-          //, arguments_permission<allow_ptrs, allow_copies>::verify<
-                //mpl::vector0<>
-              //, c24
-              //, mpl::false_
-            //>::type
-         //>::value
-    //));
-//}
+BOOST_AUTO_TEST_CASE(allow_ptr) {
+    BOOST_CHECK_NO_THROW(
+        (
+            arguments_permission<allow_ptrs>::assert_policy<
+                mpl::vector0<>
+              , c2*
+            >()
+        )
+    );
+}
 
-//BOOST_AUTO_TEST_CASE(allow_some_of_requirements_order) {
-    //BOOST_CHECK((
-        //contains_all<
-            //mpl::vector<aux::shared_ptr<int>, const std::string&>
-          //, arguments_permission<allow_copies, allow_ptrs>::verify<
-                //mpl::vector0<>
-              //, c24
-              //, mpl::false_
-            //>::type
-         //>::value
-    //));
-//}
+BOOST_AUTO_TEST_CASE(allow_const_ref) {
+    BOOST_CHECK_NO_THROW(
+        (
+            arguments_permission<allow_const_refs>::assert_policy<
+                mpl::vector0<>
+              , const c2&
+            >()
+        )
+    );
+}
 
-//BOOST_AUTO_TEST_CASE(allow_all_of_requirements) {
-    //BOOST_CHECK((
-        //contains_all<
-            //mpl::vector0<>
-          //, arguments_permission<
-                //allow_copies, allow_ptrs, allow_smart_ptrs, allow_refs
-            //>::verify<
-                //mpl::vector0<>
-              //, c24
-              //, mpl::false_
-            //>::type
-         //>::value
-    //));
-//}
+BOOST_AUTO_TEST_CASE(allow_ref) {
+    BOOST_CHECK_NO_THROW(
+        (
+            arguments_permission<allow_refs>::assert_policy<
+                mpl::vector0<>
+              , c2&
+            >()
+        )
+    );
+}
 
-//BOOST_AUTO_TEST_CASE(disallow_within_nested_type) {
-    //BOOST_CHECK((
-        //contains_all<
-            //mpl::vector<std::vector<int*>, double*>
-          //, arguments_permission<
-                //allow_copies, allow_refs, allow_smart_ptrs
-            //>::verify<
-                //mpl::vector0<>
-              //, c24
-              //, mpl::false_
-            //>::type
-         //>::value
-    //));
-//}
+BOOST_AUTO_TEST_CASE(allow_ref_from_const_ref) {
+    BOOST_CHECK_NO_THROW(
+        (
+            arguments_permission<allow_refs>::assert_policy<
+                mpl::vector0<>
+              , const c2&
+            >()
+        )
+    );
+}
+
+BOOST_AUTO_TEST_CASE(allow_rvalue_ref) {
+    BOOST_CHECK_NO_THROW(
+        (
+            arguments_permission<allow_rvalue_refs>::assert_policy<
+                mpl::vector0<>
+              , c2&&
+            >()
+        )
+    );
+}
+
+BOOST_AUTO_TEST_CASE(allow_smart_ptr) {
+    BOOST_CHECK_NO_THROW(
+        (
+            arguments_permission<allow_smart_ptrs>::assert_policy<
+                mpl::vector0<>
+              , aux::shared_ptr<c2>
+            >()
+        )
+    );
+}
+
+BOOST_AUTO_TEST_CASE(allow_many_order) {
+    BOOST_CHECK_NO_THROW(
+        (
+            arguments_permission<allow_refs, allow_ptrs>::assert_policy<
+                mpl::vector0<>
+              , const c2*
+            >()
+        )
+    );
+}
+
+BOOST_AUTO_TEST_CASE(allow_nested_type) {
+    BOOST_CHECK_NO_THROW(
+        (
+            arguments_permission<allow_copies, allow_ptrs>::assert_policy<
+                mpl::vector0<>
+              , std::vector<int*>
+            >()
+        )
+    );
+}
+
+BOOST_AUTO_TEST_CASE(disallow_nested_type_copy) {
+    BOOST_REQUIRE_EXCEPTION(
+        (
+            arguments_permission<>::assert_policy<
+                mpl::vector0<>
+              , std::vector<int*>
+            >()
+        )
+      , assert_exception
+      , [](const assert_exception& e) {
+            return e.get_msg() == "ARGUMENTS_NOT_PERMITTED" &&
+                   e.get_type() == typeid(std::vector<int*>);
+        }
+    );
+}
+
+BOOST_AUTO_TEST_CASE(disallow_nested_type_nested_ptr) {
+    BOOST_REQUIRE_EXCEPTION(
+        (
+            arguments_permission<allow_copies>::assert_policy<
+                mpl::vector0<>
+              , std::vector<int*>
+            >()
+        )
+      , assert_exception
+      , [](const assert_exception& e) {
+            return e.get_msg() == "ARGUMENTS_NOT_PERMITTED" &&
+                   e.get_type() == typeid(std::vector<int*>);
+        }
+    );
+}
 
 } // namespace policies
 } // namespace di

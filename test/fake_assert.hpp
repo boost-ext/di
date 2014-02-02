@@ -10,9 +10,10 @@
 #include <typeinfo>
 #include <stdexcept>
 
-#define BOOST_DI_ASSERT_MSG(c, msg, type) \
-    throw ::boost::di::assert_exception(#msg, &typeid(type))
-
+#define BOOST_DI_ASSERT_MSG(c, msg, type)                           \
+    if (c) {                                                        \
+        throw ::boost::di::assert_exception(#msg, &typeid(type));   \
+    }
 
 namespace boost {
 namespace di {
