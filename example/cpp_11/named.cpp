@@ -16,10 +16,9 @@ namespace {
 class named
 {
 public:
-    BOOST_DI_INJECT(named
-      , di::named<int, mpl::string<'1'>> i1
-      , di::named<int, mpl::string<'2'>> i2
-    ) : i1(i1), i2(i2) {
+    named(di::named<int, mpl::string<'1'>> i1
+        , di::named<int, mpl::string<'2'>> i2)
+        : i1(i1), i2(i2) {
         assert(i1 == 42);
         assert(i2 == 87);
     }

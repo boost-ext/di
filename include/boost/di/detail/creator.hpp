@@ -58,6 +58,23 @@
             typedef typename TDependency::scope scope;
         };
 
+        template<typename T>
+        class deleter
+        {
+        public:
+            explicit deleter(T* ptr)
+                : ptr_(ptr)
+            { }
+
+            void operator()() {
+                delete ptr_;
+            }
+
+        private:
+            T* ptr_;
+        };
+
+
         BOOST_MPL_HAS_XXX_TRAIT_DEF(named_type)
 
         template<
@@ -259,6 +276,8 @@
 
 		(visitor)(dependency<T, TCallStack, TDependency>());
 
+        typedef typename TDependency::result_type convertible_type;
+
         #define BOOST_DI_CREATOR_EXECUTE(z, n, _)       \
             BOOST_PP_COMMA_IF(n)                        \
             execute<                                    \
@@ -270,38 +289,24 @@
               , TCallStack                              \
             >(deps, cleanup, refs, visitor)
 
-        typedef typename TDependency::result_type result_type;
-
-        result_type* convertible = new result_type(
-            acquire<typename TDependency::type>(deps, cleanup).create(
-                BOOST_PP_REPEAT(
-                    BOOST_PP_ITERATION()
-                  , BOOST_DI_CREATOR_EXECUTE
-                  , ~
+        convertible_type* convertible =
+            new convertible_type(
+                acquire<typename TDependency::type>(deps, cleanup).create(
+                    BOOST_PP_REPEAT(
+                        BOOST_PP_ITERATION()
+                      , BOOST_DI_CREATOR_EXECUTE
+                      , ~
+                    )
                 )
-            )
-        );
-
-        class deleter
-        {
-        public:
-            explicit deleter(result_type* ptr)
-                : ptr_(ptr)
-            { }
-
-            void operator()() {
-                delete this->ptr_;
-            }
-
-        private:
-            result_type* ptr_;
-        };
-
-        refs.push_back(deleter(convertible));
-
-        return *convertible;
+            );
 
         #undef BOOST_DI_CREATOR_EXECUTE
+
+        refs.push_back(
+            deleter<convertible_type>(convertible)
+        );
+
+        return *convertible;
     }
 
 #endif

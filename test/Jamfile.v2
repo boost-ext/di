@@ -131,7 +131,7 @@ test-suite "di / default" :
 test-suite "compile fail" :
     #[ compile-fail-cpp11 detail/module_externals_mt_fail.cpp ]
     #[ compile-fail-cpp11 detail/module_policy_mt_fail.cpp ]
-    [ compile-fail-test  c++11 : policies/arguments_permission_mt_fail.cpp ]
+    #[ compile-fail-test  c++11 : policies/arguments_permission_mt_fail.cpp ]
     #[ compile-fail-test  c++11 : policies/arguments_permission_mt_fail.cpp : ctor_arguments_permission_mt_fail ]
     #[ compile-fail-cpp11 policies/binding_correctness_mt_fail.cpp ]
     #[ compile-fail-cpp11 policies/binding_correctness_ub_mt_fail.cpp ]
