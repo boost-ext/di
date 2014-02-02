@@ -139,7 +139,6 @@ BOOST_AUTO_TEST_CASE(inheriting_ctors) {
 
     c1 c1_(i, d);
 
-
     BOOST_CHECK_EQUAL(i, c1_.i);
     BOOST_CHECK_EQUAL(d, c1_.d);
 }
