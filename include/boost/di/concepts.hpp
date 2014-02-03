@@ -16,6 +16,7 @@
 #include "boost/di/scopes/session.hpp"
 #include "boost/di/scopes/shared.hpp"
 #include "boost/di/scopes/unique.hpp"
+#include <boost/di/inject.hpp>
 
 #include <string>
 #include <boost/mpl/int.hpp>
@@ -26,6 +27,8 @@ namespace di {
 template<int N>
 struct int_ : mpl::int_<N>
 {
+    static void BOOST_DI_INJECTOR();
+
     operator int() const {
         return N;
     }

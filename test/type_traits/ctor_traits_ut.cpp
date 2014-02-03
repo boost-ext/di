@@ -11,6 +11,7 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
 #include "boost/mpl/string.hpp"
+#include "boost/config.hpp"
 
 #include "boost/di/inject.hpp"
 #include "boost/di/named.hpp"
@@ -18,6 +19,18 @@
 
 namespace boost {
 namespace di {
+
+struct traits { };
+
+template<typename>
+struct ctor_traits;
+
+template<>
+struct ctor_traits<traits>
+{
+    static void BOOST_DI_INJECTOR();
+};
+
 namespace type_traits {
 
 struct empty
@@ -32,7 +45,7 @@ struct int_double
 
 struct extensions
 {
-    BOOST_DI_INJECT_TRAITS(char*, const int&);
+    static void BOOST_DI_INJECTOR(char*, const int&);
 };
 
 struct ctor1
@@ -47,14 +60,14 @@ struct ctor2
 
 struct ctor_complex
 {
-    ctor_complex(int, double&, aux::shared_ptr<int>, float&&, const char*, const std::string&, void*) { }
+    ctor_complex(int, double&, aux::shared_ptr<int>, float&, const char*, const std::string&, void*) { }
 };
 
 struct ctor_inject_named
 {
-    BOOST_DI_INJECT_TRAITS(
-        named<int, mpl::string<'1'>>
-      , named<int, mpl::string<'2'>>
+    static void BOOST_DI_INJECTOR(
+        named<int, mpl::string<'1'> >
+      , named<int, mpl::string<'2'> >
     );
 
     ctor_inject_named(int, int);
@@ -63,18 +76,25 @@ struct ctor_inject_named
 BOOST_AUTO_TEST_CASE(ctor) {
     BOOST_CHECK((mpl::equal<mpl::vector0<>, ctor_traits<void>::type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector0<>, ctor_traits<empty>::type>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector0<>, ctor_traits<traits>::type>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector0<>, ctor_traits<empty>::type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector2<int, double>, ctor_traits<int_double>::type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector2<char*, const int&>, ctor_traits<extensions>::type>::value));
-	BOOST_CHECK((mpl::equal<mpl::vector1<any_type>, ctor_traits<ctor1>::type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector2<any_type, any_type>, ctor_traits<ctor2>::type>::value));
 	BOOST_CHECK((mpl::equal<mpl::vector<any_type, any_type, any_type, any_type, any_type, any_type, any_type>, ctor_traits<ctor_complex>::type>::value));
     BOOST_CHECK((mpl::equal<
 		mpl::vector2<
-			named<int, mpl::string<'1'>>
-		  , named<int, mpl::string<'2'>>
+			named<int, mpl::string<'1'> >
+		  , named<int, mpl::string<'2'> >
 		>
 	  , ctor_traits<ctor_inject_named>::type>::value
 	));
+
+#if defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
+    BOOST_CHECK((mpl::equal<mpl::vector<>, ctor_traits<ctor1>::type>::value));
+#else
+    BOOST_CHECK((mpl::equal<mpl::vector1<any_type>, ctor_traits<ctor1>::type>::value));
+#endif
 }
 
 } // namespace type_traits

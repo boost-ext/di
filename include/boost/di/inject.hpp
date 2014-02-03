@@ -44,13 +44,13 @@
     #endif
 
 #else
-    #define BOOST_DI_INJECT_TRAITS(Params)          \
-        static void BOOST_DI_INJECTOR Params
+    #define BOOST_DI_INJECT_TRAITS(Args)            \
+        static void BOOST_DI_INJECTOR Args
 
     #if !defined(BOOST_DI_INJECT)
-        #define BOOST_DI_INJECT(type, params)       \
-            BOOST_DI_INJECT_TRAITS(params);         \
-            type params
+        #define BOOST_DI_INJECT(type, args)         \
+            BOOST_DI_INJECT_TRAITS(args);           \
+            type args
     #endif
 
 #endif

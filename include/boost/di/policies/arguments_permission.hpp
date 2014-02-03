@@ -174,7 +174,7 @@ public:
           , ARGUMENT_NOT_PERMITTED
           , T
         );
-    };
+    }
 };
 
 } // namespace policies

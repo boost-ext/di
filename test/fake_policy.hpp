@@ -21,7 +21,7 @@ public:
       , typename T
     >
     void assert_policy()
-    { };
+    { }
 };
 
 } // namespace di

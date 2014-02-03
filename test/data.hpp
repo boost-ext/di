@@ -436,11 +436,7 @@ struct c27
 	aux::shared_ptr<double> d_;
 };
 
-enum eid
-{
-    e0 = 1
-  , e1 = 2
-};
+enum eid { e0 = 1 , e1 = 2 };
 
 struct cd2;
 struct cd5;

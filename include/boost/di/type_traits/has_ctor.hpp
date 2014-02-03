@@ -16,6 +16,7 @@
     #include <boost/config.hpp>
 	#include <boost/typeof/typeof.hpp>
 	#include <boost/utility/enable_if.hpp>
+	#include <boost/type_traits/is_fundamental.hpp>
 	#include <boost/mpl/aux_/yes_no.hpp>
 
     namespace boost {
@@ -51,7 +52,7 @@
     public:
         BOOST_STATIC_CONSTANT(
             bool
-          , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
+          , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag) && !is_fundamental<T>::value
         );
     };
 

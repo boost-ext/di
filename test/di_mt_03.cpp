@@ -26,6 +26,7 @@ struct i
 
 struct impl : i
 {
+    static void BOOST_DI_INJECTOR();
     virtual void dummy() { }
 };
 
@@ -41,12 +42,12 @@ struct c1
 
 struct c2
 {
-    BOOST_DI_INJECT(c2, (boost::shared_ptr<c1> c1_, std::auto_ptr<i> p_))
+    BOOST_DI_INJECT(c2, (boost::shared_ptr<c1> c1_, boost::shared_ptr<i> p_))
       : c1_(c1_), p_(p_)
     { }
 
     boost::shared_ptr<c1> c1_;
-    std::auto_ptr<i> p_;
+    boost::shared_ptr<i> p_;
 };
 
 struct c3
@@ -57,7 +58,7 @@ struct c3
       , c1 c1__
       , const std::vector<int>& v_)
     )
-      : c1_(c1_), c2_(c2_), c1__(c1__), v_(v_)
+        : c1_(c1_), c2_(c2_), c1__(c1__), v_(v_)
     { }
 
     boost::shared_ptr<c1> c1_;
@@ -69,35 +70,35 @@ struct c3
 } // namespace
 
 BOOST_AUTO_TEST_CASE(create_complex) {
-    const int i = 42;
-    const double d = 42.0;
-    std::vector<int> v;
-    v.push_back(1);
+	const int i = 42;
+	const double d = 42.0;
+	std::vector<int> v;
+	v.push_back(1);
     v.push_back(2);
-    v.push_back(3);
+	v.push_back(3);
 
-    typedef di::injector<
-        di::policies::binding_correctness()
-      , impl
-    > injector_c0;
+	typedef di::injector<
+		di::policies::binding_correctness()
+	  , impl
+	> injector_c0;
 
-    BOOST_AUTO(injector_c1, di::make_injector(
-        di::policies::circular_dependencies()
+	BOOST_AUTO(injector_c1, di::make_injector(
+		di::policies::circular_dependencies()
       , di::bind_int<i>()
-      , di::bind<std::vector<int> >::to(v)
-    ));
+	  , di::bind<std::vector<int> >::to(v)
+	));
 
-    BOOST_AUTO(injector_, make_injector(
-        injector_c0()
-      , di::unique<c2>()
-      , injector_c1
-      , di::bind<double>::to(d)
-      , di::policies::arguments_permission<
-            di::policies::allow_smart_ptrs
-          , di::policies::allow_copies
-          , di::policies::allow_refs
-        >()
-    ));
+	BOOST_AUTO(injector_, make_injector(
+		injector_c0()
+	  , di::unique<c2>()
+	  , injector_c1
+	  , di::bind<double>::to(d)
+	  , di::policies::arguments_permission<
+			di::policies::allow_smart_ptrs
+		  , di::policies::allow_copies
+		  , di::policies::allow_refs
+		>()
+	));
 
     boost::shared_ptr<c3> c3_ = injector_.create<boost::shared_ptr<c3> >();
 

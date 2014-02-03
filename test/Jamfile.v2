@@ -28,7 +28,12 @@ rule run-test ( std * : src : ctor * : defines * ) {
     }
 
     if $(ctor) {
-        run $(src) : : : $(common_toolset) <define>"\"BOOST_DI_INJECT(type, ...) = type(__VA_ARGS__)\"" $(defines) : $(ctor) ;
+        inject_macro = "\"BOOST_DI_INJECT(type, ...) = type(__VA_ARGS__)\"" ;
+        if $(std) = c++03 {
+            inject_macro = "\"BOOST_DI_INJECT(type, args) = type args\"" ;
+        }
+
+        run $(src) : : : $(common_toolset) <define>$(inject_macro) $(defines) : $(ctor) ;
     } else {
         run $(src) : : : $(common_toolset) $(defines) ;
     }
@@ -42,7 +47,12 @@ rule compile-fail-test ( std * : src : ctor * ) {
     ;
 
     if $(ctor) {
-        compile-fail $(src) : $(common_toolset) <define>"\"BOOST_DI_INJECT(type, ...) = type(__VA_ARGS__)\"" : $(ctor) ;
+        inject_macro = "\"BOOST_DI_INJECT(type, ...) = type(__VA_ARGS__)\"" ;
+        if $(std) = c++03 {
+            inject_macro = "\"BOOST_DI_INJECT(type, args) = type args\"" ;
+        }
+
+        compile-fail $(src) : $(common_toolset) <define>$(inject_macro) : $(ctor) ;
     } else {
         compile-fail $(src) : $(common_toolset) ;
     }
@@ -64,6 +74,8 @@ test-suite "convertibles" :
 test-suite "type traits" :
     [ run-test c++11 : type_traits/create_traits_ut.cpp ]
     [ run-test c++11 : type_traits/ctor_traits_ut.cpp ]
+    [ run-test c++11 : type_traits/ctor_traits_ut.cpp : cpp_11_ctor_traits_ut ]
+    [ run-test c++03 : type_traits/ctor_traits_ut.cpp : cpp_03_ctor_traits_ut ]
     [ run-test c++11 : type_traits/has_ctor_ut.cpp ]
     [ run-test c++11 : type_traits/is_same_base_of_ut.cpp ]
     [ run-test c++11 : type_traits/make_plain_ut.cpp ]
@@ -119,8 +131,8 @@ test-suite "di / c++ 11" :
 ;
 
 test-suite "di / c++ 98/03" :
-    #[ run-test c++03 : di_mt_03.cpp ]
-    #[ run-test c++03 : di_mt_03.cpp : ctor_dt_mt_03 ]
+    [ run-test c++03 : di_mt_03.cpp ]
+    [ run-test c++03 : di_mt_03.cpp : ctor_dt_mt_03 ]
 ;
 
 test-suite "di / default" :
