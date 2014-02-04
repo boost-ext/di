@@ -50,12 +50,12 @@ struct extensions
 
 struct ctor1
 {
-	ctor1(int);
+    ctor1(int);
 };
 
 struct ctor2
 {
-	ctor2(char*, const int&);
+    ctor2(char*, const int&);
 };
 
 struct ctor_complex
@@ -81,14 +81,14 @@ BOOST_AUTO_TEST_CASE(ctor) {
     BOOST_CHECK((mpl::equal<mpl::vector2<int, double>, ctor_traits<int_double>::type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector2<char*, const int&>, ctor_traits<extensions>::type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector2<any_type, any_type>, ctor_traits<ctor2>::type>::value));
-	BOOST_CHECK((mpl::equal<mpl::vector<any_type, any_type, any_type, any_type, any_type, any_type, any_type>, ctor_traits<ctor_complex>::type>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector<any_type, any_type, any_type, any_type, any_type, any_type, any_type>, ctor_traits<ctor_complex>::type>::value));
     BOOST_CHECK((mpl::equal<
-		mpl::vector2<
-			named<int, mpl::string<'1'> >
-		  , named<int, mpl::string<'2'> >
-		>
-	  , ctor_traits<ctor_inject_named>::type>::value
-	));
+        mpl::vector2<
+            named<int, mpl::string<'1'> >
+          , named<int, mpl::string<'2'> >
+        >
+      , ctor_traits<ctor_inject_named>::type>::value
+    ));
 
 #if defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
     BOOST_CHECK((mpl::equal<mpl::vector<>, ctor_traits<ctor1>::type>::value));

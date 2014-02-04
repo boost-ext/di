@@ -429,11 +429,11 @@ struct c26
 
 struct c27
 {
-	BOOST_DI_INJECT(c27, aux::shared_ptr<double> d)
-		: d_(d)
-	{ }
+    BOOST_DI_INJECT(c27, aux::shared_ptr<double> d)
+        : d_(d)
+    { }
 
-	aux::shared_ptr<double> d_;
+    aux::shared_ptr<double> d_;
 };
 
 enum eid { e0 = 1 , e1 = 2 };
@@ -540,7 +540,7 @@ struct ctor_traits<c14>
 template<typename T>
 struct ctor_traits<std::basic_string<T>>
 {
-	BOOST_DI_INJECT_TRAITS();
+    BOOST_DI_INJECT_TRAITS();
 };
 
 } // namespace di

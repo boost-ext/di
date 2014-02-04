@@ -43,7 +43,7 @@ struct fake_scope
             return *obj_;
         }
 
-		template<typename I>
+        template<typename I>
         operator I() const {
             return (*this)(type<I>());
         }

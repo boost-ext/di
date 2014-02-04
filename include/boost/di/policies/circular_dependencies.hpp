@@ -31,20 +31,20 @@ namespace policies {
  */
 class circular_dependencies
 {
-	template<typename TCallStack>
-	struct is_unique_call_stack
-		: mpl::bool_<
-			  static_cast<std::size_t>(mpl::accumulate<
-				  typename mpl::transform<
-					  TCallStack
-					, mpl::count<TCallStack, mpl::_>
-				  >::type
-				, mpl::int_<0>
-				, mpl::plus<mpl::_1, mpl::_2>
-			  >::type::value
-			) == mpl::size<TCallStack>::value
-		  >
-	{ };
+    template<typename TCallStack>
+    struct is_unique_call_stack
+        : mpl::bool_<
+              static_cast<std::size_t>(mpl::accumulate<
+                  typename mpl::transform<
+                      TCallStack
+                    , mpl::count<TCallStack, mpl::_>
+                  >::type
+                , mpl::int_<0>
+                , mpl::plus<mpl::_1, mpl::_2>
+              >::type::value
+            ) == mpl::size<TCallStack>::value
+          >
+    { };
 
 public:
     template<
@@ -52,12 +52,12 @@ public:
       , typename T
     >
     static void assert_policy() {
-	   BOOST_DI_ASSERT_MSG(
-			is_unique_call_stack<typename T::call_stack>::value
-		  , CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED
-		  , typename T::call_stack
-		);
-	}
+       BOOST_DI_ASSERT_MSG(
+            is_unique_call_stack<typename T::call_stack>::value
+          , CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED
+          , typename T::call_stack
+        );
+    }
 };
 
 } // namespace policies

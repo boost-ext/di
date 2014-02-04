@@ -50,10 +50,10 @@ int main() {
 }
 
 // (anonymous namespace)::c3
-// 	std::shared_ptr<(anonymous namespace)::c1>
-// 		std::shared_ptr<(anonymous namespace)::i0>
-// 	std::shared_ptr<(anonymous namespace)::c2>
-// 		int
-// 		double
-// 		char
+//     std::shared_ptr<(anonymous namespace)::c1>
+//         std::shared_ptr<(anonymous namespace)::i0>
+//     std::shared_ptr<(anonymous namespace)::c2>
+//         int
+//         double
+//         char
 

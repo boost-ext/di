@@ -41,7 +41,7 @@ public:
           , CREATION_OWNERSHIP_IS_NOT_CLEAR
           , typename T::type
         );
-	}
+    }
 };
 
 } // namespace policies

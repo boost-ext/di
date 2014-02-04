@@ -866,18 +866,18 @@ BOOST_AUTO_TEST_CASE(to_basic) {
 }
 
 BOOST_AUTO_TEST_CASE(to_in_name) {
-	const int i1 = 42;
-	const int i2 = 87;
+    const int i1 = 42;
+    const int i2 = 87;
 
-	auto injector_ = injector<>()(
-		bind<int>::in_name<mpl::string<'1'>>::to(i1)
-	  , bind<int>::in_name<mpl::string<'2'>>::to(i2)
-	);
+    auto injector_ = injector<>()(
+        bind<int>::in_name<mpl::string<'1'>>::to(i1)
+      , bind<int>::in_name<mpl::string<'2'>>::to(i2)
+    );
 
-	auto c10_ = injector_.create<c10>();
+    auto c10_ = injector_.create<c10>();
 
-	BOOST_CHECK_EQUAL(i1, c10_.i1);
-	BOOST_CHECK_EQUAL(i2, c10_.i2);
+    BOOST_CHECK_EQUAL(i1, c10_.i1);
+    BOOST_CHECK_EQUAL(i2, c10_.i2);
 }
 
 BOOST_AUTO_TEST_CASE(to_in_call) {

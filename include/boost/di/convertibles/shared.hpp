@@ -27,13 +27,13 @@ public:
         : object_(object)
     { }
 
-	bool operator!() const {
-		return !object_;
-	}
+    bool operator!() const {
+        return !object_;
+    }
 
-	void reset(T* ptr = 0) {
-		return object_.reset(ptr);
-	}
+    void reset(T* ptr = 0) {
+        return object_.reset(ptr);
+    }
 
     template<typename I>
     aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const {
@@ -76,13 +76,13 @@ public:
         return aux::weak_ptr<I>(object_);
     }
 
-	template<typename I>
-	operator I() const {
-		return (*this)(type<I>());
-	}
+    template<typename I>
+    operator I() const {
+        return (*this)(type<I>());
+    }
 
 private:
-	aux::shared_ptr<T> object_;
+    aux::shared_ptr<T> object_;
 };
 
 } // namespace convertibles

@@ -18,7 +18,7 @@ namespace di {
 namespace policies {
 
 using clear_ownerhsip_types = mpl::vector<
-	int
+    int
   , int*
   , const int*
   , aux::shared_ptr<int>
@@ -36,24 +36,24 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(clear_ownerhsip, T, clear_ownerhsip_types) {
 }
 
 using not_clear_ownerhsip_types = mpl::vector<
-	int&
+    int&
   , const int&
 >;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(not_clear_ownerhsip, T, not_clear_ownerhsip_types) {
-	BOOST_REQUIRE_EXCEPTION(
-		(
-			creation_ownership::assert_policy<
-				mpl::vector0<>
+    BOOST_REQUIRE_EXCEPTION(
+        (
+            creation_ownership::assert_policy<
+                mpl::vector0<>
               , mpl::identity<T>
-			>()
-		)
-	  , assert_exception
-	  , [](const assert_exception& e) {
-			return e.get_msg() == "CREATION_OWNERSHIP_IS_NOT_CLEAR" &&
-				   e.get_type() == typeid(T);
-		}
-	);
+            >()
+        )
+      , assert_exception
+      , [](const assert_exception& e) {
+            return e.get_msg() == "CREATION_OWNERSHIP_IS_NOT_CLEAR" &&
+                   e.get_type() == typeid(T);
+        }
+    );
 }
 
 } // namespace policies

@@ -29,7 +29,7 @@ struct fake_dependency
     typedef void scope;
     typedef is_same<mpl::_1, T> bind;
     typedef T result_type;
-	typedef void name;
+    typedef void name;
 
     T create() { return value; }
 };
@@ -46,15 +46,15 @@ BOOST_AUTO_TEST_CASE(creator_simple) {
 
     typedef fake_dependency<int, i> dependency_type;
     entries<dependency_type> entries_;
-	std::vector<function<void()>> cleanup_;
-	std::vector<function<void()>> refs_;
+    std::vector<function<void()>> cleanup_;
+    std::vector<function<void()>> refs_;
 
     BOOST_CHECK_EQUAL(i, (
-		creator<
-			fake_binder<dependency_type>
+        creator<
+            fake_binder<dependency_type>
           , mpl::vector0<>
-		>::execute<int, void, mpl::vector0<>>(entries_, cleanup_, refs_, fake_visitor<>())
-	));
+        >::execute<int, void, mpl::vector0<>>(entries_, cleanup_, refs_, fake_visitor<>())
+    ));
 }
 
 } // namespace detail

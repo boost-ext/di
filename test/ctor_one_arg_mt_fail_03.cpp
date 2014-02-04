@@ -13,9 +13,9 @@ namespace di {
 
 struct ctor1
 {
-	ctor1(int) { } // error
-	//BOOST_DI_INJECT(ctor1, (int)) { } // ok
-	//ctor1(int, int = 0) { } // ok
+    ctor1(int) { } // error
+    //BOOST_DI_INJECT(ctor1, (int)) { } // ok
+    //ctor1(int, int = 0) { } // ok
 };
 
 BOOST_AUTO_TEST_CASE(ctor_one_arg_fail) {

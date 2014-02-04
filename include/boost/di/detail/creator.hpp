@@ -56,8 +56,8 @@
             typedef typename TDependency::given given;
             typedef typename TDependency::expected expected;
             typedef typename TDependency::scope scope;
-			typedef typename TDependency::name name;
-			typedef typename TDependency::context context;
+            typedef typename TDependency::name name;
+            typedef typename TDependency::context context;
         };
 
         template<typename T>
@@ -86,23 +86,23 @@
         >
         class eager_creator
         {
-			typedef typename type_traits::make_plain<T>::type plain_t;
+            typedef typename type_traits::make_plain<T>::type plain_t;
 
-			template<typename U, typename = void>
-			struct named_type
-			{
-				typedef U type;
-			};
+            template<typename U, typename = void>
+            struct named_type
+            {
+                typedef U type;
+            };
 
-			template<typename U>
-			struct named_type<U, typename enable_if<
-				has_named_type<typename type_traits::remove_accessors<U>::type> >::type
-			>
-			{
-				typedef typename type_traits::remove_accessors<typename U::named_type>::type type;
-			};
+            template<typename U>
+            struct named_type<U, typename enable_if<
+                has_named_type<typename type_traits::remove_accessors<U>::type> >::type
+            >
+            {
+                typedef typename type_traits::remove_accessors<typename U::named_type>::type type;
+            };
 
-		public:
+        public:
             eager_creator(TDeps& deps, Tscopes& scopes, TRefs& refs, const TVisitor& visitor)
                 : deps_(deps), scopes_(scopes), refs_(refs), visitor_(visitor)
             { }
@@ -171,7 +171,7 @@
                 >(deps_, scopes_, refs_, visitor_)(boost::type<NU&>());
             }
 
-		private:
+        private:
             TDeps& deps_;
             Tscopes& scopes_;
             TRefs& refs_;
@@ -203,7 +203,7 @@
           , typename TVisitor
         >
         static const typename binder<T, TCallStack>::result_type&
-		execute(TDeps& deps, Tscopes& scopes, TRefs& refs, const TVisitor& visitor, typename disable_if<is_same<T, any_type> >::type* = 0) {
+        execute(TDeps& deps, Tscopes& scopes, TRefs& refs, const TVisitor& visitor, typename disable_if<is_same<T, any_type> >::type* = 0) {
             return execute_impl<
                 T
               , typename mpl::push_back<
@@ -212,43 +212,43 @@
                 >::type
               , binder<T, TCallStack>
             >(deps, scopes, refs, visitor);
-		}
+        }
 
     private:
         #define BOOST_PP_FILENAME_1 "boost/di/detail/creator.hpp"
         #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM(0)
         #include BOOST_PP_ITERATE()
 
-		template<
-			typename TDependency
-		  , typename TDeps
-		  , typename Tscopes
-		>
-		static typename enable_if<is_base_of<TDependency, TDeps>, TDependency&>::type
-		acquire(TDeps& deps, Tscopes&) {
-			return static_cast<TDependency&>(deps);
-		}
+        template<
+            typename TDependency
+          , typename TDeps
+          , typename Tscopes
+        >
+        static typename enable_if<is_base_of<TDependency, TDeps>, TDependency&>::type
+        acquire(TDeps& deps, Tscopes&) {
+            return static_cast<TDependency&>(deps);
+        }
 
-		template<
-			typename TDependency
-		  , typename TDeps
-		  , typename Tscopes
-		>
-		static typename disable_if<is_base_of<TDependency, TDeps>, TDependency&>::type
-		acquire(TDeps&, Tscopes& scopes) {
-		    static TDependency* dep = 0;
-			if (!dep) {
-				dep = new TDependency();
-				struct deleter {
-					static void delete_ptr() {
+        template<
+            typename TDependency
+          , typename TDeps
+          , typename Tscopes
+        >
+        static typename disable_if<is_base_of<TDependency, TDeps>, TDependency&>::type
+        acquire(TDeps&, Tscopes& scopes) {
+            static TDependency* dep = 0;
+            if (!dep) {
+                dep = new TDependency();
+                struct deleter {
+                    static void delete_ptr() {
                         delete dep;
                         dep = 0;
-					}
-				};
+                    }
+                };
                 scopes.push_back(&deleter::delete_ptr);
-			}
+            }
             return *dep;
-    	}
+        }
 
         template<typename TSeq, typename TDeps, typename T>
         static typename enable_if<mpl::empty<TSeq> >::type assert_policies() { }
@@ -259,7 +259,7 @@
             policy::template assert_policy<TDeps, T>();
             assert_policies<typename mpl::pop_front<TSeq>::type, TDeps, T>();
         }
-	};
+    };
 
     } // namespace detail
     } // namespace di
@@ -282,20 +282,20 @@
         mpl::size<typename ctor<TDependency>::type>::value == BOOST_PP_ITERATION()
       , const typename TDependency::result_type&
     >::type execute_impl(TDeps& deps, Tscopes& scopes, TRefs& refs, const TVisitor& visitor) {
-		typedef dependency<T, TCallStack, TDependency> dependency_type;
+        typedef dependency<T, TCallStack, TDependency> dependency_type;
         assert_policies<TPolicies, typename TDeps::types, dependency_type>();
-		(visitor)(dependency_type());
+        (visitor)(dependency_type());
 
         typedef typename TDependency::result_type convertible_type;
 
         #define BOOST_DI_CREATOR_EXECUTE(z, n, _)       \
             BOOST_PP_COMMA_IF(n)                        \
             execute<                                    \
-			   typename mpl::at_c< 						\
-				   typename ctor<TDependency>::type 	\
-				 , n 									\
-			   >::type 									\
-			  , T 										\
+               typename mpl::at_c<                         \
+                   typename ctor<TDependency>::type     \
+                 , n                                     \
+               >::type                                     \
+              , T                                         \
               , TCallStack                              \
             >(deps, scopes, refs, visitor)
 

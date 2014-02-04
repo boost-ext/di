@@ -40,7 +40,7 @@ class fake_visitor
 
 public:
     ~fake_visitor() {
-		verify<TSeq>();
+        verify<TSeq>();
     }
 
     template<typename T>

@@ -20,7 +20,7 @@ namespace policies {
 template<typename T>
 struct dependency
 {
-	typedef T call_stack;
+    typedef T call_stack;
 };
 
 using no_circular_dependencies_types = mpl::vector<
@@ -34,13 +34,13 @@ using no_circular_dependencies_types = mpl::vector<
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(no_circular_dependency, T, no_circular_dependencies_types) {
     BOOST_CHECK_NO_THROW(
-		(
-			circular_dependencies::assert_policy<
-				mpl::vector0<>
+        (
+            circular_dependencies::assert_policy<
+                mpl::vector0<>
               , dependency<T>
-			>()
-		)
-	);
+            >()
+        )
+    );
 }
 
 using circular_dependencies_types = mpl::vector<
@@ -50,19 +50,19 @@ using circular_dependencies_types = mpl::vector<
 >;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(circular_dependency, T, circular_dependencies_types) {
-	BOOST_REQUIRE_EXCEPTION(
-		(
-			circular_dependencies::assert_policy<
-				mpl::vector0<>
+    BOOST_REQUIRE_EXCEPTION(
+        (
+            circular_dependencies::assert_policy<
+                mpl::vector0<>
               , dependency<T>
-			>()
-		)
-	  , assert_exception
-	  , [](const assert_exception& e) {
-			return e.get_msg() == "CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED" &&
-				   e.get_type() == typeid(T);
-		}
-	);
+            >()
+        )
+      , assert_exception
+      , [](const assert_exception& e) {
+            return e.get_msg() == "CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED" &&
+                   e.get_type() == typeid(T);
+        }
+    );
 }
 
 } // namespace policies

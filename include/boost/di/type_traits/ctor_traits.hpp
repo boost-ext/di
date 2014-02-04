@@ -34,29 +34,29 @@ struct any_type { };
 template<typename T>
 struct get_int
 {
-	typedef mpl::int_<T::value> type;
+    typedef mpl::int_<T::value> type;
 };
 
 template<typename T>
 struct get_longest_ctor
-	: mpl::fold<
-		mpl::range_c<int, 1, BOOST_DI_CTOR_LIMIT_SIZE + 1>
-	  , mpl::int_<0>
-	  , mpl::if_<
-			type_traits::has_ctor<T, get_int<mpl::_2> >
-		  , mpl::_2
-		  , mpl::_1
-		>
-	  >::type
+    : mpl::fold<
+        mpl::range_c<int, 1, BOOST_DI_CTOR_LIMIT_SIZE + 1>
+      , mpl::int_<0>
+      , mpl::if_<
+            type_traits::has_ctor<T, get_int<mpl::_2> >
+          , mpl::_2
+          , mpl::_1
+        >
+      >::type
 { };
 
 template<typename T>
 struct ctor_traits
-	: mpl::fold<
-		  mpl::range_c<int, 0, get_longest_ctor<T>::value>
-		, mpl::vector0<>
-		, mpl::push_back<mpl::_1, any_type>
-	  >
+    : mpl::fold<
+          mpl::range_c<int, 0, get_longest_ctor<T>::value>
+        , mpl::vector0<>
+        , mpl::push_back<mpl::_1, any_type>
+      >
 { };
 
 namespace type_traits {
@@ -89,17 +89,17 @@ public:
 
 template<typename T, typename = void>
 struct ctor_traits
-	: di::ctor_traits<T>::type
+    : di::ctor_traits<T>::type
 { };
 
 template<typename T>
 struct ctor_traits<T, typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_INJECTOR)<di::ctor_traits<T> > >::type>
-	: parameter_types<BOOST_TYPEOF_TPL(&di::ctor_traits<T>::BOOST_DI_INJECTOR)>::type
+    : parameter_types<BOOST_TYPEOF_TPL(&di::ctor_traits<T>::BOOST_DI_INJECTOR)>::type
 { };
 
 template<typename T>
 struct ctor_traits<T, typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_INJECTOR)<T> >::type>
-	: parameter_types<BOOST_TYPEOF_TPL(&T::BOOST_DI_INJECTOR)>::type
+    : parameter_types<BOOST_TYPEOF_TPL(&T::BOOST_DI_INJECTOR)>::type
 { };
 
 } // namespace type_traits

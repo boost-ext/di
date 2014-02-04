@@ -15,7 +15,7 @@
     #include "boost/di/detail/binder.hpp"
     #include "boost/di/detail/creator.hpp"
 
-	#include <vector>
+    #include <vector>
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/function.hpp>
     #include <boost/type.hpp>
@@ -198,12 +198,12 @@
             : TBind::template get_dependency<T, TCallStack>::type
         { };
 
-		class empty_visitor
-		{
-		public:
-			template<typename T>
-			void operator()(const T&) const { }
-		};
+        class empty_visitor
+        {
+        public:
+            template<typename T>
+            void operator()(const T&) const { }
+        };
 
         class keeper
         {

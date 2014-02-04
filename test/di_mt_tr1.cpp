@@ -81,12 +81,12 @@ BOOST_AUTO_TEST_CASE(create_complex) {
     v.push_back(3);
 
     typedef di::injector<
-		di::policies::binding_correctness()
+        di::policies::binding_correctness()
       , impl
     > injector_c0;
 
     BOOST_AUTO(injector_c1, di::make_injector(
-		di::policies::circular_dependencies()
+        di::policies::circular_dependencies()
       , di::bind_int<i>()
       , di::bind<std::vector<int> >::to(v)
     ));
@@ -96,11 +96,11 @@ BOOST_AUTO_TEST_CASE(create_complex) {
       , di::unique<c2>()
       , injector_c1
       , di::bind<double>::to(d)
-	  , di::policies::arguments_permission<
-			di::policies::allow_smart_ptrs
-		  , di::policies::allow_copies
-		  , di::policies::allow_refs
-		>()
+      , di::policies::arguments_permission<
+            di::policies::allow_smart_ptrs
+          , di::policies::allow_copies
+          , di::policies::allow_refs
+        >()
     ));
 
     std::tr1::shared_ptr<c3> c3_ = injector_.create<std::tr1::shared_ptr<c3> >();
