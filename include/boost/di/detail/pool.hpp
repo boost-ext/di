@@ -124,20 +124,20 @@
 
         pool() { }
 
-        #define BOOST_DI_INJECT_INITLIST_IMPL(_, n, na)                           \
+        #define BOOST_DI_INJECT_INITLIST_IMPL(_, n, na)                         \
             BOOST_PP_COMMA_IF(n) Args##n(args##n)
 
         #define BOOST_PP_LOCAL_MACRO(n)                                         \
             template<BOOST_PP_ENUM_PARAMS(n, typename Args)>                    \
             explicit pool(BOOST_PP_ENUM_BINARY_PARAMS(n, const Args, &args))    \
-                : BOOST_PP_REPEAT(n, BOOST_DI_INJECT_INITLIST_IMPL, ~)            \
+                : BOOST_PP_REPEAT(n, BOOST_DI_INJECT_INITLIST_IMPL, ~)          \
             { }
 
         #define BOOST_PP_LOCAL_LIMITS (1, n)
         #include BOOST_PP_LOCAL_ITERATE()
         #undef BOOST_DI_INJECT_INITLIST_IMPL
 
-        #define BOOST_DI_INJECT_INITLIST_IMPL(_, n, na)                           \
+        #define BOOST_DI_INJECT_INITLIST_IMPL(_, n, na)                         \
             BOOST_PP_COMMA_IF(n)                                                \
             mpl::at_c<typename pool<T, I>::types, n>::type(                     \
                 p.template get<                                                 \
@@ -167,7 +167,7 @@
                 >::type* = 0)                                                   \
                 : BOOST_PP_REPEAT(                                              \
                       n                                                         \
-                    , BOOST_DI_INJECT_INITLIST_IMPL                               \
+                    , BOOST_DI_INJECT_INITLIST_IMPL                             \
                     , ~                                                         \
                   )                                                             \
             { }

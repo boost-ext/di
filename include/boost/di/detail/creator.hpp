@@ -291,11 +291,11 @@
         #define BOOST_DI_CREATOR_EXECUTE(z, n, _)       \
             BOOST_PP_COMMA_IF(n)                        \
             execute<                                    \
-               typename mpl::at_c<                         \
+               typename mpl::at_c<                      \
                    typename ctor<TDependency>::type     \
-                 , n                                     \
-               >::type                                     \
-              , T                                         \
+                 , n                                    \
+               >::type                                  \
+              , T                                       \
               , TCallStack                              \
             >(deps, scopes, refs, visitor)
 
