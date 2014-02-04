@@ -8,18 +8,18 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "data.hpp"
-
 namespace boost {
 namespace di {
 
-BOOST_AUTO_TEST_CASE(shared_by_copy_fail) {
-    injector<
-        c0if0
-      , shared<
-            c6
-        >
-    >().create<c15>();
+struct ctor1
+{
+	ctor1(int) { } // error
+	//BOOST_DI_INJECT(ctor1, (int)) { } // ok
+	//ctor1(int, int = 0) { } // ok
+};
+
+BOOST_AUTO_TEST_CASE(ctor_one_arg_fail) {
+    injector<>().create<ctor1>();
 }
 
 } // namespace di

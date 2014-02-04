@@ -16,7 +16,6 @@
     #include <boost/config.hpp>
 	#include <boost/typeof/typeof.hpp>
 	#include <boost/utility/enable_if.hpp>
-	#include <boost/type_traits/is_fundamental.hpp>
 	#include <boost/mpl/aux_/yes_no.hpp>
 
     namespace boost {
@@ -26,35 +25,43 @@
 	template<typename, typename>
 	class has_ctor;
 
-    template<typename T>
-    class has_ctor<T, mpl::int_<1> >
-    {
-        struct any_type
-        {
-			typedef typename type_traits::make_plain<T>::type plain_t;
+	#if !defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
+		template<typename T>
+		class has_ctor<T, mpl::int_<1> >
+		{
+			struct any_type
+			{
+				typedef typename type_traits::make_plain<T>::type plain_t;
 
-            template<
-                typename U
-            #if !defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
-			  , typename PU = typename type_traits::make_plain<U>::type
-			  , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
-            #endif
-            >
-            operator U() const;
-        };
+				template<
+					typename U
+				  , typename PU = typename type_traits::make_plain<U>::type
+				  , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
+				>
+				operator U() const;
+			};
 
-        template<typename U>
-        static mpl::aux::yes_tag test(BOOST_TYPEOF_TPL(U(any_type()))*);
+			template<typename U>
+			static mpl::aux::yes_tag test(BOOST_TYPEOF_TPL(U(any_type()))*);
 
-        template<typename U>
-        static mpl::aux::no_tag test(...);
+			template<typename U>
+			static mpl::aux::no_tag test(...);
 
-    public:
-        BOOST_STATIC_CONSTANT(
-            bool
-          , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag) && !is_fundamental<T>::value
-        );
-    };
+		public:
+			typedef has_ctor type;
+			BOOST_STATIC_CONSTANT(
+				bool
+			  , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
+			);
+		};
+	#else
+		template<typename T>
+		class has_ctor<T, mpl::int_<1> >
+		{
+		public:
+			BOOST_STATIC_CONSTANT(bool, value = false);
+		};
+	#endif
 
 	#define BOOST_PP_FILENAME_1 "boost/di/type_traits/has_ctor.hpp"
     #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM(2)
@@ -91,6 +98,8 @@
 		static mpl::aux::no_tag test(...);
 
 	public:
+		typedef has_ctor type;
+
 		BOOST_STATIC_CONSTANT(
 			bool
 		  , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)

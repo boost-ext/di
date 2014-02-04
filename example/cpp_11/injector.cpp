@@ -35,14 +35,6 @@ struct c5
 
 } // namespace
 
-struct visitor
-{
-    template<typename T>
-    void operator()(const T&) const {
-        std::clog << typeid(typename T::type).name() << std::endl;
-    }
-};
-
 int main() {
     std::shared_ptr<c3> c3_(new c3);
     c4 c4_;
@@ -68,6 +60,5 @@ int main() {
     );
 
     injector.create<c5>();
-    injector.visit<c5>(visitor());
 }
 

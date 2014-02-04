@@ -29,10 +29,9 @@ struct fake_dependency
     typedef void scope;
     typedef is_same<mpl::_1, T> bind;
     typedef T result_type;
+	typedef void name;
 
-    T create() {
-        return value;
-    }
+    T create() { return value; }
 };
 
 template<typename T>

@@ -9,6 +9,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
+#include <boost/mpl/identity.hpp>
 
 #include "contains_all.hpp"
 #include "data.hpp"
@@ -28,7 +29,7 @@ BOOST_AUTO_TEST_CASE(value) {
         (
             arguments_permission<>::assert_policy<
                 mpl::vector0<>
-              , int
+              , mpl::identity<int>
             >()
         )
       , assert_exception
@@ -41,7 +42,7 @@ BOOST_AUTO_TEST_CASE(none) {
         (
             arguments_permission<>::assert_policy<
                 mpl::vector0<>
-              , c2
+              , mpl::identity<c2>
             >()
         )
       , assert_exception
@@ -54,7 +55,7 @@ BOOST_AUTO_TEST_CASE(allow_copy) {
         (
             arguments_permission<allow_copies>::assert_policy<
                 mpl::vector0<>
-              , c2
+              , mpl::identity<c2>
             >()
         )
     );
@@ -65,7 +66,7 @@ BOOST_AUTO_TEST_CASE(allow_ptr) {
         (
             arguments_permission<allow_ptrs>::assert_policy<
                 mpl::vector0<>
-              , c2*
+              , mpl::identity<c2*>
             >()
         )
     );
@@ -76,7 +77,7 @@ BOOST_AUTO_TEST_CASE(allow_const_ref) {
         (
             arguments_permission<allow_const_refs>::assert_policy<
                 mpl::vector0<>
-              , const c2&
+              , mpl::identity<const c2&>
             >()
         )
     );
@@ -87,7 +88,7 @@ BOOST_AUTO_TEST_CASE(allow_ref) {
         (
             arguments_permission<allow_refs>::assert_policy<
                 mpl::vector0<>
-              , c2&
+              , mpl::identity<c2&>
             >()
         )
     );
@@ -98,7 +99,7 @@ BOOST_AUTO_TEST_CASE(allow_ref_from_const_ref) {
         (
             arguments_permission<allow_refs>::assert_policy<
                 mpl::vector0<>
-              , const c2&
+              , mpl::identity<const c2&>
             >()
         )
     );
@@ -109,7 +110,7 @@ BOOST_AUTO_TEST_CASE(allow_rvalue_ref) {
         (
             arguments_permission<allow_rvalue_refs>::assert_policy<
                 mpl::vector0<>
-              , c2&&
+              , mpl::identity<c2&&>
             >()
         )
     );
@@ -120,7 +121,7 @@ BOOST_AUTO_TEST_CASE(allow_smart_ptr) {
         (
             arguments_permission<allow_smart_ptrs>::assert_policy<
                 mpl::vector0<>
-              , aux::shared_ptr<c2>
+              , mpl::identity<aux::shared_ptr<c2>>
             >()
         )
     );
@@ -131,7 +132,7 @@ BOOST_AUTO_TEST_CASE(allow_many_order) {
         (
             arguments_permission<allow_refs, allow_ptrs>::assert_policy<
                 mpl::vector0<>
-              , const c2*
+              , mpl::identity<const c2*>
             >()
         )
     );
@@ -142,7 +143,7 @@ BOOST_AUTO_TEST_CASE(allow_nested_type) {
         (
             arguments_permission<allow_copies, allow_ptrs>::assert_policy<
                 mpl::vector0<>
-              , std::vector<int*>
+              , mpl::identity<std::vector<int*>>
             >()
         )
     );
@@ -153,7 +154,7 @@ BOOST_AUTO_TEST_CASE(disallow_nested_type_copy) {
         (
             arguments_permission<>::assert_policy<
                 mpl::vector0<>
-              , std::vector<int*>
+              , mpl::identity<std::vector<int*>>
             >()
         )
       , assert_exception
@@ -166,7 +167,7 @@ BOOST_AUTO_TEST_CASE(disallow_nested_type_nested_ptr) {
         (
             arguments_permission<allow_copies>::assert_policy<
                 mpl::vector0<>
-              , std::vector<int*>
+              , mpl::identity<std::vector<int*>>
             >()
         )
       , assert_exception

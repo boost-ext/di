@@ -15,7 +15,7 @@ namespace {
 
 struct i
 {
-    virtual ~i(){};
+    virtual ~i() { };
     virtual void dummy() = 0;
 };
 

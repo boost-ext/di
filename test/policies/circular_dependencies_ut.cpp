@@ -4,10 +4,11 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#include "fake_assert.hpp" // has to be first
 #include "boost/di/policies/circular_dependencies.hpp"
 
 #include <boost/test/unit_test.hpp>
-#include <boost/type_traits/is_base_of.hpp>
+#include <boost/test/test_case_template.hpp>
 #include <boost/mpl/vector.hpp>
 
 #include "data.hpp"
@@ -16,43 +17,52 @@ namespace boost {
 namespace di {
 namespace policies {
 
-BOOST_AUTO_TEST_CASE(basic) {
-    BOOST_CHECK((
-        !is_base_of<
-            mpl::false_
-          , circular_dependencies::verify<
-                mpl::vector0<>
-              , c8
-              , mpl::false_
-            >::type
-         >::value
-    ));
+template<typename T>
+struct dependency
+{
+	typedef T call_stack;
+};
+
+using no_circular_dependencies_types = mpl::vector<
+    mpl::vector<>
+  , mpl::vector<int>
+  , mpl::vector<int, double>
+  , mpl::vector<c1>
+  , mpl::vector<c1, c2>
+  , mpl::vector<c1, c2, c3>
+>;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(no_circular_dependency, T, no_circular_dependencies_types) {
+    BOOST_CHECK_NO_THROW(
+		(
+			circular_dependencies::assert_policy<
+				mpl::vector0<>
+              , dependency<T>
+			>()
+		)
+	);
 }
 
-BOOST_AUTO_TEST_CASE(direct) {
-    BOOST_CHECK((
-        is_base_of<
-            mpl::false_
-          , circular_dependencies::verify<
-                mpl::vector0<>
-              , cd1
-              , mpl::false_
-            >::type
-        >::value
-    ));
-}
+using circular_dependencies_types = mpl::vector<
+    mpl::vector<c1, c2, c1>
+  , mpl::vector<c1, c2, c3, c2>
+  , mpl::vector<c1, c1>
+>;
 
-BOOST_AUTO_TEST_CASE(in_direct) {
-    BOOST_CHECK((
-        is_base_of<
-            mpl::false_
-          , circular_dependencies::verify<
-                mpl::vector0<>
-              , cd5
-              , mpl::false_
-            >::type
-        >::value
-    ));
+BOOST_AUTO_TEST_CASE_TEMPLATE(circular_dependency, T, circular_dependencies_types) {
+	BOOST_REQUIRE_EXCEPTION(
+		(
+			circular_dependencies::assert_policy<
+				mpl::vector0<>
+              , dependency<T>
+			>()
+		)
+	  , assert_exception
+	  , [](const assert_exception& e) {
+			return e.get_msg() == "CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED" &&
+				   e.get_type() == typeid(T);
+		}
+	);
 }
 
 } // namespace policies

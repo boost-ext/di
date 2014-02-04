@@ -52,10 +52,12 @@
         struct dependency
         {
             typedef T type;
-            typedef TCallStack context;
+            typedef TCallStack call_stack;
             typedef typename TDependency::given given;
             typedef typename TDependency::expected expected;
             typedef typename TDependency::scope scope;
+			typedef typename TDependency::name name;
+			typedef typename TDependency::context context;
         };
 
         template<typename T>
@@ -66,9 +68,7 @@
                 : ptr_(ptr)
             { }
 
-            void operator()() {
-                delete ptr_;
-            }
+            void operator()() { delete ptr_; }
 
         private:
             T* ptr_;
@@ -282,8 +282,9 @@
         mpl::size<typename ctor<TDependency>::type>::value == BOOST_PP_ITERATION()
       , const typename TDependency::result_type&
     >::type execute_impl(TDeps& deps, Tscopes& scopes, TRefs& refs, const TVisitor& visitor) {
-        assert_policies<TPolicies, typename TDeps::types, T>();
-		(visitor)(dependency<T, TCallStack, TDependency>());
+		typedef dependency<T, TCallStack, TDependency> dependency_type;
+        assert_policies<TPolicies, typename TDeps::types, dependency_type>();
+		(visitor)(dependency_type());
 
         typedef typename TDependency::result_type convertible_type;
 

@@ -4,6 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#include <cassert>
 #include <boost/di.hpp>
 
 namespace di = boost::di;
@@ -14,29 +15,44 @@ struct name { };
 
 struct c0
 {
-    c0(int, di::named<int, name> = 0) { }
+    c0(int i1, di::named<int, name> i2 = 0) {
+        assert(i1 == 0);
+        assert(i2 == 42);
+    }
 };
 
 struct c1
 {
-    BOOST_DI_INJECT(c1, int, di::named<int, name> = 0) { }
+    BOOST_DI_INJECT(c1, int i1, di::named<int, name> i2 = 0) {
+        assert(i1 == 0);
+        assert(i2 == 42);
+    }
 };
 
 struct c2
 {
     BOOST_DI_INJECT_TRAITS(int, di::named<int, name>);
-    c2(int, int = 0) { }
+    c2(int i1, int i2 = 0) {
+        assert(i1 == 0);
+        assert(i2 == 42);
+    }
 };
 
 struct c3
 {
     static void BOOST_DI_INJECTOR(int, di::named<int, name>);
-    c3(int, int = 0) { }
+    c3(int i1, int i2 = 0) {
+        assert(i1 == 0);
+        assert(i2 == 42);
+    }
 };
 
 struct c4
 {
-    c4(int, int) { }
+    c4(int i1, int i2 = 0) {
+        assert(i1 == 0);
+        assert(i2 == 42);
+    }
 };
 
 } // namespace
@@ -54,7 +70,10 @@ struct ctor_traits<c4>
 } // namespace boost
 
 int main() {
-    di::injector<> injector;
+    di::injector<
+        di::bind_int<42>::in_name<name>
+    > injector;
+
     injector.create<c0>();
     injector.create<c1>();
     injector.create<c2>();

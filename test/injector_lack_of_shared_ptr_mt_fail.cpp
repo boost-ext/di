@@ -6,7 +6,7 @@
 //
 #define BOOST_DI_INJECT_CFG_BRACKET
 
-#include "boost/di/injeinject.hpp"
+#include "boost/di/injector.hpp"
 
 #include <boost/config.hpp>
 
@@ -23,10 +23,10 @@ namespace di {
 
 struct sp
 {
-    BOOST_DI_INJECT(sp, (boost::aux::shared_ptr<int>)) { }
+    BOOST_DI_INJECT(sp, (boost::shared_ptr<int>, boost::shared_ptr<double>)) { }
 };
 
-BOOST_AUTO_TEST_CASE(lack_of_aux::shared_ptr_fail) {
+BOOST_AUTO_TEST_CASE(lack_of_shared_ptr_fail) {
     injector<>().create<sp>();
 }
 

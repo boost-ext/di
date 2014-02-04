@@ -7,10 +7,10 @@
 #ifndef BOOST_DI_POLICIES_CREATION_OWNERSHIP_HPP
 #define BOOST_DI_POLICIES_CREATION_OWNERSHIP_HPP
 
+#include "boost/di/aux_/meta.hpp"
+
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_reference.hpp>
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/assert.hpp>
 
 namespace boost {
 namespace di {
@@ -26,40 +26,22 @@ class creation_ownership
 {
 public:
     template<
-        typename TDeps
-      , typename TGiven
-      , typename TAssert = mpl::true_
-      , typename = void
-    >
-    struct verify
-        : mpl::true_
-    { };
-
-    template<
-        typename TDeps
-      , typename TGiven
-      , typename TAssert
-    >
-    struct verify<
-        TDeps
-      , TGiven
-      , TAssert
-      , typename enable_if<is_reference<TGiven> >::type
-    >
-        : mpl::false_
-    {
-       BOOST_MPL_ASSERT_MSG(
-            !TAssert::value
-          , CREATION_OWNERSHIP_IS_NOT_CLEAR
-          , (TGiven)
-        );
-    };
-
-    template<
-        typename TDeps
+        typename
       , typename T
     >
-    static void assert_policy() { }
+    static typename disable_if<is_reference<typename T::type> >::type assert_policy() { }
+
+    template<
+        typename
+      , typename T
+    >
+    static typename enable_if<is_reference<typename T::type> >::type assert_policy() {
+        BOOST_DI_ASSERT_MSG(
+            false
+          , CREATION_OWNERSHIP_IS_NOT_CLEAR
+          , typename T::type
+        );
+	}
 };
 
 } // namespace policies

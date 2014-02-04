@@ -30,7 +30,7 @@ class text_visitor
 public:
     template<typename T>
     void operator()(const T&) const {
-        int size = mpl::size<typename T::context>::value;
+        int size = mpl::size<typename T::call_stack>::value;
         while(--size) {
             std::cout << "\t";
         }

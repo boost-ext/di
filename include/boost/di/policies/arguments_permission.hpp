@@ -170,9 +170,9 @@ public:
     >
     static void assert_policy() {
         BOOST_DI_ASSERT_MSG(
-            is_allowed<T>::value
+            is_allowed<typename T::type>::value
           , ARGUMENT_NOT_PERMITTED
-          , T
+          , typename T::type
         );
     }
 };

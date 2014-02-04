@@ -38,7 +38,7 @@ struct get_int
 };
 
 template<typename T>
-struct get_
+struct get_longest_ctor
 	: mpl::fold<
 		mpl::range_c<int, 1, BOOST_DI_CTOR_LIMIT_SIZE + 1>
 	  , mpl::int_<0>
@@ -53,7 +53,7 @@ struct get_
 template<typename T>
 struct ctor_traits
 	: mpl::fold<
-		  mpl::range_c<int, 0, get_<T>::value>
+		  mpl::range_c<int, 0, get_longest_ctor<T>::value>
 		, mpl::vector0<>
 		, mpl::push_back<mpl::_1, any_type>
 	  >

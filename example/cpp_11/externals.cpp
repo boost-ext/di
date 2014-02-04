@@ -5,15 +5,21 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <cassert>
+#include <memory>
 #include <boost/di.hpp>
 
 namespace di = boost::di;
 
 namespace {
 
+struct i { virtual ~i() { } };
+struct impl0 : i { };
+struct impl1 : i { };
 struct c
 {
-    c(int i) {
+    c(std::shared_ptr<i> p, int i)
+    {
+        assert(dynamic_cast<impl1*>(p.get()));
         assert(i == 42);
     }
 };
@@ -21,8 +27,14 @@ struct c
 } // namespace
 
 int main() {
+    auto module = di::make_injector(
+        di::bind<i, impl0>()
+    );
+
     auto injector = di::make_injector(
-        di::bind<int>::to(42)
+        module()
+      , di::bind<int>::to(42)
+      , di::bind<i>::to(std::make_shared<impl1>()) // external has priority
     );
 
     injector.create<c>();
