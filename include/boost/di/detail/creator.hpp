@@ -62,20 +62,6 @@
             typedef typename TDependency::context context;
         };
 
-        template<typename T>
-        class deleter
-        {
-        public:
-            explicit deleter(T* ptr)
-                : ptr_(ptr)
-            { }
-
-            void operator()() { delete ptr_; }
-
-        private:
-            T* ptr_;
-        };
-
         BOOST_MPL_HAS_XXX_TRAIT_DEF(named_type)
 
         template<
