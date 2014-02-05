@@ -15,9 +15,10 @@
     #include "boost/di/detail/binder.hpp"
     #include "boost/di/detail/creator.hpp"
 
+    #include <typeinfo>
     #include <vector>
+    #include <map>
     #include <boost/preprocessor/iteration/iterate.hpp>
-    #include <boost/function.hpp>
     #include <boost/type.hpp>
     #include <boost/non_type.hpp>
     #include <boost/type_traits/is_same.hpp>
@@ -205,22 +206,12 @@
             void operator()(const T&) const { }
         };
 
-        class keeper
+        class type_comparator
         {
         public:
-            ~keeper() {
-                for (std::size_t i = 0; i < data_.size(); ++i) {
-                    data_[i]();
-                }
+            bool operator ()(const std::type_info* lhs, const std::type_info* rhs) const {
+                return lhs->before(*rhs);
             }
-
-            template<typename T>
-            void push_back(const T& object) {
-                data_.push_back(object);
-            }
-
-        private:
-            std::vector<function<void()> > data_;
         };
 
     public:
@@ -235,14 +226,14 @@
 
         template<typename T>
         T create() {
-            keeper refs_;
+            std::vector<aux::shared_ptr<void> > refs_;
             return TCreator<TBinder<deps>, policies>::template
                 execute<T, T, mpl::vector0<> >(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
         }
 
         template<typename T, typename Visitor>
         T visit(const Visitor& visitor) {
-            keeper refs_;
+            std::vector<aux::shared_ptr<void> > refs_;
             return TCreator<TBinder<deps>, policies>::template
                 execute<T, T, mpl::vector0<> >(static_cast<TPool<deps>&>(*this), scopes_, refs_, visitor)(boost::type<T>());
         }
@@ -273,7 +264,7 @@
             call_impl<typename mpl::pop_front<TSeq>::type>(deps, action);
         }
 
-        keeper scopes_;
+        std::map<const std::type_info*, aux::shared_ptr<void>, type_comparator> scopes_;
     };
 
     } // namespace detail

@@ -42,7 +42,8 @@ struct hello_world
 int main() {
     using injector_t = di::injector<
         di::bind_int<42>
-      , impl // -> di::bind<i, impl>
+      , impl // -> di::deduce<impl>
+             // -> di::bind<i, impl>
              // -> di::deduce<di::bind<i, impl>>
              // -> di::shared<di::bind<i, impl>>
     >;

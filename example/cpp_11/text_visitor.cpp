@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <iostream>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/units/detail/utility.hpp>

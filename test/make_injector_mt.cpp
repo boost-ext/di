@@ -158,15 +158,13 @@ BOOST_AUTO_TEST_CASE(runtime_factory_impl) {
 
     auto all = make_injector(
         common
-      , bind<i>::to([&]{
+      , bind<i>::to([&]() -> aux::shared_ptr<i> {
             if (debug_property) {
                 return aux::shared_ptr<i>(new fake());
             }
 
-            return static_pointer_cast<i>(
-                common.create<aux::shared_ptr<impl>>()
-            );
-        }())
+            return common.create<aux::shared_ptr<impl>>();
+        })
     );
 
     auto i_ = all.create<aux::shared_ptr<i>>();

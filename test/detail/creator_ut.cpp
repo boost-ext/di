@@ -12,6 +12,7 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_same.hpp>
 
+#include "boost/di/aux_/memory.hpp"
 #include "fake_binder.hpp"
 #include "fake_visitor.hpp"
 
@@ -46,8 +47,8 @@ BOOST_AUTO_TEST_CASE(creator_simple) {
 
     typedef fake_dependency<int, i> dependency_type;
     entries<dependency_type> entries_;
-    std::vector<function<void()>> cleanup_;
-    std::vector<function<void()>> refs_;
+    std::vector<aux::shared_ptr<void>> cleanup_;
+    std::vector<aux::shared_ptr<void>> refs_;
 
     BOOST_CHECK_EQUAL(i, (
         creator<
