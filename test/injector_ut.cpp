@@ -156,8 +156,8 @@ BOOST_AUTO_TEST_CASE(default_scope_bind) {
         : injector<
               bind<if0, c0if0>
             , c1
-            , bind<c2>::in_name<int>
-            , bind<c3>::in_call<call_stack<c4, c5>>
+            , bind<c2>::named<int>
+            , bind<c3>::when<call_stack<c4, c5>>
           >
     { };
 
@@ -294,10 +294,10 @@ BOOST_AUTO_TEST_CASE(many_scopes) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(in_call) {
+BOOST_AUTO_TEST_CASE(when) {
     struct injector_type
         : injector<
-              unique<c1>::in_call<c2>
+              unique<c1>::when<c2>
           >
     { };
 
@@ -311,10 +311,10 @@ BOOST_AUTO_TEST_CASE(in_call) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(in_name) {
+BOOST_AUTO_TEST_CASE(named_type) {
     struct injector_type
         : injector<
-              shared<c1>::in_name<int>
+              shared<c1>::named<int>
           >
     { };
 
@@ -328,12 +328,12 @@ BOOST_AUTO_TEST_CASE(in_name) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(in_name_in_call) {
+BOOST_AUTO_TEST_CASE(named_when) {
     struct injector_type
         : injector<
               shared<
-                  bind<c1>::in_name<int>::in_call<double>
-                , bind<c2>::in_name<double>::in_call<int>
+                  bind<c1>::named<int>::when<double>
+                , bind<c2>::named<double>::when<int>
               >
           >
     { };
@@ -349,12 +349,12 @@ BOOST_AUTO_TEST_CASE(in_name_in_call) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(in_call_in_name) {
+BOOST_AUTO_TEST_CASE(when_named) {
     struct injector_type
         : injector<
               shared<
-                  bind<c1>::in_call<double>::in_name<int>
-                , bind<c2>::in_call<int>::in_name<double>
+                  bind<c1>::when<double>::named<int>
+                , bind<c2>::when<int>::named<double>
               >
           >
     { };
@@ -395,13 +395,13 @@ BOOST_AUTO_TEST_CASE(mix) {
               shared<
                   bind<if0, c0if0>
                 , c1
-                , bind<c2>::in_name<int>
-                , bind<c3>::in_call<call_stack<c4, c5>>
+                , bind<c2>::named<int>
+                , bind<c3>::when<call_stack<c4, c5>>
               >
             , unique<
                 c6
               >
-            , shared<c7>::in_name<double>::in_call<c1>
+            , shared<c7>::named<double>::when<c1>
           >
     { };
 
@@ -420,13 +420,13 @@ BOOST_AUTO_TEST_CASE(mix) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(named_in_call) {
+BOOST_AUTO_TEST_CASE(named_when_complex) {
     struct injector_type
         : injector<
               unique<
                   bind<int, mpl::int_<1>>
-                , bind<int, mpl::int_<4>>::in_name<mpl::string<'2'>>::in_call<call_stack<c7, c6, c4>>
-                , bind<int, mpl::int_<5>>::in_call<c2>
+                , bind<int, mpl::int_<4>>::named<mpl::string<'2'>>::when<call_stack<c7, c6, c4>>
+                , bind<int, mpl::int_<5>>::when<c2>
               >
           >
     { };
@@ -447,9 +447,9 @@ BOOST_AUTO_TEST_CASE(multiple_calls) {
     struct injector_type
         : injector<
               shared<
-                  bind<c0>::in_call<c1, call_stack<c2, c3>, c4 >
+                  bind<c0>::when<c1, call_stack<c2, c3>, c4 >
               >
-            , bind<c5>::in_call<int, double>
+            , bind<c5>::when<int, double>
           >
     { };
 
@@ -544,8 +544,8 @@ BOOST_AUTO_TEST_CASE(empty_injector) {
 BOOST_AUTO_TEST_CASE(default_scope_bind_injector) {
     auto injector_ = injector<>()(
           bind<if0, c0if0>()
-        , bind<c2>::in_name<int>()
-        , bind<c3>::in_call<call_stack<c4, c5>>()
+        , bind<c2>::named<int>()
+        , bind<c3>::when<call_stack<c4, c5>>()
     );
 
     typedef decltype(injector_) injector_t;
@@ -680,9 +680,9 @@ BOOST_AUTO_TEST_CASE(many_scopes_injector) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(in_call_injector) {
+BOOST_AUTO_TEST_CASE(when_injector) {
     auto injector_ = injector<>()(
-        unique<c1>::in_call<c2>()
+        unique<c1>::when<c2>()
     );
 
     typedef decltype(injector_) injector_t;
@@ -697,9 +697,9 @@ BOOST_AUTO_TEST_CASE(in_call_injector) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(in_name_injector) {
+BOOST_AUTO_TEST_CASE(named_injector) {
     auto injector_ = injector<>()(
-        shared<c1>::in_name<int>()
+        shared<c1>::named<int>()
     );
 
     typedef decltype(injector_) injector_t;
@@ -714,11 +714,11 @@ BOOST_AUTO_TEST_CASE(in_name_injector) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(in_namein_call) {
+BOOST_AUTO_TEST_CASE(namedwhen) {
     auto injector_ = injector<>()(
         shared<
-            bind<c1>::in_name<int>::in_call<double>
-          , bind<c2>::in_name<double>::in_call<int>
+            bind<c1>::named<int>::when<double>
+          , bind<c2>::named<double>::when<int>
         >()
     );
 
@@ -735,11 +735,11 @@ BOOST_AUTO_TEST_CASE(in_namein_call) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(in_call_in_name_injector) {
+BOOST_AUTO_TEST_CASE(when_named_injector) {
     auto injector_ = injector<>()(
         shared<
-            bind<c1>::in_call<double>::in_name<int>
-          , bind<c2>::in_call<int>::in_name<double>
+            bind<c1>::when<double>::named<int>
+          , bind<c2>::when<int>::named<double>
         >()
     );
 
@@ -780,13 +780,13 @@ BOOST_AUTO_TEST_CASE(mix_injector) {
         shared<
             bind<if0, c0if0>
           , c1
-          , bind<c2>::in_name<int>
-          , bind<c3>::in_call<call_stack<c4, c5>>
+          , bind<c2>::named<int>
+          , bind<c3>::when<call_stack<c4, c5>>
         >()
       , unique<
             c6
         >()
-      , shared<c7>::in_name<double>::in_call<c1>()
+      , shared<c7>::named<double>::when<c1>()
     );
 
     typedef decltype(injector_) injector_t;
@@ -806,12 +806,12 @@ BOOST_AUTO_TEST_CASE(mix_injector) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(named_in_call_injector) {
+BOOST_AUTO_TEST_CASE(named_when_injector) {
     auto injector_ = injector<>()(
         unique<
             bind<int, mpl::int_<1>>
-          , bind<int, mpl::int_<4>>::in_name<mpl::string<'2'>>::in_call<call_stack<c7, c6, c4>>
-          , bind<int, mpl::int_<5>>::in_call<c2>
+          , bind<int, mpl::int_<4>>::named<mpl::string<'2'>>::when<call_stack<c7, c6, c4>>
+          , bind<int, mpl::int_<5>>::when<c2>
         >()
     );
 
@@ -832,9 +832,9 @@ BOOST_AUTO_TEST_CASE(named_in_call_injector) {
 BOOST_AUTO_TEST_CASE(multiple_calls_injector) {
     auto injector_ = injector<>()(
         shared<
-            bind<c0>::in_call<c1, call_stack<c2, c3>, c4>
+            bind<c0>::when<c1, call_stack<c2, c3>, c4>
         >()
-      , bind<c5>::in_call<int, double>()
+      , bind<c5>::when<int, double>()
     );
 
     typedef decltype(injector_) injector_t;
@@ -865,13 +865,13 @@ BOOST_AUTO_TEST_CASE(to_basic) {
     BOOST_CHECK_EQUAL(d, c14_.d);
 }
 
-BOOST_AUTO_TEST_CASE(to_in_name) {
+BOOST_AUTO_TEST_CASE(to_named) {
     const int i1 = 42;
     const int i2 = 87;
 
     auto injector_ = injector<>()(
-        bind<int>::in_name<mpl::string<'1'>>::to(i1)
-      , bind<int>::in_name<mpl::string<'2'>>::to(i2)
+        bind<int>::named<mpl::string<'1'>>::to(i1)
+      , bind<int>::named<mpl::string<'2'>>::to(i2)
     );
 
     auto c10_ = injector_.create<c10>();
@@ -880,11 +880,11 @@ BOOST_AUTO_TEST_CASE(to_in_name) {
     BOOST_CHECK_EQUAL(i2, c10_.i2);
 }
 
-BOOST_AUTO_TEST_CASE(to_in_call) {
+BOOST_AUTO_TEST_CASE(to_when) {
     const int i = 42;
 
     auto injector_ = injector<>()(
-        bind<int>::in_call<c3>::to(i)
+        bind<int>::when<c3>::to(i)
     );
 
     auto c4_ = injector_.create<c4>();
@@ -894,13 +894,13 @@ BOOST_AUTO_TEST_CASE(to_in_call) {
     BOOST_CHECK_EQUAL(0, c4_.i2);
 }
 
-BOOST_AUTO_TEST_CASE(to_in_call_in_name) {
+BOOST_AUTO_TEST_CASE(to_when_named) {
     const int i1 = 42;
     const int i2 = 87;
 
     auto injector_ = injector<>()(
-        bind<int>::in_call<c4>::in_name<mpl::string<'1'>>::to(i1)
-      , bind<int>::in_call<c4>::in_name<mpl::string<'2'>>::to(i2)
+        bind<int>::when<c4>::named<mpl::string<'1'>>::to(i1)
+      , bind<int>::when<c4>::named<mpl::string<'2'>>::to(i2)
       , bind<c0if0>()
     );
 
@@ -910,13 +910,13 @@ BOOST_AUTO_TEST_CASE(to_in_call_in_name) {
     BOOST_CHECK_EQUAL(i2, c6_.c4_->i2);
 }
 
-BOOST_AUTO_TEST_CASE(to_in_name_in_call) {
+BOOST_AUTO_TEST_CASE(to_named_when) {
     const int i1 = 42;
     const int i2 = 87;
 
     auto injector_ = injector<>()(
-        bind<int>::in_name<mpl::string<'1'>>::in_call<c4>::to(i1)
-      , bind<int>::in_name<mpl::string<'2'>>::in_call<c4>::to(i2)
+        bind<int>::named<mpl::string<'1'>>::when<c4>::to(i1)
+      , bind<int>::named<mpl::string<'2'>>::when<c4>::to(i2)
       , bind<c0if0>()
     );
 
@@ -926,12 +926,12 @@ BOOST_AUTO_TEST_CASE(to_in_name_in_call) {
     BOOST_CHECK_EQUAL(i2, c6_.c4_->i2);
 }
 
-BOOST_AUTO_TEST_CASE(to_in_call_with_global) {
+BOOST_AUTO_TEST_CASE(to_when_with_global) {
     const int i1 = 42;
     const int i2 = 87;
 
     auto injector_ = injector<>()(
-        bind<int>::in_call<c3>::to(i1)
+        bind<int>::when<c3>::to(i1)
       , bind<int>::to(i2)
     );
 
@@ -942,14 +942,14 @@ BOOST_AUTO_TEST_CASE(to_in_call_with_global) {
     BOOST_CHECK_EQUAL(0, c4_.i2);
 }
 
-BOOST_AUTO_TEST_CASE(to_in_call_stack) {
+BOOST_AUTO_TEST_CASE(to_when_stack) {
     const int i = 42;
 
     auto injector_ = injector<>()(
         unique<
             c3
         >()
-      , bind<int>::in_call<call_stack<c4, c3>>::to(i)
+      , bind<int>::when<call_stack<c4, c3>>::to(i)
       , bind<c0if0>()
     );
 

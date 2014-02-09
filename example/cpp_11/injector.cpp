@@ -50,11 +50,11 @@ int main() {
             di::bind_int<42>
         >()
       , di::unique<
-            di::bind_int<87>::in_name<name>
-          , di::bind<c01>::in_call<di::call_stack<c2, c1>>
+            di::bind_int<87>::named<name>
+          , di::bind<c01>::when<di::call_stack<c2, c1>>
         >()
       , di::bind<double>::to(42.0)
-      , di::bind<double>::in_call<c0>::to(87.0)
+      , di::bind<double>::when<c0>::to(87.0)
       , di::bind<c3>::to(c3_)
       , di::bind<c4>::to(c4_)
     );

@@ -243,7 +243,7 @@ template<typename TDeps = mpl::vector0<> >
 struct binder
 {
     template<typename T, typename TCallStack>
-    struct get_dependency
+    struct resolve
         : binder_impl<T, TCallStack, TDeps>
     { };
 };

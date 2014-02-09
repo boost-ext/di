@@ -170,33 +170,13 @@
             );
         };
 
-        template<typename TSeq>
-        struct unique
-            : mpl::fold<
-                  typename mpl::fold<
-                      TSeq
-                    , mpl::set0<>
-                    , mpl::insert<mpl::_1, mpl::_2>
-                  >::type
-                , mpl::vector0<>
-                , mpl::push_back<mpl::_1, mpl::_2>
-              >
-        { };
-
-        template<typename T>
-        struct ctor
-            : type_traits::ctor_traits<
-                  typename type_traits::make_plain<T>::type
-              >::type
-        { };
-
         template<
             typename T
           , typename TCallStack
           , typename TBind
         >
         struct binder
-            : TBind::template get_dependency<T, TCallStack>::type
+            : TBind::template resolve<T, TCallStack>::type
         { };
 
         class empty_visitor

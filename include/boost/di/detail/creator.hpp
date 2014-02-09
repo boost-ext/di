@@ -43,7 +43,7 @@
 
         template<typename T, typename TCallStack>
         struct binder
-            : TBinder::template get_dependency<T, TCallStack>::type
+            : TBinder::template resolve<T, TCallStack>::type
         { };
 
         template<

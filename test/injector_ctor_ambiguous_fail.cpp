@@ -4,24 +4,23 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_FAKE_BINDER_HPP
-#define BOOST_DI_FAKE_BINDER_HPP
+#include "boost/di.hpp"
+
+#include <boost/test/unit_test.hpp>
 
 namespace boost {
 namespace di {
 
-template<typename T>
-struct fake_binder
+struct ctor
 {
-    template<typename, typename>
-    struct resolve
-    {
-        typedef T type;
-    };
+    BOOST_DI_INJECT(ctor, int, double) { }
+    BOOST_DI_INJECT(ctor, double, int) { }
 };
+
+BOOST_AUTO_TEST_CASE(ctor_ambiguous_fail) {
+    injector<>().create<ctor>();
+}
 
 } // namespace di
 } // namespace boost
-
-#endif
 

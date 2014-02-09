@@ -436,6 +436,23 @@ struct c27
     aux::shared_ptr<double> d_;
 };
 
+struct c28
+{
+    c28(int i, double d, float f)
+        : i_(i), d_(d), f_(f)
+    { }
+
+    BOOST_DI_INJECT_TRAITS(int);
+
+    c28(int i)
+        : i_(i)
+    { }
+
+    int i_ = 0;
+    int d_ = 0.0;
+    int f_ = 0.0;
+};
+
 enum eid { e0 = 1 , e1 = 2 };
 
 struct cd2;
