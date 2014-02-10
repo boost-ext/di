@@ -141,7 +141,6 @@ test-suite "di / tr1 smart ptr" :
 ;
 
 test-suite "compile fail" :
-    [ compile-fail-test c++03 : ctor_one_arg_mt_fail_03.cpp ]
     [ compile-fail-test c++11 : detail/module_externals_mt_fail.cpp ]
     [ compile-fail-test c++11 : policies/arguments_permission_mt_fail.cpp ]
     [ compile-fail-test c++11 : policies/arguments_permission_mt_fail.cpp : ctor_arguments_permission_mt_fail ]
@@ -153,9 +152,10 @@ test-suite "compile fail" :
     #[ compile-fail-test c++11 : policies/scopes_permission_mt_fail.cpp ]
     [ compile-fail-test c++11 : injector_ctor_ambiguous_fail.cpp ]
     [ compile-fail-test c++11 : injector_ctor_ambiguous_fail.cpp : ctor_injector_ctor_ambiguous_fail ]
+    [ compile-fail-test c++03 : injector_ctor_one_arg_mt_fail_03.cpp ]
     [ compile-fail-test c++11 : injector_shared_by_copy_mt_fail.cpp ]
     [ compile-fail-test c++11 : injector_shared_by_copy_mt_fail.cpp : ctor_injector_shared_by_copy_mt_fail ]
-    [ compile-fail-test c++03 : injector_lack_of_shared_ptr_mt_fail.cpp :                                            : <define>BOOST_DI_TR1_SMART_PTR ]
+    [ compile-fail-test c++03 : injector_lack_of_shared_ptr_mt_fail.cpp :                                          : <define>BOOST_DI_TR1_SMART_PTR ]
     [ compile-fail-test c++03 : injector_lack_of_shared_ptr_mt_fail.cpp : ctor_injector_lack_of_shared_ptr_mt_fail : <define>BOOST_DI_TR1_SMART_PTR ]
 ;
 
