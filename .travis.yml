@@ -4,12 +4,14 @@ compiler:
   - clang
 
 before_install:
-  - sudo add-apt-repository --yes ppa:apokluda/boost1.53
-  - sudo apt-get --yes update
-  - sudo apt-get --yes install libboost1.53-all-dev
+  - rm -rf boost_1_55_0
+  - wget -c http://downloads.sourceforge.net/project/boost/boost/1.55.0/boost_1_55_0.tar.gz
+  - tar zxf boost_1_55_0.tar.gz
+  - ln -s . boost_1_55_0/libs/di
+  - cd boost_1_55_0/libs/di/test
 
 script:
-  - cd test && bjam -j2
+  - bjam -j2
 
 notifications:
   recipients:
