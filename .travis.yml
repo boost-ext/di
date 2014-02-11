@@ -4,14 +4,17 @@ compiler:
   - clang
 
 before_install:
-  - rm -rf boost_1_55_0
-  - wget -c http://downloads.sourceforge.net/project/boost/boost/1.55.0/boost_1_55_0.tar.gz
-  - tar zxf boost_1_55_0.tar.gz
-  - ln -s . boost_1_55_0/libs/di
-  - cd boost_1_55_0/libs/di/test
+  - rm -rf boost_1_54_0
+  - wget -c http://downloads.sourceforge.net/project/boost/boost/1.54.0/boost_1_54_0.tar.gz
+  - tar zxf boost_1_54_0.tar.gz
+  - mkdir boost_1_54_0/libs/di
+  - cp -r doc example include test boost_1_54_0/libs/di
+  - cd boost_1_54_0
+  - ./bootstrap.sh --with-toolset=clang
 
 script:
-  - bjam -j2
+  - cd libs/di/test && ../../../b2 -j2
+  - cd libs/di/example && ../../../b2 -j2
 
 notifications:
   recipients:
