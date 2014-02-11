@@ -13,7 +13,9 @@ before_install:
   - ./bootstrap.sh --with-toolset=clang
 
 script:
+  - pushd .
   - cd libs/di/example && ../../../b2 -j2
+  - popd
   - cd libs/di/test && ../../../b2 -j2
 
 notifications:
