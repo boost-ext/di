@@ -13,6 +13,7 @@ before_install:
   - ./bootstrap.sh --with-toolset=clang
 
 script:
+  - cd libs/di/examples && ../../../b2 -j2
   - cd libs/di/test && ../../../b2 -j2
 
 notifications:

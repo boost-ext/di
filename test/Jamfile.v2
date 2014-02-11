@@ -41,9 +41,9 @@ rule run-test ( std * : src : ctor * : defines * : force_bracket * ) {
 
 rule compile-fail-test ( std * : src : ctor * : defines * : force_bracket * ) {
     common_toolset =
-        <toolset>gcc:<cxxflags>"-std=$(std) -include config.hpp"
-        <toolset>clang:<cxxflags>"-std=$(std) -include config.hpp"
-        <toolset>intel:<cxxflags>"-std=$(std) -include config.hpp"
+        <toolset>gcc:<cxxflags>"-std=$(std) -include config.hpp -Wfatal-errors"
+        <toolset>clang:<cxxflags>"-std=$(std) -include config.hpp -Wfatal-errors"
+        <toolset>intel:<cxxflags>"-std=$(std) -include config.hpp -Wfatal-errors"
     ;
 
     if $(ctor) {
