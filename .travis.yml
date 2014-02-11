@@ -1,0 +1,21 @@
+language: cpp
+
+compiler:
+  - clang
+
+before_install:
+  - sudo add-apt-repository --yes ppa:apokluda/boost1.53
+  - sudo apt-get --yes update
+  - sudo apt-get --yes install libboost1.53-all-dev
+  - sudo apt-get --yes install bjam
+
+script:
+  - cd test && bjam -j2
+
+notifications:
+  recipients:
+    - krzysztof@jusiak.net
+  email:
+    on_success: change
+    on_failure: always
+
