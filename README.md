@@ -1,4 +1,3 @@
-C++ Dependency Injection
 ========================
 [doc](http://krzysztof-jusiak.github.com/di/doc/html)
 ---
