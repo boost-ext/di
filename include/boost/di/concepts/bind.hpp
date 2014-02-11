@@ -44,7 +44,7 @@ struct bind
       >
 {
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-    struct when
+    struct in_call
         : TDependency<
               mpl::_1
             , TExpected
@@ -54,7 +54,7 @@ struct bind
           >
     {
         template<typename TName>
-        struct named
+        struct in_name
             : TDependency<
                   mpl::_1
                 , TExpected
@@ -66,7 +66,7 @@ struct bind
     };
 
     template<typename TName>
-    struct named
+    struct in_name
         : TDependency<
               mpl::_1
             , TExpected
@@ -75,7 +75,7 @@ struct bind
           >
     {
         template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-        struct when
+        struct in_call
             : TDependency<
                   mpl::_1
                 , TExpected

@@ -41,7 +41,7 @@ namespace policies {
 /**
  * @code
  * struct c { c(int); };
- * bind<double>::when<c>();
+ * bind<double>::in_call<c>();
  * @endcode
  *
  * @code
@@ -49,7 +49,7 @@ namespace policies {
  * struct k { k(aux::shared_ptr<s>); };
  * struct c { c(aux::shared_ptr<s>, aux::shared_ptr<k>); }; //arguments evaluation order is not specified
  * injector<
- *     bind<int>::when<s>::to(i)
+ *     bind<int>::in_call<s>::to(i)
  *   , shared<s>
  * >().create<c>();
  * @endcode

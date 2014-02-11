@@ -25,13 +25,13 @@ using injector_1_t = injector<
     >
   , unique<
         c0if0
-      , bind<c1if0>::when<call_stack<c6, c5>>
-      , bind<c2if0>::when<c7>
+      , bind<c1if0>::in_call<call_stack<c6, c5>>
+      , bind<c2if0>::in_call<c7>
       , bind_int<1>
-      , bind_int<2>::when<c8>
-      , bind_int<3>::named<mpl::string<'1'>>::when<call_stack<c7, c6, c4>>
-      , bind_int<4>::named<mpl::string<'2'>>::when<call_stack<c7, c6, c4>>
-      , bind_int<5>::when<c2>
+      , bind_int<2>::in_call<c8>
+      , bind_int<3>::in_name<mpl::string<'1'>>::in_call<call_stack<c7, c6, c4>>
+      , bind_int<4>::in_name<mpl::string<'2'>>::in_call<call_stack<c7, c6, c4>>
+      , bind_int<5>::in_call<c2>
     >
 >;
 
@@ -40,7 +40,7 @@ using injector_2_t = injector<
         c3
     >
   , unique<
-        bind_int<0>::named<mpl::string<'1'>>
+        bind_int<0>::in_name<mpl::string<'1'>>
       , bind_int<1>
     >
 >;
@@ -50,13 +50,16 @@ using injector_3_t = injector<
         c0if0
     >
   , unique<
-        bind_int<2>::when<c8>
-      , bind_int<3>::named<mpl::string<'2'>>
+        bind_int<2>::in_call<c8>
+      , bind_int<3>::in_name<mpl::string<'2'>>
     >
 >;
 
 using injector_custom_scope_t = injector<
-    scope<fake_scope<>>::bind<c3, int>
+    scope<fake_scope<>>::bind<
+        c3
+      , int
+    >
 >;
 
 using injector_provider_t = injector<
@@ -75,13 +78,13 @@ auto injector_1 = make_injector(
     >()
   , unique<
         c0if0
-      , bind<c1if0>::when<call_stack<c6, c5>>
-      , bind<c2if0>::when<c7>
+      , bind<c1if0>::in_call<call_stack<c6, c5>>
+      , bind<c2if0>::in_call<c7>
       , bind_int<1>
-      , bind_int<2>::when<c8>
-      , bind_int<3>::named<mpl::string<'1'>>::when<call_stack<c7, c6, c4>>
-      , bind_int<4>::named<mpl::string<'2'>>::when<call_stack<c7, c6, c4>>
-      , bind_int<5>::when<c2>
+      , bind_int<2>::in_call<c8>
+      , bind_int<3>::in_name<mpl::string<'1'>>::in_call<call_stack<c7, c6, c4>>
+      , bind_int<4>::in_name<mpl::string<'2'>>::in_call<call_stack<c7, c6, c4>>
+      , bind_int<5>::in_call<c2>
     >()
 );
 
@@ -90,8 +93,8 @@ auto injector_2 = make_injector(
         c0if0
     >()
   , unique<
-        bind_int<2>::when<c8>
-      , bind_int<3>::named<mpl::string<'2'>>
+        bind_int<2>::in_call<c8>
+      , bind_int<3>::in_name<mpl::string<'2'>>
     >()
 );
 
@@ -100,7 +103,7 @@ auto injector_3 = make_injector(
         c3
     >()
   , unique<
-        bind_int<0>::named<mpl::string<'1'>>
+        bind_int<0>::in_name<mpl::string<'1'>>
       , bind_int<1>
     >()
 );
@@ -118,14 +121,14 @@ auto injector_provider = make_injector(
 auto injector_externals = make_injector(
     bind<double>::to(7.0)
   , bind<if0>::to(aux::shared_ptr<c3if0>(new c3if0(67, 78.0)))
-  , bind<int>::named<mpl::string<'1'>>::when<call_stack<c7, c6, c4>>::to(3)
-  , bind<int>::when<c8>::to(4)
+  , bind<int>::in_name<mpl::string<'1'>>::in_call<call_stack<c7, c6, c4>>::to(3)
+  , bind<int>::in_call<c8>::to(4)
 );
 
 auto injector_externals_1 = make_injector(
     bind<if0>::to(aux::shared_ptr<c3if0>(new c3if0(67, 78.0)))
-  , bind<int>::named<mpl::string<'1'>>::when<call_stack<c7, c6, c4>>::to(3)
-  , bind<int>::when<c8>::to(4)
+  , bind<int>::in_name<mpl::string<'1'>>::in_call<call_stack<c7, c6, c4>>::to(3)
+  , bind<int>::in_call<c8>::to(4)
 );
 
 auto injector_externals_2 = make_injector(

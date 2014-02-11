@@ -146,7 +146,7 @@ public:
         : get_dependencies<concept<mpl::vector<TExpected> > >
     {
         template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-        struct when
+        struct in_call
             : get_dependencies<
                   concept<
                       mpl::vector<TExpected>
@@ -156,7 +156,7 @@ public:
               >
         {
             template<typename TName>
-            struct named
+            struct in_name
                 : get_dependencies<
                       concept<
                           mpl::vector<TExpected>
@@ -168,7 +168,7 @@ public:
         };
 
         template<typename TName>
-        struct named
+        struct in_name
             : get_dependencies<
                   concept<
                       mpl::vector<TExpected>
@@ -177,7 +177,7 @@ public:
               >
         {
             template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-            struct when
+            struct in_call
                 : get_dependencies<
                       concept<
                           mpl::vector<TExpected>

@@ -71,7 +71,7 @@ struct ctor_traits<c4>
 
 int main() {
     di::injector<
-        di::bind_int<42>::named<name>
+        di::bind_int<42>::in_name<name>
     > injector;
 
     injector.create<c0>();

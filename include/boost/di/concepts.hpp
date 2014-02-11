@@ -23,12 +23,6 @@
 namespace boost {
 namespace di {
 
-template<int N>
-struct int_ : mpl::int_<N>
-{
-    operator int() const { return N; }
-};
-
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 struct call_stack
     : mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
@@ -66,7 +60,7 @@ struct bind
 
 template<int N>
 struct bind_int
-    : bind<int, int_<N> >
+    : bind<int, mpl::int_<N> >
 { };
 
 template<typename T>
