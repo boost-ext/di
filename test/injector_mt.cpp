@@ -268,6 +268,17 @@ BOOST_AUTO_TEST_CASE(basic_injector_externals) {
     BOOST_CHECK_EQUAL(87.0, c9_->d);
 }
 
+BOOST_AUTO_TEST_CASE(externals_priority) {
+    const int i = 87;
+
+    auto injector = make_injector(
+        bind_int<42>()
+      , bind<int>::to(i)
+    );
+
+    BOOST_CHECK_EQUAL(i, injector.create<c3>().i);
+}
+
 BOOST_AUTO_TEST_CASE(externals_mix) {
     injector<
         decltype(injector_externals_1)

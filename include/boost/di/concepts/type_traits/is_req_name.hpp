@@ -23,9 +23,9 @@ namespace type_traits {
 
 BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
 
-template<typename T, typename TName, typename = void>
+template<typename T, typename, typename = void>
 struct is_req_name_impl
-    : mpl::true_
+    : mpl::false_
 { };
 
 template<typename T, typename TName>
@@ -35,9 +35,11 @@ struct is_req_name_impl<T, TName, typename enable_if<has_name<T> >::type>
 
 template<typename TName, typename U = mpl::_1>
 struct is_req_name
-    : is_req_name_impl<
+    : mpl::times<mpl::int_<5>,
+     is_req_name_impl<
           typename di::type_traits::remove_accessors<U>::type
         , TName
+      >
       >
 { };
 

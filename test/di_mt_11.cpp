@@ -8,6 +8,9 @@
 #include <vector>
 
 #include "boost/di.hpp"
+#include "boost/di/policies/binding_correctness.hpp"
+#include "boost/di/policies/circular_dependencies.hpp"
+#include "boost/di/policies/arguments_permission.hpp"
 
 #include <boost/test/unit_test.hpp>
 

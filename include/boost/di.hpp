@@ -28,12 +28,5 @@
 #include "boost/di/named.hpp"
 #include "boost/di/provider.hpp"
 
-// policies
-#include "boost/di/policies/arguments_permission.hpp"
-#include "boost/di/policies/binding_correctness.hpp"
-#include "boost/di/policies/circular_dependencies.hpp"
-#include "boost/di/policies/creation_ownership.hpp"
-#include "boost/di/policies/scopes_permission.hpp"
-
 #endif
 
