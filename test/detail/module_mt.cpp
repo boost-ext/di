@@ -295,10 +295,10 @@ BOOST_AUTO_TEST_CASE(base_of) {
     module<
         mpl::vector<
             fake_dependency_base_of<scopes::unique<>, int, mpl::int_<1>>::type
-          , fake_dependency_base_of<scopes::unique<>, int, mpl::int_<4>, mpl::string<'2'>, call_stack<c7, c6, c4>>::type
-          , fake_dependency_base_of<scopes::unique<>, int, mpl::int_<5>, void, c2>::type
+          , fake_dependency_base_of<scopes::unique<>, int, mpl::int_<4>, mpl::string<'2'>, mpl::vector<call_stack<c7, c6, c4>>>::type
+          , fake_dependency_base_of<scopes::unique<>, int, mpl::int_<5>, void, mpl::vector<call_stack<c2>>>::type
           , fake_dependency_base_of<scopes::unique<>, c0if0, c0if0>::type
-          , fake_dependency_base_of<scopes::unique<>, int, mpl::int_<3>, mpl::string<'1'>, call_stack<c7, c6, c4>>::type
+          , fake_dependency_base_of<scopes::unique<>, int, mpl::int_<3>, mpl::string<'1'>, mpl::vector<call_stack<c7, c6, c4>>>::type
         >
     > module_;
 
@@ -324,8 +324,8 @@ BOOST_AUTO_TEST_CASE(multiple_calls) {
     module<
         mpl::vector<
             fake_dependency_base_of<scopes::unique<>, c0if0, c0if0>::type
-          , fake_dependency_base_of<scopes::shared<>, c3, c3, void, c15, call_stack<c6, c4>>::type
-          , fake_dependency_base_of<scopes::shared<>, c3, c3, void, c6>::type
+          , fake_dependency_base_of<scopes::shared<>, c3, c3, void, mpl::vector<call_stack<c15>, call_stack<c6, c4>>>::type
+          , fake_dependency_base_of<scopes::shared<>, c3, c3, void, mpl::vector<call_stack<c6>>>::type
         >
     > module_;
 

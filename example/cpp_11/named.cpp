@@ -32,8 +32,8 @@ private:
 
 int main() {
     di::injector<
-        di::bind_int<42>::in_name<mpl::string<'1'>>
-      , di::bind_int<87>::in_name<mpl::string<'2'>>
+        di::bind_int<42>::named<mpl::string<'1'>>
+      , di::bind_int<87>::named<mpl::string<'2'>>
     >().create<named>();
 
     return 0;

@@ -91,7 +91,7 @@ BOOST_AUTO_TEST_CASE(none_shareds) {
             mpl::vector<>
           , binding_correctness::verify<
                 mpl::vector<
-                    fake_dependency<scopes::unique<>, int, mpl::int_<42>, void, ub1>::type
+                    fake_dependency<scopes::unique<>, int, mpl::int_<42>, void, mpl::vector<call_stack<ub1>>>::type
                   , fake_dependency_base_of<scopes::unique<>, ub1>::type
                 >
               , ub3
@@ -114,7 +114,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(with_call, TScope, scope_types) {
             >
           , typename binding_correctness::verify<
                 mpl::vector<
-                    fake_dependency<scopes::unique<>, int, mpl::int_<42>, void, ub1>::type
+                    fake_dependency<scopes::unique<>, int, mpl::int_<42>, void, mpl::vector<call_stack<ub1>>>::type
                   , typename fake_dependency_base_of<TScope, ub1>::type
                 >
               , ub3

@@ -143,36 +143,36 @@ struct limit
 
 BOOST_AUTO_TEST_CASE(di_limit_size) {
     limit limit_ = injector<
-        bind_int<1>::in_name<n1>
-      , bind_int<2>::in_name<n2>
-      , bind_int<3>::in_name<n3>
-      , bind_int<4>::in_name<n4>
-      , bind_int<5>::in_name<n5>
-      , bind_int<6>::in_name<n6>
-      , bind_int<7>::in_name<n7>
-      , bind_int<8>::in_name<n8>
-      , bind_int<9>::in_name<n9>
-      , bind_int<10>::in_name<n10>
-      , bind_int<11>::in_name<n11>
-      , bind_int<12>::in_name<n12>
-      , bind_int<13>::in_name<n13>
-      , bind_int<14>::in_name<n14>
-      , bind_int<15>::in_name<n15>
-      , bind_int<16>::in_name<n16>
-      , bind_int<17>::in_name<n17>
-      , bind_int<18>::in_name<n18>
-      , bind_int<19>::in_name<n19>
-      , bind_int<20>::in_name<n20>
-      , bind_int<21>::in_name<n21>
-      , bind_int<22>::in_name<n22>
-      , bind_int<23>::in_name<n23>
-      , bind_int<24>::in_name<n24>
-      , bind_int<25>::in_name<n25>
-      , bind_int<26>::in_name<n26>
-      , bind_int<27>::in_name<n27>
-      , bind_int<28>::in_name<n28>
-      , bind_int<29>::in_name<n29>
-      , bind_int<30>::in_name<n30>
+        bind_int<1>::named<n1>
+      , bind_int<2>::named<n2>
+      , bind_int<3>::named<n3>
+      , bind_int<4>::named<n4>
+      , bind_int<5>::named<n5>
+      , bind_int<6>::named<n6>
+      , bind_int<7>::named<n7>
+      , bind_int<8>::named<n8>
+      , bind_int<9>::named<n9>
+      , bind_int<10>::named<n10>
+      , bind_int<11>::named<n11>
+      , bind_int<12>::named<n12>
+      , bind_int<13>::named<n13>
+      , bind_int<14>::named<n14>
+      , bind_int<15>::named<n15>
+      , bind_int<16>::named<n16>
+      , bind_int<17>::named<n17>
+      , bind_int<18>::named<n18>
+      , bind_int<19>::named<n19>
+      , bind_int<20>::named<n20>
+      , bind_int<21>::named<n21>
+      , bind_int<22>::named<n22>
+      , bind_int<23>::named<n23>
+      , bind_int<24>::named<n24>
+      , bind_int<25>::named<n25>
+      , bind_int<26>::named<n26>
+      , bind_int<27>::named<n27>
+      , bind_int<28>::named<n28>
+      , bind_int<29>::named<n29>
+      , bind_int<30>::named<n30>
     >().create<limit>();
 
     BOOST_CHECK_EQUAL(1, limit_.i1);

@@ -449,7 +449,7 @@ BOOST_DI_CTOR_PROXY
 
 DI is designed to do popular things easy:
 
-bind<int>::in_call<c1, call_stack<c1, c2, c3>>()
+bind<int>::in_call<call_stack<c1>, call_stack<c1, c2, c3>>()
 
 Binding Resolution
 
@@ -564,8 +564,8 @@ Example
 
     auto injector = make_injector(
         bind<int>::to(0)
-      , bind<int>::in_call<some_class>::to(1)
-      , bind<int>::in_call<some_class>::in_name<some_name>::to(2)
+      , bind<int>::in_call<call_stack<some_class>>::to(1)
+      , bind<int>::in_call<call_stack<some_class>>::in_name<some_name>::to(2)
     );
 
 
@@ -641,7 +641,7 @@ Example
     injector<
         binding_correctness
       , injector<
-            bind<double>::in_call<c>
+            bind<double>::in_call<call_stack<c>>
         >
     >().create<c>; // error -> double is not an argument of 'c' constructor
 
@@ -649,7 +649,7 @@ Example
     struct k { k(shared_ptr<s>); };
     struct c { c(shared_ptr<s>, shared_ptr<k>); }; //arguments evaluation order is not specified
     injector<
-        bind<int>::in_call<s>::to(i)
+        bind<int>::in_call<call_stack<s>>::to(i)
       , singleton<s>
     >().create<c>();
 

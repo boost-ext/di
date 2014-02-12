@@ -51,7 +51,7 @@ struct c13 { c13(std::shared_ptr<c12>) { } };
 int main() {
     using injector_t = di::injector<
         c0
-      , di::bind_int<42>::in_call<c1>
+      , di::bind_int<42>::when<di::call_stack<c1>>
       , di::bind_string<boost::mpl::string<'s'>>
       , di::shared<
             c1
@@ -62,12 +62,12 @@ int main() {
       , di::unique<
             impl
           , di::bind<i, impl1>
-          , di::bind<i, impl2>::in_name<name2>
-          , di::bind<i, impl3>::in_call<c6>
-          , di::bind<i, impl4>::in_call<di::call_stack<c8, c7>>::in_name<name3>
+          , di::bind<i, impl2>::named<name2>
+          , di::bind<i, impl3>::when<di::call_stack<c6>>
+          , di::bind<i, impl4>::when<di::call_stack<c8, c7>>::named<name3>
         >
       , di::shared<
-            di::bind<c9>::in_call<c10, c11, di::call_stack<c13, c12>>
+            di::bind<c9>::when<di::call_stack<c10>, di::call_stack<c11>, di::call_stack<c13, c12>>
         >
     >;
 
@@ -76,7 +76,7 @@ int main() {
       , di::unique<c5>()
       , di::bind<int>::to(42)
       , di::bind<double>::to(42.0)
-      , di::bind<double>::in_call<c1, c2>::to(87.0)
+      , di::bind<double>::when<di::call_stack<c1>, di::call_stack<c2>>::to(87.0)
     );
 }
 

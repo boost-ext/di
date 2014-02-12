@@ -25,9 +25,7 @@ template<
   , typename TExpected
   , typename TGiven = TExpected
   , typename TName = void
-  , typename TContext0 = mpl::na
-  , typename TContext1 = mpl::na
-  , typename TContext2 = mpl::na
+  , typename TContext = mpl::vector0<>
   , typename TBind = typename mpl::lambda<
         mpl::and_<
             type_traits::is_same_base_of<TExpected, mpl::_1>
@@ -42,18 +40,14 @@ struct fake_dependency_base_of
     typedef TGiven given;
     typedef TName name;
     typedef TScope scope;
-    typedef mpl::vector<TContext0, TContext1, TContext2> context;
+    typedef TContext context;
 
     typedef typename concepts::dependency<
         TScope
       , TExpected
       , TGiven
       , TName
-      , typename mpl::if_<
-            mpl::empty<context>
-          , mpl::vector0<>
-          , context
-        >::type
+      , TContext
       , TBind
     > type;
 
@@ -68,9 +62,7 @@ struct fake_dependency_base_of
           , typename mpl::if_<is_same<Given, void>, TExpected, Expected>::type
           , typename mpl::if_<is_same<Given, void>, TGiven, Given>::type
           , TName
-          , TContext0
-          , TContext1
-          , TContext2
+          , TContext
         > other;
     };
 };
