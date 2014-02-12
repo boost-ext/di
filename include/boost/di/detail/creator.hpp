@@ -58,8 +58,6 @@
             typedef typename TDependency::given given;
             typedef typename TDependency::expected expected;
             typedef typename TDependency::scope scope;
-            typedef typename TDependency::name name;
-            typedef typename TDependency::context context;
         };
 
         BOOST_MPL_HAS_XXX_TRAIT_DEF(named_type)

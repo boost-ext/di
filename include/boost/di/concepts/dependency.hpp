@@ -67,14 +67,7 @@ template<
     typename TScope
   , typename TExpected
   , typename TGiven = TExpected
-  , typename TName = void
-  , typename TContext = mpl::vector0<>
-  , typename TBind = typename mpl::lambda<
-        mpl::and_<
-            is_same<TExpected, mpl::_1>
-          , is_same<TName, mpl::_2>
-        >
-    >::type
+  , typename TBind = typename mpl::lambda<mpl::and_<is_same<TExpected, mpl::_1> > >::type
 >
 class dependency : public get_scope<TExpected, TGiven, TScope>::type
 {
@@ -86,7 +79,7 @@ class dependency : public get_scope<TExpected, TGiven, TScope>::type
     template<typename T, typename U, typename S>
     struct external
     {
-        typedef dependency<S, T, U, TName, TContext, TBind> type;
+        typedef dependency<S, T, U, TBind> type;
     };
 
     template<typename T>
@@ -143,7 +136,7 @@ class dependency : public get_scope<TExpected, TGiven, TScope>::type
 
     template<typename T>
     struct get_convertible<T, typename enable_if<has_call_operator<T> >::type>
-        : get_convertible_impl<typename type_traits::parameter_types<BOOST_TYPEOF_TPL(&T::operator())>::result_type>
+        : get_convertible_impl<typename di::type_traits::parameter_types<BOOST_TYPEOF_TPL(&T::operator())>::result_type>
     { };
 
 public:
@@ -151,8 +144,6 @@ public:
     typedef typename detail::scope_traits<TScope>::type scope;
     typedef TExpected expected;
     typedef TGiven given;
-    typedef TName name;
-    typedef TContext context;
     typedef TBind bind;
 
     template<typename T>
@@ -166,8 +157,6 @@ public:
             >::type
           , TExpected
           , TGiven
-          , TName
-          , TContext
           , TBind
         > other;
     };
