@@ -12,9 +12,9 @@
 #include <boost/test/test_case_template.hpp>
 #include <boost/mpl/vector.hpp>
 
-#include "fake_visitor.hpp"
-#include "fake_scope.hpp"
-#include "data.hpp"
+#include "common/fakes/fake_visitor.hpp"
+#include "common/fakes/fake_scope.hpp"
+#include "common/data.hpp"
 
 namespace boost {
 namespace di {
@@ -39,7 +39,7 @@ using injector_2_t = injector<
     shared<
         c3
     >
-  , unique<
+  , scope<scopes::unique<>>::bind<
         bind_int<0>::named<mpl::string<'1'>>
       , bind_int<1>
     >

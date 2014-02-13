@@ -21,9 +21,9 @@ rule run-test ( std * : src : ctor * : defines * : force_bracket * ) {
 
     if $(std) {
         common_toolset +=
-            <toolset>gcc:<cxxflags>"-std=$(std) -include config.hpp"
-            <toolset>clang:<cxxflags>"-std=$(std) -include config.hpp"
-            <toolset>intel:<cxxflags>"-std=$(std) -include config.hpp"
+            <toolset>gcc:<cxxflags>"-std=$(std) -include common/config.hpp"
+            <toolset>clang:<cxxflags>"-std=$(std) -include common/config.hpp"
+            <toolset>intel:<cxxflags>"-std=$(std) -include common/config.hpp"
         ;
     }
 
@@ -41,9 +41,9 @@ rule run-test ( std * : src : ctor * : defines * : force_bracket * ) {
 
 rule compile-fail-test ( std * : src : ctor * : defines * : force_bracket * ) {
     common_toolset =
-        <toolset>gcc:<cxxflags>"-std=$(std) -include config.hpp -Wfatal-errors"
-        <toolset>clang:<cxxflags>"-std=$(std) -include config.hpp -Wfatal-errors"
-        <toolset>intel:<cxxflags>"-std=$(std) -include config.hpp -Wfatal-errors"
+        <toolset>gcc:<cxxflags>"-std=$(std) -include common/config.hpp -Wfatal-errors"
+        <toolset>clang:<cxxflags>"-std=$(std) -include common/config.hpp -Wfatal-errors"
+        <toolset>intel:<cxxflags>"-std=$(std) -include common/config.hpp -Wfatal-errors"
     ;
 
     if $(ctor) {
@@ -113,8 +113,8 @@ rule compile-fail-test ( std * : src : ctor * : defines * : force_bracket * ) {
 #;
 
 test-suite "injector" :
-    [ run-test c++11 : injector_mt.cpp ]
-    [ run-test c++11 : injector_mt.cpp : ctor_injector_mt ]
+    #[ run-test c++11 : mt/injector_mt.cpp ]
+    #[ run-test c++11 : mt/injector_mt.cpp : ctor_injector_mt ]
     #[ run-test c++11 : injector_ut.cpp ]
     #[ run-test c++11 : injector_ut.cpp : ctor_injector_ut ]
     #[ run-test c++11 : make_injector_mt.cpp ]
@@ -126,8 +126,8 @@ test-suite "injector" :
 ;
 
 test-suite "di / c++ 11" :
-	[ run-test c++11 : di_mt_11.cpp ]
-	[ run-test c++11 : di_mt_11.cpp : ctor_dt_mt_11 ]
+	#[ run-test c++11 : ft/di_ft_cpp_11.cpp ]
+	#[ run-test c++11 : ft/di_ft_cpp_11.cpp : ctor_di_ft_cpp_11 ]
 ;
 
 #test-suite "di / c++ 03" :
@@ -159,3 +159,6 @@ test-suite "di / c++ 11" :
     #[ compile-fail-test c++03 : injector_lack_of_shared_ptr_mt_fail.cpp : ctor_injector_lack_of_shared_ptr_mt_fail : <define>BOOST_DI_TR1_SMART_PTR ]
 #;
 
+test-suite "pt" :
+	[ run-test c++11 : pt/compilation_pt.cpp ]
+;

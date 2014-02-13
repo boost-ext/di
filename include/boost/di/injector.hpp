@@ -41,18 +41,11 @@
     { };
 
     BOOST_MPL_HAS_XXX_TRAIT_DEF(deps)
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(policies)
 
     template<typename T>
     struct deps
     {
         typedef typename T::deps type;
-    };
-
-    template<typename T>
-    struct policies
-    {
-        typedef typename T::policies type;
     };
 
     template<typename TSeq>
@@ -65,8 +58,8 @@
                       mpl::is_sequence<mpl::_2>
                     , mpl::_2
                     , mpl::if_<
-                          mpl::and_<has_deps<mpl::_2>, has_policies<mpl::_2> >
-                        , mpl::joint_view<deps<mpl::_2>, policies<mpl::_2> >
+                          has_deps<mpl::_2>
+                        , deps<mpl::_2>
                         , mpl::if_<
                               has_assert_policy<mpl::_2>
                             , mpl::vector1<mpl::_2>

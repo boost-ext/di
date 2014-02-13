@@ -9,18 +9,10 @@
 
 #include "boost/di/aux_/meta.hpp"
 #include "boost/di/concepts/type_traits/is_req_type.hpp"
-#include "boost/di/concepts/type_traits/is_req_name.hpp"
-#include "boost/di/concepts/type_traits/is_req_call.hpp"
 
-#include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/mpl/copy.hpp>
-#include <boost/mpl/joint_view.hpp>
-#include <boost/mpl/back_inserter.hpp>
 #include <boost/mpl/lambda.hpp>
-#include <boost/mpl/times.hpp>
 #include <boost/mpl/has_xxx.hpp>
 
 namespace boost {
@@ -39,179 +31,45 @@ template<
 class scope
 {
     BOOST_MPL_HAS_XXX_TRAIT_DEF(bind)
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(concept_type)
-
-    struct no_name { };
-
-    template<typename T, typename U>
-    struct rebind
-        : T::template rebind<U>::other
-    { };
-
-    template<
-        typename TExpected
-      , typename TGiven = TExpected
-      , typename TName = no_name
-      , typename TContext = mpl::vector0<>
-    >
-    struct dependency
-        : TDependency<
-              mpl::_1
-            , TExpected
-            , TGiven
-			, typename mpl::lambda<
-				mpl::times<
-					mpl::times<
-						type_traits::is_req_type<TExpected>
-					  , type_traits::is_req_name<TName>
-					>
-				  , type_traits::is_req_call<TContext>
-				>
-			>::type
-          >
-    { };
-
-    template<
-        typename TExpected
-      , typename TGiven
-      , typename TContext
-    >
-    struct dependency<TExpected, TGiven, no_name, TContext>
-        : TDependency<
-              mpl::_1
-            , TExpected
-            , TGiven
-			, typename mpl::lambda<
-				mpl::times<
-					type_traits::is_req_type<TExpected>
-				  , type_traits::is_req_call<TContext>
-				>
-			>::type
-          >
-    { };
 
     template<typename T>
     struct is_dependency
         : has_bind<T>
     { };
 
-    template<typename T, typename TConcept>
-    struct make_dependency
-        : rebind<
-              dependency<
-                  T
-                , T
-                , typename TConcept::name
-                , typename TConcept::call_stack
-              >
-            , typename TConcept::scope
-          >
-    { };
-
-    template<
-        typename TDeps
-      , typename TName = no_name
-      , typename TCallStack = mpl::vector0<>
-      , typename T = TScope
-    >
-    struct concept
-    {
-        typedef TDeps deps;
-        typedef TName name;
-        typedef TCallStack call_stack;
-        typedef T scope;
-    };
-
-    template<typename T>
-    struct is_concept
-        : has_concept_type<T>
-    { };
+	template<typename T>
+	struct dependency
+		: TDependency<
+		  	  mpl::_1
+		  	, T
+		    , T
+			, typename mpl::lambda<
+				type_traits::is_req_type<T>
+			  >::type
+		  >
+	{ };
 
     template<typename T, typename U>
-    struct make_concept
-        : concept<
-              typename T::concept_type::deps
-            , typename T::concept_type::name
-            , typename T::concept_type::call_stack
-            , typename rebind<U, typename T::concept_type::scope>::type
-          >
+    struct rebind
+        : T::template rebind<U>::other
     { };
-
-    template<typename TConcept>
-    struct get_dependencies
-        : mpl::fold<
-              typename TConcept::deps
-            , mpl::vector0<>
-            , mpl::copy<
-                  mpl::if_<
-                      is_dependency<mpl::_2>
-                    , mpl::vector1<rebind<mpl::_2, typename TConcept::scope> >
-                    , mpl::if_<
-                          is_concept<mpl::_2>
-                        , get_dependencies<make_concept<mpl::_2, TScope> >
-                        , mpl::vector1<make_dependency<mpl::_2, TConcept> >
-                      >
-                  >
-                , mpl::back_inserter<mpl::_1>
-              >
-          >::type
-    {
-        typedef TConcept concept_type;
-    };
 
 public:
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     struct bind
-        : get_dependencies<concept<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> > >
+        : mpl::fold<
+              mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+            , mpl::vector0<>
+            , mpl::push_back<
+                  mpl::_1
+                , mpl::if_<
+                      is_dependency<mpl::_2>
+                    , rebind<mpl::_2, TScope>
+                    , rebind<dependency<mpl::_2>, TScope>
+                  >
+              >
+          >::type
     { };
-
-    template<typename TExpected>
-    struct bind<TExpected, BOOST_DI_TYPES_MPL_NA(1)>
-		: get_dependencies<concept<mpl::vector<TExpected> > >
-    {
-        template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-        struct when
-		   : get_dependencies<
-				  concept<
-					  mpl::vector<TExpected>
-					, void
-					, mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-				  >
-			  >
-        {
-            template<typename TName>
-            struct named
-			   : get_dependencies<
-					  concept<
-						  mpl::vector<TExpected>
-						, TName
-						, mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-					  >
-				  >
-            { };
-        };
-
-        template<typename TName>
-        struct named
-			: get_dependencies<
-				  concept<
-					  mpl::vector<TExpected>
-					, TName
-				  >
-			  >
-        {
-            template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-            struct when
-				: get_dependencies<
-					  concept<
-						  mpl::vector<TExpected>
-						, TName
-						, mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-					  >
-				  >
-            { };
-        };
-    };
 };
 
 } // namespace concepts

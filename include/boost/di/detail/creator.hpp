@@ -167,7 +167,7 @@
     public:
         template<
             typename T
-          , typename TParent
+          , typename TParent // to ignore copy/move ctor
           , typename TCallStack
           , typename TDeps
           , typename TScopes
@@ -181,7 +181,7 @@
 
         template<
             typename T
-          , typename // parent, to delete copy/move ctor, not needed
+          , typename // TParent - not needed
           , typename TCallStack
           , typename TDeps
           , typename TScopes
