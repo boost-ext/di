@@ -8,7 +8,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "data.hpp"
+#include "common/data.hpp"
 
 namespace boost {
 namespace di {

@@ -9,7 +9,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "boost/di/policies/creation_ownership.hpp"
-#include "data.hpp"
+#include "common/data.hpp"
 
 namespace boost {
 namespace di {
