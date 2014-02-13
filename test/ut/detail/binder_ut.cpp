@@ -15,24 +15,33 @@
 
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/named.hpp"
-#include "fake_scope.hpp"
-#include "fake_dependency.hpp"
-#include "fake_dependency_base_of.hpp"
-#include "data.hpp"
+#include "common/fakes/fake_scope.hpp"
+#include "common/fakes/fake_dependency.hpp"
+#include "common/data.hpp"
 
 namespace boost {
 namespace di {
 namespace detail {
 
+template<
+   typename T
+ , typename TCallStack
+ , typename TDeps
+ , typename TDefault
+>
+struct binder_resolve
+    : binder<TDeps>::template resolve<T, TCallStack, TDefault>
+{ };
+
 BOOST_AUTO_TEST_CASE(empty) {
     BOOST_CHECK((
         is_same<
             fake_dependency<fake_scope<>, int>::type
-          , binder_impl<
+          , binder_resolve<
                 int
               , mpl::vector0<>
               , mpl::vector0<>
-              , fake_dependency<fake_scope<>, int>
+              , fake_dependency<fake_scope<>, int>::type
             >::type
         >::value
     ));
@@ -42,13 +51,13 @@ BOOST_AUTO_TEST_CASE(one) {
     BOOST_CHECK((
         is_same<
             fake_dependency<fake_scope<>, int>::type
-          , binder_impl<
+          , binder_resolve<
                 int
               , mpl::vector0<>
               , mpl::vector<
-                    fake_dependency<fake_scope<>, int>
+                    fake_dependency<fake_scope<>, int>::type
                 >
-              , fake_dependency<fake_scope<>, int>
+              , fake_dependency<fake_scope<>, int>::type
             >::type
         >::value
     ));
@@ -58,15 +67,15 @@ BOOST_AUTO_TEST_CASE(found) {
     BOOST_CHECK((
         is_same<
             fake_dependency<fake_scope<>, float>::type
-          , binder_impl<
+          , binder_resolve<
                 float
               , mpl::vector0<>
               , mpl::vector<
-                    fake_dependency<fake_scope<>, int>
-                  , fake_dependency<fake_scope<>, float>
-                  , fake_dependency<fake_scope<>, double>
+                    fake_dependency<fake_scope<>, int>::type
+                  , fake_dependency<fake_scope<>, float>::type
+                  , fake_dependency<fake_scope<>, double>::type
                 >
-              , fake_dependency<fake_scope<>, void>
+              , fake_dependency<fake_scope<>, void>::type
             >::type
         >::value
     ));
@@ -76,15 +85,15 @@ BOOST_AUTO_TEST_CASE(found_many) {
     BOOST_CHECK((
         is_same<
             fake_dependency<fake_scope<>, float>::type
-          , binder_impl<
+          , binder_resolve<
                 float
               , mpl::vector0<>
               , mpl::vector<
-                    fake_dependency<fake_scope<>, int>
-                  , fake_dependency<fake_scope<>, float>
-                  , fake_dependency<fake_scope<>, float>
+                    fake_dependency<fake_scope<>, int>::type
+                  , fake_dependency<fake_scope<>, float>::type
+                  , fake_dependency<fake_scope<>, float>::type
                 >
-              , fake_dependency<fake_scope<>, void>
+              , fake_dependency<fake_scope<>, void>::type
             >::type
         >::value
     ));
@@ -94,15 +103,15 @@ BOOST_AUTO_TEST_CASE(not_found) {
     BOOST_CHECK((
         is_same<
             fake_dependency<fake_scope<>, double>::type
-          , binder_impl<
+          , binder_resolve<
                 double
               , mpl::vector0<>
               , mpl::vector<
-                    fake_dependency<fake_scope<>, int>
-                  , fake_dependency<fake_scope<>, float>
-                  , fake_dependency<fake_scope<>, float>
+                    fake_dependency<fake_scope<>, int>::type
+                  , fake_dependency<fake_scope<>, float>::type
+                  , fake_dependency<fake_scope<>, float>::type
                 >
-              , fake_dependency<fake_scope<>, double>
+              , fake_dependency<fake_scope<>, double>::type
             >::type
         >::value
     ));
@@ -112,7 +121,7 @@ BOOST_AUTO_TEST_CASE(if_base) {
     BOOST_CHECK((
         is_same<
             fake_dependency<fake_scope<>, if0, c0if0>::type
-          , binder_impl<
+          , binder_resolve<
                 if0
               , mpl::vector0<>
               , mpl::vector<
@@ -128,13 +137,13 @@ BOOST_AUTO_TEST_CASE(if_external) {
     BOOST_CHECK((
         is_same<
             fake_dependency<fake_scope<>, if0, if0>::type
-          , binder_impl<
+          , binder_resolve<
                 if0
               , mpl::vector0<>
               , mpl::vector<
-                    fake_dependency<fake_scope<>, if0, if0>
+                    fake_dependency<fake_scope<>, if0, if0>::type
                 >
-              , fake_dependency<fake_scope<>, void>
+              , fake_dependency<fake_scope<>, void>::type
             >::type
         >::value
     ));
@@ -143,15 +152,15 @@ BOOST_AUTO_TEST_CASE(if_external) {
 BOOST_AUTO_TEST_CASE(context) {
     BOOST_CHECK((
         is_same<
-            fake_dependency<fake_scope<>, int, int, void, mpl::vector<a, b>>::type
-          , binder_impl<
+            fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a, b>>>::type
+          , binder_resolve<
                 int
               , mpl::vector<a, b>
               , mpl::vector<
-                    fake_dependency<fake_scope<>, int, int, void, mpl::vector<a>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<a, b>>
+                    fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a, b>>>::type
                 >
-              , fake_dependency<fake_scope<>, void>
+              , fake_dependency<fake_scope<>, no_name>::type
             >::type
         >::value
     ));
@@ -161,13 +170,13 @@ BOOST_AUTO_TEST_CASE(context_if) {
     BOOST_CHECK((
         is_same<
             fake_dependency<fake_scope<>, if0, c0if0>::type
-          , binder_impl<
+          , binder_resolve<
                 if0
               , mpl::vector<c1>
               , mpl::vector<
-                    fake_dependency<fake_scope<>, if0, c0if0>
+                    fake_dependency<fake_scope<>, if0, c0if0>::type
                 >
-              , fake_dependency<fake_scope<>, void>
+              , fake_dependency<fake_scope<>, void>::type
             >::type
         >::value
     ));
@@ -176,16 +185,16 @@ BOOST_AUTO_TEST_CASE(context_if) {
 BOOST_AUTO_TEST_CASE(context_many) {
     BOOST_CHECK((
         is_same<
-            fake_dependency<fake_scope<>, int, int, void, mpl::vector<a, b>>::type
-          , binder_impl<
+            fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a, b>>>::type
+          , binder_resolve<
                 int
               , mpl::vector<a, b>
               , mpl::vector<
-                    fake_dependency<fake_scope<>, int>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<a>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<a, b>>
+                    fake_dependency<fake_scope<>, int>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a, b>>>::type
                 >
-              , fake_dependency<fake_scope<>, void>
+              , fake_dependency<fake_scope<>, void>::type
             >::type
         >::value
     ));
@@ -194,16 +203,16 @@ BOOST_AUTO_TEST_CASE(context_many) {
 BOOST_AUTO_TEST_CASE(context_many_end) {
     BOOST_CHECK((
         is_same<
-            fake_dependency<fake_scope<>, int, int, void, mpl::vector<a, b>>::type
-          , binder_impl<
+            fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a, b>>>::type
+          , binder_resolve<
                 int
               , mpl::vector<a, b>
               , mpl::vector<
-                    fake_dependency<fake_scope<>, int>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<b>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<a, b>>
+                    fake_dependency<fake_scope<>, int>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<b>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a, b>>>::type
                 >
-              , fake_dependency<fake_scope<>, void>
+              , fake_dependency<fake_scope<>, void>::type
             >::type
         >::value
     ));
@@ -213,14 +222,14 @@ BOOST_AUTO_TEST_CASE(context_not_found) {
     BOOST_CHECK((
         is_same<
             fake_dependency<fake_scope<>, int>::type
-          , binder_impl<
+          , binder_resolve<
                 int
               , mpl::vector<a>
               , mpl::vector<
-                    fake_dependency<fake_scope<>, int, int, void, mpl::vector<b>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<a, b>>
+                    fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<b>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a, b>>>::type
                 >
-              , fake_dependency<fake_scope<>, int>
+              , fake_dependency<fake_scope<>, int>::type
             >::type
         >::value
     ));
@@ -229,17 +238,17 @@ BOOST_AUTO_TEST_CASE(context_not_found) {
 BOOST_AUTO_TEST_CASE(context_other_types) {
     BOOST_CHECK((
         is_same<
-            fake_dependency<fake_scope<>, int, int, void, mpl::vector<a, b>>::type
-          , binder_impl<
+            fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a, b>>>::type
+          , binder_resolve<
                 int
               , mpl::vector<a, b>
               , mpl::vector<
-                    fake_dependency<fake_scope<>, int, int, void, mpl::vector<a>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<a, b>>
-                  , fake_dependency<fake_scope<>, float, float, void, mpl::vector<a, b>>
-                  , fake_dependency<fake_scope<>, double>
+                    fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a, b>>>::type
+                  , fake_dependency<fake_scope<>, float, float, no_name, mpl::vector<mpl::vector<a, b>>>::type
+                  , fake_dependency<fake_scope<>, double>::type
                 >
-              , fake_dependency<fake_scope<>, void>
+              , fake_dependency<fake_scope<>, void>::type
             >::type
         >::value
     ));
@@ -248,22 +257,22 @@ BOOST_AUTO_TEST_CASE(context_other_types) {
 BOOST_AUTO_TEST_CASE(context_long_with_order) {
     BOOST_CHECK((
         is_same<
-            fake_dependency<fake_scope<>, int, int, void, mpl::vector<a, b, c>>::type
-          , binder_impl<
+            fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a, b, c>>>::type
+          , binder_resolve<
                 int
               , mpl::vector<a, b, c>
               , mpl::vector<
-                    fake_dependency<fake_scope<>, int, int, void, mpl::vector<a, b, c>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<a>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<b>>
-                  , fake_dependency<fake_scope<>, int>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<b, c>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<b, a, c>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<b, c, c>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<a, a, a>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<c>>
+                    fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a, b, c>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<b>>>::type
+                  , fake_dependency<fake_scope<>, int>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<b, c>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<b, a, c>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<b, c, c>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a, a, a>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<c>>>::type
                 >
-              , fake_dependency<fake_scope<>, void>
+              , fake_dependency<fake_scope<>, void>::type
             >::type
         >::value
     ));
@@ -273,21 +282,21 @@ BOOST_AUTO_TEST_CASE(context_long_with_order_empty_call_stack) {
     BOOST_CHECK((
         is_same<
             fake_dependency<fake_scope<>, int>::type
-          , binder_impl<
+          , binder_resolve<
                 int
               , mpl::vector<>
               , mpl::vector<
-                    fake_dependency<fake_scope<>, int, int, void, mpl::vector<a, b, c>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<a>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<b>>
-                  , fake_dependency<fake_scope<>, int>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<b, c>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<b, a, c>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<b, c, c>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<a, a, a>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<c>>
+                    fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a, b, c>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<b>>>::type
+                  , fake_dependency<fake_scope<>, int>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<b, c>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<b, a, c>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<b, c, c>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a, a, a>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<c>>>::type
                 >
-              , fake_dependency<fake_scope<>, void>
+              , fake_dependency<fake_scope<>, void>::type
             >::type
         >::value
     ));
@@ -296,22 +305,22 @@ BOOST_AUTO_TEST_CASE(context_long_with_order_empty_call_stack) {
 BOOST_AUTO_TEST_CASE(context_long_with_order_diff_call_stack) {
     BOOST_CHECK((
         is_same<
-            fake_dependency<fake_scope<>, int, int, void, mpl::vector<b>>::type
-          , binder_impl<
+            fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<b>>>::type
+          , binder_resolve<
                 int
               , mpl::vector<c, a, b>
               , mpl::vector<
-                    fake_dependency<fake_scope<>, int, int, void, mpl::vector<a, b, c>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<a>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<b>>
-                  , fake_dependency<fake_scope<>, int>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<b, c>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<b, a, c>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<b, c, c>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<a, a, a>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<c>>
+                    fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a, b, c>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<b>>>::type
+                  , fake_dependency<fake_scope<>, int>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<b, c>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<b, a, c>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<b, c, c>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a, a, a>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<c>>>::type
                 >
-              , fake_dependency<fake_scope<>, void>
+              , fake_dependency<fake_scope<>, void>::type
             >::type
         >::value
     ));
@@ -320,22 +329,22 @@ BOOST_AUTO_TEST_CASE(context_long_with_order_diff_call_stack) {
 BOOST_AUTO_TEST_CASE(context_long_with_order_short_call_stack) {
     BOOST_CHECK((
         is_same<
-            fake_dependency<fake_scope<>, int, int, void, mpl::vector<c>>::type
-          , binder_impl<
+            fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<c>>>::type
+          , binder_resolve<
                 int
               , mpl::vector<c>
               , mpl::vector<
-                    fake_dependency<fake_scope<>, int, int, void, mpl::vector<a, b, c>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<a>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<b>>
-                  , fake_dependency<fake_scope<>, int>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<b, c>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<b, a, c>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<b, c, c>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<a, a, a>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<c>>
+                    fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a, b, c>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<b>>>::type
+                  , fake_dependency<fake_scope<>, int>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<b, c>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<b, a, c>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<b, c, c>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a, a, a>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<c>>>::type
                 >
-              , fake_dependency<fake_scope<>, void>
+              , fake_dependency<fake_scope<>, void>::type
             >::type
         >::value
     ));
@@ -345,21 +354,21 @@ BOOST_AUTO_TEST_CASE(context_long_with_order_to_long_call_stack) {
     BOOST_CHECK((
         is_same<
             fake_dependency<fake_scope<>, int>::type
-          , binder_impl<
+          , binder_resolve<
                 int
               , mpl::vector<a, b, c, d>
               , mpl::vector<
-                    fake_dependency<fake_scope<>, int, int, void, mpl::vector<a, b, c>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<a>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<b>>
-                  , fake_dependency<fake_scope<>, int>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<b, c>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<b, a, c>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<b, c, c>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<a, a, a>>
-                  , fake_dependency<fake_scope<>, int, int, void, mpl::vector<c>>
+                    fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a, b, c>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<b>>>::type
+                  , fake_dependency<fake_scope<>, int>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<b, c>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<b, a, c>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<b, c, c>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<a, a, a>>>::type
+                  , fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<c>>>::type
                 >
-              , fake_dependency<fake_scope<>, void>
+              , fake_dependency<fake_scope<>, void>::type
             >::type
         >::value
     ));
@@ -367,19 +376,19 @@ BOOST_AUTO_TEST_CASE(context_long_with_order_to_long_call_stack) {
 
 using context_priority_t = mpl::vector<
     mpl::vector<
-        fake_dependency<fake_scope<1>, int, int>
-      , fake_dependency<fake_scope<0>, int, int>
-      , fake_dependency<fake_scope<3>, int, int>
+        fake_dependency<fake_scope<1>, int, int>::type
+      , fake_dependency<fake_scope<0>, int, int>::type
+      , fake_dependency<fake_scope<3>, int, int>::type
     >
   , mpl::vector<
-        fake_dependency<fake_scope<0>, int, int>
-      , fake_dependency<fake_scope<1>, int, int>
-      , fake_dependency<fake_scope<3>, int, int>
+        fake_dependency<fake_scope<0>, int, int>::type
+      , fake_dependency<fake_scope<1>, int, int>::type
+      , fake_dependency<fake_scope<3>, int, int>::type
     >
   , mpl::vector<
-        fake_dependency<fake_scope<3>, int, int>
-      , fake_dependency<fake_scope<1>, int, int>
-      , fake_dependency<fake_scope<0>, int, int>
+        fake_dependency<fake_scope<3>, int, int>::type
+      , fake_dependency<fake_scope<1>, int, int>::type
+      , fake_dependency<fake_scope<0>, int, int>::type
     >
 >;
 
@@ -387,11 +396,11 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(context_priority, TDeps, context_priority_t) {
     BOOST_CHECK((
         is_same<
             fake_dependency<fake_scope<3>, int>::type
-          , typename binder_impl<
+          , typename binder_resolve<
                 int
               , mpl::vector<>
               , TDeps
-              , fake_dependency<fake_scope<>, void>
+              , fake_dependency<fake_scope<>, void>::type
             >::type
         >::value
     ));
@@ -401,13 +410,13 @@ BOOST_AUTO_TEST_CASE(base_of_fail) {
     BOOST_CHECK((
         is_same<
             fake_dependency<fake_scope<>, i>::type
-          , binder_impl<
+          , binder_resolve<
                 i
               , mpl::vector0<>
               , mpl::vector<
-                    fake_dependency_base_of<fake_scope<>, a>
+                    fake_dependency<fake_scope<>, a>::type
                 >
-              , fake_dependency<fake_scope<>, i>
+              , fake_dependency<fake_scope<>, i>::type
             >::type
         >::value
     ));
@@ -416,14 +425,14 @@ BOOST_AUTO_TEST_CASE(base_of_fail) {
 BOOST_AUTO_TEST_CASE(base_of_successful) {
     BOOST_CHECK((
         is_same<
-            fake_dependency_base_of<fake_scope<>, impl>::type
-          , binder_impl<
+            fake_dependency<fake_scope<>, impl>::type
+          , binder_resolve<
                 i
               , mpl::vector0<>
               , mpl::vector<
-                    fake_dependency_base_of<fake_scope<>, impl>
+                    fake_dependency<fake_scope<>, impl>::type
                 >
-              , fake_dependency<fake_scope<>, void>
+              , fake_dependency<fake_scope<>, void>::type
             >::type
         >::value
     ));
@@ -433,13 +442,13 @@ BOOST_AUTO_TEST_CASE(complex_type) {
     BOOST_CHECK((
         is_same<
             fake_dependency<fake_scope<>, int>::type
-          , binder_impl<
+          , binder_resolve<
                 aux::shared_ptr<int>
               , mpl::vector0<>
               , mpl::vector<
-                    fake_dependency<fake_scope<>, int>
+                    fake_dependency<fake_scope<>, int>::type
                 >
-              , fake_dependency<fake_scope<>, void>
+              , fake_dependency<fake_scope<>, void>::type
             >::type
         >::value
     ));
@@ -449,11 +458,11 @@ BOOST_AUTO_TEST_CASE(named_int_type) {
     BOOST_CHECK((
         is_same<
             fake_dependency<fake_scope<>, named<int, mpl::_1>, int>::type
-          , binder_impl<
+          , binder_resolve<
                 named<aux::shared_ptr<int>, mpl::_1>
               , mpl::vector0<>
               , mpl::vector0<>
-              , fake_dependency<fake_scope<>, named<int, mpl::_1>, int>
+              , fake_dependency<fake_scope<>, named<int, mpl::_1>, int>::type
             >::type
         >::value
     ));
@@ -462,14 +471,14 @@ BOOST_AUTO_TEST_CASE(named_int_type) {
 BOOST_AUTO_TEST_CASE(call_call_stack) {
     BOOST_CHECK((
         is_same<
-            fake_dependency<fake_scope<>, int, int, void, c1, mpl::vector<c2>>::type
-          , binder_impl<
+            fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<c1>, mpl::vector<c2>>>::type
+          , binder_resolve<
                 int
               , mpl::vector<c2>
               , mpl::vector<
-                    fake_dependency<fake_scope<>, int, int, void, c1, mpl::vector<c2>>
+                    fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<c1>, mpl::vector<c2>>>::type
                 >
-              , fake_dependency<fake_scope<>, void>
+              , fake_dependency<fake_scope<>, void>::type
             >::type
         >::value
     ));
@@ -483,14 +492,14 @@ typedef mpl::vector<
 BOOST_AUTO_TEST_CASE_TEMPLATE(multiple_calls, TContext, multiple_calls_t) {
     BOOST_CHECK((
         is_same<
-            fake_dependency<fake_scope<>, int, int, void, c1, mpl::vector<c2, c3>>::type
-          , typename binder_impl<
+            fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<c1>, mpl::vector<c2, c3>>>::type
+          , typename binder_resolve<
                 int
               , TContext
               , mpl::vector<
-                    fake_dependency<fake_scope<>, int, int, void, c1, mpl::vector<c2, c3>>
+                    fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<c1>, mpl::vector<c2, c3>>>::type
                 >
-              , fake_dependency<fake_scope<>, void>
+              , fake_dependency<fake_scope<>, void>::type
             >::type
         >::value
     ));
@@ -507,14 +516,14 @@ typedef mpl::vector<
 BOOST_AUTO_TEST_CASE_TEMPLATE(multiple_calls_many, TContext, multiple_calls_many_t) {
     BOOST_CHECK((
         is_same<
-            fake_dependency<fake_scope<>, int, int, void, c1, c5, mpl::vector<c3, c4>>::type
-          , typename binder_impl<
+            fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<c1>, mpl::vector<c5>, mpl::vector<c3, c4>>>::type
+          , typename binder_resolve<
                 int
               , TContext
               , mpl::vector<
-                    fake_dependency<fake_scope<>, int, int, void, c1, c5, mpl::vector<c3, c4>>
+                    fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<c1>, mpl::vector<c5>, mpl::vector<c3, c4>>>::type
                 >
-              , fake_dependency<fake_scope<>, void>
+              , fake_dependency<fake_scope<>, void>::type
             >::type
         >::value
     ));
@@ -530,13 +539,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(multiple_calls_not_found, TContext, multiple_calls
     BOOST_CHECK((
         is_same<
             fake_dependency<fake_scope<>, int, int>::type
-          , typename binder_impl<
+          , typename binder_resolve<
                 int
               , TContext
               , mpl::vector<
-                    fake_dependency<fake_scope<>, int, int, void, c1, c5, mpl::vector<c3, c4>>
+                    fake_dependency<fake_scope<>, int, int, no_name, mpl::vector<mpl::vector<c1>, mpl::vector<c5>, mpl::vector<c3, c4>>>::type
                 >
-              , fake_dependency<fake_scope<>, int, int>
+              , fake_dependency<fake_scope<>, int, int>::type
             >::type
         >::value
     ));

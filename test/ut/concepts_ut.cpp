@@ -11,7 +11,7 @@
 #include <boost/test/test_case_template.hpp>
 #include <boost/mpl/pair.hpp>
 
-#include "common/fakes/fake_dependency_base_of.hpp"
+#include "common/fakes/fake_dependency.hpp"
 #include "common/fakes/fake_scope.hpp"
 #include "common/contains_all.hpp"
 #include "common/data.hpp"
@@ -26,7 +26,7 @@ BOOST_AUTO_TEST_CASE(bind_impl) {
                 bind<i, impl>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, i, impl>::type
+                fake_dependency<fake_scope<>, i, impl>::type
             >
         >::value
     ));
@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(bind_int_value) {
                 bind_int<i>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, int, mpl::int_<i>>::type
+                fake_dependency<fake_scope<>, int, mpl::int_<i>>::type
             >
         >::value
     ));
@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE(bind_int_value_named) {
                 bind_int<i>::named<void>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, int, mpl::int_<i>, void>::type
+                fake_dependency<fake_scope<>, int, mpl::int_<i>, void>::type
             >
         >::value
     ));
@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_CASE(bind_int_value_when) {
                 bind_int<i>::when<call_stack<c0>>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, int, mpl::int_<i>, no_name, mpl::vector<call_stack<c0>>>::type
+                fake_dependency<fake_scope<>, int, mpl::int_<i>, no_name, mpl::vector<call_stack<c0>>>::type
             >
         >::value
     ));
@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE(bind_int_value_named_when) {
                 bind_int<i>::named<void>::when<call_stack<c0>>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, int, mpl::int_<i>, void, mpl::vector<call_stack<c0>>>::type
+                fake_dependency<fake_scope<>, int, mpl::int_<i>, void, mpl::vector<call_stack<c0>>>::type
             >
         >::value
     ));
@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE(bind_int_value_when_named) {
                 bind_int<i>::when<call_stack<c0>>::named<void>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, int, mpl::int_<i>, void, mpl::vector<call_stack<c0>>>::type
+                fake_dependency<fake_scope<>, int, mpl::int_<i>, void, mpl::vector<call_stack<c0>>>::type
             >
         >::value
     ));
@@ -110,7 +110,7 @@ BOOST_AUTO_TEST_CASE(bind_string_value) {
                 bind_string<s>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, std::string, s>::type
+                fake_dependency<fake_scope<>, std::string, s>::type
             >
         >::value
     ));
@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE(bind_string_value_named) {
                 bind_string<s>::named<void>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, std::string, s, void>::type
+                fake_dependency<fake_scope<>, std::string, s, void>::type
             >
         >::value
     ));
@@ -138,7 +138,7 @@ BOOST_AUTO_TEST_CASE(bind_string_value_named_when) {
                 bind_string<s>::named<void>::when<call_stack<c0>, call_stack<c1>>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, std::string, s, void, mpl::vector<call_stack<c0>, call_stack<c1>>>::type
+                fake_dependency<fake_scope<>, std::string, s, void, mpl::vector<call_stack<c0>, call_stack<c1>>>::type
             >
         >::value
     ));
@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_CASE(bind_string_value_when_named) {
                 bind_string<s>::when<call_stack<c0>, call_stack<c1>>::named<void>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, std::string, s, void, mpl::vector<call_stack<c0>, call_stack<c1>>>::type
+                fake_dependency<fake_scope<>, std::string, s, void, mpl::vector<call_stack<c0>, call_stack<c1>>>::type
             >
         >::value
     ));
@@ -166,7 +166,7 @@ BOOST_AUTO_TEST_CASE(bind_string_value_when) {
                 bind_string<s>::when<call_stack<c0>>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, std::string, s, no_name, mpl::vector<call_stack<c0>>>::type
+                fake_dependency<fake_scope<>, std::string, s, no_name, mpl::vector<call_stack<c0>>>::type
             >
         >::value
     ));
@@ -200,7 +200,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(scope_one, T, scope_one_types) {
         contains_all<
             typename mpl::second<T>::type
           , mpl::vector<
-                typename fake_dependency_base_of<typename mpl::first<T>::type, int>::type
+                typename fake_dependency<typename mpl::first<T>::type, int>::type
             >
         >::value
     ));
@@ -218,9 +218,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(scope_many, T, scope_many_types) {
         contains_all<
             typename mpl::second<T>::type
           , mpl::vector<
-                typename fake_dependency_base_of<typename mpl::first<T>::type, int>::type
-              , typename fake_dependency_base_of<typename mpl::first<T>::type, double>::type
-              , typename fake_dependency_base_of<typename mpl::first<T>::type, float>::type
+                typename fake_dependency<typename mpl::first<T>::type, int>::type
+              , typename fake_dependency<typename mpl::first<T>::type, double>::type
+              , typename fake_dependency<typename mpl::first<T>::type, float>::type
             >
         >::value
     ));
@@ -233,7 +233,7 @@ BOOST_AUTO_TEST_CASE(scope_with_call_stack) {
                 bind<i, impl>::when<call_stack<c0, c1>>::type
             >
           , mpl::vector<
-                fake_dependency_base_of<fake_scope<>, i, impl, no_name, mpl::vector<call_stack<c0, c1>>>::type
+                fake_dependency<fake_scope<>, i, impl, no_name, mpl::vector<call_stack<c0, c1>>>::type
             >
         >::value
     ));

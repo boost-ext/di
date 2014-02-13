@@ -17,13 +17,12 @@
 #include "boost/di/scopes/shared.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/concepts.hpp"
-#include "fake_dependency.hpp"
-#include "fake_dependency_base_of.hpp"
-#include "fake_visitor.hpp"
-#include "fake_scope.hpp"
-#include "fake_policy.hpp"
-#include "contains_all.hpp"
-#include "data.hpp"
+#include "common/fakes/fake_dependency.hpp"
+#include "common/fakes/fake_visitor.hpp"
+#include "common/fakes/fake_scope.hpp"
+#include "common/fakes/fake_policy.hpp"
+#include "common/contains_all.hpp"
+#include "common/data.hpp"
 
 namespace boost {
 namespace di {
@@ -122,7 +121,7 @@ BOOST_AUTO_TEST_CASE(create_shared_context) {
     module<
         mpl::vector<
             fake_dependency<scopes::unique<>, if0, c0if0>::type
-          , fake_dependency<scopes::unique<>, if0, c1if0, void, call_stack<c6, c5>>::type
+          , fake_dependency<scopes::unique<>, if0, c1if0, no_name, mpl::vector<call_stack<c6, c5>>>::type
           , fake_dependency<scopes::shared<>, c3>::type
         >
     >
@@ -150,8 +149,8 @@ BOOST_AUTO_TEST_CASE(create_unique_shared_context_order) {
     module<
         mpl::vector<
             fake_dependency<scopes::unique<>, if0, c0if0>::type
-          , fake_dependency<scopes::unique<>, if0, c1if0, void, call_stack<c6, c5>>::type
-          , fake_dependency<scopes::unique<>, if0, c2if0, void, c7>::type
+          , fake_dependency<scopes::unique<>, if0, c1if0, no_name, mpl::vector<call_stack<c6, c5>>>::type
+          , fake_dependency<scopes::unique<>, if0, c2if0, no_name, mpl::vector<call_stack<c7>>>::type
           , fake_dependency<scopes::shared<>, c3>::type
         >
     > module_;
@@ -178,14 +177,14 @@ BOOST_AUTO_TEST_CASE(create_unique_shared_context_mix) {
     module<
         mpl::vector<
             fake_dependency<scopes::unique<>, if0, c0if0>::type
-          , fake_dependency<scopes::unique<>, if0, c1if0, void, call_stack<c6, c5>>::type
-          , fake_dependency<scopes::unique<>, if0, c2if0, void, c7>::type
+          , fake_dependency<scopes::unique<>, if0, c1if0, no_name, mpl::vector<call_stack<c6, c5>>>::type
+          , fake_dependency<scopes::unique<>, if0, c2if0, no_name, mpl::vector<call_stack<c7>>>::type
           , fake_dependency<scopes::shared<>, c3>::type
           , fake_dependency<scopes::unique<>, int, mpl::int_<1>>::type
-          , fake_dependency<scopes::unique<>, int, mpl::int_<2>, void, c8>::type
-          , fake_dependency<scopes::unique<>, int, mpl::int_<3>, mpl::string<'1'>, call_stack<c7, c6, c4>>::type
-          , fake_dependency<scopes::unique<>, int, mpl::int_<4>, mpl::string<'2'>, call_stack<c7, c6, c4>>::type
-          , fake_dependency<scopes::unique<>, int, mpl::int_<5>, void, c2>::type
+          , fake_dependency<scopes::unique<>, int, mpl::int_<2>, no_name, mpl::vector<call_stack<c8>>>::type
+          , fake_dependency<scopes::unique<>, int, mpl::int_<3>, mpl::string<'1'>, mpl::vector<call_stack<c7, c6, c4>>>::type
+          , fake_dependency<scopes::unique<>, int, mpl::int_<4>, mpl::string<'2'>, mpl::vector<call_stack<c7, c6, c4>>>::type
+          , fake_dependency<scopes::unique<>, int, mpl::int_<5>, no_name, mpl::vector<call_stack<c2>>>::type
         >
     > module_;
 
@@ -264,7 +263,7 @@ BOOST_AUTO_TEST_CASE(ctor_trait) {
 
     module<
         mpl::vector<
-            fake_dependency_base_of<scopes::unique<>, int, mpl::int_<i>>::type
+            fake_dependency<scopes::unique<>, int, mpl::int_<i>>::type
         >
     > module_;
 
@@ -294,11 +293,11 @@ BOOST_AUTO_TEST_CASE(class_ctor_traits) {
 BOOST_AUTO_TEST_CASE(base_of) {
     module<
         mpl::vector<
-            fake_dependency_base_of<scopes::unique<>, int, mpl::int_<1>>::type
-          , fake_dependency_base_of<scopes::unique<>, int, mpl::int_<4>, mpl::string<'2'>, mpl::vector<call_stack<c7, c6, c4>>>::type
-          , fake_dependency_base_of<scopes::unique<>, int, mpl::int_<5>, void, mpl::vector<call_stack<c2>>>::type
-          , fake_dependency_base_of<scopes::unique<>, c0if0, c0if0>::type
-          , fake_dependency_base_of<scopes::unique<>, int, mpl::int_<3>, mpl::string<'1'>, mpl::vector<call_stack<c7, c6, c4>>>::type
+            fake_dependency<scopes::unique<>, int, mpl::int_<1>>::type
+          , fake_dependency<scopes::unique<>, int, mpl::int_<4>, mpl::string<'2'>, mpl::vector<call_stack<c7, c6, c4>>>::type
+          , fake_dependency<scopes::unique<>, int, mpl::int_<5>, no_name, mpl::vector<call_stack<c2>>>::type
+          , fake_dependency<scopes::unique<>, c0if0, c0if0>::type
+          , fake_dependency<scopes::unique<>, int, mpl::int_<3>, mpl::string<'1'>, mpl::vector<call_stack<c7, c6, c4>>>::type
         >
     > module_;
 
@@ -323,9 +322,9 @@ BOOST_AUTO_TEST_CASE(base_of) {
 BOOST_AUTO_TEST_CASE(multiple_calls) {
     module<
         mpl::vector<
-            fake_dependency_base_of<scopes::unique<>, c0if0, c0if0>::type
-          , fake_dependency_base_of<scopes::shared<>, c3, c3, void, mpl::vector<call_stack<c15>, call_stack<c6, c4>>>::type
-          , fake_dependency_base_of<scopes::shared<>, c3, c3, void, mpl::vector<call_stack<c6>>>::type
+            fake_dependency<scopes::unique<>, c0if0, c0if0>::type
+          , fake_dependency<scopes::shared<>, c3, c3, no_name, mpl::vector<call_stack<c15>, call_stack<c6, c4>>>::type
+          , fake_dependency<scopes::shared<>, c3, c3, no_name, mpl::vector<call_stack<c6>>>::type
         >
     > module_;
 
@@ -337,7 +336,7 @@ BOOST_AUTO_TEST_CASE(multiple_calls) {
 BOOST_AUTO_TEST_CASE(base_of_interface_not_trivial_ctor) {
     module<
         mpl::vector<
-            fake_dependency_base_of<scopes::unique<>, transaction_provider, transaction_provider>::type
+            fake_dependency<scopes::unique<>, transaction_provider, transaction_provider>::type
         >
     > module_;
 
@@ -365,7 +364,7 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr_base_of_explicit_value) {
 
     module<
         mpl::vector<
-            fake_dependency_base_of<scopes::unique<>, int, mpl::int_<i>, mpl::string<'1'>>::type
+            fake_dependency<scopes::unique<>, int, mpl::int_<i>, mpl::string<'1'>>::type
         >
     > module_;
 
@@ -377,7 +376,7 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr_base_of_explicit_value) {
 BOOST_AUTO_TEST_CASE(named_shared_ptr_if) {
     module<
         mpl::vector<
-            fake_dependency_base_of<scopes::unique<>, if0, c0if0, mpl::string<'1'>>::type
+            fake_dependency<scopes::unique<>, if0, c0if0, mpl::string<'1'>>::type
         >
     > module_;
 
@@ -394,8 +393,8 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr_if_with_not_trivial_ctor) {
 
     module<
         mpl::vector<
-            fake_dependency_base_of<scopes::unique<>, if0, c3if0>::type
-          , fake_dependency_base_of<scopes::unique<>, int, mpl::int_<i>>::type
+            fake_dependency<scopes::unique<>, if0, c3if0>::type
+          , fake_dependency<scopes::unique<>, int, mpl::int_<i>>::type
         >
     > module_;
 
@@ -508,8 +507,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(externals_create_priority, TModule, externals_prio
 BOOST_AUTO_TEST_CASE(visit) {
     module<
         mpl::vector<
-            fake_dependency_base_of<scopes::unique<>, transaction_provider, transaction_provider>::type
-          , fake_dependency_base_of<scopes::unique<>, int, mpl::int_<0>>::type
+            fake_dependency<scopes::unique<>, transaction_provider, transaction_provider>::type
+          , fake_dependency<scopes::unique<>, int, mpl::int_<0>>::type
         >
     > module_;
 
@@ -554,7 +553,7 @@ BOOST_AUTO_TEST_CASE(call) {
 
     module<
         mpl::vector<
-            fake_dependency_base_of<fake_scope<>, c0if0, c0if0>::type
+            fake_dependency<fake_scope<>, c0if0, c0if0>::type
         >
     > module_;
 
@@ -597,7 +596,7 @@ BOOST_AUTO_TEST_CASE(policies_mix) {
             >
           , module<
                 mpl::vector<
-                    fake_dependency_base_of<scopes::unique<>, int, mpl::int_<0>>::type
+                    fake_dependency<scopes::unique<>, int, mpl::int_<0>>::type
                   , fake_policy<0>
                   , fake_policy<1>
                 >
@@ -620,7 +619,7 @@ BOOST_AUTO_TEST_CASE(policies_mix_join_many) {
                     fake_policy<0>
                   , fake_policy<1>
                   , fake_policy<2>
-                  , fake_dependency_base_of<scopes::unique<>, int, mpl::int_<0>>::type
+                  , fake_dependency<scopes::unique<>, int, mpl::int_<0>>::type
                   , fake_policy<3>
                 >
             >::policies::type

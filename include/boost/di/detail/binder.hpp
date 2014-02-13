@@ -47,12 +47,14 @@ class binder
     { };
 
 public:
-    template<typename T, typename TCallStack
-  , typename TDefault =
-        ::boost::di::concepts::dependency<
-            typename type_traits::scope_traits<T>::type
-          , typename type_traits::make_plain<T>::type
-        >
+    template<
+        typename T
+      , typename TCallStack
+      , typename TDefault =
+            ::boost::di::concepts::dependency<
+                typename type_traits::scope_traits<T>::type
+              , typename type_traits::make_plain<T>::type
+            >
     >
     struct resolve
         : mpl::deref<

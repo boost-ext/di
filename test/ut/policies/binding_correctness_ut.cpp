@@ -14,7 +14,7 @@
 #include <boost/mpl/vector.hpp>
 
 #include "fake_dependency.hpp"
-#include "fake_dependency_base_of.hpp"
+#include "fake_dependency.hpp<"
 #include "contains_all.hpp"
 #include "data.hpp"
 
@@ -92,7 +92,7 @@ BOOST_AUTO_TEST_CASE(none_shareds) {
           , binding_correctness::verify<
                 mpl::vector<
                     fake_dependency<scopes::unique<>, int, mpl::int_<42>, void, mpl::vector<call_stack<ub1>>>::type
-                  , fake_dependency_base_of<scopes::unique<>, ub1>::type
+                  , fake_dependency<scopes::unique<>, ub1>::type
                 >
               , ub3
               , mpl::false_
@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(with_call, TScope, scope_types) {
           , typename binding_correctness::verify<
                 mpl::vector<
                     fake_dependency<scopes::unique<>, int, mpl::int_<42>, void, mpl::vector<call_stack<ub1>>>::type
-                  , typename fake_dependency_base_of<TScope, ub1>::type
+                  , typename fake_dependency<TScope, ub1>::type
                 >
               , ub3
               , mpl::false_
@@ -133,7 +133,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(with_call_stack, TScope, scope_types) {
           , typename binding_correctness::verify<
                 mpl::vector<
                     fake_dependency<scopes::unique<>, int, mpl::int_<42>, void, mpl::vector<ub2, ub1>>::type
-                  , typename fake_dependency_base_of<TScope, ub1>::type
+                  , typename fake_dependency<TScope, ub1>::type
                 >
               , ub3
               , mpl::false_
