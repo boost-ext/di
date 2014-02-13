@@ -32,6 +32,8 @@ struct c2
 class custom_scope
 {
 public:
+    typedef boost::mpl::int_<0> priority;
+
     class entry { };
     class exit { };
 

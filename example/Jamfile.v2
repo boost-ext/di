@@ -15,9 +15,9 @@ project di :
 
 rule run-test ( std : src ) {
     run $(src) : : :
-        <toolset>gcc:<cxxflags>"-std=$(std) -include ../test/config.hpp"
-        <toolset>clang:<cxxflags>"-std=$(std) -include ../test/config.hpp"
-        <toolset>intel:<cxxflags>"-std=$(std) -include ../test/config.hpp"
+        <toolset>gcc:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
+        <toolset>clang:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
+        <toolset>intel:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
     ;
 }
 
