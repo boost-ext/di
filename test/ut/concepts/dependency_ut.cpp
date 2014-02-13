@@ -50,14 +50,8 @@ struct fake_pool
 BOOST_AUTO_TEST_CASE(default_value) {
     typedef dependency<fake_scope<>, int> dependency_t;
 
-    BOOST_CHECK((is_same<mpl::vector0<>, dependency_t::context>::value));
     BOOST_CHECK((is_same<
-        mpl::lambda<
-            mpl::and_<
-                is_same<int, mpl::_1>
-              , is_same<void, mpl::_2>
-            >
-        >::type
+        mpl::lambda<mpl::and_<is_same<int, mpl::_1> > >::type
       , dependency_t::bind
     >::value));
 }
@@ -69,14 +63,12 @@ BOOST_AUTO_TEST_CASE(rebind_scope) {
                 other_fake_scope
               , int
               , int
-              , mpl::vector0<>
               , is_same<mpl::_1, int>
             >
           , dependency<
                 mpl::_1
               , int
               , int
-              , mpl::vector0<>
               , is_same<mpl::_1, int>
             >::rebind<other_fake_scope>::other
         >::value

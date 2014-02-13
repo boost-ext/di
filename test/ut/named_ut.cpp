@@ -11,7 +11,7 @@
 #include <boost/make_shared.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-#include "data.hpp"
+#include "common/data.hpp"
 
 namespace boost {
 namespace di {

@@ -11,10 +11,10 @@
 #include <boost/test/test_case_template.hpp>
 #include <boost/mpl/pair.hpp>
 
-#include "data.hpp"
-#include "fake_dependency_base_of.hpp"
-#include "fake_scope.hpp"
-#include "contains_all.hpp"
+#include "common/fakes/fake_dependency_base_of.hpp"
+#include "common/fakes/fake_scope.hpp"
+#include "common/contains_all.hpp"
+#include "common/data.hpp"
 
 namespace boost {
 namespace di {

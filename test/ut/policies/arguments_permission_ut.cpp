@@ -4,15 +4,15 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "fake_assert.hpp" // has to be first
+#include "common/fakes/fake_assert.hpp" // has to be first
 #include "boost/di/policies/arguments_permission.hpp"
 
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/identity.hpp>
 
-#include "contains_all.hpp"
-#include "data.hpp"
+#include "common/contains_all.hpp"
+#include "common/data.hpp"
 
 namespace boost {
 namespace di {

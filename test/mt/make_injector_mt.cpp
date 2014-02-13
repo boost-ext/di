@@ -13,8 +13,8 @@
 #include "boost/di/policies/binding_correctness.hpp"
 #include "boost/di/policies/circular_dependencies.hpp"
 
-#include "data.hpp"
-#include "contains_all.hpp"
+#include "common/data.hpp"
+#include "common/contains_all.hpp"
 
 namespace boost {
 namespace di {
@@ -30,15 +30,6 @@ BOOST_AUTO_TEST_CASE(ctor) {
 
 BOOST_AUTO_TEST_CASE(empty) {
     auto injector_empty = make_injector();
-
-    using injector_t = decltype(injector_empty);
-    BOOST_CHECK((
-        contains_all<
-            mpl::vector<>
-          , injector_t::policies::type
-        >::value
-    ));
-
     BOOST_CHECK_EQUAL(0, injector_empty.create<c3>().i);
 }
 
@@ -66,17 +57,6 @@ BOOST_AUTO_TEST_CASE(with_policy) {
       , policies::circular_dependencies()
     );
 
-    using injector_t = decltype(injector_);
-    BOOST_CHECK((
-        contains_all<
-            mpl::vector<
-                policies::binding_correctness
-              , policies::circular_dependencies
-            >
-          , injector_t::policies::type
-        >::value
-    ));
-
     BOOST_CHECK_EQUAL(i, injector_.create<c3>().i);
 }
 
@@ -88,17 +68,6 @@ BOOST_AUTO_TEST_CASE(with_policy_seperate) {
       , bind_int<i>()
       , policies::circular_dependencies()
     );
-
-    using injector_t = decltype(injector_);
-    BOOST_CHECK((
-        contains_all<
-            mpl::vector<
-                policies::binding_correctness
-              , policies::circular_dependencies
-            >
-          , injector_t::policies::type
-        >::value
-    ));
 
     BOOST_CHECK_EQUAL(i, injector_.create<c3>().i);
 }
@@ -130,17 +99,6 @@ BOOST_AUTO_TEST_CASE(mix) {
     );
 
     auto c5_ = injector_.create<aux::shared_ptr<c5>>();
-
-    using injector_t = decltype(injector_);
-    BOOST_CHECK((
-        contains_all<
-            mpl::vector<
-                policies::binding_correctness
-              , policies::circular_dependencies
-            >
-          , injector_t::policies::type
-        >::value
-    ));
 
     BOOST_CHECK(dynamic_cast<c0if0*>(c5_->if0_.get()));
     BOOST_CHECK_EQUAL(i, c5_->c2_->i);

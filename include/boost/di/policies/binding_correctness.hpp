@@ -78,7 +78,7 @@ class binding_correctness
     { };
 
     template<typename T>
-    struct scope
+    struct scope_
     {
         typedef typename T::scope type;
     };
@@ -129,14 +129,14 @@ class binding_correctness
       , typename TCallStack =
             mpl::vector1<typename type_traits::make_plain<T>::type>
     >
-    struct deps
+    struct deps_
         : mpl::fold<
               ctor<typename binder<T, TCallStack, TBind>::given>
             , mpl::vector0<>
             , mpl::copy<
                   mpl::joint_view<
                       mpl::vector1<binder<mpl::_2, TCallStack, TBind> >
-                    , deps<
+                    , deps_<
                           mpl::_2
                         , TBind
                         , mpl::push_back<
@@ -156,7 +156,7 @@ class binding_correctness
               TDeps
             , mpl::vector0<>
             , mpl::if_<
-                  is_scope<scope<mpl::_2> >
+                  is_scope<scope_<mpl::_2> >
                 , mpl::push_back<mpl::_1, expected<mpl::_2> >
                 , mpl::_1
               >
@@ -287,7 +287,7 @@ class binding_correctness
       , typename TBinder
       , typename TAssert
       , typename T = typename undefined_behavior_impl<
-            typename deps<TGiven, TBinder>::type
+            typename deps_<TGiven, TBinder>::type
         >::type
     >
     struct undefined_behavior : T

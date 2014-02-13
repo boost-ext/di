@@ -12,8 +12,8 @@
 
 #include "boost/di/aux_/memory.hpp"
 
-#include "fake_convertible.hpp"
-#include "data.hpp"
+#include "common/fakes/fake_convertible.hpp"
+#include "common/data.hpp"
 
 namespace boost {
 namespace di {

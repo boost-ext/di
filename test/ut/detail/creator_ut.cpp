@@ -13,8 +13,8 @@
 #include <boost/type_traits/is_same.hpp>
 
 #include "boost/di/aux_/memory.hpp"
-#include "fake_binder.hpp"
-#include "fake_visitor.hpp"
+#include "common/fakes/fake_binder.hpp"
+#include "common/fakes/fake_visitor.hpp"
 
 namespace boost {
 namespace di {

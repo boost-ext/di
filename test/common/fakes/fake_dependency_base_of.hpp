@@ -24,30 +24,21 @@ template<
     typename TScope
   , typename TExpected
   , typename TGiven = TExpected
-  , typename TName = void
-  , typename TContext = mpl::vector0<>
   , typename TBind = typename mpl::lambda<
-        mpl::and_<
-            type_traits::is_same_base_of<TExpected, mpl::_1>
-          , is_same<TName, mpl::_2>
-        >
+        type_traits::is_same_base_of<TExpected, mpl::_1>
     >::type
 >
 struct fake_dependency_base_of
 {
-    typedef TBind bind;
+    typedef TScope scope;
     typedef TExpected expected;
     typedef TGiven given;
-    typedef TName name;
-    typedef TScope scope;
-    typedef TContext context;
+    typedef TBind bind;
 
     typedef typename concepts::dependency<
         TScope
       , TExpected
       , TGiven
-      , TName
-      , TContext
       , TBind
     > type;
 
@@ -61,8 +52,6 @@ struct fake_dependency_base_of
             TScope
           , typename mpl::if_<is_same<Given, void>, TExpected, Expected>::type
           , typename mpl::if_<is_same<Given, void>, TGiven, Given>::type
-          , TName
-          , TContext
         > other;
     };
 };

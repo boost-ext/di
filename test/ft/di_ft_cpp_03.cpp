@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_CASE(create_complex) {
     v.push_back(3);
 
     typedef di::injector<
-        di::policies::binding_correctness()
+        di::policies::binding_correctness
       , impl
     > injector_c0;
 

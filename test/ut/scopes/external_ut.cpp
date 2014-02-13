@@ -14,7 +14,7 @@
 #include "boost/di/convertibles/reference.hpp"
 #include "boost/di/convertibles/shared.hpp"
 
-#include "data.hpp"
+#include "common/data.hpp"
 
 namespace boost {
 namespace di {

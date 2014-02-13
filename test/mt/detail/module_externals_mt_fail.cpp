@@ -11,7 +11,7 @@
 
 #include "boost/di/concepts/dependency.hpp"
 #include "boost/di/scopes/external.hpp"
-#include "data.hpp"
+#include "common/data.hpp"
 
 namespace boost {
 namespace di {

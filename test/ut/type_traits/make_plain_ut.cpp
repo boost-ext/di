@@ -14,7 +14,7 @@
 
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/named.hpp"
-#include "data.hpp"
+#include "common/data.hpp"
 
 namespace boost {
 namespace di {
