@@ -9,7 +9,7 @@
     #ifndef BOOST_DI_SCOPES_EXTERNAL_HPP
     #define BOOST_DI_SCOPES_EXTERNAL_HPP
 
-    #include "boost/di/aux_/meta.hpp"
+    #include "boost/di/aux_/common.hpp"
     #include "boost/di/convertibles/value.hpp"
 
     #include <boost/function.hpp>

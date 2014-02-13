@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_CONCEPTS_BIND_HPP
 #define BOOST_DI_CONCEPTS_BIND_HPP
 
-#include "boost/di/aux_/meta.hpp"
+#include "boost/di/aux_/common.hpp"
 #include "boost/di/concepts/type_traits/is_req_type.hpp"
 #include "boost/di/concepts/type_traits/is_req_name.hpp"
 #include "boost/di/concepts/type_traits/is_req_call.hpp"

@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_POLICIES_CREATION_OWNERSHIP_HPP
 #define BOOST_DI_POLICIES_CREATION_OWNERSHIP_HPP
 
-#include "boost/di/aux_/meta.hpp"
+#include "boost/di/aux_/common.hpp"
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_reference.hpp>

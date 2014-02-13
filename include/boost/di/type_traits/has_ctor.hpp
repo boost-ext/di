@@ -9,7 +9,7 @@
     #ifndef BOOST_DI_TYPE_TRAITS_HAS_CTOR_HPP
     #define BOOST_DI_TYPE_TRAITS_HAS_CTOR_HPP
 
-    #include "boost/di/aux_/meta.hpp"
+    #include "boost/di/aux_/common.hpp"
     #include "boost/di/type_traits/make_plain.hpp"
     #include "boost/di/type_traits/is_same_base_of.hpp"
 

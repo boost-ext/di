@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_POLICIES_ARGUMENTS_PERMISSION_HPP
 #define BOOST_DI_POLICIES_ARGUMENTS_PERMISSION_HPP
 
-#include "boost/di/aux_/meta.hpp"
+#include "boost/di/aux_/common.hpp"
 #include "boost/di/type_traits/remove_accessors.hpp"
 
 #include <boost/utility/enable_if.hpp>

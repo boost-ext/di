@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_CONCEPTS_HPP
 #define BOOST_DI_CONCEPTS_HPP
 
-#include "boost/di/aux_/meta.hpp"
+#include "boost/di/aux_/common.hpp"
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/concepts/bind.hpp"
 #include "boost/di/concepts/dependency.hpp"

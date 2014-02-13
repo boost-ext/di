@@ -9,7 +9,7 @@
     #ifndef BOOST_DI_DETAIL_CREATOR_HPP
     #define BOOST_DI_DETAIL_CREATOR_HPP
 
-    #include "boost/di/aux_/meta.hpp"
+    #include "boost/di/aux_/common.hpp"
     #include "boost/di/aux_/memory.hpp"
     #include "boost/di/type_traits/ctor_traits.hpp"
     #include "boost/di/type_traits/make_plain.hpp"

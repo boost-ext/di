@@ -9,7 +9,7 @@
     #ifndef BOOST_DI_DETAIL_POOL_HPP
     #define BOOST_DI_DETAIL_POOL_HPP
 
-    #include "boost/di/aux_/meta.hpp"
+    #include "boost/di/aux_/common.hpp"
 
     #include <boost/preprocessor/iteration/local.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>

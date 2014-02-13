@@ -9,7 +9,7 @@
     #ifndef BOOST_DI_DETAIL_MODULE_HPP
     #define BOOST_DI_DETAIL_MODULE_HPP
 
-    #include "boost/di/aux_/meta.hpp"
+    #include "boost/di/aux_/common.hpp"
     #include "boost/di/aux_/memory.hpp"
     #include "boost/di/detail/pool.hpp"
     #include "boost/di/detail/binder.hpp"
