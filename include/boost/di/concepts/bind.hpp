@@ -37,8 +37,8 @@ struct bind
         , TExpected
         , TGiven
         , typename mpl::lambda<
-            type_traits::is_req_type<TExpected>
-        >::type
+              type_traits::is_req_type<TExpected>
+          >::type
       >
 {
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
@@ -48,11 +48,11 @@ struct bind
             , TExpected
             , TGiven
             , typename mpl::lambda<
-                mpl::times<
-                    type_traits::is_req_type<TExpected>
-                  , type_traits::is_req_call<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
-                >
-            >::type
+                  mpl::times<
+                      type_traits::is_req_type<TExpected>
+                    , type_traits::is_req_call<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
+                  >
+              >::type
           >
     {
         template<typename TName>
@@ -62,13 +62,13 @@ struct bind
                 , TExpected
                 , TGiven
                 , typename mpl::lambda<
-                    mpl::times<
-                        mpl::times<
-                            type_traits::is_req_type<TExpected>
-                          , type_traits::is_req_name<TName>
-                        >
-                      , type_traits::is_req_call<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
-                    >
+                      mpl::times<
+                          mpl::times<
+                              type_traits::is_req_type<TExpected>
+                            , type_traits::is_req_name<TName>
+                          >
+                        , type_traits::is_req_call<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
+                      >
                 >::type
               >
         { };
@@ -81,10 +81,10 @@ struct bind
             , TExpected
             , TGiven
             , typename mpl::lambda<
-                mpl::times<
-                    type_traits::is_req_type<TExpected>
-                  , type_traits::is_req_name<TName>
-                >
+                  mpl::times<
+                      type_traits::is_req_type<TExpected>
+                    , type_traits::is_req_name<TName>
+                  >
             >::type
           >
     {
@@ -95,13 +95,13 @@ struct bind
                 , TExpected
                 , TGiven
                 , typename mpl::lambda<
-                    mpl::times<
-                        mpl::times<
-                            type_traits::is_req_type<TExpected>
-                          , type_traits::is_req_name<TName>
-                        >
-                      , type_traits::is_req_call<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
-                    >
+                      mpl::times<
+                          mpl::times<
+                              type_traits::is_req_type<TExpected>
+                            , type_traits::is_req_name<TName>
+                          >
+                        , type_traits::is_req_call<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
+                      >
                 >::type
               >
         { };

@@ -9,7 +9,9 @@
 
 #include "boost/di/concepts/dependency.hpp"
 
-#include "boost/di/type_traits/is_same_base_of.hpp"
+#include "boost/di/concepts/type_traits/is_req_type.hpp"
+#include "boost/di/concepts/type_traits/is_req_name.hpp"
+#include "boost/di/concepts/type_traits/is_req_call.hpp"
 
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/if.hpp>
@@ -20,13 +22,53 @@
 namespace boost {
 namespace di {
 
+struct no_name { };
+
+template<typename T, typename TName, typename TCallStack>
+struct get_bind
+    : mpl::lambda<
+         mpl::times<
+             mpl::times<
+                 concepts::type_traits::is_req_type<T>
+               , concepts::type_traits::is_req_name<TName>
+             >
+           , concepts::type_traits::is_req_call<TCallStack>
+         >
+      >
+{ };
+
+template<typename T, typename TName>
+struct get_bind<T, TName, mpl::vector0<>>
+    : mpl::lambda<
+          mpl::times<
+              concepts::type_traits::is_req_type<T>
+            , concepts::type_traits::is_req_name<TName>
+          >
+      >
+{ };
+
+template<typename T, typename TCallStack>
+struct get_bind<T, no_name, TCallStack>
+    : mpl::lambda<
+          mpl::times<
+              concepts::type_traits::is_req_type<T>
+            , concepts::type_traits::is_req_call<TCallStack>
+          >
+      >
+{ };
+
+template<typename T>
+struct get_bind<T, no_name, mpl::vector0<>>
+    : mpl::lambda<concepts::type_traits::is_req_type<T>>
+{ };
+
 template<
     typename TScope
   , typename TExpected
   , typename TGiven = TExpected
-  , typename TBind = typename mpl::lambda<
-        type_traits::is_same_base_of<TExpected, mpl::_1>
-    >::type
+  , typename TName = no_name
+  , typename TContext = mpl::vector0<>
+  , typename TBind = typename get_bind<TExpected, TName, TContext>::type
 >
 struct fake_dependency_base_of
 {

@@ -51,21 +51,21 @@ struct get_longest_call_stack_size
     : mpl::fold<
           TContext
         , mpl::int_<0>
-	    , mpl::if_<
-		 	equal_call_stack<mpl::_2, TCallStack>
-			, mpl::size<mpl::_2>
-			, mpl::_1
-		  >
+        , mpl::if_<
+             equal_call_stack<mpl::_2, TCallStack>
+            , mpl::size<mpl::_2>
+            , mpl::_1
+          >
       >::type
 { };
 
 template<typename TContext, typename TCallStack = mpl::_2>
 struct is_req_call
-	: mpl::if_<
-	  	  mpl::empty<TContext>
-	    , mpl::int_<1>
-	 	, mpl::times<mpl::int_<10>, get_longest_call_stack_size<TContext, TCallStack> >
-	  >::type
+    : mpl::if_<
+            mpl::empty<TContext>
+        , mpl::int_<1>
+         , mpl::times<mpl::int_<10>, get_longest_call_stack_size<TContext, TCallStack> >
+      >::type
 { };
 
 } // namespace type_traits

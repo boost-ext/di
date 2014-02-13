@@ -87,6 +87,6 @@ int main() {
     assert(i_ == c3_->c2_->c1_->i_);
     assert(d_ == c3_->c2_->c1_->d_);
 
-	return 0;
+    return 0;
 }
 

@@ -37,17 +37,12 @@ class scope
         : has_bind<T>
     { };
 
-	template<typename T>
-	struct dependency
-		: TDependency<
-		  	  mpl::_1
-		  	, T
-		    , T
-			, typename mpl::lambda<
-				type_traits::is_req_type<T>
-			  >::type
-		  >
-	{ };
+    template<typename T>
+    struct dependency
+        : TDependency<
+              mpl::_1, T, T, typename mpl::lambda<type_traits::is_req_type<T> >::type
+          >
+    { };
 
     template<typename T, typename U>
     struct rebind

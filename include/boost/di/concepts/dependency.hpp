@@ -14,6 +14,7 @@
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/type_traits/parameter_types.hpp"
+#include "boost/di/concepts/type_traits/is_req_type.hpp"
 
 #include <boost/ref.hpp>
 #include <boost/non_type.hpp>
@@ -67,7 +68,7 @@ template<
     typename TScope
   , typename TExpected
   , typename TGiven = TExpected
-  , typename TBind = typename mpl::lambda<mpl::and_<is_same<TExpected, mpl::_1> > >::type
+  , typename TBind = typename mpl::lambda<concepts::type_traits::is_req_type<TExpected> >::type
 >
 class dependency : public get_scope<TExpected, TGiven, TScope>::type
 {

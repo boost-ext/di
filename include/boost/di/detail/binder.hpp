@@ -30,7 +30,20 @@ class binder
 {
     template<typename TDependency, typename T, typename TCallStack>
     struct comparator
-        : mpl::times<typename mpl::apply<typename TDependency::bind, T, TCallStack>::type, mpl::times<mpl::int_<100>, mpl::plus<mpl::int_<1>, typename TDependency::scope::priority> > >
+        : mpl::times<
+              typename mpl::apply<
+                  typename TDependency::bind
+                , T
+                , TCallStack
+              >::type
+            , mpl::times<
+                  mpl::int_<100>
+                , mpl::plus<
+                      mpl::int_<1>
+                    , typename TDependency::scope::priority
+                  >
+              >
+          >
     { };
 
 public:
@@ -43,23 +56,27 @@ public:
     >
     struct resolve
         : mpl::deref<
-        mpl::second<typename mpl::fold<
-                TDeps
-                , mpl::pair<mpl::int_<0>, TDefault>
-                , mpl::if_<
-                    mpl::greater<
-                    comparator<
-                      mpl::_2
-                    , T
-                    , TCallStack
-                  >
-                  , mpl::first<mpl::_1>
-                  >
-                 , mpl::pair<comparator<mpl::_2, T, TCallStack>, mpl::_2>
-                 , mpl::_1
-                >
-          >::type
-        > >::type::template rebind<typename type_traits::scope_traits<T>::type>::other
+              mpl::second<
+                  typename mpl::fold<
+                      TDeps
+                    , mpl::pair<mpl::int_<0>, TDefault>
+                    , mpl::if_<
+                          mpl::greater<
+                              comparator<
+                                  mpl::_2
+                                , T
+                                , TCallStack
+                              >
+                            , mpl::first<mpl::_1>
+                          >
+                        , mpl::pair<comparator<mpl::_2, T, TCallStack>, mpl::_2>
+                        , mpl::_1
+                      >
+                  >::type
+              >
+          >::type::template rebind<
+              typename type_traits::scope_traits<T>::type
+          >::other
     { };
 };
 
