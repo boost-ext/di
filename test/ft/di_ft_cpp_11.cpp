@@ -8,9 +8,6 @@
 #include <vector>
 
 #include "boost/di.hpp"
-#include "boost/di/policies/binding_correctness.hpp"
-#include "boost/di/policies/circular_dependencies.hpp"
-#include "boost/di/policies/arguments_permission.hpp"
 
 #include <boost/test/unit_test.hpp>
 
@@ -74,14 +71,10 @@ BOOST_AUTO_TEST_CASE(create_complex) {
     const double d = 42.0;
     const std::vector<int> v = {1, 2, 3};
 
-    using injector_c0 = di::injector<
-        di::policies::binding_correctness
-      , impl
-    >;
+    using injector_c0 = di::injector<impl>;
 
     auto injector_c1 = di::make_injector(
-        di::policies::circular_dependencies()
-      , di::bind_int<i_>()
+        di::bind_int<i_>()
       , di::bind<std::vector<int>>::to(v)
     );
 
@@ -90,14 +83,17 @@ BOOST_AUTO_TEST_CASE(create_complex) {
       , di::unique<c2>()
       , injector_c1
       , di::bind<double>::to(d)
+    );
+
+    auto c3_ = injector_.create<std::shared_ptr<c3>>(
+        di::policies::binding_correctness()
+      , di::policies::circular_dependencies()
       , di::policies::arguments_permission<
             di::policies::allow_smart_ptrs
           , di::policies::allow_copies
           , di::policies::allow_refs
         >()
     );
-
-    auto c3_ = injector_.create<std::shared_ptr<c3>>();
 
     BOOST_CHECK(dynamic_cast<impl*>(c3_->c2_->p_.get()));
     BOOST_CHECK_EQUAL(c3_->c1_.get(), c3_->c2_->c1_.get());

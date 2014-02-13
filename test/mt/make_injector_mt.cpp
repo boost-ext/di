@@ -53,23 +53,25 @@ BOOST_AUTO_TEST_CASE(with_policy) {
 
     auto injector_ = make_injector(
         bind_int<i>()
-      , policies::binding_correctness()
-      , policies::circular_dependencies()
     );
 
-    BOOST_CHECK_EQUAL(i, injector_.create<c3>().i);
+    BOOST_CHECK_EQUAL(i, injector_.create<c3>(
+        policies::binding_correctness()
+      , policies::circular_dependencies()
+    ).i);
 }
 
 BOOST_AUTO_TEST_CASE(with_policy_seperate) {
     const int i = 42;
 
     auto injector_ = make_injector(
-        policies::binding_correctness()
-      , bind_int<i>()
-      , policies::circular_dependencies()
+        bind_int<i>()
     );
 
-    BOOST_CHECK_EQUAL(i, injector_.create<c3>().i);
+    BOOST_CHECK_EQUAL(i, injector_.create<c3>(
+        policies::binding_correctness()
+      , policies::circular_dependencies()
+    ).i);
 }
 
 BOOST_AUTO_TEST_CASE(mix) {
@@ -82,8 +84,7 @@ BOOST_AUTO_TEST_CASE(mix) {
     >;
 
     auto injector_c1 = make_injector(
-        policies::circular_dependencies()
-      , shared<
+        shared<
             c1
         >()
     );
@@ -93,12 +94,14 @@ BOOST_AUTO_TEST_CASE(mix) {
       , unique<
             c2
         >()
-      , policies::binding_correctness()
       , injector_c1
       , bind<double>::to(d)
     );
 
-    auto c5_ = injector_.create<aux::shared_ptr<c5>>();
+    auto c5_ = injector_.create<aux::shared_ptr<c5>>(
+        policies::circular_dependencies()
+      , policies::binding_correctness()
+    );
 
     BOOST_CHECK(dynamic_cast<c0if0*>(c5_->if0_.get()));
     BOOST_CHECK_EQUAL(i, c5_->c2_->i);

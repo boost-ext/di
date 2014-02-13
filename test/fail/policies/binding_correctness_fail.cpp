@@ -16,14 +16,12 @@ namespace di {
 namespace policies {
 
 BOOST_AUTO_TEST_CASE(binding_correctness_fail) {
-    injector<
+    injector<>().create<c3>(
         //binding_correctness
       //, injector<
             //bind<double>::when<call_stack<c3>>
         //>
-    > injector_;
-
-    injector_.create<c3>();
+    );
 }
 
 } // namespace policies

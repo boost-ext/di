@@ -191,16 +191,20 @@
 
         template<typename T>
         T create() {
+            typedef mpl::vector0<> policies;
             std::vector<aux::shared_ptr<void> > refs_;
+
             return TCreator<TBinder<deps> >::template
-                execute<T, T, mpl::vector0<> >(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
+                execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
         }
 
         template<typename T, typename Visitor>
         T visit(const Visitor& visitor) {
+            typedef mpl::vector0<> policies;
             std::vector<aux::shared_ptr<void> > refs_;
+
             return TCreator<TBinder<deps> >::template
-                execute<T, T, mpl::vector0<> >(static_cast<TPool<deps>&>(*this), scopes_, refs_, visitor)(boost::type<T>());
+                execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), scopes_, refs_, visitor)(boost::type<T>());
         }
 
         template<typename TAction>
@@ -259,6 +263,15 @@
             , init()
           )
     { }
+
+    template<typename T, BOOST_DI_TYPES(Args)>
+    T create(BOOST_DI_ARGS_NOT_USED(Args)) {
+        typedef mpl::vector<BOOST_DI_TYPES_PASS(Args)> policies;
+        std::vector<aux::shared_ptr<void> > refs_;
+
+        return TCreator<TBinder<deps> >::template
+            execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
+    }
 
 #endif
 

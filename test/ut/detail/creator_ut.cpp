@@ -52,7 +52,8 @@ BOOST_AUTO_TEST_CASE(creator_simple) {
 
     BOOST_CHECK_EQUAL(i, (
         creator<fake_binder<dependency_type> >::execute<
-            int, void, mpl::vector0<>>(entries_, cleanup_, refs_, fake_visitor<>())
+            int, void, mpl::vector0<>, mpl::vector0<>
+        >(entries_, cleanup_, refs_, fake_visitor<>())
     ));
 }
 

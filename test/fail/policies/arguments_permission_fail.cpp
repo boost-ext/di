@@ -16,9 +16,9 @@ namespace di {
 namespace policies {
 
 BOOST_AUTO_TEST_CASE(arguments_permission_fail) {
-    injector<
-        arguments_permission<allow_ptrs, allow_refs, allow_copies> // allow_smart_ptrs
-    >().create<c24>();
+    injector<>().create<c24>(
+        arguments_permission<allow_ptrs, allow_refs, allow_copies>() // allow_smart_ptrs
+    );
 }
 
 } // namespace policies

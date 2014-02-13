@@ -16,9 +16,9 @@ namespace di {
 namespace policies {
 
 BOOST_AUTO_TEST_CASE(scopes_permission_fail) {
-    injector<
-        scopes_permission<allow_scope<scopes::unique<>>> // allow_scope<scopes::shared<>>
-    >().create<c24>();
+    injector<>().create<c24>(
+        scopes_permission<allow_scope<scopes::unique<>>>() // allow_scope<scopes::shared<>>
+    );
 }
 
 } // namespace policies

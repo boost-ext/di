@@ -62,6 +62,7 @@
         template<
             typename T
           , typename TCallStack
+          , typename TPolicies
           , typename TDeps
           , typename TScopes
           , typename TRefs
@@ -107,6 +108,7 @@
                 return creator::execute_impl<
                     NU
                   , typename mpl::push_back<TCallStack, PU>::type
+                  , TPolicies
                   , binder<U, TCallStack>
                 >(deps_, scopes_, refs_, visitor_)(boost::type<NU>());
             }
@@ -129,6 +131,7 @@
                 return creator::execute_impl<
                     const U&
                   , typename mpl::push_back<TCallStack, PU>::type
+                  , TPolicies
                   , binder<const U&, TCallStack>
                 >(deps_, scopes_, refs_, visitor_)(boost::type<const NU&>());
             }
@@ -150,6 +153,7 @@
                 return creator::execute_impl<
                     U&
                   , typename mpl::push_back<TCallStack, PU>::type
+                  , TPolicies
                   , binder<U&, TCallStack>
                 >(deps_, scopes_, refs_, visitor_)(boost::type<NU&>());
             }
@@ -166,33 +170,40 @@
             typename T
           , typename TParent // to ignore copy/move ctor
           , typename TCallStack
+          , typename TPolicies
           , typename TDeps
           , typename TScopes
           , typename TRefs
           , typename TVisitor
         >
-        static eager_creator<TParent, TCallStack, TDeps, TScopes, TRefs, TVisitor>
-        execute(TDeps& deps, TScopes& scopes, TRefs& refs, const TVisitor& visitor, typename enable_if<is_same<T, any_type> >::type* = 0) {
-            return eager_creator<TParent, TCallStack, TDeps, TScopes, TRefs, TVisitor>(deps, scopes, refs, visitor);
+        static eager_creator<TParent, TCallStack, TPolicies, TDeps, TScopes, TRefs, TVisitor>
+        execute(TDeps& deps, TScopes& scopes, TRefs& refs, const TVisitor& visitor
+              , typename enable_if<is_same<T, any_type> >::type* = 0) {
+            return eager_creator<TParent, TCallStack, TPolicies, TDeps, TScopes, TRefs, TVisitor>(
+                deps, scopes, refs, visitor
+            );
         }
 
         template<
             typename T
           , typename // TParent - not needed
           , typename TCallStack
+          , typename TPolicies
           , typename TDeps
           , typename TScopes
           , typename TRefs
           , typename TVisitor
         >
         static const typename binder<T, TCallStack>::result_type&
-        execute(TDeps& deps, TScopes& scopes, TRefs& refs, const TVisitor& visitor, typename disable_if<is_same<T, any_type> >::type* = 0) {
+        execute(TDeps& deps, TScopes& scopes, TRefs& refs, const TVisitor& visitor
+              , typename disable_if<is_same<T, any_type> >::type* = 0) {
             return execute_impl<
                 T
               , typename mpl::push_back<
                     TCallStack
                   , typename binder<T, TCallStack>::given
                 >::type
+              , TPolicies
               , binder<T, TCallStack>
             >(deps, scopes, refs, visitor);
         }
@@ -251,6 +262,7 @@
     template<
         typename T
       , typename TCallStack
+      , typename TPolicies
       , typename TDependency
       , typename TDeps
       , typename TScopes
@@ -262,7 +274,7 @@
       , const typename TDependency::result_type&
     >::type execute_impl(TDeps& deps, TScopes& scopes, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
-        //assert_policies<TPolicies, typename TDeps::types, dependency_type>();
+        assert_policies<TPolicies, typename TDeps::types, dependency_type>();
         (visitor)(dependency_type());
 
         typedef typename TDependency::result_type convertible_type;
@@ -276,6 +288,7 @@
                >::type                                  \
               , T                                       \
               , TCallStack                              \
+              , TPolicies                               \
             >(deps, scopes, refs, visitor)
 
         convertible_type* convertible =
