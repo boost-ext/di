@@ -51,10 +51,8 @@ BOOST_AUTO_TEST_CASE(creator_simple) {
     std::vector<aux::shared_ptr<void>> refs_;
 
     BOOST_CHECK_EQUAL(i, (
-        creator<
-            fake_binder<dependency_type>
-          , mpl::vector0<>
-        >::execute<int, void, mpl::vector0<>>(entries_, cleanup_, refs_, fake_visitor<>())
+        creator<fake_binder<dependency_type> >::execute<
+            int, void, mpl::vector0<>>(entries_, cleanup_, refs_, fake_visitor<>())
     ));
 }
 

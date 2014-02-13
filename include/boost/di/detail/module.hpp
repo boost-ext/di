@@ -30,7 +30,6 @@
     #include <boost/mpl/bool.hpp>
     #include <boost/mpl/transform.hpp>
     #include <boost/mpl/set.hpp>
-    #include <boost/mpl/remove_if.hpp>
     #include <boost/mpl/pop_front.hpp>
     #include <boost/mpl/front.hpp>
     #include <boost/mpl/push_back.hpp>
@@ -44,49 +43,6 @@
     namespace di {
     namespace detail {
 
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(scope)
-
-    template<typename T>
-    class has_assert_policy
-    {
-        struct base_impl { static void assert_policy() { }; };
-
-        struct base
-            : base_impl
-            , mpl::if_<is_class<T>, T, mpl::void_>::type
-        { base() { } };
-
-        template<typename U>
-        static mpl::aux::no_tag test(
-            U*
-          , non_type<void(*)(), &U::assert_policy>* = 0
-        );
-
-        static mpl::aux::yes_tag test(...);
-
-    public:
-        typedef has_assert_policy type;
-
-        BOOST_STATIC_CONSTANT(
-            bool
-          , value = !has_scope<T>::value &&
-                    sizeof(test((base*)(0))) == sizeof(mpl::aux::yes_tag)
-        );
-    };
-
-    template<typename TSeq, typename TCond>
-    struct get_types
-        : mpl::remove_if<TSeq, mpl::not_<TCond> >::type
-    { };
-
-    template<typename TSeq>
-    struct get_deps
-        : get_types<
-              TSeq
-            , mpl::not_<has_assert_policy<mpl::_> >
-          >::type
-    { };
-
     template<
         typename TDeps = mpl::vector0<>
       , template<typename> class TBinder = binder
@@ -95,15 +51,17 @@
           , typename = ::boost::di::detail::never< ::boost::mpl::_1 >
           , typename = void
         > class TPool = pool
-      , template<typename, typename> class TCreator = creator
+      , template<typename> class TCreator = creator
     >
-    class module : public TPool<get_deps<TDeps> >
+    class module : public TPool<TDeps>
     {
+        BOOST_MPL_HAS_XXX_TRAIT_DEF(scope)
+
         template<
             typename
           , template<typename> class
           , template<typename, typename, typename> class
-          , template<typename, typename> class
+          , template<typename> class
         > friend class module;
 
         template<typename T>
@@ -170,6 +128,34 @@
             );
         };
 
+        template<typename T>
+        class has_assert_policy
+        {
+            struct base_impl { static void assert_policy() { }; };
+
+            struct base
+                : base_impl
+                , mpl::if_<is_class<T>, T, mpl::void_>::type
+            { base() { } };
+
+            template<typename U>
+            static mpl::aux::no_tag test(
+                U*
+              , non_type<void(*)(), &U::assert_policy>* = 0
+            );
+
+            static mpl::aux::yes_tag test(...);
+
+        public:
+            typedef has_assert_policy type;
+
+            BOOST_STATIC_CONSTANT(
+                bool
+              , value = !has_scope<T>::value &&
+                        sizeof(test((base*)(0))) == sizeof(mpl::aux::yes_tag)
+            );
+        };
+
         template<
             typename T
           , typename TCallStack
@@ -195,8 +181,7 @@
         };
 
     public:
-        typedef get_deps<TDeps> deps;
-        typedef get_types<TDeps, has_assert_policy<mpl::_> > policies;
+        typedef TDeps deps;
 
         module() { }
 
@@ -207,14 +192,14 @@
         template<typename T>
         T create() {
             std::vector<aux::shared_ptr<void> > refs_;
-            return TCreator<TBinder<deps>, policies>::template
+            return TCreator<TBinder<deps> >::template
                 execute<T, T, mpl::vector0<> >(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
         }
 
         template<typename T, typename Visitor>
         T visit(const Visitor& visitor) {
             std::vector<aux::shared_ptr<void> > refs_;
-            return TCreator<TBinder<deps>, policies>::template
+            return TCreator<TBinder<deps> >::template
                 execute<T, T, mpl::vector0<> >(static_cast<TPool<deps>&>(*this), scopes_, refs_, visitor)(boost::type<T>());
         }
 
@@ -256,7 +241,6 @@
 #else
 
     //bind<...>, etc.   -> ignore
-    //policy<...>       -> ignore
     //module<....>      -> get all dependencies from the module
     //dependency<....>  -> pass
 

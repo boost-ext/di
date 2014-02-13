@@ -60,11 +60,7 @@
                     , mpl::if_<
                           has_deps<mpl::_2>
                         , deps<mpl::_2>
-                        , mpl::if_<
-                              has_assert_policy<mpl::_2>
-                            , mpl::vector1<mpl::_2>
-                            , default_scope<mpl::_2>
-                          >
+                        , default_scope<mpl::_2>
                       >
                   >
                 , mpl::back_inserter<mpl::_1>

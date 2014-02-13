@@ -572,61 +572,6 @@ BOOST_AUTO_TEST_CASE(call) {
     BOOST_CHECK_EQUAL(1, fake_scope<>::exit_calls());
 }
 
-BOOST_AUTO_TEST_CASE(policies) {
-    BOOST_CHECK((
-        contains_all<
-            mpl::vector<
-                fake_policy<0>
-            >
-          , module<
-                mpl::vector<
-                    fake_policy<0>
-                >
-            >::policies::type
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(policies_mix) {
-    BOOST_CHECK((
-        contains_all<
-            mpl::vector<
-                fake_policy<0>
-              , fake_policy<1>
-            >
-          , module<
-                mpl::vector<
-                    fake_dependency<scopes::unique<>, int, mpl::int_<0>>::type
-                  , fake_policy<0>
-                  , fake_policy<1>
-                >
-            >::policies::type
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(policies_mix_join_many) {
-    BOOST_CHECK((
-        contains_all<
-            mpl::vector<
-                fake_policy<0>
-              , fake_policy<1>
-              , fake_policy<2>
-              , fake_policy<3>
-            >
-          , module<
-                mpl::vector<
-                    fake_policy<0>
-                  , fake_policy<1>
-                  , fake_policy<2>
-                  , fake_dependency<scopes::unique<>, int, mpl::int_<0>>::type
-                  , fake_policy<3>
-                >
-            >::policies::type
-        >::value
-    ));
-}
-
 } // namespace detail
 } // namespace di
 } // namespace boost

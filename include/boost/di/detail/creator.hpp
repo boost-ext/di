@@ -30,10 +30,7 @@
     namespace di {
     namespace detail {
 
-    template<
-        typename TBinder
-      , typename TPolicies
-    >
+    template<typename TBinder>
     class creator
     {
         template<typename TDependency>
@@ -265,7 +262,7 @@
       , const typename TDependency::result_type&
     >::type execute_impl(TDeps& deps, TScopes& scopes, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
-        assert_policies<TPolicies, typename TDeps::types, dependency_type>();
+        //assert_policies<TPolicies, typename TDeps::types, dependency_type>();
         (visitor)(dependency_type());
 
         typedef typename TDependency::result_type convertible_type;
