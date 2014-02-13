@@ -12,6 +12,7 @@
 #include "boost/di/type_traits/parameter_types.hpp"
 #include "boost/di/type_traits/has_ctor.hpp"
 
+#include <string>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_class.hpp>
@@ -28,6 +29,7 @@
 
 namespace boost {
 namespace di {
+namespace detail {
 
 struct any_type { };
 
@@ -50,14 +52,22 @@ struct get_longest_ctor
       >::type
 { };
 
+} // detail
+
 template<typename T>
 struct ctor_traits
     : mpl::fold<
-          mpl::range_c<int, 0, get_longest_ctor<T>::value>
+          mpl::range_c<int, 0, detail::get_longest_ctor<T>::value>
         , mpl::vector0<>
-        , mpl::push_back<mpl::_1, any_type>
+        , mpl::push_back<mpl::_1, detail::any_type>
       >
 { };
+
+template<typename T>
+struct ctor_traits<std::basic_string<T> > // basic_string has ambiguous ctors
+{
+    BOOST_DI_INJECT_TRAITS();
+};
 
 namespace type_traits {
 

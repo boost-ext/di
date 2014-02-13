@@ -94,12 +94,12 @@
     }
 
     template<typename T, typename TObject>
-    inline TObject create_impl(TObject object, typename enable_if<is_same<T, any_type> >::type* = 0) {
+    inline TObject create_impl(TObject object, typename enable_if<is_same<T, detail::any_type> >::type* = 0) {
         return object;
     }
 
     template<typename T, typename TObject>
-    inline T create_impl(TObject object, typename disable_if<is_same<T, any_type> >::type* = 0) {
+    inline T create_impl(TObject object, typename disable_if<is_same<T, detail::any_type> >::type* = 0) {
         return object(type<T>());
     }
 

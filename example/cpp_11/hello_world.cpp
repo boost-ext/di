@@ -16,10 +16,11 @@ struct i { virtual ~i() { } };
 struct impl : i { };
 struct c
 {
-    c(std::shared_ptr<i> p1, double p2)
+    c(std::shared_ptr<i> p1, double p2, const std::string& s)
         : p1(p1)
     {
         assert(p2 == 0.0);
+        assert(s == "text");
     }
 
     std::shared_ptr<i> p1;
@@ -40,14 +41,12 @@ struct hello_world
 } // namespace
 
 int main() {
-    using injector_t = di::injector<
-        di::bind_int<42>
-      , impl // -> di::deduce<impl>
-             // -> di::bind<i, impl>
-             // -> di::deduce<di::bind<i, impl>>
-             // -> di::shared<di::bind<i, impl>>
-    >;
+    auto injector = di::make_injector(
+        di::bind_int<42>() // static
+      , di::bind<std::string>::to("text") // external
+      , di::bind<i, impl>() // 'impl' or 'di::deduce<di::bind<i, impl>>' or 'di::shared<di::bind<i, impl>>'
+    );
 
-    injector_t().create<hello_world>();
+    injector.create<hello_world>();
 }
 

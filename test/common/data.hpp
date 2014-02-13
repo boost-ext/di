@@ -554,12 +554,6 @@ struct ctor_traits<c14>
     BOOST_DI_INJECT_TRAITS(int, double);
 };
 
-template<typename T>
-struct ctor_traits<std::basic_string<T>>
-{
-    BOOST_DI_INJECT_TRAITS();
-};
-
 } // namespace di
 } // namespace boost
 

@@ -16,6 +16,7 @@
 #include "boost/di/type_traits/parameter_types.hpp"
 #include "boost/di/concepts/type_traits/is_req_type.hpp"
 
+#include <string>
 #include <boost/ref.hpp>
 #include <boost/non_type.hpp>
 #include <boost/typeof/typeof.hpp>
@@ -25,6 +26,7 @@
 #include <boost/type_traits/is_class.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
+#include <boost/mpl/bool.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/or.hpp>
@@ -109,9 +111,34 @@ class dependency : public get_scope<TExpected, TGiven, TScope>::type
         );
     };
 
+    template<typename, typename = void>
+    struct is_text
+        : mpl::false_
+    { };
+
+    template<typename T, int N>
+    struct is_text<T[N], void>
+        : mpl::true_
+    { };
+
     template<typename T>
-    struct is_number
-        : mpl::or_<is_arithmetic<T>, is_enum<T> >
+    struct is_text<std::string, T>
+        : mpl::true_
+    { };
+
+    template<typename T>
+    struct is_text<const char*, T>
+        : mpl::true_
+    { };
+
+    template<typename T>
+    struct is_text<char*, T>
+        : mpl::true_
+    { };
+
+    template<typename T>
+    struct is_value
+        : mpl::or_<is_arithmetic<T>, is_enum<T>, is_text<T> >
     { };
 
     template<typename T>
@@ -171,14 +198,14 @@ public:
 
     template<typename T>
     static typename external<expected, T, value_type>::type
-    to(const T& obj, typename enable_if<is_number<T> >::type* = 0
+    to(const T& obj, typename enable_if<is_value<T> >::type* = 0
                    , typename disable_if<has_call_operator<T> >::type* = 0) {
         return typename external<expected, T, value_type>::type(obj);
     }
 
     template<typename T>
     static typename external<const expected, T, ref_type>::type
-    to(const T& obj, typename disable_if<is_number<T> >::type* = 0
+    to(const T& obj, typename disable_if<is_value<T> >::type* = 0
                    , typename disable_if<has_call_operator<T> >::type* = 0) {
         return typename external<const expected, T, ref_type>::type(boost::cref(obj));
     }
@@ -186,7 +213,7 @@ public:
     template<typename T>
     static typename external<expected, T, typename get_convertible<T>::type>::type
     to(const T& obj, typename enable_if<has_call_operator<T> >::type* = 0
-                   , typename disable_if<is_number<T> >::type* = 0) {
+                   , typename disable_if<is_value<T> >::type* = 0) {
         return typename external<expected, T, typename get_convertible<T>::type>::type(obj);
     }
 
