@@ -111,7 +111,7 @@ test-suite "module tests" :
     [ run-test c++11 : mt/make_injector_mt.cpp : ctor_make_injector_mt ]
     [ run-test c++11 : mt/injector_limit_size_mt.cpp : :
         <define>BOOST_DI_CTOR_LIMIT_SIZE=30
-        <define>BOOST_MPL_LIMIT_VECTOR_SIZE=50
+        <define>BOOST_MPL_LIMIT_VECTOR_SIZE=30
     ]
 ;
 
