@@ -2,13 +2,6 @@
 #define BOOST_DI_PROVIDER_HPP
 
 
-
-
-
-
-
-
-
 namespace boost {
 namespace di {
 

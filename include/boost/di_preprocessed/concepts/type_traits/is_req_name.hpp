@@ -9,15 +9,6 @@
 #include <boost/mpl/has_xxx.hpp>
 #include <boost/mpl/times.hpp>
 
-
-
-
-
-
-
-
-
-
 namespace boost {
 namespace di {
 namespace concepts {

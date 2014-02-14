@@ -10,15 +10,6 @@
 #include <boost/mpl/transform.hpp>
 #include <boost/mpl/size.hpp>
 
-
-
-
-
-
-
-
-
-
 namespace boost {
 namespace di {
 namespace policies {
@@ -46,8 +37,6 @@ public:
     >
     static void assert_policy() {
        BOOST_MPL_ASSERT_MSG(is_unique_call_stack<typename T::call_stack>::value, CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED, (typename T::call_stack))
-
-
 
          ;
     }

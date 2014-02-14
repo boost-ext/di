@@ -20,7 +20,7 @@ dump_file() {
     mkdir -p $tmp/`dirname $1`
     cp $1 $tmp/$1
 
-    $CXX -E $1 -I$tmp -include $2 | grep -v "^#"
+    $CXX -E $1 -I$tmp -include $2 | grep -v "^#" | cat -s
 
     rm -rf $tmp
 
@@ -46,13 +46,13 @@ generate_preprocessed() {
            [[ "$file" =~ "common.hpp" ]] ||
            [[ "$file" =~ "memory.hpp" ]]; then
            cp $file $new_file
-        else 
+        else
             dump_file $file $3 > $new_file
         fi
 
     done
 }
 
-dir=`dirname $0`
+dir=`readlink -f \`dirname $0\``
 cd $dir/../include && generate_preprocessed "boost" "di_preprocessed" "$dir/config.hpp"
 

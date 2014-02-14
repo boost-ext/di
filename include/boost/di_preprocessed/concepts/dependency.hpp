@@ -28,15 +28,6 @@
 #include <boost/mpl/void.hpp>
 #include <boost/mpl/aux_/yes_no.hpp>
 
-
-
-
-
-
-
-
-
-
 namespace boost {
 namespace di {
 namespace concepts {

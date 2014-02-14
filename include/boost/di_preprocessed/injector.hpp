@@ -18,18 +18,6 @@
     #include <boost/mpl/placeholders.hpp>
     #include <boost/mpl/has_xxx.hpp>
 
-
-
-
-
-
-
-
-
-
-
-
-
     namespace boost {
     namespace di {
 
@@ -95,9 +83,6 @@
             return injector<>();
         }
 
-
-
-
     template< typename Args0>
     explicit injector( Args0 args0)
         : detail::module<typename joint_concepts<>::type>( args0)
@@ -110,9 +95,6 @@
             args0
         );
     }
-
-
-
 
     template< typename Args0 , typename Args1>
     explicit injector( Args0 args0 , Args1 args1)
@@ -127,9 +109,6 @@
         );
     }
 
-
-
-
     template< typename Args0 , typename Args1 , typename Args2>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2)
@@ -142,9 +121,6 @@
             args0 , args1 , args2
         );
     }
-
-
-
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3)
@@ -159,9 +135,6 @@
         );
     }
 
-
-
-
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4)
@@ -174,9 +147,6 @@
             args0 , args1 , args2 , args3 , args4
         );
     }
-
-
-
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5)
@@ -191,9 +161,6 @@
         );
     }
 
-
-
-
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6)
@@ -206,9 +173,6 @@
             args0 , args1 , args2 , args3 , args4 , args5 , args6
         );
     }
-
-
-
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7)
@@ -223,9 +187,6 @@
         );
     }
 
-
-
-
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8)
@@ -238,9 +199,6 @@
             args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8
         );
     }
-
-
-
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9)
@@ -255,9 +213,6 @@
         );
     }
 
-
-
-
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10)
@@ -270,9 +225,6 @@
             args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10
         );
     }
-
-
-
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11)
@@ -287,9 +239,6 @@
         );
     }
 
-
-
-
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12)
@@ -302,9 +251,6 @@
             args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12
         );
     }
-
-
-
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13)
@@ -319,9 +265,6 @@
         );
     }
 
-
-
-
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14)
@@ -334,9 +277,6 @@
             args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14
         );
     }
-
-
-
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15)
@@ -351,9 +291,6 @@
         );
     }
 
-
-
-
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16)
@@ -366,9 +303,6 @@
             args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16
         );
     }
-
-
-
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17)
@@ -383,9 +317,6 @@
         );
     }
 
-
-
-
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18)
@@ -398,9 +329,6 @@
             args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18
         );
     }
-
-
-
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19)

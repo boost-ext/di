@@ -7,15 +7,6 @@
 #include <boost/type_traits/is_polymorphic.hpp>
 #include <boost/utility/enable_if.hpp>
 
-
-
-
-
-
-
-
-
-
 namespace boost {
 namespace di {
 
@@ -88,11 +79,9 @@ public:
         : object_(ptr)
     { }
 
-
     named(object_type&& object)
         : object_(std::move(object))
     { }
-
 
     operator T() const { return object_; }
 

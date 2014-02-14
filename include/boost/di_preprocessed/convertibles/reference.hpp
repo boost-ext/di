@@ -5,15 +5,6 @@
 #include <boost/type.hpp>
 #include <boost/ref.hpp>
 
-
-
-
-
-
-
-
-
-
 namespace boost {
 namespace di {
 namespace convertibles {

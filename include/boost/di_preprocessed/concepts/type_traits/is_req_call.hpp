@@ -15,14 +15,6 @@
 #include <boost/mpl/times.hpp>
 #include <boost/mpl/empty.hpp>
 
-
-
-
-
-
-
-
-
 namespace boost {
 namespace di {
 namespace concepts {

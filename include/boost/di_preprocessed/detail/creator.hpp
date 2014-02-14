@@ -16,16 +16,6 @@
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/has_xxx.hpp>
 
-
-
-
-
-
-
-
-
-
-
     namespace boost {
     namespace di {
     namespace detail {
@@ -101,10 +91,6 @@
             >
             operator U() {
 
-
-
-
-
                 return creator::execute_impl<
                     NU
                   , typename mpl::push_back<TCallStack, PU>::type
@@ -116,17 +102,12 @@
             template<
                 typename U
 
-
               , typename NU = typename named_type<U>::type
               , typename PU = typename type_traits::make_plain<U>::type
               , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
 
             >
             operator const U&() const {
-
-
-
-
 
                 return creator::execute_impl<
                     const U&
@@ -145,10 +126,6 @@
 
             >
             operator U&() const {
-
-
-
-
 
                 return creator::execute_impl<
                     U&
@@ -210,8 +187,6 @@
 
     private:
 
-
-
     template<
         typename T
       , typename TCallStack
@@ -236,21 +211,13 @@
                 acquire<typename TDependency::type>(deps, scopes).create(
                    
 
-
-
-
                 )
             );
-
-
 
         refs.push_back(aux::shared_ptr<void>(convertible));
 
         return *convertible;
     }
-
-
-
 
     template<
         typename T
@@ -276,21 +243,13 @@
                 acquire<typename TDependency::type>(deps, scopes).create(
                     execute< typename mpl::at_c< typename ctor<TDependency>::type , 0 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor)
 
-
-
-
                 )
             );
-
-
 
         refs.push_back(aux::shared_ptr<void>(convertible));
 
         return *convertible;
     }
-
-
-
 
     template<
         typename T
@@ -316,21 +275,13 @@
                 acquire<typename TDependency::type>(deps, scopes).create(
                     execute< typename mpl::at_c< typename ctor<TDependency>::type , 0 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 1 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor)
 
-
-
-
                 )
             );
-
-
 
         refs.push_back(aux::shared_ptr<void>(convertible));
 
         return *convertible;
     }
-
-
-
 
     template<
         typename T
@@ -356,21 +307,13 @@
                 acquire<typename TDependency::type>(deps, scopes).create(
                     execute< typename mpl::at_c< typename ctor<TDependency>::type , 0 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 1 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 2 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor)
 
-
-
-
                 )
             );
-
-
 
         refs.push_back(aux::shared_ptr<void>(convertible));
 
         return *convertible;
     }
-
-
-
 
     template<
         typename T
@@ -396,21 +339,13 @@
                 acquire<typename TDependency::type>(deps, scopes).create(
                     execute< typename mpl::at_c< typename ctor<TDependency>::type , 0 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 1 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 2 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 3 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor)
 
-
-
-
                 )
             );
-
-
 
         refs.push_back(aux::shared_ptr<void>(convertible));
 
         return *convertible;
     }
-
-
-
 
     template<
         typename T
@@ -436,21 +371,13 @@
                 acquire<typename TDependency::type>(deps, scopes).create(
                     execute< typename mpl::at_c< typename ctor<TDependency>::type , 0 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 1 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 2 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 3 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 4 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor)
 
-
-
-
                 )
             );
-
-
 
         refs.push_back(aux::shared_ptr<void>(convertible));
 
         return *convertible;
     }
-
-
-
 
     template<
         typename T
@@ -476,21 +403,13 @@
                 acquire<typename TDependency::type>(deps, scopes).create(
                     execute< typename mpl::at_c< typename ctor<TDependency>::type , 0 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 1 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 2 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 3 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 4 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 5 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor)
 
-
-
-
                 )
             );
-
-
 
         refs.push_back(aux::shared_ptr<void>(convertible));
 
         return *convertible;
     }
-
-
-
 
     template<
         typename T
@@ -516,21 +435,13 @@
                 acquire<typename TDependency::type>(deps, scopes).create(
                     execute< typename mpl::at_c< typename ctor<TDependency>::type , 0 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 1 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 2 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 3 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 4 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 5 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 6 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor)
 
-
-
-
                 )
             );
-
-
 
         refs.push_back(aux::shared_ptr<void>(convertible));
 
         return *convertible;
     }
-
-
-
 
     template<
         typename T
@@ -556,21 +467,13 @@
                 acquire<typename TDependency::type>(deps, scopes).create(
                     execute< typename mpl::at_c< typename ctor<TDependency>::type , 0 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 1 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 2 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 3 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 4 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 5 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 6 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 7 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor)
 
-
-
-
                 )
             );
-
-
 
         refs.push_back(aux::shared_ptr<void>(convertible));
 
         return *convertible;
     }
-
-
-
 
     template<
         typename T
@@ -596,21 +499,13 @@
                 acquire<typename TDependency::type>(deps, scopes).create(
                     execute< typename mpl::at_c< typename ctor<TDependency>::type , 0 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 1 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 2 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 3 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 4 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 5 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 6 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 7 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 8 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor)
 
-
-
-
                 )
             );
-
-
 
         refs.push_back(aux::shared_ptr<void>(convertible));
 
         return *convertible;
     }
-
-
-
 
     template<
         typename T
@@ -636,21 +531,13 @@
                 acquire<typename TDependency::type>(deps, scopes).create(
                     execute< typename mpl::at_c< typename ctor<TDependency>::type , 0 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 1 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 2 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 3 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 4 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 5 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 6 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 7 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 8 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 9 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor)
 
-
-
-
                 )
             );
-
-
 
         refs.push_back(aux::shared_ptr<void>(convertible));
 
         return *convertible;
     }
-
-
-
 
     template<
         typename T
@@ -676,21 +563,13 @@
                 acquire<typename TDependency::type>(deps, scopes).create(
                     execute< typename mpl::at_c< typename ctor<TDependency>::type , 0 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 1 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 2 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 3 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 4 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 5 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 6 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 7 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 8 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 9 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 10 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor)
 
-
-
-
                 )
             );
-
-
 
         refs.push_back(aux::shared_ptr<void>(convertible));
 
         return *convertible;
     }
-
-
-
 
     template<
         typename T
@@ -716,21 +595,13 @@
                 acquire<typename TDependency::type>(deps, scopes).create(
                     execute< typename mpl::at_c< typename ctor<TDependency>::type , 0 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 1 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 2 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 3 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 4 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 5 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 6 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 7 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 8 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 9 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 10 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 11 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor)
 
-
-
-
                 )
             );
-
-
 
         refs.push_back(aux::shared_ptr<void>(convertible));
 
         return *convertible;
     }
-
-
-
 
     template<
         typename T
@@ -756,21 +627,13 @@
                 acquire<typename TDependency::type>(deps, scopes).create(
                     execute< typename mpl::at_c< typename ctor<TDependency>::type , 0 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 1 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 2 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 3 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 4 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 5 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 6 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 7 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 8 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 9 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 10 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 11 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 12 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor)
 
-
-
-
                 )
             );
-
-
 
         refs.push_back(aux::shared_ptr<void>(convertible));
 
         return *convertible;
     }
-
-
-
 
     template<
         typename T
@@ -796,21 +659,13 @@
                 acquire<typename TDependency::type>(deps, scopes).create(
                     execute< typename mpl::at_c< typename ctor<TDependency>::type , 0 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 1 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 2 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 3 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 4 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 5 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 6 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 7 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 8 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 9 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 10 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 11 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 12 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 13 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor)
 
-
-
-
                 )
             );
-
-
 
         refs.push_back(aux::shared_ptr<void>(convertible));
 
         return *convertible;
     }
-
-
-
 
     template<
         typename T
@@ -836,21 +691,13 @@
                 acquire<typename TDependency::type>(deps, scopes).create(
                     execute< typename mpl::at_c< typename ctor<TDependency>::type , 0 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 1 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 2 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 3 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 4 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 5 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 6 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 7 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 8 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 9 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 10 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 11 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 12 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 13 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 14 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor)
 
-
-
-
                 )
             );
-
-
 
         refs.push_back(aux::shared_ptr<void>(convertible));
 
         return *convertible;
     }
-
-
-
 
     template<
         typename T
@@ -876,21 +723,13 @@
                 acquire<typename TDependency::type>(deps, scopes).create(
                     execute< typename mpl::at_c< typename ctor<TDependency>::type , 0 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 1 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 2 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 3 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 4 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 5 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 6 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 7 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 8 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 9 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 10 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 11 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 12 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 13 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 14 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 15 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor)
 
-
-
-
                 )
             );
-
-
 
         refs.push_back(aux::shared_ptr<void>(convertible));
 
         return *convertible;
     }
-
-
-
 
     template<
         typename T
@@ -916,21 +755,13 @@
                 acquire<typename TDependency::type>(deps, scopes).create(
                     execute< typename mpl::at_c< typename ctor<TDependency>::type , 0 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 1 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 2 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 3 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 4 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 5 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 6 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 7 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 8 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 9 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 10 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 11 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 12 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 13 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 14 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 15 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 16 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor)
 
-
-
-
                 )
             );
-
-
 
         refs.push_back(aux::shared_ptr<void>(convertible));
 
         return *convertible;
     }
-
-
-
 
     template<
         typename T
@@ -956,21 +787,13 @@
                 acquire<typename TDependency::type>(deps, scopes).create(
                     execute< typename mpl::at_c< typename ctor<TDependency>::type , 0 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 1 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 2 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 3 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 4 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 5 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 6 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 7 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 8 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 9 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 10 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 11 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 12 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 13 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 14 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 15 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 16 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 17 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor)
 
-
-
-
                 )
             );
-
-
 
         refs.push_back(aux::shared_ptr<void>(convertible));
 
         return *convertible;
     }
-
-
-
 
     template<
         typename T
@@ -996,21 +819,13 @@
                 acquire<typename TDependency::type>(deps, scopes).create(
                     execute< typename mpl::at_c< typename ctor<TDependency>::type , 0 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 1 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 2 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 3 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 4 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 5 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 6 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 7 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 8 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 9 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 10 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 11 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 12 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 13 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 14 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 15 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 16 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 17 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 18 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor)
 
-
-
-
                 )
             );
-
-
 
         refs.push_back(aux::shared_ptr<void>(convertible));
 
         return *convertible;
     }
-
-
-
 
     template<
         typename T
@@ -1036,13 +851,8 @@
                 acquire<typename TDependency::type>(deps, scopes).create(
                     execute< typename mpl::at_c< typename ctor<TDependency>::type , 0 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 1 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 2 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 3 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 4 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 5 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 6 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 7 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 8 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 9 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 10 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 11 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 12 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 13 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 14 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 15 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 16 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 17 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 18 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor) , execute< typename mpl::at_c< typename ctor<TDependency>::type , 19 >::type , T , TCallStack , TPolicies >(deps, scopes, refs, visitor)
 
-
-
-
                 )
             );
-
-
 
         refs.push_back(aux::shared_ptr<void>(convertible));
 

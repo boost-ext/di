@@ -5,14 +5,6 @@
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 
-
-
-
-
-
-
-
-
 namespace boost {
 namespace di {
 namespace type_traits {

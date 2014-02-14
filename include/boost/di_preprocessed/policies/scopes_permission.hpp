@@ -22,15 +22,6 @@
 #include <boost/mpl/back_inserter.hpp>
 #include <boost/mpl/assert.hpp>
 
-
-
-
-
-
-
-
-
-
 namespace boost {
 namespace di {
 namespace policies {

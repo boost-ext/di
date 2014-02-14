@@ -7,28 +7,12 @@
     #include "boost/di_preprocessed/named.hpp"
     #include <boost/mpl/int.hpp>
 
-
-
-
-
-
-
-
-
-
-
-
-
     namespace boost {
     namespace di {
     namespace scopes {
 
     template<typename>
     class callback;
-
-
-
-
 
         template<
             typename R
@@ -41,8 +25,6 @@
 
         public:
 
-
-
             callback0(
                 const f_t& f
                
@@ -52,20 +34,14 @@
                
             { }
 
-
-
             R operator()() const { return f(); }
 
         private:
             f_t f;
 
-
            
 
         };
-
-
-
 
         template<
             typename R
@@ -78,8 +54,6 @@
 
         public:
 
-
-
             callback1(
                 const f_t& f
                 ,
@@ -89,20 +63,14 @@
                 args0(args0)
             { }
 
-
-
             R operator()() const { return f( args0); }
 
         private:
             f_t f;
 
-
             Args0 args0;
 
         };
-
-
-
 
         template<
             typename R
@@ -115,8 +83,6 @@
 
         public:
 
-
-
             callback2(
                 const f_t& f
                 ,
@@ -126,20 +92,14 @@
                 args0(args0) , args1(args1)
             { }
 
-
-
             R operator()() const { return f( args0 , args1); }
 
         private:
             f_t f;
 
-
             Args0 args0; Args1 args1;
 
         };
-
-
-
 
         template<
             typename R
@@ -152,8 +112,6 @@
 
         public:
 
-
-
             callback3(
                 const f_t& f
                 ,
@@ -163,20 +121,14 @@
                 args0(args0) , args1(args1) , args2(args2)
             { }
 
-
-
             R operator()() const { return f( args0 , args1 , args2); }
 
         private:
             f_t f;
 
-
             Args0 args0; Args1 args1; Args2 args2;
 
         };
-
-
-
 
         template<
             typename R
@@ -189,8 +141,6 @@
 
         public:
 
-
-
             callback4(
                 const f_t& f
                 ,
@@ -200,20 +150,14 @@
                 args0(args0) , args1(args1) , args2(args2) , args3(args3)
             { }
 
-
-
             R operator()() const { return f( args0 , args1 , args2 , args3); }
 
         private:
             f_t f;
 
-
             Args0 args0; Args1 args1; Args2 args2; Args3 args3;
 
         };
-
-
-
 
         template<
             typename R
@@ -226,8 +170,6 @@
 
         public:
 
-
-
             callback5(
                 const f_t& f
                 ,
@@ -237,20 +179,14 @@
                 args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4)
             { }
 
-
-
             R operator()() const { return f( args0 , args1 , args2 , args3 , args4); }
 
         private:
             f_t f;
 
-
             Args0 args0; Args1 args1; Args2 args2; Args3 args3; Args4 args4;
 
         };
-
-
-
 
         template<
             typename R
@@ -263,8 +199,6 @@
 
         public:
 
-
-
             callback6(
                 const f_t& f
                 ,
@@ -274,20 +208,14 @@
                 args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5)
             { }
 
-
-
             R operator()() const { return f( args0 , args1 , args2 , args3 , args4 , args5); }
 
         private:
             f_t f;
 
-
             Args0 args0; Args1 args1; Args2 args2; Args3 args3; Args4 args4; Args5 args5;
 
         };
-
-
-
 
         template<
             typename R
@@ -300,8 +228,6 @@
 
         public:
 
-
-
             callback7(
                 const f_t& f
                 ,
@@ -311,20 +237,14 @@
                 args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6)
             { }
 
-
-
             R operator()() const { return f( args0 , args1 , args2 , args3 , args4 , args5 , args6); }
 
         private:
             f_t f;
 
-
             Args0 args0; Args1 args1; Args2 args2; Args3 args3; Args4 args4; Args5 args5; Args6 args6;
 
         };
-
-
-
 
         template<
             typename R
@@ -337,8 +257,6 @@
 
         public:
 
-
-
             callback8(
                 const f_t& f
                 ,
@@ -348,20 +266,14 @@
                 args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6) , args7(args7)
             { }
 
-
-
             R operator()() const { return f( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7); }
 
         private:
             f_t f;
 
-
             Args0 args0; Args1 args1; Args2 args2; Args3 args3; Args4 args4; Args5 args5; Args6 args6; Args7 args7;
 
         };
-
-
-
 
         template<
             typename R
@@ -374,8 +286,6 @@
 
         public:
 
-
-
             callback9(
                 const f_t& f
                 ,
@@ -385,20 +295,14 @@
                 args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6) , args7(args7) , args8(args8)
             { }
 
-
-
             R operator()() const { return f( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8); }
 
         private:
             f_t f;
 
-
             Args0 args0; Args1 args1; Args2 args2; Args3 args3; Args4 args4; Args5 args5; Args6 args6; Args7 args7; Args8 args8;
 
         };
-
-
-
 
         template<
             typename R
@@ -411,8 +315,6 @@
 
         public:
 
-
-
             callback10(
                 const f_t& f
                 ,
@@ -422,20 +324,14 @@
                 args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6) , args7(args7) , args8(args8) , args9(args9)
             { }
 
-
-
             R operator()() const { return f( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9); }
 
         private:
             f_t f;
 
-
             Args0 args0; Args1 args1; Args2 args2; Args3 args3; Args4 args4; Args5 args5; Args6 args6; Args7 args7; Args8 args8; Args9 args9;
 
         };
-
-
-
 
         template<
             typename R
@@ -448,8 +344,6 @@
 
         public:
 
-
-
             callback11(
                 const f_t& f
                 ,
@@ -459,20 +353,14 @@
                 args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6) , args7(args7) , args8(args8) , args9(args9) , args10(args10)
             { }
 
-
-
             R operator()() const { return f( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10); }
 
         private:
             f_t f;
 
-
             Args0 args0; Args1 args1; Args2 args2; Args3 args3; Args4 args4; Args5 args5; Args6 args6; Args7 args7; Args8 args8; Args9 args9; Args10 args10;
 
         };
-
-
-
 
         template<
             typename R
@@ -485,8 +373,6 @@
 
         public:
 
-
-
             callback12(
                 const f_t& f
                 ,
@@ -496,20 +382,14 @@
                 args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6) , args7(args7) , args8(args8) , args9(args9) , args10(args10) , args11(args11)
             { }
 
-
-
             R operator()() const { return f( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11); }
 
         private:
             f_t f;
 
-
             Args0 args0; Args1 args1; Args2 args2; Args3 args3; Args4 args4; Args5 args5; Args6 args6; Args7 args7; Args8 args8; Args9 args9; Args10 args10; Args11 args11;
 
         };
-
-
-
 
         template<
             typename R
@@ -522,8 +402,6 @@
 
         public:
 
-
-
             callback13(
                 const f_t& f
                 ,
@@ -533,20 +411,14 @@
                 args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6) , args7(args7) , args8(args8) , args9(args9) , args10(args10) , args11(args11) , args12(args12)
             { }
 
-
-
             R operator()() const { return f( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12); }
 
         private:
             f_t f;
 
-
             Args0 args0; Args1 args1; Args2 args2; Args3 args3; Args4 args4; Args5 args5; Args6 args6; Args7 args7; Args8 args8; Args9 args9; Args10 args10; Args11 args11; Args12 args12;
 
         };
-
-
-
 
         template<
             typename R
@@ -559,8 +431,6 @@
 
         public:
 
-
-
             callback14(
                 const f_t& f
                 ,
@@ -570,20 +440,14 @@
                 args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6) , args7(args7) , args8(args8) , args9(args9) , args10(args10) , args11(args11) , args12(args12) , args13(args13)
             { }
 
-
-
             R operator()() const { return f( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13); }
 
         private:
             f_t f;
 
-
             Args0 args0; Args1 args1; Args2 args2; Args3 args3; Args4 args4; Args5 args5; Args6 args6; Args7 args7; Args8 args8; Args9 args9; Args10 args10; Args11 args11; Args12 args12; Args13 args13;
 
         };
-
-
-
 
         template<
             typename R
@@ -596,8 +460,6 @@
 
         public:
 
-
-
             callback15(
                 const f_t& f
                 ,
@@ -607,20 +469,14 @@
                 args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6) , args7(args7) , args8(args8) , args9(args9) , args10(args10) , args11(args11) , args12(args12) , args13(args13) , args14(args14)
             { }
 
-
-
             R operator()() const { return f( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14); }
 
         private:
             f_t f;
 
-
             Args0 args0; Args1 args1; Args2 args2; Args3 args3; Args4 args4; Args5 args5; Args6 args6; Args7 args7; Args8 args8; Args9 args9; Args10 args10; Args11 args11; Args12 args12; Args13 args13; Args14 args14;
 
         };
-
-
-
 
         template<
             typename R
@@ -633,8 +489,6 @@
 
         public:
 
-
-
             callback16(
                 const f_t& f
                 ,
@@ -644,20 +498,14 @@
                 args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6) , args7(args7) , args8(args8) , args9(args9) , args10(args10) , args11(args11) , args12(args12) , args13(args13) , args14(args14) , args15(args15)
             { }
 
-
-
             R operator()() const { return f( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15); }
 
         private:
             f_t f;
 
-
             Args0 args0; Args1 args1; Args2 args2; Args3 args3; Args4 args4; Args5 args5; Args6 args6; Args7 args7; Args8 args8; Args9 args9; Args10 args10; Args11 args11; Args12 args12; Args13 args13; Args14 args14; Args15 args15;
 
         };
-
-
-
 
         template<
             typename R
@@ -670,8 +518,6 @@
 
         public:
 
-
-
             callback17(
                 const f_t& f
                 ,
@@ -681,20 +527,14 @@
                 args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6) , args7(args7) , args8(args8) , args9(args9) , args10(args10) , args11(args11) , args12(args12) , args13(args13) , args14(args14) , args15(args15) , args16(args16)
             { }
 
-
-
             R operator()() const { return f( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16); }
 
         private:
             f_t f;
 
-
             Args0 args0; Args1 args1; Args2 args2; Args3 args3; Args4 args4; Args5 args5; Args6 args6; Args7 args7; Args8 args8; Args9 args9; Args10 args10; Args11 args11; Args12 args12; Args13 args13; Args14 args14; Args15 args15; Args16 args16;
 
         };
-
-
-
 
         template<
             typename R
@@ -707,8 +547,6 @@
 
         public:
 
-
-
             callback18(
                 const f_t& f
                 ,
@@ -718,20 +556,14 @@
                 args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6) , args7(args7) , args8(args8) , args9(args9) , args10(args10) , args11(args11) , args12(args12) , args13(args13) , args14(args14) , args15(args15) , args16(args16) , args17(args17)
             { }
 
-
-
             R operator()() const { return f( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17); }
 
         private:
             f_t f;
 
-
             Args0 args0; Args1 args1; Args2 args2; Args3 args3; Args4 args4; Args5 args5; Args6 args6; Args7 args7; Args8 args8; Args9 args9; Args10 args10; Args11 args11; Args12 args12; Args13 args13; Args14 args14; Args15 args15; Args16 args16; Args17 args17;
 
         };
-
-
-
 
         template<
             typename R
@@ -744,8 +576,6 @@
 
         public:
 
-
-
             callback19(
                 const f_t& f
                 ,
@@ -755,20 +585,14 @@
                 args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6) , args7(args7) , args8(args8) , args9(args9) , args10(args10) , args11(args11) , args12(args12) , args13(args13) , args14(args14) , args15(args15) , args16(args16) , args17(args17) , args18(args18)
             { }
 
-
-
             R operator()() const { return f( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18); }
 
         private:
             f_t f;
 
-
             Args0 args0; Args1 args1; Args2 args2; Args3 args3; Args4 args4; Args5 args5; Args6 args6; Args7 args7; Args8 args8; Args9 args9; Args10 args10; Args11 args11; Args12 args12; Args13 args13; Args14 args14; Args15 args15; Args16 args16; Args17 args17; Args18 args18;
 
         };
-
-
-
 
         template<
             typename R
@@ -781,8 +605,6 @@
 
         public:
 
-
-
             callback20(
                 const f_t& f
                 ,
@@ -792,18 +614,14 @@
                 args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6) , args7(args7) , args8(args8) , args9(args9) , args10(args10) , args11(args11) , args12(args12) , args13(args13) , args14(args14) , args15(args15) , args16(args16) , args17(args17) , args18(args18) , args19(args19)
             { }
 
-
-
             R operator()() const { return f( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19); }
 
         private:
             f_t f;
 
-
             Args0 args0; Args1 args1; Args2 args2; Args3 args3; Args4 args4; Args5 args5; Args6 args6; Args7 args7; Args8 args8; Args9 args9; Args10 args10; Args11 args11; Args12 args12; Args13 args13; Args14 args14; Args15 args15; Args16 args16; Args17 args17; Args18 args18; Args19 args19;
 
         };
-
 
     template<template<typename> class TConvertible = convertibles::copy>
     class unique
@@ -823,9 +641,6 @@
                 );
             }
 
-
-
-
         template< typename Args0>
         result_type create( Args0 args0) {
             return callback1<TExpected*, Args0>(
@@ -833,9 +648,6 @@
               , args0
             );
         }
-
-
-
 
         template< typename Args0 , typename Args1>
         result_type create( Args0 args0 , Args1 args1) {
@@ -845,9 +657,6 @@
             );
         }
 
-
-
-
         template< typename Args0 , typename Args1 , typename Args2>
         result_type create( Args0 args0 , Args1 args1 , Args2 args2) {
             return callback3<TExpected*, Args0 , Args1 , Args2>(
@@ -855,9 +664,6 @@
               , args0 , args1 , args2
             );
         }
-
-
-
 
         template< typename Args0 , typename Args1 , typename Args2 , typename Args3>
         result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3) {
@@ -867,9 +673,6 @@
             );
         }
 
-
-
-
         template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
         result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4) {
             return callback5<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4>(
@@ -877,9 +680,6 @@
               , args0 , args1 , args2 , args3 , args4
             );
         }
-
-
-
 
         template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
         result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5) {
@@ -889,9 +689,6 @@
             );
         }
 
-
-
-
         template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
         result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6) {
             return callback7<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6>(
@@ -899,9 +696,6 @@
               , args0 , args1 , args2 , args3 , args4 , args5 , args6
             );
         }
-
-
-
 
         template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
         result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7) {
@@ -911,9 +705,6 @@
             );
         }
 
-
-
-
         template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
         result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8) {
             return callback9<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8>(
@@ -921,9 +712,6 @@
               , args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8
             );
         }
-
-
-
 
         template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
         result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9) {
@@ -933,9 +721,6 @@
             );
         }
 
-
-
-
         template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10>
         result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10) {
             return callback11<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10>(
@@ -943,9 +728,6 @@
               , args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10
             );
         }
-
-
-
 
         template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11>
         result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11) {
@@ -955,9 +737,6 @@
             );
         }
 
-
-
-
         template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12>
         result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12) {
             return callback13<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12>(
@@ -965,9 +744,6 @@
               , args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12
             );
         }
-
-
-
 
         template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13>
         result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13) {
@@ -977,9 +753,6 @@
             );
         }
 
-
-
-
         template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14>
         result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14) {
             return callback15<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14>(
@@ -987,9 +760,6 @@
               , args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14
             );
         }
-
-
-
 
         template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15>
         result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15) {
@@ -999,9 +769,6 @@
             );
         }
 
-
-
-
         template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16>
         result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16) {
             return callback17<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16>(
@@ -1009,9 +776,6 @@
               , args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16
             );
         }
-
-
-
 
         template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17>
         result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17) {
@@ -1021,9 +785,6 @@
             );
         }
 
-
-
-
         template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18>
         result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18) {
             return callback19<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18>(
@@ -1031,9 +792,6 @@
               , args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18
             );
         }
-
-
-
 
         template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19>
         result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19) {

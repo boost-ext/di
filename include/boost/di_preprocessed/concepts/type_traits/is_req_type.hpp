@@ -7,15 +7,6 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/or.hpp>
 
-
-
-
-
-
-
-
-
-
 namespace boost {
 namespace di {
 namespace concepts {

@@ -11,15 +11,6 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/has_xxx.hpp>
 
-
-
-
-
-
-
-
-
-
 namespace boost {
 namespace di {
 namespace type_traits {
@@ -78,8 +69,6 @@ struct scope_traits<aux::unique_ptr<T> >
     typedef scopes::unique<> type;
 };
 
-
-
 template<typename T>
 struct scope_traits<T&&>
 {
@@ -91,8 +80,6 @@ struct scope_traits<const T&&>
 {
     typedef scopes::unique<> type;
 };
-
-
 
 template<typename T>
 struct scope_traits<T, typename enable_if<has_named_type<T> >::type>

@@ -14,15 +14,6 @@
 #include <boost/mpl/greater.hpp>
 #include <boost/mpl/times.hpp>
 
-
-
-
-
-
-
-
-
-
 namespace boost {
 namespace di {
 namespace detail {

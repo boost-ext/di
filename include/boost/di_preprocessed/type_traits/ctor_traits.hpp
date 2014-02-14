@@ -19,16 +19,6 @@
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/aux_/yes_no.hpp>
 
-
-
-
-
-
-
-
-
-
-
 namespace boost {
 namespace di {
 namespace detail {

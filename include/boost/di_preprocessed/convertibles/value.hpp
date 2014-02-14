@@ -7,15 +7,6 @@
 #include <boost/type.hpp>
 #include <boost/config.hpp>
 
-
-
-
-
-
-
-
-
-
 namespace boost {
 namespace di {
 namespace convertibles {

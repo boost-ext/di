@@ -10,15 +10,6 @@
 #include <boost/mpl/lambda.hpp>
 #include <boost/mpl/times.hpp>
 
-
-
-
-
-
-
-
-
-
 namespace boost {
 namespace di {
 namespace concepts {

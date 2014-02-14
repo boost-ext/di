@@ -9,22 +9,12 @@
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/aux_/yes_no.hpp>
 
-
-
-
-
-
-
-
-
-
     namespace boost {
     namespace di {
     namespace type_traits {
 
     template<typename, typename>
     class has_ctor;
-
 
         template<typename T>
         class has_ctor<T, mpl::int_<1> >
@@ -62,8 +52,6 @@
         {
             template<typename U> operator U&() const;
 
-
-
             template<typename U> operator U();
         };
 
@@ -86,17 +74,12 @@
         );
     };
 
-
-
-
     template<typename T>
     class has_ctor<T, mpl::int_<3> >
     {
         struct any_type
         {
             template<typename U> operator U&() const;
-
-
 
             template<typename U> operator U();
         };
@@ -120,17 +103,12 @@
         );
     };
 
-
-
-
     template<typename T>
     class has_ctor<T, mpl::int_<4> >
     {
         struct any_type
         {
             template<typename U> operator U&() const;
-
-
 
             template<typename U> operator U();
         };
@@ -154,17 +132,12 @@
         );
     };
 
-
-
-
     template<typename T>
     class has_ctor<T, mpl::int_<5> >
     {
         struct any_type
         {
             template<typename U> operator U&() const;
-
-
 
             template<typename U> operator U();
         };
@@ -188,17 +161,12 @@
         );
     };
 
-
-
-
     template<typename T>
     class has_ctor<T, mpl::int_<6> >
     {
         struct any_type
         {
             template<typename U> operator U&() const;
-
-
 
             template<typename U> operator U();
         };
@@ -222,17 +190,12 @@
         );
     };
 
-
-
-
     template<typename T>
     class has_ctor<T, mpl::int_<7> >
     {
         struct any_type
         {
             template<typename U> operator U&() const;
-
-
 
             template<typename U> operator U();
         };
@@ -256,17 +219,12 @@
         );
     };
 
-
-
-
     template<typename T>
     class has_ctor<T, mpl::int_<8> >
     {
         struct any_type
         {
             template<typename U> operator U&() const;
-
-
 
             template<typename U> operator U();
         };
@@ -290,17 +248,12 @@
         );
     };
 
-
-
-
     template<typename T>
     class has_ctor<T, mpl::int_<9> >
     {
         struct any_type
         {
             template<typename U> operator U&() const;
-
-
 
             template<typename U> operator U();
         };
@@ -324,17 +277,12 @@
         );
     };
 
-
-
-
     template<typename T>
     class has_ctor<T, mpl::int_<10> >
     {
         struct any_type
         {
             template<typename U> operator U&() const;
-
-
 
             template<typename U> operator U();
         };
@@ -358,17 +306,12 @@
         );
     };
 
-
-
-
     template<typename T>
     class has_ctor<T, mpl::int_<11> >
     {
         struct any_type
         {
             template<typename U> operator U&() const;
-
-
 
             template<typename U> operator U();
         };
@@ -392,17 +335,12 @@
         );
     };
 
-
-
-
     template<typename T>
     class has_ctor<T, mpl::int_<12> >
     {
         struct any_type
         {
             template<typename U> operator U&() const;
-
-
 
             template<typename U> operator U();
         };
@@ -426,17 +364,12 @@
         );
     };
 
-
-
-
     template<typename T>
     class has_ctor<T, mpl::int_<13> >
     {
         struct any_type
         {
             template<typename U> operator U&() const;
-
-
 
             template<typename U> operator U();
         };
@@ -460,17 +393,12 @@
         );
     };
 
-
-
-
     template<typename T>
     class has_ctor<T, mpl::int_<14> >
     {
         struct any_type
         {
             template<typename U> operator U&() const;
-
-
 
             template<typename U> operator U();
         };
@@ -494,17 +422,12 @@
         );
     };
 
-
-
-
     template<typename T>
     class has_ctor<T, mpl::int_<15> >
     {
         struct any_type
         {
             template<typename U> operator U&() const;
-
-
 
             template<typename U> operator U();
         };
@@ -528,17 +451,12 @@
         );
     };
 
-
-
-
     template<typename T>
     class has_ctor<T, mpl::int_<16> >
     {
         struct any_type
         {
             template<typename U> operator U&() const;
-
-
 
             template<typename U> operator U();
         };
@@ -562,17 +480,12 @@
         );
     };
 
-
-
-
     template<typename T>
     class has_ctor<T, mpl::int_<17> >
     {
         struct any_type
         {
             template<typename U> operator U&() const;
-
-
 
             template<typename U> operator U();
         };
@@ -596,17 +509,12 @@
         );
     };
 
-
-
-
     template<typename T>
     class has_ctor<T, mpl::int_<18> >
     {
         struct any_type
         {
             template<typename U> operator U&() const;
-
-
 
             template<typename U> operator U();
         };
@@ -630,17 +538,12 @@
         );
     };
 
-
-
-
     template<typename T>
     class has_ctor<T, mpl::int_<19> >
     {
         struct any_type
         {
             template<typename U> operator U&() const;
-
-
 
             template<typename U> operator U();
         };
@@ -664,17 +567,12 @@
         );
     };
 
-
-
-
     template<typename T>
     class has_ctor<T, mpl::int_<20> >
     {
         struct any_type
         {
             template<typename U> operator U&() const;
-
-
 
             template<typename U> operator U();
         };

@@ -8,15 +8,6 @@
 #include <boost/mpl/lambda.hpp>
 #include <boost/mpl/has_xxx.hpp>
 
-
-
-
-
-
-
-
-
-
 namespace boost {
 namespace di {
 namespace concepts {

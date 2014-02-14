@@ -13,15 +13,6 @@
 #include <string>
 #include <boost/mpl/int.hpp>
 
-
-
-
-
-
-
-
-
-
 namespace boost {
 namespace di {
 

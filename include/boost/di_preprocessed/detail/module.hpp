@@ -29,16 +29,6 @@
     #include <boost/mpl/has_xxx.hpp>
     #include <boost/mpl/assert.hpp>
 
-
-
-
-
-
-
-
-
-
-
     namespace boost {
     namespace di {
     namespace detail {
@@ -185,9 +175,6 @@
 
         module() { }
 
-
-
-
     template< typename Args0>
     explicit module( Args0 args0)
         : TPool<deps>(
@@ -212,9 +199,6 @@
         return TCreator<TBinder<deps> >::template
             execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
     }
-
-
-
 
     template< typename Args0 , typename Args1>
     explicit module( Args0 args0 , Args1 args1)
@@ -241,9 +225,6 @@
             execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
     }
 
-
-
-
     template< typename Args0 , typename Args1 , typename Args2>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2)
         : TPool<deps>(
@@ -268,9 +249,6 @@
         return TCreator<TBinder<deps> >::template
             execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
     }
-
-
-
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3)
@@ -297,9 +275,6 @@
             execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
     }
 
-
-
-
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4)
         : TPool<deps>(
@@ -324,9 +299,6 @@
         return TCreator<TBinder<deps> >::template
             execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
     }
-
-
-
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5)
@@ -353,9 +325,6 @@
             execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
     }
 
-
-
-
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6)
         : TPool<deps>(
@@ -380,9 +349,6 @@
         return TCreator<TBinder<deps> >::template
             execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
     }
-
-
-
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7)
@@ -409,9 +375,6 @@
             execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
     }
 
-
-
-
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8)
         : TPool<deps>(
@@ -436,9 +399,6 @@
         return TCreator<TBinder<deps> >::template
             execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
     }
-
-
-
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9)
@@ -465,9 +425,6 @@
             execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
     }
 
-
-
-
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10)
         : TPool<deps>(
@@ -492,9 +449,6 @@
         return TCreator<TBinder<deps> >::template
             execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
     }
-
-
-
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11)
@@ -521,9 +475,6 @@
             execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
     }
 
-
-
-
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12)
         : TPool<deps>(
@@ -548,9 +499,6 @@
         return TCreator<TBinder<deps> >::template
             execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
     }
-
-
-
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13)
@@ -577,9 +525,6 @@
             execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
     }
 
-
-
-
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14)
         : TPool<deps>(
@@ -604,9 +549,6 @@
         return TCreator<TBinder<deps> >::template
             execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
     }
-
-
-
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15)
@@ -633,9 +575,6 @@
             execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
     }
 
-
-
-
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16)
         : TPool<deps>(
@@ -660,9 +599,6 @@
         return TCreator<TBinder<deps> >::template
             execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
     }
-
-
-
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17)
@@ -689,9 +625,6 @@
             execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
     }
 
-
-
-
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18)
         : TPool<deps>(
@@ -716,9 +649,6 @@
         return TCreator<TBinder<deps> >::template
             execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
     }
-
-
-
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19)

@@ -4,21 +4,9 @@
 #include <boost/none_t.hpp>
 #include <boost/mpl/int.hpp>
 
-
-
-
-
-
-
-
-
 namespace boost {
 namespace di {
 namespace scopes {
-
-
-
-
 
 class deduce
 {

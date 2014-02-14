@@ -5,24 +5,9 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_reference.hpp>
 
-
-
-
-
-
-
-
-
-
 namespace boost {
 namespace di {
 namespace policies {
-
-
-
-
-
-
 
 class creation_ownership
 {
@@ -39,8 +24,6 @@ public:
     >
     static typename enable_if<is_reference<typename T::type> >::type assert_policy() {
         BOOST_MPL_ASSERT_MSG(false, CREATION_OWNERSHIP_IS_NOT_CLEAR, (typename T::type))
-
-
 
          ;
     }

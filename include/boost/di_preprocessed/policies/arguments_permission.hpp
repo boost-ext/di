@@ -16,15 +16,6 @@
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/has_xxx.hpp>
 
-
-
-
-
-
-
-
-
-
 namespace boost {
 namespace di {
 namespace policies {
@@ -155,8 +146,6 @@ public:
     >
     static void assert_policy() {
         BOOST_MPL_ASSERT_MSG(is_allowed<typename T::type>::value, ARGUMENT_NOT_PERMITTED, (typename T::type))
-
-
 
          ;
     }

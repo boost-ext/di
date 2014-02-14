@@ -27,15 +27,6 @@
 #include <boost/mpl/empty.hpp>
 #include <boost/mpl/assert.hpp>
 
-
-
-
-
-
-
-
-
-
 namespace boost {
 namespace di {
 namespace policies {
@@ -177,7 +168,6 @@ class binding_correctness
             , mpl::push_back<mpl::_1, mpl::_2>
           >
     { };
-
 
     template<typename TBind, typename T, typename TName>
     struct comparator
