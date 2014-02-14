@@ -147,5 +147,6 @@ test-suite "fail tests" :
 
 test-suite "performance tests" :
 	[ run-test c++11 : pt/compilation_pt.cpp ] #ftime-report
+	[ run-test c++11 : pt/compilation_pt.cpp : preprocessed_compilation_pt : <define>BOOST_DI_PREPROCESSED ] #ftime-report
 ;
 

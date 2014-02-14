@@ -37,7 +37,9 @@
     #include "boost/di/policies/creation_ownership.hpp"
 
     #include "boost/di/policies/scopes_permission.hpp"
+
 #else
+
     // inject
     #include "boost/di_preprocessed/inject.hpp"
 
