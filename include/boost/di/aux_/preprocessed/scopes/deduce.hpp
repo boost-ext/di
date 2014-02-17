@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_SCOPES_DEDUCE_HPP
 #define BOOST_DI_SCOPES_DEDUCE_HPP
 
-#include "boost/di/aux_/preprocessed/scopes/deduce.hpp"
 #include <boost/none_t.hpp>
 #include <boost/mpl/int.hpp>
 

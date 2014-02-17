@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_CONVERTIBLES_VALUE_HPP
 #define BOOST_DI_CONVERTIBLES_VALUE_HPP
 
-#include "boost/di/aux_/preprocessed/convertibles/value.hpp"
 #include "boost/di/aux_/preprocessed/named.hpp"
 #include "boost/di/aux_/memory.hpp"
 #include <utility>

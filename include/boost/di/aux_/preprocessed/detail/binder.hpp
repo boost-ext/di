@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_DETAIL_BINDER_HPP
 #define BOOST_DI_DETAIL_BINDER_HPP
 
-#include "boost/di/aux_/preprocessed/detail/binder.hpp"
 #include "boost/di/aux_/preprocessed/type_traits/make_plain.hpp"
 #include "boost/di/aux_/preprocessed/type_traits/scope_traits.hpp"
 #include "boost/di/aux_/preprocessed/type_traits/remove_accessors.hpp"

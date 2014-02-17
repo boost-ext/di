@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_SCOPES_SESSION_HPP
 #define BOOST_DI_SCOPES_SESSION_HPP
 
-#include "boost/di/aux_/preprocessed/scopes/session.hpp"
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/preprocessed/type_traits/create_traits.hpp"

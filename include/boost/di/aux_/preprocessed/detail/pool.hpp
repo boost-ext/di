@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_DETAIL_POOL_HPP
 #define BOOST_DI_DETAIL_POOL_HPP
 
-#include "boost/di/aux_/preprocessed/detail/pool.hpp"
 #include "boost/di/aux_/config.hpp"
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>

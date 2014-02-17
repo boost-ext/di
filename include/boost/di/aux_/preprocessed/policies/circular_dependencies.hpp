@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_POLICIES_CIRCULAR_DEPENDENCIES_HPP
 #define BOOST_DI_POLICIES_CIRCULAR_DEPENDENCIES_HPP
 
-#include "boost/di/aux_/preprocessed/policies/circular_dependencies.hpp"
 #include "boost/di/aux_/config.hpp"
 #include <boost/mpl/count.hpp>
 #include <boost/mpl/int.hpp>

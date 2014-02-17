@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_DETAIL_CREATOR_HPP
 #define BOOST_DI_DETAIL_CREATOR_HPP
 
-#include "boost/di/aux_/preprocessed/detail/creator.hpp"
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/preprocessed/type_traits/ctor_traits.hpp"

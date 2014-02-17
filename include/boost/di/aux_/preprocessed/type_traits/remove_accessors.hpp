@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_TYPE_TRAITS_REMOVE_ACCESSORS_HPP
 #define BOOST_DI_TYPE_TRAITS_REMOVE_ACCESSORS_HPP
 
-#include "boost/di/aux_/preprocessed/type_traits/remove_accessors.hpp"
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/type_traits/remove_cv.hpp>

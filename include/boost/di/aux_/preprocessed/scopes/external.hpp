@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_SCOPES_EXTERNAL_HPP
 #define BOOST_DI_SCOPES_EXTERNAL_HPP
 
-#include "boost/di/aux_/preprocessed/scopes/external.hpp"
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/preprocessed/convertibles/value.hpp"
 #include <boost/function.hpp>

@@ -18,7 +18,7 @@ dump_file() {
     rm -rf $tmp
     mkdir $tmp
 
-    cat $1 | grep "#include" | grep -v PP_ | grep -v "boost/preprocessor" | while read include; do
+    cat $1 | grep "#include" | grep -v PP_ | grep -v "preprocess" | while read include; do
 		if [[ "$include" =~ "di/aux_" ]] ||
 		   [[ "$include" =~ "inject.hpp" ]] ||
 		   [[ "$include" =~ "di.hpp" ]]; then

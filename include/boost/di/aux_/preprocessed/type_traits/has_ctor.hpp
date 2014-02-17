@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_TYPE_TRAITS_HAS_CTOR_HPP
 #define BOOST_DI_TYPE_TRAITS_HAS_CTOR_HPP
 
-#include "boost/di/aux_/preprocessed/type_traits/has_ctor.hpp"
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/preprocessed/type_traits/make_plain.hpp"
 #include "boost/di/aux_/preprocessed/type_traits/is_same_base_of.hpp"

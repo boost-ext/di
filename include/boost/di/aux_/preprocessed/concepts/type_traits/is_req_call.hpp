@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_CONCEPTS_TYPE_TRAITS_IS_REQ_CALL_HPP
 #define BOOST_DI_CONCEPTS_TYPE_TRAITS_IS_REQ_CALL_HPP
 
-#include "boost/di/aux_/preprocessed/concepts/type_traits/is_req_call.hpp"
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/int.hpp>

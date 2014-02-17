@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_CONVERTIBLES_REFERENCE_HPP
 #define BOOST_DI_CONVERTIBLES_REFERENCE_HPP
 
-#include "boost/di/aux_/preprocessed/convertibles/reference.hpp"
 #include "boost/di/aux_/preprocessed/named.hpp"
 #include <boost/type.hpp>
 #include <boost/ref.hpp>

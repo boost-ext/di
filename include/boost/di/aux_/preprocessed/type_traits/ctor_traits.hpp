@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 
-#include "boost/di/aux_/preprocessed/type_traits/ctor_traits.hpp"
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/inject.hpp"
 #include "boost/di/aux_/preprocessed/type_traits/parameter_types.hpp"
@@ -65,7 +64,7 @@ struct ctor_traits
 template<typename T>
 struct ctor_traits<std::basic_string<T> >
 {
- static void BOOST_DI_INJECTOR();
+    static void BOOST_DI_INJECTOR();
 };
 
 namespace type_traits {

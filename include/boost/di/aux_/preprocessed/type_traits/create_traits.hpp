@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_TYPE_TRAITS_CREATE_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_CREATE_TRAITS_HPP
 
-#include "boost/di/aux_/preprocessed/type_traits/create_traits.hpp"
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/preprocessed/type_traits/ctor_traits.hpp"
 #include <string>

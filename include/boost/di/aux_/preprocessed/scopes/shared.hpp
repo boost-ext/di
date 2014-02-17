@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_SCOPES_SHARED_HPP
 #define BOOST_DI_SCOPES_SHARED_HPP
 
-#include "boost/di/aux_/preprocessed/scopes/shared.hpp"
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/preprocessed/convertibles/shared.hpp"
 #include "boost/di/aux_/preprocessed/type_traits/create_traits.hpp"

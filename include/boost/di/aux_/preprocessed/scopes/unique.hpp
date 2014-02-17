@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_SCOPES_UNIQUE_HPP
 #define BOOST_DI_SCOPES_UNIQUE_HPP
 
-#include "boost/di/aux_/preprocessed/scopes/unique.hpp"
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/preprocessed/convertibles/copy.hpp"
 #include "boost/di/aux_/preprocessed/type_traits/create_traits.hpp"

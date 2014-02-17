@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_POLICIES_BINDING_CORRECTNESS_HPP
 #define BOOST_DI_POLICIES_BINDING_CORRECTNESS_HPP
 
-#include "boost/di/aux_/preprocessed/policies/binding_correctness.hpp"
 #include "boost/di/aux_/preprocessed/detail/binder.hpp"
 #include "boost/di/aux_/preprocessed/type_traits/ctor_traits.hpp"
 #include "boost/di/aux_/preprocessed/type_traits/make_plain.hpp"

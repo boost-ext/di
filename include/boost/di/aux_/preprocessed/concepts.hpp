@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_CONCEPTS_HPP
 #define BOOST_DI_CONCEPTS_HPP
 
-#include "boost/di/aux_/preprocessed/concepts.hpp"
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/preprocessed/concepts/bind.hpp"

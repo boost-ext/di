@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_INJECTOR_HPP
 #define BOOST_DI_INJECTOR_HPP
 
-#include "boost/di/aux_/preprocessed/injector.hpp"
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/preprocessed/detail/module.hpp"
 #include "boost/di/aux_/preprocessed/detail/pool.hpp"

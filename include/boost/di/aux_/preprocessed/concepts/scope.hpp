@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_CONCEPTS_SCOPE_HPP
 #define BOOST_DI_CONCEPTS_SCOPE_HPP
 
-#include "boost/di/aux_/preprocessed/concepts/scope.hpp"
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/preprocessed/concepts/type_traits/is_req_type.hpp"
 #include <boost/mpl/vector.hpp>

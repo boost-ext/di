@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_CONCEPTS_TYPE_TRAITS_IS_REQ_TYPE_HPP
 #define BOOST_DI_CONCEPTS_TYPE_TRAITS_IS_REQ_TYPE_HPP
 
-#include "boost/di/aux_/preprocessed/concepts/type_traits/is_req_type.hpp"
 #include "boost/di/aux_/preprocessed/type_traits/make_plain.hpp"
 #include <boost/mpl/placeholders.hpp>
 #include <boost/type_traits/is_base_of.hpp>

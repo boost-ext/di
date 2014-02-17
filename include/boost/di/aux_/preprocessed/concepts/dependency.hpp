@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_CONCEPTS_DEPENDENCY_HPP
 #define BOOST_DI_CONCEPTS_DEPENDENCY_HPP
 
-#include "boost/di/aux_/preprocessed/concepts/dependency.hpp"
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/preprocessed/type_traits/make_plain.hpp"
 #include "boost/di/aux_/preprocessed/convertibles/reference.hpp"

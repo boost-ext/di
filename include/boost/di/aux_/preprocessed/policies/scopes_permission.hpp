@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_POLICIES_SCOPES_PERMISSION_HPP
 #define BOOST_DI_POLICIES_SCOPES_PERMISSION_HPP
 
-#include "boost/di/aux_/preprocessed/policies/scopes_permission.hpp"
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/preprocessed/detail/binder.hpp"
 #include "boost/di/aux_/preprocessed/type_traits/ctor_traits.hpp"

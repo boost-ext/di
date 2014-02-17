@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_TYPE_TRAITS_PARAMETER_TYPES_HPP
 #define BOOST_DI_TYPE_TRAITS_PARAMETER_TYPES_HPP
 
-#include "boost/di/aux_/preprocessed/type_traits/parameter_types.hpp"
 #include "boost/di/aux_/config.hpp"
 #include <boost/mpl/vector.hpp>
 

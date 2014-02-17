@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_PROVIDER_HPP
 #define BOOST_DI_PROVIDER_HPP
 
-#include "boost/di/aux_/preprocessed/provider.hpp"
 
 namespace boost {
 namespace di {

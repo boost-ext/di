@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_TYPE_TRAITS_IS_SAME_BASE_OF_HPP
 #define BOOST_DI_TYPE_TRAITS_IS_SAME_BASE_OF_HPP
 
-#include "boost/di/aux_/preprocessed/type_traits/is_same_base_of.hpp"
 #include <boost/mpl/placeholders.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/is_same.hpp>

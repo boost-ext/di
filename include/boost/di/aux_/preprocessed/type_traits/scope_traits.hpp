@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_TYPE_TRAITS_SCOPE_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_SCOPE_TRAITS_HPP
 
-#include "boost/di/aux_/preprocessed/type_traits/scope_traits.hpp"
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/preprocessed/type_traits/make_plain.hpp" // has_named_type
 #include "boost/di/aux_/preprocessed/type_traits/remove_accessors.hpp"
