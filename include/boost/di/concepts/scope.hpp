@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #if defined(BOOST_DI_PREPROCESSED)
-	#include "boost/di/aux_/preprocessed/concepts/scope.hpp"
+    #include "boost/di/aux_/preprocessed/concepts/scope.hpp"
 #endif
 
 #ifndef BOOST_DI_CONCEPTS_SCOPE_HPP

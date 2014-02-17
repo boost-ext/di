@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #if defined(BOOST_PP_PREPROCESSED)
-	#include "boost/di/aux_/preprocessed/type_traits/create_traits.hpp"
+    #include "boost/di/aux_/preprocessed/type_traits/create_traits.hpp"
 #elif !BOOST_PP_IS_ITERATING
 
     #ifndef BOOST_DI_TYPE_TRAITS_CREATE_TRAITS_HPP

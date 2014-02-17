@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #if defined(BOOST_PP_PREPROCESSED)
-	#include "boost/di/aux_/preprocessed/detail/creator.hpp"
+    #include "boost/di/aux_/preprocessed/detail/creator.hpp"
 #elif !BOOST_PP_IS_ITERATING
 
     #ifndef BOOST_DI_DETAIL_CREATOR_HPP

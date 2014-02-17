@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #if defined(BOOST_DI_PREPROCESSED)
-	#include "boost/di/aux_/preprocessed/type_traits/has_ctor.hpp"
+    #include "boost/di/aux_/preprocessed/type_traits/has_ctor.hpp"
 #elif !BOOST_PP_IS_ITERATING
 
     #ifndef BOOST_DI_TYPE_TRAITS_HAS_CTOR_HPP

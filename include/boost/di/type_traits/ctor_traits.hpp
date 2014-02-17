@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #if defined(BOOST_PP_PREPROCESSED)
-	#include "boost/di/aux_/preprocessed/type_traits/ctor_traits.hpp"
+    #include "boost/di/aux_/preprocessed/type_traits/ctor_traits.hpp"
 #endif
 
 #ifndef BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
@@ -70,7 +70,7 @@ struct ctor_traits
 template<typename T>
 struct ctor_traits<std::basic_string<T> > // all basic_string ctors are ambiguous
 {
-	static void BOOST_DI_INJECTOR();
+    static void BOOST_DI_INJECTOR();
 };
 
 namespace type_traits {
