@@ -2,25 +2,40 @@
 
 dump_file() {
     guard=`echo $1 | tr [:lower:] [:upper:] | sed "s/\//_/g" | sed "s/\./_/g"`
+
+    echo "//"
+    echo "// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)"
+    echo "//"
+    echo "// Distributed under the Boost Software License, Version 1.0."
+    echo "// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)"
+    echo "//"
+
     echo "#ifndef $guard"
     echo "#define $guard"
     echo
-
-    cat $1 | grep "#include" | grep -v PP_ | grep -v "boost/preprocessor" | sed "s/boost\/di\//boost\/di_preprocessed\//g"
 
     tmp=`mktemp`
     rm -rf $tmp
     mkdir $tmp
 
-    for include in `cat $1 | grep "#include" | grep -v PP_ | grep -v "boost/preprocessor" | sed "s/[^<^\"]*[\"<]\([^>\"]*\)[\">].*/\1/"`; do
-        mkdir -p $tmp/`dirname $include`
-        touch $tmp/$include
-    done
+    cat $1 | grep "#include" | grep -v PP_ | grep -v "boost/preprocessor" | while read include; do
+		if [[ "$include" =~ "di/aux_" ]] ||
+		   [[ "$include" =~ "inject.hpp" ]] ||
+		   [[ "$include" =~ "di.hpp" ]]; then
+			echo $include
+		else
+			echo $include | sed "s/boost\/di\//boost\/$3\//g"
+		fi
 
-    mkdir -p $tmp/`dirname $1`
-    cp $1 $tmp/$1
+		file=`echo $include | sed "s/[^<^\"]*[\"<]\([^>\"]*\)[\">].*/\1/"`
+		mkdir -p $tmp/`dirname $file`
+		touch $tmp/$file
+	done
 
-    $CXX -E $1 -I$tmp -include $2 | grep -v "^#" | cat -s
+	mkdir -p $tmp/`dirname $1`
+	cp $1 $tmp/$1
+
+	$CXX -E $1 -I$tmp -include $2 | grep -v "^#" | cat -s
 
     rm -rf $tmp
 
@@ -33,26 +48,21 @@ generate_preprocessed() {
     rm -rf boost/$2
 
     for file in `find $1 -iname "*.hpp"`; do
-        new_file=`echo $file | sed "s/di\//di_preprocessed\//g"`
+        new_file=`echo $file | sed "s/di\//$2\//g"`
 
-        echo $new_file
-        mkdir -p `dirname $new_file` 2>/dev/null
+		if [[ "$file" =~ "di/aux_" ]] ||
+		   [[ "$file" =~ "inject.hpp" ]] ||
+		   [[ "$file" =~ "di.hpp" ]]; then
+			continue;
+		fi
 
-        if [[ "$file" =~ "di.hpp" ]]; then
-            continue;
-        fi
-
-        if [[ "$file" =~ "inject.hpp" ]] ||
-           [[ "$file" =~ "common.hpp" ]] ||
-           [[ "$file" =~ "memory.hpp" ]]; then
-           cp $file $new_file
-        else
-            dump_file $file $3 > $new_file
-        fi
+		echo $new_file
+		mkdir -p `dirname $new_file` 2>/dev/null
+		dump_file $file $3 $2 > $new_file
 
     done
 }
 
 dir=`readlink -f \`dirname $0\``
-cd $dir/../include && generate_preprocessed "boost" "di_preprocessed" "$dir/config.hpp"
+cd $dir/../include && generate_preprocessed "boost" "di\/aux_\/preprocessed" "$dir/config.hpp"
 

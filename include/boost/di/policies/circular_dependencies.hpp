@@ -4,10 +4,14 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#if defined(BOOST_DI_PREPROCESSED)
+	#include "boost/di/aux_/preprocessed/policies/circular_dependencies.hpp"
+#endif
+
 #ifndef BOOST_DI_POLICIES_CIRCULAR_DEPENDENCIES_HPP
 #define BOOST_DI_POLICIES_CIRCULAR_DEPENDENCIES_HPP
 
-#include "boost/di/aux_/common.hpp"
+#include "boost/di/aux_/config.hpp"
 
 #include <boost/mpl/count.hpp>
 #include <boost/mpl/int.hpp>

@@ -4,10 +4,14 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#if defined(BOOST_PP_PREPROCESSED)
+	#include "boost/di/aux_/preprocessed/type_traits/ctor_traits.hpp"
+#endif
+
 #ifndef BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 
-#include "boost/di/aux_/common.hpp"
+#include "boost/di/aux_/config.hpp"
 #include "boost/di/inject.hpp"
 #include "boost/di/type_traits/parameter_types.hpp"
 #include "boost/di/type_traits/has_ctor.hpp"
@@ -64,9 +68,9 @@ struct ctor_traits
 { };
 
 template<typename T>
-struct ctor_traits<std::basic_string<T> > // basic_string has ambiguous ctors
+struct ctor_traits<std::basic_string<T> > // all basic_string ctors are ambiguous
 {
-    BOOST_DI_INJECT_TRAITS();
+	static void BOOST_DI_INJECTOR();
 };
 
 namespace type_traits {

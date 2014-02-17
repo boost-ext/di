@@ -4,6 +4,10 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#if defined(BOOST_DI_PREPROCESSED)
+	#include "boost/di/aux_/preprocessed/convertibles/reference.hpp"
+#endif
+
 #ifndef BOOST_DI_CONVERTIBLES_REFERENCE_HPP
 #define BOOST_DI_CONVERTIBLES_REFERENCE_HPP
 
