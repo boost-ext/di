@@ -15,6 +15,7 @@
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/type_traits/parameter_types.hpp"
 #include "boost/di/concepts/type_traits/is_req_type.hpp"
+#include "boost/di/concepts/type_traits/priority.hpp"
 
 #include <string>
 #include <boost/ref.hpp>
@@ -33,6 +34,7 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/lambda.hpp>
 #include <boost/mpl/void.hpp>
+#include <boost/mpl/times.hpp>
 #include <boost/mpl/aux_/yes_no.hpp>
 
 namespace boost {
@@ -70,7 +72,12 @@ template<
     typename TScope
   , typename TExpected
   , typename TGiven = TExpected
-  , typename TBind = typename mpl::lambda<concepts::type_traits::is_req_type<TExpected> >::type
+  , typename TBind = typename mpl::lambda<
+        mpl::times<
+            concepts::type_traits::priority<>
+          , concepts::type_traits::is_req_type<TExpected>
+        >
+    >::type
 >
 class dependency : public get_scope<TExpected, TGiven, TScope>::type
 {

@@ -30,20 +30,12 @@ class binder
 {
     template<typename TDependency, typename T, typename TCallStack>
     struct comparator
-        : mpl::times<
-              typename mpl::apply<
-                  typename TDependency::bind
-                , T
-                , TCallStack
-              >::type
-            , mpl::times<
-                  mpl::int_<100>
-                , mpl::plus<
-                      mpl::int_<1>
-                    , typename TDependency::scope::priority
-                  >
-              >
-          >
+        : mpl::apply<
+              typename TDependency::bind
+            , T
+            , TCallStack
+            , typename TDependency::scope
+          >::type
     { };
 
 public:

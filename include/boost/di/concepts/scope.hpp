@@ -9,6 +9,7 @@
 
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/concepts/type_traits/is_req_type.hpp"
+#include "boost/di/concepts/type_traits/priority.hpp"
 
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
@@ -40,7 +41,15 @@ class scope
     template<typename T>
     struct dependency
         : TDependency<
-              mpl::_1, T, T, typename mpl::lambda<type_traits::is_req_type<T> >::type
+              mpl::_1
+            , T
+            , T
+            , typename mpl::lambda<
+                  mpl::times<
+                      type_traits::priority<>
+                    , type_traits::is_req_type<T>
+                  >
+              >::type
           >
     { };
 

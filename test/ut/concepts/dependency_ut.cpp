@@ -51,7 +51,12 @@ BOOST_AUTO_TEST_CASE(default_value) {
     typedef dependency<fake_scope<>, int> dependency_t;
 
     BOOST_CHECK((is_same<
-        mpl::lambda<concepts::type_traits::is_req_type<int> >::type
+        mpl::lambda<
+            mpl::times<
+                concepts::type_traits::priority<>
+              , concepts::type_traits::is_req_type<int>
+            >
+        >::type
       , dependency_t::bind
     >::value));
 }

@@ -33,11 +33,11 @@ struct is_req_name_impl<T, TName, typename enable_if<has_name<T> >::type>
     : is_same<typename T::name, TName>
 { };
 
-template<typename TName, typename U = mpl::_1>
+template<typename TName, typename T = mpl::_1>
 struct is_req_name
     : mpl::times<mpl::int_<5>,
      is_req_name_impl<
-          typename di::type_traits::remove_accessors<U>::type
+          typename di::type_traits::remove_accessors<T>::type
         , TName
       >
       >
