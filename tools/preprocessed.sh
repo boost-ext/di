@@ -38,6 +38,9 @@ guard_begin() {
     echo "// Distributed under the Boost Software License, Version 1.0."
     echo "// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)"
     echo "//"
+    echo "// Preprocessed version of \"boost::di\""
+    echo "// DO NOT modify by hand!"
+    echo "//"
 
     echo "#ifndef BOOST_DI_AUX_PREPROCESSED_DI_HPP"
     echo "#define BOOST_DI_AUX_PREPROCESSED_DI_HPP"
@@ -75,6 +78,7 @@ boost/di/type_traits/scope_traits.hpp
 boost/di/concepts/type_traits/is_req_type.hpp
 boost/di/concepts/type_traits/is_req_name.hpp
 boost/di/concepts/type_traits/is_req_call.hpp
+boost/di/concepts/type_traits/priority.hpp
 boost/di/concepts/bind.hpp
 boost/di/concepts/scope.hpp
 boost/di/concepts/dependency.hpp

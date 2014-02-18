@@ -4,6 +4,9 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+// Preprocessed version of "boost::di"
+// DO NOT modify by hand!
+//
 #ifndef BOOST_DI_AUX_PREPROCESSED_DI_HPP
 #define BOOST_DI_AUX_PREPROCESSED_DI_HPP
 
@@ -3493,11 +3496,11 @@ struct is_req_name_impl<T, TName, typename enable_if<has_name<T> >::type>
     : is_same<typename T::name, TName>
 { };
 
-template<typename TName, typename U = mpl::_1>
+template<typename TName, typename T = mpl::_1>
 struct is_req_name
     : mpl::times<mpl::int_<5>,
      is_req_name_impl<
-          typename di::type_traits::remove_accessors<U>::type
+          typename di::type_traits::remove_accessors<T>::type
         , TName
       >
       >
@@ -3560,6 +3563,27 @@ struct is_req_call
 }
 }
 
+namespace boost {
+namespace di {
+namespace concepts {
+namespace type_traits {
+
+template<typename TScope = mpl::_3>
+struct priority
+    : mpl::times<
+          mpl::int_<100>
+        , mpl::plus<
+              mpl::int_<1>
+            , typename TScope::priority
+          >
+      >
+{ };
+
+}
+}
+}
+}
+
 
 namespace boost {
 namespace di {
@@ -3581,7 +3605,10 @@ struct bind
         , TExpected
         , TGiven
         , typename mpl::lambda<
-              type_traits::is_req_type<TExpected>
+              mpl::times<
+                  type_traits::priority<>
+                , type_traits::is_req_type<TExpected>
+              >
           >::type
       >
 {
@@ -3593,7 +3620,8 @@ struct bind
             , TGiven
             , typename mpl::lambda<
                   mpl::times<
-                      type_traits::is_req_type<TExpected>
+                      type_traits::priority<>
+                    , type_traits::is_req_type<TExpected>
                     , type_traits::is_req_call<mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19> >
                   >
               >::type
@@ -3607,10 +3635,9 @@ struct bind
                 , TGiven
                 , typename mpl::lambda<
                       mpl::times<
-                          mpl::times<
-                              type_traits::is_req_type<TExpected>
-                            , type_traits::is_req_name<TName>
-                          >
+                          type_traits::priority<>
+                        , type_traits::is_req_type<TExpected>
+                        , type_traits::is_req_name<TName>
                         , type_traits::is_req_call<mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19> >
                       >
                 >::type
@@ -3626,7 +3653,8 @@ struct bind
             , TGiven
             , typename mpl::lambda<
                   mpl::times<
-                      type_traits::is_req_type<TExpected>
+                      type_traits::priority<>
+                    , type_traits::is_req_type<TExpected>
                     , type_traits::is_req_name<TName>
                   >
             >::type
@@ -3640,10 +3668,9 @@ struct bind
                 , TGiven
                 , typename mpl::lambda<
                       mpl::times<
-                          mpl::times<
-                              type_traits::is_req_type<TExpected>
-                            , type_traits::is_req_name<TName>
-                          >
+                          type_traits::priority<>
+                        , type_traits::is_req_type<TExpected>
+                        , type_traits::is_req_name<TName>
                         , type_traits::is_req_call<mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19> >
                       >
                 >::type
@@ -3682,7 +3709,15 @@ class scope
     template<typename T>
     struct dependency
         : TDependency<
-              mpl::_1, T, T, typename mpl::lambda<type_traits::is_req_type<T> >::type
+              mpl::_1
+            , T
+            , T
+            , typename mpl::lambda<
+                  mpl::times<
+                      type_traits::priority<>
+                    , type_traits::is_req_type<T>
+                  >
+              >::type
           >
     { };
 
@@ -3748,7 +3783,12 @@ template<
     typename TScope
   , typename TExpected
   , typename TGiven = TExpected
-  , typename TBind = typename mpl::lambda<concepts::type_traits::is_req_type<TExpected> >::type
+  , typename TBind = typename mpl::lambda<
+        mpl::times<
+            concepts::type_traits::priority<>
+          , concepts::type_traits::is_req_type<TExpected>
+        >
+    >::type
 >
 class dependency : public get_scope<TExpected, TGiven, TScope>::type
 {
@@ -3921,20 +3961,12 @@ class binder
 {
     template<typename TDependency, typename T, typename TCallStack>
     struct comparator
-        : mpl::times<
-              typename mpl::apply<
-                  typename TDependency::bind
-                , T
-                , TCallStack
-              >::type
-            , mpl::times<
-                  mpl::int_<100>
-                , mpl::plus<
-                      mpl::int_<1>
-                    , typename TDependency::scope::priority
-                  >
-              >
-          >
+        : mpl::apply<
+              typename TDependency::bind
+            , T
+            , TCallStack
+            , typename TDependency::scope
+          >::type
     { };
 
 public:
