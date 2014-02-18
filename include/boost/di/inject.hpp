@@ -55,7 +55,9 @@
 
 #endif
 
-#include "boost/di/type_traits/ctor_traits.hpp" // di::ctor_traits<...>
+#if !defined(BOOST_DI_PREPROCESSED)
+    #include "boost/di/type_traits/ctor_traits.hpp" // di::ctor_traits<...>
+#endif
 
 #endif
 

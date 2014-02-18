@@ -4,9 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#if defined(BOOST_DI_PREPROCESSED)
-    #include "boost/di/aux_/preprocessed/scopes/unique.hpp"
-#elif !BOOST_PP_IS_ITERATING
+#if !BOOST_PP_IS_ITERATING
 
     #ifndef BOOST_DI_SCOPES_UNIQUE_HPP
     #define BOOST_DI_SCOPES_UNIQUE_HPP
