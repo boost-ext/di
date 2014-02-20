@@ -19,14 +19,18 @@
 
 #include <string>
 #include <boost/mpl/int.hpp>
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/int.hpp>
+#include <boost/mpl/size.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/max.hpp>
+#include <boost/mpl/begin_end.hpp>
+#include <boost/mpl/iterator_range.hpp>
+#include <boost/mpl/advance.hpp>
+#include <boost/mpl/equal.hpp>
 
 namespace boost {
 namespace di {
-
-template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-struct call_stack
-    : mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
-{ };
 
 template<typename TScope>
 struct scope
@@ -67,6 +71,43 @@ template<typename T>
 struct bind_string
     : bind<std::string, T>
 { };
+
+template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
+struct call_stack
+{
+    template<typename TContext, typename TCallStack>
+    struct apply_impl
+        : mpl::if_<
+              mpl::empty<TCallStack>
+            , mpl::int_<0>
+            , mpl::if_<
+                  mpl::equal<
+                      mpl::iterator_range<
+                          typename mpl::advance<
+                              typename mpl::begin<TCallStack>::type
+                            , typename mpl::max<
+                                  mpl::int_<0>
+                                , mpl::minus<
+                                      mpl::size<TCallStack>
+                                    , mpl::size<TContext>
+                                  >
+                              >::type
+                          >::type
+                        , typename mpl::end<TCallStack>::type
+                      >
+                    , TContext
+                  >
+                , mpl::size<TContext>
+                , mpl::int_<0>
+              >
+          >
+    { };
+
+    template<typename T, typename TCallStack, typename TScope>
+    struct apply
+        : apply_impl<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>, TCallStack>
+    { };
+};
 
 } // namespace di
 } // namespace boost

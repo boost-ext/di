@@ -8,7 +8,7 @@
 #define BOOST_DI_CONCEPTS_TYPE_TRAITS_PRIORITY_HPP
 
 #include <boost/mpl/placeholders.hpp>
-#include <boost/mpl/times.hpp>
+#include <boost/mpl/plus.hpp>
 
 namespace boost {
 namespace di {
@@ -17,12 +17,9 @@ namespace type_traits {
 
 template<typename TScope = mpl::_3>
 struct priority
-    : mpl::times<
-          mpl::int_<100>
-        , mpl::plus<
-              mpl::int_<1>
-            , typename TScope::priority
-          >
+    : mpl::plus<
+          mpl::int_<1>
+        , typename TScope::priority // lowest = 0, highest = N
       >
 { };
 

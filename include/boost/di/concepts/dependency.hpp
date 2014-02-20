@@ -14,7 +14,8 @@
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/type_traits/parameter_types.hpp"
-#include "boost/di/concepts/type_traits/is_req_type.hpp"
+#include "boost/di/concepts/detail/requires.hpp"
+#include "boost/di/concepts/type_traits/type.hpp"
 #include "boost/di/concepts/type_traits/priority.hpp"
 
 #include <string>
@@ -73,9 +74,9 @@ template<
   , typename TExpected
   , typename TGiven = TExpected
   , typename TBind = typename mpl::lambda<
-        mpl::times<
+        detail::requires<
             concepts::type_traits::priority<>
-          , concepts::type_traits::is_req_type<TExpected>
+          , concepts::type_traits::type<TExpected>
         >
     >::type
 >

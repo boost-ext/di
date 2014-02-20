@@ -25,6 +25,7 @@
 #include "common/contains_all.hpp"
 #include "common/data.hpp"
 
+#include <boost/units/detail/utility.hpp>
 namespace boost {
 namespace di {
 
@@ -131,6 +132,9 @@ BOOST_AUTO_TEST_CASE(default_scope_deduce) {
           , injector_type::deps
         >::value
     ));
+
+    std::cout << units::detail::demangle(typeid(fake_dependency<scopes::deduce, c1, c1>::type).name()) << std::endl;
+    std::cout << units::detail::demangle(typeid(injector_type::deps).name()) << std::endl;
 }
 
 BOOST_AUTO_TEST_CASE(default_scope_many) {

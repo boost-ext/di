@@ -8,7 +8,8 @@
 #define BOOST_DI_CONCEPTS_SCOPE_HPP
 
 #include "boost/di/aux_/config.hpp"
-#include "boost/di/concepts/type_traits/is_req_type.hpp"
+#include "boost/di/concepts/detail/requires.hpp"
+#include "boost/di/concepts/type_traits/type.hpp"
 #include "boost/di/concepts/type_traits/priority.hpp"
 
 #include <boost/mpl/vector.hpp>
@@ -45,9 +46,9 @@ class scope
             , T
             , T
             , typename mpl::lambda<
-                  mpl::times<
+                  detail::requires<
                       type_traits::priority<>
-                    , type_traits::is_req_type<T>
+                    , type_traits::type<T>
                   >
               >::type
           >

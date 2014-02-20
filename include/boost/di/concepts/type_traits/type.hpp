@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_CONCEPTS_TYPE_TRAITS_IS_REQ_TYPE_HPP
-#define BOOST_DI_CONCEPTS_TYPE_TRAITS_IS_REQ_TYPE_HPP
+#ifndef BOOST_DI_CONCEPTS_TYPE_TRAITS_TYPE_HPP
+#define BOOST_DI_CONCEPTS_TYPE_TRAITS_TYPE_HPP
 
 #include "boost/di/type_traits/make_plain.hpp"
 
@@ -20,7 +20,7 @@ namespace concepts {
 namespace type_traits {
 
 template<typename T, typename U = mpl::_1>
-struct is_req_type
+struct type
     : mpl::or_<
           is_base_of<typename di::type_traits::make_plain<U>::type, T>
         , is_same<typename di::type_traits::make_plain<U>::type, T>

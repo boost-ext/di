@@ -9,9 +9,10 @@
 
 #include "boost/di/concepts/dependency.hpp"
 
-#include "boost/di/concepts/type_traits/is_req_type.hpp"
-#include "boost/di/concepts/type_traits/is_req_name.hpp"
-#include "boost/di/concepts/type_traits/is_req_call.hpp"
+#include "boost/di/concepts/detail/requires.hpp"
+#include "boost/di/concepts/type_traits/type.hpp"
+#include "boost/di/concepts/type_traits/name.hpp"
+#include "boost/di/concepts/type_traits/when.hpp"
 #include "boost/di/concepts/type_traits/priority.hpp"
 
 #include <boost/mpl/vector.hpp>
@@ -28,11 +29,11 @@ struct no_name { };
 template<typename T, typename TName, typename TCallStack>
 struct get_bind
     : mpl::lambda<
-         mpl::times<
+         concepts::detail::requires<
              concepts::type_traits::priority<>
-           , concepts::type_traits::is_req_type<T>
-           , concepts::type_traits::is_req_name<TName>
-           , concepts::type_traits::is_req_call<TCallStack>
+           , concepts::type_traits::type<T>
+           , concepts::type_traits::name<TName>
+           , concepts::type_traits::when<TCallStack>
          >
       >
 { };
@@ -40,10 +41,10 @@ struct get_bind
 template<typename T, typename TName>
 struct get_bind<T, TName, mpl::vector0<>>
     : mpl::lambda<
-          mpl::times<
+          concepts::detail::requires<
               concepts::type_traits::priority<>
-            , concepts::type_traits::is_req_type<T>
-            , concepts::type_traits::is_req_name<TName>
+            , concepts::type_traits::type<T>
+            , concepts::type_traits::name<TName>
           >
       >
 { };
@@ -51,10 +52,10 @@ struct get_bind<T, TName, mpl::vector0<>>
 template<typename T, typename TCallStack>
 struct get_bind<T, no_name, TCallStack>
     : mpl::lambda<
-          mpl::times<
+          concepts::detail::requires<
               concepts::type_traits::priority<>
-            , concepts::type_traits::is_req_type<T>
-            , concepts::type_traits::is_req_call<TCallStack>
+            , concepts::type_traits::type<T>
+            , concepts::type_traits::when<TCallStack>
           >
       >
 { };
@@ -62,9 +63,9 @@ struct get_bind<T, no_name, TCallStack>
 template<typename T>
 struct get_bind<T, no_name, mpl::vector0<>>
     : mpl::lambda<
-          mpl::times<
+          concepts::detail::requires<
               concepts::type_traits::priority<>
-            , concepts::type_traits::is_req_type<T>
+            , concepts::type_traits::type<T>
           >
       >
 { };

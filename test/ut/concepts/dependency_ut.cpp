@@ -52,9 +52,9 @@ BOOST_AUTO_TEST_CASE(default_value) {
 
     BOOST_CHECK((is_same<
         mpl::lambda<
-            mpl::times<
+            detail::requires<
                 concepts::type_traits::priority<>
-              , concepts::type_traits::is_req_type<int>
+              , concepts::type_traits::type<int>
             >
         >::type
       , dependency_t::bind

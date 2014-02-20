@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_CONCEPTS_TYPE_TRAITS_IS_REQ_NAME_HPP
-#define BOOST_DI_CONCEPTS_TYPE_TRAITS_IS_REQ_NAME_HPP
+#ifndef BOOST_DI_CONCEPTS_TYPE_TRAITS_NAME_HPP
+#define BOOST_DI_CONCEPTS_TYPE_TRAITS_NAME_HPP
 
 #include "boost/di/type_traits/remove_accessors.hpp"
 
@@ -24,22 +24,20 @@ namespace type_traits {
 BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
 
 template<typename T, typename, typename = void>
-struct is_req_name_impl
+struct name_impl
     : mpl::false_
 { };
 
 template<typename T, typename TName>
-struct is_req_name_impl<T, TName, typename enable_if<has_name<T> >::type>
+struct name_impl<T, TName, typename enable_if<has_name<T> >::type>
     : is_same<typename T::name, TName>
 { };
 
 template<typename TName, typename T = mpl::_1>
-struct is_req_name
-    : mpl::times<mpl::int_<5>,
-     is_req_name_impl<
+struct name
+    : name_impl<
           typename di::type_traits::remove_accessors<T>::type
         , TName
-      >
       >
 { };
 
