@@ -232,7 +232,7 @@
 
             creators_.push_back(
                 std::make_pair(
-                    boost::bind(&TDependency::when, &typeid(type))
+                    boost::bind(&TDependency::when, _1)
                   , boost::bind(
                        &creator::execute_any<
                            type
@@ -344,10 +344,11 @@
         assert_policies<TPolicies, typename TDeps::types, dependency_type>();
         (visitor)(dependency_type());
 
+        //should be binder
         //int best = 0;
+        std::cout << "blah: " << typeid(typename type_traits::make_plain<T>::type).name() << creators_.size() << std::endl;
         for (const auto& c : creators_) {
             if (c.first(&typeid(typename type_traits::make_plain<T>::type))) {
-                std::cout << "blah" << std::endl;
                 return any_cast<const typename TDependency::result_type&>(c.second());
             }
         }

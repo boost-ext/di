@@ -76,10 +76,21 @@
     };
 
     template<typename TExpected, typename TGiven>
+    typename disable_if<is_abstract<TGiven>, TExpected*>::type
+    create_traits2() {
+		return new TGiven();
+    }
+
+    template<typename TExpected, typename TGiven>
+    typename enable_if<is_abstract<TGiven>, TExpected*>::type
+    create_traits2() {
+        throw std::runtime_error("type not found");
+    }
+
+    template<typename TExpected, typename TGiven>
     typename disable_if<is_explicit<TGiven>, TExpected*>::type
     create_traits() {
-        //return new TGiven();
-        throw std::runtime_error("type not found");
+		return create_traits2<TExpected, TGiven>();
     }
 
     template<typename TExpected, typename TGiven>

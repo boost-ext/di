@@ -238,7 +238,6 @@ public:
     }
 
     static int when(const std::type_info* t) {
-        std::cout << typeid(TExpected).name() << " : " << t->name() << std::endl;
         return &typeid(TExpected) == t;
     }
 };
