@@ -90,7 +90,8 @@
                 : object_(callback(object))
             { }
 
-            result_type create() {
+            template<typename T>
+            result_type create(const T&) {
                 return object_();
             }
 

@@ -31,9 +31,10 @@
         public:
             typedef TConvertible<TExpected> result_type;
 
-            result_type create() {
+            template<typename T>
+            result_type create(const T&) {
                 if (!object_) {
-                    object_.reset(type_traits::create_traits<TExpected, TGiven>());
+                    object_.reset(type_traits::create_traits<T, TExpected, TGiven>());
                 }
                 return object_;
             }
@@ -55,11 +56,11 @@
 
 #else
 
-    template<BOOST_DI_TYPES(Args)>
-    result_type create(BOOST_DI_ARGS(Args, args)) {
+    template<typename T, BOOST_DI_TYPES(Args)>
+    result_type create(const T&, BOOST_DI_ARGS(Args, args)) {
         if (!object_) {
             object_.reset(
-                type_traits::create_traits<TExpected, TGiven>(BOOST_DI_ARGS_PASS(args))
+                type_traits::create_traits<T, TExpected, TGiven>(BOOST_DI_ARGS_PASS(args))
             );
         }
         return object_;

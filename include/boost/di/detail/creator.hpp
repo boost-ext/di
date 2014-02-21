@@ -27,6 +27,7 @@
     #include <boost/type_traits/is_base_of.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/size.hpp>
+    #include <boost/mpl/empty.hpp>
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/has_xxx.hpp>
@@ -379,7 +380,9 @@
         convertible_type* convertible =
             new convertible_type(
                 acquire<typename TDependency::type>(deps).create(
-                    BOOST_PP_REPEAT(
+                   mpl::empty<typename TDeps::types>()
+                   BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
+                   BOOST_PP_REPEAT(
                         BOOST_PP_ITERATION()
                       , BOOST_DI_CREATOR_EXECUTE
                       , ~

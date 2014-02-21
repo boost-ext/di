@@ -77,29 +77,35 @@
 
     template<typename TExpected, typename TGiven>
     typename disable_if<is_abstract<TGiven>, TExpected*>::type
-    create_traits2() {
+    create_traits2(const mpl::bool_<false>&) {
+		return new TGiven();
+    }
+
+    template<typename TExpected, typename TGiven>
+    typename disable_if<is_abstract<TGiven>, TExpected*>::type
+    create_traits2(const mpl::bool_<true>&) {
 		return new TGiven();
     }
 
     template<typename TExpected, typename TGiven>
     typename enable_if<is_abstract<TGiven>, TExpected*>::type
-    create_traits2() {
+    create_traits2(const mpl::bool_<true>&) {
         throw std::runtime_error("type not found: " + std::string(typeid(TExpected).name()));
     }
 
-    template<typename TExpected, typename TGiven>
+    template<typename T, typename TExpected, typename TGiven>
     typename disable_if<is_explicit<TGiven>, TExpected*>::type
     create_traits() {
-		return create_traits2<TExpected, TGiven>();
+		return create_traits2<TExpected, TGiven>(T());
     }
 
-    template<typename TExpected, typename TGiven>
+    template<typename T, typename TExpected, typename TGiven>
     typename enable_if<has_value<TGiven>, TExpected*>::type
     create_traits() {
         return new TExpected(TGiven::value);
     }
 
-    template<typename TExpected, typename TGiven>
+    template<typename T, typename TExpected, typename TGiven>
     typename enable_if<is_mpl_string<TGiven>, TExpected*>::type
     create_traits() {
         return new TExpected(mpl::c_str<TGiven>::value);
@@ -130,7 +136,7 @@
     #define BOOST_DI_CONVERT(na, n, ctor) BOOST_PP_COMMA_IF(n) \
         create_impl<typename mpl::at_c<ctor, n>::type>(args##n)
 
-    template<typename TExpected, typename TGiven, BOOST_DI_TYPES(Args)>
+    template<typename T, typename TExpected, typename TGiven, BOOST_DI_TYPES(Args)>
     TExpected* create_traits(BOOST_DI_ARGS(Args, args)) {
         return new TGiven(
             BOOST_PP_REPEAT(
