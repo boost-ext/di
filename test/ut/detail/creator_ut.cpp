@@ -32,7 +32,10 @@ struct fake_dependency
     typedef T result_type;
     typedef void name;
 
-    T create() { return value; }
+    template<typename U>
+    T create(const U&) {
+        return value;
+    }
 };
 
 template<typename T>
@@ -47,17 +50,17 @@ BOOST_AUTO_TEST_CASE(creator_simple) {
 
     typedef fake_dependency<int, i> dependency_type;
     entries<dependency_type> entries_;
-    std::vector<aux::shared_ptr<void>> cleanup_;
     std::vector<aux::shared_ptr<void>> refs_;
 
     BOOST_CHECK_EQUAL(i, (
-        creator<fake_binder<dependency_type> >::execute<
+        creator<fake_binder<dependency_type> >().execute<
             int, void, mpl::vector0<>, mpl::vector0<>
-        >(entries_, cleanup_, refs_, fake_visitor<>())
+        >(entries_, refs_, fake_visitor<>())
     ));
 }
 
-} // namespace detail
+}
+// namespace detail
 } // namespace di
 } // namespace boost
 

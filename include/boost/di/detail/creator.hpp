@@ -12,11 +12,13 @@
     #include "boost/di/aux_/config.hpp"
     #include "boost/di/aux_/memory.hpp"
     #include "boost/di/type_traits/ctor_traits.hpp"
+    #include "boost/di/type_traits/create_traits.hpp"
     #include "boost/di/type_traits/make_plain.hpp"
     #include "boost/di/type_traits/is_same_base_of.hpp"
 
     #include <typeinfo>
     #include <map>
+    #include <vector>
     #include <typeinfo>
     #include <boost/config.hpp>
     #include <boost/bind.hpp>
@@ -39,6 +41,9 @@
     template<typename TBinder>
     class creator
     {
+        template<typename>
+        friend class creator;
+
         class type_comparator
         {
         public:
@@ -48,6 +53,7 @@
         };
 
         typedef std::map<const std::type_info*, aux::shared_ptr<void>, type_comparator> scopes_type;
+        typedef std::vector<std::pair<function<int(const std::type_info*)>, function<any()> > > creators_type;
 
         template<typename TDependency>
         struct ctor
@@ -224,25 +230,27 @@
         template<
             typename TDependency
           , typename TPolicies
+          , typename TCallStack
+          , typename TCreator
           , typename TDeps
           , typename TRefs
           , typename TVisitor
         >
-        void bind_create(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+        void bind_create(const TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
             creators_.push_back(
                 std::make_pair(
                     boost::bind(&TDependency::when, _1)
                   , boost::bind(
-                       &creator::execute_any<
+                       &TCreator::template execute_any<
                            typename TDependency::expected
                          , typename TDependency::expected
-                         , mpl::vector0<> // call_stack
+                         , TCallStack
                          , TPolicies
                          , TDeps
                          , TRefs
                          , TVisitor
                        >
-                     , this
+                     , creator
                      , deps
                      , refs
                      , visitor
@@ -316,7 +324,7 @@
 		}
 
         scopes_type scopes_;
-        std::vector<std::pair<function<int(const std::type_info*)>, function<any()>>> creators_;
+        creators_type creators_;
         const std::type_info* skip_;
     };
 
@@ -351,11 +359,11 @@
         //should be binder
         //int best = 0;
         if (skip_ != &typeid(T)) {
-            for (const auto& c : creators_) {
-                if (c.first(&typeid(typename type_traits::make_plain<T>::type))) {
+            for (creators_type::const_iterator it = creators_.begin(); it != creators_.end(); ++it) {
+                if (it->first(&typeid(typename type_traits::make_plain<T>::type))) {
 
                     convertible_type* convertible = new convertible_type(
-                        any_cast<typename TDependency::result_type>(c.second())
+                        any_cast<typename TDependency::result_type>(it->second())
                     );
 
                     refs.push_back(aux::shared_ptr<void>(convertible));
@@ -372,17 +380,19 @@
                    typename ctor<TDependency>::type     \
                  , n                                    \
                >::type                                  \
-              , T                                       \
-              , TCallStack                              \
-              , TPolicies                               \
+             , T                                        \
+             , TCallStack                               \
+             , TPolicies                                \
             >(deps, refs, visitor)
 
         convertible_type* convertible =
             new convertible_type(
                 acquire<typename TDependency::type>(deps).create(
-                   mpl::empty<typename TDeps::types>()
-                   BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
-                   BOOST_PP_REPEAT(
+                    type_traits::is_runtime<
+                        mpl::empty<typename TDeps::types>::value
+                    >()
+                    BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
+                    BOOST_PP_REPEAT(
                         BOOST_PP_ITERATION()
                       , BOOST_DI_CREATOR_EXECUTE
                       , ~

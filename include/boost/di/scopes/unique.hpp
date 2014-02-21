@@ -44,10 +44,10 @@
         public:
             typedef TConvertible<TExpected> result_type;
 
-            template<typename T>
-            result_type create(const T&) {
+            template<typename TRuntime>
+            result_type create(const TRuntime&) {
                 return callback0<TExpected*>(
-                    &type_traits::create_traits<T, TExpected, TGiven>
+                    &type_traits::create_traits<TRuntime, TExpected, TGiven>
                 );
             }
 
@@ -69,10 +69,10 @@
 
     #if !defined(BOOST_DI_CALLBACK)
 
-        template<typename T, BOOST_DI_TYPES(Args)>
-        result_type create(const T&, BOOST_DI_ARGS(Args, args)) {
+        template<typename TRuntime, BOOST_DI_TYPES(Args)>
+        result_type create(const TRuntime&, BOOST_DI_ARGS(Args, args)) {
             return BOOST_PP_CAT(callback, n)<TExpected*, BOOST_DI_TYPES_PASS(Args)>(
-                &type_traits::create_traits<T, TExpected, TGiven, BOOST_DI_TYPES_PASS(Args)>
+                &type_traits::create_traits<TRuntime, TExpected, TGiven, BOOST_DI_TYPES_PASS(Args)>
               , BOOST_DI_ARGS_PASS(args)
             );
         }

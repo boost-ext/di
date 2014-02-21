@@ -29,9 +29,9 @@ BOOST_AUTO_TEST_CASE(create) {
     unique<>::scope<int> unique_;
 
     BOOST_CHECK((
-        (unique_.create())(type<aux::shared_ptr<int>>())
+        (unique_.create(type_traits::is_runtime<false>()))(type<aux::shared_ptr<int>>())
         !=
-        (unique_.create())(type<aux::shared_ptr<int>>())
+        (unique_.create(type_traits::is_runtime<false>()))(type<aux::shared_ptr<int>>())
     ));
 }
 
@@ -43,27 +43,27 @@ BOOST_AUTO_TEST_CASE(create_args) {
     fake_convertible<char> c('0');
 
     BOOST_CHECK((
-        (unique_.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
+        (unique_.create<type_traits::is_runtime<false>, decltype(i), decltype(d), decltype(c)>(type_traits::is_runtime<false>(), i, d, c))(type<aux::shared_ptr<c2>>())
         !=
-        (unique_.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
+        (unique_.create<type_traits::is_runtime<false>, decltype(i), decltype(d), decltype(c)>(type_traits::is_runtime<false>(), i, d, c))(type<aux::shared_ptr<c2>>())
     ));
 }
 
 BOOST_AUTO_TEST_CASE(create_value_mpl_int) {
     const int i = 42;
-    auto i_ = unique<>::scope<int, mpl::int_<i>>().create();
+    auto i_ = unique<>::scope<int, mpl::int_<i>>().create(type_traits::is_runtime<false>());
     BOOST_CHECK_EQUAL(i, i_(type<int>()));
 }
 
 BOOST_AUTO_TEST_CASE(create_value_mpl_string) {
-    auto s_ = unique<>::scope<std::string, mpl::string<'s'>>().create();
+    auto s_ = unique<>::scope<std::string, mpl::string<'s'>>().create(type_traits::is_runtime<false>());
     BOOST_CHECK_EQUAL("s", s_(type<std::string>()));
 }
 
 BOOST_AUTO_TEST_CASE(create_value_has_value_type) {
     const double d = 42.0;
     double_value::value = d;
-    auto d_ = unique<>::scope<double, double_value>().create();
+    auto d_ = unique<>::scope<double, double_value>().create(type_traits::is_runtime<false>());
     BOOST_CHECK_EQUAL(d, d_(type<double>()));
 }
 

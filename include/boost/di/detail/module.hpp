@@ -187,17 +187,23 @@
         template<typename T>
         T create() {
             typedef mpl::vector0<> policies;
+            typedef mpl::vector0<> call_stack;
             std::vector<aux::shared_ptr<void> > refs_;
 
-            return creator_.template execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), refs_, empty_visitor())(boost::type<T>());
+            return creator_.template execute<T, T, call_stack, policies>(
+                static_cast<TPool<deps>&>(*this), refs_, empty_visitor())(boost::type<T>()
+            );
         }
 
         template<typename T, typename Visitor>
         T visit(const Visitor& visitor) {
             typedef mpl::vector0<> policies;
+            typedef mpl::vector0<> call_stack;
             std::vector<aux::shared_ptr<void> > refs_;
 
-            return creator_.template execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), refs_, visitor)(boost::type<T>());
+            return creator_.template execute<T, T, call_stack, policies>(
+                static_cast<TPool<deps>&>(*this), refs_, visitor)(boost::type<T>()
+            );
         }
 
         template<typename TAction>
@@ -206,11 +212,18 @@
         }
 
     protected:
-        template<typename T>
-        void bind_dependency() {
+        template<typename T, typename TInjector>
+        void bind_dependency(TInjector injector) {
             typedef mpl::vector0<> policies;
+            typedef mpl::vector0<> call_stack;
             std::vector<aux::shared_ptr<void> > refs_;
-            creator_.template bind_create<T, policies>(static_cast<TPool<deps>&>(*this), refs_, empty_visitor());
+
+            creator_.template bind_create<T, policies, call_stack>(
+                injector.creator_
+              , static_cast<TPool<typename TInjector::deps>&>(injector)
+              , refs_
+              , empty_visitor()
+            );
         }
 
     private:
@@ -268,9 +281,12 @@
     template<typename T, BOOST_DI_TYPES(Args)>
     T create(BOOST_DI_ARGS_NOT_USED(Args)) {
         typedef mpl::vector<BOOST_DI_TYPES_PASS(Args)> policies;
+        typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return creator_.template execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), refs_, empty_visitor())(boost::type<T>());
+        return creator_.template execute<T, T, call_stack, policies>(
+            static_cast<TPool<deps>&>(*this), refs_, empty_visitor())(boost::type<T>()
+        );
     }
 
 #endif

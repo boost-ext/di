@@ -13,6 +13,8 @@
     #include "boost/di/type_traits/ctor_traits.hpp"
 
     #include <string>
+    #include <stdexcept>
+    #include <typeinfo>
     #include <boost/preprocessor/repetition/enum_params.hpp>
     #include <boost/preprocessor/cat.hpp>
     #include <boost/type.hpp>
@@ -75,28 +77,31 @@
         );
     };
 
+    template<bool>
+    struct is_runtime
+    { };
+
     template<typename TExpected, typename TGiven>
-    typename disable_if<is_abstract<TGiven>, TExpected*>::type
-    create_traits2(const mpl::bool_<false>&) {
+    TGiven* create_traits_impl(const is_runtime<false>&) {
 		return new TGiven();
     }
 
     template<typename TExpected, typename TGiven>
     typename disable_if<is_abstract<TGiven>, TExpected*>::type
-    create_traits2(const mpl::bool_<true>&) {
+    create_traits_impl(const is_runtime<true>&) {
 		return new TGiven();
     }
 
     template<typename TExpected, typename TGiven>
     typename enable_if<is_abstract<TGiven>, TExpected*>::type
-    create_traits2(const mpl::bool_<true>&) {
+    create_traits_impl(const is_runtime<true>&) {
         throw std::runtime_error("type not found: " + std::string(typeid(TExpected).name()));
     }
 
-    template<typename T, typename TExpected, typename TGiven>
+    template<typename TRuntime, typename TExpected, typename TGiven>
     typename disable_if<is_explicit<TGiven>, TExpected*>::type
     create_traits() {
-		return create_traits2<TExpected, TGiven>(T());
+		return create_traits_impl<TExpected, TGiven>(TRuntime());
     }
 
     template<typename T, typename TExpected, typename TGiven>

@@ -107,7 +107,7 @@
         template<typename TSeq, typename TInjector>
         typename disable_if<mpl::empty<TSeq> >::type for_each_dependency(TInjector injector) {
             typedef typename mpl::front<TSeq>::type type;
-            bind_dependency<type>();
+            bind_dependency<type>(injector);
             for_each_dependency<typename mpl::pop_front<TSeq>::type>(injector);
         }
 
@@ -133,13 +133,22 @@
 	#if defined(BOOST_DI_INJECTOR_INSTALL)
         template<BOOST_DI_TYPES(Args)>
         void install(BOOST_DI_ARGS(Args, args)) {
-            auto i = injector<typename detail::concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type>(
-                BOOST_DI_ARGS_PASS(args)
-            );
+            typedef injector<
+                typename detail::concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type
+            > injector_type;
 
-            typedef BOOST_TYPEOF(i) d;
-            for_each_dependency<typename d::deps>(i);
+            for_each_dependency<typename injector_type::deps>(
+                injector_type(BOOST_DI_ARGS_PASS(args))
+            );
         }
+
+		template<BOOST_DI_TYPES(Args)>
+		injector<detail::concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >
+		operator()(BOOST_DI_ARGS(Args, args)) const {
+			return injector<detail::concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >(
+				BOOST_DI_ARGS_PASS(args)
+			);
+		}
 	#else
 		template<BOOST_DI_TYPES(Args)>
 		explicit injector(BOOST_DI_ARGS(Args, args))

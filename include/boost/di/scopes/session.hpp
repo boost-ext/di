@@ -49,10 +49,10 @@
                 object_.reset();
             }
 
-            template<typename T>
-            result_type create(const T&) {
+            template<typename TRuntime>
+            result_type create(const TRuntime&) {
                 if (in_scope_ && !object_) {
-                    object_.reset(type_traits::create_traits<T, TExpected, TGiven>());
+                    object_.reset(type_traits::create_traits<TRuntime, TExpected, TGiven>());
                 }
                 return object_;
             }
@@ -75,11 +75,11 @@
 
 #else
 
-    template<typename T, BOOST_DI_TYPES(Args)>
-    result_type create(const T&, BOOST_DI_ARGS(Args, args)) {
+    template<typename TRuntime, BOOST_DI_TYPES(Args)>
+    result_type create(const TRuntime&, BOOST_DI_ARGS(Args, args)) {
         if (in_scope_ && !object_) {
             object_.reset(
-                type_traits::create_traits<T, TExpected, TGiven>(BOOST_DI_ARGS_PASS(args))
+                type_traits::create_traits<TRuntime, TExpected, TGiven>(BOOST_DI_ARGS_PASS(args))
             );
         }
         return object_;

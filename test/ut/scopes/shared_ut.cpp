@@ -22,9 +22,9 @@ BOOST_AUTO_TEST_CASE(create) {
     shared<>::scope<int> shared_;
 
     BOOST_CHECK((
-        (shared_.create())(type<aux::shared_ptr<int>>())
+        (shared_.create(type_traits::is_runtime<false>()))(type<aux::shared_ptr<int>>())
         ==
-        (shared_.create())(type<aux::shared_ptr<int>>())
+        (shared_.create(type_traits::is_runtime<false>()))(type<aux::shared_ptr<int>>())
     ));
 }
 
@@ -36,9 +36,9 @@ BOOST_AUTO_TEST_CASE(create_args) {
     fake_convertible<char> c('0');
 
     BOOST_CHECK((
-        (shared_.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
+        (shared_.create<type_traits::is_runtime<false>, decltype(i), decltype(d), decltype(c)>(type_traits::is_runtime<false>(), i, d, c))(type<aux::shared_ptr<c2>>())
         ==
-        (shared_.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
+        (shared_.create<type_traits::is_runtime<false>, decltype(i), decltype(d), decltype(c)>(type_traits::is_runtime<false>(), i, d, c))(type<aux::shared_ptr<c2>>())
     ));
 }
 

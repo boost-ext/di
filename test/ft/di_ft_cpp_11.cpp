@@ -67,50 +67,46 @@ struct c3
 } // namespace
 
 BOOST_AUTO_TEST_CASE(create_complex) {
-/*    const int i_ = 42;*/
-    //const double d = 42.0;
-    //const std::vector<int> v = {1, 2, 3};
+    const int i_ = 42;
+    const double d = 42.0;
+    const std::vector<int> v = {1, 2, 3};
 
-    //using injector_c0 = di::injector<impl>;
+    using injector_c0 = di::injector<impl>;
 
-    //auto injector_c1 = di::make_injector(
-        //di::bind_int<i_>()
-      //, di::bind<std::vector<int>>::to(v)
-    //);
+    auto injector_c1 = di::make_injector(
+        di::bind_int<i_>()
+      , di::bind<std::vector<int>>::to(v)
+    );
 
-    //auto injector_ = make_injector(
-        //injector_c0()
-      //, di::unique<c2>()
-      //, injector_c1
-      //, di::bind<double>::to(d)
-    //);
-    di::injector<> injector;
-    injector.install(di::bind<i, impl>());
+    auto injector_ = make_injector(
+        injector_c0()
+      , di::unique<c2>()
+      , injector_c1
+      , di::bind<double>::to(d)
+    );
 
-    auto c3_ = injector.create<std::shared_ptr<c3>>();
+    auto c3_ = injector_.create<std::shared_ptr<c3>>(
+        di::policies::binding_correctness()
+      , di::policies::circular_dependencies()
+      , di::policies::arguments_permission<
+            di::policies::allow_smart_ptrs
+          , di::policies::allow_copies
+          , di::policies::allow_refs
+        >()
+    );
 
-    //auto c3_ = injector_.create<std::shared_ptr<c3>>(
-        //di::policies::binding_correctness()
-      //, di::policies::circular_dependencies()
-      //, di::policies::arguments_permission<
-            //di::policies::allow_smart_ptrs
-          //, di::policies::allow_copies
-          //, di::policies::allow_refs
-        //>()
-    //);
-
-    //BOOST_CHECK(dynamic_cast<impl*>(c3_->c2_->p_.get()));
-    //BOOST_CHECK_EQUAL(c3_->c1_.get(), c3_->c2_->c1_.get());
-    //BOOST_CHECK_EQUAL(i_, c3_->c1_->i_);
-    //BOOST_CHECK_EQUAL(d, c3_->c1_->d_);
-    //BOOST_CHECK_EQUAL(i_, c3_->c1__.i_);
-    //BOOST_CHECK_EQUAL(d, c3_->c1__.d_);
-    //BOOST_CHECK_EQUAL(i_, c3_->c2_->c1_->i_);
-    //BOOST_CHECK_EQUAL(d, c3_->c2_->c1_->d_);
-    //BOOST_CHECK_EQUAL(3u, v.size());
-    //BOOST_CHECK_EQUAL(v.size(), c3_->v_.size());
-    //BOOST_CHECK_EQUAL(v[0], c3_->v_[0]);
-    //BOOST_CHECK_EQUAL(v[1], c3_->v_[1]);
-    /*BOOST_CHECK_EQUAL(v[2], c3_->v_[2]);*/
+    BOOST_CHECK(dynamic_cast<impl*>(c3_->c2_->p_.get()));
+    BOOST_CHECK_EQUAL(c3_->c1_.get(), c3_->c2_->c1_.get());
+    BOOST_CHECK_EQUAL(i_, c3_->c1_->i_);
+    BOOST_CHECK_EQUAL(d, c3_->c1_->d_);
+    BOOST_CHECK_EQUAL(i_, c3_->c1__.i_);
+    BOOST_CHECK_EQUAL(d, c3_->c1__.d_);
+    BOOST_CHECK_EQUAL(i_, c3_->c2_->c1_->i_);
+    BOOST_CHECK_EQUAL(d, c3_->c2_->c1_->d_);
+    BOOST_CHECK_EQUAL(3u, v.size());
+    BOOST_CHECK_EQUAL(v.size(), c3_->v_.size());
+    BOOST_CHECK_EQUAL(v[0], c3_->v_[0]);
+    BOOST_CHECK_EQUAL(v[1], c3_->v_[1]);
+    BOOST_CHECK_EQUAL(v[2], c3_->v_[2]);
 }
 

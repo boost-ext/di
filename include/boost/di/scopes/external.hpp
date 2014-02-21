@@ -11,6 +11,7 @@
 
     #include "boost/di/aux_/config.hpp"
     #include "boost/di/convertibles/value.hpp"
+    #include "boost/di/type_traits/create_traits.hpp"
 
     #include <boost/function.hpp>
     #include <boost/non_type.hpp>
@@ -90,8 +91,8 @@
                 : object_(callback(object))
             { }
 
-            template<typename T>
-            result_type create(const T&) {
+            template<typename TRuntime>
+            result_type create(const TRuntime&) {
                 return object_();
             }
 
@@ -112,8 +113,8 @@
 
 #else
 
-    template<BOOST_DI_TYPES(Args)>
-    result_type create(BOOST_DI_ARGS_NOT_USED(Args)) {
+    template<typename TRuntime, BOOST_DI_TYPES(Args)>
+    result_type create(const TRuntime&, BOOST_DI_ARGS_NOT_USED(Args)) {
         return object_();
     }
 
