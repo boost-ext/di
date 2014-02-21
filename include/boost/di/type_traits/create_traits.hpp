@@ -78,7 +78,8 @@
     template<typename TExpected, typename TGiven>
     typename disable_if<is_explicit<TGiven>, TExpected*>::type
     create_traits() {
-        return new TGiven();
+        //return new TGiven();
+        throw std::runtime_error("type not found");
     }
 
     template<typename TExpected, typename TGiven>

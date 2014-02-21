@@ -236,6 +236,11 @@ public:
     to(aux::shared_ptr<T> obj) {
         return typename external<expected, T, shared_type>::type(obj);
     }
+
+    static int when(const std::type_info* t) {
+        std::cout << typeid(TExpected).name() << " : " << t->name() << std::endl;
+        return &typeid(TExpected) == t;
+    }
 };
 
 } // namespace concepts

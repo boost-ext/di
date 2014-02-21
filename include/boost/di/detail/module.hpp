@@ -20,7 +20,10 @@
     #include <map>
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/type.hpp>
+    #include <boost/bind.hpp>
+    #include <boost/function.hpp>
     #include <boost/non_type.hpp>
+    #include <boost/any.hpp>
     #include <boost/type_traits/is_same.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/typeof/typeof.hpp>
@@ -172,14 +175,6 @@
             void operator()(const T&) const { }
         };
 
-        class type_comparator
-        {
-        public:
-            bool operator ()(const std::type_info* lhs, const std::type_info* rhs) const {
-                return lhs->before(*rhs);
-            }
-        };
-
     public:
         typedef TDeps deps;
 
@@ -194,8 +189,7 @@
             typedef mpl::vector0<> policies;
             std::vector<aux::shared_ptr<void> > refs_;
 
-            return TCreator<TBinder<deps> >::template
-                execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
+            return creator_.template execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), refs_, empty_visitor())(boost::type<T>());
         }
 
         template<typename T, typename Visitor>
@@ -203,13 +197,20 @@
             typedef mpl::vector0<> policies;
             std::vector<aux::shared_ptr<void> > refs_;
 
-            return TCreator<TBinder<deps> >::template
-                execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), scopes_, refs_, visitor)(boost::type<T>());
+            return creator_.template execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), refs_, visitor)(boost::type<T>());
         }
 
         template<typename TAction>
         void call(const TAction& action) {
             call_impl<deps>(static_cast<TPool<deps>&>(*this), action);
+        }
+
+    protected:
+        template<typename T>
+        void bind_dependency() {
+            typedef mpl::vector0<> policies;
+            std::vector<aux::shared_ptr<void> > refs_;
+            creator_.template bind_create<T, policies>(static_cast<TPool<deps>&>(*this), refs_, empty_visitor());
         }
 
     private:
@@ -233,7 +234,7 @@
             call_impl<typename mpl::pop_front<TSeq>::type>(deps, action);
         }
 
-        std::map<const std::type_info*, aux::shared_ptr<void>, type_comparator> scopes_;
+        TCreator<TBinder<deps> > creator_;
     };
 
     } // namespace detail
@@ -269,8 +270,7 @@
         typedef mpl::vector<BOOST_DI_TYPES_PASS(Args)> policies;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return TCreator<TBinder<deps> >::template
-            execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), scopes_, refs_, empty_visitor())(boost::type<T>());
+        return creator_.template execute<T, T, mpl::vector0<>, policies>(static_cast<TPool<deps>&>(*this), refs_, empty_visitor())(boost::type<T>());
     }
 
 #endif
