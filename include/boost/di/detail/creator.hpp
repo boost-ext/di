@@ -228,15 +228,13 @@
           , typename TVisitor
         >
         void bind_create(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
-            typedef typename TDependency::expected type;
-
             creators_.push_back(
                 std::make_pair(
                     boost::bind(&TDependency::when, _1)
                   , boost::bind(
                        &creator::execute_any<
-                           type
-                         , type
+                           typename TDependency::expected
+                         , typename TDependency::expected
                          , mpl::vector0<> // call_stack
                          , TPolicies
                          , TDeps
@@ -346,7 +344,6 @@
 
         //should be binder
         //int best = 0;
-        std::cout << "blah: " << typeid(typename type_traits::make_plain<T>::type).name() << creators_.size() << std::endl;
         for (const auto& c : creators_) {
             if (c.first(&typeid(typename type_traits::make_plain<T>::type))) {
                 return any_cast<const typename TDependency::result_type&>(c.second());
