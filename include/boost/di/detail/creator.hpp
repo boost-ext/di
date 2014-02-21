@@ -261,6 +261,7 @@
           , typename TVisitor
         >
         any execute_any(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+            skip_ = &typeid(T);
             return any(execute<T, TParent, TCallStack, TPolicies>(deps, refs, visitor));
         }
 
@@ -315,6 +316,7 @@
 
         scopes_type scopes_;
         std::vector<std::pair<function<int(const std::type_info*)>, function<any()>>> creators_;
+        const std::type_info* skip_;
     };
 
     } // namespace detail
@@ -338,19 +340,29 @@
         mpl::size<typename ctor<TDependency>::type>::value == BOOST_PP_ITERATION()
       , const typename TDependency::result_type&
     >::type execute_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+
         typedef dependency<T, TCallStack, TDependency> dependency_type;
+        typedef typename TDependency::result_type convertible_type;
+
         assert_policies<TPolicies, typename TDeps::types, dependency_type>();
         (visitor)(dependency_type());
 
         //should be binder
         //int best = 0;
-        for (const auto& c : creators_) {
-            if (c.first(&typeid(typename type_traits::make_plain<T>::type))) {
-                return any_cast<const typename TDependency::result_type&>(c.second());
+        if (skip_ != &typeid(T)) {
+            for (const auto& c : creators_) {
+                if (c.first(&typeid(typename type_traits::make_plain<T>::type))) {
+
+                    convertible_type* convertible = new convertible_type(
+                        any_cast<typename TDependency::result_type>(c.second())
+                    );
+
+                    refs.push_back(aux::shared_ptr<void>(convertible));
+
+                    return *convertible;
+                }
             }
         }
-
-        typedef typename TDependency::result_type convertible_type;
 
         #define BOOST_DI_CREATOR_EXECUTE(z, n, _)       \
             BOOST_PP_COMMA_IF(n)                        \

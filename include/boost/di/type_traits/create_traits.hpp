@@ -84,7 +84,7 @@
     template<typename TExpected, typename TGiven>
     typename enable_if<is_abstract<TGiven>, TExpected*>::type
     create_traits2() {
-        throw std::runtime_error("type not found");
+        throw std::runtime_error("type not found: " + std::string(typeid(TExpected).name()));
     }
 
     template<typename TExpected, typename TGiven>
