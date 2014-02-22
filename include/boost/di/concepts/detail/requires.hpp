@@ -26,24 +26,60 @@ namespace di {
 namespace concepts {
 namespace detail {
 
-template<
-    typename T1 = mpl::na
-  , typename T2 = mpl::na
-  , typename T3 = mpl::na
-  , typename T4 = mpl::na
->
-struct requires
-    : mpl::second<
-          typename mpl::fold<
-              mpl::vector<T1, T2, T3, T4>
-            , mpl::pair<mpl::integral_c<long, 1>, mpl::integral_c<long, 1> >
-            , mpl::pair<
-                  mpl::times<mpl::first<mpl::_1>, mpl::integral_c<long, 100> >
-                , mpl::times<mpl::first<mpl::_1>, mpl::second<mpl::_1>, mpl::_2>
-              >
+template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
+class requires
+{
+    template<
+        typename TBind
+      , typename T
+      , typename TCallStack
+      , typename TScope
+    >
+    struct apply_bind
+        : TBind::template apply<
+              T
+            , TCallStack
+            , TScope
           >::type
-      >
-{ };
+    { };
+
+public:
+    template<typename T, typename TCallStack, typename TScope>
+    struct apply
+        : mpl::second<
+              typename mpl::fold<
+                  mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+                , mpl::pair<mpl::integral_c<long, 1>, mpl::integral_c<long, 1> >
+                , mpl::pair<
+                      mpl::times<mpl::first<mpl::_1>, mpl::integral_c<long, 100> >
+                    , mpl::times<mpl::first<mpl::_1>, mpl::second<mpl::_1>, apply_bind<mpl::_2, T, TCallStack, TScope> >
+                  >
+              >::type
+          >
+    { };
+
+    int operator()(const std::type_info* t, const std::type_info* name, const std::vector<const std::type_info*>& call_stack, int priority) const {
+        return (1 * (priority + 1) * (100 * T1()(t, name, call_stack))) * t2(T2(), t, name, call_stack) * t3(T3(), t, name, call_stack);
+    }
+
+    int t2(const mpl::na&, const std::type_info*, const std::type_info*, const std::vector<const std::type_info*>&) const {
+        return 1;
+    }
+
+    template<typename T>
+    int t2(const T&, const std::type_info* t, const std::type_info* n, const std::vector<const std::type_info*>& stack) const {
+        return 1000 * T()(t, n, stack);
+    }
+
+    int t3(const mpl::na&, const std::type_info*, const std::type_info*, const std::vector<const std::type_info*>&) const {
+        return 1;
+    }
+
+    template<typename T>
+    int t3(const T&, const std::type_info* t, const std::type_info* n, const std::vector<const std::type_info*>& stack) const {
+        return 10000 * T()(t, n, stack);
+    }
+};
 
 } // namespace detail
 } // namespace concepts

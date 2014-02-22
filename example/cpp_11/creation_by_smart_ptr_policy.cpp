@@ -28,7 +28,7 @@ class creation_by_smart_ptr
     BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
 public:
-    typedef creation_by_smart_ptr is_policy;
+    typedef creation_by_smart_ptr policy;
 
     template<
         typename TDeps

@@ -73,8 +73,10 @@ struct bind_string
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-struct call_stack
+class call_stack
 {
+    typedef mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> context_type;
+
     template<typename TContext, typename TCallStack>
     struct apply_impl
         : mpl::if_<
@@ -103,10 +105,40 @@ struct call_stack
           >
     { };
 
-    template<typename T, typename TCallStack, typename TScope>
+    template<typename TSeq, typename V>
+    static typename enable_if<mpl::empty<TSeq> >::type for_all(int&, const V&, int) { }
+
+    template<typename TSeq, typename V>
+    static typename disable_if<mpl::empty<TSeq> >::type for_all(int& result, const V& v, int i) {
+        typedef typename mpl::front<TSeq>::type type;
+
+        if (result != -1) {
+            if (&typeid(type) == v[i]) {
+                result = i;
+            } else {
+                result = -1;
+            }
+        }
+
+        for_all<typename mpl::pop_front<TSeq>::type>(result, v, i+1);
+    }
+
+public:
+    template<typename, typename TCallStack, typename>
     struct apply
-        : apply_impl<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>, TCallStack>
+        : apply_impl<context_type, TCallStack>
     { };
+
+    int operator()(const std::vector<const std::type_info*>& call_stack) const {
+        if (mpl::size<context_type>::value != call_stack.size()) {
+            return 0;
+        }
+
+        int result = 0;
+        for_all<context_type>(result, call_stack, 0);
+
+        return result == -1 ? 0 : result;
+    }
 };
 
 } // namespace di

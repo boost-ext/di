@@ -16,7 +16,6 @@
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
-#include <boost/mpl/lambda.hpp>
 #include <boost/mpl/bind.hpp>
 #include <boost/mpl/times.hpp>
 
@@ -39,12 +38,10 @@ struct bind
           mpl::_1
         , TExpected
         , TGiven
-        , typename mpl::lambda<
-              detail::requires<
-                  type_traits::priority<>
-                , type_traits::type<TExpected>
-              >
-          >::type
+        , detail::requires<
+              type_traits::priority
+            , type_traits::type<TExpected>
+          >
       >
 {
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
@@ -53,13 +50,11 @@ struct bind
               mpl::_1
             , TExpected
             , TGiven
-            , typename mpl::lambda<
-                  detail::requires<
-                      type_traits::priority<>
-                    , type_traits::type<TExpected>
-                    , type_traits::when<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
-                  >
-              >::type
+            , detail::requires<
+                  type_traits::priority
+                , type_traits::type<TExpected>
+                , type_traits::when<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
+              >
           >
     {
         template<typename TName>
@@ -68,14 +63,12 @@ struct bind
                   mpl::_1
                 , TExpected
                 , TGiven
-                , typename mpl::lambda<
-                      detail::requires<
-                          type_traits::priority<>
-                        , type_traits::type<TExpected>
-                        , type_traits::name<TName>
-                        , type_traits::when<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
-                      >
-                  >::type
+                , detail::requires<
+                      type_traits::priority
+                    , type_traits::type<TExpected>
+                    , type_traits::name<TName>
+                    , type_traits::when<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
+                  >
               >
         { };
     };
@@ -86,13 +79,11 @@ struct bind
               mpl::_1
             , TExpected
             , TGiven
-            , typename mpl::lambda<
-                  detail::requires<
-                      type_traits::priority<>
-                    , type_traits::type<TExpected>
-                    , type_traits::name<TName>
-                  >
-              >::type
+            , detail::requires<
+                  type_traits::priority
+                , type_traits::type<TExpected>
+                , type_traits::name<TName>
+              >
           >
     {
         template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
@@ -101,14 +92,12 @@ struct bind
                   mpl::_1
                 , TExpected
                 , TGiven
-                , typename mpl::lambda<
-                      detail::requires<
-                          type_traits::priority<>
-                        , type_traits::type<TExpected>
-                        , type_traits::name<TName>
-                        , type_traits::when<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
-                      >
-                  >::type
+                , detail::requires<
+                      type_traits::priority
+                    , type_traits::type<TExpected>
+                    , type_traits::name<TName>
+                    , type_traits::when<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
+                  >
               >
         { };
     };

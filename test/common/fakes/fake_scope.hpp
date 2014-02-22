@@ -65,8 +65,8 @@ struct fake_scope
             exit_calls()++;
         }
 
-        template<typename TRuntime, typename... Args>
-        result_type create(const TRuntime&, Args&&... args) {
+        template<typename TPolicy, typename... Args>
+        result_type create(const TPolicy&, Args&&... args) {
             if (entry_calls() > exit_calls()) {
                 return aux::shared_ptr<T>(new T(std::forward<Args>(args)...));
             }

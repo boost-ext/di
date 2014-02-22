@@ -31,10 +31,10 @@
         public:
             typedef TConvertible<TExpected> result_type;
 
-            template<typename TRuntime>
-            result_type create(const TRuntime&) {
+            template<typename TPolicy>
+            result_type create(const TPolicy&) {
                 if (!object_) {
-                    object_.reset(type_traits::create_traits<TRuntime, TExpected, TGiven>());
+                    object_.reset(type_traits::create_traits<TPolicy, TExpected, TGiven>());
                 }
                 return object_;
             }
@@ -56,11 +56,11 @@
 
 #else
 
-    template<typename TRuntime, BOOST_DI_TYPES(Args)>
-    result_type create(const TRuntime&, BOOST_DI_ARGS(Args, args)) {
+    template<typename TPolicy, BOOST_DI_TYPES(Args)>
+    result_type create(const TPolicy&, BOOST_DI_ARGS(Args, args)) {
         if (!object_) {
             object_.reset(
-                type_traits::create_traits<TRuntime, TExpected, TGiven>(BOOST_DI_ARGS_PASS(args))
+                type_traits::create_traits<TPolicy, TExpected, TGiven>(BOOST_DI_ARGS_PASS(args))
             );
         }
         return object_;

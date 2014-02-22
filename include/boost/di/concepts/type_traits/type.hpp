@@ -8,10 +8,9 @@
 #define BOOST_DI_CONCEPTS_TYPE_TRAITS_TYPE_HPP
 
 #include "boost/di/type_traits/make_plain.hpp"
+#include "boost/di/type_traits/is_same_base_of.hpp"
 
 #include <boost/mpl/placeholders.hpp>
-#include <boost/type_traits/is_base_of.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/or.hpp>
 
 namespace boost {
@@ -19,13 +18,21 @@ namespace di {
 namespace concepts {
 namespace type_traits {
 
-template<typename T, typename U = mpl::_1>
+template<typename T>
 struct type
-    : mpl::or_<
-          is_base_of<typename di::type_traits::make_plain<U>::type, T>
-        , is_same<typename di::type_traits::make_plain<U>::type, T>
-      >
-{ };
+{
+    template<typename U, typename, typename>
+    struct apply
+        : di::type_traits::is_same_base_of<
+              T
+            , typename di::type_traits::make_plain<U>::type
+          >
+    { };
+
+    int operator()(const std::type_info* t, const std::type_info*, const std::vector<const std::type_info*>&) const {
+        return &typeid(T) == t;
+    }
+};
 
 } // namespace type_traits
 } // namespace concepts

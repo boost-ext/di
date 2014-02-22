@@ -14,7 +14,6 @@
 
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
-#include <boost/mpl/lambda.hpp>
 #include <boost/mpl/has_xxx.hpp>
 
 namespace boost {
@@ -45,12 +44,10 @@ class scope
               mpl::_1
             , T
             , T
-            , typename mpl::lambda<
-                  detail::requires<
-                      type_traits::priority<>
-                    , type_traits::type<T>
-                  >
-              >::type
+            , detail::requires<
+                  type_traits::priority
+                , type_traits::type<T>
+              >
           >
     { };
 

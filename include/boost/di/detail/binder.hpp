@@ -15,7 +15,6 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/if.hpp>
-#include <boost/mpl/apply.hpp>
 #include <boost/mpl/deref.hpp>
 #include <boost/mpl/pair.hpp>
 #include <boost/mpl/greater.hpp>
@@ -29,10 +28,9 @@ template<typename TDeps = mpl::vector0<> >
 class binder
 {
     template<typename TDependency, typename T, typename TCallStack>
-    struct comparator
-        : mpl::apply<
-              typename TDependency::bind
-            , T
+    struct apply
+        : TDependency::bind::template apply<
+              T
             , TCallStack
             , typename TDependency::scope
           >::type
@@ -56,14 +54,14 @@ public:
                     , mpl::pair<mpl::int_<0>, TDefault>
                     , mpl::if_<
                           mpl::greater<
-                              comparator<
+                              apply<
                                   mpl::_2
                                 , T
                                 , TCallStack
                               >
                             , mpl::first<mpl::_1>
                           >
-                        , mpl::pair<comparator<mpl::_2, T, TCallStack>, mpl::_2>
+                        , mpl::pair<apply<mpl::_2, T, TCallStack>, mpl::_2>
                         , mpl::_1
                       >
                   >::type

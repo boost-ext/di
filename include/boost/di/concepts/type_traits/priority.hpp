@@ -15,13 +15,16 @@ namespace di {
 namespace concepts {
 namespace type_traits {
 
-template<typename TScope = mpl::_3>
 struct priority
-    : mpl::plus<
-          mpl::int_<1>
-        , typename TScope::priority // lowest = 0, highest = N
-      >
-{ };
+{
+    template<typename, typename, typename TScope>
+    struct apply
+        : mpl::plus<
+              mpl::int_<1>
+            , typename TScope::priority // lowest = 0, highest = N
+          >
+    { };
+};
 
 } // namespace type_traits
 } // namespace concepts

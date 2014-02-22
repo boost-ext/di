@@ -33,7 +33,6 @@
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/placeholders.hpp>
-#include <boost/mpl/lambda.hpp>
 #include <boost/mpl/void.hpp>
 #include <boost/mpl/times.hpp>
 #include <boost/mpl/aux_/yes_no.hpp>
@@ -73,12 +72,11 @@ template<
     typename TScope
   , typename TExpected
   , typename TGiven = TExpected
-  , typename TBind = typename mpl::lambda<
+  , typename TBind =
         detail::requires<
-            concepts::type_traits::priority<>
+            concepts::type_traits::priority
           , concepts::type_traits::type<TExpected>
         >
-    >::type
 >
 class dependency : public get_scope<TExpected, TGiven, TScope>::type
 {
@@ -237,8 +235,8 @@ public:
         return typename external<expected, T, shared_type>::type(obj);
     }
 
-    static int when(const std::type_info* t) {
-        return &typeid(TExpected) == t;
+    static int when(const std::type_info* t, const std::type_info* name, const std::vector<const std::type_info*>& call_stack, int priority) {
+        return TBind()(t, name, call_stack, priority);
     }
 };
 

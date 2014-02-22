@@ -18,23 +18,54 @@ namespace di {
 namespace concepts {
 namespace type_traits {
 
-template<typename TBind, typename T, typename TCallStack, typename TScope>
-struct apply
-    : TBind::template apply<T, TCallStack, TScope>::type
-{ };
+template<typename TContext>
+class when
+{
+    template<typename TBind, typename T, typename TCallStack, typename TScope>
+    struct apply_bind
+        : TBind::template apply<T, TCallStack, TScope>::type
+    { };
 
-template<typename TContext, typename T = mpl::_1, typename TCallStack = mpl::_2, typename TScope = mpl::_3>
-struct when
-    : mpl::if_<
-          mpl::empty<TContext>
-        , mpl::int_<1>
-        , typename mpl::deref<
-              mpl::max_element<
-                  mpl::transform_view<TContext, apply<mpl::_1, T, TCallStack, TScope> >
-              >
+    template<typename TSeq, typename V>
+    static typename enable_if<mpl::empty<TSeq> >::type for_all(int&, const V&) { }
+
+    template<typename TSeq, typename V>
+    static typename disable_if<mpl::empty<TSeq> >::type for_all(int& max, const V& v) {
+        typedef typename mpl::front<TSeq>::type type;
+        int value = type()(v);
+
+        if (value > max) {
+            max = value;
+        }
+
+        for_all<typename mpl::pop_front<TSeq>::type>(max, v);
+    }
+
+public:
+    template<typename T, typename TCallStack, typename TScope>
+    struct apply
+        : mpl::if_<
+              mpl::empty<TContext>
+            , mpl::int_<1>
+            , typename mpl::deref<
+                  mpl::max_element<
+                      mpl::transform_view<TContext, apply_bind<mpl::_1, T, TCallStack, TScope> >
+                  >
+              >::type
           >::type
-      >::type
-{ };
+    { };
+
+    int operator()(const std::type_info*, const std::type_info*, const std::vector<const std::type_info*>& call_stack) const {
+        if (mpl::empty<TContext>::value) {
+            return 1;
+        }
+
+        int max = 0;
+        for_all<TContext>(max, call_stack);
+
+        return max;
+    }
+};
 
 } // namespace type_traits
 } // namespace concepts

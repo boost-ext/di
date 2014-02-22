@@ -91,8 +91,8 @@
                 : object_(callback(object))
             { }
 
-            template<typename TRuntime>
-            result_type create(const TRuntime&) {
+            template<typename TPolicy>
+            result_type create(const TPolicy&) {
                 return object_();
             }
 
@@ -113,8 +113,8 @@
 
 #else
 
-    template<typename TRuntime, BOOST_DI_TYPES(Args)>
-    result_type create(const TRuntime&, BOOST_DI_ARGS_NOT_USED(Args)) {
+    template<typename TPolicy, BOOST_DI_TYPES(Args)>
+    result_type create(const TPolicy&, BOOST_DI_ARGS_NOT_USED(Args)) {
         return object_();
     }
 

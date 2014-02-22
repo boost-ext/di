@@ -78,30 +78,30 @@
     };
 
     template<bool>
-    struct is_runtime
+    struct policy
     { };
 
     template<typename TExpected, typename TGiven>
-    TGiven* create_traits_impl(const is_runtime<false>&) {
+    TGiven* create_traits_impl(const policy<false>&) {
 		return new TGiven();
     }
 
     template<typename TExpected, typename TGiven>
     typename disable_if<is_abstract<TGiven>, TExpected*>::type
-    create_traits_impl(const is_runtime<true>&) {
+    create_traits_impl(const policy<true>&) {
 		return new TGiven();
     }
 
     template<typename TExpected, typename TGiven>
     typename enable_if<is_abstract<TGiven>, TExpected*>::type
-    create_traits_impl(const is_runtime<true>&) {
+    create_traits_impl(const policy<true>&) {
         throw std::runtime_error("type not found: " + std::string(typeid(TExpected).name()));
     }
 
-    template<typename TRuntime, typename TExpected, typename TGiven>
+    template<typename TPolicy, typename TExpected, typename TGiven>
     typename disable_if<is_explicit<TGiven>, TExpected*>::type
     create_traits() {
-		return create_traits_impl<TExpected, TGiven>(TRuntime());
+		return create_traits_impl<TExpected, TGiven>(TPolicy());
     }
 
     template<typename T, typename TExpected, typename TGiven>
