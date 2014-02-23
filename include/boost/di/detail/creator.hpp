@@ -17,6 +17,7 @@
     #include "boost/di/type_traits/is_same_base_of.hpp"
 
     #include "boost/di/concepts/type_traits/name.hpp"
+    #include "boost/di/concepts.hpp"
 
     #include <typeinfo>
     #include <map>
@@ -29,6 +30,7 @@
     #include <boost/type.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/type_traits/is_base_of.hpp>
+    #include <boost/type_traits/is_polymorphic.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/empty.hpp>
@@ -56,8 +58,7 @@
         };
 
         typedef std::map<const std::type_info*, aux::shared_ptr<void>, type_comparator> scopes_type;
-        typedef std::map<const std::type_info*, function<any()>, type_comparator> f_type;
-        typedef std::vector<std::pair<function<int(const std::type_info*, const std::type_info*, const std::vector<const std::type_info*>&, int)>, f_type> > creators_type;
+        typedef std::vector<std::pair<function<int(const std::type_info*, const std::type_info*, const std::vector<const std::type_info*>&)>, function<any()> > > creators_type;
 
         template<typename TDependency>
         struct ctor
@@ -135,7 +136,7 @@
                   , typename mpl::push_back<TCallStack, PU>::type
                   , TPolicies
                   , binder<U, TCallStack>
-                >(deps_, refs_, visitor_)(boost::type<NU>());
+                >(deps_, refs_, visitor_);//(boost::type<NU>());
             }
 
             template<
@@ -158,7 +159,7 @@
                   , typename mpl::push_back<TCallStack, PU>::type
                   , TPolicies
                   , binder<const U&, TCallStack>
-                >(deps_, refs_, visitor_)(boost::type<const NU&>());
+                >(deps_, refs_, visitor_);//(boost::type<const NU&>());
             }
 
             template<
@@ -180,7 +181,7 @@
                   , typename mpl::push_back<TCallStack, PU>::type
                   , TPolicies
                   , binder<U&, TCallStack>
-                >(deps_, refs_, visitor_)(boost::type<NU&>());
+                >(deps_, refs_, visitor_);//(boost::type<NU&>());
             }
 
         private:
@@ -217,7 +218,8 @@
           , typename TRefs
           , typename TVisitor
         >
-        const typename binder<T, TCallStack>::result_type&
+        //const typename binder<T, TCallStack>::result_type&
+        T
         execute(TDeps& deps, TRefs& refs, const TVisitor& visitor
               , typename disable_if<is_same<T, any_type> >::type* = 0) {
             return execute_impl<
@@ -241,80 +243,27 @@
           , typename TVisitor
         >
         void bind_create(const TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
-            f_type m;
+            typedef typename TDependency::expected type;
 
-            m[&typeid(convertibles::shared<typename TDependency::expected>)] =
-               boost::bind(
-                   &TCreator::template execute_any<
-                       aux::shared_ptr<typename TDependency::expected>
-                     , aux::shared_ptr<typename TDependency::expected>
-                     , TCallStack
-                     , TPolicies
-                     , TDeps
-                     , TRefs
-                     , TVisitor
-                   >
-                 , creator
-                 , deps
-                 , refs
-                 , visitor
-               );
-
-            m[&typeid(convertibles::copy<typename TDependency::expected>)] =
-               boost::bind(
-                   &TCreator::template execute_any<
-                       typename TDependency::expected
-                     , typename TDependency::expected
-                     , TCallStack
-                     , TPolicies
-                     , TDeps
-                     , TRefs
-                     , TVisitor
-                   >
-                 , creator
-                 , deps
-                 , refs
-                 , visitor
-               );
-
-            m[&typeid(convertibles::reference<typename TDependency::expected>)] =
-               boost::bind(
-                   &TCreator::template execute_any<
-                       const typename TDependency::expected&
-                     , const typename TDependency::expected&
-                     , TCallStack
-                     , TPolicies
-                     , TDeps
-                     , TRefs
-                     , TVisitor
-                   >
-                 , creator
-                 , deps
-                 , refs
-                 , visitor
-               );
-
-            //m[&typeid(convertibles::value<typename TDependency::expected>)] =
-               //boost::bind(
-                   //&TCreator::template execute_any<
-                       //typename TDependency::expected
-                     //, typename TDependency::expected
-                     //, TCallStack
-                     //, TPolicies
-                     //, TDeps
-                     //, TRefs
-                     //, TVisitor
-                   //>
-                 //, creator
-                 //, deps
-                 //, refs
-                 //, visitor
-               //);
-
+            //std::cout << "DDD: " << units::detail::demangle(typeid(named<aux::shared_ptr<type>, typename TDependency::name>).name()) << std::endl;
             creators_.push_back(
                 std::make_pair(
-                    boost::bind(&TDependency::when, _1, _2, _3, _4)
-                  , m
+                    boost::bind(&TDependency::when, _1, _2, _3)
+                  , boost::bind(
+                       &TCreator::template execute_any<
+                           named<aux::shared_ptr<type>, typename TDependency::name>
+                         , named<aux::shared_ptr<type>, typename TDependency::name>
+                         , typename TDependency::context
+                         , TPolicies
+                         , TDeps
+                         , TRefs
+                         , TVisitor
+                       >
+                     , creator
+                     , deps
+                     , refs
+                     , visitor
+                   )
                 )
             );
         }
@@ -331,7 +280,8 @@
         >
         any execute_any(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
             skip_ = &typeid(T);
-            return any(execute<T, TParent, TCallStack, TPolicies>(deps, refs, visitor));
+            std::cout << "FROM: " << units::detail::demangle(typeid(execute<T, TParent, TCallStack, TPolicies>(deps, refs, visitor)).name()) << std::endl;
+            return any(*execute<T, TParent, TCallStack, TPolicies>(deps, refs, visitor));
         }
 
         #define BOOST_PP_FILENAME_1 "boost/di/detail/creator.hpp"
@@ -383,6 +333,25 @@
             fill_call_stack<typename mpl::pop_front<TSeq>::type>(v);
 		}
 
+BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
+
+        template<typename T, typename R>
+        T cast(int r, const boost::type<R>&, typename enable_if<has_name<R> >::type* = 0) {
+            std::cout << "TO1: " << units::detail::demangle(typeid(aux::shared_ptr<T>).name()) << std::endl;
+            return *any_cast<aux::shared_ptr<typename T::named_type> >(creators_[r].second());
+        }
+
+        template<typename T, typename R>
+        T cast(int r, const boost::type<R>&, typename disable_if<has_name<R> >::type* = 0) {
+            //std::cout << "TO2: " << units::detail::demangle(typeid(aux::shared_ptr<T>).name()) << std::endl;
+            return *any_cast<aux::shared_ptr<T> >(creators_[r].second());
+        }
+
+        template<typename T, typename R>
+        T cast(int r, const boost::type<aux::shared_ptr<R> >&) {
+            return any_cast<T>(creators_[r].second());
+        }
+
         scopes_type scopes_;
         creators_type creators_;
         const std::type_info* skip_;
@@ -407,11 +376,12 @@
     >
     typename enable_if_c<
         mpl::size<typename ctor<TDependency>::type>::value == BOOST_PP_ITERATION()
-      , const typename TDependency::result_type&
+      //, const typename TDependency::result_type&
+        , T
     >::type execute_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
 
         typedef dependency<T, TCallStack, TDependency> dependency_type;
-        typedef typename TDependency::result_type convertible_type;
+        typedef T convertible_type;
 
         assert_policies<TPolicies, typename TDeps::types, dependency_type>();
         (visitor)(dependency_type());
@@ -432,7 +402,6 @@
                     &typeid(typename type_traits::make_plain<T>::type)
                   , &typeid(typename concepts::type_traits::get_name<T>::type)
                   , call_stack
-                  , TDependency::scope::priority::value
                 );
 
                 if (current > best) {
@@ -442,18 +411,12 @@
             }
 
             if (best > 0) {
-                convertible_type* convertible = 0;
+                //convertible_type* convertible = 0;
 
-                for (const auto& i : creators_[r].second) {
-                    if (&typeid(typename TDependency::result_type) == i.first) {
-                         convertible = new convertible_type(
-                            any_cast<typename TDependency::result_type>(i.second())
-                        );
-                    }
-                }
-
-                refs.push_back(aux::shared_ptr<void>(convertible));
-                return *convertible;
+                std::cout << units::detail::demangle(typeid(T).name()) << std::endl;
+                return cast<T>(r, boost::type<typename type_traits::remove_accessors<T>::type>());
+                //refs.push_back(aux::shared_ptr<void>(convertible));
+                //return *convertible;
             }
         }
 
@@ -469,25 +432,23 @@
              , TPolicies                                \
             >(deps, refs, visitor)
 
-        convertible_type* convertible =
-            new convertible_type(
-                acquire<typename TDependency::type>(deps).create(
-                    type_traits::policy<
-                        mpl::empty<typename TDeps::types>::value
-                    >()
-                    BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
-                    BOOST_PP_REPEAT(
-                        BOOST_PP_ITERATION()
-                      , BOOST_DI_CREATOR_EXECUTE
-                      , ~
-                    )
+        return
+            acquire<typename TDependency::type>(deps).create(
+                type_traits::policy<
+                    mpl::empty<typename TDeps::types>::value
+                >()
+                BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
+                BOOST_PP_REPEAT(
+                    BOOST_PP_ITERATION()
+                  , BOOST_DI_CREATOR_EXECUTE
+                  , ~
                 )
             );
 
         #undef BOOST_DI_CREATOR_EXECUTE
 
-        refs.push_back(aux::shared_ptr<void>(convertible));
-        return *convertible;
+        //refs.push_back(aux::shared_ptr<void>(convertible));
+        //return *convertible;
     }
 
 #endif

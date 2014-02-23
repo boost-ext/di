@@ -42,6 +42,24 @@ class when
     }
 
 public:
+    template<typename T>
+    struct context
+    {
+        typedef typename T::context_type type;
+    };
+    typedef typename mpl::fold<
+        TContext
+      ,  mpl::vector0<>
+      , mpl::if_<
+            mpl::greater<
+                mpl::size<context<mpl::_2> >
+              , mpl::size<mpl::_1>
+            >
+          , context<mpl::_2>
+          , mpl::_1
+        >
+    >::type max;
+
     template<typename T, typename TCallStack, typename TScope>
     struct apply
         : mpl::if_<

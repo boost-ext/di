@@ -41,6 +41,7 @@ struct get_name<T, typename enable_if<
 template<typename TName>
 struct name
 {
+    typedef TName nameq;
     template<typename T, typename, typename>
     struct apply
         : is_same<typename get_name<T>::type, TName>

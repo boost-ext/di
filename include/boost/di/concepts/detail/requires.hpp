@@ -21,8 +21,11 @@
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/integral_c.hpp>
 
+#include <boost/units/detail/utility.hpp>
 namespace boost {
 namespace di {
+
+struct no_name {};
 namespace concepts {
 namespace detail {
 
@@ -44,6 +47,38 @@ class requires
     { };
 
 public:
+BOOST_MPL_HAS_XXX_TRAIT_DEF(max)
+BOOST_MPL_HAS_XXX_TRAIT_DEF(nameq)
+
+    template<typename T>
+    struct namee
+    {
+        typedef typename T::nameq type;
+    };
+    template<typename T>
+    struct maxx
+    {
+        typedef typename T::max type;
+    };
+    typedef typename mpl::fold<
+        mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+      , mpl::vector0<>
+      , mpl::if_<
+            has_max<mpl::_2>
+          , maxx<mpl::_2>
+          , mpl::_1
+        >
+    >::type context;
+    typedef typename  mpl::fold<
+        mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+      , no_name
+      , mpl::if_<
+            has_nameq<mpl::_2>
+          , namee<mpl::_2>
+          , mpl::_1
+        >
+    >::type name;
+
     template<typename T, typename TCallStack, typename TScope>
     struct apply
         : mpl::second<
@@ -59,7 +94,9 @@ public:
     { };
 
     int operator()(const std::type_info* t, const std::type_info* name, const std::vector<const std::type_info*>& call_stack, int priority) const {
-        return (1 * (priority + 1) * (100 * T1()(t, name, call_stack))) * t2(T2(), t, name, call_stack) * t3(T3(), t, name, call_stack);
+        std::cout << "RQ: " << units::detail::demangle(t->name()) << " : " << units::detail::demangle(typeid(T1).name()) << ": " << T1()(t, name, call_stack) << " : " << units::detail::demangle(typeid(T2).name()) << ": "<< t2(T2(), t, name, call_stack) << " : " << units::detail::demangle(typeid(T3).name()) << ": " << t3(T3(), t, name, call_stack) << std::endl;
+        int result =  (1 * (priority + 1) * (100 * T1()(t, name, call_stack))) * t2(T2(), t, name, call_stack) * t3(T3(), t, name, call_stack);
+        return result;
     }
 
     int t2(const mpl::na&, const std::type_info*, const std::type_info*, const std::vector<const std::type_info*>&) const {
@@ -68,7 +105,7 @@ public:
 
     template<typename T>
     int t2(const T&, const std::type_info* t, const std::type_info* n, const std::vector<const std::type_info*>& stack) const {
-        return 1000 * T()(t, n, stack);
+        return 10000 * T()(t, n, stack);
     }
 
     int t3(const mpl::na&, const std::type_info*, const std::type_info*, const std::vector<const std::type_info*>&) const {
@@ -77,7 +114,7 @@ public:
 
     template<typename T>
     int t3(const T&, const std::type_info* t, const std::type_info* n, const std::vector<const std::type_info*>& stack) const {
-        return 10000 * T()(t, n, stack);
+        return 1000000 * T()(t, n, stack);
     }
 };
 

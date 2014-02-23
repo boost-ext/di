@@ -245,20 +245,20 @@ using basic_call_types = mpl::vector<
   , injector<decltype(injector_custom_scope)>
 >;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(basic_call, TInjector, basic_call_types) {
-    fake_scope<>::entry_calls() = 0;
-    fake_scope<>::exit_calls() = 0;
+//BOOST_AUTO_TEST_CASE_TEMPLATE(basic_call, TInjector, basic_call_types) {
+    //fake_scope<>::entry_calls() = 0;
+    //fake_scope<>::exit_calls() = 0;
 
-    TInjector injector;
+    //TInjector injector;
 
-    BOOST_CHECK(!injector.template create<aux::shared_ptr<c3>>());
+    //BOOST_CHECK(!injector.template create<aux::shared_ptr<c3>>());
 
-    injector.call(fake_scope_entry());
-    BOOST_CHECK(injector.template create<aux::shared_ptr<c3>>());
+    //injector.call(fake_scope_entry());
+    //BOOST_CHECK(injector.template create<aux::shared_ptr<c3>>());
 
-    injector.call(fake_scope_exit());
-    BOOST_CHECK(!injector.template create<aux::shared_ptr<c3>>());
-}
+    //injector.call(fake_scope_exit());
+    //BOOST_CHECK(!injector.template create<aux::shared_ptr<c3>>());
+//}
 
 BOOST_AUTO_TEST_CASE(basic_injector_externals) {
     injector<decltype(injector_externals_2)> injector_(injector_externals_2);
@@ -371,11 +371,11 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(scope_deduction_if, TInjector, deduce_injectors_ty
     BOOST_CHECK(c20_->if0_ == c20_->if0__);
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(shared_ptr_unique_ptr, TInjector, deduce_injectors_types) {
-    TInjector injector;
-    auto c21_ = injector.template create<aux::shared_ptr<c21>>();
-    BOOST_CHECK(c21_->if0__ == c21_->if0__);
-}
+//BOOST_AUTO_TEST_CASE_TEMPLATE(shared_ptr_unique_ptr, TInjector, deduce_injectors_types) {
+    //TInjector injector;
+    //auto c21_ = injector.template create<aux::shared_ptr<c21>>();
+    //BOOST_CHECK(c21_->if0__ == c21_->if0__);
+//}
 
 BOOST_AUTO_TEST_CASE(smart_ptr_weak_ptr) {
     auto c25_ = injector<>().create<c25>();

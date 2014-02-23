@@ -35,12 +35,22 @@ BOOST_AUTO_TEST_CASE(runtime) {
     injector<> inj;
 
     inj.install(
-        bind<int>::to(42)
+        //bind<int>::to(42)
         //unique<bind<if0, c0if0>>()
-      , bind<if0, c0if0>()
+        //bind_int<42>::when<call_stack<c5, c2>>()
+      //, shared<bind<if0, c0if0>>()
+            bind<if0, c0if0>()
+          , bind<if0, c1if0>::when<call_stack<c6, c5>>()
+          , bind<if0, c2if0>::when<call_stack<c7>>()
+          , bind_int<3>::named<mpl::string<'1'>>::when<call_stack<c7, c6, c4>>()
+          , bind_int<4>::named<mpl::string<'2'>>::when<call_stack<c7, c6, c4>>()
     );
 
-    inj.create<if0*>();
+    auto c8_ = inj.create<c8>();
+    BOOST_CHECK(dynamic_cast<c1if0*>(c8_.c7_->c6_->c5_.if0_.get()));
+    BOOST_CHECK(dynamic_cast<c2if0*>(c8_.c7_->if0_.get()));
+    BOOST_CHECK_EQUAL(3, c8_.c7_->c6_->c4_->i1);
+    BOOST_CHECK_EQUAL(4, c8_.c7_->c6_->c4_->i2);
 }
 
 BOOST_AUTO_TEST_CASE(ctor) {
@@ -51,9 +61,10 @@ BOOST_AUTO_TEST_CASE(ctor) {
             c3
         >()
       , unique<
-            c0if0
-          , bind<c1if0>::when<call_stack<c6, c5>>
-          , bind<c2if0>::when<call_stack<c7>>
+            //c0if0//!!! compile error
+            bind<if0, c0if0>
+          , bind<if0, c1if0>::when<call_stack<c6, c5>>
+          , bind<if0, c2if0>::when<call_stack<c7>>
           , bind_int<1>
           , bind_int<2>::when<call_stack<c8>>
           , bind_int<3>::named<mpl::string<'1'>>::when<call_stack<c7, c6, c4>>

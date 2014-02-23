@@ -191,8 +191,7 @@
             std::vector<aux::shared_ptr<void> > refs_;
 
             return creator_.template execute<T, T, call_stack, policies>(
-                static_cast<TPool<deps>&>(*this), refs_, empty_visitor())(boost::type<T>()
-            );
+                static_cast<TPool<deps>&>(*this), refs_, empty_visitor());
         }
 
         template<typename T, typename Visitor>
@@ -202,8 +201,7 @@
             std::vector<aux::shared_ptr<void> > refs_;
 
             return creator_.template execute<T, T, call_stack, policies>(
-                static_cast<TPool<deps>&>(*this), refs_, visitor)(boost::type<T>()
-            );
+                static_cast<TPool<deps>&>(*this), refs_, visitor);
         }
 
         template<typename TAction>
