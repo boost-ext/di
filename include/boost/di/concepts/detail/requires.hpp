@@ -94,7 +94,6 @@ BOOST_MPL_HAS_XXX_TRAIT_DEF(nameq)
     { };
 
     int operator()(const std::type_info* t, const std::type_info* name, const std::vector<const std::type_info*>& call_stack, int priority) const {
-        std::cout << "RQ: " << units::detail::demangle(t->name()) << " : " << units::detail::demangle(typeid(T1).name()) << ": " << T1()(t, name, call_stack) << " : " << units::detail::demangle(typeid(T2).name()) << ": "<< t2(T2(), t, name, call_stack) << " : " << units::detail::demangle(typeid(T3).name()) << ": " << t3(T3(), t, name, call_stack) << std::endl;
         int result =  (1 * (priority + 1) * (100 * T1()(t, name, call_stack))) * t2(T2(), t, name, call_stack) * t3(T3(), t, name, call_stack);
         return result;
     }

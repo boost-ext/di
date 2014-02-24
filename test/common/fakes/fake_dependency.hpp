@@ -28,45 +28,37 @@ struct no_name { };
 
 template<typename T, typename TName, typename TCallStack>
 struct get_bind
-    : mpl::lambda<
-         concepts::detail::requires<
-             concepts::type_traits::priority<>
-           , concepts::type_traits::type<T>
-           , concepts::type_traits::name<TName>
-           , concepts::type_traits::when<TCallStack>
-         >
+    : concepts::detail::requires<
+          concepts::type_traits::priority
+        , concepts::type_traits::type<T>
+        , concepts::type_traits::name<TName>
+        , concepts::type_traits::when<TCallStack>
       >
 { };
 
 template<typename T, typename TName>
 struct get_bind<T, TName, mpl::vector0<>>
-    : mpl::lambda<
-          concepts::detail::requires<
-              concepts::type_traits::priority<>
-            , concepts::type_traits::type<T>
-            , concepts::type_traits::name<TName>
-          >
+    : concepts::detail::requires<
+          concepts::type_traits::priority
+        , concepts::type_traits::type<T>
+        , concepts::type_traits::name<TName>
       >
 { };
 
 template<typename T, typename TCallStack>
 struct get_bind<T, no_name, TCallStack>
-    : mpl::lambda<
-          concepts::detail::requires<
-              concepts::type_traits::priority<>
-            , concepts::type_traits::type<T>
-            , concepts::type_traits::when<TCallStack>
-          >
+    : concepts::detail::requires<
+          concepts::type_traits::priority
+        , concepts::type_traits::type<T>
+        , concepts::type_traits::when<TCallStack>
       >
 { };
 
 template<typename T>
 struct get_bind<T, no_name, mpl::vector0<>>
-    : mpl::lambda<
-          concepts::detail::requires<
-              concepts::type_traits::priority<>
-            , concepts::type_traits::type<T>
-          >
+    : concepts::detail::requires<
+          concepts::type_traits::priority
+        , concepts::type_traits::type<T>
       >
 { };
 

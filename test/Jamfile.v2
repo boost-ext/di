@@ -105,7 +105,7 @@ test-suite "module tests" :
     #[ run-test c++11 : mt/detail/module_mt.cpp : ctor_module_mt ]
 
     [ run-test c++11 : mt/injector_mt.cpp ]
-    #[ run-test c++11 : mt/injector_mt.cpp : ctor_injector_mt ]
+    [ run-test c++11 : mt/injector_mt.cpp : ctor_injector_mt ]
 
     [ run-test c++11 : mt/injector_runtime_mt.cpp ]
     #[ run-test c++11 : mt/injector_runtime_mt.cpp : ctor_injector_runtime_mt ]

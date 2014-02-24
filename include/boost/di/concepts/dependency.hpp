@@ -237,19 +237,10 @@ public:
     }
 
     static int when(const std::type_info* t, const std::type_info* name, const std::vector<const std::type_info*>& call_stack) {
-
-       //std::cout << units::detail::demangle(typeid(dependency).name()) << std::endl;
-        /*std::cout << units::detail::demangle(t->name()) << std::endl;*/
         return TBind()(t, name, call_stack, scope::priority::value/*type<scope>()*/);
     }
 
     typedef typename TBind::context context;
-
-    //template<typename T>
-    //struct name
-    //{
-        //typedef typename TBind::template name<T>::type type;
-    //};
     typedef typename TBind::name name;
 
 };

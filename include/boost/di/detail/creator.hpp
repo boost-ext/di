@@ -337,13 +337,11 @@ BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
 
         template<typename T, typename R>
         T cast(int r, const boost::type<R>&, typename enable_if<has_name<R> >::type* = 0) {
-            std::cout << "TO1: " << units::detail::demangle(typeid(aux::shared_ptr<T>).name()) << std::endl;
             return *any_cast<aux::shared_ptr<typename T::named_type> >(creators_[r].second());
         }
 
         template<typename T, typename R>
         T cast(int r, const boost::type<R>&, typename disable_if<has_name<R> >::type* = 0) {
-            //std::cout << "TO2: " << units::detail::demangle(typeid(aux::shared_ptr<T>).name()) << std::endl;
             return *any_cast<aux::shared_ptr<T> >(creators_[r].second());
         }
 
@@ -413,7 +411,6 @@ BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
             if (best > 0) {
                 //convertible_type* convertible = 0;
 
-                std::cout << units::detail::demangle(typeid(T).name()) << std::endl;
                 return cast<T>(r, boost::type<typename type_traits::remove_accessors<T>::type>());
                 //refs.push_back(aux::shared_ptr<void>(convertible));
                 //return *convertible;
