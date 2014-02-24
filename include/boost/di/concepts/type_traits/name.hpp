@@ -9,6 +9,7 @@
 
 #include "boost/di/type_traits/remove_accessors.hpp"
 
+#include <vector>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/placeholders.hpp>

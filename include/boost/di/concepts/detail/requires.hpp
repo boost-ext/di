@@ -24,8 +24,6 @@
 #include <boost/units/detail/utility.hpp>
 namespace boost {
 namespace di {
-
-struct no_name {};
 namespace concepts {
 namespace detail {
 
@@ -46,7 +44,11 @@ class requires
           >::type
     { };
 
+    struct no_name { };
+
 public:
+    typedef requires type;
+
 BOOST_MPL_HAS_XXX_TRAIT_DEF(max)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(nameq)
 

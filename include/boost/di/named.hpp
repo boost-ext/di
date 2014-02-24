@@ -94,9 +94,10 @@ public:
 
     operator T() const { return object_; }
 
-    object_type* operator->() { return object_.get(); }
-    object_type& operator*() { return object_; }
-    object_type* get() { return object_.get(); }
+    value_type* operator->() const { return object_.get(); }
+    value_type& operator*() const { return *object_; }
+    value_type* get() const { return object_.get(); }
+    object_type& get_object() { return object_; }
 
     void reset() {
         object_.reset();

@@ -281,7 +281,7 @@
         any execute_any(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
             skip_ = &typeid(T);
             std::cout << "FROM: " << units::detail::demangle(typeid(execute<T, TParent, TCallStack, TPolicies>(deps, refs, visitor)).name()) << std::endl;
-            return any(*execute<T, TParent, TCallStack, TPolicies>(deps, refs, visitor));
+            return any(execute<T, TParent, TCallStack, TPolicies>(deps, refs, visitor).get_object());
         }
 
         #define BOOST_PP_FILENAME_1 "boost/di/detail/creator.hpp"

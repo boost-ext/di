@@ -116,16 +116,6 @@
         return new TExpected(mpl::c_str<TGiven>::value);
     }
 
-    template<typename T, typename TObject>
-    inline TObject create_impl(TObject object) {//, typename enable_if<is_same<T, detail::any_type> >::type* = 0) {
-        return object;
-    }
-
-    //template<typename T, typename TObject>
-    //inline T create_impl(TObject object, typename disable_if<is_same<T, detail::any_type> >::type* = 0) {
-        //return object(type<T>());
-    //}
-
     #define BOOST_PP_FILENAME_1 "boost/di/type_traits/create_traits.hpp"
     #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM(1)
     #include BOOST_PP_ITERATE()
@@ -138,18 +128,9 @@
 
 #else
 
-    #define BOOST_DI_CONVERT(na, n, ctor) BOOST_PP_COMMA_IF(n) \
-        create_impl<typename mpl::at_c<ctor, n>::type>(args##n)
-
     template<typename T, typename TExpected, typename TGiven, BOOST_DI_TYPES(Args)>
     TExpected* create_traits(BOOST_DI_ARGS(Args, args)) {
-        return new TGiven(
-            BOOST_PP_REPEAT(
-                BOOST_PP_ITERATION()
-              , BOOST_DI_CONVERT
-              , typename ctor_traits<TGiven>::type
-            )
-        );
+        return new TGiven(BOOST_DI_ARGS_PASS(args));
     }
 
     #undef BOOST_DI_CONVERT
