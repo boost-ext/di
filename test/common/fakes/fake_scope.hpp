@@ -40,6 +40,9 @@ struct fake_scope
 
         template<typename I>
         I operator()(const type<I>&) const {
+            if (!obj_) {
+                return I();
+            }
             return *obj_;
         }
 
