@@ -26,6 +26,8 @@ namespace di {
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 struct fake_call_stack
 {
+    typedef mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> context_type;
+
     template<typename TContext, typename TCallStack>
     struct apply_impl
         : mpl::if_<
@@ -56,7 +58,7 @@ struct fake_call_stack
 
     template<typename T, typename TCallStack, typename TScope>
     struct apply
-        : apply_impl<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>, TCallStack>
+        : apply_impl<context_type, TCallStack>
     { };
 };
 
