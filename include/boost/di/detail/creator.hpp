@@ -132,7 +132,7 @@
                 #endif
 
                 return c_.execute_impl<
-                    NU
+                    U
                   , typename mpl::push_back<TCallStack, PU>::type
                   , TPolicies
                   , binder<U, TCallStack>
