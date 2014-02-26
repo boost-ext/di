@@ -236,6 +236,10 @@
         };
 
     public:
+        creator()
+            : skip_(&typeid(void))
+        { }
+
         template<
             typename T
           , typename TParent // to ignore copy/move ctor
@@ -262,7 +266,7 @@
           , typename TRefs
           , typename TVisitor
         >
-        convertible<T> execute(
+        const convertible<T>& execute(
             TDeps& deps, TRefs& refs, const TVisitor& visitor, typename disable_if<is_same<T, any_type> >::type* = 0) {
             return execute_impl<
                 T
@@ -433,7 +437,7 @@
     >
     typename enable_if_c<
         mpl::size<typename ctor<TDependency>::type>::value == BOOST_PP_ITERATION()
-      , convertible<T>
+      , const convertible<T>&
     >::type execute_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
         typedef convertible<T> convertible_type;
