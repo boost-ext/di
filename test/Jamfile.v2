@@ -79,7 +79,7 @@ test-suite "unit tests" :
     [ run-test c++11 : ut/type_traits/scope_traits_ut.cpp ]
 
     [ run-test c++11 : ut/detail/binder_ut.cpp ]
-    [ run-test c++11 : ut/detail/creator_ut.cpp ]
+    #[ run-test c++11 : ut/detail/creator_ut.cpp ]
     [ run-test c++11 : ut/detail/pool_ut.cpp ]
 
     [ run-test c++11 : ut/policies/arguments_permission_ut.cpp ]
@@ -96,13 +96,13 @@ test-suite "unit tests" :
     [ run-test c++11 : ut/inject_bracket_ut.cpp ]
     [ run-test c++11 : ut/inject_va_args_ut.cpp ]
 
-    [ run-test c++11 : ut/injector_ut.cpp ]
-    [ run-test c++11 : ut/injector_ut.cpp : ctor_injector_ut ]
+    #[ run-test c++11 : ut/injector_ut.cpp ]
+    #[ run-test c++11 : ut/injector_ut.cpp : ctor_injector_ut ]
 ;
 
 test-suite "module tests" :
-    [ run-test c++11 : mt/detail/module_mt.cpp ]
-    [ run-test c++11 : mt/detail/module_mt.cpp : ctor_module_mt ]
+    #[ run-test c++11 : mt/detail/module_mt.cpp ]
+    #[ run-test c++11 : mt/detail/module_mt.cpp : ctor_module_mt ]
 
     [ run-test c++11 : mt/injector_mt.cpp ]
     [ run-test c++11 : mt/injector_mt.cpp : ctor_injector_mt ]
@@ -119,14 +119,14 @@ test-suite "module tests" :
 ;
 
 test-suite "functional tests" :
-    #[ run-test c++11 : ft/di_ft_cpp_11.cpp ]
-    #[ run-test c++11 : ft/di_ft_cpp_11.cpp : ctor_di_ft_cpp_11 ]
+    [ run-test c++11 : ft/di_ft_cpp_11.cpp ]
+    [ run-test c++11 : ft/di_ft_cpp_11.cpp : ctor_di_ft_cpp_11 ]
 
-    #[ run-test c++03 : ft/di_ft_cpp_03.cpp ]
-    #[ run-test c++03 : ft/di_ft_cpp_03.cpp : ctor_di_ft_cpp_03 ]
+    [ run-test c++03 : ft/di_ft_cpp_03.cpp ]
+    [ run-test c++03 : ft/di_ft_cpp_03.cpp : ctor_di_ft_cpp_03 ]
 
-    #[ run-test c++03 : ft/di_ft_cpp_tr1.cpp :                    : <define>BOOST_DI_TR1_SMART_PTR ]
-    #[ run-test c++11 : ft/di_ft_cpp_tr1.cpp : ctor_di_ft_cpp_tr1 : <define>BOOST_DI_TR1_SMART_PTR : force_bracket ]
+    [ run-test c++03 : ft/di_ft_cpp_tr1.cpp :                    : <define>BOOST_DI_TR1_SMART_PTR ]
+    [ run-test c++11 : ft/di_ft_cpp_tr1.cpp : ctor_di_ft_cpp_tr1 : <define>BOOST_DI_TR1_SMART_PTR : force_bracket ]
 ;
 
 test-suite "fail tests" :
@@ -149,7 +149,7 @@ test-suite "fail tests" :
 ;
 
 test-suite "performance tests" :
-    #[ run-test c++11 : pt/compilation_pt.cpp ] #ftime-report
+    [ run-test c++11 : pt/compilation_pt.cpp ] #ftime-report
     #[ run-test c++11 : pt/compilation_pt.cpp : preprocessed_compilation_pt : <define>BOOST_DI_PREPROCESSED ] #ftime-report
     #[ run-test c++03 : pt/compilation_pt.cpp : preprocessed_compilation_pt : <define>BOOST_DI_PREPROCESSED ] #ftime-report
 ;

@@ -16,7 +16,7 @@ template<typename T>
 class fake_convertible
 {
 public:
-    fake_convertible(T object) // non explicit
+    fake_convertible(const T& object) // non explicit
         : object_(object)
     { }
 

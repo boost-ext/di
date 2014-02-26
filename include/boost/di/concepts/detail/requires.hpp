@@ -27,6 +27,8 @@ namespace di {
 namespace concepts {
 namespace detail {
 
+struct no_name { };
+
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 class requires
 {
@@ -44,7 +46,6 @@ class requires
           >::type
     { };
 
-    struct no_name { };
 
 public:
     typedef requires type;

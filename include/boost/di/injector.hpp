@@ -105,10 +105,11 @@
         typename enable_if<mpl::empty<TSeq> >::type for_each_dependency(TInjector) { }
 
         template<typename TSeq, typename TInjector>
-        typename disable_if<mpl::empty<TSeq> >::type for_each_dependency(TInjector injector) {
+        typename disable_if<mpl::empty<TSeq> >::type for_each_dependency(TInjector inj) {
             typedef typename mpl::front<TSeq>::type type;
-            bind_dependency<type>(injector);
-            for_each_dependency<typename mpl::pop_front<TSeq>::type>(injector);
+            //injector<type> i(static_cast<const type&>(inj));
+            bind_dependency<type>(inj);
+            for_each_dependency<typename mpl::pop_front<TSeq>::type>(inj);
         }
 
 	public:
