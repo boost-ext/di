@@ -44,10 +44,10 @@
     namespace detail {
 
     template<typename T>
-    struct blah
+    struct convertible_
     {
         template<typename Q>
-        blah(const Q& q)
+        convertible_(const Q& q)
             : f(boost::bind<T>(q, boost::type<T>()))
         { }
 
@@ -56,6 +56,34 @@
         }
 
         function<T()> f;
+    };
+
+    template<typename T, typename TName>
+    struct convertible_<named<T, TName> >
+    {
+        template<typename Q>
+        convertible_(const Q& q)
+            : f(boost::bind<T>(q, boost::type<T>()))
+        { }
+
+        operator T() const {
+            return f();
+        }
+
+        operator named<T, TName>() const {
+            return f();
+        }
+
+        function<T()> f;
+    };
+
+    template<typename T>
+    struct convertible : convertible_<T>
+    {
+        template<typename Q>
+        convertible(const Q& q)
+            : convertible_<T>(q)
+        { }
     };
 
     template<typename TBinder>
@@ -235,10 +263,10 @@
           , typename TVisitor
         >
         //const typename binder<T, TCallStack>::result_type&
-        blah<T>
+        convertible<T>
         execute(TDeps& deps, TRefs& refs, const TVisitor& visitor
               , typename disable_if<is_same<T, any_type> >::type* = 0) {
-            return blah<T>(execute_impl<
+            return execute_impl<
                 T
               , typename mpl::push_back<
                     TCallStack
@@ -246,7 +274,7 @@
                 >::type
               , TPolicies
               , binder<T, TCallStack>
-            >(deps, refs, visitor));
+            >(deps, refs, visitor);
         }
 
         template<typename TC, typename T>
@@ -408,7 +436,7 @@
     typename enable_if_c<
         mpl::size<typename ctor<TDependency>::type>::value == BOOST_PP_ITERATION()
       //, const typename TDependency::result_type&
-        , blah<T>
+        , convertible<T>
     >::type execute_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
 
         typedef dependency<T, TCallStack, TDependency> dependency_type;
@@ -446,14 +474,15 @@
 
                 //return cast<T>(r, boost::type<typename type_traits::remove_accessors<T>::type>());
 
-                std::cout << "TO: " << units::detail::demangle(typeid(blah<T>).name()) << std::endl;
+                std::cout << "TO: " << units::detail::demangle(typeid(convertible<T>).name()) << std::endl;
                 //return cast<T>(r, boost::type<typename type_traits::remove_accessors<T>::type>());
-                for (const auto& v : creators_[r].second) {
-                    if (v().type() == typeid(blah<T>)) {
-                        return any_cast<blah<T> >(v());
+                for (fun_type::const_iterator it = creators_[r].second.begin(); it != creators_[r].second.end(); ++it) {
+                    if ((*it)().type() == typeid(convertible<T>)) {
+                        return any_cast<convertible<T> >((*it)());
                     }
                 }
-                throw 0;
+
+                throw std::runtime_error("conversion not allowed");
                 //refs.push_back(aux::shared_ptr<void>(convertible));
                 //return *convertible;
             }
@@ -472,17 +501,19 @@
             >(deps, refs, visitor)
 
         return
-            blah<T>(acquire<typename TDependency::type>(deps).create(
-                type_traits::policy<
-                    mpl::empty<typename TDeps::types>::value
-                >()
-                BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
-                BOOST_PP_REPEAT(
-                    BOOST_PP_ITERATION()
-                  , BOOST_DI_CREATOR_EXECUTE
-                  , ~
+            convertible<T>(
+                acquire<typename TDependency::type>(deps).create(
+                    type_traits::policy<
+                        mpl::empty<typename TDeps::types>::value
+                    >()
+                    BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
+                    BOOST_PP_REPEAT(
+                        BOOST_PP_ITERATION()
+                      , BOOST_DI_CREATOR_EXECUTE
+                      , ~
+                    )
                 )
-            ));
+            );
 
         #undef BOOST_DI_CREATOR_EXECUTE
 

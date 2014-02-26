@@ -10,33 +10,17 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/function.hpp>
 #include <boost/mpl/vector.hpp>
+#include <boost/mpl/int.hpp>
 #include <boost/type_traits/is_same.hpp>
 
 #include "boost/di/aux_/memory.hpp"
+#include "common/fakes/fake_dependency.hpp"
 #include "common/fakes/fake_binder.hpp"
 #include "common/fakes/fake_visitor.hpp"
 
 namespace boost {
 namespace di {
 namespace detail {
-
-template<typename T, T value>
-struct fake_dependency
-{
-    typedef fake_dependency type;
-    typedef T given;
-    typedef T expected;
-    typedef mpl::vector0<> context;
-    typedef void scope;
-    typedef is_same<mpl::_1, T> bind;
-    typedef T result_type;
-    typedef void name;
-
-    template<typename U>
-    T create(const U&) {
-        return value;
-    }
-};
 
 template<typename T>
 struct entries
@@ -48,13 +32,13 @@ struct entries
 BOOST_AUTO_TEST_CASE(creator_simple) {
     const int i = 42;
 
-    typedef fake_dependency<int, i> dependency_type;
+    typedef typename fake_dependency<scopes::unique<>, int, mpl::int_<i>>::type dependency_type;
     entries<dependency_type> entries_;
     std::vector<aux::shared_ptr<void>> refs_;
 
     BOOST_CHECK_EQUAL(i, (
         creator<fake_binder<dependency_type> >().execute<
-            int, void, mpl::vector0<>, mpl::vector0<>
+            int, int, mpl::vector0<>, mpl::vector0<>
         >(entries_, refs_, fake_visitor<>())
     ));
 }
