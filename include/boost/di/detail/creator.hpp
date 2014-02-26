@@ -262,10 +262,8 @@
           , typename TRefs
           , typename TVisitor
         >
-        //const typename binder<T, TCallStack>::result_type&
-        convertible<T>
-        execute(TDeps& deps, TRefs& refs, const TVisitor& visitor
-              , typename disable_if<is_same<T, any_type> >::type* = 0) {
+        convertible<T> execute(
+            TDeps& deps, TRefs& refs, const TVisitor& visitor, typename disable_if<is_same<T, any_type> >::type* = 0) {
             return execute_impl<
                 T
               , typename mpl::push_back<
@@ -435,18 +433,16 @@
     >
     typename enable_if_c<
         mpl::size<typename ctor<TDependency>::type>::value == BOOST_PP_ITERATION()
-      //, const typename TDependency::result_type&
-        , convertible<T>
+      , convertible<T>
     >::type execute_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
-
         typedef dependency<T, TCallStack, TDependency> dependency_type;
-        typedef T convertible_type;
+        typedef convertible<T> convertible_type;
 
         assert_policies<TPolicies, typename TDeps::types, dependency_type>();
         (visitor)(dependency_type());
 
 //        should be binder
-       int best = 0;
+        int best = 0;
         std::size_t r = 0;
 
         if (skip_ != &typeid(T)) {
@@ -470,21 +466,20 @@
             }
 
             if (best > 0) {
-                //convertible_type* convertible = 0;
-
-                //return cast<T>(r, boost::type<typename type_traits::remove_accessors<T>::type>());
-
                 std::cout << "TO: " << units::detail::demangle(typeid(convertible<T>).name()) << std::endl;
-                //return cast<T>(r, boost::type<typename type_traits::remove_accessors<T>::type>());
                 for (fun_type::const_iterator it = creators_[r].second.begin(); it != creators_[r].second.end(); ++it) {
                     if ((*it)().type() == typeid(convertible<T>)) {
-                        return any_cast<convertible<T> >((*it)());
+
+                        convertible_type* convertible(new convertible_type(
+                            any_cast<convertible_type>((*it)())
+                        ));
+
+                        refs.push_back(aux::shared_ptr<void>(convertible));
+                        return *convertible;
                     }
                 }
 
                 throw std::runtime_error("conversion not allowed");
-                //refs.push_back(aux::shared_ptr<void>(convertible));
-                //return *convertible;
             }
         }
 
@@ -500,25 +495,24 @@
              , TPolicies                                \
             >(deps, refs, visitor)
 
-        return
-            convertible<T>(
-                acquire<typename TDependency::type>(deps).create(
-                    type_traits::policy<
-                        mpl::empty<typename TDeps::types>::value
-                    >()
-                    BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
-                    BOOST_PP_REPEAT(
-                        BOOST_PP_ITERATION()
-                      , BOOST_DI_CREATOR_EXECUTE
-                      , ~
-                    )
+        convertible_type* convertible = new convertible_type(
+            acquire<typename TDependency::type>(deps).create(
+                type_traits::policy<
+                    mpl::empty<typename TDeps::types>::value
+                >()
+                BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
+                BOOST_PP_REPEAT(
+                    BOOST_PP_ITERATION()
+                  , BOOST_DI_CREATOR_EXECUTE
+                  , ~
                 )
-            );
+            )
+        );
 
         #undef BOOST_DI_CREATOR_EXECUTE
 
-        //refs.push_back(aux::shared_ptr<void>(convertible));
-        //return *convertible;
+        refs.push_back(aux::shared_ptr<void>(convertible));
+        return *convertible;
     }
 
 #endif

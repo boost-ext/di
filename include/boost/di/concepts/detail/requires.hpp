@@ -9,6 +9,8 @@
 
 #include "boost/di/aux_/config.hpp"
 
+#include <typeinfo>
+#include <vector>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
