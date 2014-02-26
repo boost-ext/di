@@ -75,8 +75,8 @@ public:
             in_scope_ = false;
         }
 
-        template<typename... Args>
-        result_type create(Args&&... args) {
+        template<typename TPolicy, typename... Args>
+        result_type create(const TPolicy&, Args&&... args) {
             if (in_scope_) {
                 return std::make_shared<TGiven>(std::forward(args)...);
             }

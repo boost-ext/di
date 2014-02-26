@@ -450,6 +450,17 @@ struct c28
     int f_ = 0.0;
 };
 
+struct ref_sp_int
+{
+    BOOST_DI_INJECT(ref_sp_int, const aux::shared_ptr<int>& i)
+        : i_(i)
+    {
+        assert(i);
+    }
+
+    const aux::shared_ptr<int>& i_;
+};
+
 enum eid { e0 = 1 , e1 = 2 };
 
 struct cd2;

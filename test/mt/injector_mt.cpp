@@ -473,6 +473,12 @@ BOOST_AUTO_TEST_CASE(scoped_injector_create_with_deduced_scope) {
     }
 }
 
+BOOST_AUTO_TEST_CASE(stored_ref_created_by_injector) {
+    const int i = 42;
+    auto ref_sp_int_ = injector<bind_int<i>>().create<ref_sp_int>();
+    BOOST_CHECK(ref_sp_int_.i_);
+}
+
 } // namespace di
 } // namespace boost
 

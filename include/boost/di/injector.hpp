@@ -90,17 +90,6 @@
               >::type
         { };
 
-    public:
-        injector() { }
-
-        #define BOOST_PP_FILENAME_1 "boost/di/injector.hpp"
-        #define BOOST_PP_ITERATION_LIMITS BOOST_DI_TYPES_MPL_LIMIT_FROM(1)
-        #include BOOST_PP_ITERATE()
-    };
-
-	template<>
-    class injector<> : public detail::module<>
-	{
         template<typename TSeq, typename TInjector>
         typename enable_if<mpl::empty<TSeq> >::type for_each_dependency(TInjector) { }
 
@@ -108,21 +97,21 @@
         typename disable_if<mpl::empty<TSeq> >::type for_each_dependency(TInjector inj) {
             typedef typename mpl::front<TSeq>::type type;
             //injector<type> i(static_cast<const type&>(inj));
-            bind_dependency<type>(inj);
+            this->template bind_dependency<type>(inj);
             for_each_dependency<typename mpl::pop_front<TSeq>::type>(inj);
         }
 
-	public:
+    public:
+        injector() { }
+
 		injector<> operator()() const {
 			return injector<>();
 		}
 
-    	#define BOOST_DI_INJECTOR_INSTALL
         #define BOOST_PP_FILENAME_1 "boost/di/injector.hpp"
         #define BOOST_PP_ITERATION_LIMITS BOOST_DI_TYPES_MPL_LIMIT_FROM(1)
         #include BOOST_PP_ITERATE()
-    	#undef BOOST_DI_INJECTOR_INSTALL
-	};
+    };
 
     } // namespace di
     } // namespace boost
@@ -131,39 +120,29 @@
 
 #else
 
-	#if defined(BOOST_DI_INJECTOR_INSTALL)
-        template<BOOST_DI_TYPES(Args)>
-        void install(BOOST_DI_ARGS(Args, args)) {
-            typedef injector<
-                typename detail::concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type
-            > injector_type;
+    template<BOOST_DI_TYPES(Args)>
+    explicit injector(BOOST_DI_ARGS(Args, args))
+        : detail::module<typename joint_concepts<>::type>(BOOST_DI_ARGS_PASS(args))
+    { }
 
-            for_each_dependency<typename injector_type::deps>(
-                injector_type(BOOST_DI_ARGS_PASS(args))
-            );
-        }
+    template<BOOST_DI_TYPES(Args)>
+    injector<joint_concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >
+    operator()(BOOST_DI_ARGS(Args, args)) const {
+        return injector<joint_concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >(
+            BOOST_DI_ARGS_PASS(args)
+        );
+    }
 
-		template<BOOST_DI_TYPES(Args)>
-		injector<detail::concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >
-		operator()(BOOST_DI_ARGS(Args, args)) const {
-			return injector<detail::concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >(
-				BOOST_DI_ARGS_PASS(args)
-			);
-		}
-	#else
-		template<BOOST_DI_TYPES(Args)>
-		explicit injector(BOOST_DI_ARGS(Args, args))
-			: detail::module<typename joint_concepts<>::type>(BOOST_DI_ARGS_PASS(args))
-		{ }
+    template<BOOST_DI_TYPES(Args)>
+    void install(BOOST_DI_ARGS(Args, args)) {
+        typedef injector<
+            typename detail::concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type
+        > injector_type;
 
-		template<BOOST_DI_TYPES(Args)>
-		injector<joint_concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >
-		operator()(BOOST_DI_ARGS(Args, args)) const {
-			return injector<joint_concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >(
-				BOOST_DI_ARGS_PASS(args)
-			);
-		}
-	#endif
+        for_each_dependency<typename injector_type::deps>(
+            injector_type(BOOST_DI_ARGS_PASS(args))
+        );
+    }
 
 #endif
 
