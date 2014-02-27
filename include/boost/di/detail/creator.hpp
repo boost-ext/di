@@ -38,7 +38,6 @@
     #include <boost/mpl/push_back.hpp>
     #include <boost/mpl/has_xxx.hpp>
 
-#include <boost/units/detail/utility.hpp>
     namespace boost {
     namespace di {
     namespace detail {
@@ -128,8 +127,6 @@
             typedef typename TDependency::scope scope;
         };
 
-        BOOST_MPL_HAS_XXX_TRAIT_DEF(named_type)
-
         template<
             typename T
           , typename TCallStack
@@ -142,20 +139,6 @@
         {
             typedef typename type_traits::make_plain<T>::type plain_t;
 
-            template<typename U, typename = void>
-            struct named_type
-            {
-                typedef U type;
-            };
-
-            template<typename U>
-            struct named_type<U, typename enable_if<
-                has_named_type<typename type_traits::remove_accessors<U>::type> >::type
-            >
-            {
-                typedef typename type_traits::remove_accessors<typename U::named_type>::type type;
-            };
-
         public:
             eager_creator(creator& c, TDeps& deps, TRefs& refs, const TVisitor& visitor)
                 : c_(c), deps_(deps), refs_(refs), visitor_(visitor)
@@ -164,14 +147,12 @@
             template<
                 typename U
             #if !defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
-              , typename NU = typename named_type<U>::type
               , typename PU = typename type_traits::make_plain<U>::type
               , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
             #endif
             >
             operator U() {
                 #if defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
-                    typedef typename named_type<U>::type NU;
                     typedef typename type_traits::make_plain<U>::type PU;
                 #endif
 
@@ -180,21 +161,19 @@
                   , typename mpl::push_back<TCallStack, PU>::type
                   , TPolicies
                   , binder<U, TCallStack>
-                >(deps_, refs_, visitor_);//(boost::type<NU>());
+                >(deps_, refs_, visitor_);
             }
 
             template<
                 typename U
 
             #if !defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
-              , typename NU = typename named_type<U>::type
               , typename PU = typename type_traits::make_plain<U>::type
               , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
             #endif
             >
             operator const U&() const {
                 #if defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
-                    typedef typename named_type<U>::type NU;
                     typedef typename type_traits::make_plain<U>::type PU;
                 #endif
 
@@ -203,20 +182,18 @@
                   , typename mpl::push_back<TCallStack, PU>::type
                   , TPolicies
                   , binder<const U&, TCallStack>
-                >(deps_, refs_, visitor_);//(boost::type<const NU&>());
+                >(deps_, refs_, visitor_);
             }
 
             template<
                 typename U
             #if !defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
-              , typename NU = typename named_type<U>::type
               , typename PU = typename type_traits::make_plain<U>::type
               , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
             #endif
             >
             operator U&() const {
                 #if defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
-                    typedef typename named_type<U>::type NU;
                     typedef typename type_traits::make_plain<U>::type PU;
                 #endif
 
@@ -225,7 +202,7 @@
                   , typename mpl::push_back<TCallStack, PU>::type
                   , TPolicies
                   , binder<U&, TCallStack>
-                >(deps_, refs_, visitor_);//(boost::type<NU&>());
+                >(deps_, refs_, visitor_);
             }
 
         private:
@@ -308,20 +285,17 @@
               , typename mpl::if_<
                     is_polymorphic<type>
                   , aux::shared_ptr<type>
-                  //, aux::shared_ptr<type>
                   , typename gett<typename TDependency::result_type, type>::type
                 >::type
               , typename mpl::if_<
                     is_polymorphic<type>
                   , named<aux::shared_ptr<type>, typename TDependency::name>
-                  //, named<aux::shared_ptr<type>, typename TDependency::name>
                   , named<typename gett<typename TDependency::result_type, type>::type, typename TDependency::name>
                 >::type
             >::type t;
 
-            //std::cout << "GET: " << units::detail::demangle(typeid(t).name()) << std::endl;
-
             fun_type v;
+
             v.push_back(
                   boost::bind(
                        &TCreator::template execute_any<
@@ -360,7 +334,6 @@
         >
         any execute_any(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
             skip_ = &typeid(T);
-            std::cout << "FROM: " << units::detail::demangle(typeid(execute<T, TParent, TCallStack, TPolicies>(deps, refs, visitor)).name()) << std::endl;
             return any(execute<T, TParent, TCallStack, TPolicies>(deps, refs, visitor));
         }
 
@@ -470,7 +443,6 @@
             }
 
             if (best > 0) {
-                std::cout << "TO: " << units::detail::demangle(typeid(convertible<T>).name()) << std::endl;
                 for (fun_type::const_iterator it = creators_[r].second.begin(); it != creators_[r].second.end(); ++it) {
                     if ((*it)().type() == typeid(convertible<T>)) {
 
