@@ -18,6 +18,9 @@
 
     #include "boost/di/concepts/type_traits/name.hpp"
     #include "boost/di/concepts.hpp"
+    #include "boost/di/extensions/static/builder.hpp"
+    #include "boost/di/extensions/static/binder.hpp"
+    #include "boost/di/extensions/dynamic/builder.hpp"
 
     #include <typeinfo>
     #include <map>
@@ -42,67 +45,23 @@
     namespace di {
     namespace detail {
 
-    template<typename T>
-    struct convertible_
+    template<typename TDependecies>
+    struct builder
     {
-        template<typename Q>
-        convertible_(const Q& q)
-            : f(boost::bind<T>(q, boost::type<T>()))
-        { }
-
-        operator T() const {
-            return f();
-        }
-
-        function<T()> f;
+        template<typename T>
+        struct get
+            : mpl::if_<mpl::empty<TDependecies>, dynamic_builder<T>, static_builder<T> >::type
+        { };
     };
 
-    template<typename T, typename TName>
-    struct convertible_<named<T, TName> >
-    {
-        template<typename Q>
-        convertible_(const Q& q)
-            : f(boost::bind<T>(q, boost::type<T>()))
-        { }
-
-        operator T() const {
-            return f();
-        }
-
-        operator named<T, TName>() const {
-            return f();
-        }
-
-        function<T()> f;
-    };
-
-    template<typename T>
-    struct convertible : convertible_<T>
-    {
-        template<typename Q>
-        convertible(const Q& q)
-            : convertible_<T>(q)
-        { }
-    };
-
-    template<typename TBinder>
+    template<
+        typename TDependecies
+      , template<typename> class TBuilder = builder<TDependecies>::template get
+      , template<typename> class TBinder = binder
+    >
     class creator
+        : public TBuilder<TDependecies>
     {
-        template<typename>
-        friend class creator;
-
-        class type_comparator
-        {
-        public:
-            bool operator ()(const std::type_info* lhs, const std::type_info* rhs) const {
-                return lhs->before(*rhs);
-            }
-        };
-
-        typedef std::map<const std::type_info*, aux::shared_ptr<void>, type_comparator> scopes_type;
-        typedef std::vector< function<any()> > fun_type;
-        typedef std::vector<std::pair<function<int(const std::type_info*, const std::type_info*, const std::vector<const std::type_info*>&)>, fun_type> > creators_type;
-
         template<typename TDependency>
         struct ctor
             : type_traits::ctor_traits<typename TDependency::given>::type
@@ -110,7 +69,7 @@
 
         template<typename T, typename TCallStack>
         struct binder
-            : TBinder::template resolve<T, TCallStack>::type
+            : TBinder<TDependecies>::template resolve<T, TCallStack>::type
         { };
 
         template<
@@ -156,7 +115,7 @@
                     typedef typename type_traits::make_plain<U>::type PU;
                 #endif
 
-                return c_.execute_impl<
+                return c_.create_impl<
                     U
                   , typename mpl::push_back<TCallStack, PU>::type
                   , TPolicies
@@ -166,7 +125,6 @@
 
             template<
                 typename U
-
             #if !defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
               , typename PU = typename type_traits::make_plain<U>::type
               , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
@@ -177,7 +135,7 @@
                     typedef typename type_traits::make_plain<U>::type PU;
                 #endif
 
-                return c_.execute_impl<
+                return c_.create_impl<
                     const U&
                   , typename mpl::push_back<TCallStack, PU>::type
                   , TPolicies
@@ -197,7 +155,7 @@
                     typedef typename type_traits::make_plain<U>::type PU;
                 #endif
 
-                return c_.execute_impl<
+                return c_.create_impl<
                     U&
                   , typename mpl::push_back<TCallStack, PU>::type
                   , TPolicies
@@ -213,10 +171,6 @@
         };
 
     public:
-        creator()
-            : skip_(&typeid(void))
-        { }
-
         template<
             typename T
           , typename TParent // to ignore copy/move ctor
@@ -227,7 +181,7 @@
           , typename TVisitor
         >
         eager_creator<TParent, TCallStack, TPolicies, TDeps, TRefs, TVisitor>
-        execute(TDeps& deps, TRefs& refs, const TVisitor& visitor
+        create_(TDeps& deps, TRefs& refs, const TVisitor& visitor
               , typename enable_if<is_same<T, any_type> >::type* = 0) {
             return eager_creator<TParent, TCallStack, TPolicies, TDeps, TRefs, TVisitor>(
                 *this, deps, refs, visitor
@@ -243,9 +197,9 @@
           , typename TRefs
           , typename TVisitor
         >
-        const convertible<T>& execute(
+        const convertible<T>& create_(
             TDeps& deps, TRefs& refs, const TVisitor& visitor, typename disable_if<is_same<T, any_type> >::type* = 0) {
-            return execute_impl<
+            return create_impl<
                 T
               , typename mpl::push_back<
                     TCallStack
@@ -256,115 +210,10 @@
             >(deps, refs, visitor);
         }
 
-        template<typename TC, typename T>
-        struct gett
-        {
-            typedef T type;
-        };
-
-        template<typename TC, typename T>
-        struct gett<convertibles::shared<TC>, T>
-        {
-            typedef aux::shared_ptr<T> type;
-        };
-
-        template<
-            typename TDependency
-          , typename TPolicies
-          , typename TCallStack
-          , typename TCreator
-          , typename TDeps
-          , typename TRefs
-          , typename TVisitor
-        >
-        void bind_create(const TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
-            typedef typename TDependency::expected type;
-
-            typedef typename mpl::if_<
-                is_same<typename TDependency::name, di::concepts::detail::no_name>
-              , typename mpl::if_<
-                    is_polymorphic<type>
-                  , aux::shared_ptr<type>
-                  , typename gett<typename TDependency::result_type, type>::type
-                >::type
-              , typename mpl::if_<
-                    is_polymorphic<type>
-                  , named<aux::shared_ptr<type>, typename TDependency::name>
-                  , named<typename gett<typename TDependency::result_type, type>::type, typename TDependency::name>
-                >::type
-            >::type t;
-
-            fun_type v;
-
-            v.push_back(
-                  boost::bind(
-                       &TCreator::template execute_any<
-                           t
-                         , t
-                         , typename TDependency::context
-                         , TPolicies
-                         , TDeps
-                         , TRefs
-                         , TVisitor
-                       >
-                     , creator
-                     , deps
-                     , refs
-                     , visitor
-                   )
-                  );
-
-            creators_.push_back(
-                std::make_pair(
-                    boost::bind(&TDependency::when, _1, _2, _3)
-                  , v
-                )
-            );
-        }
-
     private:
-        template<
-            typename T
-          , typename TParent // to ignore copy/move ctor
-          , typename TCallStack
-          , typename TPolicies
-          , typename TDeps
-          , typename TRefs
-          , typename TVisitor
-        >
-        any execute_any(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
-            skip_ = &typeid(T);
-            return any(execute<T, TParent, TCallStack, TPolicies>(deps, refs, visitor));
-        }
-
         #define BOOST_PP_FILENAME_1 "boost/di/detail/creator.hpp"
         #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM(0)
         #include BOOST_PP_ITERATE()
-
-        template<
-            typename TDependency
-          , typename TDeps
-        >
-        typename enable_if<is_base_of<TDependency, TDeps>, TDependency&>::type
-        acquire(TDeps& deps) {
-            return static_cast<TDependency&>(deps);
-        }
-
-        template<
-            typename TDependency
-          , typename TDeps
-        >
-        typename disable_if<is_base_of<TDependency, TDeps>, TDependency&>::type
-        acquire(TDeps&) {
-            typename scopes_type::const_iterator it = scopes_.find(&typeid(TDependency));
-            if (it != scopes_.end()) {
-                return *static_cast<TDependency*>(it->second.get());
-            }
-
-            TDependency* dependency = new TDependency();
-            scopes_[&typeid(TDependency)] = aux::shared_ptr<void>(dependency);
-            return *dependency;
-        }
 
         template<typename TSeq, typename TDeps, typename T>
         typename enable_if<mpl::empty<TSeq> >::type assert_policies() { }
@@ -375,20 +224,6 @@
             policy::template assert_policy<TDeps, T>();
             assert_policies<typename mpl::pop_front<TSeq>::type, TDeps, T>();
         }
-
-    private:
-        template<typename TSeq, typename V>
-        static typename enable_if<mpl::empty<TSeq> >::type fill_call_stack(V&) { }
-
-        template<typename TSeq, typename V>
-        static typename disable_if<mpl::empty<TSeq> >::type fill_call_stack(V& v) {
-			v.push_back(&typeid(typename mpl::front<TSeq>::type));
-            fill_call_stack<typename mpl::pop_front<TSeq>::type>(v);
-		}
-
-        scopes_type scopes_;
-        creators_type creators_;
-        const std::type_info* skip_;
     };
 
     } // namespace detail
@@ -411,84 +246,18 @@
     typename enable_if_c<
         mpl::size<typename ctor<TDependency>::type>::value == BOOST_PP_ITERATION()
       , const convertible<T>&
-    >::type execute_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+    >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
-        typedef convertible<T> convertible_type;
-
         assert_policies<TPolicies, typename TDeps::types, dependency_type>();
         (visitor)(dependency_type());
 
-//        should be binder
-        int best = 0;
-        std::size_t r = 0;
-
-        if (skip_ != &typeid(T)) {
-            skip_ = &typeid(void);
-
-            for (std::size_t q = 0; q < creators_.size(); ++q) {
-
-                std::vector<const std::type_info*> call_stack;
-                fill_call_stack<TCallStack>(call_stack);
-
-                int current = creators_[q].first(
-                    &typeid(typename type_traits::make_plain<T>::type)
-                  , &typeid(typename concepts::type_traits::get_name<T>::type)
-                  , call_stack
-                );
-
-                if (current > best) {
-                    best = current;
-                    r = q;
-                }
-            }
-
-            if (best > 0) {
-                for (fun_type::const_iterator it = creators_[r].second.begin(); it != creators_[r].second.end(); ++it) {
-                    if ((*it)().type() == typeid(convertible<T>)) {
-
-                        convertible_type* convertible(new convertible_type(
-                            any_cast<convertible_type>((*it)())
-                        ));
-
-                        refs.push_back(aux::shared_ptr<void>(convertible));
-                        return *convertible;
-                    }
-                }
-
-                throw std::runtime_error("conversion not allowed");
-            }
-        }
-
-        #define BOOST_DI_CREATOR_EXECUTE(z, n, _)       \
-            BOOST_PP_COMMA_IF(n)                        \
-            execute<                                    \
-               typename mpl::at_c<                      \
-                   typename ctor<TDependency>::type     \
-                 , n                                    \
-               >::type                                  \
-             , T                                        \
-             , TCallStack                               \
-             , TPolicies                                \
-            >(deps, refs, visitor)
-
-        convertible_type* convertible = new convertible_type(
-            acquire<typename TDependency::type>(deps).create(
-                type_traits::policy<
-                    mpl::empty<typename TDeps::types>::value
-                >()
-                BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
-                BOOST_PP_REPEAT(
-                    BOOST_PP_ITERATION()
-                  , BOOST_DI_CREATOR_EXECUTE
-                  , ~
-                )
-            )
-        );
-
-        #undef BOOST_DI_CREATOR_EXECUTE
-
-        refs.push_back(aux::shared_ptr<void>(convertible));
-        return *convertible;
+        return this->template build<
+            T
+          , typename ctor<TDependency>::type
+          , TCallStack
+          , TPolicies
+          , TDependency
+        >(*this, deps, refs, visitor);
     }
 
 #endif

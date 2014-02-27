@@ -12,7 +12,6 @@
     #include "boost/di/aux_/config.hpp"
     #include "boost/di/aux_/memory.hpp"
     #include "boost/di/detail/pool.hpp"
-    #include "boost/di/detail/binder.hpp"
     #include "boost/di/detail/creator.hpp"
 
     #include <typeinfo>
@@ -48,23 +47,27 @@
 
     template<
         typename TDeps = mpl::vector0<>
-      , template<typename> class TBinder = binder
       , template<
             typename
           , typename = ::boost::di::detail::never< ::boost::mpl::_1 >
           , typename = void
         > class TPool = pool
-      , template<typename> class TCreator = creator
+      , template<
+            typename
+          , template<typename> class = static_builder
+          , template<typename> class = binder
+      > class TCreator = creator
     >
-    class module : public TPool<TDeps>
+    class module
+        : public TPool<TDeps>
+        , public TCreator<TDeps>
     {
         BOOST_MPL_HAS_XXX_TRAIT_DEF(scope)
 
         template<
             typename
-          , template<typename> class
           , template<typename, typename, typename> class
-          , template<typename> class
+          , template<typename, template<typename> class, template<typename> class> class
         > friend class module;
 
         template<typename T>
@@ -159,15 +162,6 @@
             );
         };
 
-        template<
-            typename T
-          , typename TCallStack
-          , typename TBind
-        >
-        struct binder
-            : TBind::template resolve<T, TCallStack>::type
-        { };
-
         class empty_visitor
         {
         public:
@@ -190,7 +184,7 @@
             typedef mpl::vector0<> call_stack;
             std::vector<aux::shared_ptr<void> > refs_;
 
-            return creator_.template execute<T, T, call_stack, policies>(
+            return this->template create_<T, T, call_stack, policies>(
                 static_cast<TPool<deps>&>(*this), refs_, empty_visitor());
         }
 
@@ -200,28 +194,13 @@
             typedef mpl::vector0<> call_stack;
             std::vector<aux::shared_ptr<void> > refs_;
 
-            return creator_.template execute<T, T, call_stack, policies>(
+            return this->template create_<T, T, call_stack, policies>(
                 static_cast<TPool<deps>&>(*this), refs_, visitor);
         }
 
         template<typename TAction>
         void call(const TAction& action) {
             call_impl<deps>(static_cast<TPool<deps>&>(*this), action);
-        }
-
-    protected:
-        template<typename T, typename TInjector>
-        void bind_dependency(TInjector injector) {
-            typedef mpl::vector0<> policies;
-            typedef mpl::vector0<> call_stack;
-            std::vector<aux::shared_ptr<void> > refs_;
-
-            creator_.template bind_create<T, policies, call_stack>(
-                injector.creator_
-              , static_cast<TPool<typename TInjector::deps>&>(injector)
-              , refs_
-              , empty_visitor()
-            );
         }
 
     private:
@@ -244,8 +223,6 @@
           , typename disable_if<has_call<typename mpl::front<TSeq>::type, TAction> >::type* = 0) {
             call_impl<typename mpl::pop_front<TSeq>::type>(deps, action);
         }
-
-        TCreator<TBinder<deps> > creator_;
     };
 
     } // namespace detail
@@ -282,7 +259,7 @@
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return creator_.template execute<T, T, call_stack, policies>(
+        return this->template create_<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }

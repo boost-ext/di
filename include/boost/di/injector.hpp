@@ -97,7 +97,7 @@
         typename disable_if<mpl::empty<TSeq> >::type for_each_dependency(TInjector inj) {
             typedef typename mpl::front<TSeq>::type type;
             //injector<type> i(static_cast<const type&>(inj));
-            this->template bind_dependency<type>(inj);
+            //this->template bind_dependency<type>(inj);
             for_each_dependency<typename mpl::pop_front<TSeq>::type>(inj);
         }
 
