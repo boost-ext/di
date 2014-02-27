@@ -42,7 +42,7 @@ namespace di {
 namespace detail {
 
 template<typename TDependecies, typename Creator>
-class dynamic_builder
+class dynamic_binder
 {
     typedef std::vector< function<any()> > fun_type;
     typedef std::vector<std::pair<function<int(const std::type_info*, const std::type_info*, const std::vector<const std::type_info*>&)>, fun_type> > creators_type;
@@ -60,7 +60,7 @@ class dynamic_builder
     };
 
 public:
-    dynamic_builder()
+    dynamic_binder()
         : skip_(&typeid(void))
     { }
 
@@ -75,7 +75,7 @@ public:
       , typename TVisitor
     >
     const convertible<T>&
-    build(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+    resolve(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef convertible<T> convertible_type;
 
         int best = 0;

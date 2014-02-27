@@ -49,7 +49,7 @@
     //{
         //template<typename T>
         //struct get
-            //: mpl::if_<mpl::empty<TDependecies>, dynamic_builder<T>, static_builder<T> >::type
+            //:
         //{ };
     //};
 
@@ -60,6 +60,7 @@
     >
     class creator
         : public builder<TDependecies, creator<TDependecies> >
+        , public mpl::if_<mpl::empty<TDependecies>, binder<TDependecies, creator<TDependecies> >, dynamic_binder<TDependecies, creator<TDependecies> > >::type
     {
         template<typename TDependency>
         struct ctor
@@ -67,9 +68,8 @@
         { };
 
         template<typename T, typename TCallStack>
-        struct binder
-            //: TBinder<TDependecies>::template resolve<T, TCallStack>::type
-            : boost::di::detail::binder<TDependecies>::template resolve<T, TCallStack>::type
+        struct binder_
+            : binder<TDependecies, creator>::template resolve<T, TCallStack>::type
         { };
 
         template<
@@ -119,7 +119,7 @@
                     U
                   , typename mpl::push_back<TCallStack, PU>::type
                   , TPolicies
-                  , binder<U, TCallStack>
+                  , binder_<U, TCallStack>
                 >(deps_, refs_, visitor_);
             }
 
@@ -139,7 +139,7 @@
                     const U&
                   , typename mpl::push_back<TCallStack, PU>::type
                   , TPolicies
-                  , binder<const U&, TCallStack>
+                  , binder_<const U&, TCallStack>
                 >(deps_, refs_, visitor_);
             }
 
@@ -159,7 +159,7 @@
                     U&
                   , typename mpl::push_back<TCallStack, PU>::type
                   , TPolicies
-                  , binder<U&, TCallStack>
+                  , binder_<U&, TCallStack>
                 >(deps_, refs_, visitor_);
             }
 
@@ -203,10 +203,10 @@
                 T
               , typename mpl::push_back<
                     TCallStack
-                  , typename binder<T, TCallStack>::given
+                  , typename binder_<T, TCallStack>::given
                 >::type
               , TPolicies
-              , binder<T, TCallStack>
+              , binder_<T, TCallStack>
             >(deps, refs, visitor);
         }
 
@@ -250,6 +250,14 @@
         typedef dependency<T, TCallStack, TDependency> dependency_type;
         assert_policies<TPolicies, typename TDeps::types, dependency_type>();
         (visitor)(dependency_type());
+
+        return this->template resolve<
+            T
+          , typename ctor<TDependency>::type
+          , TCallStack
+          , TPolicies
+          , TDependency
+        >(deps, refs, visitor);
 
         return this->template build<
             T

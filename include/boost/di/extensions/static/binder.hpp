@@ -24,7 +24,7 @@ namespace boost {
 namespace di {
 namespace detail {
 
-template<typename TDeps = mpl::vector0<> >
+template<typename TDeps, typename>
 class binder
 {
     template<typename TDependency, typename T, typename TCallStack>
