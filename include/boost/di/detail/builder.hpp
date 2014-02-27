@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef BOOST_DI_DETAIL_STATIC_BUILDER_HPP
-    #define BOOST_DI_DETAIL_STATIC_BUILDER_HPP
+    #ifndef BOOST_DI_DETAIL_BUILDER_HPP
+    #define BOOST_DI_DETAIL_BUILDER_HPP
 
     #include "boost/di/aux_/config.hpp"
     #include "boost/di/aux_/memory.hpp"
@@ -89,7 +89,7 @@
         typename TDependecies
       , typename Creator
     >
-    class static_builder
+    class builder
     {
         class type_comparator
         {
@@ -102,7 +102,7 @@
         typedef std::map<const std::type_info*, aux::shared_ptr<void>, type_comparator> scopes_type;
 
     public:
-        #define BOOST_PP_FILENAME_1 "boost/di/extensions/static/builder.hpp"
+        #define BOOST_PP_FILENAME_1 "boost/di/detail/builder.hpp"
         #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM(0)
         #include BOOST_PP_ITERATE()
 
@@ -157,13 +157,13 @@
     build(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef convertible<T> convertible_type;
 
-        #define BOOST_DI_CREATOR_EXECUTE(z, n, _)       \
-            BOOST_PP_COMMA_IF(n)                        \
-            static_cast<Creator&>(*this).template create_<                   \
-               typename mpl::at_c<TCtor, n>::type       \
-             , T                                        \
-             , TCallStack                               \
-             , TPolicies                                \
+        #define BOOST_DI_CREATOR_EXECUTE(z, n, _)           \
+            BOOST_PP_COMMA_IF(n)                            \
+            static_cast<Creator&>(*this).template create_<  \
+               typename mpl::at_c<TCtor, n>::type           \
+             , T                                            \
+             , TCallStack                                   \
+             , TPolicies                                    \
             >(deps, refs, visitor)
 
         convertible_type* convertible = new convertible_type(

@@ -18,9 +18,8 @@
 
     #include "boost/di/concepts/type_traits/name.hpp"
     #include "boost/di/concepts.hpp"
-    #include "boost/di/extensions/static/builder.hpp"
     #include "boost/di/extensions/static/binder.hpp"
-    #include "boost/di/extensions/dynamic/builder.hpp"
+    #include "boost/di/extensions/dynamic/binder.hpp"
 
     #include <typeinfo>
     #include <map>
@@ -60,7 +59,7 @@
       //, template<typename> class TBinder = binder
     >
     class creator
-        : public mpl::if_<mpl::empty<TDependecies>, dynamic_builder<TDependecies, creator<TDependecies> >, static_builder<TDependecies, creator<TDependecies> > >::type
+        : public builder<TDependecies, creator<TDependecies> >
     {
         template<typename TDependency>
         struct ctor
