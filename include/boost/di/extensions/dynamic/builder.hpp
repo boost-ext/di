@@ -16,6 +16,7 @@
 
 #include "boost/di/concepts/type_traits/name.hpp"
 #include "boost/di/concepts.hpp"
+#include "boost/di/extensions/static/builder.hpp"
 
 #include <typeinfo>
 #include <map>
@@ -40,8 +41,8 @@ namespace boost {
 namespace di {
 namespace detail {
 
-template<typename TDependecies>
-class dynamic_builder
+template<typename TDependecies, typename Creator>
+class dynamic_builder : public static_builder<TDependecies, Creator>
 {
     typedef std::vector< function<any()> > fun_type;
     typedef std::vector<std::pair<function<int(const std::type_info*, const std::type_info*, const std::vector<const std::type_info*>&)>, fun_type> > creators_type;
@@ -69,13 +70,12 @@ public:
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
-      , typename TCreator
       , typename TDeps
       , typename TRefs
       , typename TVisitor
     >
     const convertible<T>&
-    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+    build(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef convertible<T> convertible_type;
 
         int best = 0;
@@ -117,6 +117,10 @@ public:
                 throw std::runtime_error("conversion not allowed");
             }
         }
+
+
+        //pool<> p;
+        //return this->static_builder<pool<>, Creator>::template build<T, TCtor, TCallStack, TPolicies, TDependency>(p, refs, visitor);
     }
 
     class empty_visitor
@@ -171,7 +175,7 @@ private:
 
         v.push_back(
               boost::bind(
-                   &TCreator::template execute_any<
+                   &TCreator::template create_any<
                        t
                      , t
                      , typename TDependency::context
@@ -204,9 +208,9 @@ private:
       , typename TRefs
       , typename TVisitor
     >
-    any execute_any(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+    any create_any(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         skip_ = &typeid(T);
-        //return any(create_<T, TParent, TCallStack, TPolicies>(deps, refs, visitor));
+        return any(static_cast<Creator&>(*this).template create_<T, TParent, TCallStack, TPolicies>(deps, refs, visitor));
     }
 
     template<typename TSeq, typename V>

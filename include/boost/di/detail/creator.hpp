@@ -45,22 +45,22 @@
     namespace di {
     namespace detail {
 
-    template<typename TDependecies>
-    struct builder
-    {
-        template<typename T>
-        struct get
-            : mpl::if_<mpl::empty<TDependecies>, dynamic_builder<T>, static_builder<T> >::type
-        { };
-    };
+    //template<typename TDependecies>
+    //struct builder
+    //{
+        //template<typename T>
+        //struct get
+            //: mpl::if_<mpl::empty<TDependecies>, dynamic_builder<T>, static_builder<T> >::type
+        //{ };
+    //};
 
     template<
         typename TDependecies
-      , template<typename> class TBuilder = builder<TDependecies>::template get
-      , template<typename> class TBinder = binder
+      //, template<typename> class TBuilder = builder<TDependecies>::template get
+      //, template<typename> class TBinder = binder
     >
     class creator
-        : public TBuilder<TDependecies>
+        : public mpl::if_<mpl::empty<TDependecies>, dynamic_builder<TDependecies, creator<TDependecies> >, static_builder<TDependecies, creator<TDependecies> > >::type
     {
         template<typename TDependency>
         struct ctor
@@ -69,7 +69,8 @@
 
         template<typename T, typename TCallStack>
         struct binder
-            : TBinder<TDependecies>::template resolve<T, TCallStack>::type
+            //: TBinder<TDependecies>::template resolve<T, TCallStack>::type
+            : boost::di::detail::binder<TDependecies>::template resolve<T, TCallStack>::type
         { };
 
         template<
@@ -257,7 +258,7 @@
           , TCallStack
           , TPolicies
           , TDependency
-        >(*this, deps, refs, visitor);
+        >(deps, refs, visitor);
     }
 
 #endif

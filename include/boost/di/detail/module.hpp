@@ -54,8 +54,8 @@
         > class TPool = pool
       , template<
             typename
-          , template<typename> class = static_builder
-          , template<typename> class = binder
+          //, template<typename> class = static_builder
+          //, template<typename> class = binder
       > class TCreator = creator
     >
     class module
@@ -67,7 +67,7 @@
         template<
             typename
           , template<typename, typename, typename> class
-          , template<typename, template<typename> class, template<typename> class> class
+          , template<typename> class
         > friend class module;
 
         template<typename T>
