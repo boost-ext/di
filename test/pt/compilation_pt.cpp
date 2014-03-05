@@ -4,13 +4,11 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <memory>
+#include <cassert>
 #include <vector>
 #include <boost/shared_ptr.hpp>
 #include <boost/typeof/typeof.hpp>
 #include "boost/di.hpp"
-
-#include <boost/test/unit_test.hpp>
 
 namespace di = boost::di;
 
@@ -64,7 +62,7 @@ struct c3
 
 } // namespace
 
-BOOST_AUTO_TEST_CASE(create_complex) {
+int main() {
     const int i = 42;
     const double d = 42.0;
     std::vector<int> v;
@@ -96,18 +94,18 @@ BOOST_AUTO_TEST_CASE(create_complex) {
         >()
     );
 
-    BOOST_CHECK(dynamic_cast<impl*>(c3_->c2_->p_.get()));
-    BOOST_CHECK_EQUAL(c3_->c1_.get(), c3_->c2_->c1_.get());
-    BOOST_CHECK_EQUAL(i, c3_->c1_->i_);
-    BOOST_CHECK_EQUAL(d, c3_->c1_->d_);
-    BOOST_CHECK_EQUAL(i, c3_->c1__.i_);
-    BOOST_CHECK_EQUAL(d, c3_->c1__.d_);
-    BOOST_CHECK_EQUAL(i, c3_->c2_->c1_->i_);
-    BOOST_CHECK_EQUAL(d, c3_->c2_->c1_->d_);
-    BOOST_CHECK_EQUAL(3u, v.size());
-    BOOST_CHECK_EQUAL(v.size(), c3_->v_.size());
-    BOOST_CHECK_EQUAL(v[0], c3_->v_[0]);
-    BOOST_CHECK_EQUAL(v[1], c3_->v_[1]);
-    BOOST_CHECK_EQUAL(v[2], c3_->v_[2]);
+    assert(dynamic_cast<impl*>(c3_->c2_->p_.get()));
+    assert(c3_->c1_.get() == c3_->c2_->c1_.get());
+    assert(i == c3_->c1_->i_);
+    assert(d == c3_->c1_->d_);
+    assert(i == c3_->c1__.i_);
+    assert(d == c3_->c1__.d_);
+    assert(i == c3_->c2_->c1_->i_);
+    assert(d == c3_->c2_->c1_->d_);
+    assert(3u == v.size());
+    assert(v.size() == c3_->v_.size());
+    assert(v[0] == c3_->v_[0]);
+    assert(v[1] == c3_->v_[1]);
+    assert(v[2] == c3_->v_[2]);
 }
 
