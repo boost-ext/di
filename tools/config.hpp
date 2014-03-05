@@ -25,9 +25,6 @@
 #if !defined(BOOST_MPL_LIMIT_VECTOR_SIZE)
     #define BOOST_MPL_LIMIT_VECTOR_SIZE 20
 #endif
-#if !defined(BOOST_MPL_STRING_MAX_PARAMS)
-    #define BOOST_MPL_STRING_MAX_PARAMS 8
-#endif
 
 #define BOOST_DI_CTOR_LIMIT_FROM(begin)         \
     (begin, BOOST_DI_CTOR_LIMIT_SIZE)
@@ -64,7 +61,7 @@
        , arg                                    \
      )
 
-// di
+// mpl
 
 #define BOOST_DI_TYPES_MPL_LIMIT_FROM(begin)    \
     (begin, BOOST_MPL_LIMIT_VECTOR_SIZE)

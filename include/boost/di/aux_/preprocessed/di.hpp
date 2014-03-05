@@ -2063,14 +2063,16 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
         );
     };
 
-    template<typename>
+    template<typename, typename = void>
     struct is_mpl_string
         : mpl::false_
     { };
 
-    template< int C0 , int C1 , int C2 , int C3 , int C4 , int C5 , int C6 , int C7>
-    struct is_mpl_string<mpl::string< C0 , C1 , C2 , C3 , C4 , C5 , C6 , C7> >
-        : mpl::true_
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(tag)
+
+    template<typename T>
+    struct is_mpl_string<T, typename enable_if<has_tag<T> >::type>
+        : is_same<mpl::string_tag, typename T::tag>
     { };
 
     template<typename T>

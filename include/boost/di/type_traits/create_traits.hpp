@@ -21,12 +21,14 @@
     #include <boost/non_type.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/type_traits/is_class.hpp>
+    #include <boost/type_traits/is_same.hpp>
     #include <boost/mpl/string.hpp>
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/if.hpp>
     #include <boost/mpl/bool.hpp>
     #include <boost/mpl/or.hpp>
     #include <boost/mpl/void.hpp>
+    #include <boost/mpl/has_xxx.hpp>
     #include <boost/mpl/aux_/yes_no.hpp>
 
     namespace boost {
@@ -58,14 +60,16 @@
         );
     };
 
-    template<typename>
+    template<typename, typename = void>
     struct is_mpl_string
         : mpl::false_
     { };
 
-    template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, int C)>
-    struct is_mpl_string<mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> >
-        : mpl::true_
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(tag)
+
+    template<typename T>
+    struct is_mpl_string<T, typename enable_if<has_tag<T> >::type>
+        : is_same<mpl::string_tag, typename T::tag>
     { };
 
     template<typename T>
