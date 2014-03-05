@@ -17,6 +17,7 @@
 #include "boost/di/concepts/type_traits/name.hpp"
 #include "boost/di/concepts.hpp"
 #include "boost/di/detail/builder.hpp"
+#include "boost/di/detail/pool.hpp"
 
 #include <typeinfo>
 #include <map>
@@ -41,9 +42,9 @@ namespace boost {
 namespace di {
 namespace detail {
 
-template<typename, typename Creator>
+template<typename Deps, template<typename> class Creator>
 class dynamic_binder
-    : public builder<Creator>
+    : public builder<Creator<Deps> >
 {
     typedef std::vector< function<any()> > fun_type;
     typedef std::vector<std::pair<function<int(const std::type_info*, const std::type_info*, const std::vector<const std::type_info*>&)>, fun_type> > creators_type;
@@ -102,7 +103,6 @@ public:
                 }
             }
 
-            std::cout << typeid(T).name() <<  ": " <<  best << std::endl;
             if (best > 0) {
                 for (fun_type::const_iterator it = creators_[r].second.begin(); it != creators_[r].second.end(); ++it) {
                     if ((*it)().type() == typeid(convertible<T>)) {
@@ -120,14 +120,13 @@ public:
             }
         }
 
-        detail::pool<> p;
         return this->template build<
             T
           , TCtor
           , TCallStack
           , TPolicies
           , TDependency
-        >(p, refs, visitor);
+        >(deps, refs, visitor);
     }
 
     class empty_visitor
@@ -137,32 +136,10 @@ public:
         void operator()(const T&) const { }
     };
 
-    template<typename T, typename TInjector>
+    template<typename TDependency, typename TInjector>
     void bind_dependency(TInjector injector) {
-        typedef mpl::vector0<> policies;
-        typedef mpl::vector0<> call_stack;
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        bind_create<T, policies, call_stack>(
-            *this
-          , static_cast<pool<typename TInjector::deps>&>(injector)
-          , refs_
-          , empty_visitor()
-        );
-    }
-
-private:
-    template<
-        typename TDependency
-      , typename TPolicies
-      , typename TCallStack
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-    >
-    void bind_create(const TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef typename TDependency::expected type;
+        typedef mpl::vector0<> policies;
 
         typedef typename mpl::if_<
             is_same<typename TDependency::name, di::concepts::detail::no_name>
@@ -178,23 +155,26 @@ private:
             >::type
         >::type t;
 
+        std::vector<aux::shared_ptr<void> > refs_;
         fun_type v;
 
         v.push_back(
               boost::bind(
-                   &TCreator::template create_any<
+                   &dynamic_binder::create_any<
                        t
                      , t
                      , typename TDependency::context
-                     , TPolicies
-                     , TDeps
-                     , TRefs
-                     , TVisitor
+                     , policies
+                     , TInjector
+                     , pool<typename TInjector::deps>
+                     , std::vector<aux::shared_ptr<void> >
+                     , empty_visitor
                    >
-                 , creator
-                 , deps
-                 , refs
-                 , visitor
+                 , this
+                 , injector
+                 , static_cast<pool<typename TInjector::deps>&>(injector)
+                 , refs_
+                 , empty_visitor()
                )
               );
 
@@ -206,18 +186,20 @@ private:
         );
     }
 
+private:
     template<
         typename T
       , typename TParent // to ignore copy/move ctor
       , typename TCallStack
       , typename TPolicies
+      , typename TInjector
       , typename TDeps
       , typename TRefs
       , typename TVisitor
     >
-    any create_any(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+    any create_any(TInjector& injector, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         skip_ = &typeid(T);
-        return any(static_cast<Creator&>(*this).template create_<T, TParent, TCallStack, TPolicies>(deps, refs, visitor));
+        return any(static_cast<Creator<typename TInjector::deps>&>(injector).template create_<T, TParent, TCallStack, TPolicies>(deps, refs, visitor));
     }
 
     template<typename TSeq, typename V>

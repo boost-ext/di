@@ -25,9 +25,9 @@ namespace boost {
 namespace di {
 namespace detail {
 
-template<typename TDeps, typename TCreator>
+template<typename TDeps, template<typename> class TCreator>
 class binder
-    : public builder<TCreator>
+    : public builder<TCreator<TDeps> >
 {
     template<typename TDependency, typename T, typename TCallStack>
     struct apply

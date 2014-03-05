@@ -50,14 +50,14 @@
       //, template<typename> class TBinder = binder
     >
     class creator
-        : public mpl::if_<mpl::empty<TDependecies>, dynamic_binder<TDependecies, creator<TDependecies> >, binder<TDependecies, creator<TDependecies> > >::type
+        : public mpl::if_<mpl::empty<TDependecies>, dynamic_binder<TDependecies, creator>, binder<TDependecies, creator > >::type
     {
-        typedef typename mpl::if_<mpl::empty<TDependecies>, dynamic_binder<TDependecies, creator<TDependecies> >, binder<TDependecies, creator<TDependecies> > >::type binder_type;
+        typedef typename mpl::if_<mpl::empty<TDependecies>, dynamic_binder<TDependecies, detail::creator>, binder<TDependecies, detail::creator> >::type binder_type;
 
         //should be dynamic or static
         template<typename T, typename TCallStack>
         struct binder_
-            : binder<TDependecies, creator>::template resolve<T, TCallStack>::type
+            : binder<TDependecies, detail::creator>::template resolve<T, TCallStack>::type
         { };
 
         template<typename TDependency>

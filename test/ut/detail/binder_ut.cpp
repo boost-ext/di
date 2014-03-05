@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/detail/binder.hpp"
+#include "boost/di/detail/binders/static/binder.hpp"
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
@@ -18,6 +18,7 @@
 #include "common/fakes/fake_scope.hpp"
 #include "common/fakes/fake_dependency.hpp"
 #include "common/fakes/fake_call_stack.hpp"
+#include "common/fakes/fake_creator.hpp"
 #include "common/data.hpp"
 
 namespace boost {
@@ -31,7 +32,7 @@ template<
  , typename TDefault
 >
 struct binder_resolve
-    : binder<TDeps>::template resolve<T, TCallStack, TDefault>
+    : binder<TDeps, fake_creator>::template resolve<T, TCallStack, TDefault>
 { };
 
 BOOST_AUTO_TEST_CASE(empty) {
