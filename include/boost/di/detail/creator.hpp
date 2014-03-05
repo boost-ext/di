@@ -18,8 +18,8 @@
 
     #include "boost/di/concepts/type_traits/name.hpp"
     #include "boost/di/concepts.hpp"
-    #include "boost/di/extensions/static/binder.hpp"
-    #include "boost/di/extensions/dynamic/binder.hpp"
+    #include "boost/di/detail/binders/static/binder.hpp"
+    #include "boost/di/detail/binders/dynamic/binder.hpp"
 
     #include <typeinfo>
     #include <map>
@@ -44,32 +44,25 @@
     namespace di {
     namespace detail {
 
-    //template<typename TDependecies>
-    //struct builder
-    //{
-        //template<typename T>
-        //struct get
-            //:
-        //{ };
-    //};
-
     template<
         typename TDependecies
       //, template<typename> class TBuilder = builder<TDependecies>::template get
       //, template<typename> class TBinder = binder
     >
     class creator
-        : public builder<TDependecies, creator<TDependecies> >
-        , public mpl::if_<mpl::empty<TDependecies>, binder<TDependecies, creator<TDependecies> >, dynamic_binder<TDependecies, creator<TDependecies> > >::type
+        : public mpl::if_<mpl::empty<TDependecies>, dynamic_binder<TDependecies, creator<TDependecies> >, binder<TDependecies, creator<TDependecies> > >::type
     {
-        template<typename TDependency>
-        struct ctor
-            : type_traits::ctor_traits<typename TDependency::given>::type
-        { };
+        typedef typename mpl::if_<mpl::empty<TDependecies>, dynamic_binder<TDependecies, creator<TDependecies> >, binder<TDependecies, creator<TDependecies> > >::type binder_type;
 
+        //should be dynamic or static
         template<typename T, typename TCallStack>
         struct binder_
             : binder<TDependecies, creator>::template resolve<T, TCallStack>::type
+        { };
+
+        template<typename TDependency>
+        struct ctor
+            : type_traits::ctor_traits<typename TDependency::given>::type
         { };
 
         template<
@@ -171,6 +164,8 @@
         };
 
     public:
+        using binder_type::bind_dependency;
+
         template<
             typename T
           , typename TParent // to ignore copy/move ctor
@@ -251,15 +246,7 @@
         assert_policies<TPolicies, typename TDeps::types, dependency_type>();
         (visitor)(dependency_type());
 
-        return this->template resolve<
-            T
-          , typename ctor<TDependency>::type
-          , TCallStack
-          , TPolicies
-          , TDependency
-        >(deps, refs, visitor);
-
-        return this->template build<
+        return static_cast<binder_type*>(this)->template resolve_<
             T
           , typename ctor<TDependency>::type
           , TCallStack

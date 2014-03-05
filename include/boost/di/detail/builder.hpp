@@ -85,10 +85,7 @@
         { }
     };
 
-    template<
-        typename TDependecies
-      , typename Creator
-    >
+    template<typename Creator>
     class builder
     {
         class type_comparator

@@ -41,8 +41,9 @@ namespace boost {
 namespace di {
 namespace detail {
 
-template<typename TDependecies, typename Creator>
+template<typename, typename Creator>
 class dynamic_binder
+    : public builder<Creator>
 {
     typedef std::vector< function<any()> > fun_type;
     typedef std::vector<std::pair<function<int(const std::type_info*, const std::type_info*, const std::vector<const std::type_info*>&)>, fun_type> > creators_type;
@@ -75,7 +76,7 @@ public:
       , typename TVisitor
     >
     const convertible<T>&
-    resolve(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+    resolve_(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef convertible<T> convertible_type;
 
         int best = 0;
@@ -101,6 +102,7 @@ public:
                 }
             }
 
+            std::cout << typeid(T).name() <<  ": " <<  best << std::endl;
             if (best > 0) {
                 for (fun_type::const_iterator it = creators_[r].second.begin(); it != creators_[r].second.end(); ++it) {
                     if ((*it)().type() == typeid(convertible<T>)) {
@@ -118,9 +120,14 @@ public:
             }
         }
 
-
-        //pool<> p;
-        //return this->static_builder<pool<>, Creator>::template build<T, TCtor, TCallStack, TPolicies, TDependency>(p, refs, visitor);
+        detail::pool<> p;
+        return this->template build<
+            T
+          , TCtor
+          , TCallStack
+          , TPolicies
+          , TDependency
+        >(p, refs, visitor);
     }
 
     class empty_visitor

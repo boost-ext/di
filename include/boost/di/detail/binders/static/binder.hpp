@@ -1,7 +1,6 @@
 //
 // Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
-//
-// Distributed under the Boost Software License, Version 1.0.
+// // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #ifndef BOOST_DI_DETAIL_BUILDERS_STATIC_BINDER_HPP
@@ -20,12 +19,15 @@
 #include <boost/mpl/greater.hpp>
 #include <boost/mpl/times.hpp>
 
+#include "boost/di/detail/builder.hpp"
+
 namespace boost {
 namespace di {
 namespace detail {
 
-template<typename TDeps, typename>
+template<typename TDeps, typename TCreator>
 class binder
+    : public builder<TCreator>
 {
     template<typename TDependency, typename T, typename TCallStack>
     struct apply
@@ -70,6 +72,30 @@ public:
               typename type_traits::scope_traits<T>::type
           >::other
     { };
+
+    template<
+        typename T
+      , typename TCtor
+      , typename TCallStack
+      , typename TPolicies
+      , typename TDependency
+      , typename Deps
+      , typename TRefs
+      , typename TVisitor
+    >
+    const convertible<T>&
+    resolve_(Deps& deps, TRefs& refs, const TVisitor& visitor) {
+        return this->template build<
+            T
+          , TCtor
+          , TCallStack
+          , TPolicies
+          , TDependency
+        >(deps, refs, visitor);
+    }
+
+    template<typename T, typename TInjector>
+    void bind_dependency(TInjector injector) { }
 };
 
 } // namespace detail

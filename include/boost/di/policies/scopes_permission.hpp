@@ -8,7 +8,6 @@
 #define BOOST_DI_POLICIES_SCOPES_PERMISSION_HPP
 
 #include "boost/di/aux_/config.hpp"
-#include "boost/di/detail/binder.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
 
