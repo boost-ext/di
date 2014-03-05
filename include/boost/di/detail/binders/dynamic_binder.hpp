@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_DETAIL_DYNAMIC_BUILDER_HPP
-#define BOOST_DI_DETAIL_DYNAMIC_BUILDER_HPP
+#ifndef BOOST_DI_DETAIL_BINDERS_DYNAMIC_BUILDER_HPP
+#define BOOST_DI_DETAIL_BINDERS_DYNAMIC_BUILDER_HPP
 
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/memory.hpp"
@@ -142,7 +142,7 @@ public:
         typedef mpl::vector0<> policies;
 
         typedef typename mpl::if_<
-            is_same<typename TDependency::name, di::concepts::detail::no_name>
+            is_same<typename TDependency::bind::name, di::concepts::detail::no_name>
           , typename mpl::if_<
                 is_polymorphic<type>
               , aux::shared_ptr<type>
@@ -150,8 +150,8 @@ public:
             >::type
           , typename mpl::if_<
                 is_polymorphic<type>
-              , named<aux::shared_ptr<type>, typename TDependency::name>
-              , named<typename gett<typename TDependency::result_type, type>::type, typename TDependency::name>
+              , named<aux::shared_ptr<type>, typename TDependency::bind::name>
+              , named<typename gett<typename TDependency::result_type, type>::type, typename TDependency::bind::name>
             >::type
         >::type t;
 
@@ -163,7 +163,7 @@ public:
                    &dynamic_binder::create_any<
                        t
                      , t
-                     , typename TDependency::context
+                     , typename TDependency::bind::context
                      , policies
                      , TInjector
                      , pool<typename TInjector::deps>
@@ -180,13 +180,18 @@ public:
 
         creators_.push_back(
             std::make_pair(
-                boost::bind(&TDependency::when, _1, _2, _3)
+                boost::bind(&dynamic_binder::when<typename TDependency::bind, typename TDependency::scope>, _1, _2, _3)
               , v
             )
         );
     }
 
 private:
+    template<typename TBind, typename TScope>
+    static int when(const std::type_info* t, const std::type_info* name, const std::vector<const std::type_info*>& call_stack) {
+        return TBind()(t, name, call_stack, TScope::priority::value/*type<scope>()*/);
+    }
+
     template<
         typename T
       , typename TParent // to ignore copy/move ctor

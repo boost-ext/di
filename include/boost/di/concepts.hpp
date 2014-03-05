@@ -28,7 +28,6 @@
 #include <boost/mpl/iterator_range.hpp>
 #include <boost/mpl/advance.hpp>
 #include <boost/mpl/equal.hpp>
-#include <boost/mpl/contains.hpp>
 
 namespace boost {
 namespace di {
@@ -73,8 +72,6 @@ struct bind_string
     : bind<std::string, T>
 { };
 
-struct any_call_stack { };
-
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 class call_stack
 {
@@ -87,7 +84,6 @@ public:
               mpl::empty<TCallStack>
             , mpl::int_<0>
             , mpl::if_<
-          mpl::or_<
                   mpl::equal<
                       mpl::iterator_range<
                           typename mpl::advance<
@@ -104,8 +100,6 @@ public:
                       >
                     , TContext
                   >
-                , mpl::contains<TCallStack, any_call_stack>
-                  >
                 , mpl::size<TContext>
                 , mpl::int_<0>
               >
@@ -120,11 +114,7 @@ public:
         typedef typename mpl::front<TSeq>::type type;
 
         if (result != -1) {
-
-            //std::cout << "BLAH: " << units::detail::demangle(typeid(type).name()) << units::detail::demangle(v[i]->name()) << std::endl;
-
             if (&typeid(type) == v[i]) {
-                //std::cout <<"yay" << std::endl;
                 result = i;
             } else {
                 result = -1;
@@ -141,13 +131,7 @@ public:
     { };
 
     int operator()(const std::vector<const std::type_info*>& call_stack) const {
-        //std::cout << units::detail::demangle(typeid(context_type).name()) << std::endl;
-        //for (const auto& i : call_stack) {
-            //std::cout << "Q:" << units::detail::demangle(i->name()) << std::endl;
-        //}
-        //std::cout << std::endl;
-
-        if ((int)mpl::size<context_type>::value - (int)call_stack.size() >= 0) {
+        if (static_cast<int>(mpl::size<context_type>::value) - static_cast<int>(call_stack.size()) >= 0) {
             return 0;
         }
 

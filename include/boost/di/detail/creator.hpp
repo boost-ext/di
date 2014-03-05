@@ -18,8 +18,8 @@
 
     #include "boost/di/concepts/type_traits/name.hpp"
     #include "boost/di/concepts.hpp"
-    #include "boost/di/detail/binders/static/binder.hpp"
-    #include "boost/di/detail/binders/dynamic/binder.hpp"
+    #include "boost/di/detail/binders/static_binder.hpp"
+    #include "boost/di/detail/binders/dynamic_binder.hpp"
 
     #include <typeinfo>
     #include <map>
@@ -50,14 +50,14 @@
       //, template<typename> class TBinder = binder
     >
     class creator
-        : public mpl::if_<mpl::empty<TDependecies>, dynamic_binder<TDependecies, creator>, binder<TDependecies, creator > >::type
+        : public mpl::if_<mpl::empty<TDependecies>, dynamic_binder<TDependecies, creator>, static_binder<TDependecies, creator > >::type
     {
-        typedef typename mpl::if_<mpl::empty<TDependecies>, dynamic_binder<TDependecies, detail::creator>, binder<TDependecies, detail::creator> >::type binder_type;
+        typedef typename mpl::if_<mpl::empty<TDependecies>, dynamic_binder<TDependecies, detail::creator>, static_binder<TDependecies, detail::creator> >::type binder_type;
 
         //should be dynamic or static
         template<typename T, typename TCallStack>
         struct binder_
-            : binder<TDependecies, detail::creator>::template resolve<T, TCallStack>::type
+            : static_binder<TDependecies, detail::creator>::template resolve<T, TCallStack>::type
         { };
 
         template<typename TDependency>

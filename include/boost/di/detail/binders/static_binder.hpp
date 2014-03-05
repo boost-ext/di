@@ -3,8 +3,8 @@
 // // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_DETAIL_BUILDERS_STATIC_BINDER_HPP
-#define BOOST_DI_DETAIL_BUILDERS_STATIC_BINDER_HPP
+#ifndef BOOST_DI_DETAIL_BINDERS_STATIC_BINDER_HPP
+#define BOOST_DI_DETAIL_BINDERS_STATIC_BINDER_HPP
 
 #include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/type_traits/scope_traits.hpp"
@@ -26,7 +26,7 @@ namespace di {
 namespace detail {
 
 template<typename TDeps, template<typename> class TCreator>
-class binder
+class static_binder
     : public builder<TCreator<TDeps> >
 {
     template<typename TDependency, typename T, typename TCallStack>

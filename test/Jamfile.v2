@@ -78,7 +78,7 @@ test-suite "unit tests" :
     [ run-test c++11 : ut/type_traits/remove_accessors_ut.cpp ]
     [ run-test c++11 : ut/type_traits/scope_traits_ut.cpp ]
 
-    [ run-test c++11 : ut/detail/binder_ut.cpp ]
+    [ run-test c++11 : ut/detail/binders/static_binder_ut.cpp ]
     #[ run-test c++11 : ut/detail/creator_ut.cpp ]
     [ run-test c++11 : ut/detail/pool_ut.cpp ]
 

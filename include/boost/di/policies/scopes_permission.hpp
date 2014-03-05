@@ -159,7 +159,7 @@ public:
         typename TDeps
       , typename TGiven
       , typename TAssert = mpl::true_
-      , template<typename> class TBinder = di::detail::binder
+      , template<typename> class TBinder = di::detail::static_binder
     >
     struct verify
         : verify_impl<

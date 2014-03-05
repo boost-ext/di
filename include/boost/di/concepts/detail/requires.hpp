@@ -23,7 +23,6 @@
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/integral_c.hpp>
 
-#include <boost/units/detail/utility.hpp>
 namespace boost {
 namespace di {
 namespace concepts {
@@ -48,12 +47,11 @@ class requires
           >::type
     { };
 
-
 public:
     typedef requires type;
 
-BOOST_MPL_HAS_XXX_TRAIT_DEF(max)
-BOOST_MPL_HAS_XXX_TRAIT_DEF(nameq)
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(max)
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(nameq)
 
     template<typename T>
     struct namee
@@ -74,6 +72,7 @@ BOOST_MPL_HAS_XXX_TRAIT_DEF(nameq)
           , mpl::_1
         >
     >::type context;
+
     typedef typename  mpl::fold<
         mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
       , no_name
