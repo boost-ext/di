@@ -98,15 +98,16 @@
 
             template<
                 typename U
-            #if !defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
-              , typename PU = typename type_traits::make_plain<U>::type
-              , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
-            #endif
+                BOOST_DI_FEATURE(3, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+                    BOOST_DI_COMMA()
+                    typename PU = typename type_traits::make_plain<U>::type
+                  , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
+                )
             >
             operator U() {
-                #if defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
+                BOOST_DI_FEATURE(1, NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)(
                     typedef typename type_traits::make_plain<U>::type PU;
-                #endif
+                )
 
                 return c_.create_impl<
                     U
@@ -118,15 +119,16 @@
 
             template<
                 typename U
-            #if !defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
-              , typename PU = typename type_traits::make_plain<U>::type
-              , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
-            #endif
+                BOOST_DI_FEATURE(3, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+                    BOOST_DI_COMMA()
+                    typename PU = typename type_traits::make_plain<U>::type
+                  , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
+                )
             >
             operator const U&() const {
-                #if defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
+                BOOST_DI_FEATURE(1, NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)(
                     typedef typename type_traits::make_plain<U>::type PU;
-                #endif
+                )
 
                 return c_.create_impl<
                     const U&
@@ -138,15 +140,16 @@
 
             template<
                 typename U
-            #if !defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
-              , typename PU = typename type_traits::make_plain<U>::type
-              , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
-            #endif
+                BOOST_DI_FEATURE(3, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+                    BOOST_DI_COMMA()
+                    typename PU = typename type_traits::make_plain<U>::type
+                  , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
+                )
             >
             operator U&() const {
-                #if defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
+                BOOST_DI_FEATURE(1, NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)(
                     typedef typename type_traits::make_plain<U>::type PU;
-                #endif
+                )
 
                 return c_.create_impl<
                     U&

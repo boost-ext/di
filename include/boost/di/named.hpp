@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_NAMED_HPP
 #define BOOST_DI_NAMED_HPP
 
+#include "boost/di/aux_/config.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/type_traits/remove_accessors.hpp"
 
@@ -86,11 +87,11 @@ public:
         : object_(ptr)
     { }
 
-#if !defined(BOOST_NO_RVALUE_REFERENCES)
-    named(object_type&& object) // non explicit
-        : object_(std::move(object))
-    { }
-#endif
+    BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+        named(object_type&& object) // non explicit
+            : object_(std::move(object))
+        { }
+    )
 
     operator T() const { return object_; }
 

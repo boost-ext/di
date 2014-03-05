@@ -76,21 +76,19 @@ struct scope_traits<aux::unique_ptr<T> >
     typedef scopes::unique<> type;
 };
 
-#if !defined(BOOST_NO_RVALUE_REFERENCES)
+BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+    template<typename T>
+    struct scope_traits<T&&>
+    {
+        typedef scopes::unique<> type;
+    };
 
-template<typename T>
-struct scope_traits<T&&>
-{
-    typedef scopes::unique<> type;
-};
-
-template<typename T>
-struct scope_traits<const T&&>
-{
-    typedef scopes::unique<> type;
-};
-
-#endif
+    template<typename T>
+    struct scope_traits<const T&&>
+    {
+        typedef scopes::unique<> type;
+    };
+)
 
 template<typename T>
 struct scope_traits<T, typename enable_if<has_named_type<T> >::type>

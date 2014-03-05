@@ -92,6 +92,7 @@
 #include <boost/function.hpp>
 #include "boost/di/inject.hpp"
 #include "boost/di/aux_/memory.hpp"
+#include "boost/di/aux_/config.hpp"
 #include <boost/config.hpp>
 #include <boost/bind.hpp>
 #include <boost/any.hpp>
@@ -529,6 +530,7 @@ struct bind
 } // namespace di
 } // namespace boost
 
+
 namespace boost {
 namespace di {
 
@@ -601,9 +603,11 @@ public:
         : object_(ptr)
     { }
 
-    named(object_type&& object) // non explicit
-        : object_(std::move(object))
-    { }
+    BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+        named(object_type&& object) // non explicit
+            : object_(std::move(object))
+        { }
+    )
 
     operator T() const { return object_; }
 
@@ -763,6 +767,7 @@ public:
 } // namespace di
 } // namespace boost
 
+
 namespace boost {
 namespace di {
 namespace convertibles {
@@ -804,6 +809,14 @@ public:
     I* operator()(const type<I*>&) {
         return new I(value_);
     }
+
+    BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+        template<typename I>
+        I&& operator()(const type<I&&>&) {
+            return std::move(value_);
+        }
+    )
+
     template<typename I>
     operator I() const {
         return (*this)(type<I>());
@@ -1278,6 +1291,7 @@ private:
     template<typename, typename>
     class has_ctor;
 
+    BOOST_DI_FEATURE(5, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
         template<typename T>
         class has_ctor<T, mpl::int_<1> >
         {
@@ -1306,6 +1320,16 @@ private:
               , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
             );
         };
+    )
+
+    BOOST_DI_FEATURE(2, NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+        template<typename T>
+        class has_ctor<T, mpl::int_<1> >
+        {
+        public:
+            BOOST_STATIC_CONSTANT(bool, value = false);
+        };
+    )
 
     template<typename T>
     class has_ctor<T, mpl::int_<2> >
@@ -1313,8 +1337,11 @@ private:
         struct any_type
         {
             template<typename U> operator U&() const;
-
             template<typename U> operator U();
+
+            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+                template<typename U> operator U&&() const;
+            )
         };
 
         template<typename U>
@@ -1342,8 +1369,11 @@ private:
         struct any_type
         {
             template<typename U> operator U&() const;
-
             template<typename U> operator U();
+
+            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+                template<typename U> operator U&&() const;
+            )
         };
 
         template<typename U>
@@ -1371,8 +1401,11 @@ private:
         struct any_type
         {
             template<typename U> operator U&() const;
-
             template<typename U> operator U();
+
+            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+                template<typename U> operator U&&() const;
+            )
         };
 
         template<typename U>
@@ -1400,8 +1433,11 @@ private:
         struct any_type
         {
             template<typename U> operator U&() const;
-
             template<typename U> operator U();
+
+            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+                template<typename U> operator U&&() const;
+            )
         };
 
         template<typename U>
@@ -1429,8 +1465,11 @@ private:
         struct any_type
         {
             template<typename U> operator U&() const;
-
             template<typename U> operator U();
+
+            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+                template<typename U> operator U&&() const;
+            )
         };
 
         template<typename U>
@@ -1458,8 +1497,11 @@ private:
         struct any_type
         {
             template<typename U> operator U&() const;
-
             template<typename U> operator U();
+
+            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+                template<typename U> operator U&&() const;
+            )
         };
 
         template<typename U>
@@ -1487,8 +1529,11 @@ private:
         struct any_type
         {
             template<typename U> operator U&() const;
-
             template<typename U> operator U();
+
+            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+                template<typename U> operator U&&() const;
+            )
         };
 
         template<typename U>
@@ -1516,8 +1561,11 @@ private:
         struct any_type
         {
             template<typename U> operator U&() const;
-
             template<typename U> operator U();
+
+            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+                template<typename U> operator U&&() const;
+            )
         };
 
         template<typename U>
@@ -1545,8 +1593,11 @@ private:
         struct any_type
         {
             template<typename U> operator U&() const;
-
             template<typename U> operator U();
+
+            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+                template<typename U> operator U&&() const;
+            )
         };
 
         template<typename U>
@@ -1574,8 +1625,11 @@ private:
         struct any_type
         {
             template<typename U> operator U&() const;
-
             template<typename U> operator U();
+
+            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+                template<typename U> operator U&&() const;
+            )
         };
 
         template<typename U>
@@ -1603,8 +1657,11 @@ private:
         struct any_type
         {
             template<typename U> operator U&() const;
-
             template<typename U> operator U();
+
+            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+                template<typename U> operator U&&() const;
+            )
         };
 
         template<typename U>
@@ -1632,8 +1689,11 @@ private:
         struct any_type
         {
             template<typename U> operator U&() const;
-
             template<typename U> operator U();
+
+            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+                template<typename U> operator U&&() const;
+            )
         };
 
         template<typename U>
@@ -1661,8 +1721,11 @@ private:
         struct any_type
         {
             template<typename U> operator U&() const;
-
             template<typename U> operator U();
+
+            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+                template<typename U> operator U&&() const;
+            )
         };
 
         template<typename U>
@@ -1690,8 +1753,11 @@ private:
         struct any_type
         {
             template<typename U> operator U&() const;
-
             template<typename U> operator U();
+
+            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+                template<typename U> operator U&&() const;
+            )
         };
 
         template<typename U>
@@ -1719,8 +1785,11 @@ private:
         struct any_type
         {
             template<typename U> operator U&() const;
-
             template<typename U> operator U();
+
+            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+                template<typename U> operator U&&() const;
+            )
         };
 
         template<typename U>
@@ -1748,8 +1817,11 @@ private:
         struct any_type
         {
             template<typename U> operator U&() const;
-
             template<typename U> operator U();
+
+            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+                template<typename U> operator U&&() const;
+            )
         };
 
         template<typename U>
@@ -1777,8 +1849,11 @@ private:
         struct any_type
         {
             template<typename U> operator U&() const;
-
             template<typename U> operator U();
+
+            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+                template<typename U> operator U&&() const;
+            )
         };
 
         template<typename U>
@@ -1806,8 +1881,11 @@ private:
         struct any_type
         {
             template<typename U> operator U&() const;
-
             template<typename U> operator U();
+
+            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+                template<typename U> operator U&&() const;
+            )
         };
 
         template<typename U>
@@ -1835,8 +1913,11 @@ private:
         struct any_type
         {
             template<typename U> operator U&() const;
-
             template<typename U> operator U();
+
+            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+                template<typename U> operator U&&() const;
+            )
         };
 
         template<typename U>
@@ -6087,17 +6168,19 @@ struct scope_traits<aux::unique_ptr<T> >
     typedef scopes::unique<> type;
 };
 
-template<typename T>
-struct scope_traits<T&&>
-{
-    typedef scopes::unique<> type;
-};
+BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+    template<typename T>
+    struct scope_traits<T&&>
+    {
+        typedef scopes::unique<> type;
+    };
 
-template<typename T>
-struct scope_traits<const T&&>
-{
-    typedef scopes::unique<> type;
-};
+    template<typename T>
+    struct scope_traits<const T&&>
+    {
+        typedef scopes::unique<> type;
+    };
+)
 
 template<typename T>
 struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
@@ -7115,12 +7198,16 @@ private:
 
             template<
                 typename U
-
-              , typename PU = typename type_traits::make_plain<U>::type
-              , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
-
+                BOOST_DI_FEATURE(3, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+                    BOOST_DI_COMMA()
+                    typename PU = typename type_traits::make_plain<U>::type
+                  , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
+                )
             >
             operator U() {
+                BOOST_DI_FEATURE(1, NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+                    typedef typename type_traits::make_plain<U>::type PU;
+                )
 
                 return c_.create_impl<
                     U
@@ -7132,12 +7219,16 @@ private:
 
             template<
                 typename U
-
-              , typename PU = typename type_traits::make_plain<U>::type
-              , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
-
+                BOOST_DI_FEATURE(3, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+                    BOOST_DI_COMMA()
+                    typename PU = typename type_traits::make_plain<U>::type
+                  , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
+                )
             >
             operator const U&() const {
+                BOOST_DI_FEATURE(1, NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+                    typedef typename type_traits::make_plain<U>::type PU;
+                )
 
                 return c_.create_impl<
                     const U&
@@ -7149,12 +7240,16 @@ private:
 
             template<
                 typename U
-
-              , typename PU = typename type_traits::make_plain<U>::type
-              , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
-
+                BOOST_DI_FEATURE(3, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+                    BOOST_DI_COMMA()
+                    typename PU = typename type_traits::make_plain<U>::type
+                  , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
+                )
             >
             operator U&() const {
+                BOOST_DI_FEATURE(1, NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+                    typedef typename type_traits::make_plain<U>::type PU;
+                )
 
                 return c_.create_impl<
                     U&

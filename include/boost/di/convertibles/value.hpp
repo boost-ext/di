@@ -7,8 +7,9 @@
 #ifndef BOOST_DI_CONVERTIBLES_VALUE_HPP
 #define BOOST_DI_CONVERTIBLES_VALUE_HPP
 
-#include "boost/di/named.hpp"
+#include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/memory.hpp"
+#include "boost/di/named.hpp"
 
 #include <utility>
 #include <boost/type.hpp>
@@ -56,12 +57,12 @@ public:
         return new I(value_);
     }
 
-#if defined(BOOST_HAS_RVALUE_REFERENCES)
-    template<typename I>
-    I&& operator()(const type<I&&>&) {
-        return std::move(value_);
-    }
-#endif
+    BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+        template<typename I>
+        I&& operator()(const type<I&&>&) {
+            return std::move(value_);
+        }
+    )
 
     template<typename I>
     operator I() const {

@@ -52,6 +52,7 @@ guard_end() {
 }
 
 includes() {
+    echo "#include \"boost/di/aux_/config.hpp\"" >> /tmp/i.hpp
     cat /tmp/i.hpp | grep -v preprocess | sort -u -r
 }
 
@@ -74,6 +75,8 @@ generate_preprocessed() {
     mkdir -p boost/di/aux_/preprocessed/
 
     guard_begin > boost/di/aux_/preprocessed/di.hpp
+
+    echo -n .
     for file in `genereate_files "boost/di.hpp" | cat -n | sort -uk2 | sort -nk1 | cut -f2-`; do
 		if [[ "$file" =~ "di/aux_" ]] ||
 		   [[ "$file" =~ "inject.hpp" ]] ||
@@ -81,7 +84,7 @@ generate_preprocessed() {
 			continue;
 		fi
 
-	    echo $file
+        echo -n .
 		dump_file $file $3 $2 >> /tmp/f.hpp
     done
     includes >> boost/di/aux_/preprocessed/di.hpp
@@ -92,4 +95,5 @@ generate_preprocessed() {
 
 dir=`readlink -f \`dirname $0\``
 cd $dir/../include && generate_preprocessed "boost" "di\/aux_\/preprocessed" "$dir/config.hpp"
+echo done
 

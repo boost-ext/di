@@ -25,7 +25,7 @@
     template<typename, typename>
     class has_ctor;
 
-    #if !defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
+    BOOST_DI_FEATURE(5, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
         template<typename T>
         class has_ctor<T, mpl::int_<1> >
         {
@@ -54,14 +54,16 @@
               , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
             );
         };
-    #else
+    )
+
+    BOOST_DI_FEATURE(2, NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)(
         template<typename T>
         class has_ctor<T, mpl::int_<1> >
         {
         public:
             BOOST_STATIC_CONSTANT(bool, value = false);
         };
-    #endif
+    )
 
     #define BOOST_PP_FILENAME_1 "boost/di/type_traits/has_ctor.hpp"
     #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM(2)
@@ -81,10 +83,11 @@
         struct any_type
         {
             template<typename U> operator U&() const;
-        #if defined(BOOST_HAS_RVALUE_REFERENCES)
-            template<typename U> operator U&&() const;
-        #endif
             template<typename U> operator U();
+
+            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+                template<typename U> operator U&&() const;
+            )
         };
 
         template<typename U>

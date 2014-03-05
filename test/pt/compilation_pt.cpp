@@ -4,10 +4,13 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <cassert>
 #include <memory>
-
+#include <vector>
+#include <boost/shared_ptr.hpp>
+#include <boost/typeof/typeof.hpp>
 #include "boost/di.hpp"
+
+#include <boost/test/unit_test.hpp>
 
 namespace di = boost::di;
 
@@ -30,63 +33,81 @@ struct c1
         : i_(i_), d_(d_)
     { }
 
-    int i_ = 0;
-    double d_ = 0.0;
+    int i_;
+    double d_;
 };
 
 struct c2
 {
-    c2(std::shared_ptr<c1> c1_
-     , std::unique_ptr<i> p_)
-      : c1_(c1_), p_(std::move(p_))
+    c2(boost::shared_ptr<c1> c1_, boost::shared_ptr<i> p_)
+      : c1_(c1_), p_(p_)
     { }
 
-    std::shared_ptr<c1> c1_;
-    std::unique_ptr<i> p_;
+    boost::shared_ptr<c1> c1_;
+    boost::shared_ptr<i> p_;
 };
 
 struct c3
 {
-    c3(std::shared_ptr<c1> c1_
-     , std::shared_ptr<c2> c2_
-     , c1 c1__)
-      : c1_(c1_), c2_(c2_), c1__(c1__)
+    c3(boost::shared_ptr<c1> c1_
+     , boost::shared_ptr<c2> c2_
+     , c1 c1__
+     , const std::vector<int>& v_)
+       : c1_(c1_), c2_(c2_), c1__(c1__), v_(v_)
     { }
 
-    std::shared_ptr<c1> c1_;
-    std::shared_ptr<c2> c2_;
+    boost::shared_ptr<c1> c1_;
+    boost::shared_ptr<c2> c2_;
     c1 c1__;
+    std::vector<int> v_;
 };
 
 } // namespace
 
-int main() {
+BOOST_AUTO_TEST_CASE(create_complex) {
+    const int i = 42;
+    const double d = 42.0;
+    std::vector<int> v;
+    v.push_back(1);
+    v.push_back(2);
+    v.push_back(3);
 
-    const int i_ = 42;
-    const double d_ = 42.0;
+    typedef di::injector<impl> injector_c0;
 
-    using injector_c0 = di::injector<
-        di::bind_int<i_>
-      , impl
-    >;
+    BOOST_AUTO(injector_c1, di::make_injector(
+        di::bind_int<i>()
+      , di::bind<std::vector<int> >::to(v)
+    ));
 
-    auto injector_ = make_injector(
+    BOOST_AUTO(injector_, make_injector(
         injector_c0()
       , di::unique<c2>()
-      , di::bind<double>::to(d_)
+      , injector_c1
+      , di::bind<double>::to(d)
+    ));
+
+    boost::shared_ptr<c3> c3_ = injector_.create<boost::shared_ptr<c3> >(
+        di::policies::binding_correctness()
+      , di::policies::circular_dependencies()
+      , di::policies::arguments_permission<
+            di::policies::allow_smart_ptrs
+          , di::policies::allow_copies
+          , di::policies::allow_refs
+        >()
     );
 
-    auto c3_ = injector_.create<std::shared_ptr<c3>>();
-
-    assert(dynamic_cast<impl*>(c3_->c2_->p_.get()));
-    assert(c3_->c1_.get() == c3_->c2_->c1_.get());
-    assert(i_ == c3_->c1_->i_);
-    assert(d_ == c3_->c1_->d_);
-    assert(i_ == c3_->c1__.i_);
-    assert(d_ == c3_->c1__.d_);
-    assert(i_ == c3_->c2_->c1_->i_);
-    assert(d_ == c3_->c2_->c1_->d_);
-
-    return 0;
+    BOOST_CHECK(dynamic_cast<impl*>(c3_->c2_->p_.get()));
+    BOOST_CHECK_EQUAL(c3_->c1_.get(), c3_->c2_->c1_.get());
+    BOOST_CHECK_EQUAL(i, c3_->c1_->i_);
+    BOOST_CHECK_EQUAL(d, c3_->c1_->d_);
+    BOOST_CHECK_EQUAL(i, c3_->c1__.i_);
+    BOOST_CHECK_EQUAL(d, c3_->c1__.d_);
+    BOOST_CHECK_EQUAL(i, c3_->c2_->c1_->i_);
+    BOOST_CHECK_EQUAL(d, c3_->c2_->c1_->d_);
+    BOOST_CHECK_EQUAL(3u, v.size());
+    BOOST_CHECK_EQUAL(v.size(), c3_->v_.size());
+    BOOST_CHECK_EQUAL(v[0], c3_->v_[0]);
+    BOOST_CHECK_EQUAL(v[1], c3_->v_[1]);
+    BOOST_CHECK_EQUAL(v[2], c3_->v_[2]);
 }
 
