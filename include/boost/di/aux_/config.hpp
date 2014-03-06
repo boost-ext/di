@@ -15,7 +15,9 @@
     #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
 #endif
 
-#if defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS)
+#if defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS) || \
+    (BOOST_DI_CFG_CTOR_LIMIT_SIZE % 10) ||           \
+    (BOOST_MPL_LIMIT_VECTOR_SIZE % 10)
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
