@@ -22,6 +22,7 @@
     #include <boost/utility/enable_if.hpp>
     #include <boost/type_traits/is_class.hpp>
     #include <boost/type_traits/is_same.hpp>
+    #include <boost/type_traits/is_abstract.hpp>
     #include <boost/mpl/string.hpp>
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/if.hpp>

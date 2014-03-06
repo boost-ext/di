@@ -1,30 +1,31 @@
 #!/bin/bash
 
 dump_file() {
+    args=${@:4}
     tmp=`mktemp`
     rm -rf $tmp
     mkdir $tmp
 
     cat $1 | grep "#include" | grep -v PP_ | grep -v "preprocess" | while read include; do
-		if [[ "$include" =~ "di/aux_/config.hpp" ]]; then
+        if [[ "$include" =~ "di/aux_/config.hpp" ]]; then
             echo
         elif [[ "$include" =~ "di/aux_" ]] ||
-		   [[ "$include" =~ "inject.hpp" ]] ||
-		   [[ "$include" =~ "di.hpp" ]]; then
-			echo $include >> /tmp/i.hpp
-		else
-			echo $include | sed "s/boost\/di\//boost\/$3\//g" >> /tmp/i.hpp
-		fi
+           [[ "$include" =~ "inject.hpp" ]] ||
+           [[ "$include" =~ "di.hpp" ]]; then
+            echo $include >> /tmp/i.hpp
+        else
+            echo $include | sed "s/boost\/di\//boost\/$3\//g" >> /tmp/i.hpp
+        fi
 
-		file=`echo $include | sed "s/[^<^\"]*[\"<]\([^>\"]*\)[\">].*/\1/"`
-		mkdir -p $tmp/`dirname $file`
-		touch $tmp/$file
-	done
+        file=`echo $include | sed "s/[^<^\"]*[\"<]\([^>\"]*\)[\">].*/\1/"`
+        mkdir -p $tmp/`dirname $file`
+        touch $tmp/$file
+    done
 
-	mkdir -p $tmp/`dirname $1`
-	cp $1 $tmp/$1
+    mkdir -p $tmp/`dirname $1`
+    cp $1 $tmp/$1
 
-	$CXX -E $1 -CC -I$tmp -include $2 | grep -v "^#" | sed '/\/\*.*\*\// d; /\/\*/,/\*\// d' | grep -v "^/" | cat -s
+    $CXX -E $1 -CC -I$tmp -include $2 $args | grep -v "^#" | sed '/\/\*.*\*\// d; /\/\*/,/\*\// d' | grep -v "^/" | cat -s
 
     rm -rf $tmp
 }
@@ -40,8 +41,8 @@ guard_begin() {
     echo "// DO NOT modify by hand!"
     echo "//"
 
-    echo "#ifndef BOOST_DI_AUX_PREPROCESSED_DI_HPP"
-    echo "#define BOOST_DI_AUX_PREPROCESSED_DI_HPP"
+    echo "#ifndef BOOST_DI_PREPROCESSED_`echo $1 | tr '[:lower:]' '[:upper:]' | tr '.' '_'`"
+    echo "#define BOOST_DI_PREPROCESSED_`echo $1 | tr '[:lower:]' '[:upper:]' | tr '.' '_'`"
     echo
 }
 
@@ -70,30 +71,53 @@ genereate_files() {
     done
 }
 
-generate_preprocessed() {
-    rm -rf boost/di/aux_/preprocessed/di.hpp /tmp/i.hpp /tmp/f.hpp
-    mkdir -p boost/di/aux_/preprocessed/
+generate_name() {
+    tmp=`mktemp`
+    echo "BOOST_DI_CFG_CTOR_LIMIT_SIZE BOOST_MPL_LIMIT_VECTOR_SIZE" > $tmp.hpp
+    $CXX -E -P $@ $tmp.hpp | tr ' ' '_' | xargs -i% echo di_%_c.hpp
+    rm -f $tmp
+}
 
-    guard_begin > boost/di/aux_/preprocessed/di.hpp
+generate_preprocessed() {
+    args=${@:4}
+    name=`generate_name $args`
+    rm -f /tmp/i.hpp /tmp/f.hpp
+    mkdir -p boost/di/preprocessed 2>/dev/null
+
+    guard_begin $name > boost/di/preprocessed/$name
 
     echo -n .
-    for file in `genereate_files "boost/di.hpp" | cat -n | sort -uk2 | sort -nk1 | cut -f2-`; do
-		if [[ "$file" =~ "di/aux_" ]] ||
-		   [[ "$file" =~ "inject.hpp" ]] ||
-		   [[ "$file" =~ "di.hpp" ]]; then
-			continue;
-		fi
+    for file in `cat /tmp/files.hpp`; do
+        if [[ "$file" =~ "di/aux_" ]] ||
+           [[ "$file" =~ "inject.hpp" ]] ||
+           [[ "$file" =~ "di.hpp" ]]; then
+            continue;
+        fi
 
         echo -n .
-		dump_file $file $3 $2 >> /tmp/f.hpp
+        dump_file $file $3 $2 $args >> /tmp/f.hpp
     done
-    includes >> boost/di/aux_/preprocessed/di.hpp
-    cat /tmp/f.hpp >> boost/di/aux_/preprocessed/di.hpp
+    includes >> boost/di/preprocessed/$name
+    cat /tmp/f.hpp >> boost/di/preprocessed/$name
 
-    guard_end >> boost/di/aux_/preprocessed/di.hpp
+    guard_end >> boost/di/preprocessed/$name
+}
+
+generate() {
+    generate_preprocessed "boost" "di\/preprocessed" "$dir/config.hpp" $@
+    echo "done -> boost/di/preprocessed/$name"
 }
 
 dir=`readlink -f \`dirname $0\``
-cd $dir/../include && generate_preprocessed "boost" "di\/aux_\/preprocessed" "$dir/config.hpp"
-echo done
+cd $dir/../include
+genereate_files "boost/di.hpp" | cat -n | sort -uk2 | sort -nk1 | cut -f2- > /tmp/files.hpp
+
+generate -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=10 -DBOOST_MPL_LIMIT_VECTOR_SIZE=20
+generate -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=10 -DBOOST_MPL_LIMIT_VECTOR_SIZE=30
+generate -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=10 -DBOOST_MPL_LIMIT_VECTOR_SIZE=40
+generate -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=10 -DBOOST_MPL_LIMIT_VECTOR_SIZE=50
+generate -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=20 -DBOOST_MPL_LIMIT_VECTOR_SIZE=20
+generate -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=20 -DBOOST_MPL_LIMIT_VECTOR_SIZE=30
+generate -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=20 -DBOOST_MPL_LIMIT_VECTOR_SIZE=40
+generate -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=20 -DBOOST_MPL_LIMIT_VECTOR_SIZE=50
 

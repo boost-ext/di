@@ -9,20 +9,20 @@
 
 #include <boost/config.hpp>
 
-#if !defined(BOOST_DI_STD_SMART_PTR) && \
-    !defined(BOOST_DI_TR1_SMART_PTR) && \
-    !defined(BOOST_DI_BOOST_SMART_PTR)
+#if !defined(BOOST_DI_CFG_STD_SMART_PTR) && \
+    !defined(BOOST_DI_CFG_TR1_SMART_PTR) && \
+    !defined(BOOST_DI_CFG_BOOST_SMART_PTR)
 
     #if !defined(BOOST_NO_CXX11_SMART_PTR)
-        #define BOOST_DI_STD_SMART_PTR
+        #define BOOST_DI_CFG_STD_SMART_PTR
     #elif defined(BOOST_HAS_TR1_SHARED_PTR)
-        #define BOOST_DI_TR1_SMART_PTR
+        #define BOOST_DI_CFG_TR1_SMART_PTR
     #else
-        #define BOOST_DI_BOOST_SMART_PTR
+        #define BOOST_DI_CFG_BOOST_SMART_PTR
     #endif
 #endif
 
-#if defined(BOOST_DI_STD_SMART_PTR)
+#if defined(BOOST_DI_CFG_STD_SMART_PTR)
 
     #include <memory>
 
@@ -39,7 +39,7 @@
     } // namespace boost
     } // namespace di
 
-#elif defined(BOOST_DI_TR1_SMART_PTR)
+#elif defined(BOOST_DI_CFG_TR1_SMART_PTR)
 
     #include <memory>
 

@@ -7,9 +7,33 @@
 #ifndef BOOST_DI_HPP
 #define BOOST_DI_HPP
 
-#if defined(BOOST_DI_PREPROCESSED)
-    #include "boost/di/aux_/preprocessed/di.hpp"
+#include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/stringize.hpp>
+
+#include "boost/di/aux_/config.hpp"
+
+#if !defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS) &&       \
+    (                                                       \
+        BOOST_DI_CFG_CTOR_LIMIT_SIZE >= 10 &&               \
+        BOOST_DI_CFG_CTOR_LIMIT_SIZE <= 20 &&               \
+        BOOST_DI_CFG_CTOR_LIMIT_SIZE % 10 == 0              \
+    )                                                       \
+    &&                                                      \
+    (                                                       \
+        BOOST_MPL_LIMIT_VECTOR_SIZE >= 20 &&                \
+        BOOST_MPL_LIMIT_VECTOR_SIZE <= 50 &&                \
+        BOOST_MPL_LIMIT_VECTOR_SIZE % 10 == 0               \
+    )
+
+    #include BOOST_PP_STRINGIZE( 							\
+        BOOST_PP_CAT(boost/di/preprocessed/di_,             \
+        BOOST_PP_CAT(BOOST_DI_CFG_CTOR_LIMIT_SIZE, 			\
+        BOOST_PP_CAT(_, 									\
+        BOOST_PP_CAT(BOOST_MPL_LIMIT_VECTOR_SIZE, _c.hpp 	\
+    )))))
+
 #else
+
     // inject
     #include "boost/di/inject.hpp"
 
@@ -37,6 +61,7 @@
     #include "boost/di/policies/circular_dependencies.hpp"
     #include "boost/di/policies/creation_ownership.hpp"
     #include "boost/di/policies/scopes_permission.hpp"
+
 #endif
 
 #endif

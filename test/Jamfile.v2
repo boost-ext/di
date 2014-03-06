@@ -16,7 +16,7 @@ project :
         <define>BOOST_TEST_MODULE=di_test
 ;
 
-rule run-test ( std * : src : ctor * : defines * : force_bracket * ) {
+rule run-test ( std * : src : ctor * : defines * : force_bracket * : preprocessed_headers * ) {
     common_toolset = ;
 
     if $(std) {
@@ -25,6 +25,10 @@ rule run-test ( std * : src : ctor * : defines * : force_bracket * ) {
             <toolset>clang:<cxxflags>"-std=$(std) -include common/config.hpp"
             <toolset>intel:<cxxflags>"-std=$(std) -include common/config.hpp"
         ;
+    }
+
+    if ! $(preprocessed_headers) {
+        common_toolset += <define>BOOST_DI_CFG_NO_PREPROCESSED_HEADERS ;
     }
 
     if $(ctor) {
@@ -39,12 +43,16 @@ rule run-test ( std * : src : ctor * : defines * : force_bracket * ) {
     }
 }
 
-rule compile-fail-test ( std * : src : ctor * : defines * : force_bracket * ) {
+rule compile-fail-test ( std * : src : ctor * : defines * : force_bracket * : preprocessed_headers * ) {
     common_toolset =
         <toolset>gcc:<cxxflags>"-std=$(std) -include common/config.hpp -Wfatal-errors"
         <toolset>clang:<cxxflags>"-std=$(std) -include common/config.hpp -Wfatal-errors"
         <toolset>intel:<cxxflags>"-std=$(std) -include common/config.hpp -Wfatal-errors"
     ;
+
+    if ! $(preprocessed_headers) {
+        common_toolset += <define>BOOST_DI_CFG_NO_PREPROCESSED_HEADERS ;
+    }
 
     if $(ctor) {
         inject_macro = "\"BOOST_DI_INJECT(type, ...) = type(__VA_ARGS__)\"" ;
@@ -113,7 +121,7 @@ test-suite "module tests" :
     [ run-test c++11 : mt/make_injector_mt.cpp ]
     [ run-test c++11 : mt/make_injector_mt.cpp : ctor_make_injector_mt ]
     [ run-test c++11 : mt/injector_limit_size_mt.cpp : :
-        <define>BOOST_DI_CTOR_LIMIT_SIZE=30
+        <define>BOOST_DI_CFG_CTOR_LIMIT_SIZE=30
         <define>BOOST_MPL_LIMIT_VECTOR_SIZE=30
     ]
 ;
@@ -125,8 +133,8 @@ test-suite "functional tests" :
     [ run-test c++03 : ft/di_ft_cpp_03.cpp ]
     [ run-test c++03 : ft/di_ft_cpp_03.cpp : ctor_di_ft_cpp_03 ]
 
-    [ run-test c++03 : ft/di_ft_cpp_tr1.cpp :                    : <define>BOOST_DI_TR1_SMART_PTR ]
-    [ run-test c++11 : ft/di_ft_cpp_tr1.cpp : ctor_di_ft_cpp_tr1 : <define>BOOST_DI_TR1_SMART_PTR : force_bracket ]
+    [ run-test c++03 : ft/di_ft_cpp_tr1.cpp :                    : <define>BOOST_DI_CFG_TR1_SMART_PTR ]
+    [ run-test c++11 : ft/di_ft_cpp_tr1.cpp : ctor_di_ft_cpp_tr1 : <define>BOOST_DI_CFG_TR1_SMART_PTR : force_bracket ]
 ;
 
 test-suite "fail tests" :
@@ -144,12 +152,12 @@ test-suite "fail tests" :
     [ compile-fail-test c++03 : fail/injector_ctor_one_arg_fail_cpp_03.cpp ]
     [ compile-fail-test c++11 : fail/injector_shared_by_copy_fail.cpp ]
     [ compile-fail-test c++11 : fail/injector_shared_by_copy_fail.cpp : ctor_injector_shared_by_copy_fail ]
-    [ compile-fail-test c++03 : fail/injector_lack_of_shared_ptr_fail.cpp :                                          : <define>BOOST_DI_TR1_SMART_PTR ]
-    [ compile-fail-test c++03 : fail/injector_lack_of_shared_ptr_fail.cpp : ctor_injector_lack_of_shared_ptr_fail : <define>BOOST_DI_TR1_SMART_PTR ]
+    [ compile-fail-test c++03 : fail/injector_lack_of_shared_ptr_fail.cpp :                                       : <define>BOOST_DI_CFG_TR1_SMART_PTR ]
+    [ compile-fail-test c++03 : fail/injector_lack_of_shared_ptr_fail.cpp : ctor_injector_lack_of_shared_ptr_fail : <define>BOOST_DI_CFG_TR1_SMART_PTR ]
 ;
 
 test-suite "performance tests" :
-    [ run-test c++11 : pt/compilation_pt.cpp : preprocessed_compilation_pt_cpp_11 : <define>BOOST_DI_PREPROCESSED <define>BOOST_DI_BOOST_SMART_PTR ] #ftime-report
-    [ run-test c++03 : pt/compilation_pt.cpp : preprocessed_compilation_pt_cpp_03 : <define>BOOST_DI_PREPROCESSED <define>BOOST_DI_BOOST_SMART_PTR ] #ftime-report
+    [ run-test c++11 : pt/compilation_pt.cpp : preprocessed_compilation_pt_cpp_11 : <define>BOOST_DI_CFG_BOOST_SMART_PTR : : preprocessed_headers ] #ftime-report
+    [ run-test c++03 : pt/compilation_pt.cpp : preprocessed_compilation_pt_cpp_03 : <define>BOOST_DI_CFG_BOOST_SMART_PTR : : preprocessed_headers ] #ftime-report
 ;
 

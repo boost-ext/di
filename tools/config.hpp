@@ -18,16 +18,8 @@
 
 // ctor
 
-#if !defined(BOOST_DI_CTOR_LIMIT_SIZE)
-    #define BOOST_DI_CTOR_LIMIT_SIZE 20
-#endif
-
-#if !defined(BOOST_MPL_LIMIT_VECTOR_SIZE)
-    #define BOOST_MPL_LIMIT_VECTOR_SIZE 20
-#endif
-
 #define BOOST_DI_CTOR_LIMIT_FROM(begin)         \
-    (begin, BOOST_DI_CTOR_LIMIT_SIZE)
+    (begin, BOOST_DI_CFG_CTOR_LIMIT_SIZE)
 
 #define BOOST_DI_TYPES(T)                       \
      BOOST_PP_ENUM_PARAMS(                      \

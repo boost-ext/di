@@ -19,6 +19,7 @@
 #include "boost/di/detail/builder.hpp"
 #include "boost/di/detail/pool.hpp"
 
+#include <cassert>
 #include <typeinfo>
 #include <map>
 #include <vector>
@@ -116,7 +117,7 @@ public:
                     }
                 }
 
-                throw std::runtime_error("conversion not allowed");
+                assert(false);
             }
         }
 
