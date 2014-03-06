@@ -43,7 +43,6 @@
 #include <boost/mpl/transform_view.hpp>
 #include <boost/mpl/transform.hpp>
 #include <boost/mpl/times.hpp>
-#include <boost/mpl/string.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/set.hpp>
 #include <boost/mpl/range_c.hpp>
@@ -1506,6 +1505,12 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
 
 
     namespace boost {
+
+    namespace mpl {
+        struct string_tag;
+        template<typename> struct c_str;
+    } // namespace mpl
+
     namespace di {
     namespace type_traits {
 
@@ -5537,7 +5542,7 @@ public:
                     }
                 }
 
-                throw std::runtime_error("conversion not allowed");
+                assert(false);
             }
         }
 

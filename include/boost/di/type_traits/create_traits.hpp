@@ -23,7 +23,6 @@
     #include <boost/type_traits/is_class.hpp>
     #include <boost/type_traits/is_same.hpp>
     #include <boost/type_traits/is_abstract.hpp>
-    #include <boost/mpl/string.hpp>
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/if.hpp>
     #include <boost/mpl/bool.hpp>
@@ -33,6 +32,12 @@
     #include <boost/mpl/aux_/yes_no.hpp>
 
     namespace boost {
+
+    namespace mpl {
+        struct string_tag;
+        template<typename> struct c_str;
+    } // namespace mpl
+
     namespace di {
     namespace type_traits {
 
