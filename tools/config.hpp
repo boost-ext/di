@@ -16,8 +16,6 @@
 #include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/preprocessor/arithmetic/sub.hpp>
 
-// ctor
-
 #define BOOST_DI_CTOR_LIMIT_FROM(begin)         \
     (begin, BOOST_DI_CFG_CTOR_LIMIT_SIZE)
 
@@ -53,8 +51,6 @@
        , arg                                    \
      )
 
-// mpl
-
 #define BOOST_DI_TYPES_MPL_LIMIT_FROM(begin)    \
     (begin, BOOST_MPL_LIMIT_VECTOR_SIZE)
 
@@ -76,8 +72,6 @@
          BOOST_MPL_LIMIT_VECTOR_SIZE            \
        , T                                      \
      )
-
-// assert
 
 #if !defined(BOOST_DI_ASSERT_MSG)
     #define BOOST_DI_ASSERT_MSG(c, msg, type)   \
