@@ -15,30 +15,13 @@
     #include "boost/di/type_traits/create_traits.hpp"
     #include "boost/di/type_traits/make_plain.hpp"
     #include "boost/di/type_traits/is_same_base_of.hpp"
-
-    #include "boost/di/concepts/type_traits/name.hpp"
-    #include "boost/di/concepts.hpp"
     #include "boost/di/detail/binders/static_binder.hpp"
     #include "boost/di/detail/binders/dynamic_binder.hpp"
 
-    #include <typeinfo>
-    #include <map>
-    #include <vector>
-    #include <typeinfo>
-    #include <boost/config.hpp>
-    #include <boost/bind.hpp>
-    #include <boost/function.hpp>
-    #include <boost/any.hpp>
-    #include <boost/type.hpp>
-    #include <boost/preprocessor/repetition/repeat.hpp>
-    #include <boost/type_traits/is_base_of.hpp>
-    #include <boost/type_traits/is_polymorphic.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/empty.hpp>
-    #include <boost/mpl/at.hpp>
     #include <boost/mpl/push_back.hpp>
-    #include <boost/mpl/has_xxx.hpp>
 
     namespace boost {
     namespace di {

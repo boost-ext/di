@@ -14,32 +14,18 @@
     #include "boost/di/detail/pool.hpp"
     #include "boost/di/detail/creator.hpp"
 
-    #include <typeinfo>
     #include <vector>
-    #include <map>
-    #include <boost/preprocessor/iteration/iterate.hpp>
-    #include <boost/type.hpp>
-    #include <boost/bind.hpp>
-    #include <boost/function.hpp>
     #include <boost/non_type.hpp>
-    #include <boost/any.hpp>
     #include <boost/type_traits/is_same.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/typeof/typeof.hpp>
     #include <boost/mpl/vector.hpp>
-    #include <boost/mpl/is_sequence.hpp>
-    #include <boost/mpl/fold.hpp>
     #include <boost/mpl/bool.hpp>
-    #include <boost/mpl/transform.hpp>
-    #include <boost/mpl/set.hpp>
     #include <boost/mpl/pop_front.hpp>
     #include <boost/mpl/front.hpp>
-    #include <boost/mpl/push_back.hpp>
-    #include <boost/mpl/insert.hpp>
     #include <boost/mpl/contains.hpp>
     #include <boost/mpl/aux_/yes_no.hpp>
     #include <boost/mpl/has_xxx.hpp>
-    #include <boost/mpl/assert.hpp>
 
     namespace boost {
     namespace di {
