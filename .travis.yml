@@ -15,8 +15,8 @@ before_install:
   - mkdir boost_1_54_0/libs/di
   - cp -r doc example include test boost_1_54_0/libs/di
   - cd boost_1_54_0
-  - if [ "$CXX" = "g++" ]; then ./bootstrap.sh --toolset=gcc; fi
-  - if [ "$CXX" = "clang++" ]; then ./bootstrap.sh --toolset=clang; fi
+  - if [ "$CXX" = "g++" ]; then ./bootstrap.sh --with-toolset=gcc; fi
+  - if [ "$CXX" = "clang++" ]; then ./bootstrap.sh --with-toolset=clang; fi
 
 script:
   - pushd .
