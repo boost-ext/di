@@ -179,7 +179,7 @@ public:
 private:
     template<typename TBind, typename TScope>
     static int when(const std::type_info* t, const std::type_info* name, const std::vector<const std::type_info*>& call_stack) {
-        return TBind()(t, name, call_stack, TScope::priority::value/*type<scope>()*/);
+        return TBind()(t, name, call_stack, TScope::priority::value); // type<scope>()
     }
 
     template<

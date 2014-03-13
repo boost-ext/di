@@ -93,13 +93,13 @@
 
     template<typename TExpected, typename TGiven>
     TGiven* create_traits_impl(const policy<false>&) {
-		return new TGiven();
+        return new TGiven();
     }
 
     template<typename TExpected, typename TGiven>
     typename disable_if<is_abstract<TGiven>, TExpected*>::type
     create_traits_impl(const policy<true>&) {
-		return new TGiven();
+        return new TGiven();
     }
 
     template<typename TExpected, typename TGiven>
@@ -111,7 +111,7 @@
     template<typename TPolicy, typename TExpected, typename TGiven>
     typename disable_if<is_explicit<TGiven>, TExpected*>::type
     create_traits() {
-		return create_traits_impl<TExpected, TGiven>(TPolicy());
+        return create_traits_impl<TExpected, TGiven>(TPolicy());
     }
 
     template<typename T, typename TExpected, typename TGiven>

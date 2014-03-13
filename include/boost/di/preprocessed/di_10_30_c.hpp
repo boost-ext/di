@@ -132,11 +132,13 @@ public:
     {
         typedef typename T::nameq type;
     };
+
     template<typename T>
     struct maxx
     {
         typedef typename T::max type;
     };
+
     typedef typename mpl::fold<
         mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19 , T20 , T21 , T22 , T23 , T24 , T25 , T26 , T27 , T28 , T29>
       , mpl::vector0<>
@@ -398,6 +400,7 @@ public:
     {
         typedef typename T::context_type type;
     };
+
     typedef typename mpl::fold<
         TContext
       , mpl::vector0<>
@@ -859,215 +862,65 @@ private:
         typedef mpl::vector0<> type;
     };
 
-    template<typename R, typename Args0>
-    struct parameter_types<R(*)( Args0)>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0> type;
-    };
+    template<typename R, typename Args0> struct parameter_types<R(*)( Args0)> { typedef R result_type; typedef mpl::vector< Args0> type; };
 
-    template<typename R, typename T, typename Args0>
-    struct parameter_types<R(T::*)( Args0)>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0> type;
-    };
+    template<typename R, typename T, typename Args0> struct parameter_types<R(T::*)( Args0)> { typedef R result_type; typedef mpl::vector< Args0> type; };
 
-    template<typename R, typename T, typename Args0>
-    struct parameter_types<R(T::*)( Args0) const>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0> type;
-    };
+    template<typename R, typename T, typename Args0> struct parameter_types<R(T::*)( Args0) const> { typedef R result_type; typedef mpl::vector< Args0> type; };
 
-    template<typename R, typename Args0 , typename Args1>
-    struct parameter_types<R(*)( Args0 , Args1)>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1> type;
-    };
+    template<typename R, typename Args0 , typename Args1> struct parameter_types<R(*)( Args0 , Args1)> { typedef R result_type; typedef mpl::vector< Args0 , Args1> type; };
 
-    template<typename R, typename T, typename Args0 , typename Args1>
-    struct parameter_types<R(T::*)( Args0 , Args1)>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1> type;
-    };
+    template<typename R, typename T, typename Args0 , typename Args1> struct parameter_types<R(T::*)( Args0 , Args1)> { typedef R result_type; typedef mpl::vector< Args0 , Args1> type; };
 
-    template<typename R, typename T, typename Args0 , typename Args1>
-    struct parameter_types<R(T::*)( Args0 , Args1) const>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1> type;
-    };
+    template<typename R, typename T, typename Args0 , typename Args1> struct parameter_types<R(T::*)( Args0 , Args1) const> { typedef R result_type; typedef mpl::vector< Args0 , Args1> type; };
 
-    template<typename R, typename Args0 , typename Args1 , typename Args2>
-    struct parameter_types<R(*)( Args0 , Args1 , Args2)>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1 , Args2> type;
-    };
+    template<typename R, typename Args0 , typename Args1 , typename Args2> struct parameter_types<R(*)( Args0 , Args1 , Args2)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2> type; };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2>
-    struct parameter_types<R(T::*)( Args0 , Args1 , Args2)>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1 , Args2> type;
-    };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2> struct parameter_types<R(T::*)( Args0 , Args1 , Args2)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2> type; };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2>
-    struct parameter_types<R(T::*)( Args0 , Args1 , Args2) const>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1 , Args2> type;
-    };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2> struct parameter_types<R(T::*)( Args0 , Args1 , Args2) const> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2> type; };
 
-    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3>
-    struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3)>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1 , Args2 , Args3> type;
-    };
+    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3> struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3> type; };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3>
-    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3)>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1 , Args2 , Args3> type;
-    };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3> type; };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3>
-    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3) const>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1 , Args2 , Args3> type;
-    };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3) const> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3> type; };
 
-    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
-    struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3 , Args4)>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4> type;
-    };
+    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4> struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3 , Args4)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4> type; };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
-    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4)>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4> type;
-    };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4> type; };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
-    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4) const>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4> type;
-    };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4) const> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4> type; };
 
-    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
-    struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5)>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5> type;
-    };
+    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5> struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5> type; };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
-    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5)>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5> type;
-    };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5> type; };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
-    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5) const>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5> type;
-    };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5) const> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5> type; };
 
-    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
-    struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6)>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6> type;
-    };
+    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6> struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6> type; };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
-    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6)>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6> type;
-    };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6> type; };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
-    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6) const>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6> type;
-    };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6) const> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6> type; };
 
-    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
-    struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7)>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7> type;
-    };
+    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7> struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7> type; };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
-    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7)>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7> type;
-    };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7> type; };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
-    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7) const>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7> type;
-    };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7) const> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7> type; };
 
-    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
-    struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8)>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8> type;
-    };
+    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8> struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8> type; };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
-    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8)>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8> type;
-    };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8> type; };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
-    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8) const>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8> type;
-    };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8) const> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8> type; };
 
-    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
-    struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9)>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9> type;
-    };
+    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9> struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9> type; };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
-    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9)>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9> type;
-    };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9> type; };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
-    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9) const>
-    {
-        typedef R result_type;
-        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9> type;
-    };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9) const> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9> type; };
 
     } // namespace type_traits
     } // namespace di
@@ -1566,13 +1419,13 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
 
     template<typename TExpected, typename TGiven>
     TGiven* create_traits_impl(const policy<false>&) {
-  return new TGiven();
+        return new TGiven();
     }
 
     template<typename TExpected, typename TGiven>
     typename disable_if<is_abstract<TGiven>, TExpected*>::type
     create_traits_impl(const policy<true>&) {
-  return new TGiven();
+        return new TGiven();
     }
 
     template<typename TExpected, typename TGiven>
@@ -1584,7 +1437,7 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
     template<typename TPolicy, typename TExpected, typename TGiven>
     typename disable_if<is_explicit<TGiven>, TExpected*>::type
     create_traits() {
-  return create_traits_impl<TExpected, TGiven>(TPolicy());
+        return create_traits_impl<TExpected, TGiven>(TPolicy());
     }
 
     template<typename T, typename TExpected, typename TGiven>
@@ -2436,8 +2289,7 @@ private:
 
         template<
             typename R
-           
-           
+
         >
         class callback0
         {
@@ -2447,19 +2299,15 @@ private:
 
             callback0(
                 const f_t& f
-               
-               
+
             ) : f(f)
-               
-               
+
             { }
 
             R operator()() const { return f(); }
 
         private:
             f_t f;
-
-           
 
         };
 
@@ -2851,7 +2699,7 @@ private:
               , args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9
             );
         }
-        };
+ };
     };
 
     } // namespace scopes
@@ -6599,8 +6447,6 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
                 type_traits::policy<
                     mpl::empty<typename TDeps::types>::value
                 >()
-               
-               
 
             )
         );
@@ -7155,6 +7001,7 @@ public:
 private:
     template<typename TBind, typename TScope>
     static int when(const std::type_info* t, const std::type_info* name, const std::vector<const std::type_info*>& call_stack) {
+        return TBind()(t, name, call_stack, TScope::priority::value); // type<scope>()
     }
 
     template<
@@ -8849,9 +8696,9 @@ private:
     public:
         injector() { }
 
-  injector<> operator()() const {
-   return injector<>();
-  }
+        injector<> operator()() const {
+            return injector<>();
+        }
 
     template< typename Args0>
     explicit injector( Args0 args0)
@@ -9572,7 +9419,7 @@ private:
             injector_type( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29)
         );
     }
-    };
+ };
 
     } // namespace di
     } // namespace boost
@@ -9973,9 +9820,8 @@ public:
       , typename T
     >
     static void assert_policy() {
-        BOOST_MPL_ASSERT_MSG(is_allowed<typename T::type>::value, ARGUMENT_NOT_PERMITTED, (typename T::type))
+        BOOST_MPL_ASSERT_MSG(is_allowed<typename T::type>::value, ARGUMENT_NOT_PERMITTED, (typename T::type));
 
-         ;
     }
 };
 
@@ -10278,9 +10124,8 @@ public:
       , typename T
     >
     static void assert_policy() {
-       BOOST_MPL_ASSERT_MSG(is_unique_call_stack<typename T::call_stack>::value, CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED, (typename T::call_stack))
+       BOOST_MPL_ASSERT_MSG(is_unique_call_stack<typename T::call_stack>::value, CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED, (typename T::call_stack));
 
-         ;
     }
 };
 
@@ -10307,9 +10152,8 @@ public:
       , typename T
     >
     static typename enable_if<is_reference<typename T::type> >::type assert_policy() {
-        BOOST_MPL_ASSERT_MSG(false, CREATION_OWNERSHIP_IS_NOT_CLEAR, (typename T::type))
+        BOOST_MPL_ASSERT_MSG(false, CREATION_OWNERSHIP_IS_NOT_CLEAR, (typename T::type));
 
-         ;
     }
 };
 

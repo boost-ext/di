@@ -102,9 +102,9 @@
     public:
         injector() { }
 
-		injector<> operator()() const {
-			return injector<>();
-		}
+        injector<> operator()() const {
+            return injector<>();
+        }
 
         #define BOOST_PP_FILENAME_1 "boost/di/injector.hpp"
         #define BOOST_PP_ITERATION_LIMITS BOOST_DI_TYPES_MPL_LIMIT_FROM(1)

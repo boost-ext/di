@@ -5,9 +5,6 @@ compiler:
   #- clang
 
 before_install:
-  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-  - sudo apt-get update -qq
-  - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
   - sudo pip install cpp-coveralls --use-mirrors
   - rm -rf boost_1_54_0
   - wget -c http://downloads.sourceforge.net/project/boost/boost/1.54.0/boost_1_54_0.tar.gz
@@ -15,16 +12,23 @@ before_install:
   - mkdir boost_1_54_0/libs/di
   - cp -r doc example include test boost_1_54_0/libs/di
   - cd boost_1_54_0
-  - if [ "$CXX" = "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 90; fi
-  - if [ "$CXX" = "g++" ]; then ./bootstrap.sh --with-toolset=gcc; fi
-  - if [ "$CXX" = "clang++" ]; then ./bootstrap.sh --with-toolset=clang; fi
+  - if [ "$CXX" == "g++" ]; then sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y; fi
+  - if [ "$CXX" == "clang++" ]; then sudo add-apt-repository -y ppa:h-rayflood/llvm; fi
+  - sudo apt-get update -qq
+  - if [ "$CXX" == "g++" ]; then sudo apt-get install -qq g++-4.8; fi
+  - if [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 90; fi
+  - if [ "$CXX" == "g++" ]; then ./bootstrap.sh --with-toolset=gcc; fi
+  #- if [ "$CXX" == "clang++" ]; then sudo apt-get install --allow-unauthenticated -qq clang-3.4; fi
+  #- if [ "$CXX" == "clang++" ]; then sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-3.4 90; fi
+  - if [ "$CXX" == "clang++" ]; then ./bootstrap.sh --with-toolset=clang; fi
 
 script:
   - pushd .
   - cd libs/di/example && ../../../b2 -j2
   - popd
   - pushd .
-  - cd libs/di/test && ../../../b2 -j2 coverage
+  - if [ "$CXX" == "g++" ]; then cd libs/di/test && ../../../b2 -j2 coverage ; fi
+  - if [ "$CXX" == "clang++" ]; then cd libs/di/test && ../../../b2 -j2 ; fi
   - popd
 
 after_success:
