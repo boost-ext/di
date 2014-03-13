@@ -48,6 +48,7 @@ public:
     {
         typedef typename T::context_type type;
     };
+
     typedef typename mpl::fold<
         TContext
       ,  mpl::vector0<>

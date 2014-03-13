@@ -6,6 +6,16 @@
 #
 
 import testing ;
+import feature : extend-feature compose ;
+
+extend-feature variant : coverage ;
+
+compose <variant>coverage :
+    <cxxflags>-fprofile-arcs
+    <cxxflags>-ftest-coverage
+    <linkflags>-fprofile-arcs
+    <optimization>off
+;
 
 project :
     requirements
@@ -115,8 +125,8 @@ test-suite "module tests" :
     [ run-test c++11 : mt/injector_mt.cpp ]
     [ run-test c++11 : mt/injector_mt.cpp : ctor_injector_mt ]
 
-    [ run-test c++11 : mt/injector_runtime_mt.cpp ]
-    [ run-test c++11 : mt/injector_runtime_mt.cpp : ctor_injector_runtime_mt ]
+    #[ run-test c++11 : mt/injector_runtime_mt.cpp ]
+    #[ run-test c++11 : mt/injector_runtime_mt.cpp : ctor_injector_runtime_mt ]
 
     [ run-test c++11 : mt/make_injector_mt.cpp ]
     [ run-test c++11 : mt/make_injector_mt.cpp : ctor_make_injector_mt ]

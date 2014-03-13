@@ -1,22 +1,37 @@
 language: cpp
 
 compiler:
-  - clang
+  #- clang
+  - gcc
 
 before_install:
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+  - sudo apt-get update -qq
+  - [ "$CXX" = "g++" ] && sudo apt-get install -qq g++-4.8;
+  - [ "$CXX" = "g++" ] && export CXX="g++-4.8" CC="gcc-4.8";
+  - sudo pip install cpp-coveralls --use-mirrors
   - rm -rf boost_1_54_0
   - wget -c http://downloads.sourceforge.net/project/boost/boost/1.54.0/boost_1_54_0.tar.gz
   - tar zxf boost_1_54_0.tar.gz
   - mkdir boost_1_54_0/libs/di
   - cp -r doc example include test boost_1_54_0/libs/di
   - cd boost_1_54_0
-  - ./bootstrap.sh --with-toolset=clang
+  - ./bootstrap.sh
 
 script:
   - pushd .
   - cd libs/di/example && ../../../b2 -j2
   - popd
-  - cd libs/di/test && ../../../b2 -j2
+  - pushd .
+  - cd libs/di/test && ../../../b2 -j2 coverage
+  - popd
+
+after_success:
+    coveralls -r ~/Projects/boost/bin.v2/libs/di/test -b ~/Projects/boost/libs/di/test --exclude test
+
+branches:
+  only:
+    - master
 
 notifications:
   recipients:

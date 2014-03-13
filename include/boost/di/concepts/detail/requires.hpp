@@ -58,11 +58,13 @@ public:
     {
         typedef typename T::nameq type;
     };
+
     template<typename T>
     struct maxx
     {
         typedef typename T::max type;
     };
+
     typedef typename mpl::fold<
         mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
       , mpl::vector0<>
