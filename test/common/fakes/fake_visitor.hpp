@@ -16,6 +16,7 @@
 #include <boost/mpl/empty.hpp>
 #include <boost/mpl/pop_front.hpp>
 #include <boost/mpl/front.hpp>
+#include <boost/mpl/size.hpp>
 #include <boost/mpl/has_xxx.hpp>
 
 namespace boost {
@@ -28,59 +29,67 @@ class fake_visitor
 
     struct element
     {
-        element(const std::string& type, const std::string& scope)
+        element(const std::type_info* type, const std::type_info* scope)
             : type(type), scope(scope)
         { }
 
-        std::string type;
-        std::string scope;
+        const std::type_info* type;
+        const std::type_info* scope;
     };
 
     typedef std::vector<element> visits_type;
 
 public:
     ~fake_visitor() {
+        BOOST_CHECK_EQUAL(visits.size(), mpl::size<TSeq>::value);
         verify<TSeq>();
     }
 
     template<typename T>
     void operator()(const T&) const {
         visits.push_back(element(
-            typeid(typename T::type).name()
-          , typeid(typename T::scope).name()
+            &typeid(typename T::type)
+          , &typeid(typename T::scope)
         ));
     }
 
 private:
     template<typename Seq>
-    void verify(int = 0, typename enable_if<mpl::empty<Seq>>::type* = 0) { }
+    void verify(typename enable_if<mpl::empty<Seq>>::type* = 0) { }
 
     template<typename Seq>
-    void verify(int i = 0, typename disable_if<mpl::empty<Seq>>::type* = 0) {
+    void verify( typename disable_if<mpl::empty<Seq>>::type* = 0) {
         typedef typename mpl::front<Seq>::type type;
-        verify_impl<type>(i);
-        verify<typename mpl::pop_front<Seq>::type>(i + 1);
+        verify_impl<type>();
+        verify<typename mpl::pop_front<Seq>::type>();
     }
 
     template<typename T>
-    typename enable_if<has_first<T>>::type verify_impl(int i) {
-        BOOST_CHECK_EQUAL(
-            typeid(typename T::first).name()
-          , visits.at(i).type
-        );
-
-        BOOST_CHECK_EQUAL(
-            typeid(typename T::second).name()
-          , visits.at(i).scope
-        );
+    typename enable_if<has_first<T>>::type verify_impl() {
+        verify_type<typename T::first>();
+        verify_type<typename T::second>();
     }
 
     template<typename T>
-    typename disable_if<has_first<T>>::type verify_impl(int i) {
-        BOOST_CHECK_EQUAL(
-            typeid(T).name()
-          , visits.at(i).type
-        );
+    typename disable_if<has_first<T>>::type verify_impl() {
+        verify_type<T>();
+    }
+
+    template<typename T>
+    void verify_type() {
+        bool found = false;
+        for (const auto& v : visits) {
+            if (&typeid(T) == v.type || &typeid(T) == v.scope) {
+                found = true;
+                break;
+            }
+        }
+
+
+        if (!found) {
+            struct not_found { };
+            BOOST_CHECK_EQUAL(typeid(T).name(), typeid(not_found).name());
+        }
     }
 
     mutable visits_type visits;

@@ -27,7 +27,7 @@ script:
   - popd
 
 after_success:
-    coveralls -r ~/Projects/boost/bin.v2/libs/di/test -b ~/Projects/boost/libs/di/test --exclude test
+    coveralls -r bin.v2/libs/di/test -b libs/di/test --exclude test
 
 branches:
   only:

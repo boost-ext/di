@@ -42,13 +42,14 @@ rule run-test ( std * : src : ctor * : defines * : force_bracket * : preprocesse
     }
 
     if $(ctor) {
-        inject_macro = "\"BOOST_DI_INJECT(type, ...) = type(__VA_ARGS__)\"" ;
+        inject_macro = <define>"\"BOOST_DI_INJECT(type, ...) = type(__VA_ARGS__)\"" ;
         if $(std) = c++03 || $(force_bracket) {
-            inject_macro = "\"BOOST_DI_INJECT(type, args) = type args\"" ;
+            inject_macro = <define>"\"BOOST_DI_INJECT(type, args) = type args\"" ;
         }
 
-        run $(src) : : : $(common_toolset) <define>$(inject_macro) $(defines) : $(ctor) ;
+        run $(src) : : : $(common_toolset) $(inject_macro) $(defines) : $(ctor) ;
     } else {
+        defines += <define>BOOST_DI_CFG_TEST_CTOR ;
         run $(src) : : : $(common_toolset) $(defines) ;
     }
 }
@@ -65,13 +66,14 @@ rule compile-fail-test ( std * : src : ctor * : defines * : force_bracket * : pr
     }
 
     if $(ctor) {
-        inject_macro = "\"BOOST_DI_INJECT(type, ...) = type(__VA_ARGS__)\"" ;
+        inject_macro = <define>"\"BOOST_DI_INJECT(type, ...) = type(__VA_ARGS__)\"" ;
         if $(std) = c++03 || $(force_bracket) {
-            inject_macro = "\"BOOST_DI_INJECT(type, args) = type args\"" ;
+            inject_macro = <define>"\"BOOST_DI_INJECT(type, args) = type args\"" ;
         }
 
-        compile-fail $(src) : $(common_toolset) <define>$(inject_macro) $(defines) : $(ctor) ;
+        compile-fail $(src) : $(common_toolset) $(inject_macro) $(defines) : $(ctor) ;
     } else {
+        defines += <define>BOOST_DI_CFG_TEST_CTOR ;
         compile-fail $(src) : $(common_toolset) $(defines) ;
     }
 }
@@ -126,7 +128,7 @@ test-suite "module tests" :
     [ run-test c++11 : mt/injector_mt.cpp : ctor_injector_mt ]
 
     #[ run-test c++11 : mt/injector_runtime_mt.cpp ]
-    #[ run-test c++11 : mt/injector_runtime_mt.cpp : ctor_injector_runtime_mt ]
+    [ run-test c++11 : mt/injector_runtime_mt.cpp : ctor_injector_runtime_mt ]
 
     [ run-test c++11 : mt/make_injector_mt.cpp ]
     [ run-test c++11 : mt/make_injector_mt.cpp : ctor_make_injector_mt ]
