@@ -18,13 +18,15 @@ EOF
 
 for file in $(find . -iname "*.gcov" -print)
 do
-  cat >>coverage.json <<EOF
-    {
-      "name": "$(echo ${file} | sed -re 's%#%\/%g; s%.gcov$%%')",
-      "source": $(tail -n +3 ${file} | cut -d ':' -f 3- | python /tmp/json_encode.py),
-      "coverage": [$(tail -n +3 ${file} | cut -d ':' -f 1 | sed -re 's%^ +%%g; s%-%null%g; s%^[#=]+$%0%;' | tr $'\n' ',' | sed -re 's%,$%%')]
-    },
+    if [ "`head -1 $file | grep 'boost/di/' | grep -v preprocessed`" ]; then
+        cat >>coverage.json <<EOF
+        {
+          "name": "$(echo ${file} | sed -re 's%#%\/%g; s%.gcov$%%')",
+          "source": $(tail -n +3 ${file} | cut -d ':' -f 3- | python /tmp/json_encode.py),
+          "coverage": [$(tail -n +3 ${file} | cut -d ':' -f 1 | sed -re 's%^ +%%g; s%-%null%g; s%^[#=]+$%0%;' | tr $'\n' ',' | sed -re 's%,$%%')]
+        },
 EOF
+    fi
 done
 
 mv coverage.json coverage.json.tmp
