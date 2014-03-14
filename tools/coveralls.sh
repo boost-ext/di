@@ -1,4 +1,4 @@
-/usr/bin/gcov-4.8.2 --source-prefix $1 --preserve-paths --relative-only $(find ../../../bin.v2/libs/di/test -iname "*.gcda") >/dev/null
+/usr/bin/gcov-4.7 --source-prefix $1 --preserve-paths --relative-only $(find ../../../bin.v2/libs/di/test -iname "*.gcda") >/dev/null
 
 echo "#!/usr/bin/python
 import json,sys,codecs
