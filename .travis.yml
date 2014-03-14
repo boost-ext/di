@@ -34,7 +34,7 @@ script:
   #- find bin.v2/libs/di -type f -executable | xargs -i% valgrind --error-exitcode=-1 --leak-check=full --track-origins=yes --show-reachable=yes % >/dev/null
 
 after_success:
-  - if [ "$CXX" == "g++" ]; then coveralls.sh /usr/bin/gcov-4.7 libs/di/test ../../../bin.v2/libs/di/test boost/di/ L0bLvIumNdzR0XiKdKJSHgKopNnnO9mul ; fi
+  - if [ "$CXX" == "g++" ]; then coveralls.sh "/usr/bin/gcov-4.7" "libs/di/test" "../../../bin.v2/libs/di/test" "boost/di/" "L0bLvIumNdzR0XiKdKJSHgKopNnnO9mul" ; fi
 
 branches:
   only:
