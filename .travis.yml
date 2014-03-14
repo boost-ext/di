@@ -31,7 +31,7 @@ script:
   - if [ "$CXX" == "g++" ]; then cd libs/di/test && ../../../b2 -j2 coverage ; fi
   - if [ "$CXX" == "clang++" ]; then cd libs/di/test && ../../../b2 -j2 ; fi
   - popd
-  #- find bin.v2/libs/di -type f -executable | xargs -i% valgrind --leak-check=full --track-origins=yes --show-reachable=yes % >/dev/null
+  #- find bin.v2/libs/di -type f -executable | xargs -i% valgrind --error-exitcode=-1 --leak-check=full --track-origins=yes --show-reachable=yes % >/dev/null
 
 after_success:
   - if [ "$CXX" == "g++" ]; then cd libs/di/test && coveralls.sh; fi

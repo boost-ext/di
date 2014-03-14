@@ -12,7 +12,7 @@ cat >coverage.json <<EOF
   "service_name": "travis-ci",
   "service_job_id": "${TRAVIS_JOB_ID}",
   "run_at": "$(date --iso-8601=s)",
-  "repo_token" : "4NXfY3HFLXqTQqw7NJKnOD4lb3c99GS0O",
+  "repo_token" : "L0bLvIumNdzR0XiKdKJSHgKopNnnO9mul",
   "source_files": [
 EOF
 
