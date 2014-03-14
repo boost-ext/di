@@ -37,7 +37,7 @@ script:
 
 after_success:
   - sudo pip install cpp-coveralls --use-mirrors
-  - if [ "$CXX" == "g++" ]; then coveralls --gcov /usr/bin/gcov-4.7 -r bin.v2/libs/di/test -b libs/di/test --exclude test >/dev/null ; fi
+  - if [ "$CXX" == "g++" ]; then libs/di/tools/coveralls.sh; fi
 
 branches:
   only:
