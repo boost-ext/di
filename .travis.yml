@@ -2,7 +2,7 @@ language: cpp
 
 compiler:
   - gcc
-  #- clang
+  - clang
 
 before_install:
   - sudo pip install cpp-coveralls --use-mirrors
@@ -32,7 +32,7 @@ script:
   - popd
 
 after_success:
-    coveralls -r bin.v2/libs/di/test -b libs/di/test --exclude test
+    coveralls --gcov /usr/bin/gcov-4.7 -r bin.v2/libs/di/test -b libs/di/test --exclude test
 
 branches:
   only:
