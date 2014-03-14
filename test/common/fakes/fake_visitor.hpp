@@ -41,7 +41,7 @@ class fake_visitor
 
 public:
     ~fake_visitor() {
-        BOOST_CHECK_EQUAL(visits.size(), mpl::size<TSeq>::value);
+        BOOST_CHECK_EQUAL(visits.size(), static_cast<std::size_t>(mpl::size<TSeq>::value));
         verify<TSeq>();
     }
 
