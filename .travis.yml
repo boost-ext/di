@@ -13,6 +13,7 @@ before_install:
   - tar zxf boost_1_54_0.tar.gz
   - mkdir boost_1_54_0/libs/di
   - cp -r doc example include test boost_1_54_0/libs/di
+  - sudo cp tools/coveralls.sh /usr/bin
   - cd boost_1_54_0
   - if [ "$CXX" == "g++" ]; then sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y; fi
   - if [ "$CXX" == "clang++" ]; then sudo add-apt-repository -y ppa:h-rayflood/llvm; fi
@@ -36,7 +37,7 @@ script:
   #- find bin.v2/libs/di -type f -executable | xargs -i% valgrind --leak-check=full --track-origins=yes --show-reachable=yes % >/dev/null
 
 after_success:
-  - if [ "$CXX" == "g++" ]; then libs/di/tools/coveralls.sh; fi
+  - if [ "$CXX" == "g++" ]; then coveralls.sh; fi
 
 branches:
   only:
