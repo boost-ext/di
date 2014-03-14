@@ -5,6 +5,7 @@ compiler:
   - clang
 
 env:
+
   secure: "LU8flpdvLjaFIVgy8oqhHzy92AUPRgw3bRv+/Q91fnWNrvbeRVMEOj+vML+zDS7iU3L2ZbppNf/1YkavGhHh9HfD8PC0dYPEmU0xjS/3WdoKxMd0MCYUZxQ+6zgx3GLgZS2NxciVlruZSs9Q+hKbguvvjwGGSVin6LlMmC2KqGA="
 
 before_install:
@@ -37,7 +38,7 @@ script:
   #- find bin.v2/libs/di -type f -executable | xargs -i% valgrind --leak-check=full --track-origins=yes --show-reachable=yes % >/dev/null
 
 after_success:
-  - if [ "$CXX" == "g++" ]; then coveralls.sh; fi
+  - if [ "$CXX" == "g++" ]; then cd libs/di/test && coveralls.sh; fi
 
 branches:
   only:
