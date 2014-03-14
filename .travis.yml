@@ -4,6 +4,9 @@ compiler:
   - gcc
   - clang
 
+env:
+  secure: "LU8flpdvLjaFIVgy8oqhHzy92AUPRgw3bRv+/Q91fnWNrvbeRVMEOj+vML+zDS7iU3L2ZbppNf/1YkavGhHh9HfD8PC0dYPEmU0xjS/3WdoKxMd0MCYUZxQ+6zgx3GLgZS2NxciVlruZSs9Q+hKbguvvjwGGSVin6LlMmC2KqGA="
+
 before_install:
   - rm -rf boost_1_54_0
   - wget -c http://downloads.sourceforge.net/project/boost/boost/1.54.0/boost_1_54_0.tar.gz
@@ -30,7 +33,7 @@ script:
   - if [ "$CXX" == "g++" ]; then cd libs/di/test && ../../../b2 -j2 coverage ; fi
   - if [ "$CXX" == "clang++" ]; then cd libs/di/test && ../../../b2 -j2 ; fi
   - popd
-  - find bin.v2/libs/di -type f -executable | xargs -i% valgrind --leak-check=full --track-origins=yes --show-reachable=yes % >/dev/null
+  #- find bin.v2/libs/di -type f -executable | xargs -i% valgrind --leak-check=full --track-origins=yes --show-reachable=yes % >/dev/null
 
 after_success:
   - sudo pip install cpp-coveralls --use-mirrors
