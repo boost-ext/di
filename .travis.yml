@@ -32,7 +32,7 @@ script:
   - popd
 
 after_success:
-    coveralls --gcov /usr/bin/gcov-4.7 -r bin.v2/libs/di/test -b libs/di/test --exclude test
+  - if [ "$CXX" == "g++" ]; then coveralls --gcov /usr/bin/gcov-4.7 -r bin.v2/libs/di/test -b libs/di/test --exclude test ; fi
 
 branches:
   only:
