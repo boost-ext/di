@@ -21,7 +21,7 @@ do
     if [ "`head -1 $file | grep 'boost/di/' | grep -v preprocessed`" ]; then
         cat >> coverage.json << EOF
         {
-          "name": "$(head -1 $file | sed 's/.*\/\.\.\/\(.*\)/include\/\1/')",
+          "name": "$(head -1 $file | sed 's/.*\/include\/\(.*\)/include\/\1/')",
           "source": $(tail -n +3 ${file} | cut -d ':' -f 3- | python /tmp/json_encode.py),
           "coverage": [$(tail -n +3 ${file} | cut -d ':' -f 1 | sed -re 's%^ +%%g; s%-%null%g; s%^[#=]+$%0%;' | tr $'\n' ',' | sed -re 's%,$%%')]
         },
@@ -30,7 +30,7 @@ EOF
 done
 
 mv coverage.json coverage.json.tmp
-cat >coverage.json <(head -n -1 coverage.json.tmp) <(echo -e "    }\n  ]\n}")
+cat > coverage.json <(head -n -1 coverage.json.tmp) < (echo -e "    }\n  ]\n}")
 rm *.gcov coverage.json.tmp
 
 curl -F json_file=@coverage.json https://coveralls.io/api/v1/jobs
