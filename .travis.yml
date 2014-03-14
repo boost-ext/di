@@ -5,7 +5,6 @@ compiler:
   - clang
 
 before_install:
-  - sudo pip install cpp-coveralls --use-mirrors
   - rm -rf boost_1_54_0
   - wget -c http://downloads.sourceforge.net/project/boost/boost/1.54.0/boost_1_54_0.tar.gz
   - tar zxf boost_1_54_0.tar.gz
@@ -32,7 +31,10 @@ script:
   - popd
 
 after_success:
-  - if [ "$CXX" == "g++" ]; then coveralls --gcov /usr/bin/gcov-4.7 -r bin.v2/libs/di/test -b libs/di/test --exclude test >/dev/null ; fi
+  - sudo pip install cpp-coveralls --use-mirrors
+  - if [ "$CXX" == "g++" ]; then coveralls --repo-token ZGWLyqjs4IAi83zfx3kiK3gczN50f3DO7 --gcov /usr/bin/gcov-4.7 -r bin.v2/libs/di/test -b libs/di/test --exclude test >/dev/null ; fi
+  - sudo apt-get -qq install valgrind
+  - find ../../bin.v2/libs/di -type f -executable | xargs -i% valgrind --leak-check=full --track-origins=yes --show-reachable=yes %
 
 branches:
   only:
