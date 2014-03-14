@@ -36,7 +36,6 @@ script:
   #- find bin.v2/libs/di -type f -executable | xargs -i% valgrind --leak-check=full --track-origins=yes --show-reachable=yes % >/dev/null
 
 after_success:
-  - sudo pip install cpp-coveralls --use-mirrors
   - if [ "$CXX" == "g++" ]; then libs/di/tools/coveralls.sh; fi
 
 branches:
