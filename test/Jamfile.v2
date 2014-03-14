@@ -150,22 +150,22 @@ test-suite "functional tests" :
 ;
 
 test-suite "fail tests" :
-    #[ compile-fail-test c++11 : fail/detail/module_externals_fail.cpp ]
-    #[ compile-fail-test c++11 : fail/policies/arguments_permission_fail.cpp ]
-    #[ compile-fail-test c++11 : fail/policies/arguments_permission_fail.cpp : ctor_arguments_permission_fail ]
-    ##[ compile-fail-test c++11 : fail/policies/binding_correctness_fail.cpp ]
-    ##[ compile-fail-test c++11 : fail/policies/binding_correctness_ub_fail.cpp ]
-    ##[ compile-fail-test c++11 : fail/policies/circular_dependencies_fail.cpp ]
-    ##[ compile-fail-test c++11 : fail/policies/circular_dependencies_fail.cpp : ctor_circular_dependencies_fail ]
-    #[ compile-fail-test c++11 : fail/policies/creation_ownership_fail.cpp ]
-    ##[ compile-fail-test c++11 : fail/policies/scopes_permission_fail.cpp ]
-    #[ compile-fail-test c++11 : fail/injector_ctor_ambiguous_fail.cpp ]
-    #[ compile-fail-test c++11 : fail/injector_ctor_ambiguous_fail.cpp : ctor_injector_ctor_ambiguous_fail ]
-    #[ compile-fail-test c++03 : fail/injector_ctor_one_arg_fail_cpp_03.cpp ]
-    #[ compile-fail-test c++11 : fail/injector_shared_by_copy_fail.cpp ]
-    #[ compile-fail-test c++11 : fail/injector_shared_by_copy_fail.cpp : ctor_injector_shared_by_copy_fail ]
-    #[ compile-fail-test c++03 : fail/injector_lack_of_shared_ptr_fail.cpp :                                       : <define>BOOST_DI_CFG_TR1_SMART_PTR ]
-    #[ compile-fail-test c++03 : fail/injector_lack_of_shared_ptr_fail.cpp : ctor_injector_lack_of_shared_ptr_fail : <define>BOOST_DI_CFG_TR1_SMART_PTR ]
+    [ compile-fail-test c++11 : fail/detail/module_externals_fail.cpp ]
+    [ compile-fail-test c++11 : fail/policies/arguments_permission_fail.cpp ]
+    [ compile-fail-test c++11 : fail/policies/arguments_permission_fail.cpp : ctor_arguments_permission_fail ]
+    #[ compile-fail-test c++11 : fail/policies/binding_correctness_fail.cpp ]
+    #[ compile-fail-test c++11 : fail/policies/binding_correctness_ub_fail.cpp ]
+    #[ compile-fail-test c++11 : fail/policies/circular_dependencies_fail.cpp ]
+    #[ compile-fail-test c++11 : fail/policies/circular_dependencies_fail.cpp : ctor_circular_dependencies_fail ]
+    [ compile-fail-test c++11 : fail/policies/creation_ownership_fail.cpp ]
+    #[ compile-fail-test c++11 : fail/policies/scopes_permission_fail.cpp ]
+    [ compile-fail-test c++11 : fail/injector_ctor_ambiguous_fail.cpp ]
+    [ compile-fail-test c++11 : fail/injector_ctor_ambiguous_fail.cpp : ctor_injector_ctor_ambiguous_fail ]
+    [ compile-fail-test c++03 : fail/injector_ctor_one_arg_fail_cpp_03.cpp ]
+    [ compile-fail-test c++11 : fail/injector_shared_by_copy_fail.cpp ]
+    [ compile-fail-test c++11 : fail/injector_shared_by_copy_fail.cpp : ctor_injector_shared_by_copy_fail ]
+    [ compile-fail-test c++03 : fail/injector_lack_of_shared_ptr_fail.cpp :                                       : <define>BOOST_DI_CFG_TR1_SMART_PTR ]
+    [ compile-fail-test c++03 : fail/injector_lack_of_shared_ptr_fail.cpp : ctor_injector_lack_of_shared_ptr_fail : <define>BOOST_DI_CFG_TR1_SMART_PTR ]
 ;
 
 test-suite "performance tests" :
