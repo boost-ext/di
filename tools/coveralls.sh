@@ -1,4 +1,5 @@
-/usr/bin/gcov-4.7 --source-prefix $1 --preserve-paths --relative-only $(find ../../../bin.v2/libs/di/test -iname "*.gcda") >/dev/null
+cd $2
+$1 --preserve-paths --relative-only $(find $3 -iname "*.gcda") >/dev/null
 
 echo "#!/usr/bin/python
 import json,sys,codecs
@@ -12,13 +13,13 @@ cat >coverage.json <<EOF
   "service_name": "travis-ci",
   "service_job_id": "${TRAVIS_JOB_ID}",
   "run_at": "$(date --iso-8601=s)",
-  "repo_token" : "L0bLvIumNdzR0XiKdKJSHgKopNnnO9mul",
+  "repo_token" : "$5",
   "source_files": [
 EOF
 
 for file in $(find . -iname "*.gcov" -print)
 do
-    if [ "`head -1 $file | grep 'boost/di/' | grep -v preprocessed`" ]; then
+    if [ "`head -1 $file | grep '$4' | grep -v preprocessed`" ]; then
         cat >> coverage.json << EOF
         {
           "name": "$(head -1 $file | sed 's/.*\/include\/\(.*\)/include\/\1/')",
