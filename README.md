@@ -1,7 +1,6 @@
 # C++ Dependency Injection
 > "Don't call us, we'll call you", Hollywood principle
 
-
 ## Disclaimers
 This is not an official Boost library yet and there is no guarantee it will ever be.
 
