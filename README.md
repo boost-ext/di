@@ -1,5 +1,4 @@
-**C++ Dependency Injection**
-
+C++ Dependency Injection
 ===
 
 ### **Disclaimers**
