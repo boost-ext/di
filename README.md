@@ -1,10 +1,11 @@
 **C++ Dependency Injection**
+
 ===
 
 ### **Disclaimers**
 This is not an official Boost library yet and there is no guarantee it will ever be.
 
-## Introduction
+## *Introduction*
 DI is C++03/C++11, header only library providing compile time, macro free constructor dependency injection functionality.
 
 ### Hello World
@@ -17,7 +18,11 @@ struct i { virtual ~i() { } };
 struct impl : i { };
 
 struct hello_world {
-    hello_world(std::shared_ptr<i> p1, boost::shared_ptr<i> p2, int i, const std::string& txt) {
+    hello_world(std::shared_ptr<i> p1
+              , boost::shared_ptr<i> p2
+              , int i
+              , const std::string& txt)
+    {
         assert(dynamic_cast<impl*>(p1.get()));
         assert(dynamic_cast<impl*>(p2.get()));
         assert(p1.get() == p2.get());
