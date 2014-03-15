@@ -1,5 +1,5 @@
 # C++ Dependency Injection
-> "Don't call us, we'll call you" / Hollywood principle
+> "Don't call us, we'll call you", Hollywood principle
 
 
 ## Disclaimers
