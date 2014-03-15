@@ -99,7 +99,7 @@ test-suite "unit tests" :
     [ run-test c++11 : ut/type_traits/scope_traits_ut.cpp ]
 
     [ run-test c++11 : ut/detail/binders/static_binder_ut.cpp ]
-    #[ run-test c++11 : ut/detail/creator_ut.cpp ]
+    [ run-test c++11 : ut/detail/creator_ut.cpp ]
     [ run-test c++11 : ut/detail/pool_ut.cpp ]
 
     [ run-test c++11 : ut/policies/arguments_permission_ut.cpp ]
@@ -144,9 +144,6 @@ test-suite "functional tests" :
 
     [ run-test c++03 : ft/di_ft_cpp_03.cpp ]
     [ run-test c++03 : ft/di_ft_cpp_03.cpp : ctor_di_ft_cpp_03 ]
-
-    [ run-test c++03 : ft/di_ft_cpp_tr1.cpp :                    : <define>BOOST_DI_CFG_TR1_SMART_PTR ]
-    [ run-test c++11 : ft/di_ft_cpp_tr1.cpp : ctor_di_ft_cpp_tr1 : <define>BOOST_DI_CFG_TR1_SMART_PTR : force_bracket ]
 ;
 
 test-suite "fail tests" :
@@ -164,8 +161,6 @@ test-suite "fail tests" :
     [ compile-fail-test c++03 : fail/injector_ctor_one_arg_fail_cpp_03.cpp ]
     [ compile-fail-test c++11 : fail/injector_shared_by_copy_fail.cpp ]
     [ compile-fail-test c++11 : fail/injector_shared_by_copy_fail.cpp : ctor_injector_shared_by_copy_fail ]
-    [ compile-fail-test c++03 : fail/injector_lack_of_shared_ptr_fail.cpp :                                       : <define>BOOST_DI_CFG_TR1_SMART_PTR ]
-    [ compile-fail-test c++03 : fail/injector_lack_of_shared_ptr_fail.cpp : ctor_injector_lack_of_shared_ptr_fail : <define>BOOST_DI_CFG_TR1_SMART_PTR ]
 ;
 
 test-suite "performance tests" :

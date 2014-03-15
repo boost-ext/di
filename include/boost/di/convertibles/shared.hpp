@@ -20,6 +20,18 @@ namespace convertibles {
 template<typename T>
 class shared
 {
+    template<typename U, typename TShared = aux::shared_ptr<U> >
+    class sp_holder
+    {
+    public:
+        explicit sp_holder(const TShared& object)
+            : object_(object)
+        { }
+
+    private:
+        TShared object_;
+    };
+
 public:
     shared() { }
 
@@ -41,8 +53,19 @@ public:
     }
 
     template<typename I>
+    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) const {
+        aux_::shared_ptr<sp_holder<T> > sp(new sp_holder<T>(object_));
+        return aux_::shared_ptr<T>(sp, object_.get());
+    }
+
+    template<typename I>
     aux::shared_ptr<I> operator()(const type<const aux::shared_ptr<I>&>&) const {
         return object_;
+    }
+
+    template<typename I>
+    aux_::shared_ptr<I> operator()(const type<const aux_::shared_ptr<I>&>&) const {
+        return (*this)(type<aux_::shared_ptr<I> >());
     }
 
     template<typename I, typename TName>
@@ -51,8 +74,18 @@ public:
     }
 
     template<typename I, typename TName>
+    aux_::shared_ptr<I> operator()(const type<named<aux_::shared_ptr<I>, TName> >&) const {
+        return (*this)(type<aux_::shared_ptr<I> >());
+    }
+
+    template<typename I, typename TName>
     aux::shared_ptr<I> operator()(const type<named<const aux::shared_ptr<I>&, TName> >&) const {
         return object_;
+    }
+
+    template<typename I, typename TName>
+    aux_::shared_ptr<I> operator()(const type<named<const aux_::shared_ptr<I>&, TName> >&) const {
+        return (*this)(type<aux_::shared_ptr<I> >());
     }
 
     template<typename I>

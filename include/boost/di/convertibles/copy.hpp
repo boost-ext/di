@@ -12,7 +12,6 @@
 
 #include <boost/type.hpp>
 #include <boost/function.hpp>
-#include <boost/scoped_ptr.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_polymorphic.hpp>
 
@@ -24,6 +23,21 @@ template<typename T>
 class copy
 {
     typedef function<T*()> object_t;
+
+    template<typename I>
+    class scoped_ptr
+    {
+    public:
+        explicit scoped_ptr(I* ptr)
+            : ptr_(ptr)
+        { }
+
+        ~scoped_ptr() { delete ptr_; }
+        I& operator*() const { return *ptr_; }
+
+    private:
+        I* ptr_;
+    };
 
 public:
     template<typename I>
@@ -60,13 +74,29 @@ public:
     }
 
     template<typename I>
+    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) const {
+        return aux_::shared_ptr<I>(object_());
+    }
+
+    template<typename I>
     const aux::shared_ptr<I>& operator()(const type<const aux::shared_ptr<I>&>&) const {
         ref_ = aux::shared_ptr<I>(object_());
         return ref_;
     }
 
+    template<typename I>
+    const aux_::shared_ptr<I>& operator()(const type<const aux_::shared_ptr<I>&>&) const {
+        ref__ = aux_::shared_ptr<I>(object_());
+        return ref__;
+    }
+
     template<typename I, typename TName>
     I* operator()(const type<named<aux::shared_ptr<I>, TName> >&) const {
+        return object_();
+    }
+
+    template<typename I, typename TName>
+    I* operator()(const type<named<aux_::shared_ptr<I>, TName> >&) const {
         return object_();
     }
 
@@ -98,6 +128,7 @@ public:
 private:
     object_t object_;
     mutable aux::shared_ptr<T> ref_;
+    mutable aux_::shared_ptr<T> ref__;
 };
 
 } // namespace convertibles

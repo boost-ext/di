@@ -458,7 +458,7 @@ struct ref_sp_int
         assert(i);
     }
 
-    const aux::shared_ptr<int>& i_;
+    aux::shared_ptr<int> i_;
 };
 
 enum eid { e0 = 1 , e1 = 2 };

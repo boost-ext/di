@@ -48,8 +48,28 @@ public:
     }
 
     template<typename I>
+    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) {
+        return aux_::shared_ptr<I>(new I(value_));
+    }
+
+    template<typename I>
     const aux::shared_ptr<I>& operator()(const type<const aux::shared_ptr<I>& >&) {
         return aux::shared_ptr<I>(new I(value_));
+    }
+
+    template<typename I>
+    const aux_::shared_ptr<I>& operator()(const type<const aux_::shared_ptr<I>& >&) {
+        return aux_::shared_ptr<I>(new I(value_));
+    }
+
+    template<typename I, typename TName>
+    I* operator()(const type<named<aux::shared_ptr<I>, TName> >&) const {
+        return new I(value_);
+    }
+
+    template<typename I, typename TName>
+    I* operator()(const type<named<aux_::shared_ptr<I>, TName> >&) const {
+        return new I(value_);
     }
 
     template<typename I>

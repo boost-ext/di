@@ -85,6 +85,26 @@ BOOST_AUTO_TEST_CASE(call) {
     BOOST_CHECK((aux::shared_ptr<int>() == (session_.create(type_traits::policy<false>()))(type<aux::shared_ptr<int>>())));
 }
 
+BOOST_AUTO_TEST_CASE(call_args) {
+    session<>::scope<c2> session_;
+
+    fake_convertible<int> i(0);
+    fake_convertible<double> d(0.0);
+    fake_convertible<char> c('0');
+
+    session_.call(session_entry());
+    BOOST_CHECK((aux::shared_ptr<c2>() != (session_.create<type_traits::policy<false>, decltype(i), decltype(d), decltype(c)>(type_traits::policy<false>(), i, d, c))(type<aux::shared_ptr<c2>>())));
+
+    session_.call(session_exit());
+    BOOST_CHECK((aux::shared_ptr<c2>() == (session_.create<type_traits::policy<false>, decltype(i), decltype(d), decltype(c)>(type_traits::policy<false>(), i, d, c))(type<aux::shared_ptr<c2>>())));
+
+    session_.call(session_entry());
+    BOOST_CHECK((aux::shared_ptr<c2>() != (session_.create<type_traits::policy<false>, decltype(i), decltype(d), decltype(c)>(type_traits::policy<false>(), i, d, c))(type<aux::shared_ptr<c2>>())));
+
+    session_.call(session_exit());
+    BOOST_CHECK((aux::shared_ptr<c2>() == (session_.create<type_traits::policy<false>, decltype(i), decltype(d), decltype(c)>(type_traits::policy<false>(), i, d, c))(type<aux::shared_ptr<c2>>())));
+}
+
 } // namespace scopes
 } // namespace di
 } // namespace boost

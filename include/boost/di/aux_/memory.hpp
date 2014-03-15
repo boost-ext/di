@@ -7,24 +7,22 @@
 #ifndef BOOST_DI_AUX_MEMORY_HPP
 #define BOOST_DI_AUX_MEMORY_HPP
 
+#include <memory>
 #include <boost/config.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/weak_ptr.hpp>
 
 #if !defined(BOOST_DI_CFG_STD_SMART_PTR) && \
-    !defined(BOOST_DI_CFG_TR1_SMART_PTR) && \
     !defined(BOOST_DI_CFG_BOOST_SMART_PTR)
 
     #if !defined(BOOST_NO_CXX11_SMART_PTR)
         #define BOOST_DI_CFG_STD_SMART_PTR
-    #elif defined(BOOST_HAS_TR1_SHARED_PTR)
-        #define BOOST_DI_CFG_TR1_SMART_PTR
     #else
         #define BOOST_DI_CFG_BOOST_SMART_PTR
     #endif
 #endif
 
 #if defined(BOOST_DI_CFG_STD_SMART_PTR)
-
-    #include <memory>
 
     namespace boost {
     namespace di {
@@ -36,48 +34,44 @@
     using ::std::weak_ptr;
 
     } // namespace aux
+
+    namespace aux_ {
+    using ::boost::shared_ptr;
+    } // namespace aux_
+
     } // namespace boost
     } // namespace di
 
-#elif defined(BOOST_DI_CFG_TR1_SMART_PTR)
-
-    #include <memory>
-
-    #if !defined(BOOST_MSVC)
-        #include <tr1/memory>
-    #endif
+#elif defined(BOOST_DI_CFG_BOOST_SMART_PTR)
 
     namespace boost {
     namespace di {
     namespace aux {
 
     using ::std::auto_ptr;
-    template<typename> struct unique_ptr; // compile clean
-    using ::std::tr1::shared_ptr;
-    using ::std::tr1::weak_ptr;
-
-    } // namespace aux
-    } // namespace boost
-    } // namespace di
-
-#else
-
-    #include <memory>
-    #include <boost/shared_ptr.hpp>
-    #include <boost/weak_ptr.hpp>
-
-    namespace boost {
-    namespace di {
-    namespace aux {
-
-    using ::std::auto_ptr;
-    template<typename> struct unique_ptr; // compile clean
     using ::boost::shared_ptr;
     using ::boost::weak_ptr;
 
+    #if defined(BOOST_NO_CXX11_SMART_PTR)
+        template<typename> struct unique_ptr { }; // compile clean
+    #else
+        using ::std::unique_ptr;
+    #endif
+
     } // namespace aux
-    } // namespace boost
-    } // namespace di
+
+    namespace aux_ {
+
+    #if defined(BOOST_NO_CXX11_SMART_PTR)
+        template<typename T> struct shared_ptr { };
+    #else
+        using ::std::shared_ptr;
+    #endif
+
+    } // namespace aux_
+
+} // namespace boost
+} // namespace di
 
 #endif
 
