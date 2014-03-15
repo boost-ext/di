@@ -1,13 +1,14 @@
-C++ Dependency Injection
-===
+# C++ Dependency Injection
+> "Don't call us, we'll call you" | Hollywood principle
 
-### **Disclaimers**
+
+## Disclaimers
 This is not an official Boost library yet and there is no guarantee it will ever be.
 
-### **Introduction**
+## Introduction
 DI is C++03/C++11, header only library providing compile time, macro free constructor dependency injection functionality.
 
-### **Hello World**
+## Hello World
 ```cpp
 #include <boost/di.hpp>
 
@@ -41,7 +42,7 @@ int main() {
 }
 ```
 
-### **Main Features**
+## Main Features
 * Header only
 * Architecture independent (tested on x86/x86\_64)
 * Supports all POSIX and Windows operating systems (tested on Linux 3.8/Windows 7/8)
@@ -57,20 +58,20 @@ int main() {
 * Named parameters (named<int, my_int>)
 * Runtime visitor (generation UML diagrams)
 
-### **Tested compilers**
+## Tested compilers
 * Clang 3.2/3.3/3.4
 * GCC 4.7.3/4.8.1
 * Intel C++ 14.0.0
 * MinGW 4.7.3/4.8.1
 * Visual Studio 2013
 
-### **More information**
+## More information
 * [Documentation](http://krzysztof-jusiak.github.com/di/doc/html)
 * [Todo/Issues] (https://github.com/krzysztof-jusiak/di/issues?state=open)
 
-### **Continuous integration**
+## Continuous integration
 [![Build Status](https://travis-ci.org/krzysztof-jusiak/di.png?branch=master)](https://travis-ci.org/krzysztof-jusiak/di) [![Coverage Status](https://coveralls.io/repos/krzysztof-jusiak/di/badge.png?branch=master)](https://coveralls.io/r/krzysztof-jusiak/di?branch=master)
 
-### **License**
+## License
 Distributed under the [Boost Software License, Version 1.0](http://www.boost.org/LICENSE_1_0.txt).
 
