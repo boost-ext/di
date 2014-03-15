@@ -1,6 +1,7 @@
 **C++ Dependency Injection**
+===
 
-### Disclaimers
+### **Disclaimers**
 This is not an official Boost library yet and there is no guarantee it will ever be.
 
 ## Introduction
@@ -71,8 +72,8 @@ int main() {
 [![Build Status](https://travis-ci.org/krzysztof-jusiak/di.png?branch=master)](https://travis-ci.org/krzysztof-jusiak/di) [![Coverage Status](https://coveralls.io/repos/krzysztof-jusiak/di/badge.png?branch=master)](https://coveralls.io/r/krzysztof-jusiak/di?branch=master)
 
 ### More information
-[Documentation](http://krzysztof-jusiak.github.com/di/doc/html)
-[Todo/Issues] (https://github.com/krzysztof-jusiak/di/issues?state=open)
+* [Documentation](http://krzysztof-jusiak.github.com/di/doc/html)
+* [Todo/Issues] (https://github.com/krzysztof-jusiak/di/issues?state=open)
 
 ### License
 Distributed under the [Boost Software License, Version 1.0](http://www.boost.org/LICENSE_1_0.txt).
