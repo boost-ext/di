@@ -63,7 +63,7 @@ int main() {
 * GCC 4.7.3/4.8.1
 * Intel C++ 14.0.0
 * MinGW 4.7.3/4.8.1
-* Visual Studio 2013 RC / 2013
+* Visual Studio 2013
 
 ### **More information**
 * [Documentation](http://krzysztof-jusiak.github.com/di/doc/html)
