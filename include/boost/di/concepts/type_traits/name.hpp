@@ -9,11 +9,8 @@
 
 #include "boost/di/type_traits/remove_accessors.hpp"
 
-#include <vector>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/mpl/placeholders.hpp>
-#include <boost/mpl/bool.hpp>
 #include <boost/mpl/has_xxx.hpp>
 #include <boost/mpl/times.hpp>
 
@@ -22,35 +19,31 @@ namespace di {
 namespace concepts {
 namespace type_traits {
 
-BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
-
-template<typename T, typename = void>
-struct get_name
-{
-    struct no_name { };
-    typedef no_name type;
-};
-
-template<typename T>
-struct get_name<T, typename enable_if<
-    has_name<typename di::type_traits::remove_accessors<T>::type> >::type
->
-{
-    typedef typename di::type_traits::remove_accessors<T>::type::name type;
-};
-
 template<typename TName>
-struct name
+class name
 {
-    typedef TName nameq;
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
+
+    template<typename T, typename = void>
+    struct get_name
+    {
+        struct no_name { };
+        typedef no_name type;
+    };
+
+    template<typename T>
+    struct get_name<T, typename enable_if<
+        has_name<typename di::type_traits::remove_accessors<T>::type> >::type
+    >
+    {
+        typedef typename di::type_traits::remove_accessors<T>::type::name type;
+    };
+
+public:
     template<typename T, typename, typename>
     struct apply
         : is_same<typename get_name<T>::type, TName>
     { };
-
-    int operator()(const std::type_info*, const std::type_info* name, const std::vector<const std::type_info*>&) const {
-        return &typeid(TName) == name;
-    }
 };
 
 } // namespace type_traits

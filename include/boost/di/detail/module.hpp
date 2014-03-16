@@ -38,11 +38,7 @@
           , typename = ::boost::di::detail::never< ::boost::mpl::_1 >
           , typename = void
         > class TPool = pool
-      , template<
-            typename
-          //, template<typename> class = static_builder
-          //, template<typename> class = binder
-      > class TCreator = creator
+      , template<typename> class TCreator = creator
     >
     class module
         : public TPool<TDeps>

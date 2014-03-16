@@ -3,21 +3,18 @@
 // // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_DETAIL_BINDERS_STATIC_BINDER_HPP
-#define BOOST_DI_DETAIL_BINDERS_STATIC_BINDER_HPP
+#ifndef BOOST_DI_DETAIL_BINDER_HPP
+#define BOOST_DI_DETAIL_BINDER_HPP
 
 #include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/type_traits/scope_traits.hpp"
 #include "boost/di/type_traits/remove_accessors.hpp"
 #include "boost/di/concepts/dependency.hpp"
 
-#include <boost/utility/enable_if.hpp>
-#include <boost/mpl/vector.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/deref.hpp>
 #include <boost/mpl/pair.hpp>
 #include <boost/mpl/greater.hpp>
-#include <boost/mpl/times.hpp>
 
 #include "boost/di/detail/builder.hpp"
 
@@ -25,8 +22,11 @@ namespace boost {
 namespace di {
 namespace detail {
 
-template<typename TDeps, template<typename> class TCreator>
-class static_binder
+template<
+    typename TDeps
+  , template<typename> class TCreator
+>
+class binder
     : public builder<TCreator<TDeps> >
 {
     template<typename TDependency, typename T, typename TCallStack>
@@ -84,7 +84,7 @@ public:
       , typename TVisitor
     >
     const convertible<T>&
-    resolve_(Deps& deps, TRefs& refs, const TVisitor& visitor) {
+    resolve_impl(Deps& deps, TRefs& refs, const TVisitor& visitor) {
         return this->template build<
             T
           , TCtor
@@ -93,9 +93,6 @@ public:
           , TDependency
         >(deps, refs, visitor);
     }
-
-    template<typename T, typename TInjector>
-    void bind_dependency(TInjector injector) { }
 };
 
 } // namespace detail

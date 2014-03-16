@@ -15,8 +15,7 @@
     #include "boost/di/type_traits/create_traits.hpp"
     #include "boost/di/type_traits/make_plain.hpp"
     #include "boost/di/type_traits/is_same_base_of.hpp"
-    #include "boost/di/detail/binders/static_binder.hpp"
-    #include "boost/di/detail/binders/dynamic_binder.hpp"
+    #include "boost/di/detail/binder.hpp"
 
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/size.hpp>
@@ -27,20 +26,14 @@
     namespace di {
     namespace detail {
 
-    template<
-        typename TDependecies
-      //, template<typename> class TBuilder = builder<TDependecies>::template get
-      //, template<typename> class TBinder = binder
-    >
-    class creator
-        : public mpl::if_<mpl::empty<TDependecies>, dynamic_binder<TDependecies, creator>, static_binder<TDependecies, creator > >::type
+    template<typename TDependecies>
+    class creator : public binder<TDependecies, detail::creator>
     {
-        typedef typename mpl::if_<mpl::empty<TDependecies>, dynamic_binder<TDependecies, detail::creator>, static_binder<TDependecies, detail::creator> >::type binder_type;
+        typedef binder<TDependecies, detail::creator> binder_type;
 
-        //should be dynamic or static
         template<typename T, typename TCallStack>
         struct binder_
-            : static_binder<TDependecies, detail::creator>::template resolve<T, TCallStack>::type
+            : binder_type::template resolve<T, TCallStack>::type
         { };
 
         template<typename TDependency>
@@ -150,8 +143,6 @@
         };
 
     public:
-        using binder_type::bind_dependency;
-
         template<
             typename T
           , typename TParent // to ignore copy/move ctor
@@ -232,7 +223,7 @@
         assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
-        return static_cast<binder_type*>(this)->template resolve_<
+        return static_cast<binder_type*>(this)->template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack

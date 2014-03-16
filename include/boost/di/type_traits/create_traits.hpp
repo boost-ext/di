@@ -12,11 +12,6 @@
     #include "boost/di/aux_/config.hpp"
     #include "boost/di/type_traits/ctor_traits.hpp"
 
-    #include <string>
-    #include <stdexcept>
-    #include <typeinfo>
-    #include <boost/preprocessor/repetition/enum_params.hpp>
-    #include <boost/preprocessor/cat.hpp>
     #include <boost/type.hpp>
     #include <boost/non_type.hpp>
     #include <boost/utility/enable_if.hpp>
@@ -105,7 +100,7 @@
     template<typename TExpected, typename TGiven>
     typename enable_if<is_abstract<TGiven>, TExpected*>::type
     create_traits_impl(const policy<true>&) {
-        throw std::runtime_error("type not found: " + std::string(typeid(TExpected).name()));
+        return new TGiven();
     }
 
     template<typename TPolicy, typename TExpected, typename TGiven>

@@ -14,7 +14,6 @@
 #include <utility>
 #include <typeinfo>
 #include <string>
-#include <stdexcept>
 #include <map>
 #include <cassert>
 #include <boost/utility/enable_if.hpp>
@@ -51,7 +50,6 @@
 #include <boost/mpl/pair.hpp>
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/not.hpp>
-#include <boost/mpl/next.hpp>
 #include <boost/mpl/max.hpp>
 #include <boost/mpl/max_element.hpp>
 #include <boost/mpl/joint_view.hpp>
@@ -60,7 +58,6 @@
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/integral_c.hpp>
 #include <boost/mpl/if.hpp>
-#include <boost/mpl/identity.hpp>
 #include <boost/mpl/has_xxx.hpp>
 #include <boost/mpl/greater.hpp>
 #include <boost/mpl/front.hpp>
@@ -88,15 +85,12 @@
 #include "boost/di/aux_/config.hpp"
 #include <boost/config.hpp>
 #include <boost/bind.hpp>
-#include <boost/any.hpp>
 
 
 namespace boost {
 namespace di {
 namespace concepts {
 namespace detail {
-
-struct no_name { };
 
 template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na , typename T10 = ::boost::mpl::na , typename T11 = ::boost::mpl::na , typename T12 = ::boost::mpl::na , typename T13 = ::boost::mpl::na , typename T14 = ::boost::mpl::na , typename T15 = ::boost::mpl::na , typename T16 = ::boost::mpl::na , typename T17 = ::boost::mpl::na , typename T18 = ::boost::mpl::na , typename T19 = ::boost::mpl::na >
 class requires
@@ -118,41 +112,6 @@ class requires
 public:
     typedef requires type;
 
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(max)
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(nameq)
-
-    template<typename T>
-    struct namee
-    {
-        typedef typename T::nameq type;
-    };
-
-    template<typename T>
-    struct maxx
-    {
-        typedef typename T::max type;
-    };
-
-    typedef typename mpl::fold<
-        mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19>
-      , mpl::vector0<>
-      , mpl::if_<
-            has_max<mpl::_2>
-          , maxx<mpl::_2>
-          , mpl::_1
-        >
-    >::type context;
-
-    typedef typename mpl::fold<
-        mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19>
-      , no_name
-      , mpl::if_<
-            has_nameq<mpl::_2>
-          , namee<mpl::_2>
-          , mpl::_1
-        >
-    >::type name;
-
     template<typename T, typename TCallStack, typename TScope>
     struct apply
         : mpl::second<
@@ -166,29 +125,6 @@ public:
               >::type
           >
     { };
-
-    int operator()(const std::type_info* t, const std::type_info* name, const std::vector<const std::type_info*>& call_stack, int priority) const {
-        int result = (1 * (priority + 1) * (100 * T1()(t, name, call_stack))) * t2(T2(), t, name, call_stack) * t3(T3(), t, name, call_stack);
-        return result;
-    }
-
-    int t2(const mpl::na&, const std::type_info*, const std::type_info*, const std::vector<const std::type_info*>&) const {
-        return 1;
-    }
-
-    template<typename T>
-    int t2(const T&, const std::type_info* t, const std::type_info* n, const std::vector<const std::type_info*>& stack) const {
-        return 10000 * T()(t, n, stack);
-    }
-
-    int t3(const mpl::na&, const std::type_info*, const std::type_info*, const std::vector<const std::type_info*>&) const {
-        return 1;
-    }
-
-    template<typename T>
-    int t3(const T&, const std::type_info* t, const std::type_info* n, const std::vector<const std::type_info*>& stack) const {
-        return 1000000 * T()(t, n, stack);
-    }
 };
 
 } // namespace detail
@@ -308,10 +244,6 @@ struct type
             , typename di::type_traits::make_plain<U>::type
           >
     { };
-
-    int operator()(const std::type_info* t, const std::type_info*, const std::vector<const std::type_info*>&) const {
-        return &typeid(T) == t;
-    }
 };
 
 } // namespace type_traits
@@ -324,35 +256,31 @@ namespace di {
 namespace concepts {
 namespace type_traits {
 
-BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
-
-template<typename T, typename = void>
-struct get_name
-{
-    struct no_name { };
-    typedef no_name type;
-};
-
-template<typename T>
-struct get_name<T, typename enable_if<
-    has_name<typename di::type_traits::remove_accessors<T>::type> >::type
->
-{
-    typedef typename di::type_traits::remove_accessors<T>::type::name type;
-};
-
 template<typename TName>
-struct name
+class name
 {
-    typedef TName nameq;
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
+
+    template<typename T, typename = void>
+    struct get_name
+    {
+        struct no_name { };
+        typedef no_name type;
+    };
+
+    template<typename T>
+    struct get_name<T, typename enable_if<
+        has_name<typename di::type_traits::remove_accessors<T>::type> >::type
+    >
+    {
+        typedef typename di::type_traits::remove_accessors<T>::type::name type;
+    };
+
+public:
     template<typename T, typename, typename>
     struct apply
         : is_same<typename get_name<T>::type, TName>
     { };
-
-    int operator()(const std::type_info*, const std::type_info* name, const std::vector<const std::type_info*>&) const {
-        return &typeid(TName) == name;
-    }
 };
 
 } // namespace type_traits
@@ -373,41 +301,7 @@ class when
         : TBind::template apply<T, TCallStack, TScope>::type
     { };
 
-    template<typename TSeq, typename V>
-    static typename enable_if<mpl::empty<TSeq> >::type for_all(int&, const V&) { }
-
-    template<typename TSeq, typename V>
-    static typename disable_if<mpl::empty<TSeq> >::type for_all(int& max, const V& v) {
-        typedef typename mpl::front<TSeq>::type type;
-        int value = type()(v);
-
-        if (value > max) {
-            max = value;
-        }
-
-        for_all<typename mpl::pop_front<TSeq>::type>(max, v);
-    }
-
 public:
-    template<typename T>
-    struct context
-    {
-        typedef typename T::context_type type;
-    };
-
-    typedef typename mpl::fold<
-        TContext
-      , mpl::vector0<>
-      , mpl::if_<
-            mpl::greater<
-                mpl::size<context<mpl::_2> >
-              , mpl::size<mpl::_1>
-            >
-          , context<mpl::_2>
-          , mpl::_1
-        >
-    >::type max;
-
     template<typename T, typename TCallStack, typename TScope>
     struct apply
         : mpl::if_<
@@ -415,22 +309,14 @@ public:
             , mpl::int_<1>
             , typename mpl::deref<
                   mpl::max_element<
-                      mpl::transform_view<TContext, apply_bind<mpl::_1, T, TCallStack, TScope> >
+                      mpl::transform_view<
+                          TContext
+                        , apply_bind<mpl::_1, T, TCallStack, TScope>
+                      >
                   >
               >::type
           >::type
     { };
-
-    int operator()(const std::type_info*, const std::type_info*, const std::vector<const std::type_info*>& call_stack) const {
-        if (mpl::empty<TContext>::value) {
-            return 1;
-        }
-
-        int max = 0;
-        for_all<TContext>(max, call_stack);
-
-        return max;
-    }
 };
 
 } // namespace type_traits
@@ -1482,7 +1368,7 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
     template<typename TExpected, typename TGiven>
     typename enable_if<is_abstract<TGiven>, TExpected*>::type
     create_traits_impl(const policy<true>&) {
-        throw std::runtime_error("type not found: " + std::string(typeid(TExpected).name()));
+        return new TGiven();
     }
 
     template<typename TPolicy, typename TExpected, typename TGiven>
@@ -2881,40 +2767,11 @@ public:
           >
     { };
 
-    template<typename TSeq, typename V>
-    static typename enable_if<mpl::empty<TSeq> >::type for_all(int&, const V&, int) { }
-
-    template<typename TSeq, typename V>
-    static typename disable_if<mpl::empty<TSeq> >::type for_all(int& result, const V& v, int i) {
-        typedef typename mpl::front<TSeq>::type type;
-
-        if (result != -1) {
-            if (&typeid(type) == v[i]) {
-                result = i;
-            } else {
-                result = -1;
-            }
-        }
-
-        for_all<typename mpl::pop_front<TSeq>::type>(result, v, i+1);
-    }
-
 public:
     template<typename, typename TCallStack, typename>
     struct apply
         : apply_impl<context_type, TCallStack>::type
     { };
-
-    int operator()(const std::vector<const std::type_info*>& call_stack) const {
-        if (static_cast<int>(mpl::size<context_type>::value) - static_cast<int>(call_stack.size()) >= 0) {
-            return 0;
-        }
-
-        int result = 0;
-
-        for_all<context_type>(result, call_stack, call_stack.size()- mpl::size<context_type>::value - 1);
-        return result == -1 ? 0 : mpl::size<context_type>::value;
-    }
 };
 
 } // namespace di
@@ -4935,49 +4792,54 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
     namespace detail {
 
     template<typename T>
-    struct convertible_
+    class convertible_impl
     {
-        template<typename Q>
-        convertible_(const Q& q)
-            : f(boost::bind<T>(q, boost::type<T>()))
+    public:
+        template<typename TObject>
+        convertible_impl(const TObject& object)
+            : callback_(boost::bind<T>(object, boost::type<T>()))
         { }
 
         operator T() const {
-            return f();
+            return callback_();
         }
 
-        function<T()> f;
+    private:
+        function<T()> callback_;
     };
 
     template<typename T, typename TName>
-    struct convertible_<named<T, TName> >
+    class convertible_impl<named<T, TName> >
     {
-        template<typename Q>
-        convertible_(const Q& q)
-            : f(boost::bind<T>(q, boost::type<T>()))
+    public:
+        template<typename TObject>
+        convertible_impl(const TObject& object)
+            : callback_(boost::bind<T>(object, boost::type<T>()))
         { }
 
         operator T() const {
-            return f();
+            return callback_();
         }
 
         operator named<T, TName>() const {
-            return f();
+            return callback_();
         }
 
-        function<T()> f;
+    private:
+        function<T()> callback_;
     };
 
     template<typename T>
-    struct convertible : convertible_<T>
+    class convertible : public convertible_impl<T>
     {
-        template<typename Q>
-        convertible(const Q& q)
-            : convertible_<T>(q)
+    public:
+        template<typename TObject>
+        convertible(const TObject& object)
+            : convertible_impl<T>(object)
         { }
     };
 
-    template<typename Creator>
+    template<typename TCreator>
     class builder
     {
         class type_comparator
@@ -5037,7 +4899,7 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
                     mpl::empty<typename TDeps::types>::value
                 >()
                 ,
-                static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+                static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -5065,7 +4927,7 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
                     mpl::empty<typename TDeps::types>::value
                 >()
                 ,
-                static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+                static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -5093,7 +4955,7 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
                     mpl::empty<typename TDeps::types>::value
                 >()
                 ,
-                static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+                static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -5121,7 +4983,7 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
                     mpl::empty<typename TDeps::types>::value
                 >()
                 ,
-                static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+                static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -5149,7 +5011,7 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
                     mpl::empty<typename TDeps::types>::value
                 >()
                 ,
-                static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+                static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -5177,7 +5039,7 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
                     mpl::empty<typename TDeps::types>::value
                 >()
                 ,
-                static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+                static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -5205,7 +5067,7 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
                     mpl::empty<typename TDeps::types>::value
                 >()
                 ,
-                static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+                static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -5233,7 +5095,7 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
                     mpl::empty<typename TDeps::types>::value
                 >()
                 ,
-                static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+                static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -5261,7 +5123,7 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
                     mpl::empty<typename TDeps::types>::value
                 >()
                 ,
-                static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 8>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+                static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 8>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -5289,7 +5151,7 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
                     mpl::empty<typename TDeps::types>::value
                 >()
                 ,
-                static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 8>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<Creator&>(*this).template create_< typename mpl::at_c<TCtor, 9>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+                static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 8>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 9>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -5335,8 +5197,11 @@ namespace boost {
 namespace di {
 namespace detail {
 
-template<typename TDeps, template<typename> class TCreator>
-class static_binder
+template<
+    typename TDeps
+  , template<typename> class TCreator
+>
+class binder
     : public builder<TCreator<TDeps> >
 {
     template<typename TDependency, typename T, typename TCallStack>
@@ -5394,7 +5259,7 @@ public:
       , typename TVisitor
     >
     const convertible<T>&
-    resolve_(Deps& deps, TRefs& refs, const TVisitor& visitor) {
+    resolve_impl(Deps& deps, TRefs& refs, const TVisitor& visitor) {
         return this->template build<
             T
           , TCtor
@@ -5403,196 +5268,6 @@ public:
           , TDependency
         >(deps, refs, visitor);
     }
-
-    template<typename T, typename TInjector>
-    void bind_dependency(TInjector injector) { }
-};
-
-} // namespace detail
-} // namespace di
-} // namespace boost
-
-
-namespace boost {
-namespace di {
-namespace detail {
-
-template<typename Deps, template<typename> class Creator>
-class dynamic_binder
-    : public builder<Creator<Deps> >
-{
-    typedef std::vector< function<any()> > fun_type;
-    typedef std::vector<std::pair<function<int(const std::type_info*, const std::type_info*, const std::vector<const std::type_info*>&)>, fun_type> > creators_type;
-
-    template<typename TC, typename T>
-    struct gett
-    {
-        typedef T type;
-    };
-
-    template<typename TC, typename T>
-    struct gett<convertibles::shared<TC>, T>
-    {
-        typedef aux::shared_ptr<T> type;
-    };
-
-public:
-    dynamic_binder()
-        : skip_(&typeid(void))
-    { }
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TPolicies
-      , typename TDependency
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-    >
-    const convertible<T>&
-    resolve_(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
-        typedef convertible<T> convertible_type;
-
-        int best = 0;
-        std::size_t r = 0;
-
-        if (skip_ != &typeid(T)) {
-            skip_ = &typeid(void);
-
-            for (std::size_t q = 0; q < creators_.size(); ++q) {
-
-                std::vector<const std::type_info*> call_stack;
-                fill_call_stack<TCallStack>(call_stack);
-
-                int current = creators_[q].first(
-                    &typeid(typename type_traits::make_plain<T>::type)
-                  , &typeid(typename concepts::type_traits::get_name<T>::type)
-                  , call_stack
-                );
-
-                if (current > best) {
-                    best = current;
-                    r = q;
-                }
-            }
-
-            if (best > 0) {
-                for (fun_type::const_iterator it = creators_[r].second.begin(); it != creators_[r].second.end(); ++it) {
-                    if ((*it)().type() == typeid(convertible<T>)) {
-
-                        convertible_type* convertible(new convertible_type(
-                            any_cast<convertible_type>((*it)())
-                        ));
-
-                        refs.push_back(aux::shared_ptr<void>(convertible));
-                        return *convertible;
-                    }
-                }
-
-                assert(false);
-            }
-        }
-
-        return this->template build<
-            T
-          , TCtor
-          , TCallStack
-          , TPolicies
-          , TDependency
-        >(deps, refs, visitor);
-    }
-
-    class empty_visitor
-    {
-    public:
-        template<typename T>
-        void operator()(const T&) const { }
-    };
-
-    template<typename TDependency, typename TInjector>
-    void bind_dependency(TInjector injector) {
-        typedef typename TDependency::expected type;
-        typedef mpl::vector0<> policies;
-
-        typedef typename mpl::if_<
-            is_same<typename TDependency::bind::name, di::concepts::detail::no_name>
-          , typename mpl::if_<
-                is_polymorphic<type>
-              , aux::shared_ptr<type>
-              , typename gett<typename TDependency::result_type, type>::type
-            >::type
-          , typename mpl::if_<
-                is_polymorphic<type>
-              , named<aux::shared_ptr<type>, typename TDependency::bind::name>
-              , named<typename gett<typename TDependency::result_type, type>::type, typename TDependency::bind::name>
-            >::type
-        >::type t;
-
-        std::vector<aux::shared_ptr<void> > refs_;
-        fun_type v;
-
-        v.push_back(
-              boost::bind(
-                   &dynamic_binder::create_any<
-                       t
-                     , t
-                     , typename TDependency::bind::context
-                     , policies
-                     , TInjector
-                     , pool<typename TInjector::deps>
-                     , std::vector<aux::shared_ptr<void> >
-                     , empty_visitor
-                   >
-                 , this
-                 , injector
-                 , static_cast<pool<typename TInjector::deps>&>(injector)
-                 , refs_
-                 , empty_visitor()
-               )
-              );
-
-        creators_.push_back(
-            std::make_pair(
-                boost::bind(&dynamic_binder::when<typename TDependency::bind, typename TDependency::scope>, _1, _2, _3)
-              , v
-            )
-        );
-    }
-
-private:
-    template<typename TBind, typename TScope>
-    static int when(const std::type_info* t, const std::type_info* name, const std::vector<const std::type_info*>& call_stack) {
-        return TBind()(t, name, call_stack, TScope::priority::value); // type<scope>()
-    }
-
-    template<
-        typename T
-      , typename TParent // to ignore copy/move ctor
-      , typename TCallStack
-      , typename TPolicies
-      , typename TInjector
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-    >
-    any create_any(TInjector& injector, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
-        skip_ = &typeid(T);
-        return any(static_cast<Creator<typename TInjector::deps>&>(injector).template create_<T, TParent, TCallStack, TPolicies>(deps, refs, visitor));
-    }
-
-    template<typename TSeq, typename V>
-    static typename enable_if<mpl::empty<TSeq> >::type fill_call_stack(V&) { }
-
-    template<typename TSeq, typename V>
-    static typename disable_if<mpl::empty<TSeq> >::type fill_call_stack(V& v) {
-        v.push_back(&typeid(typename mpl::front<TSeq>::type));
-        fill_call_stack<typename mpl::pop_front<TSeq>::type>(v);
-    }
-
-    creators_type creators_;
-    const std::type_info* skip_;
 };
 
 } // namespace detail
@@ -5604,20 +5279,14 @@ private:
     namespace di {
     namespace detail {
 
-    template<
-        typename TDependecies
-      //, template<typename> class TBuilder = builder<TDependecies>::template get
-      //, template<typename> class TBinder = binder
-    >
-    class creator
-        : public mpl::if_<mpl::empty<TDependecies>, dynamic_binder<TDependecies, creator>, static_binder<TDependecies, creator > >::type
+    template<typename TDependecies>
+    class creator : public binder<TDependecies, detail::creator>
     {
-        typedef typename mpl::if_<mpl::empty<TDependecies>, dynamic_binder<TDependecies, detail::creator>, static_binder<TDependecies, detail::creator> >::type binder_type;
+        typedef binder<TDependecies, detail::creator> binder_type;
 
-        //should be dynamic or static
         template<typename T, typename TCallStack>
         struct binder_
-            : static_binder<TDependecies, detail::creator>::template resolve<T, TCallStack>::type
+            : binder_type::template resolve<T, TCallStack>::type
         { };
 
         template<typename TDependency>
@@ -5727,8 +5396,6 @@ private:
         };
 
     public:
-        using binder_type::bind_dependency;
-
         template<
             typename T
           , typename TParent // to ignore copy/move ctor
@@ -5787,7 +5454,7 @@ private:
         assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
-        return static_cast<binder_type*>(this)->template resolve_<
+        return static_cast<binder_type*>(this)->template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack
@@ -5813,7 +5480,7 @@ private:
         assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
-        return static_cast<binder_type*>(this)->template resolve_<
+        return static_cast<binder_type*>(this)->template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack
@@ -5839,7 +5506,7 @@ private:
         assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
-        return static_cast<binder_type*>(this)->template resolve_<
+        return static_cast<binder_type*>(this)->template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack
@@ -5865,7 +5532,7 @@ private:
         assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
-        return static_cast<binder_type*>(this)->template resolve_<
+        return static_cast<binder_type*>(this)->template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack
@@ -5891,7 +5558,7 @@ private:
         assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
-        return static_cast<binder_type*>(this)->template resolve_<
+        return static_cast<binder_type*>(this)->template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack
@@ -5917,7 +5584,7 @@ private:
         assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
-        return static_cast<binder_type*>(this)->template resolve_<
+        return static_cast<binder_type*>(this)->template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack
@@ -5943,7 +5610,7 @@ private:
         assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
-        return static_cast<binder_type*>(this)->template resolve_<
+        return static_cast<binder_type*>(this)->template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack
@@ -5969,7 +5636,7 @@ private:
         assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
-        return static_cast<binder_type*>(this)->template resolve_<
+        return static_cast<binder_type*>(this)->template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack
@@ -5995,7 +5662,7 @@ private:
         assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
-        return static_cast<binder_type*>(this)->template resolve_<
+        return static_cast<binder_type*>(this)->template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack
@@ -6021,7 +5688,7 @@ private:
         assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
-        return static_cast<binder_type*>(this)->template resolve_<
+        return static_cast<binder_type*>(this)->template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack
@@ -6047,7 +5714,7 @@ private:
         assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
-        return static_cast<binder_type*>(this)->template resolve_<
+        return static_cast<binder_type*>(this)->template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack
@@ -6083,11 +5750,7 @@ private:
           , typename = ::boost::di::detail::never< ::boost::mpl::_1 >
           , typename = void
         > class TPool = pool
-      , template<
-            typename
-          //, template<typename> class = static_builder
-          //, template<typename> class = binder
-      > class TCreator = creator
+      , template<typename> class TCreator = creator
     >
     class module
         : public TPool<TDeps>
@@ -6907,17 +6570,6 @@ private:
               >::type
         { };
 
-        template<typename TSeq, typename TInjector>
-        typename enable_if<mpl::empty<TSeq> >::type for_each_dependency(TInjector) { }
-
-        template<typename TSeq, typename TInjector>
-        typename disable_if<mpl::empty<TSeq> >::type for_each_dependency(TInjector inj) {
-            typedef typename mpl::front<TSeq>::type type;
-            //injector<type> i(static_cast<const type&>(inj));
-            this->template bind_dependency<type>(inj);
-            for_each_dependency<typename mpl::pop_front<TSeq>::type>(inj);
-        }
-
     public:
         injector() { }
 
@@ -6938,17 +6590,6 @@ private:
         );
     }
 
-    template< typename Args0>
-    void install( Args0 args0) {
-        typedef injector<
-            typename detail::concepts<mpl::vector< Args0> >::type
-        > injector_type;
-
-        for_each_dependency<typename injector_type::deps>(
-            injector_type( args0)
-        );
-    }
-
     template< typename Args0 , typename Args1>
     explicit injector( Args0 args0 , Args1 args1)
         : detail::module<typename joint_concepts<>::type>( args0 , args1)
@@ -6959,17 +6600,6 @@ private:
     operator()( Args0 args0 , Args1 args1) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1> > >(
             args0 , args1
-        );
-    }
-
-    template< typename Args0 , typename Args1>
-    void install( Args0 args0 , Args1 args1) {
-        typedef injector<
-            typename detail::concepts<mpl::vector< Args0 , Args1> >::type
-        > injector_type;
-
-        for_each_dependency<typename injector_type::deps>(
-            injector_type( args0 , args1)
         );
     }
 
@@ -6986,17 +6616,6 @@ private:
         );
     }
 
-    template< typename Args0 , typename Args1 , typename Args2>
-    void install( Args0 args0 , Args1 args1 , Args2 args2) {
-        typedef injector<
-            typename detail::concepts<mpl::vector< Args0 , Args1 , Args2> >::type
-        > injector_type;
-
-        for_each_dependency<typename injector_type::deps>(
-            injector_type( args0 , args1 , args2)
-        );
-    }
-
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3)
@@ -7007,17 +6626,6 @@ private:
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3> > >(
             args0 , args1 , args2 , args3
-        );
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3>
-    void install( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3) {
-        typedef injector<
-            typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3> >::type
-        > injector_type;
-
-        for_each_dependency<typename injector_type::deps>(
-            injector_type( args0 , args1 , args2 , args3)
         );
     }
 
@@ -7034,17 +6642,6 @@ private:
         );
     }
 
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
-    void install( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4) {
-        typedef injector<
-            typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4> >::type
-        > injector_type;
-
-        for_each_dependency<typename injector_type::deps>(
-            injector_type( args0 , args1 , args2 , args3 , args4)
-        );
-    }
-
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5)
@@ -7055,17 +6652,6 @@ private:
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5> > >(
             args0 , args1 , args2 , args3 , args4 , args5
-        );
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
-    void install( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5) {
-        typedef injector<
-            typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5> >::type
-        > injector_type;
-
-        for_each_dependency<typename injector_type::deps>(
-            injector_type( args0 , args1 , args2 , args3 , args4 , args5)
         );
     }
 
@@ -7082,17 +6668,6 @@ private:
         );
     }
 
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
-    void install( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6) {
-        typedef injector<
-            typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6> >::type
-        > injector_type;
-
-        for_each_dependency<typename injector_type::deps>(
-            injector_type( args0 , args1 , args2 , args3 , args4 , args5 , args6)
-        );
-    }
-
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7)
@@ -7103,17 +6678,6 @@ private:
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7> > >(
             args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7
-        );
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
-    void install( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7) {
-        typedef injector<
-            typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7> >::type
-        > injector_type;
-
-        for_each_dependency<typename injector_type::deps>(
-            injector_type( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7)
         );
     }
 
@@ -7130,17 +6694,6 @@ private:
         );
     }
 
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
-    void install( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8) {
-        typedef injector<
-            typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8> >::type
-        > injector_type;
-
-        for_each_dependency<typename injector_type::deps>(
-            injector_type( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8)
-        );
-    }
-
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9)
@@ -7151,17 +6704,6 @@ private:
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9> > >(
             args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9
-        );
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
-    void install( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9) {
-        typedef injector<
-            typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9> >::type
-        > injector_type;
-
-        for_each_dependency<typename injector_type::deps>(
-            injector_type( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9)
         );
     }
 
@@ -7178,17 +6720,6 @@ private:
         );
     }
 
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10>
-    void install( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10) {
-        typedef injector<
-            typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10> >::type
-        > injector_type;
-
-        for_each_dependency<typename injector_type::deps>(
-            injector_type( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10)
-        );
-    }
-
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11)
@@ -7199,17 +6730,6 @@ private:
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11> > >(
             args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11
-        );
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11>
-    void install( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11) {
-        typedef injector<
-            typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11> >::type
-        > injector_type;
-
-        for_each_dependency<typename injector_type::deps>(
-            injector_type( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11)
         );
     }
 
@@ -7226,17 +6746,6 @@ private:
         );
     }
 
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12>
-    void install( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12) {
-        typedef injector<
-            typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12> >::type
-        > injector_type;
-
-        for_each_dependency<typename injector_type::deps>(
-            injector_type( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12)
-        );
-    }
-
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13)
@@ -7247,17 +6756,6 @@ private:
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13> > >(
             args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13
-        );
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13>
-    void install( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13) {
-        typedef injector<
-            typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13> >::type
-        > injector_type;
-
-        for_each_dependency<typename injector_type::deps>(
-            injector_type( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13)
         );
     }
 
@@ -7274,17 +6772,6 @@ private:
         );
     }
 
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14>
-    void install( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14) {
-        typedef injector<
-            typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14> >::type
-        > injector_type;
-
-        for_each_dependency<typename injector_type::deps>(
-            injector_type( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14)
-        );
-    }
-
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15)
@@ -7295,17 +6782,6 @@ private:
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15> > >(
             args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15
-        );
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15>
-    void install( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15) {
-        typedef injector<
-            typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15> >::type
-        > injector_type;
-
-        for_each_dependency<typename injector_type::deps>(
-            injector_type( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15)
         );
     }
 
@@ -7322,17 +6798,6 @@ private:
         );
     }
 
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16>
-    void install( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16) {
-        typedef injector<
-            typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16> >::type
-        > injector_type;
-
-        for_each_dependency<typename injector_type::deps>(
-            injector_type( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16)
-        );
-    }
-
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17)
@@ -7343,17 +6808,6 @@ private:
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17> > >(
             args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17
-        );
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17>
-    void install( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17) {
-        typedef injector<
-            typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17> >::type
-        > injector_type;
-
-        for_each_dependency<typename injector_type::deps>(
-            injector_type( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17)
         );
     }
 
@@ -7370,17 +6824,6 @@ private:
         );
     }
 
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18>
-    void install( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18) {
-        typedef injector<
-            typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18> >::type
-        > injector_type;
-
-        for_each_dependency<typename injector_type::deps>(
-            injector_type( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18)
-        );
-    }
-
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19)
@@ -7391,17 +6834,6 @@ private:
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19> > >(
             args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19
-        );
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19>
-    void install( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19) {
-        typedef injector<
-            typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19> >::type
-        > injector_type;
-
-        for_each_dependency<typename injector_type::deps>(
-            injector_type( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19)
         );
     }
  };

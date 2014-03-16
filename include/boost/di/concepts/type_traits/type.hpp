@@ -10,9 +10,6 @@
 #include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/type_traits/is_same_base_of.hpp"
 
-#include <boost/mpl/placeholders.hpp>
-#include <boost/mpl/or.hpp>
-
 namespace boost {
 namespace di {
 namespace concepts {
@@ -28,10 +25,6 @@ struct type
             , typename di::type_traits::make_plain<U>::type
           >
     { };
-
-    int operator()(const std::type_info* t, const std::type_info*, const std::vector<const std::type_info*>&) const {
-        return &typeid(T) == t;
-    }
 };
 
 } // namespace type_traits

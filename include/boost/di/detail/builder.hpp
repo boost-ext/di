@@ -21,71 +21,71 @@
 
     #include <typeinfo>
     #include <map>
-    #include <vector>
-    #include <typeinfo>
     #include <boost/config.hpp>
     #include <boost/bind.hpp>
     #include <boost/function.hpp>
-    #include <boost/any.hpp>
     #include <boost/type.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/type_traits/is_base_of.hpp>
-    #include <boost/type_traits/is_polymorphic.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/empty.hpp>
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/push_back.hpp>
-    #include <boost/mpl/has_xxx.hpp>
 
     namespace boost {
     namespace di {
     namespace detail {
 
     template<typename T>
-    struct convertible_
+    class convertible_impl
     {
-        template<typename Q>
-        convertible_(const Q& q)
-            : f(boost::bind<T>(q, boost::type<T>()))
+    public:
+        template<typename TObject>
+        convertible_impl(const TObject& object)
+            : callback_(boost::bind<T>(object, boost::type<T>()))
         { }
 
         operator T() const {
-            return f();
+            return callback_();
         }
 
-        function<T()> f;
+    private:
+        function<T()> callback_;
     };
 
     template<typename T, typename TName>
-    struct convertible_<named<T, TName> >
+    class convertible_impl<named<T, TName> >
     {
-        template<typename Q>
-        convertible_(const Q& q)
-            : f(boost::bind<T>(q, boost::type<T>()))
+    public:
+        template<typename TObject>
+        convertible_impl(const TObject& object)
+            : callback_(boost::bind<T>(object, boost::type<T>()))
         { }
 
         operator T() const {
-            return f();
+            return callback_();
         }
 
         operator named<T, TName>() const {
-            return f();
+            return callback_();
         }
 
-        function<T()> f;
+    private:
+        function<T()> callback_;
     };
 
     template<typename T>
-    struct convertible : convertible_<T>
+    class convertible : public convertible_impl<T>
     {
-        template<typename Q>
-        convertible(const Q& q)
-            : convertible_<T>(q)
+    public:
+        template<typename TObject>
+        convertible(const TObject& object)
+            : convertible_impl<T>(object)
         { }
     };
 
-    template<typename Creator>
+    template<typename TCreator>
     class builder
     {
         class type_comparator
@@ -156,7 +156,7 @@
 
         #define BOOST_DI_CREATOR_EXECUTE(z, n, _)           \
             BOOST_PP_COMMA_IF(n)                            \
-            static_cast<Creator&>(*this).template create_<  \
+            static_cast<TCreator&>(*this).template create_< \
                typename mpl::at_c<TCtor, n>::type           \
              , T                                            \
              , TCallStack                                   \

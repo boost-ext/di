@@ -20,7 +20,6 @@
 #include <string>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/vector.hpp>
-#include <boost/mpl/int.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/max.hpp>
@@ -106,40 +105,11 @@ public:
           >
     { };
 
-    template<typename TSeq, typename V>
-    static typename enable_if<mpl::empty<TSeq> >::type for_all(int&, const V&, int) { }
-
-    template<typename TSeq, typename V>
-    static typename disable_if<mpl::empty<TSeq> >::type for_all(int& result, const V& v, int i) {
-        typedef typename mpl::front<TSeq>::type type;
-
-        if (result != -1) {
-            if (&typeid(type) == v[i]) {
-                result = i;
-            } else {
-                result = -1;
-            }
-        }
-
-        for_all<typename mpl::pop_front<TSeq>::type>(result, v, i+1);
-    }
-
 public:
     template<typename, typename TCallStack, typename>
     struct apply
         : apply_impl<context_type, TCallStack>::type
     { };
-
-    int operator()(const std::vector<const std::type_info*>& call_stack) const {
-        if (static_cast<int>(mpl::size<context_type>::value) - static_cast<int>(call_stack.size()) >= 0) {
-            return 0;
-        }
-
-        int result = 0;
-
-        for_all<context_type>(result, call_stack, call_stack.size()- mpl::size<context_type>::value - 1);
-        return result == -1 ? 0 : mpl::size<context_type>::value;
-    }
 };
 
 } // namespace di

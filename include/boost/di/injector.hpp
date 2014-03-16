@@ -16,15 +16,11 @@
     #include "boost/di/concepts.hpp"
 
     #include <boost/preprocessor/iteration/iterate.hpp>
-    #include <boost/preprocessor/repetition/repeat.hpp>
-    #include <boost/preprocessor/punctuation/comma_if.hpp>
-    #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/joint_view.hpp>
     #include <boost/mpl/fold.hpp>
     #include <boost/mpl/copy.hpp>
     #include <boost/mpl/if.hpp>
-    #include <boost/mpl/and.hpp>
     #include <boost/mpl/back_inserter.hpp>
     #include <boost/mpl/is_sequence.hpp>
     #include <boost/mpl/placeholders.hpp>
@@ -88,17 +84,6 @@
               >::type
         { };
 
-        template<typename TSeq, typename TInjector>
-        typename enable_if<mpl::empty<TSeq> >::type for_each_dependency(TInjector) { }
-
-        template<typename TSeq, typename TInjector>
-        typename disable_if<mpl::empty<TSeq> >::type for_each_dependency(TInjector inj) {
-            typedef typename mpl::front<TSeq>::type type;
-            //injector<type> i(static_cast<const type&>(inj));
-            this->template bind_dependency<type>(inj);
-            for_each_dependency<typename mpl::pop_front<TSeq>::type>(inj);
-        }
-
     public:
         injector() { }
 
@@ -128,17 +113,6 @@
     operator()(BOOST_DI_ARGS(Args, args)) const {
         return injector<joint_concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >(
             BOOST_DI_ARGS_PASS(args)
-        );
-    }
-
-    template<BOOST_DI_TYPES(Args)>
-    void install(BOOST_DI_ARGS(Args, args)) {
-        typedef injector<
-            typename detail::concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type
-        > injector_type;
-
-        for_each_dependency<typename injector_type::deps>(
-            injector_type(BOOST_DI_ARGS_PASS(args))
         );
     }
 
