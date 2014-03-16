@@ -115,8 +115,18 @@ public:
         return aux::unique_ptr<I>(object_());
     }
 
+    template<typename I>
+    aux::unique_ptr<I> operator()(const type<const aux::unique_ptr<I>&>&) const {
+        return aux::unique_ptr<I>(object_());
+    }
+
     template<typename I, typename TName>
-    I* operator()(type<named<aux::unique_ptr<I>, TName> >&) const {
+    I* operator()(const type<named<aux::unique_ptr<I>, TName> >&) const {
+        return object_();
+    }
+
+    template<typename I, typename TName>
+    I* operator()(const type<named<const aux::unique_ptr<I>&, TName> >&) const {
         return object_();
     }
 

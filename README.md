@@ -5,7 +5,7 @@
 This is not an official Boost library yet and there is no guarantee it will ever be.
 
 ## Introduction
-DI is C++03/C++11, header only library providing compile time, macro free constructor dependency injection functionality.
+DI is C++03/C++11 header only library providing compile time, macro free constructor dependency injection functionality.
 
 ## Hello World
 ```cpp

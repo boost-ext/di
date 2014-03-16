@@ -38,7 +38,7 @@ public:
     }
 
     template<typename I, typename TName>
-    I operator()(const type<named<I, TName>&>&) const {
+    I& operator()(const type<named<I, TName>&>&) const {
         return value_;
     }
 
@@ -54,12 +54,14 @@ public:
 
     template<typename I>
     const aux::shared_ptr<I>& operator()(const type<const aux::shared_ptr<I>& >&) {
-        return aux::shared_ptr<I>(new I(value_));
+        ref_ = aux::shared_ptr<I>(new I(value_));
+        return ref_;
     }
 
     template<typename I>
     const aux_::shared_ptr<I>& operator()(const type<const aux_::shared_ptr<I>& >&) {
-        return aux_::shared_ptr<I>(new I(value_));
+        ref__ = aux_::shared_ptr<I>(new I(value_));
+        return ref__;
     }
 
     template<typename I, typename TName>
@@ -90,6 +92,8 @@ public:
     }
 
 private:
+    mutable aux::shared_ptr<T> ref_;
+    mutable aux_::shared_ptr<T> ref__;
     mutable T value_;
 };
 

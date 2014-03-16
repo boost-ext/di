@@ -27,9 +27,49 @@ BOOST_AUTO_TEST_CASE(to_named_value) {
     BOOST_CHECK_EQUAL(i, object);
 }
 
-BOOST_AUTO_TEST_CASE(to_move) {
+BOOST_AUTO_TEST_CASE(to_ref) {
+    int& object((value<int>(42))(type<int&>()));
+    BOOST_CHECK_EQUAL(i, object);
+}
+
+BOOST_AUTO_TEST_CASE(to_named_ref) {
+    int& object((value<int>(42))(type<named<int>&>()));
+    BOOST_CHECK_EQUAL(i, object);
+}
+
+BOOST_AUTO_TEST_CASE(to_rvalue) {
     int&& object((value<int>(42))(type<int>()));
     BOOST_CHECK_EQUAL(i, object);
+}
+
+BOOST_AUTO_TEST_CASE(to_shared_ptr) {
+    aux::shared_ptr<int> object((value<int>(42))(type<aux::shared_ptr<int>>()));
+    BOOST_CHECK_EQUAL(i, *object);
+}
+
+BOOST_AUTO_TEST_CASE(to_shared_ptr_other) {
+    aux_::shared_ptr<int> object((value<int>(42))(type<aux_::shared_ptr<int>>()));
+    BOOST_CHECK_EQUAL(i, *object);
+}
+
+BOOST_AUTO_TEST_CASE(to_shared_ptr_ref) {
+    aux::shared_ptr<int> object((value<int>(42))(type<const aux::shared_ptr<int>&>()));
+    BOOST_CHECK_EQUAL(i, *object);
+}
+
+BOOST_AUTO_TEST_CASE(to_shared_ptr_other_ref) {
+    aux_::shared_ptr<int> object((value<int>(42))(type<const aux_::shared_ptr<int>&>()));
+    BOOST_CHECK_EQUAL(i, *object);
+}
+
+BOOST_AUTO_TEST_CASE(to_named_shared_ptr) {
+    named<aux::shared_ptr<int>> object((value<int>(42))(type<named<aux::shared_ptr<int>>>()));
+    BOOST_CHECK_EQUAL(i, *object);
+}
+
+BOOST_AUTO_TEST_CASE(to_named_shared_ptr_other) {
+    named<aux_::shared_ptr<int>> object((value<int>(42))(type<named<aux_::shared_ptr<int>>>()));
+    BOOST_CHECK_EQUAL(i, *object);
 }
 
 } // namespace convertibles

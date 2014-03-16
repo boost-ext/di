@@ -91,6 +91,10 @@ public:
         named(object_type&& object) // non explicit
             : object_(std::move(object))
         { }
+
+        //named(named&& other) // non explicit
+            //: object_(std::move(other.object_))
+        //{ }
     )
 
     operator T() const { return object_; }

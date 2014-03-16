@@ -170,7 +170,11 @@ class dependency : public get_scope<TExpected, TGiven, TScope>::type
 
     template<typename T>
     struct get_convertible<T, typename enable_if<has_call_operator<T> >::type>
-        : get_convertible_impl<typename di::type_traits::parameter_types<BOOST_TYPEOF_TPL(&T::operator())>::result_type>
+        : get_convertible_impl<
+              typename di::type_traits::parameter_types<
+                  BOOST_TYPEOF_TPL(&T::operator())
+              >::result_type
+          >
     { };
 
 public:

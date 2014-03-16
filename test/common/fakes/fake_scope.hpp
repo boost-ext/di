@@ -56,9 +56,13 @@ struct fake_scope
     };
 
     template<typename T, typename>
-    struct scope
+    class scope
     {
+    public:
         typedef convertible<T> result_type;
+
+        scope() { }
+        explicit scope(const T&) { }
 
         void call(const fake_scope_entry&) {
             entry_calls()++;
