@@ -28,7 +28,6 @@ namespace di {
 namespace policies {
 
 BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
-BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
 
 struct allow_smart_ptrs
 {
@@ -91,31 +90,6 @@ struct allow_copies
     { };
 };
 
-namespace detail {
-
-template<typename T>
-struct value_type
-{
-    typedef typename T::value_type type;
-};
-
-template<typename TAllow, typename T>
-struct is_allowed_impl
-    : TAllow::template allow<T>
-{ };
-
-template<typename, typename, typename = void>
-struct is_allowed_nested_impl
-    : mpl::true_
-{ };
-
-template<typename TAllow, typename T>
-struct is_allowed_nested_impl<TAllow, T, typename enable_if<has_value_type<T> >::type>
-    : TAllow::template allow<typename value_type<T>::type>
-{ };
-
-} // namespace detail
-
 /**
  * @code
  * arguments_permission<>
@@ -135,14 +109,37 @@ struct is_allowed_nested_impl<TAllow, T, typename enable_if<has_value_type<T> >:
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 class arguments_permission
 {
-    typedef mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> allows_type;
+    typedef mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> allow_types;
+
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
 
     template<typename T>
-    struct is_allowed_nested
+    struct value_type
+    {
+        typedef typename T::value_type type;
+    };
+
+    template<typename TAllow, typename T>
+    struct is_argment_permitted_impl
+        : TAllow::template allow<T>
+    { };
+
+    template<typename, typename, typename = void>
+    struct is_argument_permitted_nested_impl
+        : mpl::true_
+    { };
+
+    template<typename TAllow, typename T>
+    struct is_argument_permitted_nested_impl<TAllow, T, typename enable_if<has_value_type<T> >::type>
+        : TAllow::template allow<typename value_type<T>::type>
+    { };
+
+    template<typename T>
+    struct is_argument_permitted_nested
         : mpl::bool_<
               mpl::count_if<
-                  allows_type
-                , detail::is_allowed_nested_impl<
+                  allow_types
+                , is_argument_permitted_nested_impl<
                       mpl::_
                     , typename type_traits::remove_accessors<T>::type
                   >
@@ -151,13 +148,13 @@ class arguments_permission
     { };
 
     template<typename T>
-    struct is_allowed
+    struct is_argument_permitted
         : mpl::bool_<
               mpl::count_if<
-                  allows_type
+                  allow_types
                 , mpl::and_<
-                      detail::is_allowed_impl<mpl::_, T>
-                    , is_allowed_nested<T>
+                      is_argment_permitted_impl<mpl::_, T>
+                    , is_argument_permitted_nested<T>
                   >
               >::value != 0
           >
@@ -170,7 +167,7 @@ public:
     >
     static void assert_policy() {
         BOOST_DI_ASSERT_MSG(
-            is_allowed<typename T::type>::value
+            is_argument_permitted<typename T::type>::value
           , ARGUMENT_NOT_PERMITTED
           , typename T::type
         );

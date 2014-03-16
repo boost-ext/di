@@ -11,7 +11,6 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/identity.hpp>
 
-#include "common/contains_all.hpp"
 #include "common/data.hpp"
 
 namespace boost {

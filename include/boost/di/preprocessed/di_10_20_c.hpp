@@ -34,7 +34,6 @@
 #include <boost/type_traits/is_abstract.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/type.hpp>
-#include <boost/scoped_ptr.hpp>
 #include <boost/ref.hpp>
 #include <boost/non_type.hpp>
 #include <boost/none_t.hpp>
@@ -68,7 +67,6 @@
 #include <boost/mpl/greater.hpp>
 #include <boost/mpl/front.hpp>
 #include <boost/mpl/fold.hpp>
-#include <boost/mpl/equal_to.hpp>
 #include <boost/mpl/equal.hpp>
 #include <boost/mpl/empty.hpp>
 #include <boost/mpl/deref.hpp>
@@ -610,6 +608,10 @@ public:
         named(object_type&& object) // non explicit
             : object_(std::move(object))
         { }
+
+        //named(named&& other) // non explicit
+            //: object_(std::move(other.object_))
+        //{ }
     )
 
     operator T() const { return object_; }
@@ -681,6 +683,18 @@ namespace convertibles {
 template<typename T>
 class shared
 {
+    template<typename U, typename TShared = aux::shared_ptr<U> >
+    class sp_holder
+    {
+    public:
+        explicit sp_holder(const TShared& object)
+            : object_(object)
+        { }
+
+    private:
+        TShared object_;
+    };
+
 public:
     shared() { }
 
@@ -702,8 +716,19 @@ public:
     }
 
     template<typename I>
+    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) const {
+        aux_::shared_ptr<sp_holder<T> > sp(new sp_holder<T>(object_));
+        return aux_::shared_ptr<T>(sp, object_.get());
+    }
+
+    template<typename I>
     aux::shared_ptr<I> operator()(const type<const aux::shared_ptr<I>&>&) const {
         return object_;
+    }
+
+    template<typename I>
+    aux_::shared_ptr<I> operator()(const type<const aux_::shared_ptr<I>&>&) const {
+        return (*this)(type<aux_::shared_ptr<I> >());
     }
 
     template<typename I, typename TName>
@@ -712,8 +737,18 @@ public:
     }
 
     template<typename I, typename TName>
+    aux_::shared_ptr<I> operator()(const type<named<aux_::shared_ptr<I>, TName> >&) const {
+        return (*this)(type<aux_::shared_ptr<I> >());
+    }
+
+    template<typename I, typename TName>
     aux::shared_ptr<I> operator()(const type<named<const aux::shared_ptr<I>&, TName> >&) const {
         return object_;
+    }
+
+    template<typename I, typename TName>
+    aux_::shared_ptr<I> operator()(const type<named<const aux_::shared_ptr<I>&, TName> >&) const {
+        return (*this)(type<aux_::shared_ptr<I> >());
     }
 
     template<typename I>
@@ -794,7 +829,7 @@ public:
     }
 
     template<typename I, typename TName>
-    I operator()(const type<named<I, TName>&>&) const {
+    I& operator()(const type<named<I, TName>&>&) const {
         return value_;
     }
 
@@ -804,8 +839,30 @@ public:
     }
 
     template<typename I>
+    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) {
+        return aux_::shared_ptr<I>(new I(value_));
+    }
+
+    template<typename I>
     const aux::shared_ptr<I>& operator()(const type<const aux::shared_ptr<I>& >&) {
-        return aux::shared_ptr<I>(new I(value_));
+        ref_ = aux::shared_ptr<I>(new I(value_));
+        return ref_;
+    }
+
+    template<typename I>
+    const aux_::shared_ptr<I>& operator()(const type<const aux_::shared_ptr<I>& >&) {
+        ref__ = aux_::shared_ptr<I>(new I(value_));
+        return ref__;
+    }
+
+    template<typename I, typename TName>
+    I* operator()(const type<named<aux::shared_ptr<I>, TName> >&) const {
+        return new I(value_);
+    }
+
+    template<typename I, typename TName>
+    I* operator()(const type<named<aux_::shared_ptr<I>, TName> >&) const {
+        return new I(value_);
     }
 
     template<typename I>
@@ -826,6 +883,8 @@ public:
     }
 
 private:
+    mutable aux::shared_ptr<T> ref_;
+    mutable aux_::shared_ptr<T> ref__;
     mutable T value_;
 };
 
@@ -1773,7 +1832,11 @@ class dependency : public get_scope<TExpected, TGiven, TScope>::type
 
     template<typename T>
     struct get_convertible<T, typename enable_if<has_call_operator<T> >::type>
-        : get_convertible_impl<typename di::type_traits::parameter_types<BOOST_TYPEOF_TPL(&T::operator())>::result_type>
+        : get_convertible_impl<
+              typename di::type_traits::parameter_types<
+                  BOOST_TYPEOF_TPL(&T::operator())
+              >::result_type
+          >
     { };
 
 public:
@@ -2200,6 +2263,21 @@ class copy
 {
     typedef function<T*()> object_t;
 
+    template<typename I>
+    class scoped_ptr
+    {
+    public:
+        explicit scoped_ptr(I* ptr)
+            : ptr_(ptr)
+        { }
+
+        ~scoped_ptr() { delete ptr_; }
+        I& operator*() const { return *ptr_; }
+
+    private:
+        I* ptr_;
+    };
+
 public:
     template<typename I>
     copy(const I& object) // non explicit
@@ -2235,13 +2313,29 @@ public:
     }
 
     template<typename I>
+    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) const {
+        return aux_::shared_ptr<I>(object_());
+    }
+
+    template<typename I>
     const aux::shared_ptr<I>& operator()(const type<const aux::shared_ptr<I>&>&) const {
         ref_ = aux::shared_ptr<I>(object_());
         return ref_;
     }
 
+    template<typename I>
+    const aux_::shared_ptr<I>& operator()(const type<const aux_::shared_ptr<I>&>&) const {
+        ref__ = aux_::shared_ptr<I>(object_());
+        return ref__;
+    }
+
     template<typename I, typename TName>
     I* operator()(const type<named<aux::shared_ptr<I>, TName> >&) const {
+        return object_();
+    }
+
+    template<typename I, typename TName>
+    I* operator()(const type<named<aux_::shared_ptr<I>, TName> >&) const {
         return object_();
     }
 
@@ -2260,8 +2354,18 @@ public:
         return aux::unique_ptr<I>(object_());
     }
 
+    template<typename I>
+    aux::unique_ptr<I> operator()(const type<const aux::unique_ptr<I>&>&) const {
+        return aux::unique_ptr<I>(object_());
+    }
+
     template<typename I, typename TName>
-    I* operator()(type<named<aux::unique_ptr<I>, TName> >&) const {
+    I* operator()(const type<named<aux::unique_ptr<I>, TName> >&) const {
+        return object_();
+    }
+
+    template<typename I, typename TName>
+    I* operator()(const type<named<const aux::unique_ptr<I>&, TName> >&) const {
         return object_();
     }
 
@@ -2273,6 +2377,7 @@ public:
 private:
     object_t object_;
     mutable aux::shared_ptr<T> ref_;
+    mutable aux_::shared_ptr<T> ref__;
 };
 
 } // namespace convertibles
@@ -4786,6 +4891,12 @@ struct scope_traits<aux::auto_ptr<T> >
 
 template<typename T>
 struct scope_traits<aux::shared_ptr<T> >
+{
+    typedef scopes::shared<> type;
+};
+
+template<typename T>
+struct scope_traits<aux_::shared_ptr<T> >
 {
     typedef scopes::shared<> type;
 };
@@ -7525,7 +7636,6 @@ namespace di {
 namespace policies {
 
 BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
-BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
 
 struct allow_smart_ptrs
 {
@@ -7588,42 +7698,40 @@ struct allow_copies
     { };
 };
 
-namespace detail {
-
-template<typename T>
-struct value_type
-{
-    typedef typename T::value_type type;
-};
-
-template<typename TAllow, typename T>
-struct is_allowed_impl
-    : TAllow::template allow<T>
-{ };
-
-template<typename, typename, typename = void>
-struct is_allowed_nested_impl
-    : mpl::true_
-{ };
-
-template<typename TAllow, typename T>
-struct is_allowed_nested_impl<TAllow, T, typename enable_if<has_value_type<T> >::type>
-    : TAllow::template allow<typename value_type<T>::type>
-{ };
-
-} // namespace detail
-
 template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na , typename T10 = ::boost::mpl::na , typename T11 = ::boost::mpl::na , typename T12 = ::boost::mpl::na , typename T13 = ::boost::mpl::na , typename T14 = ::boost::mpl::na , typename T15 = ::boost::mpl::na , typename T16 = ::boost::mpl::na , typename T17 = ::boost::mpl::na , typename T18 = ::boost::mpl::na , typename T19 = ::boost::mpl::na >
 class arguments_permission
 {
-    typedef mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19> allows_type;
+    typedef mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19> allow_types;
+
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
 
     template<typename T>
-    struct is_allowed_nested
+    struct value_type
+    {
+        typedef typename T::value_type type;
+    };
+
+    template<typename TAllow, typename T>
+    struct is_argment_permitted_impl
+        : TAllow::template allow<T>
+    { };
+
+    template<typename, typename, typename = void>
+    struct is_argument_permitted_nested_impl
+        : mpl::true_
+    { };
+
+    template<typename TAllow, typename T>
+    struct is_argument_permitted_nested_impl<TAllow, T, typename enable_if<has_value_type<T> >::type>
+        : TAllow::template allow<typename value_type<T>::type>
+    { };
+
+    template<typename T>
+    struct is_argument_permitted_nested
         : mpl::bool_<
               mpl::count_if<
-                  allows_type
-                , detail::is_allowed_nested_impl<
+                  allow_types
+                , is_argument_permitted_nested_impl<
                       mpl::_
                     , typename type_traits::remove_accessors<T>::type
                   >
@@ -7632,13 +7740,13 @@ class arguments_permission
     { };
 
     template<typename T>
-    struct is_allowed
+    struct is_argument_permitted
         : mpl::bool_<
               mpl::count_if<
-                  allows_type
+                  allow_types
                 , mpl::and_<
-                      detail::is_allowed_impl<mpl::_, T>
-                    , is_allowed_nested<T>
+                      is_argment_permitted_impl<mpl::_, T>
+                    , is_argument_permitted_nested<T>
                   >
               >::value != 0
           >
@@ -7650,7 +7758,7 @@ public:
       , typename T
     >
     static void assert_policy() {
-        BOOST_MPL_ASSERT_MSG(is_allowed<typename T::type>::value, ARGUMENT_NOT_PERMITTED, (typename T::type));
+        BOOST_MPL_ASSERT_MSG(is_argument_permitted<typename T::type>::value, ARGUMENT_NOT_PERMITTED, (typename T::type));
 
     }
 };
@@ -8008,125 +8116,32 @@ struct allow_scope
 template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na , typename T10 = ::boost::mpl::na , typename T11 = ::boost::mpl::na , typename T12 = ::boost::mpl::na , typename T13 = ::boost::mpl::na , typename T14 = ::boost::mpl::na , typename T15 = ::boost::mpl::na , typename T16 = ::boost::mpl::na , typename T17 = ::boost::mpl::na , typename T18 = ::boost::mpl::na , typename T19 = ::boost::mpl::na >
 class scopes_permission
 {
-    template<
-        typename T
-      , typename TCallStackSize
-      , typename TCtor =
-            typename type_traits::ctor_traits<
-                typename type_traits::make_plain<T>::type
-            >::type
-    >
-    struct ctor
-        : mpl::if_<
-              mpl::and_<
-                  mpl::empty<TCtor>
-                , mpl::equal_to<TCallStackSize, mpl::int_<1> >
-              >
-            , mpl::vector1<T>
-            , TCtor
-          >::type
-    { };
-
-    template<
-        typename T
-      , typename TCallStack
-      , typename TBind
-    >
-    struct binder
-        : TBind::template get_dependency<T, TCallStack>::type
-    { };
+    typedef mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19> permitted_types;
 
     template<typename TAllow, typename T>
-    struct is_allowed_impl
+    struct is_scope_permitted_impl
         : TAllow::template allow<T>
     { };
 
-    template<
-        typename T
-      , typename TAllows = mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19>
-    >
-    struct is_allowed
+    template<typename T>
+    struct is_scope_permitted
         : mpl::bool_<
               mpl::count_if<
-                  TAllows
-                , is_allowed_impl<mpl::_, T>
+                  permitted_types
+                , is_scope_permitted_impl<mpl::_, T>
               >::value != 0
           >
     { };
 
-    template<typename T>
-    struct scope
-    {
-        typedef typename T::scope type;
-    };
-
-    template<
-        typename T
-      , typename TBind
-      , typename TCallStack =
-            mpl::vector1<typename type_traits::make_plain<T>::type>
-    >
-    struct scopes_permission_impl
-        : mpl::fold<
-              ctor<typename binder<T, TCallStack, TBind>::given, mpl::size<TCallStack> >
-            , mpl::vector0<>
-            , mpl::copy<
-                  mpl::joint_view<
-                      mpl::if_<
-                          is_allowed<
-                              scope<binder<mpl::_2, TCallStack, TBind> >
-                          >
-                        , mpl::_2 // ignore
-                        , mpl::vector1<
-                              mpl::pair<
-                                  mpl::_2
-                                , scope<binder<mpl::_2, TCallStack, TBind> >
-                              >
-                          >
-                      >
-                    , scopes_permission_impl<
-                          mpl::_2
-                        , TBind
-                        , mpl::push_back<
-                              TCallStack
-                            , type_traits::make_plain<mpl::_2>
-                          >
-                      >
-                  >
-                , mpl::back_inserter<mpl::_1>
-              >
-          >
-    { };
-
-    template<typename T, typename TAssert>
-    struct verify_impl : T
-    {
-        BOOST_MPL_ASSERT_MSG(
-            !TAssert::value || mpl::empty<T>::value
-          , SCOPE_NOT_PERMITTED
-          , (T)
-        );
-    };
-
 public:
     template<
-        typename TDeps
-      , typename TGiven
-      , typename TAssert = mpl::true_
-      , template<typename> class TBinder = di::detail::static_binder
-    >
-    struct verify
-        : verify_impl<
-              typename scopes_permission_impl<TGiven, TBinder<TDeps> >::type
-            , TAssert
-          >
-    { };
-
-    template<
-        typename TDeps
+        typename
       , typename T
     >
-    static void assert_policy() { }
+    static void assert_policy() {
+        BOOST_MPL_ASSERT_MSG(is_scope_permitted<typename T::scope>::value, SCOPE_NOT_PERMITTED, (typename T::scope));
+
+    }
 };
 
 } // namespace policies
