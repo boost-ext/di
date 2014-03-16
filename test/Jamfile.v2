@@ -78,87 +78,87 @@ rule compile-fail-test ( std * : src : ctor * : defines * : force_bracket * : pr
     }
 }
 
-#test-suite "unit tests" :
-    #[ run-test c++11 : ut/concepts/dependency_ut.cpp ]
-    #[ run-test c++11 : ut/concepts_ut.cpp ]
-    #[ run-test c++11 : ut/named_ut.cpp ]
+test-suite "unit tests" :
+    [ run-test c++11 : ut/concepts/dependency_ut.cpp ]
+    [ run-test c++11 : ut/concepts_ut.cpp ]
+    [ run-test c++11 : ut/named_ut.cpp ]
 
-    #[ run-test c++11 : ut/convertibles/copy_ut.cpp : convertible_copy_ut ]
-    #[ run-test c++11 : ut/convertibles/reference_ut.cpp : convertible_reference_ut ]
-    #[ run-test c++11 : ut/convertibles/shared_ut.cpp : convertible_shared_ut ]
-    #[ run-test c++11 : ut/convertibles/value_ut.cpp : convertible_value_ut ]
+    [ run-test c++11 : ut/convertibles/copy_ut.cpp : convertible_copy_ut ]
+    [ run-test c++11 : ut/convertibles/reference_ut.cpp : convertible_reference_ut ]
+    [ run-test c++11 : ut/convertibles/shared_ut.cpp : convertible_shared_ut ]
+    [ run-test c++11 : ut/convertibles/value_ut.cpp : convertible_value_ut ]
 
-    #[ run-test c++11 : ut/type_traits/create_traits_ut.cpp ]
-    #[ run-test c++11 : ut/type_traits/ctor_traits_ut.cpp ]
-    #[ run-test c++11 : ut/type_traits/ctor_traits_ut.cpp : cpp_11_ctor_traits_ut ]
-    #[ run-test c++03 : ut/type_traits/ctor_traits_ut.cpp : cpp_03_ctor_traits_ut ]
-    #[ run-test c++11 : ut/type_traits/has_ctor_ut.cpp ]
-    #[ run-test c++11 : ut/type_traits/is_same_base_of_ut.cpp ]
-    #[ run-test c++11 : ut/type_traits/make_plain_ut.cpp ]
-    #[ run-test c++11 : ut/type_traits/remove_accessors_ut.cpp ]
-    #[ run-test c++11 : ut/type_traits/scope_traits_ut.cpp ]
+    [ run-test c++11 : ut/type_traits/create_traits_ut.cpp ]
+    [ run-test c++11 : ut/type_traits/ctor_traits_ut.cpp ]
+    [ run-test c++11 : ut/type_traits/ctor_traits_ut.cpp : cpp_11_ctor_traits_ut ]
+    [ run-test c++03 : ut/type_traits/ctor_traits_ut.cpp : cpp_03_ctor_traits_ut ]
+    [ run-test c++11 : ut/type_traits/has_ctor_ut.cpp ]
+    [ run-test c++11 : ut/type_traits/is_same_base_of_ut.cpp ]
+    [ run-test c++11 : ut/type_traits/make_plain_ut.cpp ]
+    [ run-test c++11 : ut/type_traits/remove_accessors_ut.cpp ]
+    [ run-test c++11 : ut/type_traits/scope_traits_ut.cpp ]
 
-    #[ run-test c++11 : ut/detail/binders/static_binder_ut.cpp ]
-    #[ run-test c++11 : ut/detail/creator_ut.cpp ]
-    #[ run-test c++11 : ut/detail/pool_ut.cpp ]
+    [ run-test c++11 : ut/detail/binders/static_binder_ut.cpp ]
+    [ run-test c++11 : ut/detail/creator_ut.cpp ]
+    [ run-test c++11 : ut/detail/pool_ut.cpp ]
 
-    #[ run-test c++11 : ut/policies/arguments_permission_ut.cpp ]
-    #[ run-test c++11 : ut/policies/circular_dependencies_ut.cpp ]
-    #[ run-test c++11 : ut/policies/creation_ownership_ut.cpp ]
-    #[ run-test c++11 : ut/policies/scopes_permission_ut.cpp ]
+    [ run-test c++11 : ut/policies/arguments_permission_ut.cpp ]
+    [ run-test c++11 : ut/policies/circular_dependencies_ut.cpp ]
+    [ run-test c++11 : ut/policies/creation_ownership_ut.cpp ]
+    [ run-test c++11 : ut/policies/scopes_permission_ut.cpp ]
 
-    #[ run-test c++11 : ut/scopes/external_ut.cpp : scope_external_ut ]
-    #[ run-test c++11 : ut/scopes/session_ut.cpp : scope_session_ut ]
-    #[ run-test c++11 : ut/scopes/shared_ut.cpp : scope_shared_ut ]
-    #[ run-test c++11 : ut/scopes/unique_ut.cpp : scope_unique_ut ]
+    [ run-test c++11 : ut/scopes/external_ut.cpp : scope_external_ut ]
+    [ run-test c++11 : ut/scopes/session_ut.cpp : scope_session_ut ]
+    [ run-test c++11 : ut/scopes/shared_ut.cpp : scope_shared_ut ]
+    [ run-test c++11 : ut/scopes/unique_ut.cpp : scope_unique_ut ]
 
-    #[ run-test c++11 : ut/inject_bracket_ut.cpp ]
-    #[ run-test c++11 : ut/inject_va_args_ut.cpp ]
+    [ run-test c++11 : ut/inject_bracket_ut.cpp ]
+    [ run-test c++11 : ut/inject_va_args_ut.cpp ]
 
-    #[ run-test c++11 : ut/injector_ut.cpp ]
-    #[ run-test c++11 : ut/injector_ut.cpp : ctor_injector_ut ]
-#;
+    [ run-test c++11 : ut/injector_ut.cpp ]
+    [ run-test c++11 : ut/injector_ut.cpp : ctor_injector_ut ]
+;
 
-#test-suite "module tests" :
-    #[ run-test c++11 : mt/detail/module_mt.cpp ]
-    #[ run-test c++11 : mt/detail/module_mt.cpp : ctor_module_mt ]
+test-suite "module tests" :
+    [ run-test c++11 : mt/detail/module_mt.cpp ]
+    [ run-test c++11 : mt/detail/module_mt.cpp : ctor_module_mt ]
 
-    #[ run-test c++11 : mt/injector_mt.cpp ]
-    #[ run-test c++11 : mt/injector_mt.cpp : ctor_injector_mt ]
+    [ run-test c++11 : mt/injector_mt.cpp ]
+    [ run-test c++11 : mt/injector_mt.cpp : ctor_injector_mt ]
 
-    ##[ run-test c++11 : mt/injector_runtime_mt.cpp ]
-    #[ run-test c++11 : mt/injector_runtime_mt.cpp : ctor_injector_runtime_mt ]
+    #[ run-test c++11 : mt/injector_runtime_mt.cpp ]
+    [ run-test c++11 : mt/injector_runtime_mt.cpp : ctor_injector_runtime_mt ]
 
-    #[ run-test c++11 : mt/make_injector_mt.cpp ]
-    #[ run-test c++11 : mt/make_injector_mt.cpp : ctor_make_injector_mt ]
-    #[ run-test c++11 : mt/injector_limit_size_mt.cpp : :
-        #<define>BOOST_DI_CFG_CTOR_LIMIT_SIZE=30
-        #<define>BOOST_MPL_LIMIT_VECTOR_SIZE=30
-    #]
-#;
+    [ run-test c++11 : mt/make_injector_mt.cpp ]
+    [ run-test c++11 : mt/make_injector_mt.cpp : ctor_make_injector_mt ]
+    [ run-test c++11 : mt/injector_limit_size_mt.cpp : :
+        <define>BOOST_DI_CFG_CTOR_LIMIT_SIZE=30
+        <define>BOOST_MPL_LIMIT_VECTOR_SIZE=30
+    ]
+;
 
-#test-suite "functional tests" :
-    #[ run-test c++11 : ft/di_ft_cpp_11.cpp ]
-    #[ run-test c++11 : ft/di_ft_cpp_11.cpp : ctor_di_ft_cpp_11 ]
+test-suite "functional tests" :
+    [ run-test c++11 : ft/di_ft_cpp_11.cpp ]
+    [ run-test c++11 : ft/di_ft_cpp_11.cpp : ctor_di_ft_cpp_11 ]
 
-    #[ run-test c++03 : ft/di_ft_cpp_03.cpp ]
-    #[ run-test c++03 : ft/di_ft_cpp_03.cpp : ctor_di_ft_cpp_03 ]
-#;
+    [ run-test c++03 : ft/di_ft_cpp_03.cpp ]
+    [ run-test c++03 : ft/di_ft_cpp_03.cpp : ctor_di_ft_cpp_03 ]
+;
 
-#test-suite "fail tests" :
-    #[ compile-fail-test c++11 : fail/detail/module_externals_fail.cpp ]
-    #[ compile-fail-test c++11 : fail/policies/arguments_permission_fail.cpp ]
-    #[ compile-fail-test c++11 : fail/policies/arguments_permission_fail.cpp : ctor_arguments_permission_fail ]
-    #[ compile-fail-test c++11 : fail/policies/circular_dependencies_fail.cpp ]
-    #[ compile-fail-test c++11 : fail/policies/circular_dependencies_fail.cpp : ctor_circular_dependencies_fail ]
-    #[ compile-fail-test c++11 : fail/policies/creation_ownership_fail.cpp ]
-    #[ compile-fail-test c++11 : fail/policies/scopes_permission_fail.cpp ]
-    #[ compile-fail-test c++11 : fail/injector_ctor_ambiguous_fail.cpp ]
-    #[ compile-fail-test c++11 : fail/injector_ctor_ambiguous_fail.cpp : ctor_injector_ctor_ambiguous_fail ]
-    #[ compile-fail-test c++03 : fail/injector_ctor_one_arg_fail_cpp_03.cpp ]
-    #[ compile-fail-test c++11 : fail/injector_shared_by_copy_fail.cpp ]
-    #[ compile-fail-test c++11 : fail/injector_shared_by_copy_fail.cpp : ctor_injector_shared_by_copy_fail ]
-#;
+test-suite "fail tests" :
+    [ compile-fail-test c++11 : fail/detail/module_externals_fail.cpp ]
+    [ compile-fail-test c++11 : fail/policies/arguments_permission_fail.cpp ]
+    [ compile-fail-test c++11 : fail/policies/arguments_permission_fail.cpp : ctor_arguments_permission_fail ]
+    [ compile-fail-test c++11 : fail/policies/circular_dependencies_fail.cpp ]
+    [ compile-fail-test c++11 : fail/policies/circular_dependencies_fail.cpp : ctor_circular_dependencies_fail ]
+    [ compile-fail-test c++11 : fail/policies/creation_ownership_fail.cpp ]
+    [ compile-fail-test c++11 : fail/policies/scopes_permission_fail.cpp ]
+    [ compile-fail-test c++11 : fail/injector_ctor_ambiguous_fail.cpp ]
+    [ compile-fail-test c++11 : fail/injector_ctor_ambiguous_fail.cpp : ctor_injector_ctor_ambiguous_fail ]
+    [ compile-fail-test c++03 : fail/injector_ctor_one_arg_fail_cpp_03.cpp ]
+    [ compile-fail-test c++11 : fail/injector_shared_by_copy_fail.cpp ]
+    [ compile-fail-test c++11 : fail/injector_shared_by_copy_fail.cpp : ctor_injector_shared_by_copy_fail ]
+;
 
 test-suite "performance tests" :
     [ run-test c++11 : pt/compilation_pt.cpp : preprocessed_compilation_pt_cpp_11 : <define>BOOST_DI_CFG_BOOST_SMART_PTR : : preprocessed_headers ] #ftime-report
