@@ -36,8 +36,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(no_circular_dependency, T, no_circular_dependencie
     BOOST_CHECK_NO_THROW(
         (
             circular_dependencies::assert_policy<
-                mpl::vector0<>
-              , dependency<T>
+                dependency<T>
             >()
         )
     );
@@ -53,8 +52,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(circular_dependency, T, circular_dependencies_type
     BOOST_REQUIRE_EXCEPTION(
         (
             circular_dependencies::assert_policy<
-                mpl::vector0<>
-              , dependency<T>
+                dependency<T>
             >()
         )
       , assert_exception

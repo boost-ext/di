@@ -11,11 +11,17 @@
 #include <boost/test/test_case_template.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
-#include <boost/mpl/identity.hpp>
 
 namespace boost {
 namespace di {
 namespace policies {
+
+template<typename T, typename TCallStack = mpl::vector0<> >
+struct fake_dependency
+{
+    typedef T type;
+    typedef TCallStack call_stack;
+};
 
 using clear_ownerhsip_types = mpl::vector<
     int
@@ -28,8 +34,17 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(clear_ownerhsip, T, clear_ownerhsip_types) {
     BOOST_CHECK_NO_THROW(
         (
             creation_ownership::assert_policy<
-                mpl::vector0<>
-              , mpl::identity<T>
+                fake_dependency<T>
+            >()
+        )
+    );
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(clear_ownerhsip_nested, T, clear_ownerhsip_types) {
+    BOOST_CHECK_NO_THROW(
+        (
+            creation_ownership::assert_policy<
+                fake_dependency<T, mpl::vector<T, T>>
             >()
         )
     );
@@ -44,8 +59,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(not_clear_ownerhsip, T, not_clear_ownerhsip_types)
     BOOST_REQUIRE_EXCEPTION(
         (
             creation_ownership::assert_policy<
-                mpl::vector0<>
-              , mpl::identity<T>
+                fake_dependency<T, mpl::vector<T> >
             >()
         )
       , assert_exception

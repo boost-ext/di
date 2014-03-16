@@ -16,10 +16,7 @@ template<int>
 class fake_policy
 {
 public:
-    template<
-        typename TDeps
-      , typename T
-    >
+    template<typename T>
     void assert_policy()
     { }
 };

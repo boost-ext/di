@@ -91,7 +91,7 @@ BOOST_AUTO_TEST_CASE(create_complex) {
     ));
 
     boost::shared_ptr<c3> c3_ = injector_.create<boost::shared_ptr<c3> >(
-        di::policies::binding_correctness()
+        di::policies::creation_ownership()
       , di::policies::circular_dependencies()
       , di::policies::arguments_permission<
             di::policies::allow_smart_ptrs

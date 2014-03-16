@@ -120,34 +120,6 @@
             );
         };
 
-        template<typename T>
-        class has_assert_policy
-        {
-            struct base_impl { static void assert_policy() { }; };
-
-            struct base
-                : base_impl
-                , mpl::if_<is_class<T>, T, mpl::void_>::type
-            { base() { } };
-
-            template<typename U>
-            static mpl::aux::no_tag test(
-                U*
-              , non_type<void(*)(), &U::assert_policy>* = 0
-            );
-
-            static mpl::aux::yes_tag test(...);
-
-        public:
-            typedef has_assert_policy type;
-
-            BOOST_STATIC_CONSTANT(
-                bool
-              , value = !has_scope<T>::value &&
-                        sizeof(test((base*)(0))) == sizeof(mpl::aux::yes_tag)
-            );
-        };
-
         class empty_visitor
         {
         public:

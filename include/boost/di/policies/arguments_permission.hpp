@@ -161,15 +161,12 @@ class arguments_permission
     { };
 
 public:
-    template<
-        typename TDeps
-      , typename T
-    >
+    template<typename TDependency>
     static void assert_policy() {
         BOOST_DI_ASSERT_MSG(
-            is_argument_permitted<typename T::type>::value
+            is_argument_permitted<typename TDependency::type>::value
           , ARGUMENT_NOT_PERMITTED
-          , typename T::type
+          , typename TDependency::type
         );
     }
 };

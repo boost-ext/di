@@ -196,14 +196,14 @@
         #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM(0)
         #include BOOST_PP_ITERATE()
 
-        template<typename TSeq, typename TDeps, typename T>
+        template<typename TSeq, typename T>
         typename enable_if<mpl::empty<TSeq> >::type assert_policies() { }
 
-        template<typename TSeq, typename TDeps, typename T>
+        template<typename TSeq, typename T>
         typename disable_if<mpl::empty<TSeq> >::type assert_policies() {
             typedef typename mpl::front<TSeq>::type policy;
-            policy::template assert_policy<TDeps, T>();
-            assert_policies<typename mpl::pop_front<TSeq>::type, TDeps, T>();
+            policy::template assert_policy<T>();
+            assert_policies<typename mpl::pop_front<TSeq>::type, T>();
         }
     };
 
@@ -229,7 +229,7 @@
       , const convertible<T>&
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
-        assert_policies<TPolicies, typename TDeps::types, dependency_type>();
+        assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
         return static_cast<binder_type*>(this)->template resolve_<

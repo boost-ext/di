@@ -47,15 +47,12 @@ class circular_dependencies
     { };
 
 public:
-    template<
-        typename
-      , typename T
-    >
+    template<typename TDependency>
     static void assert_policy() {
        BOOST_DI_ASSERT_MSG(
-            is_unique_call_stack<typename T::call_stack>::value
+            is_unique_call_stack<typename TDependency::call_stack>::value
           , CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED
-          , typename T::call_stack
+          , typename TDependency::call_stack
         );
     }
 };

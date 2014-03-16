@@ -10,7 +10,7 @@
 
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/concepts.hpp"
-#include "boost/di/policies/binding_correctness.hpp"
+#include "boost/di/policies/creation_ownership.hpp"
 #include "boost/di/policies/circular_dependencies.hpp"
 
 #include "common/data.hpp"
@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE(with_policy) {
     );
 
     BOOST_CHECK_EQUAL(i, injector_.create<c3>(
-        policies::binding_correctness()
+        policies::creation_ownership()
       , policies::circular_dependencies()
     ).i);
 }
@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE(with_policy_seperate) {
     );
 
     BOOST_CHECK_EQUAL(i, injector_.create<c3>(
-        policies::binding_correctness()
+        policies::creation_ownership()
       , policies::circular_dependencies()
     ).i);
 }
@@ -100,7 +100,7 @@ BOOST_AUTO_TEST_CASE(mix) {
 
     auto c5_ = injector_.create<aux::shared_ptr<c5>>(
         policies::circular_dependencies()
-      , policies::binding_correctness()
+      , policies::creation_ownership()
     );
 
     BOOST_CHECK(dynamic_cast<c0if0*>(c5_->if0_.get()));

@@ -15,34 +15,49 @@ namespace di = boost::di;
 
 struct i { virtual ~i() { } };
 struct impl : i { };
+struct some_name { };
 
-struct hello_world {
-    hello_world(std::shared_ptr<i> p1
-              , boost::shared_ptr<i> p2
-              , int i
-              , const std::string& txt)
+struct hello
+{
+    hello(const std::shared_ptr<i>& sp, double d)
+        : sp(sp)
     {
-        assert(dynamic_cast<impl*>(p1.get()));
-        assert(dynamic_cast<impl*>(p2.get()));
-        assert(p1.get() == p2.get());
+        assert(dynamic_cast<impl*>(sp.get()));
+        assert(d == 0.0); // default zero initialization
+    }
+
+    std::shared_ptr<i> sp;
+};
+
+struct world {
+    world(hello copy
+        , boost::shared_ptr<i> sp
+        , int i
+        , di::named<const std::string&, some_name> str)
+    {
+        std::string s = str;
+        assert(dynamic_cast<impl*>(sp.get()));
+        assert(copy.sp.get() == sp.get());
         assert(i == 42);
-        assert(txt == "text");
+        assert(s == "some_name");
     }
 };
 
 int main() {
     auto injector = di::make_injector(
-        di::bind_int<42>() // static
-      , di::bind<std::string>::to("text") // external
-      , di::bind<i, impl>() // di::shared<di::bind<i, impl>>
+        di::bind_int<42>() // static value
+      , di::bind<std::string>::named<some_name>::to("some_name") // external value
+      , di::bind<i, impl>() // scope deduction -> di::shared<di::bind<i, impl>>
     );
 
-    auto app = injector.create<hello_world>();
+    auto hello_world = injector.create<world>();
+
+    return 0;
 }
 ```
 
 ## Main Features
-* Header only
+* Header only library
 * Architecture independent (tested on x86/x86\_64)
 * Supports all POSIX and Windows operating systems (tested on Linux 3.8/Windows 7/8)
 * Supports C++03/C++11 standard
@@ -51,11 +66,11 @@ int main() {
 * Constructor injection (macro free)
 * Compile time creation guaranty
 * Compile time policies (arguments permission, binding correctness, circular dependencies, creation ownership, scopes permission)
-* Dependencies life time management (scopes: deduce, external, unique, shared, session) + custom scopes
-* Scope deduction (shared\_ptr -> shared, unique\_ptr, lvalue -> unique)
-* Supports copies, references, pointers, boost and std smart pointers + rvalue references
-* Named parameters (named<int, my_int>)
-* Runtime visitor (generation UML diagrams)
+* Dependencies life time management (scopes: deduce, external, unique, shared, session + custom scopes)
+* Scope deduction (shared\_ptr -> shared, unique\_ptr, lvalue -> unique, ...)
+* Supports copies, references, pointers, boost and std smart pointers / rvalue references(C++11)
+* Named parameters (named\<int, my\_int\>)
+* Runtime visitor throughout created objects (useful for generation dependency diagrams)
 
 ## Tested compilers
 * Clang 3.2/3.3/3.4

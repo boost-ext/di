@@ -43,7 +43,6 @@
 #include <boost/mpl/transform.hpp>
 #include <boost/mpl/times.hpp>
 #include <boost/mpl/size.hpp>
-#include <boost/mpl/set.hpp>
 #include <boost/mpl/range_c.hpp>
 #include <boost/mpl/push_back.hpp>
 #include <boost/mpl/pop_front.hpp>
@@ -60,7 +59,6 @@
 #include <boost/mpl/is_sequence.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/integral_c.hpp>
-#include <boost/mpl/insert.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/has_xxx.hpp>
@@ -78,10 +76,8 @@
 #include <boost/mpl/bind.hpp>
 #include <boost/mpl/begin_end.hpp>
 #include <boost/mpl/back_inserter.hpp>
-#include <boost/mpl/back.hpp>
 #include <boost/mpl/aux_/yes_no.hpp>
 #include <boost/mpl/at.hpp>
-#include <boost/mpl/assert.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/advance.hpp>
@@ -608,10 +604,6 @@ public:
         named(object_type&& object) // non explicit
             : object_(std::move(object))
         { }
-
-        //named(named&& other) // non explicit
-            //: object_(std::move(other.object_))
-        //{ }
     )
 
     operator T() const { return object_; }
@@ -9272,7 +9264,7 @@ private:
       , const convertible<T>&
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
-        assert_policies<TPolicies, typename TDeps::types, dependency_type>();
+        assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
         return static_cast<binder_type*>(this)->template resolve_<
@@ -9298,7 +9290,7 @@ private:
       , const convertible<T>&
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
-        assert_policies<TPolicies, typename TDeps::types, dependency_type>();
+        assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
         return static_cast<binder_type*>(this)->template resolve_<
@@ -9324,7 +9316,7 @@ private:
       , const convertible<T>&
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
-        assert_policies<TPolicies, typename TDeps::types, dependency_type>();
+        assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
         return static_cast<binder_type*>(this)->template resolve_<
@@ -9350,7 +9342,7 @@ private:
       , const convertible<T>&
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
-        assert_policies<TPolicies, typename TDeps::types, dependency_type>();
+        assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
         return static_cast<binder_type*>(this)->template resolve_<
@@ -9376,7 +9368,7 @@ private:
       , const convertible<T>&
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
-        assert_policies<TPolicies, typename TDeps::types, dependency_type>();
+        assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
         return static_cast<binder_type*>(this)->template resolve_<
@@ -9402,7 +9394,7 @@ private:
       , const convertible<T>&
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
-        assert_policies<TPolicies, typename TDeps::types, dependency_type>();
+        assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
         return static_cast<binder_type*>(this)->template resolve_<
@@ -9428,7 +9420,7 @@ private:
       , const convertible<T>&
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
-        assert_policies<TPolicies, typename TDeps::types, dependency_type>();
+        assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
         return static_cast<binder_type*>(this)->template resolve_<
@@ -9454,7 +9446,7 @@ private:
       , const convertible<T>&
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
-        assert_policies<TPolicies, typename TDeps::types, dependency_type>();
+        assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
         return static_cast<binder_type*>(this)->template resolve_<
@@ -9480,7 +9472,7 @@ private:
       , const convertible<T>&
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
-        assert_policies<TPolicies, typename TDeps::types, dependency_type>();
+        assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
         return static_cast<binder_type*>(this)->template resolve_<
@@ -9506,7 +9498,7 @@ private:
       , const convertible<T>&
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
-        assert_policies<TPolicies, typename TDeps::types, dependency_type>();
+        assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
         return static_cast<binder_type*>(this)->template resolve_<
@@ -9532,7 +9524,7 @@ private:
       , const convertible<T>&
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
-        assert_policies<TPolicies, typename TDeps::types, dependency_type>();
+        assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
         return static_cast<binder_type*>(this)->template resolve_<
@@ -9544,14 +9536,14 @@ private:
         >(deps, refs, visitor);
     }
 
-        template<typename TSeq, typename TDeps, typename T>
+        template<typename TSeq, typename T>
         typename enable_if<mpl::empty<TSeq> >::type assert_policies() { }
 
-        template<typename TSeq, typename TDeps, typename T>
+        template<typename TSeq, typename T>
         typename disable_if<mpl::empty<TSeq> >::type assert_policies() {
             typedef typename mpl::front<TSeq>::type policy;
-            policy::template assert_policy<TDeps, T>();
-            assert_policies<typename mpl::pop_front<TSeq>::type, TDeps, T>();
+            policy::template assert_policy<T>();
+            assert_policies<typename mpl::pop_front<TSeq>::type, T>();
         }
     };
 
@@ -9650,34 +9642,6 @@ private:
             BOOST_STATIC_CONSTANT(
                 bool
               , value = base_call<mpl::bool_<has_call_impl<T>::value> >::value
-            );
-        };
-
-        template<typename T>
-        class has_assert_policy
-        {
-            struct base_impl { static void assert_policy() { }; };
-
-            struct base
-                : base_impl
-                , mpl::if_<is_class<T>, T, mpl::void_>::type
-            { base() { } };
-
-            template<typename U>
-            static mpl::aux::no_tag test(
-                U*
-              , non_type<void(*)(), &U::assert_policy>* = 0
-            );
-
-            static mpl::aux::yes_tag test(...);
-
-        public:
-            typedef has_assert_policy type;
-
-            BOOST_STATIC_CONSTANT(
-                bool
-              , value = !has_scope<T>::value &&
-                        sizeof(test((base*)(0))) == sizeof(mpl::aux::yes_tag)
             );
         };
 
@@ -12493,281 +12457,11 @@ class arguments_permission
     { };
 
 public:
-    template<
-        typename TDeps
-      , typename T
-    >
+    template<typename TDependency>
     static void assert_policy() {
-        BOOST_MPL_ASSERT_MSG(is_argument_permitted<typename T::type>::value, ARGUMENT_NOT_PERMITTED, (typename T::type));
+        BOOST_MPL_ASSERT_MSG(is_argument_permitted<typename TDependency::type>::value, ARGUMENT_NOT_PERMITTED, (typename TDependency::type));
 
     }
-};
-
-} // namespace policies
-} // namespace di
-} // namespace boost
-
-namespace boost {
-namespace di {
-namespace policies {
-
-class binding_correctness
-{
-    template<typename>
-    struct is_scope
-        : mpl::false_
-    { };
-
-    template<template<typename> class TConvertible>
-    struct is_scope<scopes::shared<TConvertible> >
-        : mpl::true_
-    { };
-
-    template<template<typename> class TConvertible>
-    struct is_scope<scopes::session<TConvertible> >
-        : mpl::true_
-    { };
-
-    template<typename T>
-    struct scope_
-    {
-        typedef typename T::scope type;
-    };
-
-    template<typename T>
-    struct expected
-    {
-        typedef typename T::expected type;
-    };
-
-    template<typename T>
-    struct context
-    {
-        typedef typename T::context type;
-    };
-
-    template<typename T, typename = void>
-    struct get_type
-    {
-        typedef T type;
-    };
-
-    template<typename T>
-    struct get_type<T, typename enable_if<mpl::is_sequence<T> >::type>
-    {
-        typedef typename mpl::back<T>::type type;
-    };
-
-    template<typename T>
-    struct ctor
-        : type_traits::ctor_traits<
-              typename type_traits::make_plain<T>::type
-          >::type
-    { };
-
-    template<
-        typename T
-      , typename TCallStack
-      , typename TBind
-    >
-    struct binder
-        : TBind::template get_dependency<T, TCallStack>::type
-    { };
-
-    template<
-        typename T
-      , typename TBind
-      , typename TCallStack =
-            mpl::vector1<typename type_traits::make_plain<T>::type>
-    >
-    struct deps_
-        : mpl::fold<
-              ctor<typename binder<T, TCallStack, TBind>::given>
-            , mpl::vector0<>
-            , mpl::copy<
-                  mpl::joint_view<
-                      mpl::vector1<binder<mpl::_2, TCallStack, TBind> >
-                    , deps_<
-                          mpl::_2
-                        , TBind
-                        , mpl::push_back<
-                              TCallStack
-                            , type_traits::make_plain<mpl::_2>
-                          >
-                      >
-                  >
-                , mpl::back_inserter<mpl::_1>
-              >
-          >
-    { };
-
-    template<typename TDeps>
-    struct get_singletons
-        : mpl::fold<
-              TDeps
-            , mpl::vector0<>
-            , mpl::if_<
-                  is_scope<scope_<mpl::_2> >
-                , mpl::push_back<mpl::_1, expected<mpl::_2> >
-                , mpl::_1
-              >
-          >
-    { };
-
-    template<typename TDeps, typename T>
-    struct is_in_any_context
-        : mpl::contains<
-              typename mpl::fold<
-                  typename mpl::fold<
-                      typename mpl::transform<TDeps, context<mpl::_> >::type
-                    , mpl::vector0<>
-                    , mpl::copy<
-                          mpl::_2
-                        , mpl::back_inserter<mpl::_1>
-                      >
-                  >::type
-                , mpl::vector0<>
-                , mpl::push_back<mpl::_1, get_type<mpl::_2> >
-              >::type
-            , T
-          >
-    { };
-
-    template<typename TDeps>
-    struct undefined_behavior_impl
-        : mpl::fold<
-              typename mpl::fold<
-                  typename get_singletons<TDeps>::type
-                , mpl::set0<>
-                , mpl::if_<
-                      is_in_any_context<TDeps, mpl::_2>
-                    , mpl::insert<mpl::_1, mpl::_2>
-                    , mpl::_1
-                  >
-              >::type
-            , mpl::vector0<>
-            , mpl::push_back<mpl::_1, mpl::_2>
-          >
-    { };
-
-    template<typename TBind, typename T, typename TName>
-    struct comparator
-        : mpl::apply<TBind, T, TName>::type
-    { };
-
-    template<
-        typename TCtor
-      , typename TDependency
-    >
-    struct ctor_has_type
-        : mpl::count_if<
-              TCtor
-            , comparator<
-                  typename TDependency::bind
-                , mpl::_1
-                , typename TDependency::name
-              >
-          >::type
-    { };
-
-    template<typename T>
-    struct get_context
-        : mpl::fold<
-              typename T::context
-            , mpl::vector0<>
-            , mpl::if_<
-                  mpl::is_sequence<mpl::_2>
-                , mpl::push_back<
-                      mpl::_1
-                    , mpl::back<mpl::_2>
-                  >
-                , mpl::push_back<mpl::_1, mpl::_2>
-              >
-          >::type
-    { };
-
-    template<typename TDependency, typename TResult>
-    struct for_each_context
-        : mpl::fold<
-              get_context<TDependency>
-            , TResult
-            , mpl::if_<
-                 ctor_has_type<
-                      ctor<mpl::_2>
-                    , TDependency
-                  >
-                , mpl::_1
-                , mpl::push_back<
-                      mpl::_1
-                    , mpl::pair<
-                          typename expected<TDependency>::type
-                        , mpl::_2
-                      >
-                  >
-              >
-          >::type
-    { };
-
-    template<typename TDeps>
-    struct binding_impl
-        : mpl::fold<
-              TDeps
-            , mpl::vector0<>
-            , for_each_context<mpl::_2, mpl::_1>
-          >::type
-    { };
-
-    template<
-        typename TDeps
-      , typename TAssert
-      , typename T = typename binding_impl<TDeps>::type
-    >
-    struct binding : T
-    {
-       BOOST_MPL_ASSERT_MSG(
-            !TAssert::value || mpl::empty<T>::value
-          , BINDING_DECLARATION_IS_NOT_CORRECT
-          , (T)
-        );
-    };
-
-    template<
-        typename TDeps
-      , typename TGiven
-      , typename TBinder
-      , typename TAssert
-      , typename T = typename undefined_behavior_impl<
-            typename deps_<TGiven, TBinder>::type
-        >::type
-    >
-    struct undefined_behavior : T
-    {
-        BOOST_MPL_ASSERT_MSG(
-            !TAssert::value || mpl::empty<T>::value
-          , ARGUMENTS_EVALUTION_ORDER_UNDEFINED_BEHAVIOR
-          , (T)
-        );
-    };
-
-public:
-    template<
-        typename TDeps
-      , typename TGiven
-      , typename TAssert = mpl::true_
-      , template<typename> class TBinder = di::detail::static_binder
-    >
-    struct verify
-        : mpl::joint_view<
-              binding<TDeps, TAssert>
-            , undefined_behavior<TDeps, TGiven, TBinder<TDeps>, TAssert>
-          >
-    { };
-
-    template<
-        typename TDeps
-      , typename T
-    >
-    static void assert_policy() { }
 };
 
 } // namespace policies
@@ -12797,12 +12491,9 @@ class circular_dependencies
     { };
 
 public:
-    template<
-        typename
-      , typename T
-    >
+    template<typename TDependency>
     static void assert_policy() {
-       BOOST_MPL_ASSERT_MSG(is_unique_call_stack<typename T::call_stack>::value, CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED, (typename T::call_stack));
+       BOOST_MPL_ASSERT_MSG(is_unique_call_stack<typename TDependency::call_stack>::value, CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED, (typename TDependency::call_stack));
 
     }
 };
@@ -12818,19 +12509,23 @@ namespace policies {
 
 class creation_ownership
 {
-public:
-    template<
-        typename
-      , typename T
-    >
-    static typename disable_if<is_reference<typename T::type> >::type assert_policy() { }
+    template<typename TDependency>
+    struct is_result_type_reference
+        : mpl::bool_<
+             mpl::size<typename TDependency::call_stack>::value == 1 &&
+             is_reference<typename TDependency::type>::value
+          >
+    { };
 
-    template<
-        typename
-      , typename T
-    >
-    static typename enable_if<is_reference<typename T::type> >::type assert_policy() {
-        BOOST_MPL_ASSERT_MSG(false, CREATION_OWNERSHIP_IS_NOT_CLEAR, (typename T::type));
+public:
+    template<typename TDependency>
+    static typename disable_if<is_result_type_reference<TDependency> >::type
+    assert_policy() { }
+
+    template<typename TDependency>
+    static typename enable_if<is_result_type_reference<TDependency> >::type
+    assert_policy() {
+        BOOST_MPL_ASSERT_MSG(false, CREATION_OWNERSHIP_IS_NOT_CLEAR, (typename TDependency::type));
 
     }
 };
@@ -12874,12 +12569,9 @@ class scopes_permission
     { };
 
 public:
-    template<
-        typename
-      , typename T
-    >
+    template<typename TDependency>
     static void assert_policy() {
-        BOOST_MPL_ASSERT_MSG(is_scope_permitted<typename T::scope>::value, SCOPE_NOT_PERMITTED, (typename T::scope));
+        BOOST_MPL_ASSERT_MSG(is_scope_permitted<typename TDependency::scope>::value, SCOPE_NOT_PERMITTED, (typename TDependency::scope));
 
     }
 };

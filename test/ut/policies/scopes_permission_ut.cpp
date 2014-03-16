@@ -11,7 +11,6 @@
 #include "boost/di/scopes/unique.hpp"
 
 #include <boost/test/unit_test.hpp>
-#include <boost/mpl/vector.hpp>
 
 #include "common/data.hpp"
 
@@ -35,8 +34,7 @@ BOOST_AUTO_TEST_CASE(value) {
     BOOST_REQUIRE_EXCEPTION(
         (
             scopes_permission<>::assert_policy<
-                mpl::vector0<>
-              , fake_scope<scopes::unique<>>
+                fake_scope<scopes::unique<>>
             >()
         )
       , assert_exception
@@ -51,8 +49,7 @@ BOOST_AUTO_TEST_CASE(allow_none) {
                 allow_scope<scopes::unique<>>
               , allow_scope<scopes::shared<>>
             >::assert_policy<
-                mpl::vector0<>
-              , fake_scope<scopes::session<>>
+                fake_scope<scopes::session<>>
             >()
         )
       , assert_exception
@@ -64,8 +61,7 @@ BOOST_AUTO_TEST_CASE(allow_unique) {
     BOOST_CHECK_NO_THROW(
         (
             scopes_permission<allow_scope<scopes::unique<>>>::assert_policy<
-                mpl::vector0<>
-              , fake_scope<scopes::unique<>>
+                fake_scope<scopes::unique<>>
             >()
         )
     );
@@ -75,8 +71,7 @@ BOOST_AUTO_TEST_CASE(allow_shared) {
     BOOST_CHECK_NO_THROW(
         (
             scopes_permission<allow_scope<scopes::shared<>>>::assert_policy<
-                mpl::vector0<>
-              , fake_scope<scopes::shared<>>
+                fake_scope<scopes::shared<>>
             >()
         )
     );
