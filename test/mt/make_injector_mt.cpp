@@ -14,7 +14,6 @@
 #include "boost/di/policies/circular_dependencies.hpp"
 
 #include "common/data.hpp"
-#include "common/contains_all.hpp"
 
 namespace boost {
 namespace di {
