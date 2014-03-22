@@ -171,7 +171,7 @@
           , typename TRefs
           , typename TVisitor
         >
-        const convertible<T>& create(
+        const convertibles::convertible<T>& create(
             TDeps& deps, TRefs& refs, const TVisitor& visitor, typename disable_if<is_same<T, any_type> >::type* = 0) {
             return create_impl<
                 T
@@ -221,7 +221,7 @@
     >
     typename enable_if_c<
         mpl::size<typename ctor<TDependency>::type>::value == BOOST_PP_ITERATION()
-      , const convertible<T>&
+      , const convertibles::convertible<T>&
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
         assert_policies<TPolicies, dependency_type>();

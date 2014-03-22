@@ -15,16 +15,10 @@
     #include "boost/di/type_traits/create_traits.hpp"
     #include "boost/di/type_traits/make_plain.hpp"
     #include "boost/di/type_traits/is_same_base_of.hpp"
-
-    #include "boost/di/concepts/type_traits/name.hpp"
-    #include "boost/di/concepts.hpp"
+    #include "boost/di/convertibles/convertible.hpp"
 
     #include <typeinfo>
     #include <map>
-    #include <boost/config.hpp>
-    #include <boost/bind.hpp>
-    #include <boost/function.hpp>
-    #include <boost/type.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/type_traits/is_base_of.hpp>
     #include <boost/utility/enable_if.hpp>
@@ -36,54 +30,6 @@
     namespace boost {
     namespace di {
     namespace detail {
-
-    template<typename T>
-    class convertible_impl
-    {
-    public:
-        template<typename TObject>
-        convertible_impl(const TObject& object)
-            : callback_(boost::bind<T>(object, boost::type<T>()))
-        { }
-
-        operator T() const {
-            return callback_();
-        }
-
-    private:
-        function<T()> callback_;
-    };
-
-    template<typename T, typename TName>
-    class convertible_impl<named<T, TName> >
-    {
-    public:
-        template<typename TObject>
-        convertible_impl(const TObject& object)
-            : callback_(boost::bind<T>(object, boost::type<T>()))
-        { }
-
-        operator T() const {
-            return callback_();
-        }
-
-        operator named<T, TName>() const {
-            return callback_();
-        }
-
-    private:
-        function<T()> callback_;
-    };
-
-    template<typename T>
-    class convertible : public convertible_impl<T>
-    {
-    public:
-        template<typename TObject>
-        convertible(const TObject& object)
-            : convertible_impl<T>(object)
-        { }
-    };
 
     class builder
     {
@@ -150,10 +96,8 @@
       , typename TRefs
       , typename TVisitor
     >
-    typename enable_if_c<mpl::size<TCtor>::value == BOOST_PP_ITERATION(), const convertible<T>&>::type
+    typename enable_if_c<mpl::size<TCtor>::value == BOOST_PP_ITERATION(), const convertibles::convertible<T>&>::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
-        typedef convertible<T> convertible_type;
-
         #define BOOST_DI_CREATOR_EXECUTE(z, n, _)   \
             BOOST_PP_COMMA_IF(n)                    \
             creator.template create<                \
@@ -163,23 +107,25 @@
              , TPolicies                            \
             >(deps, refs, visitor)
 
-        convertible_type* convertible = new convertible_type(
-            acquire<typename TDependency::type>(deps).create(
-                type_traits::policy<
-                    mpl::empty<typename TDeps::types>::value
-                >()
-                BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
-                BOOST_PP_REPEAT(
-                    BOOST_PP_ITERATION()
-                  , BOOST_DI_CREATOR_EXECUTE
-                  , ~
+        aux::shared_ptr<convertibles::convertible<T> > convertible(
+            new convertibles::convertible<T>(
+                acquire<typename TDependency::type>(deps).create(
+                    type_traits::policy<
+                        mpl::empty<typename TDeps::types>::value
+                    >()
+                    BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
+                    BOOST_PP_REPEAT(
+                        BOOST_PP_ITERATION()
+                      , BOOST_DI_CREATOR_EXECUTE
+                      , ~
+                    )
                 )
             )
         );
 
         #undef BOOST_DI_CREATOR_EXECUTE
 
-        refs.push_back(aux::shared_ptr<void>(convertible));
+        refs.push_back(convertible);
         return *convertible;
     }
 
