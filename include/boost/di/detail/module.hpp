@@ -32,24 +32,27 @@
     namespace detail {
 
     template<
-        typename TDeps = mpl::vector0<>
+        typename TDependecies = mpl::vector0<>
+      , template<
+            typename
+          , template<typename, typename> class = binder
+        > class TCreator = creator
       , template<
             typename
           , typename = ::boost::di::detail::never< ::boost::mpl::_1 >
           , typename = void
         > class TPool = pool
-      , template<typename> class TCreator = creator
     >
     class module
-        : public TPool<TDeps>
-        , public TCreator<TDeps>
+        : public TPool<TDependecies>
+        , public TCreator<TDependecies>
     {
         BOOST_MPL_HAS_XXX_TRAIT_DEF(scope)
 
         template<
             typename
+          , template<typename, template<typename, typename> class> class
           , template<typename, typename, typename> class
-          , template<typename> class
         > friend class module;
 
         template<typename T>
@@ -124,7 +127,7 @@
         };
 
     public:
-        typedef TDeps deps;
+        typedef TDependecies deps;
 
         module() { }
 
@@ -187,9 +190,9 @@
 
 #else
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template<BOOST_DI_TYPES(Args)>
     explicit module(BOOST_DI_ARGS(Args, args))

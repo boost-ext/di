@@ -18,7 +18,6 @@
 #include "common/fakes/fake_scope.hpp"
 #include "common/fakes/fake_dependency.hpp"
 #include "common/fakes/fake_call_stack.hpp"
-#include "common/fakes/fake_creator.hpp"
 #include "common/data.hpp"
 
 namespace boost {
@@ -28,11 +27,11 @@ namespace detail {
 template<
    typename T
  , typename TCallStack
- , typename TDeps
+ , typename TDependecies
  , typename TDefault
 >
 struct binder_resolve
-    : binder<TDeps, fake_creator>::template resolve<T, TCallStack, TDefault>
+    : binder<TDependecies>::template resolve<T, TCallStack, TDefault>
 { };
 
 BOOST_AUTO_TEST_CASE(empty) {

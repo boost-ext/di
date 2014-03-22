@@ -85,7 +85,6 @@
         { }
     };
 
-    template<typename TCreator>
     class builder
     {
         class type_comparator
@@ -146,6 +145,7 @@
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TCreator
       , typename TDeps
       , typename TRefs
       , typename TVisitor

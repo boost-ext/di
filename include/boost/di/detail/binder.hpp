@@ -23,11 +23,10 @@ namespace di {
 namespace detail {
 
 template<
-    typename TDeps
-  , template<typename> class TCreator
+    typename TDependecies
+  , typename TBuilder = builder
 >
-class binder
-    : public builder<TCreator<TDeps> >
+class binder : public TBuilder
 {
     template<typename TDependency, typename T, typename TCallStack>
     struct apply
@@ -52,7 +51,7 @@ public:
         : mpl::deref<
               mpl::second<
                   typename mpl::fold<
-                      TDeps
+                      TDependecies
                     , mpl::pair<mpl::int_<0>, TDefault>
                     , mpl::if_<
                           mpl::greater<
@@ -79,6 +78,7 @@ public:
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TCreator
       , typename Deps
       , typename TRefs
       , typename TVisitor
@@ -91,6 +91,7 @@ public:
           , TCallStack
           , TPolicies
           , TDependency
+          , TCreator
         >(deps, refs, visitor);
     }
 };

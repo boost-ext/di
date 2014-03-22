@@ -16,6 +16,7 @@
     #include "boost/di/type_traits/make_plain.hpp"
     #include "boost/di/type_traits/is_same_base_of.hpp"
     #include "boost/di/detail/binder.hpp"
+    #include "boost/di/detail/builder.hpp"
 
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/size.hpp>
@@ -26,14 +27,16 @@
     namespace di {
     namespace detail {
 
-    template<typename TDependecies>
-    class creator : public binder<TDependecies, detail::creator>
+    template<
+        typename TDependecies
+      , template<typename, typename = builder> class TBinder = binder
+    >
+    class creator
+        : public TBinder<TDependecies>
     {
-        typedef binder<TDependecies, detail::creator> binder_type;
-
         template<typename T, typename TCallStack>
-        struct binder_
-            : binder_type::template resolve<T, TCallStack>::type
+        struct binder
+            : TBinder<TDependecies>::template resolve<T, TCallStack>::type
         { };
 
         template<typename TDependency>
@@ -89,7 +92,7 @@
                     U
                   , typename mpl::push_back<TCallStack, PU>::type
                   , TPolicies
-                  , binder_<U, TCallStack>
+                  , binder<U, TCallStack>
                 >(deps_, refs_, visitor_);
             }
 
@@ -110,7 +113,7 @@
                     const U&
                   , typename mpl::push_back<TCallStack, PU>::type
                   , TPolicies
-                  , binder_<const U&, TCallStack>
+                  , binder<const U&, TCallStack>
                 >(deps_, refs_, visitor_);
             }
 
@@ -131,7 +134,7 @@
                     U&
                   , typename mpl::push_back<TCallStack, PU>::type
                   , TPolicies
-                  , binder_<U&, TCallStack>
+                  , binder<U&, TCallStack>
                 >(deps_, refs_, visitor_);
             }
 
@@ -175,10 +178,10 @@
                 T
               , typename mpl::push_back<
                     TCallStack
-                  , typename binder_<T, TCallStack>::given
+                  , typename binder<T, TCallStack>::given
                 >::type
               , TPolicies
-              , binder_<T, TCallStack>
+              , binder<T, TCallStack>
             >(deps, refs, visitor);
         }
 
@@ -223,12 +226,13 @@
         assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
-        return static_cast<binder_type*>(this)->template resolve_impl<
+        return static_cast<TBinder<TDependecies>*>(this)->template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack
           , TPolicies
           , TDependency
+          , creator
         >(deps, refs, visitor);
     }
 
