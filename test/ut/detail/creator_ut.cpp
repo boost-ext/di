@@ -17,29 +17,23 @@
 #include "common/fakes/fake_dependency.hpp"
 #include "common/fakes/fake_binder.hpp"
 #include "common/fakes/fake_visitor.hpp"
+#include "common/fakes/fake_pool.hpp"
 
 namespace boost {
 namespace di {
 namespace detail {
 
-template<typename T>
-struct entries
-    : T
-{
-    typedef mpl::vector<T> types;
-};
-
 BOOST_AUTO_TEST_CASE(creator_simple) {
     const int i = 42;
 
     typedef typename fake_dependency<scopes::unique<>, int, mpl::int_<i>>::type dependency_type;
-    entries<dependency_type> entries_;
-    std::vector<aux::shared_ptr<void>> refs_;
+    fake_pool<dependency_type> deps;
+    std::vector<aux::shared_ptr<void>> refs;
 
     BOOST_CHECK_EQUAL(i, (
         creator<mpl::vector<dependency_type>>().create<
             int, int, mpl::vector0<>, mpl::vector0<>
-        >(entries_, refs_, fake_visitor<mpl::vector<int>>())
+        >(deps, refs, fake_visitor<mpl::vector<int>>())
     ));
 }
 

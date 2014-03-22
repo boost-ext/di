@@ -29,30 +29,35 @@ struct fake_call_stack
     typedef mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> context_type;
 
     template<typename TContext, typename TCallStack>
+    struct equal
+      : mpl::equal<
+            mpl::iterator_range<
+                typename mpl::advance<
+                    typename mpl::begin<TCallStack>::type
+                  , typename mpl::max<
+                        mpl::int_<0>
+                      , mpl::minus<
+                            mpl::size<TCallStack>
+                          , mpl::size<TContext>
+                        >
+                    >::type
+                >::type
+              , typename mpl::end<TCallStack>::type
+            >
+          , TContext
+        >
+    { };
+
+    template<typename TContext, typename TCallStack>
     struct apply_impl
         : mpl::if_<
-            mpl::empty<TCallStack>
-          , mpl::int_<0>
-          , mpl::if_<
-              mpl::equal<
-                  mpl::iterator_range<
-                      typename mpl::advance<
-                          typename mpl::begin<TCallStack>::type
-                        , typename mpl::max<
-                              mpl::int_<0>
-                            , mpl::minus<
-                                  mpl::size<TCallStack>
-                                , mpl::size<TContext>
-                              >
-                          >::type
-                      >::type
-                    , typename mpl::end<TCallStack>::type
-                  >
-                , TContext
-              >
-            , mpl::size<TContext>
+              mpl::empty<TCallStack>
             , mpl::int_<0>
-          >
+            , mpl::if_<
+                  equal<TContext, TCallStack>
+                , mpl::size<TContext>
+                , mpl::int_<0>
+              >
           >
     { };
 

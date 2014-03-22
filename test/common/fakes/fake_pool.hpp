@@ -12,9 +12,10 @@
 namespace boost {
 namespace di {
 
-struct fake_pool
+template<typename... T>
+struct fake_pool : T...
 {
-    typedef mpl::vector0<> types;
+    typedef mpl::vector<T...> types;
 };
 
 } // namespace di

@@ -69,8 +69,8 @@
                 return *static_cast<TDependency*>(it->second.get());
             }
 
-            TDependency* dependency = new TDependency();
-            scopes_[&typeid(TDependency)] = aux::shared_ptr<void>(dependency);
+            aux::shared_ptr<TDependency> dependency(new TDependency());
+            scopes_[&typeid(TDependency)] = dependency;
             return *dependency;
         }
 
@@ -96,7 +96,10 @@
       , typename TRefs
       , typename TVisitor
     >
-    typename enable_if_c<mpl::size<TCtor>::value == BOOST_PP_ITERATION(), const convertibles::convertible<T>&>::type
+    typename enable_if_c<
+        mpl::size<TCtor>::value == BOOST_PP_ITERATION()
+      , const convertibles::convertible<T>&
+    >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         #define BOOST_DI_CREATOR_EXECUTE(z, n, _)   \
             BOOST_PP_COMMA_IF(n)                    \
