@@ -45,7 +45,6 @@
     >
     class module
         : public TPool<TDependecies>
-        , public TCreator<TDependecies>
     {
         BOOST_MPL_HAS_XXX_TRAIT_DEF(scope)
 
@@ -141,7 +140,7 @@
             typedef mpl::vector0<> call_stack;
             std::vector<aux::shared_ptr<void> > refs_;
 
-            return this->template create_<T, T, call_stack, policies>(
+            return creator_.template create<T, T, call_stack, policies>(
                 static_cast<TPool<deps>&>(*this), refs_, empty_visitor());
         }
 
@@ -151,7 +150,7 @@
             typedef mpl::vector0<> call_stack;
             std::vector<aux::shared_ptr<void> > refs_;
 
-            return this->template create_<T, T, call_stack, policies>(
+            return creator_.template create<T, T, call_stack, policies>(
                 static_cast<TPool<deps>&>(*this), refs_, visitor);
         }
 
@@ -180,6 +179,8 @@
           , typename disable_if<has_call<typename mpl::front<TSeq>::type, TAction> >::type* = 0) {
             call_impl<typename mpl::pop_front<TSeq>::type>(deps, action);
         }
+
+        TCreator<TDependecies> creator_;
     };
 
     } // namespace detail
@@ -216,7 +217,7 @@
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }

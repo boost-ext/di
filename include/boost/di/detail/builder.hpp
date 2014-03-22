@@ -90,7 +90,7 @@
         class type_comparator
         {
         public:
-            bool operator ()(const std::type_info* lhs, const std::type_info* rhs) const {
+            bool operator()(const std::type_info* lhs, const std::type_info* rhs) const {
                 return lhs->before(*rhs);
             }
         };
@@ -151,16 +151,16 @@
       , typename TVisitor
     >
     typename enable_if_c<mpl::size<TCtor>::value == BOOST_PP_ITERATION(), const convertible<T>&>::type
-    build(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef convertible<T> convertible_type;
 
-        #define BOOST_DI_CREATOR_EXECUTE(z, n, _)           \
-            BOOST_PP_COMMA_IF(n)                            \
-            static_cast<TCreator&>(*this).template create_< \
-               typename mpl::at_c<TCtor, n>::type           \
-             , T                                            \
-             , TCallStack                                   \
-             , TPolicies                                    \
+        #define BOOST_DI_CREATOR_EXECUTE(z, n, _)   \
+            BOOST_PP_COMMA_IF(n)                    \
+            creator.template create<                \
+               typename mpl::at_c<TCtor, n>::type   \
+             , T                                    \
+             , TCallStack                           \
+             , TPolicies                            \
             >(deps, refs, visitor)
 
         convertible_type* convertible = new convertible_type(

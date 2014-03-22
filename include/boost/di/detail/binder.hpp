@@ -10,13 +10,12 @@
 #include "boost/di/type_traits/scope_traits.hpp"
 #include "boost/di/type_traits/remove_accessors.hpp"
 #include "boost/di/concepts/dependency.hpp"
+#include "boost/di/detail/builder.hpp"
 
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/deref.hpp>
 #include <boost/mpl/pair.hpp>
 #include <boost/mpl/greater.hpp>
-
-#include "boost/di/detail/builder.hpp"
 
 namespace boost {
 namespace di {
@@ -26,7 +25,7 @@ template<
     typename TDependecies
   , typename TBuilder = builder
 >
-class binder : public TBuilder
+class binder
 {
     template<typename TDependency, typename T, typename TCallStack>
     struct apply
@@ -79,21 +78,24 @@ public:
       , typename TPolicies
       , typename TDependency
       , typename TCreator
-      , typename Deps
+      , typename TDeps
       , typename TRefs
       , typename TVisitor
     >
     const convertible<T>&
-    resolve_impl(Deps& deps, TRefs& refs, const TVisitor& visitor) {
-        return this->template build<
+    resolve_impl(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+        return builder_.template build<
             T
           , TCtor
           , TCallStack
           , TPolicies
           , TDependency
           , TCreator
-        >(deps, refs, visitor);
+        >(creator, deps, refs, visitor);
     }
+
+private:
+    TBuilder builder_;
 };
 
 } // namespace detail

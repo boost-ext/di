@@ -32,7 +32,6 @@
       , template<typename, typename = builder> class TBinder = binder
     >
     class creator
-        : public TBinder<TDependecies>
     {
         template<typename T, typename TCallStack>
         struct binder
@@ -156,7 +155,7 @@
           , typename TVisitor
         >
         eager_creator<TParent, TCallStack, TPolicies, TDeps, TRefs, TVisitor>
-        create_(TDeps& deps, TRefs& refs, const TVisitor& visitor
+        create(TDeps& deps, TRefs& refs, const TVisitor& visitor
               , typename enable_if<is_same<T, any_type> >::type* = 0) {
             return eager_creator<TParent, TCallStack, TPolicies, TDeps, TRefs, TVisitor>(
                 *this, deps, refs, visitor
@@ -172,7 +171,7 @@
           , typename TRefs
           , typename TVisitor
         >
-        const convertible<T>& create_(
+        const convertible<T>& create(
             TDeps& deps, TRefs& refs, const TVisitor& visitor, typename disable_if<is_same<T, any_type> >::type* = 0) {
             return create_impl<
                 T
@@ -199,6 +198,8 @@
             policy::template assert_policy<T>();
             assert_policies<typename mpl::pop_front<TSeq>::type, T>();
         }
+
+        TBinder<TDependecies> binder_;
     };
 
     } // namespace detail
@@ -226,14 +227,13 @@
         assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
-        return static_cast<TBinder<TDependecies>*>(this)->template resolve_impl<
+        return binder_.template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack
           , TPolicies
           , TDependency
-          , creator
-        >(deps, refs, visitor);
+        >(*this, deps, refs, visitor);
     }
 
 #endif
