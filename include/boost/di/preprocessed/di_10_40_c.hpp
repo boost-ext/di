@@ -8319,13 +8319,12 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
         { }
     };
 
-    template<typename TCreator>
     class builder
     {
         class type_comparator
         {
         public:
-            bool operator ()(const std::type_info* lhs, const std::type_info* rhs) const {
+            bool operator()(const std::type_info* lhs, const std::type_info* rhs) const {
                 return lhs->before(*rhs);
             }
         };
@@ -8340,12 +8339,13 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TCreator
       , typename TDeps
       , typename TRefs
       , typename TVisitor
     >
     typename enable_if_c<mpl::size<TCtor>::value == 0, const convertible<T>&>::type
-    build(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef convertible<T> convertible_type;
         convertible_type* convertible = new convertible_type(
             acquire<typename TDependency::type>(deps).create(
@@ -8366,12 +8366,13 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TCreator
       , typename TDeps
       , typename TRefs
       , typename TVisitor
     >
     typename enable_if_c<mpl::size<TCtor>::value == 1, const convertible<T>&>::type
-    build(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef convertible<T> convertible_type;
         convertible_type* convertible = new convertible_type(
             acquire<typename TDependency::type>(deps).create(
@@ -8379,7 +8380,7 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
                     mpl::empty<typename TDeps::types>::value
                 >()
                 ,
-                static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -8394,12 +8395,13 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TCreator
       , typename TDeps
       , typename TRefs
       , typename TVisitor
     >
     typename enable_if_c<mpl::size<TCtor>::value == 2, const convertible<T>&>::type
-    build(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef convertible<T> convertible_type;
         convertible_type* convertible = new convertible_type(
             acquire<typename TDependency::type>(deps).create(
@@ -8407,7 +8409,7 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
                     mpl::empty<typename TDeps::types>::value
                 >()
                 ,
-                static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -8422,12 +8424,13 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TCreator
       , typename TDeps
       , typename TRefs
       , typename TVisitor
     >
     typename enable_if_c<mpl::size<TCtor>::value == 3, const convertible<T>&>::type
-    build(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef convertible<T> convertible_type;
         convertible_type* convertible = new convertible_type(
             acquire<typename TDependency::type>(deps).create(
@@ -8435,7 +8438,7 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
                     mpl::empty<typename TDeps::types>::value
                 >()
                 ,
-                static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -8450,12 +8453,13 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TCreator
       , typename TDeps
       , typename TRefs
       , typename TVisitor
     >
     typename enable_if_c<mpl::size<TCtor>::value == 4, const convertible<T>&>::type
-    build(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef convertible<T> convertible_type;
         convertible_type* convertible = new convertible_type(
             acquire<typename TDependency::type>(deps).create(
@@ -8463,7 +8467,7 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
                     mpl::empty<typename TDeps::types>::value
                 >()
                 ,
-                static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -8478,12 +8482,13 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TCreator
       , typename TDeps
       , typename TRefs
       , typename TVisitor
     >
     typename enable_if_c<mpl::size<TCtor>::value == 5, const convertible<T>&>::type
-    build(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef convertible<T> convertible_type;
         convertible_type* convertible = new convertible_type(
             acquire<typename TDependency::type>(deps).create(
@@ -8491,7 +8496,7 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
                     mpl::empty<typename TDeps::types>::value
                 >()
                 ,
-                static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -8506,12 +8511,13 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TCreator
       , typename TDeps
       , typename TRefs
       , typename TVisitor
     >
     typename enable_if_c<mpl::size<TCtor>::value == 6, const convertible<T>&>::type
-    build(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef convertible<T> convertible_type;
         convertible_type* convertible = new convertible_type(
             acquire<typename TDependency::type>(deps).create(
@@ -8519,7 +8525,7 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
                     mpl::empty<typename TDeps::types>::value
                 >()
                 ,
-                static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -8534,12 +8540,13 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TCreator
       , typename TDeps
       , typename TRefs
       , typename TVisitor
     >
     typename enable_if_c<mpl::size<TCtor>::value == 7, const convertible<T>&>::type
-    build(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef convertible<T> convertible_type;
         convertible_type* convertible = new convertible_type(
             acquire<typename TDependency::type>(deps).create(
@@ -8547,7 +8554,7 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
                     mpl::empty<typename TDeps::types>::value
                 >()
                 ,
-                static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -8562,12 +8569,13 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TCreator
       , typename TDeps
       , typename TRefs
       , typename TVisitor
     >
     typename enable_if_c<mpl::size<TCtor>::value == 8, const convertible<T>&>::type
-    build(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef convertible<T> convertible_type;
         convertible_type* convertible = new convertible_type(
             acquire<typename TDependency::type>(deps).create(
@@ -8575,7 +8583,7 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
                     mpl::empty<typename TDeps::types>::value
                 >()
                 ,
-                static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -8590,12 +8598,13 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TCreator
       , typename TDeps
       , typename TRefs
       , typename TVisitor
     >
     typename enable_if_c<mpl::size<TCtor>::value == 9, const convertible<T>&>::type
-    build(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef convertible<T> convertible_type;
         convertible_type* convertible = new convertible_type(
             acquire<typename TDependency::type>(deps).create(
@@ -8603,7 +8612,7 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
                     mpl::empty<typename TDeps::types>::value
                 >()
                 ,
-                static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 8>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -8618,12 +8627,13 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TCreator
       , typename TDeps
       , typename TRefs
       , typename TVisitor
     >
     typename enable_if_c<mpl::size<TCtor>::value == 10, const convertible<T>&>::type
-    build(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef convertible<T> convertible_type;
         convertible_type* convertible = new convertible_type(
             acquire<typename TDependency::type>(deps).create(
@@ -8631,7 +8641,7 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
                     mpl::empty<typename TDeps::types>::value
                 >()
                 ,
-                static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 8>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , static_cast<TCreator&>(*this).template create_< typename mpl::at_c<TCtor, 9>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 9>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -8678,11 +8688,10 @@ namespace di {
 namespace detail {
 
 template<
-    typename TDeps
-  , template<typename> class TCreator
+    typename TDependecies
+  , typename TBuilder = builder
 >
 class binder
-    : public builder<TCreator<TDeps> >
 {
     template<typename TDependency, typename T, typename TCallStack>
     struct apply
@@ -8707,7 +8716,7 @@ public:
         : mpl::deref<
               mpl::second<
                   typename mpl::fold<
-                      TDeps
+                      TDependecies
                     , mpl::pair<mpl::int_<0>, TDefault>
                     , mpl::if_<
                           mpl::greater<
@@ -8734,20 +8743,25 @@ public:
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
-      , typename Deps
+      , typename TCreator
+      , typename TDeps
       , typename TRefs
       , typename TVisitor
     >
     const convertible<T>&
-    resolve_impl(Deps& deps, TRefs& refs, const TVisitor& visitor) {
-        return this->template build<
+    resolve_impl(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+        return builder_.template build<
             T
           , TCtor
           , TCallStack
           , TPolicies
           , TDependency
-        >(deps, refs, visitor);
+          , TCreator
+        >(creator, deps, refs, visitor);
     }
+
+private:
+    TBuilder builder_;
 };
 
 } // namespace detail
@@ -8759,14 +8773,15 @@ public:
     namespace di {
     namespace detail {
 
-    template<typename TDependecies>
-    class creator : public binder<TDependecies, detail::creator>
+    template<
+        typename TDependecies
+      , template<typename, typename = builder> class TBinder = binder
+    >
+    class creator
     {
-        typedef binder<TDependecies, detail::creator> binder_type;
-
         template<typename T, typename TCallStack>
-        struct binder_
-            : binder_type::template resolve<T, TCallStack>::type
+        struct binder
+            : TBinder<TDependecies>::template resolve<T, TCallStack>::type
         { };
 
         template<typename TDependency>
@@ -8822,7 +8837,7 @@ public:
                     U
                   , typename mpl::push_back<TCallStack, PU>::type
                   , TPolicies
-                  , binder_<U, TCallStack>
+                  , binder<U, TCallStack>
                 >(deps_, refs_, visitor_);
             }
 
@@ -8843,7 +8858,7 @@ public:
                     const U&
                   , typename mpl::push_back<TCallStack, PU>::type
                   , TPolicies
-                  , binder_<const U&, TCallStack>
+                  , binder<const U&, TCallStack>
                 >(deps_, refs_, visitor_);
             }
 
@@ -8864,7 +8879,7 @@ public:
                     U&
                   , typename mpl::push_back<TCallStack, PU>::type
                   , TPolicies
-                  , binder_<U&, TCallStack>
+                  , binder<U&, TCallStack>
                 >(deps_, refs_, visitor_);
             }
 
@@ -8886,7 +8901,7 @@ public:
           , typename TVisitor
         >
         eager_creator<TParent, TCallStack, TPolicies, TDeps, TRefs, TVisitor>
-        create_(TDeps& deps, TRefs& refs, const TVisitor& visitor
+        create(TDeps& deps, TRefs& refs, const TVisitor& visitor
               , typename enable_if<is_same<T, any_type> >::type* = 0) {
             return eager_creator<TParent, TCallStack, TPolicies, TDeps, TRefs, TVisitor>(
                 *this, deps, refs, visitor
@@ -8902,16 +8917,16 @@ public:
           , typename TRefs
           , typename TVisitor
         >
-        const convertible<T>& create_(
+        const convertible<T>& create(
             TDeps& deps, TRefs& refs, const TVisitor& visitor, typename disable_if<is_same<T, any_type> >::type* = 0) {
             return create_impl<
                 T
               , typename mpl::push_back<
                     TCallStack
-                  , typename binder_<T, TCallStack>::given
+                  , typename binder<T, TCallStack>::given
                 >::type
               , TPolicies
-              , binder_<T, TCallStack>
+              , binder<T, TCallStack>
             >(deps, refs, visitor);
         }
 
@@ -8934,13 +8949,13 @@ public:
         assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
-        return static_cast<binder_type*>(this)->template resolve_impl<
+        return binder_.template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack
           , TPolicies
           , TDependency
-        >(deps, refs, visitor);
+        >(*this, deps, refs, visitor);
     }
 
     template<
@@ -8960,13 +8975,13 @@ public:
         assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
-        return static_cast<binder_type*>(this)->template resolve_impl<
+        return binder_.template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack
           , TPolicies
           , TDependency
-        >(deps, refs, visitor);
+        >(*this, deps, refs, visitor);
     }
 
     template<
@@ -8986,13 +9001,13 @@ public:
         assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
-        return static_cast<binder_type*>(this)->template resolve_impl<
+        return binder_.template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack
           , TPolicies
           , TDependency
-        >(deps, refs, visitor);
+        >(*this, deps, refs, visitor);
     }
 
     template<
@@ -9012,13 +9027,13 @@ public:
         assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
-        return static_cast<binder_type*>(this)->template resolve_impl<
+        return binder_.template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack
           , TPolicies
           , TDependency
-        >(deps, refs, visitor);
+        >(*this, deps, refs, visitor);
     }
 
     template<
@@ -9038,13 +9053,13 @@ public:
         assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
-        return static_cast<binder_type*>(this)->template resolve_impl<
+        return binder_.template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack
           , TPolicies
           , TDependency
-        >(deps, refs, visitor);
+        >(*this, deps, refs, visitor);
     }
 
     template<
@@ -9064,13 +9079,13 @@ public:
         assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
-        return static_cast<binder_type*>(this)->template resolve_impl<
+        return binder_.template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack
           , TPolicies
           , TDependency
-        >(deps, refs, visitor);
+        >(*this, deps, refs, visitor);
     }
 
     template<
@@ -9090,13 +9105,13 @@ public:
         assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
-        return static_cast<binder_type*>(this)->template resolve_impl<
+        return binder_.template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack
           , TPolicies
           , TDependency
-        >(deps, refs, visitor);
+        >(*this, deps, refs, visitor);
     }
 
     template<
@@ -9116,13 +9131,13 @@ public:
         assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
-        return static_cast<binder_type*>(this)->template resolve_impl<
+        return binder_.template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack
           , TPolicies
           , TDependency
-        >(deps, refs, visitor);
+        >(*this, deps, refs, visitor);
     }
 
     template<
@@ -9142,13 +9157,13 @@ public:
         assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
-        return static_cast<binder_type*>(this)->template resolve_impl<
+        return binder_.template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack
           , TPolicies
           , TDependency
-        >(deps, refs, visitor);
+        >(*this, deps, refs, visitor);
     }
 
     template<
@@ -9168,13 +9183,13 @@ public:
         assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
-        return static_cast<binder_type*>(this)->template resolve_impl<
+        return binder_.template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack
           , TPolicies
           , TDependency
-        >(deps, refs, visitor);
+        >(*this, deps, refs, visitor);
     }
 
     template<
@@ -9194,13 +9209,13 @@ public:
         assert_policies<TPolicies, dependency_type>();
         (visitor)(dependency_type());
 
-        return static_cast<binder_type*>(this)->template resolve_impl<
+        return binder_.template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack
           , TPolicies
           , TDependency
-        >(deps, refs, visitor);
+        >(*this, deps, refs, visitor);
     }
 
         template<typename TSeq, typename T>
@@ -9212,6 +9227,8 @@ public:
             policy::template assert_policy<T>();
             assert_policies<typename mpl::pop_front<TSeq>::type, T>();
         }
+
+        TBinder<TDependecies> binder_;
     };
 
     } // namespace detail
@@ -9224,24 +9241,26 @@ public:
     namespace detail {
 
     template<
-        typename TDeps = mpl::vector0<>
+        typename TDependecies = mpl::vector0<>
+      , template<
+            typename
+          , template<typename, typename> class = binder
+        > class TCreator = creator
       , template<
             typename
           , typename = ::boost::di::detail::never< ::boost::mpl::_1 >
           , typename = void
         > class TPool = pool
-      , template<typename> class TCreator = creator
     >
     class module
-        : public TPool<TDeps>
-        , public TCreator<TDeps>
+        : public TPool<TDependecies>
     {
         BOOST_MPL_HAS_XXX_TRAIT_DEF(scope)
 
         template<
             typename
+          , template<typename, template<typename, typename> class> class
           , template<typename, typename, typename> class
-          , template<typename> class
         > friend class module;
 
         template<typename T>
@@ -9316,13 +9335,13 @@ public:
         };
 
     public:
-        typedef TDeps deps;
+        typedef TDependecies deps;
 
         module() { }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0>
     explicit module( Args0 args0)
@@ -9346,14 +9365,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1>
     explicit module( Args0 args0 , Args1 args1)
@@ -9377,14 +9396,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2)
@@ -9408,14 +9427,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3)
@@ -9439,14 +9458,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4)
@@ -9470,14 +9489,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5)
@@ -9501,14 +9520,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6)
@@ -9532,14 +9551,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7)
@@ -9563,14 +9582,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8)
@@ -9594,14 +9613,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9)
@@ -9625,14 +9644,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10)
@@ -9656,14 +9675,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11)
@@ -9687,14 +9706,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12)
@@ -9718,14 +9737,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13)
@@ -9749,14 +9768,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14)
@@ -9780,14 +9799,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15)
@@ -9811,14 +9830,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16)
@@ -9842,14 +9861,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17)
@@ -9873,14 +9892,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18)
@@ -9904,14 +9923,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19)
@@ -9935,14 +9954,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20)
@@ -9966,14 +9985,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21)
@@ -9997,14 +10016,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22)
@@ -10028,14 +10047,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23)
@@ -10059,14 +10078,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24)
@@ -10090,14 +10109,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25)
@@ -10121,14 +10140,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26)
@@ -10152,14 +10171,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27)
@@ -10183,14 +10202,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28)
@@ -10214,14 +10233,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29)
@@ -10245,14 +10264,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30)
@@ -10276,14 +10295,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31)
@@ -10307,14 +10326,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32)
@@ -10338,14 +10357,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33)
@@ -10369,14 +10388,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34)
@@ -10400,14 +10419,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35)
@@ -10431,14 +10450,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36)
@@ -10462,14 +10481,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36 , typename Args37>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36 , Args37 args37)
@@ -10493,14 +10512,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36 , typename Args37 , typename Args38>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36 , Args37 args37 , Args38 args38)
@@ -10524,14 +10543,14 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
 
-    //bind<...>, etc.   -> ignore
-    //module<....>      -> get all dependencies from the module
-    //dependency<....>  -> pass
+    // bind<...>, etc.   -> ignore
+    // module<....>      -> get all dependencies from the module
+    // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36 , typename Args37 , typename Args38 , typename Args39>
     explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36 , Args37 args37 , Args38 args38 , Args39 args39)
@@ -10555,7 +10574,7 @@ public:
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return this->template create_<T, T, call_stack, policies>(
+        return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
         );
     }
@@ -10566,7 +10585,7 @@ public:
             typedef mpl::vector0<> call_stack;
             std::vector<aux::shared_ptr<void> > refs_;
 
-            return this->template create_<T, T, call_stack, policies>(
+            return creator_.template create<T, T, call_stack, policies>(
                 static_cast<TPool<deps>&>(*this), refs_, empty_visitor());
         }
 
@@ -10576,7 +10595,7 @@ public:
             typedef mpl::vector0<> call_stack;
             std::vector<aux::shared_ptr<void> > refs_;
 
-            return this->template create_<T, T, call_stack, policies>(
+            return creator_.template create<T, T, call_stack, policies>(
                 static_cast<TPool<deps>&>(*this), refs_, visitor);
         }
 
@@ -10605,6 +10624,8 @@ public:
           , typename disable_if<has_call<typename mpl::front<TSeq>::type, TAction> >::type* = 0) {
             call_impl<typename mpl::pop_front<TSeq>::type>(deps, action);
         }
+
+        TCreator<TDependecies> creator_;
     };
 
     } // namespace detail

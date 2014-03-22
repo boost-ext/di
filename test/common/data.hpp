@@ -282,7 +282,7 @@ struct c15
     c6 c6_;
 };
 
-struct c16 : noncopyable
+struct c16 : private noncopyable
 {
     BOOST_DI_INJECT(c16
         , c14& c14_
@@ -310,7 +310,7 @@ struct c17
     std::string s_;
 };
 
-struct c18// : private noncopyable
+struct c18
 {
     BOOST_DI_INJECT(c18
         , c0 c0_ // unique

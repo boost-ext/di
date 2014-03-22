@@ -31,6 +31,21 @@
 namespace boost {
 namespace di {
 
+template<typename TExpected, typename TGiven = TExpected>
+struct bind
+    : concepts::bind<TExpected, TGiven, concepts::dependency>
+{ };
+
+template<int N>
+struct bind_int
+    : bind<int, mpl::int_<N> >
+{ };
+
+template<typename T>
+struct bind_string
+    : bind<std::string, T>
+{ };
+
 template<typename TScope>
 struct scope
     : concepts::scope<TScope, concepts::dependency>
@@ -56,25 +71,9 @@ struct session
     : scope<scopes::session<> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
 { };
 
-template<typename TExpected, typename TGiven = TExpected>
-struct bind
-    : concepts::bind<TExpected, TGiven, concepts::dependency>
-{ };
-
-template<int N>
-struct bind_int
-    : bind<int, mpl::int_<N> >
-{ };
-
-template<typename T>
-struct bind_string
-    : bind<std::string, T>
-{ };
-
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 class call_stack
 {
-public:
     typedef mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> context_type;
 
     template<typename TContext, typename TCallStack>
