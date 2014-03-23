@@ -18,25 +18,17 @@ namespace {
 
 struct c
 {
-    c(int, double, char) { }
+    c(std::shared_ptr<int>, std::unique_ptr<double>, boost::shared_ptr<char>) { }
 };
 
 } // namespace
 
-class creation_by_smart_ptr_policy
+class allow_only_smart_ptr_policy
 {
     BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
-    template<typename TDependency, typename = void>
-    struct is_creation_by_smart_ptr
-        : mpl::true_
-    { };
-
     template<typename TDependency>
-    struct is_creation_by_smart_ptr<
-        TDependency
-      , typename boost::enable_if_c<mpl::size<typename TDependency::call_stack>::value == 1>::type
-    >
+    struct is_creation_by_smart_ptr
         : has_element_type<typename TDependency::type>
     { };
 
@@ -46,7 +38,7 @@ public:
 
     template<typename TDependency>
     static typename boost::disable_if<is_creation_by_smart_ptr<TDependency>>::type assert_policy() {
-        BOOST_DI_ASSERT_MSG(
+        BOOST_MPL_ASSERT_MSG(
             false
           , CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED
           , (TDependency)
@@ -56,8 +48,8 @@ public:
 
 int main() {
     di::injector<> injector;
-    injector.create<std::shared_ptr<c>>(creation_by_smart_ptr_policy());
-    //injector.create<c>(creation_by_smart_ptr_policy()); //compile error (CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED)
+    injector.create<std::shared_ptr<c>>(allow_only_smart_ptr_policy());
+    //injector.create<c>(allow_only_smart_ptr_policy()); //compile error (CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED)
 
     return 0;
 }

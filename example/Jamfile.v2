@@ -25,8 +25,8 @@ test-suite "di / c++ 03" :
 ;
 
 test-suite "di / c++ 11" :
+    [ run-test c++11 : cpp_11/allow_only_smart_ptr_policy.cpp ]
     [ run-test c++11 : cpp_11/concepts.cpp ]
-    [ run-test c++11 : cpp_11/creation_by_smart_ptr_policy.cpp ]
     [ run-test c++11 : cpp_11/inject.cpp ]
     [ run-test c++11 : cpp_11/custom_scope.cpp ]
     [ run-test c++11 : cpp_11/deduce_scope.cpp ]
