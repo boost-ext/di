@@ -79,10 +79,16 @@ rule compile-fail-test ( std * : src : ctor * : defines * : force_bracket * : pr
 }
 
 test-suite "unit tests" :
-    [ run-test c++11 : ut/concepts/dependency_ut.cpp ]
+    [ run-test c++11 : ut/concepts/detail/requires_ut.cpp ]
+    [ run-test c++11 : ut/concepts/type_traits/name_ut.cpp ]
+    [ run-test c++11 : ut/concepts/type_traits/priority_ut.cpp ]
+    [ run-test c++11 : ut/concepts/type_traits/type_ut.cpp ]
+    [ run-test c++11 : ut/concepts/type_traits/when_ut.cpp ]
+    #[ run-test c++11 : ut/concepts/dependency_ut.cpp ]
     [ run-test c++11 : ut/concepts_ut.cpp ]
     [ run-test c++11 : ut/named_ut.cpp ]
 
+    [ run-test c++11 : ut/convertibles/convertible_ut.cpp : convertible_ut ]
     [ run-test c++11 : ut/convertibles/copy_ut.cpp : convertible_copy_ut ]
     [ run-test c++11 : ut/convertibles/reference_ut.cpp : convertible_reference_ut ]
     [ run-test c++11 : ut/convertibles/shared_ut.cpp : convertible_shared_ut ]
@@ -99,6 +105,7 @@ test-suite "unit tests" :
     [ run-test c++11 : ut/type_traits/scope_traits_ut.cpp ]
 
     [ run-test c++11 : ut/detail/binder_ut.cpp ]
+    [ run-test c++11 : ut/detail/builder_ut.cpp ]
     [ run-test c++11 : ut/detail/creator_ut.cpp ]
     [ run-test c++11 : ut/detail/pool_ut.cpp ]
 

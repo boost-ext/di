@@ -61,6 +61,7 @@
         class scope
         {
         public:
+            typedef scope type;
             typedef TConvertible<TExpected> result_type;
 
         private:

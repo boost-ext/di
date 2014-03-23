@@ -446,8 +446,8 @@ struct c28
     { }
 
     int i_ = 0;
-    int d_ = 0.0;
-    int f_ = 0.0;
+    double d_ = 0.0;
+    float f_ = 0.0;
 };
 
 struct ref_sp_int

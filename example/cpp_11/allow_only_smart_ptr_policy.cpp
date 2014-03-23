@@ -18,7 +18,10 @@ namespace {
 
 struct c
 {
-    c(std::shared_ptr<int>, std::unique_ptr<double>, boost::shared_ptr<char>) { }
+    c(std::shared_ptr<int>
+    , std::unique_ptr<double>
+    , boost::shared_ptr<char>)
+    { }
 };
 
 } // namespace

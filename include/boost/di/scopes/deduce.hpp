@@ -26,6 +26,7 @@ public:
     template<typename, typename>
     struct scope
     {
+        typedef scope type;
         typedef none_t result_type;
     };
 };

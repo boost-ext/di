@@ -59,6 +59,7 @@ struct fake_scope
     class scope
     {
     public:
+        typedef scope type;
         typedef convertible<T> result_type;
 
         scope() { }

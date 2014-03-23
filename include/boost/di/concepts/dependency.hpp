@@ -63,9 +63,9 @@ template<
   , typename TScope
 >
 struct get_scope
+    : detail::scope_traits<TScope>::type::template scope<TExpected, TGiven>
 {
-    typedef typename detail::scope_traits<TScope>::type::
-        template scope<TExpected, TGiven> type;
+    get_scope() { }
 };
 
 template<

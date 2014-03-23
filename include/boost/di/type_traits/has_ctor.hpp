@@ -29,9 +29,12 @@
         template<typename T>
         class has_ctor<T, mpl::int_<1> >
         {
-            struct any_type
+            class any_type
             {
                 typedef typename type_traits::make_plain<T>::type plain_t;
+
+            public:
+                any_type() { }
 
                 template<
                     typename U
@@ -80,8 +83,11 @@
     template<typename T>
     class has_ctor<T, mpl::int_<BOOST_PP_ITERATION()> >
     {
-        struct any_type
+        class any_type
         {
+        public:
+            any_type() { }
+
             template<typename U> operator U&() const;
             template<typename U> operator U();
 
