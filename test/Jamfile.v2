@@ -84,7 +84,7 @@ test-suite "unit tests" :
     [ run-test c++11 : ut/concepts/type_traits/priority_ut.cpp ]
     [ run-test c++11 : ut/concepts/type_traits/type_ut.cpp ]
     [ run-test c++11 : ut/concepts/type_traits/when_ut.cpp ]
-    #[ run-test c++11 : ut/concepts/dependency_ut.cpp ]
+    [ run-test c++11 : ut/concepts/dependency_ut.cpp ]
     [ run-test c++11 : ut/concepts_ut.cpp ]
     [ run-test c++11 : ut/named_ut.cpp ]
 
