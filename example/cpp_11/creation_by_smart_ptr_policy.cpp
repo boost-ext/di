@@ -23,40 +23,41 @@ struct c
 
 } // namespace
 
-class creation_by_smart_ptr
+class creation_by_smart_ptr_policy
 {
     BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
-public:
-    typedef creation_by_smart_ptr policy;
+    template<typename TDependency, typename = void>
+    struct is_creation_by_smart_ptr
+        : mpl::true_
+    { };
 
-    template<
-        typename TDeps
-      , typename TGiven
-      , typename = void
+    template<typename TDependency>
+    struct is_creation_by_smart_ptr<
+        TDependency
+      , typename boost::enable_if_c<mpl::size<typename TDependency::call_stack>::value == 1>::type
     >
-    struct verify : mpl::false_
-    {
-       BOOST_MPL_ASSERT_MSG(
+        : has_element_type<typename TDependency::type>
+    { };
+
+public:
+    template<typename TDependency>
+    static typename boost::enable_if<is_creation_by_smart_ptr<TDependency>>::type assert_policy() { }
+
+    template<typename TDependency>
+    static typename boost::disable_if<is_creation_by_smart_ptr<TDependency>>::type assert_policy() {
+        BOOST_DI_ASSERT_MSG(
             false
           , CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED
-          , (TGiven)
+          , (TDependency)
         );
-    };
-
-    template<typename TDeps, typename TGiven>
-    struct verify<
-        TDeps
-      , TGiven
-      , typename boost::enable_if<has_element_type<TGiven>>::type
-    > : mpl::true_
-    { };
+    }
 };
 
 int main() {
-    di::injector<creation_by_smart_ptr> injector;
-    injector.create<std::shared_ptr<c>>();
-    //injector.create<c>(); //compile error (CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED)
+    di::injector<> injector;
+    injector.create<std::shared_ptr<c>>(creation_by_smart_ptr_policy());
+    //injector.create<c>(creation_by_smart_ptr_policy()); //compile error (CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED)
 
     return 0;
 }

@@ -40,9 +40,9 @@ struct impl2 : i
 template<typename T>
 struct c
 {
-    c(std::shared_ptr<i> i) {
-        assert(i.get());
-        assert(dynamic_cast<T*>(i.get()));
+    c(std::shared_ptr<i> sp) {
+        assert(sp.get());
+        assert(dynamic_cast<T*>(sp.get()));
     }
 };
 
@@ -63,19 +63,21 @@ public:
             di::bind<int>::to(static_cast<int>(id))
         );
 
+        const auto lambda = [&]() -> std::shared_ptr<i> {
+            switch(id) {
+                case e1:
+                    return common.create<std::shared_ptr<impl1>>();
+
+                case e2:
+                    return common.create<std::shared_ptr<impl2>>();
+            }
+
+            return nullptr;
+        };
+
         auto injector = di::make_injector(
             common
-          , di::bind<i>::to([&]() -> std::shared_ptr<i> {
-                switch(id) {
-                    case e1:
-                        return common.create<std::shared_ptr<impl1>>();
-
-                    case e2:
-                        return common.create<std::shared_ptr<impl2>>();
-                }
-
-                return nullptr;
-            })
+          , di::bind<i>::to(lambda)
         );
 
         return injector.template create<T>();

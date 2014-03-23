@@ -56,27 +56,31 @@ BOOST_AUTO_TEST_CASE(rebind_scope) {
 
 BOOST_AUTO_TEST_CASE(to_value_arithmetic) {
     using expected = scopes::external<convertibles::value>;
-    using given = decltype(dependency<fake_scope<>, int>::to(int()))::scope;
+    using external = decltype(dependency<fake_scope<>, int>::to(int()));
+    using given = external::scope;
     BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
 }
 
 BOOST_AUTO_TEST_CASE(to_value_enum) {
     enum e { };
     using expected = scopes::external<convertibles::value>;
-    using given = decltype(dependency<fake_scope<>, e>::to(e()))::scope;
+    using external = decltype(dependency<fake_scope<>, e>::to(e()));
+    using given = external::scope;
     BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
 }
 
 BOOST_AUTO_TEST_CASE(to_value_text) {
     using expected = scopes::external<convertibles::value>;
-    using given = decltype(dependency<fake_scope<>, std::string>::to(std::string()))::scope;
+    using external = decltype(dependency<fake_scope<>, std::string>::to(std::string()));
+    using given = external::scope;
     BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
 }
 
 BOOST_AUTO_TEST_CASE(to_const_ref) {
     struct c { } c_;
     using expected = scopes::external<convertibles::reference>;
-    using given = decltype(dependency<fake_scope<>, c>::to(c_))::scope;
+    using external = decltype(dependency<fake_scope<>, c>::to(c_));
+    using given = external::scope;
     BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
 }
 
@@ -84,20 +88,23 @@ BOOST_AUTO_TEST_CASE(to_ref) {
     struct c { } c_;
     c& c_ref_ = c_;
     using expected = scopes::external<convertibles::reference>;
-    using given = decltype(dependency<fake_scope<>, c>::to(c_ref_))::scope;
+    using external = decltype(dependency<fake_scope<>, c>::to(c_ref_));
+    using given = external::scope;
     BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
 }
 
 BOOST_AUTO_TEST_CASE(to_shared_ptr) {
     using expected = scopes::external<convertibles::shared>;
-    using given = decltype(dependency<fake_scope<>, int>::to(aux::shared_ptr<int>()))::scope;
+    using external = decltype(dependency<fake_scope<>, int>::to(aux::shared_ptr<int>()));
+    using given = external::scope;
     BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
 }
 
 BOOST_AUTO_TEST_CASE(to_lambda_shared_ptr) {
     using expected = scopes::external<convertibles::shared>;
     auto given = dependency<fake_scope<>, int>::to([]{ return aux::shared_ptr<int>(); });
-    BOOST_CHECK_EQUAL(&typeid(expected), &typeid(decltype(given)::scope));
+    using external = decltype(given);
+    BOOST_CHECK_EQUAL(&typeid(expected), &typeid(external::scope));
 }
 
 } // namespace concepts
