@@ -105,6 +105,9 @@
       , const convertibles::convertible<T>&
     >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+        (void)creator;
+        (void)visitor;
+
         #define BOOST_DI_CREATOR_EXECUTE(z, n, _)   \
             BOOST_PP_COMMA_IF(n)                    \
             creator.template create<                \

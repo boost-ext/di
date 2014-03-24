@@ -320,6 +320,8 @@ struct c18
         : c0_(c0_), c1_(c1_), c3_(c3_)
     { }
 
+    c18& operator=(const c18&);
+
     c0 c0_;
     aux::shared_ptr<c1> c1_;
     c3& c3_;

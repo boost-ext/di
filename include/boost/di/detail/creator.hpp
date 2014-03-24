@@ -29,7 +29,10 @@
 
     template<
         typename TDependecies
-      , template<typename, typename = builder> class TBinder = binder
+      , template<
+            typename
+          , typename = ::boost::di::detail::builder
+        > class TBinder = binder
     >
     class creator
     {
@@ -68,6 +71,8 @@
         class eager_creator
         {
             typedef typename type_traits::make_plain<T>::type plain_t;
+
+            eager_creator& operator=(const eager_creator&);
 
         public:
             eager_creator(creator& c, TDeps& deps, TRefs& refs, const TVisitor& visitor)

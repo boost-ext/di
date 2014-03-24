@@ -26,7 +26,7 @@ namespace detail {
 BOOST_AUTO_TEST_CASE(creator_simple) {
     const int i = 42;
 
-    typedef typename fake_dependency<scopes::unique<>, int, mpl::int_<i>>::type dependency_type;
+    typedef fake_dependency<scopes::unique<>, int, mpl::int_<i>>::type dependency_type;
     fake_pool<dependency_type> deps;
     std::vector<aux::shared_ptr<void>> refs;
 
