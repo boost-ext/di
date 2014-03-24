@@ -38,6 +38,10 @@ class binder
     { };
 
 public:
+    explicit binder(TBuilder builder = TBuilder())
+        : builder_(builder)
+    { }
+
     template<
         typename T
       , typename TCallStack

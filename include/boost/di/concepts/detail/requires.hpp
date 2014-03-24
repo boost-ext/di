@@ -40,15 +40,27 @@ class requires
 public:
     typedef requires type;
 
-    template<typename T, typename TCallStack, typename TScope>
+    template<
+        typename T
+      , typename TCallStack
+      , typename TScope
+      , typename TMultiplicationFactor = mpl::integral_c<long, 100>
+    >
     struct apply
         : mpl::second<
               typename mpl::fold<
                   mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
                 , mpl::pair<mpl::integral_c<long, 1>, mpl::integral_c<long, 1> >
                 , mpl::pair<
-                      mpl::times<mpl::first<mpl::_1>, mpl::integral_c<long, 100> >
-                    , mpl::times<mpl::first<mpl::_1>, mpl::second<mpl::_1>, apply_bind<mpl::_2, T, TCallStack, TScope> >
+                      mpl::times<
+                          mpl::first<mpl::_1>
+                        , TMultiplicationFactor
+                      >
+                    , mpl::times<
+                          mpl::first<mpl::_1>
+                        , mpl::second<mpl::_1>
+                        , apply_bind<mpl::_2, T, TCallStack, TScope>
+                      >
                   >
               >::type
           >

@@ -128,7 +128,9 @@
     public:
         typedef TDependecies deps;
 
-        module() { }
+        explicit module(TCreator<TDependecies> creator = TCreator<TDependecies>())
+            : creator_(creator)
+        { }
 
         #define BOOST_PP_FILENAME_1 "boost/di/detail/module.hpp"
         #define BOOST_PP_ITERATION_LIMITS BOOST_DI_TYPES_MPL_LIMIT_FROM(1)

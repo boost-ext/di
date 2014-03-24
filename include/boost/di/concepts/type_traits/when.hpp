@@ -12,6 +12,7 @@
 #include <boost/mpl/deref.hpp>
 #include <boost/mpl/transform_view.hpp>
 #include <boost/mpl/max_element.hpp>
+#include <boost/mpl/empty.hpp>
 
 namespace boost {
 namespace di {

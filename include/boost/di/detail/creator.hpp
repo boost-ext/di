@@ -145,6 +145,10 @@
         };
 
     public:
+        explicit creator(TBinder<TDependecies> binder = TBinder<TDependecies>())
+            : binder_(binder)
+        { }
+
         template<
             typename T
           , typename TParent // to ignore copy/move ctor

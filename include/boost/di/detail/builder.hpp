@@ -44,6 +44,10 @@
         typedef std::map<const std::type_info*, aux::shared_ptr<void>, type_comparator> scopes_type;
 
     public:
+        explicit builder(scopes_type scopes = scopes_type())
+            : scopes_(scopes)
+        { }
+
         #define BOOST_PP_FILENAME_1 "boost/di/detail/builder.hpp"
         #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM(0)
         #include BOOST_PP_ITERATE()

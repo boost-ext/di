@@ -8,11 +8,65 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "boost/di/aux_/memory.hpp"
+
 namespace boost {
 namespace di {
 namespace type_traits {
 
-BOOST_AUTO_TEST_CASE(basic) {
+enum e { };
+struct trivial_ctor { };
+struct default_ctor { default_ctor(int = 0) { }};
+struct copy_ctor { copy_ctor(const copy_ctor&) { }};
+struct copy_ctor_and_int { copy_ctor_and_int(const copy_ctor_and_int&) { } copy_ctor_and_int(int) { }};
+struct copy_ctor_and_many { copy_ctor_and_many(const copy_ctor_and_many&) { } copy_ctor_and_many(int, double) { }};
+struct many { many(int, double, float) { }};
+struct many_2_3 { many_2_3(int, double) { } many_2_3(int, double, float) { } };
+
+#if (__cplusplus >= 201100L)
+    struct many_complex { many_complex(const int&, double, float*, aux::shared_ptr<void>, char&&) { }};
+#else
+    struct many_complex { many_complex(const int&, double, float*, aux::shared_ptr<void>, char&) { }};
+#endif
+
+BOOST_AUTO_TEST_CASE(fundamental_types) {
+    BOOST_CHECK((!has_ctor<void, mpl::int_<1> >::value));
+    BOOST_CHECK((!has_ctor<int, mpl::int_<1> >::value));
+    BOOST_CHECK((!has_ctor<char, mpl::int_<1> >::value));
+    BOOST_CHECK((!has_ctor<float, mpl::int_<1> >::value));
+    BOOST_CHECK((!has_ctor<double, mpl::int_<1> >::value));
+    BOOST_CHECK((!has_ctor<e, mpl::int_<1> >::value));
+}
+
+BOOST_AUTO_TEST_CASE(copy_ctors) {
+    BOOST_CHECK((!has_ctor<trivial_ctor, mpl::int_<1> >::value));
+    BOOST_CHECK((!has_ctor<copy_ctor, mpl::int_<1> >::value));
+
+#if (__cplusplus >= 201100L)
+    BOOST_CHECK((has_ctor<default_ctor, mpl::int_<1> >::value));
+    BOOST_CHECK((has_ctor<copy_ctor_and_int, mpl::int_<1> >::value));
+#else
+    BOOST_CHECK((!has_ctor<default_ctor, mpl::int_<1> >::value));
+    BOOST_CHECK((!has_ctor<copy_ctor_and_int, mpl::int_<1> >::value));
+#endif
+}
+
+BOOST_AUTO_TEST_CASE(many_arguments) {
+    BOOST_CHECK((!has_ctor<copy_ctor_and_many, mpl::int_<1> >::value));
+    BOOST_CHECK((has_ctor<copy_ctor_and_many, mpl::int_<2> >::value));
+    BOOST_CHECK((!has_ctor<copy_ctor_and_many, mpl::int_<3> >::value));
+
+    BOOST_CHECK((!has_ctor<many, mpl::int_<1> >::value));
+    BOOST_CHECK((!has_ctor<many, mpl::int_<2> >::value));
+    BOOST_CHECK((has_ctor<many, mpl::int_<3> >::value));
+
+    BOOST_CHECK((!has_ctor<many_2_3, mpl::int_<1> >::value));
+    BOOST_CHECK((has_ctor<many_2_3, mpl::int_<2> >::value));
+    BOOST_CHECK((has_ctor<many_2_3, mpl::int_<3> >::value));
+
+    BOOST_CHECK((!has_ctor<many_complex, mpl::int_<4> >::value));
+    BOOST_CHECK((has_ctor<many_complex, mpl::int_<5> >::value));
+    BOOST_CHECK((!has_ctor<many_complex, mpl::int_<6> >::value));
 }
 
 } // namespace type_traits
