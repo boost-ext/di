@@ -56,6 +56,7 @@ public:
         };
 
     public:
+        typedef scope type;
         typedef convertible result_type;
 
         scope()
