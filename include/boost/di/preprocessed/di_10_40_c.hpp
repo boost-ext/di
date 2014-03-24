@@ -30,7 +30,6 @@
 #include <boost/type_traits/is_class.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/is_arithmetic.hpp>
-#include <boost/type_traits/is_abstract.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/type.hpp>
 #include <boost/ref.hpp>
@@ -308,13 +307,22 @@ namespace type_traits {
 template<typename TContext>
 class when
 {
-    template<typename TBind, typename T, typename TCallStack, typename TScope>
+    template<
+        typename TBind
+      , typename T
+      , typename TCallStack
+      , typename TScope
+    >
     struct apply_bind
         : TBind::template apply<T, TCallStack, TScope>::type
     { };
 
 public:
-    template<typename T, typename TCallStack, typename TScope>
+    template<
+        typename T
+      , typename TCallStack
+      , typename TScope
+    >
     struct apply
         : mpl::if_<
               mpl::empty<TContext>
@@ -1225,91 +1233,70 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
         );
     };
 
-    template<bool>
-    struct policy
-    { };
-
-    template<typename TExpected, typename TGiven>
-    TGiven* create_traits_impl(const policy<false>&) {
-        return new TGiven();
-    }
-
-    template<typename TExpected, typename TGiven>
-    typename disable_if<is_abstract<TGiven>, TExpected*>::type
-    create_traits_impl(const policy<true>&) {
-        return new TGiven();
-    }
-
-    template<typename TExpected, typename TGiven>
-    typename enable_if<is_abstract<TGiven>, TExpected*>::type
-    create_traits_impl(const policy<true>&) {
-        return new TGiven();
-    }
-
-    template<typename TPolicy, typename TExpected, typename TGiven>
+    template<typename TCreatePolicy, typename TExpected, typename TGiven>
     typename disable_if<is_explicit<TGiven>, TExpected*>::type
     create_traits() {
-        return create_traits_impl<TExpected, TGiven>(TPolicy());
+        return TCreatePolicy::template create<TExpected, TGiven>();
     }
 
-    template<typename T, typename TExpected, typename TGiven>
+    template<typename, typename TExpected, typename TGiven>
     typename enable_if<has_value<TGiven>, TExpected*>::type
     create_traits() {
         return new TExpected(TGiven::value);
     }
 
-    template<typename T, typename TExpected, typename TGiven>
+    template<typename, typename TExpected, typename TGiven>
     typename enable_if<is_mpl_string<TGiven>, TExpected*>::type
     create_traits() {
         return new TExpected(mpl::c_str<TGiven>::value);
     }
 
-    template<typename T, typename TExpected, typename TGiven, typename Args0>
+    template<typename, typename TExpected, typename TGiven, typename Args0>
     TExpected* create_traits( Args0 args0) {
         return new TGiven( args0);
     }
 
-    template<typename T, typename TExpected, typename TGiven, typename Args0 , typename Args1>
+    template<typename, typename TExpected, typename TGiven, typename Args0 , typename Args1>
     TExpected* create_traits( Args0 args0 , Args1 args1) {
         return new TGiven( args0 , args1);
     }
 
-    template<typename T, typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2>
+    template<typename, typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2>
     TExpected* create_traits( Args0 args0 , Args1 args1 , Args2 args2) {
         return new TGiven( args0 , args1 , args2);
     }
 
-    template<typename T, typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3>
+    template<typename, typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3>
     TExpected* create_traits( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3) {
         return new TGiven( args0 , args1 , args2 , args3);
     }
 
-    template<typename T, typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
+    template<typename, typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
     TExpected* create_traits( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4) {
         return new TGiven( args0 , args1 , args2 , args3 , args4);
     }
 
-    template<typename T, typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
+    template<typename, typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
     TExpected* create_traits( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5) {
         return new TGiven( args0 , args1 , args2 , args3 , args4 , args5);
     }
 
-    template<typename T, typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
+    template<typename, typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
     TExpected* create_traits( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6) {
         return new TGiven( args0 , args1 , args2 , args3 , args4 , args5 , args6);
     }
 
-    template<typename T, typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
+    template<typename, typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
     TExpected* create_traits( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7) {
         return new TGiven( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7);
     }
 
-    template<typename T, typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
+    template<typename, typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
     TExpected* create_traits( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8) {
         return new TGiven( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8);
     }
 
-    template<typename T, typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
+    template<typename, typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
     TExpected* create_traits( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9) {
         return new TGiven( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9);
     }
@@ -1389,58 +1376,58 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
                 : object_(callback(object))
             { }
 
-            template<typename TPolicy>
-            result_type create(const TPolicy&) {
+            template<typename>
+            result_type create() {
                 return object_();
             }
 
-    template<typename TPolicy, typename Args0>
-    result_type create(const TPolicy&, Args0 ) {
+    template<typename, typename Args0>
+    result_type create( Args0 ) {
         return object_();
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1>
-    result_type create(const TPolicy&, Args0 , Args1 ) {
+    template<typename, typename Args0 , typename Args1>
+    result_type create( Args0 , Args1 ) {
         return object_();
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1 , typename Args2>
-    result_type create(const TPolicy&, Args0 , Args1 , Args2 ) {
+    template<typename, typename Args0 , typename Args1 , typename Args2>
+    result_type create( Args0 , Args1 , Args2 ) {
         return object_();
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3>
-    result_type create(const TPolicy&, Args0 , Args1 , Args2 , Args3 ) {
+    template<typename, typename Args0 , typename Args1 , typename Args2 , typename Args3>
+    result_type create( Args0 , Args1 , Args2 , Args3 ) {
         return object_();
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
-    result_type create(const TPolicy&, Args0 , Args1 , Args2 , Args3 , Args4 ) {
+    template<typename, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
+    result_type create( Args0 , Args1 , Args2 , Args3 , Args4 ) {
         return object_();
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
-    result_type create(const TPolicy&, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 ) {
+    template<typename, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
+    result_type create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 ) {
         return object_();
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
-    result_type create(const TPolicy&, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 ) {
+    template<typename, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
+    result_type create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 ) {
         return object_();
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
-    result_type create(const TPolicy&, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 ) {
+    template<typename, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
+    result_type create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 ) {
         return object_();
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
-    result_type create(const TPolicy&, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 ) {
+    template<typename, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
+    result_type create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 ) {
         return object_();
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
-    result_type create(const TPolicy&, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 ) {
+    template<typename, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
+    result_type create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 ) {
         return object_();
     }
 
@@ -1758,109 +1745,109 @@ public:
                 object_.reset();
             }
 
-            template<typename TPolicy>
-            result_type create(const TPolicy&) {
+            template<typename TCreatePolicy>
+            result_type create() {
                 if (in_scope_ && !object_) {
-                    object_.reset(type_traits::create_traits<TPolicy, TExpected, TGiven>());
+                    object_.reset(type_traits::create_traits<TCreatePolicy, TExpected, TGiven>());
                 }
                 return object_;
             }
 
-    template<typename TPolicy, typename Args0>
-    result_type create(const TPolicy&, Args0 args0) {
+    template<typename TCreatePolicy, typename Args0>
+    result_type create( Args0 args0) {
         if (in_scope_ && !object_) {
             object_.reset(
-                type_traits::create_traits<TPolicy, TExpected, TGiven>( args0)
+                type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0)
             );
         }
         return object_;
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1>
-    result_type create(const TPolicy&, Args0 args0 , Args1 args1) {
+    template<typename TCreatePolicy, typename Args0 , typename Args1>
+    result_type create( Args0 args0 , Args1 args1) {
         if (in_scope_ && !object_) {
             object_.reset(
-                type_traits::create_traits<TPolicy, TExpected, TGiven>( args0 , args1)
+                type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1)
             );
         }
         return object_;
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1 , typename Args2>
-    result_type create(const TPolicy&, Args0 args0 , Args1 args1 , Args2 args2) {
+    template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2) {
         if (in_scope_ && !object_) {
             object_.reset(
-                type_traits::create_traits<TPolicy, TExpected, TGiven>( args0 , args1 , args2)
+                type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2)
             );
         }
         return object_;
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3>
-    result_type create(const TPolicy&, Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3) {
+    template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3) {
         if (in_scope_ && !object_) {
             object_.reset(
-                type_traits::create_traits<TPolicy, TExpected, TGiven>( args0 , args1 , args2 , args3)
+                type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3)
             );
         }
         return object_;
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
-    result_type create(const TPolicy&, Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4) {
+    template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4) {
         if (in_scope_ && !object_) {
             object_.reset(
-                type_traits::create_traits<TPolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4)
+                type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4)
             );
         }
         return object_;
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
-    result_type create(const TPolicy&, Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5) {
+    template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5) {
         if (in_scope_ && !object_) {
             object_.reset(
-                type_traits::create_traits<TPolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5)
+                type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5)
             );
         }
         return object_;
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
-    result_type create(const TPolicy&, Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6) {
+    template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6) {
         if (in_scope_ && !object_) {
             object_.reset(
-                type_traits::create_traits<TPolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6)
+                type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6)
             );
         }
         return object_;
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
-    result_type create(const TPolicy&, Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7) {
+    template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7) {
         if (in_scope_ && !object_) {
             object_.reset(
-                type_traits::create_traits<TPolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7)
+                type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7)
             );
         }
         return object_;
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
-    result_type create(const TPolicy&, Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8) {
+    template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8) {
         if (in_scope_ && !object_) {
             object_.reset(
-                type_traits::create_traits<TPolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8)
+                type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8)
             );
         }
         return object_;
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
-    result_type create(const TPolicy&, Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9) {
+    template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9) {
         if (in_scope_ && !object_) {
             object_.reset(
-                type_traits::create_traits<TPolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9)
+                type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9)
             );
         }
         return object_;
@@ -1894,109 +1881,109 @@ public:
             typedef scope type;
             typedef TConvertible<TExpected> result_type;
 
-            template<typename TPolicy>
-            result_type create(const TPolicy&) {
+            template<typename TCreatePolicy>
+            result_type create() {
                 if (!object_) {
-                    object_.reset(type_traits::create_traits<TPolicy, TExpected, TGiven>());
+                    object_.reset(type_traits::create_traits<TCreatePolicy, TExpected, TGiven>());
                 }
                 return object_;
             }
 
-    template<typename TPolicy, typename Args0>
-    result_type create(const TPolicy&, Args0 args0) {
+    template<typename TCreatePolicy, typename Args0>
+    result_type create( Args0 args0) {
         if (!object_) {
             object_.reset(
-                type_traits::create_traits<TPolicy, TExpected, TGiven>( args0)
+                type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0)
             );
         }
         return object_;
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1>
-    result_type create(const TPolicy&, Args0 args0 , Args1 args1) {
+    template<typename TCreatePolicy, typename Args0 , typename Args1>
+    result_type create( Args0 args0 , Args1 args1) {
         if (!object_) {
             object_.reset(
-                type_traits::create_traits<TPolicy, TExpected, TGiven>( args0 , args1)
+                type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1)
             );
         }
         return object_;
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1 , typename Args2>
-    result_type create(const TPolicy&, Args0 args0 , Args1 args1 , Args2 args2) {
+    template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2) {
         if (!object_) {
             object_.reset(
-                type_traits::create_traits<TPolicy, TExpected, TGiven>( args0 , args1 , args2)
+                type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2)
             );
         }
         return object_;
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3>
-    result_type create(const TPolicy&, Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3) {
+    template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3) {
         if (!object_) {
             object_.reset(
-                type_traits::create_traits<TPolicy, TExpected, TGiven>( args0 , args1 , args2 , args3)
+                type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3)
             );
         }
         return object_;
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
-    result_type create(const TPolicy&, Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4) {
+    template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4) {
         if (!object_) {
             object_.reset(
-                type_traits::create_traits<TPolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4)
+                type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4)
             );
         }
         return object_;
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
-    result_type create(const TPolicy&, Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5) {
+    template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5) {
         if (!object_) {
             object_.reset(
-                type_traits::create_traits<TPolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5)
+                type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5)
             );
         }
         return object_;
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
-    result_type create(const TPolicy&, Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6) {
+    template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6) {
         if (!object_) {
             object_.reset(
-                type_traits::create_traits<TPolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6)
+                type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6)
             );
         }
         return object_;
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
-    result_type create(const TPolicy&, Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7) {
+    template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7) {
         if (!object_) {
             object_.reset(
-                type_traits::create_traits<TPolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7)
+                type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7)
             );
         }
         return object_;
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
-    result_type create(const TPolicy&, Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8) {
+    template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8) {
         if (!object_) {
             object_.reset(
-                type_traits::create_traits<TPolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8)
+                type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8)
             );
         }
         return object_;
     }
 
-    template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
-    result_type create(const TPolicy&, Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9) {
+    template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9) {
         if (!object_) {
             object_.reset(
-                type_traits::create_traits<TPolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9)
+                type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9)
             );
         }
         return object_;
@@ -2540,89 +2527,89 @@ private:
             typedef scope type;
             typedef TConvertible<TExpected> result_type;
 
-            template<typename TPolicy>
-            result_type create(const TPolicy&) {
+            template<typename TCreatePolicy>
+            result_type create() {
                 return callback0<TExpected*>(
-                    &type_traits::create_traits<TPolicy, TExpected, TGiven>
+                    &type_traits::create_traits<TCreatePolicy, TExpected, TGiven>
                 );
             }
 
-        template<typename TPolicy, typename Args0>
-        result_type create(const TPolicy&, Args0 args0) {
+        template<typename TCreatePolicy, typename Args0>
+        result_type create( Args0 args0) {
             return callback1<TExpected*, Args0>(
-                &type_traits::create_traits<TPolicy, TExpected, TGiven, Args0>
+                &type_traits::create_traits<TCreatePolicy, TExpected, TGiven, Args0>
               , args0
             );
         }
 
-        template<typename TPolicy, typename Args0 , typename Args1>
-        result_type create(const TPolicy&, Args0 args0 , Args1 args1) {
+        template<typename TCreatePolicy, typename Args0 , typename Args1>
+        result_type create( Args0 args0 , Args1 args1) {
             return callback2<TExpected*, Args0 , Args1>(
-                &type_traits::create_traits<TPolicy, TExpected, TGiven, Args0 , Args1>
+                &type_traits::create_traits<TCreatePolicy, TExpected, TGiven, Args0 , Args1>
               , args0 , args1
             );
         }
 
-        template<typename TPolicy, typename Args0 , typename Args1 , typename Args2>
-        result_type create(const TPolicy&, Args0 args0 , Args1 args1 , Args2 args2) {
+        template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2>
+        result_type create( Args0 args0 , Args1 args1 , Args2 args2) {
             return callback3<TExpected*, Args0 , Args1 , Args2>(
-                &type_traits::create_traits<TPolicy, TExpected, TGiven, Args0 , Args1 , Args2>
+                &type_traits::create_traits<TCreatePolicy, TExpected, TGiven, Args0 , Args1 , Args2>
               , args0 , args1 , args2
             );
         }
 
-        template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3>
-        result_type create(const TPolicy&, Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3) {
+        template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3>
+        result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3) {
             return callback4<TExpected*, Args0 , Args1 , Args2 , Args3>(
-                &type_traits::create_traits<TPolicy, TExpected, TGiven, Args0 , Args1 , Args2 , Args3>
+                &type_traits::create_traits<TCreatePolicy, TExpected, TGiven, Args0 , Args1 , Args2 , Args3>
               , args0 , args1 , args2 , args3
             );
         }
 
-        template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
-        result_type create(const TPolicy&, Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4) {
+        template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
+        result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4) {
             return callback5<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4>(
-                &type_traits::create_traits<TPolicy, TExpected, TGiven, Args0 , Args1 , Args2 , Args3 , Args4>
+                &type_traits::create_traits<TCreatePolicy, TExpected, TGiven, Args0 , Args1 , Args2 , Args3 , Args4>
               , args0 , args1 , args2 , args3 , args4
             );
         }
 
-        template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
-        result_type create(const TPolicy&, Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5) {
+        template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
+        result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5) {
             return callback6<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4 , Args5>(
-                &type_traits::create_traits<TPolicy, TExpected, TGiven, Args0 , Args1 , Args2 , Args3 , Args4 , Args5>
+                &type_traits::create_traits<TCreatePolicy, TExpected, TGiven, Args0 , Args1 , Args2 , Args3 , Args4 , Args5>
               , args0 , args1 , args2 , args3 , args4 , args5
             );
         }
 
-        template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
-        result_type create(const TPolicy&, Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6) {
+        template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
+        result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6) {
             return callback7<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6>(
-                &type_traits::create_traits<TPolicy, TExpected, TGiven, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6>
+                &type_traits::create_traits<TCreatePolicy, TExpected, TGiven, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6>
               , args0 , args1 , args2 , args3 , args4 , args5 , args6
             );
         }
 
-        template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
-        result_type create(const TPolicy&, Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7) {
+        template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
+        result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7) {
             return callback8<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7>(
-                &type_traits::create_traits<TPolicy, TExpected, TGiven, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7>
+                &type_traits::create_traits<TCreatePolicy, TExpected, TGiven, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7>
               , args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7
             );
         }
 
-        template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
-        result_type create(const TPolicy&, Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8) {
+        template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
+        result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8) {
             return callback9<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8>(
-                &type_traits::create_traits<TPolicy, TExpected, TGiven, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8>
+                &type_traits::create_traits<TCreatePolicy, TExpected, TGiven, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8>
               , args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8
             );
         }
 
-        template<typename TPolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
-        result_type create(const TPolicy&, Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9) {
+        template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
+        result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9) {
             return callback10<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9>(
-                &type_traits::create_traits<TPolicy, TExpected, TGiven, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9>
+                &type_traits::create_traits<TCreatePolicy, TExpected, TGiven, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9>
               , args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9
             );
         }
@@ -8289,7 +8276,11 @@ public:
             }
         };
 
-        typedef std::map<const std::type_info*, aux::shared_ptr<void>, type_comparator> scopes_type;
+        typedef std::map<
+            const std::type_info*
+          , aux::shared_ptr<void>
+          , type_comparator
+        > scopes_type;
 
     public:
         explicit builder(scopes_type scopes = scopes_type())
@@ -8302,6 +8293,7 @@ public:
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TCreatePolicy
       , typename TCreator
       , typename TDeps
       , typename TRefs
@@ -8316,10 +8308,7 @@ public:
         (void)visitor;
         aux::shared_ptr<convertibles::convertible<T> > convertible(
             new convertibles::convertible<T>(
-                acquire<typename TDependency::type>(deps).create(
-                    type_traits::policy<
-                        mpl::empty<typename TDeps::types>::value
-                    >()
+                acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
 
                 )
             )
@@ -8335,6 +8324,7 @@ public:
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TCreatePolicy
       , typename TCreator
       , typename TDeps
       , typename TRefs
@@ -8349,11 +8339,7 @@ public:
         (void)visitor;
         aux::shared_ptr<convertibles::convertible<T> > convertible(
             new convertibles::convertible<T>(
-                acquire<typename TDependency::type>(deps).create(
-                    type_traits::policy<
-                        mpl::empty<typename TDeps::types>::value
-                    >()
-                    ,
+                acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
                     creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
                 )
@@ -8370,6 +8356,7 @@ public:
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TCreatePolicy
       , typename TCreator
       , typename TDeps
       , typename TRefs
@@ -8384,11 +8371,7 @@ public:
         (void)visitor;
         aux::shared_ptr<convertibles::convertible<T> > convertible(
             new convertibles::convertible<T>(
-                acquire<typename TDependency::type>(deps).create(
-                    type_traits::policy<
-                        mpl::empty<typename TDeps::types>::value
-                    >()
-                    ,
+                acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
                     creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
                 )
@@ -8405,6 +8388,7 @@ public:
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TCreatePolicy
       , typename TCreator
       , typename TDeps
       , typename TRefs
@@ -8419,11 +8403,7 @@ public:
         (void)visitor;
         aux::shared_ptr<convertibles::convertible<T> > convertible(
             new convertibles::convertible<T>(
-                acquire<typename TDependency::type>(deps).create(
-                    type_traits::policy<
-                        mpl::empty<typename TDeps::types>::value
-                    >()
-                    ,
+                acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
                     creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
                 )
@@ -8440,6 +8420,7 @@ public:
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TCreatePolicy
       , typename TCreator
       , typename TDeps
       , typename TRefs
@@ -8454,11 +8435,7 @@ public:
         (void)visitor;
         aux::shared_ptr<convertibles::convertible<T> > convertible(
             new convertibles::convertible<T>(
-                acquire<typename TDependency::type>(deps).create(
-                    type_traits::policy<
-                        mpl::empty<typename TDeps::types>::value
-                    >()
-                    ,
+                acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
                     creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
                 )
@@ -8475,6 +8452,7 @@ public:
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TCreatePolicy
       , typename TCreator
       , typename TDeps
       , typename TRefs
@@ -8489,11 +8467,7 @@ public:
         (void)visitor;
         aux::shared_ptr<convertibles::convertible<T> > convertible(
             new convertibles::convertible<T>(
-                acquire<typename TDependency::type>(deps).create(
-                    type_traits::policy<
-                        mpl::empty<typename TDeps::types>::value
-                    >()
-                    ,
+                acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
                     creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
                 )
@@ -8510,6 +8484,7 @@ public:
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TCreatePolicy
       , typename TCreator
       , typename TDeps
       , typename TRefs
@@ -8524,11 +8499,7 @@ public:
         (void)visitor;
         aux::shared_ptr<convertibles::convertible<T> > convertible(
             new convertibles::convertible<T>(
-                acquire<typename TDependency::type>(deps).create(
-                    type_traits::policy<
-                        mpl::empty<typename TDeps::types>::value
-                    >()
-                    ,
+                acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
                     creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
                 )
@@ -8545,6 +8516,7 @@ public:
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TCreatePolicy
       , typename TCreator
       , typename TDeps
       , typename TRefs
@@ -8559,11 +8531,7 @@ public:
         (void)visitor;
         aux::shared_ptr<convertibles::convertible<T> > convertible(
             new convertibles::convertible<T>(
-                acquire<typename TDependency::type>(deps).create(
-                    type_traits::policy<
-                        mpl::empty<typename TDeps::types>::value
-                    >()
-                    ,
+                acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
                     creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
                 )
@@ -8580,6 +8548,7 @@ public:
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TCreatePolicy
       , typename TCreator
       , typename TDeps
       , typename TRefs
@@ -8594,11 +8563,7 @@ public:
         (void)visitor;
         aux::shared_ptr<convertibles::convertible<T> > convertible(
             new convertibles::convertible<T>(
-                acquire<typename TDependency::type>(deps).create(
-                    type_traits::policy<
-                        mpl::empty<typename TDeps::types>::value
-                    >()
-                    ,
+                acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
                     creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
                 )
@@ -8615,6 +8580,7 @@ public:
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TCreatePolicy
       , typename TCreator
       , typename TDeps
       , typename TRefs
@@ -8629,11 +8595,7 @@ public:
         (void)visitor;
         aux::shared_ptr<convertibles::convertible<T> > convertible(
             new convertibles::convertible<T>(
-                acquire<typename TDependency::type>(deps).create(
-                    type_traits::policy<
-                        mpl::empty<typename TDeps::types>::value
-                    >()
-                    ,
+                acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
                     creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
                 )
@@ -8650,6 +8612,7 @@ public:
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TCreatePolicy
       , typename TCreator
       , typename TDeps
       , typename TRefs
@@ -8664,11 +8627,7 @@ public:
         (void)visitor;
         aux::shared_ptr<convertibles::convertible<T> > convertible(
             new convertibles::convertible<T>(
-                acquire<typename TDependency::type>(deps).create(
-                    type_traits::policy<
-                        mpl::empty<typename TDeps::types>::value
-                    >()
-                    ,
+                acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
                     creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 9>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
                 )
@@ -8722,7 +8681,11 @@ template<
 >
 class binder
 {
-    template<typename TDependency, typename T, typename TCallStack>
+    template<
+        typename TDependency
+      , typename T
+      , typename TCallStack
+    >
     struct apply
         : TDependency::bind::template apply<
               T
@@ -8776,6 +8739,7 @@ public:
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TCreatePolicy
       , typename TCreator
       , typename TDeps
       , typename TRefs
@@ -8789,6 +8753,7 @@ public:
           , TCallStack
           , TPolicies
           , TDependency
+          , TCreatePolicy
           , TCreator
         >(creator, deps, refs, visitor);
     }
@@ -8806,12 +8771,22 @@ private:
     namespace di {
     namespace detail {
 
+    class default_create_policy
+    {
+    public:
+        template<typename TExpected, typename TGiven>
+        static TExpected* create() {
+            return new TGiven();
+        }
+    };
+
     template<
         typename TDependecies
       , template<
             typename
           , typename = ::boost::di::detail::builder
         > class TBinder = binder
+      , typename TCreatePolicy = default_create_policy
     >
     class creator
     {
@@ -8960,7 +8935,10 @@ private:
           , typename TVisitor
         >
         const convertibles::convertible<T>& create(
-            TDeps& deps, TRefs& refs, const TVisitor& visitor, typename disable_if<is_same<T, any_type> >::type* = 0) {
+            TDeps& deps
+          , TRefs& refs
+          , const TVisitor& visitor
+          , typename disable_if<is_same<T, any_type> >::type* = 0) {
             return create_impl<
                 T
               , typename mpl::push_back<
@@ -8997,6 +8975,7 @@ private:
           , TCallStack
           , TPolicies
           , TDependency
+          , TCreatePolicy
         >(*this, deps, refs, visitor);
     }
 
@@ -9023,6 +9002,7 @@ private:
           , TCallStack
           , TPolicies
           , TDependency
+          , TCreatePolicy
         >(*this, deps, refs, visitor);
     }
 
@@ -9049,6 +9029,7 @@ private:
           , TCallStack
           , TPolicies
           , TDependency
+          , TCreatePolicy
         >(*this, deps, refs, visitor);
     }
 
@@ -9075,6 +9056,7 @@ private:
           , TCallStack
           , TPolicies
           , TDependency
+          , TCreatePolicy
         >(*this, deps, refs, visitor);
     }
 
@@ -9101,6 +9083,7 @@ private:
           , TCallStack
           , TPolicies
           , TDependency
+          , TCreatePolicy
         >(*this, deps, refs, visitor);
     }
 
@@ -9127,6 +9110,7 @@ private:
           , TCallStack
           , TPolicies
           , TDependency
+          , TCreatePolicy
         >(*this, deps, refs, visitor);
     }
 
@@ -9153,6 +9137,7 @@ private:
           , TCallStack
           , TPolicies
           , TDependency
+          , TCreatePolicy
         >(*this, deps, refs, visitor);
     }
 
@@ -9179,6 +9164,7 @@ private:
           , TCallStack
           , TPolicies
           , TDependency
+          , TCreatePolicy
         >(*this, deps, refs, visitor);
     }
 
@@ -9205,6 +9191,7 @@ private:
           , TCallStack
           , TPolicies
           , TDependency
+          , TCreatePolicy
         >(*this, deps, refs, visitor);
     }
 
@@ -9231,6 +9218,7 @@ private:
           , TCallStack
           , TPolicies
           , TDependency
+          , TCreatePolicy
         >(*this, deps, refs, visitor);
     }
 
@@ -9257,6 +9245,7 @@ private:
           , TCallStack
           , TPolicies
           , TDependency
+          , TCreatePolicy
         >(*this, deps, refs, visitor);
     }
 
@@ -9286,7 +9275,8 @@ private:
         typename TDependecies = mpl::vector0<>
       , template<
             typename
-          , template<typename, typename> class = binder
+          , template<typename, typename> class = ::boost::di::detail::binder
+          , typename = ::boost::di::detail::default_create_policy
         > class TCreator = creator
       , template<
             typename
@@ -9301,7 +9291,7 @@ private:
 
         template<
             typename
-          , template<typename, template<typename, typename> class> class
+          , template<typename, template<typename, typename> class, typename> class
           , template<typename, typename, typename> class
         > friend class module;
 

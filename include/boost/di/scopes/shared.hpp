@@ -32,10 +32,10 @@
             typedef scope type;
             typedef TConvertible<TExpected> result_type;
 
-            template<typename TPolicy>
+            template<typename TCreatePolicy>
             result_type create() {
                 if (!object_) {
-                    object_.reset(type_traits::create_traits<TPolicy, TExpected, TGiven>());
+                    object_.reset(type_traits::create_traits<TCreatePolicy, TExpected, TGiven>());
                 }
                 return object_;
             }
@@ -57,11 +57,11 @@
 
 #else
 
-    template<typename TPolicy, BOOST_DI_TYPES(Args)>
+    template<typename TCreatePolicy, BOOST_DI_TYPES(Args)>
     result_type create(BOOST_DI_ARGS(Args, args)) {
         if (!object_) {
             object_.reset(
-                type_traits::create_traits<TPolicy, TExpected, TGiven>(BOOST_DI_ARGS_PASS(args))
+                type_traits::create_traits<TCreatePolicy, TExpected, TGiven>(BOOST_DI_ARGS_PASS(args))
             );
         }
         return object_;

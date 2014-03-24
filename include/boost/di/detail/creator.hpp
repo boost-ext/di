@@ -42,7 +42,7 @@
             typename
           , typename = ::boost::di::detail::builder
         > class TBinder = binder
-      , typename TPolicy = default_create_policy
+      , typename TCreatePolicy = default_create_policy
     >
     class creator
     {
@@ -255,7 +255,7 @@
           , TCallStack
           , TPolicies
           , TDependency
-          , TPolicy
+          , TCreatePolicy
         >(*this, deps, refs, visitor);
     }
 

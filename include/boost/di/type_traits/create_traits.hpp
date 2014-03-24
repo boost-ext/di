@@ -81,10 +81,10 @@
         );
     };
 
-    template<typename TPolicy, typename TExpected, typename TGiven>
+    template<typename TCreatePolicy, typename TExpected, typename TGiven>
     typename disable_if<is_explicit<TGiven>, TExpected*>::type
     create_traits() {
-        return TPolicy::template create<TExpected, TGiven>();
+        return TCreatePolicy::template create<TExpected, TGiven>();
     }
 
     template<typename, typename TExpected, typename TGiven>

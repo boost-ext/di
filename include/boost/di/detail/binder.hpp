@@ -86,7 +86,7 @@ public:
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
-      , typename TPolicy
+      , typename TCreatePolicy
       , typename TCreator
       , typename TDeps
       , typename TRefs
@@ -100,7 +100,7 @@ public:
           , TCallStack
           , TPolicies
           , TDependency
-          , TPolicy
+          , TCreatePolicy
           , TCreator
         >(creator, deps, refs, visitor);
     }
