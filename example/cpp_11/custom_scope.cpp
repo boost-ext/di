@@ -59,10 +59,6 @@ public:
         typedef scope type;
         typedef convertible result_type;
 
-        scope()
-            : in_scope_(false) {
-        }
-
         void call(const entry&) {
             in_scope_ = true;
         }
@@ -71,8 +67,8 @@ public:
             in_scope_ = false;
         }
 
-        template<typename TCreatePolicy, typename... Args>
-        result_type create(const TCreatePolicy&, Args&&... args) {
+        template<typename, typename... Args>
+        result_type create(Args&&... args) {
             if (in_scope_) {
                 return std::make_shared<TGiven>(std::forward(args)...);
             }
@@ -81,7 +77,7 @@ public:
         }
 
     private:
-        bool in_scope_;
+        bool in_scope_ = false;
     };
 };
 
