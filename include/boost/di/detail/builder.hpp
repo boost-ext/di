@@ -99,6 +99,7 @@
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
+      , typename TPolicy
       , typename TCreator
       , typename TDeps
       , typename TRefs
@@ -123,11 +124,7 @@
 
         aux::shared_ptr<convertibles::convertible<T> > convertible(
             new convertibles::convertible<T>(
-                acquire<typename TDependency::type>(deps).create(
-                    type_traits::policy<
-                        mpl::empty<typename TDeps::types>::value
-                    >()
-                    BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
+                acquire<typename TDependency::type>(deps).template create<TPolicy>(
                     BOOST_PP_REPEAT(
                         BOOST_PP_ITERATION()
                       , BOOST_DI_CREATOR_EXECUTE

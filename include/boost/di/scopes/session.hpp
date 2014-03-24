@@ -51,7 +51,7 @@
             }
 
             template<typename TPolicy>
-            result_type create(const TPolicy&) {
+            result_type create() {
                 if (in_scope_ && !object_) {
                     object_.reset(type_traits::create_traits<TPolicy, TExpected, TGiven>());
                 }
@@ -77,7 +77,7 @@
 #else
 
     template<typename TPolicy, BOOST_DI_TYPES(Args)>
-    result_type create(const TPolicy&, BOOST_DI_ARGS(Args, args)) {
+    result_type create(BOOST_DI_ARGS(Args, args)) {
         if (in_scope_ && !object_) {
             object_.reset(
                 type_traits::create_traits<TPolicy, TExpected, TGiven>(BOOST_DI_ARGS_PASS(args))

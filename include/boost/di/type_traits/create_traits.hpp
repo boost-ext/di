@@ -17,7 +17,6 @@
     #include <boost/utility/enable_if.hpp>
     #include <boost/type_traits/is_class.hpp>
     #include <boost/type_traits/is_same.hpp>
-    #include <boost/type_traits/is_abstract.hpp>
     #include <boost/mpl/at.hpp>
     #include <boost/mpl/if.hpp>
     #include <boost/mpl/bool.hpp>
@@ -82,40 +81,19 @@
         );
     };
 
-    template<bool>
-    struct policy
-    { };
-
-    template<typename TExpected, typename TGiven>
-    TGiven* create_traits_impl(const policy<false>&) {
-        return new TGiven();
-    }
-
-    template<typename TExpected, typename TGiven>
-    typename disable_if<is_abstract<TGiven>, TExpected*>::type
-    create_traits_impl(const policy<true>&) {
-        return new TGiven();
-    }
-
-    template<typename TExpected, typename TGiven>
-    typename enable_if<is_abstract<TGiven>, TExpected*>::type
-    create_traits_impl(const policy<true>&) {
-        return new TGiven();
-    }
-
     template<typename TPolicy, typename TExpected, typename TGiven>
     typename disable_if<is_explicit<TGiven>, TExpected*>::type
     create_traits() {
-        return create_traits_impl<TExpected, TGiven>(TPolicy());
+        return TPolicy::template create<TExpected, TGiven>();
     }
 
-    template<typename T, typename TExpected, typename TGiven>
+    template<typename, typename TExpected, typename TGiven>
     typename enable_if<has_value<TGiven>, TExpected*>::type
     create_traits() {
         return new TExpected(TGiven::value);
     }
 
-    template<typename T, typename TExpected, typename TGiven>
+    template<typename, typename TExpected, typename TGiven>
     typename enable_if<is_mpl_string<TGiven>, TExpected*>::type
     create_traits() {
         return new TExpected(mpl::c_str<TGiven>::value);
@@ -133,7 +111,7 @@
 
 #else
 
-    template<typename T, typename TExpected, typename TGiven, BOOST_DI_TYPES(Args)>
+    template<typename, typename TExpected, typename TGiven, BOOST_DI_TYPES(Args)>
     TExpected* create_traits(BOOST_DI_ARGS(Args, args)) {
         return new TGiven(BOOST_DI_ARGS_PASS(args));
     }

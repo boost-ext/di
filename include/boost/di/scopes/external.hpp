@@ -92,8 +92,8 @@
                 : object_(callback(object))
             { }
 
-            template<typename TPolicy>
-            result_type create(const TPolicy&) {
+            template<typename>
+            result_type create() {
                 return object_();
             }
 
@@ -114,8 +114,8 @@
 
 #else
 
-    template<typename TPolicy, BOOST_DI_TYPES(Args)>
-    result_type create(const TPolicy&, BOOST_DI_ARGS_NOT_USED(Args)) {
+    template<typename, BOOST_DI_TYPES(Args)>
+    result_type create(BOOST_DI_ARGS_NOT_USED(Args)) {
         return object_();
     }
 

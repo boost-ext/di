@@ -35,7 +35,8 @@
         typename TDependecies = mpl::vector0<>
       , template<
             typename
-          , template<typename, typename> class = binder
+          , template<typename, typename> class = ::boost::di::detail::binder
+          , typename = ::boost::di::detail::default_create_policy
         > class TCreator = creator
       , template<
             typename
@@ -50,7 +51,7 @@
 
         template<
             typename
-          , template<typename, template<typename, typename> class> class
+          , template<typename, template<typename, typename> class, typename> class
           , template<typename, typename, typename> class
         > friend class module;
 

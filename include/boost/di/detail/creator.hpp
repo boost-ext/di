@@ -27,12 +27,22 @@
     namespace di {
     namespace detail {
 
+    class default_create_policy
+    {
+    public:
+        template<typename TExpected, typename TGiven>
+        static TExpected* create() {
+            return new TGiven();
+        }
+    };
+
     template<
         typename TDependecies
       , template<
             typename
           , typename = ::boost::di::detail::builder
         > class TBinder = binder
+      , typename TPolicy = default_create_policy
     >
     class creator
     {
@@ -245,6 +255,7 @@
           , TCallStack
           , TPolicies
           , TDependency
+          , TPolicy
         >(*this, deps, refs, visitor);
     }
 

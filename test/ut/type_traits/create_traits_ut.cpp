@@ -15,6 +15,7 @@
 #include "boost/di/inject.hpp"
 
 #include "common/fakes/fake_convertible.hpp"
+#include "common/fakes/fake_create_policy.hpp"
 
 namespace boost {
 namespace di {
@@ -31,24 +32,24 @@ struct ctor
 };
 
 BOOST_AUTO_TEST_CASE(create_empty) {
-    aux::unique_ptr<empty> empty_(create_traits<policy<false>, empty, empty>());
+    aux::unique_ptr<empty> empty_(create_traits<fake_create_policy, empty, empty>());
     BOOST_CHECK(empty_.get());
 }
 
 BOOST_AUTO_TEST_CASE(create_ctor) {
     fake_convertible<int> i(42);
     fake_convertible<double> d(42.0);
-    aux::unique_ptr<ctor> ctor_(create_traits<policy<false>, ctor, ctor, decltype(i), decltype(d)>(i, d));
+    aux::unique_ptr<ctor> ctor_(create_traits<fake_create_policy, ctor, ctor, decltype(i), decltype(d)>(i, d));
     BOOST_CHECK(ctor_.get());
 }
 
 BOOST_AUTO_TEST_CASE(create_int_value) {
-    aux::unique_ptr<int> i(create_traits<policy<false>, int, mpl::int_<42>>());
+    aux::unique_ptr<int> i(create_traits<fake_create_policy, int, mpl::int_<42>>());
     BOOST_CHECK_EQUAL(42, *i);
 }
 
 BOOST_AUTO_TEST_CASE(create_string_value) {
-    aux::unique_ptr<std::string> s(create_traits<policy<false>, std::string, mpl::string<'s'>>());
+    aux::unique_ptr<std::string> s(create_traits<fake_create_policy, std::string, mpl::string<'s'>>());
     BOOST_CHECK_EQUAL("s", *s);
 }
 

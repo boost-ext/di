@@ -12,6 +12,7 @@
 #include "common/fakes/fake_pool.hpp"
 #include "common/fakes/fake_visitor.hpp"
 #include "common/fakes/fake_dependency.hpp"
+#include "common/fakes/fake_create_policy.hpp"
 #include "common/fakes/fake_scope.hpp"
 
 namespace boost {
@@ -30,6 +31,7 @@ BOOST_AUTO_TEST_CASE(build) {
       , mpl::vector0<>
       , mpl::vector0<>
       , fake_dependency<fake_scope<> , int>
+      , fake_create_policy
     >(creator, deps, refs, visitor)));
 }
 
