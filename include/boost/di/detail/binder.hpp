@@ -28,7 +28,11 @@ template<
 >
 class binder
 {
-    template<typename TDependency, typename T, typename TCallStack>
+    template<
+        typename TDependency
+      , typename T
+      , typename TCallStack
+    >
     struct apply
         : TDependency::bind::template apply<
               T

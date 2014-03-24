@@ -22,13 +22,22 @@ namespace type_traits {
 template<typename TContext>
 class when
 {
-    template<typename TBind, typename T, typename TCallStack, typename TScope>
+    template<
+        typename TBind
+      , typename T
+      , typename TCallStack
+      , typename TScope
+    >
     struct apply_bind
         : TBind::template apply<T, TCallStack, TScope>::type
     { };
 
 public:
-    template<typename T, typename TCallStack, typename TScope>
+    template<
+        typename T
+      , typename TCallStack
+      , typename TScope
+    >
     struct apply
         : mpl::if_<
               mpl::empty<TContext>

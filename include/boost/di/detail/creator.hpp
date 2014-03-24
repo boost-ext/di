@@ -181,7 +181,10 @@
           , typename TVisitor
         >
         const convertibles::convertible<T>& create(
-            TDeps& deps, TRefs& refs, const TVisitor& visitor, typename disable_if<is_same<T, any_type> >::type* = 0) {
+            TDeps& deps
+          , TRefs& refs
+          , const TVisitor& visitor
+          , typename disable_if<is_same<T, any_type> >::type* = 0) {
             return create_impl<
                 T
               , typename mpl::push_back<

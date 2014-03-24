@@ -41,7 +41,11 @@
             }
         };
 
-        typedef std::map<const std::type_info*, aux::shared_ptr<void>, type_comparator> scopes_type;
+        typedef std::map<
+            const std::type_info*
+          , aux::shared_ptr<void>
+          , type_comparator
+        > scopes_type;
 
     public:
         explicit builder(scopes_type scopes = scopes_type())

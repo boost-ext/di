@@ -108,6 +108,29 @@ BOOST_AUTO_TEST_CASE(mix) {
     BOOST_CHECK_EQUAL(0, c5_->c2_->c);
 }
 
+BOOST_AUTO_TEST_CASE(externals_return_from_function) {
+    const int i = 42;
+    const double d = 87.0;
+
+    using externals = di::injector<
+        c0if0
+      , decltype(bind<int>::to(int()))
+      , BOOST_TYPEOF(bind<double>::to(double()))
+    >;
+
+    externals injector = externals(
+        bind<int>::to(i)
+      , bind<double>::to(d)
+    );
+
+    auto c5_ = injector.create<c5>();
+
+    BOOST_CHECK(dynamic_cast<c0if0*>(c5_.if0_.get()));
+    BOOST_CHECK_EQUAL(i, c5_.c2_->i);
+    BOOST_CHECK_EQUAL(d, c5_.c2_->d);
+    BOOST_CHECK_EQUAL(0, c5_.c2_->c);
+}
+
 BOOST_AUTO_TEST_CASE(runtime_factory_impl) {
     const auto debug_property = false;
     const auto value = 42;
