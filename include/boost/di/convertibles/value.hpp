@@ -70,11 +70,6 @@ public:
         }
     )
 
-    template<typename I>
-    operator I() const {
-        return (*this)(type<I>());
-    }
-
 private:
     mutable aux::shared_ptr<T> ref_;
     mutable aux_::shared_ptr<T> ref__;

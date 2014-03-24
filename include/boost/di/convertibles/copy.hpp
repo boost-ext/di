@@ -98,11 +98,6 @@ public:
         return aux::unique_ptr<I>(object_());
     }
 
-    template<typename I>
-    operator I() const {
-        return (*this)(type<I>());
-    }
-
 private:
     object_t object_;
     mutable aux::shared_ptr<T> ref_;

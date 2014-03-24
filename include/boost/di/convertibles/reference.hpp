@@ -32,11 +32,6 @@ public:
         return object_;
     }
 
-    template<typename I>
-    operator I() const {
-        return (*this)(type<I>());
-    }
-
 private:
     reference_wrapper<T> object_;
 };

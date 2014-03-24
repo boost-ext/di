@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE(from_context) {
 
 BOOST_AUTO_TEST_CASE(from_if_shared_ptr) {
     aux::shared_ptr<c0if0> c0_(new c0if0);
-    aux::shared_ptr<if0> c1_ = external<convertibles::shared>::scope<if0>(c0_).create(type_traits::policy<false>());
+    aux::shared_ptr<if0> c1_ = external<convertibles::shared>::scope<if0>(c0_).create(type_traits::policy<false>())(type<aux::shared_ptr<if0>>());
     BOOST_CHECK_EQUAL(c0_, c1_);
 }
 

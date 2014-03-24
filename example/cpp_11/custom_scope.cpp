@@ -52,11 +52,6 @@ public:
                 return object_;
             }
 
-            template<typename I>
-            operator I() const {
-                return (*this)(boost::type<I>());
-            }
-
             std::shared_ptr<TExpected> object_;
         };
 

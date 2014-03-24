@@ -46,11 +46,6 @@ struct fake_scope
             return *obj_;
         }
 
-        template<typename I>
-        operator I() const {
-            return (*this)(type<I>());
-        }
-
     private:
         aux::shared_ptr<T> obj_;
     };
@@ -63,6 +58,7 @@ struct fake_scope
         typedef convertible<T> result_type;
 
         scope() { }
+
         explicit scope(const T&) { }
 
         void call(const fake_scope_entry&) {
