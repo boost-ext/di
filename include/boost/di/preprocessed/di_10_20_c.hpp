@@ -112,15 +112,27 @@ class requires
 public:
     typedef requires type;
 
-    template<typename T, typename TCallStack, typename TScope>
+    template<
+        typename T
+      , typename TCallStack
+      , typename TScope
+      , typename TMultiplicationFactor = mpl::integral_c<long, 100>
+    >
     struct apply
         : mpl::second<
               typename mpl::fold<
                   mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19>
                 , mpl::pair<mpl::integral_c<long, 1>, mpl::integral_c<long, 1> >
                 , mpl::pair<
-                      mpl::times<mpl::first<mpl::_1>, mpl::integral_c<long, 100> >
-                    , mpl::times<mpl::first<mpl::_1>, mpl::second<mpl::_1>, apply_bind<mpl::_2, T, TCallStack, TScope> >
+                      mpl::times<
+                          mpl::first<mpl::_1>
+                        , TMultiplicationFactor
+                      >
+                    , mpl::times<
+                          mpl::first<mpl::_1>
+                        , mpl::second<mpl::_1>
+                        , apply_bind<mpl::_2, T, TCallStack, TScope>
+                      >
                   >
               >::type
           >
@@ -413,107 +425,6 @@ struct bind
 } // namespace di
 } // namespace boost
 
-
-namespace boost {
-namespace di {
-
-BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
-
-template<
-    typename T
-  , typename TName = void
-  , typename = void
->
-class named
-{
-    typedef typename type_traits::remove_accessors<T>::type object_type;
-
-public:
-    typedef T named_type;
-    typedef TName name;
-
-    named(const object_type& object) // non explicit
-        : object_(object)
-    { }
-
-    operator T() const {
-        return object_;
-    }
-
-    operator T&() {
-        return object_;
-    }
-
-private:
-    object_type object_;
-};
-
-template<
-    typename T
-  , typename TName
->
-class named<T, TName, typename enable_if<
-    is_polymorphic<typename type_traits::remove_accessors<T>::type> >::type
->
-{
-public:
-    typedef T named_type;
-    typedef TName name;
-};
-
-template<
-    typename T
-  , typename TName
->
-class named<T, TName, typename enable_if<
-    has_element_type<typename type_traits::remove_accessors<T>::type> >::type
->
-{
-    typedef typename type_traits::remove_accessors<T>::type object_type;
-    typedef typename type_traits::make_plain<T>::type value_type;
-
-public:
-    typedef T named_type;
-    typedef TName name;
-
-    named() { }
-
-    named(const object_type& object) // non explicit
-        : object_(object)
-    { }
-
-    named(typename object_type::element_type* ptr) // non explicit
-        : object_(ptr)
-    { }
-
-    BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
-        named(object_type&& object) // non explicit
-            : object_(std::move(object))
-        { }
-    )
-
-    operator T() const { return object_; }
-
-    value_type* operator->() const { return object_.get(); }
-    value_type& operator*() const { return *object_; }
-    value_type* get() const { return object_.get(); }
-    object_type& get_object() { return object_; }
-
-    void reset() {
-        object_.reset();
-    }
-
-    void reset(typename object_type::element_type* ptr) {
-        object_.reset(ptr);
-    }
-
-private:
-    object_type object_;
-};
-
-} // namespace di
-} // namespace boost
-
 namespace boost {
 namespace di {
 namespace convertibles {
@@ -534,16 +445,6 @@ public:
     template<typename I>
     I& operator()(const type<I&>&) const {
         return object_;
-    }
-
-    template<typename I, typename TName>
-    named<I, TName> operator()(const type<named<I, TName> >&) const {
-        return named<I, TName>(object_);
-    }
-
-    template<typename I>
-    operator I() const {
-        return (*this)(type<I>());
     }
 
 private:
@@ -609,26 +510,6 @@ public:
         return (*this)(type<aux_::shared_ptr<I> >());
     }
 
-    template<typename I, typename TName>
-    aux::shared_ptr<I> operator()(const type<named<aux::shared_ptr<I>, TName> >&) const {
-        return object_;
-    }
-
-    template<typename I, typename TName>
-    aux_::shared_ptr<I> operator()(const type<named<aux_::shared_ptr<I>, TName> >&) const {
-        return (*this)(type<aux_::shared_ptr<I> >());
-    }
-
-    template<typename I, typename TName>
-    aux::shared_ptr<I> operator()(const type<named<const aux::shared_ptr<I>&, TName> >&) const {
-        return object_;
-    }
-
-    template<typename I, typename TName>
-    aux_::shared_ptr<I> operator()(const type<named<const aux_::shared_ptr<I>&, TName> >&) const {
-        return (*this)(type<aux_::shared_ptr<I> >());
-    }
-
     template<typename I>
     aux::weak_ptr<I> operator()(const type<aux::weak_ptr<I> >&) const {
         return object_;
@@ -637,22 +518,6 @@ public:
     template<typename I>
     aux::weak_ptr<I> operator()(const type<const aux::weak_ptr<I>&>&) const {
         return object_;
-    }
-
-    template<typename I, typename TName>
-    aux::weak_ptr<I> operator()(const type<named<aux::weak_ptr<I>, TName> >&) const {
-        return aux::weak_ptr<I>(object_);
-    }
-
-    template<typename I, typename TName>
-    aux::weak_ptr<I>
-    operator()(const type<named<const aux::weak_ptr<I>&, TName> >&) const {
-        return aux::weak_ptr<I>(object_);
-    }
-
-    template<typename I>
-    operator I() const {
-        return (*this)(type<I>());
     }
 
 private:
@@ -675,6 +540,7 @@ public:
     template<typename, typename>
     struct scope
     {
+        typedef scope type;
         typedef none_t result_type;
     };
 };
@@ -706,11 +572,6 @@ public:
         return value_;
     }
 
-    template<typename I, typename TName>
-    I& operator()(const type<named<I, TName>&>&) const {
-        return value_;
-    }
-
     template<typename I>
     aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) {
         return aux::shared_ptr<I>(new I(value_));
@@ -733,16 +594,6 @@ public:
         return ref__;
     }
 
-    template<typename I, typename TName>
-    I* operator()(const type<named<aux::shared_ptr<I>, TName> >&) const {
-        return new I(value_);
-    }
-
-    template<typename I, typename TName>
-    I* operator()(const type<named<aux_::shared_ptr<I>, TName> >&) const {
-        return new I(value_);
-    }
-
     template<typename I>
     I* operator()(const type<I*>&) {
         return new I(value_);
@@ -754,11 +605,6 @@ public:
             return std::move(value_);
         }
     )
-
-    template<typename I>
-    operator I() const {
-        return (*this)(type<I>());
-    }
 
 private:
     mutable aux::shared_ptr<T> ref_;
@@ -875,9 +721,12 @@ private:
         template<typename T>
         class has_ctor<T, mpl::int_<1> >
         {
-            struct any_type
+            class any_type
             {
                 typedef typename type_traits::make_plain<T>::type plain_t;
+
+            public:
+                any_type() { }
 
                 template<
                     typename U
@@ -914,8 +763,11 @@ private:
     template<typename T>
     class has_ctor<T, mpl::int_<2> >
     {
-        struct any_type
+        class any_type
         {
+        public:
+            any_type() { }
+
             template<typename U> operator U&() const;
             template<typename U> operator U();
 
@@ -946,8 +798,11 @@ private:
     template<typename T>
     class has_ctor<T, mpl::int_<3> >
     {
-        struct any_type
+        class any_type
         {
+        public:
+            any_type() { }
+
             template<typename U> operator U&() const;
             template<typename U> operator U();
 
@@ -978,8 +833,11 @@ private:
     template<typename T>
     class has_ctor<T, mpl::int_<4> >
     {
-        struct any_type
+        class any_type
         {
+        public:
+            any_type() { }
+
             template<typename U> operator U&() const;
             template<typename U> operator U();
 
@@ -1010,8 +868,11 @@ private:
     template<typename T>
     class has_ctor<T, mpl::int_<5> >
     {
-        struct any_type
+        class any_type
         {
+        public:
+            any_type() { }
+
             template<typename U> operator U&() const;
             template<typename U> operator U();
 
@@ -1042,8 +903,11 @@ private:
     template<typename T>
     class has_ctor<T, mpl::int_<6> >
     {
-        struct any_type
+        class any_type
         {
+        public:
+            any_type() { }
+
             template<typename U> operator U&() const;
             template<typename U> operator U();
 
@@ -1074,8 +938,11 @@ private:
     template<typename T>
     class has_ctor<T, mpl::int_<7> >
     {
-        struct any_type
+        class any_type
         {
+        public:
+            any_type() { }
+
             template<typename U> operator U&() const;
             template<typename U> operator U();
 
@@ -1106,8 +973,11 @@ private:
     template<typename T>
     class has_ctor<T, mpl::int_<8> >
     {
-        struct any_type
+        class any_type
         {
+        public:
+            any_type() { }
+
             template<typename U> operator U&() const;
             template<typename U> operator U();
 
@@ -1138,8 +1008,11 @@ private:
     template<typename T>
     class has_ctor<T, mpl::int_<9> >
     {
-        struct any_type
+        class any_type
         {
+        public:
+            any_type() { }
+
             template<typename U> operator U&() const;
             template<typename U> operator U();
 
@@ -1170,8 +1043,11 @@ private:
     template<typename T>
     class has_ctor<T, mpl::int_<10> >
     {
-        struct any_type
+        class any_type
         {
+        public:
+            any_type() { }
+
             template<typename U> operator U&() const;
             template<typename U> operator U();
 
@@ -1482,6 +1358,7 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
         class scope
         {
         public:
+            typedef scope type;
             typedef TConvertible<TExpected> result_type;
 
         private:
@@ -1602,9 +1479,10 @@ template<
   , typename TScope
 >
 struct get_scope
+    : detail::scope_traits<TScope>::type::template
+         scope<TExpected, TGiven>
 {
-    typedef typename detail::scope_traits<TScope>::type::
-        template scope<TExpected, TGiven> type;
+    get_scope() { }
 };
 
 template<
@@ -1864,6 +1742,7 @@ public:
         class scope
         {
         public:
+            typedef scope type;
             typedef TConvertible<TExpected> result_type;
 
             scope()
@@ -2012,6 +1891,7 @@ public:
         class scope
         {
         public:
+            typedef scope type;
             typedef TConvertible<TExpected> result_type;
 
             template<typename TPolicy>
@@ -2178,12 +2058,6 @@ public:
         return object_();
     }
 
-    template<typename I, typename TName>
-    I operator()(const type<named<I, TName> >&) const {
-        scoped_ptr<I> ptr(object_());
-        return *ptr;
-    }
-
     template<typename I>
     aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const {
         return aux::shared_ptr<I>(object_());
@@ -2206,24 +2080,9 @@ public:
         return ref__;
     }
 
-    template<typename I, typename TName>
-    I* operator()(const type<named<aux::shared_ptr<I>, TName> >&) const {
-        return object_();
-    }
-
-    template<typename I, typename TName>
-    I* operator()(const type<named<aux_::shared_ptr<I>, TName> >&) const {
-        return object_();
-    }
-
     template<typename I>
     aux::auto_ptr<I> operator()(const type<aux::auto_ptr<I> >&) const {
         return aux::auto_ptr<I>(object_());
-    }
-
-    template<typename I, typename TName>
-    I* operator()(const type<named<aux::auto_ptr<I>, TName> >&) const {
-        return object_();
     }
 
     template<typename I>
@@ -2236,21 +2095,6 @@ public:
         return aux::unique_ptr<I>(object_());
     }
 
-    template<typename I, typename TName>
-    I* operator()(const type<named<aux::unique_ptr<I>, TName> >&) const {
-        return object_();
-    }
-
-    template<typename I, typename TName>
-    I* operator()(const type<named<const aux::unique_ptr<I>&, TName> >&) const {
-        return object_();
-    }
-
-    template<typename I>
-    operator I() const {
-        return (*this)(type<I>());
-    }
-
 private:
     object_t object_;
     mutable aux::shared_ptr<T> ref_;
@@ -2258,6 +2102,106 @@ private:
 };
 
 } // namespace convertibles
+} // namespace di
+} // namespace boost
+
+
+namespace boost {
+namespace di {
+
+BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
+
+template<
+    typename T
+  , typename TName = void
+  , typename = void
+>
+class named
+{
+    typedef typename type_traits::remove_accessors<T>::type object_type;
+
+public:
+    typedef T named_type;
+    typedef TName name;
+
+    named(const object_type& object) // non explicit
+        : object_(object)
+    { }
+
+    operator T() const {
+        return object_;
+    }
+
+    operator T&() {
+        return object_;
+    }
+
+private:
+    object_type object_;
+};
+
+template<
+    typename T
+  , typename TName
+>
+class named<T, TName, typename enable_if<
+    is_polymorphic<typename type_traits::remove_accessors<T>::type> >::type
+>
+{
+public:
+    typedef T named_type;
+    typedef TName name;
+};
+
+template<
+    typename T
+  , typename TName
+>
+class named<T, TName, typename enable_if<
+    has_element_type<typename type_traits::remove_accessors<T>::type> >::type
+>
+{
+    typedef typename type_traits::remove_accessors<T>::type object_type;
+    typedef typename type_traits::make_plain<T>::type value_type;
+
+public:
+    typedef T named_type;
+    typedef TName name;
+
+    named() { }
+
+    named(const object_type& object) // non explicit
+        : object_(object)
+    { }
+
+    named(typename object_type::element_type* ptr) // non explicit
+        : object_(ptr)
+    { }
+
+    BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+        named(object_type&& object) // non explicit
+            : object_(std::move(object))
+        { }
+    )
+
+    operator T() const { return object_; }
+
+    value_type* operator->() const { return object_.get(); }
+    value_type& operator*() const { return *object_; }
+    value_type* get() const { return object_.get(); }
+
+    void reset() {
+        object_.reset();
+    }
+
+    void reset(typename object_type::element_type* ptr) {
+        object_.reset(ptr);
+    }
+
+private:
+    object_type object_;
+};
+
 } // namespace di
 } // namespace boost
 
@@ -2593,6 +2537,7 @@ private:
         class scope
         {
         public:
+            typedef scope type;
             typedef TConvertible<TExpected> result_type;
 
             template<typename TPolicy>
@@ -4867,6 +4812,9 @@ public:
         typedef std::map<const std::type_info*, aux::shared_ptr<void>, type_comparator> scopes_type;
 
     public:
+        explicit builder(scopes_type scopes = scopes_type())
+            : scopes_(scopes)
+        { }
 
     template<
         typename T
@@ -4884,6 +4832,8 @@ public:
       , const convertibles::convertible<T>&
     >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+        (void)creator;
+        (void)visitor;
         aux::shared_ptr<convertibles::convertible<T> > convertible(
             new convertibles::convertible<T>(
                 acquire<typename TDependency::type>(deps).create(
@@ -4915,6 +4865,8 @@ public:
       , const convertibles::convertible<T>&
     >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+        (void)creator;
+        (void)visitor;
         aux::shared_ptr<convertibles::convertible<T> > convertible(
             new convertibles::convertible<T>(
                 acquire<typename TDependency::type>(deps).create(
@@ -4948,6 +4900,8 @@ public:
       , const convertibles::convertible<T>&
     >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+        (void)creator;
+        (void)visitor;
         aux::shared_ptr<convertibles::convertible<T> > convertible(
             new convertibles::convertible<T>(
                 acquire<typename TDependency::type>(deps).create(
@@ -4981,6 +4935,8 @@ public:
       , const convertibles::convertible<T>&
     >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+        (void)creator;
+        (void)visitor;
         aux::shared_ptr<convertibles::convertible<T> > convertible(
             new convertibles::convertible<T>(
                 acquire<typename TDependency::type>(deps).create(
@@ -5014,6 +4970,8 @@ public:
       , const convertibles::convertible<T>&
     >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+        (void)creator;
+        (void)visitor;
         aux::shared_ptr<convertibles::convertible<T> > convertible(
             new convertibles::convertible<T>(
                 acquire<typename TDependency::type>(deps).create(
@@ -5047,6 +5005,8 @@ public:
       , const convertibles::convertible<T>&
     >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+        (void)creator;
+        (void)visitor;
         aux::shared_ptr<convertibles::convertible<T> > convertible(
             new convertibles::convertible<T>(
                 acquire<typename TDependency::type>(deps).create(
@@ -5080,6 +5040,8 @@ public:
       , const convertibles::convertible<T>&
     >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+        (void)creator;
+        (void)visitor;
         aux::shared_ptr<convertibles::convertible<T> > convertible(
             new convertibles::convertible<T>(
                 acquire<typename TDependency::type>(deps).create(
@@ -5113,6 +5075,8 @@ public:
       , const convertibles::convertible<T>&
     >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+        (void)creator;
+        (void)visitor;
         aux::shared_ptr<convertibles::convertible<T> > convertible(
             new convertibles::convertible<T>(
                 acquire<typename TDependency::type>(deps).create(
@@ -5146,6 +5110,8 @@ public:
       , const convertibles::convertible<T>&
     >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+        (void)creator;
+        (void)visitor;
         aux::shared_ptr<convertibles::convertible<T> > convertible(
             new convertibles::convertible<T>(
                 acquire<typename TDependency::type>(deps).create(
@@ -5179,6 +5145,8 @@ public:
       , const convertibles::convertible<T>&
     >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+        (void)creator;
+        (void)visitor;
         aux::shared_ptr<convertibles::convertible<T> > convertible(
             new convertibles::convertible<T>(
                 acquire<typename TDependency::type>(deps).create(
@@ -5212,6 +5180,8 @@ public:
       , const convertibles::convertible<T>&
     >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+        (void)creator;
+        (void)visitor;
         aux::shared_ptr<convertibles::convertible<T> > convertible(
             new convertibles::convertible<T>(
                 acquire<typename TDependency::type>(deps).create(
@@ -5282,6 +5252,10 @@ class binder
     { };
 
 public:
+    explicit binder(TBuilder builder = TBuilder())
+        : builder_(builder)
+    { }
+
     template<
         typename T
       , typename TCallStack
@@ -5354,7 +5328,10 @@ private:
 
     template<
         typename TDependecies
-      , template<typename, typename = builder> class TBinder = binder
+      , template<
+            typename
+          , typename = ::boost::di::detail::builder
+        > class TBinder = binder
     >
     class creator
     {
@@ -5393,6 +5370,8 @@ private:
         class eager_creator
         {
             typedef typename type_traits::make_plain<T>::type plain_t;
+
+            eager_creator& operator=(const eager_creator&);
 
         public:
             eager_creator(creator& c, TDeps& deps, TRefs& refs, const TVisitor& visitor)
@@ -5470,6 +5449,10 @@ private:
         };
 
     public:
+        explicit creator(TBinder<TDependecies> binder = TBinder<TDependecies>())
+            : binder_(binder)
+        { }
+
         template<
             typename T
           , typename TParent // to ignore copy/move ctor
@@ -5916,7 +5899,9 @@ private:
     public:
         typedef TDependecies deps;
 
-        module() { }
+        explicit module(TCreator<TDependecies> creator = TCreator<TDependecies>())
+            : creator_(creator)
+        { }
 
     // bind<...>, etc.   -> ignore
     // module<....>      -> get all dependencies from the module
