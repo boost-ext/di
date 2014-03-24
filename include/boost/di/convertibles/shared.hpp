@@ -8,7 +8,6 @@
 #define BOOST_DI_CONVERTIBLES_SHARED_HPP
 
 #include "boost/di/aux_/memory.hpp"
-#include "boost/di/named.hpp"
 
 #include <boost/type.hpp>
 #include <boost/config.hpp>
@@ -68,26 +67,6 @@ public:
         return (*this)(type<aux_::shared_ptr<I> >());
     }
 
-    template<typename I, typename TName>
-    aux::shared_ptr<I> operator()(const type<named<aux::shared_ptr<I>, TName> >&) const {
-        return object_;
-    }
-
-    template<typename I, typename TName>
-    aux_::shared_ptr<I> operator()(const type<named<aux_::shared_ptr<I>, TName> >&) const {
-        return (*this)(type<aux_::shared_ptr<I> >());
-    }
-
-    template<typename I, typename TName>
-    aux::shared_ptr<I> operator()(const type<named<const aux::shared_ptr<I>&, TName> >&) const {
-        return object_;
-    }
-
-    template<typename I, typename TName>
-    aux_::shared_ptr<I> operator()(const type<named<const aux_::shared_ptr<I>&, TName> >&) const {
-        return (*this)(type<aux_::shared_ptr<I> >());
-    }
-
     template<typename I>
     aux::weak_ptr<I> operator()(const type<aux::weak_ptr<I> >&) const {
         return object_;
@@ -96,17 +75,6 @@ public:
     template<typename I>
     aux::weak_ptr<I> operator()(const type<const aux::weak_ptr<I>&>&) const {
         return object_;
-    }
-
-    template<typename I, typename TName>
-    aux::weak_ptr<I> operator()(const type<named<aux::weak_ptr<I>, TName> >&) const {
-        return aux::weak_ptr<I>(object_);
-    }
-
-    template<typename I, typename TName>
-    aux::weak_ptr<I>
-    operator()(const type<named<const aux::weak_ptr<I>&, TName> >&) const {
-        return aux::weak_ptr<I>(object_);
     }
 
     template<typename I>

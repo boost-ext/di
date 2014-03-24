@@ -9,7 +9,6 @@
 
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/memory.hpp"
-#include "boost/di/named.hpp"
 
 #include <utility>
 #include <boost/type.hpp>
@@ -37,11 +36,6 @@ public:
         return value_;
     }
 
-    template<typename I, typename TName>
-    I& operator()(const type<named<I, TName>&>&) const {
-        return value_;
-    }
-
     template<typename I>
     aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) {
         return aux::shared_ptr<I>(new I(value_));
@@ -62,16 +56,6 @@ public:
     const aux_::shared_ptr<I>& operator()(const type<const aux_::shared_ptr<I>& >&) {
         ref__ = aux_::shared_ptr<I>(new I(value_));
         return ref__;
-    }
-
-    template<typename I, typename TName>
-    I* operator()(const type<named<aux::shared_ptr<I>, TName> >&) const {
-        return new I(value_);
-    }
-
-    template<typename I, typename TName>
-    I* operator()(const type<named<aux_::shared_ptr<I>, TName> >&) const {
-        return new I(value_);
     }
 
     template<typename I>

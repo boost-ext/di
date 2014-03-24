@@ -7,8 +7,6 @@
 #ifndef BOOST_DI_CONVERTIBLES_REFERENCE_HPP
 #define BOOST_DI_CONVERTIBLES_REFERENCE_HPP
 
-#include "boost/di/named.hpp"
-
 #include <boost/type.hpp>
 #include <boost/ref.hpp>
 
@@ -32,11 +30,6 @@ public:
     template<typename I>
     I& operator()(const type<I&>&) const {
         return object_;
-    }
-
-    template<typename I, typename TName>
-    named<I, TName> operator()(const type<named<I, TName> >&) const {
-        return named<I, TName>(object_);
     }
 
     template<typename I>

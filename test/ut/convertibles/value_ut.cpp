@@ -9,8 +9,6 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/type.hpp>
 
-#include "boost/di/named.hpp"
-
 namespace boost {
 namespace di {
 namespace convertibles {
@@ -22,18 +20,8 @@ BOOST_AUTO_TEST_CASE(to_value) {
     BOOST_CHECK_EQUAL(i, object);
 }
 
-BOOST_AUTO_TEST_CASE(to_named_value) {
-    named<int> object((value<int>(42))(type<int>()));
-    BOOST_CHECK_EQUAL(i, object);
-}
-
 BOOST_AUTO_TEST_CASE(to_ref) {
     int& object((value<int>(42))(type<int&>()));
-    BOOST_CHECK_EQUAL(i, object);
-}
-
-BOOST_AUTO_TEST_CASE(to_named_ref) {
-    int& object((value<int>(42))(type<named<int>&>()));
     BOOST_CHECK_EQUAL(i, object);
 }
 
@@ -59,16 +47,6 @@ BOOST_AUTO_TEST_CASE(to_shared_ptr_ref) {
 
 BOOST_AUTO_TEST_CASE(to_shared_ptr_other_ref) {
     aux_::shared_ptr<int> object((value<int>(42))(type<const aux_::shared_ptr<int>&>()));
-    BOOST_CHECK_EQUAL(i, *object);
-}
-
-BOOST_AUTO_TEST_CASE(to_named_shared_ptr) {
-    named<aux::shared_ptr<int>> object((value<int>(42))(type<named<aux::shared_ptr<int>>>()));
-    BOOST_CHECK_EQUAL(i, *object);
-}
-
-BOOST_AUTO_TEST_CASE(to_named_shared_ptr_other) {
-    named<aux_::shared_ptr<int>> object((value<int>(42))(type<named<aux_::shared_ptr<int>>>()));
     BOOST_CHECK_EQUAL(i, *object);
 }
 

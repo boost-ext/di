@@ -37,27 +37,11 @@ BOOST_AUTO_TEST_CASE(to_lvalue) {
     BOOST_CHECK_EQUAL(i, object_ref(type<int>()));
 }
 
-BOOST_AUTO_TEST_CASE(to_named) {
-    int i = 42;
-    int& i_ref = i;
-    reference<int> object_ref((reference_wrapper<int>(i_ref)));
-    named<int> named_ref(object_ref(type<int&>()));
-    BOOST_CHECK_EQUAL(i, named_ref);
-}
-
 BOOST_AUTO_TEST_CASE(to_const_ref) {
     const int i = 42;
     const int& i_ref = i;
     reference<const int> object_ref((reference_wrapper<const int>(i_ref)));
     BOOST_CHECK_EQUAL(i, object_ref(type<const int&>()));
-}
-
-BOOST_AUTO_TEST_CASE(to_const_named_ref) {
-    const int i = 42;
-    const int& i_ref = i;
-    reference<const int> object_ref((reference_wrapper<const int>(i_ref)));
-    named<const int> named_ref(object_ref(type<const int&>()));
-    BOOST_CHECK_EQUAL(i, named_ref);
 }
 
 } // namespace convertibles
