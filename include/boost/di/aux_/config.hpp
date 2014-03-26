@@ -9,7 +9,6 @@
 
 #include <boost/config.hpp>
 #include <boost/mpl/limits/vector.hpp>
-#include <boost/mpl/assert.hpp>
 
 #if !defined(BOOST_DI_CFG_CTOR_LIMIT_SIZE)
     #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
@@ -149,9 +148,17 @@
     #define BOOST_DI_FEATURE_5_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS(a1, a2, a3, a4, a5)
 #endif
 
+#if defined(BOOST_NO_CXX11_DECLTYPE)
+    #include <boost/typeof/typeof.hpp>
+    #define BOOST_DI_FEATURE_DECLTYPE(arg) BOOST_TYPEOF_TPL(arg)
+#else
+    #define BOOST_DI_FEATURE_DECLTYPE(arg) decltype(arg)
+#endif
+
 #define BOOST_DI_COMMA() ,
 
 #if !defined(BOOST_DI_ASSERT_MSG)
+    #include <boost/mpl/assert.hpp>
     #define BOOST_DI_ASSERT_MSG(c, msg, type)   \
         BOOST_MPL_ASSERT_MSG(c, msg, (type))
 #endif

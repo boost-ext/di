@@ -74,7 +74,6 @@ struct ctor_inject_named
 };
 
 BOOST_AUTO_TEST_CASE(ctor) {
-    BOOST_CHECK((mpl::equal<mpl::vector0<>, ctor_traits<void>::type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector0<>, ctor_traits<empty>::type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector0<>, ctor_traits<traits>::type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector0<>, ctor_traits<empty>::type>::value));

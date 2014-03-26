@@ -21,7 +21,6 @@
 #include <string>
 #include <boost/ref.hpp>
 #include <boost/non_type.hpp>
-#include <boost/typeof/typeof.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_arithmetic.hpp>
 #include <boost/type_traits/is_enum.hpp>
@@ -173,7 +172,7 @@ class dependency : public get_scope<TExpected, TGiven, TScope>::type
     struct get_convertible<T, typename enable_if<has_call_operator<T> >::type>
         : get_convertible_impl<
               typename di::type_traits::parameter_types<
-                  BOOST_TYPEOF_TPL(&T::operator())
+                  BOOST_DI_FEATURE_DECLTYPE(&T::operator())
               >::result_type
           >
     { };

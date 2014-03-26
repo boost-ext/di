@@ -18,7 +18,6 @@
     #include <boost/non_type.hpp>
     #include <boost/type_traits/is_same.hpp>
     #include <boost/utility/enable_if.hpp>
-    #include <boost/typeof/typeof.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/bool.hpp>
     #include <boost/mpl/pop_front.hpp>
@@ -103,7 +102,7 @@
             template<typename TDummy>
             struct base_call<mpl::true_, TDummy>
                 : is_same<
-                      BOOST_TYPEOF_TPL(
+                      BOOST_DI_FEATURE_DECLTYPE(
                          ((((base*)0)->call(*(TAction*)0)), void_<T>())
                       )
                     , void_<T>

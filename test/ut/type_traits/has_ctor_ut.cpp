@@ -30,7 +30,6 @@ struct many_2_3 { many_2_3(int, double) { } many_2_3(int, double, float) { } };
 #endif
 
 BOOST_AUTO_TEST_CASE(fundamental_types) {
-    BOOST_CHECK((!has_ctor<void, mpl::int_<1> >::value));
     BOOST_CHECK((!has_ctor<int, mpl::int_<1> >::value));
     BOOST_CHECK((!has_ctor<char, mpl::int_<1> >::value));
     BOOST_CHECK((!has_ctor<float, mpl::int_<1> >::value));

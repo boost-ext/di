@@ -7,6 +7,7 @@
 #include "boost/di/make_injector.hpp"
 
 #include <boost/test/unit_test.hpp>
+#include <boost/typeof/typeof.hpp>
 
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/concepts.hpp"

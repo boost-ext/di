@@ -16,7 +16,6 @@
 #include <boost/preprocessor/cat.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_class.hpp>
-#include <boost/typeof/typeof.hpp>
 #include <boost/non_type.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
@@ -103,12 +102,12 @@ struct ctor_traits
 
 template<typename T>
 struct ctor_traits<T, typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_INJECTOR)<di::ctor_traits<T> > >::type>
-    : parameter_types<BOOST_TYPEOF_TPL(&di::ctor_traits<T>::BOOST_DI_INJECTOR)>::type
+    : parameter_types<BOOST_DI_FEATURE_DECLTYPE(&di::ctor_traits<T>::BOOST_DI_INJECTOR)>::type
 { };
 
 template<typename T>
 struct ctor_traits<T, typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_INJECTOR)<T> >::type>
-    : parameter_types<BOOST_TYPEOF_TPL(&T::BOOST_DI_INJECTOR)>::type
+    : parameter_types<BOOST_DI_FEATURE_DECLTYPE(&T::BOOST_DI_INJECTOR)>::type
 { };
 
 } // namespace type_traits

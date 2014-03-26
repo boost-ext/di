@@ -14,7 +14,6 @@
     #include "boost/di/type_traits/is_same_base_of.hpp"
 
     #include <boost/config.hpp>
-    #include <boost/typeof/typeof.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/aux_/yes_no.hpp>
 
@@ -45,7 +44,7 @@
             };
 
             template<typename U>
-            static mpl::aux::yes_tag test(BOOST_TYPEOF_TPL(U(any_type()))*);
+            static mpl::aux::yes_tag test(BOOST_DI_FEATURE_DECLTYPE(U(any_type()))*);
 
             template<typename U>
             static mpl::aux::no_tag test(...);
@@ -98,7 +97,7 @@
 
         template<typename U>
         static mpl::aux::yes_tag test(
-            BOOST_TYPEOF_TPL(U(
+            BOOST_DI_FEATURE_DECLTYPE(U(
                 BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), any_type() BOOST_PP_INTERCEPT))
             )*
         );

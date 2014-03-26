@@ -30,7 +30,6 @@
 #include <boost/type_traits/is_class.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/is_arithmetic.hpp>
-#include <boost/typeof/typeof.hpp>
 #include <boost/type.hpp>
 #include <boost/ref.hpp>
 #include <boost/non_type.hpp>
@@ -745,7 +744,7 @@ private:
             };
 
             template<typename U>
-            static mpl::aux::yes_tag test(BOOST_TYPEOF_TPL(U(any_type()))*);
+            static mpl::aux::yes_tag test(BOOST_DI_FEATURE_DECLTYPE(U(any_type()))*);
 
             template<typename U>
             static mpl::aux::no_tag test(...);
@@ -786,7 +785,7 @@ private:
 
         template<typename U>
         static mpl::aux::yes_tag test(
-            BOOST_TYPEOF_TPL(U(
+            BOOST_DI_FEATURE_DECLTYPE(U(
                 any_type() , any_type() )
             )*
         );
@@ -821,7 +820,7 @@ private:
 
         template<typename U>
         static mpl::aux::yes_tag test(
-            BOOST_TYPEOF_TPL(U(
+            BOOST_DI_FEATURE_DECLTYPE(U(
                 any_type() , any_type() , any_type() )
             )*
         );
@@ -856,7 +855,7 @@ private:
 
         template<typename U>
         static mpl::aux::yes_tag test(
-            BOOST_TYPEOF_TPL(U(
+            BOOST_DI_FEATURE_DECLTYPE(U(
                 any_type() , any_type() , any_type() , any_type() )
             )*
         );
@@ -891,7 +890,7 @@ private:
 
         template<typename U>
         static mpl::aux::yes_tag test(
-            BOOST_TYPEOF_TPL(U(
+            BOOST_DI_FEATURE_DECLTYPE(U(
                 any_type() , any_type() , any_type() , any_type() , any_type() )
             )*
         );
@@ -926,7 +925,7 @@ private:
 
         template<typename U>
         static mpl::aux::yes_tag test(
-            BOOST_TYPEOF_TPL(U(
+            BOOST_DI_FEATURE_DECLTYPE(U(
                 any_type() , any_type() , any_type() , any_type() , any_type() , any_type() )
             )*
         );
@@ -961,7 +960,7 @@ private:
 
         template<typename U>
         static mpl::aux::yes_tag test(
-            BOOST_TYPEOF_TPL(U(
+            BOOST_DI_FEATURE_DECLTYPE(U(
                 any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() )
             )*
         );
@@ -996,7 +995,7 @@ private:
 
         template<typename U>
         static mpl::aux::yes_tag test(
-            BOOST_TYPEOF_TPL(U(
+            BOOST_DI_FEATURE_DECLTYPE(U(
                 any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() )
             )*
         );
@@ -1031,7 +1030,7 @@ private:
 
         template<typename U>
         static mpl::aux::yes_tag test(
-            BOOST_TYPEOF_TPL(U(
+            BOOST_DI_FEATURE_DECLTYPE(U(
                 any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() )
             )*
         );
@@ -1066,7 +1065,7 @@ private:
 
         template<typename U>
         static mpl::aux::yes_tag test(
-            BOOST_TYPEOF_TPL(U(
+            BOOST_DI_FEATURE_DECLTYPE(U(
                 any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() )
             )*
         );
@@ -1164,12 +1163,12 @@ struct ctor_traits
 
 template<typename T>
 struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<di::ctor_traits<T> > >::type>
-    : parameter_types<BOOST_TYPEOF_TPL(&di::ctor_traits<T>::BOOST_DI_INJECTOR)>::type
+    : parameter_types<BOOST_DI_FEATURE_DECLTYPE(&di::ctor_traits<T>::BOOST_DI_INJECTOR)>::type
 { };
 
 template<typename T>
 struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
-    : parameter_types<BOOST_TYPEOF_TPL(&T::BOOST_DI_INJECTOR)>::type
+    : parameter_types<BOOST_DI_FEATURE_DECLTYPE(&T::BOOST_DI_INJECTOR)>::type
 { };
 
 } // namespace type_traits
@@ -1576,7 +1575,7 @@ class dependency : public get_scope<TExpected, TGiven, TScope>::type
     struct get_convertible<T, typename enable_if<has_call_operator<T> >::type>
         : get_convertible_impl<
               typename di::type_traits::parameter_types<
-                  BOOST_TYPEOF_TPL(&T::operator())
+                  BOOST_DI_FEATURE_DECLTYPE(&T::operator())
               >::result_type
           >
     { };
@@ -9343,7 +9342,7 @@ private:
             template<typename TDummy>
             struct base_call<mpl::true_, TDummy>
                 : is_same<
-                      BOOST_TYPEOF_TPL(
+                      BOOST_DI_FEATURE_DECLTYPE(
                          ((((base*)0)->call(*(TAction*)0)), void_<T>())
                       )
                     , void_<T>
