@@ -28,6 +28,7 @@ namespace di {
 namespace policies {
 
 BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
+BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
 
 struct allow_smart_ptrs
 {
@@ -110,8 +111,6 @@ template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 class arguments_permission
 {
     typedef mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> allow_types;
-
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
 
     template<typename T>
     struct value_type

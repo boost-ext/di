@@ -17,7 +17,7 @@ namespace boost {
 namespace di {
 namespace detail {
 
-BOOST_AUTO_TEST_CASE(injector_externals_fail) {
+BOOST_AUTO_TEST_CASE(module_externals_fail) {
     concepts::dependency<scopes::external<>, int> i_(42);
 
     module<

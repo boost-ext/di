@@ -19,11 +19,11 @@ namespace di {
 namespace concepts {
 namespace type_traits {
 
+BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
+
 template<typename TName>
 class name
 {
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
-
     template<typename T, typename = void>
     struct get_name
     {

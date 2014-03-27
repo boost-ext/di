@@ -10,7 +10,6 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include <boost/noncopyable.hpp>
 #include <boost/function.hpp>
 #include <boost/mpl/string.hpp>
 #include "boost/di/aux_/memory.hpp"
@@ -89,7 +88,7 @@ struct c0
     //trivial ctor
 };
 
-struct c1 : private noncopyable
+struct c1
 {
     explicit c1(int = 0) { }
 };
@@ -282,7 +281,7 @@ struct c15
     c6 c6_;
 };
 
-struct c16 : private noncopyable
+struct c16
 {
     BOOST_DI_INJECT(c16
         , c14& c14_
@@ -290,6 +289,8 @@ struct c16 : private noncopyable
     )
         : c14_(c14_), c3_(c3_)
     { }
+ 
+    c16& operator=(const c16&);
 
     c14& c14_;
     const c3& c3_;

@@ -8,6 +8,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/memory.hpp"
 
 namespace boost {
@@ -23,7 +24,7 @@ struct copy_ctor_and_many { copy_ctor_and_many(const copy_ctor_and_many&) { } co
 struct many { many(int, double, float) { }};
 struct many_2_3 { many_2_3(int, double) { } many_2_3(int, double, float) { } };
 
-#if (__cplusplus >= 201100L)
+#if (__cplusplus >= 201100L) || defined(BOOST_MSVC)
     struct many_complex { many_complex(const int&, double, float*, aux::shared_ptr<void>, char&&) { }};
 #else
     struct many_complex { many_complex(const int&, double, float*, aux::shared_ptr<void>, char&) { }};
@@ -41,7 +42,7 @@ BOOST_AUTO_TEST_CASE(copy_ctors) {
     BOOST_CHECK((!has_ctor<trivial_ctor, mpl::int_<1> >::value));
     BOOST_CHECK((!has_ctor<copy_ctor, mpl::int_<1> >::value));
 
-#if (__cplusplus >= 201100L)
+#if (__cplusplus >= 201100L) || defined(BOOST_MSVC)
     BOOST_CHECK((has_ctor<default_ctor, mpl::int_<1> >::value));
     BOOST_CHECK((has_ctor<copy_ctor_and_int, mpl::int_<1> >::value));
 #else

@@ -44,7 +44,7 @@ public:
         typename T
       , typename TCallStack
       , typename TScope
-      , typename TMultiplicationFactor = mpl::integral_c<long, 100>
+      , typename TMultiplicationFactor = mpl::integral_c<long, 10>
     >
     struct apply
         : mpl::second<

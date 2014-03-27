@@ -24,7 +24,7 @@ BOOST_AUTO_TEST_CASE(ctor) {
 }
 
 BOOST_AUTO_TEST_CASE(default_value) {
-    typedef dependency<fake_scope<>, int> dependency_t;
+    using dependency_t = dependency<fake_scope<>, int>;
 
     BOOST_CHECK((is_same<
         detail::requires<
