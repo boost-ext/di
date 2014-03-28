@@ -51,6 +51,7 @@
 
         public:
             typedef has_ctor type;
+
             BOOST_STATIC_CONSTANT(
                 bool
               , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
@@ -87,9 +88,8 @@
         public:
             any_type() { }
 
-            template<typename U> operator U&() const;
             template<typename U> operator U();
-
+            template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )

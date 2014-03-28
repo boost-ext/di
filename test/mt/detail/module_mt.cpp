@@ -541,7 +541,7 @@ BOOST_AUTO_TEST_CASE(visit_external) {
           , mpl::pair<aux::shared_ptr<c1>, scopes::shared<>>
           , mpl::pair<int, scopes::unique<>>
           , mpl::pair<c3&, scopes::external<>>
-#if defined(BOOST_DI_CFG_TEST_CTOR)
+#if !defined(BOOST_DI_CFG_TEST_CTOR)
           , mpl::pair<int, scopes::unique<>>
 #endif
         >

@@ -114,7 +114,7 @@ public:
         typename T
       , typename TCallStack
       , typename TScope
-      , typename TMultiplicationFactor = mpl::integral_c<long, 100>
+      , typename TMultiplicationFactor = mpl::integral_c<long, 10>
     >
     struct apply
         : mpl::second<
@@ -266,11 +266,11 @@ namespace di {
 namespace concepts {
 namespace type_traits {
 
+BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
+
 template<typename TName>
 class name
 {
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
-
     template<typename T, typename = void>
     struct get_name
     {
@@ -751,6 +751,7 @@ private:
 
         public:
             typedef has_ctor type;
+
             BOOST_STATIC_CONSTANT(
                 bool
               , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
@@ -775,9 +776,8 @@ private:
         public:
             any_type() { }
 
-            template<typename U> operator U&() const;
             template<typename U> operator U();
-
+            template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
@@ -810,9 +810,8 @@ private:
         public:
             any_type() { }
 
-            template<typename U> operator U&() const;
             template<typename U> operator U();
-
+            template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
@@ -845,9 +844,8 @@ private:
         public:
             any_type() { }
 
-            template<typename U> operator U&() const;
             template<typename U> operator U();
-
+            template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
@@ -880,9 +878,8 @@ private:
         public:
             any_type() { }
 
-            template<typename U> operator U&() const;
             template<typename U> operator U();
-
+            template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
@@ -915,9 +912,8 @@ private:
         public:
             any_type() { }
 
-            template<typename U> operator U&() const;
             template<typename U> operator U();
-
+            template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
@@ -950,9 +946,8 @@ private:
         public:
             any_type() { }
 
-            template<typename U> operator U&() const;
             template<typename U> operator U();
-
+            template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
@@ -985,9 +980,8 @@ private:
         public:
             any_type() { }
 
-            template<typename U> operator U&() const;
             template<typename U> operator U();
-
+            template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
@@ -1020,9 +1014,8 @@ private:
         public:
             any_type() { }
 
-            template<typename U> operator U&() const;
             template<typename U> operator U();
-
+            template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
@@ -1055,9 +1048,8 @@ private:
         public:
             any_type() { }
 
-            template<typename U> operator U&() const;
             template<typename U> operator U();
-
+            template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
@@ -11606,6 +11598,7 @@ namespace di {
 namespace policies {
 
 BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
+BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
 
 struct allow_smart_ptrs
 {
@@ -11672,8 +11665,6 @@ template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , type
 class arguments_permission
 {
     typedef mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19 , T20 , T21 , T22 , T23 , T24 , T25 , T26 , T27 , T28 , T29 , T30 , T31 , T32 , T33 , T34 , T35 , T36 , T37 , T38 , T39> allow_types;
-
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
 
     template<typename T>
     struct value_type

@@ -25,6 +25,10 @@
     #pragma warning(disable:1478) //class "std::aux::auto_ptr<...>" was declared deprecated
 #endif
 
+#if defined(BOOST_DI_CFG_TEST_CTOR)
+    #define BOOST_DI_INJECT(type, ...) type(__VA_ARGS__)
+#endif
+
 #if defined(BOOST_MPL_LIMIT_VECTOR_SIZE)
 
     #if (BOOST_MPL_LIMIT_VECTOR_SIZE <= 50)
