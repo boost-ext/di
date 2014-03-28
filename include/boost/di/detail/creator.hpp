@@ -80,8 +80,6 @@
         >
         class eager_creator
         {
-            typedef typename type_traits::make_plain<T>::type plain_t;
-
             eager_creator& operator=(const eager_creator&);
 
         public:
@@ -91,20 +89,23 @@
 
             template<
                 typename U
-                BOOST_DI_FEATURE(3, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+                BOOST_DI_FEATURE(2, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
                     BOOST_DI_COMMA()
-                    typename PU = typename type_traits::make_plain<U>::type
-                  , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
+                    typename = typename disable_if<
+                        type_traits::is_same_base_of<
+                            typename type_traits::make_plain<U>::type
+                          , typename type_traits::make_plain<T>::type
+                        >
+                    >::type
                 )
             >
             operator U() {
-                BOOST_DI_FEATURE(1, NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-                    typedef typename type_traits::make_plain<U>::type PU;
-                )
-
                 return c_.create_impl<
                     U
-                  , typename mpl::push_back<TCallStack, PU>::type
+                  , typename mpl::push_back<
+                        TCallStack
+                      , typename type_traits::make_plain<U>::type
+                    >::type
                   , TPolicies
                   , binder<U, TCallStack>
                 >(deps_, refs_, visitor_);
@@ -112,20 +113,23 @@
 
             template<
                 typename U
-                BOOST_DI_FEATURE(3, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+                BOOST_DI_FEATURE(2, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
                     BOOST_DI_COMMA()
-                    typename PU = typename type_traits::make_plain<U>::type
-                  , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
+                    typename = typename disable_if<
+                        type_traits::is_same_base_of<
+                            typename type_traits::make_plain<U>::type
+                          , typename type_traits::make_plain<T>::type
+                        >
+                    >::type
                 )
             >
             operator const U&() const {
-                BOOST_DI_FEATURE(1, NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-                    typedef typename type_traits::make_plain<U>::type PU;
-                )
-
                 return c_.create_impl<
                     const U&
-                  , typename mpl::push_back<TCallStack, PU>::type
+                  , typename mpl::push_back<
+                        TCallStack
+                      , typename type_traits::make_plain<U>::type
+                    >::type
                   , TPolicies
                   , binder<const U&, TCallStack>
                 >(deps_, refs_, visitor_);
@@ -133,20 +137,23 @@
 
             template<
                 typename U
-                BOOST_DI_FEATURE(3, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+                BOOST_DI_FEATURE(2, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
                     BOOST_DI_COMMA()
-                    typename PU = typename type_traits::make_plain<U>::type
-                  , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
+                    typename = typename disable_if<
+                        type_traits::is_same_base_of<
+                            typename type_traits::make_plain<U>::type
+                          , typename type_traits::make_plain<T>::type
+                        >
+                    >::type
                 )
             >
             operator U&() const {
-                BOOST_DI_FEATURE(1, NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-                    typedef typename type_traits::make_plain<U>::type PU;
-                )
-
                 return c_.create_impl<
                     U&
-                  , typename mpl::push_back<TCallStack, PU>::type
+                  , typename mpl::push_back<
+                        TCallStack
+                      , typename type_traits::make_plain<U>::type
+                    >::type
                   , TPolicies
                   , binder<U&, TCallStack>
                 >(deps_, refs_, visitor_);

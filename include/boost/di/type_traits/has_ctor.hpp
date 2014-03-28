@@ -24,21 +24,21 @@
     template<typename, typename>
     class has_ctor;
 
-    BOOST_DI_FEATURE(5, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+    BOOST_DI_FEATURE(4, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
         template<typename T>
         class has_ctor<T, mpl::int_<1> >
         {
             class any_type
             {
-                typedef typename type_traits::make_plain<T>::type plain_t;
-
             public:
-                any_type() { }
-
                 template<
                     typename U
-                  , typename PU = typename type_traits::make_plain<U>::type
-                  , typename = typename disable_if<type_traits::is_same_base_of<PU, plain_t> >::type
+                  , typename = typename disable_if<
+                        type_traits::is_same_base_of<
+                            typename type_traits::make_plain<U>::type
+                          , typename type_traits::make_plain<T>::type
+                        >
+                    >::type
                 >
                 operator U() const;
             };
@@ -86,8 +86,6 @@
         class any_type
         {
         public:
-            any_type() { }
-
             template<typename U> operator U();
             template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
