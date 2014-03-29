@@ -40,7 +40,7 @@
                         >
                     >::type
                 >
-                operator U() const;
+                operator U();
             };
 
             template<typename U>
@@ -87,7 +87,7 @@
         {
         public:
             template<typename U> operator U();
-            //template<typename U> operator const U&();
+            template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;

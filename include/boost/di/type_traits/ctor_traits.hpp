@@ -62,7 +62,7 @@ struct ctor_traits
 { };
 
 template<typename T>
-struct ctor_traits<std::basic_string<T> > // all basic_string ctors are ambiguous
+struct ctor_traits<std::basic_string<T> > // basic_string ctors are ambiguous
 {
     static void BOOST_DI_INJECTOR();
 };
