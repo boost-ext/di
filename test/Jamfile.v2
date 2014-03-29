@@ -92,6 +92,7 @@ test-suite "unit tests" :
     [ run-test c++11 : ut/convertibles/shared_ut.cpp : convertible_shared_ut ]
     [ run-test c++11 : ut/convertibles/value_ut.cpp : convertible_value_ut ]
 
+    [ run-test c++11 : ut/type_traits/create_traits_ut.cpp ]
     [ run-test c++11 : ut/type_traits/ctor_traits_ut.cpp : cpp_11_ctor_traits_ut ]
     [ run-test c++03 : ut/type_traits/ctor_traits_ut.cpp : cpp_03_ctor_traits_ut ]
     [ run-test c++11 : ut/type_traits/has_ctor_ut.cpp : cpp_11_has_ctor_ut ]

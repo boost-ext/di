@@ -22,7 +22,11 @@
 #endif
 
 #if defined(BOOST_INTEL)
-    #pragma warning(disable:1478) //class "std::aux::auto_ptr<...>" was declared deprecated
+    #pragma warning(disable:1478) // class "std::aux::auto_ptr<...>" was declared deprecated
+#endif
+
+#if defined(BOOST_MSVC)
+    #pragma warning(disable:4127) // conditional expression is constant
 #endif
 
 #if defined(BOOST_DI_CFG_TEST_CTOR)

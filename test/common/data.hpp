@@ -289,7 +289,7 @@ struct c16
     )
         : c14_(c14_), c3_(c3_)
     { }
- 
+
     c16& operator=(const c16&);
 
     c14& c14_;

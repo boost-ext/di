@@ -54,6 +54,7 @@
 
     public:
         typedef has_value type;
+
         BOOST_STATIC_CONSTANT(
             bool
           , value = sizeof(test((base*)(0))) == sizeof(mpl::aux::yes_tag)
@@ -115,8 +116,6 @@
     TExpected* create_traits(BOOST_DI_ARGS(Args, args)) {
         return new TGiven(BOOST_DI_ARGS_PASS(args));
     }
-
-    #undef BOOST_DI_CONVERT
 
 #endif
 
