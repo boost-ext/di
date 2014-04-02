@@ -9,7 +9,7 @@
 #include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/type_traits/scope_traits.hpp"
 #include "boost/di/type_traits/remove_accessors.hpp"
-#include "boost/di/convertibles/convertible.hpp"
+#include "boost/di/convertibles/any.hpp"
 #include "boost/di/detail/builder.hpp"
 #include "boost/di/concepts/dependency.hpp"
 
@@ -92,7 +92,7 @@ public:
       , typename TRefs
       , typename TVisitor
     >
-    const convertibles::convertible<T>&
+    convertibles::any<T>
     resolve_impl(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         return builder_.template build<
             T

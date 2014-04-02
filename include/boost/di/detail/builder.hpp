@@ -15,7 +15,7 @@
     #include "boost/di/type_traits/create_traits.hpp"
     #include "boost/di/type_traits/make_plain.hpp"
     #include "boost/di/type_traits/is_same_base_of.hpp"
-    #include "boost/di/convertibles/convertible.hpp"
+    #include "boost/di/convertibles/any.hpp"
 
     #include <typeinfo>
     #include <map>
@@ -107,7 +107,7 @@
     >
     typename enable_if_c<
         mpl::size<TCtor>::value == BOOST_PP_ITERATION()
-      , const convertibles::convertible<T>&
+      , convertibles::any<T>
     >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         (void)creator;
@@ -122,22 +122,18 @@
              , TPolicies                            \
             >(deps, refs, visitor)
 
-        aux::shared_ptr<convertibles::convertible<T> > convertible(
-            new convertibles::convertible<T>(
-                acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
-                    BOOST_PP_REPEAT(
-                        BOOST_PP_ITERATION()
-                      , BOOST_DI_CREATOR_EXECUTE
-                      , ~
-                    )
+        return convertibles::any<T>(
+            refs
+          , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
+                BOOST_PP_REPEAT(
+                    BOOST_PP_ITERATION()
+                  , BOOST_DI_CREATOR_EXECUTE
+                  , ~
                 )
             )
         );
 
         #undef BOOST_DI_CREATOR_EXECUTE
-
-        refs.push_back(convertible);
-        return *convertible;
     }
 
 #endif

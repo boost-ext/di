@@ -51,12 +51,6 @@ public:
     }
 
     template<typename I>
-    const I& operator()(const type<const I&>&) const {
-        ref_ = aux::shared_ptr<I>(object_());
-        return *ref_;
-    }
-
-    template<typename I>
     I* operator()(const type<I*>&) const {
         return object_();
     }
@@ -72,18 +66,6 @@ public:
     }
 
     template<typename I>
-    const aux::shared_ptr<I>& operator()(const type<const aux::shared_ptr<I>&>&) const {
-        ref_ = aux::shared_ptr<I>(object_());
-        return ref_;
-    }
-
-    template<typename I>
-    const aux_::shared_ptr<I>& operator()(const type<const aux_::shared_ptr<I>&>&) const {
-        ref__ = aux_::shared_ptr<I>(object_());
-        return ref__;
-    }
-
-    template<typename I>
     aux::auto_ptr<I> operator()(const type<aux::auto_ptr<I> >&) const {
         return aux::auto_ptr<I>(object_());
     }
@@ -93,15 +75,8 @@ public:
         return aux::unique_ptr<I>(object_());
     }
 
-    template<typename I>
-    aux::unique_ptr<I> operator()(const type<const aux::unique_ptr<I>&>&) const {
-        return aux::unique_ptr<I>(object_());
-    }
-
 private:
     object_t object_;
-    mutable aux::shared_ptr<T> ref_;
-    mutable aux_::shared_ptr<T> ref__;
 };
 
 } // namespace convertibles

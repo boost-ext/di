@@ -23,12 +23,7 @@ public:
     { }
 
     template<typename I>
-    I operator()(const type<I>&) const {
-        return object_;
-    }
-
-    template<typename I>
-    I& operator()(const type<I&>&) const {
+    reference_wrapper<T> operator()(const type<I>&) const {
         return object_;
     }
 

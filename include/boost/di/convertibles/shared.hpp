@@ -58,22 +58,7 @@ public:
     }
 
     template<typename I>
-    aux::shared_ptr<I> operator()(const type<const aux::shared_ptr<I>&>&) const {
-        return object_;
-    }
-
-    template<typename I>
-    aux_::shared_ptr<I> operator()(const type<const aux_::shared_ptr<I>&>&) const {
-        return (*this)(type<aux_::shared_ptr<I> >());
-    }
-
-    template<typename I>
     aux::weak_ptr<I> operator()(const type<aux::weak_ptr<I> >&) const {
-        return object_;
-    }
-
-    template<typename I>
-    aux::weak_ptr<I> operator()(const type<const aux::weak_ptr<I>&>&) const {
         return object_;
     }
 

@@ -34,15 +34,15 @@
 #define BOOST_DI_ARGS(T, arg)                   \
      BOOST_PP_ENUM_BINARY_PARAMS(               \
          BOOST_PP_ITERATION()                   \
-       , T                                      \
-       , arg                                    \
+       , const T                                \
+       , & arg                                  \
      )
 
 #define BOOST_DI_ARGS_NOT_USED(T)               \
      BOOST_PP_ENUM_BINARY_PARAMS(               \
          BOOST_PP_ITERATION()                   \
-       , T                                      \
-       , BOOST_PP_INTERCEPT                     \
+       , const T                                \
+       , & BOOST_PP_INTERCEPT                   \
      )
 
 #define BOOST_DI_ARGS_PASS(arg)                 \
