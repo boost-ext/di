@@ -32,11 +32,6 @@ public:
     }
 
     template<typename I>
-    I& operator()(const type<I&>&) const {
-        return value_;
-    }
-
-    template<typename I>
     aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) {
         return aux::shared_ptr<I>(new I(value_));
     }

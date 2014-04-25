@@ -12,6 +12,7 @@
 
 #include <vector>
 #include <boost/type.hpp>
+#include <boost/any.hpp>
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
 
@@ -26,7 +27,7 @@ class any_impl
 {
 public:
     template<typename TObject>
-    explicit any_impl(std::vector<aux::shared_ptr<void> >& refs, const TObject& object)
+    explicit any_impl(std::vector<boost::any>& refs, const TObject& object)
         : refs_(refs), callback_(boost::bind<T>(object, boost::type<T>()))
     { }
 
@@ -35,7 +36,7 @@ public:
     }
 
 private:
-    std::vector<aux::shared_ptr<void> >& refs_;
+    std::vector<boost::any>& refs_;
     function<T()> callback_;
 };
 
@@ -44,17 +45,18 @@ class any_impl<const T&>
 {
 public:
     template<typename TObject>
-    explicit any_impl(std::vector<aux::shared_ptr<void> >& refs, const TObject& object)
+    explicit any_impl(std::vector<boost::any>& refs, const TObject& object)
         : refs_(refs), callback_(boost::bind<T>(object, boost::type<T>()))
     { }
 
     operator const T&() const {
-        return callback_();
+        refs_.push_back(callback_());
+        return any_cast<const T&>(refs_.back());
     }
 
 private:
-    std::vector<aux::shared_ptr<void> >& refs_;
-    function<reference_wrapper<const T>()> callback_;
+    std::vector<boost::any>& refs_;
+    function<T()> callback_;
 };
 
 template<typename T, typename TName>
@@ -62,7 +64,7 @@ class any_impl<named<T, TName> >
 {
 public:
     template<typename TObject>
-    any_impl(std::vector<aux::shared_ptr<void> >& refs, const TObject& object)
+    any_impl(std::vector<boost::any>& refs, const TObject& object)
         : refs_(refs), callback_(boost::bind<T>(object, boost::type<T>()))
     { }
 
@@ -75,7 +77,7 @@ public:
     }
 
 private:
-    std::vector<aux::shared_ptr<void> >& refs_;
+    std::vector<boost::any>& refs_;
     function<T()> callback_;
 };
 
@@ -86,7 +88,7 @@ class any : public detail::any_impl<T>
 {
 public:
     template<typename TObject>
-    any(std::vector<aux::shared_ptr<void> >& refs, const TObject& object)
+    any(std::vector<boost::any>& refs, const TObject& object)
         : detail::any_impl<T>(refs, object)
     { }
 };
