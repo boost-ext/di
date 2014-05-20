@@ -62,6 +62,16 @@ public:
         return object_;
     }
 
+    template<typename I>
+    I& operator()(const type<I&>&) const {
+        return *object_;
+    }
+
+    template<typename I>
+    const I& operator()(const type<const I&>&) const {
+        return *object_;
+    }
+
 private:
     aux::shared_ptr<T> object_;
 };
