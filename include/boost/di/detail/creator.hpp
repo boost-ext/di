@@ -100,6 +100,30 @@
                     >::type
                 )
             >
+            operator U() {
+                return c_.create_impl<
+                    U
+                  , typename mpl::push_back<
+                        TCallStack
+                      , typename type_traits::make_plain<U>::type
+                    >::type
+                  , TPolicies
+                  , binder<U, TCallStack>
+                >(deps_, refs_, visitor_);
+            }
+
+            template<
+                typename U
+                BOOST_DI_FEATURE(2, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+                    BOOST_DI_COMMA()
+                    typename = typename disable_if<
+                        type_traits::is_same_base_of<
+                            typename type_traits::make_plain<U>::type
+                          , typename type_traits::make_plain<T>::type
+                        >
+                    >::type
+                )
+            >
             operator const U&() const {
                 return c_.create_impl<
                     const U&

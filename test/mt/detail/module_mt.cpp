@@ -524,31 +524,31 @@ BOOST_AUTO_TEST_CASE(visit) {
     module_.visit<transaction_usage>(visitor);
 }
 
-BOOST_AUTO_TEST_CASE(visit_external) {
-    c3 c3_;
-    fake_dependency<scopes::external<>, c3>::type e3(c3_);
+//BOOST_AUTO_TEST_CASE(visit_external) {
+    //c3 c3_;
+    //fake_dependency<scopes::external<>, c3>::type e3(c3_);
 
-    module<
-        mpl::vector<
-            fake_dependency<scopes::external<>, c3>::type
-        >
-    > module_(e3);
+    //module<
+        //mpl::vector<
+            //fake_dependency<scopes::external<>, c3>::type
+        //>
+    //> module_(e3);
 
-    fake_visitor<
-        mpl::vector<
-            mpl::pair<c18, scopes::unique<>>
-          , mpl::pair<c0, scopes::unique<>>
-          , mpl::pair<aux::shared_ptr<c1>, scopes::shared<>>
-          , mpl::pair<int, scopes::unique<>>
-          , mpl::pair<c3&, scopes::external<>>
-#if !defined(BOOST_DI_CFG_TEST_CTOR)
-          , mpl::pair<int, scopes::unique<>>
-#endif
-        >
-    > visitor;
+    //fake_visitor<
+        //mpl::vector<
+            //mpl::pair<c18, scopes::unique<>>
+          //, mpl::pair<c0, scopes::unique<>>
+          //, mpl::pair<aux::shared_ptr<c1>, scopes::shared<>>
+          //, mpl::pair<int, scopes::unique<>>
+          //, mpl::pair<c3&, scopes::external<>>
+//#if !defined(BOOST_DI_CFG_TEST_CTOR)
+          //, mpl::pair<int, scopes::unique<>>
+//#endif
+        //>
+    //> visitor;
 
-    module_.visit<c18>(visitor);
-}
+    //module_.visit<c18>(visitor);
+//}
 
 BOOST_AUTO_TEST_CASE(call) {
     fake_scope<>::entry_calls() = 0;

@@ -22,6 +22,11 @@ public:
         : object_(object)
     { }
 
+    template<typename I>
+    I& operator()(const type<I>&) const {
+        return object_;
+    }
+
     T& operator()(const type<T&>&) const {
         return object_;
     }

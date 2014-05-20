@@ -33,8 +33,7 @@ public:
     { }
 
     operator T() const {
-        //return callback_();
-        throw 0;
+        return callback_();
     }
 
 private:
@@ -47,19 +46,28 @@ class any_impl<const T&>
 {
 public:
     template<typename TObject>
-    explicit any_impl(std::vector<boost::any>& refs, const TObject& object, typename enable_if<di::type_traits::is_convertible_to_ref<TObject, const T&> >::type* = 0)
-        //: refs_(refs), callback_(boost::bind<T>(object, boost::type<T>()))
+    explicit any_impl(std::vector<boost::any>& refs, const TObject& object, typename enable_if<di::type_traits::is_convertible_to_ref<TObject, T&> >::type* = 0)
+        : refs_(refs), callback_(boost::bind<const T&>(object, boost::type<T>())), m(false)
+    { }
+
+    template<typename TObject>
+    explicit any_impl(std::vector<boost::any>& refs, const TObject& object, typename disable_if<di::type_traits::is_convertible_to_ref<TObject, T&> >::type* = 0)
+        : refs_(refs), callback_(boost::bind<const T&>(object, boost::type<T>())), m(true)
     { }
 
     operator const T&() const {
-        //refs_.push_back(callback_());
-        //return any_cast<const T&>(refs_.back());
-        throw 0;
+        if (m) {
+            refs_.push_back(callback_());
+            return any_cast<const T&>(refs_.back());
+        }
+
+        return callback_();
     }
 
 private:
     std::vector<boost::any>& refs_;
-    function<T()> callback_;
+    function<const T&()> callback_;
+    bool m;
 };
 
 template<typename T, typename TName>

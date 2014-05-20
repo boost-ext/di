@@ -120,8 +120,8 @@ test-suite "unit tests" :
     #[ run-test c++11 : ut/inject_bracket_ut.cpp ]
     #[ run-test c++11 : ut/inject_va_args_ut.cpp ]
 
-    #[ run-test c++11 : ut/injector_ut.cpp ]
-    #[ run-test c++11 : ut/injector_ut.cpp : ctor_injector_ut ]
+    [ run-test c++11 : ut/injector_ut.cpp ]
+    [ run-test c++11 : ut/injector_ut.cpp : ctor_injector_ut ]
 ;
 
 test-suite "module tests" :

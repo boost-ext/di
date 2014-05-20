@@ -46,17 +46,17 @@ public:
         return value_;
     }
 
-#if 1
-    template<typename I>
-    I& operator()(const type<I&>&) const {
-        return value_;
-    }
+//#if 1
+    //template<typename I>
+    //I& operator()(const type<I&>&) const {
+        //return value_;
+    //}
 
-    template<typename I>
-    const I& operator()(const type<const I&>&) const {
-        return value_;
-    }
-#endif
+    //template<typename I>
+    //const I& operator()(const type<const I&>&) const {
+        //return value_;
+    //}
+//#endif
 
     BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
         template<typename I>

@@ -985,14 +985,14 @@ BOOST_AUTO_TEST_CASE(to_ref) {
       , bind<c14>::to(c14_ref)
     );
 
-    auto c16_ = injector_.create<aux::shared_ptr<c16>>();
+    //auto c16_ = injector_.create<aux::shared_ptr<c16>>();
 
-    BOOST_CHECK(&c3_const_ref == &c16_->c3_);
-    BOOST_CHECK(&c14_ref == &c16_->c14_);
+    //BOOST_CHECK(&c3_const_ref == &c16_->c3_);
+    //BOOST_CHECK(&c14_ref == &c16_->c14_);
 
-    BOOST_CHECK_EQUAL(c3_.i, c16_->c3_.i);
-    BOOST_CHECK_EQUAL(c14_.i, c16_->c14_.i);
-    BOOST_CHECK_EQUAL(c14_.d, c16_->c14_.d);
+    //BOOST_CHECK_EQUAL(c3_.i, c16_->c3_.i);
+    //BOOST_CHECK_EQUAL(c14_.i, c16_->c14_.i);
+    //BOOST_CHECK_EQUAL(c14_.d, c16_->c14_.d);
 }
 
 BOOST_AUTO_TEST_CASE(to_ref_no_copy) {
