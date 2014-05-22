@@ -47,27 +47,27 @@ class universal_impl<const T&>
 public:
     template<typename TObject>
     explicit universal_impl(std::vector<boost::any>& refs, const TObject& object, typename enable_if<di::type_traits::is_convertible_to_ref<TObject, T&> >::type* = 0)
-        : refs_(refs), callback_(boost::bind<const T&>(object, boost::type<T>())), m(false)
+        : refs_(refs), callback_ref_(boost::bind<const T&>(object, boost::type<T>()))
     { }
 
     template<typename TObject>
     explicit universal_impl(std::vector<boost::any>& refs, const TObject& object, typename disable_if<di::type_traits::is_convertible_to_ref<TObject, T&> >::type* = 0)
-        : refs_(refs), callback_(boost::bind<const T&>(object, boost::type<T>())), m(true)
+        : refs_(refs), callback_copy_(boost::bind<T>(object, boost::type<T>()))
     { }
 
     operator const T&() const {
-        if (m) {
-            refs_.push_back(callback_());
+        if (!callback_copy_.empty()) {
+            refs_.push_back(callback_copy_());
             return any_cast<const T&>(refs_.back());
         }
 
-        return callback_();
+        return callback_ref_();
     }
 
 private:
     std::vector<boost::any>& refs_;
-    function<const T&()> callback_;
-    bool m;
+    function<T()> callback_copy_;
+    function<const T&()> callback_ref_;
 };
 
 template<typename T, typename TName>
