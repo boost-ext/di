@@ -987,7 +987,7 @@ BOOST_AUTO_TEST_CASE(to_ref) {
 
     auto c16_ = injector_.create<aux::shared_ptr<c16>>();
 
-    //BOOST_CHECK(&c3_const_ref == &c16_->c3_);
+    BOOST_CHECK(&c3_const_ref == &c16_->c3_);
     BOOST_CHECK(&c14_ref == &c16_->c14_);
 
     BOOST_CHECK_EQUAL(c3_.i, c16_->c3_.i);
