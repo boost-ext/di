@@ -15,7 +15,7 @@
     #include "boost/di/type_traits/create_traits.hpp"
     #include "boost/di/type_traits/make_plain.hpp"
     #include "boost/di/type_traits/is_same_base_of.hpp"
-    #include "boost/di/convertibles/any.hpp"
+    #include "boost/di/wrappers/universal.hpp"
     #include "boost/di/detail/binder.hpp"
     #include "boost/di/detail/builder.hpp"
 
@@ -198,7 +198,7 @@
           , typename TRefs
           , typename TVisitor
         >
-        convertibles::any<T> create(
+        wrappers::universal<T> create(
             TDeps& deps
           , TRefs& refs
           , const TVisitor& visitor
@@ -251,7 +251,7 @@
     >
     typename enable_if_c<
         mpl::size<typename ctor<TDependency>::type>::value == BOOST_PP_ITERATION()
-      , convertibles::any<T>
+      , wrappers::universal<T>
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
         assert_policies<TPolicies, dependency_type>();

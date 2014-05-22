@@ -10,7 +10,7 @@
     #define BOOST_DI_SCOPES_EXTERNAL_HPP
 
     #include "boost/di/aux_/config.hpp"
-    #include "boost/di/convertibles/value.hpp"
+    #include "boost/di/wrappers/value.hpp"
     #include "boost/di/type_traits/create_traits.hpp"
 
     #include <boost/function.hpp>
@@ -51,7 +51,7 @@
 
     namespace scopes {
 
-    template<template<typename> class TConvertible = convertibles::value>
+    template<template<typename> class TConvertible = wrappers::value>
     class external
     {
     public:

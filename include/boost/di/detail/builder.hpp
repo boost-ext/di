@@ -15,7 +15,7 @@
     #include "boost/di/type_traits/create_traits.hpp"
     #include "boost/di/type_traits/make_plain.hpp"
     #include "boost/di/type_traits/is_same_base_of.hpp"
-    #include "boost/di/convertibles/any.hpp"
+    #include "boost/di/wrappers/universal.hpp"
 
     #include <typeinfo>
     #include <map>
@@ -107,7 +107,7 @@
     >
     typename enable_if_c<
         mpl::size<TCtor>::value == BOOST_PP_ITERATION()
-      , convertibles::any<T>
+      , wrappers::universal<T>
     >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         (void)creator;
@@ -122,7 +122,7 @@
              , TPolicies                            \
             >(deps, refs, visitor)
 
-        return convertibles::any<T>(
+        return wrappers::universal<T>(
             refs
           , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
                 BOOST_PP_REPEAT(

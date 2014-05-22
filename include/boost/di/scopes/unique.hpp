@@ -10,7 +10,7 @@
     #define BOOST_DI_SCOPES_UNIQUE_HPP
 
     #include "boost/di/aux_/config.hpp"
-    #include "boost/di/convertibles/copy.hpp"
+    #include "boost/di/wrappers/copy.hpp"
     #include "boost/di/type_traits/create_traits.hpp"
     #include "boost/di/named.hpp"
 
@@ -32,7 +32,7 @@
     #include BOOST_PP_ITERATE()
     #undef BOOST_DI_CALLBACK
 
-    template<template<typename> class TConvertible = convertibles::copy>
+    template<template<typename> class TConvertible = wrappers::copy>
     class unique
     {
     public:

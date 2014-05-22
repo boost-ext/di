@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_CASE(rebind_scope) {
 }
 
 BOOST_AUTO_TEST_CASE(to_value_arithmetic) {
-    using expected = scopes::external<convertibles::value>;
+    using expected = scopes::external<wrappers::value>;
     using external = decltype(dependency<fake_scope<>, int>::to(int()));
     using given = external::scope;
     BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
@@ -63,14 +63,14 @@ BOOST_AUTO_TEST_CASE(to_value_arithmetic) {
 
 BOOST_AUTO_TEST_CASE(to_value_enum) {
     enum e { };
-    using expected = scopes::external<convertibles::value>;
+    using expected = scopes::external<wrappers::value>;
     using external = decltype(dependency<fake_scope<>, e>::to(e()));
     using given = external::scope;
     BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
 }
 
 BOOST_AUTO_TEST_CASE(to_value_text) {
-    using expected = scopes::external<convertibles::value>;
+    using expected = scopes::external<wrappers::value>;
     using external = decltype(dependency<fake_scope<>, std::string>::to(std::string()));
     using given = external::scope;
     BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(to_value_text) {
 
 BOOST_AUTO_TEST_CASE(to_const_ref) {
     struct c { } c_;
-    using expected = scopes::external<convertibles::reference>;
+    using expected = scopes::external<wrappers::reference>;
     using external = decltype(dependency<fake_scope<>, c>::to(c_));
     using given = external::scope;
     BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
@@ -87,21 +87,21 @@ BOOST_AUTO_TEST_CASE(to_const_ref) {
 BOOST_AUTO_TEST_CASE(to_ref) {
     struct c { } c_;
     c& c_ref_ = c_;
-    using expected = scopes::external<convertibles::reference>;
+    using expected = scopes::external<wrappers::reference>;
     using external = decltype(dependency<fake_scope<>, c>::to(c_ref_));
     using given = external::scope;
     BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
 }
 
 BOOST_AUTO_TEST_CASE(to_shared_ptr) {
-    using expected = scopes::external<convertibles::shared>;
+    using expected = scopes::external<wrappers::shared>;
     using external = decltype(dependency<fake_scope<>, int>::to(aux::shared_ptr<int>()));
     using given = external::scope;
     BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
 }
 
 BOOST_AUTO_TEST_CASE(to_lambda_shared_ptr) {
-    using expected = scopes::external<convertibles::shared>;
+    using expected = scopes::external<wrappers::shared>;
     auto given = dependency<fake_scope<>, int>::to([]{ return aux::shared_ptr<int>(); });
     using external = decltype(given);
     BOOST_CHECK_EQUAL(&typeid(expected), &typeid(external::scope));

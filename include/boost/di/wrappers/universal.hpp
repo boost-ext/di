@@ -2,10 +2,10 @@
 // Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
 //
 // Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+// (See accompuniversaling file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_DETAIL_anyS_ANY_HPP
-#define BOOST_DI_DETAIL_anyS_ANY_HPP
+#ifndef BOOST_DI_DETAIL_WRAPPERS_UNIVERSAL_HPP
+#define BOOST_DI_DETAIL_WRAPPERS_UNIVERSAL_HPP
 
 #include "boost/di/named.hpp"
 #include "boost/di/aux_/memory.hpp"
@@ -19,16 +19,16 @@
 
 namespace boost {
 namespace di {
-namespace convertibles {
+namespace wrappers {
 
 namespace detail {
 
 template<typename T>
-class any_impl
+class universal_impl
 {
 public:
     template<typename TObject>
-    explicit any_impl(std::vector<boost::any>& refs, const TObject& object)
+    explicit universal_impl(std::vector<boost::any>& refs, const TObject& object)
         : refs_(refs), callback_(boost::bind<T>(object, boost::type<T>()))
     { }
 
@@ -42,16 +42,16 @@ private:
 };
 
 template<typename T>
-class any_impl<const T&>
+class universal_impl<const T&>
 {
 public:
     template<typename TObject>
-    explicit any_impl(std::vector<boost::any>& refs, const TObject& object, typename enable_if<di::type_traits::is_convertible_to_ref<TObject, T&> >::type* = 0)
+    explicit universal_impl(std::vector<boost::any>& refs, const TObject& object, typename enable_if<di::type_traits::is_convertible_to_ref<TObject, T&> >::type* = 0)
         : refs_(refs), callback_(boost::bind<const T&>(object, boost::type<T>())), m(false)
     { }
 
     template<typename TObject>
-    explicit any_impl(std::vector<boost::any>& refs, const TObject& object, typename disable_if<di::type_traits::is_convertible_to_ref<TObject, T&> >::type* = 0)
+    explicit universal_impl(std::vector<boost::any>& refs, const TObject& object, typename disable_if<di::type_traits::is_convertible_to_ref<TObject, T&> >::type* = 0)
         : refs_(refs), callback_(boost::bind<const T&>(object, boost::type<T>())), m(true)
     { }
 
@@ -71,11 +71,11 @@ private:
 };
 
 template<typename T, typename TName>
-class any_impl<named<T, TName> >
+class universal_impl<named<T, TName> >
 {
 public:
     template<typename TObject>
-    any_impl(std::vector<boost::any>& refs, const TObject& object)
+    universal_impl(std::vector<boost::any>& refs, const TObject& object)
         : refs_(refs), callback_(boost::bind<T>(object, boost::type<T>()))
     { }
 
@@ -95,16 +95,16 @@ private:
 } // namespace detail
 
 template<typename T>
-class any : public detail::any_impl<T>
+class universal : public detail::universal_impl<T>
 {
 public:
     template<typename TObject>
-    any(std::vector<boost::any>& refs, const TObject& object)
-        : detail::any_impl<T>(refs, object)
+    universal(std::vector<boost::any>& refs, const TObject& object)
+        : detail::universal_impl<T>(refs, object)
     { }
 };
 
-} // namespace convertibles
+} // namespace wrappers
 } // namespace di
 } // namespace boost
 

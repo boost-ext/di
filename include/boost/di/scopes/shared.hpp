@@ -10,7 +10,7 @@
     #define BOOST_DI_SCOPES_SHARED_HPP
 
     #include "boost/di/aux_/config.hpp"
-    #include "boost/di/convertibles/shared.hpp"
+    #include "boost/di/wrappers/shared.hpp"
     #include "boost/di/type_traits/create_traits.hpp"
 
     #include <boost/mpl/int.hpp>
@@ -19,7 +19,7 @@
     namespace di {
     namespace scopes {
 
-    template<template<typename> class TConvertible = convertibles::shared>
+    template<template<typename> class TConvertible = wrappers::shared>
     class shared
     {
     public:

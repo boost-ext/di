@@ -438,7 +438,7 @@ BOOST_AUTO_TEST_CASE(externals_create_with_non_trivial_ctor) {
     const double d = 21.0;
     const char c = 'x';
 
-    using external_shared = scopes::external<convertibles::shared>;
+    using external_shared = scopes::external<wrappers::shared>;
     fake_dependency<external_shared, c2>::type c2_(aux::shared_ptr<c2>(new c2(i, d, c)));
 
     module<

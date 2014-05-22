@@ -434,7 +434,7 @@ struct bind
 
 namespace boost {
 namespace di {
-namespace convertibles {
+namespace wrappers {
 
 template<typename T>
 class reference
@@ -458,13 +458,13 @@ private:
     reference_wrapper<T> object_;
 };
 
-} // namespace convertibles
+} // namespace wrappers
 } // namespace di
 } // namespace boost
 
 namespace boost {
 namespace di {
-namespace convertibles {
+namespace wrappers {
 
 template<typename T>
 class shared
@@ -531,7 +531,7 @@ private:
     aux::shared_ptr<T> object_;
 };
 
-} // namespace convertibles
+} // namespace wrappers
 } // namespace di
 } // namespace boost
 
@@ -559,7 +559,7 @@ public:
 
 namespace boost {
 namespace di {
-namespace convertibles {
+namespace wrappers {
 
 template<typename T>
 class value
@@ -619,7 +619,7 @@ private:
     mutable T value_;
 };
 
-} // namespace convertibles
+} // namespace wrappers
 } // namespace di
 } // namespace boost
 
@@ -1308,7 +1308,7 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
 
     namespace scopes {
 
-    template<template<typename> class TConvertible = convertibles::value>
+    template<template<typename> class TConvertible = wrappers::value>
     class external
     {
     public:
@@ -1458,9 +1458,9 @@ template<
 class dependency : public get_scope<TExpected, TGiven, TScope>::type
 {
     typedef typename get_scope<TExpected, TGiven, TScope>::type scope_type;
-    typedef scopes::external<convertibles::reference> ref_type;
-    typedef scopes::external<convertibles::shared> shared_type;
-    typedef scopes::external<convertibles::value> value_type;
+    typedef scopes::external<wrappers::reference> ref_type;
+    typedef scopes::external<wrappers::shared> shared_type;
+    typedef scopes::external<wrappers::value> value_type;
 
     template<typename T, typename U, typename S>
     struct external
@@ -1692,7 +1692,7 @@ public:
     class session_entry { };
     class session_exit { };
 
-    template<template<typename> class TConvertible = convertibles::shared>
+    template<template<typename> class TConvertible = wrappers::shared>
     class session
     {
     public:
@@ -1841,7 +1841,7 @@ public:
     namespace di {
     namespace scopes {
 
-    template<template<typename> class TConvertible = convertibles::shared>
+    template<template<typename> class TConvertible = wrappers::shared>
     class shared
     {
     public:
@@ -1973,7 +1973,7 @@ public:
 
 namespace boost {
 namespace di {
-namespace convertibles {
+namespace wrappers {
 
 template<typename T>
 class copy
@@ -2061,7 +2061,7 @@ private:
     mutable aux_::shared_ptr<T> ref__;
 };
 
-} // namespace convertibles
+} // namespace wrappers
 } // namespace di
 } // namespace boost
 
@@ -2487,7 +2487,7 @@ private:
 
         };
 
-    template<template<typename> class TConvertible = convertibles::copy>
+    template<template<typename> class TConvertible = wrappers::copy>
     class unique
     {
     public:
@@ -6236,7 +6236,7 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
 
 namespace boost {
 namespace di {
-namespace convertibles {
+namespace wrappers {
 
 namespace detail {
 
@@ -6290,7 +6290,7 @@ public:
     { }
 };
 
-} // namespace convertibles
+} // namespace wrappers
 } // namespace di
 } // namespace boost
 
@@ -6334,13 +6334,13 @@ public:
     >
     typename enable_if_c<
         mpl::size<TCtor>::value == 0
-      , const convertibles::convertible<T>&
+      , const wrappers::convertible<T>&
     >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         (void)creator;
         (void)visitor;
-        aux::shared_ptr<convertibles::convertible<T> > convertible(
-            new convertibles::convertible<T>(
+        aux::shared_ptr<wrappers::convertible<T> > convertible(
+            new wrappers::convertible<T>(
                 acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
 
                 )
@@ -6365,13 +6365,13 @@ public:
     >
     typename enable_if_c<
         mpl::size<TCtor>::value == 1
-      , const convertibles::convertible<T>&
+      , const wrappers::convertible<T>&
     >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         (void)creator;
         (void)visitor;
-        aux::shared_ptr<convertibles::convertible<T> > convertible(
-            new convertibles::convertible<T>(
+        aux::shared_ptr<wrappers::convertible<T> > convertible(
+            new wrappers::convertible<T>(
                 acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
                     creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
@@ -6397,13 +6397,13 @@ public:
     >
     typename enable_if_c<
         mpl::size<TCtor>::value == 2
-      , const convertibles::convertible<T>&
+      , const wrappers::convertible<T>&
     >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         (void)creator;
         (void)visitor;
-        aux::shared_ptr<convertibles::convertible<T> > convertible(
-            new convertibles::convertible<T>(
+        aux::shared_ptr<wrappers::convertible<T> > convertible(
+            new wrappers::convertible<T>(
                 acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
                     creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
@@ -6429,13 +6429,13 @@ public:
     >
     typename enable_if_c<
         mpl::size<TCtor>::value == 3
-      , const convertibles::convertible<T>&
+      , const wrappers::convertible<T>&
     >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         (void)creator;
         (void)visitor;
-        aux::shared_ptr<convertibles::convertible<T> > convertible(
-            new convertibles::convertible<T>(
+        aux::shared_ptr<wrappers::convertible<T> > convertible(
+            new wrappers::convertible<T>(
                 acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
                     creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
@@ -6461,13 +6461,13 @@ public:
     >
     typename enable_if_c<
         mpl::size<TCtor>::value == 4
-      , const convertibles::convertible<T>&
+      , const wrappers::convertible<T>&
     >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         (void)creator;
         (void)visitor;
-        aux::shared_ptr<convertibles::convertible<T> > convertible(
-            new convertibles::convertible<T>(
+        aux::shared_ptr<wrappers::convertible<T> > convertible(
+            new wrappers::convertible<T>(
                 acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
                     creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
@@ -6493,13 +6493,13 @@ public:
     >
     typename enable_if_c<
         mpl::size<TCtor>::value == 5
-      , const convertibles::convertible<T>&
+      , const wrappers::convertible<T>&
     >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         (void)creator;
         (void)visitor;
-        aux::shared_ptr<convertibles::convertible<T> > convertible(
-            new convertibles::convertible<T>(
+        aux::shared_ptr<wrappers::convertible<T> > convertible(
+            new wrappers::convertible<T>(
                 acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
                     creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
@@ -6525,13 +6525,13 @@ public:
     >
     typename enable_if_c<
         mpl::size<TCtor>::value == 6
-      , const convertibles::convertible<T>&
+      , const wrappers::convertible<T>&
     >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         (void)creator;
         (void)visitor;
-        aux::shared_ptr<convertibles::convertible<T> > convertible(
-            new convertibles::convertible<T>(
+        aux::shared_ptr<wrappers::convertible<T> > convertible(
+            new wrappers::convertible<T>(
                 acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
                     creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
@@ -6557,13 +6557,13 @@ public:
     >
     typename enable_if_c<
         mpl::size<TCtor>::value == 7
-      , const convertibles::convertible<T>&
+      , const wrappers::convertible<T>&
     >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         (void)creator;
         (void)visitor;
-        aux::shared_ptr<convertibles::convertible<T> > convertible(
-            new convertibles::convertible<T>(
+        aux::shared_ptr<wrappers::convertible<T> > convertible(
+            new wrappers::convertible<T>(
                 acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
                     creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
@@ -6589,13 +6589,13 @@ public:
     >
     typename enable_if_c<
         mpl::size<TCtor>::value == 8
-      , const convertibles::convertible<T>&
+      , const wrappers::convertible<T>&
     >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         (void)creator;
         (void)visitor;
-        aux::shared_ptr<convertibles::convertible<T> > convertible(
-            new convertibles::convertible<T>(
+        aux::shared_ptr<wrappers::convertible<T> > convertible(
+            new wrappers::convertible<T>(
                 acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
                     creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
@@ -6621,13 +6621,13 @@ public:
     >
     typename enable_if_c<
         mpl::size<TCtor>::value == 9
-      , const convertibles::convertible<T>&
+      , const wrappers::convertible<T>&
     >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         (void)creator;
         (void)visitor;
-        aux::shared_ptr<convertibles::convertible<T> > convertible(
-            new convertibles::convertible<T>(
+        aux::shared_ptr<wrappers::convertible<T> > convertible(
+            new wrappers::convertible<T>(
                 acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
                     creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
@@ -6653,13 +6653,13 @@ public:
     >
     typename enable_if_c<
         mpl::size<TCtor>::value == 10
-      , const convertibles::convertible<T>&
+      , const wrappers::convertible<T>&
     >::type
     build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         (void)creator;
         (void)visitor;
-        aux::shared_ptr<convertibles::convertible<T> > convertible(
-            new convertibles::convertible<T>(
+        aux::shared_ptr<wrappers::convertible<T> > convertible(
+            new wrappers::convertible<T>(
                 acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
                     creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 9>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
@@ -6778,7 +6778,7 @@ public:
       , typename TRefs
       , typename TVisitor
     >
-    const convertibles::convertible<T>&
+    const wrappers::convertible<T>&
     resolve_impl(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         return builder_.template build<
             T
@@ -6974,7 +6974,7 @@ private:
           , typename TRefs
           , typename TVisitor
         >
-        const convertibles::convertible<T>& create(
+        const wrappers::convertible<T>& create(
             TDeps& deps
           , TRefs& refs
           , const TVisitor& visitor
@@ -7003,7 +7003,7 @@ private:
     >
     typename enable_if_c<
         mpl::size<typename ctor<TDependency>::type>::value == 0
-      , const convertibles::convertible<T>&
+      , const wrappers::convertible<T>&
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
         assert_policies<TPolicies, dependency_type>();
@@ -7030,7 +7030,7 @@ private:
     >
     typename enable_if_c<
         mpl::size<typename ctor<TDependency>::type>::value == 1
-      , const convertibles::convertible<T>&
+      , const wrappers::convertible<T>&
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
         assert_policies<TPolicies, dependency_type>();
@@ -7057,7 +7057,7 @@ private:
     >
     typename enable_if_c<
         mpl::size<typename ctor<TDependency>::type>::value == 2
-      , const convertibles::convertible<T>&
+      , const wrappers::convertible<T>&
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
         assert_policies<TPolicies, dependency_type>();
@@ -7084,7 +7084,7 @@ private:
     >
     typename enable_if_c<
         mpl::size<typename ctor<TDependency>::type>::value == 3
-      , const convertibles::convertible<T>&
+      , const wrappers::convertible<T>&
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
         assert_policies<TPolicies, dependency_type>();
@@ -7111,7 +7111,7 @@ private:
     >
     typename enable_if_c<
         mpl::size<typename ctor<TDependency>::type>::value == 4
-      , const convertibles::convertible<T>&
+      , const wrappers::convertible<T>&
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
         assert_policies<TPolicies, dependency_type>();
@@ -7138,7 +7138,7 @@ private:
     >
     typename enable_if_c<
         mpl::size<typename ctor<TDependency>::type>::value == 5
-      , const convertibles::convertible<T>&
+      , const wrappers::convertible<T>&
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
         assert_policies<TPolicies, dependency_type>();
@@ -7165,7 +7165,7 @@ private:
     >
     typename enable_if_c<
         mpl::size<typename ctor<TDependency>::type>::value == 6
-      , const convertibles::convertible<T>&
+      , const wrappers::convertible<T>&
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
         assert_policies<TPolicies, dependency_type>();
@@ -7192,7 +7192,7 @@ private:
     >
     typename enable_if_c<
         mpl::size<typename ctor<TDependency>::type>::value == 7
-      , const convertibles::convertible<T>&
+      , const wrappers::convertible<T>&
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
         assert_policies<TPolicies, dependency_type>();
@@ -7219,7 +7219,7 @@ private:
     >
     typename enable_if_c<
         mpl::size<typename ctor<TDependency>::type>::value == 8
-      , const convertibles::convertible<T>&
+      , const wrappers::convertible<T>&
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
         assert_policies<TPolicies, dependency_type>();
@@ -7246,7 +7246,7 @@ private:
     >
     typename enable_if_c<
         mpl::size<typename ctor<TDependency>::type>::value == 9
-      , const convertibles::convertible<T>&
+      , const wrappers::convertible<T>&
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
         assert_policies<TPolicies, dependency_type>();
@@ -7273,7 +7273,7 @@ private:
     >
     typename enable_if_c<
         mpl::size<typename ctor<TDependency>::type>::value == 10
-      , const convertibles::convertible<T>&
+      , const wrappers::convertible<T>&
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
         assert_policies<TPolicies, dependency_type>();

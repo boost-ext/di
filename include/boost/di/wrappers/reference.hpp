@@ -4,15 +4,15 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_CONVERTIBLES_REFERENCE_HPP
-#define BOOST_DI_CONVERTIBLES_REFERENCE_HPP
+#ifndef BOOST_DI_WRAPPERS_REFERENCE_HPP
+#define BOOST_DI_WRAPPERS_REFERENCE_HPP
 
 #include <boost/type.hpp>
 #include <boost/ref.hpp>
 
 namespace boost {
 namespace di {
-namespace convertibles {
+namespace wrappers {
 
 template<typename T>
 class reference
@@ -35,7 +35,7 @@ private:
     reference_wrapper<T> object_;
 };
 
-} // namespace convertibles
+} // namespace wrappers
 } // namespace di
 } // namespace boost
 

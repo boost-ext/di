@@ -86,7 +86,7 @@ test-suite "unit tests" :
     #[ run-test c++11 : ut/concepts_ut.cpp ]
     #[ run-test c++11 : ut/named_ut.cpp ]
 
-    #[ run-test c++11 : ut/convertibles/any_ut.cpp : any_ut ]
+    #[ run-test c++11 : ut/convertibles/universal_ut.cpp : universal_ut ]
     #[ run-test c++11 : ut/convertibles/copy_ut.cpp : convertible_copy_ut ]
     #[ run-test c++11 : ut/convertibles/reference_ut.cpp : convertible_reference_ut ]
     #[ run-test c++11 : ut/convertibles/shared_ut.cpp : convertible_shared_ut ]

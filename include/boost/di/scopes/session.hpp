@@ -12,7 +12,7 @@
     #include "boost/di/aux_/config.hpp"
     #include "boost/di/aux_/memory.hpp"
     #include "boost/di/type_traits/create_traits.hpp"
-    #include "boost/di/convertibles/shared.hpp"
+    #include "boost/di/wrappers/shared.hpp"
 
     #include <cassert>
     #include <boost/mpl/int.hpp>
@@ -24,7 +24,7 @@
     class session_entry { };
     class session_exit { };
 
-    template<template<typename> class TConvertible = convertibles::shared>
+    template<template<typename> class TConvertible = wrappers::shared>
     class session
     {
     public:

@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/convertibles/reference.hpp"
+#include "boost/di/wrappers/reference.hpp"
 
 #include <boost/test/unit_test.hpp>
 #include <memory>
@@ -13,7 +13,7 @@
 
 namespace boost {
 namespace di {
-namespace convertibles {
+namespace wrappers {
 
 BOOST_AUTO_TEST_CASE(copy_ctor) {
     int i = 42;
@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(to_const_ref) {
     BOOST_CHECK_EQUAL(i, object_ref(type<const int&>()));
 }
 
-} // namespace convertibles
+} // namespace wrappers
 } // namespace di
 } // namespace boost
 

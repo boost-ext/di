@@ -65,7 +65,19 @@ struct scope_traits<aux::shared_ptr<T> >
 };
 
 template<typename T>
+struct scope_traits<const aux::shared_ptr<T>&>
+{
+    typedef scopes::shared<> type;
+};
+
+template<typename T>
 struct scope_traits<aux_::shared_ptr<T> >
+{
+    typedef scopes::shared<> type;
+};
+
+template<typename T>
+struct scope_traits<const aux_::shared_ptr<T>&>
 {
     typedef scopes::shared<> type;
 };

@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_CONVERTIBLES_VALUE_HPP
-#define BOOST_DI_CONVERTIBLES_VALUE_HPP
+#ifndef BOOST_DI_WRAPPERS_VALUE_HPP
+#define BOOST_DI_WRAPPERS_VALUE_HPP
 
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/memory.hpp"
@@ -16,7 +16,7 @@
 
 namespace boost {
 namespace di {
-namespace convertibles {
+namespace wrappers {
 
 template<typename T>
 class value
@@ -69,7 +69,7 @@ private:
     T value_;
 };
 
-} // namespace convertibles
+} // namespace wrappers
 } // namespace di
 } // namespace boost
 

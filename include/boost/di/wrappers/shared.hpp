@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_CONVERTIBLES_SHARED_HPP
-#define BOOST_DI_CONVERTIBLES_SHARED_HPP
+#ifndef BOOST_DI_WRAPPERS_SHARED_HPP
+#define BOOST_DI_WRAPPERS_SHARED_HPP
 
 #include "boost/di/aux_/memory.hpp"
 
@@ -14,7 +14,7 @@
 
 namespace boost {
 namespace di {
-namespace convertibles {
+namespace wrappers {
 
 template<typename T>
 class shared
@@ -63,20 +63,20 @@ public:
     }
 
     template<typename I>
-    I& operator()(const type<I&>&) const {
-        return *object_;
+    const I& operator()(const type<I&>&) const {
+        return object_;
     }
 
     template<typename I>
     const I& operator()(const type<const I&>&) const {
-        return *object_;
+        return object_;
     }
 
 private:
     aux::shared_ptr<T> object_;
 };
 
-} // namespace convertibles
+} // namespace wrappers
 } // namespace di
 } // namespace boost
 
