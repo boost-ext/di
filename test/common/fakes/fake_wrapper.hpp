@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_FAKE_CONVERTIBLE_HPP
-#define BOOST_DI_FAKE_CONVERTIBLE_HPP
+#ifndef BOOST_DI_FAKE_WRAPPER_HPP
+#define BOOST_DI_FAKE_WRAPPER_HPP
 
 #include <boost/type.hpp>
 
@@ -13,10 +13,10 @@ namespace boost {
 namespace di {
 
 template<typename T>
-class fake_convertible
+class fake_wrapper
 {
 public:
-    fake_convertible(const T& object) // non explicit
+    fake_wrapper(const T& object) // non explicit
         : object_(object)
     { }
 
@@ -38,5 +38,4 @@ private:
 } // namespace boost
 
 #endif
-
 

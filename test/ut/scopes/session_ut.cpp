@@ -12,7 +12,7 @@
 
 #include "boost/di/aux_/memory.hpp"
 
-#include "common/fakes/fake_convertible.hpp"
+#include "common/fakes/fake_wrapper.hpp"
 #include "common/fakes/fake_create_policy.hpp"
 #include "common/data.hpp"
 
@@ -47,9 +47,9 @@ BOOST_AUTO_TEST_CASE(create_args) {
     session<>::scope<c2> session1;
     session<>::scope<c2> session2;
 
-    fake_convertible<int> i(0);
-    fake_convertible<double> d(0.0);
-    fake_convertible<char> c('0');
+    fake_wrapper<int> i(0);
+    fake_wrapper<double> d(0.0);
+    fake_wrapper<char> c('0');
 
     BOOST_CHECK((
         (session1.create<fake_create_policy, decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
@@ -89,9 +89,9 @@ BOOST_AUTO_TEST_CASE(call) {
 BOOST_AUTO_TEST_CASE(call_args) {
     session<>::scope<c2> session_;
 
-    fake_convertible<int> i(0);
-    fake_convertible<double> d(0.0);
-    fake_convertible<char> c('0');
+    fake_wrapper<int> i(0);
+    fake_wrapper<double> d(0.0);
+    fake_wrapper<char> c('0');
 
     session_.call(session_entry());
     BOOST_CHECK((aux::shared_ptr<c2>() != (session_.create<fake_create_policy, decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())));

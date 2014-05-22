@@ -11,7 +11,7 @@
 
 #include "boost/di/aux_/memory.hpp"
 
-#include "common/fakes/fake_convertible.hpp"
+#include "common/fakes/fake_wrapper.hpp"
 #include "common/fakes/fake_create_policy.hpp"
 #include "common/data.hpp"
 
@@ -32,9 +32,9 @@ BOOST_AUTO_TEST_CASE(create) {
 BOOST_AUTO_TEST_CASE(create_args) {
     shared<>::scope<c2> shared_;
 
-    fake_convertible<int> i(0);
-    fake_convertible<double> d(0.0);
-    fake_convertible<char> c('0');
+    fake_wrapper<int> i(0);
+    fake_wrapper<double> d(0.0);
+    fake_wrapper<char> c('0');
 
     BOOST_CHECK((
         (shared_.create<fake_create_policy, decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
