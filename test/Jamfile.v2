@@ -140,8 +140,8 @@ test-suite "module tests" :
 ;
 
 test-suite "functional tests" :
-    #[ run-test c++11 : ft/di_ft_cpp_11.cpp ]
-    #[ run-test c++11 : ft/di_ft_cpp_11.cpp : ctor_di_ft_cpp_11 ]
+    [ run-test c++11 : ft/di_ft_cpp_11.cpp ]
+    [ run-test c++11 : ft/di_ft_cpp_11.cpp : ctor_di_ft_cpp_11 ]
 
     [ run-test c++03 : ft/di_ft_cpp_03.cpp ]
     [ run-test c++03 : ft/di_ft_cpp_03.cpp : ctor_di_ft_cpp_03 ]
