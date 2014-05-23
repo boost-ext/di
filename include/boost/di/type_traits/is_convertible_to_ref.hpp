@@ -18,11 +18,11 @@ namespace type_traits {
 template<typename T, typename TRef>
 class is_convertible_to_ref
 {
-	template<typename U>
-	static mpl::aux::yes_tag test(non_type<TRef& (U::*)(const type<TRef&>&) const, &U::operator()>*);
+    template<typename U>
+    static mpl::aux::yes_tag test(non_type<TRef& (U::*)(const type<TRef&>&) const, &U::operator()>*);
 
-	template<typename U>
-	static mpl::aux::yes_tag test(non_type<const TRef& (U::*)(const type<const TRef&>&) const, &U::operator()>*);
+    template<typename U>
+    static mpl::aux::yes_tag test(non_type<const TRef& (U::*)(const type<const TRef&>&) const, &U::operator()>*);
 
 	template<typename>
 	static mpl::aux::no_tag test(...);
