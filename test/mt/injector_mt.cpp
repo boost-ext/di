@@ -5,12 +5,14 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include "boost/di/injector.hpp"
-#include "boost/di/make_injector.hpp"
-#include "boost/di/aux_/memory.hpp"
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
 #include <boost/mpl/vector.hpp>
+
+#include "boost/di/make_injector.hpp"
+#include "boost/di/aux_/memory.hpp"
+#include "boost/di/aux_/config.hpp"
 
 #include "common/fakes/fake_visitor.hpp"
 #include "common/fakes/fake_scope.hpp"
@@ -473,11 +475,13 @@ BOOST_AUTO_TEST_CASE(scoped_injector_create_with_deduced_scope) {
     }
 }
 
-BOOST_AUTO_TEST_CASE(stored_ref_created_by_injector) {
-    const int i = 42;
-    auto ref_sp_int_ = injector<bind_int<i>>().create<ref_sp_int>();
-    BOOST_CHECK(ref_sp_int_.i_);
-}
+#if !defined(BOOST_MSVC)
+    BOOST_AUTO_TEST_CASE(stored_ref_created_by_injector) {
+        const int i = 42;
+        auto ref_sp_int_ = injector<bind_int<i>>().create<ref_sp_int>();
+        BOOST_CHECK(ref_sp_int_.i_);
+    }
+#endif
 
 //BOOST_AUTO_TEST_CASE(shared_by_ref) {
     //auto c1_ = injector<shared<c1>>().create<shared_ref>();

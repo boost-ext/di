@@ -93,7 +93,7 @@ class universal_impl<const T&>
 
 public:
     template<typename TObject>
-    universal_impl(std::vector<aux::shared_ptr<void> >& refs
+    universal_impl(std::vector<aux::shared_ptr<void> >&
                  , const TObject& object
                  , typename enable_if<is_convertible_to_ref<TObject, T> >::type* = 0)
         : callback_(boost::bind(&universal_impl<const T&>::callback_ref<TObject>, object))

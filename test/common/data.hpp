@@ -459,6 +459,8 @@ struct shared_ref
         : c1_(c1_), c1__(c1__), c1___(c1___)
     { }
 
+    shared_ref& operator=(const shared_ref&);
+
     aux::shared_ptr<c1> c1_;
     const c1& c1__;
     c1& c1___;
