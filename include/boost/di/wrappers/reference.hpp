@@ -23,7 +23,7 @@ public:
     { }
 
     template<typename I>
-    T& operator()(const type<I>&) const {
+    I& operator()(const type<I>&) const {
         return object_;
     }
 
