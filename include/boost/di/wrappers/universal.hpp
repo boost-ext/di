@@ -12,6 +12,7 @@
 #include "boost/di/named.hpp"
 
 #include <vector>
+#include <boost/ref.hpp>
 #include <boost/type.hpp>
 #include <boost/non_type.hpp>
 #include <boost/bind.hpp>
@@ -102,7 +103,7 @@ public:
     universal_impl(std::vector<aux::shared_ptr<void> >& refs
                  , const TObject& object
                  , typename disable_if<is_convertible_to_ref<TObject, T> >::type* = 0)
-        : callback_(boost::bind(&universal_impl<const T&>::callback_copy<TObject>, refs, object))
+        : callback_(boost::bind(&universal_impl<const T&>::callback_copy<TObject>, boost::ref(refs), object))
     { }
 
     operator const T&() const {
