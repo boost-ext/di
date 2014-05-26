@@ -569,7 +569,7 @@ public:
     }
 
     template<typename I>
-    I operator()(const type<I>&) const {
+    I operator()(const type<I>&) {
         return value_;
     }
 
