@@ -17,7 +17,7 @@ namespace boost {
 namespace di {
 namespace wrappers {
 
-BOOST_AUTO_TEST_CASE(convert_to_basic_type) {
+BOOST_AUTO_TEST_CASE(convert_to_value_type) {
     const int i = 42;
     std::vector<aux::shared_ptr<void>> refs;
     universal<int> c(refs, fake_wrapper<int>(i));
@@ -30,6 +30,13 @@ BOOST_AUTO_TEST_CASE(convert_to_named_type) {
     universal<named<int>> c(refs, fake_wrapper<int>(i));
     BOOST_CHECK_EQUAL(i, c.operator int());
     BOOST_CHECK_EQUAL(i, c.operator named<int>());
+}
+
+BOOST_AUTO_TEST_CASE(convert_to_ref_type) {
+    int i = 42;
+    std::vector<aux::shared_ptr<void>> refs;
+    universal<int&> c(refs, fake_wrapper<int&>(i));
+    BOOST_CHECK_EQUAL(i, static_cast<int&>(c));
 }
 
 } // namespace wrappers
