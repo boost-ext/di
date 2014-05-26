@@ -445,7 +445,7 @@ public:
     { }
 
     template<typename I>
-    I& operator()(const type<I>&) const {
+    T& operator()(const type<I>&) const {
         return object_;
     }
 
