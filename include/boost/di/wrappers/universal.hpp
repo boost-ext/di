@@ -13,9 +13,10 @@
 
 #include <vector>
 #include <boost/type.hpp>
+#include <boost/non_type.hpp>
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
-#include <boost/non_type.hpp>
+#include <boost/mpl/or.hpp>
 #include <boost/mpl/aux_/yes_no.hpp>
 
 namespace boost {
@@ -29,8 +30,8 @@ class universal_impl
 {
 public:
     template<typename TObject>
-    explicit universal_impl(std::vector<aux::shared_ptr<void> >& refs, const TObject& object)
-        : refs_(refs), callback_(boost::bind<T>(object, boost::type<T>()))
+    explicit universal_impl(std::vector<aux::shared_ptr<void> >&, const TObject& object)
+        : callback_(boost::bind<T>(object, boost::type<T>()))
     { }
 
     operator T() const {
@@ -38,34 +39,12 @@ public:
     }
 
 private:
-    std::vector<aux::shared_ptr<void> >& refs_;
     function<T()> callback_;
 };
 
 template<typename T>
 class universal_impl<const T&>
 {
-    template<typename To, typename TRef>
-    class is_convertible_to_ref
-    {
-        template<typename U>
-        static mpl::aux::yes_tag test(non_type<TRef& (U::*)(const type<TRef&>&) const, &U::operator()>*);
-
-        template<typename U>
-        static mpl::aux::yes_tag test(non_type<const TRef& (U::*)(const type<const TRef&>&) const, &U::operator()>*);
-
-        template<typename>
-        static mpl::aux::no_tag test(...);
-
-    public:
-        typedef is_convertible_to_ref type;
-
-        BOOST_STATIC_CONSTANT(
-            bool
-          , value = sizeof(test<To>(0)) == sizeof(mpl::aux::yes_tag)
-        );
-    };
-
     template<typename TValueType>
     struct holder
     {
@@ -76,14 +55,41 @@ class universal_impl<const T&>
         TValueType held;
     };
 
+    template<typename TValueType, typename TSignature>
+    class is_convertible
+    {
+        template<typename U> static mpl::aux::yes_tag test(non_type<TSignature, &U::operator()>*);
+        template<typename>   static mpl::aux::no_tag test(...);
+
+    public:
+        typedef is_convertible type;
+
+        BOOST_STATIC_CONSTANT(
+            bool
+          , value = sizeof(test<TValueType>(0)) == sizeof(mpl::aux::yes_tag)
+        );
+    };
+
+    template<typename TObject, typename TValueType>
+    struct is_convertible_to_ref
+        : mpl::or_<
+              is_convertible<TObject, TValueType&(TObject::*)(const type<TValueType&>&) const>
+            , is_convertible<TObject, const TValueType&(TObject::*)(const type<const TValueType&>&) const>
+          >
+    { };
+
 public:
     template<typename TObject>
-    explicit universal_impl(std::vector<aux::shared_ptr<void> >& refs, const TObject& object, typename enable_if<is_convertible_to_ref<TObject, T> >::type* = 0)
-        : refs_(refs), callback_ref_(boost::bind<const T&>(object, boost::type<T>()))
+    universal_impl(std::vector<aux::shared_ptr<void> >& refs
+                 , const TObject& object
+                 , typename enable_if<is_convertible_to_ref<TObject, T> >::type* = 0)
+        : refs_(refs), callback_ref_(boost::bind<const T&>(object, boost::type<const T&>()))
     { }
 
     template<typename TObject>
-    explicit universal_impl(std::vector<aux::shared_ptr<void> >& refs, const TObject& object, typename disable_if<is_convertible_to_ref<TObject, T> >::type* = 0)
+    universal_impl(std::vector<aux::shared_ptr<void> >& refs
+                 , const TObject& object
+                 , typename disable_if<is_convertible_to_ref<TObject, T> >::type* = 0)
         : refs_(refs), callback_copy_(boost::bind<T>(object, boost::type<T>()))
     { }
 
@@ -108,8 +114,8 @@ class universal_impl<named<T, TName> >
 {
 public:
     template<typename TObject>
-    universal_impl(std::vector<aux::shared_ptr<void> >& refs, const TObject& object)
-        : refs_(refs), callback_(boost::bind<T>(object, boost::type<T>()))
+    universal_impl(std::vector<aux::shared_ptr<void> >&, const TObject& object)
+        : callback_(boost::bind<T>(object, boost::type<T>()))
     { }
 
     operator T() const {
@@ -121,7 +127,6 @@ public:
     }
 
 private:
-    std::vector<aux::shared_ptr<void> >& refs_;
     function<T()> callback_;
 };
 

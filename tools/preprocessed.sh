@@ -1,5 +1,7 @@
 #!/bin/bash
 
+[ -z "$CXX" ] && CXX="g++"
+
 dump_file() {
     args=${@:4}
     tmp=`mktemp`
