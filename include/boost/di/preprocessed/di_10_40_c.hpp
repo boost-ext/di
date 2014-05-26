@@ -617,65 +617,215 @@ private:
         typedef mpl::vector0<> type;
     };
 
-    template<typename R, typename Args0 > struct parameter_types<R(*)( Args0)> { typedef R result_type; typedef mpl::vector< Args0> type; };
+    template<typename R, typename Args0>
+    struct parameter_types<R(*)( Args0)>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0> type;
+    };
 
-    template<typename R, typename T, typename Args0 > struct parameter_types<R(T::*)( Args0)> { typedef R result_type; typedef mpl::vector< Args0> type; };
+    template<typename R, typename T, typename Args0>
+    struct parameter_types<R(T::*)( Args0)>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0> type;
+    };
 
-    template<typename R, typename T, typename Args0 > struct parameter_types<R(T::*)( Args0) const> { typedef R result_type; typedef mpl::vector< Args0> type; };
+    template<typename R, typename T, typename Args0>
+    struct parameter_types<R(T::*)( Args0) const>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0> type;
+    };
 
-    template<typename R, typename Args0 , typename Args1> struct parameter_types<R(*)( Args0 , Args1)> { typedef R result_type; typedef mpl::vector< Args0 , Args1> type; };
+    template<typename R, typename Args0 , typename Args1>
+    struct parameter_types<R(*)( Args0 , Args1)>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1> type;
+    };
 
-    template<typename R, typename T, typename Args0 , typename Args1> struct parameter_types<R(T::*)( Args0 , Args1)> { typedef R result_type; typedef mpl::vector< Args0 , Args1> type; };
+    template<typename R, typename T, typename Args0 , typename Args1>
+    struct parameter_types<R(T::*)( Args0 , Args1)>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1> type;
+    };
 
-    template<typename R, typename T, typename Args0 , typename Args1> struct parameter_types<R(T::*)( Args0 , Args1) const> { typedef R result_type; typedef mpl::vector< Args0 , Args1> type; };
+    template<typename R, typename T, typename Args0 , typename Args1>
+    struct parameter_types<R(T::*)( Args0 , Args1) const>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1> type;
+    };
 
-    template<typename R, typename Args0 , typename Args1 , typename Args2> struct parameter_types<R(*)( Args0 , Args1 , Args2)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2> type; };
+    template<typename R, typename Args0 , typename Args1 , typename Args2>
+    struct parameter_types<R(*)( Args0 , Args1 , Args2)>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1 , Args2> type;
+    };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2> struct parameter_types<R(T::*)( Args0 , Args1 , Args2)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2> type; };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2>
+    struct parameter_types<R(T::*)( Args0 , Args1 , Args2)>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1 , Args2> type;
+    };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2> struct parameter_types<R(T::*)( Args0 , Args1 , Args2) const> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2> type; };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2>
+    struct parameter_types<R(T::*)( Args0 , Args1 , Args2) const>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1 , Args2> type;
+    };
 
-    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3> struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3> type; };
+    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3>
+    struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3)>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1 , Args2 , Args3> type;
+    };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3> type; };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3>
+    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3)>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1 , Args2 , Args3> type;
+    };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3) const> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3> type; };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3>
+    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3) const>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1 , Args2 , Args3> type;
+    };
 
-    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4> struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3 , Args4)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4> type; };
+    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
+    struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3 , Args4)>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4> type;
+    };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4> type; };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
+    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4)>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4> type;
+    };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4) const> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4> type; };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
+    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4) const>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4> type;
+    };
 
-    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5> struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5> type; };
+    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
+    struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5)>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5> type;
+    };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5> type; };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
+    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5)>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5> type;
+    };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5) const> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5> type; };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
+    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5) const>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5> type;
+    };
 
-    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6> struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6> type; };
+    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
+    struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6)>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6> type;
+    };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6> type; };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
+    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6)>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6> type;
+    };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6) const> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6> type; };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
+    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6) const>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6> type;
+    };
 
-    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7> struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7> type; };
+    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
+    struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7)>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7> type;
+    };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7> type; };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
+    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7)>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7> type;
+    };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7) const> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7> type; };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
+    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7) const>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7> type;
+    };
 
-    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8> struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8> type; };
+    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
+    struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8)>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8> type;
+    };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8> type; };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
+    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8)>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8> type;
+    };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8) const> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8> type; };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
+    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8) const>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8> type;
+    };
 
-    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9> struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9> type; };
+    template<typename R, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
+    struct parameter_types<R(*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9)>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9> type;
+    };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9)> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9> type; };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
+    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9)>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9> type;
+    };
 
-    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9> struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9) const> { typedef R result_type; typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9> type; };
+    template<typename R, typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
+    struct parameter_types<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9) const>
+    {
+        typedef R result_type;
+        typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9> type;
+    };
 
     } // namespace type_traits
     } // namespace di
@@ -749,8 +899,8 @@ private:
 
         template<typename U>
         static mpl::aux::yes_tag test(
-            BOOST_DI_FEATURE_DECLTYPE(U( any_type() , any_type() )
-
+            BOOST_DI_FEATURE_DECLTYPE(U(
+                any_type() , any_type() )
             )*
         );
 
@@ -782,8 +932,8 @@ private:
 
         template<typename U>
         static mpl::aux::yes_tag test(
-            BOOST_DI_FEATURE_DECLTYPE(U( any_type() , any_type() , any_type() )
-
+            BOOST_DI_FEATURE_DECLTYPE(U(
+                any_type() , any_type() , any_type() )
             )*
         );
 
@@ -815,8 +965,8 @@ private:
 
         template<typename U>
         static mpl::aux::yes_tag test(
-            BOOST_DI_FEATURE_DECLTYPE(U( any_type() , any_type() , any_type() , any_type() )
-
+            BOOST_DI_FEATURE_DECLTYPE(U(
+                any_type() , any_type() , any_type() , any_type() )
             )*
         );
 
@@ -848,8 +998,8 @@ private:
 
         template<typename U>
         static mpl::aux::yes_tag test(
-            BOOST_DI_FEATURE_DECLTYPE(U( any_type() , any_type() , any_type() , any_type() , any_type() )
-
+            BOOST_DI_FEATURE_DECLTYPE(U(
+                any_type() , any_type() , any_type() , any_type() , any_type() )
             )*
         );
 
@@ -881,8 +1031,8 @@ private:
 
         template<typename U>
         static mpl::aux::yes_tag test(
-            BOOST_DI_FEATURE_DECLTYPE(U( any_type() , any_type() , any_type() , any_type() , any_type() , any_type() )
-
+            BOOST_DI_FEATURE_DECLTYPE(U(
+                any_type() , any_type() , any_type() , any_type() , any_type() , any_type() )
             )*
         );
 
@@ -914,8 +1064,8 @@ private:
 
         template<typename U>
         static mpl::aux::yes_tag test(
-            BOOST_DI_FEATURE_DECLTYPE(U( any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() )
-
+            BOOST_DI_FEATURE_DECLTYPE(U(
+                any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() )
             )*
         );
 
@@ -947,8 +1097,8 @@ private:
 
         template<typename U>
         static mpl::aux::yes_tag test(
-            BOOST_DI_FEATURE_DECLTYPE(U( any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() )
-
+            BOOST_DI_FEATURE_DECLTYPE(U(
+                any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() )
             )*
         );
 
@@ -980,8 +1130,8 @@ private:
 
         template<typename U>
         static mpl::aux::yes_tag test(
-            BOOST_DI_FEATURE_DECLTYPE(U( any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() )
-
+            BOOST_DI_FEATURE_DECLTYPE(U(
+                any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() )
             )*
         );
 
@@ -1013,8 +1163,8 @@ private:
 
         template<typename U>
         static mpl::aux::yes_tag test(
-            BOOST_DI_FEATURE_DECLTYPE(U( any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() )
-
+            BOOST_DI_FEATURE_DECLTYPE(U(
+                any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() , any_type() )
             )*
         );
 
@@ -1199,53 +1349,53 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
         return new TExpected(mpl::c_str<TGiven>::value);
     }
 
-    template<typename, typename TExpected, typename TGiven, typename Args0 >
-    TExpected* create_traits( const Args0 & args0) {
+    template<typename, typename TExpected, typename TGiven, typename Args0>
+    TExpected* create_traits( Args0 args0) {
         return new TGiven( args0);
     }
 
     template<typename, typename TExpected, typename TGiven, typename Args0 , typename Args1>
-    TExpected* create_traits( const Args0 & args0 , const Args1 & args1) {
+    TExpected* create_traits( Args0 args0 , Args1 args1) {
         return new TGiven( args0 , args1);
     }
 
     template<typename, typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2>
-    TExpected* create_traits( const Args0 & args0 , const Args1 & args1 , const Args2 & args2) {
+    TExpected* create_traits( Args0 args0 , Args1 args1 , Args2 args2) {
         return new TGiven( args0 , args1 , args2);
     }
 
     template<typename, typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3>
-    TExpected* create_traits( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3) {
+    TExpected* create_traits( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3) {
         return new TGiven( args0 , args1 , args2 , args3);
     }
 
     template<typename, typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
-    TExpected* create_traits( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4) {
+    TExpected* create_traits( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4) {
         return new TGiven( args0 , args1 , args2 , args3 , args4);
     }
 
     template<typename, typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
-    TExpected* create_traits( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5) {
+    TExpected* create_traits( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5) {
         return new TGiven( args0 , args1 , args2 , args3 , args4 , args5);
     }
 
     template<typename, typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
-    TExpected* create_traits( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6) {
+    TExpected* create_traits( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6) {
         return new TGiven( args0 , args1 , args2 , args3 , args4 , args5 , args6);
     }
 
     template<typename, typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
-    TExpected* create_traits( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7) {
+    TExpected* create_traits( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7) {
         return new TGiven( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7);
     }
 
     template<typename, typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
-    TExpected* create_traits( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8) {
+    TExpected* create_traits( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8) {
         return new TGiven( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8);
     }
 
     template<typename, typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
-    TExpected* create_traits( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9) {
+    TExpected* create_traits( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9) {
         return new TGiven( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9);
     }
 
@@ -1329,53 +1479,53 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
                 return object_();
             }
 
-    template<typename, typename Args0 >
-    result_type create( const Args0 & ) {
+    template<typename, typename Args0>
+    result_type create( Args0 ) {
         return object_();
     }
 
     template<typename, typename Args0 , typename Args1>
-    result_type create( const Args0 & , const Args1 & ) {
+    result_type create( Args0 , Args1 ) {
         return object_();
     }
 
     template<typename, typename Args0 , typename Args1 , typename Args2>
-    result_type create( const Args0 & , const Args1 & , const Args2 & ) {
+    result_type create( Args0 , Args1 , Args2 ) {
         return object_();
     }
 
     template<typename, typename Args0 , typename Args1 , typename Args2 , typename Args3>
-    result_type create( const Args0 & , const Args1 & , const Args2 & , const Args3 & ) {
+    result_type create( Args0 , Args1 , Args2 , Args3 ) {
         return object_();
     }
 
     template<typename, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
-    result_type create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & ) {
+    result_type create( Args0 , Args1 , Args2 , Args3 , Args4 ) {
         return object_();
     }
 
     template<typename, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
-    result_type create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & ) {
+    result_type create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 ) {
         return object_();
     }
 
     template<typename, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
-    result_type create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & ) {
+    result_type create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 ) {
         return object_();
     }
 
     template<typename, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
-    result_type create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & ) {
+    result_type create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 ) {
         return object_();
     }
 
     template<typename, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
-    result_type create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & ) {
+    result_type create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 ) {
         return object_();
     }
 
     template<typename, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
-    result_type create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & ) {
+    result_type create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 ) {
         return object_();
     }
 
@@ -1701,8 +1851,8 @@ public:
                 return object_;
             }
 
-    template<typename TCreatePolicy, typename Args0 >
-    result_type create( const Args0 & args0) {
+    template<typename TCreatePolicy, typename Args0>
+    result_type create( Args0 args0) {
         if (in_scope_ && !object_) {
             object_.reset(
                 type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0)
@@ -1712,7 +1862,7 @@ public:
     }
 
     template<typename TCreatePolicy, typename Args0 , typename Args1>
-    result_type create( const Args0 & args0 , const Args1 & args1) {
+    result_type create( Args0 args0 , Args1 args1) {
         if (in_scope_ && !object_) {
             object_.reset(
                 type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1)
@@ -1722,7 +1872,7 @@ public:
     }
 
     template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2>
-    result_type create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2) {
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2) {
         if (in_scope_ && !object_) {
             object_.reset(
                 type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2)
@@ -1732,7 +1882,7 @@ public:
     }
 
     template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3>
-    result_type create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3) {
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3) {
         if (in_scope_ && !object_) {
             object_.reset(
                 type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3)
@@ -1742,7 +1892,7 @@ public:
     }
 
     template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
-    result_type create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4) {
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4) {
         if (in_scope_ && !object_) {
             object_.reset(
                 type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4)
@@ -1752,7 +1902,7 @@ public:
     }
 
     template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
-    result_type create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5) {
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5) {
         if (in_scope_ && !object_) {
             object_.reset(
                 type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5)
@@ -1762,7 +1912,7 @@ public:
     }
 
     template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
-    result_type create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6) {
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6) {
         if (in_scope_ && !object_) {
             object_.reset(
                 type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6)
@@ -1772,7 +1922,7 @@ public:
     }
 
     template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
-    result_type create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7) {
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7) {
         if (in_scope_ && !object_) {
             object_.reset(
                 type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7)
@@ -1782,7 +1932,7 @@ public:
     }
 
     template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
-    result_type create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8) {
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8) {
         if (in_scope_ && !object_) {
             object_.reset(
                 type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8)
@@ -1792,7 +1942,7 @@ public:
     }
 
     template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
-    result_type create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9) {
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9) {
         if (in_scope_ && !object_) {
             object_.reset(
                 type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9)
@@ -1837,8 +1987,8 @@ public:
                 return object_;
             }
 
-    template<typename TCreatePolicy, typename Args0 >
-    result_type create( const Args0 & args0) {
+    template<typename TCreatePolicy, typename Args0>
+    result_type create( Args0 args0) {
         if (!object_) {
             object_.reset(
                 type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0)
@@ -1848,7 +1998,7 @@ public:
     }
 
     template<typename TCreatePolicy, typename Args0 , typename Args1>
-    result_type create( const Args0 & args0 , const Args1 & args1) {
+    result_type create( Args0 args0 , Args1 args1) {
         if (!object_) {
             object_.reset(
                 type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1)
@@ -1858,7 +2008,7 @@ public:
     }
 
     template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2>
-    result_type create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2) {
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2) {
         if (!object_) {
             object_.reset(
                 type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2)
@@ -1868,7 +2018,7 @@ public:
     }
 
     template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3>
-    result_type create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3) {
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3) {
         if (!object_) {
             object_.reset(
                 type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3)
@@ -1878,7 +2028,7 @@ public:
     }
 
     template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
-    result_type create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4) {
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4) {
         if (!object_) {
             object_.reset(
                 type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4)
@@ -1888,7 +2038,7 @@ public:
     }
 
     template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
-    result_type create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5) {
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5) {
         if (!object_) {
             object_.reset(
                 type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5)
@@ -1898,7 +2048,7 @@ public:
     }
 
     template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
-    result_type create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6) {
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6) {
         if (!object_) {
             object_.reset(
                 type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6)
@@ -1908,7 +2058,7 @@ public:
     }
 
     template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
-    result_type create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7) {
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7) {
         if (!object_) {
             object_.reset(
                 type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7)
@@ -1918,7 +2068,7 @@ public:
     }
 
     template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
-    result_type create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8) {
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8) {
         if (!object_) {
             object_.reset(
                 type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8)
@@ -1928,7 +2078,7 @@ public:
     }
 
     template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
-    result_type create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9) {
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9) {
         if (!object_) {
             object_.reset(
                 type_traits::create_traits<TCreatePolicy, TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9)
@@ -2125,7 +2275,8 @@ private:
 
         template<
             typename R
-
+           
+           
         >
         class callback0
         {
@@ -2135,9 +2286,11 @@ private:
 
             callback0(
                 const f_t& f
-
+               
+               
             ) : f(f)
-
+               
+               
             { }
 
             R operator()() const { return f(); }
@@ -2145,26 +2298,28 @@ private:
         private:
             f_t f;
 
+           
+
         };
 
         template<
             typename R
-            , typename Args0
-
+            ,
+            typename Args0
         >
         class callback1
         {
-            typedef R(*f_t)( const Args0 & );
+            typedef R(*f_t)( Args0 );
 
         public:
 
             callback1(
                 const f_t& f
-                , const Args0 & args0
-
+                ,
+                Args0 args0
             ) : f(f)
-                , args0(args0)
-
+                ,
+                args0(args0)
             { }
 
             R operator()() const { return f( args0); }
@@ -2178,22 +2333,22 @@ private:
 
         template<
             typename R
-            , typename Args0 , typename Args1
-
+            ,
+            typename Args0 , typename Args1
         >
         class callback2
         {
-            typedef R(*f_t)( const Args0 & , const Args1 & );
+            typedef R(*f_t)( Args0 , Args1 );
 
         public:
 
             callback2(
                 const f_t& f
-                , const Args0 & args0 , const Args1 & args1
-
+                ,
+                Args0 args0 , Args1 args1
             ) : f(f)
-                , args0(args0) , args1(args1)
-
+                ,
+                args0(args0) , args1(args1)
             { }
 
             R operator()() const { return f( args0 , args1); }
@@ -2207,22 +2362,22 @@ private:
 
         template<
             typename R
-            , typename Args0 , typename Args1 , typename Args2
-
+            ,
+            typename Args0 , typename Args1 , typename Args2
         >
         class callback3
         {
-            typedef R(*f_t)( const Args0 & , const Args1 & , const Args2 & );
+            typedef R(*f_t)( Args0 , Args1 , Args2 );
 
         public:
 
             callback3(
                 const f_t& f
-                , const Args0 & args0 , const Args1 & args1 , const Args2 & args2
-
+                ,
+                Args0 args0 , Args1 args1 , Args2 args2
             ) : f(f)
-                , args0(args0) , args1(args1) , args2(args2)
-
+                ,
+                args0(args0) , args1(args1) , args2(args2)
             { }
 
             R operator()() const { return f( args0 , args1 , args2); }
@@ -2236,22 +2391,22 @@ private:
 
         template<
             typename R
-            , typename Args0 , typename Args1 , typename Args2 , typename Args3
-
+            ,
+            typename Args0 , typename Args1 , typename Args2 , typename Args3
         >
         class callback4
         {
-            typedef R(*f_t)( const Args0 & , const Args1 & , const Args2 & , const Args3 & );
+            typedef R(*f_t)( Args0 , Args1 , Args2 , Args3 );
 
         public:
 
             callback4(
                 const f_t& f
-                , const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3
-
+                ,
+                Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3
             ) : f(f)
-                , args0(args0) , args1(args1) , args2(args2) , args3(args3)
-
+                ,
+                args0(args0) , args1(args1) , args2(args2) , args3(args3)
             { }
 
             R operator()() const { return f( args0 , args1 , args2 , args3); }
@@ -2265,22 +2420,22 @@ private:
 
         template<
             typename R
-            , typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4
-
+            ,
+            typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4
         >
         class callback5
         {
-            typedef R(*f_t)( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & );
+            typedef R(*f_t)( Args0 , Args1 , Args2 , Args3 , Args4 );
 
         public:
 
             callback5(
                 const f_t& f
-                , const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4
-
+                ,
+                Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4
             ) : f(f)
-                , args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4)
-
+                ,
+                args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4)
             { }
 
             R operator()() const { return f( args0 , args1 , args2 , args3 , args4); }
@@ -2294,22 +2449,22 @@ private:
 
         template<
             typename R
-            , typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5
-
+            ,
+            typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5
         >
         class callback6
         {
-            typedef R(*f_t)( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & );
+            typedef R(*f_t)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 );
 
         public:
 
             callback6(
                 const f_t& f
-                , const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5
-
+                ,
+                Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5
             ) : f(f)
-                , args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5)
-
+                ,
+                args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5)
             { }
 
             R operator()() const { return f( args0 , args1 , args2 , args3 , args4 , args5); }
@@ -2323,22 +2478,22 @@ private:
 
         template<
             typename R
-            , typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6
-
+            ,
+            typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6
         >
         class callback7
         {
-            typedef R(*f_t)( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & );
+            typedef R(*f_t)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 );
 
         public:
 
             callback7(
                 const f_t& f
-                , const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6
-
+                ,
+                Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6
             ) : f(f)
-                , args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6)
-
+                ,
+                args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6)
             { }
 
             R operator()() const { return f( args0 , args1 , args2 , args3 , args4 , args5 , args6); }
@@ -2352,22 +2507,22 @@ private:
 
         template<
             typename R
-            , typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7
-
+            ,
+            typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7
         >
         class callback8
         {
-            typedef R(*f_t)( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & );
+            typedef R(*f_t)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 );
 
         public:
 
             callback8(
                 const f_t& f
-                , const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7
-
+                ,
+                Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7
             ) : f(f)
-                , args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6) , args7(args7)
-
+                ,
+                args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6) , args7(args7)
             { }
 
             R operator()() const { return f( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7); }
@@ -2381,22 +2536,22 @@ private:
 
         template<
             typename R
-            , typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8
-
+            ,
+            typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8
         >
         class callback9
         {
-            typedef R(*f_t)( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & );
+            typedef R(*f_t)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 );
 
         public:
 
             callback9(
                 const f_t& f
-                , const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8
-
+                ,
+                Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8
             ) : f(f)
-                , args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6) , args7(args7) , args8(args8)
-
+                ,
+                args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6) , args7(args7) , args8(args8)
             { }
 
             R operator()() const { return f( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8); }
@@ -2410,22 +2565,22 @@ private:
 
         template<
             typename R
-            , typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9
-
+            ,
+            typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9
         >
         class callback10
         {
-            typedef R(*f_t)( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & );
+            typedef R(*f_t)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 );
 
         public:
 
             callback10(
                 const f_t& f
-                , const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9
-
+                ,
+                Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9
             ) : f(f)
-                , args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6) , args7(args7) , args8(args8) , args9(args9)
-
+                ,
+                args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6) , args7(args7) , args8(args8) , args9(args9)
             { }
 
             R operator()() const { return f( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9); }
@@ -2457,16 +2612,16 @@ private:
                 );
             }
 
-        template<typename TCreatePolicy, typename Args0 >
-        result_type create( const Args0 & args0) {
-            return callback1<TExpected*, Args0 >(
-                &type_traits::create_traits<TCreatePolicy, TExpected, TGiven, Args0 >
+        template<typename TCreatePolicy, typename Args0>
+        result_type create( Args0 args0) {
+            return callback1<TExpected*, Args0>(
+                &type_traits::create_traits<TCreatePolicy, TExpected, TGiven, Args0>
               , args0
             );
         }
 
         template<typename TCreatePolicy, typename Args0 , typename Args1>
-        result_type create( const Args0 & args0 , const Args1 & args1) {
+        result_type create( Args0 args0 , Args1 args1) {
             return callback2<TExpected*, Args0 , Args1>(
                 &type_traits::create_traits<TCreatePolicy, TExpected, TGiven, Args0 , Args1>
               , args0 , args1
@@ -2474,7 +2629,7 @@ private:
         }
 
         template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2>
-        result_type create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2) {
+        result_type create( Args0 args0 , Args1 args1 , Args2 args2) {
             return callback3<TExpected*, Args0 , Args1 , Args2>(
                 &type_traits::create_traits<TCreatePolicy, TExpected, TGiven, Args0 , Args1 , Args2>
               , args0 , args1 , args2
@@ -2482,7 +2637,7 @@ private:
         }
 
         template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3>
-        result_type create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3) {
+        result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3) {
             return callback4<TExpected*, Args0 , Args1 , Args2 , Args3>(
                 &type_traits::create_traits<TCreatePolicy, TExpected, TGiven, Args0 , Args1 , Args2 , Args3>
               , args0 , args1 , args2 , args3
@@ -2490,7 +2645,7 @@ private:
         }
 
         template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
-        result_type create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4) {
+        result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4) {
             return callback5<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4>(
                 &type_traits::create_traits<TCreatePolicy, TExpected, TGiven, Args0 , Args1 , Args2 , Args3 , Args4>
               , args0 , args1 , args2 , args3 , args4
@@ -2498,7 +2653,7 @@ private:
         }
 
         template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
-        result_type create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5) {
+        result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5) {
             return callback6<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4 , Args5>(
                 &type_traits::create_traits<TCreatePolicy, TExpected, TGiven, Args0 , Args1 , Args2 , Args3 , Args4 , Args5>
               , args0 , args1 , args2 , args3 , args4 , args5
@@ -2506,7 +2661,7 @@ private:
         }
 
         template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
-        result_type create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6) {
+        result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6) {
             return callback7<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6>(
                 &type_traits::create_traits<TCreatePolicy, TExpected, TGiven, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6>
               , args0 , args1 , args2 , args3 , args4 , args5 , args6
@@ -2514,7 +2669,7 @@ private:
         }
 
         template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
-        result_type create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7) {
+        result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7) {
             return callback8<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7>(
                 &type_traits::create_traits<TCreatePolicy, TExpected, TGiven, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7>
               , args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7
@@ -2522,7 +2677,7 @@ private:
         }
 
         template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
-        result_type create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8) {
+        result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8) {
             return callback9<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8>(
                 &type_traits::create_traits<TCreatePolicy, TExpected, TGiven, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8>
               , args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8
@@ -2530,13 +2685,13 @@ private:
         }
 
         template<typename TCreatePolicy, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
-        result_type create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9) {
+        result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9) {
             return callback10<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9>(
                 &type_traits::create_traits<TCreatePolicy, TExpected, TGiven, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9>
               , args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9
             );
         }
- };
+        };
     };
 
     } // namespace scopes
@@ -8312,6 +8467,7 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
         return wrappers::universal<T>(
             refs
           , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
+               
 
             )
         );
@@ -8339,7 +8495,8 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
         (void)visitor;
         return wrappers::universal<T>(
             refs
-          , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>( creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+          , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -8367,7 +8524,8 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
         (void)visitor;
         return wrappers::universal<T>(
             refs
-          , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>( creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+          , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -8395,7 +8553,8 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
         (void)visitor;
         return wrappers::universal<T>(
             refs
-          , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>( creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+          , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -8423,7 +8582,8 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
         (void)visitor;
         return wrappers::universal<T>(
             refs
-          , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>( creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+          , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -8451,7 +8611,8 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
         (void)visitor;
         return wrappers::universal<T>(
             refs
-          , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>( creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+          , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -8479,7 +8640,8 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
         (void)visitor;
         return wrappers::universal<T>(
             refs
-          , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>( creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+          , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -8507,7 +8669,8 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
         (void)visitor;
         return wrappers::universal<T>(
             refs
-          , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>( creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+          , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -8535,7 +8698,8 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
         (void)visitor;
         return wrappers::universal<T>(
             refs
-          , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>( creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+          , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -8563,7 +8727,8 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
         (void)visitor;
         return wrappers::universal<T>(
             refs
-          , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>( creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+          , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -8591,7 +8756,8 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
         (void)visitor;
         return wrappers::universal<T>(
             refs
-          , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>( creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 9>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
+          , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 9>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
             )
         );
@@ -9345,7 +9511,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0>
-    explicit module( const Args0 & args0)
+    explicit module( Args0 args0)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0>
@@ -9360,8 +9526,8 @@ private:
           )
     { }
 
-    template<typename T, typename Args0 >
-    T create( const Args0 & ) {
+    template<typename T, typename Args0>
+    T create( Args0 ) {
         typedef mpl::vector< Args0> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -9376,7 +9542,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1>
-    explicit module( const Args0 & args0 , const Args1 & args1)
+    explicit module( Args0 args0 , Args1 args1)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1>
@@ -9392,7 +9558,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1>
-    T create( const Args0 & , const Args1 & ) {
+    T create( Args0 , Args1 ) {
         typedef mpl::vector< Args0 , Args1> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -9407,7 +9573,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2>
@@ -9423,7 +9589,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2>
-    T create( const Args0 & , const Args1 & , const Args2 & ) {
+    T create( Args0 , Args1 , Args2 ) {
         typedef mpl::vector< Args0 , Args1 , Args2> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -9438,7 +9604,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3>
@@ -9454,7 +9620,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -9469,7 +9635,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4>
@@ -9485,7 +9651,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -9500,7 +9666,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5>
@@ -9516,7 +9682,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -9531,7 +9697,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6>
@@ -9547,7 +9713,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -9562,7 +9728,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7>
@@ -9578,7 +9744,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -9593,7 +9759,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8>
@@ -9609,7 +9775,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -9624,7 +9790,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9>
@@ -9640,7 +9806,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -9655,7 +9821,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10>
@@ -9671,7 +9837,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -9686,7 +9852,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11>
@@ -9702,7 +9868,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -9717,7 +9883,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12>
@@ -9733,7 +9899,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -9748,7 +9914,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13>
@@ -9764,7 +9930,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -9779,7 +9945,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14>
@@ -9795,7 +9961,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -9810,7 +9976,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15>
@@ -9826,7 +9992,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & , const Args15 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -9841,7 +10007,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16>
@@ -9857,7 +10023,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & , const Args15 & , const Args16 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -9872,7 +10038,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17>
@@ -9888,7 +10054,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & , const Args15 & , const Args16 & , const Args17 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -9903,7 +10069,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18>
@@ -9919,7 +10085,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & , const Args15 & , const Args16 & , const Args17 & , const Args18 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -9934,7 +10100,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19>
@@ -9950,7 +10116,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & , const Args15 & , const Args16 & , const Args17 & , const Args18 & , const Args19 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -9965,7 +10131,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20>
@@ -9981,7 +10147,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & , const Args15 & , const Args16 & , const Args17 & , const Args18 & , const Args19 & , const Args20 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -9996,7 +10162,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21>
@@ -10012,7 +10178,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & , const Args15 & , const Args16 & , const Args17 & , const Args18 & , const Args19 & , const Args20 & , const Args21 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -10027,7 +10193,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22>
@@ -10043,7 +10209,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & , const Args15 & , const Args16 & , const Args17 & , const Args18 & , const Args19 & , const Args20 & , const Args21 & , const Args22 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -10058,7 +10224,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23>
@@ -10074,7 +10240,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & , const Args15 & , const Args16 & , const Args17 & , const Args18 & , const Args19 & , const Args20 & , const Args21 & , const Args22 & , const Args23 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -10089,7 +10255,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24>
@@ -10105,7 +10271,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & , const Args15 & , const Args16 & , const Args17 & , const Args18 & , const Args19 & , const Args20 & , const Args21 & , const Args22 & , const Args23 & , const Args24 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -10120,7 +10286,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25>
@@ -10136,7 +10302,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & , const Args15 & , const Args16 & , const Args17 & , const Args18 & , const Args19 & , const Args20 & , const Args21 & , const Args22 & , const Args23 & , const Args24 & , const Args25 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -10151,7 +10317,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26>
@@ -10167,7 +10333,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & , const Args15 & , const Args16 & , const Args17 & , const Args18 & , const Args19 & , const Args20 & , const Args21 & , const Args22 & , const Args23 & , const Args24 & , const Args25 & , const Args26 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -10182,7 +10348,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27>
@@ -10198,7 +10364,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & , const Args15 & , const Args16 & , const Args17 & , const Args18 & , const Args19 & , const Args20 & , const Args21 & , const Args22 & , const Args23 & , const Args24 & , const Args25 & , const Args26 & , const Args27 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -10213,7 +10379,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28>
@@ -10229,7 +10395,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & , const Args15 & , const Args16 & , const Args17 & , const Args18 & , const Args19 & , const Args20 & , const Args21 & , const Args22 & , const Args23 & , const Args24 & , const Args25 & , const Args26 & , const Args27 & , const Args28 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -10244,7 +10410,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29>
@@ -10260,7 +10426,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & , const Args15 & , const Args16 & , const Args17 & , const Args18 & , const Args19 & , const Args20 & , const Args21 & , const Args22 & , const Args23 & , const Args24 & , const Args25 & , const Args26 & , const Args27 & , const Args28 & , const Args29 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -10275,7 +10441,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30>
@@ -10291,7 +10457,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & , const Args15 & , const Args16 & , const Args17 & , const Args18 & , const Args19 & , const Args20 & , const Args21 & , const Args22 & , const Args23 & , const Args24 & , const Args25 & , const Args26 & , const Args27 & , const Args28 & , const Args29 & , const Args30 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -10306,7 +10472,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31>
@@ -10322,7 +10488,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & , const Args15 & , const Args16 & , const Args17 & , const Args18 & , const Args19 & , const Args20 & , const Args21 & , const Args22 & , const Args23 & , const Args24 & , const Args25 & , const Args26 & , const Args27 & , const Args28 & , const Args29 & , const Args30 & , const Args31 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -10337,7 +10503,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32>
@@ -10353,7 +10519,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & , const Args15 & , const Args16 & , const Args17 & , const Args18 & , const Args19 & , const Args20 & , const Args21 & , const Args22 & , const Args23 & , const Args24 & , const Args25 & , const Args26 & , const Args27 & , const Args28 & , const Args29 & , const Args30 & , const Args31 & , const Args32 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -10368,7 +10534,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33>
@@ -10384,7 +10550,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & , const Args15 & , const Args16 & , const Args17 & , const Args18 & , const Args19 & , const Args20 & , const Args21 & , const Args22 & , const Args23 & , const Args24 & , const Args25 & , const Args26 & , const Args27 & , const Args28 & , const Args29 & , const Args30 & , const Args31 & , const Args32 & , const Args33 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -10399,7 +10565,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33 , const Args34 & args34)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34>
@@ -10415,7 +10581,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & , const Args15 & , const Args16 & , const Args17 & , const Args18 & , const Args19 & , const Args20 & , const Args21 & , const Args22 & , const Args23 & , const Args24 & , const Args25 & , const Args26 & , const Args27 & , const Args28 & , const Args29 & , const Args30 & , const Args31 & , const Args32 & , const Args33 & , const Args34 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -10430,7 +10596,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33 , const Args34 & args34 , const Args35 & args35)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35>
@@ -10446,7 +10612,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & , const Args15 & , const Args16 & , const Args17 & , const Args18 & , const Args19 & , const Args20 & , const Args21 & , const Args22 & , const Args23 & , const Args24 & , const Args25 & , const Args26 & , const Args27 & , const Args28 & , const Args29 & , const Args30 & , const Args31 & , const Args32 & , const Args33 & , const Args34 & , const Args35 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -10461,7 +10627,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33 , const Args34 & args34 , const Args35 & args35 , const Args36 & args36)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36>
@@ -10477,7 +10643,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & , const Args15 & , const Args16 & , const Args17 & , const Args18 & , const Args19 & , const Args20 & , const Args21 & , const Args22 & , const Args23 & , const Args24 & , const Args25 & , const Args26 & , const Args27 & , const Args28 & , const Args29 & , const Args30 & , const Args31 & , const Args32 & , const Args33 & , const Args34 & , const Args35 & , const Args36 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -10492,7 +10658,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36 , typename Args37>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33 , const Args34 & args34 , const Args35 & args35 , const Args36 & args36 , const Args37 & args37)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36 , Args37 args37)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37>
@@ -10508,7 +10674,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36 , typename Args37>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & , const Args15 & , const Args16 & , const Args17 & , const Args18 & , const Args19 & , const Args20 & , const Args21 & , const Args22 & , const Args23 & , const Args24 & , const Args25 & , const Args26 & , const Args27 & , const Args28 & , const Args29 & , const Args30 & , const Args31 & , const Args32 & , const Args33 & , const Args34 & , const Args35 & , const Args36 & , const Args37 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -10523,7 +10689,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36 , typename Args37 , typename Args38>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33 , const Args34 & args34 , const Args35 & args35 , const Args36 & args36 , const Args37 & args37 , const Args38 & args38)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36 , Args37 args37 , Args38 args38)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37 , Args38>
@@ -10539,7 +10705,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36 , typename Args37 , typename Args38>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & , const Args15 & , const Args16 & , const Args17 & , const Args18 & , const Args19 & , const Args20 & , const Args21 & , const Args22 & , const Args23 & , const Args24 & , const Args25 & , const Args26 & , const Args27 & , const Args28 & , const Args29 & , const Args30 & , const Args31 & , const Args32 & , const Args33 & , const Args34 & , const Args35 & , const Args36 & , const Args37 & , const Args38 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37 , Args38 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37 , Args38> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -10554,7 +10720,7 @@ private:
     // dependency<....>  -> pass
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36 , typename Args37 , typename Args38 , typename Args39>
-    explicit module( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33 , const Args34 & args34 , const Args35 & args35 , const Args36 & args36 , const Args37 & args37 , const Args38 & args38 , const Args39 & args39)
+    explicit module( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36 , Args37 args37 , Args38 args38 , Args39 args39)
         : TPool<deps>(
               TPool<
                   mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37 , Args38 , Args39>
@@ -10570,7 +10736,7 @@ private:
     { }
 
     template<typename T, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36 , typename Args37 , typename Args38 , typename Args39>
-    T create( const Args0 & , const Args1 & , const Args2 & , const Args3 & , const Args4 & , const Args5 & , const Args6 & , const Args7 & , const Args8 & , const Args9 & , const Args10 & , const Args11 & , const Args12 & , const Args13 & , const Args14 & , const Args15 & , const Args16 & , const Args17 & , const Args18 & , const Args19 & , const Args20 & , const Args21 & , const Args22 & , const Args23 & , const Args24 & , const Args25 & , const Args26 & , const Args27 & , const Args28 & , const Args29 & , const Args30 & , const Args31 & , const Args32 & , const Args33 & , const Args34 & , const Args35 & , const Args36 & , const Args37 & , const Args38 & , const Args39 & ) {
+    T create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37 , Args38 , Args39 ) {
         typedef mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37 , Args38 , Args39> policies;
         typedef mpl::vector0<> call_stack;
         std::vector<aux::shared_ptr<void> > refs_;
@@ -10700,525 +10866,525 @@ private:
         }
 
     template< typename Args0>
-    explicit injector( const Args0 & args0)
+    explicit injector( Args0 args0)
         : detail::module<typename joint_concepts<>::type>( args0)
     { }
 
     template< typename Args0>
     injector<joint_concepts<mpl::vector< Args0> > >
-    operator()( const Args0 & args0) const {
-        return injector<joint_concepts<mpl::vector< Args0> > >( args0
-
+    operator()( Args0 args0) const {
+        return injector<joint_concepts<mpl::vector< Args0> > >(
+            args0
         );
     }
 
     template< typename Args0 , typename Args1>
-    explicit injector( const Args0 & args0 , const Args1 & args1)
+    explicit injector( Args0 args0 , Args1 args1)
         : detail::module<typename joint_concepts<>::type>( args0 , args1)
     { }
 
     template< typename Args0 , typename Args1>
     injector<joint_concepts<mpl::vector< Args0 , Args1> > >
-    operator()( const Args0 & args0 , const Args1 & args1) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1> > >( args0 , args1
-
+    operator()( Args0 args0 , Args1 args1) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1> > >(
+            args0 , args1
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2> > >( args0 , args1 , args2
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2> > >(
+            args0 , args1 , args2
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3> > >( args0 , args1 , args2 , args3
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3> > >(
+            args0 , args1 , args2 , args3
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4> > >( args0 , args1 , args2 , args3 , args4
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4> > >(
+            args0 , args1 , args2 , args3 , args4
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5> > >( args0 , args1 , args2 , args3 , args4 , args5
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5> > >(
+            args0 , args1 , args2 , args3 , args4 , args5
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33 , const Args34 & args34)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33 , const Args34 & args34) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33 , const Args34 & args34 , const Args35 & args35)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33 , const Args34 & args34 , const Args35 & args35) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33 , const Args34 & args34 , const Args35 & args35 , const Args36 & args36)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33 , const Args34 & args34 , const Args35 & args35 , const Args36 & args36) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36 , typename Args37>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33 , const Args34 & args34 , const Args35 & args35 , const Args36 & args36 , const Args37 & args37)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36 , Args37 args37)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36 , args37)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36 , typename Args37>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33 , const Args34 & args34 , const Args35 & args35 , const Args36 & args36 , const Args37 & args37) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36 , args37
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36 , Args37 args37) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36 , args37
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36 , typename Args37 , typename Args38>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33 , const Args34 & args34 , const Args35 & args35 , const Args36 & args36 , const Args37 & args37 , const Args38 & args38)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36 , Args37 args37 , Args38 args38)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36 , args37 , args38)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36 , typename Args37 , typename Args38>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37 , Args38> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33 , const Args34 & args34 , const Args35 & args35 , const Args36 & args36 , const Args37 & args37 , const Args38 & args38) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37 , Args38> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36 , args37 , args38
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36 , Args37 args37 , Args38 args38) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37 , Args38> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36 , args37 , args38
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36 , typename Args37 , typename Args38 , typename Args39>
-    explicit injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33 , const Args34 & args34 , const Args35 & args35 , const Args36 & args36 , const Args37 & args37 , const Args38 & args38 , const Args39 & args39)
+    explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36 , Args37 args37 , Args38 args38 , Args39 args39)
         : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36 , args37 , args38 , args39)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36 , typename Args37 , typename Args38 , typename Args39>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37 , Args38 , Args39> > >
-    operator()( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33 , const Args34 & args34 , const Args35 & args35 , const Args36 & args36 , const Args37 & args37 , const Args38 & args38 , const Args39 & args39) const {
-        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37 , Args38 , Args39> > >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36 , args37 , args38 , args39
-
+    operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36 , Args37 args37 , Args38 args38 , Args39 args39) const {
+        return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37 , Args38 , Args39> > >(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36 , args37 , args38 , args39
         );
     }
- };
+    };
 
     } // namespace di
     } // namespace boost
@@ -11233,321 +11399,321 @@ private:
 
     template< typename Args0>
     injector<typename detail::concepts<mpl::vector< Args0> >::type>
-    inline make_injector( const Args0 & args0) {
-        return injector<typename detail::concepts<mpl::vector< Args0> >::type>( args0
-
+    inline make_injector( Args0 args0) {
+        return injector<typename detail::concepts<mpl::vector< Args0> >::type>(
+            args0
         );
     }
 
     template< typename Args0 , typename Args1>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1> >::type>( args0 , args1
-
+    inline make_injector( Args0 args0 , Args1 args1) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1> >::type>(
+            args0 , args1
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2> >::type>( args0 , args1 , args2
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2> >::type>(
+            args0 , args1 , args2
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3> >::type>( args0 , args1 , args2 , args3
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3> >::type>(
+            args0 , args1 , args2 , args3
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4> >::type>( args0 , args1 , args2 , args3 , args4
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4> >::type>(
+            args0 , args1 , args2 , args3 , args4
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5> >::type>( args0 , args1 , args2 , args3 , args4 , args5
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33 , const Args34 & args34) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33 , const Args34 & args34 , const Args35 & args35) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33 , const Args34 & args34 , const Args35 & args35 , const Args36 & args36) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36 , typename Args37>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33 , const Args34 & args34 , const Args35 & args35 , const Args36 & args36 , const Args37 & args37) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36 , args37
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36 , Args37 args37) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36 , args37
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36 , typename Args37 , typename Args38>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37 , Args38> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33 , const Args34 & args34 , const Args35 & args35 , const Args36 & args36 , const Args37 & args37 , const Args38 & args38) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37 , Args38> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36 , args37 , args38
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36 , Args37 args37 , Args38 args38) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37 , Args38> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36 , args37 , args38
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36 , typename Args37 , typename Args38 , typename Args39>
     injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37 , Args38 , Args39> >::type>
-    inline make_injector( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9 , const Args10 & args10 , const Args11 & args11 , const Args12 & args12 , const Args13 & args13 , const Args14 & args14 , const Args15 & args15 , const Args16 & args16 , const Args17 & args17 , const Args18 & args18 , const Args19 & args19 , const Args20 & args20 , const Args21 & args21 , const Args22 & args22 , const Args23 & args23 , const Args24 & args24 , const Args25 & args25 , const Args26 & args26 , const Args27 & args27 , const Args28 & args28 , const Args29 & args29 , const Args30 & args30 , const Args31 & args31 , const Args32 & args32 , const Args33 & args33 , const Args34 & args34 , const Args35 & args35 , const Args36 & args36 , const Args37 & args37 , const Args38 & args38 , const Args39 & args39) {
-        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37 , Args38 , Args39> >::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36 , args37 , args38 , args39
-
+    inline make_injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36 , Args37 args37 , Args38 args38 , Args39 args39) {
+        return injector<typename detail::concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37 , Args38 , Args39> >::type>(
+            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36 , args37 , args38 , args39
         );
     }
 
@@ -11692,8 +11858,9 @@ class arguments_permission
 public:
     template<typename TDependency>
     static void assert_policy() {
-        BOOST_MPL_ASSERT_MSG(is_argument_permitted<typename TDependency::type>::value, ARGUMENT_NOT_PERMITTED, (typename TDependency::type));
+        BOOST_MPL_ASSERT_MSG(is_argument_permitted<typename TDependency::type>::value, ARGUMENT_NOT_PERMITTED, (typename TDependency::type))
 
+         ;
     }
 };
 
@@ -11726,8 +11893,9 @@ class circular_dependencies
 public:
     template<typename TDependency>
     static void assert_policy() {
-       BOOST_MPL_ASSERT_MSG(is_unique_call_stack<typename TDependency::call_stack>::value, CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED, (typename TDependency::call_stack));
+       BOOST_MPL_ASSERT_MSG(is_unique_call_stack<typename TDependency::call_stack>::value, CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED, (typename TDependency::call_stack))
 
+         ;
     }
 };
 
@@ -11758,8 +11926,9 @@ public:
     template<typename TDependency>
     static typename enable_if<is_result_type_reference<TDependency> >::type
     assert_policy() {
-        BOOST_MPL_ASSERT_MSG(false, CREATION_OWNERSHIP_IS_NOT_CLEAR, (typename TDependency::type));
+        BOOST_MPL_ASSERT_MSG(false, CREATION_OWNERSHIP_IS_NOT_CLEAR, (typename TDependency::type))
 
+         ;
     }
 };
 
@@ -11804,8 +11973,9 @@ class scopes_permission
 public:
     template<typename TDependency>
     static void assert_policy() {
-        BOOST_MPL_ASSERT_MSG(is_scope_permitted<typename TDependency::scope>::value, SCOPE_NOT_PERMITTED, (typename TDependency::scope));
+        BOOST_MPL_ASSERT_MSG(is_scope_permitted<typename TDependency::scope>::value, SCOPE_NOT_PERMITTED, (typename TDependency::scope))
 
+         ;
     }
 };
 
