@@ -45,7 +45,7 @@ struct world {
 };
 
 int main() {
-    float f = 0;
+    float f = 0.f;
 
     auto injector = di::make_injector(
         di::bind_int<42>()                                          // static value
@@ -56,8 +56,8 @@ int main() {
 
     auto hello_world = injector.create<world>();
 
-    hello_world.f = 42.0;
-    assert(f == 42.0);
+    hello_world.f = 42.f;
+    assert(f == 42.f);
 
     return 0;
 }
