@@ -10,43 +10,55 @@
 
 namespace di = boost::di;
 
-namespace {
-
 struct i { virtual ~i() { } };
 struct impl : i { };
-struct c
-{
-    c(std::shared_ptr<i> p1, double p2, const std::string& s)
-        : p1(p1)
+struct some_name { };
+
+struct hello {
+    hello(const std::shared_ptr<i>& sp, double d, std::unique_ptr<int> u)
+        : sp(sp)
     {
-        assert(p2 == 0.0);
-        assert(s == "text");
+        assert(*u==42);
+        assert(dynamic_cast<impl*>(sp.get()));
+        assert(d == 0.0); // default zero initialization
     }
 
-    std::shared_ptr<i> p1;
+    std::shared_ptr<i> sp;
 };
 
-struct hello_world
-{
-    hello_world(std::shared_ptr<i> p1, std::unique_ptr<i> p2, c p3, int p4) {
-        assert(dynamic_cast<impl*>(p1.get()));
-        assert(dynamic_cast<impl*>(p2.get()));
-        assert(dynamic_cast<impl*>(p3.p1.get()));
-        assert(p1.get() != p2.get());
-        assert(p1 == p3.p1);
-        assert(p4 == 42);
+struct world {
+    world(hello copy
+        , boost::shared_ptr<i> sp
+        , int i
+        , di::named<const std::string&, some_name> str
+        , float& f)
+        : f(f)
+    {
+        std::string s = str;
+        assert(dynamic_cast<impl*>(sp.get()));
+        assert(copy.sp.get() == sp.get());
+        assert(i == 42);
+        assert(s == "some_name");
     }
-};
 
-} // namespace
+    float& f;
+};
 
 int main() {
+    float f = 0;
+
     auto injector = di::make_injector(
-        di::bind_int<42>() // static
-      , di::bind<std::string>::to("text") // external
-      , di::bind<i, impl>() // 'impl' or 'di::deduce<di::bind<i, impl>>' or 'di::shared<di::bind<i, impl>>'
+        di::bind_int<42>()                                          // static value
+      , di::bind<i, impl>()                                         // scope deduction -> di::shared<di::bind<i, impl>>
+      , di::bind<std::string>::named<some_name>::to("some_name")    // external value
+      , di::bind<float>::to(f)                                      // external reference
     );
 
-    injector.create<hello_world>();
+    auto hello_world = injector.create<world>();
+
+    hello_world.f = 42.0;
+    assert(f == 42.0);
+
+    return 0;
 }
 
