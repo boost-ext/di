@@ -2,20 +2,21 @@
 // Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
 //
 // Distributed under the Boost Software License, Version 1.0.
-// (See accompuniversaling file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #ifndef BOOST_DI_DETAIL_WRAPPERS_UNIVERSAL_HPP
 #define BOOST_DI_DETAIL_WRAPPERS_UNIVERSAL_HPP
 
-#include "boost/di/named.hpp"
+#include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/memory.hpp"
-#include "boost/di/type_traits/is_convertible_to_ref.hpp"
+#include "boost/di/named.hpp"
 
 #include <vector>
 #include <boost/type.hpp>
-#include <boost/any.hpp>
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
+#include <boost/non_type.hpp>
+#include <boost/mpl/aux_/yes_no.hpp>
 
 namespace boost {
 namespace di {
@@ -28,7 +29,7 @@ class universal_impl
 {
 public:
     template<typename TObject>
-    explicit universal_impl(std::vector<boost::any>& refs, const TObject& object)
+    explicit universal_impl(std::vector<aux::shared_ptr<void> >& refs, const TObject& object)
         : refs_(refs), callback_(boost::bind<T>(object, boost::type<T>()))
     { }
 
@@ -37,35 +38,67 @@ public:
     }
 
 private:
-    std::vector<boost::any>& refs_;
+    std::vector<aux::shared_ptr<void> >& refs_;
     function<T()> callback_;
 };
 
 template<typename T>
 class universal_impl<const T&>
 {
+    template<typename To, typename TRef>
+    class is_convertible_to_ref
+    {
+        template<typename U>
+        static mpl::aux::yes_tag test(non_type<TRef& (U::*)(const type<TRef&>&) const, &U::operator()>*);
+
+        template<typename U>
+        static mpl::aux::yes_tag test(non_type<const TRef& (U::*)(const type<const TRef&>&) const, &U::operator()>*);
+
+        template<typename>
+        static mpl::aux::no_tag test(...);
+
+    public:
+        typedef is_convertible_to_ref type;
+
+        BOOST_STATIC_CONSTANT(
+            bool
+          , value = sizeof(test<To>(0)) == sizeof(mpl::aux::yes_tag)
+        );
+    };
+
+    template<typename TValueType>
+    struct holder
+    {
+        explicit holder(const TValueType& value)
+            : held(value)
+        { }
+
+        TValueType held;
+    };
+
 public:
     template<typename TObject>
-    explicit universal_impl(std::vector<boost::any>& refs, const TObject& object, typename enable_if<di::type_traits::is_convertible_to_ref<TObject, T> >::type* = 0)
+    explicit universal_impl(std::vector<aux::shared_ptr<void> >& refs, const TObject& object, typename enable_if<is_convertible_to_ref<TObject, T> >::type* = 0)
         : refs_(refs), callback_ref_(boost::bind<const T&>(object, boost::type<T>()))
     { }
 
     template<typename TObject>
-    explicit universal_impl(std::vector<boost::any>& refs, const TObject& object, typename disable_if<di::type_traits::is_convertible_to_ref<TObject, T> >::type* = 0)
+    explicit universal_impl(std::vector<aux::shared_ptr<void> >& refs, const TObject& object, typename disable_if<is_convertible_to_ref<TObject, T> >::type* = 0)
         : refs_(refs), callback_copy_(boost::bind<T>(object, boost::type<T>()))
     { }
 
     operator const T&() const {
         if (!callback_copy_.empty()) {
-            refs_.push_back(callback_copy_());
-            return any_cast<const T&>(refs_.back());
+            aux::shared_ptr<holder<T> > value(new holder<T>(callback_copy_()));
+            refs_.push_back(value);
+            return value->held;
         }
 
         return callback_ref_();
     }
 
 private:
-    std::vector<boost::any>& refs_;
+    std::vector<aux::shared_ptr<void> >& refs_;
     function<T()> callback_copy_;
     function<const T&()> callback_ref_;
 };
@@ -75,7 +108,7 @@ class universal_impl<named<T, TName> >
 {
 public:
     template<typename TObject>
-    universal_impl(std::vector<boost::any>& refs, const TObject& object)
+    universal_impl(std::vector<aux::shared_ptr<void> >& refs, const TObject& object)
         : refs_(refs), callback_(boost::bind<T>(object, boost::type<T>()))
     { }
 
@@ -88,7 +121,7 @@ public:
     }
 
 private:
-    std::vector<boost::any>& refs_;
+    std::vector<aux::shared_ptr<void> >& refs_;
     function<T()> callback_;
 };
 
@@ -99,7 +132,7 @@ class universal : public detail::universal_impl<T>
 {
 public:
     template<typename TObject>
-    universal(std::vector<boost::any>& refs, const TObject& object)
+    universal(std::vector<aux::shared_ptr<void> >& refs, const TObject& object)
         : detail::universal_impl<T>(refs, object)
     { }
 };

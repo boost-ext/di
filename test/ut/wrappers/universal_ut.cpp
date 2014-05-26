@@ -7,7 +7,9 @@
 #include "boost/di/wrappers/universal.hpp"
 
 #include <boost/test/unit_test.hpp>
+#include <vector>
 
+#include "boost/di/aux_/memory.hpp"
 #include "boost/di/named.hpp"
 #include "common/fakes/fake_wrapper.hpp"
 
@@ -17,13 +19,15 @@ namespace wrappers {
 
 BOOST_AUTO_TEST_CASE(convert_to_basic_type) {
     const int i = 42;
-    universal<int> c((fake_wrapper<int>(i)));
+    std::vector<aux::shared_ptr<void>> refs;
+    universal<int> c(refs, fake_wrapper<int>(i));
     BOOST_CHECK_EQUAL(i, static_cast<int>(c));
 }
 
 BOOST_AUTO_TEST_CASE(convert_to_named_type) {
     const int i = 42;
-    universal<named<int>> c((fake_wrapper<int>(i)));
+    std::vector<aux::shared_ptr<void>> refs;
+    universal<named<int>> c(refs, fake_wrapper<int>(i));
     BOOST_CHECK_EQUAL(i, c.operator int());
     BOOST_CHECK_EQUAL(i, c.operator named<int>());
 }

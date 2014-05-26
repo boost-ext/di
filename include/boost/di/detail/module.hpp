@@ -140,7 +140,7 @@
         T create() {
             typedef mpl::vector0<> policies;
             typedef mpl::vector0<> call_stack;
-            std::vector<boost::any> refs_;
+            std::vector<aux::shared_ptr<void> > refs_;
 
             return creator_.template create<T, T, call_stack, policies>(
                 static_cast<TPool<deps>&>(*this), refs_, empty_visitor());
@@ -150,7 +150,7 @@
         T visit(const Visitor& visitor) {
             typedef mpl::vector0<> policies;
             typedef mpl::vector0<> call_stack;
-            std::vector<boost::any> refs_;
+            std::vector<aux::shared_ptr<void> > refs_;
 
             return creator_.template create<T, T, call_stack, policies>(
                 static_cast<TPool<deps>&>(*this), refs_, visitor);
@@ -217,7 +217,7 @@
     T create(BOOST_DI_ARGS_NOT_USED(Args)) {
         typedef mpl::vector<BOOST_DI_TYPES_PASS(Args)> policies;
         typedef mpl::vector0<> call_stack;
-        std::vector<boost::any> refs_;
+        std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack, policies>(
             static_cast<TPool<deps>&>(*this), refs_, empty_visitor()

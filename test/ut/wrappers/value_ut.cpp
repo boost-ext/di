@@ -20,11 +20,6 @@ BOOST_AUTO_TEST_CASE(to_value) {
     BOOST_CHECK_EQUAL(i, object);
 }
 
-BOOST_AUTO_TEST_CASE(to_ref) {
-    int& object((value<int>(42))(type<int&>()));
-    BOOST_CHECK_EQUAL(i, object);
-}
-
 BOOST_AUTO_TEST_CASE(to_rvalue) {
     int&& object((value<int>(42))(type<int>()));
     BOOST_CHECK_EQUAL(i, object);
@@ -37,16 +32,6 @@ BOOST_AUTO_TEST_CASE(to_shared_ptr) {
 
 BOOST_AUTO_TEST_CASE(to_shared_ptr_other) {
     aux_::shared_ptr<int> object((value<int>(42))(type<aux_::shared_ptr<int>>()));
-    BOOST_CHECK_EQUAL(i, *object);
-}
-
-BOOST_AUTO_TEST_CASE(to_shared_ptr_ref) {
-    aux::shared_ptr<int> object((value<int>(42))(type<const aux::shared_ptr<int>&>()));
-    BOOST_CHECK_EQUAL(i, *object);
-}
-
-BOOST_AUTO_TEST_CASE(to_shared_ptr_other_ref) {
-    aux_::shared_ptr<int> object((value<int>(42))(type<const aux_::shared_ptr<int>&>()));
     BOOST_CHECK_EQUAL(i, *object);
 }
 

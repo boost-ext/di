@@ -87,8 +87,8 @@ test-suite "unit tests" :
     [ run-test c++11 : ut/named_ut.cpp ]
 
     [ run-test c++11 : ut/detail/binder_ut.cpp ]
-    #[ run-test c++11 : ut/detail/builder_ut.cpp ]
-    #[ run-test c++11 : ut/detail/creator_ut.cpp ]
+    [ run-test c++11 : ut/detail/builder_ut.cpp ]
+    [ run-test c++11 : ut/detail/creator_ut.cpp ]
     [ run-test c++11 : ut/detail/pool_ut.cpp ]
 
     [ run-test c++11 : ut/policies/arguments_permission_ut.cpp ]
@@ -101,11 +101,11 @@ test-suite "unit tests" :
     [ run-test c++11 : ut/scopes/shared_ut.cpp : scope_shared_ut ]
     [ run-test c++11 : ut/scopes/unique_ut.cpp : scope_unique_ut ]
 
-    #[ run-test c++11 : ut/wrappers/universal_ut.cpp : universal_ut ]
-    #[ run-test c++11 : ut/wrappers/copy_ut.cpp : wrapper_copy_ut ]
+    [ run-test c++11 : ut/wrappers/copy_ut.cpp : wrapper_copy_ut ]
     [ run-test c++11 : ut/wrappers/reference_ut.cpp : wrapper_reference_ut ]
-    #[ run-test c++11 : ut/wrappers/shared_ut.cpp : wrapper_shared_ut ]
-    #[ run-test c++11 : ut/wrappers/value_ut.cpp : wrapper_value_ut ]
+    [ run-test c++11 : ut/wrappers/shared_ut.cpp : wrapper_shared_ut ]
+    [ run-test c++11 : ut/wrappers/universal_ut.cpp : universal_ut ]
+    [ run-test c++11 : ut/wrappers/value_ut.cpp : wrapper_value_ut ]
 
     [ run-test c++11 : ut/type_traits/create_traits_ut.cpp ]
     [ run-test c++11 : ut/type_traits/ctor_traits_ut.cpp : cpp_11_ctor_traits_ut ]
