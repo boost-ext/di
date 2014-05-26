@@ -77,7 +77,7 @@ int main() {
       , di::bind<std::vector<int> >::to(v)
     ));
 
-    BOOST_AUTO(injector_, make_injector(
+    BOOST_AUTO(injector_, di::make_injector(
         injector_c0()
       , di::unique<c2>()
       , injector_c1
