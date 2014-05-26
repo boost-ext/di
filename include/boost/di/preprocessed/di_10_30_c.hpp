@@ -445,7 +445,7 @@ public:
     { }
 
     template<typename I>
-    T& operator()(const type<I>&) const {
+    I& operator()(const type<I>&) const {
         return object_;
     }
 
@@ -6311,35 +6311,39 @@ class universal_impl<const T&>
           >
     { };
 
+    template<typename TObject>
+    static const T& callback_ref(const TObject& object) {
+        return object(boost::type<const T&>());
+    }
+
+    template<typename TObject>
+    static const T& callback_copy(std::vector<aux::shared_ptr<void> >& refs, const TObject& object) {
+        aux::shared_ptr<holder<T> > value(new holder<T>(object(boost::type<T>())));
+        refs.push_back(value);
+        return value->held;
+    }
+
 public:
     template<typename TObject>
     universal_impl(std::vector<aux::shared_ptr<void> >& refs
                  , const TObject& object
                  , typename enable_if<is_convertible_to_ref<TObject, T> >::type* = 0)
-        : refs_(refs), callback_ref_(boost::bind<const T&>(object, boost::type<const T&>()))
+        : callback_(boost::bind(&universal_impl<const T&>::callback_ref<TObject>, object))
     { }
 
     template<typename TObject>
     universal_impl(std::vector<aux::shared_ptr<void> >& refs
                  , const TObject& object
                  , typename disable_if<is_convertible_to_ref<TObject, T> >::type* = 0)
-        : refs_(refs), callback_copy_(boost::bind<T>(object, boost::type<T>()))
+        : callback_(boost::bind(&universal_impl<const T&>::callback_copy<TObject>, boost::ref(refs), object))
     { }
 
     operator const T&() const {
-        if (!callback_copy_.empty()) {
-            aux::shared_ptr<holder<T> > value(new holder<T>(callback_copy_()));
-            refs_.push_back(value);
-            return value->held;
-        }
-
-        return callback_ref_();
+        return callback_();
     }
 
 private:
-    std::vector<aux::shared_ptr<void> >& refs_;
-    function<T()> callback_copy_;
-    function<const T&()> callback_ref_;
+    function<const T&()> callback_;
 };
 
 template<typename T, typename TName>
