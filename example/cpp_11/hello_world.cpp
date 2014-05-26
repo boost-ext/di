@@ -48,9 +48,10 @@ int main() {
     float f = 0.f;
 
     auto injector = di::make_injector(
-        di::bind_int<42>()                                          // static value
-      , di::bind<i, impl>()                                         // scope deduction -> di::shared<di::bind<i, impl>>
-      , di::bind<std::string>::named<some_name>::to("some_name")    // external value
+        di::deduce<impl>()                                          // scope deduction -> di::shared<di::bind<i, impl>>
+                                                                    // bind<i, impl> -> useful with multiple interfaces
+      , di::bind_int<42>()                                          // static, compile time value
+      , di::bind<std::string>::named<some_name>::to("some_name")    // external, named value
       , di::bind<float>::to(f)                                      // external reference
     );
 
