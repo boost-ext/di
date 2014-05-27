@@ -14,7 +14,6 @@
     #include "boost/di/type_traits/create_traits.hpp"
     #include "boost/di/wrappers/shared.hpp"
 
-    #include <cassert>
     #include <boost/mpl/int.hpp>
 
     namespace boost {
