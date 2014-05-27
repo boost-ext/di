@@ -15,6 +15,8 @@ namespace di {
 template<typename T>
 class fake_wrapper
 {
+    fake_wrapper& operator=(const fake_wrapper&);
+
 public:
     fake_wrapper(const T& object) // non explicit
         : object_(object)

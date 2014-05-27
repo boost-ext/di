@@ -13,9 +13,13 @@ namespace di {
 
 struct ctor1
 {
-    ctor1(int) { } // error in c++03
-    //BOOST_DI_INJECT(ctor1, (int)) { } // ok in c++03
-    //ctor1(int, int = 0) { } // ok in c++03
+    #if defined(BOOST_MSVC)
+        ctor1(msvc_doesnt_have_cpp_03_std_option) { };
+    #else
+        ctor1(int) { } // error in c++03
+        //BOOST_DI_INJECT(ctor1, (int)) { } // ok in c++03
+        //ctor1(int, int = 0) { } // ok in c++03
+    #endif
 };
 
 BOOST_AUTO_TEST_CASE(ctor_one_arg_fail) {

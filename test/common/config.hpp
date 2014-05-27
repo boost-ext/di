@@ -27,6 +27,7 @@
 
 #if defined(BOOST_MSVC)
     #pragma warning(disable:4127) // conditional expression is constant
+    #undef BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS
 #endif
 
 #if defined(BOOST_DI_CFG_TEST_CTOR)
