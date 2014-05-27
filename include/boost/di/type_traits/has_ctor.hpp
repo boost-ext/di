@@ -34,9 +34,9 @@
                 template<
                     typename U
                   , typename = typename disable_if<
-                        type_traits::is_same_base_of<
-                            typename type_traits::make_plain<U>::type
-                          , typename type_traits::make_plain<T>::type
+                        is_same_base_of<
+                            typename make_plain<U>::type
+                          , typename make_plain<T>::type
                         >
                     >::type
                 >
