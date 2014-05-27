@@ -46,7 +46,7 @@
             template<typename U>
             static mpl::aux::yes_tag test(BOOST_DI_FEATURE_DECLTYPE(U(any_type()))*);
 
-            template<typename U>
+            template<typename>
             static mpl::aux::no_tag test(...);
 
         public:
@@ -101,7 +101,7 @@
             )*
         );
 
-        template<typename U>
+        template<typename>
         static mpl::aux::no_tag test(...);
 
     public:
