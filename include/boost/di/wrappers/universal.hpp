@@ -115,6 +115,41 @@ private:
 };
 
 template<typename T, typename TName>
+class universal_impl<const named<T, TName>&>
+{
+    template<typename TValueType>
+    struct holder
+    {
+        explicit holder(const TValueType& value)
+            : held(value)
+        { }
+
+        TValueType held;
+    };
+
+    template<typename TObject>
+    static const named<T, TName>& callback_copy(std::vector<aux::shared_ptr<void> >& refs, const TObject& object) {
+        aux::shared_ptr<holder<named<T, TName> > > value(new holder<named<T, TName> >(named<T, TName>(object(boost::type<T>()))));
+        refs.push_back(value);
+        return value->held;
+    }
+
+public:
+    template<typename TObject>
+    universal_impl(std::vector<aux::shared_ptr<void> >& refs
+                 , const TObject& object)
+        : callback_(boost::bind(&universal_impl<const named<T, TName>&>::callback_copy<TObject>, boost::ref(refs), object))
+    { }
+
+    operator const named<T, TName>&() const {
+        return callback_();
+    }
+
+private:
+    function<const named<T, TName>&()> callback_;
+};
+
+template<typename T, typename TName>
 class universal_impl<named<T, TName> >
 {
 public:

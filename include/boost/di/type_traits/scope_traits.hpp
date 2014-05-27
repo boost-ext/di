@@ -89,7 +89,19 @@ struct scope_traits<aux::weak_ptr<T> >
 };
 
 template<typename T>
+struct scope_traits<const aux::weak_ptr<T>&>
+{
+    typedef scopes::shared<> type;
+};
+
+template<typename T>
 struct scope_traits<aux::unique_ptr<T> >
+{
+    typedef scopes::unique<> type;
+};
+
+template<typename T>
+struct scope_traits<const aux::unique_ptr<T>&>
 {
     typedef scopes::unique<> type;
 };

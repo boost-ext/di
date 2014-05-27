@@ -86,7 +86,9 @@
         class any_type
         {
         public:
+#if 0
             template<typename U> operator U();
+#endif
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
