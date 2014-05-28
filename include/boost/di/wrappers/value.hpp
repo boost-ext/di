@@ -27,17 +27,17 @@ public:
     { }
 
     template<typename I>
-    aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) {
+    aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const {
         return aux::shared_ptr<I>(new I(value_));
     }
 
     template<typename I>
-    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) {
+    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) const {
         return aux_::shared_ptr<I>(new I(value_));
     }
 
     template<typename I>
-    I* operator()(const type<I*>&) {
+    I* operator()(const type<I*>&) const {
         return new I(value_);
     }
 
@@ -48,10 +48,15 @@ public:
 
     BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
         template<typename I>
-        I&& operator()(const type<I&&>&) {
+        I&& operator()(const type<I&&>&) const {
             return std::move(value_);
         }
     )
+
+    template<typename I>
+    I& operator()(const type<I&>&) {
+        return value_;
+    }
 
 private:
     T value_;
