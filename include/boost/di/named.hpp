@@ -87,7 +87,7 @@ public:
         : object_(ptr)
     { }
 
-    BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+    BOOST_DI_FEATURE(RVALUE_REFERENCES)(
         named(object_type&& object) // non explicit
             : object_(std::move(object))
         { }

@@ -24,7 +24,7 @@
     template<typename, typename>
     class has_ctor;
 
-    BOOST_DI_FEATURE(4, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+    BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
         template<typename T>
         class has_ctor<T, mpl::int_<1> >
         {
@@ -59,7 +59,7 @@
         };
     )
 
-    BOOST_DI_FEATURE(2, NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+    BOOST_DI_FEATURE(NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)(
         template<typename T>
         class has_ctor<T, mpl::int_<1> >
         {
@@ -88,10 +88,10 @@
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
-            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+            BOOST_DI_FEATURE(RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
-            BOOST_DI_WKND(1, NO_MSVC)(
+            BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
             )
         };

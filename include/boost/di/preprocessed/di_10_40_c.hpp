@@ -572,7 +572,7 @@ public:
         return value_;
     }
 
-    BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+    BOOST_DI_FEATURE(RVALUE_REFERENCES)(
         template<typename I>
         I&& operator()(const type<I&&>&) const {
             return std::move(value_);
@@ -843,7 +843,7 @@ private:
     template<typename, typename>
     class has_ctor;
 
-    BOOST_DI_FEATURE(4, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+    BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
         template<typename T>
         class has_ctor<T, mpl::int_<1> >
         {
@@ -878,7 +878,7 @@ private:
         };
     )
 
-    BOOST_DI_FEATURE(2, NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+    BOOST_DI_FEATURE(NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)(
         template<typename T>
         class has_ctor<T, mpl::int_<1> >
         {
@@ -895,10 +895,10 @@ private:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
-            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+            BOOST_DI_FEATURE(RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
-            BOOST_DI_WKND(1, NO_MSVC)(
+            BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
             )
         };
@@ -930,10 +930,10 @@ private:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
-            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+            BOOST_DI_FEATURE(RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
-            BOOST_DI_WKND(1, NO_MSVC)(
+            BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
             )
         };
@@ -965,10 +965,10 @@ private:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
-            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+            BOOST_DI_FEATURE(RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
-            BOOST_DI_WKND(1, NO_MSVC)(
+            BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
             )
         };
@@ -1000,10 +1000,10 @@ private:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
-            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+            BOOST_DI_FEATURE(RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
-            BOOST_DI_WKND(1, NO_MSVC)(
+            BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
             )
         };
@@ -1035,10 +1035,10 @@ private:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
-            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+            BOOST_DI_FEATURE(RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
-            BOOST_DI_WKND(1, NO_MSVC)(
+            BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
             )
         };
@@ -1070,10 +1070,10 @@ private:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
-            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+            BOOST_DI_FEATURE(RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
-            BOOST_DI_WKND(1, NO_MSVC)(
+            BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
             )
         };
@@ -1105,10 +1105,10 @@ private:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
-            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+            BOOST_DI_FEATURE(RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
-            BOOST_DI_WKND(1, NO_MSVC)(
+            BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
             )
         };
@@ -1140,10 +1140,10 @@ private:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
-            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+            BOOST_DI_FEATURE(RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
-            BOOST_DI_WKND(1, NO_MSVC)(
+            BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
             )
         };
@@ -1175,10 +1175,10 @@ private:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
-            BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+            BOOST_DI_FEATURE(RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
-            BOOST_DI_WKND(1, NO_MSVC)(
+            BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
             )
         };
@@ -2260,7 +2260,7 @@ public:
         : object_(ptr)
     { }
 
-    BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+    BOOST_DI_FEATURE(RVALUE_REFERENCES)(
         named(object_type&& object) // non explicit
             : object_(std::move(object))
         { }
@@ -2851,9 +2851,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 1>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type
 
- public mpl::at_c<TSeq, 0>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -2908,9 +2907,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 2>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -2969,9 +2967,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 3>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -3034,9 +3031,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 4>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -3103,9 +3099,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 5>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -3176,9 +3171,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 6>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -3253,9 +3247,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 7>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -3334,9 +3327,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 8>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -3419,9 +3411,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 9>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -3508,9 +3499,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 10>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -3601,9 +3591,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 11>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -3698,9 +3687,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 12>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -3799,9 +3787,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 13>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -3904,9 +3891,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 14>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -4013,9 +3999,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 15>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -4126,9 +4111,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 16>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -4243,9 +4227,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 17>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -4364,9 +4347,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 18>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -4489,9 +4471,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 19>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -4618,9 +4599,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 20>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -4751,9 +4731,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 21>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -4888,9 +4867,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 22>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -5029,9 +5007,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 23>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -5174,9 +5151,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 24>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -5323,9 +5299,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 25>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -5476,9 +5451,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 26>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -5633,9 +5607,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 27>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -5794,9 +5767,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 28>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -5959,9 +5931,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 29>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type , public mpl::at_c<TSeq, 28>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type , public mpl::at_c<TSeq, 28>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -6128,9 +6099,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 30>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type , public mpl::at_c<TSeq, 28>::type , public mpl::at_c<TSeq, 29>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type , public mpl::at_c<TSeq, 28>::type , public mpl::at_c<TSeq, 29>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -6301,9 +6271,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 31>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type , public mpl::at_c<TSeq, 28>::type , public mpl::at_c<TSeq, 29>::type , public mpl::at_c<TSeq, 30>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type , public mpl::at_c<TSeq, 28>::type , public mpl::at_c<TSeq, 29>::type , public mpl::at_c<TSeq, 30>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -6478,9 +6447,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 32>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type , public mpl::at_c<TSeq, 28>::type , public mpl::at_c<TSeq, 29>::type , public mpl::at_c<TSeq, 30>::type , public mpl::at_c<TSeq, 31>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type , public mpl::at_c<TSeq, 28>::type , public mpl::at_c<TSeq, 29>::type , public mpl::at_c<TSeq, 30>::type , public mpl::at_c<TSeq, 31>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -6659,9 +6627,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 33>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type , public mpl::at_c<TSeq, 28>::type , public mpl::at_c<TSeq, 29>::type , public mpl::at_c<TSeq, 30>::type , public mpl::at_c<TSeq, 31>::type , public mpl::at_c<TSeq, 32>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type , public mpl::at_c<TSeq, 28>::type , public mpl::at_c<TSeq, 29>::type , public mpl::at_c<TSeq, 30>::type , public mpl::at_c<TSeq, 31>::type , public mpl::at_c<TSeq, 32>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -6844,9 +6811,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 34>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type , public mpl::at_c<TSeq, 28>::type , public mpl::at_c<TSeq, 29>::type , public mpl::at_c<TSeq, 30>::type , public mpl::at_c<TSeq, 31>::type , public mpl::at_c<TSeq, 32>::type , public mpl::at_c<TSeq, 33>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type , public mpl::at_c<TSeq, 28>::type , public mpl::at_c<TSeq, 29>::type , public mpl::at_c<TSeq, 30>::type , public mpl::at_c<TSeq, 31>::type , public mpl::at_c<TSeq, 32>::type , public mpl::at_c<TSeq, 33>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -7033,9 +6999,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 35>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type , public mpl::at_c<TSeq, 28>::type , public mpl::at_c<TSeq, 29>::type , public mpl::at_c<TSeq, 30>::type , public mpl::at_c<TSeq, 31>::type , public mpl::at_c<TSeq, 32>::type , public mpl::at_c<TSeq, 33>::type , public mpl::at_c<TSeq, 34>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type , public mpl::at_c<TSeq, 28>::type , public mpl::at_c<TSeq, 29>::type , public mpl::at_c<TSeq, 30>::type , public mpl::at_c<TSeq, 31>::type , public mpl::at_c<TSeq, 32>::type , public mpl::at_c<TSeq, 33>::type , public mpl::at_c<TSeq, 34>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -7226,9 +7191,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 36>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type , public mpl::at_c<TSeq, 28>::type , public mpl::at_c<TSeq, 29>::type , public mpl::at_c<TSeq, 30>::type , public mpl::at_c<TSeq, 31>::type , public mpl::at_c<TSeq, 32>::type , public mpl::at_c<TSeq, 33>::type , public mpl::at_c<TSeq, 34>::type , public mpl::at_c<TSeq, 35>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type , public mpl::at_c<TSeq, 28>::type , public mpl::at_c<TSeq, 29>::type , public mpl::at_c<TSeq, 30>::type , public mpl::at_c<TSeq, 31>::type , public mpl::at_c<TSeq, 32>::type , public mpl::at_c<TSeq, 33>::type , public mpl::at_c<TSeq, 34>::type , public mpl::at_c<TSeq, 35>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -7423,9 +7387,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 37>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type , public mpl::at_c<TSeq, 28>::type , public mpl::at_c<TSeq, 29>::type , public mpl::at_c<TSeq, 30>::type , public mpl::at_c<TSeq, 31>::type , public mpl::at_c<TSeq, 32>::type , public mpl::at_c<TSeq, 33>::type , public mpl::at_c<TSeq, 34>::type , public mpl::at_c<TSeq, 35>::type , public mpl::at_c<TSeq, 36>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type , public mpl::at_c<TSeq, 28>::type , public mpl::at_c<TSeq, 29>::type , public mpl::at_c<TSeq, 30>::type , public mpl::at_c<TSeq, 31>::type , public mpl::at_c<TSeq, 32>::type , public mpl::at_c<TSeq, 33>::type , public mpl::at_c<TSeq, 34>::type , public mpl::at_c<TSeq, 35>::type , public mpl::at_c<TSeq, 36>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -7624,9 +7587,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 38>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type , public mpl::at_c<TSeq, 28>::type , public mpl::at_c<TSeq, 29>::type , public mpl::at_c<TSeq, 30>::type , public mpl::at_c<TSeq, 31>::type , public mpl::at_c<TSeq, 32>::type , public mpl::at_c<TSeq, 33>::type , public mpl::at_c<TSeq, 34>::type , public mpl::at_c<TSeq, 35>::type , public mpl::at_c<TSeq, 36>::type , public mpl::at_c<TSeq, 37>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type , public mpl::at_c<TSeq, 28>::type , public mpl::at_c<TSeq, 29>::type , public mpl::at_c<TSeq, 30>::type , public mpl::at_c<TSeq, 31>::type , public mpl::at_c<TSeq, 32>::type , public mpl::at_c<TSeq, 33>::type , public mpl::at_c<TSeq, 34>::type , public mpl::at_c<TSeq, 35>::type , public mpl::at_c<TSeq, 36>::type , public mpl::at_c<TSeq, 37>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -7829,9 +7791,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 39>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type , public mpl::at_c<TSeq, 28>::type , public mpl::at_c<TSeq, 29>::type , public mpl::at_c<TSeq, 30>::type , public mpl::at_c<TSeq, 31>::type , public mpl::at_c<TSeq, 32>::type , public mpl::at_c<TSeq, 33>::type , public mpl::at_c<TSeq, 34>::type , public mpl::at_c<TSeq, 35>::type , public mpl::at_c<TSeq, 36>::type , public mpl::at_c<TSeq, 37>::type , public mpl::at_c<TSeq, 38>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type , public mpl::at_c<TSeq, 28>::type , public mpl::at_c<TSeq, 29>::type , public mpl::at_c<TSeq, 30>::type , public mpl::at_c<TSeq, 31>::type , public mpl::at_c<TSeq, 32>::type , public mpl::at_c<TSeq, 33>::type , public mpl::at_c<TSeq, 34>::type , public mpl::at_c<TSeq, 35>::type , public mpl::at_c<TSeq, 36>::type , public mpl::at_c<TSeq, 37>::type , public mpl::at_c<TSeq, 38>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -8038,9 +7999,8 @@ public:
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 40>::type>
-        :
+        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type , public mpl::at_c<TSeq, 28>::type , public mpl::at_c<TSeq, 29>::type , public mpl::at_c<TSeq, 30>::type , public mpl::at_c<TSeq, 31>::type , public mpl::at_c<TSeq, 32>::type , public mpl::at_c<TSeq, 33>::type , public mpl::at_c<TSeq, 34>::type , public mpl::at_c<TSeq, 35>::type , public mpl::at_c<TSeq, 36>::type , public mpl::at_c<TSeq, 37>::type , public mpl::at_c<TSeq, 38>::type , public mpl::at_c<TSeq, 39>::type
 
- public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type , public mpl::at_c<TSeq, 20>::type , public mpl::at_c<TSeq, 21>::type , public mpl::at_c<TSeq, 22>::type , public mpl::at_c<TSeq, 23>::type , public mpl::at_c<TSeq, 24>::type , public mpl::at_c<TSeq, 25>::type , public mpl::at_c<TSeq, 26>::type , public mpl::at_c<TSeq, 27>::type , public mpl::at_c<TSeq, 28>::type , public mpl::at_c<TSeq, 29>::type , public mpl::at_c<TSeq, 30>::type , public mpl::at_c<TSeq, 31>::type , public mpl::at_c<TSeq, 32>::type , public mpl::at_c<TSeq, 33>::type , public mpl::at_c<TSeq, 34>::type , public mpl::at_c<TSeq, 35>::type , public mpl::at_c<TSeq, 36>::type , public mpl::at_c<TSeq, 37>::type , public mpl::at_c<TSeq, 38>::type , public mpl::at_c<TSeq, 39>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -8508,7 +8468,7 @@ struct scope_traits<const aux::unique_ptr<T>&>
     typedef scopes::unique<> type;
 };
 
-BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+BOOST_DI_FEATURE(RVALUE_REFERENCES)(
     template<typename T>
     struct scope_traits<T&&>
     {
@@ -8609,9 +8569,8 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
         return wrappers::universal<T>(
             refs
           , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
-               
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
- creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
             )
         );
 
@@ -8639,9 +8598,8 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
         return wrappers::universal<T>(
             refs
           , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
-               
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
- creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
             )
         );
 
@@ -8669,9 +8627,8 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
         return wrappers::universal<T>(
             refs
           , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
-               
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
- creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
             )
         );
 
@@ -8699,9 +8656,8 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
         return wrappers::universal<T>(
             refs
           , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
-               
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
- creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
             )
         );
 
@@ -8729,9 +8685,8 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
         return wrappers::universal<T>(
             refs
           , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
-               
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
- creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
             )
         );
 
@@ -8759,9 +8714,8 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
         return wrappers::universal<T>(
             refs
           , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
-               
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
- creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
             )
         );
 
@@ -8789,9 +8743,8 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
         return wrappers::universal<T>(
             refs
           , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
-               
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
- creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
             )
         );
 
@@ -8819,9 +8772,8 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
         return wrappers::universal<T>(
             refs
           , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
-               
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
- creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
             )
         );
 
@@ -8849,9 +8801,8 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
         return wrappers::universal<T>(
             refs
           , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
-               
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
- creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
             )
         );
 
@@ -8879,9 +8830,8 @@ struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
         return wrappers::universal<T>(
             refs
           , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
-               
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 9>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
 
- creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack , TPolicies >(deps, refs, visitor) , creator.template create< typename mpl::at_c<TCtor, 9>::type , T , TCallStack , TPolicies >(deps, refs, visitor)
             )
         );
 
@@ -9080,12 +9030,11 @@ private:
                 : c_(c), deps_(deps), refs_(refs), visitor_(visitor)
             { }
 
-            BOOST_DI_WKND(6, MSVC)(
+            BOOST_DI_WKND(MSVC)(
                 template<
                     typename U
-                    BOOST_DI_FEATURE(2, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-                        BOOST_DI_COMMA()
-                        typename = typename disable_if<
+                    BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+                        , typename = typename disable_if<
                             type_traits::is_same_base_of<
                                 typename type_traits::make_plain<U>::type
                               , typename type_traits::make_plain<T>::type
@@ -9106,12 +9055,11 @@ private:
                 }
             )
 
-            BOOST_DI_WKND(6, NO_MSVC)(
+            BOOST_DI_WKND(NO_MSVC)(
                 template<
                     typename U
-                    BOOST_DI_FEATURE(2, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-                        BOOST_DI_COMMA()
-                        typename = typename disable_if<
+                    BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+                        , typename = typename disable_if<
                             type_traits::is_same_base_of<
                                 typename type_traits::make_plain<U>::type
                               , typename type_traits::make_plain<T>::type
@@ -9134,9 +9082,8 @@ private:
 
             template<
                 typename U
-                BOOST_DI_FEATURE(2, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-                    BOOST_DI_COMMA()
-                    typename = typename disable_if<
+                BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+                    , typename = typename disable_if<
                         type_traits::is_same_base_of<
                             typename type_traits::make_plain<U>::type
                           , typename type_traits::make_plain<T>::type
@@ -9158,9 +9105,8 @@ private:
 
             template<
                 typename U
-                BOOST_DI_FEATURE(2, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-                    BOOST_DI_COMMA()
-                    typename = typename disable_if<
+                BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+                    , typename = typename disable_if<
                         type_traits::is_same_base_of<
                             typename type_traits::make_plain<U>::type
                           , typename type_traits::make_plain<T>::type

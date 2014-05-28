@@ -88,12 +88,11 @@
                 : c_(c), deps_(deps), refs_(refs), visitor_(visitor)
             { }
 
-            BOOST_DI_WKND(6, MSVC)(
+            BOOST_DI_WKND(MSVC)(
                 template<
                     typename U
-                    BOOST_DI_FEATURE(2, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-                        BOOST_DI_COMMA()
-                        typename = typename disable_if<
+                    BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+                        , typename = typename disable_if<
                             type_traits::is_same_base_of<
                                 typename type_traits::make_plain<U>::type
                               , typename type_traits::make_plain<T>::type
@@ -114,12 +113,11 @@
                 }
             )
 
-            BOOST_DI_WKND(6, NO_MSVC)(
+            BOOST_DI_WKND(NO_MSVC)(
                 template<
                     typename U
-                    BOOST_DI_FEATURE(2, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-                        BOOST_DI_COMMA()
-                        typename = typename disable_if<
+                    BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+                        , typename = typename disable_if<
                             type_traits::is_same_base_of<
                                 typename type_traits::make_plain<U>::type
                               , typename type_traits::make_plain<T>::type
@@ -142,9 +140,8 @@
 
             template<
                 typename U
-                BOOST_DI_FEATURE(2, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-                    BOOST_DI_COMMA()
-                    typename = typename disable_if<
+                BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+                    , typename = typename disable_if<
                         type_traits::is_same_base_of<
                             typename type_traits::make_plain<U>::type
                           , typename type_traits::make_plain<T>::type
@@ -166,9 +163,8 @@
 
             template<
                 typename U
-                BOOST_DI_FEATURE(2, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-                    BOOST_DI_COMMA()
-                    typename = typename disable_if<
+                BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+                    , typename = typename disable_if<
                         type_traits::is_same_base_of<
                             typename type_traits::make_plain<U>::type
                           , typename type_traits::make_plain<T>::type

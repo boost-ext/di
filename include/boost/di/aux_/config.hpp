@@ -89,108 +89,54 @@
 
 #endif
 
-#define BOOST_DI_FEATURE(n, feature) \
-    BOOST_DI_FEATURE_##n##_##feature
+#define BOOST_DI_FEATURE(feature) \
+    BOOST_DI_FEATURE_##feature
 
 #if defined(BOOST_NO_RVALUE_REFERENCES)
-    #define BOOST_DI_FEATURE_1_RVALUE_REFERENCES(a1)
-    #define BOOST_DI_FEATURE_2_RVALUE_REFERENCES(a1, a2)
-    #define BOOST_DI_FEATURE_3_RVALUE_REFERENCES(a1, a2, a3)
-    #define BOOST_DI_FEATURE_4_RVALUE_REFERENCES(a1, a2, a3, a4)
-    #define BOOST_DI_FEATURE_5_RVALUE_REFERENCES(a1, a2, a3, a4, a5)
+    #define BOOST_DI_FEATURE_RVALUE_REFERENCES(...)
 #else
-    #define BOOST_DI_FEATURE_1_RVALUE_REFERENCES(a1) a1
-    #define BOOST_DI_FEATURE_2_RVALUE_REFERENCES(a1, a2) a1, a2
-    #define BOOST_DI_FEATURE_3_RVALUE_REFERENCES(a1, a2, a3) a1, a2, a3
-    #define BOOST_DI_FEATURE_4_RVALUE_REFERENCES(a1, a2, a3, a4) a1, a2, a3, a4
-    #define BOOST_DI_FEATURE_5_RVALUE_REFERENCES(a1, a2, a3, a4, a5) a1, a2, a3, a4, a5
+    #define BOOST_DI_FEATURE_RVALUE_REFERENCES(...) __VA_ARGS__
 #endif
 
 #if defined(BOOST_NO_RVALUE_REFERENCES)
-    #define BOOST_DI_FEATURE_1_NO_RVALUE_REFERENCES(a1) a1
-    #define BOOST_DI_FEATURE_2_NO_RVALUE_REFERENCES(a1, a2) a1, a2
-    #define BOOST_DI_FEATURE_3_NO_RVALUE_REFERENCES(a1, a2, a3) a1, a2, a3
-    #define BOOST_DI_FEATURE_4_NO_RVALUE_REFERENCES(a1, a2, a3, a4) a1, a2, a3, a4
-    #define BOOST_DI_FEATURE_5_NO_RVALUE_REFERENCES(a1, a2, a3, a4, a5) a1, a2, a3, a4, a5
+    #define BOOST_DI_FEATURE_NO_RVALUE_REFERENCES(...) __VA_ARGS__
 #else
-    #define BOOST_DI_FEATURE_1_NO_RVALUE_REFERENCES(a1)
-    #define BOOST_DI_FEATURE_2_NO_RVALUE_REFERENCES(a1, a2)
-    #define BOOST_DI_FEATURE_3_NO_RVALUE_REFERENCES(a1, a2, a3)
-    #define BOOST_DI_FEATURE_4_NO_RVALUE_REFERENCES(a1, a2, a3, a4)
-    #define BOOST_DI_FEATURE_5_NO_RVALUE_REFERENCES(a1, a2, a3, a4, a5)
+    #define BOOST_DI_FEATURE_NO_RVALUE_REFERENCES(...)
 #endif
 
 #if defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
-    #define BOOST_DI_FEATURE_1_FUNCTION_TEMPLATE_DEFAULT_ARGS(a1)
-    #define BOOST_DI_FEATURE_2_FUNCTION_TEMPLATE_DEFAULT_ARGS(a1, a2)
-    #define BOOST_DI_FEATURE_3_FUNCTION_TEMPLATE_DEFAULT_ARGS(a1, a2, a3)
-    #define BOOST_DI_FEATURE_4_FUNCTION_TEMPLATE_DEFAULT_ARGS(a1, a2, a3, a4)
-    #define BOOST_DI_FEATURE_5_FUNCTION_TEMPLATE_DEFAULT_ARGS(a1, a2, a3, a4, a5)
+    #define BOOST_DI_FEATURE_FUNCTION_TEMPLATE_DEFAULT_ARGS(...)
 #else
-    #define BOOST_DI_FEATURE_1_FUNCTION_TEMPLATE_DEFAULT_ARGS(a1) a1
-    #define BOOST_DI_FEATURE_2_FUNCTION_TEMPLATE_DEFAULT_ARGS(a1, a2) a1, a2
-    #define BOOST_DI_FEATURE_3_FUNCTION_TEMPLATE_DEFAULT_ARGS(a1, a2, a3) a1, a2, a3
-    #define BOOST_DI_FEATURE_4_FUNCTION_TEMPLATE_DEFAULT_ARGS(a1, a2, a3, a4) a1, a2, a3, a4
-    #define BOOST_DI_FEATURE_5_FUNCTION_TEMPLATE_DEFAULT_ARGS(a1, a2, a3, a4, a5) a1, a2, a3, a4, a5
+    #define BOOST_DI_FEATURE_FUNCTION_TEMPLATE_DEFAULT_ARGS(...) __VA_ARGS__
 #endif
 
 #if defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
-    #define BOOST_DI_FEATURE_1_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS(a1) a1
-    #define BOOST_DI_FEATURE_2_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS(a1, a2) a1, a2
-    #define BOOST_DI_FEATURE_3_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS(a1, a2, a3) a1, a2, a3
-    #define BOOST_DI_FEATURE_4_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS(a1, a2, a3, a4) a1, a2, a3, a4
-    #define BOOST_DI_FEATURE_5_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS(a1, a2, a3, a4, a5) a1, a2, a3, a4, a5
+    #define BOOST_DI_FEATURE_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS(...) __VA_ARGS__
 #else
-    #define BOOST_DI_FEATURE_1_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS(a1)
-    #define BOOST_DI_FEATURE_2_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS(a1, a2)
-    #define BOOST_DI_FEATURE_3_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS(a1, a2, a3)
-    #define BOOST_DI_FEATURE_4_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS(a1, a2, a3, a4)
-    #define BOOST_DI_FEATURE_5_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS(a1, a2, a3, a4, a5)
+    #define BOOST_DI_FEATURE_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS(...)
 #endif
 
 #if defined(BOOST_NO_CXX11_DECLTYPE)
     #include <boost/typeof/typeof.hpp>
-    #define BOOST_DI_FEATURE_DECLTYPE(arg) BOOST_TYPEOF_TPL(arg)
+    #define BOOST_DI_FEATURE_DECLTYPE(...) BOOST_TYPEOF_TPL(__VA_ARGS__)
 #else
-    #define BOOST_DI_FEATURE_DECLTYPE(arg) decltype(arg)
+    #define BOOST_DI_FEATURE_DECLTYPE(...) decltype(__VA_ARGS__)
 #endif
 
-#define BOOST_DI_WKND(n, wknd) \
-    BOOST_DI_WKND_##n##_##wknd
+#define BOOST_DI_WKND(wknd) \
+    BOOST_DI_WKND_##wknd
 
 #if defined(BOOST_MSVC)
-    #define BOOST_DI_WKND_1_MSVC(a1) a1
-    #define BOOST_DI_WKND_2_MSVC(a1, a2) a1, a2
-    #define BOOST_DI_WKND_3_MSVC(a1, a2, a3) a1, a2, a3
-    #define BOOST_DI_WKND_4_MSVC(a1, a2, a3, a4) a1, a2, a3, a4
-    #define BOOST_DI_WKND_5_MSVC(a1, a2, a3, a4, a5) a1, a2, a3, a4, a5
-    #define BOOST_DI_WKND_6_MSVC(a1, a2, a3, a4, a5) a1, a2, a3, a4, a5, a6
+    #define BOOST_DI_WKND_MSVC(...) __VA_ARGS__
 #else
-    #define BOOST_DI_WKND_1_MSVC(a1)
-    #define BOOST_DI_WKND_2_MSVC(a1, a2)
-    #define BOOST_DI_WKND_3_MSVC(a1, a2, a3)
-    #define BOOST_DI_WKND_4_MSVC(a1, a2, a3, a4)
-    #define BOOST_DI_WKND_5_MSVC(a1, a2, a3, a4, a5)
-    #define BOOST_DI_WKND_6_MSVC(a1, a2, a3, a4, a5, a6)
+    #define BOOST_DI_WKND_MSVC(...)
 #endif
 
 #if defined(BOOST_MSVC)
-    #define BOOST_DI_WKND_1_NO_MSVC(a1)
-    #define BOOST_DI_WKND_2_NO_MSVC(a1, a2)
-    #define BOOST_DI_WKND_3_NO_MSVC(a1, a2, a3)
-    #define BOOST_DI_WKND_4_NO_MSVC(a1, a2, a3, a4)
-    #define BOOST_DI_WKND_5_NO_MSVC(a1, a2, a3, a4, a5)
-    #define BOOST_DI_WKND_6_NO_MSVC(a1, a2, a3, a4, a5, a6)
+    #define BOOST_DI_WKND_NO_MSVC(...)
 #else
-    #define BOOST_DI_WKND_1_NO_MSVC(a1) a1
-    #define BOOST_DI_WKND_2_NO_MSVC(a1, a2) a1, a2
-    #define BOOST_DI_WKND_3_NO_MSVC(a1, a2, a3) a1, a2, a3
-    #define BOOST_DI_WKND_4_NO_MSVC(a1, a2, a3, a4) a1, a2, a3, a4
-    #define BOOST_DI_WKND_5_NO_MSVC(a1, a2, a3, a4, a5) a1, a2, a3, a4, a5
-    #define BOOST_DI_WKND_6_NO_MSVC(a1, a2, a3, a4, a5, a6) a1, a2, a3, a4, a5, a6
+    #define BOOST_DI_WKND_NO_MSVC(...) __VA_ARGS__
 #endif
-
-#define BOOST_DI_COMMA() ,
 
 #if !defined(BOOST_DI_ASSERT_MSG)
     #include <boost/mpl/assert.hpp>

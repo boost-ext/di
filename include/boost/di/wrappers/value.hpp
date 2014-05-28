@@ -46,7 +46,7 @@ public:
         return value_;
     }
 
-    BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
+    BOOST_DI_FEATURE(RVALUE_REFERENCES)(
         template<typename I>
         I&& operator()(const type<I&&>&) const {
             return std::move(value_);
