@@ -41,6 +41,8 @@ struct world {
         assert(s == "some_name");
     }
 
+    world& operator=(const world&);
+
     float& f;
 };
 

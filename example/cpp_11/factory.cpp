@@ -52,6 +52,8 @@ enum eid { e1 = 1, e2 = 2 };
 
 class config
 {
+    config& operator=(const config&);
+
 public:
     explicit config(eid& id)
         : id(id)

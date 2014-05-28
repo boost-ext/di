@@ -76,6 +76,8 @@ class uml_visitor
         std::size_t context_size;
     };
 
+    uml_visitor& operator=(const uml_visitor&);
+
 public:
     explicit uml_visitor(std::stringstream& stream)
         : stream_(stream) {

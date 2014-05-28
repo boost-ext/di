@@ -74,9 +74,9 @@ int main() {
 
 ## Tested compilers
 * Clang 3.2/3.3/3.4/3.4.1
-* GCC 4.7.3/4.8.1
+* GCC 4.7.3/4.8.2
 * Intel C++ 14.0.0
-* MinGW 4.7.3/4.8.1
+* MinGW 4.7.3/4.8.2
 * Visual Studio 2013
 
 ## More information
@@ -85,6 +85,7 @@ int main() {
 
 ## Continuous integration
 [![Build Status](https://travis-ci.org/krzysztof-jusiak/di.png?branch=master)](https://travis-ci.org/krzysztof-jusiak/di) [![Coverage Status](https://coveralls.io/repos/krzysztof-jusiak/di/badge.png?branch=master)](https://coveralls.io/r/krzysztof-jusiak/di?branch=master)
+[![Build Status](https://ci.appveyor.com/api/projects/status/1il4knxh7tq9o5ic)](https://ci.appveyor.com/project/krzysztof-jusiak/di)
 
 ## License
 Distributed under the [Boost Software License, Version 1.0](http://www.boost.org/LICENSE_1_0.txt).
