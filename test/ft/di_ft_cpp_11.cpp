@@ -91,6 +91,7 @@ BOOST_AUTO_TEST_CASE(create_complex) {
       , di::policies::arguments_permission<
             di::policies::allow_smart_ptrs
           , di::policies::allow_copies
+          , di::policies::allow_const_refs
           , di::policies::allow_refs
         >()
     );

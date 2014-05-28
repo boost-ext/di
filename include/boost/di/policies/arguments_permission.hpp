@@ -32,14 +32,9 @@ BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
 
 struct allow_smart_ptrs
 {
-    template<typename, typename = void>
-    struct allow
-        : mpl::false_
-    { };
-
     template<typename T>
-    struct allow<T, typename enable_if<has_element_type<T> >::type>
-        : mpl::true_
+    struct allow
+        : has_element_type<typename type_traits::remove_accessors<T>::type> 
     { };
 };
 
@@ -47,7 +42,13 @@ struct allow_refs
 {
     template<typename T>
     struct allow
-        : is_reference<T>
+        : mpl::and_<
+              mpl::not_<is_const<typename remove_reference<T>::type> >
+            , is_reference<T>
+            , mpl::not_<
+                  has_element_type<typename type_traits::remove_accessors<T>::type>
+              >
+          >
     { };
 };
 
@@ -58,6 +59,9 @@ struct allow_const_refs
         : mpl::and_<
               is_const<typename remove_reference<T>::type>
             , is_reference<T>
+            , mpl::not_<
+                  has_element_type<typename type_traits::remove_accessors<T>::type>
+              >
           >
     { };
 };
@@ -86,7 +90,7 @@ struct allow_copies
                mpl::not_<is_reference<T> >
              , mpl::not_<is_pointer<T> >
              , mpl::not_<is_rvalue_reference<T> >
-             , mpl::not_<has_element_type<T> >
+             , mpl::not_<has_element_type<typename type_traits::remove_accessors<T>::type> >
           >
     { };
 };

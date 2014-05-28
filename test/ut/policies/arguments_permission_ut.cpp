@@ -86,16 +86,6 @@ BOOST_AUTO_TEST_CASE(allow_ref) {
     );
 }
 
-BOOST_AUTO_TEST_CASE(allow_ref_from_const_ref) {
-    BOOST_CHECK_NO_THROW(
-        (
-            arguments_permission<allow_refs>::assert_policy<
-                mpl::identity<const c2&>
-            >()
-        )
-    );
-}
-
 BOOST_AUTO_TEST_CASE(allow_rvalue_ref) {
     BOOST_CHECK_NO_THROW(
         (
@@ -133,6 +123,18 @@ BOOST_AUTO_TEST_CASE(allow_nested_type) {
                 mpl::identity<std::vector<int*>>
             >()
         )
+    );
+}
+
+BOOST_AUTO_TEST_CASE(disallow_ref_from_const_ref) {
+    BOOST_REQUIRE_EXCEPTION(
+        (
+            arguments_permission<allow_refs>::assert_policy<
+                mpl::identity<const c2&>
+            >()
+        )
+      , assert_exception
+      , verify_assert_exception<const c2&>
     );
 }
 

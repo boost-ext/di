@@ -31,7 +31,11 @@
 #endif
 
 #if defined(BOOST_DI_CFG_TEST_CTOR)
-    #define BOOST_DI_INJECT(type, ...) type(__VA_ARGS__)
+    #if defined(BOOST_DI_INJECT_CFG_BRACKET)
+        #define BOOST_DI_INJECT(type, args) type args
+    #else
+        #define BOOST_DI_INJECT(type, ...) type(__VA_ARGS__)
+    #endif
 #endif
 
 #if defined(BOOST_MPL_LIMIT_VECTOR_SIZE)
