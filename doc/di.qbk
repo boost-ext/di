@@ -23,6 +23,7 @@
 
 [def __BOOST_DI_CTOR [link di.reference.ctor `BOOST_DI_CTOR `]]
 
+
 [section Overview]
 
 "Google Guice"
