@@ -169,8 +169,8 @@ test-suite "fail tests" :
     [ compile-fail-test c++11 : fail/injector_shared_by_copy_fail.cpp : ctor_injector_shared_by_copy_fail ]
 ;
 
-#test-suite "performance tests" :
-    #[ run-test c++11 : pt/compilation_pt.cpp : preprocessed_compilation_pt_cpp_11 : <define>BOOST_DI_CFG_BOOST_SMART_PTR : : preprocessed_headers ] #ftime-report
-    #[ run-test c++03 : pt/compilation_pt.cpp : preprocessed_compilation_pt_cpp_03 : <define>BOOST_DI_CFG_BOOST_SMART_PTR : : preprocessed_headers ] #ftime-report
-#;
+test-suite "performance test (-ftime-report)" :
+    [ run-test c++11 : pt/compilation_pt.cpp : preprocessed_compilation_pt_cpp_11 : <define>BOOST_DI_CFG_BOOST_SMART_PTR : : preprocessed_headers ]
+    [ run-test c++03 : pt/compilation_pt.cpp : preprocessed_compilation_pt_cpp_03 : <define>BOOST_DI_CFG_BOOST_SMART_PTR : : preprocessed_headers ]
+;
 
