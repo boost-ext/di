@@ -86,13 +86,13 @@
         class any_type
         {
         public:
-#if 0
-            template<typename U> operator U();
-#endif
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
+            )
+            BOOST_DI_WKND(1, NO_MSVC)(
+                template<typename U> operator U();
             )
         };
 

@@ -893,11 +893,13 @@ private:
         class any_type
         {
         public:
-
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
+            )
+            BOOST_DI_WKND(1, NO_MSVC)(
+                template<typename U> operator U();
             )
         };
 
@@ -926,11 +928,13 @@ private:
         class any_type
         {
         public:
-
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
+            )
+            BOOST_DI_WKND(1, NO_MSVC)(
+                template<typename U> operator U();
             )
         };
 
@@ -959,11 +963,13 @@ private:
         class any_type
         {
         public:
-
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
+            )
+            BOOST_DI_WKND(1, NO_MSVC)(
+                template<typename U> operator U();
             )
         };
 
@@ -992,11 +998,13 @@ private:
         class any_type
         {
         public:
-
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
+            )
+            BOOST_DI_WKND(1, NO_MSVC)(
+                template<typename U> operator U();
             )
         };
 
@@ -1025,11 +1033,13 @@ private:
         class any_type
         {
         public:
-
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
+            )
+            BOOST_DI_WKND(1, NO_MSVC)(
+                template<typename U> operator U();
             )
         };
 
@@ -1058,11 +1068,13 @@ private:
         class any_type
         {
         public:
-
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
+            )
+            BOOST_DI_WKND(1, NO_MSVC)(
+                template<typename U> operator U();
             )
         };
 
@@ -1091,11 +1103,13 @@ private:
         class any_type
         {
         public:
-
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
+            )
+            BOOST_DI_WKND(1, NO_MSVC)(
+                template<typename U> operator U();
             )
         };
 
@@ -1124,11 +1138,13 @@ private:
         class any_type
         {
         public:
-
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
+            )
+            BOOST_DI_WKND(1, NO_MSVC)(
+                template<typename U> operator U();
             )
         };
 
@@ -1157,11 +1173,13 @@ private:
         class any_type
         {
         public:
-
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
+            )
+            BOOST_DI_WKND(1, NO_MSVC)(
+                template<typename U> operator U();
             )
         };
 
@@ -5561,29 +5579,58 @@ private:
             eager_creator(creator& c, TDeps& deps, TRefs& refs, const TVisitor& visitor)
                 : c_(c), deps_(deps), refs_(refs), visitor_(visitor)
             { }
-            template<
-                typename U
-                BOOST_DI_FEATURE(2, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-                    BOOST_DI_COMMA()
-                    typename = typename disable_if<
-                        type_traits::is_same_base_of<
-                            typename type_traits::make_plain<U>::type
-                          , typename type_traits::make_plain<T>::type
-                        >
-                    >::type
-                )
-            >
-            operator aux::unique_ptr<U>() {
-                return c_.create_impl<
-                    aux::unique_ptr<U>
-                  , typename mpl::push_back<
-                        TCallStack
-                      , typename type_traits::make_plain<aux::unique_ptr<U>>::type
-                    >::type
-                  , TPolicies
-                  , binder<aux::unique_ptr<U>, TCallStack>
-                >(deps_, refs_, visitor_);
-            }
+
+            BOOST_DI_WKND(6, MSVC)(
+                template<
+                    typename U
+                    BOOST_DI_FEATURE(2, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+                        BOOST_DI_COMMA()
+                        typename = typename disable_if<
+                            type_traits::is_same_base_of<
+                                typename type_traits::make_plain<U>::type
+                              , typename type_traits::make_plain<T>::type
+                            >
+                        >::type
+                    )
+                >
+                operator aux::unique_ptr<U>() {
+                    return c_.create_impl<
+                        aux::unique_ptr<U>
+                      , typename mpl::push_back<
+                            TCallStack
+                          , typename type_traits::make_plain<aux::unique_ptr<U>>::type
+                        >::type
+                      , TPolicies
+                      , binder<aux::unique_ptr<U>, TCallStack>
+                    >(deps_, refs_, visitor_);
+                }
+            )
+
+            BOOST_DI_WKND(6, NO_MSVC)(
+                template<
+                    typename U
+                    BOOST_DI_FEATURE(2, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+                        BOOST_DI_COMMA()
+                        typename = typename disable_if<
+                            type_traits::is_same_base_of<
+                                typename type_traits::make_plain<U>::type
+                              , typename type_traits::make_plain<T>::type
+                            >
+                        >::type
+                    )
+                >
+                operator U() {
+                    return c_.create_impl<
+                        U
+                      , typename mpl::push_back<
+                            TCallStack
+                          , typename type_traits::make_plain<U>::type
+                        >::type
+                      , TPolicies
+                      , binder<U, TCallStack>
+                    >(deps_, refs_, visitor_);
+                }
+            )
 
             template<
                 typename U

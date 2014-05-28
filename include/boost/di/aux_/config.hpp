@@ -155,6 +155,41 @@
     #define BOOST_DI_FEATURE_DECLTYPE(arg) decltype(arg)
 #endif
 
+#define BOOST_DI_WKND(n, wknd) \
+    BOOST_DI_WKND_##n##_##wknd
+
+#if defined(BOOST_MSVC)
+    #define BOOST_DI_WKND_1_MSVC(a1) a1
+    #define BOOST_DI_WKND_2_MSVC(a1, a2) a1, a2
+    #define BOOST_DI_WKND_3_MSVC(a1, a2, a3) a1, a2, a3
+    #define BOOST_DI_WKND_4_MSVC(a1, a2, a3, a4) a1, a2, a3, a4
+    #define BOOST_DI_WKND_5_MSVC(a1, a2, a3, a4, a5) a1, a2, a3, a4, a5
+    #define BOOST_DI_WKND_6_MSVC(a1, a2, a3, a4, a5) a1, a2, a3, a4, a5, a6
+#else
+    #define BOOST_DI_WKND_1_MSVC(a1)
+    #define BOOST_DI_WKND_2_MSVC(a1, a2)
+    #define BOOST_DI_WKND_3_MSVC(a1, a2, a3)
+    #define BOOST_DI_WKND_4_MSVC(a1, a2, a3, a4)
+    #define BOOST_DI_WKND_5_MSVC(a1, a2, a3, a4, a5)
+    #define BOOST_DI_WKND_6_MSVC(a1, a2, a3, a4, a5, a6)
+#endif
+
+#if defined(BOOST_MSVC)
+    #define BOOST_DI_WKND_1_NO_MSVC(a1)
+    #define BOOST_DI_WKND_2_NO_MSVC(a1, a2)
+    #define BOOST_DI_WKND_3_NO_MSVC(a1, a2, a3)
+    #define BOOST_DI_WKND_4_NO_MSVC(a1, a2, a3, a4)
+    #define BOOST_DI_WKND_5_NO_MSVC(a1, a2, a3, a4, a5)
+    #define BOOST_DI_WKND_6_NO_MSVC(a1, a2, a3, a4, a5, a6)
+#else
+    #define BOOST_DI_WKND_1_NO_MSVC(a1) a1
+    #define BOOST_DI_WKND_2_NO_MSVC(a1, a2) a1, a2
+    #define BOOST_DI_WKND_3_NO_MSVC(a1, a2, a3) a1, a2, a3
+    #define BOOST_DI_WKND_4_NO_MSVC(a1, a2, a3, a4) a1, a2, a3, a4
+    #define BOOST_DI_WKND_5_NO_MSVC(a1, a2, a3, a4, a5) a1, a2, a3, a4, a5
+    #define BOOST_DI_WKND_6_NO_MSVC(a1, a2, a3, a4, a5, a6) a1, a2, a3, a4, a5, a6
+#endif
+
 #define BOOST_DI_COMMA() ,
 
 #if !defined(BOOST_DI_ASSERT_MSG)
