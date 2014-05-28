@@ -50,7 +50,6 @@ Description
 * supports mocks testing facilities (ex: to create mock hierarchy)
 * minimal overhead / compile time approach
 
-
 [endsect]
 
 [section User's Guide]
