@@ -89,6 +89,10 @@
 
 #endif
 
+#if defined(BOOST_GCC) || defined(BOOST_CLANG)
+    #pragma GCC diagnostic ignored "-Wvariadic-macros"
+#endif
+
 #define BOOST_DI_FEATURE(feature) \
     BOOST_DI_FEATURE_##feature
 
