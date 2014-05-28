@@ -15,7 +15,6 @@
 #include <typeinfo>
 #include <string>
 #include <map>
-#include <cassert>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
@@ -554,31 +553,36 @@ public:
     { }
 
     template<typename I>
-    aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) {
+    aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const {
         return aux::shared_ptr<I>(new I(value_));
     }
 
     template<typename I>
-    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) {
+    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) const {
         return aux_::shared_ptr<I>(new I(value_));
     }
 
     template<typename I>
-    I* operator()(const type<I*>&) {
+    I* operator()(const type<I*>&) const {
         return new I(value_);
     }
 
     template<typename I>
-    I operator()(const type<I>&) {
+    I operator()(const type<I>&) const {
         return value_;
     }
 
     BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
         template<typename I>
-        I&& operator()(const type<I&&>&) {
+        I&& operator()(const type<I&&>&) const {
             return std::move(value_);
         }
     )
+
+    template<typename I>
+    I& operator()(const type<I&>&) {
+        return value_;
+    }
 
 private:
     T value_;
@@ -889,7 +893,7 @@ private:
         class any_type
         {
         public:
-            template<typename U> operator U();
+
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
@@ -922,7 +926,7 @@ private:
         class any_type
         {
         public:
-            template<typename U> operator U();
+
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
@@ -955,7 +959,7 @@ private:
         class any_type
         {
         public:
-            template<typename U> operator U();
+
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
@@ -988,7 +992,7 @@ private:
         class any_type
         {
         public:
-            template<typename U> operator U();
+
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
@@ -1021,7 +1025,7 @@ private:
         class any_type
         {
         public:
-            template<typename U> operator U();
+
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
@@ -1054,7 +1058,7 @@ private:
         class any_type
         {
         public:
-            template<typename U> operator U();
+
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
@@ -1087,7 +1091,7 @@ private:
         class any_type
         {
         public:
-            template<typename U> operator U();
+
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
@@ -1120,7 +1124,7 @@ private:
         class any_type
         {
         public:
-            template<typename U> operator U();
+
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
@@ -1153,7 +1157,7 @@ private:
         class any_type
         {
         public:
-            template<typename U> operator U();
+
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
             BOOST_DI_FEATURE(1, RVALUE_REFERENCES)(
@@ -8327,6 +8331,41 @@ private:
 };
 
 template<typename T, typename TName>
+class universal_impl<const named<T, TName>&>
+{
+    template<typename TValueType>
+    struct holder
+    {
+        explicit holder(const TValueType& value)
+            : held(value)
+        { }
+
+        TValueType held;
+    };
+
+    template<typename TObject>
+    static const named<T, TName>& callback_copy(std::vector<aux::shared_ptr<void> >& refs, const TObject& object) {
+        aux::shared_ptr<holder<named<T, TName> > > value(new holder<named<T, TName> >(named<T, TName>(object(boost::type<T>()))));
+        refs.push_back(value);
+        return value->held;
+    }
+
+public:
+    template<typename TObject>
+    universal_impl(std::vector<aux::shared_ptr<void> >& refs
+                 , const TObject& object)
+        : callback_(boost::bind(&universal_impl<const named<T, TName>&>::callback_copy<TObject>, boost::ref(refs), object))
+    { }
+
+    operator const named<T, TName>&() const {
+        return callback_();
+    }
+
+private:
+    function<const named<T, TName>&()> callback_;
+};
+
+template<typename T, typename TName>
 class universal_impl<named<T, TName> >
 {
 public:
@@ -8434,7 +8473,19 @@ struct scope_traits<aux::weak_ptr<T> >
 };
 
 template<typename T>
+struct scope_traits<const aux::weak_ptr<T>&>
+{
+    typedef scopes::shared<> type;
+};
+
+template<typename T>
 struct scope_traits<aux::unique_ptr<T> >
+{
+    typedef scopes::unique<> type;
+};
+
+template<typename T>
+struct scope_traits<const aux::unique_ptr<T>&>
 {
     typedef scopes::unique<> type;
 };
@@ -9010,7 +9061,6 @@ private:
             eager_creator(creator& c, TDeps& deps, TRefs& refs, const TVisitor& visitor)
                 : c_(c), deps_(deps), refs_(refs), visitor_(visitor)
             { }
-
             template<
                 typename U
                 BOOST_DI_FEATURE(2, FUNCTION_TEMPLATE_DEFAULT_ARGS)(
@@ -9023,15 +9073,15 @@ private:
                     >::type
                 )
             >
-            operator U() {
+            operator aux::unique_ptr<U>() {
                 return c_.create_impl<
-                    U
+                    aux::unique_ptr<U>
                   , typename mpl::push_back<
                         TCallStack
-                      , typename type_traits::make_plain<U>::type
+                      , typename type_traits::make_plain<aux::unique_ptr<U>>::type
                     >::type
                   , TPolicies
-                  , binder<U, TCallStack>
+                  , binder<aux::unique_ptr<U>, TCallStack>
                 >(deps_, refs_, visitor_);
             }
 
@@ -11798,14 +11848,9 @@ BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
 
 struct allow_smart_ptrs
 {
-    template<typename, typename = void>
-    struct allow
-        : mpl::false_
-    { };
-
     template<typename T>
-    struct allow<T, typename enable_if<has_element_type<T> >::type>
-        : mpl::true_
+    struct allow
+        : has_element_type<typename type_traits::remove_accessors<T>::type>
     { };
 };
 
@@ -11813,7 +11858,13 @@ struct allow_refs
 {
     template<typename T>
     struct allow
-        : is_reference<T>
+        : mpl::and_<
+              mpl::not_<is_const<typename remove_reference<T>::type> >
+            , is_reference<T>
+            , mpl::not_<
+                  has_element_type<typename type_traits::remove_accessors<T>::type>
+              >
+          >
     { };
 };
 
@@ -11824,6 +11875,9 @@ struct allow_const_refs
         : mpl::and_<
               is_const<typename remove_reference<T>::type>
             , is_reference<T>
+            , mpl::not_<
+                  has_element_type<typename type_traits::remove_accessors<T>::type>
+              >
           >
     { };
 };
@@ -11852,7 +11906,7 @@ struct allow_copies
                mpl::not_<is_reference<T> >
              , mpl::not_<is_pointer<T> >
              , mpl::not_<is_rvalue_reference<T> >
-             , mpl::not_<has_element_type<T> >
+             , mpl::not_<has_element_type<typename type_traits::remove_accessors<T>::type> >
           >
     { };
 };
