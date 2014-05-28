@@ -6,6 +6,7 @@
 //
 #include <boost/shared_ptr.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/remove_reference.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/has_xxx.hpp>
 #include <boost/mpl/assert.hpp>
@@ -29,7 +30,9 @@ class allow_only_smart_ptr_policy
 
     template<typename TDependency>
     struct is_creation_by_smart_ptr
-        : has_element_type<typename TDependency::type>
+        : has_element_type<
+              typename boost::remove_reference<typename TDependency::type>::type
+          >
     { };
 
 public:
