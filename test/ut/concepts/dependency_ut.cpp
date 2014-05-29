@@ -103,14 +103,12 @@ BOOST_AUTO_TEST_CASE(to_shared_ptr) {
     BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
 }
 
-#if !defined(BOOST_MSVC)
-    BOOST_AUTO_TEST_CASE(to_lambda_shared_ptr) {
-        using expected = scopes::external<wrappers::shared>;
-        auto given = dependency<fake_scope<>, int>::to([]{ return aux::shared_ptr<int>(); });
-        using external = decltype(given);
-        BOOST_CHECK_EQUAL(&typeid(expected), &typeid(external::scope));
-    }
-#endif
+BOOST_AUTO_TEST_CASE(to_lambda_shared_ptr) {
+    using expected = scopes::external<wrappers::shared>;
+    auto given = dependency<fake_scope<>, int>::to([]{ return aux::shared_ptr<int>(); });
+    using external = decltype(given);
+    BOOST_CHECK_EQUAL(&typeid(expected), &typeid(external::scope));
+}
 
 } // namespace concepts
 } // namespace di

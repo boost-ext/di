@@ -133,56 +133,54 @@ BOOST_AUTO_TEST_CASE(externals_return_from_function) {
     BOOST_CHECK_EQUAL(0, c5_.c2_->c);
 }
 
-#if !defined(BOOST_MSVC)
-    BOOST_AUTO_TEST_CASE(runtime_factory_impl) {
-        const auto debug_property = false;
-        const auto value = 42;
+BOOST_AUTO_TEST_CASE(runtime_factory_impl) {
+    const auto debug_property = false;
+    const auto value = 42;
 
-        auto common = make_injector(
-            bind<int>::to(value)
-        );
+    auto common = make_injector(
+        bind<int>::to(value)
+    );
 
-        auto all = make_injector(
-            common
-          , bind<i>::to([&]() -> aux::shared_ptr<i> {
-                if (debug_property) {
-                    return aux::shared_ptr<i>(new fake());
-                }
+    auto all = make_injector(
+        common
+      , bind<i>::to([&]() -> aux::shared_ptr<i> {
+            if (debug_property) {
+                return aux::shared_ptr<i>(new fake());
+            }
 
-                return common.create<aux::shared_ptr<impl>>();
-            })
-        );
+            return common.create<aux::shared_ptr<impl>>();
+        })
+    );
 
-        auto i_ = all.create<aux::shared_ptr<i>>();
+    auto i_ = all.create<aux::shared_ptr<i>>();
 
-        BOOST_CHECK(dynamic_cast<impl*>(i_.get()));
-        BOOST_CHECK_EQUAL(value, dynamic_cast<impl*>(i_.get())->i);
-    }
+    BOOST_CHECK(dynamic_cast<impl*>(i_.get()));
+    BOOST_CHECK_EQUAL(value, dynamic_cast<impl*>(i_.get())->i);
+}
 
-    BOOST_AUTO_TEST_CASE(runtime_factory_fake) {
-        const auto debug_property = true;
-        const auto value = 42;
+BOOST_AUTO_TEST_CASE(runtime_factory_fake) {
+    const auto debug_property = true;
+    const auto value = 42;
 
-        auto common = make_injector(
-            bind<int>::to(value)
-        );
+    auto common = make_injector(
+        bind<int>::to(value)
+    );
 
-        auto all = make_injector(
-            common
-          , bind<i>::to([&]() -> aux::shared_ptr<i> {
-                if (debug_property) {
-                    return aux::shared_ptr<i>(new fake());
-                }
+    auto all = make_injector(
+        common
+      , bind<i>::to([&]() -> aux::shared_ptr<i> {
+            if (debug_property) {
+                return aux::shared_ptr<i>(new fake());
+            }
 
-                return common.create<aux::shared_ptr<impl>>();
-            })
-        );
+            return common.create<aux::shared_ptr<impl>>();
+        })
+    );
 
-        auto i_ = all.create<aux::shared_ptr<i>>();
+    auto i_ = all.create<aux::shared_ptr<i>>();
 
-        BOOST_CHECK(dynamic_cast<fake*>(i_.get()));
-    }
-#endif
+    BOOST_CHECK(dynamic_cast<fake*>(i_.get()));
+}
 
 } // namespace di
 } // namespace boost
