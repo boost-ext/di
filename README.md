@@ -74,7 +74,7 @@ int main() {
 
 ## Tested compilers
 * Clang 3.2/3.3/3.4/3.4.1
-* GCC 4.7.3/4.8.2
+* GCC 4.7.3/4.8.2/4.9.0
 * Intel C++ 14.0.3
 * MinGW 4.7.3/4.8.2
 * Visual Studio 2013
