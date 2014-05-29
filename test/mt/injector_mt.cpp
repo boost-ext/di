@@ -481,10 +481,6 @@ BOOST_AUTO_TEST_CASE(stored_ref_created_by_injector) {
     BOOST_CHECK(ref_sp_int_.i_);
 }
 
-//BOOST_AUTO_TEST_CASE(shared_by_ref) {
-    //auto c1_ = injector<shared<c1>>().create<shared_ref>();
-//}
-
 } // namespace di
 } // namespace boost
 

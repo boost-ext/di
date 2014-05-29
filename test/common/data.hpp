@@ -453,19 +453,6 @@ struct c28
     float f_ = 0.0;
 };
 
-struct shared_ref
-{
-    BOOST_DI_INJECT(shared_ref, const aux::shared_ptr<c1>& c1_, const c1& c1__, c1& c1___)
-        : c1_(c1_), c1__(c1__), c1___(c1___)
-    { }
-
-    shared_ref& operator=(const shared_ref&);
-
-    aux::shared_ptr<c1> c1_;
-    const c1& c1__;
-    c1& c1___;
-};
-
 struct ref_sp_int
 {
     BOOST_DI_INJECT(ref_sp_int, const aux::shared_ptr<int>& i)
