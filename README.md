@@ -73,11 +73,17 @@ int main() {
 * Runtime visitor throughout created objects (useful for generation dependency diagrams)
 
 ## Tested compilers
-* Clang 3.2/3.3/3.4/3.4.1
-* GCC 4.7.3/4.8.2/4.9.0
-* Intel C++ 14.0.3
-* MinGW 4.7.3/4.8.2
-* Visual Studio 2013
+* Linux (Valgrind, Clang Static Analyzer)
+   * Clang 3.2/3.3/3.4/3.4.1
+   * GCC 4.7.3/4.8.2/4.9.0
+   * Intel C++ 14.0.3
+
+* Windows (DrMemory)
+   * MinGW 4.7.3/4.8.2
+   * Visual Studio 2013
+
+* Mac
+   * Clang 3.4.1
 
 ## More information
 * [Documentation](http://krzysztof-jusiak.github.com/di/doc/html)
