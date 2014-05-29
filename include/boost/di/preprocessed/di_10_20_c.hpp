@@ -1578,6 +1578,32 @@ struct scope_traits<mpl::_1>
     typedef scopes::deduce type;
 };
 
+template<typename T>
+class has_call_operator
+{
+    struct base_impl { void operator()(...) { } };
+    struct base
+        : base_impl
+        , mpl::if_<is_class<T>, T, mpl::void_>::type
+    { base() { } };
+
+    template<typename U>
+    static mpl::aux::no_tag test(
+        U*
+      , non_type<void (base_impl::*)(...), &U::operator()>* = 0
+    );
+
+    static mpl::aux::yes_tag test(...);
+
+public:
+    typedef has_call_operator type;
+
+    BOOST_STATIC_CONSTANT(
+        bool
+      , value = sizeof(test((base*)(0))) == sizeof(mpl::aux::yes_tag)
+    );
+};
+
 } // namespace detail
 
 template<
@@ -1613,32 +1639,6 @@ class dependency : public get_scope<TExpected, TGiven, TScope>::type
     struct external
     {
         typedef dependency<S, T, U, TBind> type;
-    };
-
-    template<typename T>
-    class has_call_operator
-    {
-        struct base_impl { void operator()(...) { } };
-        struct base
-            : base_impl
-            , mpl::if_<is_class<T>, T, mpl::void_>::type
-        { base() { } };
-
-        template<typename U>
-        static mpl::aux::no_tag test(
-            U*
-          , non_type<void (base_impl::*)(...), &U::operator()>* = 0
-        );
-
-        static mpl::aux::yes_tag test(...);
-
-    public:
-        typedef has_call_operator type;
-
-        BOOST_STATIC_CONSTANT(
-            bool
-          , value = sizeof(test((base*)(0))) == sizeof(mpl::aux::yes_tag)
-        );
     };
 
     template<typename, typename = void>
@@ -1693,7 +1693,7 @@ class dependency : public get_scope<TExpected, TGiven, TScope>::type
     };
 
     template<typename T>
-    struct get_convertible<T, typename enable_if<has_call_operator<T> >::type>
+    struct get_convertible<T, typename enable_if<detail::has_call_operator<T> >::type>
         : get_convertible_impl<
               typename di::type_traits::parameter_types<
                   BOOST_DI_FEATURE_DECLTYPE(&T::operator())
@@ -1733,20 +1733,20 @@ public:
     template<typename T>
     static typename external<expected, T, value_type>::type
     to(const T& obj, typename enable_if<is_value<T> >::type* = 0
-                   , typename disable_if<has_call_operator<T> >::type* = 0) {
+                   , typename disable_if<detail::has_call_operator<T> >::type* = 0) {
         return typename external<expected, T, value_type>::type(obj);
     }
 
     template<typename T>
     static typename external<const expected, T, ref_type>::type
     to(const T& obj, typename disable_if<is_value<T> >::type* = 0
-                   , typename disable_if<has_call_operator<T> >::type* = 0) {
+                   , typename disable_if<detail::has_call_operator<T> >::type* = 0) {
         return typename external<const expected, T, ref_type>::type(boost::cref(obj));
     }
 
     template<typename T>
     static typename external<expected, T, typename get_convertible<T>::type>::type
-    to(const T& obj, typename enable_if<has_call_operator<T> >::type* = 0
+    to(const T& obj, typename enable_if<detail::has_call_operator<T> >::type* = 0
                    , typename disable_if<is_value<T> >::type* = 0) {
         return typename external<expected, T, typename get_convertible<T>::type>::type(obj);
     }
