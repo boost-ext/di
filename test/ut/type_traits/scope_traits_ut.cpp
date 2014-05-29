@@ -18,7 +18,7 @@ namespace type_traits {
 
 struct c { };
 
-BOOST_AUTO_TEST_CASE(basic) {
+BOOST_AUTO_TEST_CASE(types) {
     BOOST_CHECK((is_same<scopes::unique<>, scope_traits<int>::type>::value));
     BOOST_CHECK((is_same<scopes::unique<>, scope_traits<named<int>>::type>::value));
     BOOST_CHECK((is_same<scopes::unique<>, scope_traits<c>::type>::value));
@@ -32,11 +32,20 @@ BOOST_AUTO_TEST_CASE(basic) {
     BOOST_CHECK((is_same<scopes::unique<>, scope_traits<aux::auto_ptr<int>>::type>::value));
     BOOST_CHECK((is_same<scopes::unique<>, scope_traits<named<aux::auto_ptr<int>>>::type>::value));
     BOOST_CHECK((is_same<scopes::shared<>, scope_traits<aux::shared_ptr<int>>::type>::value));
+    BOOST_CHECK((is_same<scopes::shared<>, scope_traits<const aux::shared_ptr<int>&>::type>::value));
     BOOST_CHECK((is_same<scopes::shared<>, scope_traits<named<aux::shared_ptr<int>>>::type>::value));
+    BOOST_CHECK((is_same<scopes::shared<>, scope_traits<const named<aux::shared_ptr<int>>&>::type>::value));
+    BOOST_CHECK((is_same<scopes::shared<>, scope_traits<aux_::shared_ptr<int>>::type>::value));
+    BOOST_CHECK((is_same<scopes::shared<>, scope_traits<const aux_::shared_ptr<int>&>::type>::value));
+    BOOST_CHECK((is_same<scopes::shared<>, scope_traits<named<aux_::shared_ptr<int>>>::type>::value));
+    BOOST_CHECK((is_same<scopes::shared<>, scope_traits<const named<aux_::shared_ptr<int>>&>::type>::value));
     BOOST_CHECK((is_same<scopes::shared<>, scope_traits<aux::weak_ptr<int>>::type>::value));
+    BOOST_CHECK((is_same<scopes::shared<>, scope_traits<const aux::weak_ptr<int>&>::type>::value));
     BOOST_CHECK((is_same<scopes::shared<>, scope_traits<named<aux::weak_ptr<int>>>::type>::value));
+    BOOST_CHECK((is_same<scopes::shared<>, scope_traits<const named<aux::weak_ptr<int>>&>::type>::value));
     BOOST_CHECK((is_same<scopes::external<>, scope_traits<int&>::type>::value));
     BOOST_CHECK((is_same<scopes::external<>, scope_traits<named<int&>>::type>::value));
+    BOOST_CHECK((is_same<scopes::external<>, scope_traits<const named<int&>&>::type>::value));
 
 #if !defined(BOOST_NO_CXX11_SMART_PTR)
     BOOST_CHECK((is_same<scopes::unique<>, scope_traits<aux::unique_ptr<int>>::type>::value));

@@ -370,7 +370,7 @@ struct c21
 struct c22
 {
     BOOST_DI_INJECT(c22
-        , named<aux::shared_ptr<int>, mpl::string<'1'>> i
+        , const named<aux::shared_ptr<int>, mpl::string<'1'>>& i
         , aux::shared_ptr<c11> c11_
     )
         : i(i), c11_(c11_)

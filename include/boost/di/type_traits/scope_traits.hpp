@@ -7,22 +7,18 @@
 #ifndef BOOST_DI_TYPE_TRAITS_SCOPE_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_SCOPE_TRAITS_HPP
 
+#include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/memory.hpp"
-#include "boost/di/type_traits/make_plain.hpp" // has_named_type
-#include "boost/di/type_traits/remove_accessors.hpp"
 #include "boost/di/scopes/unique.hpp"
 #include "boost/di/scopes/shared.hpp"
 #include "boost/di/scopes/external.hpp"
-
-#include <boost/config.hpp>
-#include <boost/utility/enable_if.hpp>
-#include <boost/mpl/has_xxx.hpp>
+#include "boost/di/named.hpp"
 
 namespace boost {
 namespace di {
 namespace type_traits {
 
-template<typename T, typename = void>
+template<typename T>
 struct scope_traits
 {
     typedef scopes::unique<> type;
@@ -120,10 +116,16 @@ BOOST_DI_FEATURE(RVALUE_REFERENCES)(
     };
 )
 
-template<typename T>
-struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
+template<typename T, typename TName>
+struct scope_traits<named<T, TName> >
 {
-    typedef typename scope_traits<typename T::named_type>::type type;
+    typedef typename scope_traits<T>::type type;
+};
+
+template<typename T, typename TName>
+struct scope_traits<const named<T, TName>&>
+{
+    typedef typename scope_traits<T>::type type;
 };
 
 } // namespace type_traits

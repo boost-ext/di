@@ -8380,11 +8380,12 @@ public:
 } // namespace di
 } // namespace boost
 
+
 namespace boost {
 namespace di {
 namespace type_traits {
 
-template<typename T, typename = void>
+template<typename T>
 struct scope_traits
 {
     typedef scopes::unique<> type;
@@ -8482,10 +8483,16 @@ BOOST_DI_FEATURE(RVALUE_REFERENCES)(
     };
 )
 
-template<typename T>
-struct scope_traits<T, typename enable_if<has_named_type<T> >::type>
+template<typename T, typename TName>
+struct scope_traits<named<T, TName> >
 {
-    typedef typename scope_traits<typename T::named_type>::type type;
+    typedef typename scope_traits<T>::type type;
+};
+
+template<typename T, typename TName>
+struct scope_traits<const named<T, TName>&>
+{
+    typedef typename scope_traits<T>::type type;
 };
 
 } // namespace type_traits
