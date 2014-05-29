@@ -31,7 +31,7 @@ test-suite "di / c++ 11" :
     [ run-test c++11 : cpp_11/custom_scope.cpp ]
     [ run-test c++11 : cpp_11/deduce_scope.cpp ]
     [ run-test c++11 : cpp_11/externals.cpp ]
-    #[ run-test c++11 : cpp_11/factory.cpp ]
+    [ run-test c++11 : cpp_11/factory.cpp ]
     [ run-test c++11 : cpp_11/hello_world.cpp ]
     [ run-test c++11 : cpp_11/injector.cpp ]
     [ run-test c++11 : cpp_11/named.cpp ]
