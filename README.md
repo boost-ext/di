@@ -72,22 +72,22 @@ int main() {
 * Named parameters (named\<int, my\_int\>)
 * Runtime visitor throughout created objects (useful for generation dependency diagrams)
 
-## Tested compilers
-* Linux (Valgrind, Clang Static Analyzer)
-   * Clang 3.2/3.3/3.4/3.4.1
-   * GCC 4.7.3/4.8.2/4.9.0
-   * Intel C++ 14.0.3
-
-* Windows (DrMemory)
-   * MinGW 4.7.3/4.8.2
-   * Visual Studio 2013
-
-* Mac
-   * Clang 3.4.1
-
 ## More information
 * [Documentation](http://krzysztof-jusiak.github.com/di/doc/html)
 * [Todo/Issues] (https://github.com/krzysztof-jusiak/di/issues?state=open)
+
+## Tested compilers
+* Linux
+   * Clang 3.2/3.3/3.4/3.4.1 (clean with Clang Static Analyzer and Valgrind)
+   * GCC 4.7.3/4.8.2/4.9.0 (clean with Valgrind)
+   * Intel C++ 14.0.3
+
+* Windows
+   * MinGW 4.7.3/4.8.2
+   * Visual Studio 2013 (clean with DrMemory)
+
+* Mac
+   * Clang 3.4.1
 
 ## Continuous integration
 [![Build Status](https://travis-ci.org/krzysztof-jusiak/di.png?branch=master)](https://travis-ci.org/krzysztof-jusiak/di)
