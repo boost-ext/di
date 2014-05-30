@@ -54,7 +54,7 @@ int main() {
                                                                     // bind<i, impl> -> useful with multiple interfaces
       , di::bind_int<42>()                                          // static, compile time value
       , di::bind<std::string>::named<some_name>::to("some_name")    // external, named value
-      , di::bind<float>::to(f)                                      // external reference
+      , di::bind<float>::to(boost::ref(f))                          // external reference
     );
 
     auto hello_world = injector.create<world>();

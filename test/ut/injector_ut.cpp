@@ -981,8 +981,8 @@ BOOST_AUTO_TEST_CASE(to_ref) {
     c14& c14_ref = c14_;
 
     auto injector_ = injector<>()(
-        bind<c3>::to(c3_const_ref)
-      , bind<c14>::to(c14_ref)
+        bind<c3>::to(cref(c3_const_ref))
+      , bind<c14>::to(ref(c14_ref))
     );
 
     auto c16_ = injector_.create<aux::shared_ptr<c16>>();
@@ -1002,8 +1002,8 @@ BOOST_AUTO_TEST_CASE(to_ref_no_copy) {
     c14 c14_(i, d);
 
     auto injector_ = injector<>()(
-        bind<c3>::to(boost::cref(c3_))
-      , bind<c14>::to(c14_)
+        bind<c3>::to(cref(c3_))
+      , bind<c14>::to(ref(c14_))
     );
 
     auto c16_ = injector_.create<aux::shared_ptr<c16>>();
