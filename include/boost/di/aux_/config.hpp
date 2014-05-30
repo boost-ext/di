@@ -90,6 +90,7 @@
 #endif
 
 #if defined(BOOST_GCC) || defined(BOOST_CLANG)
+    #pragma GCC system_header
     #pragma GCC diagnostic ignored "-Wvariadic-macros"
 #endif
 
