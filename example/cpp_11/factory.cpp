@@ -97,6 +97,7 @@ int main() {
 
     id = e2;
     conf.create<c<impl2>>();
+    (void)id;
 
     return 0;
 }
