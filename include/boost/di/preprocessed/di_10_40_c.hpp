@@ -8293,6 +8293,32 @@ private:
     function<const named<T, TName>&()> callback_;
 };
 
+template<typename T, typename TName>
+class universal_impl<const named<const T&, TName>&>
+{
+public:
+    template<typename TValueType>
+    universal_impl(std::vector<aux::shared_ptr<void> >&
+                 , const TValueType& value
+                 , typename enable_if<is_convertible_to_ref<TValueType, T> >::type* = 0)
+        : callback_(boost::bind(&callback_ref<named<const T&, TName>, TValueType>, value))
+    { }
+
+    template<typename TValueType>
+    universal_impl(std::vector<aux::shared_ptr<void> >& refs
+                 , const TValueType& value
+                 , typename disable_if<is_convertible_to_ref<TValueType, T> >::type* = 0)
+        : callback_(boost::bind(&callback_copy<named<const T&, TName>, T, TValueType>, boost::ref(refs), value))
+    { }
+
+    operator const named<const T&, TName>&() const {
+        return callback_();
+    }
+
+private:
+    function<const named<const T&, TName>&()> callback_;
+};
+
 } // namespace detail
 
 template<typename T>
