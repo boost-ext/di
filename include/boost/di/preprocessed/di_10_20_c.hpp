@@ -1455,7 +1455,7 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
 
     namespace scopes {
 
-    template<template<typename> class TConvertible = wrappers::value>
+    template<template<typename> class TWrapper = wrappers::value>
     class external
     {
     public:
@@ -1466,7 +1466,7 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
         {
         public:
             typedef scope type;
-            typedef TConvertible<TExpected> result_type;
+            typedef TWrapper<TExpected> result_type;
 
         private:
             class callback
@@ -1839,7 +1839,7 @@ public:
     class session_entry { };
     class session_exit { };
 
-    template<template<typename> class TConvertible = wrappers::shared>
+    template<template<typename> class TWrapper = wrappers::shared>
     class session
     {
     public:
@@ -1850,7 +1850,7 @@ public:
         {
         public:
             typedef scope type;
-            typedef TConvertible<TExpected> result_type;
+            typedef TWrapper<TExpected> result_type;
 
             scope()
                 : in_scope_(false)
@@ -1988,7 +1988,7 @@ public:
     namespace di {
     namespace scopes {
 
-    template<template<typename> class TConvertible = wrappers::shared>
+    template<template<typename> class TWrapper = wrappers::shared>
     class shared
     {
     public:
@@ -1999,7 +1999,7 @@ public:
         {
         public:
             typedef scope type;
-            typedef TConvertible<TExpected> result_type;
+            typedef TWrapper<TExpected> result_type;
 
             template<typename TCreatePolicy>
             result_type create() {
@@ -2614,7 +2614,7 @@ private:
 
         };
 
-    template<template<typename> class TConvertible = wrappers::copy>
+    template<template<typename> class TWrapper = wrappers::copy>
     class unique
     {
     public:
@@ -2625,7 +2625,7 @@ private:
         {
         public:
             typedef scope type;
-            typedef TConvertible<TExpected> result_type;
+            typedef TWrapper<TExpected> result_type;
 
             template<typename TCreatePolicy>
             result_type create() {

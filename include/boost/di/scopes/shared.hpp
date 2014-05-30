@@ -19,7 +19,7 @@
     namespace di {
     namespace scopes {
 
-    template<template<typename> class TConvertible = wrappers::shared>
+    template<template<typename> class TWrapper = wrappers::shared>
     class shared
     {
     public:
@@ -30,7 +30,7 @@
         {
         public:
             typedef scope type;
-            typedef TConvertible<TExpected> result_type;
+            typedef TWrapper<TExpected> result_type;
 
             template<typename TCreatePolicy>
             result_type create() {

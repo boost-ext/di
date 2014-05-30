@@ -526,11 +526,11 @@ BOOST_AUTO_TEST_CASE(visit) {
 
 BOOST_AUTO_TEST_CASE(visit_external) {
     c3 c3_;
-    fake_dependency<scopes::external<>, c3>::type e3(c3_);
+    fake_dependency<scopes::external<wrappers::reference>, c3>::type e3(boost::ref(c3_));
 
     module<
         mpl::vector<
-            fake_dependency<scopes::external<>, c3>::type
+            fake_dependency<scopes::external<wrappers::reference>, c3>::type
         >
     > module_(e3);
 
@@ -540,7 +540,7 @@ BOOST_AUTO_TEST_CASE(visit_external) {
           , mpl::pair<c0, scopes::unique<>>
           , mpl::pair<aux::shared_ptr<c1>, scopes::shared<>>
           , mpl::pair<int, scopes::unique<>>
-          , mpl::pair<c3&, scopes::external<>>
+          , mpl::pair<c3&, scopes::external<wrappers::reference>>
 #if !defined(BOOST_DI_CFG_TEST_CTOR)
           , mpl::pair<int, scopes::unique<>>
 #endif

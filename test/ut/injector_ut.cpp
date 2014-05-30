@@ -1002,7 +1002,7 @@ BOOST_AUTO_TEST_CASE(to_ref_no_copy) {
     c14 c14_(i, d);
 
     auto injector_ = injector<>()(
-        bind<c3>::to(c3_)
+        bind<c3>::to(boost::cref(c3_))
       , bind<c14>::to(c14_)
     );
 

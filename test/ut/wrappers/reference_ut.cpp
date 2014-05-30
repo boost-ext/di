@@ -30,13 +30,6 @@ BOOST_AUTO_TEST_CASE(to_ref) {
     BOOST_CHECK_EQUAL(i, object_ref(type<int&>()));
 }
 
-BOOST_AUTO_TEST_CASE(to_lvalue) {
-    int i = 42;
-    int& i_ref = i;
-    reference<int> object_ref((reference_wrapper<int>(i_ref)));
-    BOOST_CHECK_EQUAL(i, object_ref(type<int>()));
-}
-
 BOOST_AUTO_TEST_CASE(to_const_ref) {
     const int i = 42;
     const int& i_ref = i;

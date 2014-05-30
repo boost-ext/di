@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE(from_arithmetic) {
 
 BOOST_AUTO_TEST_CASE(from_string) {
     const std::string s = "string";
-    BOOST_CHECK_EQUAL(s, (external<>::scope<std::string>(s).create<fake_create_policy>())(type<const std::string&>()));
+    BOOST_CHECK_EQUAL(s, (external<>::scope<std::string>(s).create<fake_create_policy>())(type<std::string>()));
 }
 
 BOOST_AUTO_TEST_CASE(from_ref) {

@@ -32,7 +32,7 @@
     #include BOOST_PP_ITERATE()
     #undef BOOST_DI_CALLBACK
 
-    template<template<typename> class TConvertible = wrappers::copy>
+    template<template<typename> class TWrapper = wrappers::copy>
     class unique
     {
     public:
@@ -43,7 +43,7 @@
         {
         public:
             typedef scope type;
-            typedef TConvertible<TExpected> result_type;
+            typedef TWrapper<TExpected> result_type;
 
             template<typename TCreatePolicy>
             result_type create() {

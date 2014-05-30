@@ -23,7 +23,7 @@
     class session_entry { };
     class session_exit { };
 
-    template<template<typename> class TConvertible = wrappers::shared>
+    template<template<typename> class TWrapper = wrappers::shared>
     class session
     {
     public:
@@ -34,7 +34,7 @@
         {
         public:
             typedef scope type;
-            typedef TConvertible<TExpected> result_type;
+            typedef TWrapper<TExpected> result_type;
 
             scope()
                 : in_scope_(false)

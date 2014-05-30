@@ -51,7 +51,7 @@
 
     namespace scopes {
 
-    template<template<typename> class TConvertible = wrappers::value>
+    template<template<typename> class TWrapper = wrappers::value>
     class external
     {
     public:
@@ -62,7 +62,7 @@
         {
         public:
             typedef scope type;
-            typedef TConvertible<TExpected> result_type;
+            typedef TWrapper<TExpected> result_type;
 
         private:
             class callback

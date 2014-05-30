@@ -22,7 +22,7 @@ template<typename T>
 class value
 {
 public:
-    value(T value) // non explicit
+    value(const T& value) // non explicit
         : value_(value)
     { }
 
@@ -36,27 +36,19 @@ public:
         return aux_::shared_ptr<I>(new I(value_));
     }
 
-    template<typename I>
-    I* operator()(const type<I*>&) const {
-        return new I(value_);
-    }
+    T operator()(const type<T>&) const {
+		return value_;
+	}
 
-    template<typename I>
-    I operator()(const type<I>&) const {
-        return value_;
+    T* operator()(const type<T*>&) const {
+        return new T(value_);
     }
 
     BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-        template<typename I>
-        I&& operator()(const type<I&&>&) const {
+        T&& operator()(const type<T&&>&) const {
             return std::move(value_);
         }
     )
-
-    template<typename I>
-    I& operator()(const type<I&>&) {
-        return value_;
-    }
 
 private:
     T value_;

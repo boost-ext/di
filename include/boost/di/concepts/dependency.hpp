@@ -202,41 +202,41 @@ public:
     dependency() { }
 
     template<typename T>
-    explicit dependency(const T& obj)
-        : scope_type(obj)
+    explicit dependency(const T& object)
+        : scope_type(object)
     { }
 
     template<typename T>
     static typename external<expected, T, value_type>::type
-    to(const T& obj, typename enable_if<is_value<T> >::type* = 0
-                   , typename disable_if<detail::has_call_operator<T> >::type* = 0) {
-        return typename external<expected, T, value_type>::type(obj);
+    to(const T& object, typename enable_if<is_value<T> >::type* = 0
+                      , typename disable_if<detail::has_call_operator<T> >::type* = 0) {
+        return typename external<expected, T, value_type>::type(object);
     }
 
     template<typename T>
     static typename external<const expected, T, ref_type>::type
-    to(const T& obj, typename disable_if<is_value<T> >::type* = 0
-                   , typename disable_if<detail::has_call_operator<T> >::type* = 0) {
-        return typename external<const expected, T, ref_type>::type(boost::cref(obj));
+    to(const T& object, typename disable_if<is_value<T> >::type* = 0
+                      , typename disable_if<detail::has_call_operator<T> >::type* = 0) {
+        return typename external<const expected, T, ref_type>::type(boost::cref(object));
     }
 
     template<typename T>
     static typename external<expected, T, typename get_convertible<T>::type>::type
-    to(const T& obj, typename enable_if<detail::has_call_operator<T> >::type* = 0
-                   , typename disable_if<is_value<T> >::type* = 0) {
-        return typename external<expected, T, typename get_convertible<T>::type>::type(obj);
+    to(const T& object, typename enable_if<detail::has_call_operator<T> >::type* = 0
+                      , typename disable_if<is_value<T> >::type* = 0) {
+        return typename external<expected, T, typename get_convertible<T>::type>::type(object);
     }
 
     template<typename T>
     static typename external<expected, T, ref_type>::type
-    to(T& obj) {
-        return typename external<expected, T, ref_type>::type(boost::ref(obj));
+    to(T& object) {
+        return typename external<expected, T, ref_type>::type(boost::ref(object));
     }
 
     template<typename T>
     static typename external<expected, T, shared_type>::type
-    to(aux::shared_ptr<T> obj) {
-        return typename external<expected, T, shared_type>::type(obj);
+    to(aux::shared_ptr<T> object) {
+        return typename external<expected, T, shared_type>::type(object);
     }
 };
 
