@@ -158,7 +158,7 @@ public:
     }
 
 private:
-    function<const T&()> callback_;
+    function<named<const T&, TName>()> callback_;
 };
 
 template<typename T, typename TName>
@@ -168,7 +168,7 @@ public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >& refs
                  , const TValueType& value)
-        : callback_(boost::bind(&callback_copy<T, T, TValueType>, boost::ref(refs), value))
+        : callback_(boost::bind(&callback_copy<named<T, TName>, T, TValueType>, boost::ref(refs), value))
     { }
 
     operator const named<T, TName>&() const {
@@ -176,7 +176,7 @@ public:
     }
 
 private:
-    function<T()> callback_;
+    function<const named<T, TName>&()> callback_;
 };
 
 } // namespace detail
