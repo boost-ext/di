@@ -135,17 +135,17 @@ public:
     { }
 
     template<typename T>
-    static dependency<ref_type, typename unwrap_reference<T>::type, T, TBind>
-    to(const T& object, typename enable_if<is_reference_wrapper<T> >::type* = 0
-                      , typename disable_if<has_call_operator<T> >::type* = 0) {
-        return dependency<ref_type, typename unwrap_reference<T>::type, T, TBind>(object);
-    }
-
-    template<typename T>
     static dependency<value_type, expected, T, TBind>
     to(const T& object, typename disable_if<is_reference_wrapper<T> >::type* = 0
                       , typename disable_if<has_call_operator<T> >::type* = 0) {
         return dependency<value_type, expected, T, TBind>(object);
+    }
+
+    template<typename T>
+    static dependency<ref_type, typename unwrap_reference<T>::type, T, TBind>
+    to(const T& object, typename enable_if<is_reference_wrapper<T> >::type* = 0
+                      , typename disable_if<has_call_operator<T> >::type* = 0) {
+        return dependency<ref_type, typename unwrap_reference<T>::type, T, TBind>(object);
     }
 
     template<typename T>

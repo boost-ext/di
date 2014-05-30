@@ -56,7 +56,7 @@ int main() {
       , di::bind<double>::to(42.0)
       , di::bind<double>::when<di::call_stack<c0>>::to(87.0)
       , di::bind<c3>::to(c3_)
-      , di::bind<c4>::to(c4_)
+      , di::bind<c4>::to(boost::ref(c4_))
     );
 
     injector.create<c5>();
