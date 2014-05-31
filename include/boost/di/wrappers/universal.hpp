@@ -211,6 +211,9 @@ template<typename T>
 class universal : public detail::universal_impl<T>
 {
 public:
+    typedef universal type;
+    typedef T element_type;
+
     template<typename TValueType>
     universal(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value)
         : detail::universal_impl<T>(refs, value)

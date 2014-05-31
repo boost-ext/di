@@ -4845,6 +4845,9 @@ template<typename T>
 class universal : public detail::universal_impl<T>
 {
 public:
+    typedef universal type;
+    typedef T element_type;
+
     template<typename TValueType>
     universal(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value)
         : detail::universal_impl<T>(refs, value)
@@ -5962,10 +5965,10 @@ private:
     }
 
         template<typename TSeq, typename T>
-        typename enable_if<mpl::empty<TSeq> >::type assert_policies() { }
+        static typename enable_if<mpl::empty<TSeq> >::type assert_policies() { }
 
         template<typename TSeq, typename T>
-        typename disable_if<mpl::empty<TSeq> >::type assert_policies() {
+        static typename disable_if<mpl::empty<TSeq> >::type assert_policies() {
             typedef typename mpl::front<TSeq>::type policy;
             policy::template assert_policy<T>();
             assert_policies<typename mpl::pop_front<TSeq>::type, T>();
