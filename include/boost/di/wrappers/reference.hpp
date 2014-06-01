@@ -18,16 +18,16 @@ template<typename T>
 class reference
 {
 public:
-    reference(const reference_wrapper<T>& object) // non explicit
-        : object_(object)
+    reference(const reference_wrapper<T>& value) // non explicit
+        : value_(value)
     { }
 
     T& operator()(const type<T&>&) const {
-        return object_;
+        return value_;
     }
 
 private:
-    reference_wrapper<T> object_;
+    reference_wrapper<T> value_;
 };
 
 } // namespace wrappers

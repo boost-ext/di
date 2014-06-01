@@ -20,6 +20,8 @@ namespace wrappers {
 template<typename T>
 class copy
 {
+    typedef function<T*()> value_t;
+
     template<typename I>
     class scoped_ptr
     {
@@ -36,44 +38,44 @@ class copy
     };
 
 public:
-    template<typename I>
-    copy(I* object) // non explicit
-        : object_(object)
+    template<typename TValueType>
+    copy(const TValueType& value) // non explicit
+        : value_(value)
     { }
 
     template<typename I>
     I operator()(const type<I>&, typename disable_if<is_polymorphic<I> >::type* = 0) const {
-        scoped_ptr<I> ptr(object_);
+        scoped_ptr<I> ptr(value_());
         return *ptr;
     }
 
     template<typename I>
     I* operator()(const type<I*>&) const {
-        return object_; // ownership transfer
+        return value_(); // ownership transfer
     }
 
     template<typename I>
     aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const {
-        return aux::shared_ptr<I>(object_);
+        return aux::shared_ptr<I>(value_());
     }
 
     template<typename I>
     aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) const {
-        return aux_::shared_ptr<I>(object_);
+        return aux_::shared_ptr<I>(value_());
     }
 
     template<typename I>
     aux::auto_ptr<I> operator()(const type<aux::auto_ptr<I> >&) const {
-        return aux::auto_ptr<I>(object_);
+        return aux::auto_ptr<I>(value_());
     }
 
     template<typename I>
     aux::unique_ptr<I> operator()(const type<aux::unique_ptr<I> >&) const {
-        return aux::unique_ptr<I>(object_);
+        return aux::unique_ptr<I>(value_());
     }
 
 private:
-    T* object_; // weak
+    value_t value_;
 };
 
 } // namespace wrappers

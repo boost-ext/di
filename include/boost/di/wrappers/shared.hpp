@@ -23,47 +23,47 @@ class shared
     class sp_holder
     {
     public:
-        explicit sp_holder(const TShared& object)
-            : object_(object)
+        explicit sp_holder(const TShared& value)
+            : value_(value)
         { }
 
     private:
-        TShared object_;
+        TShared value_;
     };
 
 public:
     shared() { }
 
-    shared(const aux::shared_ptr<T>& object) // non explicit
-        : object_(object)
+    shared(const aux::shared_ptr<T>& value) // non explicit
+        : value_(value)
     { }
 
     bool operator!() const {
-        return !object_;
+        return !value_;
     }
 
     void reset(T* ptr = 0) {
-        return object_.reset(ptr);
+        return value_.reset(ptr);
     }
 
     template<typename I>
     aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const {
-        return object_;
+        return value_;
     }
 
     template<typename I>
     aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) const {
-        aux_::shared_ptr<sp_holder<T> > sp(new sp_holder<T>(object_));
-        return aux_::shared_ptr<T>(sp, object_.get());
+        aux_::shared_ptr<sp_holder<T> > sp(new sp_holder<T>(value_));
+        return aux_::shared_ptr<T>(sp, value_.get());
     }
 
     template<typename I>
     aux::weak_ptr<I> operator()(const type<aux::weak_ptr<I> >&) const {
-        return object_;
+        return value_;
     }
 
 private:
-    aux::shared_ptr<T> object_;
+    aux::shared_ptr<T> value_;
 };
 
 } // namespace wrappers
