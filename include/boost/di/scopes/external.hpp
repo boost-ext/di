@@ -10,7 +10,6 @@
     #define BOOST_DI_SCOPES_EXTERNAL_HPP
 
     #include "boost/di/aux_/config.hpp"
-    #include "boost/di/aux_/function.hpp"
     #include "boost/di/wrappers/value.hpp"
     #include "boost/di/type_traits/create_traits.hpp"
 
@@ -64,37 +63,20 @@
             typedef scope type;
             typedef TWrapper<TExpected> result_type;
 
-        private:
-            class callback
-            {
-            public:
-                template<typename T>
-                explicit callback(const T& object)
-                    : object_(object)
-                { }
-
-                result_type operator()() const {
-                    return object_;
-                }
-
-            private:
-                result_type object_;
-            };
-
         public:
             template<typename T>
             explicit scope(const T& object, typename enable_if_c<has_call_operator<T>::value>::type* = 0)
-                : object_(object)
+                : object_(object())
             { }
 
             template<typename T>
             explicit scope(const T& object, typename disable_if_c<has_call_operator<T>::value>::type* = 0)
-                : object_(callback(object))
+                : object_(object)
             { }
 
             template<typename>
             result_type create() {
-                return object_();
+                return object_;
             }
 
             #define BOOST_PP_FILENAME_1 "boost/di/scopes/external.hpp"
@@ -102,7 +84,7 @@
             #include BOOST_PP_ITERATE()
 
         private:
-            aux::function<result_type> object_;
+            result_type object_;
         };
     };
 
@@ -116,7 +98,7 @@
 
     template<typename, BOOST_DI_TYPES(Args)>
     result_type create(BOOST_DI_ARGS_NOT_USED(Args)) {
-        return object_();
+        return object_;
     }
 
 #endif

@@ -17,6 +17,7 @@
 #include "boost/di/concepts/detail/requires.hpp"
 #include "boost/di/concepts/type_traits/type.hpp"
 #include "boost/di/concepts/type_traits/priority.hpp"
+#include "boost/di/type_traits/create_traits.hpp"
 
 #include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>

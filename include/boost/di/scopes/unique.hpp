@@ -10,7 +10,7 @@
     #define BOOST_DI_SCOPES_UNIQUE_HPP
 
     #include "boost/di/aux_/config.hpp"
-    #include "boost/di/aux_/function.hpp"
+    //#include "boost/di/aux_/function.hpp"
     #include "boost/di/wrappers/copy.hpp"
     #include "boost/di/type_traits/create_traits.hpp"
     #include "boost/di/named.hpp"
@@ -37,9 +37,10 @@
 
             template<typename TCreatePolicy>
             result_type create() {
-                return aux::bind<TExpected*>(
-                    &type_traits::create_traits<TCreatePolicy, TExpected, TGiven>
-                );
+                //return aux::bind<TExpected*>(
+                    //&type_traits::create_traits<TCreatePolicy, TExpected, TGiven>
+                //);
+                return type_traits::create_traits<TCreatePolicy, TExpected, TGiven>();
             }
 
             #define BOOST_PP_FILENAME_1 "boost/di/scopes/unique.hpp"
@@ -58,10 +59,11 @@
 
     template<typename TCreatePolicy, BOOST_DI_TYPES(Args)>
     result_type create(BOOST_DI_ARGS(Args, args)) {
-        return aux::bind<TExpected*>(
-            &type_traits::create_traits<TCreatePolicy, TExpected, TGiven, BOOST_DI_TYPES_PASS(Args)>
-          , BOOST_DI_ARGS_PASS(args)
-        );
+        //return aux::bind<TExpected*>(
+            //&type_traits::create_traits<TCreatePolicy, TExpected, TGiven, BOOST_DI_TYPES_PASS(Args)>
+          //, BOOST_DI_ARGS_PASS(args)
+        //);
+        return type_traits::create_traits<TCreatePolicy, TExpected, TGiven, BOOST_DI_TYPES_PASS(Args)>(BOOST_DI_ARGS_PASS(args));
     }
 
 #endif

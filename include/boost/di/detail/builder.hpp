@@ -43,7 +43,8 @@
 
         typedef std::map<
             const std::type_info*
-          , aux::shared_ptr<void>
+          //, aux::shared_ptr<void>
+          , void*
           , type_comparator
         > scopes_type;
 
@@ -74,12 +75,14 @@
         acquire(TDeps&) {
             typename scopes_type::const_iterator it = scopes_.find(&typeid(TDependency));
             if (it != scopes_.end()) {
-                return *static_cast<TDependency*>(it->second.get());
+                return *static_cast<TDependency*>(it->second);
             }
 
-            aux::shared_ptr<TDependency> dependency(new TDependency());
+            //aux::shared_ptr<TDependency> dependency(new TDependency());
+            TDependency* dependency = new TDependency();
             scopes_[&typeid(TDependency)] = dependency;
             return *dependency;
+            //return TDependency();
         }
 
         scopes_type scopes_;

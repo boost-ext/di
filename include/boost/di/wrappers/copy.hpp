@@ -8,7 +8,7 @@
 #define BOOST_DI_WRAPPERS_COPY_HPP
 
 #include "boost/di/aux_/memory.hpp"
-#include "boost/di/aux_/function.hpp"
+//#include "boost/di/aux_/function.hpp"
 
 #include <boost/type.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -21,7 +21,8 @@ namespace wrappers {
 template<typename T>
 class copy
 {
-    typedef aux::function<T*> object_t;
+    //typedef aux::function<T*> object_t;
+    typedef T object_t;
 
     template<typename I>
     class scoped_ptr
@@ -40,43 +41,43 @@ class copy
 
 public:
     template<typename I>
-    copy(const I& object) // non explicit
+    copy(I* object) // non explicit
         : object_(object)
     { }
 
     template<typename I>
     I operator()(const type<I>&, typename disable_if<is_polymorphic<I> >::type* = 0) const {
-        scoped_ptr<I> ptr(object_());
+        scoped_ptr<I> ptr(object_);
         return *ptr;
     }
 
     template<typename I>
     I* operator()(const type<I*>&) const {
-        return object_();
+        return object_;
     }
 
     template<typename I>
     aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const {
-        return aux::shared_ptr<I>(object_());
+        return aux::shared_ptr<I>(object_);
     }
 
     template<typename I>
     aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) const {
-        return aux_::shared_ptr<I>(object_());
+        return aux_::shared_ptr<I>(object_);
     }
 
     template<typename I>
     aux::auto_ptr<I> operator()(const type<aux::auto_ptr<I> >&) const {
-        return aux::auto_ptr<I>(object_());
+        return aux::auto_ptr<I>(object_);
     }
 
     template<typename I>
     aux::unique_ptr<I> operator()(const type<aux::unique_ptr<I> >&) const {
-        return aux::unique_ptr<I>(object_());
+        return aux::unique_ptr<I>(object_);
     }
 
 private:
-    object_t object_;
+    object_t* object_;
 };
 
 } // namespace wrappers
