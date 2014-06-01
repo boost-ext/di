@@ -1,112 +1,45 @@
-//
-// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
-//
-// Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <cassert>
-#include <vector>
-#include <boost/shared_ptr.hpp>
-#include <boost/typeof/typeof.hpp>
 #include "boost/di.hpp"
+
+#include <boost/preprocessor/iteration/local.hpp>
+#include <boost/preprocessor/repetition/repeat.hpp>
+#include <boost/preprocessor/punctuation/comma_if.hpp>
+#include <boost/preprocessor/arithmetic/sub.hpp>
+#include <boost/preprocessor/cat.hpp>
 
 namespace di = boost::di;
 
-namespace {
+template<int>
+struct level0
+{ };
 
-struct i
-{
-    virtual ~i() { }
-    virtual void dummy() = 0;
-};
+#define BOOST_DI_LEVEL_GEN(_, n, level)                 \
+    BOOST_PP_COMMA_IF(n) level<n>
 
-struct impl : i
-{
-    virtual void dummy() { }
-};
+#define BOOST_PP_LOCAL_MACRO(n)                         \
+    template<int>                                       \
+    struct level##n                                     \
+    {                                                   \
+        level##n(                                       \
+            BOOST_PP_REPEAT(                            \
+                BOOST_DI_CFG_TEST_LEVELS_LIMIT_SIZE     \
+              , BOOST_DI_LEVEL_GEN                      \
+              , BOOST_PP_CAT(level, BOOST_PP_SUB(n, 1)) \
+            )                                           \
+        ) { }                                           \
+    };
 
-struct c1
-{
-    explicit c1(int i_ = 0, double d_ = 0.0)
-        : i_(i_), d_(d_)
-    { }
+#define BOOST_PP_LOCAL_LIMITS (1, BOOST_DI_CFG_TEST_LEVELS_LIMIT_SIZE)
+#include BOOST_PP_LOCAL_ITERATE()
 
-    int i_;
-    double d_;
-};
-
-struct c2
-{
-    c2(boost::shared_ptr<c1> c1_, boost::shared_ptr<i> p_)
-      : c1_(c1_), p_(p_)
-    { }
-
-    boost::shared_ptr<c1> c1_;
-    boost::shared_ptr<i> p_;
-};
-
-struct c3
-{
-    c3(boost::shared_ptr<c1> c1_
-     , boost::shared_ptr<c2> c2_
-     , c1 c1__
-     , const std::vector<int>& v_)
-       : c1_(c1_), c2_(c2_), c1__(c1__), v_(v_)
-    { }
-
-    boost::shared_ptr<c1> c1_;
-    boost::shared_ptr<c2> c2_;
-    c1 c1__;
-    std::vector<int> v_;
-};
-
-} // namespace
+#undef BOOST_DI_LEVEL_GEN
 
 int main() {
-    const int i = 42;
-    const double d = 42.0;
-    std::vector<int> v;
-    v.push_back(1);
-    v.push_back(2);
-    v.push_back(3);
+    di::make_injector().create<
+        BOOST_PP_CAT(level, BOOST_DI_CFG_TEST_LEVELS_LIMIT_SIZE)<0>
+    >();
 
-    typedef di::injector<impl> injector_c0;
-
-    BOOST_AUTO(injector_c1, di::make_injector(
-        di::bind_int<i>()
-      , di::bind<std::vector<int> >::to(v)
-    ));
-
-    BOOST_AUTO(injector_, di::make_injector(
-        injector_c0()
-      , di::unique<c2>()
-      , injector_c1
-      , di::bind<double>::to(d)
-    ));
-
-    boost::shared_ptr<c3> c3_ = injector_.create<boost::shared_ptr<c3> >(
-        di::policies::creation_ownership()
-      , di::policies::circular_dependencies()
-      , di::policies::arguments_permission<
-            di::policies::allow_smart_ptrs
-          , di::policies::allow_copies
-          , di::policies::allow_const_refs
-          , di::policies::allow_refs
-        >()
-    );
-
-    assert(dynamic_cast<impl*>(c3_->c2_->p_.get()));
-    assert(c3_->c1_.get() == c3_->c2_->c1_.get());
-    assert(i == c3_->c1_->i_);
-    assert(d == c3_->c1_->d_);
-    assert(i == c3_->c1__.i_);
-    assert(d == c3_->c1__.d_);
-    assert(i == c3_->c2_->c1_->i_);
-    assert(d == c3_->c2_->c1_->d_);
-    assert(3u == v.size());
-    assert(v.size() == c3_->v_.size());
-    assert(v[0] == c3_->v_[0]);
-    assert(v[1] == c3_->v_[1]);
-    assert(v[2] == c3_->v_[2]);
+    return 0;
 }
 
