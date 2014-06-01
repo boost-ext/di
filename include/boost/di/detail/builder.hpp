@@ -43,13 +43,12 @@
 
         typedef std::map<
             const std::type_info*
-          //, aux::shared_ptr<void>
-          , void*
+          , aux::shared_ptr<void>
           , type_comparator
         > scopes_type;
 
     public:
-        explicit builder(scopes_type scopes = scopes_type())
+        explicit builder(const scopes_type& scopes = scopes_type())
             : scopes_(scopes)
         { }
 
@@ -75,14 +74,12 @@
         acquire(TDeps&) {
             typename scopes_type::const_iterator it = scopes_.find(&typeid(TDependency));
             if (it != scopes_.end()) {
-                return *static_cast<TDependency*>(it->second);
+                return *static_cast<TDependency*>(it->second.get());
             }
 
-            //aux::shared_ptr<TDependency> dependency(new TDependency());
-            TDependency* dependency = new TDependency();
+            aux::shared_ptr<TDependency> dependency(new TDependency());
             scopes_[&typeid(TDependency)] = dependency;
             return *dependency;
-            //return TDependency();
         }
 
         scopes_type scopes_;
@@ -102,7 +99,6 @@
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
-      , typename TCreatePolicy
       , typename TCreator
       , typename TDeps
       , typename TRefs
@@ -127,7 +123,7 @@
 
         return wrappers::universal<T>(
             refs
-          , acquire<typename TDependency::type>(deps).template create<TCreatePolicy>(
+          , acquire<typename TDependency::type>(deps).template create(
                 BOOST_PP_REPEAT(
                     BOOST_PP_ITERATION()
                   , BOOST_DI_CREATOR_EXECUTE

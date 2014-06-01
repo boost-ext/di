@@ -74,7 +74,6 @@
                 : object_(object)
             { }
 
-            template<typename>
             result_type create() {
                 return object_;
             }
@@ -96,7 +95,7 @@
 
 #else
 
-    template<typename, BOOST_DI_TYPES(Args)>
+    template<BOOST_DI_TYPES(Args)>
     result_type create(BOOST_DI_ARGS_NOT_USED(Args)) {
         return object_;
     }

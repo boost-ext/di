@@ -12,7 +12,6 @@
 #include "boost/di/named.hpp"
 
 #include <vector>
-//#include <boost/ref.hpp>
 #include <boost/type.hpp>
 #include <boost/non_type.hpp>
 #include <boost/mpl/or.hpp>
@@ -57,13 +56,8 @@ struct holder
     T held;
 };
 
-template<typename T, typename TValueType>
-inline const T& callback_ref(const TValueType& value) {
-    return value(boost::type<const T&>());
-}
-
 template<typename TResult, typename T, typename TValueType>
-inline const TResult& callback_copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
+inline const TResult& copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
     aux::shared_ptr<holder<TResult> > object(new holder<TResult>(value(boost::type<T>())));
     refs.push_back(object);
     return object->held;
@@ -75,7 +69,6 @@ class universal_impl
 public:
     template<typename TValueType>
     explicit universal_impl(std::vector<aux::shared_ptr<void> >&, const TValueType& value)
-        //: callback_(aux::bind<T>(value, boost::type<T>()))
     : t(value(boost::type<T>()))
     { }
 
@@ -84,7 +77,6 @@ public:
     }
 
 private:
-    //aux::function<T> callback_;
     T t;
 };
 
@@ -96,7 +88,6 @@ public:
     universal_impl(std::vector<aux::shared_ptr<void> >&
                  , const TValueType& value
                  , typename enable_if<is_convertible_to_ref<TValueType, T> >::type* = 0)
-        //: callback_(aux::bind<const T&>(&callback_ref<T, TValueType>, value))
         : t(value(boost::type<const T&>()))
     { }
 
@@ -104,8 +95,7 @@ public:
     universal_impl(std::vector<aux::shared_ptr<void> >& refs
                  , const TValueType& value
                  , typename disable_if<is_convertible_to_ref<TValueType, T> >::type* = 0)
-        //: callback_(aux::bind<T>(&callback_copy<T, T, TValueType>, boost::ref(refs), value))
-        : t(callback_copy<T, T, TValueType>(refs, value))
+        : t(copy<T, T, TValueType>(refs, value))
     { }
 
     operator const T&() const {
@@ -122,7 +112,6 @@ class universal_impl<named<T, TName> >
 public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >&, const TValueType& value)
-        //: callback_(aux::bind<T>(value, boost::type<T>()))
         : t(value(boost::type<T>()))
     { }
 
@@ -135,7 +124,6 @@ public:
     }
 
 private:
-    //aux::function<T> callback_;
     T t;
 };
 
@@ -147,7 +135,6 @@ public:
     universal_impl(std::vector<aux::shared_ptr<void> >&
                  , const TValueType& value
                  , typename enable_if<is_convertible_to_ref<TValueType, T> >::type* = 0)
-        //: callback_(aux::bind<const T&>(&callback_ref<T, TValueType>, value))
         : t(value(boost::type<const T&>()))
     { }
 
@@ -155,17 +142,14 @@ public:
     universal_impl(std::vector<aux::shared_ptr<void> >& refs
                  , const TValueType& value
                  , typename disable_if<is_convertible_to_ref<TValueType, T> >::type* = 0)
-        //: callback_(aux::bind<T>(&callback_copy<T, T, TValueType>, boost::ref(refs), value))
-        : t(callback_copy<T, T, TValueType>(refs, value))
+        : t(copy<T, T, TValueType>(refs, value))
     { }
 
     operator named<const T&, TName>() const {
-        //return callback_();
         return t;
     }
 
 private:
-    //aux::function<named<const T&, TName>> callback_;
     named<const T&, TName> t;
 };
 
@@ -176,17 +160,14 @@ public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >& refs
                  , const TValueType& value)
-        //: callback_(aux::bind<named<T, TName> >(&callback_copy<named<T, TName>, T, TValueType>, boost::ref(refs), value))
-        : t(callback_copy<named<T, TName>, T, TValueType>(refs, value))
+        : t(copy<named<T, TName>, T, TValueType>(refs, value))
     { }
 
     operator const named<T, TName>&() const {
-        //return callback_();
         return t;
     }
 
 private:
-    //aux::function<const named<T, TName>&> callback_;
     const named<T, TName>& t;
 };
 
@@ -198,7 +179,6 @@ public:
     universal_impl(std::vector<aux::shared_ptr<void> >&
                  , const TValueType& value
                  , typename enable_if<is_convertible_to_ref<TValueType, T> >::type* = 0)
-        //: callback_(aux::bind<const named<const T&, TName>&>(&callback_ref<named<const T&, TName>, TValueType>, value))
         : t(value(boost::type<const named<const T&, TName>&>()))
     { }
 
@@ -206,17 +186,14 @@ public:
     universal_impl(std::vector<aux::shared_ptr<void> >& refs
                  , const TValueType& value
                  , typename disable_if<is_convertible_to_ref<TValueType, T> >::type* = 0)
-        //: callback_(aux::bind<named<const T&, TName> >(&callback_copy<named<const T&, TName>, T, TValueType>, boost::ref(refs), value))
-        : t(callback_copy<named<const T&, TName>, T, TValueType>(refs, value))
+        : t(copy<named<const T&, TName>, T, TValueType>(refs, value))
     { }
 
     operator const named<const T&, TName>&() const {
-        //return callback_();
         return t;
     }
 
 private:
-    //aux::function<const named<const T&, TName>&> callback_;
     const named<const T&, TName>& t;
 };
 

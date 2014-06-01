@@ -42,7 +42,7 @@ class binder
     { };
 
 public:
-    explicit binder(TBuilder builder = TBuilder())
+    explicit binder(const TBuilder& builder = TBuilder())
         : builder_(builder)
     { }
 
@@ -86,7 +86,6 @@ public:
       , typename TCallStack
       , typename TPolicies
       , typename TDependency
-      , typename TCreatePolicy
       , typename TCreator
       , typename TDeps
       , typename TRefs
@@ -100,7 +99,6 @@ public:
           , TCallStack
           , TPolicies
           , TDependency
-          , TCreatePolicy
           , TCreator
         >(creator, deps, refs, visitor);
     }

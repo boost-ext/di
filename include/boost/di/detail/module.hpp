@@ -35,7 +35,6 @@
       , template<
             typename
           , template<typename, typename> class = ::boost::di::detail::binder
-          , typename = ::boost::di::detail::default_create_policy
         > class TCreator = creator
       , template<
             typename
@@ -50,7 +49,7 @@
 
         template<
             typename
-          , template<typename, template<typename, typename> class, typename> class
+          , template<typename, template<typename, typename> class> class
           , template<typename, typename, typename> class
         > friend class module;
 
@@ -128,7 +127,7 @@
     public:
         typedef TDependecies deps;
 
-        explicit module(TCreator<TDependecies> creator = TCreator<TDependecies>())
+        explicit module(const TCreator<TDependecies>& creator = TCreator<TDependecies>())
             : creator_(creator)
         { }
 

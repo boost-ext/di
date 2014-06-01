@@ -8,7 +8,6 @@
 #define BOOST_DI_WRAPPERS_COPY_HPP
 
 #include "boost/di/aux_/memory.hpp"
-//#include "boost/di/aux_/function.hpp"
 
 #include <boost/type.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -21,9 +20,6 @@ namespace wrappers {
 template<typename T>
 class copy
 {
-    //typedef aux::function<T*> object_t;
-    typedef T object_t;
-
     template<typename I>
     class scoped_ptr
     {
@@ -53,7 +49,7 @@ public:
 
     template<typename I>
     I* operator()(const type<I*>&) const {
-        return object_;
+        return object_; // ownership transfer
     }
 
     template<typename I>
@@ -77,7 +73,7 @@ public:
     }
 
 private:
-    object_t* object_;
+    T* object_; // weak
 };
 
 } // namespace wrappers

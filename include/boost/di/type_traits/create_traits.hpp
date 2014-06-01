@@ -82,19 +82,19 @@
         );
     };
 
-    template<typename TCreatePolicy, typename TExpected, typename TGiven>
+    template<typename TExpected, typename TGiven>
     typename disable_if<is_explicit<TGiven>, TExpected*>::type
     create_traits() {
-        return TCreatePolicy::template create<TExpected, TGiven>();
+        return new TGiven();
     }
 
-    template<typename, typename TExpected, typename TGiven>
+    template<typename TExpected, typename TGiven>
     typename enable_if<has_value<TGiven>, TExpected*>::type
     create_traits() {
         return new TExpected(TGiven::value);
     }
 
-    template<typename, typename TExpected, typename TGiven>
+    template<typename TExpected, typename TGiven>
     typename enable_if<is_mpl_string<TGiven>, TExpected*>::type
     create_traits() {
         return new TExpected(mpl::c_str<TGiven>::value);
@@ -112,7 +112,7 @@
 
 #else
 
-    template<typename, typename TExpected, typename TGiven, BOOST_DI_TYPES(Args)>
+    template<typename TExpected, typename TGiven, BOOST_DI_TYPES(Args)>
     TExpected* create_traits(BOOST_DI_ARGS(Args, args)) {
         return new TGiven(BOOST_DI_ARGS_PASS(args));
     }

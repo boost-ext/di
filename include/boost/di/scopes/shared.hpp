@@ -32,10 +32,9 @@
             typedef scope type;
             typedef TWrapper<TExpected> result_type;
 
-            template<typename TCreatePolicy>
             result_type create() {
                 if (!object_) {
-                    object_.reset(type_traits::create_traits<TCreatePolicy, TExpected, TGiven>());
+                    object_.reset(type_traits::create_traits<TExpected, TGiven>());
                 }
                 return object_;
             }
@@ -57,11 +56,11 @@
 
 #else
 
-    template<typename TCreatePolicy, BOOST_DI_TYPES(Args)>
+    template<BOOST_DI_TYPES(Args)>
     result_type create(BOOST_DI_ARGS(Args, args)) {
         if (!object_) {
             object_.reset(
-                type_traits::create_traits<TCreatePolicy, TExpected, TGiven>(BOOST_DI_ARGS_PASS(args))
+                type_traits::create_traits<TExpected, TGiven>(BOOST_DI_ARGS_PASS(args))
             );
         }
         return object_;
