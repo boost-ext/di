@@ -26,10 +26,10 @@ struct fake_scope
     typedef mpl::int_<Priority> priority;
 
     template<typename T>
-    class convertible
+    class wrapper
     {
     public:
-        convertible(const aux::shared_ptr<T>& obj) // non explicit
+        wrapper(const aux::shared_ptr<T>& obj) // non explicit
             : obj_(obj)
         { }
 
@@ -38,10 +38,9 @@ struct fake_scope
             return obj_;
         }
 
-        template<typename I>
-        I operator()(const type<I>&) const {
+        T operator()(const type<T>&) const {
             if (!obj_) {
-                return I();
+                return T();
             }
             return *obj_;
         }
@@ -55,7 +54,7 @@ struct fake_scope
     {
     public:
         typedef scope type;
-        typedef convertible<T> result_type;
+        typedef wrapper<T> result_type;
 
         scope() { }
 
