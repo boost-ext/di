@@ -10,6 +10,7 @@
 #include "boost/di/aux_/memory.hpp"
 
 #include <boost/type.hpp>
+#include <boost/function.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_polymorphic.hpp>
 

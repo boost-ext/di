@@ -440,47 +440,47 @@ class shared
     class sp_holder
     {
     public:
-        explicit sp_holder(const TShared& object)
-            : object_(object)
+        explicit sp_holder(const TShared& value)
+            : value_(value)
         { }
 
     private:
-        TShared object_;
+        TShared value_;
     };
 
 public:
     shared() { }
 
-    shared(const aux::shared_ptr<T>& object) // non explicit
-        : object_(object)
+    shared(const aux::shared_ptr<T>& value) // non explicit
+        : value_(value)
     { }
 
     bool operator!() const {
-        return !object_;
+        return !value_;
     }
 
     void reset(T* ptr = 0) {
-        return object_.reset(ptr);
+        return value_.reset(ptr);
     }
 
     template<typename I>
     aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const {
-        return object_;
+        return value_;
     }
 
     template<typename I>
     aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) const {
-        aux_::shared_ptr<sp_holder<T> > sp(new sp_holder<T>(object_));
-        return aux_::shared_ptr<T>(sp, object_.get());
+        aux_::shared_ptr<sp_holder<T> > sp(new sp_holder<T>(value_));
+        return aux_::shared_ptr<T>(sp, value_.get());
     }
 
     template<typename I>
     aux::weak_ptr<I> operator()(const type<aux::weak_ptr<I> >&) const {
-        return object_;
+        return value_;
     }
 
 private:
-    aux::shared_ptr<T> object_;
+    aux::shared_ptr<T> value_;
 };
 
 } // namespace wrappers
@@ -495,16 +495,16 @@ template<typename T>
 class reference
 {
 public:
-    reference(const reference_wrapper<T>& object) // non explicit
-        : object_(object)
+    reference(const reference_wrapper<T>& value) // non explicit
+        : value_(value)
     { }
 
     T& operator()(const type<T&>&) const {
-        return object_;
+        return value_;
     }
 
 private:
-    reference_wrapper<T> object_;
+    reference_wrapper<T> value_;
 };
 
 } // namespace wrappers
@@ -2025,6 +2025,8 @@ namespace wrappers {
 template<typename T>
 class copy
 {
+    typedef function<T*()> value_t;
+
     template<typename I>
     class scoped_ptr
     {
@@ -2041,44 +2043,44 @@ class copy
     };
 
 public:
-    template<typename I>
-    copy(I* object) // non explicit
-        : object_(object)
+    template<typename TValueType>
+    copy(const TValueType& value) // non explicit
+        : value_(value)
     { }
 
     template<typename I>
     I operator()(const type<I>&, typename disable_if<is_polymorphic<I> >::type* = 0) const {
-        scoped_ptr<I> ptr(object_);
+        scoped_ptr<I> ptr(value_());
         return *ptr;
     }
 
     template<typename I>
     I* operator()(const type<I*>&) const {
-        return object_; // ownership transfer
+        return value_(); // ownership transfer
     }
 
     template<typename I>
     aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const {
-        return aux::shared_ptr<I>(object_);
+        return aux::shared_ptr<I>(value_());
     }
 
     template<typename I>
     aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) const {
-        return aux_::shared_ptr<I>(object_);
+        return aux_::shared_ptr<I>(value_());
     }
 
     template<typename I>
     aux::auto_ptr<I> operator()(const type<aux::auto_ptr<I> >&) const {
-        return aux::auto_ptr<I>(object_);
+        return aux::auto_ptr<I>(value_());
     }
 
     template<typename I>
     aux::unique_ptr<I> operator()(const type<aux::unique_ptr<I> >&) const {
-        return aux::unique_ptr<I>(object_);
+        return aux::unique_ptr<I>(value_());
     }
 
 private:
-    T* object_; // weak
+    value_t value_;
 };
 
 } // namespace wrappers
@@ -2086,109 +2088,328 @@ private:
 } // namespace boost
 
 
-namespace boost {
-namespace di {
-
-BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
-
-template<
-    typename T
-  , typename TName = void
-  , typename = void
->
-class named
-{
-    typedef typename type_traits::remove_accessors<T>::type object_type;
-
-public:
-    typedef T named_type;
-    typedef TName name;
-
-    named(const object_type& object) // non explicit
-        : object_(object)
-    { }
-
-    operator T() const {
-        return object_;
-    }
-
-    operator T&() {
-        return object_;
-    }
-
-private:
-    object_type object_;
-};
-
-template<
-    typename T
-  , typename TName
->
-class named<T, TName, typename enable_if<
-    is_polymorphic<typename type_traits::remove_accessors<T>::type> >::type
->
-{
-public:
-    typedef T named_type;
-    typedef TName name;
-};
-
-template<
-    typename T
-  , typename TName
->
-class named<T, TName, typename enable_if<
-    has_element_type<typename type_traits::remove_accessors<T>::type> >::type
->
-{
-    typedef typename type_traits::remove_accessors<T>::type object_type;
-    typedef typename type_traits::make_plain<T>::type value_type;
-
-public:
-    typedef T named_type;
-    typedef TName name;
-
-    named() { }
-
-    named(const object_type& object) // non explicit
-        : object_(object)
-    { }
-
-    named(typename object_type::element_type* ptr) // non explicit
-        : object_(ptr)
-    { }
-
-    BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-        named(object_type&& object) // non explicit
-            : object_(std::move(object))
-        { }
-    )
-
-    operator T() const { return object_; }
-
-    value_type* operator->() const { return object_.get(); }
-    value_type& operator*() const { return *object_; }
-    value_type* get() const { return object_.get(); }
-
-    void reset() {
-        object_.reset();
-    }
-
-    void reset(typename object_type::element_type* ptr) {
-        object_.reset(ptr);
-    }
-
-private:
-    object_type object_;
-};
-
-} // namespace di
-} // namespace boost
-
-
     namespace boost {
     namespace di {
     namespace scopes {
+
+        template<
+            typename R
+           
+           
+        >
+        class callback0
+        {
+            typedef R(*f_t)();
+
+        public:
+
+            callback0(
+                const f_t& f
+               
+               
+            ) : f(f)
+               
+               
+            { }
+
+            R operator()() const { return f(); }
+
+        private:
+            f_t f;
+
+           
+
+        };
+
+        template<
+            typename R
+            ,
+            typename Args0
+        >
+        class callback1
+        {
+            typedef R(*f_t)( Args0 );
+
+        public:
+
+            callback1(
+                const f_t& f
+                ,
+                Args0 args0
+            ) : f(f)
+                ,
+                args0(args0)
+            { }
+
+            R operator()() const { return f( args0); }
+
+        private:
+            f_t f;
+
+            Args0 args0;
+
+        };
+
+        template<
+            typename R
+            ,
+            typename Args0 , typename Args1
+        >
+        class callback2
+        {
+            typedef R(*f_t)( Args0 , Args1 );
+
+        public:
+
+            callback2(
+                const f_t& f
+                ,
+                Args0 args0 , Args1 args1
+            ) : f(f)
+                ,
+                args0(args0) , args1(args1)
+            { }
+
+            R operator()() const { return f( args0 , args1); }
+
+        private:
+            f_t f;
+
+            Args0 args0; Args1 args1;
+
+        };
+
+        template<
+            typename R
+            ,
+            typename Args0 , typename Args1 , typename Args2
+        >
+        class callback3
+        {
+            typedef R(*f_t)( Args0 , Args1 , Args2 );
+
+        public:
+
+            callback3(
+                const f_t& f
+                ,
+                Args0 args0 , Args1 args1 , Args2 args2
+            ) : f(f)
+                ,
+                args0(args0) , args1(args1) , args2(args2)
+            { }
+
+            R operator()() const { return f( args0 , args1 , args2); }
+
+        private:
+            f_t f;
+
+            Args0 args0; Args1 args1; Args2 args2;
+
+        };
+
+        template<
+            typename R
+            ,
+            typename Args0 , typename Args1 , typename Args2 , typename Args3
+        >
+        class callback4
+        {
+            typedef R(*f_t)( Args0 , Args1 , Args2 , Args3 );
+
+        public:
+
+            callback4(
+                const f_t& f
+                ,
+                Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3
+            ) : f(f)
+                ,
+                args0(args0) , args1(args1) , args2(args2) , args3(args3)
+            { }
+
+            R operator()() const { return f( args0 , args1 , args2 , args3); }
+
+        private:
+            f_t f;
+
+            Args0 args0; Args1 args1; Args2 args2; Args3 args3;
+
+        };
+
+        template<
+            typename R
+            ,
+            typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4
+        >
+        class callback5
+        {
+            typedef R(*f_t)( Args0 , Args1 , Args2 , Args3 , Args4 );
+
+        public:
+
+            callback5(
+                const f_t& f
+                ,
+                Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4
+            ) : f(f)
+                ,
+                args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4)
+            { }
+
+            R operator()() const { return f( args0 , args1 , args2 , args3 , args4); }
+
+        private:
+            f_t f;
+
+            Args0 args0; Args1 args1; Args2 args2; Args3 args3; Args4 args4;
+
+        };
+
+        template<
+            typename R
+            ,
+            typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5
+        >
+        class callback6
+        {
+            typedef R(*f_t)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 );
+
+        public:
+
+            callback6(
+                const f_t& f
+                ,
+                Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5
+            ) : f(f)
+                ,
+                args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5)
+            { }
+
+            R operator()() const { return f( args0 , args1 , args2 , args3 , args4 , args5); }
+
+        private:
+            f_t f;
+
+            Args0 args0; Args1 args1; Args2 args2; Args3 args3; Args4 args4; Args5 args5;
+
+        };
+
+        template<
+            typename R
+            ,
+            typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6
+        >
+        class callback7
+        {
+            typedef R(*f_t)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 );
+
+        public:
+
+            callback7(
+                const f_t& f
+                ,
+                Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6
+            ) : f(f)
+                ,
+                args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6)
+            { }
+
+            R operator()() const { return f( args0 , args1 , args2 , args3 , args4 , args5 , args6); }
+
+        private:
+            f_t f;
+
+            Args0 args0; Args1 args1; Args2 args2; Args3 args3; Args4 args4; Args5 args5; Args6 args6;
+
+        };
+
+        template<
+            typename R
+            ,
+            typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7
+        >
+        class callback8
+        {
+            typedef R(*f_t)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 );
+
+        public:
+
+            callback8(
+                const f_t& f
+                ,
+                Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7
+            ) : f(f)
+                ,
+                args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6) , args7(args7)
+            { }
+
+            R operator()() const { return f( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7); }
+
+        private:
+            f_t f;
+
+            Args0 args0; Args1 args1; Args2 args2; Args3 args3; Args4 args4; Args5 args5; Args6 args6; Args7 args7;
+
+        };
+
+        template<
+            typename R
+            ,
+            typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8
+        >
+        class callback9
+        {
+            typedef R(*f_t)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 );
+
+        public:
+
+            callback9(
+                const f_t& f
+                ,
+                Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8
+            ) : f(f)
+                ,
+                args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6) , args7(args7) , args8(args8)
+            { }
+
+            R operator()() const { return f( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8); }
+
+        private:
+            f_t f;
+
+            Args0 args0; Args1 args1; Args2 args2; Args3 args3; Args4 args4; Args5 args5; Args6 args6; Args7 args7; Args8 args8;
+
+        };
+
+        template<
+            typename R
+            ,
+            typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9
+        >
+        class callback10
+        {
+            typedef R(*f_t)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 );
+
+        public:
+
+            callback10(
+                const f_t& f
+                ,
+                Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9
+            ) : f(f)
+                ,
+                args0(args0) , args1(args1) , args2(args2) , args3(args3) , args4(args4) , args5(args5) , args6(args6) , args7(args7) , args8(args8) , args9(args9)
+            { }
+
+            R operator()() const { return f( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9); }
+
+        private:
+            f_t f;
+
+            Args0 args0; Args1 args1; Args2 args2; Args3 args3; Args4 args4; Args5 args5; Args6 args6; Args7 args7; Args8 args8; Args9 args9;
+
+        };
 
     template<template<typename> class TWrapper = wrappers::copy>
     class unique
@@ -2204,98 +2425,90 @@ private:
             typedef TWrapper<TExpected> result_type;
 
             result_type create() {
-                return type_traits::create_traits<TExpected, TGiven>();
+                return callback0<TExpected*>(
+                    &type_traits::create_traits<TExpected, TGiven>
+                );
             }
 
-    template< typename Args0>
-    result_type create( Args0 args0) {
-        return type_traits::create_traits<
-            TExpected
-          , TGiven
-          , Args0
-        >( args0);
-    }
+        template< typename Args0>
+        result_type create( Args0 args0) {
+            return callback1<TExpected*, Args0>(
+                &type_traits::create_traits<TExpected, TGiven, Args0>
+              , args0
+            );
+        }
 
-    template< typename Args0 , typename Args1>
-    result_type create( Args0 args0 , Args1 args1) {
-        return type_traits::create_traits<
-            TExpected
-          , TGiven
-          , Args0 , Args1
-        >( args0 , args1);
-    }
+        template< typename Args0 , typename Args1>
+        result_type create( Args0 args0 , Args1 args1) {
+            return callback2<TExpected*, Args0 , Args1>(
+                &type_traits::create_traits<TExpected, TGiven, Args0 , Args1>
+              , args0 , args1
+            );
+        }
 
-    template< typename Args0 , typename Args1 , typename Args2>
-    result_type create( Args0 args0 , Args1 args1 , Args2 args2) {
-        return type_traits::create_traits<
-            TExpected
-          , TGiven
-          , Args0 , Args1 , Args2
-        >( args0 , args1 , args2);
-    }
+        template< typename Args0 , typename Args1 , typename Args2>
+        result_type create( Args0 args0 , Args1 args1 , Args2 args2) {
+            return callback3<TExpected*, Args0 , Args1 , Args2>(
+                &type_traits::create_traits<TExpected, TGiven, Args0 , Args1 , Args2>
+              , args0 , args1 , args2
+            );
+        }
 
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3>
-    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3) {
-        return type_traits::create_traits<
-            TExpected
-          , TGiven
-          , Args0 , Args1 , Args2 , Args3
-        >( args0 , args1 , args2 , args3);
-    }
+        template< typename Args0 , typename Args1 , typename Args2 , typename Args3>
+        result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3) {
+            return callback4<TExpected*, Args0 , Args1 , Args2 , Args3>(
+                &type_traits::create_traits<TExpected, TGiven, Args0 , Args1 , Args2 , Args3>
+              , args0 , args1 , args2 , args3
+            );
+        }
 
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
-    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4) {
-        return type_traits::create_traits<
-            TExpected
-          , TGiven
-          , Args0 , Args1 , Args2 , Args3 , Args4
-        >( args0 , args1 , args2 , args3 , args4);
-    }
+        template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
+        result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4) {
+            return callback5<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4>(
+                &type_traits::create_traits<TExpected, TGiven, Args0 , Args1 , Args2 , Args3 , Args4>
+              , args0 , args1 , args2 , args3 , args4
+            );
+        }
 
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
-    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5) {
-        return type_traits::create_traits<
-            TExpected
-          , TGiven
-          , Args0 , Args1 , Args2 , Args3 , Args4 , Args5
-        >( args0 , args1 , args2 , args3 , args4 , args5);
-    }
+        template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
+        result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5) {
+            return callback6<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4 , Args5>(
+                &type_traits::create_traits<TExpected, TGiven, Args0 , Args1 , Args2 , Args3 , Args4 , Args5>
+              , args0 , args1 , args2 , args3 , args4 , args5
+            );
+        }
 
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
-    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6) {
-        return type_traits::create_traits<
-            TExpected
-          , TGiven
-          , Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6
-        >( args0 , args1 , args2 , args3 , args4 , args5 , args6);
-    }
+        template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
+        result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6) {
+            return callback7<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6>(
+                &type_traits::create_traits<TExpected, TGiven, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6>
+              , args0 , args1 , args2 , args3 , args4 , args5 , args6
+            );
+        }
 
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
-    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7) {
-        return type_traits::create_traits<
-            TExpected
-          , TGiven
-          , Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7
-        >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7);
-    }
+        template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
+        result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7) {
+            return callback8<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7>(
+                &type_traits::create_traits<TExpected, TGiven, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7>
+              , args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7
+            );
+        }
 
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
-    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8) {
-        return type_traits::create_traits<
-            TExpected
-          , TGiven
-          , Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8
-        >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8);
-    }
+        template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
+        result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8) {
+            return callback9<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8>(
+                &type_traits::create_traits<TExpected, TGiven, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8>
+              , args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8
+            );
+        }
 
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
-    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9) {
-        return type_traits::create_traits<
-            TExpected
-          , TGiven
-          , Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9
-        >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9);
-    }
+        template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
+        result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9) {
+            return callback10<TExpected*, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9>(
+                &type_traits::create_traits<TExpected, TGiven, Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9>
+              , args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9
+            );
+        }
         };
     };
 
@@ -5859,6 +6072,106 @@ public:
 
 namespace boost {
 namespace di {
+
+BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
+
+template<
+    typename T
+  , typename TName = void
+  , typename = void
+>
+class named
+{
+    typedef typename type_traits::remove_accessors<T>::type object_type;
+
+public:
+    typedef T named_type;
+    typedef TName name;
+
+    named(const object_type& object) // non explicit
+        : object_(object)
+    { }
+
+    operator T() const {
+        return object_;
+    }
+
+    operator T&() {
+        return object_;
+    }
+
+private:
+    object_type object_;
+};
+
+template<
+    typename T
+  , typename TName
+>
+class named<T, TName, typename enable_if<
+    is_polymorphic<typename type_traits::remove_accessors<T>::type> >::type
+>
+{
+public:
+    typedef T named_type;
+    typedef TName name;
+};
+
+template<
+    typename T
+  , typename TName
+>
+class named<T, TName, typename enable_if<
+    has_element_type<typename type_traits::remove_accessors<T>::type> >::type
+>
+{
+    typedef typename type_traits::remove_accessors<T>::type object_type;
+    typedef typename type_traits::make_plain<T>::type value_type;
+
+public:
+    typedef T named_type;
+    typedef TName name;
+
+    named() { }
+
+    named(const object_type& object) // non explicit
+        : object_(object)
+    { }
+
+    named(typename object_type::element_type* ptr) // non explicit
+        : object_(ptr)
+    { }
+
+    BOOST_DI_FEATURE(RVALUE_REFERENCES)(
+        named(object_type&& object) // non explicit
+            : object_(std::move(object))
+        { }
+    )
+
+    operator T() const { return object_; }
+
+    value_type* operator->() const { return object_.get(); }
+    value_type& operator*() const { return *object_; }
+    value_type* get() const { return object_.get(); }
+
+    void reset() {
+        object_.reset();
+    }
+
+    void reset(typename object_type::element_type* ptr) {
+        object_.reset(ptr);
+    }
+
+private:
+    object_type object_;
+};
+
+} // namespace di
+} // namespace boost
+
+
+namespace boost {
+namespace di {
 namespace wrappers {
 
 namespace detail {
@@ -5909,15 +6222,15 @@ class universal_impl
 public:
     template<typename TValueType>
     explicit universal_impl(std::vector<aux::shared_ptr<void> >&, const TValueType& value)
-        : f_(boost::bind<T>(value, boost::type<T>()))
+        : value_(boost::bind<T>(value, boost::type<T>()))
     { }
 
     operator T() const {
-        return f_();
+        return value_();
     }
 
 private:
-    function<T()> f_;
+    function<T()> value_;
 };
 
 template<typename T>
@@ -5928,22 +6241,22 @@ public:
     universal_impl(std::vector<aux::shared_ptr<void> >&
                  , const TValueType& value
                  , typename enable_if<is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : f_(boost::bind<const T&>(value, boost::type<const T&>()))
+        : value_(boost::bind<const T&>(value, boost::type<const T&>()))
     { }
 
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >& refs
                  , const TValueType& value
                  , typename disable_if<is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : f_(boost::bind(&copy<T, T, TValueType>, boost::ref(refs), value))
+        : value_(boost::bind(&copy<T, T, TValueType>, boost::ref(refs), value))
     { }
 
     operator const T&() const {
-        return f_();
+        return value_();
     }
 
 private:
-    function<const T&()> f_;
+    function<const T&()> value_;
 };
 
 template<typename T, typename TName>
@@ -5952,19 +6265,19 @@ class universal_impl<named<T, TName> >
 public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >&, const TValueType& value)
-        : f_(boost::bind<T>(value, boost::type<T>()))
+        : value_(boost::bind<T>(value, boost::type<T>()))
     { }
 
     operator T() const {
-        return f_();
+        return value_();
     }
 
     operator named<T, TName>() const {
-        return f_();
+        return value_();
     }
 
 private:
-    function<T()> f_;
+    function<T()> value_;
 };
 
 template<typename T, typename TName>
@@ -5975,22 +6288,22 @@ public:
     universal_impl(std::vector<aux::shared_ptr<void> >&
                  , const TValueType& value
                  , typename enable_if<is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : f_(boost::bind<const T&>(value, boost::type<const T&>()))
+        : value_(boost::bind<const T&>(value, boost::type<const T&>()))
     { }
 
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >& refs
                  , const TValueType& value
                  , typename disable_if<is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : f_(boost::bind(&copy<T, T, TValueType>, boost::ref(refs), value))
+        : value_(boost::bind(&copy<T, T, TValueType>, boost::ref(refs), value))
     { }
 
     operator named<const T&, TName>() const {
-        return f_();
+        return value_();
     }
 
 private:
-    function<named<const T&, TName>()> f_;
+    function<named<const T&, TName>()> value_;
 };
 
 template<typename T, typename TName>
@@ -6000,15 +6313,15 @@ public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >& refs
                  , const TValueType& value)
-        : f_(boost::bind(&copy<named<T, TName>, T, TValueType>, boost::ref(refs), value))
+        : value_(boost::bind(&copy<named<T, TName>, T, TValueType>, boost::ref(refs), value))
     { }
 
     operator const named<T, TName>&() const {
-        return f_();
+        return value_();
     }
 
 private:
-    function<const named<T, TName>&()> f_;
+    function<const named<T, TName>&()> value_;
 };
 
 template<typename T, typename TName>
@@ -6019,22 +6332,22 @@ public:
     universal_impl(std::vector<aux::shared_ptr<void> >&
                  , const TValueType& value
                  , typename enable_if<is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : f_(boost::bind<named<const T&, TName>&>(value, boost::type<named<const T&, TName>&>()))
+        : value_(boost::bind<named<const T&, TName>&>(value, boost::type<named<const T&, TName>&>()))
     { }
 
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >& refs
                  , const TValueType& value
                  , typename disable_if<is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : f_(boost::bind(&copy<named<const T&, TName>, T, TValueType>, boost::ref(refs), value))
+        : value_(boost::bind(&copy<named<const T&, TName>, T, TValueType>, boost::ref(refs), value))
     { }
 
     operator const named<const T&, TName>&() const {
-        return f_();
+        return value_();
     }
 
 private:
-    function<const named<const T&, TName>&()> f_;
+    function<const named<const T&, TName>&()> value_;
 };
 
 } // namespace detail
