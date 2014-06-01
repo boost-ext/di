@@ -14,7 +14,6 @@
 #include "boost/di/wrappers/reference.hpp"
 #include "boost/di/wrappers/shared.hpp"
 
-#include "common/fakes/fake_create_policy.hpp"
 #include "common/data.hpp"
 
 namespace boost {
@@ -23,30 +22,30 @@ namespace scopes {
 
 BOOST_AUTO_TEST_CASE(from_arithmetic) {
     const int i = 42;
-    BOOST_CHECK_EQUAL(i, (external<>::scope<int>(i).create<fake_create_policy>())(type<int>()));
+    BOOST_CHECK_EQUAL(i, (external<>::scope<int>(i).create())(type<int>()));
 }
 
 BOOST_AUTO_TEST_CASE(from_string) {
     const std::string s = "string";
-    BOOST_CHECK_EQUAL(s, (external<>::scope<std::string>(s).create<fake_create_policy>())(type<std::string>()));
+    BOOST_CHECK_EQUAL(s, (external<>::scope<std::string>(s).create())(type<std::string>()));
 }
 
 BOOST_AUTO_TEST_CASE(from_ref) {
     c c_;
-    c& c_ref_ = (external<wrappers::reference>::scope<c>(boost::ref(c_)).create<fake_create_policy>())(type<c&>());
+    c& c_ref_ = (external<wrappers::reference>::scope<c>(boost::ref(c_)).create())(type<c&>());
     BOOST_CHECK_EQUAL(&c_, &c_ref_);
 }
 
 BOOST_AUTO_TEST_CASE(from_const_ref) {
     c c_;
-    const c& const_c_ref_ = (external<wrappers::reference>::scope<const c>(boost::cref(c_)).create<fake_create_policy>())(type<const c&>());
+    const c& const_c_ref_ = (external<wrappers::reference>::scope<const c>(boost::cref(c_)).create())(type<const c&>());
     BOOST_CHECK_EQUAL(&c_, &const_c_ref_);
 }
 
 BOOST_AUTO_TEST_CASE(from_shared_ptr) {
     aux::shared_ptr<c> c_(new c);
     aux::shared_ptr<c> sp_c =
-        (external<wrappers::shared>::scope<c>(c_).create<fake_create_policy>())(type<aux::shared_ptr<c>>());
+        (external<wrappers::shared>::scope<c>(c_).create())(type<aux::shared_ptr<c>>());
 
     BOOST_CHECK_EQUAL(c_, sp_c);
 }
@@ -56,21 +55,21 @@ BOOST_AUTO_TEST_CASE(from_context) {
     aux::shared_ptr<c> c2_(new c);
 
     BOOST_CHECK((
-        (external<>::scope<int, a>(87).create<fake_create_policy>())(type<int>())
+        (external<>::scope<int, a>(87).create())(type<int>())
         !=
-        (external<>::scope<int, b>(42).create<fake_create_policy>())(type<int>())
+        (external<>::scope<int, b>(42).create())(type<int>())
     ));
 
     BOOST_CHECK((
-        (external<wrappers::shared>::scope<c, a>(c1_).create<fake_create_policy>())(type<aux::shared_ptr<c>>())
+        (external<wrappers::shared>::scope<c, a>(c1_).create())(type<aux::shared_ptr<c>>())
         !=
-        (external<wrappers::shared>::scope<c, b>(c2_).create<fake_create_policy>())(type<aux::shared_ptr<c>>())
+        (external<wrappers::shared>::scope<c, b>(c2_).create())(type<aux::shared_ptr<c>>())
     ));
 }
 
 BOOST_AUTO_TEST_CASE(from_if_shared_ptr) {
     aux::shared_ptr<c0if0> c0_(new c0if0);
-    aux::shared_ptr<if0> c1_ = external<wrappers::shared>::scope<if0>(c0_).create<fake_create_policy>()(type<aux::shared_ptr<if0>>());
+    aux::shared_ptr<if0> c1_ = external<wrappers::shared>::scope<if0>(c0_).create()(type<aux::shared_ptr<if0>>());
     BOOST_CHECK_EQUAL(c0_, c1_);
 }
 

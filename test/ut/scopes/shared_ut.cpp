@@ -12,7 +12,6 @@
 #include "boost/di/aux_/memory.hpp"
 
 #include "common/fakes/fake_wrapper.hpp"
-#include "common/fakes/fake_create_policy.hpp"
 #include "common/data.hpp"
 
 namespace boost {
@@ -23,9 +22,9 @@ BOOST_AUTO_TEST_CASE(create) {
     shared<>::scope<int> shared_;
 
     BOOST_CHECK((
-        (shared_.create<fake_create_policy>())(type<aux::shared_ptr<int>>())
+        (shared_.create())(type<aux::shared_ptr<int>>())
         ==
-        (shared_.create<fake_create_policy>())(type<aux::shared_ptr<int>>())
+        (shared_.create())(type<aux::shared_ptr<int>>())
     ));
 }
 
@@ -37,9 +36,9 @@ BOOST_AUTO_TEST_CASE(create_args) {
     fake_wrapper<char> c('0');
 
     BOOST_CHECK((
-        (shared_.create<fake_create_policy, decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
+        (shared_.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
         ==
-        (shared_.create<fake_create_policy, decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
+        (shared_.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
     ));
 }
 

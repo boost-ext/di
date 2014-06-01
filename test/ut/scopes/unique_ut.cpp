@@ -13,7 +13,6 @@
 
 #include "boost/di/aux_/memory.hpp"
 #include "common/fakes/fake_wrapper.hpp"
-#include "common/fakes/fake_create_policy.hpp"
 #include "common/data.hpp"
 
 namespace boost {
@@ -30,9 +29,9 @@ BOOST_AUTO_TEST_CASE(create) {
     unique<>::scope<int> unique_;
 
     BOOST_CHECK((
-        (unique_.create<fake_create_policy>())(type<aux::shared_ptr<int>>())
+        (unique_.create())(type<aux::shared_ptr<int>>())
         !=
-        (unique_.create<fake_create_policy>())(type<aux::shared_ptr<int>>())
+        (unique_.create())(type<aux::shared_ptr<int>>())
     ));
 }
 
@@ -44,27 +43,27 @@ BOOST_AUTO_TEST_CASE(create_args) {
     fake_wrapper<char> c('0');
 
     BOOST_CHECK((
-        (unique_.create<fake_create_policy, decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
+        (unique_.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
         !=
-        (unique_.create<fake_create_policy, decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
+        (unique_.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
     ));
 }
 
 BOOST_AUTO_TEST_CASE(create_value_mpl_int) {
     const int i = 42;
-    auto i_ = unique<>::scope<int, mpl::int_<i>>().create<fake_create_policy>();
+    auto i_ = unique<>::scope<int, mpl::int_<i>>().create();
     BOOST_CHECK_EQUAL(i, i_(type<int>()));
 }
 
 BOOST_AUTO_TEST_CASE(create_value_mpl_string) {
-    auto s_ = unique<>::scope<std::string, mpl::string<'s'>>().create<fake_create_policy>();
+    auto s_ = unique<>::scope<std::string, mpl::string<'s'>>().create();
     BOOST_CHECK_EQUAL("s", s_(type<std::string>()));
 }
 
 BOOST_AUTO_TEST_CASE(create_value_has_value_type) {
     const double d = 42.0;
     double_value::value = d;
-    auto d_ = unique<>::scope<double, double_value>().create<fake_create_policy>();
+    auto d_ = unique<>::scope<double, double_value>().create();
     BOOST_CHECK_EQUAL(d, d_(type<double>()));
 }
 

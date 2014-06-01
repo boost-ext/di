@@ -123,7 +123,7 @@
 
         return wrappers::universal<T>(
             refs
-          , acquire<typename TDependency::type>(deps).template create(
+          , acquire<typename TDependency::type>(deps).create(
                 BOOST_PP_REPEAT(
                     BOOST_PP_ITERATION()
                   , BOOST_DI_CREATOR_EXECUTE

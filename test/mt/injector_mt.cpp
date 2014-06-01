@@ -373,11 +373,11 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(scope_deduction_if, TInjector, deduce_injectors_ty
     BOOST_CHECK(c20_->if0_ == c20_->if0__);
 }
 
-//BOOST_AUTO_TEST_CASE_TEMPLATE(shared_ptr_unique_ptr, TInjector, deduce_injectors_types) {
-    //TInjector injector;
-    //auto c21_ = injector.template create<aux::shared_ptr<c21>>();
-    //BOOST_CHECK(c21_->if0__ == c21_->if0__);
-//}
+BOOST_AUTO_TEST_CASE_TEMPLATE(shared_ptr_unique_ptr, TInjector, deduce_injectors_types) {
+    TInjector injector;
+    auto c21_ = injector.template create<aux::shared_ptr<c21>>();
+    BOOST_CHECK(c21_->if0__ == c21_->if0__);
+}
 
 BOOST_AUTO_TEST_CASE(smart_ptr_weak_ptr) {
     auto c25_ = injector<>().create<c25>();
