@@ -10,10 +10,10 @@
     #define BOOST_DI_SCOPES_EXTERNAL_HPP
 
     #include "boost/di/aux_/config.hpp"
+    #include "boost/di/aux_/function.hpp"
     #include "boost/di/wrappers/value.hpp"
     #include "boost/di/type_traits/create_traits.hpp"
 
-    #include <boost/function.hpp>
     #include <boost/non_type.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/type_traits/is_class.hpp>
@@ -102,7 +102,7 @@
             #include BOOST_PP_ITERATE()
 
         private:
-            function<result_type()> object_;
+            aux::function<result_type> object_;
         };
     };
 

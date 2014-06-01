@@ -8,9 +8,9 @@
 #define BOOST_DI_WRAPPERS_COPY_HPP
 
 #include "boost/di/aux_/memory.hpp"
+#include "boost/di/aux_/function.hpp"
 
 #include <boost/type.hpp>
-#include <boost/function.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_polymorphic.hpp>
 
@@ -21,7 +21,7 @@ namespace wrappers {
 template<typename T>
 class copy
 {
-    typedef function<T*()> object_t;
+    typedef aux::function<T*> object_t;
 
     template<typename I>
     class scoped_ptr
