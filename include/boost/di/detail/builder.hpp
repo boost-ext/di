@@ -115,10 +115,10 @@
         #define BOOST_DI_CREATOR_EXECUTE(z, n, _)   \
             BOOST_PP_COMMA_IF(n)                    \
             creator.template create<                \
-               typename mpl::at_c<TCtor, n>::type   \
-             , T                                    \
-             , TCallStack                           \
-             , TPolicies                            \
+                typename mpl::at_c<TCtor, n>::type  \
+              , T                                   \
+              , TCallStack                          \
+              , TPolicies                           \
             >(deps, refs, visitor)
 
         return wrappers::universal<T>(
