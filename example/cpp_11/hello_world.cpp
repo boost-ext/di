@@ -51,10 +51,10 @@ int main() {
     float f = 0.f;
 
     auto injector = di::make_injector(
-        di::bind<i, impl>()                                         // scope deducted bind value
-      , di::bind_int<42>()                                          // static, compile time value
-      , di::bind<std::string>::named<some_name>::to("some_name")    // external, named value
-      , di::bind<float>::to(boost::ref(f))                          // external reference
+        di::bind<i, impl>()
+      , di::bind_int<42>()
+      , di::bind<std::string>::named<some_name>::to("some_name")
+      , di::bind<float>::to(boost::ref(f))
     );
 
     auto hello_world = injector.create<world>();

@@ -4660,6 +4660,19 @@ struct is_convertible_to_ref
       >
 { };
 
+template<typename TValueType, typename T>
+struct is_convertible_to_ptr
+    : is_convertible<TValueType, T*(TValueType::*)(const boost::type<T*>&) const>
+{ };
+
+template<typename TResult, typename T, typename TValueType>
+inline typename enable_if<is_convertible_to_ptr<TValueType, T>, const TResult&>::type
+copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
+    aux::shared_ptr<TResult> object(value(boost::type<T*>()));
+    refs.push_back(object);
+    return *object;
+}
+
 template<typename T>
 struct holder
 {
@@ -4671,7 +4684,8 @@ struct holder
 };
 
 template<typename TResult, typename T, typename TValueType>
-inline const TResult& copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
+inline typename disable_if<is_convertible_to_ptr<TValueType, T>, const TResult&>::type
+copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
     aux::shared_ptr<holder<TResult> > object(new holder<TResult>(value(boost::type<T>())));
     refs.push_back(object);
     return object->held;
