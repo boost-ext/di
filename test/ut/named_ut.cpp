@@ -35,6 +35,26 @@ BOOST_AUTO_TEST_CASE(named_int_ref) {
     BOOST_CHECK_EQUAL(i + 1, named_);
 }
 
+BOOST_AUTO_TEST_CASE(named_const_ref) {
+    const int i = 42;
+    typedef named<const int&, a> named_type;
+    named_type named_(i);
+
+    const int& ref = static_cast<const int&>(named_);
+    BOOST_CHECK_EQUAL(i, ref);
+}
+
+BOOST_AUTO_TEST_CASE(named_ref) {
+    const int i = 42;
+    typedef named<int&, a> named_type;
+    named_type named_(i);
+
+    int& ref = static_cast<int&>(named_);
+    ref++;
+
+    BOOST_CHECK_EQUAL(i + 1, static_cast<int&>(named_));
+}
+
 BOOST_AUTO_TEST_CASE(named_shared_ptr) {
     const int i = 42;
     typedef named<aux::shared_ptr<int>, a> named_type;
