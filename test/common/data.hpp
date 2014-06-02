@@ -10,6 +10,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <cassert>
 #include <boost/function.hpp>
 #include <boost/mpl/string.hpp>
 #include "boost/di/aux_/memory.hpp"
@@ -462,6 +463,26 @@ struct ref_sp_int
     }
 
     aux::shared_ptr<int> i_;
+};
+
+class noncopyable
+{
+    noncopyable(const noncopyable&);
+
+public:
+    BOOST_DI_INJECT(explicit noncopyable, int i = 0)
+        : i_(i)
+    {
+    }
+
+    int i_ = 0;
+};
+
+struct noncopyable_const_ref
+{
+    BOOST_DI_INJECT(noncopyable_const_ref, const noncopyable& n)
+    {
+    }
 };
 
 enum eid { e0 = 1 , e1 = 2 };
