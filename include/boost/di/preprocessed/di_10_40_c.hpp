@@ -27,6 +27,7 @@
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_class.hpp>
 #include <boost/type_traits/is_base_of.hpp>
+#include <boost/type_traits/has_trivial_copy.hpp>
 #include <boost/type.hpp>
 #include <boost/ref.hpp>
 #include <boost/non_type.hpp>
@@ -8140,13 +8141,16 @@ struct is_convertible_to_ref
       >
 { };
 
-template<typename TValueType, typename T>
-struct is_convertible_to_ptr
-    : is_convertible<TValueType, T*(TValueType::*)(const boost::type<T*>&) const>
+template<typename T>
+struct is_copyable
+    : mpl::or_<
+          has_trivial_copy<T>
+        , has_element_type<T>
+      >
 { };
 
 template<typename TResult, typename T, typename TValueType>
-inline typename enable_if<is_convertible_to_ptr<TValueType, T>, const TResult&>::type
+inline typename disable_if<is_copyable<T>, const TResult&>::type
 copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
     aux::shared_ptr<TResult> object(value(boost::type<T*>()));
     refs.push_back(object);
@@ -8164,7 +8168,7 @@ struct holder
 };
 
 template<typename TResult, typename T, typename TValueType>
-inline typename disable_if<is_convertible_to_ptr<TValueType, T>, const TResult&>::type
+inline typename enable_if<is_copyable<T>, const TResult&>::type
 copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
     aux::shared_ptr<holder<TResult> > object(new holder<TResult>(value(boost::type<T>())));
     refs.push_back(object);
