@@ -6083,6 +6083,7 @@ template<
 class named
 {
     typedef typename type_traits::remove_accessors<T>::type object_type;
+    typedef typename remove_reference<T>::type& ref_type;
 
 public:
     typedef T named_type;
@@ -6096,7 +6097,7 @@ public:
         return object_;
     }
 
-    operator T&() {
+    operator ref_type() {
         return object_;
     }
 
