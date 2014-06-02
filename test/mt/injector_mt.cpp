@@ -384,6 +384,18 @@ BOOST_AUTO_TEST_CASE(smart_ptr_weak_ptr) {
     BOOST_CHECK(nullptr != c25_.w1_.lock());
 }
 
+BOOST_AUTO_TEST_CASE(noncopyable_by_const_ref) {
+    const int i = 42;
+    auto noncopyable_ = injector<bind_int<i>>().create<noncopyable_const_ref>();
+    BOOST_CHECK_EQUAL(i, noncopyable_.i_);
+}
+
+BOOST_AUTO_TEST_CASE(stored_ref_created_by_injector) {
+    const int i = 42;
+    auto ref_sp_int_ = injector<bind_int<i>>().create<ref_sp_int>();
+    BOOST_CHECK(ref_sp_int_.i_);
+}
+
 BOOST_AUTO_TEST_CASE(inject_priority) {
     const int i = 42;
     const double d = 87.0;
@@ -473,16 +485,6 @@ BOOST_AUTO_TEST_CASE(scoped_injector_create_with_deduced_scope) {
     BOOST_CHECK(i3->d_ != i1->d_);
     BOOST_CHECK(i3->d_ != i2->d_);
     }
-}
-
-BOOST_AUTO_TEST_CASE(noncopyable_by_const_ref) {
-    injector<>().create<noncopyable_const_ref>();
-}
-
-BOOST_AUTO_TEST_CASE(stored_ref_created_by_injector) {
-    const int i = 42;
-    auto ref_sp_int_ = injector<bind_int<i>>().create<ref_sp_int>();
-    BOOST_CHECK(ref_sp_int_.i_);
 }
 
 } // namespace di

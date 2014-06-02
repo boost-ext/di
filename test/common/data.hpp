@@ -472,8 +472,7 @@ class noncopyable
 public:
     BOOST_DI_INJECT(explicit noncopyable, int i = 0)
         : i_(i)
-    {
-    }
+    { }
 
     int i_ = 0;
 };
@@ -481,8 +480,10 @@ public:
 struct noncopyable_const_ref
 {
     BOOST_DI_INJECT(noncopyable_const_ref, const noncopyable& n)
-    {
-    }
+        : i_(n.i_)
+    { }
+
+    int i_ = 0;
 };
 
 enum eid { e0 = 1 , e1 = 2 };
