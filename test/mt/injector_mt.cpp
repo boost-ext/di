@@ -390,11 +390,13 @@ BOOST_AUTO_TEST_CASE(smart_ptr_auto_ptr) {
     BOOST_CHECK_EQUAL(i, *auto_ptr_int_->i_);
 }
 
-BOOST_AUTO_TEST_CASE(noncopyable_by_const_ref) {
-    const int i = 42;
-    auto noncopyable_ = injector<bind_int<i>>().create<noncopyable_const_ref>();
-    BOOST_CHECK_EQUAL(i, noncopyable_.i_);
-}
+#if (!defined(BOOST_GCC) || (defined(BOOST_GCC) && (BOOST_GCC >= 40800)))
+    BOOST_AUTO_TEST_CASE(noncopyable_by_const_ref) {
+        const int i = 42;
+        auto noncopyable_ = injector<bind_int<i>>().create<noncopyable_const_ref>();
+        BOOST_CHECK_EQUAL(i, noncopyable_.i_);
+    }
+#endif
 
 BOOST_AUTO_TEST_CASE(stored_ref_created_by_injector) {
     const int i = 42;
