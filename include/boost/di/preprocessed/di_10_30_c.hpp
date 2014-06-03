@@ -6178,6 +6178,23 @@ namespace wrappers {
 
 namespace detail {
 
+template<typename T>
+class has_copy_ctor
+{
+    static T copy_ctor();
+
+    template<typename U> static mpl::aux::yes_tag test(BOOST_DI_FEATURE_DECLTYPE(U(copy_ctor()))*);
+    template<typename> static mpl::aux::no_tag test(...);
+
+public:
+    typedef has_copy_ctor type;
+
+    BOOST_STATIC_CONSTANT(
+        bool
+      , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
+    );
+};
+
 template<typename T, typename TSignature>
 class is_convertible
 {
@@ -6201,16 +6218,8 @@ struct is_convertible_to_ref
       >
 { };
 
-template<typename T>
-struct is_copyable
-    : mpl::or_<
-          has_trivial_copy<T>
-        , has_element_type<T>
-      >
-{ };
-
 template<typename TResult, typename T, typename TValueType>
-inline typename disable_if<is_copyable<T>, const TResult&>::type
+inline typename disable_if<has_copy_ctor<T>, const TResult&>::type
 copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
     aux::shared_ptr<TResult> object(value(boost::type<T*>()));
     refs.push_back(object);
@@ -6228,7 +6237,7 @@ struct holder
 };
 
 template<typename TResult, typename T, typename TValueType>
-inline typename enable_if<is_copyable<T>, const TResult&>::type
+inline typename enable_if<has_copy_ctor<T>, const TResult&>::type
 copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
     aux::shared_ptr<holder<TResult> > object(new holder<TResult>(value(boost::type<T>())));
     refs.push_back(object);

@@ -15,6 +15,7 @@
 #include <boost/type_traits/is_polymorphic.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/mpl/has_xxx.hpp>
 
 namespace boost {
 namespace di {
