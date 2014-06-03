@@ -32,7 +32,6 @@ template<typename T>
 class has_copy_ctor
 {
     static T copy_ctor();
-
     template<typename U> static mpl::aux::yes_tag test(BOOST_DI_FEATURE_DECLTYPE(U(copy_ctor()))*);
     template<typename>   static mpl::aux::no_tag test(...);
 
