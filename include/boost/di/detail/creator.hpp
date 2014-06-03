@@ -78,69 +78,6 @@
                 : c_(c), deps_(deps), refs_(refs), visitor_(visitor)
             { }
 
-            BOOST_DI_WKND(MSVC)(
-                template<
-                    typename U
-                    BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-                        , typename = typename disable_if<
-                            type_traits::is_same_base_of<
-                                typename type_traits::make_plain<U>::type
-                              , typename type_traits::make_plain<T>::type
-                            >
-                        >::type
-                    )
-                >
-                operator aux::unique_ptr<U>() {
-                    return c_.create_impl<
-                        aux::unique_ptr<U>
-                      , typename mpl::push_back<
-                            TCallStack
-                          , typename type_traits::make_plain<aux::unique_ptr<U>>::type
-                        >::type
-                      , TPolicies
-                      , binder<aux::unique_ptr<U>, TCallStack>
-                    >(deps_, refs_, visitor_);
-                }
-            )
-
-            BOOST_DI_WKND(NO_MSVC)(
-                template<
-                    typename U
-                    BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-                        , typename = typename disable_if<
-                            type_traits::is_same_base_of<
-                                typename type_traits::make_plain<U>::type
-                              , typename type_traits::make_plain<T>::type
-                            >
-                        >::type
-                    )
-                >
-                operator U() {
-                    return c_.create_impl<
-                        U
-                      , typename mpl::push_back<
-                            TCallStack
-                          , typename type_traits::make_plain<U>::type
-                        >::type
-                      , TPolicies
-                      , binder<U, TCallStack>
-                    >(deps_, refs_, visitor_);
-                }
-
-                template<typename U>
-                operator aux::auto_ptr<U>&() {
-                    return c_.create_impl<
-                        aux::auto_ptr<U>
-                      , typename mpl::push_back<
-                            TCallStack
-                          , typename type_traits::make_plain<aux::auto_ptr<U> >::type
-                        >::type
-                      , TPolicies
-                      , binder<aux::auto_ptr<U>, TCallStack>
-                    >(deps_, refs_, visitor_);
-                }
-            )
-
             template<
                 typename U
                 BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
@@ -187,6 +124,59 @@
                 >(deps_, refs_, visitor_);
             }
 
+            template<typename U>
+            operator aux::auto_ptr<U>&() {
+                return c_.create_impl<
+                    aux::auto_ptr<U>
+                  , typename mpl::push_back<
+                        TCallStack
+                      , typename type_traits::make_plain<aux::auto_ptr<U> >::type
+                    >::type
+                  , TPolicies
+                  , binder<aux::auto_ptr<U>, TCallStack>
+                >(deps_, refs_, visitor_);
+            }
+
+            BOOST_DI_WKND(MSVC)(
+                template<typename U>
+                operator aux::unique_ptr<U>() {
+                    return c_.create_impl<
+                        aux::unique_ptr<U>
+                      , typename mpl::push_back<
+                            TCallStack
+                          , typename type_traits::make_plain<aux::unique_ptr<U>>::type
+                        >::type
+                      , TPolicies
+                      , binder<aux::unique_ptr<U>, TCallStack>
+                    >(deps_, refs_, visitor_);
+                }
+            )
+
+            BOOST_DI_WKND(NO_MSVC)(
+                template<
+                    typename U
+                    BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+                        , typename = typename disable_if<
+                            type_traits::is_same_base_of<
+                                typename type_traits::make_plain<U>::type
+                              , typename type_traits::make_plain<T>::type
+                            >
+                        >::type
+                    )
+                >
+                operator U() {
+                    return c_.create_impl<
+                        U
+                      , typename mpl::push_back<
+                            TCallStack
+                          , typename type_traits::make_plain<U>::type
+                        >::type
+                      , TPolicies
+                      , binder<U, TCallStack>
+                    >(deps_, refs_, visitor_);
+                }
+            )
+
         private:
             creator& c_;
             TDeps& deps_;
@@ -210,7 +200,7 @@
         >
         eager_creator<TParent, TCallStack, TPolicies, TDeps, TRefs, TVisitor>
         create(TDeps& deps, TRefs& refs, const TVisitor& visitor
-              , typename enable_if<is_same<T, any_type> >::type* = 0) {
+             , typename enable_if<is_same<T, any_type> >::type* = 0) {
             return eager_creator<TParent, TCallStack, TPolicies, TDeps, TRefs, TVisitor>(
                 *this, deps, refs, visitor
             );
