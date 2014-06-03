@@ -66,8 +66,8 @@ public:
     }
 
     template<typename I>
-    aux::auto_ptr<I> operator()(const type<aux::auto_ptr<I> >&) const {
-        return aux::auto_ptr<I>(value_());
+    aux::auto_ptr<I>* operator()(const type<aux::auto_ptr<I>*>&) const {
+        return new aux::auto_ptr<I>(value_());
     }
 
     template<typename I>

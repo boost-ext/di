@@ -13,9 +13,9 @@
 #include "boost/mpl/string.hpp"
 #include "boost/config.hpp"
 
+#include "boost/di/aux_/memory.hpp"
 #include "boost/di/inject.hpp"
 #include "boost/di/named.hpp"
-#include "boost/di/aux_/memory.hpp"
 
 namespace boost {
 namespace di {
@@ -60,7 +60,12 @@ struct ctor2
 
 struct ctor_complex
 {
-    ctor_complex(int, double&, aux::shared_ptr<int>, float&, const char*, const std::string&, void*) { }
+    ctor_complex(int, double&, aux::shared_ptr<int>, float&, const char*, const std::string&, void*, aux::auto_ptr<int>) { }
+};
+
+struct ctor_auto_ptr
+{
+    ctor_auto_ptr(aux::auto_ptr<int>) { }
 };
 
 struct ctor_inject_named
@@ -80,7 +85,7 @@ BOOST_AUTO_TEST_CASE(ctors) {
     BOOST_CHECK((mpl::equal<mpl::vector2<int, double>, ctor_traits<int_double>::type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector2<char*, const int&>, ctor_traits<extensions>::type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector2<detail::any_type, detail::any_type>, ctor_traits<ctor2>::type>::value));
-    BOOST_CHECK((mpl::equal<mpl::vector<detail::any_type, detail::any_type, detail::any_type, detail::any_type, detail::any_type, detail::any_type, detail::any_type>, ctor_traits<ctor_complex>::type>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector<detail::any_type, detail::any_type, detail::any_type, detail::any_type, detail::any_type, detail::any_type, detail::any_type, detail::any_type>, ctor_traits<ctor_complex>::type>::value));
     BOOST_CHECK((mpl::equal<
         mpl::vector2<
             named<int, mpl::string<'1'> >
@@ -91,8 +96,10 @@ BOOST_AUTO_TEST_CASE(ctors) {
 
 #if defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
     BOOST_CHECK((mpl::equal<mpl::vector<>, ctor_traits<ctor1>::type>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector<>, ctor_traits<ctor_auto_ptr>::type>::value));
 #else
     BOOST_CHECK((mpl::equal<mpl::vector1<detail::any_type>, ctor_traits<ctor1>::type>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector1<detail::any_type>, ctor_traits<ctor_auto_ptr>::type>::value));
 #endif
 }
 

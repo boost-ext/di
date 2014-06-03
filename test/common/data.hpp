@@ -454,6 +454,15 @@ struct c28
     float f_ = 0.0;
 };
 
+struct auto_ptr_int
+{
+    BOOST_DI_INJECT(auto_ptr_int, aux::auto_ptr<int> i)
+        : i_(i)
+    { }
+
+    aux::auto_ptr<int> i_;
+};
+
 struct ref_sp_int
 {
     BOOST_DI_INJECT(ref_sp_int, const aux::shared_ptr<int>& i)

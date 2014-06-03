@@ -10,6 +10,7 @@
     #define BOOST_DI_TYPE_TRAITS_HAS_CTOR_HPP
 
     #include "boost/di/aux_/config.hpp"
+    #include "boost/di/aux_/memory.hpp"
     #include "boost/di/type_traits/make_plain.hpp"
     #include "boost/di/type_traits/is_same_base_of.hpp"
 
@@ -41,6 +42,10 @@
                     >::type
                 >
                 operator U();
+
+                BOOST_DI_WKND(NO_MSVC)(
+                    template<typename U> operator aux::auto_ptr<U>&();
+                )
             };
 
             template<typename U>
@@ -93,6 +98,7 @@
             )
             BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
+                template<typename U> operator aux::auto_ptr<U>&();
             )
         };
 

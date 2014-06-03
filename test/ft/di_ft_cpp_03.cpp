@@ -39,12 +39,12 @@ struct c1
 
 struct c2
 {
-    BOOST_DI_INJECT(c2, (boost::shared_ptr<c1> c1_, boost::shared_ptr<i> p_))
+    BOOST_DI_INJECT(c2, (boost::shared_ptr<c1> c1_, std::auto_ptr<i> p_))
       : c1_(c1_), p_(p_)
     { }
 
     boost::shared_ptr<c1> c1_;
-    boost::shared_ptr<i> p_;
+    std::auto_ptr<i> p_;
 };
 
 struct c3

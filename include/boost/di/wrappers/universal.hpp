@@ -90,7 +90,7 @@ class universal_impl
 {
 public:
     template<typename TValueType>
-    explicit universal_impl(std::vector<aux::shared_ptr<void> >&, const TValueType& value)
+    universal_impl(std::vector<aux::shared_ptr<void> >&, const TValueType& value)
         : value_(boost::bind<T>(value, boost::type<T>()))
     { }
 
@@ -100,6 +100,25 @@ public:
 
 private:
     function<T()> value_;
+};
+
+template<typename T>
+class universal_impl<aux::auto_ptr<T> >
+{
+public:
+    template<typename TValueType>
+    universal_impl(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value)
+        : value_(value(boost::type<aux::auto_ptr<T>*>()))
+    {
+        refs.push_back(aux::shared_ptr<aux::auto_ptr<T> >(value_));
+    }
+
+    operator aux::auto_ptr<T>&() {
+        return *value_;
+    }
+
+private:
+    aux::auto_ptr<T>* value_;
 };
 
 template<typename T>

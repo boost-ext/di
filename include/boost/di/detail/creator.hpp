@@ -126,6 +126,19 @@
                       , binder<U, TCallStack>
                     >(deps_, refs_, visitor_);
                 }
+
+                template<typename U>
+                operator aux::auto_ptr<U>&() {
+                    return c_.create_impl<
+                        aux::auto_ptr<U>
+                      , typename mpl::push_back<
+                            TCallStack
+                          , typename type_traits::make_plain<aux::auto_ptr<U> >::type
+                        >::type
+                      , TPolicies
+                      , binder<aux::auto_ptr<U>, TCallStack>
+                    >(deps_, refs_, visitor_);
+                }
             )
 
             template<
