@@ -73,7 +73,7 @@ struct ctor_inject_named
     ctor_inject_named(int, int);
 };
 
-BOOST_AUTO_TEST_CASE(ctor) {
+BOOST_AUTO_TEST_CASE(ctors) {
     BOOST_CHECK((mpl::equal<mpl::vector0<>, ctor_traits<empty>::type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector0<>, ctor_traits<traits>::type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector0<>, ctor_traits<empty>::type>::value));
@@ -95,6 +95,32 @@ BOOST_AUTO_TEST_CASE(ctor) {
     BOOST_CHECK((mpl::equal<mpl::vector1<detail::any_type>, ctor_traits<ctor1>::type>::value));
 #endif
 }
+
+#if (__cplusplus >= 201100L) &&                                             \
+    !defined(BOOST_INTEL) &&                                                \
+    !(defined(BOOST_GCC) && (BOOST_GCC < 40800)) &&                         \
+    !(defined(BOOST_CLANG) && __clang_major__ >= 3 && __clang_minor__ < 3)
+
+BOOST_AUTO_TEST_CASE(inheriting_ctors) {
+    struct c0 { c0(int, double) { } };
+    struct c1 : public c0 { using c0::c0; };
+
+    BOOST_CHECK((mpl::equal<mpl::vector2<detail::any_type, detail::any_type>, ctor_traits<c0>::type>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector2<detail::any_type, detail::any_type>, ctor_traits<c1>::type>::value));
+}
+
+BOOST_AUTO_TEST_CASE(inheriting_ctors_inject) {
+    struct c0 { c0(int, double) { } static void BOOST_DI_INJECTOR(int, double); };
+    struct c1 : public c0 { using c0::c0; };
+    struct c2 : public c0 { };
+    struct c3 : public c0 { static void BOOST_DI_INJECTOR(); };
+
+    BOOST_CHECK((mpl::equal<mpl::vector2<int, double>, ctor_traits<c0>::type>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector2<int, double>, ctor_traits<c1>::type>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector2<int, double>, ctor_traits<c2>::type>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector0<>, ctor_traits<c3>::type>::value));
+}
+#endif
 
 } // namespace type_traits
 } // namespace di

@@ -82,6 +82,20 @@ BOOST_AUTO_TEST_CASE(many_arguments) {
     BOOST_CHECK((!has_ctor<many_complex, mpl::int_<6> >::value));
 }
 
+#if (__cplusplus >= 201100L) &&                                             \
+    !defined(BOOST_INTEL) &&                                                \
+    !(defined(BOOST_GCC) && (BOOST_GCC < 40800)) &&                         \
+    !(defined(BOOST_CLANG) && __clang_major__ >= 3 && __clang_minor__ < 3)
+
+BOOST_AUTO_TEST_CASE(inheriting_ctors) {
+    struct c0 { c0(int, double) { } };
+    struct c1 : public c0 { using c0::c0; };
+
+    BOOST_CHECK((has_ctor<c0, mpl::int_<2> >::value));
+    BOOST_CHECK((has_ctor<c1, mpl::int_<2> >::value));
+}
+#endif
+
 } // namespace type_traits
 } // namespace di
 } // namespace boost
