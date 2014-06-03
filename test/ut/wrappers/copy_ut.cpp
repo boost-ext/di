@@ -50,8 +50,8 @@ BOOST_AUTO_TEST_CASE(to_shared_ptr_other) {
 }
 
 BOOST_AUTO_TEST_CASE(to_auto_ptr) {
-    aux::unique_ptr<aux::auto_ptr<int> > object((copy<int>(return_i))(type<aux::auto_ptr<int>*>()));
-    BOOST_CHECK_EQUAL(i, **object);
+    aux::auto_ptr<int> object((copy<int>(return_i))(type<aux::auto_ptr<int> >()));
+    BOOST_CHECK_EQUAL(i, *object);
 }
 
 BOOST_AUTO_TEST_CASE(to_unique_ptr) {

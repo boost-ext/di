@@ -108,7 +108,7 @@ class universal_impl<aux::auto_ptr<T> >
 public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value)
-        : value_(value(boost::type<aux::auto_ptr<T>*>()))
+        : value_(new aux::auto_ptr<T>(value(boost::type<aux::auto_ptr<T> >()).release()))
     {
         refs.push_back(aux::shared_ptr<aux::auto_ptr<T> >(value_));
     }
@@ -118,7 +118,7 @@ public:
     }
 
 private:
-    aux::auto_ptr<T>* value_;
+    aux::auto_ptr<T>* value_; // weak
 };
 
 template<typename T>
