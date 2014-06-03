@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE(default_value) {
     using dependency_t = dependency<fake_scope<>, int>;
 
     BOOST_CHECK((is_same<
-        detail::requires<
+        detail::requires_<
             concepts::type_traits::priority
           , concepts::type_traits::type<int>
         >
@@ -44,13 +44,13 @@ BOOST_AUTO_TEST_CASE(rebind_scope) {
                 fake_scope<1>
               , int
               , int
-              , detail::requires<is_same<mpl::_1, int>>
+              , detail::requires_<is_same<mpl::_1, int>>
             >
           , dependency<
                 mpl::_1
               , int
               , int
-              , detail::requires<is_same<mpl::_1, int>>
+              , detail::requires_<is_same<mpl::_1, int>>
             >::rebind<fake_scope<1>>::other
         >::value
     ));

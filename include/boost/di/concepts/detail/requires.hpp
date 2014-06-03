@@ -21,7 +21,7 @@ namespace concepts {
 namespace detail {
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-class requires
+class requires_
 {
     template<
         typename TBind
@@ -38,7 +38,7 @@ class requires
     { };
 
 public:
-    typedef requires type;
+    typedef requires_ type;
 
     template<
         typename T

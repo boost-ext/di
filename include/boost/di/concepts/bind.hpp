@@ -38,7 +38,7 @@ struct bind
           mpl::_1
         , TExpected
         , TGiven
-        , detail::requires<
+        , detail::requires_<
               type_traits::priority
             , type_traits::type<TExpected>
           >
@@ -50,7 +50,7 @@ struct bind
               mpl::_1
             , TExpected
             , TGiven
-            , detail::requires<
+            , detail::requires_<
                   type_traits::priority
                 , type_traits::type<TExpected>
                 , type_traits::when<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
@@ -63,7 +63,7 @@ struct bind
                   mpl::_1
                 , TExpected
                 , TGiven
-                , detail::requires<
+                , detail::requires_<
                       type_traits::priority
                     , type_traits::type<TExpected>
                     , type_traits::name<TName>
@@ -79,7 +79,7 @@ struct bind
               mpl::_1
             , TExpected
             , TGiven
-            , detail::requires<
+            , detail::requires_<
                   type_traits::priority
                 , type_traits::type<TExpected>
                 , type_traits::name<TName>
@@ -92,7 +92,7 @@ struct bind
                   mpl::_1
                 , TExpected
                 , TGiven
-                , detail::requires<
+                , detail::requires_<
                       type_traits::priority
                     , type_traits::type<TExpected>
                     , type_traits::name<TName>

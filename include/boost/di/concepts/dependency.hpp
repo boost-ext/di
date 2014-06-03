@@ -61,7 +61,7 @@ template<
   , typename TExpected
   , typename TGiven = TExpected
   , typename TBind =
-        detail::requires<
+        detail::requires_<
             concepts::type_traits::priority
           , concepts::type_traits::type<TExpected>
         >

@@ -44,7 +44,7 @@ class scope
               mpl::_1
             , T
             , T
-            , detail::requires<
+            , detail::requires_<
                   type_traits::priority
                 , type_traits::type<T>
               >

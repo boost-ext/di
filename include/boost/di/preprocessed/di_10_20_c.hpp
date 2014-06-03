@@ -89,7 +89,7 @@ namespace concepts {
 namespace detail {
 
 template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na , typename T10 = ::boost::mpl::na , typename T11 = ::boost::mpl::na , typename T12 = ::boost::mpl::na , typename T13 = ::boost::mpl::na , typename T14 = ::boost::mpl::na , typename T15 = ::boost::mpl::na , typename T16 = ::boost::mpl::na , typename T17 = ::boost::mpl::na , typename T18 = ::boost::mpl::na , typename T19 = ::boost::mpl::na >
-class requires
+class requires_
 {
     template<
         typename TBind
@@ -106,7 +106,7 @@ class requires
     { };
 
 public:
-    typedef requires type;
+    typedef requires_ type;
 
     template<
         typename T
@@ -361,7 +361,7 @@ struct bind
           mpl::_1
         , TExpected
         , TGiven
-        , detail::requires<
+        , detail::requires_<
               type_traits::priority
             , type_traits::type<TExpected>
           >
@@ -373,7 +373,7 @@ struct bind
               mpl::_1
             , TExpected
             , TGiven
-            , detail::requires<
+            , detail::requires_<
                   type_traits::priority
                 , type_traits::type<TExpected>
                 , type_traits::when<mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19> >
@@ -386,7 +386,7 @@ struct bind
                   mpl::_1
                 , TExpected
                 , TGiven
-                , detail::requires<
+                , detail::requires_<
                       type_traits::priority
                     , type_traits::type<TExpected>
                     , type_traits::name<TName>
@@ -402,7 +402,7 @@ struct bind
               mpl::_1
             , TExpected
             , TGiven
-            , detail::requires<
+            , detail::requires_<
                   type_traits::priority
                 , type_traits::type<TExpected>
                 , type_traits::name<TName>
@@ -415,7 +415,7 @@ struct bind
                   mpl::_1
                 , TExpected
                 , TGiven
-                , detail::requires<
+                , detail::requires_<
                       type_traits::priority
                     , type_traits::type<TExpected>
                     , type_traits::name<TName>
@@ -1565,7 +1565,7 @@ template<
   , typename TExpected
   , typename TGiven = TExpected
   , typename TBind =
-        detail::requires<
+        detail::requires_<
             concepts::type_traits::priority
           , concepts::type_traits::type<TExpected>
         >
@@ -1700,7 +1700,7 @@ class scope
               mpl::_1
             , T
             , T
-            , detail::requires<
+            , detail::requires_<
                   type_traits::priority
                 , type_traits::type<T>
               >

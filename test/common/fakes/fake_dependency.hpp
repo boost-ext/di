@@ -28,7 +28,7 @@ struct no_name { };
 
 template<typename T, typename TName, typename TCallStack>
 struct get_bind
-    : concepts::detail::requires<
+    : concepts::detail::requires_<
           concepts::type_traits::priority
         , concepts::type_traits::type<T>
         , concepts::type_traits::name<TName>
@@ -38,7 +38,7 @@ struct get_bind
 
 template<typename T, typename TName>
 struct get_bind<T, TName, mpl::vector0<>>
-    : concepts::detail::requires<
+    : concepts::detail::requires_<
           concepts::type_traits::priority
         , concepts::type_traits::type<T>
         , concepts::type_traits::name<TName>
@@ -47,7 +47,7 @@ struct get_bind<T, TName, mpl::vector0<>>
 
 template<typename T, typename TCallStack>
 struct get_bind<T, no_name, TCallStack>
-    : concepts::detail::requires<
+    : concepts::detail::requires_<
           concepts::type_traits::priority
         , concepts::type_traits::type<T>
         , concepts::type_traits::when<TCallStack>
@@ -56,7 +56,7 @@ struct get_bind<T, no_name, TCallStack>
 
 template<typename T>
 struct get_bind<T, no_name, mpl::vector0<>>
-    : concepts::detail::requires<
+    : concepts::detail::requires_<
           concepts::type_traits::priority
         , concepts::type_traits::type<T>
       >
