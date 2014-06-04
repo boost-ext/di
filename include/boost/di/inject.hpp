@@ -13,11 +13,11 @@
     #define BOOST_DI_INJECTOR boost_di_injector__
 #endif
 
-#if !defined(BOOST_DI_INJECT_CFG_VA_ARGS) && !defined(BOOST_DI_INJECT_CFG_BRACKET)
+#if !defined(BOOST_DI_CFG_INJECT_VA_ARGS) && !defined(BOOST_DI_CFG_INJECT_BRACKET)
     #if (__cplusplus >= 201100L) || defined(BOOST_MSVC)
-        #define BOOST_DI_INJECT_CFG_VA_ARGS
+        #define BOOST_DI_CFG_INJECT_VA_ARGS
     #else
-        #define BOOST_DI_INJECT_CFG_BRACKET
+        #define BOOST_DI_CFG_INJECT_BRACKET
     #endif
 #endif
 
@@ -29,27 +29,27 @@
     #pragma warning(disable:177) //function "..." was declared but never referenced
 #endif
 
-#if defined(BOOST_DI_INJECT_CFG_VA_ARGS)
+#if defined(BOOST_DI_CFG_INJECT_VA_ARGS)
     #if defined(BOOST_GCC) || defined(BOOST_CLANG)
         #pragma GCC diagnostic ignored "-Wvariadic-macros"
     #endif
 
-    #define BOOST_DI_INJECT_TRAITS(...)             \
+    #define BOOST_DI_INJECT_TRAITS(...)                 \
         static void BOOST_DI_INJECTOR(__VA_ARGS__)
 
     #if !defined(BOOST_DI_INJECT)
-        #define BOOST_DI_INJECT(type, ...)          \
-            BOOST_DI_INJECT_TRAITS(__VA_ARGS__);    \
+        #define BOOST_DI_INJECT(type, ...)              \
+            BOOST_DI_INJECT_TRAITS(__VA_ARGS__);        \
             type(__VA_ARGS__)
     #endif
 
 #else
-    #define BOOST_DI_INJECT_TRAITS(Args)            \
+    #define BOOST_DI_INJECT_TRAITS(Args)                \
         static void BOOST_DI_INJECTOR Args
 
     #if !defined(BOOST_DI_INJECT)
-        #define BOOST_DI_INJECT(type, args)         \
-            BOOST_DI_INJECT_TRAITS(args);           \
+        #define BOOST_DI_INJECT(type, args)             \
+            BOOST_DI_INJECT_TRAITS(args);               \
             type args
     #endif
 

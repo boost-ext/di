@@ -26,7 +26,7 @@ project :
         <define>BOOST_TEST_MODULE=di_test
 ;
 
-rule run-test ( std * : src : ctor * : defines * : force_bracket * : preprocessed_headers * ) {
+rule run-test ( std * : src : ctor * : defines * : preprocessed_headers * ) {
     common_toolset = ;
 
     if $(std) {
@@ -40,14 +40,10 @@ rule run-test ( std * : src : ctor * : defines * : force_bracket * : preprocesse
 
     if $(ctor) {
         if $(std) = c++03 {
-            defines += <define>BOOST_DI_INJECT_CFG_BRACKET ;
+            defines += <define>BOOST_DI_CFG_INJECT_BRACKET ;
         } else {
             defines += <define>BOOST_DI_CFG_TEST_CTOR ;
         }
-    }
-
-    if $(force_bracket) {
-        defines += <define>BOOST_DI_INJECT_CFG_BRACKET ;
     }
 
     if ! $(preprocessed_headers) {
@@ -57,7 +53,7 @@ rule run-test ( std * : src : ctor * : defines * : force_bracket * : preprocesse
     run $(src) : : : $(common_toolset) $(defines) : $(ctor) ;
 }
 
-rule compile-fail-test ( std * : src : ctor * : defines * : force_bracket * : preprocessed_headers * ) {
+rule compile-fail-test ( std * : src : ctor * : defines * : preprocessed_headers * ) {
     common_toolset =
         <toolset>gcc:<cxxflags>"-std=$(std) -include common/config.hpp -Wfatal-errors"
         <toolset>clang:<cxxflags>"-std=$(std) -include common/config.hpp -Wfatal-errors"
@@ -67,14 +63,10 @@ rule compile-fail-test ( std * : src : ctor * : defines * : force_bracket * : pr
 
     if $(ctor) {
         if $(std) = c++03 {
-            defines += <define>BOOST_DI_INJECT_CFG_BRACKET ;
+            defines += <define>BOOST_DI_CFG_INJECT_BRACKET ;
         } else {
             defines += <define>BOOST_DI_CFG_TEST_CTOR ;
         }
-    }
-
-    if $(force_bracket) {
-        defines += <define>BOOST_DI_INJECT_CFG_BRACKET ;
     }
 
     if ! $(preprocessed_headers) {
@@ -128,29 +120,27 @@ test-suite ut : # unit tests
     [ run-test c++11 : ut/inject_bracket_ut.cpp ]
     [ run-test c++11 : ut/inject_va_args_ut.cpp ]
 
-    [ run-test c++11 : ut/injector_ut.cpp ]
-    [ run-test c++11 : ut/injector_ut.cpp : ctor_injector_ut ]
+    [ run-test c++11 : ut/injector_ut.cpp : : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
+    [ run-test c++11 : ut/injector_ut.cpp : ctor_injector_ut : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
 ;
 
 test-suite mt : # module tests
-    [ run-test c++11 : mt/detail/module_mt.cpp ]
-    [ run-test c++11 : mt/detail/module_mt.cpp : ctor_module_mt ]
+    [ run-test c++11 : mt/detail/module_mt.cpp : : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
+    [ run-test c++11 : mt/detail/module_mt.cpp : ctor_module_mt : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
 
-    [ run-test c++11 : mt/injector_mt.cpp ]
-    [ run-test c++11 : mt/injector_mt.cpp : ctor_injector_mt ]
+    [ run-test c++11 : mt/injector_mt.cpp : : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
+    [ run-test c++11 : mt/injector_mt.cpp : ctor_injector_mt : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
 
-    [ run-test c++11 : mt/make_injector_mt.cpp ]
-    [ run-test c++11 : mt/make_injector_mt.cpp : ctor_make_injector_mt ]
-    [ run-test c++11 : mt/injector_limit_size_mt.cpp : :
-        <define>BOOST_DI_CFG_CTOR_LIMIT_SIZE=20
-    ]
+    [ run-test c++11 : mt/make_injector_mt.cpp : : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
+    [ run-test c++11 : mt/make_injector_mt.cpp : ctor_make_injector_mt : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
+    [ run-test c++11 : mt/injector_limit_size_mt.cpp : : <define>BOOST_DI_CFG_CTOR_LIMIT_SIZE=20 ]
 ;
 
 test-suite ft : # functional tests
     [ run-test c++11 : ft/di_ft_cpp_11.cpp ]
     [ run-test c++11 : ft/di_ft_cpp_11.cpp : ctor_di_ft_cpp_11 ]
 
-    [ run-test c++03 : ft/di_ft_cpp_03.cpp : : : force_bracket ]
+    [ run-test c++03 : ft/di_ft_cpp_03.cpp : : <define>BOOST_DI_CFG_INJECT_BRACKET ]
     [ run-test c++03 : ft/di_ft_cpp_03.cpp : ctor_di_ft_cpp_03 ]
 ;
 
@@ -158,10 +148,10 @@ test-suite fail : # compile fail tests
     [ compile-fail-test c++11 : fail/detail/module_externals_fail.cpp ]
     [ compile-fail-test c++11 : fail/policies/arguments_permission_fail.cpp ]
     [ compile-fail-test c++11 : fail/policies/arguments_permission_fail.cpp : ctor_arguments_permission_fail ]
-    [ compile-fail-test c++11 : fail/policies/circular_dependencies_fail.cpp ]
-    [ compile-fail-test c++11 : fail/policies/circular_dependencies_fail.cpp : ctor_circular_dependencies_fail ]
-    [ compile-fail-test c++11 : fail/policies/creation_ownership_fail.cpp ]
-    [ compile-fail-test c++11 : fail/policies/scopes_permission_fail.cpp ]
+    [ compile-fail-test c++11 : fail/policies/circular_dependencies_fail.cpp : : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
+    [ compile-fail-test c++11 : fail/policies/circular_dependencies_fail.cpp : ctor_circular_dependencies_fail : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
+    [ compile-fail-test c++11 : fail/policies/creation_ownership_fail.cpp : : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
+    [ compile-fail-test c++11 : fail/policies/scopes_permission_fail.cpp : ]
     [ compile-fail-test c++11 : fail/injector_ctor_ambiguous_fail.cpp ]
     [ compile-fail-test c++11 : fail/injector_ctor_ambiguous_fail.cpp : ctor_injector_ctor_ambiguous_fail ]
     [ compile-fail-test c++03 : fail/injector_ctor_one_arg_fail_cpp_03.cpp ]
@@ -170,9 +160,9 @@ test-suite fail : # compile fail tests
 ;
 
 test-suite pt : # performane tests
-    [ run-test c++11 : pt/compilation_pt.cpp : preprocessed_compilation_pt_cpp_11 : <define>BOOST_DI_CFG_TEST_LEVELS_LIMIT_SIZE=4 : : preprocessed_headers ]
-    [ run-test c++03 : pt/compilation_pt.cpp : preprocessed_compilation_pt_cpp_03 : <define>BOOST_DI_CFG_TEST_LEVELS_LIMIT_SIZE=4 : : preprocessed_headers ]
-    [ run-test c++11 : pt/runtime_pt.cpp : preprocessed_runtime_pt_cpp_11 : <define>BOOST_DI_CFG_BOOST_SMART_PTR : : preprocessed_headers ]
-    [ run-test c++03 : pt/runtime_pt.cpp : preprocessed_runtime_pt_cpp_03 : <define>BOOST_DI_CFG_BOOST_SMART_PTR : : preprocessed_headers ]
+    [ run-test c++11 : pt/compilation_pt.cpp : preprocessed_compilation_pt_cpp_11 : <define>BOOST_DI_CFG_TEST_LEVELS_LIMIT_SIZE=2 : preprocessed_headers ]
+    [ run-test c++03 : pt/compilation_pt.cpp : preprocessed_compilation_pt_cpp_03 : <define>BOOST_DI_CFG_TEST_LEVELS_LIMIT_SIZE=2 : preprocessed_headers ]
+    [ run-test c++11 : pt/runtime_pt.cpp : preprocessed_runtime_pt_cpp_11 : <define>BOOST_DI_CFG_BOOST_SMART_PTR : preprocessed_headers ]
+    [ run-test c++03 : pt/runtime_pt.cpp : preprocessed_runtime_pt_cpp_03 : <define>BOOST_DI_CFG_BOOST_SMART_PTR : preprocessed_headers ]
 ;
 

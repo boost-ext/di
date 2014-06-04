@@ -8135,7 +8135,6 @@ template<typename T>
 class has_copy_ctor
 {
     static T copy_ctor();
-
     template<typename U> static mpl::aux::yes_tag test(BOOST_DI_FEATURE_DECLTYPE(U(copy_ctor()))*);
     template<typename> static mpl::aux::no_tag test(...);
 
@@ -9017,10 +9016,15 @@ private:
             operator const U&() const {
                 return c_.create_impl<
                     const U&
-                  , typename mpl::push_back<
-                        TCallStack
-                      , typename type_traits::make_plain<U>::type
-                    >::type
+                    BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
+                      , typename mpl::push_back<
+                            TCallStack
+                          , typename type_traits::make_plain<U>::type
+                        >::type
+                    )
+                    BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
+                        , mpl::vector0<>
+                    )
                   , TPolicies
                   , binder<const U&, TCallStack>
                 >(deps_, refs_, visitor_);
@@ -9040,10 +9044,15 @@ private:
             operator U&() const {
                 return c_.create_impl<
                     U&
-                  , typename mpl::push_back<
-                        TCallStack
-                      , typename type_traits::make_plain<U>::type
-                    >::type
+                    BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
+                      , typename mpl::push_back<
+                            TCallStack
+                          , typename type_traits::make_plain<U>::type
+                        >::type
+                    )
+                    BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
+                        , mpl::vector0<>
+                    )
                   , TPolicies
                   , binder<U&, TCallStack>
                 >(deps_, refs_, visitor_);
@@ -9053,10 +9062,15 @@ private:
             operator aux::auto_ptr<U>&() {
                 return c_.create_impl<
                     aux::auto_ptr<U>
-                  , typename mpl::push_back<
-                        TCallStack
-                      , typename type_traits::make_plain<aux::auto_ptr<U> >::type
-                    >::type
+                    BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
+                      , typename mpl::push_back<
+                            TCallStack
+                          , typename type_traits::make_plain<aux::auto_ptr<U> >::type
+                        >::type
+                    )
+                    BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
+                        , mpl::vector0<>
+                    )
                   , TPolicies
                   , binder<aux::auto_ptr<U>, TCallStack>
                 >(deps_, refs_, visitor_);
@@ -9067,10 +9081,15 @@ private:
                 operator aux::unique_ptr<U>() {
                     return c_.create_impl<
                         aux::unique_ptr<U>
-                      , typename mpl::push_back<
-                            TCallStack
-                          , typename type_traits::make_plain<aux::unique_ptr<U>>::type
-                        >::type
+                        BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
+                          , typename mpl::push_back<
+                                TCallStack
+                              , typename type_traits::make_plain<aux::unique_ptr<U>>::type
+                            >::type
+                        )
+                        BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
+                            , mpl::vector0<>
+                        )
                       , TPolicies
                       , binder<aux::unique_ptr<U>, TCallStack>
                     >(deps_, refs_, visitor_);
@@ -9092,10 +9111,15 @@ private:
                 operator U() {
                     return c_.create_impl<
                         U
-                      , typename mpl::push_back<
-                            TCallStack
-                          , typename type_traits::make_plain<U>::type
-                        >::type
+                        BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
+                          , typename mpl::push_back<
+                                TCallStack
+                              , typename type_traits::make_plain<U>::type
+                            >::type
+                        )
+                        BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
+                            , mpl::vector0<>
+                        )
                       , TPolicies
                       , binder<U, TCallStack>
                     >(deps_, refs_, visitor_);
@@ -9147,10 +9171,15 @@ private:
           , typename disable_if<is_same<T, any_type> >::type* = 0) {
             return create_impl<
                 T
-              , typename mpl::push_back<
-                    TCallStack
-                  , typename binder<T, TCallStack>::given
-                >::type
+                BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
+                  , typename mpl::push_back<
+                        TCallStack
+                      , typename binder<T, TCallStack>::given
+                    >::type
+                )
+                BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
+                    , mpl::vector0<>
+                )
               , TPolicies
               , binder<T, TCallStack>
             >(deps, refs, visitor);

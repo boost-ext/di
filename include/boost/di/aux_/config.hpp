@@ -99,25 +99,17 @@
 
 #if defined(BOOST_NO_RVALUE_REFERENCES)
     #define BOOST_DI_FEATURE_RVALUE_REFERENCES(...)
-#else
-    #define BOOST_DI_FEATURE_RVALUE_REFERENCES(...) __VA_ARGS__
-#endif
-
-#if defined(BOOST_NO_RVALUE_REFERENCES)
     #define BOOST_DI_FEATURE_NO_RVALUE_REFERENCES(...) __VA_ARGS__
 #else
+    #define BOOST_DI_FEATURE_RVALUE_REFERENCES(...) __VA_ARGS__
     #define BOOST_DI_FEATURE_NO_RVALUE_REFERENCES(...)
 #endif
 
 #if defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
+    #define BOOST_DI_FEATURE_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS(...) __VA_ARGS__
     #define BOOST_DI_FEATURE_FUNCTION_TEMPLATE_DEFAULT_ARGS(...)
 #else
     #define BOOST_DI_FEATURE_FUNCTION_TEMPLATE_DEFAULT_ARGS(...) __VA_ARGS__
-#endif
-
-#if defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
-    #define BOOST_DI_FEATURE_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS(...) __VA_ARGS__
-#else
     #define BOOST_DI_FEATURE_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS(...)
 #endif
 
@@ -128,18 +120,22 @@
     #define BOOST_DI_FEATURE_DECLTYPE(...) decltype(__VA_ARGS__)
 #endif
 
+#if defined(BOOST_DI_CFG_EXAMINE_CALL_STACK)
+    #define BOOST_DI_FEATURE_EXAMINE_CALL_STACK(...) __VA_ARGS__
+    #define BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(...)
+#else
+    #define BOOST_DI_FEATURE_EXAMINE_CALL_STACK(...)
+    #define BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(...) __VA_ARGS__
+#endif
+
 #define BOOST_DI_WKND(wknd) \
     BOOST_DI_WKND_##wknd
 
 #if defined(BOOST_MSVC)
     #define BOOST_DI_WKND_MSVC(...) __VA_ARGS__
-#else
-    #define BOOST_DI_WKND_MSVC(...)
-#endif
-
-#if defined(BOOST_MSVC)
     #define BOOST_DI_WKND_NO_MSVC(...)
 #else
+    #define BOOST_DI_WKND_MSVC(...)
     #define BOOST_DI_WKND_NO_MSVC(...) __VA_ARGS__
 #endif
 

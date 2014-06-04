@@ -23,9 +23,7 @@
     #include <boost/type_traits/is_base_of.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/size.hpp>
-    #include <boost/mpl/empty.hpp>
     #include <boost/mpl/at.hpp>
-    #include <boost/mpl/push_back.hpp>
 
     namespace boost {
     namespace di {
