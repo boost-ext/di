@@ -27,7 +27,6 @@
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_class.hpp>
 #include <boost/type_traits/is_base_of.hpp>
-#include <boost/type_traits/has_trivial_copy.hpp>
 #include <boost/type.hpp>
 #include <boost/ref.hpp>
 #include <boost/non_type.hpp>
@@ -1208,6 +1207,41 @@ public:
 
 namespace boost {
 namespace di {
+namespace type_traits {
+
+template<typename T>
+class has_BOOST_DI_INJECTOR
+{
+    struct base_impl { void BOOST_DI_INJECTOR(...) { } };
+    struct base
+        : base_impl
+        , mpl::if_<is_class<T>, T, mpl::void_>::type
+    { };
+
+    template<typename U>
+    static mpl::aux::no_tag test(
+        U*
+      , non_type<void (base_impl::*)(...), &U::BOOST_DI_INJECTOR>* = 0
+    );
+
+    static mpl::aux::yes_tag test(...);
+
+public:
+    typedef has_BOOST_DI_INJECTOR type;
+
+    BOOST_STATIC_CONSTANT(
+        bool
+      , value = sizeof(test((base*)0)) == sizeof(mpl::aux::yes_tag)
+    );
+};
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+
+
+namespace boost {
+namespace di {
 namespace detail {
 
 struct any_type { };
@@ -1249,32 +1283,6 @@ struct ctor_traits<std::basic_string<T> > // basic_string ctors are ambiguous
 
 namespace type_traits {
 
-template<typename T>
-class has_BOOST_DI_INJECTOR
-{
-    struct base_impl { void BOOST_DI_INJECTOR(...) { } };
-    struct base
-        : base_impl
-        , mpl::if_<is_class<T>, T, mpl::void_>::type
-    { base() { } };
-
-    template<typename U>
-    static mpl::aux::no_tag test(
-        U*
-      , non_type<void (base_impl::*)(...), &U::BOOST_DI_INJECTOR>* = 0
-    );
-
-    static mpl::aux::yes_tag test(...);
-
-public:
-    typedef has_BOOST_DI_INJECTOR type;
-
-    BOOST_STATIC_CONSTANT(
-        bool
-      , value = sizeof(test((base*)(0))) == sizeof(mpl::aux::yes_tag)
-    );
-};
-
 template<typename T, typename = void>
 struct ctor_traits
     : di::ctor_traits<T>::type
@@ -1295,6 +1303,41 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
 } // namespace boost
 
 
+namespace boost {
+namespace di {
+namespace type_traits {
+
+template<typename T>
+class has_value
+{
+    struct base_impl { int value; };
+    struct base
+        : base_impl
+        , mpl::if_<is_class<T>, T, mpl::void_>::type
+    { };
+
+    template<typename U>
+    static mpl::aux::no_tag test(
+        U*
+      , non_type<int base_impl::*, &U::value>* = 0
+    );
+
+    static mpl::aux::yes_tag test(...);
+
+public:
+    typedef has_value type;
+
+    BOOST_STATIC_CONSTANT(
+        bool
+      , value = sizeof(test((base*)0)) == sizeof(mpl::aux::yes_tag)
+    );
+};
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+
+
     namespace boost {
 
     namespace mpl {
@@ -1304,32 +1347,6 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
 
     namespace di {
     namespace type_traits {
-
-    template<typename T>
-    class has_value
-    {
-        struct base_impl { int value; };
-        struct base
-            : base_impl
-            , mpl::if_<is_class<T>, T, mpl::void_>::type
-        { base() { } };
-
-        template<typename U>
-        static mpl::aux::no_tag test(
-            U*
-          , non_type<int base_impl::*, &U::value>* = 0
-        );
-
-        static mpl::aux::yes_tag test(...);
-
-    public:
-        typedef has_value type;
-
-        BOOST_STATIC_CONSTANT(
-            bool
-          , value = sizeof(test((base*)(0))) == sizeof(mpl::aux::yes_tag)
-        );
-    };
 
     template<typename, typename = void>
     struct is_mpl_string
@@ -1345,12 +1362,11 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
 
     template<typename T>
     struct is_explicit
-    {
-        BOOST_STATIC_CONSTANT(
-            bool
-          , value = has_value<T>::value || is_mpl_string<T>::value
-        );
-    };
+        : mpl::or_<
+              has_value<T>
+            , is_mpl_string<T>
+          >
+    { };
 
     template<typename TExpected, typename TGiven>
     typename disable_if<is_explicit<TGiven>, TExpected*>::type
@@ -1425,33 +1441,41 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
     } // namespace boost
 
 
+namespace boost {
+namespace di {
+namespace type_traits {
+
+template<typename T>
+class has_call_operator
+{
+    struct base_impl { void operator()(...) { } };
+    struct base
+        : base_impl
+        , mpl::if_<is_class<T>, T, mpl::void_>::type
+    { };
+
+    template<typename U>
+    static mpl::aux::no_tag test(
+        U*
+      , non_type<void (base_impl::*)(...), &U::operator()>* = 0
+    );
+
+    static mpl::aux::yes_tag test(...);
+
+public:
+    BOOST_STATIC_CONSTANT(
+        bool
+      , value = sizeof(test((base*)0)) == sizeof(mpl::aux::yes_tag)
+    );
+};
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+
+
     namespace boost {
     namespace di {
-
-    template<typename T>
-    class has_call_operator
-    {
-        struct base_impl { void operator()(...) { } };
-        struct base
-            : base_impl
-            , mpl::if_<is_class<T>, T, mpl::void_>::type
-        { base() { } };
-
-        template<typename U>
-        static mpl::aux::no_tag test(
-            U*
-          , non_type<void (base_impl::*)(...), &U::operator()>* = 0
-        );
-
-        static mpl::aux::yes_tag test(...);
-
-    public:
-        BOOST_STATIC_CONSTANT(
-            bool
-          , value = sizeof(test((base*)(0))) == sizeof(mpl::aux::yes_tag)
-        );
-    };
-
     namespace scopes {
 
     template<template<typename> class TWrapper = wrappers::value>
@@ -1469,12 +1493,14 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
 
         public:
             template<typename T>
-            explicit scope(const T& object, typename enable_if_c<has_call_operator<T>::value>::type* = 0)
+            explicit scope(const T& object
+                         , typename enable_if_c<type_traits::has_call_operator<T>::value>::type* = 0)
                 : object_(object())
             { }
 
             template<typename T>
-            explicit scope(const T& object, typename disable_if_c<has_call_operator<T>::value>::type* = 0)
+            explicit scope(const T& object
+                         , typename disable_if_c<type_traits::has_call_operator<T>::value>::type* = 0)
                 : object_(object)
             { }
 
@@ -1615,7 +1641,7 @@ class dependency : public detail::get_scope<TExpected, TGiven, TScope>::type
     };
 
     template<typename T>
-    struct get_wrapper<T, typename enable_if<has_call_operator<T> >::type>
+    struct get_wrapper<T, typename enable_if<di::type_traits::has_call_operator<T> >::type>
         : get_wrapper_impl<
               typename di::type_traits::parameter_types<
                   BOOST_DI_FEATURE_DECLTYPE(&T::operator())
@@ -1655,21 +1681,21 @@ public:
     template<typename T>
     static dependency<value_type, expected, T, TBind>
     to(const T& object, typename disable_if<is_reference_wrapper<T> >::type* = 0
-                      , typename disable_if<has_call_operator<T> >::type* = 0) {
+                      , typename disable_if<di::type_traits::has_call_operator<T> >::type* = 0) {
         return dependency<value_type, expected, T, TBind>(object);
     }
 
     template<typename T>
     static dependency<ref_type, typename unwrap_reference<T>::type, T, TBind>
     to(const T& object, typename enable_if<is_reference_wrapper<T> >::type* = 0
-                      , typename disable_if<has_call_operator<T> >::type* = 0) {
+                      , typename disable_if<di::type_traits::has_call_operator<T> >::type* = 0) {
         return dependency<ref_type, typename unwrap_reference<T>::type, T, TBind>(object);
     }
 
     template<typename T>
     static dependency<typename get_wrapper<T>::type, expected, T, TBind>
     to(const T& object, typename disable_if<is_reference_wrapper<T> >::type* = 0
-                      , typename enable_if<has_call_operator<T> >::type* = 0) {
+                      , typename enable_if<di::type_traits::has_call_operator<T> >::type* = 0) {
         return dependency<typename get_wrapper<T>::type, expected, T, TBind>(object);
     }
 
@@ -8127,16 +8153,18 @@ private:
 
 namespace boost {
 namespace di {
-namespace wrappers {
-
-namespace detail {
+namespace type_traits {
 
 template<typename T>
 class has_copy_ctor
 {
     static T copy_ctor();
-    template<typename U> static mpl::aux::yes_tag test(BOOST_DI_FEATURE_DECLTYPE(U(copy_ctor()))*);
-    template<typename> static mpl::aux::no_tag test(...);
+
+    template<typename U>
+    static mpl::aux::yes_tag test(BOOST_DI_FEATURE_DECLTYPE(U(copy_ctor()))*);
+
+    template<typename>
+    static mpl::aux::no_tag test(...);
 
 public:
     typedef has_copy_ctor type;
@@ -8147,11 +8175,26 @@ public:
     );
 };
 
-template<typename T, typename TSignature>
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+
+
+namespace boost {
+namespace di {
+namespace type_traits {
+
+template<
+    typename T
+  , typename TSignature
+>
 class is_convertible
 {
-    template<typename U> static mpl::aux::yes_tag test(non_type<TSignature, &U::operator()>*);
-    template<typename> static mpl::aux::no_tag test(...);
+    template<typename U>
+    static mpl::aux::yes_tag test(non_type<TSignature, &U::operator()>*);
+
+    template<typename>
+     static mpl::aux::no_tag test(...);
 
 public:
     typedef is_convertible type;
@@ -8162,16 +8205,27 @@ public:
     );
 };
 
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+
+
+namespace boost {
+namespace di {
+namespace wrappers {
+
+namespace detail {
+
 template<typename TValueType, typename T>
 struct is_convertible_to_ref
     : mpl::or_<
-          is_convertible<TValueType, T&(TValueType::*)(const boost::type<T&>&) const>
-        , is_convertible<TValueType, const T&(TValueType::*)(const boost::type<const T&>&) const>
+          type_traits::is_convertible<TValueType, T&(TValueType::*)(const boost::type<T&>&) const>
+        , type_traits::is_convertible<TValueType, const T&(TValueType::*)(const boost::type<const T&>&) const>
       >
 { };
 
 template<typename TResult, typename T, typename TValueType>
-inline typename disable_if<has_copy_ctor<T>, const TResult&>::type
+inline typename disable_if<type_traits::has_copy_ctor<T>, const TResult&>::type
 copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
     aux::shared_ptr<TResult> object(value(boost::type<T*>()));
     refs.push_back(object);
@@ -8189,7 +8243,7 @@ struct holder
 };
 
 template<typename TResult, typename T, typename TValueType>
-inline typename enable_if<has_copy_ctor<T>, const TResult&>::type
+inline typename enable_if<type_traits::has_copy_ctor<T>, const TResult&>::type
 copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
     aux::shared_ptr<holder<TResult> > object(new holder<TResult>(value(boost::type<T>())));
     refs.push_back(object);
@@ -9491,6 +9545,87 @@ private:
     } // namespace boost
 
 
+namespace boost {
+namespace di {
+namespace type_traits {
+
+namespace detail {
+
+template<typename T>
+class has_call_impl
+{
+    struct base_impl { void call() { } };
+    struct base : T, base_impl { };
+
+    template<typename U>
+    static mpl::aux::no_tag test(
+        U*
+      , non_type<void (base_impl::*)(), &U::call>* = 0
+    );
+
+    template<typename>
+    static mpl::aux::yes_tag test(...);
+
+public:
+    typedef has_call_impl type;
+
+    BOOST_STATIC_CONSTANT(
+        bool
+      , value = sizeof(test<base>(0)) == sizeof(mpl::aux::yes_tag)
+    );
+};
+
+} // namespace detail
+
+template<
+    typename T
+  , typename TAction
+>
+class has_call
+{
+    template<typename>
+    struct void_ { };
+
+    template<typename S, typename U>
+    friend U& operator,(const U&, void_<S>);
+
+    struct base : T
+    {
+        using T::call;
+        mpl::aux::no_tag call(...) const;
+    };
+
+    template<typename, typename = void>
+    struct base_call
+        : mpl::false_
+    { };
+
+    template<typename TDummy>
+    struct base_call<mpl::true_, TDummy>
+        : is_same<
+              BOOST_DI_FEATURE_DECLTYPE(
+                 ((((base*)0)->call(*(TAction*)0)), void_<T>())
+              )
+            , void_<T>
+          >
+    { };
+
+public :
+    typedef has_call type;
+
+    BOOST_STATIC_CONSTANT(
+        bool
+      , value = base_call<
+            mpl::bool_<detail::has_call_impl<T>::value>
+        >::value
+    );
+};
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+
+
     namespace boost {
     namespace di {
     namespace detail {
@@ -9510,77 +9645,11 @@ private:
     class module
         : public TPool<TDependecies>
     {
-        BOOST_MPL_HAS_XXX_TRAIT_DEF(scope)
-
         template<
             typename
           , template<typename, template<typename, typename> class> class
           , template<typename, typename, typename> class
         > friend class module;
-
-        template<typename T>
-        class has_call_impl
-        {
-            struct base_impl { void call() { } };
-            struct base : T, base_impl { base() { } };
-
-            template<typename U>
-            static mpl::aux::no_tag test(
-                U*
-              , non_type<void (base_impl::*)(), &U::call>* = 0
-            );
-
-            template<typename>
-            static mpl::aux::yes_tag test(...);
-
-        public:
-            typedef has_call_impl type;
-
-            BOOST_STATIC_CONSTANT(
-                bool
-              , value = sizeof(test<base>(0)) == sizeof(mpl::aux::yes_tag)
-            );
-        };
-
-        template<typename T, typename TAction>
-        class has_call
-        {
-            template<typename>
-            struct void_ { };
-
-            template<typename S, typename U>
-            friend U& operator,(const U&, void_<S>);
-
-            struct base : T
-            {
-                base() { }
-                using T::call;
-                mpl::aux::no_tag call(...) const;
-            };
-
-            template<typename, typename = void>
-            struct base_call
-                : mpl::false_
-            { };
-
-            template<typename TDummy>
-            struct base_call<mpl::true_, TDummy>
-                : is_same<
-                      BOOST_DI_FEATURE_DECLTYPE(
-                         ((((base*)0)->call(*(TAction*)0)), void_<T>())
-                      )
-                    , void_<T>
-                  >
-            { };
-
-        public :
-            typedef has_call type;
-
-            BOOST_STATIC_CONSTANT(
-                bool
-              , value = base_call<mpl::bool_<has_call_impl<T>::value> >::value
-            );
-        };
 
         class empty_visitor
         {
@@ -10869,7 +10938,7 @@ private:
         typename disable_if<mpl::empty<TSeq> >::type call_impl(
             T& deps
           , const TAction& action
-          , typename enable_if<has_call<typename mpl::front<TSeq>::type, TAction> >::type* = 0) {
+          , typename enable_if<type_traits::has_call<typename mpl::front<TSeq>::type, TAction> >::type* = 0) {
             static_cast<typename mpl::front<TSeq>::type&>(deps).call(action);
             call_impl<typename mpl::pop_front<TSeq>::type>(deps, action);
         }
@@ -10878,7 +10947,7 @@ private:
         typename disable_if<mpl::empty<TSeq> >::type call_impl(
             T& deps
           , const TAction& action
-          , typename disable_if<has_call<typename mpl::front<TSeq>::type, TAction> >::type* = 0) {
+          , typename disable_if<type_traits::has_call<typename mpl::front<TSeq>::type, TAction> >::type* = 0) {
             call_impl<typename mpl::pop_front<TSeq>::type>(deps, action);
         }
 
