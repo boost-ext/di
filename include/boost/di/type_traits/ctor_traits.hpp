@@ -11,20 +11,16 @@
 #include "boost/di/inject.hpp"
 #include "boost/di/type_traits/parameter_types.hpp"
 #include "boost/di/type_traits/has_ctor.hpp"
+#include "boost/di/type_traits/has_injector.hpp"
 
 #include <string>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/type_traits/is_class.hpp>
-#include <boost/non_type.hpp>
-#include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/range_c.hpp>
 #include <boost/mpl/if.hpp>
-#include <boost/mpl/void.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/push_back.hpp>
-#include <boost/mpl/aux_/yes_no.hpp>
 
 namespace boost {
 namespace di {
@@ -68,32 +64,6 @@ struct ctor_traits<std::basic_string<T> > // basic_string ctors are ambiguous
 };
 
 namespace type_traits {
-
-template<typename T>
-class BOOST_PP_CAT(has_, BOOST_DI_INJECTOR)
-{
-    struct base_impl { void BOOST_DI_INJECTOR(...) { } };
-    struct base
-        : base_impl
-        , mpl::if_<is_class<T>, T, mpl::void_>::type
-    { base() { } };
-
-    template<typename U>
-    static mpl::aux::no_tag test(
-        U*
-      , non_type<void (base_impl::*)(...), &U::BOOST_DI_INJECTOR>* = 0
-    );
-
-    static mpl::aux::yes_tag test(...);
-
-public:
-    typedef BOOST_PP_CAT(has_, BOOST_DI_INJECTOR) type;
-
-    BOOST_STATIC_CONSTANT(
-        bool
-      , value = sizeof(test((base*)(0))) == sizeof(mpl::aux::yes_tag)
-    );
-};
 
 template<typename T, typename = void>
 struct ctor_traits

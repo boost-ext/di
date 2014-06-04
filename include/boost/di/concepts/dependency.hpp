@@ -14,6 +14,7 @@
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/type_traits/parameter_types.hpp"
+#include "boost/di/type_traits/has_call_operator.hpp"
 #include "boost/di/concepts/detail/requires.hpp"
 #include "boost/di/concepts/type_traits/type.hpp"
 #include "boost/di/concepts/type_traits/priority.hpp"
@@ -98,7 +99,7 @@ class dependency : public detail::get_scope<TExpected, TGiven, TScope>::type
     };
 
     template<typename T>
-    struct get_wrapper<T, typename enable_if<has_call_operator<T> >::type>
+    struct get_wrapper<T, typename enable_if<di::type_traits::has_call_operator<T> >::type>
         : get_wrapper_impl<
               typename di::type_traits::parameter_types<
                   BOOST_DI_FEATURE_DECLTYPE(&T::operator())
@@ -138,21 +139,21 @@ public:
     template<typename T>
     static dependency<value_type, expected, T, TBind>
     to(const T& object, typename disable_if<is_reference_wrapper<T> >::type* = 0
-                      , typename disable_if<has_call_operator<T> >::type* = 0) {
+                      , typename disable_if<di::type_traits::has_call_operator<T> >::type* = 0) {
         return dependency<value_type, expected, T, TBind>(object);
     }
 
     template<typename T>
     static dependency<ref_type, typename unwrap_reference<T>::type, T, TBind>
     to(const T& object, typename enable_if<is_reference_wrapper<T> >::type* = 0
-                      , typename disable_if<has_call_operator<T> >::type* = 0) {
+                      , typename disable_if<di::type_traits::has_call_operator<T> >::type* = 0) {
         return dependency<ref_type, typename unwrap_reference<T>::type, T, TBind>(object);
     }
 
     template<typename T>
     static dependency<typename get_wrapper<T>::type, expected, T, TBind>
     to(const T& object, typename disable_if<is_reference_wrapper<T> >::type* = 0
-                      , typename enable_if<has_call_operator<T> >::type* = 0) {
+                      , typename enable_if<di::type_traits::has_call_operator<T> >::type* = 0) {
         return dependency<typename get_wrapper<T>::type, expected, T, TBind>(object);
     }
 

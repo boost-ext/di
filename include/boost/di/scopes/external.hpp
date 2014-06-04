@@ -12,42 +12,12 @@
     #include "boost/di/aux_/config.hpp"
     #include "boost/di/wrappers/value.hpp"
     #include "boost/di/type_traits/create_traits.hpp"
+    #include "boost/di/type_traits/has_call_operator.hpp"
 
-    #include <boost/non_type.hpp>
     #include <boost/utility/enable_if.hpp>
-    #include <boost/type_traits/is_class.hpp>
-    #include <boost/mpl/or.hpp>
-    #include <boost/mpl/if.hpp>
-    #include <boost/mpl/void.hpp>
-    #include <boost/mpl/aux_/yes_no.hpp>
 
     namespace boost {
     namespace di {
-
-    template<typename T>
-    class has_call_operator
-    {
-        struct base_impl { void operator()(...) { } };
-        struct base
-            : base_impl
-            , mpl::if_<is_class<T>, T, mpl::void_>::type
-        { base() { } };
-
-        template<typename U>
-        static mpl::aux::no_tag test(
-            U*
-          , non_type<void (base_impl::*)(...), &U::operator()>* = 0
-        );
-
-        static mpl::aux::yes_tag test(...);
-
-    public:
-        BOOST_STATIC_CONSTANT(
-            bool
-          , value = sizeof(test((base*)(0))) == sizeof(mpl::aux::yes_tag)
-        );
-    };
-
     namespace scopes {
 
     template<template<typename> class TWrapper = wrappers::value>
@@ -65,12 +35,14 @@
 
         public:
             template<typename T>
-            explicit scope(const T& object, typename enable_if_c<has_call_operator<T>::value>::type* = 0)
+            explicit scope(const T& object
+                         , typename enable_if_c<type_traits::has_call_operator<T>::value>::type* = 0)
                 : object_(object())
             { }
 
             template<typename T>
-            explicit scope(const T& object, typename disable_if_c<has_call_operator<T>::value>::type* = 0)
+            explicit scope(const T& object
+                         , typename disable_if_c<type_traits::has_call_operator<T>::value>::type* = 0)
                 : object_(object)
             { }
 

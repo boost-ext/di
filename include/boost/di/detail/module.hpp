@@ -13,18 +13,14 @@
     #include "boost/di/aux_/memory.hpp"
     #include "boost/di/detail/pool.hpp"
     #include "boost/di/detail/creator.hpp"
+    #include "boost/di/type_traits/has_call.hpp"
 
     #include <vector>
-    #include <boost/non_type.hpp>
-    #include <boost/type_traits/is_same.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/vector.hpp>
-    #include <boost/mpl/bool.hpp>
     #include <boost/mpl/pop_front.hpp>
     #include <boost/mpl/front.hpp>
     #include <boost/mpl/contains.hpp>
-    #include <boost/mpl/aux_/yes_no.hpp>
-    #include <boost/mpl/has_xxx.hpp>
 
     namespace boost {
     namespace di {
@@ -45,77 +41,11 @@
     class module
         : public TPool<TDependecies>
     {
-        BOOST_MPL_HAS_XXX_TRAIT_DEF(scope)
-
         template<
             typename
           , template<typename, template<typename, typename> class> class
           , template<typename, typename, typename> class
         > friend class module;
-
-        template<typename T>
-        class has_call_impl
-        {
-            struct base_impl { void call() { } };
-            struct base : T, base_impl { base() { } };
-
-            template<typename U>
-            static mpl::aux::no_tag test(
-                U*
-              , non_type<void (base_impl::*)(), &U::call>* = 0
-            );
-
-            template<typename>
-            static mpl::aux::yes_tag test(...);
-
-        public:
-            typedef has_call_impl type;
-
-            BOOST_STATIC_CONSTANT(
-                bool
-              , value = sizeof(test<base>(0)) == sizeof(mpl::aux::yes_tag)
-            );
-        };
-
-        template<typename T, typename TAction>
-        class has_call
-        {
-            template<typename>
-            struct void_ { };
-
-            template<typename S, typename U>
-            friend U& operator,(const U&, void_<S>);
-
-            struct base : T
-            {
-                base() { }
-                using T::call;
-                mpl::aux::no_tag call(...) const;
-            };
-
-            template<typename, typename = void>
-            struct base_call
-                : mpl::false_
-            { };
-
-            template<typename TDummy>
-            struct base_call<mpl::true_, TDummy>
-                : is_same<
-                      BOOST_DI_FEATURE_DECLTYPE(
-                         ((((base*)0)->call(*(TAction*)0)), void_<T>())
-                      )
-                    , void_<T>
-                  >
-            { };
-
-        public :
-            typedef has_call type;
-
-            BOOST_STATIC_CONSTANT(
-                bool
-              , value = base_call<mpl::bool_<has_call_impl<T>::value> >::value
-            );
-        };
 
         class empty_visitor
         {
@@ -168,7 +98,7 @@
         typename disable_if<mpl::empty<TSeq> >::type call_impl(
             T& deps
           , const TAction& action
-          , typename enable_if<has_call<typename mpl::front<TSeq>::type, TAction> >::type* = 0) {
+          , typename enable_if<type_traits::has_call<typename mpl::front<TSeq>::type, TAction> >::type* = 0) {
             static_cast<typename mpl::front<TSeq>::type&>(deps).call(action);
             call_impl<typename mpl::pop_front<TSeq>::type>(deps, action);
         }
@@ -177,7 +107,7 @@
         typename disable_if<mpl::empty<TSeq> >::type call_impl(
             T& deps
           , const TAction& action
-          , typename disable_if<has_call<typename mpl::front<TSeq>::type, TAction> >::type* = 0) {
+          , typename disable_if<type_traits::has_call<typename mpl::front<TSeq>::type, TAction> >::type* = 0) {
             call_impl<typename mpl::pop_front<TSeq>::type>(deps, action);
         }
 

@@ -10,17 +10,16 @@
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/named.hpp"
+#include "boost/di/type_traits/has_copy_ctor.hpp"
+#include "boost/di/type_traits/is_convertible.hpp"
 
 #include <vector>
-#include <boost/type_traits/has_trivial_copy.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
 #include <boost/ref.hpp>
 #include <boost/type.hpp>
-#include <boost/non_type.hpp>
 #include <boost/mpl/or.hpp>
-#include <boost/mpl/aux_/yes_no.hpp>
 
 namespace boost {
 namespace di {
@@ -28,47 +27,16 @@ namespace wrappers {
 
 namespace detail {
 
-template<typename T>
-class has_copy_ctor
-{
-    static T copy_ctor();
-    template<typename U> static mpl::aux::yes_tag test(BOOST_DI_FEATURE_DECLTYPE(U(copy_ctor()))*);
-    template<typename>   static mpl::aux::no_tag test(...);
-
-public:
-    typedef has_copy_ctor type;
-
-    BOOST_STATIC_CONSTANT(
-        bool
-      , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
-    );
-};
-
-template<typename T, typename TSignature>
-class is_convertible
-{
-    template<typename U> static mpl::aux::yes_tag test(non_type<TSignature, &U::operator()>*);
-    template<typename>   static mpl::aux::no_tag test(...);
-
-public:
-    typedef is_convertible type;
-
-    BOOST_STATIC_CONSTANT(
-        bool
-      , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
-    );
-};
-
 template<typename TValueType, typename T>
 struct is_convertible_to_ref
     : mpl::or_<
-          is_convertible<TValueType, T&(TValueType::*)(const boost::type<T&>&) const>
-        , is_convertible<TValueType, const T&(TValueType::*)(const boost::type<const T&>&) const>
+          type_traits::is_convertible<TValueType, T&(TValueType::*)(const boost::type<T&>&) const>
+        , type_traits::is_convertible<TValueType, const T&(TValueType::*)(const boost::type<const T&>&) const>
       >
 { };
 
 template<typename TResult, typename T, typename TValueType>
-inline typename disable_if<has_copy_ctor<T>, const TResult&>::type
+inline typename disable_if<type_traits::has_copy_ctor<T>, const TResult&>::type
 copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
     aux::shared_ptr<TResult> object(value(boost::type<T*>()));
     refs.push_back(object);
@@ -86,7 +54,7 @@ struct holder
 };
 
 template<typename TResult, typename T, typename TValueType>
-inline typename enable_if<has_copy_ctor<T>, const TResult&>::type
+inline typename enable_if<type_traits::has_copy_ctor<T>, const TResult&>::type
 copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
     aux::shared_ptr<holder<TResult> > object(new holder<TResult>(value(boost::type<T>())));
     refs.push_back(object);
