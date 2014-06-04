@@ -15,6 +15,7 @@ project di :
 
 rule run-test ( std : src : property * ) {
     run $(src) : : :
+        <define>BOOST_DI_CFG_EXAMINE_CALL_STACK
         <toolset>gcc:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
         <toolset>clang:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
         <toolset>intel:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"

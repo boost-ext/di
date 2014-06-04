@@ -160,8 +160,8 @@ test-suite fail : # compile fail tests
 ;
 
 test-suite pt : # performane tests
-    [ run-test c++11 : pt/compilation_pt.cpp : preprocessed_compilation_pt_cpp_11 : <define>BOOST_DI_CFG_TEST_LEVELS_LIMIT_SIZE=2 : preprocessed_headers ]
-    [ run-test c++03 : pt/compilation_pt.cpp : preprocessed_compilation_pt_cpp_03 : <define>BOOST_DI_CFG_TEST_LEVELS_LIMIT_SIZE=2 : preprocessed_headers ]
+    [ run-test c++11 : pt/compilation_pt.cpp : preprocessed_compilation_pt_cpp_11 : <define>BOOST_DI_CFG_TEST_LEVELS_LIMIT_SIZE=5 : preprocessed_headers ]
+    [ run-test c++03 : pt/compilation_pt.cpp : preprocessed_compilation_pt_cpp_03 : <define>BOOST_DI_CFG_TEST_LEVELS_LIMIT_SIZE=5 : preprocessed_headers ]
     [ run-test c++11 : pt/runtime_pt.cpp : preprocessed_runtime_pt_cpp_11 : <define>BOOST_DI_CFG_BOOST_SMART_PTR : preprocessed_headers ]
     [ run-test c++03 : pt/runtime_pt.cpp : preprocessed_runtime_pt_cpp_03 : <define>BOOST_DI_CFG_BOOST_SMART_PTR : preprocessed_headers ]
 ;
