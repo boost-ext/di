@@ -5,14 +5,14 @@ compiler:
   - clang
 
 before_install:
-  - rm -rf boost_1_54_0
-  - wget -c http://downloads.sourceforge.net/project/boost/boost/1.54.0/boost_1_54_0.tar.gz
-  - tar zxf boost_1_54_0.tar.gz
-  - mkdir boost_1_54_0/libs/di
-  - cp -r doc example include test boost_1_54_0/libs/di
+  - rm -rf boost_1_55_0
+  - wget -c http://downloads.sourceforge.net/project/boost/boost/1.55.0/boost_1_55_0.tar.gz
+  - tar zxf boost_1_55_0.tar.gz
+  - mkdir boost_1_55_0/libs/di
+  - cp -r doc example include test boost_1_55_0/libs/di
   - git clone https://github.com/krzysztof-jusiak/gcov-coveralls.git
   - sudo cp gcov-coveralls/gcov-coveralls.sh /usr/bin
-  - cd boost_1_54_0
+  - cd boost_1_55_0
   - if [ "$CXX" == "g++" ]; then sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y; fi
   #- if [ "$CXX" == "clang++" ]; then sudo add-apt-repository -y ppa:h-rayflood/llvm; fi
   - sudo apt-get update -qq
