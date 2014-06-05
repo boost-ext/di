@@ -7,11 +7,9 @@
 #ifndef BOOST_DI_INJECT_HPP
 #define BOOST_DI_INJECT_HPP
 
-#include <boost/config.hpp>
+#include "boost/di/aux_/config.hpp"
 
-#if !defined(BOOST_DI_INJECTOR)
-    #define BOOST_DI_INJECTOR boost_di_injector__
-#endif
+#include <boost/config.hpp>
 
 #if !defined(BOOST_DI_CFG_INJECT_VA_ARGS) && !defined(BOOST_DI_CFG_INJECT_BRACKET)
     #if (__cplusplus >= 201100L) || defined(BOOST_MSVC)

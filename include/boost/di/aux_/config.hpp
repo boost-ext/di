@@ -10,6 +10,10 @@
 #include <boost/config.hpp>
 #include <boost/mpl/limits/vector.hpp>
 
+#if !defined(BOOST_DI_INJECTOR)
+    #define BOOST_DI_INJECTOR boost_di_injector__
+#endif
+
 #if !defined(BOOST_DI_CFG_CTOR_LIMIT_SIZE)
     #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
 #endif
