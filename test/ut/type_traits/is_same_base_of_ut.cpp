@@ -16,10 +16,11 @@ struct i { };
 struct c : i { };
 struct a { };
 
-BOOST_AUTO_TEST_CASE(basic) {
+BOOST_AUTO_TEST_CASE(types) {
     BOOST_CHECK((is_same_base_of<int, int>::value));
     BOOST_CHECK((is_same_base_of<c, c>::value));
     BOOST_CHECK((is_same_base_of<c, i>::value));
+
     BOOST_CHECK((!is_same_base_of<c, a>::value));
 }
 

@@ -4704,6 +4704,8 @@ namespace boost {
 namespace di {
 namespace type_traits {
 
+namespace detail {
+
 template<
     typename T
   , typename TSignature
@@ -4714,7 +4716,7 @@ class is_convertible
     static mpl::aux::yes_tag test(non_type<TSignature, &U::operator()>*);
 
     template<typename>
-     static mpl::aux::no_tag test(...);
+    static mpl::aux::no_tag test(...);
 
 public:
     typedef is_convertible type;
@@ -4724,6 +4726,19 @@ public:
       , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
     );
 };
+
+} // namespace detail
+
+template<
+    typename TValueType
+  , typename T
+>
+struct is_convertible_to_ref
+    : mpl::or_<
+          detail::is_convertible<TValueType, T&(TValueType::*)(const boost::type<T&>&) const>
+        , detail::is_convertible<TValueType, const T&(TValueType::*)(const boost::type<const T&>&) const>
+      >
+{ };
 
 } // namespace type_traits
 } // namespace di
@@ -4735,14 +4750,6 @@ namespace di {
 namespace wrappers {
 
 namespace detail {
-
-template<typename TValueType, typename T>
-struct is_convertible_to_ref
-    : mpl::or_<
-          type_traits::is_convertible<TValueType, T&(TValueType::*)(const boost::type<T&>&) const>
-        , type_traits::is_convertible<TValueType, const T&(TValueType::*)(const boost::type<const T&>&) const>
-      >
-{ };
 
 template<typename TResult, typename T, typename TValueType>
 inline typename disable_if<type_traits::has_copy_ctor<T>, const TResult&>::type
@@ -4813,14 +4820,14 @@ public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >&
                  , const TValueType& value
-                 , typename enable_if<is_convertible_to_ref<TValueType, T> >::type* = 0)
+                 , typename enable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
         : value_(boost::bind<const T&>(value, boost::type<const T&>()))
     { }
 
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >& refs
                  , const TValueType& value
-                 , typename disable_if<is_convertible_to_ref<TValueType, T> >::type* = 0)
+                 , typename disable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
         : value_(boost::bind(&copy<T, T, TValueType>, boost::ref(refs), value))
     { }
 
@@ -4860,14 +4867,14 @@ public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >&
                  , const TValueType& value
-                 , typename enable_if<is_convertible_to_ref<TValueType, T> >::type* = 0)
+                 , typename enable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
         : value_(boost::bind<const T&>(value, boost::type<const T&>()))
     { }
 
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >& refs
                  , const TValueType& value
-                 , typename disable_if<is_convertible_to_ref<TValueType, T> >::type* = 0)
+                 , typename disable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
         : value_(boost::bind(&copy<T, T, TValueType>, boost::ref(refs), value))
     { }
 
@@ -4904,14 +4911,14 @@ public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >&
                  , const TValueType& value
-                 , typename enable_if<is_convertible_to_ref<TValueType, T> >::type* = 0)
+                 , typename enable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
         : value_(boost::bind<named<const T&, TName>&>(value, boost::type<named<const T&, TName>&>()))
     { }
 
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >& refs
                  , const TValueType& value
-                 , typename disable_if<is_convertible_to_ref<TValueType, T> >::type* = 0)
+                 , typename disable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
         : value_(boost::bind(&copy<named<const T&, TName>, T, TValueType>, boost::ref(refs), value))
     { }
 

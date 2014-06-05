@@ -9,6 +9,7 @@
 
 #include "boost/di/aux_/config.hpp"
 
+#include <boost/non_type.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/void.hpp>
 #include <boost/type_traits/is_class.hpp>

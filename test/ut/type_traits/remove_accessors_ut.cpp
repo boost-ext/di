@@ -15,7 +15,7 @@ namespace boost {
 namespace di {
 namespace type_traits {
 
-BOOST_AUTO_TEST_CASE(basic) {
+BOOST_AUTO_TEST_CASE(types) {
     BOOST_CHECK((is_same<int, remove_accessors<int>::type>::value));
     BOOST_CHECK((is_same<named<int>, remove_accessors<named<int>>::type>::value));
     BOOST_CHECK((is_same<int, remove_accessors<int&>::type>::value));
