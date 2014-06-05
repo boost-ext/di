@@ -474,12 +474,10 @@ struct ref_sp_int
     aux::shared_ptr<int> i_;
 };
 
-class noncopyable
+class noncopyable_int : noncopyable
 {
-    noncopyable(const noncopyable&);
-
 public:
-    BOOST_DI_INJECT(explicit noncopyable, int i = 0)
+    BOOST_DI_INJECT(explicit noncopyable_int, int i = 0)
         : i_(i)
     { }
 
@@ -488,7 +486,7 @@ public:
 
 struct noncopyable_const_ref
 {
-    BOOST_DI_INJECT(noncopyable_const_ref, const noncopyable& n)
+    BOOST_DI_INJECT(noncopyable_const_ref, const noncopyable_int& n)
         : i_(n.i_)
     { }
 

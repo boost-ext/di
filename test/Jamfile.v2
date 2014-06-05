@@ -114,8 +114,6 @@ test-suite ut : # unit tests
     [ run-test c++03 : ut/type_traits/has_call_operator_ut.cpp : cpp_03_has_call_operator_ut ]
     [ run-test c++11 : ut/type_traits/has_call_ut.cpp : cpp_11_has_call_ut ]
     [ run-test c++03 : ut/type_traits/has_call_ut.cpp : cpp_03_has_call_ut ]
-    [ run-test c++11 : ut/type_traits/has_copy_ctor_ut.cpp : cpp_11_has_copy_ctor_ut ]
-    [ run-test c++03 : ut/type_traits/has_copy_ctor_ut.cpp : cpp_03_has_copy_ctor_ut ]
     [ run-test c++11 : ut/type_traits/has_ctor_ut.cpp : cpp_11_has_ctor_ut ]
     [ run-test c++03 : ut/type_traits/has_ctor_ut.cpp : cpp_03_has_ctor_ut ]
     [ run-test c++11 : ut/type_traits/has_injector_ut.cpp : cpp_11_has_injector_ut ]

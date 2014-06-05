@@ -10,11 +10,11 @@
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/named.hpp"
-#include "boost/di/type_traits/has_copy_ctor.hpp"
 #include "boost/di/type_traits/is_convertible_to_ref.hpp"
 
 #include <vector>
 #include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/is_copy_constructible.hpp>
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
 #include <boost/ref.hpp>
@@ -27,7 +27,7 @@ namespace wrappers {
 namespace detail {
 
 template<typename TResult, typename T, typename TValueType>
-inline typename disable_if<type_traits::has_copy_ctor<T>, const TResult&>::type
+inline typename disable_if<is_copy_constructible<T>, const TResult&>::type
 copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
     aux::shared_ptr<TResult> object(value(boost::type<T*>()));
     refs.push_back(object);
@@ -45,7 +45,7 @@ struct holder
 };
 
 template<typename TResult, typename T, typename TValueType>
-inline typename enable_if<type_traits::has_copy_ctor<T>, const TResult&>::type
+inline typename enable_if<is_copy_constructible<T>, const TResult&>::type
 copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
     aux::shared_ptr<holder<TResult> > object(new holder<TResult>(value(boost::type<T>())));
     refs.push_back(object);
