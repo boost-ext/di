@@ -31,8 +31,11 @@ struct call_template
 
 BOOST_AUTO_TEST_CASE(calls) {
     BOOST_CHECK((!has_call<empty, int>::value));
+
+#if !defined(BOOST_MSVC)
     BOOST_CHECK((!has_call<call_int, empty>::value));
     BOOST_CHECK((!has_call<call_derived, empty>::value));
+#endif
 
     BOOST_CHECK((has_call<call_int, int>::value));
     BOOST_CHECK((has_call<call_derived, int>::value));

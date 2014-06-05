@@ -25,7 +25,7 @@ class has_call_operator
     struct base
         : base_impl
         , mpl::if_<is_class<T>, T, mpl::void_>::type
-    { };
+    { base() { } };
 
     template<typename U>
     static mpl::aux::no_tag test(
