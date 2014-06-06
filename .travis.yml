@@ -6,9 +6,7 @@ compiler:
 
 before_install:
   - rm -rf boost
-  - wget https://gist.githubusercontent.com/krzysztof-jusiak/11c105090bf6a9963dc9/raw/9a8b4565dcf6a250d410fe4e860f541ee7821221/get_boost.sh
-  - chmod +x get_boost.sh
-  - ./get_boost.sh align bind config core function mpl predef preprocessor typeof smart_ptr test type_traits utility
+  - git clone --quiet --depth=1 --recursive --single-branch https://github.com/boostorg/boost.git > /dev/null
   - mkdir boost/libs/di
   - cp -r doc example include test boost/libs/di
   - git clone https://github.com/krzysztof-jusiak/gcov-coveralls.git
