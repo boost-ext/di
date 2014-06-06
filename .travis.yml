@@ -5,24 +5,23 @@ compiler:
   - clang
 
 before_install:
-  - rm -rf boost_1_55_0
-  - wget -c http://downloads.sourceforge.net/project/boost/boost/1.55.0/boost_1_55_0.tar.gz
-  - tar zxf boost_1_55_0.tar.gz
-  - mkdir boost_1_55_0/libs/di
-  - cp -r doc example include test boost_1_55_0/libs/di
+  - rm -rf boost
+  - wget https://gist.githubusercontent.com/krzysztof-jusiak/11c105090bf6a9963dc9/raw/562f63026f45ad6d42d1906d723089f499bbb3b7/get_boost.sh
+  - chmod +x get_boost.sh
+  - ./get_boost.sh align bind config core function mpl predef preprocessor typeof smart_ptr test type_traits utility
+  - mkdir boost/libs/di
+  - cp -r doc example include test boost/libs/di
   - git clone https://github.com/krzysztof-jusiak/gcov-coveralls.git
   - sudo cp gcov-coveralls/gcov-coveralls.sh /usr/bin
-  - cd boost_1_55_0
+  - cd boost
   - if [ "$CXX" == "g++" ]; then sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y; fi
-  #- if [ "$CXX" == "clang++" ]; then sudo add-apt-repository -y ppa:h-rayflood/llvm; fi
   - sudo apt-get update -qq
   - sudo apt-get -qq install valgrind
   - if [ "$CXX" == "g++" ]; then sudo apt-get install -qq g++-4.7; fi
   - if [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.7 90; fi
   - if [ "$CXX" == "g++" ]; then ./bootstrap.sh --with-toolset=gcc; fi
-  #- if [ "$CXX" == "clang++" ]; then sudo apt-get install --allow-unauthenticated -qq clang-3.4; fi
-  #- if [ "$CXX" == "clang++" ]; then sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-3.4 90; fi
   - if [ "$CXX" == "clang++" ]; then ./bootstrap.sh --with-toolset=clang; fi
+  - ./b2 headers
 
 script:
   - pushd .
