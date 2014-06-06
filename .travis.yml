@@ -6,7 +6,7 @@ compiler:
 
 before_install:
   - rm -rf boost
-  - wget https://gist.githubusercontent.com/krzysztof-jusiak/11c105090bf6a9963dc9/raw/562f63026f45ad6d42d1906d723089f499bbb3b7/get_boost.sh
+  - wget https://gist.githubusercontent.com/krzysztof-jusiak/11c105090bf6a9963dc9/raw/9a8b4565dcf6a250d410fe4e860f541ee7821221/get_boost.sh
   - chmod +x get_boost.sh
   - ./get_boost.sh align bind config core function mpl predef preprocessor typeof smart_ptr test type_traits utility
   - mkdir boost/libs/di
