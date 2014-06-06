@@ -40,7 +40,7 @@ rule run-test ( std * : src : ctor * : defines * : preprocessed_headers * ) {
 
     if $(std) = c++03 {
         common_toolset +=
-            <toolset>clang:<cxxflags>"-Wno-c99-extensions" # boost preprocessor
+            <toolset>clang:<cxxflags>"-Wno-c99-extensions -Wno-variadic-macros" # boost preprocessor
         ;
     }
 
