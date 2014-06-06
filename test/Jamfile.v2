@@ -38,12 +38,6 @@ rule run-test ( std * : src : ctor * : defines * : preprocessed_headers * ) {
         ;
     }
 
-    if $(std) = c++03 {
-        common_toolset +=
-            <toolset>clang:<cxxflags>"-Wno-c99-extensions -Wno-variadic-macros" # boost preprocessor
-        ;
-    }
-
     if $(ctor) {
         if $(std) = c++03 {
             defines += <define>BOOST_DI_CFG_INJECT_BRACKET ;
@@ -73,12 +67,6 @@ rule compile-fail-test ( std * : src : ctor * : defines * : preprocessed_headers
         } else {
             defines += <define>BOOST_DI_CFG_TEST_CTOR ;
         }
-    }
-
-    if $(std) = c++03 {
-        common_toolset +=
-            <toolset>clang:<cxxflags>"-Wno-c99-extensions -Wno-variadic-macros" # boost preprocessor
-        ;
     }
 
     if ! $(preprocessed_headers) {
