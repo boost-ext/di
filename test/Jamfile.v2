@@ -39,7 +39,9 @@ rule run-test ( std * : src : ctor * : defines * : preprocessed_headers * ) {
     }
 
     if $(std) = c++03 {
-        <toolset>clang:<cxxflags>"-Wno-c99-extensions" # boost preprocessor
+        common_toolset +=
+            <toolset>clang:<cxxflags>"-Wno-c99-extensions" # boost preprocessor
+        ;
     }
 
     if $(ctor) {
