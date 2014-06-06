@@ -23,11 +23,11 @@ before_install:
 
 script:
   - pushd .
-  - cd libs/di/example && ../../../b2 -j2
+  - cd libs/di/example && ../../../b2 -j2 -q
   - popd
   - pushd .
-  - if [ "$CXX" == "g++" ]; then cd libs/di/test && ../../../b2 -j2 coverage ; fi
-  - if [ "$CXX" == "clang++" ]; then cd libs/di/test && ../../../b2 -j2 ; fi
+  - if [ "$CXX" == "g++" ]; then cd libs/di/test && ../../../b2 -j2 -q coverage ; fi
+  - if [ "$CXX" == "clang++" ]; then cd libs/di/test && ../../../b2 -j2 -q ; fi
   - popd
   #- find bin.v2/libs/di -type f -executable | xargs -i% valgrind --error-exitcode=-1 --leak-check=full --track-origins=yes --show-reachable=yes % >/dev/null
 

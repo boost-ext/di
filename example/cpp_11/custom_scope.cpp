@@ -6,6 +6,7 @@
 //
 #include <memory>
 #include <utility>
+#include <iostream>
 #include <boost/shared_ptr.hpp>
 #include <boost/type.hpp>
 #include <boost/di.hpp>
