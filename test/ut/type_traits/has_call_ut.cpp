@@ -37,8 +37,8 @@ BOOST_AUTO_TEST_CASE(calls) {
     BOOST_CHECK((has_call<call_template, int>::value));
     BOOST_CHECK((has_call<call_template, double>::value));
 
-    BOOST_CHECK((has_call<call_int, double>::value)); // int is convertible to double
-    BOOST_CHECK((has_call<call_derived, double>::value)); // int is convertible to double
+    BOOST_CHECK((has_call<call_int, short>::value)); // short is convertible to int
+    BOOST_CHECK((has_call<call_derived, short>::value)); // short is convertible to int
 }
 
 } // namespace type_traits

@@ -33,6 +33,7 @@ rule run-test ( std * : src : ctor * : defines * : preprocessed_headers * ) {
         common_toolset +=
             <toolset>gcc:<cxxflags>"-std=$(std) -include common/config.hpp"
             <toolset>clang:<cxxflags>"-std=$(std) -include common/config.hpp"
+            <toolset>darwin:<cxxflags>"-std=$(std) -include common/config.hpp"
             <toolset>intel:<cxxflags>"-std=$(std) -include common/config.hpp"
             <toolset>msvc:<cxxflags>"/FI common/config.hpp"
         ;
@@ -57,6 +58,7 @@ rule compile-fail-test ( std * : src : ctor * : defines * : preprocessed_headers
     common_toolset =
         <toolset>gcc:<cxxflags>"-std=$(std) -include common/config.hpp -Wfatal-errors"
         <toolset>clang:<cxxflags>"-std=$(std) -include common/config.hpp -Wfatal-errors"
+        <toolset>darwin:<cxxflags>"-std=$(std) -include common/config.hpp -Wfatal-errors"
         <toolset>intel:<cxxflags>"-std=$(std) -include common/config.hpp -Wfatal-errors"
         <toolset>msvc:<cxxflags>"/FI common/config.hpp"
     ;

@@ -18,6 +18,7 @@ rule run-test ( std : src : property * ) {
         <define>BOOST_DI_CFG_EXAMINE_CALL_STACK
         <toolset>gcc:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
         <toolset>clang:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
+        <toolset>darwin:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
         <toolset>intel:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
     : $(property) ;
 }
