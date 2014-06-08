@@ -14,6 +14,7 @@
     #include "boost/di/type_traits/make_plain.hpp"
     #include "boost/di/type_traits/is_same_base_of.hpp"
 
+    #include <memory>
     #include <boost/config.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/aux_/yes_no.hpp>

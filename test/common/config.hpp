@@ -18,8 +18,6 @@
 
 #if defined(BOOST_GCC) || defined(BOOST_CLANG)
     #pragma GCC diagnostic ignored "-Wdeprecated-declarations" // std::aux::auto_ptr
-    #pragma GCC diagnostic ignored "-Wc99-extensions" // boost::preprocessor warnings
-    #pragma GCC diagnostic ignored "-Wvariadic-macros" // boost::preprocessor warnings
 #endif
 
 #if defined(BOOST_INTEL)
@@ -47,6 +45,7 @@
         #endif
         #include <boost/mpl/vector.hpp>
     #else
+        #include <boost/preprocessor/iteration/iterate.hpp>
         #include <boost/mpl/vector/vector50.hpp>
 
         namespace boost {
@@ -65,8 +64,6 @@
 #else
     #include <boost/mpl/limits/vector.hpp> // default BOOST_MPL_LIMIT_VECTOR_SIZE=20
 #endif
-
-#include <boost/preprocessor/iteration/iterate.hpp>
 
 #endif
 
