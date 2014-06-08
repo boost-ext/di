@@ -24,6 +24,7 @@
 #include <boost/type_traits/is_reference.hpp>
 #include <boost/type_traits/is_polymorphic.hpp>
 #include <boost/type_traits/is_pointer.hpp>
+#include <boost/type_traits/is_copy_constructible.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_class.hpp>
 #include <boost/type_traits/is_base_of.hpp>
@@ -846,9 +847,8 @@ public:
                 >
                 operator U();
 
-                BOOST_DI_WKND(NO_MSVC)(
-                    template<typename U> operator aux::auto_ptr<U>&();
-                )
+                template<typename U>
+                operator aux::auto_ptr<U>&();
             };
 
             template<typename U>
@@ -869,9 +869,7 @@ public:
 
     BOOST_DI_FEATURE(NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)(
         template<typename T>
-        class has_ctor<T, mpl::int_<1> >
-        {
-        public:
+        class has_ctor<T, mpl::int_<1> > { public:
             BOOST_STATIC_CONSTANT(bool, value = false);
         };
     )
@@ -884,12 +882,12 @@ public:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
+            template<typename U> operator aux::auto_ptr<U>&();
             BOOST_DI_FEATURE(RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
             BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
-                template<typename U> operator aux::auto_ptr<U>&();
             )
         };
 
@@ -920,12 +918,12 @@ public:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
+            template<typename U> operator aux::auto_ptr<U>&();
             BOOST_DI_FEATURE(RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
             BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
-                template<typename U> operator aux::auto_ptr<U>&();
             )
         };
 
@@ -956,12 +954,12 @@ public:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
+            template<typename U> operator aux::auto_ptr<U>&();
             BOOST_DI_FEATURE(RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
             BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
-                template<typename U> operator aux::auto_ptr<U>&();
             )
         };
 
@@ -992,12 +990,12 @@ public:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
+            template<typename U> operator aux::auto_ptr<U>&();
             BOOST_DI_FEATURE(RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
             BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
-                template<typename U> operator aux::auto_ptr<U>&();
             )
         };
 
@@ -1028,12 +1026,12 @@ public:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
+            template<typename U> operator aux::auto_ptr<U>&();
             BOOST_DI_FEATURE(RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
             BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
-                template<typename U> operator aux::auto_ptr<U>&();
             )
         };
 
@@ -1064,12 +1062,12 @@ public:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
+            template<typename U> operator aux::auto_ptr<U>&();
             BOOST_DI_FEATURE(RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
             BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
-                template<typename U> operator aux::auto_ptr<U>&();
             )
         };
 
@@ -1100,12 +1098,12 @@ public:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
+            template<typename U> operator aux::auto_ptr<U>&();
             BOOST_DI_FEATURE(RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
             BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
-                template<typename U> operator aux::auto_ptr<U>&();
             )
         };
 
@@ -1136,12 +1134,12 @@ public:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
+            template<typename U> operator aux::auto_ptr<U>&();
             BOOST_DI_FEATURE(RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
             BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
-                template<typename U> operator aux::auto_ptr<U>&();
             )
         };
 
@@ -1172,12 +1170,12 @@ public:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
+            template<typename U> operator aux::auto_ptr<U>&();
             BOOST_DI_FEATURE(RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
             BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
-                template<typename U> operator aux::auto_ptr<U>&();
             )
         };
 
@@ -1216,7 +1214,7 @@ class has_BOOST_DI_INJECTOR
     struct base
         : base_impl
         , mpl::if_<is_class<T>, T, mpl::void_>::type
-    { };
+    { base() { } };
 
     template<typename U>
     static mpl::aux::no_tag test(
@@ -1314,7 +1312,7 @@ class has_value
     struct base
         : base_impl
         , mpl::if_<is_class<T>, T, mpl::void_>::type
-    { };
+    { base() { } };
 
     template<typename U>
     static mpl::aux::no_tag test(
@@ -1452,7 +1450,7 @@ class has_call_operator
     struct base
         : base_impl
         , mpl::if_<is_class<T>, T, mpl::void_>::type
-    { };
+    { base() { } };
 
     template<typename U>
     static mpl::aux::no_tag test(
@@ -8155,35 +8153,6 @@ namespace boost {
 namespace di {
 namespace type_traits {
 
-template<typename T>
-class has_copy_ctor
-{
-    static T copy_ctor();
-
-    template<typename U>
-    static mpl::aux::yes_tag test(BOOST_DI_FEATURE_DECLTYPE(U(copy_ctor()))*);
-
-    template<typename>
-    static mpl::aux::no_tag test(...);
-
-public:
-    typedef has_copy_ctor type;
-
-    BOOST_STATIC_CONSTANT(
-        bool
-      , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
-    );
-};
-
-} // namespace type_traits
-} // namespace di
-} // namespace boost
-
-
-namespace boost {
-namespace di {
-namespace type_traits {
-
 namespace detail {
 
 template<
@@ -8232,7 +8201,7 @@ namespace wrappers {
 namespace detail {
 
 template<typename TResult, typename T, typename TValueType>
-inline typename disable_if<type_traits::has_copy_ctor<T>, const TResult&>::type
+inline typename disable_if<is_copy_constructible<T>, const TResult&>::type
 copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
     aux::shared_ptr<TResult> object(value(boost::type<T*>()));
     refs.push_back(object);
@@ -8250,7 +8219,7 @@ struct holder
 };
 
 template<typename TResult, typename T, typename TValueType>
-inline typename enable_if<type_traits::has_copy_ctor<T>, const TResult&>::type
+inline typename enable_if<is_copy_constructible<T>, const TResult&>::type
 copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
     aux::shared_ptr<holder<TResult> > object(new holder<TResult>(value(boost::type<T>())));
     refs.push_back(object);

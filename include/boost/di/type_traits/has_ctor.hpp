@@ -43,9 +43,8 @@
                 >
                 operator U();
 
-                BOOST_DI_WKND(NO_MSVC)(
-                    template<typename U> operator aux::auto_ptr<U>&();
-                )
+                template<typename U>
+                operator aux::auto_ptr<U>&();
             };
 
             template<typename U>
@@ -66,9 +65,7 @@
 
     BOOST_DI_FEATURE(NO_FUNCTION_TEMPLATE_DEFAULT_ARGS)(
         template<typename T>
-        class has_ctor<T, mpl::int_<1> >
-        {
-        public:
+        class has_ctor<T, mpl::int_<1> > { public:
             BOOST_STATIC_CONSTANT(bool, value = false);
         };
     )
@@ -93,12 +90,12 @@
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
+            template<typename U> operator aux::auto_ptr<U>&();
             BOOST_DI_FEATURE(RVALUE_REFERENCES)(
                 template<typename U> operator U&&() const;
             )
             BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
-                template<typename U> operator aux::auto_ptr<U>&();
             )
         };
 
