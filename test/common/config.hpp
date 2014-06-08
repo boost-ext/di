@@ -8,7 +8,6 @@
 #define BOOST_DI_TEST_CONFIG_HPP
 
 #include <boost/config.hpp>
-#include <boost/preprocessor/iteration/iterate.hpp>
 
 #if defined(BOOST_NO_CXX11_SMART_PTR) &&    \
     __clang_major__ >= 3 &&                 \
@@ -19,6 +18,8 @@
 
 #if defined(BOOST_GCC) || defined(BOOST_CLANG)
     #pragma GCC diagnostic ignored "-Wdeprecated-declarations" // std::aux::auto_ptr
+    #pragma GCC diagnostic ignored "-Wc99-extensions" // boost::preprocessor warnings
+    #pragma GCC diagnostic ignored "-Wvariadic-macros" // boost::preprocessor warnings
 #endif
 
 #if defined(BOOST_INTEL)
@@ -64,6 +65,8 @@
 #else
     #include <boost/mpl/limits/vector.hpp> // default BOOST_MPL_LIMIT_VECTOR_SIZE=20
 #endif
+
+#include <boost/preprocessor/iteration/iterate.hpp>
 
 #endif
 
