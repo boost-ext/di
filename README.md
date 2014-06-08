@@ -87,7 +87,7 @@ int main() {
    * Visual Studio 2013 (clean with DrMemory)
 
 * Mac
-   * Clang 3.4.1
+   * Clang 503.0.40 (Apple LLVM version 5.1)
 
 ## Continuous integration
 [![Build Status](https://travis-ci.org/krzysztof-jusiak/di.png?branch=master)](https://travis-ci.org/krzysztof-jusiak/di)
