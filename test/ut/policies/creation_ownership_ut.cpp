@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(not_clear_ownerhsip, T, not_clear_ownerhsip_types)
         )
       , assert_exception
       , [](const assert_exception& e) {
-            return e.get_msg() == "CREATION_OWNERSHIP_IS_NOT_CLEAR" &&
+            return e.what() == std::string("CREATION_OWNERSHIP_IS_NOT_CLEAR") &&
                    e.get_type() == typeid(T);
         }
     );

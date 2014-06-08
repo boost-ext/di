@@ -18,7 +18,7 @@ namespace policies {
 
 template<typename T>
 bool verify_assert_exception(const assert_exception& e) {
-    return e.get_msg() == "ARGUMENT_NOT_PERMITTED" &&
+    return e.what() == std::string("ARGUMENT_NOT_PERMITTED") &&
            e.get_type() == typeid(T);
 }
 

@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(circular_dependency, T, circular_dependencies_type
         )
       , assert_exception
       , [](const assert_exception& e) {
-            return e.get_msg() == "CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED" &&
+            return e.what() == std::string("CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED") &&
                    e.get_type() == typeid(T);
         }
     );

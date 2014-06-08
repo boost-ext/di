@@ -21,15 +21,15 @@ namespace di {
 class assert_exception : public std::exception
 {
 public:
-    assert_exception(const std::string& msg, const std::type_info* type)
+    assert_exception(const char* msg, const std::type_info* type)
         : msg_(msg), type_(type)
     { }
 
-    const std::string& get_msg() const { return msg_; }
+    const char* what() const noexcept override { return msg_; }
     const std::type_info& get_type() const { return *type_; }
 
 private:
-    std::string msg_;
+    const char* msg_;
     const std::type_info* type_;
 };
 

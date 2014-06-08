@@ -34,7 +34,7 @@ struct allow_smart_ptrs
 {
     template<typename T>
     struct allow
-        : has_element_type<typename type_traits::remove_accessors<T>::type> 
+        : has_element_type<typename type_traits::remove_accessors<T>::type>
     { };
 };
 
