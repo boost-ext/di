@@ -13,12 +13,12 @@ namespace boost {
 namespace di {
 
 template<typename T>
-class fake_wrapper
+class fake_wrapper_
 {
-    fake_wrapper& operator=(const fake_wrapper&);
+    fake_wrapper_& operator=(const fake_wrapper_&);
 
 public:
-    fake_wrapper(const T& object) // non explicit
+    fake_wrapper_(const T& object) // non explicit
         : object_(object)
     { }
 
@@ -27,14 +27,59 @@ public:
         return object_;
     }
 
-    template<typename I>
-    operator I() const {
-        return (*this)(type<I>());
-    }
-
 private:
     T object_;
 };
+
+template<typename T>
+class fake_wrapper_<const T&>
+{
+public:
+    fake_wrapper_(const T& object) // non explicit
+        : object_(object)
+    { }
+
+    const T& operator()(const type<const T&>&) const {
+        return object_;
+    }
+
+private:
+    const T& object_;
+};
+
+template<typename T>
+class fake_wrapper_<T&>
+{
+public:
+    fake_wrapper_(T& object) // non explicit
+        : object_(object)
+    { }
+
+    T& operator()(const type<T&>&) const {
+        return object_;
+    }
+
+private:
+    T& object_;
+};
+
+template<typename T>
+class fake_wrapper
+{
+public:
+    fake_wrapper(const T& object) // non explicit
+        : wrapper_(object)
+    { }
+
+    template<typename I>
+    operator I() const {
+        return wrapper_(type<I>());
+    }
+
+private:
+    fake_wrapper_<T> wrapper_;
+};
+
 
 } // namespace di
 } // namespace boost
