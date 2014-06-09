@@ -34,6 +34,8 @@ private:
 template<typename T>
 class fake_wrapper_<const T&>
 {
+    fake_wrapper_& operator=(const fake_wrapper_&);
+
 public:
     fake_wrapper_(const T& object) // non explicit
         : object_(object)
@@ -50,6 +52,8 @@ private:
 template<typename T>
 class fake_wrapper_<T&>
 {
+    fake_wrapper_& operator=(const fake_wrapper_&);
+
 public:
     fake_wrapper_(T& object) // non explicit
         : object_(object)
