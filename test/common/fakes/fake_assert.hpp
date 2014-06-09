@@ -9,6 +9,7 @@
 
 #include <typeinfo>
 #include <stdexcept>
+#include <boost/config.hpp>
 
 #define BOOST_DI_ASSERT_MSG(c, msg, type)                           \
     if (!c) {                                                       \
@@ -25,7 +26,7 @@ public:
         : msg_(msg), type_(type)
     { }
 
-    const char* what() const noexcept override { return msg_; }
+    const char* what() const BOOST_NOEXCEPT override { return msg_; }
     const std::type_info& get_type() const { return *type_; }
 
 private:
