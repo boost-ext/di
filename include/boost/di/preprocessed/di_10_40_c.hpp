@@ -859,19 +859,6 @@ public:
                 >
                 operator U&() const;
 
-                BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-                    template<
-                        typename U
-                      , typename = typename disable_if<
-                            is_same_base_of<
-                                typename make_plain<U>::type
-                              , typename make_plain<T>::type
-                            >
-                        >::type
-                    >
-                    operator U&&() const;
-                )
-
                 BOOST_DI_WKND(NO_MSVC)(
                     template<
                         typename U
@@ -920,9 +907,6 @@ public:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
-            BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-                template<typename U> operator U&&() const;
-            )
             BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
             )
@@ -956,9 +940,6 @@ public:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
-            BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-                template<typename U> operator U&&() const;
-            )
             BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
             )
@@ -992,9 +973,6 @@ public:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
-            BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-                template<typename U> operator U&&() const;
-            )
             BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
             )
@@ -1028,9 +1006,6 @@ public:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
-            BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-                template<typename U> operator U&&() const;
-            )
             BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
             )
@@ -1064,9 +1039,6 @@ public:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
-            BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-                template<typename U> operator U&&() const;
-            )
             BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
             )
@@ -1100,9 +1072,6 @@ public:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
-            BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-                template<typename U> operator U&&() const;
-            )
             BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
             )
@@ -1136,9 +1105,6 @@ public:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
-            BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-                template<typename U> operator U&&() const;
-            )
             BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
             )
@@ -1172,9 +1138,6 @@ public:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
-            BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-                template<typename U> operator U&&() const;
-            )
             BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
             )
@@ -1208,9 +1171,6 @@ public:
         public:
             template<typename U> operator const U&() const;
             template<typename U> operator U&() const;
-            BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-                template<typename U> operator U&&() const;
-            )
             BOOST_DI_WKND(NO_MSVC)(
                 template<typename U> operator U();
             )
