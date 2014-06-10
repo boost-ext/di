@@ -116,6 +116,11 @@ public:
     { };
 };
 
+template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
+struct any_of
+    : mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+{ };
+
 } // namespace di
 } // namespace boost
 

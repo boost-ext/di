@@ -172,6 +172,42 @@ BOOST_AUTO_TEST_CASE(bind_string_value_when) {
     ));
 }
 
+BOOST_AUTO_TEST_CASE(bind_any) {
+    BOOST_CHECK((
+        contains_all<
+            scope<fake_scope<>>::bind<
+                bind<cif0if1>::type
+            >
+          , mpl::vector<
+                fake_dependency<fake_scope<>, cif0if1, cif0if1>::type
+            >
+        >::value
+    ));
+}
+
+BOOST_AUTO_TEST_CASE(bind_any_of) {
+    BOOST_CHECK((
+        contains_all<
+            scope<fake_scope<>>::bind<
+                bind<any_of<if0, if1>, cif0if1>::type
+            >
+          , mpl::vector<
+                fake_dependency<
+                    fake_scope<>
+                  , cif0if1
+                  , cif0if1
+                  , no_name
+                  , mpl::vector0<>
+                  , concepts::detail::requires_<
+                        concepts::type_traits::priority
+                      , concepts::type_traits::type<any_of<if0, if1>>
+                    >
+                >::type
+            >
+        >::value
+    ));
+}
+
 using scope_empty_types = mpl::vector<
     deduce<>
   , unique<>

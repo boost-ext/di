@@ -14,14 +14,26 @@
 #include "boost/di/concepts/type_traits/name.hpp"
 #include "boost/di/concepts/type_traits/when.hpp"
 
-#include <boost/utility/enable_if.hpp>
 #include <boost/mpl/vector.hpp>
-#include <boost/mpl/bind.hpp>
-#include <boost/mpl/times.hpp>
+#include <boost/mpl/is_sequence.hpp>
+#include <boost/mpl/if.hpp>
 
 namespace boost {
 namespace di {
 namespace concepts {
+
+namespace detail {
+
+template<typename TExpected, typename TGiven>
+struct get_expected
+    : mpl::if_<
+          mpl::is_sequence<TExpected>
+        , TGiven
+        , TExpected
+      >
+{ };
+
+} // namespace detail
 
 template<
     typename TExpected
@@ -36,7 +48,7 @@ template<
 struct bind
     : TDependency<
           mpl::_1
-        , TExpected
+        , typename detail::get_expected<TExpected, TGiven>::type
         , TGiven
         , detail::requires_<
               type_traits::priority
@@ -48,7 +60,7 @@ struct bind
     struct when
         : TDependency<
               mpl::_1
-            , TExpected
+            , typename detail::get_expected<TExpected, TGiven>::type
             , TGiven
             , detail::requires_<
                   type_traits::priority
@@ -61,7 +73,7 @@ struct bind
         struct named
             : TDependency<
                   mpl::_1
-                , TExpected
+                , typename detail::get_expected<TExpected, TGiven>::type
                 , TGiven
                 , detail::requires_<
                       type_traits::priority
@@ -77,7 +89,7 @@ struct bind
     struct named
         : TDependency<
               mpl::_1
-            , TExpected
+            , typename detail::get_expected<TExpected, TGiven>::type
             , TGiven
             , detail::requires_<
                   type_traits::priority
@@ -90,7 +102,7 @@ struct bind
         struct when
             : TDependency<
                   mpl::_1
-                , TExpected
+                , typename detail::get_expected<TExpected, TGiven>::type
                 , TGiven
                 , detail::requires_<
                       type_traits::priority

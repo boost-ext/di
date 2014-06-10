@@ -52,22 +52,34 @@ struct fake : public i
 struct if0
 {
     virtual ~if0() { }
-    virtual void dummy() = 0;
+    virtual void dummy0() = 0;
+};
+
+struct if1
+{
+    virtual ~if1() { }
+    virtual void dummy1() = 0;
 };
 
 struct c0if0 : if0
 {
-    void dummy() override { }
+    void dummy0() override { }
+};
+
+struct cif0if1 : if0, if1
+{
+    void dummy0() override { }
+    void dummy1() override { }
 };
 
 struct c1if0 : if0
 {
-    void dummy() override { }
+    void dummy0() override { }
 };
 
 struct c2if0 : if0
 {
-    void dummy() override { }
+    void dummy0() override { }
 };
 
 struct c3if0 : if0
@@ -79,7 +91,7 @@ struct c3if0 : if0
         : i(i), d(d)
     { }
 
-    void dummy() override { }
+    void dummy0() override { }
 
     int i = 0;
     double d = 0.0;
@@ -501,6 +513,16 @@ struct rvalue
     { }
 
     int i_ = 0;
+};
+
+struct multiple_interfaces
+{
+    BOOST_DI_INJECT(multiple_interfaces, aux::shared_ptr<if0> if0_, aux::shared_ptr<if1> if1_)
+        : if0_(if0_), if1_(if1_)
+    { }
+
+    aux::shared_ptr<if0> if0_;
+    aux::shared_ptr<if1> if1_;
 };
 
 enum eid { e0 = 1 , e1 = 2 };

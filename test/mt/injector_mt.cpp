@@ -189,14 +189,14 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(one_injector, TInjector, one_injector_types) {
     check(injector.template create<c8>());
 }
 
-using many_injectors_types = mpl::vector<
+using multiple_injectors_types = mpl::vector<
     injector<injector_2_t, injector_3_t>
   , injector<injector_3_t, injector_2_t>
   , injector<decltype(injector_2), decltype(injector_3)>
   , injector<decltype(injector_3), decltype(injector_2)>
 >;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(many_injectors, TInjector, many_injectors_types) {
+BOOST_AUTO_TEST_CASE_TEMPLATE(multiple_injectors, TInjector, multiple_injectors_types) {
     TInjector injector;
     check(injector.template create<aux::shared_ptr<c8>>());
 }
@@ -407,6 +407,39 @@ BOOST_AUTO_TEST_CASE(smart_ptr_auto_ptr) {
     const int i = 42;
     auto auto_ptr_int_ = injector<bind_int<i>>().create<aux::auto_ptr<auto_ptr_int>>();
     BOOST_CHECK_EQUAL(i, *auto_ptr_int_->i_);
+}
+
+using bind_multiple_interfaces_to_the_same_impl_types = mpl::vector<
+    cif0if1
+  , bind<any_of<if0, if1>, cif0if1>
+  , deduce<cif0if1>
+>;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(bind_multiple_interfaces_to_the_same_impl, T, bind_multiple_interfaces_to_the_same_impl_types) {
+    auto multiple_interfaces_ = injector<T>().template create<multiple_interfaces>();
+
+    BOOST_CHECK(dynamic_cast<cif0if1*>(multiple_interfaces_.if0_.get()));
+    BOOST_CHECK(dynamic_cast<cif0if1*>(multiple_interfaces_.if1_.get()));
+    BOOST_CHECK(
+        static_cast<cif0if1*>(multiple_interfaces_.if0_.get())
+        ==
+        static_cast<cif0if1*>(multiple_interfaces_.if1_.get())
+    );
+}
+
+BOOST_AUTO_TEST_CASE(bind_multiple_interfaces_to_the_same_impl_without_any_of) {
+    auto multiple_interfaces_ = injector<
+        bind<if0, cif0if1>
+      , bind<if1, cif0if1>
+    >().create<multiple_interfaces>();
+
+    BOOST_CHECK(dynamic_cast<cif0if1*>(multiple_interfaces_.if0_.get()));
+    BOOST_CHECK(dynamic_cast<cif0if1*>(multiple_interfaces_.if1_.get()));
+    BOOST_CHECK(
+        static_cast<cif0if1*>(multiple_interfaces_.if0_.get())
+        !=
+        static_cast<cif0if1*>(multiple_interfaces_.if1_.get())
+    );
 }
 
 BOOST_AUTO_TEST_CASE(inject_priority) {

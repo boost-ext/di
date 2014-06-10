@@ -67,7 +67,6 @@
 #include <boost/mpl/copy.hpp>
 #include <boost/mpl/contains.hpp>
 #include <boost/mpl/bool.hpp>
-#include <boost/mpl/bind.hpp>
 #include <boost/mpl/begin_end.hpp>
 #include <boost/mpl/back_inserter.hpp>
 #include <boost/mpl/aux_/yes_no.hpp>
@@ -243,7 +242,7 @@ namespace di {
 namespace concepts {
 namespace type_traits {
 
-template<typename T>
+template<typename T, typename = void>
 struct type
 {
     template<typename U, typename, typename>
@@ -251,6 +250,21 @@ struct type
         : di::type_traits::is_same_base_of<
               T
             , typename di::type_traits::make_plain<U>::type
+          >
+    { };
+};
+
+template<typename T>
+struct type<T, typename enable_if<mpl::is_sequence<T> >::type>
+{
+    template<typename U, typename, typename>
+    struct apply
+        : mpl::count_if<
+              T
+            , di::type_traits::is_same_base_of<
+                  typename di::type_traits::make_plain<U>::type
+                , mpl::_
+              >
           >
     { };
 };
@@ -347,6 +361,19 @@ namespace boost {
 namespace di {
 namespace concepts {
 
+namespace detail {
+
+template<typename TExpected, typename TGiven>
+struct get_expected
+    : mpl::if_<
+          mpl::is_sequence<TExpected>
+        , TGiven
+        , TExpected
+      >
+{ };
+
+} // namespace detail
+
 template<
     typename TExpected
   , typename TGiven
@@ -360,7 +387,7 @@ template<
 struct bind
     : TDependency<
           mpl::_1
-        , TExpected
+        , typename detail::get_expected<TExpected, TGiven>::type
         , TGiven
         , detail::requires_<
               type_traits::priority
@@ -372,7 +399,7 @@ struct bind
     struct when
         : TDependency<
               mpl::_1
-            , TExpected
+            , typename detail::get_expected<TExpected, TGiven>::type
             , TGiven
             , detail::requires_<
                   type_traits::priority
@@ -385,7 +412,7 @@ struct bind
         struct named
             : TDependency<
                   mpl::_1
-                , TExpected
+                , typename detail::get_expected<TExpected, TGiven>::type
                 , TGiven
                 , detail::requires_<
                       type_traits::priority
@@ -401,7 +428,7 @@ struct bind
     struct named
         : TDependency<
               mpl::_1
-            , TExpected
+            , typename detail::get_expected<TExpected, TGiven>::type
             , TGiven
             , detail::requires_<
                   type_traits::priority
@@ -414,7 +441,7 @@ struct bind
         struct when
             : TDependency<
                   mpl::_1
-                , TExpected
+                , typename detail::get_expected<TExpected, TGiven>::type
                 , TGiven
                 , detail::requires_<
                       type_traits::priority
@@ -2640,6 +2667,11 @@ public:
         : apply_impl<context_type, TCallStack>::type
     { };
 };
+
+template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na , typename T10 = ::boost::mpl::na , typename T11 = ::boost::mpl::na , typename T12 = ::boost::mpl::na , typename T13 = ::boost::mpl::na , typename T14 = ::boost::mpl::na , typename T15 = ::boost::mpl::na , typename T16 = ::boost::mpl::na , typename T17 = ::boost::mpl::na , typename T18 = ::boost::mpl::na , typename T19 = ::boost::mpl::na >
+struct any_of
+    : mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19>
+{ };
 
 } // namespace di
 } // namespace boost
