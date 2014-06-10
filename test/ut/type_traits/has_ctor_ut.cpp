@@ -26,12 +26,13 @@ struct copy_ctor_and_many { copy_ctor_and_many(const copy_ctor_and_many&) { } co
 struct many { many(int, double, float) { } };
 struct many_2_3 { many_2_3(int, double) { } many_2_3(int, double, float) { } };
 struct many_ref { many_ref(int&, const double&) { } };
+struct many_complex { many_complex(const int&, double, float*, aux::shared_ptr<void>, char&) { }};
 
 #if (__cplusplus >= 201100L) || defined(BOOST_MSVC)
-    struct many_complex { many_complex(const int&, double, float*, aux::shared_ptr<void>, char&) { }};
     struct many_sp { many_sp(aux::shared_ptr<int>, aux::unique_ptr<int>) { } };
+    struct rvalue1 { rvalue1(int&&) { } };
+    struct rvalue2 { rvalue2(int, int&&) { } };
 #else
-    struct many_complex { many_complex(const int&, double, float*, aux::shared_ptr<void>, char&) { }};
     struct many_sp { many_sp(aux::shared_ptr<int>, aux::auto_ptr<int>) { } };
 #endif
 
@@ -52,6 +53,7 @@ BOOST_AUTO_TEST_CASE(copy_ctors) {
     BOOST_CHECK((has_ctor<explicit_ctor, mpl::int_<1> >::value));
     BOOST_CHECK((has_ctor<copy_ctor_and_int, mpl::int_<1> >::value));
     BOOST_CHECK((has_ctor<ctor_auto_ptr, mpl::int_<1> >::value));
+    BOOST_CHECK((has_ctor<rvalue1, mpl::int_<1> >::value));
 #else
     BOOST_CHECK((!has_ctor<default_ctor, mpl::int_<1> >::value));
     BOOST_CHECK((!has_ctor<explicit_ctor, mpl::int_<1> >::value));
@@ -84,6 +86,10 @@ BOOST_AUTO_TEST_CASE(many_arguments) {
     BOOST_CHECK((!has_ctor<many_complex, mpl::int_<4> >::value));
     BOOST_CHECK((has_ctor<many_complex, mpl::int_<5> >::value));
     BOOST_CHECK((!has_ctor<many_complex, mpl::int_<6> >::value));
+
+#if (__cplusplus >= 201100L) || defined(BOOST_MSVC)
+    BOOST_CHECK((has_ctor<rvalue2, mpl::int_<2> >::value));
+#endif
 }
 
 #if (__cplusplus >= 201100L) &&                                             \

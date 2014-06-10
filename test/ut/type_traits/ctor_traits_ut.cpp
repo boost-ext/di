@@ -78,6 +78,13 @@ struct ctor_inject_named
     ctor_inject_named(int, int);
 };
 
+#if !defined(BOOST_NO_RVALUE_REFERENCES)
+    struct rvalue
+    {
+        rvalue(int&&) { };
+    };
+#endif
+
 BOOST_AUTO_TEST_CASE(ctors) {
     BOOST_CHECK((mpl::equal<mpl::vector0<>, ctor_traits<empty>::type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector0<>, ctor_traits<traits>::type>::value));
@@ -100,6 +107,10 @@ BOOST_AUTO_TEST_CASE(ctors) {
 #else
     BOOST_CHECK((mpl::equal<mpl::vector1<detail::any_type>, ctor_traits<ctor1>::type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector1<detail::any_type>, ctor_traits<ctor_auto_ptr>::type>::value));
+#endif
+
+#if !defined(BOOST_NO_RVALUE_REFERENCES)
+    BOOST_CHECK((mpl::equal<mpl::vector1<detail::any_type>, ctor_traits<rvalue>::type>::value));
 #endif
 }
 

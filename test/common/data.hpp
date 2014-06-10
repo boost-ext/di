@@ -494,6 +494,15 @@ struct noncopyable_const_ref
     int i_ = 0;
 };
 
+struct rvalue
+{
+    explicit rvalue(int&& i)
+        : i_(std::move(i))
+    { }
+
+    int i_ = 0;
+};
+
 enum eid { e0 = 1 , e1 = 2 };
 
 struct cd2;

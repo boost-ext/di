@@ -384,22 +384,27 @@ BOOST_AUTO_TEST_CASE(smart_ptr_weak_ptr) {
     BOOST_CHECK(nullptr != c25_.w1_.lock());
 }
 
-BOOST_AUTO_TEST_CASE(smart_ptr_auto_ptr) {
-    const int i = 42;
-    auto auto_ptr_int_ = injector<bind_int<i>>().create<aux::auto_ptr<auto_ptr_int>>();
-    BOOST_CHECK_EQUAL(i, *auto_ptr_int_->i_);
-}
+using creation_special_cases_types = mpl::vector<
+    noncopyable_const_ref
+  , rvalue
+>;
 
-BOOST_AUTO_TEST_CASE(noncopyable_by_const_ref) {
+BOOST_AUTO_TEST_CASE_TEMPLATE(creation_special_cases, T, creation_special_cases_types) {
     const int i = 42;
-    auto noncopyable_ = injector<bind_int<i>>().create<noncopyable_const_ref>();
-    BOOST_CHECK_EQUAL(i, noncopyable_.i_);
+    auto obj_ = injector<bind_int<i>>().create<T>();
+    BOOST_CHECK_EQUAL(i, obj_.i_);
 }
 
 BOOST_AUTO_TEST_CASE(stored_ref_created_by_injector) {
     const int i = 42;
     auto ref_sp_int_ = injector<bind_int<i>>().create<ref_sp_int>();
     BOOST_CHECK(ref_sp_int_.i_);
+}
+
+BOOST_AUTO_TEST_CASE(smart_ptr_auto_ptr) {
+    const int i = 42;
+    auto auto_ptr_int_ = injector<bind_int<i>>().create<aux::auto_ptr<auto_ptr_int>>();
+    BOOST_CHECK_EQUAL(i, *auto_ptr_int_->i_);
 }
 
 BOOST_AUTO_TEST_CASE(inject_priority) {
