@@ -53,12 +53,15 @@ BOOST_AUTO_TEST_CASE(copy_ctors) {
     BOOST_CHECK((has_ctor<explicit_ctor, mpl::int_<1> >::value));
     BOOST_CHECK((has_ctor<copy_ctor_and_int, mpl::int_<1> >::value));
     BOOST_CHECK((has_ctor<ctor_auto_ptr, mpl::int_<1> >::value));
-    BOOST_CHECK((has_ctor<rvalue1, mpl::int_<1> >::value));
 #else
     BOOST_CHECK((!has_ctor<default_ctor, mpl::int_<1> >::value));
     BOOST_CHECK((!has_ctor<explicit_ctor, mpl::int_<1> >::value));
     BOOST_CHECK((!has_ctor<copy_ctor_and_int, mpl::int_<1> >::value));
     BOOST_CHECK((!has_ctor<ctor_auto_ptr, mpl::int_<1> >::value));
+#endif
+
+#if (__cplusplus >= 201100L) && !defined(BOOST_MSVC)
+    BOOST_CHECK((has_ctor<rvalue1, mpl::int_<1> >::value));
 #endif
 }
 
@@ -87,7 +90,7 @@ BOOST_AUTO_TEST_CASE(many_arguments) {
     BOOST_CHECK((has_ctor<many_complex, mpl::int_<5> >::value));
     BOOST_CHECK((!has_ctor<many_complex, mpl::int_<6> >::value));
 
-#if (__cplusplus >= 201100L) || defined(BOOST_MSVC)
+#if (__cplusplus >= 201100L) && !defined(BOOST_MSVC)
     BOOST_CHECK((has_ctor<rvalue2, mpl::int_<2> >::value));
 #endif
 }

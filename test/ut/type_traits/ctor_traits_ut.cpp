@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_CASE(ctors) {
     BOOST_CHECK((mpl::equal<mpl::vector1<detail::any_type>, ctor_traits<ctor_auto_ptr>::type>::value));
 #endif
 
-#if !defined(BOOST_NO_RVALUE_REFERENCES)
+#if !defined(BOOST_NO_RVALUE_REFERENCES) && !defined(BOOST_MSVC)
     BOOST_CHECK((mpl::equal<mpl::vector1<detail::any_type>, ctor_traits<rvalue>::type>::value));
 #endif
 }
