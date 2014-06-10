@@ -33,7 +33,7 @@
           , template<typename, typename> class = ::boost::di::detail::binder
         > class TCreator = creator
       , template<
-            typename
+            typename = ::boost::mpl::vector0<>
           , typename = ::boost::di::detail::never< ::boost::mpl::_1 >
           , typename = void
         > class TPool = pool
@@ -67,22 +67,20 @@
 
         template<typename T>
         T create() {
-            typedef mpl::vector0<> policies;
             typedef mpl::vector0<> call_stack;
             std::vector<aux::shared_ptr<void> > refs_;
 
-            return creator_.template create<T, T, call_stack, policies>(
-                static_cast<TPool<deps>&>(*this), refs_, empty_visitor());
+            return creator_.template create<T, T, call_stack>(
+                static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), TPool<>());
         }
 
         template<typename T, typename Visitor>
         T visit(const Visitor& visitor) {
-            typedef mpl::vector0<> policies;
             typedef mpl::vector0<> call_stack;
             std::vector<aux::shared_ptr<void> > refs_;
 
-            return creator_.template create<T, T, call_stack, policies>(
-                static_cast<TPool<deps>&>(*this), refs_, visitor);
+            return creator_.template create<T, T, call_stack>(
+                static_cast<TPool<deps>&>(*this), refs_, visitor, TPool<>());
         }
 
         template<typename TAction>
@@ -143,13 +141,13 @@
     { }
 
     template<typename T, BOOST_DI_TYPES(Args)>
-    T create(BOOST_DI_ARGS_NOT_USED(Args)) {
-        typedef mpl::vector<BOOST_DI_TYPES_PASS(Args)> policies;
+    T create(BOOST_DI_ARGS(Args, args)) {
         typedef mpl::vector0<> call_stack;
+        TPool<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > policies(BOOST_DI_ARGS_PASS(args));
         std::vector<aux::shared_ptr<void> > refs_;
 
-        return creator_.template create<T, T, call_stack, policies>(
-            static_cast<TPool<deps>&>(*this), refs_, empty_visitor()
+        return creator_.template create<T, T, call_stack>(
+            static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies
         );
     }
 

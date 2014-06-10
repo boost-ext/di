@@ -20,6 +20,7 @@
     #include "boost/di/detail/builder.hpp"
 
     #include <boost/utility/enable_if.hpp>
+    #include <boost/mpl/vector.hpp>
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/empty.hpp>
     #include <boost/mpl/push_back.hpp>
@@ -29,7 +30,7 @@
     namespace detail {
 
     template<
-        typename TDependecies
+        typename TDependecies = mpl::vector0<>
       , template<
             typename
           , typename = ::boost::di::detail::builder
@@ -64,18 +65,18 @@
         template<
             typename T
           , typename TCallStack
-          , typename TPolicies
           , typename TDeps
           , typename TRefs
           , typename TVisitor
+          , typename TPolicies
         >
         class eager_creator
         {
             eager_creator& operator=(const eager_creator&);
 
         public:
-            eager_creator(creator& c, TDeps& deps, TRefs& refs, const TVisitor& visitor)
-                : c_(c), deps_(deps), refs_(refs), visitor_(visitor)
+            eager_creator(creator& c, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies)
+                : c_(c), deps_(deps), refs_(refs), visitor_(visitor), policies_(policies)
             { }
 
             template<
@@ -101,9 +102,8 @@
                     BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
                         , mpl::vector0<>
                     )
-                  , TPolicies
                   , binder<const U&, TCallStack>
-                >(deps_, refs_, visitor_);
+                >(deps_, refs_, visitor_, policies_);
             }
 
             template<
@@ -129,9 +129,8 @@
                     BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
                         , mpl::vector0<>
                     )
-                  , TPolicies
                   , binder<U&, TCallStack>
-                >(deps_, refs_, visitor_);
+                >(deps_, refs_, visitor_, policies_);
             }
 
             template<typename U>
@@ -147,9 +146,8 @@
                     BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
                         , mpl::vector0<>
                     )
-                  , TPolicies
                   , binder<aux::auto_ptr<U>, TCallStack>
-                >(deps_, refs_, visitor_);
+                >(deps_, refs_, visitor_, policies_);
             }
 
             BOOST_DI_WKND(MSVC)(
@@ -166,9 +164,8 @@
                         BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
                             , mpl::vector0<>
                         )
-                      , TPolicies
                       , binder<aux::unique_ptr<U>, TCallStack>
-                    >(deps_, refs_, visitor_);
+                    >(deps_, refs_, visitor_, policies_);
                 }
             )
 
@@ -196,9 +193,8 @@
                         BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
                             , mpl::vector0<>
                         )
-                      , TPolicies
                       , binder<U, TCallStack>
-                    >(deps_, refs_, visitor_);
+                    >(deps_, refs_, visitor_, policies_);
                 }
             )
 
@@ -207,6 +203,7 @@
             TDeps& deps_;
             TRefs& refs_;
             const TVisitor& visitor_;
+            const TPolicies& policies_;
         };
 
     public:
@@ -218,16 +215,16 @@
             typename T
           , typename TParent // to ignore copy/move ctor
           , typename TCallStack
-          , typename TPolicies
           , typename TDeps
           , typename TRefs
           , typename TVisitor
+          , typename TPolicies
         >
-        eager_creator<TParent, TCallStack, TPolicies, TDeps, TRefs, TVisitor>
-        create(TDeps& deps, TRefs& refs, const TVisitor& visitor
+        eager_creator<TParent, TCallStack, TDeps, TRefs, TVisitor, TPolicies>
+        create(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies
              , typename enable_if<is_same<T, any_type> >::type* = 0) {
-            return eager_creator<TParent, TCallStack, TPolicies, TDeps, TRefs, TVisitor>(
-                *this, deps, refs, visitor
+            return eager_creator<TParent, TCallStack, TDeps, TRefs, TVisitor, TPolicies>(
+                *this, deps, refs, visitor, policies
             );
         }
 
@@ -235,15 +232,16 @@
             typename T
           , typename // TParent - not needed
           , typename TCallStack
-          , typename TPolicies
           , typename TDeps
           , typename TRefs
           , typename TVisitor
+          , typename TPolicies
         >
         wrappers::universal<T> create(
             TDeps& deps
           , TRefs& refs
           , const TVisitor& visitor
+          , const TPolicies& policies
           , typename disable_if<is_same<T, any_type> >::type* = 0) {
             return create_impl<
                 T
@@ -256,9 +254,8 @@
                 BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
                     , mpl::vector0<>
                 )
-              , TPolicies
               , binder<T, TCallStack>
-            >(deps, refs, visitor);
+            >(deps, refs, visitor, policies);
         }
 
     private:
@@ -266,14 +263,14 @@
         #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM(0)
         #include BOOST_PP_ITERATE()
 
-        template<typename TSeq, typename T>
-        static typename enable_if<mpl::empty<TSeq> >::type assert_policies() { }
+        template<typename TSeq, typename T, typename TPolicies>
+        static typename enable_if<mpl::empty<TSeq> >::type assert_policies(const TPolicies&) { }
 
-        template<typename TSeq, typename T>
-        static typename disable_if<mpl::empty<TSeq> >::type assert_policies() {
+        template<typename TSeq, typename T, typename TPolicies>
+        static typename disable_if<mpl::empty<TSeq> >::type assert_policies(const TPolicies& policies) {
             typedef typename mpl::front<TSeq>::type policy;
-            policy::template assert_policy<T>();
-            assert_policies<typename mpl::pop_front<TSeq>::type, T>();
+            static_cast<const policy&>(policies).template assert_policy<T>();
+            assert_policies<typename mpl::pop_front<TSeq>::type, T>(policies);
         }
 
         TBinder<TDependecies> binder_;
@@ -290,27 +287,26 @@
     template<
         typename T
       , typename TCallStack
-      , typename TPolicies
       , typename TDependency
       , typename TDeps
       , typename TRefs
       , typename TVisitor
+      , typename TPolicies
     >
     typename enable_if_c<
         mpl::size<typename ctor<TDependency>::type>::value == BOOST_PP_ITERATION()
       , wrappers::universal<T>
-    >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+    >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
         typedef dependency<T, TCallStack, TDependency> dependency_type;
-        assert_policies<TPolicies, dependency_type>();
+        assert_policies<typename TPolicies::types, dependency_type>(policies);
         (visitor)(dependency_type());
 
         return binder_.template resolve_impl<
             T
           , typename ctor<TDependency>::type
           , TCallStack
-          , TPolicies
           , TDependency
-        >(*this, deps, refs, visitor);
+        >(*this, deps, refs, visitor, policies);
     }
 
 #endif

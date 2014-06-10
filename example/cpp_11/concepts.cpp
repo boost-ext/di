@@ -30,10 +30,9 @@ struct c1 { c1(int, di::named<double, name1>) { } };
 struct c2 { c2(di::named<double, name1>, c1) { } };
 struct c3
 {
-    c3(
-        std::string
-      , std::shared_ptr<i>
-      , const di::named<boost::shared_ptr<i>, name2>&
+    c3(std::string
+     , std::shared_ptr<i>
+     , const di::named<boost::shared_ptr<i>, name2>&
     ) { }
 };
 struct c4 { };

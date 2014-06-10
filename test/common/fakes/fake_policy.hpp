@@ -17,7 +17,7 @@ class fake_policy
 {
 public:
     template<typename>
-    void assert_policy()
+    void assert_policy() const
     { }
 };
 

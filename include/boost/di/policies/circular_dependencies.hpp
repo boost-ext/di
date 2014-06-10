@@ -48,7 +48,7 @@ class circular_dependencies
 
 public:
     template<typename TDependency>
-    static void assert_policy() {
+    void assert_policy() const {
        BOOST_DI_ASSERT_MSG(
             is_unique_call_stack<typename TDependency::call_stack>::value
           , CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED

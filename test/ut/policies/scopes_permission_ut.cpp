@@ -33,7 +33,7 @@ struct fake_scope
 BOOST_AUTO_TEST_CASE(value) {
     BOOST_REQUIRE_EXCEPTION(
         (
-            scopes_permission<>::assert_policy<
+            scopes_permission<>().assert_policy<
                 fake_scope<scopes::unique<>>
             >()
         )
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(allow_none) {
             scopes_permission<
                 allow_scope<scopes::unique<>>
               , allow_scope<scopes::shared<>>
-            >::assert_policy<
+            >().assert_policy<
                 fake_scope<scopes::session<>>
             >()
         )
@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE(allow_none) {
 BOOST_AUTO_TEST_CASE(allow_unique) {
     BOOST_CHECK_NO_THROW(
         (
-            scopes_permission<allow_scope<scopes::unique<>>>::assert_policy<
+            scopes_permission<allow_scope<scopes::unique<>>>().assert_policy<
                 fake_scope<scopes::unique<>>
             >()
         )
@@ -70,7 +70,7 @@ BOOST_AUTO_TEST_CASE(allow_unique) {
 BOOST_AUTO_TEST_CASE(allow_shared) {
     BOOST_CHECK_NO_THROW(
         (
-            scopes_permission<allow_scope<scopes::shared<>>>::assert_policy<
+            scopes_permission<allow_scope<scopes::shared<>>>().assert_policy<
                 fake_scope<scopes::shared<>>
             >()
         )

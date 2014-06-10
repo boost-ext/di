@@ -84,23 +84,22 @@ public:
         typename T
       , typename TCtor
       , typename TCallStack
-      , typename TPolicies
       , typename TDependency
       , typename TCreator
       , typename TDeps
       , typename TRefs
       , typename TVisitor
+      , typename TPolicies
     >
     wrappers::universal<T>
-    resolve_impl(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+    resolve_impl(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
         return builder_.template build<
             T
           , TCtor
           , TCallStack
-          , TPolicies
           , TDependency
           , TCreator
-        >(creator, deps, refs, visitor);
+        >(creator, deps, refs, visitor, policies);
     }
 
 private:

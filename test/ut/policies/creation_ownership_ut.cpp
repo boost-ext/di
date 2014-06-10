@@ -33,7 +33,7 @@ using clear_ownerhsip_types = mpl::vector<
 BOOST_AUTO_TEST_CASE_TEMPLATE(clear_ownerhsip, T, clear_ownerhsip_types) {
     BOOST_CHECK_NO_THROW(
         (
-            creation_ownership::assert_policy<
+            creation_ownership().assert_policy<
                 fake_dependency<T>
             >()
         )
@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(clear_ownerhsip, T, clear_ownerhsip_types) {
 BOOST_AUTO_TEST_CASE_TEMPLATE(clear_ownerhsip_nested, T, clear_ownerhsip_types) {
     BOOST_CHECK_NO_THROW(
         (
-            creation_ownership::assert_policy<
+            creation_ownership().assert_policy<
                 fake_dependency<T, mpl::vector<T, T>>
             >()
         )
@@ -58,7 +58,7 @@ using not_clear_ownerhsip_types = mpl::vector<
 BOOST_AUTO_TEST_CASE_TEMPLATE(not_clear_ownerhsip, T, not_clear_ownerhsip_types) {
     BOOST_REQUIRE_EXCEPTION(
         (
-            creation_ownership::assert_policy<
+            creation_ownership().assert_policy<
                 fake_dependency<T, mpl::vector<T> >
             >()
         )

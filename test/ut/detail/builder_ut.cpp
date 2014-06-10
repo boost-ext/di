@@ -22,15 +22,15 @@ BOOST_AUTO_TEST_CASE(build) {
     fake_creator<int> creator;
     fake_pool<> deps;
     fake_visitor<> visitor;
+    fake_pool<> policies;
     std::vector<aux::shared_ptr<void>> refs;
 
     BOOST_CHECK_EQUAL(0, (builder().build<
         int
       , mpl::vector0<>
       , mpl::vector0<>
-      , mpl::vector0<>
       , fake_dependency<fake_scope<> , int>
-    >(creator, deps, refs, visitor)));
+    >(creator, deps, refs, visitor, policies)));
 }
 
 } // namespace detail

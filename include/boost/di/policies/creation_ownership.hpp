@@ -36,12 +36,12 @@ class creation_ownership
 
 public:
     template<typename TDependency>
-    static typename disable_if<is_result_type_reference<TDependency> >::type
-    assert_policy() { }
+    typename disable_if<is_result_type_reference<TDependency> >::type
+    assert_policy() const { }
 
     template<typename TDependency>
-    static typename enable_if<is_result_type_reference<TDependency> >::type
-    assert_policy() {
+    typename enable_if<is_result_type_reference<TDependency> >::type
+    assert_policy() const {
         BOOST_DI_ASSERT_MSG(
             false
           , CREATION_OWNERSHIP_IS_NOT_CLEAR

@@ -95,20 +95,21 @@
         typename T
       , typename TCtor
       , typename TCallStack
-      , typename TPolicies
       , typename TDependency
       , typename TCreator
       , typename TDeps
       , typename TRefs
       , typename TVisitor
+      , typename TPolicies
     >
     typename enable_if_c<
         mpl::size<TCtor>::value == BOOST_PP_ITERATION()
       , wrappers::universal<T>
     >::type
-    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor) {
+    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
         (void)creator;
         (void)visitor;
+        (void)policies;
 
         #define BOOST_DI_CREATOR_EXECUTE(z, n, _)   \
             BOOST_PP_COMMA_IF(n)                    \
@@ -116,8 +117,7 @@
                 typename mpl::at_c<TCtor, n>::type  \
               , T                                   \
               , TCallStack                          \
-              , TPolicies                           \
-            >(deps, refs, visitor)
+            >(deps, refs, visitor, policies)
 
         return wrappers::universal<T>(
             refs

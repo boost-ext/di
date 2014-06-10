@@ -165,7 +165,7 @@ class arguments_permission
 
 public:
     template<typename TDependency>
-    static void assert_policy() {
+    void assert_policy() const {
         BOOST_DI_ASSERT_MSG(
             is_argument_permitted<typename TDependency::type>::value
           , ARGUMENT_NOT_PERMITTED

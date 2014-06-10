@@ -37,10 +37,12 @@ class allow_only_smart_ptr_policy
 
 public:
     template<typename TDependency>
-    static typename boost::enable_if<is_creation_by_smart_ptr<TDependency>>::type assert_policy() { }
+    typename boost::enable_if<is_creation_by_smart_ptr<TDependency>>::type
+    assert_policy() const { }
 
     template<typename TDependency>
-    static typename boost::disable_if<is_creation_by_smart_ptr<TDependency>>::type assert_policy() {
+    typename boost::disable_if<is_creation_by_smart_ptr<TDependency>>::type
+    assert_policy() const {
         BOOST_MPL_ASSERT_MSG(
             false
           , CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED

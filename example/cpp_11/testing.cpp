@@ -37,12 +37,12 @@ int main() {
 
     //code
     {
-    injector.create<app<injector_t>>();
+        injector.create<app<injector_t>>();
     }
 
     //test
     {
-    injector.create<app<ut::injector_t>>();
+        injector.create<app<ut::injector_t>>();
     }
 
     return 0;

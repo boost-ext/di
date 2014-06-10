@@ -59,7 +59,7 @@ class scopes_permission
 
 public:
     template<typename TDependency>
-    static void assert_policy() {
+    void assert_policy() const {
         BOOST_DI_ASSERT_MSG(
             is_scope_permitted<typename TDependency::scope>::value
           , SCOPE_NOT_PERMITTED
