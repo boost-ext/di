@@ -9,13 +9,6 @@
 
 #include <boost/config.hpp>
 
-#if defined(BOOST_NO_CXX11_SMART_PTR) &&    \
-    __clang_major__ >= 3 &&                 \
-    __clang_minor__ >= 2 &&                 \
-    __cplusplus >= 201100L
-    #undef BOOST_NO_CXX11_SMART_PTR
-#endif
-
 #if defined(BOOST_GCC) || defined(BOOST_CLANG)
     #pragma GCC diagnostic ignored "-Wdeprecated-declarations" // std::aux::auto_ptr
 #endif
@@ -26,7 +19,6 @@
 
 #if defined(BOOST_MSVC)
     #pragma warning(disable:4127) // conditional expression is constant
-    #undef BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS
 #endif
 
 #if defined(BOOST_DI_CFG_TEST_CTOR)
