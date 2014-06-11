@@ -20,6 +20,7 @@ rule run-test ( std : src : property * ) {
         <toolset>clang:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
         <toolset>darwin:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
         <toolset>intel:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
+        <toolset>msvc:<cxxflags>"/FI ../test/common/config.hpp"
     : $(property) ;
 }
 
