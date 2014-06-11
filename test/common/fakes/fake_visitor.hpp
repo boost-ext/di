@@ -44,8 +44,6 @@ class fake_visitor
 
 public:
     ~fake_visitor() {
-        for (const auto& o : visits)
-            std::cout << units::detail::demangle(o.type->name()) << std::endl;
         BOOST_CHECK_EQUAL(visits.size(), static_cast<std::size_t>(mpl::size<TSeq>::value));
         verify<TSeq>();
     }
