@@ -1,0 +1,26 @@
+platform:
+  - x64
+  - x86
+
+configuration:
+  - Debug
+  - Release
+
+install:
+  - c:\"Program Files (x86)"\"Microsoft Visual Studio 12.0"\VC\vcvarsall.bat
+  - appveyor DownloadFile http://www2.cs.uidaho.edu/~jeffery/win32/unzip.exe
+  - appveyor DownloadFile http://downloads.sourceforge.net/project/unxutils/unxutils/current/UnxUtils.zip
+  - unzip.exe -qq UnxUtils.zip
+  - git clone --quiet --depth=1 --recursive --single-branch https://github.com/boostorg/boost.git > boost.log
+  - mkdir boost\libs\di
+  - usr\local\wbin\cp.exe -r doc example include test boost\libs\di
+  - cd boost
+  - bootstrap.bat --with-toolset=msvc-12
+  - cd libs\di\test
+  - ..\..\..\bjam --toolset=msvc-12 -q -j2 ut ft pt fail
+
+build: OFF
+test: OFF
+test_script: OFF
+deploy: OFF
+

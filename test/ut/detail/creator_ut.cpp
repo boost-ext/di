@@ -32,7 +32,6 @@ public:
     { }
 };
 
-
 BOOST_AUTO_TEST_CASE(creator_pod) {
     const int i = 42;
 
