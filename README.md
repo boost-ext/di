@@ -86,7 +86,7 @@ int main() {
    * MinGW 4.7.3/4.8.2
    * Visual Studio 2013 (clean with DrMemory)
 
-* Darwin/Mac
+* Darwin/Mac OS
    * Clang 503.0.40 (Apple LLVM version 5.1)
 
 ## Continuous integration
