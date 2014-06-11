@@ -21,6 +21,7 @@ struct default_ctor { default_ctor(int = 0) { } };
 struct explicit_ctor { explicit explicit_ctor(int = 0) { } };
 struct copy_ctor { copy_ctor(const copy_ctor&) { } };
 struct ctor_auto_ptr { ctor_auto_ptr(aux::auto_ptr<int>) { } };
+struct ctor_shared_ptr { ctor_shared_ptr(aux::shared_ptr<int>) { } };
 struct copy_ctor_and_int { copy_ctor_and_int(const copy_ctor_and_int&) { } copy_ctor_and_int(int) { } };
 struct copy_ctor_and_many { copy_ctor_and_many(const copy_ctor_and_many&) { } copy_ctor_and_many(int, double) { } };
 struct many { many(int, double, float) { } };
@@ -53,11 +54,13 @@ BOOST_AUTO_TEST_CASE(copy_ctors) {
     BOOST_CHECK((has_ctor<explicit_ctor, mpl::int_<1> >::value));
     BOOST_CHECK((has_ctor<copy_ctor_and_int, mpl::int_<1> >::value));
     BOOST_CHECK((has_ctor<ctor_auto_ptr, mpl::int_<1> >::value));
+    BOOST_CHECK((has_ctor<ctor_shared_ptr, mpl::int_<1> >::value));
 #else
     BOOST_CHECK((!has_ctor<default_ctor, mpl::int_<1> >::value));
     BOOST_CHECK((!has_ctor<explicit_ctor, mpl::int_<1> >::value));
     BOOST_CHECK((!has_ctor<copy_ctor_and_int, mpl::int_<1> >::value));
     BOOST_CHECK((!has_ctor<ctor_auto_ptr, mpl::int_<1> >::value));
+    BOOST_CHECK((!has_ctor<ctor_shared_ptr, mpl::int_<1> >::value));
 #endif
 
 #if (__cplusplus >= 201100L) && !defined(BOOST_MSVC)
