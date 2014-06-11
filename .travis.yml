@@ -14,13 +14,13 @@ before_install:
   - mkdir boost/libs/di
   - cp -r doc example include test boost/libs/di
   - git clone https://github.com/krzysztof-jusiak/gcov-coveralls.git
-  - sudo cp gcov-coveralls/gcov-coveralls.sh /usr/bin
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo cp gcov-coveralls/gcov-coveralls.sh /usr/bin; fi
   - cd boost
-  - if [ "$CXX" == "g++" ]; then sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y; fi
-  - sudo apt-get update -qq
-  - sudo apt-get -qq install valgrind
-  - if [ "$CXX" == "g++" ]; then sudo apt-get install -qq g++-4.7; fi
-  - if [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.7 90; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get update -qq; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get -qq install valgrind; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then sudo apt-get install -qq g++-4.7; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.7 90; fi
   - if [ "$CXX" == "g++" ]; then ./bootstrap.sh --with-toolset=gcc; fi
   - if [ "$CXX" == "clang++" ]; then ./bootstrap.sh --with-toolset=clang; fi
   - ./b2 headers
@@ -37,7 +37,7 @@ script:
   #- find bin.v2/libs/di -type f -executable | xargs -i% valgrind --error-exitcode=-1 --leak-check=full --track-origins=yes --show-reachable=yes % >/dev/null
 
 after_success:
-  - if [ "$CXX" == "g++" ]; then gcov-coveralls.sh "/usr/bin/gcov-4.7" "libs/di/test" "bin.v2/libs/di/test" "boost/di/" "L0bLvIumNdzR0XiKdKJSHgKopNnnO9mul" ; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then gcov-coveralls.sh "/usr/bin/gcov-4.7" "libs/di/test" "bin.v2/libs/di/test" "boost/di/" "L0bLvIumNdzR0XiKdKJSHgKopNnnO9mul" ; fi
 
 branches:
   only:
