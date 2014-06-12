@@ -38,7 +38,6 @@ class binder
         typedef T type;
         typedef TCallStack call_stack;
         typedef TScope scope;
-        typedef binder binder_;
     };
 
     template<
