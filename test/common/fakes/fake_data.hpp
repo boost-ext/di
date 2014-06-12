@@ -18,7 +18,9 @@ template<
 struct fake_data {
     typedef T type;
     typedef TCallStack call_stack;
-    typedef TScope scope;
+    struct dependency {
+        typedef TScope scope;
+    };
 };
 
 } // namespace di

@@ -21,7 +21,7 @@ struct is_required_priority
     struct apply
         : mpl::plus<
               mpl::int_<1>
-            , typename T::scope::priority // lowest = 0, highest = N
+            , typename T::dependency::scope::priority // lowest = 0, highest = N
           >
     { };
 };

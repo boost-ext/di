@@ -17,7 +17,9 @@ namespace type_traits {
 
 template<typename TScope>
 struct fake_data {
-    typedef TScope scope;
+    struct dependency {
+        typedef TScope scope;
+    };
 };
 
 BOOST_AUTO_TEST_CASE(scope_priority) {
