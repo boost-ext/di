@@ -65,6 +65,7 @@ struct fake_call_stack
     struct apply
         : apply_impl<context_type, TCallStack>
     { };
+
 };
 
 } // namespace di

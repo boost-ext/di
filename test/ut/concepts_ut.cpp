@@ -199,8 +199,8 @@ BOOST_AUTO_TEST_CASE(bind_any_of) {
                   , no_name
                   , mpl::vector0<>
                   , concepts::detail::requires_<
-                        concepts::type_traits::priority
-                      , concepts::type_traits::type<any_of<if0, if1>>
+                        concepts::type_traits::is_required_priority
+                      , concepts::type_traits::is_required_type<any_of<if0, if1>>
                     >
                 >::type
             >

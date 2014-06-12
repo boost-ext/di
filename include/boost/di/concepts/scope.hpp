@@ -9,8 +9,8 @@
 
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/concepts/detail/requires.hpp"
-#include "boost/di/concepts/type_traits/type.hpp"
-#include "boost/di/concepts/type_traits/priority.hpp"
+#include "boost/di/concepts/type_traits/is_required_type.hpp"
+#include "boost/di/concepts/type_traits/is_required_priority.hpp"
 
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
@@ -45,8 +45,8 @@ class scope
             , T
             , T
             , detail::requires_<
-                  type_traits::priority
-                , type_traits::type<T>
+                  type_traits::is_required_priority
+                , type_traits::is_required_type<T>
               >
           >
     { };

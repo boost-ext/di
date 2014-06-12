@@ -98,9 +98,9 @@ public:
 
         context_.push_back(
             dependency(
-                utils::demangle(typeid(typename T::expected).name())
-              , utils::demangle(typeid(typename T::given).name())
-              , utils::demangle(typeid(typename T::scope).name())
+                utils::demangle(typeid(typename T::dependency::expected).name())
+              , utils::demangle(typeid(typename T::dependency::given).name())
+              , utils::demangle(typeid(typename T::dependency::scope).name())
               , call_stack_size
             )
         );

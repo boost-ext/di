@@ -16,8 +16,8 @@
 #include "boost/di/type_traits/parameter_types.hpp"
 #include "boost/di/type_traits/has_call_operator.hpp"
 #include "boost/di/concepts/detail/requires.hpp"
-#include "boost/di/concepts/type_traits/type.hpp"
-#include "boost/di/concepts/type_traits/priority.hpp"
+#include "boost/di/concepts/type_traits/is_required_priority.hpp"
+#include "boost/di/concepts/type_traits/is_required_type.hpp"
 #include "boost/di/type_traits/create_traits.hpp"
 
 #include <boost/type_traits/is_same.hpp>
@@ -63,8 +63,8 @@ template<
   , typename TGiven = TExpected
   , typename TBind =
         detail::requires_<
-            concepts::type_traits::priority
-          , concepts::type_traits::type<TExpected>
+            concepts::type_traits::is_required_priority
+          , concepts::type_traits::is_required_type<TExpected>
         >
 >
 class dependency : public detail::get_scope<TExpected, TGiven, TScope>::type

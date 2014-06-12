@@ -9,6 +9,8 @@
 
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/memory.hpp"
+#include "boost/di/detail/binder.hpp"
+#include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/concepts/bind.hpp"
 #include "boost/di/concepts/dependency.hpp"
 #include "boost/di/concepts/scope.hpp"
@@ -27,6 +29,7 @@
 #include <boost/mpl/iterator_range.hpp>
 #include <boost/mpl/advance.hpp>
 #include <boost/mpl/equal.hpp>
+#include <boost/mpl/transform.hpp>
 
 namespace boost {
 namespace di {
@@ -112,7 +115,13 @@ class call_stack
 public:
     template<typename, typename TCallStack, typename>
     struct apply
-        : apply_impl<context_type, TCallStack>::type
+        : apply_impl<
+              context_type
+            , typename mpl::transform<
+                  TCallStack
+                , di::type_traits::make_plain<mpl::_>
+              >::type
+          >::type
     { };
 };
 

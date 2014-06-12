@@ -30,8 +30,8 @@ BOOST_AUTO_TEST_CASE(default_value) {
 
     BOOST_CHECK((is_same<
         detail::requires_<
-            concepts::type_traits::priority
-          , concepts::type_traits::type<int>
+            concepts::type_traits::is_required_priority
+          , concepts::type_traits::is_required_type<int>
         >
       , dependency_t::bind
     >::value));

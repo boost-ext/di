@@ -53,13 +53,11 @@
           , typename TCallStack
           , typename TDependency
         >
-        struct dependency
+        struct created
         {
             typedef T type;
             typedef TCallStack call_stack;
-            typedef typename TDependency::given given;
-            typedef typename TDependency::expected expected;
-            typedef typename TDependency::scope scope;
+            typedef TDependency dependency;
         };
 
         template<
@@ -96,11 +94,11 @@
                     BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
                       , typename mpl::push_back<
                             TCallStack
-                          , typename type_traits::make_plain<U>::type
+                          , const U&
                         >::type
                     )
                     BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
-                        , mpl::vector0<>
+                      , TCallStack
                     )
                   , binder<const U&, TCallStack>
                 >(deps_, refs_, visitor_, policies_);
@@ -123,11 +121,11 @@
                     BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
                       , typename mpl::push_back<
                             TCallStack
-                          , typename type_traits::make_plain<U>::type
+                          , U&
                         >::type
                     )
                     BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
-                        , mpl::vector0<>
+                      , TCallStack
                     )
                   , binder<U&, TCallStack>
                 >(deps_, refs_, visitor_, policies_);
@@ -140,11 +138,11 @@
                     BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
                       , typename mpl::push_back<
                             TCallStack
-                          , typename type_traits::make_plain<aux::auto_ptr<U> >::type
+                          , aux::auto_ptr<U>
                         >::type
                     )
                     BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
-                        , mpl::vector0<>
+                      , TCallStack
                     )
                   , binder<aux::auto_ptr<U>, TCallStack>
                 >(deps_, refs_, visitor_, policies_);
@@ -158,11 +156,11 @@
                         BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
                           , typename mpl::push_back<
                                 TCallStack
-                              , typename type_traits::make_plain<aux::unique_ptr<U>>::type
+                              , aux::unique_ptr<U>
                             >::type
                         )
                         BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
-                            , mpl::vector0<>
+                          , TCallStack
                         )
                       , binder<aux::unique_ptr<U>, TCallStack>
                     >(deps_, refs_, visitor_, policies_);
@@ -187,11 +185,11 @@
                         BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
                           , typename mpl::push_back<
                                 TCallStack
-                              , typename type_traits::make_plain<U>::type
+                              , U
                             >::type
                         )
                         BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
-                            , mpl::vector0<>
+                          , TCallStack
                         )
                       , binder<U, TCallStack>
                     >(deps_, refs_, visitor_, policies_);
@@ -248,11 +246,11 @@
                 BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
                   , typename mpl::push_back<
                         TCallStack
-                      , typename binder<T, TCallStack>::given
+                      , T
                     >::type
                 )
                 BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
-                    , mpl::vector0<>
+                  , TCallStack
                 )
               , binder<T, TCallStack>
             >(deps, refs, visitor, policies);
@@ -297,9 +295,9 @@
         mpl::size<typename ctor<TDependency>::type>::value == BOOST_PP_ITERATION()
       , wrappers::universal<T>
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-        typedef dependency<T, TCallStack, TDependency> dependency_type;
-        assert_policies<typename TPolicies::types, dependency_type>(policies);
-        (visitor)(dependency_type());
+        typedef created<T, TCallStack, TDependency> created_type;
+        assert_policies<typename TPolicies::types, created_type>(policies);
+        (visitor)(created_type());
 
         return binder_.template resolve_impl<
             T

@@ -9,10 +9,10 @@
 
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/concepts/detail/requires.hpp"
-#include "boost/di/concepts/type_traits/priority.hpp"
-#include "boost/di/concepts/type_traits/type.hpp"
-#include "boost/di/concepts/type_traits/name.hpp"
-#include "boost/di/concepts/type_traits/when.hpp"
+#include "boost/di/concepts/detail/when.hpp"
+#include "boost/di/concepts/type_traits/is_required_name.hpp"
+#include "boost/di/concepts/type_traits/is_required_priority.hpp"
+#include "boost/di/concepts/type_traits/is_required_type.hpp"
 
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/is_sequence.hpp>
@@ -51,8 +51,8 @@ struct bind
         , typename detail::get_expected<TExpected, TGiven>::type
         , TGiven
         , detail::requires_<
-              type_traits::priority
-            , type_traits::type<TExpected>
+              type_traits::is_required_priority
+            , type_traits::is_required_type<TExpected>
           >
       >
 {
@@ -63,9 +63,9 @@ struct bind
             , typename detail::get_expected<TExpected, TGiven>::type
             , TGiven
             , detail::requires_<
-                  type_traits::priority
-                , type_traits::type<TExpected>
-                , type_traits::when<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
+                  type_traits::is_required_priority
+                , type_traits::is_required_type<TExpected>
+                , detail::when_<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
               >
           >
     {
@@ -76,10 +76,10 @@ struct bind
                 , typename detail::get_expected<TExpected, TGiven>::type
                 , TGiven
                 , detail::requires_<
-                      type_traits::priority
-                    , type_traits::type<TExpected>
-                    , type_traits::name<TName>
-                    , type_traits::when<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
+                      type_traits::is_required_priority
+                    , type_traits::is_required_type<TExpected>
+                    , type_traits::is_required_name<TName>
+                    , detail::when_<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
                   >
               >
         { };
@@ -92,9 +92,9 @@ struct bind
             , typename detail::get_expected<TExpected, TGiven>::type
             , TGiven
             , detail::requires_<
-                  type_traits::priority
-                , type_traits::type<TExpected>
-                , type_traits::name<TName>
+                  type_traits::is_required_priority
+                , type_traits::is_required_type<TExpected>
+                , type_traits::is_required_name<TName>
               >
           >
     {
@@ -105,10 +105,10 @@ struct bind
                 , typename detail::get_expected<TExpected, TGiven>::type
                 , TGiven
                 , detail::requires_<
-                      type_traits::priority
-                    , type_traits::type<TExpected>
-                    , type_traits::name<TName>
-                    , type_traits::when<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
+                      type_traits::is_required_priority
+                    , type_traits::is_required_type<TExpected>
+                    , type_traits::is_required_name<TName>
+                    , detail::when_<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
                   >
               >
         { };

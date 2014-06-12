@@ -52,7 +52,7 @@ public:
     void operator()(const T&) const {
         visits.push_back(element(
             &typeid(typename T::type)
-          , &typeid(typename T::scope)
+          , &typeid(typename T::dependency::scope)
         ));
     }
 

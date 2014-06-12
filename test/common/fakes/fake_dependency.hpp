@@ -10,16 +10,12 @@
 #include "boost/di/concepts/dependency.hpp"
 
 #include "boost/di/concepts/detail/requires.hpp"
-#include "boost/di/concepts/type_traits/type.hpp"
-#include "boost/di/concepts/type_traits/name.hpp"
-#include "boost/di/concepts/type_traits/when.hpp"
-#include "boost/di/concepts/type_traits/priority.hpp"
+#include "boost/di/concepts/detail/when.hpp"
+#include "boost/di/concepts/type_traits/is_required_name.hpp"
+#include "boost/di/concepts/type_traits/is_required_priority.hpp"
+#include "boost/di/concepts/type_traits/is_required_type.hpp"
 
-#include <boost/mpl/vector.hpp>
 #include <boost/mpl/if.hpp>
-#include <boost/mpl/empty.hpp>
-#include <boost/mpl/or.hpp>
-#include <boost/mpl/lambda.hpp>
 
 namespace boost {
 namespace di {
@@ -29,36 +25,36 @@ struct no_name { };
 template<typename T, typename TName, typename TCallStack>
 struct get_bind
     : concepts::detail::requires_<
-          concepts::type_traits::priority
-        , concepts::type_traits::type<T>
-        , concepts::type_traits::name<TName>
-        , concepts::type_traits::when<TCallStack>
+          concepts::type_traits::is_required_priority
+        , concepts::type_traits::is_required_type<T>
+        , concepts::type_traits::is_required_name<TName>
+        , concepts::detail::when_<TCallStack>
       >
 { };
 
 template<typename T, typename TName>
 struct get_bind<T, TName, mpl::vector0<>>
     : concepts::detail::requires_<
-          concepts::type_traits::priority
-        , concepts::type_traits::type<T>
-        , concepts::type_traits::name<TName>
+          concepts::type_traits::is_required_priority
+        , concepts::type_traits::is_required_type<T>
+        , concepts::type_traits::is_required_name<TName>
       >
 { };
 
 template<typename T, typename TCallStack>
 struct get_bind<T, no_name, TCallStack>
     : concepts::detail::requires_<
-          concepts::type_traits::priority
-        , concepts::type_traits::type<T>
-        , concepts::type_traits::when<TCallStack>
+          concepts::type_traits::is_required_priority
+        , concepts::type_traits::is_required_type<T>
+        , concepts::detail::when_<TCallStack>
       >
 { };
 
 template<typename T>
 struct get_bind<T, no_name, mpl::vector0<>>
     : concepts::detail::requires_<
-          concepts::type_traits::priority
-        , concepts::type_traits::type<T>
+          concepts::type_traits::is_required_priority
+        , concepts::type_traits::is_required_type<T>
       >
 { };
 
