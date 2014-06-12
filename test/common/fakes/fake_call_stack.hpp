@@ -61,9 +61,9 @@ struct fake_call_stack
           >
     { };
 
-    template<typename T, typename TCallStack, typename TScope>
+    template<typename T>
     struct apply
-        : apply_impl<context_type, TCallStack>
+        : apply_impl<context_type, typename T::call_stack>
     { };
 
 };

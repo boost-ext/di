@@ -17,11 +17,11 @@ namespace type_traits {
 
 struct is_required_priority
 {
-    template<typename, typename, typename TScope>
+    template<typename T>
     struct apply
         : mpl::plus<
               mpl::int_<1>
-            , typename TScope::priority // lowest = 0, highest = N
+            , typename T::scope::priority // lowest = 0, highest = N
           >
     { };
 };

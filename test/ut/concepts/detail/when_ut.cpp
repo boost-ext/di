@@ -8,8 +8,9 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "common/fakes/fake_scope.hpp"
+#include "common/fakes/fake_data.hpp"
 #include "common/fakes/fake_concept.hpp"
+#include "common/fakes/fake_scope.hpp"
 
 namespace boost {
 namespace di {
@@ -17,7 +18,7 @@ namespace concepts {
 namespace detail {
 
 BOOST_AUTO_TEST_CASE(empty_context) {
-    BOOST_CHECK_EQUAL(1, (when_<mpl::vector0<>>::apply<void, mpl::vector0<>, fake_scope<>>::type::value));
+    BOOST_CHECK_EQUAL(1, (when_<mpl::vector0<>>::apply<fake_data<void, mpl::vector0<>, fake_scope<>>>::type::value));
 }
 
 BOOST_AUTO_TEST_CASE(one_concept_fail) {
@@ -26,7 +27,7 @@ BOOST_AUTO_TEST_CASE(one_concept_fail) {
             mpl::vector<
                 fake_concept<0>
             >
-        >::apply<void, mpl::vector0<>, fake_scope<>>::type::value)
+        >::apply<fake_data<void, mpl::vector0<>, fake_scope<>>>::type::value)
     );
 }
 
@@ -36,7 +37,7 @@ BOOST_AUTO_TEST_CASE(one_concept_pass) {
             mpl::vector<
                 fake_concept<1>
             >
-        >::apply<void, mpl::vector0<>, fake_scope<>>::type::value)
+        >::apply<fake_data<void, mpl::vector0<>, fake_scope<>>>::type::value)
     );
 }
 
@@ -49,7 +50,7 @@ BOOST_AUTO_TEST_CASE(many_concepts_max_element) {
               , fake_concept<1>
               , fake_concept<3>
             >
-        >::apply<void, mpl::vector0<>, fake_scope<>>::type::value)
+        >::apply<fake_data<void, mpl::vector0<>, fake_scope<>>>::type::value)
     );
 }
 

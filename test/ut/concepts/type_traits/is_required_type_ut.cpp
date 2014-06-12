@@ -19,26 +19,31 @@ struct i1 { };
 struct i2 { };
 struct impl : i1, i2 { };
 
-BOOST_AUTO_TEST_CASE(types) {
-    BOOST_CHECK((!is_required_type<int>::apply<void, void, void>::type::value));
-    BOOST_CHECK((!is_required_type<int>::apply<const double&, void, void>::type::value));
+template<typename T>
+struct fake_data {
+    typedef T type;
+};
 
-    BOOST_CHECK((is_required_type<int>::apply<int, void, void>::type::value));
-    BOOST_CHECK((is_required_type<int>::apply<const int&, void, void>::type::value));
-    BOOST_CHECK((is_required_type<int>::apply<int*, void, void>::type::value));
-    BOOST_CHECK((is_required_type<impl>::apply<i1, void, void>::type::value));
-    BOOST_CHECK((is_required_type<impl>::apply<const i1&, void, void>::type::value));
-    BOOST_CHECK((is_required_type<impl>::apply<i1*, void, void>::type::value));
+BOOST_AUTO_TEST_CASE(types) {
+    BOOST_CHECK((!is_required_type<int>::apply<fake_data<void>>::type::value));
+    BOOST_CHECK((!is_required_type<int>::apply<fake_data<const double&>>::type::value));
+
+    BOOST_CHECK((is_required_type<int>::apply<fake_data<int>>::type::value));
+    BOOST_CHECK((is_required_type<int>::apply<fake_data<const int&>>::type::value));
+    BOOST_CHECK((is_required_type<int>::apply<fake_data<int*>>::type::value));
+    BOOST_CHECK((is_required_type<impl>::apply<fake_data<i1>>::type::value));
+    BOOST_CHECK((is_required_type<impl>::apply<fake_data<const i1&>>::type::value));
+    BOOST_CHECK((is_required_type<impl>::apply<fake_data<i1*>>::type::value));
 }
 
 BOOST_AUTO_TEST_CASE(sequence_type) {
-    BOOST_CHECK((!is_required_type<mpl::vector<int, double> >::apply<void, void, void>::type::value));
+    BOOST_CHECK((!is_required_type<mpl::vector<int, double> >::apply<fake_data<void>>::type::value));
 
-    BOOST_CHECK((is_required_type<mpl::vector<int, double> >::apply<int, void, void>::type::value));
-    BOOST_CHECK((is_required_type<mpl::vector<int, double> >::apply<double, void, void>::type::value));
-    BOOST_CHECK((is_required_type<mpl::vector<i1, i2> >::apply<impl, void, void>::type::value));
-    BOOST_CHECK((is_required_type<mpl::vector<i1> >::apply<impl, void, void>::type::value));
-    BOOST_CHECK((is_required_type<mpl::vector<int, i2> >::apply<impl, void, void>::type::value));
+    BOOST_CHECK((is_required_type<mpl::vector<int, double> >::apply<fake_data<int>>::type::value));
+    BOOST_CHECK((is_required_type<mpl::vector<int, double> >::apply<fake_data<double>>::type::value));
+    BOOST_CHECK((is_required_type<mpl::vector<i1, i2> >::apply<fake_data<impl>>::type::value));
+    BOOST_CHECK((is_required_type<mpl::vector<i1> >::apply<fake_data<impl>>::type::value));
+    BOOST_CHECK((is_required_type<mpl::vector<int, i2> >::apply<fake_data<impl>>::type::value));
 }
 
 } // namespace type_traits

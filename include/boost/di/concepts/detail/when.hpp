@@ -25,19 +25,13 @@ class when_
     template<
         typename TBind
       , typename T
-      , typename TCallStack
-      , typename TScope
     >
     struct apply_bind
-        : TBind::template apply<T, TCallStack, TScope>::type
+        : TBind::template apply<T>::type
     { };
 
 public:
-    template<
-        typename T
-      , typename TCallStack
-      , typename TScope
-    >
+    template<typename T>
     struct apply
         : mpl::if_<
               mpl::empty<TContext>
@@ -46,7 +40,7 @@ public:
                   mpl::max_element<
                       mpl::transform_view<
                           TContext
-                        , apply_bind<mpl::_1, T, TCallStack, TScope>
+                        , apply_bind<mpl::_1, T>
                       >
                   >
               >::type

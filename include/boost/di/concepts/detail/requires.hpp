@@ -26,15 +26,9 @@ class requires_
     template<
         typename TBind
       , typename T
-      , typename TCallStack
-      , typename TScope
     >
     struct apply_bind
-        : TBind::template apply<
-              T
-            , TCallStack
-            , TScope
-          >::type
+        : TBind::template apply<T>::type
     { };
 
 public:
@@ -42,8 +36,6 @@ public:
 
     template<
         typename T
-      , typename TCallStack
-      , typename TScope
       , typename TMultiplicationFactor = mpl::integral_c<long, 10>
     >
     struct apply
@@ -59,7 +51,7 @@ public:
                     , mpl::times<
                           mpl::first<mpl::_1>
                         , mpl::second<mpl::_1>
-                        , apply_bind<mpl::_2, T, TCallStack, TScope>
+                        , apply_bind<mpl::_2, T>
                       >
                   >
               >::type

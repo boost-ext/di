@@ -29,15 +29,30 @@ template<
 class binder
 {
     template<
+        typename T
+      , typename TCallStack
+      , typename TScope
+    >
+    struct data
+    {
+        typedef T type;
+        typedef TCallStack call_stack;
+        typedef TScope scope;
+        typedef binder binder_;
+    };
+
+    template<
         typename TDependency
       , typename T
       , typename TCallStack
     >
     struct apply
         : TDependency::bind::template apply<
-              T
-            , TCallStack
-            , typename TDependency::scope
+              data<
+                  T
+                , TCallStack
+                , typename TDependency::scope
+              >
           >::type
     { };
 

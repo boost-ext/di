@@ -4,26 +4,25 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_FAKE_CONCEPT_HPP
-#define BOOST_DI_FAKE_CONCEPT_HPP
-
-#include <boost/mpl/int.hpp>
+#ifndef BOOST_DI_FAKE_DATA_HPP
+#define BOOST_DI_FAKE_DATA_HPP
 
 namespace boost {
 namespace di {
 
-template<int Value>
-struct fake_concept
-{
-    template<typename>
-    struct apply
-        : mpl::int_<Value>
-    { };
+template<
+    typename T
+  , typename TCallStack
+  , typename TScope
+>
+struct fake_data {
+    typedef T type;
+    typedef TCallStack call_stack;
+    typedef TScope scope;
 };
 
 } // namespace di
 } // namespace boost
 
 #endif
-
 

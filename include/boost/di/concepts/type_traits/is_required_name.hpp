@@ -40,9 +40,9 @@ class is_required_name
     };
 
 public:
-    template<typename T, typename, typename>
+    template<typename T>
     struct apply
-        : is_same<typename get_name<T>::type, TName>
+        : is_same<typename get_name<typename T::type>::type, TName>
     { };
 };
 

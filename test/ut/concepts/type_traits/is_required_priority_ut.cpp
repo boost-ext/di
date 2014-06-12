@@ -15,9 +15,14 @@ namespace di {
 namespace concepts {
 namespace type_traits {
 
+template<typename TScope>
+struct fake_data {
+    typedef TScope scope;
+};
+
 BOOST_AUTO_TEST_CASE(scope_priority) {
-    BOOST_CHECK_EQUAL(1, (is_required_priority::apply<void, void, fake_scope<0>>::type::value));
-    BOOST_CHECK_EQUAL(2, (is_required_priority::apply<void, void, fake_scope<1>>::type::value));
+    BOOST_CHECK_EQUAL(1, (is_required_priority::apply<fake_data<fake_scope<0>>>::type::value));
+    BOOST_CHECK_EQUAL(2, (is_required_priority::apply<fake_data<fake_scope<1>>>::type::value));
 }
 
 } // namespace type_traits

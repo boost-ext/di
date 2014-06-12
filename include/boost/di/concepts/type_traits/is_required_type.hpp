@@ -19,27 +19,27 @@ namespace di {
 namespace concepts {
 namespace type_traits {
 
-template<typename T, typename = void>
+template<typename TValueType, typename = void>
 struct is_required_type
 {
-    template<typename U, typename, typename>
+    template<typename T>
     struct apply
         : di::type_traits::is_same_base_of<
-              T
-            , typename di::type_traits::make_plain<U>::type
+              TValueType
+            , typename di::type_traits::make_plain<typename T::type>::type
           >
     { };
 };
 
-template<typename T>
-struct is_required_type<T, typename enable_if<mpl::is_sequence<T> >::type>
+template<typename TValueType>
+struct is_required_type<TValueType, typename enable_if<mpl::is_sequence<TValueType> >::type>
 {
-    template<typename U, typename, typename>
+    template<typename T>
     struct apply
         : mpl::count_if<
-              T
+              TValueType
             , di::type_traits::is_same_base_of<
-                  typename di::type_traits::make_plain<U>::type
+                  typename di::type_traits::make_plain<typename T::type>::type
                 , mpl::_
               >
           >

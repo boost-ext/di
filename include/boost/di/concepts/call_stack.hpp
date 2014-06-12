@@ -62,13 +62,19 @@ class call_stack
           >
     { };
 
+    //template<typename T, typename TCallStack>
+    //struct get_type
+    //{
+        //typedef typename detail::binder<TDeps>::template resolve<T, TCallStack>::given type;
+    //};
+
 public:
-    template<typename, typename TCallStack, typename>
+    template<typename T>
     struct apply
         : apply_impl<
               context_type
             , typename mpl::transform<
-                  TCallStack
+                  typename T::call_stack
                 , di::type_traits::make_plain<mpl::_>
               >::type
           >::type
