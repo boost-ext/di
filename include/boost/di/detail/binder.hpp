@@ -23,23 +23,23 @@ namespace di {
 namespace detail {
 
 template<
+    typename T
+  , typename TCallStack
+  , typename TDependency
+>
+struct data
+{
+    typedef T type;
+    typedef TCallStack call_stack;
+    typedef TDependency dependency;
+};
+
+template<
     typename TDependecies
   , typename TBuilder = builder
 >
 class binder
 {
-    template<
-        typename T
-      , typename TCallStack
-      , typename TDependency
-    >
-    struct data
-    {
-        typedef T type;
-        typedef TCallStack call_stack;
-        typedef TDependency dependency;
-    };
-
     template<
         typename TDependency
       , typename T

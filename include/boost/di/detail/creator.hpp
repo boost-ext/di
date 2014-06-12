@@ -51,18 +51,6 @@
         template<
             typename T
           , typename TCallStack
-          , typename TDependency
-        >
-        struct created
-        {
-            typedef T type;
-            typedef TCallStack call_stack;
-            typedef TDependency dependency;
-        };
-
-        template<
-            typename T
-          , typename TCallStack
           , typename TDeps
           , typename TRefs
           , typename TVisitor
@@ -295,9 +283,9 @@
         mpl::size<typename ctor<TDependency>::type>::value == BOOST_PP_ITERATION()
       , wrappers::universal<T>
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-        typedef created<T, TCallStack, TDependency> created_type;
-        assert_policies<typename TPolicies::types, created_type>(policies);
-        (visitor)(created_type());
+        typedef data<T, TCallStack, TDependency> data_type;
+        assert_policies<typename TPolicies::types, data_type>(policies);
+        (visitor)(data_type());
 
         return binder_.template resolve_impl<
             T

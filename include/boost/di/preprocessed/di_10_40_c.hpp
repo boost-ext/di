@@ -94,15 +94,9 @@ class requires_
     template<
         typename TBind
       , typename T
-      , typename TCallStack
-      , typename TScope
     >
     struct apply_bind
-        : TBind::template apply<
-              T
-            , TCallStack
-            , TScope
-          >::type
+        : TBind::template apply<T>::type
     { };
 
 public:
@@ -110,8 +104,6 @@ public:
 
     template<
         typename T
-      , typename TCallStack
-      , typename TScope
       , typename TMultiplicationFactor = mpl::integral_c<long, 10>
     >
     struct apply
@@ -127,7 +119,7 @@ public:
                     , mpl::times<
                           mpl::first<mpl::_1>
                         , mpl::second<mpl::_1>
-                        , apply_bind<mpl::_2, T, TCallStack, TScope>
+                        , apply_bind<mpl::_2, T>
                       >
                   >
               >::type
@@ -151,19 +143,13 @@ class when_
     template<
         typename TBind
       , typename T
-      , typename TCallStack
-      , typename TScope
     >
     struct apply_bind
-        : TBind::template apply<T, TCallStack, TScope>::type
+        : TBind::template apply<T>::type
     { };
 
 public:
-    template<
-        typename T
-      , typename TCallStack
-      , typename TScope
-    >
+    template<typename T>
     struct apply
         : mpl::if_<
               mpl::empty<TContext>
@@ -172,7 +158,7 @@ public:
                   mpl::max_element<
                       mpl::transform_view<
                           TContext
-                        , apply_bind<mpl::_1, T, TCallStack, TScope>
+                        , apply_bind<mpl::_1, T>
                       >
                   >
               >::type
@@ -228,9 +214,9 @@ class is_required_name
     };
 
 public:
-    template<typename T, typename, typename>
+    template<typename T>
     struct apply
-        : is_same<typename get_name<T>::type, TName>
+        : is_same<typename get_name<typename T::type>::type, TName>
     { };
 };
 
@@ -246,11 +232,11 @@ namespace type_traits {
 
 struct is_required_priority
 {
-    template<typename, typename, typename TScope>
+    template<typename T>
     struct apply
         : mpl::plus<
               mpl::int_<1>
-            , typename TScope::priority // lowest = 0, highest = N
+            , typename T::dependency::scope::priority // lowest = 0, highest = N
           >
     { };
 };
@@ -324,27 +310,27 @@ namespace di {
 namespace concepts {
 namespace type_traits {
 
-template<typename T, typename = void>
+template<typename TValueType, typename = void>
 struct is_required_type
 {
-    template<typename U, typename, typename>
+    template<typename T>
     struct apply
         : di::type_traits::is_same_base_of<
-              T
-            , typename di::type_traits::make_plain<U>::type
+              TValueType
+            , typename di::type_traits::make_plain<typename T::type>::type
           >
     { };
 };
 
-template<typename T>
-struct is_required_type<T, typename enable_if<mpl::is_sequence<T> >::type>
+template<typename TValueType>
+struct is_required_type<TValueType, typename enable_if<mpl::is_sequence<TValueType> >::type>
 {
-    template<typename U, typename, typename>
+    template<typename T>
     struct apply
         : mpl::count_if<
-              T
+              TValueType
             , di::type_traits::is_same_base_of<
-                  typename di::type_traits::make_plain<U>::type
+                  typename di::type_traits::make_plain<typename T::type>::type
                 , mpl::_
               >
           >
@@ -3224,16 +3210,24 @@ template<
 class binder
 {
     template<
+        typename T
+      , typename TCallStack
+      , typename TDependency
+    >
+    struct data
+    {
+        typedef T type;
+        typedef TCallStack call_stack;
+        typedef TDependency dependency;
+    };
+
+    template<
         typename TDependency
       , typename T
       , typename TCallStack
     >
     struct apply
-        : TDependency::bind::template apply<
-              T
-            , TCallStack
-            , typename TDependency::scope
-          >::type
+        : TDependency::bind::template apply<data<T, TCallStack, TDependency> >::type
     { };
 
 public:
@@ -3349,12 +3343,12 @@ class call_stack
     { };
 
 public:
-    template<typename, typename TCallStack, typename>
+    template<typename T>
     struct apply
         : apply_impl<
               context_type
             , typename mpl::transform<
-                  TCallStack
+                  typename T::call_stack
                 , di::type_traits::make_plain<mpl::_>
               >::type
           >::type
