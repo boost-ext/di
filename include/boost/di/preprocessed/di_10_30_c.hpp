@@ -82,6 +82,109 @@
 #include <boost/config.hpp>
 #include <boost/bind.hpp>
 
+
+namespace boost {
+namespace di {
+namespace concepts {
+namespace detail {
+
+template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na , typename T10 = ::boost::mpl::na , typename T11 = ::boost::mpl::na , typename T12 = ::boost::mpl::na , typename T13 = ::boost::mpl::na , typename T14 = ::boost::mpl::na , typename T15 = ::boost::mpl::na , typename T16 = ::boost::mpl::na , typename T17 = ::boost::mpl::na , typename T18 = ::boost::mpl::na , typename T19 = ::boost::mpl::na , typename T20 = ::boost::mpl::na , typename T21 = ::boost::mpl::na , typename T22 = ::boost::mpl::na , typename T23 = ::boost::mpl::na , typename T24 = ::boost::mpl::na , typename T25 = ::boost::mpl::na , typename T26 = ::boost::mpl::na , typename T27 = ::boost::mpl::na , typename T28 = ::boost::mpl::na , typename T29 = ::boost::mpl::na >
+class requires_
+{
+    template<
+        typename TBind
+      , typename T
+      , typename TCallStack
+      , typename TScope
+    >
+    struct apply_bind
+        : TBind::template apply<
+              T
+            , TCallStack
+            , TScope
+          >::type
+    { };
+
+public:
+    typedef requires_ type;
+
+    template<
+        typename T
+      , typename TCallStack
+      , typename TScope
+      , typename TMultiplicationFactor = mpl::integral_c<long, 10>
+    >
+    struct apply
+        : mpl::second<
+              typename mpl::fold<
+                  mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19 , T20 , T21 , T22 , T23 , T24 , T25 , T26 , T27 , T28 , T29>
+                , mpl::pair<mpl::integral_c<long, 1>, mpl::integral_c<long, 1> >
+                , mpl::pair<
+                      mpl::times<
+                          mpl::first<mpl::_1>
+                        , TMultiplicationFactor
+                      >
+                    , mpl::times<
+                          mpl::first<mpl::_1>
+                        , mpl::second<mpl::_1>
+                        , apply_bind<mpl::_2, T, TCallStack, TScope>
+                      >
+                  >
+              >::type
+          >
+    { };
+};
+
+} // namespace detail
+} // namespace concepts
+} // namespace di
+} // namespace boost
+
+namespace boost {
+namespace di {
+namespace concepts {
+namespace detail {
+
+template<typename TContext>
+class when_
+{
+    template<
+        typename TBind
+      , typename T
+      , typename TCallStack
+      , typename TScope
+    >
+    struct apply_bind
+        : TBind::template apply<T, TCallStack, TScope>::type
+    { };
+
+public:
+    template<
+        typename T
+      , typename TCallStack
+      , typename TScope
+    >
+    struct apply
+        : mpl::if_<
+              mpl::empty<TContext>
+            , mpl::int_<1>
+            , typename mpl::deref<
+                  mpl::max_element<
+                      mpl::transform_view<
+                          TContext
+                        , apply_bind<mpl::_1, T, TCallStack, TScope>
+                      >
+                  >
+              >::type
+          >::type
+    { };
+};
+
+} // namespace detail
+} // namespace concepts
+} // namespace di
+} // namespace boost
+
 namespace boost {
 namespace di {
 namespace type_traits {
@@ -96,6 +199,64 @@ struct remove_accessors
 { };
 
 } // namespace type_traits
+} // namespace di
+} // namespace boost
+
+namespace boost {
+namespace di {
+namespace concepts {
+namespace type_traits {
+
+BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
+
+template<typename TName>
+class is_required_name
+{
+    template<typename T, typename = void>
+    struct get_name
+    {
+        struct no_name { };
+        typedef no_name type;
+    };
+
+    template<typename T>
+    struct get_name<T, typename enable_if<
+        has_name<typename di::type_traits::remove_accessors<T>::type> >::type
+    >
+    {
+        typedef typename di::type_traits::remove_accessors<T>::type::name type;
+    };
+
+public:
+    template<typename T, typename, typename>
+    struct apply
+        : is_same<typename get_name<T>::type, TName>
+    { };
+};
+
+} // namespace type_traits
+} // namespace concepts
+} // namespace di
+} // namespace boost
+
+namespace boost {
+namespace di {
+namespace concepts {
+namespace type_traits {
+
+struct is_required_priority
+{
+    template<typename, typename, typename TScope>
+    struct apply
+        : mpl::plus<
+              mpl::int_<1>
+            , typename TScope::priority // lowest = 0, highest = N
+          >
+    { };
+};
+
+} // namespace type_traits
+} // namespace concepts
 } // namespace di
 } // namespace boost
 
@@ -139,6 +300,161 @@ struct make_plain
 { };
 
 } // namespace type_traits
+} // namespace di
+} // namespace boost
+
+namespace boost {
+namespace di {
+namespace type_traits {
+
+template<typename T, typename U = mpl::_1>
+struct is_same_base_of
+    : mpl::or_<
+          is_base_of<U, T>
+        , is_same<U, T>
+      >
+{ };
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+
+namespace boost {
+namespace di {
+namespace concepts {
+namespace type_traits {
+
+template<typename T, typename = void>
+struct is_required_type
+{
+    template<typename U, typename, typename>
+    struct apply
+        : di::type_traits::is_same_base_of<
+              T
+            , typename di::type_traits::make_plain<U>::type
+          >
+    { };
+};
+
+template<typename T>
+struct is_required_type<T, typename enable_if<mpl::is_sequence<T> >::type>
+{
+    template<typename U, typename, typename>
+    struct apply
+        : mpl::count_if<
+              T
+            , di::type_traits::is_same_base_of<
+                  typename di::type_traits::make_plain<U>::type
+                , mpl::_
+              >
+          >
+    { };
+};
+
+} // namespace type_traits
+} // namespace concepts
+} // namespace di
+} // namespace boost
+
+
+namespace boost {
+namespace di {
+namespace concepts {
+
+namespace detail {
+
+template<typename TExpected, typename TGiven>
+struct get_expected
+    : mpl::if_<
+          mpl::is_sequence<TExpected>
+        , TGiven
+        , TExpected
+      >
+{ };
+
+} // namespace detail
+
+template<
+    typename TExpected
+  , typename TGiven
+  , template<
+        typename
+      , typename
+      , typename
+      , typename
+    > class TDependency
+>
+struct bind
+    : TDependency<
+          mpl::_1
+        , typename detail::get_expected<TExpected, TGiven>::type
+        , TGiven
+        , detail::requires_<
+              type_traits::is_required_priority
+            , type_traits::is_required_type<TExpected>
+          >
+      >
+{
+    template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na , typename T10 = ::boost::mpl::na , typename T11 = ::boost::mpl::na , typename T12 = ::boost::mpl::na , typename T13 = ::boost::mpl::na , typename T14 = ::boost::mpl::na , typename T15 = ::boost::mpl::na , typename T16 = ::boost::mpl::na , typename T17 = ::boost::mpl::na , typename T18 = ::boost::mpl::na , typename T19 = ::boost::mpl::na , typename T20 = ::boost::mpl::na , typename T21 = ::boost::mpl::na , typename T22 = ::boost::mpl::na , typename T23 = ::boost::mpl::na , typename T24 = ::boost::mpl::na , typename T25 = ::boost::mpl::na , typename T26 = ::boost::mpl::na , typename T27 = ::boost::mpl::na , typename T28 = ::boost::mpl::na , typename T29 = ::boost::mpl::na >
+    struct when
+        : TDependency<
+              mpl::_1
+            , typename detail::get_expected<TExpected, TGiven>::type
+            , TGiven
+            , detail::requires_<
+                  type_traits::is_required_priority
+                , type_traits::is_required_type<TExpected>
+                , detail::when_<mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19 , T20 , T21 , T22 , T23 , T24 , T25 , T26 , T27 , T28 , T29> >
+              >
+          >
+    {
+        template<typename TName>
+        struct named
+            : TDependency<
+                  mpl::_1
+                , typename detail::get_expected<TExpected, TGiven>::type
+                , TGiven
+                , detail::requires_<
+                      type_traits::is_required_priority
+                    , type_traits::is_required_type<TExpected>
+                    , type_traits::is_required_name<TName>
+                    , detail::when_<mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19 , T20 , T21 , T22 , T23 , T24 , T25 , T26 , T27 , T28 , T29> >
+                  >
+              >
+        { };
+    };
+
+    template<typename TName>
+    struct named
+        : TDependency<
+              mpl::_1
+            , typename detail::get_expected<TExpected, TGiven>::type
+            , TGiven
+            , detail::requires_<
+                  type_traits::is_required_priority
+                , type_traits::is_required_type<TExpected>
+                , type_traits::is_required_name<TName>
+              >
+          >
+    {
+        template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na , typename T10 = ::boost::mpl::na , typename T11 = ::boost::mpl::na , typename T12 = ::boost::mpl::na , typename T13 = ::boost::mpl::na , typename T14 = ::boost::mpl::na , typename T15 = ::boost::mpl::na , typename T16 = ::boost::mpl::na , typename T17 = ::boost::mpl::na , typename T18 = ::boost::mpl::na , typename T19 = ::boost::mpl::na , typename T20 = ::boost::mpl::na , typename T21 = ::boost::mpl::na , typename T22 = ::boost::mpl::na , typename T23 = ::boost::mpl::na , typename T24 = ::boost::mpl::na , typename T25 = ::boost::mpl::na , typename T26 = ::boost::mpl::na , typename T27 = ::boost::mpl::na , typename T28 = ::boost::mpl::na , typename T29 = ::boost::mpl::na >
+        struct when
+            : TDependency<
+                  mpl::_1
+                , typename detail::get_expected<TExpected, TGiven>::type
+                , TGiven
+                , detail::requires_<
+                      type_traits::is_required_priority
+                    , type_traits::is_required_type<TExpected>
+                    , type_traits::is_required_name<TName>
+                    , detail::when_<mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19 , T20 , T21 , T22 , T23 , T24 , T25 , T26 , T27 , T28 , T29> >
+                  >
+              >
+        { };
+    };
+};
+
+} // namespace concepts
 } // namespace di
 } // namespace boost
 
@@ -453,22 +769,6 @@ private:
     } // namespace type_traits
     } // namespace di
     } // namespace boost
-
-namespace boost {
-namespace di {
-namespace type_traits {
-
-template<typename T, typename U = mpl::_1>
-struct is_same_base_of
-    : mpl::or_<
-          is_base_of<U, T>
-        , is_same<U, T>
-      >
-{ };
-
-} // namespace type_traits
-} // namespace di
-} // namespace boost
 
 
     namespace boost {
@@ -2770,122 +3070,6 @@ public:
 } // namespace di
 } // namespace boost
 
-
-namespace boost {
-namespace di {
-namespace concepts {
-namespace detail {
-
-template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na , typename T10 = ::boost::mpl::na , typename T11 = ::boost::mpl::na , typename T12 = ::boost::mpl::na , typename T13 = ::boost::mpl::na , typename T14 = ::boost::mpl::na , typename T15 = ::boost::mpl::na , typename T16 = ::boost::mpl::na , typename T17 = ::boost::mpl::na , typename T18 = ::boost::mpl::na , typename T19 = ::boost::mpl::na , typename T20 = ::boost::mpl::na , typename T21 = ::boost::mpl::na , typename T22 = ::boost::mpl::na , typename T23 = ::boost::mpl::na , typename T24 = ::boost::mpl::na , typename T25 = ::boost::mpl::na , typename T26 = ::boost::mpl::na , typename T27 = ::boost::mpl::na , typename T28 = ::boost::mpl::na , typename T29 = ::boost::mpl::na >
-class requires_
-{
-    template<
-        typename TBind
-      , typename T
-      , typename TCallStack
-      , typename TScope
-    >
-    struct apply_bind
-        : TBind::template apply<
-              T
-            , TCallStack
-            , TScope
-          >::type
-    { };
-
-public:
-    typedef requires_ type;
-
-    template<
-        typename T
-      , typename TCallStack
-      , typename TScope
-      , typename TMultiplicationFactor = mpl::integral_c<long, 10>
-    >
-    struct apply
-        : mpl::second<
-              typename mpl::fold<
-                  mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19 , T20 , T21 , T22 , T23 , T24 , T25 , T26 , T27 , T28 , T29>
-                , mpl::pair<mpl::integral_c<long, 1>, mpl::integral_c<long, 1> >
-                , mpl::pair<
-                      mpl::times<
-                          mpl::first<mpl::_1>
-                        , TMultiplicationFactor
-                      >
-                    , mpl::times<
-                          mpl::first<mpl::_1>
-                        , mpl::second<mpl::_1>
-                        , apply_bind<mpl::_2, T, TCallStack, TScope>
-                      >
-                  >
-              >::type
-          >
-    { };
-};
-
-} // namespace detail
-} // namespace concepts
-} // namespace di
-} // namespace boost
-
-namespace boost {
-namespace di {
-namespace concepts {
-namespace type_traits {
-
-struct is_required_priority
-{
-    template<typename, typename, typename TScope>
-    struct apply
-        : mpl::plus<
-              mpl::int_<1>
-            , typename TScope::priority // lowest = 0, highest = N
-          >
-    { };
-};
-
-} // namespace type_traits
-} // namespace concepts
-} // namespace di
-} // namespace boost
-
-namespace boost {
-namespace di {
-namespace concepts {
-namespace type_traits {
-
-template<typename T, typename = void>
-struct is_required_type
-{
-    template<typename U, typename, typename>
-    struct apply
-        : di::type_traits::is_same_base_of<
-              T
-            , typename di::type_traits::make_plain<U>::type
-          >
-    { };
-};
-
-template<typename T>
-struct is_required_type<T, typename enable_if<mpl::is_sequence<T> >::type>
-{
-    template<typename U, typename, typename>
-    struct apply
-        : mpl::count_if<
-              T
-            , di::type_traits::is_same_base_of<
-                  typename di::type_traits::make_plain<U>::type
-                , mpl::_
-              >
-          >
-    { };
-};
-
-} // namespace type_traits
-} // namespace concepts
-} // namespace di
-} // namespace boost
-
 namespace boost {
 namespace di {
 namespace concepts {
@@ -3121,184 +3305,60 @@ private:
 } // namespace di
 } // namespace boost
 
+
 namespace boost {
 namespace di {
 namespace concepts {
-namespace detail {
 
-template<typename TContext>
-class when_
+template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na , typename T10 = ::boost::mpl::na , typename T11 = ::boost::mpl::na , typename T12 = ::boost::mpl::na , typename T13 = ::boost::mpl::na , typename T14 = ::boost::mpl::na , typename T15 = ::boost::mpl::na , typename T16 = ::boost::mpl::na , typename T17 = ::boost::mpl::na , typename T18 = ::boost::mpl::na , typename T19 = ::boost::mpl::na , typename T20 = ::boost::mpl::na , typename T21 = ::boost::mpl::na , typename T22 = ::boost::mpl::na , typename T23 = ::boost::mpl::na , typename T24 = ::boost::mpl::na , typename T25 = ::boost::mpl::na , typename T26 = ::boost::mpl::na , typename T27 = ::boost::mpl::na , typename T28 = ::boost::mpl::na , typename T29 = ::boost::mpl::na >
+class call_stack
 {
-    template<
-        typename TBind
-      , typename T
-      , typename TCallStack
-      , typename TScope
-    >
-    struct apply_bind
-        : TBind::template apply<T, TCallStack, TScope>::type
+    typedef mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19 , T20 , T21 , T22 , T23 , T24 , T25 , T26 , T27 , T28 , T29> context_type;
+
+    template<typename TContext, typename TCallStack>
+    struct equal
+      : mpl::equal<
+            mpl::iterator_range<
+                typename mpl::advance<
+                    typename mpl::begin<TCallStack>::type
+                  , typename mpl::max<
+                        mpl::int_<0>
+                      , mpl::minus<
+                            mpl::size<TCallStack>
+                          , mpl::size<TContext>
+                        >
+                    >::type
+                >::type
+              , typename mpl::end<TCallStack>::type
+            >
+          , TContext
+        >
+    { };
+
+    template<typename TContext, typename TCallStack>
+    struct apply_impl
+        : mpl::if_<
+              mpl::empty<TCallStack>
+            , mpl::int_<0>
+            , mpl::if_<
+                  equal<TContext, TCallStack>
+                , mpl::size<TContext>
+                , mpl::int_<0>
+              >
+          >
     { };
 
 public:
-    template<
-        typename T
-      , typename TCallStack
-      , typename TScope
-    >
+    template<typename, typename TCallStack, typename>
     struct apply
-        : mpl::if_<
-              mpl::empty<TContext>
-            , mpl::int_<1>
-            , typename mpl::deref<
-                  mpl::max_element<
-                      mpl::transform_view<
-                          TContext
-                        , apply_bind<mpl::_1, T, TCallStack, TScope>
-                      >
-                  >
+        : apply_impl<
+              context_type
+            , typename mpl::transform<
+                  TCallStack
+                , di::type_traits::make_plain<mpl::_>
               >::type
           >::type
     { };
-};
-
-} // namespace detail
-} // namespace concepts
-} // namespace di
-} // namespace boost
-
-namespace boost {
-namespace di {
-namespace concepts {
-namespace type_traits {
-
-BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
-
-template<typename TName>
-class is_required_name
-{
-    template<typename T, typename = void>
-    struct get_name
-    {
-        struct no_name { };
-        typedef no_name type;
-    };
-
-    template<typename T>
-    struct get_name<T, typename enable_if<
-        has_name<typename di::type_traits::remove_accessors<T>::type> >::type
-    >
-    {
-        typedef typename di::type_traits::remove_accessors<T>::type::name type;
-    };
-
-public:
-    template<typename T, typename, typename>
-    struct apply
-        : is_same<typename get_name<T>::type, TName>
-    { };
-};
-
-} // namespace type_traits
-} // namespace concepts
-} // namespace di
-} // namespace boost
-
-
-namespace boost {
-namespace di {
-namespace concepts {
-
-namespace detail {
-
-template<typename TExpected, typename TGiven>
-struct get_expected
-    : mpl::if_<
-          mpl::is_sequence<TExpected>
-        , TGiven
-        , TExpected
-      >
-{ };
-
-} // namespace detail
-
-template<
-    typename TExpected
-  , typename TGiven
-  , template<
-        typename
-      , typename
-      , typename
-      , typename
-    > class TDependency
->
-struct bind
-    : TDependency<
-          mpl::_1
-        , typename detail::get_expected<TExpected, TGiven>::type
-        , TGiven
-        , detail::requires_<
-              type_traits::is_required_priority
-            , type_traits::is_required_type<TExpected>
-          >
-      >
-{
-    template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na , typename T10 = ::boost::mpl::na , typename T11 = ::boost::mpl::na , typename T12 = ::boost::mpl::na , typename T13 = ::boost::mpl::na , typename T14 = ::boost::mpl::na , typename T15 = ::boost::mpl::na , typename T16 = ::boost::mpl::na , typename T17 = ::boost::mpl::na , typename T18 = ::boost::mpl::na , typename T19 = ::boost::mpl::na , typename T20 = ::boost::mpl::na , typename T21 = ::boost::mpl::na , typename T22 = ::boost::mpl::na , typename T23 = ::boost::mpl::na , typename T24 = ::boost::mpl::na , typename T25 = ::boost::mpl::na , typename T26 = ::boost::mpl::na , typename T27 = ::boost::mpl::na , typename T28 = ::boost::mpl::na , typename T29 = ::boost::mpl::na >
-    struct when
-        : TDependency<
-              mpl::_1
-            , typename detail::get_expected<TExpected, TGiven>::type
-            , TGiven
-            , detail::requires_<
-                  type_traits::is_required_priority
-                , type_traits::is_required_type<TExpected>
-                , detail::when_<mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19 , T20 , T21 , T22 , T23 , T24 , T25 , T26 , T27 , T28 , T29> >
-              >
-          >
-    {
-        template<typename TName>
-        struct named
-            : TDependency<
-                  mpl::_1
-                , typename detail::get_expected<TExpected, TGiven>::type
-                , TGiven
-                , detail::requires_<
-                      type_traits::is_required_priority
-                    , type_traits::is_required_type<TExpected>
-                    , type_traits::is_required_name<TName>
-                    , detail::when_<mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19 , T20 , T21 , T22 , T23 , T24 , T25 , T26 , T27 , T28 , T29> >
-                  >
-              >
-        { };
-    };
-
-    template<typename TName>
-    struct named
-        : TDependency<
-              mpl::_1
-            , typename detail::get_expected<TExpected, TGiven>::type
-            , TGiven
-            , detail::requires_<
-                  type_traits::is_required_priority
-                , type_traits::is_required_type<TExpected>
-                , type_traits::is_required_name<TName>
-              >
-          >
-    {
-        template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na , typename T10 = ::boost::mpl::na , typename T11 = ::boost::mpl::na , typename T12 = ::boost::mpl::na , typename T13 = ::boost::mpl::na , typename T14 = ::boost::mpl::na , typename T15 = ::boost::mpl::na , typename T16 = ::boost::mpl::na , typename T17 = ::boost::mpl::na , typename T18 = ::boost::mpl::na , typename T19 = ::boost::mpl::na , typename T20 = ::boost::mpl::na , typename T21 = ::boost::mpl::na , typename T22 = ::boost::mpl::na , typename T23 = ::boost::mpl::na , typename T24 = ::boost::mpl::na , typename T25 = ::boost::mpl::na , typename T26 = ::boost::mpl::na , typename T27 = ::boost::mpl::na , typename T28 = ::boost::mpl::na , typename T29 = ::boost::mpl::na >
-        struct when
-            : TDependency<
-                  mpl::_1
-                , typename detail::get_expected<TExpected, TGiven>::type
-                , TGiven
-                , detail::requires_<
-                      type_traits::is_required_priority
-                    , type_traits::is_required_type<TExpected>
-                    , type_traits::is_required_name<TName>
-                    , detail::when_<mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19 , T20 , T21 , T22 , T23 , T24 , T25 , T26 , T27 , T28 , T29> >
-                  >
-              >
-        { };
-    };
 };
 
 } // namespace concepts
@@ -3564,55 +3624,9 @@ struct session
 { };
 
 template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na , typename T10 = ::boost::mpl::na , typename T11 = ::boost::mpl::na , typename T12 = ::boost::mpl::na , typename T13 = ::boost::mpl::na , typename T14 = ::boost::mpl::na , typename T15 = ::boost::mpl::na , typename T16 = ::boost::mpl::na , typename T17 = ::boost::mpl::na , typename T18 = ::boost::mpl::na , typename T19 = ::boost::mpl::na , typename T20 = ::boost::mpl::na , typename T21 = ::boost::mpl::na , typename T22 = ::boost::mpl::na , typename T23 = ::boost::mpl::na , typename T24 = ::boost::mpl::na , typename T25 = ::boost::mpl::na , typename T26 = ::boost::mpl::na , typename T27 = ::boost::mpl::na , typename T28 = ::boost::mpl::na , typename T29 = ::boost::mpl::na >
-class call_stack
-{
-    typedef mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19 , T20 , T21 , T22 , T23 , T24 , T25 , T26 , T27 , T28 , T29> context_type;
-
-    template<typename TContext, typename TCallStack>
-    struct equal
-      : mpl::equal<
-            mpl::iterator_range<
-                typename mpl::advance<
-                    typename mpl::begin<TCallStack>::type
-                  , typename mpl::max<
-                        mpl::int_<0>
-                      , mpl::minus<
-                            mpl::size<TCallStack>
-                          , mpl::size<TContext>
-                        >
-                    >::type
-                >::type
-              , typename mpl::end<TCallStack>::type
-            >
-          , TContext
-        >
-    { };
-
-    template<typename TContext, typename TCallStack>
-    struct apply_impl
-        : mpl::if_<
-              mpl::empty<TCallStack>
-            , mpl::int_<0>
-            , mpl::if_<
-                  equal<TContext, TCallStack>
-                , mpl::size<TContext>
-                , mpl::int_<0>
-              >
-          >
-    { };
-
-public:
-    template<typename, typename TCallStack, typename>
-    struct apply
-        : apply_impl<
-              context_type
-            , typename mpl::transform<
-                  TCallStack
-                , di::type_traits::make_plain<mpl::_>
-              >::type
-          >::type
-    { };
-};
+struct call_stack
+    : concepts::call_stack< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19 , T20 , T21 , T22 , T23 , T24 , T25 , T26 , T27 , T28 , T29>
+{ };
 
 template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na , typename T10 = ::boost::mpl::na , typename T11 = ::boost::mpl::na , typename T12 = ::boost::mpl::na , typename T13 = ::boost::mpl::na , typename T14 = ::boost::mpl::na , typename T15 = ::boost::mpl::na , typename T16 = ::boost::mpl::na , typename T17 = ::boost::mpl::na , typename T18 = ::boost::mpl::na , typename T19 = ::boost::mpl::na , typename T20 = ::boost::mpl::na , typename T21 = ::boost::mpl::na , typename T22 = ::boost::mpl::na , typename T23 = ::boost::mpl::na , typename T24 = ::boost::mpl::na , typename T25 = ::boost::mpl::na , typename T26 = ::boost::mpl::na , typename T27 = ::boost::mpl::na , typename T28 = ::boost::mpl::na , typename T29 = ::boost::mpl::na >
 struct any_of

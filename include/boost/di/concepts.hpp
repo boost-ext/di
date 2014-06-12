@@ -8,10 +8,8 @@
 #define BOOST_DI_CONCEPTS_HPP
 
 #include "boost/di/aux_/config.hpp"
-#include "boost/di/aux_/memory.hpp"
-#include "boost/di/detail/binder.hpp"
-#include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/concepts/bind.hpp"
+#include "boost/di/concepts/call_stack.hpp"
 #include "boost/di/concepts/dependency.hpp"
 #include "boost/di/concepts/scope.hpp"
 #include "boost/di/scopes/deduce.hpp"
@@ -22,14 +20,6 @@
 #include <string>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/vector.hpp>
-#include <boost/mpl/size.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/mpl/max.hpp>
-#include <boost/mpl/begin_end.hpp>
-#include <boost/mpl/iterator_range.hpp>
-#include <boost/mpl/advance.hpp>
-#include <boost/mpl/equal.hpp>
-#include <boost/mpl/transform.hpp>
 
 namespace boost {
 namespace di {
@@ -75,55 +65,9 @@ struct session
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-class call_stack
-{
-    typedef mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> context_type;
-
-    template<typename TContext, typename TCallStack>
-    struct equal
-      : mpl::equal<
-            mpl::iterator_range<
-                typename mpl::advance<
-                    typename mpl::begin<TCallStack>::type
-                  , typename mpl::max<
-                        mpl::int_<0>
-                      , mpl::minus<
-                            mpl::size<TCallStack>
-                          , mpl::size<TContext>
-                        >
-                    >::type
-                >::type
-              , typename mpl::end<TCallStack>::type
-            >
-          , TContext
-        >
-    { };
-
-    template<typename TContext, typename TCallStack>
-    struct apply_impl
-        : mpl::if_<
-              mpl::empty<TCallStack>
-            , mpl::int_<0>
-            , mpl::if_<
-                  equal<TContext, TCallStack>
-                , mpl::size<TContext>
-                , mpl::int_<0>
-              >
-          >
-    { };
-
-public:
-    template<typename, typename TCallStack, typename>
-    struct apply
-        : apply_impl<
-              context_type
-            , typename mpl::transform<
-                  TCallStack
-                , di::type_traits::make_plain<mpl::_>
-              >::type
-          >::type
-    { };
-};
+struct call_stack
+    : concepts::call_stack<BOOST_DI_TYPES_PASS_MPL(T)>
+{ };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 struct any_of
