@@ -62,12 +62,6 @@ class call_stack
           >
     { };
 
-    //template<typename T, typename TCallStack>
-    //struct get_type
-    //{
-        //typedef typename detail::binder<TDeps>::template resolve<T, TCallStack>::given type;
-    //};
-
 public:
     template<typename T>
     struct apply

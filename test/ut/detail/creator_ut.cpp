@@ -24,15 +24,7 @@ namespace boost {
 namespace di {
 namespace detail {
 
-class policy
-{
-public:
-    template<typename T>
-    void assert_policy()
-    { }
-};
-
-BOOST_AUTO_TEST_CASE(creator_pod) {
+BOOST_AUTO_TEST_CASE(create_pod) {
     const int i = 42;
 
     typedef fake_dependency<scopes::unique<>, int, mpl::int_<i>>::type dependency_type;
@@ -45,19 +37,6 @@ BOOST_AUTO_TEST_CASE(creator_pod) {
         >(deps, refs, fake_visitor<mpl::vector<int>>(), fake_pool<>())
     ));
 }
-
-//BOOST_AUTO_TEST_CASE(creator_interface_call_stack) {
-    //typedef fake_dependency<scopes::unique<>, if0, c0if0>::type dependency_type;
-    //fake_pool<dependency_type> deps;
-    //std::vector<aux::shared_ptr<void>> refs;
-    //struct empty_visitor
-    //{
-        //template<typename T>
-        //void operator()(const T&) const { }
-    //} visitor;
-
-    //creator<mpl::vector<dependency_type>>().create<c5, c5, mpl::vector0<>, mpl::vector0<>>(deps, refs, visitor);
-//}
 
 } // namespace detail
 } // namespace di
