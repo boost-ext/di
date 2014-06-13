@@ -21,7 +21,6 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get -qq install valgrind; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then sudo apt-get install -qq g++-4.7; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.7 90; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$CXX" == "g++" ]; then which uninstall-devtools ; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$CXX" == "g++" ]; then ls /Library/Developer ; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$CXX" == "g++" ]; then sudo /Library/Developer/uninstall-devtools --mode=all; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$CXX" == "g++" ]; then wget https://github.com/downloads/kennethreitz/osx-gcc-installer/GCC-10.7-v2.pkg; fi
