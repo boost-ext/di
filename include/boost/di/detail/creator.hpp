@@ -39,7 +39,7 @@
     class creator
     {
         template<typename T, typename TCallStack>
-        struct binder
+        struct resolve
             : TBinder<TDependecies>::template resolve<T, TCallStack>::type
         { };
 
@@ -88,7 +88,7 @@
                     BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
                       , TCallStack
                     )
-                  , binder<const U&, TCallStack>
+                  , resolve<const U&, TCallStack>
                 >(deps_, refs_, visitor_, policies_);
             }
 
@@ -115,7 +115,7 @@
                     BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
                       , TCallStack
                     )
-                  , binder<U&, TCallStack>
+                  , resolve<U&, TCallStack>
                 >(deps_, refs_, visitor_, policies_);
             }
 
@@ -132,7 +132,7 @@
                     BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
                       , TCallStack
                     )
-                  , binder<aux::auto_ptr<U>, TCallStack>
+                  , resolve<aux::auto_ptr<U>, TCallStack>
                 >(deps_, refs_, visitor_, policies_);
             }
 
@@ -150,7 +150,7 @@
                         BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
                           , TCallStack
                         )
-                      , binder<aux::unique_ptr<U>, TCallStack>
+                      , resolve<aux::unique_ptr<U>, TCallStack>
                     >(deps_, refs_, visitor_, policies_);
                 }
             )
@@ -179,7 +179,7 @@
                         BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
                           , TCallStack
                         )
-                      , binder<U, TCallStack>
+                      , resolve<U, TCallStack>
                     >(deps_, refs_, visitor_, policies_);
                 }
             )
@@ -240,7 +240,7 @@
                 BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
                   , TCallStack
                 )
-              , binder<T, TCallStack>
+              , resolve<T, TCallStack>
             >(deps, refs, visitor, policies);
         }
 
