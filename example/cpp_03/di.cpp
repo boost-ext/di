@@ -6,9 +6,9 @@
 //
 #include <cassert>
 #include <memory>
-#include <boost/di.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/typeof/typeof.hpp>
+#include <boost/di.hpp>
 
 namespace di = boost::di;
 
@@ -16,8 +16,8 @@ struct i { virtual ~i() { } };
 struct impl : i { };
 struct some_name { };
 
-struct module {
-    module(const boost::shared_ptr<i>& sp, double d, std::auto_ptr<int> ap, int i)
+struct hello {
+    hello(const boost::shared_ptr<i>& sp, double d, std::auto_ptr<int> ap, int i)
         : sp(sp)
     {
         assert(dynamic_cast<impl*>(sp.get()));
@@ -29,13 +29,13 @@ struct module {
     boost::shared_ptr<i> sp;
 };
 
-struct app {
-    app(module copy
-      , boost::shared_ptr<i> sp
-      , int i
-      , di::named<const std::string&, some_name> s
-      , float& f)
-      : str(s), f(f)
+struct world {
+    world(hello copy
+        , boost::shared_ptr<i> sp
+        , int i
+        , di::named<const std::string&, some_name> s
+        , float& f)
+        : str(s), f(f)
     {
         assert(dynamic_cast<impl*>(sp.get()));
         assert(copy.sp.get() == sp.get());
@@ -43,7 +43,7 @@ struct app {
         assert(str == "some_name");
     }
 
-    app& operator=(const app&);
+    world& operator=(const world&);
 
     std::string str;
     float& f;
@@ -59,9 +59,9 @@ int main() {
       , di::bind<float>::to(boost::ref(f))
     )));
 
-    app module_app = injector.create<app>();
+    world hello_world = injector.create<world>();
 
-    module_app.f = 42.f;
+    hello_world.f = 42.f;
     assert(f == 42.f);
 
     return 0;

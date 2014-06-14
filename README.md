@@ -8,6 +8,47 @@ This is not an official Boost library yet and there is no guarantee it will ever
 DI is C++03/C++11 header only library providing compile time, macro free constructor dependency injection functionality.
 
 ## Hello World
+
+```cpp
+#include <boost/di.hpp>
+
+namespace di = boost::di;
+
+struct hello {
+    hello(const std::shared_ptr<int>& sp, std::unique_ptr<int> up, double d)
+        : sp(sp)
+    {
+        assert(*sp == 0.0);
+        assert(*up == 0);
+        assert(d == 0.0);
+    }
+
+    std::shared_ptr<int> sp;
+};
+
+struct world {
+    world(hello copy
+        , boost::shared_ptr<int> sp
+        , const std::string& str
+        , int i)
+    {
+        assert(copy.sp.get() == sp.get());
+        assert(str == "");
+        assert(i == 0);
+    }
+};
+
+struct app {
+    app(hello, world) { }
+};
+
+int main() {
+    di::make_injector().create<app>();
+    return 0;
+}
+```
+
+## DI
 ```cpp
 #include <boost/di.hpp>
 

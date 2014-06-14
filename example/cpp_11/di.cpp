@@ -7,8 +7,6 @@
 #include <cassert>
 #include <memory>
 #include <boost/di.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/typeof/typeof.hpp>
 
 namespace di = boost::di;
 
@@ -17,25 +15,25 @@ struct impl : i { };
 struct some_name { };
 
 struct module {
-    module(const boost::shared_ptr<i>& sp, double d, std::auto_ptr<int> ap, int i)
+    module(const std::shared_ptr<i>& sp, double d, std::unique_ptr<int> up, int i)
         : sp(sp)
     {
         assert(dynamic_cast<impl*>(sp.get()));
         assert(d == 0.0); // default zero initialization
-        assert(*ap == 42);
+        assert(*up == 42);
         assert(i == 42);
     }
 
-    boost::shared_ptr<i> sp;
+    std::shared_ptr<i> sp;
 };
 
 struct app {
     app(module copy
-      , boost::shared_ptr<i> sp
-      , int i
-      , di::named<const std::string&, some_name> s
-      , float& f)
-      : str(s), f(f)
+        , boost::shared_ptr<i> sp
+        , int i
+        , di::named<const std::string&, some_name> s
+        , float& f)
+        : str(s), f(f)
     {
         assert(dynamic_cast<impl*>(sp.get()));
         assert(copy.sp.get() == sp.get());
@@ -52,14 +50,14 @@ struct app {
 int main() {
     float f = 0.f;
 
-    BOOST_AUTO(injector, (di::make_injector(
+    auto injector = di::make_injector(
         di::bind<i, impl>()
       , di::bind_int<42>()
       , di::bind<std::string>::named<some_name>::to("some_name")
       , di::bind<float>::to(boost::ref(f))
-    )));
+    );
 
-    app module_app = injector.create<app>();
+    auto module_app = injector.create<app>();
 
     module_app.f = 42.f;
     assert(f == 42.f);

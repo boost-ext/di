@@ -1359,3 +1359,53 @@ This header exists simply as a convenience to the user, including all of the hea
 [section Revision History]
 [endsect]
 
+[section References]
+    Dependency Injection in .NET
+    By: Mark Seemann
+    Publisher: Manning Publications
+    Pub. Date: September 28, 2011
+    Print ISBN-10: 1-935182-50-1
+    Print ISBN-13: 978-1-935182-50-4
+
+    Google Guice: Agile Lightweight Dependency Injection Framework
+    By: Robbie Vanbrabant
+    Publisher: Apress
+    Pub. Date: April 2008
+    Print ISBN: 978-1-59059-997-6
+
+    Mastering Ninject for Dependency Injection
+    By: Daniel Baharestani;
+    Publisher: Packt Publishing
+    Pub. Date: September 25, 2013
+    Print ISBN-13: 978-1-78216-620-7
+    Web ISBN-13: 978-1-78216-621-4
+
+    Dependency Injection: Design patterns using Spring and Guice
+    By: Dhanji R. Prasanna
+    Publisher: Manning Publications
+    Pub. Date: August 10, 2009
+    Print ISBN-13: 978-1-933988-55-9
+    Web ISBN-10: 1-933988-55-X
+
+    Design Patterns: Elements of Reusable Object-Oriented Software
+    By: Erich Gamma; Richard Helm; Ralph Johnson; John Vlissides
+    Publisher: Addison-Wesley Professional
+    Pub. Date: October 31, 1994
+    Print ISBN-10: 0-201-63361-2
+    Print ISBN-13: 978-0-201-63361-0
+
+    C++ Template Metaprogramming: Concepts, Tools, and Techniques from Boost and Beyond
+    By: David Abrahams; Aleksey Gurtovoy
+    Publisher: Addison-Wesley Professional
+    Pub. Date: December 10, 2004
+    Print ISBN-10: 0-321-22725-5
+    Print ISBN-13: 978-0-321-22725-6
+
+    C++ Coding Standards: 101 Rules, Guidelines, and Best Practices
+    By: Herb Sutter; Andrei Alexandrescu
+    Publisher: Addison-Wesley Professional
+    Pub. Date: October 25, 2004
+    Print ISBN-10: 0-321-11358-6
+    Print ISBN-13: 978-0-321-11358-0
+[endsect]
+

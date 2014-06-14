@@ -10,58 +10,36 @@
 
 namespace di = boost::di;
 
-struct i { virtual ~i() { } };
-struct impl : i { };
-struct some_name { };
-
 struct hello {
-    hello(const std::shared_ptr<i>& sp, double d, std::unique_ptr<int> up, int i)
+    hello(const std::shared_ptr<int>& sp, std::unique_ptr<int> up, double d)
         : sp(sp)
     {
-        assert(dynamic_cast<impl*>(sp.get()));
-        assert(d == 0.0); // default zero initialization
-        assert(*up == 42);
-        assert(i == 42);
+        assert(*sp == 0.0);
+        assert(*up == 0);
+        assert(d == 0.0);
     }
 
-    std::shared_ptr<i> sp;
+    std::shared_ptr<int> sp;
 };
 
 struct world {
     world(hello copy
-        , boost::shared_ptr<i> sp
-        , int i
-        , di::named<const std::string&, some_name> s
-        , float& f)
-        : str(s), f(f)
+        , boost::shared_ptr<int> sp
+        , const std::string& str
+        , int i)
     {
-        assert(dynamic_cast<impl*>(sp.get()));
         assert(copy.sp.get() == sp.get());
-        assert(i == 42);
-        assert(str == "some_name");
+        assert(str == "");
+        assert(i == 0);
     }
+};
 
-    world& operator=(const world&);
-
-    std::string str;
-    float& f;
+struct app {
+    app(hello, world) { }
 };
 
 int main() {
-    float f = 0.f;
-
-    auto injector = di::make_injector(
-        di::bind<i, impl>()
-      , di::bind_int<42>()
-      , di::bind<std::string>::named<some_name>::to("some_name")
-      , di::bind<float>::to(boost::ref(f))
-    );
-
-    auto hello_world = injector.create<world>();
-
-    hello_world.f = 42.f;
-    assert(f == 42.f);
-
+    di::make_injector().create<app>();
     return 0;
 }
 
