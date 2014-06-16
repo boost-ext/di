@@ -4,7 +4,7 @@
 
 DI is C++03/C++11 header only library providing compile time, macro free constructor dependency injection functionality.
 
-Features
+[section Features]
 
 * Header only library
 * Architecture independent (tested on x86/x86\_64)
@@ -21,7 +21,9 @@ Features
 * Named parameters (named\<int, my\_int\>)
 * Runtime visitor throughout created objects (useful for generation dependency diagrams)
 
-Dependencies
+[endsect]
+
+[section Dependencies]
 
 * Boost.Bind
 * Boost.Config
@@ -35,17 +37,21 @@ Dependencies
 * Boost.Type_Traits
 * Boost.Utility
 
-Configuration
-    BOOST_MPL_LIMIT_VECTOR_SIZE
-    BOOST_DI_CTOR_CFG_VA_ARGS || BOOST_DI_CTOR_CFG_BRACKET
-    #define BOOST_DI_CONSTRUCTOR boost_di_constructor__
-    #define BOOST_DI_CREATE boost_di_create__
+[endsect]
 
-Tested Compilers
+[section Supported Compilers]
 
-[/
-[link di.supported_compilers]
-/]
+* GCC 4.7.3/4.8.1 * Clang 3.2/3.3
+* Intel C++ 14.0.0
+* MinGW 4.7.3/4.8.1
+* Visual Studio 2013 RC / 2013
+
+travis
+appveyor
+valgrind
+drmemory
+
+[endsect]
 
 [endsect]
 
