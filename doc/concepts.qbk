@@ -1,0 +1,172 @@
+[def __BOOST_DI_INJECT [link di.reference.ctor `BOOST_DI_INJECT `]]
+
+[section Concepts]
+
+[section constructor injection]
+
+Constructor injection is straightforward. Because Java technology guarantees constructor invocation, you don't need to worry about objects arriving in an uninitialized state — whether or not Guice creates them. You can also mark your fields final.
+According to the Guice best practices guide, constructor injection is the preferred way to ask for your dependencies
+
+[section BOOST_DI_INJECT]
+
+[table BOOST_DI_INJECT
+    [
+        [
+            struct c {
+                BOOST_DI_INJECT(c, int i = 0, double = 0.0) { }
+            };
+        ]
+        [
+            struct c {
+                static void boost_di_ctor__(int i = 0, double = 0.0);
+                c(int i = 0, double = 0.0) { }
+            };
+        ]
+    ]
+]
+
+[endsect]
+
+[section BOOST_DI_INJECT_TRAITS]
+
+[table BOOST_DI_INJECT_TRAITS
+    [
+        [
+            struct c {
+                BOOST_DI_INJECT_TRAITS(int, named<double,  my_name>);
+                c(int, double) { }
+            };
+        ]
+        [
+            struct c {
+                static void boost_di_ctor__(int, named<double, my_name>);
+                c(int, double) { }
+            };
+        ]
+    ]
+]
+
+[endsect]
+
+[section BOOST_DI_CREATE]
+
+[table BOOST_DI_CREATE
+    [
+        [
+            struct i_factory {
+                i* BOOST_DI_CREATE(int i) {
+                    if (i) {
+                        return new impl();
+                    }
+
+                    return nullptr;
+                }
+            };
+        ]
+        [
+            struct i_factory {
+                i* boost_di_create__(int i) {
+                    if (i) {
+                        return new impl();
+                    }
+
+                    return nullptr;
+                }
+            };
+        ]
+    ]
+]
+
+    class i_factory
+    {
+    public:
+        i* BOOST_DI_CREATE(eid id) {
+            switch(id) {
+                case e1: return new impl1();
+                case e2: return new impl2();
+            }
+
+            return nullptr;
+        }
+    };
+
+    int main() {
+        auto injector = di::make_injector(
+            di::bind<eid>::to(e1)
+          , di::bind<i, i_factory>()
+        );
+
+        injector.create<c>();
+
+        return 0;
+    }
+
+[endsect]
+
+[section di::ctor_traits]
+
+    struct c
+    {
+        c(int, int) { }
+    };
+
+    namespace boost {
+    namespace di {
+
+    template<>
+    struct ctor_traits<c>
+    {
+        static void ctor(int, di::named<int, name>);
+    };
+
+    } // namespace di
+    } // namespace boost
+
+    injector.create<c>();
+
+[endsect]
+
+[section binding]
+
+DI is designed to do popular things easy:
+
+bind<int>::in_call<call_stack<c1>, call_stack<c1, c2, c3>>()
+
+Binding Resolution
+
+The injector's process of resolving an injection request depends on the bindings and the annotations of the types involved. Here's how an injection request is resolved:
+
+Use explicit bindings.
+If the binding links to another, follow this resolution algorithm for that.
+If the binding specifies an instance, return that.
+If the binding specifies a provider, use that.
+Ask a parent injector. If this injector has a parent injector, ask that to resolve the binding. If it succeeds, use that. Otherwise proceed.
+Ask child injectors. If any child injector already has this binding, give up. A blacklist of bindings from child injectors is kept so injectors don't need to maintain references to their child injectors.
+Handle Provider injections. If the type is Provider<T>, resolve T instead, using the same binding annotation, if it exists.
+Convert constants. If there is a constant string bound with the same annotation, and a TypeConverter that supports this type, use the converted String.
+If the dependency has a binding annotation, give up. Guice will not create default bindings for annotated dependencies.
+If the dependency is an array or enum, give up.
+Handle TypeLiteral injections. If the type is TypeLiteral<T>, inject that value, using context for the value of the type parameter.
+Use resolution annotations. If the dependency's type has @ImplementedBy or @ProvidedBy, lookup the binding for the referenced type and use that.
+If the dependency is abstract or a non-static inner class, give up.
+Use a single @Inject or public no-arguments constructor.
+Validate bindings for all dependencies — the constructor's parameters, plus @Inject methods and fields of the type and all supertypes.
+Invoke the constructor.
+Inject all fields. Supertype fields are injected before subtype fields.
+Inject all methods. Supertype methods are injected before subtype methods.
+
+[endsect]
+
+[section injector]
+[endsect]
+
+[section named]
+[endsect]
+
+[section provider]
+[endsect]
+
+[endsect]
+
+[endsect]
+

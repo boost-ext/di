@@ -1,0 +1,137 @@
+[section Examples]
+
+[section hello world]
+
+[table
+    [[C++98/03] [C++11]]
+    [
+        [```
+            #include <boost/di.hpp>
+
+            namespace di = boost::di;
+
+            namespace {
+            struct i { virtual ~i() { } };
+            struct impl : i { };
+            struct c
+            {
+                BOOST_DI_CTOR(c
+                  , boost::shared_ptr<i> p1     // i->impl, p1 == hello_world.p1
+                  , double p2                   // p2 = 0.0
+                ) { }
+            };
+
+            struct hello_world
+            {
+                BOOST_DI_CTOR(hello_world
+                    , std::shared_ptr<i> p1     // i->impl
+                    , std::unique_ptr<i> p3     // i->impl, p3 != p1 != c.p1
+                    , c p4                      // by value
+                    , int p5                    // p5 = 0
+                ) { }
+            };
+            } // namespace
+
+            int main() {
+                using injector_t = di::injector<
+                    impl // -> di::bind<i, impl>
+                         // -> di::deduce<di::bind<i, impl>>
+                         // -> di::singleton<di::bind<i, impl>>
+                >;
+
+                injector_t().create<hello_world>();
+            }
+        ```]
+
+        [```
+            #include <boost/di.hpp>
+
+            namespace di = boost::di;
+
+            namespace {
+            struct i { virtual ~i() { } };
+            struct impl : i { };
+            struct c
+            {
+                BOOST_DI_CTOR(c
+                  , boost::shared_ptr<i> p1     // i->impl, p1 == hello_world.p1
+                  , double p2                   // p2 = 0.0
+                ) { }
+            };
+
+            struct hello_world
+            {
+                BOOST_DI_CTOR(hello_world
+                    , std::shared_ptr<i> p1     // i->impl
+                    , std::unique_ptr<i> p3     // i->impl, p3 != p1 != c.p1
+                    , c p4                      // by value
+                    , int p5                    // p5 = 0
+                ) { }
+            };
+            } // namespace
+
+            int main() {
+                using injector_t = di::injector<
+                    impl // -> di::bind<i, impl>
+                         // -> di::deduce<di::bind<i, impl>>
+                         // -> di::singleton<di::bind<i, impl>>
+                >;
+
+                injector_t().create<hello_world>();
+            }
+        ```]
+    ]
+    [
+        [full code example: [@http://examples/hello_world.cpp hello_world_03.cpp]]
+        [full code example: [@http://examples/hello_world.cpp hello_world_11.cpp]]
+    ]
+]
+
+[endsect]
+
+[section boost and smart pointers]
+
+[note conversion between boost and std smart pointers cause overhead and weak ptr conversions aren't supported]
+[endsect]
+
+[section concepts]
+[endsect]
+
+[section policies]
+[endsect]
+
+[section custom policy]
+[endsect]
+
+[section scopes / deduce / per_request / singleton / session]
+[endsect]
+
+[section custom scope]
+[endsect]
+
+[section ctor]
+[endsect]
+
+[section factory]
+[endsect]
+
+[section externals]
+[endsect]
+
+[section injector/make injector]
+[endsect]
+
+[section named parameters]
+[endsect]
+
+[section provider]
+[endsect]
+
+[section testing]
+[endsect]
+
+[section visitor / text visitor]
+[endsect]
+
+[endsect]
+

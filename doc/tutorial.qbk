@@ -1,0 +1,46 @@
+[section Tutorial]
+
+[table
+    [[Write your code so it's flexible...] [...and let DI glue it together for you]]
+    [
+        [```
+        class Samurai
+        {
+        public:
+            Samurai(std::shared_ptr<IWeapon> weapon)
+                : weapon(weapon)
+            { }
+
+        private:
+            std::shared_ptr<IWeapon> weapon;
+        };
+        ```]
+
+        [```
+            using injector_t = di::injector<Sword>;
+      // or using injector_t = di::injector<bind<IWeapon, Sword>>
+        ```]
+    ]
+]
+
+But first, Guice needs to be configured to build the graph exactly as you want it.
+To illustrate, we'll start the RealBillingService class that accepts its dependent interfaces CreditCardProcessor and TransactionLog in its constructor. To make it explicit that the RealBillingService constructor is invoked by Guice, we add the BOOST_DI_CTOR:
+"
+
+configure:
+
+using config = injector<DatabaseTransactionLog>;
+or
+using config = injector<bind<TransactionLog, DatabaseTransactionLog>>;
+
+using config = injector<PaypalCreditCardProcessor>;
+or
+using config = injector<bind<CreditCardProcessor, PaypalCreditCardProcessor>>;
+
+The modules are the building blocks of an injector, which is Guice's object-graph builder
+
+auto billingService = config().create<RealBillingService>();
+auto billingService = make_injector(config()).create<RealBillingService>();
+
+[endsect]
+

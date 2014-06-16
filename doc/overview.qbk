@@ -1,0 +1,48 @@
+[section Overview]
+
+* supports dependency injection by constructors
+* supports scopes (deduce, per_request, singleton, session) + custom scopes
+* supports scope deduction from parameter (by default, ex: shared_ptr -> singleton, unique_ptr, lvalue -> per_request)
+* supports C++03 and C++11 standard
+* supports c++11 smart pointers, rvalue references and combinations between boost and std smart pointers
+* supports named parameters (named<int, my_int>>
+* supports creation of dynamic dependent factories
+* supports binding external values (passed by the client)
+* supports generation of constructor traits via python script using clang (to avoid using BOOST_DI_CTOR macro)
+* supports compile time policies (circular dependencies, creation ownership, not safe arguments, undefined behaviors)
+* supports module structure (injectors might be used separately or together)
+* supports run time visitor through the objection creation (ex: for generation UML diagrams)
+* supports mocks testing facilities (ex: to create mock hierarchy)
+* minimal overhead / compile time approach
+
+[section Getting Started]
+
+Requirements
+
+* Boost.DI depends on some Boost libraries:
+* Boost.Config
+* Boost.SmartPtr
+* Boost.MPL
+* Boost.Utility/enable_if
+* Boost.TypeTraits
+
+Header only library
+
+Exception safety
+
+Thread Safety
+
+Configuration
+    BOOST_MPL_LIMIT_VECTOR_SIZE
+    BOOST_DI_CTOR_CFG_VA_ARGS || BOOST_DI_CTOR_CFG_BRACKET
+    #define BOOST_DI_CONSTRUCTOR boost_di_constructor__
+    #define BOOST_DI_CREATE boost_di_create__
+
+Tested Compilers
+
+see tests.qbk
+
+[endsect]
+
+[endsect]
+

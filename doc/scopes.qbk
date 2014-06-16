@@ -1,0 +1,136 @@
+[section Scopes]
+
+By default, DI returns a deduced instance each time it supplies a value
+
+table - scope_traits
+    per_request, T*, T
+    singleton, T*, T
+
+Applying scopes:
+
+make_injector(
+    singleton<impl>
+  , per_request<impl2>
+);
+
+Singletons:
+    has to be thread safe
+
+    namespace boost {
+    namespace di {
+    namespace scopes {
+
+    class scope {
+    public:
+        template<typename T, typename = T>
+        class scope {
+        public:
+            typedef unspecified result_type;
+            // typedef unspecified is_priority;
+
+            template<typename... T>
+            result_type create(const T&...);
+        };
+    };
+
+    } // namespace scopes
+    } // namespace di
+    } // namespace boost
+
+[section deduce]
+
+Synopsis
+
+    class deduce {
+    public:
+        template<typename T, typename = T>
+        class scope;
+    };
+
+Description
+
+
+Header
+
+    #include <boost/di/scopes/deduce.hpp>
+
+Example
+
+    using injector_t = injector<impl>;
+    assert(injector_t().create<impl2>());
+
+
+    injector<
+        bind<i, impl>
+    >;
+
+    injector<
+        scope<deduce>::bind<
+            bind<i, impl>
+        >
+    >;
+
+[endsect]
+
+[section external]
+
+    auto injector = make_injector(
+        bind<int>::to(0)
+      , bind<int>::in_call<call_stack<some_class>>::to(1)
+      , bind<int>::in_call<call_stack<some_class>>::in_name<some_name>::to(2)
+    );
+
+
+[endsect]
+
+[section per_request]
+
+    auto injector = make_injector(
+        per_request<int>
+      , per_request<
+    );
+
+[endsect]
+
+[section singleton]
+[endsect]
+
+[section session]
+[endsect]
+
+[section custom_scope]
+
+    struct entry { };
+    struct exit { };
+
+    struct custom_scope {
+        template<typename T, typename>
+        struct scope
+        {
+            typedef T result_type;
+            //typedef scope is_priority;
+
+            void call(const entry&);
+            void call(const exit&);
+
+            template<typename... Args>
+            result_type create(Args&&... args);
+        };
+    };
+
+    using injector_t = injector<
+        scope<custom_scope>::bind<
+            types...
+        >
+    >;
+
+    injector_t injector;
+
+    injector.call(entry());
+    injector.create<type>();
+    injector.call(exit());
+
+[endsect]
+
+[endsect]
+

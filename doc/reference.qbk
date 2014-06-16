@@ -1,0 +1,669 @@
+[section Reference]
+
+[section Header <boost/di.hpp>]
+This header exists simply as a convenience to the user, including all of the headers in the boost/di directory.
+
+    // ctor
+    #include "boost/di/ctor.hpp"
+
+    // concepts
+    #include "boost/di/concepts.hpp"
+
+    // scopes
+    #include "boost/di/scopes/deduce.hpp"
+    #include "boost/di/scopes/external.hpp"
+    #include "boost/di/scopes/per_request.hpp"
+    #include "boost/di/scopes/session.hpp"
+    #include "boost/di/scopes/singleton.hpp"
+
+    // injector
+    #include "boost/di/injector.hpp"
+    #include "boost/di/make_injector.hpp"
+
+    // utilities
+    #include "boost/di/named.hpp"
+    #include "boost/di/provider.hpp"
+
+    // policies
+    #include "boost/di/policies/arguments_permission.hpp"
+    #include "boost/di/policies/binding_correctness.hpp"
+    #include "boost/di/policies/circular_dependencies.hpp"
+    #include "boost/di/policies/creation_ownership.hpp"
+
+[endsect]
+
+[section Header <boost/di/concepts/bind.hpp>]
+
+    namespace boost {
+    namespace di {
+    namespace concepts {
+
+    template<
+        typename TExpected
+      , typename TGiven
+    >
+    struct bind {
+        template<typename... T>
+        struct in_call {
+            template<TName>
+            struct in_name;
+        };
+
+        template<TName>
+        struct in_name {
+            template<typename... T>
+            struct in_call;
+        };
+    };
+
+    } // namespace concepts
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/concepts/dependency.hpp>]
+
+    namespace boost {
+    namespace di {
+    namespace concepts {
+
+    template<
+        typename TScope
+      , typename TExpected
+      , typename TGiven = TExpected
+      , typename TContext = mpl::vector0<>
+      , typename TBind = typename mpl::lambda<
+            is_same<mpl::_1, TExpected>
+        >::type
+    >
+    class dependency {
+    public:
+        typedef dependency type;
+        typedef typename TScope scope;
+        typedef typename TExpected expected;
+        typedef typename TGiven given;
+        typedef TContext context;
+        typedef TBind bind;
+
+        template<typename T>
+        struct rebind {
+            typedef dependency<T, TExpected, TGiven, TContext, TBind> other;
+        };
+
+        dependency() { }
+
+        template<typename T>
+        explicit dependency(const T&);
+
+        template<typename T>
+        dependency<T> to(const T&);
+
+        template<typename T>
+        dependency<T> to(T&);
+
+        template<typename T>
+        dependency<T> to(shared_ptr<T>);
+
+        template<typename T>
+        dependency<T> to(std::shared_ptr<T>);
+    };
+
+    } // namespace concepts
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/concepts/scope.hpp>]
+
+    namespace boost {
+    namespace di {
+    namespace concepts {
+
+    template<typename TScope>
+    struct scope {
+        template<typename... T>
+        struct bind {
+            template<TName>
+            struct in_name;
+        };
+
+        template<T>
+        struct bind {
+            template<typename... T>
+            struct in_call {
+                template<TName>
+                struct in_name;
+            };
+
+            template<typename TName>
+            struct in_name {
+                template<typename... T>
+                struct in_call;
+            };
+        };
+    };
+
+    } // namespace concepts
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/convertibles/copy.hpp>]
+
+    namespace boost {
+    namespace di {
+    namespace concepts {
+
+    template<typename T>
+    struct copy {
+        template<typename I>
+        explicit copy(const I&);
+
+        operator T*() const;
+
+        template<typename I, typename TName>
+        operator named<I, TName>() const;
+
+        template<typename I>
+        operator shared_ptr<I>() const;
+
+        template<typename I, typename TName>
+        operator named<shared_ptr<I>, TName>() const;
+
+        template<typename I>
+        operator std::auto_ptr<I>&() const;
+
+        template<typename I, typename TName>
+        operator named<std::auto_ptr<I>, TName>&() const;
+
+        template<typename I>
+        operator std::shared_ptr<I>() const;
+
+        template<typename I, typename TName>
+        operator named<std::shared_ptr<I>, TName>() const;
+
+        template<typename I>
+        operator std::unique_ptr<I>() const;
+
+        template<typename I, typename TName>
+        operator named<std::unique_ptr<I>, TName>() const;
+    };
+
+    } // namespace concepts
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/convertibles/ref.hpp>]
+
+    namespace boost {
+    namespace di {
+    namespace concepts {
+
+    template<typename T>
+    struct ref {
+        explicit ref(const reference_wrapper<T>&);
+
+        operator T&() const;
+
+        template<typename I, typename TName>
+        operator named<I, TName>() const;
+    };
+
+    } // namespace concepts
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/convertibles/shared.hpp>]
+
+    namespace boost {
+    namespace di {
+    namespace concepts {
+
+    template<typename T>
+    struct shared {
+        shared() { }
+        explicit shared(shared_ptr<T>);
+        explicit shared(std::shared_ptr<T>);
+
+        bool operator!() const;
+
+        void reset();
+
+        void reset(T*);
+
+        template<typename I>
+        operator shared_ptr<I>() const;
+
+        template<typename I, typename TName>
+        operator named<shared_ptr<I>, TName>() const;
+
+        template<typename I>
+        operator weak_ptr<I>() const;
+
+        template<typename I, typename TName>
+        operator named<weak_ptr<I>, TName>() const;
+
+        template<typename I>
+        operator std::shared_ptr<I>() const;
+
+        template<typename I, typename TName>
+        operator named<std::shared_ptr<I>, TName>() const;
+    };
+
+    } // namespace concepts
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/convertibles/value.hpp>]
+
+    namespace boost {
+    namespace di {
+    namespace concepts {
+
+    template<typename T>
+    struct value {
+        explicit value(T);
+
+        operator T() const;
+        operator T&&() const;
+        template<typename I, typename TName>
+        operator named<I, TName>() const;
+    };
+
+    } // namespace concepts
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/concepts.hpp>]
+
+    namespace boost {
+    namespace di {
+
+    template<typename TExpected, typename TGiven = TExpected>
+    struct bind;
+
+    template<int N>
+    struct bind_int;
+
+    template<typename T>
+    struct bind_string;
+
+    template<typename TScope>
+    struct scope;
+
+    template<typename... T>
+    struct deduce;
+
+    template<typename... T>
+    struct per_request;
+
+    template<typename... T>
+    struct singleton;
+
+    template<typename... T>
+    struct session;
+
+    template<typename... T>
+    struct call_stack;
+
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/ctor.hpp>]
+    BOOST_DI_CTOR_TRAITS(...)
+
+    BOOST_DI_CTOR(type, ...)
+
+[endsect]
+
+[section Header <boost/di/injector.hpp>]
+
+    namespace boost {
+    namespace di {
+
+    template<typename...>
+    class injector {
+    public:
+        typedef unspecified deps;
+        typedef unspecified policies;
+
+        template<typename... TArgs>
+        explicit injector(const TArgs&...);
+
+        template<typename... TArgs>
+        injector<TArgs...> operator()(const TArgs&...);
+
+        template<typename T>
+        T create();
+
+        template<typename T, typename TVisitor>
+        T create(const TVisitor&);
+
+        template<typename TAction>
+        void call(const TAction&);
+    };
+
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/make_injector.hpp>]
+
+    namespace boost {
+    namespace di {
+
+    template<typename... T>
+    injector<T...> make_injector(const T...&);
+
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/named.hpp>]
+
+    namespace boost {
+    namespace di {
+
+    template<
+        typename T
+      , typename TName = void
+      , typename = void
+    >
+    class named {
+    public:
+        typedef T named_type;
+        typedef TName name;
+
+        template<typename U>
+        struct rebind
+        {
+            typedef named<U, TName> other;
+        };
+
+        named(T object = T()); //non explicit
+
+        operator T() const;
+        operator T&();
+    };
+
+    template<
+        typename T
+      , typename TName = void
+      , typename enable_if<is_smart_ptr<T> >::type
+    >
+    class named {
+        typedef typename T::element_type element_type;
+
+    public:
+        typedef T named_type;
+        typedef TName name;
+
+        template<typename U>
+        struct rebind
+        {
+            typedef named<U, TName> other;
+        };
+
+        named(T = T()); //non explicit
+
+        named(element_type*); // non explicit
+
+        operator T() const;
+        element_type* operator->() const;
+        element_type& operator*() const;
+        element_type* get() const;
+
+        void reset();
+        void reset(element_type*);
+    };
+
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/provider.hpp>]
+
+    namespace boost {
+    namespace di {
+
+    template<typename T>
+    class provider {
+    public:
+        virtual ~provider();
+        virtual T get() const = 0;
+    };
+
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/scopes/deduce.hpp>]
+
+    namespace boost {
+    namespace di {
+    namespace scopes {
+
+    class deduce {
+    public:
+        template<typename, typename>
+        class scope { };
+    };
+
+    } // namespace scopes
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/scopes/external.hpp>]
+
+    namespace boost {
+    namespace di {
+    namespace scopes {
+
+    template<
+        template<typename> class TConvertible = convertibles::value
+    >
+    class external {
+    public:
+        typedef unspecified is_priority;
+
+        template<typename TExpected, typename = TExpected>
+        class scope {
+        public:
+            typedef TConvertible<TExpected> result_type;
+
+            template<typename T>
+            explicit scope(const T&);
+
+            template<typename... T>
+            result_type create(const T&...);
+        };
+    };
+
+    } // namespace scopes
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/scopes/per_request.hpp>]
+
+    namespace boost {
+    namespace di {
+    namespace scopes {
+
+    template<
+        template<typename> class TConvertible = convertibles::copy
+    >
+    class per_request {
+    public:
+        template<typename TExpected, typename = TExpected>
+        class scope {
+        public:
+            typedef TConvertible<TExpected> result_type;
+
+            template<typename... T>
+            result_type create(const T&...);
+        };
+    };
+
+    } // namespace scopes
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/scopes/session.hpp>]
+
+    namespace boost {
+    namespace di {
+    namespace scopes {
+
+    template<
+        template<typename> class TConvertible = convertibles::shared
+    >
+    class session {
+    public:
+        template<typename TExpected, typename = TExpected>
+        class scope {
+        public:
+            typedef TConvertible<TExpected> result_type;
+
+            template<typename... T>
+            result_type create(const T&...);
+        };
+    };
+
+    } // namespace scopes
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/scopes/singleton.hpp>]
+
+    namespace boost {
+    namespace di {
+    namespace scopes {
+
+    template<
+        template<typename> class TConvertible = convertibles::shared
+    >
+    class singleton {
+    public:
+        template<typename TExpected, typename = TExpected>
+        class scope {
+        public:
+            typedef TConvertible<TExpected> result_type;
+
+            template<typename... T>
+            result_type create(const T&...);
+        };
+    };
+
+    } // namespace scopes
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/policies/arguments_permission.hpp>]
+
+    namespace boost {
+    namespace di {
+    namespace policies {
+
+    struct allow_smart_ptrs;
+    struct allow_refs;
+    struct allow_rvalue_refs;
+    struct allow_ptrs;
+    struct allow_copies;
+
+    template<typename... T>
+    class arguments_permission {
+    public:
+        template<typename TDeps, typename T>
+        void assert_policy() { }
+    };
+
+    } // namespace policies
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/policies/binding_correctness.hpp>]
+
+    namespace boost {
+    namespace di {
+    namespace policies {
+
+    class binding_correctness {
+    public:
+        template<typename TDeps, typename T>
+        void assert_policy() { }
+        struct verify;
+    };
+
+    } // namespace policies
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/policies/circular_dependencies.hpp>]
+
+    namespace boost {
+    namespace di {
+    namespace policies {
+
+    class circular_dependencies {
+    public:
+        template<typename TDeps, typename TGiven>
+        void assert_policy() { }
+    };
+
+    } // namespace policies
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[section Header <boost/di/policies/creation_ownership.hpp>]
+
+    namespace boost {
+    namespace di {
+    namespace policies {
+
+    class creation_ownership {
+    public:
+        template<typename TDeps, typename TGiven>
+        void assert_policy() { }
+    };
+
+    } // namespace policies
+    } // namespace di
+    } // namespace boost
+
+[endsect]
+
+[endsect]
+
