@@ -1,0 +1,15 @@
+[section Introduction & Motivation]
+
+DI is C++03/C++11 header only library providing compile time, macro free constructor dependency injection functionality.
+
+"Don't call us, we'll call you", Hollywood principle
+
+* for using Dependency Injection
+
+* for using Dependency Injection Framework
+
+[import ../example/cpp_11/motivation.cpp]
+[example]
+
+[endsect]
+

@@ -23,7 +23,7 @@
 
 [caution This is not an official Boost library yet and there is no guarantee it will ever be!]
 
-[include motivation.qbk]
+[include introduction_motivation.qbk]
 [include overview.qbk]
 [include design.qbk]
 [include tutorial.qbk]
