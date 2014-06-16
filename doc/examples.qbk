@@ -1,137 +1,2812 @@
 [section Examples]
-
 [section Hello World]
-
 [table
-    [[C++98/03] [C++11]]
-    [
-        [```
-            #include <boost/di.hpp>
+[[C++98/03] [C++11]]
+[
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <cassert>
+#include <memory>
+#include <boost/di.hpp>
 
-            namespace di = boost::di;
+namespace di = boost::di;
 
-            namespace {
-            struct i { virtual ~i() { } };
-            struct impl : i { };
-            struct c
-            {
-                BOOST_DI_CTOR(c
-                  , boost::shared_ptr<i> p1     // i->impl, p1 == hello_world.p1
-                  , double p2                   // p2 = 0.0
-                ) { }
-            };
+struct hello {
+    hello(const std::shared_ptr<int>& sp, std::unique_ptr<int> up, double d)
+        : sp(sp)
+    {
+        assert(*sp == 0.0);
+        assert(*up == 0);
+        assert(d == 0.0);
+    }
 
-            struct hello_world
-            {
-                BOOST_DI_CTOR(hello_world
-                    , std::shared_ptr<i> p1     // i->impl
-                    , std::unique_ptr<i> p3     // i->impl, p3 != p1 != c.p1
-                    , c p4                      // by value
-                    , int p5                    // p5 = 0
-                ) { }
-            };
-            } // namespace
+    std::shared_ptr<int> sp;
+};
 
-            int main() {
-                using injector_t = di::injector<
-                    impl // -> di::bind<i, impl>
-                         // -> di::deduce<di::bind<i, impl>>
-                         // -> di::singleton<di::bind<i, impl>>
-                >;
+struct world {
+    world(hello copy
+        , boost::shared_ptr<int> sp
+        , const std::string& str
+        , int i)
+    {
+        assert(copy.sp.get() == sp.get());
+        assert(str == "");
+        assert(i == 0);
+    }
+};
 
-                injector_t().create<hello_world>();
-            }
-        ```]
+struct app {
+    app(hello, world) { }
+};
 
-        [```
-            #include <boost/di.hpp>
+int main() {
+    di::make_injector().create<app>();
+    return 0;
+}
 
-            namespace di = boost::di;
+```]
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <cassert>
+#include <memory>
+#include <boost/di.hpp>
 
-            namespace {
-            struct i { virtual ~i() { } };
-            struct impl : i { };
-            struct c
-            {
-                BOOST_DI_CTOR(c
-                  , boost::shared_ptr<i> p1     // i->impl, p1 == hello_world.p1
-                  , double p2                   // p2 = 0.0
-                ) { }
-            };
+namespace di = boost::di;
 
-            struct hello_world
-            {
-                BOOST_DI_CTOR(hello_world
-                    , std::shared_ptr<i> p1     // i->impl
-                    , std::unique_ptr<i> p3     // i->impl, p3 != p1 != c.p1
-                    , c p4                      // by value
-                    , int p5                    // p5 = 0
-                ) { }
-            };
-            } // namespace
+struct hello {
+    hello(const std::shared_ptr<int>& sp, std::unique_ptr<int> up, double d)
+        : sp(sp)
+    {
+        assert(*sp == 0.0);
+        assert(*up == 0);
+        assert(d == 0.0);
+    }
 
-            int main() {
-                using injector_t = di::injector<
-                    impl // -> di::bind<i, impl>
-                         // -> di::deduce<di::bind<i, impl>>
-                         // -> di::singleton<di::bind<i, impl>>
-                >;
+    std::shared_ptr<int> sp;
+};
 
-                injector_t().create<hello_world>();
-            }
-        ```]
-    ]
-    [
-        [full code example: [@http://examples/hello_world.cpp hello_world_03.cpp]]
-        [full code example: [@http://examples/hello_world.cpp hello_world_11.cpp]]
-    ]
+struct world {
+    world(hello copy
+        , boost::shared_ptr<int> sp
+        , const std::string& str
+        , int i)
+    {
+        assert(copy.sp.get() == sp.get());
+        assert(str == "");
+        assert(i == 0);
+    }
+};
+
+struct app {
+    app(hello, world) { }
+};
+
+int main() {
+    di::make_injector().create<app>();
+    return 0;
+}
+
+```]
 ]
-
+[
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+]
+]
 [endsect]
-
-[section Boost and smart pointers]
-
-[note conversion between boost and std smart pointers cause overhead and weak ptr conversions aren't supported]
-[endsect]
-
-[section Concepts]
-[endsect]
-
-[section Policies]
-[endsect]
-
-[section Custom policy]
-[endsect]
-
-[section Scopes / deduce / unique / shared / session / external]
-[endsect]
-
-[section Custom Scope]
-[endsect]
-
 [section Inject]
-[endsect]
+[table
+[[C++98/03] [C++11]]
+[
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <cassert>
+#include <boost/di.hpp>
 
-[section Factory]
-[endsect]
+namespace di = boost::di;
 
-[section Externals]
-[endsect]
+namespace {
 
-[section Injector/Make Injector]
-[endsect]
+struct name { };
 
-[section Named parameters]
-[endsect]
+struct c0
+{
+    c0(int i1, di::named<int, name> i2 = 0) {
+        assert(i1 == 0);
+        assert(i2 == 42);
+    }
+};
 
-[section Provider]
-[endsect]
+struct c1
+{
+    BOOST_DI_INJECT(c1, int i1, di::named<int, name> i2 = 0) {
+        assert(i1 == 0);
+        assert(i2 == 42);
+    }
+};
 
+struct c2
+{
+    BOOST_DI_INJECT_TRAITS(int, di::named<int, name>);
+    c2(int i1, int i2 = 0) {
+        assert(i1 == 0);
+        assert(i2 == 42);
+    }
+};
+
+struct c3
+{
+    static void BOOST_DI_INJECTOR(int, di::named<int, name>);
+    c3(int i1, int i2 = 0) {
+        assert(i1 == 0);
+        assert(i2 == 42);
+    }
+};
+
+struct c4
+{
+    c4(int i1, int i2 = 0) {
+        assert(i1 == 0);
+        assert(i2 == 42);
+    }
+};
+
+} // namespace
+
+namespace boost {
+namespace di {
+
+template<>
+struct ctor_traits<c4>
+{
+    BOOST_DI_INJECT_TRAITS(int, di::named<int, name>);
+};
+
+} // namespace di
+} // namespace boost
+
+int main() {
+    di::injector<
+        di::bind_int<42>::named<name>
+    > injector;
+
+    injector.create<c0>();
+    injector.create<c1>();
+    injector.create<c2>();
+    injector.create<c3>();
+    injector.create<c4>();
+}
+
+```]
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <cassert>
+#include <boost/di.hpp>
+
+namespace di = boost::di;
+
+namespace {
+
+struct name { };
+
+struct c0
+{
+    c0(int i1, di::named<int, name> i2 = 0) {
+        assert(i1 == 0);
+        assert(i2 == 42);
+    }
+};
+
+struct c1
+{
+    BOOST_DI_INJECT(c1, int i1, di::named<int, name> i2 = 0) {
+        assert(i1 == 0);
+        assert(i2 == 42);
+    }
+};
+
+struct c2
+{
+    BOOST_DI_INJECT_TRAITS(int, di::named<int, name>);
+    c2(int i1, int i2 = 0) {
+        assert(i1 == 0);
+        assert(i2 == 42);
+    }
+};
+
+struct c3
+{
+    static void BOOST_DI_INJECTOR(int, di::named<int, name>);
+    c3(int i1, int i2 = 0) {
+        assert(i1 == 0);
+        assert(i2 == 42);
+    }
+};
+
+struct c4
+{
+    c4(int i1, int i2 = 0) {
+        assert(i1 == 0);
+        assert(i2 == 42);
+    }
+};
+
+} // namespace
+
+namespace boost {
+namespace di {
+
+template<>
+struct ctor_traits<c4>
+{
+    BOOST_DI_INJECT_TRAITS(int, di::named<int, name>);
+};
+
+} // namespace di
+} // namespace boost
+
+int main() {
+    di::injector<
+        di::bind_int<42>::named<name>
+    > injector;
+
+    injector.create<c0>();
+    injector.create<c1>();
+    injector.create<c2>();
+    injector.create<c3>();
+    injector.create<c4>();
+}
+
+```]
+]
+[
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+]
+]
+[endsect]
+[section Motivation]
+[table
+[[C++98/03] [C++11]]
+[
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+
+//[example
+#include <memory>
+
+/*<<include di headers>>*/
+#include <boost/di.hpp>
+
+/*<<Define class as usual>>*/
+class app {
+public:
+    app(const std::shared_ptr<int>&
+      , boost::shared_ptr<int>
+      , std::unique_ptr<int>
+      , double
+      , int
+      , const std::string&)
+    { }
+};
+
+int main() {
+    /*<<make injector>>*/
+    auto injector = boost::di::make_injector();
+
+    /*<<create app>>*/
+    app = injector.create<app>();
+
+    /*<<use app>>*/
+    //...
+
+    return 0;
+}
+//]
+
+```]
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+
+//[example
+#include <memory>
+
+/*<<include di headers>>*/
+#include <boost/di.hpp>
+
+/*<<Define class as usual>>*/
+class app {
+public:
+    app(const std::shared_ptr<int>&
+      , boost::shared_ptr<int>
+      , std::unique_ptr<int>
+      , double
+      , int
+      , const std::string&)
+    { }
+};
+
+int main() {
+    /*<<make injector>>*/
+    auto injector = boost::di::make_injector();
+
+    /*<<create app>>*/
+    app = injector.create<app>();
+
+    /*<<use app>>*/
+    //...
+
+    return 0;
+}
+//]
+
+```]
+]
+[
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+]
+]
+[endsect]
+[section Di]
+[table
+[[C++98/03] [C++11]]
+[
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <cassert>
+#include <memory>
+#include <boost/di.hpp>
+
+namespace di = boost::di;
+
+struct i { virtual ~i() { } };
+struct impl : i { };
+struct some_name { };
+
+struct module {
+    module(const std::shared_ptr<i>& sp, double d, std::unique_ptr<int> up, int i)
+        : sp(sp)
+    {
+        assert(dynamic_cast<impl*>(sp.get()));
+        assert(d == 0.0); // default zero initialization
+        assert(*up == 42);
+        assert(i == 42);
+    }
+
+    std::shared_ptr<i> sp;
+};
+
+struct app {
+    app(module copy
+        , boost::shared_ptr<i> sp
+        , int i
+        , di::named<const std::string&, some_name> s
+        , float& f)
+        : str(s), f(f)
+    {
+        assert(dynamic_cast<impl*>(sp.get()));
+        assert(copy.sp.get() == sp.get());
+        assert(i == 42);
+        assert(str == "some_name");
+    }
+
+    app& operator=(const app&);
+
+    std::string str;
+    float& f;
+};
+
+int main() {
+    float f = 0.f;
+
+    auto injector = di::make_injector(
+        di::bind<i, impl>()
+      , di::bind_int<42>()
+      , di::bind<std::string>::named<some_name>::to("some_name")
+      , di::bind<float>::to(boost::ref(f))
+    );
+
+    auto module_app = injector.create<app>();
+
+    module_app.f = 42.f;
+    assert(f == 42.f);
+
+    return 0;
+}
+
+```]
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <cassert>
+#include <memory>
+#include <boost/di.hpp>
+
+namespace di = boost::di;
+
+struct i { virtual ~i() { } };
+struct impl : i { };
+struct some_name { };
+
+struct module {
+    module(const std::shared_ptr<i>& sp, double d, std::unique_ptr<int> up, int i)
+        : sp(sp)
+    {
+        assert(dynamic_cast<impl*>(sp.get()));
+        assert(d == 0.0); // default zero initialization
+        assert(*up == 42);
+        assert(i == 42);
+    }
+
+    std::shared_ptr<i> sp;
+};
+
+struct app {
+    app(module copy
+        , boost::shared_ptr<i> sp
+        , int i
+        , di::named<const std::string&, some_name> s
+        , float& f)
+        : str(s), f(f)
+    {
+        assert(dynamic_cast<impl*>(sp.get()));
+        assert(copy.sp.get() == sp.get());
+        assert(i == 42);
+        assert(str == "some_name");
+    }
+
+    app& operator=(const app&);
+
+    std::string str;
+    float& f;
+};
+
+int main() {
+    float f = 0.f;
+
+    auto injector = di::make_injector(
+        di::bind<i, impl>()
+      , di::bind_int<42>()
+      , di::bind<std::string>::named<some_name>::to("some_name")
+      , di::bind<float>::to(boost::ref(f))
+    );
+
+    auto module_app = injector.create<app>();
+
+    module_app.f = 42.f;
+    assert(f == 42.f);
+
+    return 0;
+}
+
+```]
+]
+[
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+]
+]
+[endsect]
 [section Testing]
-[endsect]
+[table
+[[C++98/03] [C++11]]
+[
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <memory>
+#include <boost/di.hpp>
 
-[section Visitor / Text visitor]
-[endsect]
+namespace di = boost::di;
 
-[endsect]
+namespace {
 
+struct i { virtual ~i() { } };
+struct impl : i { };
+
+template<typename Config>
+struct app
+{
+    app(std::unique_ptr<i>) { }
+};
+
+using injector_t = di::injector<impl>;
+
+} // namespace
+
+namespace ut {
+
+struct fake : i { };
+
+using injector_t = di::injector<fake>;
+
+} // namespace ut
+
+int main() {
+    di::injector<> injector;
+
+    //code
+    {
+        injector.create<app<injector_t>>();
+    }
+
+    //test
+    {
+        injector.create<app<ut::injector_t>>();
+    }
+
+    return 0;
+}
+
+```]
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <memory>
+#include <boost/di.hpp>
+
+namespace di = boost::di;
+
+namespace {
+
+struct i { virtual ~i() { } };
+struct impl : i { };
+
+template<typename Config>
+struct app
+{
+    app(std::unique_ptr<i>) { }
+};
+
+using injector_t = di::injector<impl>;
+
+} // namespace
+
+namespace ut {
+
+struct fake : i { };
+
+using injector_t = di::injector<fake>;
+
+} // namespace ut
+
+int main() {
+    di::injector<> injector;
+
+    //code
+    {
+        injector.create<app<injector_t>>();
+    }
+
+    //test
+    {
+        injector.create<app<ut::injector_t>>();
+    }
+
+    return 0;
+}
+
+```]
+]
+[
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+]
+]
+[endsect]
+[section Named]
+[table
+[[C++98/03] [C++11]]
+[
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <cassert>
+#include <boost/mpl/string.hpp>
+#include <boost/di.hpp>
+
+namespace mpl = boost::mpl;
+namespace di  = boost::di;
+
+namespace {
+
+class named
+{
+public:
+    named(di::named<int, mpl::string<'1'>> i1
+        , di::named<int, mpl::string<'2'>> i2)
+        : i1(i1), i2(i2) {
+        assert(i1 == 42);
+        assert(i2 == 87);
+    }
+
+private:
+    int i1 = 0;
+    int i2 = 0;
+};
+
+} // namespace
+
+int main() {
+    di::injector<
+        di::bind_int<42>::named<mpl::string<'1'>>
+      , di::bind_int<87>::named<mpl::string<'2'>>
+    >().create<named>();
+
+    return 0;
+}
+
+```]
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <cassert>
+#include <boost/mpl/string.hpp>
+#include <boost/di.hpp>
+
+namespace mpl = boost::mpl;
+namespace di  = boost::di;
+
+namespace {
+
+class named
+{
+public:
+    named(di::named<int, mpl::string<'1'>> i1
+        , di::named<int, mpl::string<'2'>> i2)
+        : i1(i1), i2(i2) {
+        assert(i1 == 42);
+        assert(i2 == 87);
+    }
+
+private:
+    int i1 = 0;
+    int i2 = 0;
+};
+
+} // namespace
+
+int main() {
+    di::injector<
+        di::bind_int<42>::named<mpl::string<'1'>>
+      , di::bind_int<87>::named<mpl::string<'2'>>
+    >().create<named>();
+
+    return 0;
+}
+
+```]
+]
+[
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+]
+]
+[endsect]
+[section Provider]
+[table
+[[C++98/03] [C++11]]
+[
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <cassert>
+#include <memory>
+#include <boost/di.hpp>
+
+namespace di = boost::di;
+
+namespace {
+
+struct transaction
+    : di::provider<int>
+{
+    virtual int get() const {
+        return next();
+    }
+
+    static int& next() {
+        static int i = 0;
+        return ++i;
+    }
+};
+
+struct usage
+{
+    usage(std::unique_ptr<di::provider<int>> p) {
+        assert(p->get() == 1);
+        assert(p->get() == 2);
+    }
+};
+
+} // namespace
+
+int main() {
+    using injector_t = di::injector<
+        transaction
+    >;
+
+    injector_t().create<usage>();
+}
+
+```]
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <cassert>
+#include <memory>
+#include <boost/di.hpp>
+
+namespace di = boost::di;
+
+namespace {
+
+struct transaction
+    : di::provider<int>
+{
+    virtual int get() const {
+        return next();
+    }
+
+    static int& next() {
+        static int i = 0;
+        return ++i;
+    }
+};
+
+struct usage
+{
+    usage(std::unique_ptr<di::provider<int>> p) {
+        assert(p->get() == 1);
+        assert(p->get() == 2);
+    }
+};
+
+} // namespace
+
+int main() {
+    using injector_t = di::injector<
+        transaction
+    >;
+
+    injector_t().create<usage>();
+}
+
+```]
+]
+[
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+]
+]
+[endsect]
+[section Uml Visitor]
+[table
+[[C++98/03] [C++11]]
+[
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <iostream>
+#include <sstream>
+#include <vector>
+#include <boost/mpl/size.hpp>
+#include <boost/units/detail/utility.hpp>
+#include <boost/di.hpp>
+
+namespace mpl   = boost::mpl;
+namespace utils = boost::units::detail;
+namespace di    = boost::di;
+
+namespace {
+
+struct i0 { virtual ~i0() { }; };
+struct c0 : i0 { };
+struct c1 { c1(std::shared_ptr<i0>) { } };
+struct c2 { c2(int, double, char) { } };
+struct c3 { c3(std::shared_ptr<c1>, std::shared_ptr<c2>) { } };
+
+} // namespace
+
+/**
+ * http://plantuml.sourceforge.net/objects.html
+ * ./uml_visitor | java -jar plantuml.jar -p > uml_visitor.png
+ */
+class plant_uml
+{
+public:
+    void on_begin(std::stringstream& stream) const
+    {
+        stream << "@startuml uml_visitor.png" << std::endl;
+    }
+
+    void on_end(std::stringstream& stream) const
+    {
+        stream << "@enduml" << std::endl;
+    }
+
+    template<typename TDependency>
+    void on_call(std::stringstream& stream
+               , const TDependency& from
+               , const TDependency& to) const
+    {
+        if (to.expected != to.given) {
+            stream << "\"" << to.expected << "\" <|-- \"" << to.given << "\"" << std::endl;
+        }
+
+        stream << "\"" << from.expected << "\" .. \"" << to.expected << "\"" << std::endl;
+    }
+};
+
+template<typename TPolicy>
+class uml_visitor
+    : public TPolicy
+{
+    struct dependency
+    {
+        dependency(const std::string& expected
+                 , const std::string& given
+                 , const std::string& scope
+                 , std::size_t context_size)
+            : expected(expected)
+            , given(given)
+            , scope(scope)
+            , context_size(context_size) { }
+
+        std::string expected;
+        std::string given;
+        std::string scope;
+        std::size_t context_size;
+    };
+
+    uml_visitor& operator=(const uml_visitor&);
+
+public:
+    explicit uml_visitor(std::stringstream& stream)
+        : stream_(stream) {
+        this->on_begin(stream_);
+    }
+
+    ~uml_visitor() {
+        this->on_end(stream_);
+    }
+
+    template<typename T>
+    void operator()(const T&) const {
+        std::size_t call_stack_size = mpl::size<typename T::call_stack>::value;
+
+        while (!context_.empty() && context_.back().context_size >= call_stack_size) {
+            context_.pop_back();
+        }
+
+        context_.push_back(
+            dependency(
+                utils::demangle(typeid(typename T::dependency::expected).name())
+              , utils::demangle(typeid(typename T::dependency::given).name())
+              , utils::demangle(typeid(typename T::dependency::scope).name())
+              , call_stack_size
+            )
+        );
+
+        std::size_t context_size = context_.size();
+
+        if (context_size > 1 && context_size > (call_stack_size - 2)) {
+            this->on_call(
+                stream_
+              , context_[context_size - 2]
+              , context_[context_size - 1]
+            );
+        }
+    }
+
+    std::stringstream& stream_;
+    mutable std::vector<dependency> context_;
+};
+
+int main() {
+    di::injector<c0> injector;
+
+    std::stringstream stream;
+    injector.visit<c3>(uml_visitor<plant_uml>(stream));
+    std::cout << stream.str();
+
+    return 0;
+}
+
+// @startuml uml_visitor.png
+// "(anonymous namespace)::c3" .. "(anonymous namespace)::c1"
+// "(anonymous namespace)::i0" <|-- "(anonymous namespace)::c0"
+// "(anonymous namespace)::c1" .. "(anonymous namespace)::i0"
+// "(anonymous namespace)::c3" .. "(anonymous namespace)::c2"
+// "(anonymous namespace)::c2" .. "int"
+// "(anonymous namespace)::c2" .. "double"
+// "(anonymous namespace)::c2" .. "char"
+// @enduml
+
+```]
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <iostream>
+#include <sstream>
+#include <vector>
+#include <boost/mpl/size.hpp>
+#include <boost/units/detail/utility.hpp>
+#include <boost/di.hpp>
+
+namespace mpl   = boost::mpl;
+namespace utils = boost::units::detail;
+namespace di    = boost::di;
+
+namespace {
+
+struct i0 { virtual ~i0() { }; };
+struct c0 : i0 { };
+struct c1 { c1(std::shared_ptr<i0>) { } };
+struct c2 { c2(int, double, char) { } };
+struct c3 { c3(std::shared_ptr<c1>, std::shared_ptr<c2>) { } };
+
+} // namespace
+
+/**
+ * http://plantuml.sourceforge.net/objects.html
+ * ./uml_visitor | java -jar plantuml.jar -p > uml_visitor.png
+ */
+class plant_uml
+{
+public:
+    void on_begin(std::stringstream& stream) const
+    {
+        stream << "@startuml uml_visitor.png" << std::endl;
+    }
+
+    void on_end(std::stringstream& stream) const
+    {
+        stream << "@enduml" << std::endl;
+    }
+
+    template<typename TDependency>
+    void on_call(std::stringstream& stream
+               , const TDependency& from
+               , const TDependency& to) const
+    {
+        if (to.expected != to.given) {
+            stream << "\"" << to.expected << "\" <|-- \"" << to.given << "\"" << std::endl;
+        }
+
+        stream << "\"" << from.expected << "\" .. \"" << to.expected << "\"" << std::endl;
+    }
+};
+
+template<typename TPolicy>
+class uml_visitor
+    : public TPolicy
+{
+    struct dependency
+    {
+        dependency(const std::string& expected
+                 , const std::string& given
+                 , const std::string& scope
+                 , std::size_t context_size)
+            : expected(expected)
+            , given(given)
+            , scope(scope)
+            , context_size(context_size) { }
+
+        std::string expected;
+        std::string given;
+        std::string scope;
+        std::size_t context_size;
+    };
+
+    uml_visitor& operator=(const uml_visitor&);
+
+public:
+    explicit uml_visitor(std::stringstream& stream)
+        : stream_(stream) {
+        this->on_begin(stream_);
+    }
+
+    ~uml_visitor() {
+        this->on_end(stream_);
+    }
+
+    template<typename T>
+    void operator()(const T&) const {
+        std::size_t call_stack_size = mpl::size<typename T::call_stack>::value;
+
+        while (!context_.empty() && context_.back().context_size >= call_stack_size) {
+            context_.pop_back();
+        }
+
+        context_.push_back(
+            dependency(
+                utils::demangle(typeid(typename T::dependency::expected).name())
+              , utils::demangle(typeid(typename T::dependency::given).name())
+              , utils::demangle(typeid(typename T::dependency::scope).name())
+              , call_stack_size
+            )
+        );
+
+        std::size_t context_size = context_.size();
+
+        if (context_size > 1 && context_size > (call_stack_size - 2)) {
+            this->on_call(
+                stream_
+              , context_[context_size - 2]
+              , context_[context_size - 1]
+            );
+        }
+    }
+
+    std::stringstream& stream_;
+    mutable std::vector<dependency> context_;
+};
+
+int main() {
+    di::injector<c0> injector;
+
+    std::stringstream stream;
+    injector.visit<c3>(uml_visitor<plant_uml>(stream));
+    std::cout << stream.str();
+
+    return 0;
+}
+
+// @startuml uml_visitor.png
+// "(anonymous namespace)::c3" .. "(anonymous namespace)::c1"
+// "(anonymous namespace)::i0" <|-- "(anonymous namespace)::c0"
+// "(anonymous namespace)::c1" .. "(anonymous namespace)::i0"
+// "(anonymous namespace)::c3" .. "(anonymous namespace)::c2"
+// "(anonymous namespace)::c2" .. "int"
+// "(anonymous namespace)::c2" .. "double"
+// "(anonymous namespace)::c2" .. "char"
+// @enduml
+
+```]
+]
+[
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+]
+]
+[endsect]
+[section Allow Only Smart Ptr Policy]
+[table
+[[C++98/03] [C++11]]
+[
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <boost/shared_ptr.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/remove_reference.hpp>
+#include <boost/mpl/bool.hpp>
+#include <boost/mpl/has_xxx.hpp>
+#include <boost/mpl/assert.hpp>
+#include <boost/di.hpp>
+
+namespace mpl = boost::mpl;
+namespace di  = boost::di;
+
+namespace {
+
+struct c
+{
+    c(std::shared_ptr<int>, std::unique_ptr<double>, boost::shared_ptr<char>) { }
+};
+
+} // namespace
+
+class allow_only_smart_ptr_policy
+{
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
+
+    template<typename TDependency>
+    struct is_creation_by_smart_ptr
+        : has_element_type<
+              typename boost::remove_reference<typename TDependency::type>::type
+          >
+    { };
+
+public:
+    template<typename TDependency>
+    typename boost::enable_if<is_creation_by_smart_ptr<TDependency>>::type
+    assert_policy() const { }
+
+    template<typename TDependency>
+    typename boost::disable_if<is_creation_by_smart_ptr<TDependency>>::type
+    assert_policy() const {
+        BOOST_MPL_ASSERT_MSG(
+            false
+          , CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED
+          , (TDependency)
+        );
+    }
+};
+
+int main() {
+    di::injector<> injector;
+    injector.create<std::shared_ptr<c>>(allow_only_smart_ptr_policy());
+    //injector.create<c>(allow_only_smart_ptr_policy()); //compile error (CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED)
+
+    return 0;
+}
+
+```]
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <boost/shared_ptr.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/remove_reference.hpp>
+#include <boost/mpl/bool.hpp>
+#include <boost/mpl/has_xxx.hpp>
+#include <boost/mpl/assert.hpp>
+#include <boost/di.hpp>
+
+namespace mpl = boost::mpl;
+namespace di  = boost::di;
+
+namespace {
+
+struct c
+{
+    c(std::shared_ptr<int>, std::unique_ptr<double>, boost::shared_ptr<char>) { }
+};
+
+} // namespace
+
+class allow_only_smart_ptr_policy
+{
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
+
+    template<typename TDependency>
+    struct is_creation_by_smart_ptr
+        : has_element_type<
+              typename boost::remove_reference<typename TDependency::type>::type
+          >
+    { };
+
+public:
+    template<typename TDependency>
+    typename boost::enable_if<is_creation_by_smart_ptr<TDependency>>::type
+    assert_policy() const { }
+
+    template<typename TDependency>
+    typename boost::disable_if<is_creation_by_smart_ptr<TDependency>>::type
+    assert_policy() const {
+        BOOST_MPL_ASSERT_MSG(
+            false
+          , CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED
+          , (TDependency)
+        );
+    }
+};
+
+int main() {
+    di::injector<> injector;
+    injector.create<std::shared_ptr<c>>(allow_only_smart_ptr_policy());
+    //injector.create<c>(allow_only_smart_ptr_policy()); //compile error (CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED)
+
+    return 0;
+}
+
+```]
+]
+[
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+]
+]
+[endsect]
+[section Externals]
+[table
+[[C++98/03] [C++11]]
+[
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <cassert>
+#include <memory>
+#include <boost/di.hpp>
+
+namespace di = boost::di;
+
+namespace {
+
+struct i { virtual ~i() { } };
+struct impl0 : i { };
+struct impl1 : i { };
+struct c
+{
+    c(std::shared_ptr<i> p, int i)
+    {
+        assert(dynamic_cast<impl1*>(p.get()));
+        assert(i == 42);
+    }
+};
+
+} // namespace
+
+int main() {
+    auto module = di::make_injector(
+        di::bind<i, impl0>()
+    );
+
+    auto injector = di::make_injector(
+        module()
+      , di::bind<int>::to(42)
+      , di::bind<i>::to(std::make_shared<impl1>()) // external has priority
+    );
+
+    injector.create<c>();
+}
+
+```]
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <cassert>
+#include <memory>
+#include <boost/di.hpp>
+
+namespace di = boost::di;
+
+namespace {
+
+struct i { virtual ~i() { } };
+struct impl0 : i { };
+struct impl1 : i { };
+struct c
+{
+    c(std::shared_ptr<i> p, int i)
+    {
+        assert(dynamic_cast<impl1*>(p.get()));
+        assert(i == 42);
+    }
+};
+
+} // namespace
+
+int main() {
+    auto module = di::make_injector(
+        di::bind<i, impl0>()
+    );
+
+    auto injector = di::make_injector(
+        module()
+      , di::bind<int>::to(42)
+      , di::bind<i>::to(std::make_shared<impl1>()) // external has priority
+    );
+
+    injector.create<c>();
+}
+
+```]
+]
+[
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+]
+]
+[endsect]
+[section Injector]
+[table
+[[C++98/03] [C++11]]
+[
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <typeinfo>
+#include <iostream>
+#include <memory>
+#include <boost/di.hpp>
+
+namespace mpl = boost::mpl;
+namespace di  = boost::di;
+
+namespace {
+
+struct name { };
+
+struct i0 { virtual ~i0() { }; };
+struct c0 : i0 { c0(di::named<int, name>, double) { } };
+struct c01 : i0 { };
+struct c1 { c1(std::shared_ptr<i0>) { } };
+struct c2 { c2(std::shared_ptr<c1>, int, double, char) { } };
+struct c3 { };
+struct c4 { };
+struct c5
+{
+    c5(std::shared_ptr<c1>
+     , c2
+     , std::shared_ptr<i0>
+     , std::shared_ptr<c3>
+     , c4&
+    ) { }
+};
+
+} // namespace
+
+int main() {
+    std::shared_ptr<c3> c3_(new c3);
+    c4 c4_;
+
+    auto injector = di::make_injector(
+        di::shared<
+            c1
+        >()
+      , di::unique<
+            c0
+        >()
+      , di::scope<di::scopes::unique<>>::bind<
+            di::bind_int<42>
+        >()
+      , di::unique<
+            di::bind_int<87>::named<name>
+          , di::bind<c01>::when<di::call_stack<c2, c1>>
+        >()
+      , di::bind<double>::to(42.0)
+      , di::bind<double>::when<di::call_stack<c0>>::to(87.0)
+      , di::bind<c3>::to(c3_)
+      , di::bind<c4>::to(boost::ref(c4_))
+    );
+
+    injector.create<c5>();
+}
+
+```]
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <typeinfo>
+#include <iostream>
+#include <memory>
+#include <boost/di.hpp>
+
+namespace mpl = boost::mpl;
+namespace di  = boost::di;
+
+namespace {
+
+struct name { };
+
+struct i0 { virtual ~i0() { }; };
+struct c0 : i0 { c0(di::named<int, name>, double) { } };
+struct c01 : i0 { };
+struct c1 { c1(std::shared_ptr<i0>) { } };
+struct c2 { c2(std::shared_ptr<c1>, int, double, char) { } };
+struct c3 { };
+struct c4 { };
+struct c5
+{
+    c5(std::shared_ptr<c1>
+     , c2
+     , std::shared_ptr<i0>
+     , std::shared_ptr<c3>
+     , c4&
+    ) { }
+};
+
+} // namespace
+
+int main() {
+    std::shared_ptr<c3> c3_(new c3);
+    c4 c4_;
+
+    auto injector = di::make_injector(
+        di::shared<
+            c1
+        >()
+      , di::unique<
+            c0
+        >()
+      , di::scope<di::scopes::unique<>>::bind<
+            di::bind_int<42>
+        >()
+      , di::unique<
+            di::bind_int<87>::named<name>
+          , di::bind<c01>::when<di::call_stack<c2, c1>>
+        >()
+      , di::bind<double>::to(42.0)
+      , di::bind<double>::when<di::call_stack<c0>>::to(87.0)
+      , di::bind<c3>::to(c3_)
+      , di::bind<c4>::to(boost::ref(c4_))
+    );
+
+    injector.create<c5>();
+}
+
+```]
+]
+[
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+]
+]
+[endsect]
+[section Text Visitor]
+[table
+[[C++98/03] [C++11]]
+[
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <iostream>
+#include <memory>
+#include <boost/mpl/size.hpp>
+#include <boost/mpl/int.hpp>
+#include <boost/units/detail/utility.hpp>
+#include <boost/di.hpp>
+
+namespace mpl   = boost::mpl;
+namespace utils = boost::units::detail;
+namespace di    = boost::di;
+
+namespace {
+
+struct i0 { virtual ~i0() { }; };
+struct c0 : i0 { };
+struct c1 { c1(std::shared_ptr<i0>) { } };
+struct c2 { c2(int, double, char) { } };
+struct c3 { c3(std::shared_ptr<c1>, std::shared_ptr<c2>) { } };
+
+} // namespace
+
+class text_visitor
+{
+public:
+    template<typename T>
+    void operator()(const T&) const {
+        int size = mpl::size<typename T::call_stack>::value;
+        while(--size) {
+            std::cout << "\t";
+        }
+        std::cout << utils::demangle(typeid(typename T::type).name()) << std::endl;
+    }
+};
+
+int main() {
+    di::injector<
+        di::bind_int<42>
+      , c0
+    > injector;
+
+    injector.visit<c3>(text_visitor());
+
+    return 0;
+}
+
+// (anonymous namespace)::c3
+//     std::shared_ptr<(anonymous namespace)::c1>
+//         std::shared_ptr<(anonymous namespace)::i0>
+//     std::shared_ptr<(anonymous namespace)::c2>
+//         int
+//         double
+//         char
+
+```]
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <iostream>
+#include <memory>
+#include <boost/mpl/size.hpp>
+#include <boost/mpl/int.hpp>
+#include <boost/units/detail/utility.hpp>
+#include <boost/di.hpp>
+
+namespace mpl   = boost::mpl;
+namespace utils = boost::units::detail;
+namespace di    = boost::di;
+
+namespace {
+
+struct i0 { virtual ~i0() { }; };
+struct c0 : i0 { };
+struct c1 { c1(std::shared_ptr<i0>) { } };
+struct c2 { c2(int, double, char) { } };
+struct c3 { c3(std::shared_ptr<c1>, std::shared_ptr<c2>) { } };
+
+} // namespace
+
+class text_visitor
+{
+public:
+    template<typename T>
+    void operator()(const T&) const {
+        int size = mpl::size<typename T::call_stack>::value;
+        while(--size) {
+            std::cout << "\t";
+        }
+        std::cout << utils::demangle(typeid(typename T::type).name()) << std::endl;
+    }
+};
+
+int main() {
+    di::injector<
+        di::bind_int<42>
+      , c0
+    > injector;
+
+    injector.visit<c3>(text_visitor());
+
+    return 0;
+}
+
+// (anonymous namespace)::c3
+//     std::shared_ptr<(anonymous namespace)::c1>
+//         std::shared_ptr<(anonymous namespace)::i0>
+//     std::shared_ptr<(anonymous namespace)::c2>
+//         int
+//         double
+//         char
+
+```]
+]
+[
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+]
+]
+[endsect]
+[section Concepts]
+[table
+[[C++98/03] [C++11]]
+[
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <boost/shared_ptr.hpp>
+#include <boost/mpl/string.hpp>
+#include <boost/di.hpp>
+
+namespace di  = boost::di;
+
+namespace {
+
+struct name1 { };
+struct name2 { };
+struct name3 { };
+
+struct i { virtual ~i() { }; };
+
+struct impl : i { };
+struct impl1 : i { };
+struct impl2 : i { };
+struct impl3 : i { };
+struct impl4 : i { };
+
+struct c0 { };
+
+struct c1 { c1(int, di::named<double, name1>) { } };
+struct c2 { c2(di::named<double, name1>, c1) { } };
+struct c3
+{
+    c3(std::string
+     , std::shared_ptr<i>
+     , const di::named<boost::shared_ptr<i>, name2>&
+    ) { }
+};
+struct c4 { };
+struct c5 { };
+struct c6 { c6(std::shared_ptr<i>) { } };
+struct c7 { c7(di::named<std::shared_ptr<i>, name3>) { } };
+struct c8 { c8(std::string, std::shared_ptr<i>, c7) { } };
+struct c9 { };
+struct c10 { c10(c9, c8) { } };
+struct c11 { c11(c9, c10) { } };
+struct c12 { c12(c9, c11) { } };
+struct c13 { c13(std::shared_ptr<c12>) { } };
+
+} // namespace
+
+int main() {
+    using injector_t = di::injector<
+        c0
+      , di::bind_int<42>::when<di::call_stack<c1>>
+      , di::bind_string<boost::mpl::string<'s'>>
+      , di::shared<
+            c1
+        >
+      , di::shared<
+            c3, c4
+        >
+      , di::unique<
+            impl
+          , di::bind<i, impl1>
+          , di::bind<i, impl2>::named<name2>
+          , di::bind<i, impl3>::when<di::call_stack<c6>>
+          , di::bind<i, impl4>::when<di::call_stack<c8, c7>>::named<name3>
+        >
+      , di::shared<
+            di::bind<c9>::when<di::call_stack<c10>, di::call_stack<c11>, di::call_stack<c13, c12>>
+        >
+    >;
+
+    auto injector = di::make_injector(
+        injector_t()
+      , di::unique<c5>()
+      , di::bind<int>::to(42)
+      , di::bind<double>::to(42.0)
+      , di::bind<double>::when<di::call_stack<c1>, di::call_stack<c2>>::to(87.0)
+    );
+}
+
+```]
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <boost/shared_ptr.hpp>
+#include <boost/mpl/string.hpp>
+#include <boost/di.hpp>
+
+namespace di  = boost::di;
+
+namespace {
+
+struct name1 { };
+struct name2 { };
+struct name3 { };
+
+struct i { virtual ~i() { }; };
+
+struct impl : i { };
+struct impl1 : i { };
+struct impl2 : i { };
+struct impl3 : i { };
+struct impl4 : i { };
+
+struct c0 { };
+
+struct c1 { c1(int, di::named<double, name1>) { } };
+struct c2 { c2(di::named<double, name1>, c1) { } };
+struct c3
+{
+    c3(std::string
+     , std::shared_ptr<i>
+     , const di::named<boost::shared_ptr<i>, name2>&
+    ) { }
+};
+struct c4 { };
+struct c5 { };
+struct c6 { c6(std::shared_ptr<i>) { } };
+struct c7 { c7(di::named<std::shared_ptr<i>, name3>) { } };
+struct c8 { c8(std::string, std::shared_ptr<i>, c7) { } };
+struct c9 { };
+struct c10 { c10(c9, c8) { } };
+struct c11 { c11(c9, c10) { } };
+struct c12 { c12(c9, c11) { } };
+struct c13 { c13(std::shared_ptr<c12>) { } };
+
+} // namespace
+
+int main() {
+    using injector_t = di::injector<
+        c0
+      , di::bind_int<42>::when<di::call_stack<c1>>
+      , di::bind_string<boost::mpl::string<'s'>>
+      , di::shared<
+            c1
+        >
+      , di::shared<
+            c3, c4
+        >
+      , di::unique<
+            impl
+          , di::bind<i, impl1>
+          , di::bind<i, impl2>::named<name2>
+          , di::bind<i, impl3>::when<di::call_stack<c6>>
+          , di::bind<i, impl4>::when<di::call_stack<c8, c7>>::named<name3>
+        >
+      , di::shared<
+            di::bind<c9>::when<di::call_stack<c10>, di::call_stack<c11>, di::call_stack<c13, c12>>
+        >
+    >;
+
+    auto injector = di::make_injector(
+        injector_t()
+      , di::unique<c5>()
+      , di::bind<int>::to(42)
+      , di::bind<double>::to(42.0)
+      , di::bind<double>::when<di::call_stack<c1>, di::call_stack<c2>>::to(87.0)
+    );
+}
+
+```]
+]
+[
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+]
+]
+[endsect]
+[section Custom Scope]
+[table
+[[C++98/03] [C++11]]
+[
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <memory>
+#include <utility>
+#include <iostream>
+#include <boost/shared_ptr.hpp>
+#include <boost/type.hpp>
+#include <boost/di.hpp>
+
+namespace di = boost::di;
+
+namespace {
+
+struct c1 { };
+
+struct c2
+{
+    c2(std::shared_ptr<c1> sp) {
+        if (sp) {
+            std::clog << "in custom scope" << std::endl;
+        } else {
+            std::clog << "not in custom scope" << std::endl;
+        }
+    }
+};
+
+} // namespace
+
+class custom_scope
+{
+public:
+    typedef boost::mpl::int_<0> priority;
+
+    class entry { };
+    class exit { };
+
+    template<typename TExpected, typename TGiven>
+    class scope
+    {
+        class convertible
+        {
+        public:
+            convertible(const std::shared_ptr<TExpected>& object) // non explicit
+                : object_(object)
+            { }
+
+            template<typename I>
+            std::shared_ptr<I> operator()(const boost::type<std::shared_ptr<I>>&) const {
+                return object_;
+            }
+
+            std::shared_ptr<TExpected> object_;
+        };
+
+    public:
+        typedef scope type;
+        typedef convertible result_type;
+
+        void call(const entry&) {
+            in_scope_ = true;
+        }
+
+        void call(const exit&) {
+            in_scope_ = false;
+        }
+
+        template<typename... Args>
+        result_type create(Args&&... args) {
+            if (in_scope_) {
+                return std::make_shared<TGiven>(std::forward(args)...);
+            }
+
+            return std::shared_ptr<TGiven>();
+        }
+
+    private:
+        bool in_scope_ = false;
+    };
+};
+
+int main() {
+    using injector_t = di::injector<
+        di::scope<custom_scope>::bind<
+            c1
+        >
+    >;;
+
+    di::injector<injector_t> injector;
+
+    injector.create<c2>(); // not in custom scope
+    injector.call(custom_scope::entry());
+    injector.create<c2>(); // in custom scope
+    injector.call(custom_scope::exit());
+    injector.create<c2>(); // not in custom scope
+}
+
+```]
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <memory>
+#include <utility>
+#include <iostream>
+#include <boost/shared_ptr.hpp>
+#include <boost/type.hpp>
+#include <boost/di.hpp>
+
+namespace di = boost::di;
+
+namespace {
+
+struct c1 { };
+
+struct c2
+{
+    c2(std::shared_ptr<c1> sp) {
+        if (sp) {
+            std::clog << "in custom scope" << std::endl;
+        } else {
+            std::clog << "not in custom scope" << std::endl;
+        }
+    }
+};
+
+} // namespace
+
+class custom_scope
+{
+public:
+    typedef boost::mpl::int_<0> priority;
+
+    class entry { };
+    class exit { };
+
+    template<typename TExpected, typename TGiven>
+    class scope
+    {
+        class convertible
+        {
+        public:
+            convertible(const std::shared_ptr<TExpected>& object) // non explicit
+                : object_(object)
+            { }
+
+            template<typename I>
+            std::shared_ptr<I> operator()(const boost::type<std::shared_ptr<I>>&) const {
+                return object_;
+            }
+
+            std::shared_ptr<TExpected> object_;
+        };
+
+    public:
+        typedef scope type;
+        typedef convertible result_type;
+
+        void call(const entry&) {
+            in_scope_ = true;
+        }
+
+        void call(const exit&) {
+            in_scope_ = false;
+        }
+
+        template<typename... Args>
+        result_type create(Args&&... args) {
+            if (in_scope_) {
+                return std::make_shared<TGiven>(std::forward(args)...);
+            }
+
+            return std::shared_ptr<TGiven>();
+        }
+
+    private:
+        bool in_scope_ = false;
+    };
+};
+
+int main() {
+    using injector_t = di::injector<
+        di::scope<custom_scope>::bind<
+            c1
+        >
+    >;;
+
+    di::injector<injector_t> injector;
+
+    injector.create<c2>(); // not in custom scope
+    injector.call(custom_scope::entry());
+    injector.create<c2>(); // in custom scope
+    injector.call(custom_scope::exit());
+    injector.create<c2>(); // not in custom scope
+}
+
+```]
+]
+[
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+]
+]
+[endsect]
+[section Multiple Interfaces]
+[table
+[[C++98/03] [C++11]]
+[
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <cassert>
+#include <memory>
+#include <boost/di.hpp>
+
+namespace mpl = boost::mpl;
+namespace di  = boost::di;
+
+namespace {
+
+struct i1 { virtual ~i1() { } };
+struct i2 { virtual ~i2() { } };
+struct impl : i1, i2 { };
+
+class multiple_interfaces
+{
+public:
+    multiple_interfaces(const std::shared_ptr<i1>& i1_, const std::shared_ptr<i2>& i2_)
+    {
+        assert(dynamic_cast<impl*>(i1_.get()));
+        assert(dynamic_cast<impl*>(i2_.get()));
+        assert(static_cast<impl*>(i1_.get()) == static_cast<impl*>(i2_.get()));
+    }
+};
+
+} // namespace
+
+int main() {
+    {
+        di::injector<
+            impl
+        >().create<multiple_interfaces>();
+    }
+
+    {
+        di::make_injector(
+            di::deduce<impl>()
+        ).create<multiple_interfaces>();
+    }
+
+    {
+        di::make_injector(
+            di::bind<di::any_of<i1, i2>, impl>()
+        ).create<multiple_interfaces>();
+    }
+
+    return 0;
+}
+
+```]
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <cassert>
+#include <memory>
+#include <boost/di.hpp>
+
+namespace mpl = boost::mpl;
+namespace di  = boost::di;
+
+namespace {
+
+struct i1 { virtual ~i1() { } };
+struct i2 { virtual ~i2() { } };
+struct impl : i1, i2 { };
+
+class multiple_interfaces
+{
+public:
+    multiple_interfaces(const std::shared_ptr<i1>& i1_, const std::shared_ptr<i2>& i2_)
+    {
+        assert(dynamic_cast<impl*>(i1_.get()));
+        assert(dynamic_cast<impl*>(i2_.get()));
+        assert(static_cast<impl*>(i1_.get()) == static_cast<impl*>(i2_.get()));
+    }
+};
+
+} // namespace
+
+int main() {
+    {
+        di::injector<
+            impl
+        >().create<multiple_interfaces>();
+    }
+
+    {
+        di::make_injector(
+            di::deduce<impl>()
+        ).create<multiple_interfaces>();
+    }
+
+    {
+        di::make_injector(
+            di::bind<di::any_of<i1, i2>, impl>()
+        ).create<multiple_interfaces>();
+    }
+
+    return 0;
+}
+
+```]
+]
+[
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+]
+]
+[endsect]
+[section Factory]
+[table
+[[C++98/03] [C++11]]
+[
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <cassert>
+#include <memory>
+#include <boost/di.hpp>
+
+namespace di  = boost::di;
+namespace mpl = boost::mpl;
+
+namespace {
+
+struct i
+{
+    virtual ~i() { };
+    virtual void dummy() = 0;
+};
+
+struct impl1 : i
+{
+    impl1(int i) {
+        assert(i == 1);
+    }
+
+    void dummy() override {}
+};
+
+struct impl2 : i
+{
+    impl2(int i) {
+        assert(i == 2);
+    }
+
+    void dummy() override {}
+};
+
+template<typename T>
+struct c
+{
+    c(std::shared_ptr<i> sp) {
+        assert(sp.get());
+        assert(dynamic_cast<T*>(sp.get()));
+    }
+};
+
+enum eid { e1 = 1, e2 = 2 };
+
+} // namespace
+
+class config
+{
+    config& operator=(const config&);
+
+public:
+    explicit config(eid& id)
+        : id(id)
+    { }
+
+    template<typename T>
+    T create() const {
+        auto common = di::make_injector(
+            di::bind<int>::to(static_cast<int>(id))
+        );
+
+        auto injector = di::make_injector(
+            common
+          , di::bind<i>::to(
+                [&]() -> std::shared_ptr<i> {
+                    switch(id) {
+                        case e1:
+                            return common.create<std::shared_ptr<impl1>>();
+
+                        case e2:
+                            return common.create<std::shared_ptr<impl2>>();
+                    }
+
+                    return nullptr;
+                }
+            )
+        );
+
+        return injector.template create<T>();
+    }
+
+private:
+    eid& id;
+};
+
+int main() {
+    auto id = e1;
+
+    config conf((id));
+    conf.create<c<impl1>>();
+
+    id = e2;
+    conf.create<c<impl2>>();
+    (void)id;
+
+    return 0;
+}
+
+```]
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <cassert>
+#include <memory>
+#include <boost/di.hpp>
+
+namespace di  = boost::di;
+namespace mpl = boost::mpl;
+
+namespace {
+
+struct i
+{
+    virtual ~i() { };
+    virtual void dummy() = 0;
+};
+
+struct impl1 : i
+{
+    impl1(int i) {
+        assert(i == 1);
+    }
+
+    void dummy() override {}
+};
+
+struct impl2 : i
+{
+    impl2(int i) {
+        assert(i == 2);
+    }
+
+    void dummy() override {}
+};
+
+template<typename T>
+struct c
+{
+    c(std::shared_ptr<i> sp) {
+        assert(sp.get());
+        assert(dynamic_cast<T*>(sp.get()));
+    }
+};
+
+enum eid { e1 = 1, e2 = 2 };
+
+} // namespace
+
+class config
+{
+    config& operator=(const config&);
+
+public:
+    explicit config(eid& id)
+        : id(id)
+    { }
+
+    template<typename T>
+    T create() const {
+        auto common = di::make_injector(
+            di::bind<int>::to(static_cast<int>(id))
+        );
+
+        auto injector = di::make_injector(
+            common
+          , di::bind<i>::to(
+                [&]() -> std::shared_ptr<i> {
+                    switch(id) {
+                        case e1:
+                            return common.create<std::shared_ptr<impl1>>();
+
+                        case e2:
+                            return common.create<std::shared_ptr<impl2>>();
+                    }
+
+                    return nullptr;
+                }
+            )
+        );
+
+        return injector.template create<T>();
+    }
+
+private:
+    eid& id;
+};
+
+int main() {
+    auto id = e1;
+
+    config conf((id));
+    conf.create<c<impl1>>();
+
+    id = e2;
+    conf.create<c<impl2>>();
+    (void)id;
+
+    return 0;
+}
+
+```]
+]
+[
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+]
+]
+[endsect]
+[section Deduce Scope]
+[table
+[[C++98/03] [C++11]]
+[
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <memory>
+#include <boost/di.hpp>
+
+namespace di = boost::di;
+
+namespace {
+struct if0 { virtual ~if0() { } virtual void dummy() = 0; };
+struct c0if0 : if0 { void dummy() override { } };
+struct c2 { c2(std::shared_ptr<if0> /*shared*/) { } };
+struct c3 { c3(std::shared_ptr<if0> /*shared*/) { } };
+struct c4 { c4(std::unique_ptr<c2> /*unique*/, std::unique_ptr<c3> /*unique*/) { } };
+} // namespace
+
+int main() {
+    {
+        auto injector = di::make_injector(
+            di::deduce<c0if0>()
+        );
+
+        injector.create<c4>();
+    }
+
+    {
+        using injector = di::injector<
+            c0if0
+        >;
+
+        injector().create<c4>();
+    }
+
+    return 0;
+}
+
+```]
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <memory>
+#include <boost/di.hpp>
+
+namespace di = boost::di;
+
+namespace {
+struct if0 { virtual ~if0() { } virtual void dummy() = 0; };
+struct c0if0 : if0 { void dummy() override { } };
+struct c2 { c2(std::shared_ptr<if0> /*shared*/) { } };
+struct c3 { c3(std::shared_ptr<if0> /*shared*/) { } };
+struct c4 { c4(std::unique_ptr<c2> /*unique*/, std::unique_ptr<c3> /*unique*/) { } };
+} // namespace
+
+int main() {
+    {
+        auto injector = di::make_injector(
+            di::deduce<c0if0>()
+        );
+
+        injector.create<c4>();
+    }
+
+    {
+        using injector = di::injector<
+            c0if0
+        >;
+
+        injector().create<c4>();
+    }
+
+    return 0;
+}
+
+```]
+]
+[
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+]
+]
+[endsect]
+[section Hello World]
+[table
+[[C++98/03] [C++11]]
+[
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <cassert>
+#include <memory>
+#include <boost/di.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/typeof/typeof.hpp>
+
+namespace di = boost::di;
+
+struct i { virtual ~i() { } };
+struct impl : i { };
+struct some_name { };
+
+struct module {
+    module(const boost::shared_ptr<i>& sp, double d, std::auto_ptr<int> ap, int i)
+        : sp(sp)
+    {
+        assert(dynamic_cast<impl*>(sp.get()));
+        assert(d == 0.0); // default zero initialization
+        assert(*ap == 42);
+        assert(i == 42);
+    }
+
+    boost::shared_ptr<i> sp;
+};
+
+struct app {
+    app(module copy
+      , boost::shared_ptr<i> sp
+      , int i
+      , di::named<const std::string&, some_name> s
+      , float& f)
+      : str(s), f(f)
+    {
+        assert(dynamic_cast<impl*>(sp.get()));
+        assert(copy.sp.get() == sp.get());
+        assert(i == 42);
+        assert(str == "some_name");
+    }
+
+    app& operator=(const app&);
+
+    std::string str;
+    float& f;
+};
+
+int main() {
+    float f = 0.f;
+
+    BOOST_AUTO(injector, (di::make_injector(
+        di::bind<i, impl>()
+      , di::bind_int<42>()
+      , di::bind<std::string>::named<some_name>::to("some_name")
+      , di::bind<float>::to(boost::ref(f))
+    )));
+
+    app module_app = injector.create<app>();
+
+    module_app.f = 42.f;
+    assert(f == 42.f);
+
+    return 0;
+}
+
+```]
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <cassert>
+#include <memory>
+#include <boost/di.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/typeof/typeof.hpp>
+
+namespace di = boost::di;
+
+struct i { virtual ~i() { } };
+struct impl : i { };
+struct some_name { };
+
+struct module {
+    module(const boost::shared_ptr<i>& sp, double d, std::auto_ptr<int> ap, int i)
+        : sp(sp)
+    {
+        assert(dynamic_cast<impl*>(sp.get()));
+        assert(d == 0.0); // default zero initialization
+        assert(*ap == 42);
+        assert(i == 42);
+    }
+
+    boost::shared_ptr<i> sp;
+};
+
+struct app {
+    app(module copy
+      , boost::shared_ptr<i> sp
+      , int i
+      , di::named<const std::string&, some_name> s
+      , float& f)
+      : str(s), f(f)
+    {
+        assert(dynamic_cast<impl*>(sp.get()));
+        assert(copy.sp.get() == sp.get());
+        assert(i == 42);
+        assert(str == "some_name");
+    }
+
+    app& operator=(const app&);
+
+    std::string str;
+    float& f;
+};
+
+int main() {
+    float f = 0.f;
+
+    BOOST_AUTO(injector, (di::make_injector(
+        di::bind<i, impl>()
+      , di::bind_int<42>()
+      , di::bind<std::string>::named<some_name>::to("some_name")
+      , di::bind<float>::to(boost::ref(f))
+    )));
+
+    app module_app = injector.create<app>();
+
+    module_app.f = 42.f;
+    assert(f == 42.f);
+
+    return 0;
+}
+
+```]
+]
+[
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+]
+]
+[endsect]
+[section Di]
+[table
+[[C++98/03] [C++11]]
+[
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <cassert>
+#include <memory>
+#include <boost/shared_ptr.hpp>
+#include <boost/typeof/typeof.hpp>
+#include <boost/di.hpp>
+
+namespace di = boost::di;
+
+struct i { virtual ~i() { } };
+struct impl : i { };
+struct some_name { };
+
+struct hello {
+    hello(const boost::shared_ptr<i>& sp, double d, std::auto_ptr<int> ap, int i)
+        : sp(sp)
+    {
+        assert(dynamic_cast<impl*>(sp.get()));
+        assert(d == 0.0); // default zero initialization
+        assert(*ap == 42);
+        assert(i == 42);
+    }
+
+    boost::shared_ptr<i> sp;
+};
+
+struct world {
+    world(hello copy
+        , boost::shared_ptr<i> sp
+        , int i
+        , di::named<const std::string&, some_name> s
+        , float& f)
+        : str(s), f(f)
+    {
+        assert(dynamic_cast<impl*>(sp.get()));
+        assert(copy.sp.get() == sp.get());
+        assert(i == 42);
+        assert(str == "some_name");
+    }
+
+    world& operator=(const world&);
+
+    std::string str;
+    float& f;
+};
+
+int main() {
+    float f = 0.f;
+
+    BOOST_AUTO(injector, (di::make_injector(
+        di::bind<i, impl>()
+      , di::bind_int<42>()
+      , di::bind<std::string>::named<some_name>::to("some_name")
+      , di::bind<float>::to(boost::ref(f))
+    )));
+
+    world hello_world = injector.create<world>();
+
+    hello_world.f = 42.f;
+    assert(f == 42.f);
+
+    return 0;
+}
+
+```]
+[```
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include <cassert>
+#include <memory>
+#include <boost/shared_ptr.hpp>
+#include <boost/typeof/typeof.hpp>
+#include <boost/di.hpp>
+
+namespace di = boost::di;
+
+struct i { virtual ~i() { } };
+struct impl : i { };
+struct some_name { };
+
+struct hello {
+    hello(const boost::shared_ptr<i>& sp, double d, std::auto_ptr<int> ap, int i)
+        : sp(sp)
+    {
+        assert(dynamic_cast<impl*>(sp.get()));
+        assert(d == 0.0); // default zero initialization
+        assert(*ap == 42);
+        assert(i == 42);
+    }
+
+    boost::shared_ptr<i> sp;
+};
+
+struct world {
+    world(hello copy
+        , boost::shared_ptr<i> sp
+        , int i
+        , di::named<const std::string&, some_name> s
+        , float& f)
+        : str(s), f(f)
+    {
+        assert(dynamic_cast<impl*>(sp.get()));
+        assert(copy.sp.get() == sp.get());
+        assert(i == 42);
+        assert(str == "some_name");
+    }
+
+    world& operator=(const world&);
+
+    std::string str;
+    float& f;
+};
+
+int main() {
+    float f = 0.f;
+
+    BOOST_AUTO(injector, (di::make_injector(
+        di::bind<i, impl>()
+      , di::bind_int<42>()
+      , di::bind<std::string>::named<some_name>::to("some_name")
+      , di::bind<float>::to(boost::ref(f))
+    )));
+
+    world hello_world = injector.create<world>();
+
+    hello_world.f = 42.f;
+    assert(f == 42.f);
+
+    return 0;
+}
+
+```]
+]
+[
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+]
+]
+[endsect]
+[section Configuration]
+[table
+[[C++98/03] [C++11]]
+[
+[```
+```]
+[```
+```]
+]
+[
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]
+]
+]
+[endsect]
+[endsect]
