@@ -20,11 +20,17 @@
 Requirements
 
 * Boost.DI depends on some Boost libraries:
+* Boost.Bind
 * Boost.Config
-* Boost.SmartPtr
+* Boost.Detail
+* Boost.Function
 * Boost.MPL
-* Boost.Utility/enable_if
-* Boost.TypeTraits
+* Boost.Preprocessor
+* Boost.Ref
+* Boost.Smart_Ptr
+* Boost.Typeof
+* Boost.Type_Traits
+* Boost.Utility
 
 Header only library
 
@@ -40,7 +46,9 @@ Configuration
 
 Tested Compilers
 
-see tests.qbk
+[/
+[link di.supported_compilers]
+/]
 
 [endsect]
 

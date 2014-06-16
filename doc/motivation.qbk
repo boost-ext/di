@@ -1,3 +1,7 @@
 [section Motivation]
+
+[import ../example/cpp_11/motivation.cpp]
+[example]
+
 [endsect]
 

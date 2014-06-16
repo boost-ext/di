@@ -37,7 +37,7 @@ Singletons:
     } // namespace di
     } // namespace boost
 
-[section deduce]
+[section Deduce]
 
 Synopsis
 
@@ -72,7 +72,7 @@ Example
 
 [endsect]
 
-[section external]
+[section External]
 
     auto injector = make_injector(
         bind<int>::to(0)
@@ -83,7 +83,7 @@ Example
 
 [endsect]
 
-[section per_request]
+[section Unique]
 
     auto injector = make_injector(
         per_request<int>
@@ -92,13 +92,13 @@ Example
 
 [endsect]
 
-[section singleton]
+[section Shared]
 [endsect]
 
-[section session]
+[section Session]
 [endsect]
 
-[section custom_scope]
+[section Custom]
 
     struct entry { };
     struct exit { };

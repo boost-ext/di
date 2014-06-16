@@ -1,6 +1,6 @@
 [section Examples]
 
-[section hello world]
+[section Hello World]
 
 [table
     [[C++98/03] [C++11]]
@@ -89,48 +89,48 @@
 
 [endsect]
 
-[section boost and smart pointers]
+[section Boost and smart pointers]
 
 [note conversion between boost and std smart pointers cause overhead and weak ptr conversions aren't supported]
 [endsect]
 
-[section concepts]
+[section Concepts]
 [endsect]
 
-[section policies]
+[section Policies]
 [endsect]
 
-[section custom policy]
+[section Custom policy]
 [endsect]
 
-[section scopes / deduce / per_request / singleton / session]
+[section Scopes / deduce / unique / shared / session / external]
 [endsect]
 
-[section custom scope]
+[section Custom Scope]
 [endsect]
 
-[section ctor]
+[section Inject]
 [endsect]
 
-[section factory]
+[section Factory]
 [endsect]
 
-[section externals]
+[section Externals]
 [endsect]
 
-[section injector/make injector]
+[section Injector/Make Injector]
 [endsect]
 
-[section named parameters]
+[section Named parameters]
 [endsect]
 
-[section provider]
+[section Provider]
 [endsect]
 
-[section testing]
+[section Testing]
 [endsect]
 
-[section visitor / text visitor]
+[section Visitor / Text visitor]
 [endsect]
 
 [endsect]

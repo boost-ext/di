@@ -2,7 +2,7 @@
 
 [section Concepts]
 
-[section constructor injection]
+[section Constructor Injection]
 
 Constructor injection is straightforward. Because Java technology guarantees constructor invocation, you don't need to worry about objects arriving in an uninitialized state — whether or not Guice creates them. You can also mark your fields final.
 According to the Guice best practices guide, constructor injection is the preferred way to ask for your dependencies
@@ -126,7 +126,9 @@ According to the Guice best practices guide, constructor injection is the prefer
 
 [endsect]
 
-[section binding]
+[endsect]
+
+[section Binding]
 
 DI is designed to do popular things easy:
 
@@ -157,15 +159,13 @@ Inject all methods. Supertype methods are injected before subtype methods.
 
 [endsect]
 
-[section injector]
+[section Injector]
 [endsect]
 
-[section named]
+[section Named Parameters]
 [endsect]
 
-[section provider]
-[endsect]
-
+[section Provider]
 [endsect]
 
 [endsect]

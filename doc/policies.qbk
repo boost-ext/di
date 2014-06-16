@@ -1,6 +1,6 @@
 [section Policies]
 
-[section arguments_permission]
+[section Arguments Permission]
 
     injector<arguments_permission<>>().create<int>(); // compile fail
     injector<arguments_permission<allow_copies>>().create<int>(); // ok
@@ -8,30 +8,7 @@
 
 [endsect]
 
-[section binding_correctness]
-
-    struct c {
-        BOOST_DI_CTOR(c, int);
-    };
-
-    injector<
-        binding_correctness
-      , injector<
-            bind<double>::in_call<call_stack<c>>
-        >
-    >().create<c>; // error -> double is not an argument of 'c' constructor
-
-    struct s { s(int); };
-    struct k { k(shared_ptr<s>); };
-    struct c { c(shared_ptr<s>, shared_ptr<k>); }; //arguments evaluation order is not specified
-    injector<
-        bind<int>::in_call<call_stack<s>>::to(i)
-      , singleton<s>
-    >().create<c>();
-
-[endsect]
-
-[section circular_dependencies]
+[section Circular Dependencies]
 
     struct cd2;
     struct cd1 { cd1(cd2*); };
@@ -40,11 +17,14 @@
 
 [endsect]
 
-[section creation_ownership]
+[section Creation Ownership]
 
     injector_.create<const c1&>(); //error
     injector_.create<c1&>(); //error
 
+[endsect]
+
+[section Scopes Permission]
 [endsect]
 
 [endsect]
