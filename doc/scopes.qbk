@@ -37,7 +37,7 @@ Singletons:
     } // namespace di
     } // namespace boost
 
-[section Deduce]
+[section Deduce (Default)]
 
 Synopsis
 
