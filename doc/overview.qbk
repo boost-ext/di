@@ -1,25 +1,28 @@
 [section Overview]
 
-* supports dependency injection by constructors
-* supports scopes (deduce, per_request, singleton, session) + custom scopes
-* supports scope deduction from parameter (by default, ex: shared_ptr -> singleton, unique_ptr, lvalue -> per_request)
-* supports C++03 and C++11 standard
-* supports c++11 smart pointers, rvalue references and combinations between boost and std smart pointers
-* supports named parameters (named<int, my_int>>
-* supports creation of dynamic dependent factories
-* supports binding external values (passed by the client)
-* supports generation of constructor traits via python script using clang (to avoid using BOOST_DI_CTOR macro)
-* supports compile time policies (circular dependencies, creation ownership, not safe arguments, undefined behaviors)
-* supports module structure (injectors might be used separately or together)
-* supports run time visitor through the objection creation (ex: for generation UML diagrams)
-* supports mocks testing facilities (ex: to create mock hierarchy)
-* minimal overhead / compile time approach
+"Don't call us, we'll call you", Hollywood principle
 
-[section Getting Started]
+DI is C++03/C++11 header only library providing compile time, macro free constructor dependency injection functionality.
 
-Requirements
+Features
 
-* Boost.DI depends on some Boost libraries:
+* Header only library
+* Architecture independent (tested on x86/x86\_64)
+* Supports all POSIX and Windows operating systems (tested on Linux/Windows/Mac/Darwin)
+* Supports C++03/C++11 standard
+* Exception safe guaranty
+* Thread safe guaranty
+* Constructor injection (macro free)
+* Compile time creation guaranty
+* Compile time policies (arguments permission, binding correctness, circular dependencies, creation ownership, scopes permission)
+* Dependencies life time management (scopes: deduce, external, unique, shared, session + custom scopes)
+* Scope deduction (shared\_ptr -> shared, unique\_ptr, lvalue -> unique, ...)
+* Supports copies, references, pointers, boost and std smart pointers / rvalue references(C++11)
+* Named parameters (named\<int, my\_int\>)
+* Runtime visitor throughout created objects (useful for generation dependency diagrams)
+
+Dependencies
+
 * Boost.Bind
 * Boost.Config
 * Boost.Detail
@@ -32,12 +35,6 @@ Requirements
 * Boost.Type_Traits
 * Boost.Utility
 
-Header only library
-
-Exception safety
-
-Thread Safety
-
 Configuration
     BOOST_MPL_LIMIT_VECTOR_SIZE
     BOOST_DI_CTOR_CFG_VA_ARGS || BOOST_DI_CTOR_CFG_BRACKET
@@ -49,8 +46,6 @@ Tested Compilers
 [/
 [link di.supported_compilers]
 /]
-
-[endsect]
 
 [endsect]
 

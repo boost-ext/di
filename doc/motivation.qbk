@@ -1,5 +1,9 @@
 [section Motivation]
 
+* for using Dependency Injection
+
+* for using Dependency Injection Framework
+
 [import ../example/cpp_11/motivation.cpp]
 [example]
 
