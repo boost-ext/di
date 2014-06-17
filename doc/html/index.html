@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="./doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.0">
 <link rel="home" href="index.html" title="Chapter&#160;1.&#160;Boost.DI (Dependency Injection) 1.0">
-<link rel="next" href="di/user_s_guide.html" title="User's Guide">
+<link rel="next" href="boost_di__dependency_injection_/overview.html" title="Overview">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -17,7 +17,7 @@
 <td align="center"><a href="./more/index.htm">More</a></td>
 </tr></table>
 <hr>
-<div class="spirit-nav"><a accesskey="n" href="di/user_s_guide.html"><img src="./doc/src/images/next.png" alt="Next"></a></div>
+<div class="spirit-nav"><a accesskey="n" href="boost_di__dependency_injection_/overview.html"><img src="./doc/src/images/next.png" alt="Next"></a></div>
 <div class="chapter">
 <div class="titlepage"><div>
 <div><h2 class="title">
@@ -25,7 +25,7 @@
 <div><div class="author"><h3 class="author">
 <span class="firstname">Krzysztof</span> <span class="surname">Jusiak</span>
 </h3></div></div>
-<div><p class="copyright">Copyright &#169; 2012, 2013 Krzysztof Jusiak</p></div>
+<div><p class="copyright">Copyright &#169; 2014 Krzysztof Jusiak</p></div>
 <div><div class="legalnotice">
 <a name="di.legal"></a><p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -36,98 +36,195 @@
 <div class="toc">
 <p><b>Table of Contents</b></p>
 <dl class="toc">
-<dt><span class="section"><a href="index.html#di.overview">Overview</a></span></dt>
-<dt><span class="section"><a href="di/user_s_guide.html">User's Guide</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_di__dependency_injection_.introduction___motivation">Introduction
+    &amp; Motivation</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/overview.html">Overview</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="di/user_s_guide.html#di.user_s_guide.getting_started">Getting Started</a></span></dt>
-<dt><span class="section"><a href="di/user_s_guide.html#di.user_s_guide.tutorial">Tutorial</a></span></dt>
-<dt><span class="section"><a href="di/user_s_guide.html#di.user_s_guide.examples">Examples</a></span></dt>
-<dt><span class="section"><a href="di/user_s_guide.html#di.user_s_guide.concepts">Concepts</a></span></dt>
-<dt><span class="section"><a href="di/user_s_guide.html#di.user_s_guide.scopes">Scopes</a></span></dt>
-<dt><span class="section"><a href="di/user_s_guide.html#di.user_s_guide.policies">Policies</a></span></dt>
-<dt><span class="section"><a href="di/user_s_guide.html#di.user_s_guide.reference">Reference</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/overview.html#boost_di__dependency_injection_.overview.features">Features</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/overview.html#boost_di__dependency_injection_.overview.dependencies">Dependencies</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/overview.html#boost_di__dependency_injection_.overview.supported_compilers">Supported
+      Compilers</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="di/integration_with_boost_libraries.html">Integration with Boost
-    libraries</a></span></dt>
-<dd><dl><dt><span class="section"><a href="di/integration_with_boost_libraries.html#di.integration_with_boost_libraries.boost_meta_state_machine">Boost
+<dt><span class="section"><a href="boost_di__dependency_injection_/desing_rationale.html">Desing
+    Rationale</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/tutorial.html">Tutorial</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/concepts.html">Concepts</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_di__dependency_injection_/concepts.html#boost_di__dependency_injection_.concepts.constructor_injection">Constructor
+      Injection</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/concepts.html#boost_di__dependency_injection_.concepts.binding">Binding</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/concepts.html#boost_di__dependency_injection_.concepts.injector">Injector</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/concepts.html#boost_di__dependency_injection_.concepts.named_parameters">Named
+      Parameters</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/concepts.html#boost_di__dependency_injection_.concepts.provider">Provider</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_di__dependency_injection_/scopes.html">Scopes</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_di__dependency_injection_/scopes.html#boost_di__dependency_injection_.scopes.deduce__default_">Deduce
+      (Default)</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/scopes.html#boost_di__dependency_injection_.scopes.external">External</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/scopes.html#boost_di__dependency_injection_.scopes.unique">Unique</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/scopes.html#boost_di__dependency_injection_.scopes.shared">Shared</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/scopes.html#boost_di__dependency_injection_.scopes.session">Session</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/scopes.html#boost_di__dependency_injection_.scopes.custom">Custom</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_di__dependency_injection_/policies.html">Policies</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_di__dependency_injection_/policies.html#boost_di__dependency_injection_.policies.arguments_permission">Arguments
+      Permission</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/policies.html#boost_di__dependency_injection_.policies.circular_dependencies">Circular
+      Dependencies</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/policies.html#boost_di__dependency_injection_.policies.creation_ownership">Creation
+      Ownership</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/policies.html#boost_di__dependency_injection_.policies.scopes_permission">Scopes
+      Permission</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html">Examples</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.hello_world">Hello
+      World</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.inject">Inject</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.motivation">Motivation</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.di">Di</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.testing">Testing</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.named">Named</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.provider">Provider</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.uml_visitor">Uml
+      Visitor</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.allow_only_smart_ptr_policy">Allow
+      Only Smart Ptr Policy</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.externals">Externals</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.injector">Injector</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.text_visitor">Text
+      Visitor</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.concepts">Concepts</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.custom_scope">Custom
+      Scope</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.multiple_interfaces">Multiple
+      Interfaces</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.factory">Factory</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.deduce_scope">Deduce
+      Scope</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.hello_world0">Hello
+      World</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.di0">Di</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.configuration">Configuration</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_di__dependency_injection_/integration_with_boost_libraries.html">Integration
+    with Boost libraries</a></span></dt>
+<dd><dl><dt><span class="section"><a href="boost_di__dependency_injection_/integration_with_boost_libraries.html#boost_di__dependency_injection_.integration_with_boost_libraries.boost_meta_state_machine">Boost
       Meta State Machine</a></span></dt></dl></dd>
-<dt><span class="section"><a href="di/revision_history.html">Revision History</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/performance.html">Performance</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_di__dependency_injection_/performance.html#boost_di__dependency_injection_.performance.compilation_times">Compilation
+      times</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/performance.html#boost_di__dependency_injection_.performance.runtime_execution">Runtime
+      execution</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_di__dependency_injection_/reference.html">Reference</a></span></dt>
+<dd><dl><dt><span class="section"><a href="boost_di__dependency_injection_/reference.html#boost_di__dependency_injection_.reference.headers">Headers</a></span></dt></dl></dd>
+<dt><span class="section"><a href="boost_di__dependency_injection_/bibliography.html">Bibliography</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/acknowledgements.html">Acknowledgements</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/revision_history.html">Revision
+    History</a></span></dt>
 </dl>
 </div>
+<div class="caution"><table border="0" summary="Caution">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Caution]" src="./doc/src/images/caution.png"></td>
+<th align="left">Caution</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+      This is not an official Boost library yet and there is no guarantee it will
+      ever be!
+    </p></td></tr>
+</table></div>
 <div class="section">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="di.overview"></a><a class="link" href="index.html#di.overview" title="Overview">Overview</a>
+<a name="boost_di__dependency_injection_.introduction___motivation"></a><a class="link" href="index.html#boost_di__dependency_injection_.introduction___motivation" title="Introduction &amp; Motivation">Introduction
+    &amp; Motivation</a>
 </h2></div></div></div>
 <p>
-      "Google Guice" "With dependency injection, objects accept dependencies
-      in their constructors. To construct an object, you first build its dependencies.
-      But to build each dependency, you need its dependencies, and so on. So when
-      you build an object, you really need to build an object graph. Building object
-      graphs by hand is labour intensive, error prone, and makes testing difficult.
-      Instead, Guice can build the object graph for you.
+      DI is C++03/C++11 header only library providing compile time, macro free constructor
+      dependency injection functionality.
     </p>
 <p>
-      Motivation https://code.google.com/p/google-guice/wiki/Motivation
-    </p>
-<p>
-      Description
+      "Don't call us, we'll call you", Hollywood principle
     </p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
-          supports dependency injection by constructors
+          for using Dependency Injection
         </li>
 <li class="listitem">
-          supports scopes (deduce, per_request, singleton, session) + custom scopes
-        </li>
-<li class="listitem">
-          supports scope deduction from parameter (by default, ex: shared_ptr -&gt;
-          singleton, unique_ptr, lvalue -&gt; per_request)
-        </li>
-<li class="listitem">
-          supports C++03 and C++11 standard
-        </li>
-<li class="listitem">
-          supports c++11 smart pointers, rvalue references and combinations between
-          boost and std smart pointers
-        </li>
-<li class="listitem">
-          supports named parameters (named&lt;int, my_int&gt;&gt;
-        </li>
-<li class="listitem">
-          supports creation of dynamic dependent factories
-        </li>
-<li class="listitem">
-          supports binding external values (passed by the client)
-        </li>
-<li class="listitem">
-          supports generation of constructor traits via python script using clang
-          (to avoid using BOOST_DI_CTOR macro)
-        </li>
-<li class="listitem">
-          supports compile time policies (circular dependencies, creation ownership,
-          not safe arguments, undefined behaviors)
-        </li>
-<li class="listitem">
-          supports module structure (injectors might be used separately or together)
-        </li>
-<li class="listitem">
-          supports run time visitor through the objection creation (ex: for generation
-          UML diagrams)
-        </li>
-<li class="listitem">
-          supports mocks testing facilities (ex: to create mock hierarchy)
-        </li>
-<li class="listitem">
-          minimal overhead / compile time approach
+          for using Dependency Injection Framework
         </li>
 </ul></div>
+<p>
+</p>
+<pre class="programlisting"><a class="co" name="boost_di__dependency_injection_.introduction___motivation.c0" href="index.html#boost_di__dependency_injection_.introduction___motivation.c1"><img src="./doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="special">#</span><span class="identifier">include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<a class="co" name="boost_di__dependency_injection_.introduction___motivation.c2" href="index.html#boost_di__dependency_injection_.introduction___motivation.c3"><img src="./doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="keyword">class</span> <span class="identifier">app</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">app</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;&amp;</span>
+      <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span>
+      <span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span>
+      <span class="special">,</span> <span class="keyword">double</span>
+      <span class="special">,</span> <span class="keyword">int</span>
+      <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;)</span>
+    <span class="special">{</span> <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <a class="co" name="boost_di__dependency_injection_.introduction___motivation.c4" href="index.html#boost_di__dependency_injection_.introduction___motivation.c5"><img src="./doc/src/images/callouts/3.png" alt="3" border="0"></a><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">();</span>
+
+    <a class="co" name="boost_di__dependency_injection_.introduction___motivation.c6" href="index.html#boost_di__dependency_injection_.introduction___motivation.c7"><img src="./doc/src/images/callouts/4.png" alt="4" border="0"></a><span class="identifier">app</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;();</span>
+
+    <a class="co" name="boost_di__dependency_injection_.introduction___motivation.c8" href="index.html#boost_di__dependency_injection_.introduction___motivation.c9"><img src="./doc/src/images/callouts/5.png" alt="5" border="0"></a><span class="comment">//...</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+    </p>
+<div class="calloutlist"><table border="0" summary="Callout list">
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_di__dependency_injection_.introduction___motivation.c1"></a><a href="#boost_di__dependency_injection_.introduction___motivation.c0"><img src="./doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+          include di headers
+        </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_di__dependency_injection_.introduction___motivation.c3"></a><a href="#boost_di__dependency_injection_.introduction___motivation.c2"><img src="./doc/src/images/callouts/2.png" alt="2" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+          Define class as usual
+        </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_di__dependency_injection_.introduction___motivation.c5"></a><a href="#boost_di__dependency_injection_.introduction___motivation.c4"><img src="./doc/src/images/callouts/3.png" alt="3" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+          make injector
+        </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_di__dependency_injection_.introduction___motivation.c7"></a><a href="#boost_di__dependency_injection_.introduction___motivation.c6"><img src="./doc/src/images/callouts/4.png" alt="4" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+          create app
+        </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_di__dependency_injection_.introduction___motivation.c9"></a><a href="#boost_di__dependency_injection_.introduction___motivation.c8"><img src="./doc/src/images/callouts/5.png" alt="5" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+          use app
+        </p></td>
+</tr>
+</table></div>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: October 02, 2013 at 09:38:25 GMT</small></p></td>
+<td align="left"><p><small>Last revised: June 17, 2014 at 20:50:20 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>
-<div class="spirit-nav"><a accesskey="n" href="di/user_s_guide.html"><img src="./doc/src/images/next.png" alt="Next"></a></div>
+<div class="spirit-nav"><a accesskey="n" href="boost_di__dependency_injection_/overview.html"><img src="./doc/src/images/next.png" alt="Next"></a></div>
 </body>
 </html>
