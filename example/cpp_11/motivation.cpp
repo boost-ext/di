@@ -6,7 +6,9 @@
 //
 
 //[example
+//<-
 #include <memory>
+//->
 
 /*<<include di headers>>*/
 #include <boost/di.hpp>
@@ -35,5 +37,6 @@ int main() {
 
     return 0;
 }
+
 //]
 

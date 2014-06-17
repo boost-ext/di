@@ -59,3 +59,5 @@ int main() {
     return 0;
 }
 
+//`[note conversion between standard smart pointers and boost smart pointers - weak ptr]
+
