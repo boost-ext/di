@@ -42,5 +42,20 @@ class make_injector
 class named
 class provider
 
+dependency - scope
+dependency - bind
+injector - make_injector
+injector - concepts
+injector - policies
+injector - module
+scopes - wrappers
+dependency - module
+concepts - scopes
+
+module <|-- pool
+module --* creator
+creator --* binder
+binder --* builder
+
 @enduml
 
