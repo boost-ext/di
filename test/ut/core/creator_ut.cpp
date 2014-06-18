@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/detail/creator.hpp"
+#include "boost/di/core/creator.hpp"
 
 #include <vector>
 #include <boost/test/unit_test.hpp>
@@ -22,7 +22,7 @@
 
 namespace boost {
 namespace di {
-namespace detail {
+namespace core {
 
 BOOST_AUTO_TEST_CASE(create_pod) {
     const int i = 42;
@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE(create_pod) {
     ));
 }
 
-} // namespace detail
+} // namespace core
 } // namespace di
 } // namespace boost
 

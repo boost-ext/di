@@ -8,7 +8,6 @@
 #define BOOST_DI_CONCEPTS_CALL_STACK_HPP
 
 #include "boost/di/aux_/config.hpp"
-#include "boost/di/detail/binder.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
 
 #include <boost/mpl/size.hpp>

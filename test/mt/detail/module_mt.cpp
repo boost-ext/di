@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/detail/module.hpp"
+#include "boost/di/core/module.hpp"
 #include <memory>
 
 #include <boost/test/unit_test.hpp>
@@ -26,7 +26,7 @@
 
 namespace boost {
 namespace di {
-namespace detail {
+namespace core {
 
 BOOST_AUTO_TEST_CASE(create_using_copy) {
     module<> module_;
@@ -575,7 +575,7 @@ BOOST_AUTO_TEST_CASE(call) {
     BOOST_CHECK_EQUAL(1, fake_scope<>::exit_calls());
 }
 
-} // namespace detail
+} // namespace core
 } // namespace di
 } // namespace boost
 

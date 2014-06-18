@@ -3,14 +3,14 @@
 // // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_DETAIL_BINDER_HPP
-#define BOOST_DI_DETAIL_BINDER_HPP
+#ifndef BOOST_DI_CORE_BINDER_HPP
+#define BOOST_DI_CORE_BINDER_HPP
 
 #include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/type_traits/scope_traits.hpp"
 #include "boost/di/type_traits/remove_accessors.hpp"
 #include "boost/di/wrappers/universal.hpp"
-#include "boost/di/detail/builder.hpp"
+#include "boost/di/core/builder.hpp"
 #include "boost/di/concepts/dependency.hpp"
 
 #include <boost/mpl/if.hpp>
@@ -20,7 +20,7 @@
 
 namespace boost {
 namespace di {
-namespace detail {
+namespace core {
 
 template<
     typename T
@@ -114,7 +114,7 @@ private:
     TBuilder builder_;
 };
 
-} // namespace detail
+} // namespace core
 } // namespace di
 } // namespace boost
 

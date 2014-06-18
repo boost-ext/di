@@ -6,13 +6,13 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef BOOST_DI_DETAIL_MODULE_HPP
-    #define BOOST_DI_DETAIL_MODULE_HPP
+    #ifndef BOOST_DI_CORE_MODULE_HPP
+    #define BOOST_DI_CORE_MODULE_HPP
 
     #include "boost/di/aux_/config.hpp"
     #include "boost/di/aux_/memory.hpp"
-    #include "boost/di/detail/pool.hpp"
-    #include "boost/di/detail/creator.hpp"
+    #include "boost/di/core/pool.hpp"
+    #include "boost/di/core/creator.hpp"
     #include "boost/di/type_traits/has_call.hpp"
 
     #include <vector>
@@ -24,17 +24,17 @@
 
     namespace boost {
     namespace di {
-    namespace detail {
+    namespace core {
 
     template<
         typename TDependecies = mpl::vector0<>
       , template<
             typename
-          , template<typename, typename> class = ::boost::di::detail::binder
+          , template<typename, typename> class = ::boost::di::core::binder
         > class TCreator = creator
       , template<
             typename = ::boost::mpl::vector0<>
-          , typename = ::boost::di::detail::never< ::boost::mpl::_1 >
+          , typename = ::boost::di::core::never< ::boost::mpl::_1 >
           , typename = void
         > class TPool = pool
     >
@@ -61,7 +61,7 @@
             : creator_(creator)
         { }
 
-        #define BOOST_PP_FILENAME_1 "boost/di/detail/module.hpp"
+        #define BOOST_PP_FILENAME_1 "boost/di/core/module.hpp"
         #define BOOST_PP_ITERATION_LIMITS BOOST_DI_TYPES_MPL_LIMIT_FROM(1)
         #include BOOST_PP_ITERATE()
 
@@ -112,7 +112,7 @@
         TCreator<TDependecies> creator_;
     };
 
-    } // namespace detail
+    } // namespace core
     } // namespace di
     } // namespace boost
 

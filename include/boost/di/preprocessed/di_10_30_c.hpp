@@ -444,72 +444,211 @@ struct bind
 } // namespace di
 } // namespace boost
 
+
+namespace boost {
+namespace di {
+namespace concepts {
+
+template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na , typename T10 = ::boost::mpl::na , typename T11 = ::boost::mpl::na , typename T12 = ::boost::mpl::na , typename T13 = ::boost::mpl::na , typename T14 = ::boost::mpl::na , typename T15 = ::boost::mpl::na , typename T16 = ::boost::mpl::na , typename T17 = ::boost::mpl::na , typename T18 = ::boost::mpl::na , typename T19 = ::boost::mpl::na , typename T20 = ::boost::mpl::na , typename T21 = ::boost::mpl::na , typename T22 = ::boost::mpl::na , typename T23 = ::boost::mpl::na , typename T24 = ::boost::mpl::na , typename T25 = ::boost::mpl::na , typename T26 = ::boost::mpl::na , typename T27 = ::boost::mpl::na , typename T28 = ::boost::mpl::na , typename T29 = ::boost::mpl::na >
+class call_stack
+{
+    typedef mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19 , T20 , T21 , T22 , T23 , T24 , T25 , T26 , T27 , T28 , T29> context_type;
+
+    template<typename TContext, typename TCallStack>
+    struct equal
+      : mpl::equal<
+            mpl::iterator_range<
+                typename mpl::advance<
+                    typename mpl::begin<TCallStack>::type
+                  , typename mpl::max<
+                        mpl::int_<0>
+                      , mpl::minus<
+                            mpl::size<TCallStack>
+                          , mpl::size<TContext>
+                        >
+                    >::type
+                >::type
+              , typename mpl::end<TCallStack>::type
+            >
+          , TContext
+        >
+    { };
+
+    template<typename TContext, typename TCallStack>
+    struct apply_impl
+        : mpl::if_<
+              mpl::empty<TCallStack>
+            , mpl::int_<0>
+            , mpl::if_<
+                  equal<TContext, TCallStack>
+                , mpl::size<TContext>
+                , mpl::int_<0>
+              >
+          >
+    { };
+
+public:
+    template<typename T>
+    struct apply
+        : apply_impl<
+              context_type
+            , typename mpl::transform<
+                  typename T::call_stack
+                , di::type_traits::make_plain<mpl::_>
+              >::type
+          >::type
+    { };
+};
+
+} // namespace concepts
+} // namespace di
+} // namespace boost
+
 namespace boost {
 namespace di {
 namespace wrappers {
 
 template<typename T>
-class copy
+class shared
 {
-    typedef function<T*()> value_t;
-
-    template<typename I>
-    class scoped_ptr
+    template<typename U, typename TShared = aux::shared_ptr<U> >
+    class sp_holder
     {
     public:
-        explicit scoped_ptr(I* ptr)
-            : ptr_(ptr)
+        explicit sp_holder(const TShared& value)
+            : value_(value)
         { }
 
-        ~scoped_ptr() { delete ptr_; }
-        I& operator*() const { return *ptr_; }
-
     private:
-        I* ptr_;
+        TShared value_;
     };
 
 public:
-    template<typename TValueType>
-    copy(const TValueType& value) // non explicit
+    shared() { }
+
+    shared(const aux::shared_ptr<T>& value) // non explicit
         : value_(value)
     { }
 
-    template<typename I>
-    I operator()(const type<I>&, typename disable_if<is_polymorphic<I> >::type* = 0) const {
-        scoped_ptr<I> ptr(value_());
-        return *ptr;
+    bool operator!() const {
+        return !value_;
     }
 
-    template<typename I>
-    I* operator()(const type<I*>&) const {
-        return value_(); // ownership transfer
+    void reset(T* ptr = 0) {
+        return value_.reset(ptr);
     }
 
     template<typename I>
     aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const {
-        return aux::shared_ptr<I>(value_());
+        return value_;
     }
 
     template<typename I>
     aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) const {
-        return aux_::shared_ptr<I>(value_());
+        aux_::shared_ptr<sp_holder<T> > sp(new sp_holder<T>(value_));
+        return aux_::shared_ptr<T>(sp, value_.get());
     }
 
     template<typename I>
-    aux::auto_ptr<I> operator()(const type<aux::auto_ptr<I> >&) const {
-        return aux::auto_ptr<I>(value_());
-    }
-
-    template<typename I>
-    aux::unique_ptr<I> operator()(const type<aux::unique_ptr<I> >&) const {
-        return aux::unique_ptr<I>(value_());
+    aux::weak_ptr<I> operator()(const type<aux::weak_ptr<I> >&) const {
+        return value_;
     }
 
 private:
-    value_t value_;
+    aux::shared_ptr<T> value_;
 };
 
 } // namespace wrappers
+} // namespace di
+} // namespace boost
+
+namespace boost {
+namespace di {
+namespace wrappers {
+
+template<typename T>
+class reference
+{
+public:
+    reference(const reference_wrapper<T>& value) // non explicit
+        : value_(value)
+    { }
+
+    T& operator()(const type<T&>&) const {
+        return value_;
+    }
+
+private:
+    reference_wrapper<T> value_;
+};
+
+} // namespace wrappers
+} // namespace di
+} // namespace boost
+
+
+namespace boost {
+namespace di {
+namespace wrappers {
+
+template<typename T>
+class value
+{
+public:
+    value(const T& value) // non explicit
+        : value_(value)
+    { }
+
+    template<typename I>
+    aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const {
+        return aux::shared_ptr<I>(new I(value_));
+    }
+
+    template<typename I>
+    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) const {
+        return aux_::shared_ptr<I>(new I(value_));
+    }
+
+    T operator()(const type<T>&) const {
+  return value_;
+ }
+
+    T* operator()(const type<T*>&) const {
+        return new T(value_);
+    }
+
+    BOOST_DI_FEATURE(RVALUE_REFERENCES)(
+        T&& operator()(const type<T&&>&) const {
+            return std::move(value_);
+        }
+    )
+
+private:
+    T value_;
+};
+
+} // namespace wrappers
+} // namespace di
+} // namespace boost
+
+namespace boost {
+namespace di {
+namespace scopes {
+
+class deduce
+{
+public:
+    typedef mpl::int_<0> priority;
+
+    template<typename, typename>
+    struct scope
+    {
+        typedef scope type;
+        typedef none_t result_type;
+    };
+};
+
+} // namespace scopes
 } // namespace di
 } // namespace boost
 
@@ -1371,6 +1510,693 @@ public:
     } // namespace boost
 
 
+namespace boost {
+namespace di {
+namespace type_traits {
+
+template<typename T>
+class has_call_operator
+{
+    struct base_impl { void operator()(...) { } };
+    struct base
+        : base_impl
+        , mpl::if_<is_class<T>, T, mpl::void_>::type
+    { base() { } };
+
+    template<typename U>
+    static mpl::aux::no_tag test(
+        U*
+      , non_type<void (base_impl::*)(...), &U::operator()>* = 0
+    );
+
+    static mpl::aux::yes_tag test(...);
+
+public:
+    BOOST_STATIC_CONSTANT(
+        bool
+      , value = sizeof(test((base*)0)) == sizeof(mpl::aux::yes_tag)
+    );
+};
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+
+
+    namespace boost {
+    namespace di {
+    namespace scopes {
+
+    template<template<typename> class TWrapper = wrappers::value>
+    class external
+    {
+    public:
+        typedef mpl::int_<1> priority;
+
+        template<typename TExpected, typename = TExpected>
+        class scope
+        {
+        public:
+            typedef scope type;
+            typedef TWrapper<TExpected> result_type;
+
+        public:
+            template<typename T>
+            explicit scope(const T& object
+                         , typename enable_if_c<type_traits::has_call_operator<T>::value>::type* = 0)
+                : object_(object())
+            { }
+
+            template<typename T>
+            explicit scope(const T& object
+                         , typename disable_if_c<type_traits::has_call_operator<T>::value>::type* = 0)
+                : object_(object)
+            { }
+
+            result_type create() {
+                return object_;
+            }
+
+    template< typename Args0>
+    result_type create( Args0 ) {
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1>
+    result_type create( Args0 , Args1 ) {
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1 , typename Args2>
+    result_type create( Args0 , Args1 , Args2 ) {
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1 , typename Args2 , typename Args3>
+    result_type create( Args0 , Args1 , Args2 , Args3 ) {
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
+    result_type create( Args0 , Args1 , Args2 , Args3 , Args4 ) {
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
+    result_type create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 ) {
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
+    result_type create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 ) {
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
+    result_type create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 ) {
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
+    result_type create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 ) {
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
+    result_type create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 ) {
+        return object_;
+    }
+
+        private:
+            result_type object_;
+        };
+    };
+
+    } // namespace scopes
+    } // namespace di
+    } // namespace boost
+
+namespace boost {
+namespace di {
+namespace concepts {
+
+namespace detail {
+
+template<typename T>
+struct scope_traits
+{
+    typedef T type;
+};
+
+template<>
+struct scope_traits<mpl::_1>
+{
+    typedef scopes::deduce type;
+};
+
+template<
+    typename TExpected
+  , typename TGiven
+  , typename TScope
+>
+struct get_scope
+    : detail::scope_traits<TScope>::type::template
+         scope<TExpected, TGiven>
+{
+    get_scope() { }
+};
+
+} // namespace detail
+
+template<
+    typename TScope
+  , typename TExpected
+  , typename TGiven = TExpected
+  , typename TBind =
+        detail::requires_<
+            concepts::type_traits::is_required_priority
+          , concepts::type_traits::is_required_type<TExpected>
+        >
+>
+class dependency : public detail::get_scope<TExpected, TGiven, TScope>::type
+{
+    typedef typename detail::get_scope<TExpected, TGiven, TScope>::type scope_type;
+    typedef scopes::external<wrappers::reference> ref_type;
+    typedef scopes::external<wrappers::shared> shared_type;
+    typedef scopes::external<wrappers::value> value_type;
+
+    template<typename>
+    struct get_wrapper_impl
+    {
+        typedef value_type type;
+    };
+
+    template<typename T>
+    struct get_wrapper_impl<reference_wrapper<T> >
+    {
+        typedef ref_type type;
+    };
+
+    template<typename T>
+    struct get_wrapper_impl<aux::shared_ptr<T> >
+    {
+        typedef shared_type type;
+    };
+
+    template<typename T, typename = void>
+    struct get_wrapper
+    {
+        typedef T type;
+    };
+
+    template<typename T>
+    struct get_wrapper<T, typename enable_if<di::type_traits::has_call_operator<T> >::type>
+        : get_wrapper_impl<
+              typename di::type_traits::parameter_types<
+                  BOOST_DI_FEATURE_DECLTYPE(&T::operator())
+              >::result_type
+          >
+    { };
+
+public:
+    typedef dependency type;
+    typedef typename detail::scope_traits<TScope>::type scope;
+    typedef TExpected expected;
+    typedef TGiven given;
+    typedef TBind bind;
+
+    template<typename T>
+    struct rebind
+    {
+        typedef dependency<
+            typename mpl::if_<
+                is_same<scope, scopes::deduce>
+              , T
+              , TScope
+            >::type
+          , TExpected
+          , TGiven
+          , TBind
+        > other;
+    };
+
+    dependency() { }
+
+    template<typename T>
+    explicit dependency(const T& object)
+        : scope_type(object)
+    { }
+
+    template<typename T>
+    static dependency<value_type, expected, T, TBind>
+    to(const T& object, typename disable_if<is_reference_wrapper<T> >::type* = 0
+                      , typename disable_if<di::type_traits::has_call_operator<T> >::type* = 0) {
+        return dependency<value_type, expected, T, TBind>(object);
+    }
+
+    template<typename T>
+    static dependency<ref_type, typename unwrap_reference<T>::type, T, TBind>
+    to(const T& object, typename enable_if<is_reference_wrapper<T> >::type* = 0
+                      , typename disable_if<di::type_traits::has_call_operator<T> >::type* = 0) {
+        return dependency<ref_type, typename unwrap_reference<T>::type, T, TBind>(object);
+    }
+
+    template<typename T>
+    static dependency<typename get_wrapper<T>::type, expected, T, TBind>
+    to(const T& object, typename disable_if<is_reference_wrapper<T> >::type* = 0
+                      , typename enable_if<di::type_traits::has_call_operator<T> >::type* = 0) {
+        return dependency<typename get_wrapper<T>::type, expected, T, TBind>(object);
+    }
+
+    template<typename T>
+    static dependency<shared_type, expected, T>
+    to(const aux::shared_ptr<T>& object) {
+        return dependency<shared_type, expected, T>(object);
+    }
+};
+
+} // namespace concepts
+} // namespace di
+} // namespace boost
+
+
+namespace boost {
+namespace di {
+namespace concepts {
+
+template<
+    typename TScope
+  , template<
+        typename
+      , typename
+      , typename
+      , typename
+    > class TDependency
+>
+class scope
+{
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(bind)
+
+    template<typename T>
+    struct is_dependency
+        : has_bind<T>
+    { };
+
+    template<typename T>
+    struct dependency
+        : TDependency<
+              mpl::_1
+            , T
+            , T
+            , detail::requires_<
+                  type_traits::is_required_priority
+                , type_traits::is_required_type<T>
+              >
+          >
+    { };
+
+    template<typename T, typename U>
+    struct rebind
+        : T::template rebind<U>::other
+    { };
+
+public:
+    template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na , typename T10 = ::boost::mpl::na , typename T11 = ::boost::mpl::na , typename T12 = ::boost::mpl::na , typename T13 = ::boost::mpl::na , typename T14 = ::boost::mpl::na , typename T15 = ::boost::mpl::na , typename T16 = ::boost::mpl::na , typename T17 = ::boost::mpl::na , typename T18 = ::boost::mpl::na , typename T19 = ::boost::mpl::na , typename T20 = ::boost::mpl::na , typename T21 = ::boost::mpl::na , typename T22 = ::boost::mpl::na , typename T23 = ::boost::mpl::na , typename T24 = ::boost::mpl::na , typename T25 = ::boost::mpl::na , typename T26 = ::boost::mpl::na , typename T27 = ::boost::mpl::na , typename T28 = ::boost::mpl::na , typename T29 = ::boost::mpl::na >
+    struct bind
+        : mpl::fold<
+              mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19 , T20 , T21 , T22 , T23 , T24 , T25 , T26 , T27 , T28 , T29>
+            , mpl::vector0<>
+            , mpl::push_back<
+                  mpl::_1
+                , mpl::if_<
+                      is_dependency<mpl::_2>
+                    , rebind<mpl::_2, TScope>
+                    , rebind<dependency<mpl::_2>, TScope>
+                  >
+              >
+          >::type
+    { };
+};
+
+} // namespace concepts
+} // namespace di
+} // namespace boost
+
+
+    namespace boost {
+    namespace di {
+    namespace scopes {
+
+    class session_entry { };
+    class session_exit { };
+
+    template<template<typename> class TWrapper = wrappers::shared>
+    class session
+    {
+    public:
+        typedef mpl::int_<0> priority;
+
+        template<typename TExpected, typename TGiven = TExpected>
+        class scope
+        {
+        public:
+            typedef scope type;
+            typedef TWrapper<TExpected> result_type;
+
+            scope()
+                : in_scope_(false)
+            { }
+
+            void call(const session_entry&) {
+                in_scope_ = true;
+            }
+
+            void call(const session_exit&) {
+                in_scope_ = false;
+                object_.reset();
+            }
+
+            result_type create() {
+                if (in_scope_ && !object_) {
+                    object_.reset(type_traits::create_traits<TExpected, TGiven>());
+                }
+                return object_;
+            }
+
+    template< typename Args0>
+    result_type create( Args0 args0) {
+        if (in_scope_ && !object_) {
+            object_.reset(
+                type_traits::create_traits<TExpected, TGiven>( args0)
+            );
+        }
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1>
+    result_type create( Args0 args0 , Args1 args1) {
+        if (in_scope_ && !object_) {
+            object_.reset(
+                type_traits::create_traits<TExpected, TGiven>( args0 , args1)
+            );
+        }
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1 , typename Args2>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2) {
+        if (in_scope_ && !object_) {
+            object_.reset(
+                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2)
+            );
+        }
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1 , typename Args2 , typename Args3>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3) {
+        if (in_scope_ && !object_) {
+            object_.reset(
+                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3)
+            );
+        }
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4) {
+        if (in_scope_ && !object_) {
+            object_.reset(
+                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3 , args4)
+            );
+        }
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5) {
+        if (in_scope_ && !object_) {
+            object_.reset(
+                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5)
+            );
+        }
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6) {
+        if (in_scope_ && !object_) {
+            object_.reset(
+                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6)
+            );
+        }
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7) {
+        if (in_scope_ && !object_) {
+            object_.reset(
+                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7)
+            );
+        }
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8) {
+        if (in_scope_ && !object_) {
+            object_.reset(
+                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8)
+            );
+        }
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9) {
+        if (in_scope_ && !object_) {
+            object_.reset(
+                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9)
+            );
+        }
+        return object_;
+    }
+
+        private:
+            result_type object_;
+            bool in_scope_;
+        };
+    };
+
+    } // namespace scopes
+    } // namespace di
+    } // namespace boost
+
+
+    namespace boost {
+    namespace di {
+    namespace scopes {
+
+    template<template<typename> class TWrapper = wrappers::shared>
+    class shared
+    {
+    public:
+        typedef mpl::int_<0> priority;
+
+        template<typename TExpected, typename TGiven = TExpected>
+        class scope
+        {
+        public:
+            typedef scope type;
+            typedef TWrapper<TExpected> result_type;
+
+            result_type create() {
+                if (!object_) {
+                    object_.reset(type_traits::create_traits<TExpected, TGiven>());
+                }
+                return object_;
+            }
+
+    template< typename Args0>
+    result_type create( Args0 args0) {
+        if (!object_) {
+            object_.reset(
+                type_traits::create_traits<TExpected, TGiven>( args0)
+            );
+        }
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1>
+    result_type create( Args0 args0 , Args1 args1) {
+        if (!object_) {
+            object_.reset(
+                type_traits::create_traits<TExpected, TGiven>( args0 , args1)
+            );
+        }
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1 , typename Args2>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2) {
+        if (!object_) {
+            object_.reset(
+                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2)
+            );
+        }
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1 , typename Args2 , typename Args3>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3) {
+        if (!object_) {
+            object_.reset(
+                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3)
+            );
+        }
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4) {
+        if (!object_) {
+            object_.reset(
+                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3 , args4)
+            );
+        }
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5) {
+        if (!object_) {
+            object_.reset(
+                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5)
+            );
+        }
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6) {
+        if (!object_) {
+            object_.reset(
+                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6)
+            );
+        }
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7) {
+        if (!object_) {
+            object_.reset(
+                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7)
+            );
+        }
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8) {
+        if (!object_) {
+            object_.reset(
+                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8)
+            );
+        }
+        return object_;
+    }
+
+    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
+    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9) {
+        if (!object_) {
+            object_.reset(
+                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9)
+            );
+        }
+        return object_;
+    }
+
+        private:
+            result_type object_;
+        };
+    };
+
+    } // namespace scopes
+    } // namespace di
+    } // namespace boost
+
+namespace boost {
+namespace di {
+namespace wrappers {
+
+template<typename T>
+class copy
+{
+    typedef function<T*()> value_t;
+
+    template<typename I>
+    class scoped_ptr
+    {
+    public:
+        explicit scoped_ptr(I* ptr)
+            : ptr_(ptr)
+        { }
+
+        ~scoped_ptr() { delete ptr_; }
+        I& operator*() const { return *ptr_; }
+
+    private:
+        I* ptr_;
+    };
+
+public:
+    template<typename TValueType>
+    copy(const TValueType& value) // non explicit
+        : value_(value)
+    { }
+
+    template<typename I>
+    I operator()(const type<I>&, typename disable_if<is_polymorphic<I> >::type* = 0) const {
+        scoped_ptr<I> ptr(value_());
+        return *ptr;
+    }
+
+    template<typename I>
+    I* operator()(const type<I*>&) const {
+        return value_(); // ownership transfer
+    }
+
+    template<typename I>
+    aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const {
+        return aux::shared_ptr<I>(value_());
+    }
+
+    template<typename I>
+    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) const {
+        return aux_::shared_ptr<I>(value_());
+    }
+
+    template<typename I>
+    aux::auto_ptr<I> operator()(const type<aux::auto_ptr<I> >&) const {
+        return aux::auto_ptr<I>(value_());
+    }
+
+    template<typename I>
+    aux::unique_ptr<I> operator()(const type<aux::unique_ptr<I> >&) const {
+        return aux::unique_ptr<I>(value_());
+    }
+
+private:
+    value_t value_;
+};
+
+} // namespace wrappers
+} // namespace di
+} // namespace boost
+
+
     namespace boost {
     namespace di {
     namespace scopes {
@@ -1799,1780 +2625,6 @@ public:
     } // namespace di
     } // namespace boost
 
-namespace boost {
-namespace di {
-namespace wrappers {
-
-template<typename T>
-class shared
-{
-    template<typename U, typename TShared = aux::shared_ptr<U> >
-    class sp_holder
-    {
-    public:
-        explicit sp_holder(const TShared& value)
-            : value_(value)
-        { }
-
-    private:
-        TShared value_;
-    };
-
-public:
-    shared() { }
-
-    shared(const aux::shared_ptr<T>& value) // non explicit
-        : value_(value)
-    { }
-
-    bool operator!() const {
-        return !value_;
-    }
-
-    void reset(T* ptr = 0) {
-        return value_.reset(ptr);
-    }
-
-    template<typename I>
-    aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const {
-        return value_;
-    }
-
-    template<typename I>
-    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) const {
-        aux_::shared_ptr<sp_holder<T> > sp(new sp_holder<T>(value_));
-        return aux_::shared_ptr<T>(sp, value_.get());
-    }
-
-    template<typename I>
-    aux::weak_ptr<I> operator()(const type<aux::weak_ptr<I> >&) const {
-        return value_;
-    }
-
-private:
-    aux::shared_ptr<T> value_;
-};
-
-} // namespace wrappers
-} // namespace di
-} // namespace boost
-
-
-    namespace boost {
-    namespace di {
-    namespace scopes {
-
-    template<template<typename> class TWrapper = wrappers::shared>
-    class shared
-    {
-    public:
-        typedef mpl::int_<0> priority;
-
-        template<typename TExpected, typename TGiven = TExpected>
-        class scope
-        {
-        public:
-            typedef scope type;
-            typedef TWrapper<TExpected> result_type;
-
-            result_type create() {
-                if (!object_) {
-                    object_.reset(type_traits::create_traits<TExpected, TGiven>());
-                }
-                return object_;
-            }
-
-    template< typename Args0>
-    result_type create( Args0 args0) {
-        if (!object_) {
-            object_.reset(
-                type_traits::create_traits<TExpected, TGiven>( args0)
-            );
-        }
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1>
-    result_type create( Args0 args0 , Args1 args1) {
-        if (!object_) {
-            object_.reset(
-                type_traits::create_traits<TExpected, TGiven>( args0 , args1)
-            );
-        }
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2>
-    result_type create( Args0 args0 , Args1 args1 , Args2 args2) {
-        if (!object_) {
-            object_.reset(
-                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2)
-            );
-        }
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3>
-    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3) {
-        if (!object_) {
-            object_.reset(
-                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3)
-            );
-        }
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
-    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4) {
-        if (!object_) {
-            object_.reset(
-                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3 , args4)
-            );
-        }
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
-    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5) {
-        if (!object_) {
-            object_.reset(
-                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5)
-            );
-        }
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
-    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6) {
-        if (!object_) {
-            object_.reset(
-                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6)
-            );
-        }
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
-    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7) {
-        if (!object_) {
-            object_.reset(
-                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7)
-            );
-        }
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
-    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8) {
-        if (!object_) {
-            object_.reset(
-                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8)
-            );
-        }
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
-    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9) {
-        if (!object_) {
-            object_.reset(
-                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9)
-            );
-        }
-        return object_;
-    }
-
-        private:
-            result_type object_;
-        };
-    };
-
-    } // namespace scopes
-    } // namespace di
-    } // namespace boost
-
-
-namespace boost {
-namespace di {
-namespace wrappers {
-
-template<typename T>
-class value
-{
-public:
-    value(const T& value) // non explicit
-        : value_(value)
-    { }
-
-    template<typename I>
-    aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const {
-        return aux::shared_ptr<I>(new I(value_));
-    }
-
-    template<typename I>
-    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) const {
-        return aux_::shared_ptr<I>(new I(value_));
-    }
-
-    T operator()(const type<T>&) const {
-  return value_;
- }
-
-    T* operator()(const type<T*>&) const {
-        return new T(value_);
-    }
-
-    BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-        T&& operator()(const type<T&&>&) const {
-            return std::move(value_);
-        }
-    )
-
-private:
-    T value_;
-};
-
-} // namespace wrappers
-} // namespace di
-} // namespace boost
-
-
-namespace boost {
-namespace di {
-namespace type_traits {
-
-template<typename T>
-class has_call_operator
-{
-    struct base_impl { void operator()(...) { } };
-    struct base
-        : base_impl
-        , mpl::if_<is_class<T>, T, mpl::void_>::type
-    { base() { } };
-
-    template<typename U>
-    static mpl::aux::no_tag test(
-        U*
-      , non_type<void (base_impl::*)(...), &U::operator()>* = 0
-    );
-
-    static mpl::aux::yes_tag test(...);
-
-public:
-    BOOST_STATIC_CONSTANT(
-        bool
-      , value = sizeof(test((base*)0)) == sizeof(mpl::aux::yes_tag)
-    );
-};
-
-} // namespace type_traits
-} // namespace di
-} // namespace boost
-
-
-    namespace boost {
-    namespace di {
-    namespace scopes {
-
-    template<template<typename> class TWrapper = wrappers::value>
-    class external
-    {
-    public:
-        typedef mpl::int_<1> priority;
-
-        template<typename TExpected, typename = TExpected>
-        class scope
-        {
-        public:
-            typedef scope type;
-            typedef TWrapper<TExpected> result_type;
-
-        public:
-            template<typename T>
-            explicit scope(const T& object
-                         , typename enable_if_c<type_traits::has_call_operator<T>::value>::type* = 0)
-                : object_(object())
-            { }
-
-            template<typename T>
-            explicit scope(const T& object
-                         , typename disable_if_c<type_traits::has_call_operator<T>::value>::type* = 0)
-                : object_(object)
-            { }
-
-            result_type create() {
-                return object_;
-            }
-
-    template< typename Args0>
-    result_type create( Args0 ) {
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1>
-    result_type create( Args0 , Args1 ) {
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2>
-    result_type create( Args0 , Args1 , Args2 ) {
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3>
-    result_type create( Args0 , Args1 , Args2 , Args3 ) {
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
-    result_type create( Args0 , Args1 , Args2 , Args3 , Args4 ) {
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
-    result_type create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 ) {
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
-    result_type create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 ) {
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
-    result_type create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 ) {
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
-    result_type create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 ) {
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
-    result_type create( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 ) {
-        return object_;
-    }
-
-        private:
-            result_type object_;
-        };
-    };
-
-    } // namespace scopes
-    } // namespace di
-    } // namespace boost
-
-
-namespace boost {
-namespace di {
-
-BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
-
-template<
-    typename T
-  , typename TName = void
-  , typename = void
->
-class named
-{
-    typedef typename type_traits::remove_accessors<T>::type object_type;
-    typedef typename remove_reference<T>::type& ref_type;
-
-public:
-    typedef T named_type;
-    typedef TName name;
-
-    named(const object_type& object) // non explicit
-        : object_(object)
-    { }
-
-    operator T() const {
-        return object_;
-    }
-
-    operator ref_type() {
-        return object_;
-    }
-
-private:
-    object_type object_;
-};
-
-template<
-    typename T
-  , typename TName
->
-class named<T, TName, typename enable_if<
-    is_polymorphic<typename type_traits::remove_accessors<T>::type> >::type
->
-{
-public:
-    typedef T named_type;
-    typedef TName name;
-};
-
-template<
-    typename T
-  , typename TName
->
-class named<T, TName, typename enable_if<
-    has_element_type<typename type_traits::remove_accessors<T>::type> >::type
->
-{
-    typedef typename type_traits::remove_accessors<T>::type object_type;
-    typedef typename type_traits::make_plain<T>::type value_type;
-
-public:
-    typedef T named_type;
-    typedef TName name;
-
-    named() { }
-
-    named(const object_type& object) // non explicit
-        : object_(object)
-    { }
-
-    named(typename object_type::element_type* ptr) // non explicit
-        : object_(ptr)
-    { }
-
-    BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-        named(object_type&& object) // non explicit
-            : object_(std::move(object))
-        { }
-    )
-
-    operator T() const { return object_; }
-
-    value_type* operator->() const { return object_.get(); }
-    value_type& operator*() const { return *object_; }
-    value_type* get() const { return object_.get(); }
-
-    void reset() {
-        object_.reset();
-    }
-
-    void reset(typename object_type::element_type* ptr) {
-        object_.reset(ptr);
-    }
-
-private:
-    object_type object_;
-};
-
-} // namespace di
-} // namespace boost
-
-
-namespace boost {
-namespace di {
-namespace type_traits {
-
-template<typename T>
-struct scope_traits
-{
-    typedef scopes::unique<> type;
-};
-
-template<typename T>
-struct scope_traits<T&>
-{
-    typedef scopes::external<> type;
-};
-
-template<typename T>
-struct scope_traits<const T&>
-{
-    typedef scopes::unique<> type;
-};
-
-template<typename T>
-struct scope_traits<T*>
-{
-    typedef scopes::unique<> type;
-};
-
-template<typename T>
-struct scope_traits<const T*>
-{
-    typedef scopes::unique<> type;
-};
-
-template<typename T>
-struct scope_traits<aux::auto_ptr<T> >
-{
-    typedef scopes::unique<> type;
-};
-
-template<typename T>
-struct scope_traits<aux::shared_ptr<T> >
-{
-    typedef scopes::shared<> type;
-};
-
-template<typename T>
-struct scope_traits<const aux::shared_ptr<T>&>
-{
-    typedef scopes::shared<> type;
-};
-
-template<typename T>
-struct scope_traits<aux_::shared_ptr<T> >
-{
-    typedef scopes::shared<> type;
-};
-
-template<typename T>
-struct scope_traits<const aux_::shared_ptr<T>&>
-{
-    typedef scopes::shared<> type;
-};
-
-template<typename T>
-struct scope_traits<aux::weak_ptr<T> >
-{
-    typedef scopes::shared<> type;
-};
-
-template<typename T>
-struct scope_traits<const aux::weak_ptr<T>&>
-{
-    typedef scopes::shared<> type;
-};
-
-template<typename T>
-struct scope_traits<aux::unique_ptr<T> >
-{
-    typedef scopes::unique<> type;
-};
-
-template<typename T>
-struct scope_traits<const aux::unique_ptr<T>&>
-{
-    typedef scopes::unique<> type;
-};
-
-BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-    template<typename T>
-    struct scope_traits<T&&>
-    {
-        typedef scopes::unique<> type;
-    };
-
-    template<typename T>
-    struct scope_traits<const T&&>
-    {
-        typedef scopes::unique<> type;
-    };
-)
-
-template<typename T, typename TName>
-struct scope_traits<named<T, TName> >
-{
-    typedef typename scope_traits<T>::type type;
-};
-
-template<typename T, typename TName>
-struct scope_traits<const named<T, TName>&>
-{
-    typedef typename scope_traits<T>::type type;
-};
-
-} // namespace type_traits
-} // namespace di
-} // namespace boost
-
-
-namespace boost {
-namespace di {
-namespace type_traits {
-
-namespace detail {
-
-template<
-    typename T
-  , typename TSignature
->
-class is_convertible
-{
-    template<typename U>
-    static mpl::aux::yes_tag test(non_type<TSignature, &U::operator()>*);
-
-    template<typename>
-    static mpl::aux::no_tag test(...);
-
-public:
-    typedef is_convertible type;
-
-    BOOST_STATIC_CONSTANT(
-        bool
-      , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
-    );
-};
-
-} // namespace detail
-
-template<
-    typename TValueType
-  , typename T
->
-struct is_convertible_to_ref
-    : mpl::or_<
-          detail::is_convertible<TValueType, T&(TValueType::*)(const boost::type<T&>&) const>
-        , detail::is_convertible<TValueType, const T&(TValueType::*)(const boost::type<const T&>&) const>
-      >
-{ };
-
-} // namespace type_traits
-} // namespace di
-} // namespace boost
-
-
-namespace boost {
-namespace di {
-namespace wrappers {
-
-namespace detail {
-
-template<typename TResult, typename T, typename TValueType>
-inline typename disable_if<is_copy_constructible<T>, const TResult&>::type
-copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
-    aux::shared_ptr<TResult> object(value(boost::type<T*>()));
-    refs.push_back(object);
-    return *object;
-}
-
-template<typename T>
-struct holder
-{
-    explicit holder(const T& value)
-        : held(value)
-    { }
-
-    T held;
-};
-
-template<typename TResult, typename T, typename TValueType>
-inline typename enable_if<is_copy_constructible<T>, const TResult&>::type
-copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
-    aux::shared_ptr<holder<TResult> > object(new holder<TResult>(value(boost::type<T>())));
-    refs.push_back(object);
-    return object->held;
-}
-
-template<typename T>
-class universal_impl
-{
-public:
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void> >&, const TValueType& value)
-        : value_(boost::bind<T>(value, boost::type<T>()))
-    { }
-
-    operator T() const {
-        return value_();
-    }
-
-private:
-    function<T()> value_;
-};
-
-template<typename T>
-class universal_impl<aux::auto_ptr<T> >
-{
-public:
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value)
-        : value_(new aux::auto_ptr<T>(value(boost::type<aux::auto_ptr<T> >()).release()))
-    {
-        refs.push_back(aux::shared_ptr<aux::auto_ptr<T> >(value_));
-    }
-
-    operator aux::auto_ptr<T>&() {
-        return *value_;
-    }
-
-private:
-    aux::auto_ptr<T>* value_; // weak
-};
-
-template<typename T>
-class universal_impl<const T&>
-{
-public:
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void> >&
-                 , const TValueType& value
-                 , typename enable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : value_(boost::bind<const T&>(value, boost::type<const T&>()))
-    { }
-
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void> >& refs
-                 , const TValueType& value
-                 , typename disable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : value_(boost::bind(&copy<T, T, TValueType>, boost::ref(refs), value))
-    { }
-
-    operator const T&() const {
-        return value_();
-    }
-
-private:
-    function<const T&()> value_;
-};
-
-template<typename T, typename TName>
-class universal_impl<named<T, TName> >
-{
-public:
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void> >&, const TValueType& value)
-        : value_(boost::bind<T>(value, boost::type<T>()))
-    { }
-
-    operator T() const {
-        return value_();
-    }
-
-    operator named<T, TName>() const {
-        return value_();
-    }
-
-private:
-    function<T()> value_;
-};
-
-template<typename T, typename TName>
-class universal_impl<named<const T&, TName> >
-{
-public:
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void> >&
-                 , const TValueType& value
-                 , typename enable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : value_(boost::bind<const T&>(value, boost::type<const T&>()))
-    { }
-
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void> >& refs
-                 , const TValueType& value
-                 , typename disable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : value_(boost::bind(&copy<T, T, TValueType>, boost::ref(refs), value))
-    { }
-
-    operator named<const T&, TName>() const {
-        return value_();
-    }
-
-private:
-    function<named<const T&, TName>()> value_;
-};
-
-template<typename T, typename TName>
-class universal_impl<const named<T, TName>&>
-{
-public:
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void> >& refs
-                 , const TValueType& value)
-        : value_(boost::bind(&copy<named<T, TName>, T, TValueType>, boost::ref(refs), value))
-    { }
-
-    operator const named<T, TName>&() const {
-        return value_();
-    }
-
-private:
-    function<const named<T, TName>&()> value_;
-};
-
-template<typename T, typename TName>
-class universal_impl<const named<const T&, TName>&>
-{
-public:
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void> >&
-                 , const TValueType& value
-                 , typename enable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : value_(boost::bind<named<const T&, TName>&>(value, boost::type<named<const T&, TName>&>()))
-    { }
-
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void> >& refs
-                 , const TValueType& value
-                 , typename disable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : value_(boost::bind(&copy<named<const T&, TName>, T, TValueType>, boost::ref(refs), value))
-    { }
-
-    operator const named<const T&, TName>&() const {
-        return value_();
-    }
-
-private:
-    function<const named<const T&, TName>&()> value_;
-};
-
-} // namespace detail
-
-template<typename T>
-class universal : public detail::universal_impl<T>
-{
-public:
-    typedef universal type;
-    typedef T element_type;
-
-    template<typename TValueType>
-    universal(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value)
-        : detail::universal_impl<T>(refs, value)
-    { }
-};
-
-} // namespace wrappers
-} // namespace di
-} // namespace boost
-
-
-    namespace boost {
-    namespace di {
-    namespace detail {
-
-    class builder
-    {
-        class type_comparator
-        {
-        public:
-            bool operator()(const std::type_info* lhs, const std::type_info* rhs) const {
-                return lhs->before(*rhs);
-            }
-        };
-
-        typedef std::map<
-            const std::type_info*
-          , aux::shared_ptr<void>
-          , type_comparator
-        > scopes_type;
-
-    public:
-        explicit builder(const scopes_type& scopes = scopes_type())
-            : scopes_(scopes)
-        { }
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TPolicies
-    >
-    typename enable_if_c<
-        mpl::size<TCtor>::value == 0
-      , wrappers::universal<T>
-    >::type
-    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-        (void)creator;
-        (void)visitor;
-        (void)policies;
-        return wrappers::universal<T>(
-            refs
-          , acquire<typename TDependency::type>(deps).create(
-               
-
-            )
-        );
-
-    }
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TPolicies
-    >
-    typename enable_if_c<
-        mpl::size<TCtor>::value == 1
-      , wrappers::universal<T>
-    >::type
-    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-        (void)creator;
-        (void)visitor;
-        (void)policies;
-        return wrappers::universal<T>(
-            refs
-          , acquire<typename TDependency::type>(deps).create(
-                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, policies)
-
-            )
-        );
-
-    }
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TPolicies
-    >
-    typename enable_if_c<
-        mpl::size<TCtor>::value == 2
-      , wrappers::universal<T>
-    >::type
-    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-        (void)creator;
-        (void)visitor;
-        (void)policies;
-        return wrappers::universal<T>(
-            refs
-          , acquire<typename TDependency::type>(deps).create(
-                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, policies)
-
-            )
-        );
-
-    }
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TPolicies
-    >
-    typename enable_if_c<
-        mpl::size<TCtor>::value == 3
-      , wrappers::universal<T>
-    >::type
-    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-        (void)creator;
-        (void)visitor;
-        (void)policies;
-        return wrappers::universal<T>(
-            refs
-          , acquire<typename TDependency::type>(deps).create(
-                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, policies)
-
-            )
-        );
-
-    }
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TPolicies
-    >
-    typename enable_if_c<
-        mpl::size<TCtor>::value == 4
-      , wrappers::universal<T>
-    >::type
-    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-        (void)creator;
-        (void)visitor;
-        (void)policies;
-        return wrappers::universal<T>(
-            refs
-          , acquire<typename TDependency::type>(deps).create(
-                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, policies)
-
-            )
-        );
-
-    }
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TPolicies
-    >
-    typename enable_if_c<
-        mpl::size<TCtor>::value == 5
-      , wrappers::universal<T>
-    >::type
-    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-        (void)creator;
-        (void)visitor;
-        (void)policies;
-        return wrappers::universal<T>(
-            refs
-          , acquire<typename TDependency::type>(deps).create(
-                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(deps, refs, visitor, policies)
-
-            )
-        );
-
-    }
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TPolicies
-    >
-    typename enable_if_c<
-        mpl::size<TCtor>::value == 6
-      , wrappers::universal<T>
-    >::type
-    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-        (void)creator;
-        (void)visitor;
-        (void)policies;
-        return wrappers::universal<T>(
-            refs
-          , acquire<typename TDependency::type>(deps).create(
-                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(deps, refs, visitor, policies)
-
-            )
-        );
-
-    }
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TPolicies
-    >
-    typename enable_if_c<
-        mpl::size<TCtor>::value == 7
-      , wrappers::universal<T>
-    >::type
-    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-        (void)creator;
-        (void)visitor;
-        (void)policies;
-        return wrappers::universal<T>(
-            refs
-          , acquire<typename TDependency::type>(deps).create(
-                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(deps, refs, visitor, policies)
-
-            )
-        );
-
-    }
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TPolicies
-    >
-    typename enable_if_c<
-        mpl::size<TCtor>::value == 8
-      , wrappers::universal<T>
-    >::type
-    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-        (void)creator;
-        (void)visitor;
-        (void)policies;
-        return wrappers::universal<T>(
-            refs
-          , acquire<typename TDependency::type>(deps).create(
-                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(deps, refs, visitor, policies)
-
-            )
-        );
-
-    }
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TPolicies
-    >
-    typename enable_if_c<
-        mpl::size<TCtor>::value == 9
-      , wrappers::universal<T>
-    >::type
-    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-        (void)creator;
-        (void)visitor;
-        (void)policies;
-        return wrappers::universal<T>(
-            refs
-          , acquire<typename TDependency::type>(deps).create(
-                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack >(deps, refs, visitor, policies)
-
-            )
-        );
-
-    }
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TPolicies
-    >
-    typename enable_if_c<
-        mpl::size<TCtor>::value == 10
-      , wrappers::universal<T>
-    >::type
-    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-        (void)creator;
-        (void)visitor;
-        (void)policies;
-        return wrappers::universal<T>(
-            refs
-          , acquire<typename TDependency::type>(deps).create(
-                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 9>::type , T , TCallStack >(deps, refs, visitor, policies)
-
-            )
-        );
-
-    }
-
-    private:
-        template<
-            typename TDependency
-          , typename TDeps
-        >
-        typename enable_if<is_base_of<TDependency, TDeps>, TDependency&>::type
-        acquire(TDeps& deps) {
-            return static_cast<TDependency&>(deps);
-        }
-
-        template<
-            typename TDependency
-          , typename TDeps
-        >
-        typename disable_if<is_base_of<TDependency, TDeps>, TDependency&>::type
-        acquire(TDeps&) {
-            typename scopes_type::const_iterator it = scopes_.find(&typeid(TDependency));
-            if (it != scopes_.end()) {
-                return *static_cast<TDependency*>(it->second.get());
-            }
-
-            aux::shared_ptr<TDependency> dependency(new TDependency());
-            scopes_[&typeid(TDependency)] = dependency;
-            return *dependency;
-        }
-
-        scopes_type scopes_;
-    };
-
-    } // namespace detail
-    } // namespace di
-    } // namespace boost
-
-namespace boost {
-namespace di {
-namespace wrappers {
-
-template<typename T>
-class reference
-{
-public:
-    reference(const reference_wrapper<T>& value) // non explicit
-        : value_(value)
-    { }
-
-    T& operator()(const type<T&>&) const {
-        return value_;
-    }
-
-private:
-    reference_wrapper<T> value_;
-};
-
-} // namespace wrappers
-} // namespace di
-} // namespace boost
-
-namespace boost {
-namespace di {
-namespace scopes {
-
-class deduce
-{
-public:
-    typedef mpl::int_<0> priority;
-
-    template<typename, typename>
-    struct scope
-    {
-        typedef scope type;
-        typedef none_t result_type;
-    };
-};
-
-} // namespace scopes
-} // namespace di
-} // namespace boost
-
-namespace boost {
-namespace di {
-namespace concepts {
-
-namespace detail {
-
-template<typename T>
-struct scope_traits
-{
-    typedef T type;
-};
-
-template<>
-struct scope_traits<mpl::_1>
-{
-    typedef scopes::deduce type;
-};
-
-template<
-    typename TExpected
-  , typename TGiven
-  , typename TScope
->
-struct get_scope
-    : detail::scope_traits<TScope>::type::template
-         scope<TExpected, TGiven>
-{
-    get_scope() { }
-};
-
-} // namespace detail
-
-template<
-    typename TScope
-  , typename TExpected
-  , typename TGiven = TExpected
-  , typename TBind =
-        detail::requires_<
-            concepts::type_traits::is_required_priority
-          , concepts::type_traits::is_required_type<TExpected>
-        >
->
-class dependency : public detail::get_scope<TExpected, TGiven, TScope>::type
-{
-    typedef typename detail::get_scope<TExpected, TGiven, TScope>::type scope_type;
-    typedef scopes::external<wrappers::reference> ref_type;
-    typedef scopes::external<wrappers::shared> shared_type;
-    typedef scopes::external<wrappers::value> value_type;
-
-    template<typename>
-    struct get_wrapper_impl
-    {
-        typedef value_type type;
-    };
-
-    template<typename T>
-    struct get_wrapper_impl<reference_wrapper<T> >
-    {
-        typedef ref_type type;
-    };
-
-    template<typename T>
-    struct get_wrapper_impl<aux::shared_ptr<T> >
-    {
-        typedef shared_type type;
-    };
-
-    template<typename T, typename = void>
-    struct get_wrapper
-    {
-        typedef T type;
-    };
-
-    template<typename T>
-    struct get_wrapper<T, typename enable_if<di::type_traits::has_call_operator<T> >::type>
-        : get_wrapper_impl<
-              typename di::type_traits::parameter_types<
-                  BOOST_DI_FEATURE_DECLTYPE(&T::operator())
-              >::result_type
-          >
-    { };
-
-public:
-    typedef dependency type;
-    typedef typename detail::scope_traits<TScope>::type scope;
-    typedef TExpected expected;
-    typedef TGiven given;
-    typedef TBind bind;
-
-    template<typename T>
-    struct rebind
-    {
-        typedef dependency<
-            typename mpl::if_<
-                is_same<scope, scopes::deduce>
-              , T
-              , TScope
-            >::type
-          , TExpected
-          , TGiven
-          , TBind
-        > other;
-    };
-
-    dependency() { }
-
-    template<typename T>
-    explicit dependency(const T& object)
-        : scope_type(object)
-    { }
-
-    template<typename T>
-    static dependency<value_type, expected, T, TBind>
-    to(const T& object, typename disable_if<is_reference_wrapper<T> >::type* = 0
-                      , typename disable_if<di::type_traits::has_call_operator<T> >::type* = 0) {
-        return dependency<value_type, expected, T, TBind>(object);
-    }
-
-    template<typename T>
-    static dependency<ref_type, typename unwrap_reference<T>::type, T, TBind>
-    to(const T& object, typename enable_if<is_reference_wrapper<T> >::type* = 0
-                      , typename disable_if<di::type_traits::has_call_operator<T> >::type* = 0) {
-        return dependency<ref_type, typename unwrap_reference<T>::type, T, TBind>(object);
-    }
-
-    template<typename T>
-    static dependency<typename get_wrapper<T>::type, expected, T, TBind>
-    to(const T& object, typename disable_if<is_reference_wrapper<T> >::type* = 0
-                      , typename enable_if<di::type_traits::has_call_operator<T> >::type* = 0) {
-        return dependency<typename get_wrapper<T>::type, expected, T, TBind>(object);
-    }
-
-    template<typename T>
-    static dependency<shared_type, expected, T>
-    to(const aux::shared_ptr<T>& object) {
-        return dependency<shared_type, expected, T>(object);
-    }
-};
-
-} // namespace concepts
-} // namespace di
-} // namespace boost
-
-namespace boost {
-namespace di {
-namespace detail {
-
-template<
-    typename TDependecies
-  , typename TBuilder = builder
->
-class binder
-{
-    template<
-        typename T
-      , typename TCallStack
-      , typename TDependency
-    >
-    struct data
-    {
-        typedef T type;
-        typedef TCallStack call_stack;
-        typedef TDependency dependency;
-    };
-
-    template<
-        typename TDependency
-      , typename T
-      , typename TCallStack
-    >
-    struct apply
-        : TDependency::bind::template apply<data<T, TCallStack, TDependency> >::type
-    { };
-
-public:
-    explicit binder(const TBuilder& builder = TBuilder())
-        : builder_(builder)
-    { }
-
-    template<
-        typename T
-      , typename TCallStack
-      , typename TDefault =
-            ::boost::di::concepts::dependency<
-                typename type_traits::scope_traits<T>::type
-              , typename type_traits::make_plain<T>::type
-            >
-    >
-    struct resolve
-        : mpl::deref<
-              mpl::second<
-                  typename mpl::fold<
-                      TDependecies
-                    , mpl::pair<mpl::int_<0>, TDefault>
-                    , mpl::if_<
-                          mpl::greater<
-                              apply<
-                                  mpl::_2
-                                , T
-                                , TCallStack
-                              >
-                            , mpl::first<mpl::_1>
-                          >
-                        , mpl::pair<apply<mpl::_2, T, TCallStack>, mpl::_2>
-                        , mpl::_1
-                      >
-                  >::type
-              >
-          >::type::template rebind<
-              typename type_traits::scope_traits<T>::type
-          >::other
-    { };
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TPolicies
-    >
-    wrappers::universal<T>
-    resolve_impl(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-        return builder_.template build<
-            T
-          , TCtor
-          , TCallStack
-          , TDependency
-          , TCreator
-        >(creator, deps, refs, visitor, policies);
-    }
-
-private:
-    TBuilder builder_;
-};
-
-} // namespace detail
-} // namespace di
-} // namespace boost
-
-
-namespace boost {
-namespace di {
-namespace concepts {
-
-template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na , typename T10 = ::boost::mpl::na , typename T11 = ::boost::mpl::na , typename T12 = ::boost::mpl::na , typename T13 = ::boost::mpl::na , typename T14 = ::boost::mpl::na , typename T15 = ::boost::mpl::na , typename T16 = ::boost::mpl::na , typename T17 = ::boost::mpl::na , typename T18 = ::boost::mpl::na , typename T19 = ::boost::mpl::na , typename T20 = ::boost::mpl::na , typename T21 = ::boost::mpl::na , typename T22 = ::boost::mpl::na , typename T23 = ::boost::mpl::na , typename T24 = ::boost::mpl::na , typename T25 = ::boost::mpl::na , typename T26 = ::boost::mpl::na , typename T27 = ::boost::mpl::na , typename T28 = ::boost::mpl::na , typename T29 = ::boost::mpl::na >
-class call_stack
-{
-    typedef mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19 , T20 , T21 , T22 , T23 , T24 , T25 , T26 , T27 , T28 , T29> context_type;
-
-    template<typename TContext, typename TCallStack>
-    struct equal
-      : mpl::equal<
-            mpl::iterator_range<
-                typename mpl::advance<
-                    typename mpl::begin<TCallStack>::type
-                  , typename mpl::max<
-                        mpl::int_<0>
-                      , mpl::minus<
-                            mpl::size<TCallStack>
-                          , mpl::size<TContext>
-                        >
-                    >::type
-                >::type
-              , typename mpl::end<TCallStack>::type
-            >
-          , TContext
-        >
-    { };
-
-    template<typename TContext, typename TCallStack>
-    struct apply_impl
-        : mpl::if_<
-              mpl::empty<TCallStack>
-            , mpl::int_<0>
-            , mpl::if_<
-                  equal<TContext, TCallStack>
-                , mpl::size<TContext>
-                , mpl::int_<0>
-              >
-          >
-    { };
-
-public:
-    template<typename T>
-    struct apply
-        : apply_impl<
-              context_type
-            , typename mpl::transform<
-                  typename T::call_stack
-                , di::type_traits::make_plain<mpl::_>
-              >::type
-          >::type
-    { };
-};
-
-} // namespace concepts
-} // namespace di
-} // namespace boost
-
-
-namespace boost {
-namespace di {
-namespace concepts {
-
-template<
-    typename TScope
-  , template<
-        typename
-      , typename
-      , typename
-      , typename
-    > class TDependency
->
-class scope
-{
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(bind)
-
-    template<typename T>
-    struct is_dependency
-        : has_bind<T>
-    { };
-
-    template<typename T>
-    struct dependency
-        : TDependency<
-              mpl::_1
-            , T
-            , T
-            , detail::requires_<
-                  type_traits::is_required_priority
-                , type_traits::is_required_type<T>
-              >
-          >
-    { };
-
-    template<typename T, typename U>
-    struct rebind
-        : T::template rebind<U>::other
-    { };
-
-public:
-    template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na , typename T10 = ::boost::mpl::na , typename T11 = ::boost::mpl::na , typename T12 = ::boost::mpl::na , typename T13 = ::boost::mpl::na , typename T14 = ::boost::mpl::na , typename T15 = ::boost::mpl::na , typename T16 = ::boost::mpl::na , typename T17 = ::boost::mpl::na , typename T18 = ::boost::mpl::na , typename T19 = ::boost::mpl::na , typename T20 = ::boost::mpl::na , typename T21 = ::boost::mpl::na , typename T22 = ::boost::mpl::na , typename T23 = ::boost::mpl::na , typename T24 = ::boost::mpl::na , typename T25 = ::boost::mpl::na , typename T26 = ::boost::mpl::na , typename T27 = ::boost::mpl::na , typename T28 = ::boost::mpl::na , typename T29 = ::boost::mpl::na >
-    struct bind
-        : mpl::fold<
-              mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19 , T20 , T21 , T22 , T23 , T24 , T25 , T26 , T27 , T28 , T29>
-            , mpl::vector0<>
-            , mpl::push_back<
-                  mpl::_1
-                , mpl::if_<
-                      is_dependency<mpl::_2>
-                    , rebind<mpl::_2, TScope>
-                    , rebind<dependency<mpl::_2>, TScope>
-                  >
-              >
-          >::type
-    { };
-};
-
-} // namespace concepts
-} // namespace di
-} // namespace boost
-
-
-    namespace boost {
-    namespace di {
-    namespace scopes {
-
-    class session_entry { };
-    class session_exit { };
-
-    template<template<typename> class TWrapper = wrappers::shared>
-    class session
-    {
-    public:
-        typedef mpl::int_<0> priority;
-
-        template<typename TExpected, typename TGiven = TExpected>
-        class scope
-        {
-        public:
-            typedef scope type;
-            typedef TWrapper<TExpected> result_type;
-
-            scope()
-                : in_scope_(false)
-            { }
-
-            void call(const session_entry&) {
-                in_scope_ = true;
-            }
-
-            void call(const session_exit&) {
-                in_scope_ = false;
-                object_.reset();
-            }
-
-            result_type create() {
-                if (in_scope_ && !object_) {
-                    object_.reset(type_traits::create_traits<TExpected, TGiven>());
-                }
-                return object_;
-            }
-
-    template< typename Args0>
-    result_type create( Args0 args0) {
-        if (in_scope_ && !object_) {
-            object_.reset(
-                type_traits::create_traits<TExpected, TGiven>( args0)
-            );
-        }
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1>
-    result_type create( Args0 args0 , Args1 args1) {
-        if (in_scope_ && !object_) {
-            object_.reset(
-                type_traits::create_traits<TExpected, TGiven>( args0 , args1)
-            );
-        }
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2>
-    result_type create( Args0 args0 , Args1 args1 , Args2 args2) {
-        if (in_scope_ && !object_) {
-            object_.reset(
-                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2)
-            );
-        }
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3>
-    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3) {
-        if (in_scope_ && !object_) {
-            object_.reset(
-                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3)
-            );
-        }
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
-    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4) {
-        if (in_scope_ && !object_) {
-            object_.reset(
-                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3 , args4)
-            );
-        }
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
-    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5) {
-        if (in_scope_ && !object_) {
-            object_.reset(
-                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5)
-            );
-        }
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
-    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6) {
-        if (in_scope_ && !object_) {
-            object_.reset(
-                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6)
-            );
-        }
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
-    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7) {
-        if (in_scope_ && !object_) {
-            object_.reset(
-                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7)
-            );
-        }
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
-    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8) {
-        if (in_scope_ && !object_) {
-            object_.reset(
-                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8)
-            );
-        }
-        return object_;
-    }
-
-    template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
-    result_type create( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9) {
-        if (in_scope_ && !object_) {
-            object_.reset(
-                type_traits::create_traits<TExpected, TGiven>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9)
-            );
-        }
-        return object_;
-    }
-
-        private:
-            result_type object_;
-            bool in_scope_;
-        };
-    };
-
-    } // namespace scopes
-    } // namespace di
-    } // namespace boost
-
 
 namespace boost {
 namespace di {
@@ -3633,7 +2685,7 @@ struct any_of
 
     namespace boost {
     namespace di {
-    namespace detail {
+    namespace core {
 
     BOOST_MPL_HAS_XXX_TRAIT_DEF(types)
 
@@ -7087,26 +6139,974 @@ struct any_of
         }
     };
 
-    } // namespace detail
+    } // namespace core
     } // namespace di
     } // namespace boost
 
 
+namespace boost {
+namespace di {
+
+BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
+
+template<
+    typename T
+  , typename TName = void
+  , typename = void
+>
+class named
+{
+    typedef typename type_traits::remove_accessors<T>::type object_type;
+    typedef typename remove_reference<T>::type& ref_type;
+
+public:
+    typedef T named_type;
+    typedef TName name;
+
+    named(const object_type& object) // non explicit
+        : object_(object)
+    { }
+
+    operator T() const {
+        return object_;
+    }
+
+    operator ref_type() {
+        return object_;
+    }
+
+private:
+    object_type object_;
+};
+
+template<
+    typename T
+  , typename TName
+>
+class named<T, TName, typename enable_if<
+    is_polymorphic<typename type_traits::remove_accessors<T>::type> >::type
+>
+{
+public:
+    typedef T named_type;
+    typedef TName name;
+};
+
+template<
+    typename T
+  , typename TName
+>
+class named<T, TName, typename enable_if<
+    has_element_type<typename type_traits::remove_accessors<T>::type> >::type
+>
+{
+    typedef typename type_traits::remove_accessors<T>::type object_type;
+    typedef typename type_traits::make_plain<T>::type value_type;
+
+public:
+    typedef T named_type;
+    typedef TName name;
+
+    named() { }
+
+    named(const object_type& object) // non explicit
+        : object_(object)
+    { }
+
+    named(typename object_type::element_type* ptr) // non explicit
+        : object_(ptr)
+    { }
+
+    BOOST_DI_FEATURE(RVALUE_REFERENCES)(
+        named(object_type&& object) // non explicit
+            : object_(std::move(object))
+        { }
+    )
+
+    operator T() const { return object_; }
+
+    value_type* operator->() const { return object_.get(); }
+    value_type& operator*() const { return *object_; }
+    value_type* get() const { return object_.get(); }
+
+    void reset() {
+        object_.reset();
+    }
+
+    void reset(typename object_type::element_type* ptr) {
+        object_.reset(ptr);
+    }
+
+private:
+    object_type object_;
+};
+
+} // namespace di
+} // namespace boost
+
+
+namespace boost {
+namespace di {
+namespace type_traits {
+
+namespace detail {
+
+template<
+    typename T
+  , typename TSignature
+>
+class is_convertible
+{
+    template<typename U>
+    static mpl::aux::yes_tag test(non_type<TSignature, &U::operator()>*);
+
+    template<typename>
+    static mpl::aux::no_tag test(...);
+
+public:
+    typedef is_convertible type;
+
+    BOOST_STATIC_CONSTANT(
+        bool
+      , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
+    );
+};
+
+} // namespace detail
+
+template<
+    typename TValueType
+  , typename T
+>
+struct is_convertible_to_ref
+    : mpl::or_<
+          detail::is_convertible<TValueType, T&(TValueType::*)(const boost::type<T&>&) const>
+        , detail::is_convertible<TValueType, const T&(TValueType::*)(const boost::type<const T&>&) const>
+      >
+{ };
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+
+
+namespace boost {
+namespace di {
+namespace wrappers {
+
+namespace detail {
+
+template<typename TResult, typename T, typename TValueType>
+inline typename disable_if<is_copy_constructible<T>, const TResult&>::type
+copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
+    aux::shared_ptr<TResult> object(value(boost::type<T*>()));
+    refs.push_back(object);
+    return *object;
+}
+
+template<typename T>
+struct holder
+{
+    explicit holder(const T& value)
+        : held(value)
+    { }
+
+    T held;
+};
+
+template<typename TResult, typename T, typename TValueType>
+inline typename enable_if<is_copy_constructible<T>, const TResult&>::type
+copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
+    aux::shared_ptr<holder<TResult> > object(new holder<TResult>(value(boost::type<T>())));
+    refs.push_back(object);
+    return object->held;
+}
+
+template<typename T>
+class universal_impl
+{
+public:
+    template<typename TValueType>
+    universal_impl(std::vector<aux::shared_ptr<void> >&, const TValueType& value)
+        : value_(boost::bind<T>(value, boost::type<T>()))
+    { }
+
+    operator T() const {
+        return value_();
+    }
+
+private:
+    function<T()> value_;
+};
+
+template<typename T>
+class universal_impl<aux::auto_ptr<T> >
+{
+public:
+    template<typename TValueType>
+    universal_impl(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value)
+        : value_(new aux::auto_ptr<T>(value(boost::type<aux::auto_ptr<T> >()).release()))
+    {
+        refs.push_back(aux::shared_ptr<aux::auto_ptr<T> >(value_));
+    }
+
+    operator aux::auto_ptr<T>&() {
+        return *value_;
+    }
+
+private:
+    aux::auto_ptr<T>* value_; // weak
+};
+
+template<typename T>
+class universal_impl<const T&>
+{
+public:
+    template<typename TValueType>
+    universal_impl(std::vector<aux::shared_ptr<void> >&
+                 , const TValueType& value
+                 , typename enable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
+        : value_(boost::bind<const T&>(value, boost::type<const T&>()))
+    { }
+
+    template<typename TValueType>
+    universal_impl(std::vector<aux::shared_ptr<void> >& refs
+                 , const TValueType& value
+                 , typename disable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
+        : value_(boost::bind(&copy<T, T, TValueType>, boost::ref(refs), value))
+    { }
+
+    operator const T&() const {
+        return value_();
+    }
+
+private:
+    function<const T&()> value_;
+};
+
+template<typename T, typename TName>
+class universal_impl<named<T, TName> >
+{
+public:
+    template<typename TValueType>
+    universal_impl(std::vector<aux::shared_ptr<void> >&, const TValueType& value)
+        : value_(boost::bind<T>(value, boost::type<T>()))
+    { }
+
+    operator T() const {
+        return value_();
+    }
+
+    operator named<T, TName>() const {
+        return value_();
+    }
+
+private:
+    function<T()> value_;
+};
+
+template<typename T, typename TName>
+class universal_impl<named<const T&, TName> >
+{
+public:
+    template<typename TValueType>
+    universal_impl(std::vector<aux::shared_ptr<void> >&
+                 , const TValueType& value
+                 , typename enable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
+        : value_(boost::bind<const T&>(value, boost::type<const T&>()))
+    { }
+
+    template<typename TValueType>
+    universal_impl(std::vector<aux::shared_ptr<void> >& refs
+                 , const TValueType& value
+                 , typename disable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
+        : value_(boost::bind(&copy<T, T, TValueType>, boost::ref(refs), value))
+    { }
+
+    operator named<const T&, TName>() const {
+        return value_();
+    }
+
+private:
+    function<named<const T&, TName>()> value_;
+};
+
+template<typename T, typename TName>
+class universal_impl<const named<T, TName>&>
+{
+public:
+    template<typename TValueType>
+    universal_impl(std::vector<aux::shared_ptr<void> >& refs
+                 , const TValueType& value)
+        : value_(boost::bind(&copy<named<T, TName>, T, TValueType>, boost::ref(refs), value))
+    { }
+
+    operator const named<T, TName>&() const {
+        return value_();
+    }
+
+private:
+    function<const named<T, TName>&()> value_;
+};
+
+template<typename T, typename TName>
+class universal_impl<const named<const T&, TName>&>
+{
+public:
+    template<typename TValueType>
+    universal_impl(std::vector<aux::shared_ptr<void> >&
+                 , const TValueType& value
+                 , typename enable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
+        : value_(boost::bind<named<const T&, TName>&>(value, boost::type<named<const T&, TName>&>()))
+    { }
+
+    template<typename TValueType>
+    universal_impl(std::vector<aux::shared_ptr<void> >& refs
+                 , const TValueType& value
+                 , typename disable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
+        : value_(boost::bind(&copy<named<const T&, TName>, T, TValueType>, boost::ref(refs), value))
+    { }
+
+    operator const named<const T&, TName>&() const {
+        return value_();
+    }
+
+private:
+    function<const named<const T&, TName>&()> value_;
+};
+
+} // namespace detail
+
+template<typename T>
+class universal : public detail::universal_impl<T>
+{
+public:
+    typedef universal type;
+    typedef T element_type;
+
+    template<typename TValueType>
+    universal(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value)
+        : detail::universal_impl<T>(refs, value)
+    { }
+};
+
+} // namespace wrappers
+} // namespace di
+} // namespace boost
+
+
+namespace boost {
+namespace di {
+namespace type_traits {
+
+template<typename T>
+struct scope_traits
+{
+    typedef scopes::unique<> type;
+};
+
+template<typename T>
+struct scope_traits<T&>
+{
+    typedef scopes::external<> type;
+};
+
+template<typename T>
+struct scope_traits<const T&>
+{
+    typedef scopes::unique<> type;
+};
+
+template<typename T>
+struct scope_traits<T*>
+{
+    typedef scopes::unique<> type;
+};
+
+template<typename T>
+struct scope_traits<const T*>
+{
+    typedef scopes::unique<> type;
+};
+
+template<typename T>
+struct scope_traits<aux::auto_ptr<T> >
+{
+    typedef scopes::unique<> type;
+};
+
+template<typename T>
+struct scope_traits<aux::shared_ptr<T> >
+{
+    typedef scopes::shared<> type;
+};
+
+template<typename T>
+struct scope_traits<const aux::shared_ptr<T>&>
+{
+    typedef scopes::shared<> type;
+};
+
+template<typename T>
+struct scope_traits<aux_::shared_ptr<T> >
+{
+    typedef scopes::shared<> type;
+};
+
+template<typename T>
+struct scope_traits<const aux_::shared_ptr<T>&>
+{
+    typedef scopes::shared<> type;
+};
+
+template<typename T>
+struct scope_traits<aux::weak_ptr<T> >
+{
+    typedef scopes::shared<> type;
+};
+
+template<typename T>
+struct scope_traits<const aux::weak_ptr<T>&>
+{
+    typedef scopes::shared<> type;
+};
+
+template<typename T>
+struct scope_traits<aux::unique_ptr<T> >
+{
+    typedef scopes::unique<> type;
+};
+
+template<typename T>
+struct scope_traits<const aux::unique_ptr<T>&>
+{
+    typedef scopes::unique<> type;
+};
+
+BOOST_DI_FEATURE(RVALUE_REFERENCES)(
+    template<typename T>
+    struct scope_traits<T&&>
+    {
+        typedef scopes::unique<> type;
+    };
+
+    template<typename T>
+    struct scope_traits<const T&&>
+    {
+        typedef scopes::unique<> type;
+    };
+)
+
+template<typename T, typename TName>
+struct scope_traits<named<T, TName> >
+{
+    typedef typename scope_traits<T>::type type;
+};
+
+template<typename T, typename TName>
+struct scope_traits<const named<T, TName>&>
+{
+    typedef typename scope_traits<T>::type type;
+};
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+
+
     namespace boost {
     namespace di {
-    namespace detail {
+    namespace core {
+
+    class builder
+    {
+        class type_comparator
+        {
+        public:
+            bool operator()(const std::type_info* lhs, const std::type_info* rhs) const {
+                return lhs->before(*rhs);
+            }
+        };
+
+        typedef std::map<
+            const std::type_info*
+          , aux::shared_ptr<void>
+          , type_comparator
+        > scopes_type;
+
+    public:
+        explicit builder(const scopes_type& scopes = scopes_type())
+            : scopes_(scopes)
+        { }
+
+    template<
+        typename T
+      , typename TCtor
+      , typename TCallStack
+      , typename TDependency
+      , typename TCreator
+      , typename TDeps
+      , typename TRefs
+      , typename TVisitor
+      , typename TPolicies
+    >
+    typename enable_if_c<
+        mpl::size<TCtor>::value == 0
+      , wrappers::universal<T>
+    >::type
+    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+        (void)creator;
+        (void)visitor;
+        (void)policies;
+        return wrappers::universal<T>(
+            refs
+          , acquire<typename TDependency::type>(deps).create(
+               
+
+            )
+        );
+
+    }
+
+    template<
+        typename T
+      , typename TCtor
+      , typename TCallStack
+      , typename TDependency
+      , typename TCreator
+      , typename TDeps
+      , typename TRefs
+      , typename TVisitor
+      , typename TPolicies
+    >
+    typename enable_if_c<
+        mpl::size<TCtor>::value == 1
+      , wrappers::universal<T>
+    >::type
+    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+        (void)creator;
+        (void)visitor;
+        (void)policies;
+        return wrappers::universal<T>(
+            refs
+          , acquire<typename TDependency::type>(deps).create(
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, policies)
+
+            )
+        );
+
+    }
+
+    template<
+        typename T
+      , typename TCtor
+      , typename TCallStack
+      , typename TDependency
+      , typename TCreator
+      , typename TDeps
+      , typename TRefs
+      , typename TVisitor
+      , typename TPolicies
+    >
+    typename enable_if_c<
+        mpl::size<TCtor>::value == 2
+      , wrappers::universal<T>
+    >::type
+    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+        (void)creator;
+        (void)visitor;
+        (void)policies;
+        return wrappers::universal<T>(
+            refs
+          , acquire<typename TDependency::type>(deps).create(
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, policies)
+
+            )
+        );
+
+    }
+
+    template<
+        typename T
+      , typename TCtor
+      , typename TCallStack
+      , typename TDependency
+      , typename TCreator
+      , typename TDeps
+      , typename TRefs
+      , typename TVisitor
+      , typename TPolicies
+    >
+    typename enable_if_c<
+        mpl::size<TCtor>::value == 3
+      , wrappers::universal<T>
+    >::type
+    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+        (void)creator;
+        (void)visitor;
+        (void)policies;
+        return wrappers::universal<T>(
+            refs
+          , acquire<typename TDependency::type>(deps).create(
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, policies)
+
+            )
+        );
+
+    }
+
+    template<
+        typename T
+      , typename TCtor
+      , typename TCallStack
+      , typename TDependency
+      , typename TCreator
+      , typename TDeps
+      , typename TRefs
+      , typename TVisitor
+      , typename TPolicies
+    >
+    typename enable_if_c<
+        mpl::size<TCtor>::value == 4
+      , wrappers::universal<T>
+    >::type
+    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+        (void)creator;
+        (void)visitor;
+        (void)policies;
+        return wrappers::universal<T>(
+            refs
+          , acquire<typename TDependency::type>(deps).create(
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, policies)
+
+            )
+        );
+
+    }
+
+    template<
+        typename T
+      , typename TCtor
+      , typename TCallStack
+      , typename TDependency
+      , typename TCreator
+      , typename TDeps
+      , typename TRefs
+      , typename TVisitor
+      , typename TPolicies
+    >
+    typename enable_if_c<
+        mpl::size<TCtor>::value == 5
+      , wrappers::universal<T>
+    >::type
+    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+        (void)creator;
+        (void)visitor;
+        (void)policies;
+        return wrappers::universal<T>(
+            refs
+          , acquire<typename TDependency::type>(deps).create(
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(deps, refs, visitor, policies)
+
+            )
+        );
+
+    }
+
+    template<
+        typename T
+      , typename TCtor
+      , typename TCallStack
+      , typename TDependency
+      , typename TCreator
+      , typename TDeps
+      , typename TRefs
+      , typename TVisitor
+      , typename TPolicies
+    >
+    typename enable_if_c<
+        mpl::size<TCtor>::value == 6
+      , wrappers::universal<T>
+    >::type
+    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+        (void)creator;
+        (void)visitor;
+        (void)policies;
+        return wrappers::universal<T>(
+            refs
+          , acquire<typename TDependency::type>(deps).create(
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(deps, refs, visitor, policies)
+
+            )
+        );
+
+    }
+
+    template<
+        typename T
+      , typename TCtor
+      , typename TCallStack
+      , typename TDependency
+      , typename TCreator
+      , typename TDeps
+      , typename TRefs
+      , typename TVisitor
+      , typename TPolicies
+    >
+    typename enable_if_c<
+        mpl::size<TCtor>::value == 7
+      , wrappers::universal<T>
+    >::type
+    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+        (void)creator;
+        (void)visitor;
+        (void)policies;
+        return wrappers::universal<T>(
+            refs
+          , acquire<typename TDependency::type>(deps).create(
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(deps, refs, visitor, policies)
+
+            )
+        );
+
+    }
+
+    template<
+        typename T
+      , typename TCtor
+      , typename TCallStack
+      , typename TDependency
+      , typename TCreator
+      , typename TDeps
+      , typename TRefs
+      , typename TVisitor
+      , typename TPolicies
+    >
+    typename enable_if_c<
+        mpl::size<TCtor>::value == 8
+      , wrappers::universal<T>
+    >::type
+    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+        (void)creator;
+        (void)visitor;
+        (void)policies;
+        return wrappers::universal<T>(
+            refs
+          , acquire<typename TDependency::type>(deps).create(
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(deps, refs, visitor, policies)
+
+            )
+        );
+
+    }
+
+    template<
+        typename T
+      , typename TCtor
+      , typename TCallStack
+      , typename TDependency
+      , typename TCreator
+      , typename TDeps
+      , typename TRefs
+      , typename TVisitor
+      , typename TPolicies
+    >
+    typename enable_if_c<
+        mpl::size<TCtor>::value == 9
+      , wrappers::universal<T>
+    >::type
+    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+        (void)creator;
+        (void)visitor;
+        (void)policies;
+        return wrappers::universal<T>(
+            refs
+          , acquire<typename TDependency::type>(deps).create(
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack >(deps, refs, visitor, policies)
+
+            )
+        );
+
+    }
+
+    template<
+        typename T
+      , typename TCtor
+      , typename TCallStack
+      , typename TDependency
+      , typename TCreator
+      , typename TDeps
+      , typename TRefs
+      , typename TVisitor
+      , typename TPolicies
+    >
+    typename enable_if_c<
+        mpl::size<TCtor>::value == 10
+      , wrappers::universal<T>
+    >::type
+    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+        (void)creator;
+        (void)visitor;
+        (void)policies;
+        return wrappers::universal<T>(
+            refs
+          , acquire<typename TDependency::type>(deps).create(
+                creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack >(deps, refs, visitor, policies) , creator.template create< typename mpl::at_c<TCtor, 9>::type , T , TCallStack >(deps, refs, visitor, policies)
+
+            )
+        );
+
+    }
+
+    private:
+        template<
+            typename TDependency
+          , typename TDeps
+        >
+        typename enable_if<is_base_of<TDependency, TDeps>, TDependency&>::type
+        acquire(TDeps& deps) {
+            return static_cast<TDependency&>(deps);
+        }
+
+        template<
+            typename TDependency
+          , typename TDeps
+        >
+        typename disable_if<is_base_of<TDependency, TDeps>, TDependency&>::type
+        acquire(TDeps&) {
+            typename scopes_type::const_iterator it = scopes_.find(&typeid(TDependency));
+            if (it != scopes_.end()) {
+                return *static_cast<TDependency*>(it->second.get());
+            }
+
+            aux::shared_ptr<TDependency> dependency(new TDependency());
+            scopes_[&typeid(TDependency)] = dependency;
+            return *dependency;
+        }
+
+        scopes_type scopes_;
+    };
+
+    } // namespace core
+    } // namespace di
+    } // namespace boost
+
+namespace boost {
+namespace di {
+namespace core {
+
+template<
+    typename T
+  , typename TCallStack
+  , typename TDependency
+>
+struct data
+{
+    typedef T type;
+    typedef TCallStack call_stack;
+    typedef TDependency dependency;
+};
+
+template<
+    typename TDependecies
+  , typename TBuilder = builder
+>
+class binder
+{
+    template<
+        typename TDependency
+      , typename T
+      , typename TCallStack
+    >
+    struct apply
+        : TDependency::bind::template apply<data<T, TCallStack, TDependency> >::type
+    { };
+
+public:
+    explicit binder(const TBuilder& builder = TBuilder())
+        : builder_(builder)
+    { }
+
+    template<
+        typename T
+      , typename TCallStack
+      , typename TDefault =
+            ::boost::di::concepts::dependency<
+                typename type_traits::scope_traits<T>::type
+              , typename type_traits::make_plain<T>::type
+            >
+    >
+    struct resolve
+        : mpl::deref<
+              mpl::second<
+                  typename mpl::fold<
+                      TDependecies
+                    , mpl::pair<mpl::int_<0>, TDefault>
+                    , mpl::if_<
+                          mpl::greater<
+                              apply<
+                                  mpl::_2
+                                , T
+                                , TCallStack
+                              >
+                            , mpl::first<mpl::_1>
+                          >
+                        , mpl::pair<apply<mpl::_2, T, TCallStack>, mpl::_2>
+                        , mpl::_1
+                      >
+                  >::type
+              >
+          >::type::template rebind<
+              typename type_traits::scope_traits<T>::type
+          >::other
+    { };
+
+    template<
+        typename T
+      , typename TCtor
+      , typename TCallStack
+      , typename TDependency
+      , typename TCreator
+      , typename TDeps
+      , typename TRefs
+      , typename TVisitor
+      , typename TPolicies
+    >
+    wrappers::universal<T>
+    resolve_impl(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+        return builder_.template build<
+            T
+          , TCtor
+          , TCallStack
+          , TDependency
+          , TCreator
+        >(creator, deps, refs, visitor, policies);
+    }
+
+private:
+    TBuilder builder_;
+};
+
+} // namespace core
+} // namespace di
+} // namespace boost
+
+
+    namespace boost {
+    namespace di {
+    namespace core {
 
     template<
         typename TDependecies = mpl::vector0<>
       , template<
             typename
-          , typename = ::boost::di::detail::builder
+          , typename = ::boost::di::core::builder
         > class TBinder = binder
     >
     class creator
     {
         template<typename T, typename TCallStack>
-        struct binder
+        struct resolve
             : TBinder<TDependecies>::template resolve<T, TCallStack>::type
         { };
 
@@ -7114,18 +7114,6 @@ struct any_of
         struct ctor
             : type_traits::ctor_traits<typename TDependency::given>::type
         { };
-
-        template<
-            typename T
-          , typename TCallStack
-          , typename TDependency
-        >
-        struct created
-        {
-            typedef T type;
-            typedef TCallStack call_stack;
-            typedef TDependency dependency;
-        };
 
         template<
             typename T
@@ -7167,7 +7155,7 @@ struct any_of
                     BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
                       , TCallStack
                     )
-                  , binder<const U&, TCallStack>
+                  , resolve<const U&, TCallStack>
                 >(deps_, refs_, visitor_, policies_);
             }
 
@@ -7194,7 +7182,7 @@ struct any_of
                     BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
                       , TCallStack
                     )
-                  , binder<U&, TCallStack>
+                  , resolve<U&, TCallStack>
                 >(deps_, refs_, visitor_, policies_);
             }
 
@@ -7211,7 +7199,7 @@ struct any_of
                     BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
                       , TCallStack
                     )
-                  , binder<aux::auto_ptr<U>, TCallStack>
+                  , resolve<aux::auto_ptr<U>, TCallStack>
                 >(deps_, refs_, visitor_, policies_);
             }
 
@@ -7229,7 +7217,7 @@ struct any_of
                         BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
                           , TCallStack
                         )
-                      , binder<aux::unique_ptr<U>, TCallStack>
+                      , resolve<aux::unique_ptr<U>, TCallStack>
                     >(deps_, refs_, visitor_, policies_);
                 }
             )
@@ -7258,7 +7246,7 @@ struct any_of
                         BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
                           , TCallStack
                         )
-                      , binder<U, TCallStack>
+                      , resolve<U, TCallStack>
                     >(deps_, refs_, visitor_, policies_);
                 }
             )
@@ -7287,7 +7275,7 @@ struct any_of
         >
         eager_creator<TParent, TCallStack, TDeps, TRefs, TVisitor, TPolicies>
         create(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies
-             , typename enable_if<is_same<T, any_type> >::type* = 0) {
+             , typename enable_if<is_same<T, detail::any_type> >::type* = 0) {
             return eager_creator<TParent, TCallStack, TDeps, TRefs, TVisitor, TPolicies>(
                 *this, deps, refs, visitor, policies
             );
@@ -7307,7 +7295,7 @@ struct any_of
           , TRefs& refs
           , const TVisitor& visitor
           , const TPolicies& policies
-          , typename disable_if<is_same<T, any_type> >::type* = 0) {
+          , typename disable_if<is_same<T, detail::any_type> >::type* = 0) {
             return create_impl<
                 T
                 BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
@@ -7319,7 +7307,7 @@ struct any_of
                 BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
                   , TCallStack
                 )
-              , binder<T, TCallStack>
+              , resolve<T, TCallStack>
             >(deps, refs, visitor, policies);
         }
 
@@ -7338,9 +7326,9 @@ struct any_of
         mpl::size<typename ctor<TDependency>::type>::value == 0
       , wrappers::universal<T>
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-        typedef created<T, TCallStack, TDependency> created_type;
-        assert_policies<typename TPolicies::types, created_type>(policies);
-        (visitor)(created_type());
+        typedef data<T, TCallStack, TDependency> data_type;
+        assert_policies<typename TPolicies::types, data_type>(policies);
+        (visitor)(data_type());
 
         return binder_.template resolve_impl<
             T
@@ -7363,9 +7351,9 @@ struct any_of
         mpl::size<typename ctor<TDependency>::type>::value == 1
       , wrappers::universal<T>
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-        typedef created<T, TCallStack, TDependency> created_type;
-        assert_policies<typename TPolicies::types, created_type>(policies);
-        (visitor)(created_type());
+        typedef data<T, TCallStack, TDependency> data_type;
+        assert_policies<typename TPolicies::types, data_type>(policies);
+        (visitor)(data_type());
 
         return binder_.template resolve_impl<
             T
@@ -7388,9 +7376,9 @@ struct any_of
         mpl::size<typename ctor<TDependency>::type>::value == 2
       , wrappers::universal<T>
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-        typedef created<T, TCallStack, TDependency> created_type;
-        assert_policies<typename TPolicies::types, created_type>(policies);
-        (visitor)(created_type());
+        typedef data<T, TCallStack, TDependency> data_type;
+        assert_policies<typename TPolicies::types, data_type>(policies);
+        (visitor)(data_type());
 
         return binder_.template resolve_impl<
             T
@@ -7413,9 +7401,9 @@ struct any_of
         mpl::size<typename ctor<TDependency>::type>::value == 3
       , wrappers::universal<T>
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-        typedef created<T, TCallStack, TDependency> created_type;
-        assert_policies<typename TPolicies::types, created_type>(policies);
-        (visitor)(created_type());
+        typedef data<T, TCallStack, TDependency> data_type;
+        assert_policies<typename TPolicies::types, data_type>(policies);
+        (visitor)(data_type());
 
         return binder_.template resolve_impl<
             T
@@ -7438,9 +7426,9 @@ struct any_of
         mpl::size<typename ctor<TDependency>::type>::value == 4
       , wrappers::universal<T>
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-        typedef created<T, TCallStack, TDependency> created_type;
-        assert_policies<typename TPolicies::types, created_type>(policies);
-        (visitor)(created_type());
+        typedef data<T, TCallStack, TDependency> data_type;
+        assert_policies<typename TPolicies::types, data_type>(policies);
+        (visitor)(data_type());
 
         return binder_.template resolve_impl<
             T
@@ -7463,9 +7451,9 @@ struct any_of
         mpl::size<typename ctor<TDependency>::type>::value == 5
       , wrappers::universal<T>
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-        typedef created<T, TCallStack, TDependency> created_type;
-        assert_policies<typename TPolicies::types, created_type>(policies);
-        (visitor)(created_type());
+        typedef data<T, TCallStack, TDependency> data_type;
+        assert_policies<typename TPolicies::types, data_type>(policies);
+        (visitor)(data_type());
 
         return binder_.template resolve_impl<
             T
@@ -7488,9 +7476,9 @@ struct any_of
         mpl::size<typename ctor<TDependency>::type>::value == 6
       , wrappers::universal<T>
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-        typedef created<T, TCallStack, TDependency> created_type;
-        assert_policies<typename TPolicies::types, created_type>(policies);
-        (visitor)(created_type());
+        typedef data<T, TCallStack, TDependency> data_type;
+        assert_policies<typename TPolicies::types, data_type>(policies);
+        (visitor)(data_type());
 
         return binder_.template resolve_impl<
             T
@@ -7513,9 +7501,9 @@ struct any_of
         mpl::size<typename ctor<TDependency>::type>::value == 7
       , wrappers::universal<T>
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-        typedef created<T, TCallStack, TDependency> created_type;
-        assert_policies<typename TPolicies::types, created_type>(policies);
-        (visitor)(created_type());
+        typedef data<T, TCallStack, TDependency> data_type;
+        assert_policies<typename TPolicies::types, data_type>(policies);
+        (visitor)(data_type());
 
         return binder_.template resolve_impl<
             T
@@ -7538,9 +7526,9 @@ struct any_of
         mpl::size<typename ctor<TDependency>::type>::value == 8
       , wrappers::universal<T>
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-        typedef created<T, TCallStack, TDependency> created_type;
-        assert_policies<typename TPolicies::types, created_type>(policies);
-        (visitor)(created_type());
+        typedef data<T, TCallStack, TDependency> data_type;
+        assert_policies<typename TPolicies::types, data_type>(policies);
+        (visitor)(data_type());
 
         return binder_.template resolve_impl<
             T
@@ -7563,9 +7551,9 @@ struct any_of
         mpl::size<typename ctor<TDependency>::type>::value == 9
       , wrappers::universal<T>
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-        typedef created<T, TCallStack, TDependency> created_type;
-        assert_policies<typename TPolicies::types, created_type>(policies);
-        (visitor)(created_type());
+        typedef data<T, TCallStack, TDependency> data_type;
+        assert_policies<typename TPolicies::types, data_type>(policies);
+        (visitor)(data_type());
 
         return binder_.template resolve_impl<
             T
@@ -7588,9 +7576,9 @@ struct any_of
         mpl::size<typename ctor<TDependency>::type>::value == 10
       , wrappers::universal<T>
     >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-        typedef created<T, TCallStack, TDependency> created_type;
-        assert_policies<typename TPolicies::types, created_type>(policies);
-        (visitor)(created_type());
+        typedef data<T, TCallStack, TDependency> data_type;
+        assert_policies<typename TPolicies::types, data_type>(policies);
+        (visitor)(data_type());
 
         return binder_.template resolve_impl<
             T
@@ -7613,7 +7601,7 @@ struct any_of
         TBinder<TDependecies> binder_;
     };
 
-    } // namespace detail
+    } // namespace core
     } // namespace di
     } // namespace boost
 
@@ -7701,17 +7689,17 @@ public :
 
     namespace boost {
     namespace di {
-    namespace detail {
+    namespace core {
 
     template<
         typename TDependecies = mpl::vector0<>
       , template<
             typename
-          , template<typename, typename> class = ::boost::di::detail::binder
+          , template<typename, typename> class = ::boost::di::core::binder
         > class TCreator = creator
       , template<
             typename = ::boost::mpl::vector0<>
-          , typename = ::boost::di::detail::never< ::boost::mpl::_1 >
+          , typename = ::boost::di::core::never< ::boost::mpl::_1 >
           , typename = void
         > class TPool = pool
     >
@@ -8715,7 +8703,7 @@ public :
         TCreator<TDependecies> creator_;
     };
 
-    } // namespace detail
+    } // namespace core
     } // namespace di
     } // namespace boost
 
@@ -8762,7 +8750,7 @@ public :
 
     template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na , typename T10 = ::boost::mpl::na , typename T11 = ::boost::mpl::na , typename T12 = ::boost::mpl::na , typename T13 = ::boost::mpl::na , typename T14 = ::boost::mpl::na , typename T15 = ::boost::mpl::na , typename T16 = ::boost::mpl::na , typename T17 = ::boost::mpl::na , typename T18 = ::boost::mpl::na , typename T19 = ::boost::mpl::na , typename T20 = ::boost::mpl::na , typename T21 = ::boost::mpl::na , typename T22 = ::boost::mpl::na , typename T23 = ::boost::mpl::na , typename T24 = ::boost::mpl::na , typename T25 = ::boost::mpl::na , typename T26 = ::boost::mpl::na , typename T27 = ::boost::mpl::na , typename T28 = ::boost::mpl::na , typename T29 = ::boost::mpl::na >
     class injector
-        : public detail::module<
+        : public core::module<
               typename detail::concepts<
                   mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19 , T20 , T21 , T22 , T23 , T24 , T25 , T26 , T27 , T28 , T29>
               >::type
@@ -8787,7 +8775,7 @@ public :
 
     template< typename Args0>
     explicit injector( Args0 args0)
-        : detail::module<typename joint_concepts<>::type>( args0)
+        : core::module<typename joint_concepts<>::type>( args0)
     { }
 
     template< typename Args0>
@@ -8800,7 +8788,7 @@ public :
 
     template< typename Args0 , typename Args1>
     explicit injector( Args0 args0 , Args1 args1)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1)
+        : core::module<typename joint_concepts<>::type>( args0 , args1)
     { }
 
     template< typename Args0 , typename Args1>
@@ -8813,7 +8801,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2>
@@ -8826,7 +8814,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3>
@@ -8839,7 +8827,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
@@ -8852,7 +8840,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
@@ -8865,7 +8853,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
@@ -8878,7 +8866,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
@@ -8891,7 +8879,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
@@ -8904,7 +8892,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
@@ -8917,7 +8905,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10>
@@ -8930,7 +8918,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11>
@@ -8943,7 +8931,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12>
@@ -8956,7 +8944,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13>
@@ -8969,7 +8957,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14>
@@ -8982,7 +8970,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15>
@@ -8995,7 +8983,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16>
@@ -9008,7 +8996,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17>
@@ -9021,7 +9009,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18>
@@ -9034,7 +9022,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19>
@@ -9047,7 +9035,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20>
@@ -9060,7 +9048,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21>
@@ -9073,7 +9061,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22>
@@ -9086,7 +9074,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23>
@@ -9099,7 +9087,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24>
@@ -9112,7 +9100,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25>
@@ -9125,7 +9113,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26>
@@ -9138,7 +9126,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27>
@@ -9151,7 +9139,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28>
@@ -9164,7 +9152,7 @@ public :
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29)
-        : detail::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29)
+        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29)
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29>

@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef BOOST_DI_DETAIL_CREATOR_HPP
-    #define BOOST_DI_DETAIL_CREATOR_HPP
+    #ifndef BOOST_DI_CORE_CREATOR_HPP
+    #define BOOST_DI_CORE_CREATOR_HPP
 
     #include "boost/di/aux_/config.hpp"
     #include "boost/di/aux_/memory.hpp"
@@ -16,8 +16,8 @@
     #include "boost/di/type_traits/make_plain.hpp"
     #include "boost/di/type_traits/is_same_base_of.hpp"
     #include "boost/di/wrappers/universal.hpp"
-    #include "boost/di/detail/binder.hpp"
-    #include "boost/di/detail/builder.hpp"
+    #include "boost/di/core/binder.hpp"
+    #include "boost/di/core/builder.hpp"
 
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/vector.hpp>
@@ -27,13 +27,13 @@
 
     namespace boost {
     namespace di {
-    namespace detail {
+    namespace core {
 
     template<
         typename TDependecies = mpl::vector0<>
       , template<
             typename
-          , typename = ::boost::di::detail::builder
+          , typename = ::boost::di::core::builder
         > class TBinder = binder
     >
     class creator
@@ -208,7 +208,7 @@
         >
         eager_creator<TParent, TCallStack, TDeps, TRefs, TVisitor, TPolicies>
         create(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies
-             , typename enable_if<is_same<T, any_type> >::type* = 0) {
+             , typename enable_if<is_same<T, detail::any_type> >::type* = 0) {
             return eager_creator<TParent, TCallStack, TDeps, TRefs, TVisitor, TPolicies>(
                 *this, deps, refs, visitor, policies
             );
@@ -228,7 +228,7 @@
           , TRefs& refs
           , const TVisitor& visitor
           , const TPolicies& policies
-          , typename disable_if<is_same<T, any_type> >::type* = 0) {
+          , typename disable_if<is_same<T, detail::any_type> >::type* = 0) {
             return create_impl<
                 T
                 BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
@@ -245,7 +245,7 @@
         }
 
     private:
-        #define BOOST_PP_FILENAME_1 "boost/di/detail/creator.hpp"
+        #define BOOST_PP_FILENAME_1 "boost/di/core/creator.hpp"
         #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM(0)
         #include BOOST_PP_ITERATE()
 
@@ -262,7 +262,7 @@
         TBinder<TDependecies> binder_;
     };
 
-    } // namespace detail
+    } // namespace core
     } // namespace di
     } // namespace boost
 

@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/detail/pool.hpp"
+#include "boost/di/core/pool.hpp"
 
 #include "boost/di/aux_/memory.hpp"
 #include <boost/test/unit_test.hpp>
@@ -13,7 +13,7 @@
 
 namespace boost {
 namespace di {
-namespace detail {
+namespace core {
 
 template<typename T>
 struct allocator
@@ -341,7 +341,7 @@ BOOST_AUTO_TEST_CASE(pool_flatten) {
     BOOST_CHECK_EQUAL(0, p2.get<trivial_ctor>().i);
 }
 
-} // namespace detail
+} // namespace core
 } // namespace di
 } // namespace boost
 

@@ -10,8 +10,8 @@
     #define BOOST_DI_INJECTOR_HPP
 
     #include "boost/di/aux_/config.hpp"
-    #include "boost/di/detail/module.hpp"
-    #include "boost/di/detail/pool.hpp"
+    #include "boost/di/core/module.hpp"
+    #include "boost/di/core/pool.hpp"
     #include "boost/di/scopes/deduce.hpp"
     #include "boost/di/concepts.hpp"
 
@@ -68,7 +68,7 @@
 
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     class injector
-        : public detail::module<
+        : public core::module<
               typename detail::concepts<
                   mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
               >::type
@@ -105,7 +105,7 @@
 
     template<BOOST_DI_TYPES(Args)>
     explicit injector(BOOST_DI_ARGS(Args, args))
-        : detail::module<typename joint_concepts<>::type>(BOOST_DI_ARGS_PASS(args))
+        : core::module<typename joint_concepts<>::type>(BOOST_DI_ARGS_PASS(args))
     { }
 
     template<BOOST_DI_TYPES(Args)>

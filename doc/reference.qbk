@@ -1,6 +1,6 @@
 [section Reference]
 
-[section Headers]
+[section DI]
 
 [section Header <boost/di.hpp>]
 This header exists simply as a convenience to the user, including all of the headers in the boost/di directory.
@@ -34,9 +34,6 @@ This header exists simply as a convenience to the user, including all of the hea
 
 [endsect]
 
-[section Header <boost/di/concepts.hpp>]
-[endsect]
-
 [section Header <boost/di/inject.hpp>]
 [endsect]
 
@@ -52,10 +49,30 @@ This header exists simply as a convenience to the user, including all of the hea
 [section Header <boost/di/provider.hpp>]
 [endsect]
 
-[section Header <boost/di/aux_/config.hpp>]
 [endsect]
 
-[section Header <boost/di/aux_/memory.hpp>]
+[section Core]
+
+[section Header <boost/di/core/binder.hpp>]
+[endsect]
+
+[section Header <boost/di/core/builder.hpp>]
+[endsect]
+
+[section Header <boost/di/core/creator.hpp>]
+[endsect]
+
+[section Header <boost/di/core/module.hpp>]
+[endsect]
+
+[section Header <boost/di/core/pool.hpp>]
+[endsect]
+
+[endsect]
+
+[section Concepts]
+
+[section Header <boost/di/concepts.hpp>]
 [endsect]
 
 [section Header <boost/di/concepts/bind.hpp>]
@@ -85,32 +102,10 @@ This header exists simply as a convenience to the user, including all of the hea
 [section Header <boost/di/concepts/type_traits/is_required_type.hpp>]
 [endsect]
 
-[section Header <boost/di/detail/binder.hpp>]
+
 [endsect]
 
-[section Header <boost/di/detail/builder.hpp>]
-[endsect]
-
-[section Header <boost/di/detail/creator.hpp>]
-[endsect]
-
-[section Header <boost/di/detail/module.hpp>]
-[endsect]
-
-[section Header <boost/di/detail/pool.hpp>]
-[endsect]
-
-[section Header <boost/di/policies/arguments_permission.hpp>]
-[endsect]
-
-[section Header <boost/di/policies/circular_dependencies.hpp>]
-[endsect]
-
-[section Header <boost/di/policies/creation_ownership.hpp>]
-[endsect]
-
-[section Header <boost/di/policies/scopes_permission.hpp>]
-[endsect]
+[section Scopes]
 
 [section Header <boost/di/scopes/deduce.hpp>]
 [endsect]
@@ -126,6 +121,26 @@ This header exists simply as a convenience to the user, including all of the hea
 
 [section Header <boost/di/scopes/unique.hpp>]
 [endsect]
+
+[endsect]
+
+[section Policies]
+
+[section Header <boost/di/policies/arguments_permission.hpp>]
+[endsect]
+
+[section Header <boost/di/policies/circular_dependencies.hpp>]
+[endsect]
+
+[section Header <boost/di/policies/creation_ownership.hpp>]
+[endsect]
+
+[section Header <boost/di/policies/scopes_permission.hpp>]
+[endsect]
+
+[endsect]
+
+[section Type Traits]
 
 [section Header <boost/di/type_traits/create_traits.hpp>]
 [endsect]
@@ -165,6 +180,10 @@ This header exists simply as a convenience to the user, including all of the hea
 
 [section Header <boost/di/type_traits/scope_traits.hpp>]
 [endsect]
+
+[endsect]
+
+[section Wrappers]
 
 [section Header <boost/di/wrappers/copy.hpp>]
 [endsect]

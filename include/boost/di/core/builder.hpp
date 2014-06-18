@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef BOOST_DI_DETAIL_BUILDER_HPP
-    #define BOOST_DI_DETAIL_BUILDER_HPP
+    #ifndef BOOST_DI_CORE_BUILDER_HPP
+    #define BOOST_DI_CORE_BUILDER_HPP
 
     #include "boost/di/aux_/config.hpp"
     #include "boost/di/aux_/memory.hpp"
@@ -27,7 +27,7 @@
 
     namespace boost {
     namespace di {
-    namespace detail {
+    namespace core {
 
     class builder
     {
@@ -50,7 +50,7 @@
             : scopes_(scopes)
         { }
 
-        #define BOOST_PP_FILENAME_1 "boost/di/detail/builder.hpp"
+        #define BOOST_PP_FILENAME_1 "boost/di/core/builder.hpp"
         #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM(0)
         #include BOOST_PP_ITERATE()
 
@@ -83,7 +83,7 @@
         scopes_type scopes_;
     };
 
-    } // namespace detail
+    } // namespace core
     } // namespace di
     } // namespace boost
 

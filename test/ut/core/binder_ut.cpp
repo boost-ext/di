@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/detail/binder.hpp"
+#include "boost/di/core/binder.hpp"
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
@@ -22,7 +22,7 @@
 
 namespace boost {
 namespace di {
-namespace detail {
+namespace core {
 
 template<
    typename T
@@ -552,7 +552,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(multiple_calls_not_found, TContext, multiple_calls
     ));
 }
 
-} // namespace detail
+} // namespace core
 } // namespace di
 } // namespace boost
 

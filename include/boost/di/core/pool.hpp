@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef BOOST_DI_DETAIL_POOL_HPP
-    #define BOOST_DI_DETAIL_POOL_HPP
+    #ifndef BOOST_DI_CORE_POOL_HPP
+    #define BOOST_DI_CORE_POOL_HPP
 
     #include "boost/di/aux_/config.hpp"
 
@@ -31,7 +31,7 @@
 
     namespace boost {
     namespace di {
-    namespace detail {
+    namespace core {
 
     BOOST_MPL_HAS_XXX_TRAIT_DEF(types)
 
@@ -65,11 +65,11 @@
         }
     };
 
-    #define BOOST_PP_FILENAME_1 "boost/di/detail/pool.hpp"
+    #define BOOST_PP_FILENAME_1 "boost/di/core/pool.hpp"
     #define BOOST_PP_ITERATION_LIMITS BOOST_DI_TYPES_MPL_LIMIT_FROM(1)
     #include BOOST_PP_ITERATE()
 
-    } // namespace detail
+    } // namespace core
     } // namespace di
     } // namespace boost
 

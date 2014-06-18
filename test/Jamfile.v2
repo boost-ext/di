@@ -79,19 +79,18 @@ rule compile-fail-test ( std * : src : ctor * : defines * : preprocessed_headers
 }
 
 test-suite ut : # unit tests
+    [ run-test c++11 : ut/concepts_ut.cpp ]
     [ run-test c++11 : ut/concepts/detail/requires_ut.cpp ]
     [ run-test c++11 : ut/concepts/detail/when_ut.cpp ]
     [ run-test c++11 : ut/concepts/type_traits/is_required_name_ut.cpp ]
     [ run-test c++11 : ut/concepts/type_traits/is_required_priority_ut.cpp ]
     [ run-test c++11 : ut/concepts/type_traits/is_required_type_ut.cpp ]
     [ run-test c++11 : ut/concepts/dependency_ut.cpp ]
-    [ run-test c++11 : ut/concepts_ut.cpp ]
-    [ run-test c++11 : ut/named_ut.cpp ]
 
-    [ run-test c++11 : ut/detail/binder_ut.cpp ]
-    [ run-test c++11 : ut/detail/builder_ut.cpp ]
-    [ run-test c++11 : ut/detail/creator_ut.cpp ]
-    [ run-test c++11 : ut/detail/pool_ut.cpp ]
+    [ run-test c++11 : ut/core/binder_ut.cpp ]
+    [ run-test c++11 : ut/core/builder_ut.cpp ]
+    [ run-test c++11 : ut/core/creator_ut.cpp ]
+    [ run-test c++11 : ut/core/pool_ut.cpp ]
 
     [ run-test c++11 : ut/policies/arguments_permission_ut.cpp ]
     [ run-test c++11 : ut/policies/circular_dependencies_ut.cpp ]
@@ -134,6 +133,8 @@ test-suite ut : # unit tests
 
     [ run-test c++11 : ut/injector_ut.cpp : : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
     [ run-test c++11 : ut/injector_ut.cpp : ctor_injector_ut : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
+
+    [ run-test c++11 : ut/named_ut.cpp ]
 ;
 
 test-suite mt : # module tests

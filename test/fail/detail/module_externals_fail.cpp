@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/detail/module.hpp"
+#include "boost/di/core/module.hpp"
 
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
@@ -15,7 +15,7 @@
 
 namespace boost {
 namespace di {
-namespace detail {
+namespace core {
 
 BOOST_AUTO_TEST_CASE(module_externals_fail) {
     concepts::dependency<scopes::external<>, int> i_(42);
@@ -30,7 +30,7 @@ BOOST_AUTO_TEST_CASE(module_externals_fail) {
     module_.create<c14>();
 }
 
-} // namespace detail
+} // namespace core
 } // namespace di
 } // namespace boost
 
