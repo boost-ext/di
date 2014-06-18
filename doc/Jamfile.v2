@@ -13,3 +13,5 @@ boostbook standalone : di :
     <xsl:param>boost.root=.
 ;
 
+install html/images : [ glob images/*.png ] ;
+

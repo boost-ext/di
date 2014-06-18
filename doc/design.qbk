@@ -1,8 +1,38 @@
 [section Desing Rationale]
 
-class diagram
-constructor deduction algorithm
-create flow
+[$images/di.png]
+
+Core
+
+* Responsible for resolving requested types (implementation detail)
+
+Concepts
+
+* DSL to create dependencies representation which will be used by core to resolve types
+
+Scopes
+
+* Responsible for providing request object type accurately
+
+Wrappers
+
+* Responsible for conversion to required type
+
+Policies
+
+* Compile time assertions for types
+
+Constructor Deduction Algorithm
+
+1.
+2.
+3.
+
+Type Creation Algorithm
+
+1.
+2.
+3.
 
 [endsect]
 

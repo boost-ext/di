@@ -79,9 +79,9 @@ BOOST_AUTO_TEST_CASE(to_value_text) {
 }
 
 BOOST_AUTO_TEST_CASE(to_const_ref) {
-    struct c { };
+    struct c { } c_;
     using expected = scopes::external<wrappers::reference>;
-    using external = decltype(dependency<fake_scope<>, c>::to(cref(c())));
+    using external = decltype(dependency<fake_scope<>, c>::to(cref(c_)));
     using given = external::scope;
     BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
 }

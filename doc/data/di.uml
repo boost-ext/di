@@ -1,0 +1,46 @@
+@startuml
+
+package core <<Rect>> {
+    class binder
+    class builder
+    class creator
+    class module
+    class pool
+}
+
+package concepts <<Rect>> {
+    class dependency
+    class bind
+    class scope
+}
+
+package scopes <<Rect>> {
+    class deduce
+    class external
+    class session
+    class shared
+    class unique
+}
+
+package policies <<Rect>> {
+    class arguments_permission
+    class circular_dependencies
+    class creation_ownership
+    class scopes_permission
+}
+
+package wrappers <<Rect>> {
+    class copy
+    class reference
+    class shared
+    class universal
+    class value
+}
+
+class injector
+class make_injector
+class named
+class provider
+
+@enduml
+

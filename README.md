@@ -5,7 +5,7 @@
 This is not an official Boost library yet and there is no guarantee it will ever be!
 
 ## Introduction
-DI is C++03/C++11 header only library providing compile time, macro free constructor dependency injection functionality.
+Dependency Injection is C++03/C++11 header only library providing compile time, macro free constructor dependency injection functionality.
 
 ## Hello World
 
@@ -99,7 +99,7 @@ int main() {
 
 ## Main Features
 * Header only library
-* Architecture independent (tested on x86/x86\_64)
+* Architecture independent (tested on x86/x86-64)
 * Supports all POSIX and Windows operating systems (tested on Linux 3.8/Windows 7/8)
 * Supports C++03/C++11 standard
 * Exception safe guaranty
@@ -118,16 +118,16 @@ int main() {
 * [Todo/Issues] (https://github.com/krzysztof-jusiak/di/issues?state=open)
 
 ## Tested compilers
-* Linux
+* Linux (x86/x86-64)
    * Clang 3.2/3.3/3.4/3.4.1 (clean with Clang Static Analyzer and Valgrind)
    * GCC 4.7.3/4.8.2/4.9.0 (clean with Valgrind)
    * Intel C++ 14.0.3 (clean with Valgrind)
 
-* Windows
+* Windows (x86/x86-64)
    * MinGW 4.7.3/4.8.2
    * Visual Studio 2013 (clean with DrMemory)
 
-* Darwin/Mac OS
+* Darwin/Mac OS (x86-64)
    * Clang 503.0.40 (Apple LLVM version 5.1)
 
 ## Continuous integration

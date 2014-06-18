@@ -3,7 +3,7 @@
 [section Features]
 
 * Header only library
-* Architecture independent (tested on x86/x86\_64)
+* Architecture independent (tested on x86/x86-64)
 * Supports all POSIX and Windows operating systems (tested on Linux/Windows/Mac/Darwin)
 * Supports C++03/C++11 standard
 * Exception safe guaranty
@@ -37,11 +37,23 @@
 
 [section Supported Compilers]
 
-* GCC 4.7.3/4.8.1
-* Clang 3.2/3.3
-* Intel C++ 14.0.0
-* MinGW 4.7.3/4.8.1
-* Visual Studio 2013 RC / 2013
+* Linux (x86/x86-64)
+   * Clang 3.2/3.3/3.4/3.4.1 (clean with Clang Static Analyzer and Valgrind)
+   * GCC 4.7.3/4.8.2/4.9.0 (clean with Valgrind)
+   * Intel C++ 14.0.3 (clean with Valgrind)
+
+* Windows (x86/x86-64)
+   * MinGW 4.7.3/4.8.2
+   * Visual Studio 2013 (clean with DrMemory)
+
+* Darwin/Mac OS (x86-64)
+   * Clang 503.0.40 (Apple LLVM version 5.1)
+
+[note Older compilers might be supported, but weren't tested and probably can't be tested properly due to C++ 11 features requirements by the tests.]
+
+[endsect]
+
+[section Continuous Integration]
 
 [@https://travis-ci.org/krzysztof-jusiak/di [$https://travis-ci.org/krzysztof-jusiak/di.svg?branch=master [format PNG]]]
 [@https://ci.appveyor.com/project/krzysztof-jusiak/di [$https://ci.appveyor.com/api/projects/status/1il4knxh7tq9o5ic [format PNG]]]
