@@ -31,17 +31,50 @@
 <dt><span class="section"><a href="overview.html#boost_di__dependency_injection_.overview.dependencies">Dependencies</a></span></dt>
 <dt><span class="section"><a href="overview.html#boost_di__dependency_injection_.overview.supported_compilers">Supported
       Compilers</a></span></dt>
+<dt><span class="section"><a href="overview.html#boost_di__dependency_injection_.overview.continuous_integration">Continuous
+      Integration</a></span></dt>
 </dl></div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_di__dependency_injection_.overview.features"></a><a class="link" href="overview.html#boost_di__dependency_injection_.overview.features" title="Features">Features</a>
 </h3></div></div></div>
+<p>
+        What is so unique about this library?
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+            Compile time approach - no exceptions - if your application is compiling
+            all dependencies will be be created accurately
+          </li>
+<li class="listitem">
+            Macro free - no macros - you don't have to specify constructor traits
+            or register classes - less intrusive
+          </li>
+<li class="listitem">
+            Scopes deduction - scopes are deduced based on type based semantic in
+            respect to smart pointers, references, pointers, ...
+          </li>
+<li class="listitem">
+            Automatic conversion between std/boost smart pointers - some libraries
+            requires std and some boost smart pointers
+          </li>
+<li class="listitem">
+            Supports C++ 03 / C++ 11 / C++ 14 standards
+          </li>
+<li class="listitem">
+            Compile time policies - for example to detect circular dependencies or
+            limit supported types only to smart pointers
+          </li>
+</ul></div>
+<p>
+        Main features:
+      </p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
             Header only library
           </li>
 <li class="listitem">
-            Architecture independent (tested on x86/x86_64)
+            Architecture independent (tested on x86/x86-64)
           </li>
 <li class="listitem">
             Supports all POSIX and Windows operating systems (tested on Linux/Windows/Mac/Darwin)
@@ -133,21 +166,53 @@
 </h3></div></div></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
-            GCC 4.7.3/4.8.1
+            Linux (x86/x86-64)
+            <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
+<li class="listitem">
+                  Clang 3.2/3.3/3.4/3.4.1 (clean with Clang Static Analyzer and Valgrind)
+                </li>
+<li class="listitem">
+                  GCC 4.7.3/4.8.2/4.9.0 (clean with Valgrind)
+                </li>
+<li class="listitem">
+                  Intel C++ 14.0.3 (clean with Valgrind)
+                </li>
+</ul></div>
           </li>
 <li class="listitem">
-            Clang 3.2/3.3
+            Windows (x86/x86-64)
+            <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
+<li class="listitem">
+                  MinGW 4.7.3/4.8.2
+                </li>
+<li class="listitem">
+                  Visual Studio 2013 (clean with DrMemory)
+                </li>
+</ul></div>
           </li>
 <li class="listitem">
-            Intel C++ 14.0.0
-          </li>
-<li class="listitem">
-            MinGW 4.7.3/4.8.1
-          </li>
-<li class="listitem">
-            Visual Studio 2013 RC / 2013
+            Darwin/Mac OS (x86-64)
+            <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem">
+                  Clang 503.0.40 (Apple LLVM version 5.1)
+                </li></ul></div>
           </li>
 </ul></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src=".././doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          Older compilers might be supported, but weren't tested and probably can't
+          be tested properly due to requirements of C++ 11 features by the tests.
+        </p></td></tr>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_di__dependency_injection_.overview.continuous_integration"></a><a class="link" href="overview.html#boost_di__dependency_injection_.overview.continuous_integration" title="Continuous Integration">Continuous
+      Integration</a>
+</h3></div></div></div>
 <p>
         <a href="https://travis-ci.org/krzysztof-jusiak/di" target="_top"><span class="inlinemediaobject"><img src="https://travis-ci.org/krzysztof-jusiak/di.svg?branch=master" alt="di"></span></a> <a href="https://ci.appveyor.com/project/krzysztof-jusiak/di" target="_top"><span class="inlinemediaobject"><img src="https://ci.appveyor.com/api/projects/status/1il4knxh7tq9o5ic" alt="1il4knxh7tq9o5ic"></span></a> <a href="https://coveralls.io/r/krzysztof-jusiak/di?branch=master" target="_top"><span class="inlinemediaobject"><img src="https://coveralls.io/repos/krzysztof-jusiak/di/badge.png?branch=master" alt="badge"></span></a>
       </p>
