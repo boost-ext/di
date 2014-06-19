@@ -4,8 +4,13 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+
+//[factory_cpp_11
+//`[h6 C++ 11]
+//<-
 #include <cassert>
 #include <memory>
+//->
 #include <boost/di.hpp>
 
 namespace di  = boost::di;
@@ -101,4 +106,7 @@ int main() {
 
     return 0;
 }
+
+//`full code example: [@example/cpp_11/factory.cpp factory.cpp]
+//]
 

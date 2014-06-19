@@ -9,7 +9,7 @@ Dependency Injection is C++03/C++11 header only library providing compile time, 
 * for using Dependency Injection Framework
 
 [import ../example/cpp_11/motivation.cpp]
-[example]
+[motivation_cpp_11]
 
 [endsect]
 

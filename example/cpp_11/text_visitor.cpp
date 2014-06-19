@@ -4,11 +4,16 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+
+//[text_visitor_cpp_11
+//`[h6 C++ 11]
+//<-
 #include <iostream>
 #include <memory>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/units/detail/utility.hpp>
+//->
 #include <boost/di.hpp>
 
 namespace mpl   = boost::mpl;
@@ -56,4 +61,7 @@ int main() {
 //         int
 //         double
 //         char
+
+//`full code example: [@example/cpp_11/text_visitor.cpp text_visitor.cpp]
+//]
 

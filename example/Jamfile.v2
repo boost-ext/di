@@ -24,27 +24,32 @@ rule run-test ( std : src : property * ) {
     : $(property) ;
 }
 
+test-suite di :
+    [ run-test c++03 : hello_world.cpp : hello_world_cpp_03 ]
+    [ run-test c++11 : hello_world.cpp : hello_world_cpp_11 ]
+;
+
 test-suite cpp_03 : # "di / c++ 03"
-    [ run-test c++03 : cpp_03/dependency_injection.cpp : cpp_03 ]
+    [ run-test c++03 : cpp_03/dependency_injection.cpp : dependency_injection_cpp_03 ]
 ;
 
 test-suite cpp_11 : # "di / c++ 11"
-    [ run-test c++11 : cpp_11/allow_only_smart_ptr_policy.cpp ]
-    [ run-test c++11 : cpp_11/concepts.cpp ]
-    [ run-test c++11 : cpp_11/custom_scope.cpp ]
-    [ run-test c++11 : cpp_11/deduce_scope.cpp ]
-    [ run-test c++11 : cpp_11/dependency_injection.cpp ]
-    [ run-test c++11 : cpp_11/externals.cpp ]
-    [ run-test c++11 : cpp_11/factory.cpp ]
-    [ run-test c++11 : cpp_11/hello_world.cpp ]
-    [ run-test c++11 : cpp_11/inject.cpp ]
-    [ run-test c++11 : cpp_11/injector.cpp ]
-    [ run-test c++11 : cpp_11/multiple_interfaces.cpp ]
-    [ run-test c++11 : cpp_11/named.cpp ]
-    [ run-test c++11 : cpp_11/provider.cpp ]
-    [ run-test c++11 : cpp_11/testing.cpp ]
-    [ run-test c++11 : cpp_11/text_visitor.cpp ]
-    [ run-test c++11 : cpp_11/uml_visitor.cpp ]
+    [ run-test c++11 : cpp_11/allow_only_smart_ptr_policy.cpp : allow_only_smart_ptr_policy_cpp_11 ]
+    [ run-test c++11 : cpp_11/concepts.cpp : concepts_cpp_11 ]
+    [ run-test c++11 : cpp_11/custom_scope.cpp : custom_scope_cpp_11 ]
+    [ run-test c++11 : cpp_11/deduce_scope.cpp : deduce_scope_cpp_11 ]
+    [ run-test c++11 : cpp_11/dependency_injection.cpp : dependency_injection_cpp_11 ]
+    [ run-test c++11 : cpp_11/externals.cpp : externals_cpp_11 ]
+    [ run-test c++11 : cpp_11/factory.cpp : factory_cpp_11 ]
+    [ run-test c++11 : cpp_11/inject.cpp : inject_cpp_11 ]
+    [ run-test c++11 : cpp_11/injector.cpp : injector_cpp_11 ]
+    [ run-test c++11 : cpp_11/multiple_interfaces.cpp : multiple_interfaces_cpp_11 ]
+    [ run-test c++11 : cpp_11/motivation.cpp : motivation_cpp_11 ]
+    [ run-test c++11 : cpp_11/named.cpp : named_cpp_11 ]
+    [ run-test c++11 : cpp_11/provider.cpp : provider_cpp_11 ]
+    [ run-test c++11 : cpp_11/testing.cpp : testing_cpp_11 ]
+    [ run-test c++11 : cpp_11/text_visitor.cpp : text_visitor_cpp_11 ]
+    [ run-test c++11 : cpp_11/uml_visitor.cpp : uml_visitor_cpp_11 ]
 ;
 
 test-suite cpp_14 : # "di / c++ 14"

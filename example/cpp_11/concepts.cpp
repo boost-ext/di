@@ -4,8 +4,13 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+
+//[concepts_cpp_11
+//`[h6 C++ 11]
+//<-
 #include <boost/shared_ptr.hpp>
 #include <boost/mpl/string.hpp>
+//->
 #include <boost/di.hpp>
 
 namespace di  = boost::di;
@@ -79,4 +84,7 @@ int main() {
       , di::bind<double>::when<di::call_stack<c1>, di::call_stack<c2>>::to(87.0)
     );
 }
+
+//`full code example: [@example/cpp_11/concepts.cpp concepts.cpp]
+//]
 

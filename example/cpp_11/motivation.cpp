@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[example
+//[motivation_cpp_11
 //<-
 #include <memory>
 //->
@@ -23,6 +23,8 @@ public:
       , int
       , const std::string&)
     { }
+
+    void start() { }
 };
 
 int main() {
@@ -30,9 +32,10 @@ int main() {
     auto injector = boost::di::make_injector();
 
     /*<<create app>>*/
-    app = injector.create<app>();
+    auto my_app = injector.create<app>();
 
-    /*<<use app>>*/
+    /*<<use my_app>>*/
+    my_app.start();
     //...
 
     return 0;

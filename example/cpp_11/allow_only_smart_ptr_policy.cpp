@@ -4,12 +4,18 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+
+//[allow_only_smart_ptr_policy_cpp_11
+//`[h6 C++ 11]
+
+//<-
 #include <boost/shared_ptr.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/has_xxx.hpp>
 #include <boost/mpl/assert.hpp>
+//->
 #include <boost/di.hpp>
 
 namespace mpl = boost::mpl;
@@ -60,4 +66,7 @@ int main() {
 }
 
 //`[note conversion between standard smart pointers and boost smart pointers - weak ptr]
+//`full code example:  [@example/cpp_111/allow_only_smart_ptr_policy.cpp allow_only_smart_ptr_policy.cpp]
+
+//]
 
