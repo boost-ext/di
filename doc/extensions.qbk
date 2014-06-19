@@ -1,0 +1,63 @@
+[section Extensions]
+
+[table
+    [[Constructor Traits Generator]]
+    [[
+        Python script based on lib clang generating constructor traits. Useful for third party libraries, which can't be changed.
+
+        Usage:
+
+        ```
+        Usage: di_ctor_traits.py [options] files...
+
+        Options:
+          -h, --help                    show this help message and exit
+          -o OUTPUT, --output=OUTPUT    output file (default='di_ctor_traits.hpp')
+          -l LIMIT, --limit=LIMIT       limit to constructors within declaration (default='')
+
+        ```
+
+        Example:
+        ```
+
+        ./di_ctor_traits.py -o di_ctor_traits.hpp -l "namespace::class" files...
+
+        ```
+
+        Download:
+        [@https://github.com/krzysztof-jusiak/di_ctor_traits di_ctor_traits]
+    ]]
+]
+
+[table
+    [[Runtime (Experimental)]]
+    [[
+        Implementation of experimental runtime extension giving possibility to install dependencies during runtime.
+
+        Example:
+        ```
+
+        di::injector<> injector;
+
+        injector.install(
+            di::bind<i, impl>()
+          , di::bind<int>::to(42)
+        );
+
+        injector.install(
+            di::bind<i2, impl2>()
+        );
+
+        injector.create<app>();
+        ...
+
+        ```
+
+        Download:
+        [@https://github.com/krzysztof-jusiak/di_extensions di_runtime]
+    ]]
+]
+
+[endsect]
+
+
