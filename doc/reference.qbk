@@ -1,6 +1,6 @@
 [section Reference]
 
-[section Injections]
+[section ...]
 
 [section Header <boost/di.hpp>]
 This header exists simply as a convenience to the user, including all of the headers in the boost/di directory.
