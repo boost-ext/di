@@ -2,6 +2,17 @@
 
 [section Features]
 
+What is so unique about this library?
+
+* Compile time approach - no exceptions - if your application is compiling all dependencies will be be created accurately
+* Macro free - no macros - you don't have to specify constructor traits or register classes - less intrusive
+* Scopes deduction - scopes are deduced based on type based semantic in respect to smart pointers, references, pointers, ...
+* Automatic conversion between std/boost smart pointers - some libraries requires std and some boost smart pointers
+* Supports C++ 03 / C++ 11 / C++ 14 standards
+* Compile time policies - for example to detect circular dependencies or limit supported types only to smart pointers
+
+Main features:
+
 * Header only library
 * Architecture independent (tested on x86/x86-64)
 * Supports all POSIX and Windows operating systems (tested on Linux/Windows/Mac/Darwin)
@@ -49,7 +60,7 @@
 * Darwin/Mac OS (x86-64)
    * Clang 503.0.40 (Apple LLVM version 5.1)
 
-[note Older compilers might be supported, but weren't tested and probably can't be tested properly due to C++ 11 features requirements by the tests.]
+[note Older compilers might be supported, but weren't tested and probably can't be tested properly due to requirements of C++ 11 features by the tests.]
 
 [endsect]
 

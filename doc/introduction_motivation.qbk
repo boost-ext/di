@@ -1,12 +1,34 @@
 [section Introduction & Motivation]
 
-Dependency Injection is C++03/C++11 header only library providing compile time, macro free constructor dependency injection functionality.
+Boost.DI is C++ 03 / C++ 11 header only library providing compile time, macro free constructor dependency injection functionality.
+
+[h5 Dependency Injection?]
 
 "Don't call us, we'll call you", Hollywood principle
 
-* for using Dependency Injection
+[@http://en.wikipedia.org/wiki/Dependency_injection Dependency injection] is a [@http://en.wikipedia.org/wiki/Software_design_pattern software design pattern] that implements [@http://en.wikipedia.org/wiki/Inversion_of_control inversion of control] and allows a program design to follow the dependency inversion principle.
 
-* for using Dependency Injection Framework
+testable code, separation between business logic and object creation
+
+Form of dependency injection:
+constructor injection
+setter injection
+member injection
+interface injection
+
+Service locator - anti pattern in the end
+factory
+
+The Clean Code Talks
+http://www.youtube.com/watch?v=wEhu57pih5w - Unit Testing
+http://www.youtube.com/watch?v=RlfLCWKxHJ0 - Don't Look For Things
+
+[h5 Dependency Injection Library?]
+
+* to avoid writing boilerplate, tedious code
+* to write testable, maintainable code 
+
+[h5 Motivation example]
 
 [import ../example/cpp_11/motivation.cpp]
 [motivation_cpp_11]

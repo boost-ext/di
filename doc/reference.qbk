@@ -1,6 +1,6 @@
 [section Reference]
 
-[section Dependency Injection]
+[section Injections]
 
 [section Header <boost/di.hpp>]
 This header exists simply as a convenience to the user, including all of the headers in the boost/di directory.
@@ -47,25 +47,6 @@ This header exists simply as a convenience to the user, including all of the hea
 [endsect]
 
 [section Header <boost/di/provider.hpp>]
-[endsect]
-
-[endsect]
-
-[section Core]
-
-[section Header <boost/di/core/binder.hpp>]
-[endsect]
-
-[section Header <boost/di/core/builder.hpp>]
-[endsect]
-
-[section Header <boost/di/core/creator.hpp>]
-[endsect]
-
-[section Header <boost/di/core/module.hpp>]
-[endsect]
-
-[section Header <boost/di/core/pool.hpp>]
 [endsect]
 
 [endsect]
@@ -201,6 +182,27 @@ This header exists simply as a convenience to the user, including all of the hea
 [endsect]
 
 [endsect]
+
+[section Core]
+
+[section Header <boost/di/core/binder.hpp>]
+[endsect]
+
+[section Header <boost/di/core/builder.hpp>]
+[endsect]
+
+[section Header <boost/di/core/creator.hpp>]
+[endsect]
+
+[section Header <boost/di/core/module.hpp>]
+[endsect]
+
+[section Header <boost/di/core/pool.hpp>]
+[endsect]
+
+[endsect]
+
+
 
 [endsect]
 
