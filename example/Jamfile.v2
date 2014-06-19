@@ -25,7 +25,7 @@ rule run-test ( std : src : property * ) {
 }
 
 test-suite cpp_03 : # "di / c++ 03"
-    [ run-test c++03 : cpp_03/di.cpp : cpp_03 ]
+    [ run-test c++03 : cpp_03/dependency_injection.cpp : cpp_03 ]
 ;
 
 test-suite cpp_11 : # "di / c++ 11"
@@ -33,7 +33,7 @@ test-suite cpp_11 : # "di / c++ 11"
     [ run-test c++11 : cpp_11/concepts.cpp ]
     [ run-test c++11 : cpp_11/custom_scope.cpp ]
     [ run-test c++11 : cpp_11/deduce_scope.cpp ]
-    [ run-test c++11 : cpp_11/di.cpp ]
+    [ run-test c++11 : cpp_11/dependency_injection.cpp ]
     [ run-test c++11 : cpp_11/externals.cpp ]
     [ run-test c++11 : cpp_11/factory.cpp ]
     [ run-test c++11 : cpp_11/hello_world.cpp ]

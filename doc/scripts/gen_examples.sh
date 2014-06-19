@@ -1,20 +1,27 @@
 #!/bin/bash
 
 function generate_example() {
-    echo "[section `echo $1 | sed "s/.*\/\(.*\).cpp/\1/" | tr '_' ' ' | sed -r 's/\<./\U&/g'`]"
+    num=`ls $1 | wc -l`
+    nice_name=`echo $1 | sed "s/.*\/\(.*\).cpp/\1/" | tr '_' ' ' | sed -r 's/\<./\U&/g'`
+
+    echo "[section $nice_name]"
         echo "[table"
-        echo "[[C++98/03] [C++11]]"
-        echo "["
-            echo "[\`\`\`"
-            cat $1
-            echo  "\`\`\`]"
-            echo "[\`\`\`"
-            cat $1
-            echo  "\`\`\`]"
+        echo -n "["
+        for std in `ls $1`; do
+            echo -n "[`echo $std | sed "s/cpp/C++/g" | tr '_' ' '`] "
+        done
         echo "]"
         echo "["
-            echo "[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]"
-            echo "[full code example:  [@http://examples/hello_world.cpp hello_world_03.cpp]]"
+            for std in `ls $1`; do
+                echo "[\`\`\`"
+                cat $1/$std
+                echo  "\`\`\`]"
+            done
+        echo "]"
+        echo "["
+            for std in `ls $1`; do
+                echo "[full code example:  [@example/$2 $2]]"
+            done
         echo "]"
     echo "]"
     echo "[endsect]"
@@ -23,8 +30,16 @@ function generate_example() {
 function generate_examples() {
     echo "[section Examples]"
     for file in `find $1 -type f -iname "*.cpp"`; do
-        generate_example $file
+        std=`echo $file | sed "s/.*\/\(.*\)\/.*/\1/"`
+        name=`basename $file`
+        dir=`dirname $file`
+        mkdir -p /tmp/di/$name
+        cat $file > /tmp/di/$name/$std
     done
+    for dir in `ls /tmp/di/`; do
+        generate_example /tmp/di/$dir $name
+    done
+
     echo "[endsect]"
 }
 
