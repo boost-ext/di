@@ -37,7 +37,7 @@ struct i { virtual ~i() { } };
 struct impl : i { };
 
 struct app {
-	explicit app(std::unique_ptr<i> up, int i) {
+	app(std::unique_ptr<i> up, int i) {
         assert(dynamic_cast<impl*>(up.get()));
 		assert(i == 42);
 	}
