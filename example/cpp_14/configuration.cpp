@@ -9,6 +9,7 @@
 //`[h6 C++ 14]
 //<-
 #include <tuple>
+#include <utility>
 //->
 
 #include <boost/di.hpp>
