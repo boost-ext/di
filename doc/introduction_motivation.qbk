@@ -5,7 +5,8 @@ Boost.DI is C++ 03 / C++ 11 header only library providing compile time, macro fr
 [h5 Dependency Injection?]
 
 "Don't call us, we'll call you", Hollywood principle
-
+Dependency Injection is a set of software design principles and patterns that enable us to develop loosely coupled code.
+DI enables loose coupling, and loose coupling makes code more maintainable
 [@http://en.wikipedia.org/wiki/Dependency_injection Dependency injection] is a [@http://en.wikipedia.org/wiki/Software_design_pattern software design pattern] that implements [@http://en.wikipedia.org/wiki/Inversion_of_control inversion of control] and allows a program design to follow the dependency inversion principle.
 
 testable code, separation between business logic and object creation
@@ -15,6 +16,11 @@ constructor injection
 setter injection
 member injection
 interface injection
+
+* Parallel Development
+* Extensibility
+* Maintainability
+* Testability
 
 Service locator - anti pattern in the end
 factory
@@ -32,6 +38,9 @@ http://www.youtube.com/watch?v=RlfLCWKxHJ0 - Don't Look For Things
 
 [import ../example/cpp_11/motivation.cpp]
 [motivation_cpp_11]
+
+Good practises:
+* Composition Root is a (preferably) unique location in an application where modules are composed together
 
 [endsect]
 

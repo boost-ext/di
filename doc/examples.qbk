@@ -31,10 +31,15 @@
 [endsect]
 
 [section Dependency Injection]
-[import ../example/cpp_03/dependency_injection.cpp]
-[dependency_injection_cpp_03]
 [import ../example/cpp_11/dependency_injection.cpp]
 [dependency_injection_cpp_11]
+[import ../example/cpp_03/dependency_injection.cpp]
+[dependency_injection_cpp_03]
+[endsect]
+
+[section Configuration]
+[import ../example/cpp_14/configuration.cpp]
+[configuration_cpp_14]
 [endsect]
 
 [section Deduce Scope]
@@ -50,11 +55,6 @@
 [section Custom Scope]
 [import ../example/cpp_11/custom_scope.cpp]
 [custom_scope_cpp_11]
-[endsect]
-
-[section Configuration]
-[import ../example/cpp_14/configuration.cpp]
-[configuration_cpp_14]
 [endsect]
 
 [section Factory]

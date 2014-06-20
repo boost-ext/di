@@ -53,5 +53,6 @@ test-suite cpp_11 : # "di / c++ 11"
 ;
 
 test-suite cpp_14 : # "di / c++ 14"
+    [ run-test c++1y : cpp_14/configuration.cpp : configuration_cpp_14 ]
 ;
 
