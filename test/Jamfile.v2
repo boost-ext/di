@@ -78,6 +78,11 @@ rule compile-fail-test ( std * : src : ctor * : defines * : preprocessed_headers
     compile-fail $(src) : $(common_toolset) $(defines) : $(ctor) ;
 }
 
+test-suite vt : # verification tests
+    [ run-test c++03 : vt/compiler_support_vt.cpp : cpp_03_compiler_support ]
+    [ run-test c++11 : vt/compiler_support_vt.cpp : cpp_11_compiler_support ]
+;
+
 test-suite ut : # unit tests
     [ run-test c++11 : ut/concepts_ut.cpp ]
     [ run-test c++11 : ut/concepts/detail/requires_ut.cpp ]
