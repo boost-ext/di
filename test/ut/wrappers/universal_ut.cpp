@@ -32,6 +32,27 @@ BOOST_AUTO_TEST_CASE(convert_to_named_type) {
     BOOST_CHECK_EQUAL(i, c.operator named<int>());
 }
 
+BOOST_AUTO_TEST_CASE(convert_to_named_const_ref_type) {
+    const int i = 42;
+    std::vector<aux::shared_ptr<void>> refs;
+    universal<named<const int&>> c(refs, fake_wrapper_<const int&>(i));
+    BOOST_CHECK_EQUAL(i, c.operator named<const int&>());
+}
+
+BOOST_AUTO_TEST_CASE(convert_to_const_named_ref_type) {
+    const int i = 42;
+    std::vector<aux::shared_ptr<void>> refs;
+    universal<const named<int>&> c(refs, fake_wrapper_<int>(i));
+    BOOST_CHECK_EQUAL(i, c.operator const named<int>&());
+}
+
+BOOST_AUTO_TEST_CASE(convert_to_const_named_const_ref_ref_type) {
+    named<const int&> i(42);
+    std::vector<aux::shared_ptr<void>> refs;
+    universal<const named<const int&>&> c(refs, fake_wrapper_<named<const int&>>(i));
+    BOOST_CHECK_EQUAL(i, c.operator const named<const int&>&());
+}
+
 BOOST_AUTO_TEST_CASE(convert_to_ref_type) {
     int i = 42;
     std::vector<aux::shared_ptr<void>> refs;
@@ -44,6 +65,27 @@ BOOST_AUTO_TEST_CASE(convert_to_const_ref_type) {
     std::vector<aux::shared_ptr<void>> refs;
     universal<const int&> c(refs, fake_wrapper_<const int&>(i));
     BOOST_CHECK_EQUAL(i, static_cast<const int&>(c));
+}
+
+BOOST_AUTO_TEST_CASE(convert_to_const_ref_type_is_convertible) {
+    to_ref to_ref_;
+    std::vector<aux::shared_ptr<void>> refs;
+    universal<const to_ref&> c(refs, fake_wrapper_<const to_ref&>(to_ref_));
+    BOOST_CHECK(&to_ref_ == &static_cast<const to_ref&>(c));
+}
+
+BOOST_AUTO_TEST_CASE(convert_to_const_ref_type_is_not_convertible) {
+    not_to_ref not_to_ref_;
+    std::vector<aux::shared_ptr<void>> refs;
+    universal<const not_to_ref&> c(refs, fake_wrapper_<const not_to_ref&>(not_to_ref_));
+    BOOST_CHECK(&not_to_ref_ != &static_cast<const not_to_ref&>(c));
+}
+
+BOOST_AUTO_TEST_CASE(convert_to_auto_ptr_type) {
+    const int i = 42;
+    std::vector<aux::shared_ptr<void>> refs;
+    universal<std::auto_ptr<int>> c(refs, fake_wrapper_<std::auto_ptr<int>>(new int(i)));
+    BOOST_CHECK_EQUAL(i, *static_cast<std::auto_ptr<int>>(c));
 }
 
 } // namespace wrappers

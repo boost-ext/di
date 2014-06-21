@@ -36,7 +36,7 @@
 [include extensions.qbk]
 [include reference.qbk]
 [include faq.qbk]
-[include bibliography.qbk]
+[include references.qbk]
 [include acknowledgements.qbk]
 [include revision_history.qbk]
 

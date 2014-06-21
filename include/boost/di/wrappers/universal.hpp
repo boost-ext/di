@@ -187,7 +187,7 @@ public:
     universal_impl(std::vector<aux::shared_ptr<void> >&
                  , const TValueType& value
                  , typename enable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : value_(boost::bind<named<const T&, TName>&>(value, boost::type<named<const T&, TName>&>()))
+        : value_(boost::bind<const named<const T&, TName>&>(value, boost::type<const named<const T&, TName>&>()))
     { }
 
     template<typename TValueType>
