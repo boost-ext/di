@@ -79,8 +79,8 @@ rule compile-fail-test ( std * : src : ctor * : defines * : preprocessed_headers
 }
 
 test-suite vt : # verification tests
-    [ run-test c++03 : vt/compiler_support_vt.cpp : cpp_03_compiler_support ]
-    [ run-test c++11 : vt/compiler_support_vt.cpp : cpp_11_compiler_support ]
+    [ run-test c++03 : vt/compiler_support_vt.cpp : compiler_support_cpp_03 ]
+    [ run-test c++11 : vt/compiler_support_vt.cpp : compiler_support_cpp_11 ]
 ;
 
 test-suite ut : # unit tests
@@ -114,20 +114,20 @@ test-suite ut : # unit tests
     [ run-test c++11 : ut/wrappers/value_ut.cpp : wrapper_value_ut ]
 
     [ run-test c++11 : ut/type_traits/create_traits_ut.cpp ]
-    [ run-test c++11 : ut/type_traits/ctor_traits_ut.cpp : cpp_11_ctor_traits_ut ]
-    [ run-test c++03 : ut/type_traits/ctor_traits_ut.cpp : cpp_03_ctor_traits_ut ]
-    [ run-test c++11 : ut/type_traits/has_call_operator_ut.cpp : cpp_11_has_call_operator_ut ]
-    [ run-test c++03 : ut/type_traits/has_call_operator_ut.cpp : cpp_03_has_call_operator_ut ]
-    [ run-test c++11 : ut/type_traits/has_call_ut.cpp : cpp_11_has_call_ut ]
-    [ run-test c++03 : ut/type_traits/has_call_ut.cpp : cpp_03_has_call_ut ]
-    [ run-test c++11 : ut/type_traits/has_ctor_ut.cpp : cpp_11_has_ctor_ut ]
-    [ run-test c++03 : ut/type_traits/has_ctor_ut.cpp : cpp_03_has_ctor_ut ]
-    [ run-test c++11 : ut/type_traits/has_injector_ut.cpp : cpp_11_has_injector_ut ]
-    [ run-test c++03 : ut/type_traits/has_injector_ut.cpp : cpp_03_has_injector_ut ]
-    [ run-test c++11 : ut/type_traits/has_value_ut.cpp : cpp_11_has_value_ut ]
-    [ run-test c++03 : ut/type_traits/has_value_ut.cpp : cpp_03_has_value_ut ]
-    [ run-test c++11 : ut/type_traits/is_convertible_to_ref_ut.cpp : cpp_11_is_convertible_to_ref_ut ]
-    [ run-test c++03 : ut/type_traits/is_convertible_to_ref_ut.cpp : cpp_03_is_convertible_to_ref_ut ]
+    [ run-test c++11 : ut/type_traits/ctor_traits_ut.cpp : ctor_traits_ut_cpp_11 ]
+    [ run-test c++03 : ut/type_traits/ctor_traits_ut.cpp : ctor_traits_ut_cpp_03 ]
+    [ run-test c++11 : ut/type_traits/has_call_operator_ut.cpp : has_call_operator_ut_cpp_11 ]
+    [ run-test c++03 : ut/type_traits/has_call_operator_ut.cpp : _has_call_operator_ut_cpp_03 ]
+    [ run-test c++11 : ut/type_traits/has_call_ut.cpp : has_call_ut_cpp_11 ]
+    [ run-test c++03 : ut/type_traits/has_call_ut.cpp : has_call_ut_cpp_03 ]
+    [ run-test c++11 : ut/type_traits/has_ctor_ut.cpp : has_ctor_ut_cpp_11 ]
+    [ run-test c++03 : ut/type_traits/has_ctor_ut.cpp : has_ctor_ut_cpp_03 ]
+    [ run-test c++11 : ut/type_traits/has_injector_ut.cpp : has_injector_ut_cpp_11 ]
+    [ run-test c++03 : ut/type_traits/has_injector_ut.cpp : has_injector_ut_cpp_03 ]
+    [ run-test c++11 : ut/type_traits/has_value_ut.cpp : has_value_ut_cpp_11 ]
+    [ run-test c++03 : ut/type_traits/has_value_ut.cpp : has_value_ut_cpp_03 ]
+    [ run-test c++11 : ut/type_traits/is_convertible_to_ref_ut.cpp : is_convertible_to_ref_ut_cpp_11 ]
+    [ run-test c++03 : ut/type_traits/is_convertible_to_ref_ut.cpp : is_convertible_to_ref_ut_cpp_03 ]
     [ run-test c++11 : ut/type_traits/is_same_base_of_ut.cpp ]
     [ run-test c++11 : ut/type_traits/make_plain_ut.cpp ]
     [ run-test c++11 : ut/type_traits/remove_accessors_ut.cpp ]

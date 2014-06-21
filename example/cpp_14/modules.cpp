@@ -5,10 +5,11 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[configuration_cpp_14
+//[modules_cpp_14
 //`[h6 C++ 14]
 //<-
 #include <tuple>
+#include <memory>
 #include <utility>
 //->
 
@@ -43,7 +44,8 @@ struct app {
 	}
 };
 
-struct module1 {
+class module1 {
+public:
 	auto configure() const {
 		return di::make_injector(
             di::bind<i, impl>()
@@ -51,20 +53,30 @@ struct module1 {
 	}
 };
 
-struct module2 {
+class module2 {
+public:
+    explicit module2(int i)
+        : i_(i)
+    { }
+
 	auto configure() const {
 		return di::make_injector(
-            di::bind_int<42>()
+            di::bind<int>::to(i_)
         );
 	}
+
+private:
+    int i_ = 0;
 };
 
 int main() {
+    const int i = 42;
+
 	auto injector =
 		invoke([](const auto&... args) {
 			return di::make_injector(args.configure()...);
 		}
-	  , std::make_tuple(module1(), module2())
+	  , std::make_tuple(module1(), module2(i))
 	);
 
 	injector.create<app>();
@@ -72,6 +84,6 @@ int main() {
 	return 0;
 }
 
-//`full code example: [@example/cpp_14/configuration.cpp configuration.cpp]
+//`full code example: [@example/cpp_14/modules.cpp modules.cpp]
 //]
 

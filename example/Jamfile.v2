@@ -31,6 +31,7 @@ test-suite di :
 
 test-suite cpp_03 : # "di / c++ 03"
     [ run-test c++03 : cpp_03/dependency_injection.cpp : dependency_injection_cpp_03 ]
+    [ run-test c++03 : cpp_03/modules.cpp : modules_cpp_03 ]
 ;
 
 test-suite cpp_11 : # "di / c++ 11"
@@ -53,6 +54,6 @@ test-suite cpp_11 : # "di / c++ 11"
 ;
 
 test-suite cpp_14 : # "di / c++ 14"
-    [ run-test c++1y : cpp_14/configuration.cpp : configuration_cpp_14 ]
+    [ run-test c++1y : cpp_14/modules.cpp : modules_cpp_14 ]
 ;
 

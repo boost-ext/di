@@ -37,9 +37,11 @@
 [dependency_injection_cpp_03]
 [endsect]
 
-[section Configuration]
-[import ../example/cpp_14/configuration.cpp]
-[configuration_cpp_14]
+[section Modules]
+[import ../example/cpp_14/modules.cpp]
+[modules_cpp_14]
+[import ../example/cpp_03/modules.cpp]
+[modules_cpp_03]
 [endsect]
 
 [section Deduce Scope]
