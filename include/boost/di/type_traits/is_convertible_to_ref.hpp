@@ -12,7 +12,6 @@
 
 #include <boost/type.hpp>
 #include <boost/non_type.hpp>
-#include <boost/mpl/or.hpp>
 #include <boost/mpl/aux_/yes_no.hpp>
 
 namespace boost {
@@ -49,10 +48,7 @@ template<
   , typename T
 >
 struct is_convertible_to_ref
-    : mpl::or_<
-          detail::is_convertible<TValueType, T&(TValueType::*)(const boost::type<T&>&) const>
-        , detail::is_convertible<TValueType, const T&(TValueType::*)(const boost::type<const T&>&) const>
-      >
+    : detail::is_convertible<TValueType, const T&(TValueType::*)(const boost::type<const T&>&) const>
 { };
 
 } // namespace type_traits

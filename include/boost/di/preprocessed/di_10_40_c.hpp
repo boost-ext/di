@@ -8219,10 +8219,7 @@ template<
   , typename T
 >
 struct is_convertible_to_ref
-    : mpl::or_<
-          detail::is_convertible<TValueType, T&(TValueType::*)(const boost::type<T&>&) const>
-        , detail::is_convertible<TValueType, const T&(TValueType::*)(const boost::type<const T&>&) const>
-      >
+    : detail::is_convertible<TValueType, const T&(TValueType::*)(const boost::type<const T&>&) const>
 { };
 
 } // namespace type_traits
@@ -8397,7 +8394,7 @@ public:
     universal_impl(std::vector<aux::shared_ptr<void> >&
                  , const TValueType& value
                  , typename enable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : value_(boost::bind<named<const T&, TName>&>(value, boost::type<named<const T&, TName>&>()))
+        : value_(boost::bind<const named<const T&, TName>&>(value, boost::type<const named<const T&, TName>&>()))
     { }
 
     template<typename TValueType>

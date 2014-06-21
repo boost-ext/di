@@ -45,10 +45,10 @@ BOOST_AUTO_TEST_CASE(convertbiles) {
     BOOST_CHECK((!detail::is_convertible<convertible_to_int_const, double(convertible_to_int_const::*)() const>::value));
 }
 
-BOOST_AUTO_TEST_CASE(convertbiles_to_ref) {
-    BOOST_CHECK((is_convertible_to_ref<convertible_to_int_ref, int>::value));
+BOOST_AUTO_TEST_CASE(convertbiles_to_const_ref) {
     BOOST_CHECK((is_convertible_to_ref<convertible_to_const_int_ref, int>::value));
 
+    BOOST_CHECK((!is_convertible_to_ref<convertible_to_int_ref, int>::value));
     BOOST_CHECK((!is_convertible_to_ref<empty, int>::value));
     BOOST_CHECK((!is_convertible_to_ref<convertible_to_int_const, int>::value));
     BOOST_CHECK((!is_convertible_to_ref<convertible_to_int, int>::value));
