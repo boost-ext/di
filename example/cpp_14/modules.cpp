@@ -20,19 +20,19 @@ struct i { virtual ~i() { } };
 struct impl : i { };
 
 struct app {
-	app(std::unique_ptr<i> up, int i) {
+    app(std::unique_ptr<i> up, int i) {
         assert(dynamic_cast<impl*>(up.get()));
-		assert(i == 42);
-	}
+        assert(i == 42);
+    }
 };
 
 class module1 {
 public:
-	auto configure() const {
-		return di::make_injector(
+    auto configure() const {
+        return di::make_injector(
             di::bind<i, impl>()
         );
-	}
+    }
 };
 
 class module2 {
@@ -41,11 +41,11 @@ public:
         : i_(i)
     { }
 
-	auto configure() const {
-		return di::make_injector(
+    auto configure() const {
+        return di::make_injector(
             di::bind<int>::to(i_)
         );
-	}
+    }
 
 private:
     int i_ = 0;
@@ -54,10 +54,10 @@ private:
 int main() {
     const int i = 42;
 
-	auto injector = di::make_injector(module1(), module2(i));
-	injector.create<app>();
+    auto injector = di::make_injector(module1(), module2(i));
+    injector.create<app>();
 
-	return 0;
+    return 0;
 }
 
 //`full code example: [@example/cpp_14/modules.cpp modules.cpp]
