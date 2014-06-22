@@ -14,7 +14,7 @@ namespace boost {
 namespace di {
 
 struct converter {
-    template<typename T> operator T() const {
+    template<typename T> operator T() {
         return T();
     }
 
@@ -25,6 +25,11 @@ struct converter {
 
     template<typename T> operator const T&() const {
         static T t;
+        return t;
+    }
+
+    template<typename T> operator std::auto_ptr<T>&() {
+        static std::auto_ptr<T> t;
         return t;
     }
 };
@@ -59,7 +64,7 @@ struct app {
 };
 
 BOOST_AUTO_TEST_CASE(conversion) {
-    app app_(converter(), converter(), converter(), converter(), converter(), converter());
+    std::auto_ptr<app> app_(new app(converter(), converter(), converter(), converter(), converter(), converter()));
 }
 
 BOOST_AUTO_TEST_CASE(constructor) {

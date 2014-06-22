@@ -14,13 +14,19 @@
     #include "boost/di/core/pool.hpp"
     #include "boost/di/scopes/deduce.hpp"
     #include "boost/di/concepts.hpp"
+    #include "boost/di/type_traits/has_configure.hpp"
+    #include "boost/di/type_traits/parameter_types.hpp"
 
     #include <boost/preprocessor/iteration/iterate.hpp>
+    #include <boost/preprocessor/repetition/repeat.hpp>
+    #include <boost/preprocessor/punctuation/comma_if.hpp>
+    #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/joint_view.hpp>
     #include <boost/mpl/fold.hpp>
     #include <boost/mpl/copy.hpp>
     #include <boost/mpl/if.hpp>
+    #include <boost/mpl/or.hpp>
     #include <boost/mpl/back_inserter.hpp>
     #include <boost/mpl/is_sequence.hpp>
     #include <boost/mpl/placeholders.hpp>
@@ -39,9 +45,37 @@
     BOOST_MPL_HAS_XXX_TRAIT_DEF(deps)
 
     template<typename T>
-    struct deps
+    struct is_module
+        : mpl::or_<
+               has_deps<T>
+             , type_traits::has_configure<T>
+          >
+    { };
+
+    template<typename T, typename = void>
+    struct get_module
+    {
+        typedef T type;
+    };
+
+    template<typename T>
+    struct get_module<T, typename enable_if<type_traits::has_configure<T> >::type>
+    {
+        typedef typename type_traits::parameter_types<
+            BOOST_DI_FEATURE_DECLTYPE(&T::configure)
+        >::result_type type;
+    };
+
+    template<typename T, typename = void>
+    struct get_deps
     {
         typedef typename T::deps type;
+    };
+
+    template<typename T>
+    struct get_deps<T, typename enable_if<type_traits::has_configure<T> >::type>
+    {
+        typedef typename get_module<T>::type::deps type;
     };
 
     template<typename TSeq>
@@ -54,8 +88,8 @@
                       mpl::is_sequence<mpl::_2>
                     , mpl::_2
                     , mpl::if_<
-                          has_deps<mpl::_2>
-                        , deps<mpl::_2>
+                          is_module<mpl::_2>
+                        , get_deps<mpl::_2>
                         , default_scope<mpl::_2>
                       >
                   >
@@ -94,6 +128,19 @@
         #define BOOST_PP_FILENAME_1 "boost/di/injector.hpp"
         #define BOOST_PP_ITERATION_LIMITS BOOST_DI_TYPES_MPL_LIMIT_FROM(1)
         #include BOOST_PP_ITERATE()
+
+    private:
+        template<typename T>
+        const T& pass_arg(const T& arg, typename disable_if<type_traits::has_configure<T> >::type* = 0) const {
+            return arg;
+        }
+
+        template<typename T>
+        typename detail::get_module<T>::type
+        pass_arg(const T& arg
+               , typename enable_if<type_traits::has_configure<T> >::type* = 0) const {
+            return arg.configure();
+        }
     };
 
     } // namespace di
@@ -103,18 +150,24 @@
 
 #else
 
+    #define BOOST_DI_PASS_ARG(_, n, arg) BOOST_PP_COMMA_IF(n) pass_arg(arg##n)
+
     template<BOOST_DI_TYPES(Args)>
     explicit injector(BOOST_DI_ARGS(Args, args))
-        : core::module<typename joint_concepts<>::type>(BOOST_DI_ARGS_PASS(args))
+        : core::module<typename joint_concepts<>::type>(
+            BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_PASS_ARG, args)
+          )
     { }
 
     template<BOOST_DI_TYPES(Args)>
     injector<joint_concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >
     operator()(BOOST_DI_ARGS(Args, args)) const {
         return injector<joint_concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >(
-            BOOST_DI_ARGS_PASS(args)
+            BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_PASS_ARG, args)
         );
     }
+
+    #undef BOOST_DI_PASS_ARG
 
 #endif
 

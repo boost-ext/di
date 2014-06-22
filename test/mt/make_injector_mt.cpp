@@ -20,6 +20,28 @@
 namespace boost {
 namespace di {
 
+struct module1 {
+    using injector_t = injector<c0if0>;
+
+    injector_t configure() const {
+        return injector_t();
+    }
+};
+
+struct module2 {
+    using injector_t = injector<decltype(bind<int>::to(int()))>;
+
+    explicit module2(int i)
+        : i_(i)
+    { }
+
+    injector_t configure() const {
+        return injector_t(bind<int>::to(i_));
+    }
+
+    int i_ = 0;
+};
+
 BOOST_AUTO_TEST_CASE(ctor) {
     using injector_c0 = injector<
         c0if0
@@ -180,6 +202,22 @@ BOOST_AUTO_TEST_CASE(runtime_factory_fake) {
     auto i_ = all.create<aux::shared_ptr<i>>();
 
     BOOST_CHECK(dynamic_cast<fake*>(i_.get()));
+}
+
+BOOST_AUTO_TEST_CASE(modules_injector) {
+    const int i = 42;
+    injector<module1, module2> injector_{module2(i)};
+
+    BOOST_CHECK(dynamic_cast<c0if0*>(injector_.create<aux::auto_ptr<if0>>().get()));
+    BOOST_CHECK_EQUAL(i, injector_.create<int>());
+}
+
+BOOST_AUTO_TEST_CASE(modules_make_injector) {
+    const int i = 42;
+    auto injector_ = di::make_injector(module1(), module2(i));
+
+    BOOST_CHECK(dynamic_cast<c0if0*>(injector_.create<aux::auto_ptr<if0>>().get()));
+    BOOST_CHECK_EQUAL(i, injector_.create<int>());
 }
 
 } // namespace di

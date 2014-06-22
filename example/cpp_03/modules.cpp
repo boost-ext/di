@@ -38,14 +38,14 @@ public:
 };
 
 class module2 {
+    typedef di::injector<
+        BOOST_TYPEOF(di::bind<int>::to(int()))
+    > injector_t;
+
 public:
     explicit module2(int i)
         : i_(i)
     { }
-
-    typedef di::injector<
-        BOOST_TYPEOF(di::bind<int>::to(int()))
-    > injector_t;
 
 	injector_t configure() const {
 		return injector_t(
@@ -61,10 +61,7 @@ int main() {
     const int i = 42;
 
     BOOST_AUTO(injector, (
-        di::make_injector(
-            module1().configure()
-          , module2(i).configure()
-        )
+        di::make_injector(module1(), module2(i))
     ));
 
     injector.create<app>();

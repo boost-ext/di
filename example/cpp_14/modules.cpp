@@ -8,7 +8,6 @@
 //[modules_cpp_14
 //`[h6 C++ 14]
 //<-
-#include <tuple>
 #include <memory>
 #include <utility>
 //->
@@ -16,23 +15,6 @@
 #include <boost/di.hpp>
 
 namespace di = boost::di;
-
-//<-
-namespace {
-
-template<typename F, typename T, std::size_t... N>
-auto invoke_impl(const F& f, const T& t, const std::index_sequence<N...>&) {
-	return f(std::get<N>(t)...);
-}
-
-template<typename F, typename T>
-auto invoke(const F& f, const T& t) {
-	return invoke_impl(f, t, std::make_index_sequence<std::tuple_size<T>::value>());
-}
-
-} // namespace
-
-//->
 
 struct i { virtual ~i() { } };
 struct impl : i { };
@@ -72,13 +54,7 @@ private:
 int main() {
     const int i = 42;
 
-	auto injector =
-		invoke([](const auto&... args) {
-			return di::make_injector(args.configure()...);
-		}
-	  , std::make_tuple(module1(), module2(i))
-	);
-
+	auto injector = di::make_injector(module1(), module2(i));
 	injector.create<app>();
 
 	return 0;

@@ -1532,6 +1532,8 @@ class has_call_operator
     static mpl::aux::yes_tag test(...);
 
 public:
+    typedef has_call_operator type;
+
     BOOST_STATIC_CONSTANT(
         bool
       , value = sizeof(test((base*)0)) == sizeof(mpl::aux::yes_tag)
@@ -10955,6 +10957,39 @@ public :
     } // namespace boost
 
 
+namespace boost {
+namespace di {
+namespace type_traits {
+
+template<typename T>
+class has_configure
+{
+    struct base_impl { void configure() { } };
+    struct base : T, base_impl { };
+
+    template<typename U>
+    static mpl::aux::no_tag test(
+        U*
+      , non_type<void (base_impl::*)(), &U::configure>* = 0
+    );
+
+    template<typename>
+    static mpl::aux::yes_tag test(...);
+
+public:
+    typedef has_configure type;
+
+    BOOST_STATIC_CONSTANT(
+        bool
+      , value = sizeof(test<base>(0)) == sizeof(mpl::aux::yes_tag)
+    );
+};
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+
+
     namespace boost {
     namespace di {
 
@@ -10968,9 +11003,37 @@ public :
     BOOST_MPL_HAS_XXX_TRAIT_DEF(deps)
 
     template<typename T>
-    struct deps
+    struct is_module
+        : mpl::or_<
+               has_deps<T>
+             , type_traits::has_configure<T>
+          >
+    { };
+
+    template<typename T, typename = void>
+    struct get_module
+    {
+        typedef T type;
+    };
+
+    template<typename T>
+    struct get_module<T, typename enable_if<type_traits::has_configure<T> >::type>
+    {
+        typedef typename type_traits::parameter_types<
+            BOOST_DI_FEATURE_DECLTYPE(&T::configure)
+        >::result_type type;
+    };
+
+    template<typename T, typename = void>
+    struct get_deps
     {
         typedef typename T::deps type;
+    };
+
+    template<typename T>
+    struct get_deps<T, typename enable_if<type_traits::has_configure<T> >::type>
+    {
+        typedef typename get_module<T>::type::deps type;
     };
 
     template<typename TSeq>
@@ -10983,8 +11046,8 @@ public :
                       mpl::is_sequence<mpl::_2>
                     , mpl::_2
                     , mpl::if_<
-                          has_deps<mpl::_2>
-                        , deps<mpl::_2>
+                          is_module<mpl::_2>
+                        , get_deps<mpl::_2>
                         , default_scope<mpl::_2>
                       >
                   >
@@ -11022,523 +11085,616 @@ public :
 
     template< typename Args0>
     explicit injector( Args0 args0)
-        : core::module<typename joint_concepts<>::type>( args0)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0)
+          )
     { }
 
     template< typename Args0>
     injector<joint_concepts<mpl::vector< Args0> > >
     operator()( Args0 args0) const {
         return injector<joint_concepts<mpl::vector< Args0> > >(
-            args0
+            pass_arg(args0)
         );
     }
 
     template< typename Args0 , typename Args1>
     explicit injector( Args0 args0 , Args1 args1)
-        : core::module<typename joint_concepts<>::type>( args0 , args1)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1)
+          )
     { }
 
     template< typename Args0 , typename Args1>
     injector<joint_concepts<mpl::vector< Args0 , Args1> > >
     operator()( Args0 args0 , Args1 args1) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1> > >(
-            args0 , args1
+            pass_arg(args0) , pass_arg(args1)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2> > >(
-            args0 , args1 , args2
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3> > >(
-            args0 , args1 , args2 , args3
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4> > >(
-            args0 , args1 , args2 , args3 , args4
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5> > >(
-            args0 , args1 , args2 , args3 , args4 , args5
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27) , pass_arg(args28)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27) , pass_arg(args28)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27) , pass_arg(args28) , pass_arg(args29)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27) , pass_arg(args28) , pass_arg(args29)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27) , pass_arg(args28) , pass_arg(args29) , pass_arg(args30)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27) , pass_arg(args28) , pass_arg(args29) , pass_arg(args30)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27) , pass_arg(args28) , pass_arg(args29) , pass_arg(args30) , pass_arg(args31)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27) , pass_arg(args28) , pass_arg(args29) , pass_arg(args30) , pass_arg(args31)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27) , pass_arg(args28) , pass_arg(args29) , pass_arg(args30) , pass_arg(args31) , pass_arg(args32)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27) , pass_arg(args28) , pass_arg(args29) , pass_arg(args30) , pass_arg(args31) , pass_arg(args32)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27) , pass_arg(args28) , pass_arg(args29) , pass_arg(args30) , pass_arg(args31) , pass_arg(args32) , pass_arg(args33)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27) , pass_arg(args28) , pass_arg(args29) , pass_arg(args30) , pass_arg(args31) , pass_arg(args32) , pass_arg(args33)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27) , pass_arg(args28) , pass_arg(args29) , pass_arg(args30) , pass_arg(args31) , pass_arg(args32) , pass_arg(args33) , pass_arg(args34)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27) , pass_arg(args28) , pass_arg(args29) , pass_arg(args30) , pass_arg(args31) , pass_arg(args32) , pass_arg(args33) , pass_arg(args34)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27) , pass_arg(args28) , pass_arg(args29) , pass_arg(args30) , pass_arg(args31) , pass_arg(args32) , pass_arg(args33) , pass_arg(args34) , pass_arg(args35)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27) , pass_arg(args28) , pass_arg(args29) , pass_arg(args30) , pass_arg(args31) , pass_arg(args32) , pass_arg(args33) , pass_arg(args34) , pass_arg(args35)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27) , pass_arg(args28) , pass_arg(args29) , pass_arg(args30) , pass_arg(args31) , pass_arg(args32) , pass_arg(args33) , pass_arg(args34) , pass_arg(args35) , pass_arg(args36)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27) , pass_arg(args28) , pass_arg(args29) , pass_arg(args30) , pass_arg(args31) , pass_arg(args32) , pass_arg(args33) , pass_arg(args34) , pass_arg(args35) , pass_arg(args36)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36 , typename Args37>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36 , Args37 args37)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36 , args37)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27) , pass_arg(args28) , pass_arg(args29) , pass_arg(args30) , pass_arg(args31) , pass_arg(args32) , pass_arg(args33) , pass_arg(args34) , pass_arg(args35) , pass_arg(args36) , pass_arg(args37)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36 , typename Args37>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36 , Args37 args37) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36 , args37
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27) , pass_arg(args28) , pass_arg(args29) , pass_arg(args30) , pass_arg(args31) , pass_arg(args32) , pass_arg(args33) , pass_arg(args34) , pass_arg(args35) , pass_arg(args36) , pass_arg(args37)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36 , typename Args37 , typename Args38>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36 , Args37 args37 , Args38 args38)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36 , args37 , args38)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27) , pass_arg(args28) , pass_arg(args29) , pass_arg(args30) , pass_arg(args31) , pass_arg(args32) , pass_arg(args33) , pass_arg(args34) , pass_arg(args35) , pass_arg(args36) , pass_arg(args37) , pass_arg(args38)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36 , typename Args37 , typename Args38>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37 , Args38> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36 , Args37 args37 , Args38 args38) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37 , Args38> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36 , args37 , args38
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27) , pass_arg(args28) , pass_arg(args29) , pass_arg(args30) , pass_arg(args31) , pass_arg(args32) , pass_arg(args33) , pass_arg(args34) , pass_arg(args35) , pass_arg(args36) , pass_arg(args37) , pass_arg(args38)
         );
     }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36 , typename Args37 , typename Args38 , typename Args39>
     explicit injector( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36 , Args37 args37 , Args38 args38 , Args39 args39)
-        : core::module<typename joint_concepts<>::type>( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36 , args37 , args38 , args39)
+        : core::module<typename joint_concepts<>::type>(
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27) , pass_arg(args28) , pass_arg(args29) , pass_arg(args30) , pass_arg(args31) , pass_arg(args32) , pass_arg(args33) , pass_arg(args34) , pass_arg(args35) , pass_arg(args36) , pass_arg(args37) , pass_arg(args38) , pass_arg(args39)
+          )
     { }
 
     template< typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9 , typename Args10 , typename Args11 , typename Args12 , typename Args13 , typename Args14 , typename Args15 , typename Args16 , typename Args17 , typename Args18 , typename Args19 , typename Args20 , typename Args21 , typename Args22 , typename Args23 , typename Args24 , typename Args25 , typename Args26 , typename Args27 , typename Args28 , typename Args29 , typename Args30 , typename Args31 , typename Args32 , typename Args33 , typename Args34 , typename Args35 , typename Args36 , typename Args37 , typename Args38 , typename Args39>
     injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37 , Args38 , Args39> > >
     operator()( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9 , Args10 args10 , Args11 args11 , Args12 args12 , Args13 args13 , Args14 args14 , Args15 args15 , Args16 args16 , Args17 args17 , Args18 args18 , Args19 args19 , Args20 args20 , Args21 args21 , Args22 args22 , Args23 args23 , Args24 args24 , Args25 args25 , Args26 args26 , Args27 args27 , Args28 args28 , Args29 args29 , Args30 args30 , Args31 args31 , Args32 args32 , Args33 args33 , Args34 args34 , Args35 args35 , Args36 args36 , Args37 args37 , Args38 args38 , Args39 args39) const {
         return injector<joint_concepts<mpl::vector< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9 , Args10 , Args11 , Args12 , Args13 , Args14 , Args15 , Args16 , Args17 , Args18 , Args19 , Args20 , Args21 , Args22 , Args23 , Args24 , Args25 , Args26 , Args27 , Args28 , Args29 , Args30 , Args31 , Args32 , Args33 , Args34 , Args35 , Args36 , Args37 , Args38 , Args39> > >(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19 , args20 , args21 , args22 , args23 , args24 , args25 , args26 , args27 , args28 , args29 , args30 , args31 , args32 , args33 , args34 , args35 , args36 , args37 , args38 , args39
+            pass_arg(args0) , pass_arg(args1) , pass_arg(args2) , pass_arg(args3) , pass_arg(args4) , pass_arg(args5) , pass_arg(args6) , pass_arg(args7) , pass_arg(args8) , pass_arg(args9) , pass_arg(args10) , pass_arg(args11) , pass_arg(args12) , pass_arg(args13) , pass_arg(args14) , pass_arg(args15) , pass_arg(args16) , pass_arg(args17) , pass_arg(args18) , pass_arg(args19) , pass_arg(args20) , pass_arg(args21) , pass_arg(args22) , pass_arg(args23) , pass_arg(args24) , pass_arg(args25) , pass_arg(args26) , pass_arg(args27) , pass_arg(args28) , pass_arg(args29) , pass_arg(args30) , pass_arg(args31) , pass_arg(args32) , pass_arg(args33) , pass_arg(args34) , pass_arg(args35) , pass_arg(args36) , pass_arg(args37) , pass_arg(args38) , pass_arg(args39)
         );
     }
+
+    private:
+        template<typename T>
+        const T& pass_arg(const T& arg, typename disable_if<type_traits::has_configure<T> >::type* = 0) const {
+            return arg;
+        }
+
+        template<typename T>
+        typename detail::get_module<T>::type
+        pass_arg(const T& arg
+               , typename enable_if<type_traits::has_configure<T> >::type* = 0) const {
+            return arg.configure();
+        }
     };
 
     } // namespace di

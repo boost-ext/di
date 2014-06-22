@@ -28,11 +28,19 @@
 namespace boost {
 namespace di {
 
-struct double_value
-{
+struct double_value {
     static double value;
 };
 double double_value::value = 0;
+
+class module {
+    using injector_t = injector<bind<if0, c0if0>>;
+
+public:
+    injector_t configure() const {
+        return injector_t();
+    }
+};
 
 BOOST_AUTO_TEST_CASE(create) {
     struct injector_type
@@ -530,7 +538,7 @@ BOOST_AUTO_TEST_CASE(call_injector) {
 
 BOOST_AUTO_TEST_CASE(empty_injector) {
     auto injector_ = injector<>()();
-    typedef decltype(injector_) injector_t;
+    using injector_t = decltype(injector_);
 
     BOOST_CHECK((
         contains_all<
@@ -547,7 +555,7 @@ BOOST_AUTO_TEST_CASE(default_scope_bind_injector) {
         , bind<c3>::when<call_stack<c4, c5>>()
     );
 
-    typedef decltype(injector_) injector_t;
+    using injector_t = decltype(injector_);
 
     BOOST_CHECK((
         contains_all<
@@ -568,7 +576,7 @@ BOOST_AUTO_TEST_CASE(one_scope_injector) {
         >()
     );
 
-    typedef decltype(injector_) injector_t;
+    using injector_t = decltype(injector_);
 
     BOOST_CHECK((
         contains_all<
@@ -587,7 +595,7 @@ BOOST_AUTO_TEST_CASE(one_scope_alias_injector) {
         >()
     );
 
-    typedef decltype(injector_) injector_t;
+    using injector_t = decltype(injector_);
 
     BOOST_CHECK((
         contains_all<
@@ -604,7 +612,7 @@ BOOST_AUTO_TEST_CASE(one_scope_direct_injector) {
         shared<c0if0>()
     );
 
-    typedef decltype(injector_) injector_t;
+    using injector_t = decltype(injector_);
 
     BOOST_CHECK((
         contains_all<
@@ -621,7 +629,7 @@ BOOST_AUTO_TEST_CASE(custom_scope_injector) {
         scope<fake_scope<>>::bind<c0if0>()
     );
 
-    typedef decltype(injector_) injector_t;
+    using injector_t = decltype(injector_);
 
     BOOST_CHECK((
         contains_all<
@@ -640,7 +648,7 @@ BOOST_AUTO_TEST_CASE(many_shared_injector) {
         >()
     );
 
-    typedef decltype(injector_) injector_t;
+    using injector_t = decltype(injector_);
 
     BOOST_CHECK((
         contains_all<
@@ -664,7 +672,7 @@ BOOST_AUTO_TEST_CASE(many_scopes_injector) {
         >()
     );
 
-    typedef decltype(injector_) injector_t;
+    using injector_t = decltype(injector_);
 
     BOOST_CHECK((
         contains_all<
@@ -684,7 +692,7 @@ BOOST_AUTO_TEST_CASE(when_injector) {
         unique<bind<c1>::when<call_stack<c2>>>()
     );
 
-    typedef decltype(injector_) injector_t;
+    using injector_t = decltype(injector_);
 
     BOOST_CHECK((
         contains_all<
@@ -701,7 +709,7 @@ BOOST_AUTO_TEST_CASE(named_injector) {
         shared<bind<c1>::named<int>>()
     );
 
-    typedef decltype(injector_) injector_t;
+    using injector_t = decltype(injector_);
 
     BOOST_CHECK((
         contains_all<
@@ -721,7 +729,7 @@ BOOST_AUTO_TEST_CASE(named_when) {
         >()
     );
 
-    typedef decltype(injector_) injector_t;
+    using injector_t = decltype(injector_);
 
     BOOST_CHECK((
         contains_all<
@@ -742,7 +750,7 @@ BOOST_AUTO_TEST_CASE(when_named_injector) {
         >()
     );
 
-    typedef decltype(injector_) injector_t;
+    using injector_t = decltype(injector_);
 
     BOOST_CHECK((
         contains_all<
@@ -762,7 +770,7 @@ BOOST_AUTO_TEST_CASE(bind_if_injector) {
         >()
     );
 
-    typedef decltype(injector_) injector_t;
+    using injector_t = decltype(injector_);
 
     BOOST_CHECK((
         contains_all<
@@ -788,7 +796,7 @@ BOOST_AUTO_TEST_CASE(mix_injector) {
       , shared<bind<c7>::named<double>::when<call_stack<c1>>>()
     );
 
-    typedef decltype(injector_) injector_t;
+    using injector_t = decltype(injector_);
 
     BOOST_CHECK((
         contains_all<
@@ -814,7 +822,7 @@ BOOST_AUTO_TEST_CASE(named_when_injector) {
         >()
     );
 
-    typedef decltype(injector_) injector_t;
+    using injector_t = decltype(injector_);
 
     BOOST_CHECK((
         contains_all<
@@ -836,7 +844,7 @@ BOOST_AUTO_TEST_CASE(multiple_calls_injector) {
       , bind<c5>::when<call_stack<int>, call_stack<double>>()
     );
 
-    typedef decltype(injector_) injector_t;
+    using injector_t = decltype(injector_);
 
     BOOST_CHECK((
         contains_all<
@@ -1024,6 +1032,22 @@ BOOST_AUTO_TEST_CASE(fixed_value) {
     );
 
     BOOST_CHECK_EQUAL(double_value::value, injector_.create<double>());
+}
+
+BOOST_AUTO_TEST_CASE(modules) {
+    auto injector_ = injector<>()(module());
+    using injector_t = decltype(injector_);
+
+    BOOST_CHECK((
+        contains_all<
+            mpl::vector<
+                fake_dependency<scopes::deduce, if0, c0if0>::type
+            >
+          , injector_t::deps
+        >::value
+    ));
+
+    BOOST_CHECK(dynamic_cast<c0if0*>(injector_.create<aux::auto_ptr<if0>>().get()));
 }
 
 } // namespace di
