@@ -78,7 +78,10 @@
         typedef typename get_module<T>::type::deps type;
     };
 
-    template<typename TSeq>
+    template<
+        typename TSeq
+      , typename TDefaultScope = default_scope<mpl::_2>
+    >
     struct concepts
         : mpl::fold<
               TSeq
@@ -90,7 +93,7 @@
                     , mpl::if_<
                           is_module<mpl::_2>
                         , get_deps<mpl::_2>
-                        , default_scope<mpl::_2>
+                        , TDefaultScope
                       >
                   >
                 , mpl::back_inserter<mpl::_1>

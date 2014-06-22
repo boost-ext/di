@@ -12,8 +12,13 @@
     #include "boost/di/aux_/config.hpp"
     #include "boost/di/injector.hpp"
 
+    #include <boost/mpl/if.hpp>
+    #include <boost/mpl/has_xxx.hpp>
+
     namespace boost {
     namespace di {
+
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(scope)
 
     inline injector<> make_injector() {
         return injector<>();
@@ -33,9 +38,16 @@
     template<BOOST_DI_TYPES(Args)>
     injector<typename detail::concepts<BOOST_DI_MPL_VECTOR_TYPES_PASS(Args)>::type>
     inline make_injector(BOOST_DI_ARGS(Args, args)) {
-        return injector<typename detail::concepts<BOOST_DI_MPL_VECTOR_TYPES_PASS(Args)>::type>(
-            BOOST_DI_ARGS_PASS(args)
-        );
+        return injector<
+            typename detail::concepts<
+                BOOST_DI_MPL_VECTOR_TYPES_PASS(Args)
+              , mpl::if_<
+                    has_scope<mpl::_2>
+                  , detail::default_scope<mpl::_2>
+                  , mpl::_2 // argument not supported
+                >
+            >::type
+        >(BOOST_DI_ARGS_PASS(args));
     }
 
 #endif
