@@ -177,6 +177,8 @@ test-suite fail : # compile fail tests
     [ compile-fail-test c++03 : fail/injector_ctor_one_arg_fail_cpp_03.cpp ]
     [ compile-fail-test c++11 : fail/injector_shared_by_copy_fail.cpp ]
     [ compile-fail-test c++11 : fail/injector_shared_by_copy_fail.cpp : ctor_injector_shared_by_copy_fail ]
+    #[ compile-fail-test c++11 : fail/make_injector_wrong_arg_fail.cpp : make_injector_wrong_arg_fail_cpp_11 ]
+    #[ compile-fail-test c++03 : fail/make_injector_wrong_arg_fail.cpp : make_injector_wrong_arg_fail_cpp_03 ]
 ;
 
 test-suite pt : # performane tests
