@@ -37,7 +37,7 @@
 
     class init { };
 
-    template<typename T>
+    template<typename>
     struct never
         : mpl::false_
     { };
