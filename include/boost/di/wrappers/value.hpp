@@ -37,8 +37,8 @@ public:
     }
 
     T operator()(const type<T>&) const {
-		return value_;
-	}
+        return value_;
+    }
 
     T* operator()(const type<T*>&) const {
         return new T(value_);
