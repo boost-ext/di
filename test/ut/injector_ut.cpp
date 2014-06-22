@@ -472,11 +472,11 @@ BOOST_AUTO_TEST_CASE(multiple_calls) {
 }
 
 BOOST_AUTO_TEST_CASE(create_injector) {
-    auto injector_ = injector<>()(
+    auto injector_ = injector<
         unique<
             c0if0
-        >()
-    );
+        >
+    >();
 
     auto c8_ = injector_.create<aux::shared_ptr<c8>>();
 
@@ -497,12 +497,12 @@ BOOST_AUTO_TEST_CASE(create_injector) {
 }
 
 BOOST_AUTO_TEST_CASE(visit_injector) {
-    auto injector_ = injector<>()(
+    auto injector_ = injector<
         unique<
             transaction_provider
           , mpl::int_<0>
-        >()
-    );
+        >
+    >();
 
     fake_visitor<
         mpl::vector<
@@ -520,9 +520,9 @@ BOOST_AUTO_TEST_CASE(call_injector) {
     fake_scope<>::entry_calls() = 0;
     fake_scope<>::exit_calls() = 0;
 
-    auto injector_ = injector<>()(
-        scope<fake_scope<>>::bind<c0if0>()
-    );
+    auto injector_ = injector<
+        scope<fake_scope<>>::bind<c0if0>
+    >();
 
     BOOST_CHECK_EQUAL(0, fake_scope<>::entry_calls());
     BOOST_CHECK_EQUAL(0, fake_scope<>::exit_calls());
@@ -537,7 +537,7 @@ BOOST_AUTO_TEST_CASE(call_injector) {
 }
 
 BOOST_AUTO_TEST_CASE(empty_injector) {
-    auto injector_ = injector<>()();
+    auto injector_ = injector<>();
     using injector_t = decltype(injector_);
 
     BOOST_CHECK((
@@ -549,11 +549,11 @@ BOOST_AUTO_TEST_CASE(empty_injector) {
 }
 
 BOOST_AUTO_TEST_CASE(default_scope_bind_injector) {
-    auto injector_ = injector<>()(
-          bind<if0, c0if0>()
-        , bind<c2>::named<int>()
-        , bind<c3>::when<call_stack<c4, c5>>()
-    );
+    auto injector_ = injector<
+          bind<if0, c0if0>
+        , bind<c2>::named<int>
+        , bind<c3>::when<call_stack<c4, c5>>
+    >();
 
     using injector_t = decltype(injector_);
 
@@ -570,11 +570,11 @@ BOOST_AUTO_TEST_CASE(default_scope_bind_injector) {
 }
 
 BOOST_AUTO_TEST_CASE(one_scope_injector) {
-    auto injector_ = injector<>()(
+    auto injector_ = injector<
         scope<scopes::shared<>>::bind<
             c0if0
-        >()
-    );
+        >
+    >();
 
     using injector_t = decltype(injector_);
 
@@ -589,11 +589,11 @@ BOOST_AUTO_TEST_CASE(one_scope_injector) {
 }
 
 BOOST_AUTO_TEST_CASE(one_scope_alias_injector) {
-    auto injector_ = injector<>()(
+    auto injector_ = injector<
         shared<
             c0if0
-        >()
-    );
+        >
+    >();
 
     using injector_t = decltype(injector_);
 
@@ -608,9 +608,9 @@ BOOST_AUTO_TEST_CASE(one_scope_alias_injector) {
 }
 
 BOOST_AUTO_TEST_CASE(one_scope_direct_injector) {
-    auto injector_ = injector<>()(
-        shared<c0if0>()
-    );
+    auto injector_ = injector<
+        shared<c0if0>
+    >();
 
     using injector_t = decltype(injector_);
 
@@ -625,9 +625,9 @@ BOOST_AUTO_TEST_CASE(one_scope_direct_injector) {
 }
 
 BOOST_AUTO_TEST_CASE(custom_scope_injector) {
-    auto injector_ = injector<>()(
-        scope<fake_scope<>>::bind<c0if0>()
-    );
+    auto injector_ = injector<
+        scope<fake_scope<>>::bind<c0if0>
+    >();
 
     using injector_t = decltype(injector_);
 
@@ -642,11 +642,11 @@ BOOST_AUTO_TEST_CASE(custom_scope_injector) {
 }
 
 BOOST_AUTO_TEST_CASE(many_shared_injector) {
-    auto injector_ = injector<>()(
+    auto injector_ = injector<
         shared<
             c1, c2, c3
-        >()
-    );
+        >
+    >();
 
     using injector_t = decltype(injector_);
 
@@ -663,14 +663,14 @@ BOOST_AUTO_TEST_CASE(many_shared_injector) {
 }
 
 BOOST_AUTO_TEST_CASE(many_scopes_injector) {
-    auto injector_ = injector<>()(
+    auto injector_ = injector<
         shared<
           c1, c2
-        >()
+        >
       , unique<
           c3, c4
-        >()
-    );
+        >
+    >();
 
     using injector_t = decltype(injector_);
 
@@ -688,9 +688,9 @@ BOOST_AUTO_TEST_CASE(many_scopes_injector) {
 }
 
 BOOST_AUTO_TEST_CASE(when_injector) {
-    auto injector_ = injector<>()(
-        unique<bind<c1>::when<call_stack<c2>>>()
-    );
+    auto injector_ = injector<
+        unique<bind<c1>::when<call_stack<c2>>>
+    >();
 
     using injector_t = decltype(injector_);
 
@@ -705,9 +705,9 @@ BOOST_AUTO_TEST_CASE(when_injector) {
 }
 
 BOOST_AUTO_TEST_CASE(named_injector) {
-    auto injector_ = injector<>()(
-        shared<bind<c1>::named<int>>()
-    );
+    auto injector_ = injector<
+        shared<bind<c1>::named<int>>
+    >();
 
     using injector_t = decltype(injector_);
 
@@ -722,12 +722,12 @@ BOOST_AUTO_TEST_CASE(named_injector) {
 }
 
 BOOST_AUTO_TEST_CASE(named_when) {
-    auto injector_ = injector<>()(
+    auto injector_ = injector<
         shared<
             bind<c1>::named<int>::when<call_stack<double>>
           , bind<c2>::named<double>::when<call_stack<int>>
-        >()
-    );
+        >
+    >();
 
     using injector_t = decltype(injector_);
 
@@ -743,12 +743,12 @@ BOOST_AUTO_TEST_CASE(named_when) {
 }
 
 BOOST_AUTO_TEST_CASE(when_named_injector) {
-    auto injector_ = injector<>()(
+    auto injector_ = injector<
         shared<
             bind<c1>::when<call_stack<double>>::named<int>
           , bind<c2>::when<call_stack<int>>::named<double>
-        >()
-    );
+        >
+    >();
 
     using injector_t = decltype(injector_);
 
@@ -764,11 +764,11 @@ BOOST_AUTO_TEST_CASE(when_named_injector) {
 }
 
 BOOST_AUTO_TEST_CASE(bind_if_injector) {
-    auto injector_ = injector<>()(
+    auto injector_ = injector<
         shared<
             bind<if0, c0if0>
-        >()
-    );
+        >
+    >();
 
     using injector_t = decltype(injector_);
 
@@ -783,18 +783,18 @@ BOOST_AUTO_TEST_CASE(bind_if_injector) {
 }
 
 BOOST_AUTO_TEST_CASE(mix_injector) {
-    auto injector_ = injector<>()(
+    auto injector_ = injector<
         shared<
             bind<if0, c0if0>
           , c1
           , bind<c2>::named<int>
           , bind<c3>::when<call_stack<c4, c5>>
-        >()
+        >
       , unique<
             c6
-        >()
-      , shared<bind<c7>::named<double>::when<call_stack<c1>>>()
-    );
+        >
+      , shared<bind<c7>::named<double>::when<call_stack<c1>>>
+    >();
 
     using injector_t = decltype(injector_);
 
@@ -814,13 +814,13 @@ BOOST_AUTO_TEST_CASE(mix_injector) {
 }
 
 BOOST_AUTO_TEST_CASE(named_when_injector) {
-    auto injector_ = injector<>()(
+    auto injector_ = injector<
         unique<
             bind<int, mpl::int_<1>>
           , bind<int, mpl::int_<4>>::named<mpl::string<'2'>>::when<call_stack<c7, c6, c4>>
           , bind<int, mpl::int_<5>>::when<call_stack<c2>>
-        >()
-    );
+        >
+    >();
 
     using injector_t = decltype(injector_);
 
@@ -837,12 +837,12 @@ BOOST_AUTO_TEST_CASE(named_when_injector) {
 }
 
 BOOST_AUTO_TEST_CASE(multiple_calls_injector) {
-    auto injector_ = injector<>()(
+    auto injector_ = injector<
         shared<
             bind<c0>::when<call_stack<c1>, call_stack<c2, c3>, call_stack<c4>>
-        >()
-      , bind<c5>::when<call_stack<int>, call_stack<double>>()
-    );
+        >
+      , bind<c5>::when<call_stack<int>, call_stack<double>>
+    >();
 
     using injector_t = decltype(injector_);
 
@@ -861,7 +861,12 @@ BOOST_AUTO_TEST_CASE(to_basic) {
     const int i = 42;
     const double d = 87.0;
 
-    auto injector_ = injector<>()(
+    using injector_t = injector<
+        decltype(bind<int>::to(int()))
+      , decltype(bind<double>::to(double()))
+    >;
+
+    auto injector_ = injector_t(
         bind<int>::to(i)
       , bind<double>::to(d)
     );
@@ -876,7 +881,12 @@ BOOST_AUTO_TEST_CASE(to_named) {
     const int i1 = 42;
     const int i2 = 87;
 
-    auto injector_ = injector<>()(
+    using injector_t = injector<
+        decltype(bind<int>::named<mpl::string<'1'>>::to(int()))
+      , decltype(bind<int>::named<mpl::string<'2'>>::to(int()))
+    >;
+
+    auto injector_ = injector_t(
         bind<int>::named<mpl::string<'1'>>::to(i1)
       , bind<int>::named<mpl::string<'2'>>::to(i2)
     );
@@ -890,7 +900,11 @@ BOOST_AUTO_TEST_CASE(to_named) {
 BOOST_AUTO_TEST_CASE(to_when) {
     const int i = 42;
 
-    auto injector_ = injector<>()(
+    using injector_t = injector<
+        decltype(bind<int>::when<call_stack<c3>>::to(int()))
+    >;
+
+    auto injector_ = injector_t(
         bind<int>::when<call_stack<c3>>::to(i)
     );
 
@@ -905,7 +919,13 @@ BOOST_AUTO_TEST_CASE(to_when_named) {
     const int i1 = 42;
     const int i2 = 87;
 
-    auto injector_ = injector<>()(
+    using injector_t = injector<
+        decltype(bind<int>::when<call_stack<c4>>::named<mpl::string<'1'>>::to(int()))
+      , decltype(bind<int>::when<call_stack<c4>>::named<mpl::string<'2'>>::to(int()))
+      , decltype(bind<c0if0>())
+    >;
+
+    auto injector_ = injector_t(
         bind<int>::when<call_stack<c4>>::named<mpl::string<'1'>>::to(i1)
       , bind<int>::when<call_stack<c4>>::named<mpl::string<'2'>>::to(i2)
       , bind<c0if0>()
@@ -921,7 +941,13 @@ BOOST_AUTO_TEST_CASE(to_named_when) {
     const int i1 = 42;
     const int i2 = 87;
 
-    auto injector_ = injector<>()(
+    using injector_t = injector<
+        decltype(bind<int>::named<mpl::string<'1'>>::when<call_stack<c4>>::to(int()))
+      , decltype(bind<int>::named<mpl::string<'2'>>::when<call_stack<c4>>::to(int()))
+      , decltype(bind<c0if0>())
+    >;
+
+    auto injector_ = injector_t(
         bind<int>::named<mpl::string<'1'>>::when<call_stack<c4>>::to(i1)
       , bind<int>::named<mpl::string<'2'>>::when<call_stack<c4>>::to(i2)
       , bind<c0if0>()
@@ -937,7 +963,12 @@ BOOST_AUTO_TEST_CASE(to_when_with_global) {
     const int i1 = 42;
     const int i2 = 87;
 
-    auto injector_ = injector<>()(
+    using injector_t = injector<
+        decltype(bind<int>::when<call_stack<c3>>::to(int()))
+      , decltype(bind<int>::to(int()))
+    >;
+
+    auto injector_ = injector_t(
         bind<int>::when<call_stack<c3>>::to(i1)
       , bind<int>::to(i2)
     );
@@ -952,7 +983,13 @@ BOOST_AUTO_TEST_CASE(to_when_with_global) {
 BOOST_AUTO_TEST_CASE(to_when_stack) {
     const int i = 42;
 
-    auto injector_ = injector<>()(
+    using injector_t = injector<
+        decltype(unique<c3>())
+      , decltype(bind<int>::when<call_stack<c4, c3>>::to(int()))
+      , decltype(bind<c0if0>())
+    >;
+
+    auto injector_ = injector_t(
         unique<
             c3
         >()
@@ -970,7 +1007,11 @@ BOOST_AUTO_TEST_CASE(to_when_stack) {
 BOOST_AUTO_TEST_CASE(to_shared_ptr) {
     aux::shared_ptr<c3> c3_(new c3);
 
-    auto injector_ = injector<>()(
+    using injector_t = injector<
+        decltype(bind<c3>::to(c3_))
+    >;
+
+    auto injector_ = injector_t(
         bind<c3>::to(c3_)
     );
 
@@ -988,7 +1029,12 @@ BOOST_AUTO_TEST_CASE(to_ref) {
     const c3& c3_const_ref = c3_;
     c14& c14_ref = c14_;
 
-    auto injector_ = injector<>()(
+    using injector_t = injector<
+        decltype(bind<c3>::to(cref(c3_const_ref)))
+      , decltype(bind<c14>::to(ref(c14_ref)))
+    >;
+
+    auto injector_ = injector_t(
         bind<c3>::to(cref(c3_const_ref))
       , bind<c14>::to(ref(c14_ref))
     );
@@ -1009,7 +1055,12 @@ BOOST_AUTO_TEST_CASE(to_ref_no_copy) {
     c3 c3_(i);
     c14 c14_(i, d);
 
-    auto injector_ = injector<>()(
+    using injector_t = injector<
+        decltype(bind<c3>::to(cref(c3_)))
+      , decltype(bind<c14>::to(ref(c14_)))
+    >;
+
+    auto injector_ = injector_t(
         bind<c3>::to(cref(c3_))
       , bind<c14>::to(ref(c14_))
     );
@@ -1027,7 +1078,11 @@ BOOST_AUTO_TEST_CASE(to_ref_no_copy) {
 BOOST_AUTO_TEST_CASE(fixed_value) {
     double_value::value = 42.0;
 
-    auto injector_ = injector<>()(
+    using injector_t = injector<
+        decltype(bind<double, double_value>())
+    >;
+
+    auto injector_ = injector_t(
         bind<double, double_value>()
     );
 
@@ -1035,7 +1090,7 @@ BOOST_AUTO_TEST_CASE(fixed_value) {
 }
 
 BOOST_AUTO_TEST_CASE(modules) {
-    auto injector_ = injector<>()(module());
+    auto injector_ = injector<module>(module());
     using injector_t = decltype(injector_);
 
     BOOST_CHECK((

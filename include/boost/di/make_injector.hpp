@@ -16,7 +16,7 @@
     namespace di {
 
     inline injector<> make_injector() {
-        return injector<>()();
+        return injector<>();
     }
 
     #define BOOST_PP_FILENAME_1 "boost/di/make_injector.hpp"

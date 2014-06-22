@@ -333,23 +333,13 @@ BOOST_AUTO_TEST_CASE(ctor_mix_explicit_order) {
 }
 
 BOOST_AUTO_TEST_CASE(install) {
-    injector<> injector_;
-    check(injector_(injector_2_t(), injector_3_t()).create<aux::shared_ptr<c8>>());
+    injector<injector_2_t, injector_3_t> injector_((injector_2_t(), injector_3_t()));
+    check(injector_.create<aux::shared_ptr<c8>>());
 }
 
 BOOST_AUTO_TEST_CASE(install_mix) {
-    injector<> injector_;
-    check(injector_(injector_2_t(), injector_2).create<aux::shared_ptr<c8>>());
-}
-
-BOOST_AUTO_TEST_CASE(pre_installed_injector_install_injector_type) {
-    injector<decltype(injector_2)> injector_(injector_2);
-    check(injector_(injector_2_t()).create<aux::shared_ptr<c8>>());
-}
-
-BOOST_AUTO_TEST_CASE(pre_installed_injector_install_injector) {
-    injector<injector_2_t> injector_;
-    check(injector_(injector_2).create<aux::shared_ptr<c8>>());
+    injector<injector_2_t, decltype(injector_2)> injector_((injector_2_t(), injector_2));
+    check(injector_.create<aux::shared_ptr<c8>>());
 }
 
 BOOST_AUTO_TEST_CASE(scope_deduction) {

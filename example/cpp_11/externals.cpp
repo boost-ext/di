@@ -37,7 +37,7 @@ int main() {
     );
 
     auto injector = di::make_injector(
-        module()
+        module
       , di::bind<int>::to(42)
       , di::bind<i>::to(std::make_shared<impl1>()) // external has priority
     );

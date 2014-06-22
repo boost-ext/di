@@ -220,6 +220,33 @@ BOOST_AUTO_TEST_CASE(modules_make_injector) {
     BOOST_CHECK_EQUAL(i, injector_.create<int>());
 }
 
+BOOST_AUTO_TEST_CASE(modules_mix_make_injector) {
+    const int i = 42;
+    const double d = 87.0;
+    const float f = 123.0;
+    const std::string s = "string";
+
+    auto injector_string = di::make_injector(
+        bind<std::string>::to(s)
+    );
+
+    auto injector_ = di::make_injector(
+        bind<double>::to(d)
+      , module1()
+      , di::make_injector(
+            bind<float>::to(f)
+        )
+      , injector_string
+      , module2(i)
+    );
+
+    BOOST_CHECK(dynamic_cast<c0if0*>(injector_.create<aux::auto_ptr<if0>>().get()));
+    BOOST_CHECK_EQUAL(i, injector_.create<int>());
+    BOOST_CHECK_EQUAL(d, injector_.create<double>());
+    BOOST_CHECK_EQUAL(f, injector_.create<float>());
+    BOOST_CHECK_EQUAL(s, injector_.create<std::string>());
+}
+
 } // namespace di
 } // namespace boost
 

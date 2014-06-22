@@ -47,8 +47,8 @@
     template<typename T>
     struct is_module
         : mpl::or_<
-               has_deps<T>
-             , type_traits::has_configure<T>
+              has_deps<T>
+            , type_traits::has_configure<T>
           >
     { };
 
@@ -121,10 +121,6 @@
     public:
         injector() { }
 
-        injector<> operator()() const {
-            return injector<>();
-        }
-
         #define BOOST_PP_FILENAME_1 "boost/di/injector.hpp"
         #define BOOST_PP_ITERATION_LIMITS BOOST_DI_TYPES_MPL_LIMIT_FROM(1)
         #include BOOST_PP_ITERATE()
@@ -158,14 +154,6 @@
             BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_PASS_ARG, args)
           )
     { }
-
-    template<BOOST_DI_TYPES(Args)>
-    injector<joint_concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >
-    operator()(BOOST_DI_ARGS(Args, args)) const {
-        return injector<joint_concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > >(
-            BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_PASS_ARG, args)
-        );
-    }
 
     #undef BOOST_DI_PASS_ARG
 
