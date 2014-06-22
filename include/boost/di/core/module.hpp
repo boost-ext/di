@@ -128,7 +128,7 @@
     explicit module(BOOST_DI_ARGS(Args, args))
         : TPool<deps>(
               TPool<
-                  mpl::vector<BOOST_DI_TYPES_PASS(Args)>
+                  BOOST_DI_MPL_VECTOR_TYPES_PASS(Args)
                 , mpl::not_<
                       mpl::or_<
                           mpl::contains<deps, mpl::_>
@@ -143,7 +143,7 @@
     template<typename T, BOOST_DI_TYPES(Args)>
     T create(BOOST_DI_ARGS(Args, args)) {
         typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector<BOOST_DI_TYPES_PASS(Args)> > policies(BOOST_DI_ARGS_PASS(args));
+        TPool<BOOST_DI_MPL_VECTOR_TYPES_PASS(Args)> policies(BOOST_DI_ARGS_PASS(args));
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(

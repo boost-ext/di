@@ -31,9 +31,9 @@
 #else
 
     template<BOOST_DI_TYPES(Args)>
-    injector<typename detail::concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type>
+    injector<typename detail::concepts<BOOST_DI_MPL_VECTOR_TYPES_PASS(Args)>::type>
     inline make_injector(BOOST_DI_ARGS(Args, args)) {
-        return injector<typename detail::concepts<mpl::vector<BOOST_DI_TYPES_PASS(Args)> >::type>(
+        return injector<typename detail::concepts<BOOST_DI_MPL_VECTOR_TYPES_PASS(Args)>::type>(
             BOOST_DI_ARGS_PASS(args)
         );
     }

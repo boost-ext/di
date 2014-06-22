@@ -15,6 +15,7 @@
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/preprocessor/arithmetic/sub.hpp>
+#include <boost/preprocessor/cat.hpp>
 
 #define BOOST_DI_CTOR_LIMIT_FROM(begin)         \
     (begin, BOOST_DI_CFG_CTOR_LIMIT_SIZE)
@@ -30,6 +31,15 @@
          BOOST_PP_ITERATION()                   \
        , T                                      \
      )
+
+#define BOOST_DI_MPL_VECTOR_TYPES_PASS(T)       \
+    BOOST_PP_CAT(                               \
+        mpl::vector                             \
+     ,  BOOST_PP_ITERATION()                    \
+    )<BOOST_PP_ENUM_PARAMS(                     \
+        BOOST_PP_ITERATION()                    \
+      , T                                       \
+    )>
 
 #define BOOST_DI_ARGS(T, arg)                   \
      BOOST_PP_ENUM_BINARY_PARAMS(               \
@@ -72,6 +82,12 @@
          BOOST_MPL_LIMIT_VECTOR_SIZE            \
        , T                                      \
      )
+
+#define BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)   \
+    mpl::vector<BOOST_PP_ENUM_PARAMS(           \
+        BOOST_MPL_LIMIT_VECTOR_SIZE             \
+      , T                                       \
+    )>
 
 #if !defined(BOOST_DI_ASSERT_MSG)
     #define BOOST_DI_ASSERT_MSG(c, msg, type)   \

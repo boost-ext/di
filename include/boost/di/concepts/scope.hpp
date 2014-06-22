@@ -60,7 +60,7 @@ public:
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     struct bind
         : mpl::fold<
-              mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+              BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)
             , mpl::vector0<>
             , mpl::push_back<
                   mpl::_1

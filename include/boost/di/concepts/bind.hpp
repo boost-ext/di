@@ -65,7 +65,7 @@ struct bind
             , detail::requires_<
                   type_traits::is_required_priority
                 , type_traits::is_required_type<TExpected>
-                , detail::when_<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
+                , detail::when_<BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)>
               >
           >
     {
@@ -79,7 +79,7 @@ struct bind
                       type_traits::is_required_priority
                     , type_traits::is_required_type<TExpected>
                     , type_traits::is_required_name<TName>
-                    , detail::when_<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
+                    , detail::when_<BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)>
                   >
               >
         { };
@@ -108,7 +108,7 @@ struct bind
                       type_traits::is_required_priority
                     , type_traits::is_required_type<TExpected>
                     , type_traits::is_required_name<TName>
-                    , detail::when_<mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> >
+                    , detail::when_<BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)>
                   >
               >
         { };

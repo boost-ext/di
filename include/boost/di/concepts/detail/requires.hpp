@@ -41,7 +41,7 @@ public:
     struct apply
         : mpl::second<
               typename mpl::fold<
-                  mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+                  BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)
                 , mpl::pair<mpl::integral_c<long, 1>, mpl::integral_c<long, 1> >
                 , mpl::pair<
                       mpl::times<

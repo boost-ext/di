@@ -57,21 +57,21 @@
     struct parameter_types<R(*)(BOOST_DI_TYPES_PASS(Args))>             \
     {                                                                   \
         typedef R result_type;                                          \
-        typedef mpl::vector<BOOST_DI_TYPES_PASS(Args)> type;            \
+        typedef BOOST_DI_MPL_VECTOR_TYPES_PASS(Args) type;              \
     };
 
     template<typename R, typename T, BOOST_DI_TYPES(Args)>              \
     struct parameter_types<R(T::*)(BOOST_DI_TYPES_PASS(Args))>          \
     {                                                                   \
         typedef R result_type;                                          \
-        typedef mpl::vector<BOOST_DI_TYPES_PASS(Args)> type;            \
+        typedef BOOST_DI_MPL_VECTOR_TYPES_PASS(Args) type;              \
     };
 
     template<typename R, typename T, BOOST_DI_TYPES(Args)>              \
     struct parameter_types<R(T::*)(BOOST_DI_TYPES_PASS(Args)) const>    \
     {                                                                   \
         typedef R result_type;                                          \
-        typedef mpl::vector<BOOST_DI_TYPES_PASS(Args)> type;            \
+        typedef BOOST_DI_MPL_VECTOR_TYPES_PASS(Args) type;              \
     };
 
 #endif

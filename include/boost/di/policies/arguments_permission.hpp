@@ -114,7 +114,7 @@ struct allow_copies
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 class arguments_permission
 {
-    typedef mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> allow_types;
+    typedef BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T) allow_types;
 
     template<typename T>
     struct value_type

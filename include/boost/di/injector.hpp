@@ -104,7 +104,7 @@
     class injector
         : public core::module<
               typename detail::concepts<
-                  mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+                  BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)
               >::type
           >
     {
@@ -112,7 +112,7 @@
         struct joint_concepts
             : detail::concepts<
                   mpl::joint_view<
-                      mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)>
+                      BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)
                     , TSeq
                   >
               >::type
