@@ -10,12 +10,12 @@ install:
   - c:\"Program Files (x86)"\"Microsoft Visual Studio 12.0"\VC\vcvarsall.bat
   - appveyor DownloadFile http://www2.cs.uidaho.edu/~jeffery/win32/unzip.exe
   - appveyor DownloadFile http://downloads.sourceforge.net/project/unxutils/unxutils/current/UnxUtils.zip
-  #- appveyor DownloadFile 
   - unzip.exe -qq UnxUtils.zip
-  - unzip.exe -qq boost_11_06_2014.zip
-  - mkdir boost\libs\di
-  - usr\local\wbin\cp.exe -r doc example include test boost\libs\di
-  - cd boost
+  - appveyor DownloadFile http://downloads.sourceforge.net/project/boost/boost/1.54.0/boost_1_54_0.zip
+  - unzip.exe -qq boost_1_54_0.zip
+  - mkdir boost_1_54_0\libs\di
+  - usr\local\wbin\cp.exe -r doc example include test boost\boost_1_54_0\di
+  - cd boost_1_54_0
   - bootstrap.bat --with-toolset=msvc-12
   - cd libs\di\test
   - ..\..\..\bjam --toolset=msvc-12 -q -j2 ut ft pt fail
