@@ -28,7 +28,7 @@
 #if defined(BOOST_MSVC)
     #pragma warning(disable:4127) // conditional expression is constant
 
-    #if (BOOST_VERSION <= 105400)
+    #if (BOOST_VERSION < 105500)
         #undef BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS
     #endif
 #endif
