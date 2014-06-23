@@ -24,7 +24,7 @@ template<typename T>
 class has_call_impl
 {
     struct base_impl { void call() { } };
-    struct base : T, base_impl { };
+    struct base : T, base_impl { base() { } };
 
     template<typename U>
     static mpl::aux::no_tag test(
