@@ -14,9 +14,11 @@ namespace boost {
 namespace di {
 
 struct converter {
-    template<typename T> operator T() {
-        return T();
-    }
+    BOOST_DI_WKND(NO_MSVC)(
+        template<typename T> operator T() {
+            return T();
+        }
+    )
 
     template<typename T> operator T&() const {
         static T t;
@@ -37,9 +39,11 @@ struct converter {
 template<typename T>
 struct ctor {
     struct any_type {
+        BOOST_DI_WKND(NO_MSVC)(
+            template<typename U> operator U();
+        )
         template<typename U> operator const U&() const;
         template<typename U> operator U&() const;
-        template<typename U> operator U();
         template<typename U> operator std::auto_ptr<U>&();
     };
 

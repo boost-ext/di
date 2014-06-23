@@ -22,7 +22,10 @@ template<typename T>
 class has_configure
 {
     struct base_impl { void configure() { } };
-    struct base : T, base_impl { base() { } };
+    struct base
+        : base_impl
+        , mpl::if_<is_class<T>, T, mpl::void_>::type
+    { base() { } };
 
     template<typename U>
     static mpl::aux::no_tag test(
