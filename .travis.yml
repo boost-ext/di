@@ -21,9 +21,6 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get -qq install valgrind; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then sudo apt-get install -qq g++-4.7; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.7 90; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$CXX" == "g++" ]; then wget https://gist.githubusercontent.com/yoneken/3284561/raw/db665bb64f93e38ce138b5ca620b9edd18dc31e4/remove_CLI_tools.sh; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$CXX" == "g++" ]; then chmod +x remove_CLI_tools.sh; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$CXX" == "g++" ]; then sudo ./remove_CLI_tools.sh; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$CXX" == "g++" ]; then wget https://github.com/downloads/kennethreitz/osx-gcc-installer/GCC-10.7-v2.pkg; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$CXX" == "g++" ]; then sudo installer -pkg GCC-10.7-v2.pkg -target /; fi
   - if [ "$CXX" == "g++" ]; then ./bootstrap.sh --with-toolset=gcc; fi
@@ -31,6 +28,8 @@ before_install:
   - ./b2 headers
 
 script:
+  - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$CXX" == "g++" ]; then find / -iname "g++*"; fi
+
   - pushd .
   - if [ "$CXX" == "g++" ]; then cd libs/di/example && ../../../b2 -j2 -q ; fi
   - if [ "$CXX" == "clang++" ]; then cd libs/di/example && ../../../b2 -j2 -q cxxflags="-Wno-c99-extensions -Wno-variadic-macros" ; fi
