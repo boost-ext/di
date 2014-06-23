@@ -31,8 +31,6 @@ before_install:
   - ./b2 headers
 
 script:
-  - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$CXX" == "g++" ]; then find / -iname "g++*"; fi
-
   - pushd .
   - if [ "$CXX" == "g++" ]; then cd libs/di/example && ../../../b2 -j2 -q ; fi
   - if [ "$CXX" == "clang++" ]; then cd libs/di/example && ../../../b2 -j2 -q cxxflags="-Wno-c99-extensions -Wno-variadic-macros" ; fi
