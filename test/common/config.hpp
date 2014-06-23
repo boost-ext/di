@@ -8,6 +8,7 @@
 #define BOOST_DI_TEST_CONFIG_HPP
 
 #include <boost/config.hpp>
+#include <boost/version.hpp>
 
 #if defined(BOOST_NO_CXX11_SMART_PTR) &&    \
     __clang_major__ >= 3 &&                 \
@@ -26,6 +27,10 @@
 
 #if defined(BOOST_MSVC)
     #pragma warning(disable:4127) // conditional expression is constant
+
+    #if (BOOST_VERSION <= 105400)
+        #undef BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS
+    #endif
 #endif
 
 #if defined(BOOST_DI_CFG_TEST_CTOR)
