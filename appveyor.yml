@@ -13,6 +13,8 @@ install:
   - unzip.exe -qq UnxUtils.zip
   - appveyor DownloadFile http://downloads.sourceforge.net/project/boost/boost/1.53.0/boost_1_53_0.zip
   - unzip.exe -qq boost_1_53_0.zip
+  - appveyor DownloadFile https://raw.githubusercontent.com/boostorg/type_traits/master/include/boost/type_traits/is_copy_constructible.hpp
+  - usr\local\wbin\mv.exe is_copy_constructible.hpp boost_1_53_0\boost\type_traits
   - mkdir boost_1_53_0\libs\di
   - usr\local\wbin\cp.exe -r doc example include test boost_1_53_0\libs\di
   - cd boost_1_53_0

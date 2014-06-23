@@ -80,6 +80,7 @@ BOOST_AUTO_TEST_CASE(to_value_text) {
 
 BOOST_AUTO_TEST_CASE(to_const_ref) {
     struct c { } c_;
+    (void)c_;
     using expected = scopes::external<wrappers::reference>;
     using external = decltype(dependency<fake_scope<>, c>::to(cref(c_)));
     using given = external::scope;
