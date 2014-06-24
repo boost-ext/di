@@ -20,7 +20,7 @@ install:
   - cd boost_1_53_0
   - bootstrap.bat --with-toolset=msvc-12
   - cd libs\di\test
-  - ..\..\..\bjam --toolset=msvc-12 -q -j2 ut ft pt fail
+  - ..\..\..\bjam --toolset=msvc-12 -q -j2 vt ut ft pt fail
 
 build: OFF
 test: OFF
