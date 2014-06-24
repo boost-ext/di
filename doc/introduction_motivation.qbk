@@ -2,45 +2,66 @@
 
 Boost.DI is C++ 03 / C++ 11 header only library providing compile time, macro free constructor dependency injection functionality.
 
-[h5 Dependency Injection?]
+[h6 Dependency Injection?]
 
-"Don't call us, we'll call you", Hollywood principle
-Dependency Injection is a set of software design principles and patterns that enable us to develop loosely coupled code.
-DI enables loose coupling, and loose coupling makes code more maintainable
-[@http://en.wikipedia.org/wiki/Dependency_injection Dependency injection] is a [@http://en.wikipedia.org/wiki/Software_design_pattern software design pattern] that implements [@http://en.wikipedia.org/wiki/Inversion_of_control inversion of control] and allows a program design to follow the dependency inversion principle.
+According to [1] "Dependency Injection is a set of software design principles and patterns that enable us to develop loosely coupled code".
+And loose coupling code make code more maintainable, which is one of an obvious goals in software engineering.
+On the other hand Dependency Injection might be described with the Hollywood principle: "Don't call us, we'll call you".
+Wikipedia definition says [@http://en.wikipedia.org/wiki/Dependency_injection Dependency injection] is a
+[@http://en.wikipedia.org/wiki/Software_design_pattern software design pattern] that implements
+[@http://en.wikipedia.org/wiki/Inversion_of_control inversion of control] and allows a program design to follow the dependency inversion principle.
 
-testable code, separation between business logic and object creation
+Basically Dependency Injection allow us to separate business logic and object creation,
+which is a really good thing, because it give us the possibility to write maintainable and testable code.
 
-Form of dependency injection:
-constructor injection
-setter injection
-member injection
-interface injection
+There are many forms of dependency injection about which you can read in [2]:
+
+* Constructor injection
+* Interface injection
+* Setter injection
+* Member injection
+
+Constructor injection is the most powerful and the most clean way of dependency injection, it's also the preferable as well.
+This library provide the functionality for constructor and interface injection.
+
+Author in [1] widely explains advantages of using dependency injection, which might be sum up by:
 
 * Parallel Development
+    * allows many teams to work separately on different modules
+
 * Extensibility
+    * lose coupling, declarative approach are features which make code easy to extend
+
 * Maintainability
+    * separation between object creation and business logic make code easy maintainable
+
 * Testability
+    * possibility of passing all required parameters via constructor give the opportunity to use fakes for testing purposes
 
-Service locator - anti pattern in the end
-factory
+[note Service locator - similar in a lot of cases to dependency injection - anti pattern, because force unnatural code structure and a lot of resolve calls]
 
-The Clean Code Talks
-http://www.youtube.com/watch?v=wEhu57pih5w - Unit Testing
-http://www.youtube.com/watch?v=RlfLCWKxHJ0 - Don't Look For Things
+[h6 The Clean Code Talks]
 
-[h5 Dependency Injection Library?]
+The Clean Code Talks are great for basic understanding why dependency injection is so useful:
 
-* to avoid writing boilerplate, tedious code
-* to write testable, maintainable code
+* [@http://www.youtube.com/watch?v=wEhu57pih5w Unit Testing]
+* [@http://www.youtube.com/watch?v=RlfLCWKxHJ0 Don't Look For Things]
 
-[h5 Motivation example]
+[h6 Dependency Injection Library?]
+
+But do we really need dependency injection library, we can inject all dependencies ourselves?
+Well, we don't need it to apply all the goods of dependency injection, but it may make our life easier.
+Programmers should be `lazy` and shouldn't have to write tedious, boilerplate code (which is hard to test - how to test factories?).
+Frameworks needs are scaling with the project size, the bigger project is, the more frameworks will be used.
+Using library may give you additional advantages like logging, generating diagrams, compile time checking or restrictions,
+additional conversions, etc... in general it give you full control of what and how will be injected in easy and user friendly way.
+
+[h6 Motivation example]
 
 [import ../example/cpp_11/motivation.cpp]
 [motivation_cpp_11]
 
-Good practises:
-* Composition Root is a (preferably) unique location in an application where modules are composed together
+[tip Good practise: composition root is a (preferably) unique location in an application where modules are composed together in 1]
 
 [endsect]
 
