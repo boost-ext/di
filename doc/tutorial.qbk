@@ -1,46 +1,281 @@
 [section Tutorial]
 
-[table
-    [[Write your code so it's flexible...] [...and let DI glue it together for you]]
-    [
-        [```
-        class Samurai
-        {
-        public:
-            Samurai(std::shared_ptr<IWeapon> weapon)
-                : weapon(weapon)
-            { }
+Obviously first step would be to write a test, but for a sake of this tutorial we will skip this phase.
 
-        private:
-            std::shared_ptr<IWeapon> weapon;
-        };
-        ```]
+For the purposes of this tutorial we are going to implement simple application which will print
+some text on some condition.
 
-        [```
-            using injector_t = di::injector<Sword>;
-      // or using injector_t = di::injector<bind<IWeapon, Sword>>
-        ```]
-    ]
-]
+So, the first step would be to define app class.
+There is nothing special about it, no macros, no registration, nothing.
 
-But first, Guice needs to be configured to build the graph exactly as you want it.
-To illustrate, we'll start the RealBillingService class that accepts its dependent interfaces CreditCardProcessor and TransactionLog in its constructor. To make it explicit that the RealBillingService constructor is invoked by Guice, we add the BOOST_DI_CTOR:
-"
+```
+class app
+{
+public:
+    app(int value, const std::string& text)
+        : value_(value), text_(text)
+    { }
 
-configure:
+    void start() {
+        if (value_)
+            std::cout << text << std::endl;
+    }
 
-using config = injector<DatabaseTransactionLog>;
-or
-using config = injector<bind<TransactionLog, DatabaseTransactionLog>>;
+private:
+    int value_ = 0;
+    std::string text;
+};
+```
 
-using config = injector<PaypalCreditCardProcessor>;
-or
-using config = injector<bind<CreditCardProcessor, PaypalCreditCardProcessor>>;
+After this is completed we would like to create our app. This step will be different than normal flow, because
+we are going to use dependency injection framework to create our dependencies for us.
+We are going to apply composition root in our example application and start the app class.
 
-The modules are the building blocks of an injector, which is Guice's object-graph builder
+Remember to include DI headers
+```
+#include <boost/di.hpp>
+```
 
-auto billingService = config().create<RealBillingService>();
-auto billingService = make_injector(config()).create<RealBillingService>();
+```
+int main() {
+    auto injector = di::make_injector();
+    injector.create<app>().start();
+
+    return 0;
+}
+```
+
+Thats all, our application should compile and don't print anything.
+'flag' should be false and 'text' should be an empty string.
+
+So far everything seems to be really easy, so the next step will be
+to configure our dependencies, meaning what exactly will be passed
+to the application. We will do it using make_injector functionality. Let's say
+we would like to print "hello world" if first command line argument
+is not equal 0.
+
+First step will be to configure the text and value. To demonstrate different
+between static(compile time) values and externals(given by client) we set
+the value to 1 for now:
+
+```
+auto injector = di::make_injector(
+    di::bind_int<1>() // static value
+  , di::bind<std::string>::to("hello world") // dynamic value
+);
+```
+
+So, right now we have injector configured and the output of our example application
+should always be "hello world".
+
+Let's continue then with our requirement that text should be displayed if first command
+line argument is not equal 0.
+
+```
+int main(int argc, char** argv) {
+    auto injector = di::make_injector(
+        di::bind<int>::to(std::atoi(argv[0])); // let's assume that user will always pass one argument
+      , di::bind<std::string>::to("hello world")
+    );
+    injector.create<app>().start();
+}
+```
+
+Great! Seems like our example application is working they way was required.
+
+But well, we aren't happy with that example, are we? Since we haven't written the test for it and we
+would like to do it right now we have just noticed that is hard to mock std::cout, how are we going
+to test it then? Hmm, maybe helper class would be useful? Let's do it then.
+
+```
+class iprinter
+{
+public:
+    virtual ~printer() { }
+    virtual void print(const std::string&) = 0;
+};
+
+class printer : public iprinter
+{
+public:
+    void print(const std::string& s) override {
+        std::cout << s << std::endl;
+    }
+};
+```
+
+Having a printer interface and implementation, we just have to add it to our example application:
+
+```
+class app
+{
+public:
+    app(int value, const std::string& text, std::unique_ptr<printer> printer)
+        : value_(value), text_(text), printer_(printer)
+    { }
+
+    void start() {
+        if (value_)
+            printer_->print(text);
+    }
+
+private:
+    int value_ = 0;
+    std::string text;
+    std::unique_ptr<printer> printer_;
+};
+```
+
+So what we have to do in order to printer to be created by dependency injection framework.
+Absolutely nothing actually! DI will find out that printer is needed and create appropriate
+instance. So our main function remains the same. Isn't that great?
+
+But wait a minute, shouldn't we pass interface instead? Of course we should, we wanted to
+write a test, so we have to be able to fake printer behavior. Let's do some changes then.
+
+```
+app(int value, const std::string& text, std::unique_ptr<iprinter> printer)
+...
+std::unique_ptr<iprinter> printer_;
+```
+
+Hmm, right now our example project isn't compiling, because iprinter can't be instantiated due
+to pure virtual method print not being implemented. Well, we have to configure DI the way iprinter
+will be actually a printer. There is nothing easier, we just have to bind iprinter interface to printer implementation.
+
+```
+    auto injector = di::make_injector(
+        di::bind<iprinter, printer>()
+      , di::bind<int>::to(std::atoi(argv[0])); // let's assume that user will always pass one argument
+      , di::bind<std::string>::to("hello world")
+    );
+```
+
+Yay, everything is working again. But oh, we wanted to use mock framework for tests, but we can't to do it,
+due to unique ptr stilling our pointer :/ Well, let's say we will switch to shared_ptr instead.
+Our application code will looks like that:
+
+```
+app(int value, const std::string& text, std::shared_ptr<iprinter> printer)
+...
+std::shared_ptr<iprinter> printer_;
+```
+
+Again, we don't have to change anything with the DI configuration, it will be figured out automatically for us.
+
+[note DI will by default deduce scope based on parameter type, therefore shared_ptr will be shared between many instances]
+[note If we pass raw pointer anywhere it always be our responsibility to delete it, DI will NEVER do it for us]
+
+Finally we were able to easy write unit tests for our example application code :)
+
+Yea, but this example is really easy, writing whole configuration within the main function is a bit smelly, what to do?
+Well, we can define module for our configuration. Module is a class with `configure` method returning dependencies configuration.
+So, let's do it.
+
+```
+class module
+{
+public:
+    explicit module(int i)
+        : i_(i)
+    { }
+
+    auto configure() const {
+        return di::make_injector(
+            di::deduce<printer>() // we can deduce the interface as well!
+          , di::bind<int>::to(i_);
+          , di::bind<std::string>::to("hello world")
+        );
+    }
+
+private:
+    int i_ = 0;
+};
+```
+
+and the main function
+
+```
+int main(int argc, char** argv) {
+    auto injector = make_injector(module(std::atoi(argv[0])));
+    injector.create<app>().start();
+
+    return 0;
+}
+
+```
+
+But in our company we use custom string, but we still want to support std::string as well, how to do that?
+Well, we will have to add second constructor accepting custom string, but then we have 2 constructors
+taking 2 parameters, that will be ambiguous, how DI will be able to figure out which one to use? Short answer: it won't, we will have
+to point which constructor we want to be used by DI. We do it using BOOST_DI_INJECT macro. Let's do it!
+
+```
+class app
+{
+public:
+    BOOST_DI_INJECT(app, int value, const std::string& text)
+        : value_(value), text_(text)
+    { }
+
+    app(int value, const our_string& text)
+        : value_(value), text_(text)
+    { }
+
+    void start() {
+        if (value_)
+            std::cout << text << std::endl;
+    }
+
+private:
+    int value_ = 0;
+    variant<std::string, our_string> text;
+};
+```
+
+[note We don't need to specify BOOST_DI_INJECT if there is a constructor with more parameters, DI will always use the longest one]
+
+Hmm, so what if I have two command line parameters passed by user, how to distinguish them?
+We have few options in order to do so, some of them are more intrusive and some are less. First
+we can define different types for both of them. We can use named parameters like that:
+
+```
+    class first { };
+    class second { };
+...
+    app(named<int, first> value1, named<int, second> value2, const std::string& text)
+```
+
+[note named parameters will convert to the type there are named from, meaning - you can write: `int value = named<int, first>(42)`]
+
+The last option is less intrusive and uses traits to achieve named parameters.
+
+```
+    app(int value1, int value2, const std::string& text)
+
+...
+
+    namespace boost {
+    namespace di {
+
+    template<>
+    struct ctor_traits<app>
+    {
+        BOOST_DI_INJECT_TRAITS(named<int, first>, named<int, second>, const std::string&);
+    };
+
+    }} //boost::di
+```
+
+[tip BOOST_DI_INJECT_TRAITS might be defined within a class as well]
+
+That's pretty much it. Hope this tutorial helped you a bit to understand
+basics concept of dependency injection framework and that creation dependencies won't be
+a problem for you anymore.
+
+Right now you can move on to more in depth stuff - concepts - or just straight away to examples.
+
+[full example code: ]
 
 [endsect]
 
