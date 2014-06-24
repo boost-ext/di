@@ -56,6 +56,11 @@ public:
     }
 
     template<typename I>
+    const I* operator()(const type<const I*>&) const {
+        return value_(); // ownership transfer
+    }
+
+    template<typename I>
     aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const {
         return aux::shared_ptr<I>(value_());
     }

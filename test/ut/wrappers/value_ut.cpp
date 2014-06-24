@@ -9,6 +9,8 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/type.hpp>
 
+#include "boost/di/aux_/memory.hpp"
+
 namespace boost {
 namespace di {
 namespace wrappers {
@@ -25,6 +27,16 @@ BOOST_AUTO_TEST_CASE(to_rvalue) {
     BOOST_CHECK_EQUAL(i, object);
 }
 
+BOOST_AUTO_TEST_CASE(to_ptr) {
+    aux::unique_ptr<int> object((value<int>(42))(type<int*>()));
+    BOOST_CHECK_EQUAL(i, *object);
+}
+
+BOOST_AUTO_TEST_CASE(to_const_ptr) {
+    aux::unique_ptr<const int> object((value<int>(42))(type<const int*>()));
+    BOOST_CHECK_EQUAL(i, *object);
+}
+
 BOOST_AUTO_TEST_CASE(to_shared_ptr) {
     aux::shared_ptr<int> object((value<int>(42))(type<aux::shared_ptr<int>>()));
     BOOST_CHECK_EQUAL(i, *object);
@@ -32,6 +44,16 @@ BOOST_AUTO_TEST_CASE(to_shared_ptr) {
 
 BOOST_AUTO_TEST_CASE(to_shared_ptr_other) {
     aux_::shared_ptr<int> object((value<int>(42))(type<aux_::shared_ptr<int>>()));
+    BOOST_CHECK_EQUAL(i, *object);
+}
+
+BOOST_AUTO_TEST_CASE(to_auto_ptr) {
+    aux::auto_ptr<int> object((value<int>(42))(type<aux::auto_ptr<int>>()));
+    BOOST_CHECK_EQUAL(i, *object);
+}
+
+BOOST_AUTO_TEST_CASE(to_unique_ptr) {
+    aux::unique_ptr<int> object((value<int>(42))(type<aux::unique_ptr<int>>()));
     BOOST_CHECK_EQUAL(i, *object);
 }
 

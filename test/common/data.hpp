@@ -26,6 +26,7 @@ class a { };
 class b { };
 class c { };
 class d { };
+class e { };
 
 struct i
 {
@@ -523,6 +524,56 @@ struct multiple_interfaces
 
     aux::shared_ptr<if0> if0_;
     aux::shared_ptr<if1> if1_;
+};
+
+struct wrappers_types
+{
+    BOOST_DI_INJECT(wrappers_types
+                  , const int i
+                  , named<const int, a> ii
+                  , aux::unique_ptr<float> f
+                  , named<aux::unique_ptr<float>, b> ff
+                  , short* s
+                  , named<short*, d> ss
+                  , const double* d
+                  , named<const double*, c> dd
+                  , char&& c
+                  , named<char, e> cc //TOOD char&&
+                  , const long& l
+                  , const named<const long&>& ll)
+        : i_(i)
+        , ii_(ii)
+        , f_(std::move(f))
+        , ff_(std::move(ff))
+        , s_(s)
+        , ss_(ss)
+        , d_(d)
+        , dd_(dd)
+        , c_(std::move(c))
+        , cc_(cc)//std::move(cc))
+        , l_(std::move(l))
+        , ll_(std::move(ll))
+    { }
+
+    ~wrappers_types() {
+        delete s_;
+        delete ss_;
+        delete d_;
+        delete dd_;
+    }
+
+    const int i_ = 0;
+    const int ii_ = 0;
+    aux::unique_ptr<float> f_;
+    aux::unique_ptr<float> ff_;
+    short* s_ = nullptr;
+    short* ss_ = nullptr;
+    const double* d_ = nullptr;
+    const double* dd_ = nullptr;
+    char c_ = '0';
+    char cc_ = '0';
+    long l_ = 0;
+    long ll_ = 0;
 };
 
 enum eid { e0 = 1 , e1 = 2 };

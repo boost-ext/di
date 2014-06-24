@@ -1,5 +1,4 @@
 platform:
-  - x64
   - x86
 
 configuration:

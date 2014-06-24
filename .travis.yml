@@ -21,20 +21,17 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get -qq install valgrind; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then sudo apt-get install -qq g++-4.7; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.7 90; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$CXX" == "g++" ]; then wget https://www.litebeam.net/gcc/gcc_472.pkg; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$CXX" == "g++" ]; then sudo installer -pkg gcc_472.pkg -target /; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "$CXX" == "g++" ]; then export PATH="/usr/gcc-4.7.2/bin:$PATH"; fi
   - if [ "$CXX" == "g++" ]; then ./bootstrap.sh --with-toolset=gcc; fi
   - if [ "$CXX" == "clang++" ]; then ./bootstrap.sh --with-toolset=clang; fi
   - ./b2 headers
 
 script:
   - pushd .
-  - if [ "$CXX" == "g++" ]; then cd libs/di/example && ../../../b2 -j2 -q ; fi
+  - if [ "$CXX" == "g++" ] && [ "$TRAVIS_OS_NAME" != "osx" ]; then cd libs/di/example && ../../../b2 -j2 -q ; fi
   - if [ "$CXX" == "clang++" ]; then cd libs/di/example && ../../../b2 -j2 -q cxxflags="-Wno-c99-extensions -Wno-variadic-macros" ; fi
   - popd
   - pushd .
-  - if [ "$CXX" == "g++" ]; then cd libs/di/test && ../../../b2 -j2 -q coverage ; fi
+  - if [ "$CXX" == "g++" ] && [ "$TRAVIS_OS_NAME" != "osx" ]; then cd libs/di/test && ../../../b2 -j2 -q coverage ; fi
   - if [ "$CXX" == "clang++" ]; then cd libs/di/test && ../../../b2 -j2 -q cxxflags="-Wno-c99-extensions -Wno-variadic-macros"; fi
   - popd
   #- find bin.v2/libs/di -type f -executable | xargs -i% valgrind --error-exitcode=-1 --leak-check=full --track-origins=yes --show-reachable=yes % >/dev/null

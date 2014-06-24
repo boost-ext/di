@@ -141,7 +141,7 @@ test-suite ut : # unit tests
     [ run-test c++11 : ut/injector_ut.cpp : : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
     [ run-test c++11 : ut/injector_ut.cpp : ctor_injector_ut : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
 
-    [ run-test c++11 : ut/named_ut.cpp ]
+    #[ run-test c++11 : ut/named_ut.cpp ]
 ;
 
 test-suite mt : # module tests
@@ -151,8 +151,8 @@ test-suite mt : # module tests
     [ run-test c++11 : mt/injector_mt.cpp : : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
     [ run-test c++11 : mt/injector_mt.cpp : ctor_injector_mt : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
 
-    [ run-test c++11 : mt/make_injector_mt.cpp : : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
-    [ run-test c++11 : mt/make_injector_mt.cpp : ctor_make_injector_mt : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
+    [ run-test c++11 : mt/make_injector_mt.cpp : : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK <define>BOOST_DI_CFG_CTOR_LIMIT_SIZE=20 ]
+    [ run-test c++11 : mt/make_injector_mt.cpp : ctor_make_injector_mt : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK <define>BOOST_DI_CFG_CTOR_LIMIT_SIZE=20 ]
     [ run-test c++11 : mt/injector_limit_size_mt.cpp : : <define>BOOST_DI_CFG_CTOR_LIMIT_SIZE=20 ]
 ;
 

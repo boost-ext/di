@@ -26,6 +26,24 @@ public:
         : value_(value)
     { }
 
+    T operator()(const type<T>&) const {
+        return value_;
+    }
+
+    T* operator()(const type<T*>&) const {
+        return new T(value_);
+    }
+
+    const T* operator()(const type<const T*>&) const {
+        return new T(value_);
+    }
+
+    BOOST_DI_FEATURE(RVALUE_REFERENCES)(
+        T&& operator()(const type<T&&>&) {
+            return std::move(value_);
+        }
+    )
+
     template<typename I>
     aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const {
         return aux::shared_ptr<I>(new I(value_));
@@ -36,19 +54,15 @@ public:
         return aux_::shared_ptr<I>(new I(value_));
     }
 
-    T operator()(const type<T>&) const {
-        return value_;
+    template<typename I>
+    aux::auto_ptr<I> operator()(const type<aux::auto_ptr<I> >&) const {
+        return aux::auto_ptr<I>(new I(value_));
     }
 
-    T* operator()(const type<T*>&) const {
-        return new T(value_);
+    template<typename I>
+    aux::unique_ptr<I> operator()(const type<aux::unique_ptr<I> >&) const {
+        return aux::unique_ptr<I>(new I(value_));
     }
-
-    BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-        T&& operator()(const type<T&&>&) const {
-            return std::move(value_);
-        }
-    )
 
 private:
     T value_;

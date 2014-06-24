@@ -10,6 +10,8 @@
 #include <memory>
 #include <boost/type.hpp>
 
+#include "boost/di/aux_/memory.hpp"
+
 namespace boost {
 namespace di {
 namespace wrappers {
@@ -36,6 +38,11 @@ BOOST_AUTO_TEST_CASE(to_interface) {
 
 BOOST_AUTO_TEST_CASE(to_ptr) {
     aux::unique_ptr<int> object((copy<int>(return_i))(type<int*>()));
+    BOOST_CHECK_EQUAL(i, *object);
+}
+
+BOOST_AUTO_TEST_CASE(to_const_ptr) {
+    aux::unique_ptr<const int> object((copy<int>(return_i))(type<const int*>()));
     BOOST_CHECK_EQUAL(i, *object);
 }
 

@@ -8,6 +8,7 @@
 #define BOOST_DI_NAMED_HPP
 
 #include "boost/di/aux_/config.hpp"
+#include "boost/di/aux_/memory.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/type_traits/remove_accessors.hpp"
 
@@ -29,16 +30,23 @@ template<
 >
 class named
 {
-    typedef typename type_traits::remove_accessors<T>::type object_type;
     typedef typename remove_reference<T>::type& ref_type;
+
+    //named& operator=(const named&);
 
 public:
     typedef T named_type;
     typedef TName name;
 
-    named(const object_type& object) // non explicit
+    named(const typename remove_reference<T>::type& object) // non explicit
         : object_(object)
     { }
+
+    BOOST_DI_FEATURE(RVALUE_REFERENCES)(
+        named(typename remove_reference<T>::type&& object) // non explicit
+            : object_(std::move(object))
+        { }
+    )
 
     operator T() const {
         return object_;
@@ -49,7 +57,7 @@ public:
     }
 
 private:
-    object_type object_;
+    T object_;
 };
 
 template<
@@ -60,6 +68,8 @@ class named<T, TName, typename enable_if<
     is_polymorphic<typename type_traits::remove_accessors<T>::type> >::type
 >
 {
+    //named& operator=(const named&);
+
 public:
     typedef T named_type;
     typedef TName name;
@@ -73,8 +83,9 @@ class named<T, TName, typename enable_if<
     has_element_type<typename type_traits::remove_accessors<T>::type> >::type
 >
 {
-    typedef typename type_traits::remove_accessors<T>::type object_type;
     typedef typename type_traits::make_plain<T>::type value_type;
+
+    //named& operator=(const named&);
 
 public:
     typedef T named_type;
@@ -82,18 +93,22 @@ public:
 
     named() { }
 
-    named(const object_type& object) // non explicit
+    named(const typename remove_reference<T>::type& object) // non explicit
         : object_(object)
     { }
 
-    named(typename object_type::element_type* ptr) // non explicit
+    named(typename type_traits::remove_accessors<T>::type::element_type* ptr) // non explicit
         : object_(ptr)
     { }
 
     BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-        named(object_type&& object) // non explicit
+        named(typename remove_reference<T>::type&& object) // non explicit
             : object_(std::move(object))
         { }
+
+        //TODO
+        template<typename I>
+        operator aux::unique_ptr<I>() { return std::move(object_); }
     )
 
     operator T() const { return object_; }
@@ -106,12 +121,12 @@ public:
         object_.reset();
     }
 
-    void reset(typename object_type::element_type* ptr) {
+    void reset(typename type_traits::remove_accessors<T>::type::element_type* ptr) {
         object_.reset(ptr);
     }
 
 private:
-    object_type object_;
+    T object_;
 };
 
 } // namespace di

@@ -184,25 +184,30 @@ class universal_impl<const named<const T&, TName>&>
 {
 public:
     template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void> >&
+    universal_impl(std::vector<aux::shared_ptr<void> >& refs
                  , const TValueType& value
                  , typename enable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : value_(boost::bind<const named<const T&, TName>&>(value, boost::type<const named<const T&, TName>&>()))
+        : refs_(refs)
+        , value_(boost::bind<const T&>(value, boost::type<const T&>()))
     { }
 
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >& refs
                  , const TValueType& value
                  , typename disable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : value_(boost::bind(&copy<named<const T&, TName>, T, TValueType>, boost::ref(refs), value))
+        : refs_(refs)
+        , value_(boost::bind(&copy<T, T, TValueType>, boost::ref(refs), value))
     { }
 
     operator const named<const T&, TName>&() const {
-        return value_();
+        aux::shared_ptr<holder<named<const T&, TName> > > object(new holder<named<const T&, TName> >(value_()));
+        refs_.push_back(object);
+        return object->held;
     }
 
 private:
-    function<const named<const T&, TName>&()> value_;
+    std::vector<aux::shared_ptr<void> >& refs_;
+    function<named<const T&, TName>()> value_;
 };
 
 } // namespace detail
