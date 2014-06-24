@@ -34,7 +34,7 @@ script:
   - if [ "$CXX" == "g++" ] && [ "$TRAVIS_OS_NAME" != "osx" ]; then cd libs/di/test && ../../../b2 -j2 -q coverage ; fi
   - if [ "$CXX" == "clang++" ]; then cd libs/di/test && ../../../b2 -j2 -q cxxflags="-Wno-c99-extensions -Wno-variadic-macros"; fi
   - popd
-  #- find bin.v2/libs/di -type f -executable | xargs -i% valgrind --error-exitcode=-1 --leak-check=full --track-origins=yes --show-reachable=yes % >/dev/null
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then find bin.v2/libs/di -type f -executable | xargs -i% valgrind --quiet --error-exitcode=-1 % >/dev/null; fi
 
 after_success:
   - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then gcov-coveralls.sh "/usr/bin/gcov-4.7" "libs/di/test" "bin.v2/libs/di/test" "boost/di/" "L0bLvIumNdzR0XiKdKJSHgKopNnnO9mul" ; fi
