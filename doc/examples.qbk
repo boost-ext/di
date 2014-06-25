@@ -10,16 +10,6 @@
 [concepts_cpp_11]
 [endsect]
 
-[section Inject]
-[import ../example/cpp_11/inject.cpp]
-[inject_cpp_11]
-[endsect]
-
-[section Injector]
-[import ../example/cpp_11/injector.cpp]
-[injector_cpp_11]
-[endsect]
-
 [section Named]
 [import ../example/cpp_11/named.cpp]
 [named_cpp_11]
@@ -30,23 +20,9 @@
 [provider_cpp_11]
 [endsect]
 
-[section Dependency Injection]
-[import ../example/cpp_11/dependency_injection.cpp]
-[dependency_injection_cpp_11]
-[import ../example/cpp_03/dependency_injection.cpp]
-[dependency_injection_cpp_03]
-[endsect]
-
-[section Modules]
-[import ../example/cpp_14/modules.cpp]
-[modules_cpp_14]
-[import ../example/cpp_03/modules.cpp]
-[modules_cpp_03]
-[endsect]
-
-[section Deduce Scope]
-[import ../example/cpp_11/deduce_scope.cpp]
-[deduce_scope_cpp_11]
+[section Inject]
+[import ../example/cpp_11/inject.cpp]
+[inject_cpp_11]
 [endsect]
 
 [section Externals]
@@ -54,9 +30,33 @@
 [externals_cpp_11]
 [endsect]
 
+[section Deduce Scope]
+[import ../example/cpp_11/deduce_scope.cpp]
+[deduce_scope_cpp_11]
+[endsect]
+
 [section Custom Scope]
 [import ../example/cpp_11/custom_scope.cpp]
 [custom_scope_cpp_11]
+[endsect]
+
+[section Injector]
+[import ../example/cpp_11/injector.cpp]
+[injector_cpp_11]
+[endsect]
+
+[section Injection]
+[import ../example/cpp_11/injection.cpp]
+[injection_cpp_11]
+[import ../example/cpp_03/injection.cpp]
+[injection_cpp_03]
+[endsect]
+
+[section Modules]
+[import ../example/cpp_14/modules.cpp]
+[modules_cpp_14]
+[import ../example/cpp_03/modules.cpp]
+[modules_cpp_03]
 [endsect]
 
 [section Factory]

@@ -1,8 +1,83 @@
 [section Integration with Boost libraries]
 
+Integration with existing libraries is really straight forward.
+Usually doesn't require anything! Unless constructor can't be deduced due to ambiguity or it's variadic.
+
 [section Boost Meta State Machine]
 
-Match-3 Game
+[@http://www.boost.org/doc/libs/1_55_0/libs/msm/doc/HTML/index.html Boost Meta State Machine] is a library allowing you to easily and quickly define state machines of very high performance.
+MSM is a great library, unfortunately `Service Locator` pattern is used within to accomplish actions or guards execution.
+This approach is a bit hard to maintain and test, therefore would be great to have the possibility just to 
+implement action/guards without FSM dependency and with proper dependencies instead and just let the dependency injection inject all requirements via constructor.
+
+```
+#include <boost/di.hpp>
+
+struct event : euml_event<event> { };
+
+class guard : public euml_action<guard>
+{
+public:
+    guard() { } // for euml
+
+    explicit guard(shared_ptr<int> dep)
+        : dep(dep)
+    { }
+
+    bool operator()(const event&) const {
+        return *dep != 0;
+    }
+
+private:
+    shared_ptr<int> dep;
+};
+
+class action : public euml_action<action>
+{
+public:
+    action() { } // for euml
+
+    explicit action(shared_ptr<int> dep)
+        : dep(dep)
+    { }
+
+    void operator()(const event&) {
+        (*dep)++;
+    }
+
+private:
+    shared_ptr<int> dep;
+};
+
+class state_machine_ : state_machine_def<state_machine_>
+{
+    struct state1 : state<>, euml_state<state1> { };
+    struct state2 : state<>, euml_state<state2> { };
+
+public:
+    typedef state1 initial_state;
+
+    BOOST_MSM_EUML_DECLARE_TRANSITION_TABLE((
+        state1() + event() [guard] / action == state2()
+    ), transition_table)
+};
+
+int main() {
+    auto sm_ = injector<>().create<state_machine<state_machine_>>();
+    sm_.process_event(event());
+
+    return 0;
+}
+```
+
+Full example and implementation might be found in [@https://github.com/krzysztof-jusiak/msm Boost Meta State Machine with Dependency Injection].
+
+[h5 Match-3 Game]
+
+Simple Match-3 game is an real life example using Boost Dependency Injection and Boost Meta State Machine.
+
+* [@https://github.com/krzysztof-jusiak/match3/blob/master/include/config.hpp Dependency Injection Configuration]
+* [@https://github.com/krzysztof-jusiak/match3/blob/master/include/controller.hpp Meta State Machine Definition]
 
 [endsect]
 

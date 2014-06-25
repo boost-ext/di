@@ -5,13 +5,11 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[dependency_injection_cpp_03
-//`[h6 C++ 98/03]
+//[injection_cpp_11
+//`[h6 C++ 11]
 //<-
 #include <cassert>
 #include <memory>
-#include <boost/shared_ptr.hpp>
-#include <boost/typeof/typeof.hpp>
 //->
 #include <boost/di.hpp>
 
@@ -21,21 +19,21 @@ struct i { virtual ~i() { } };
 struct impl : i { };
 struct some_name { };
 
-struct hello {
-    hello(const boost::shared_ptr<i>& sp, double d, std::auto_ptr<int> ap, int i)
+struct module {
+    module(const std::shared_ptr<i>& sp, double d, std::unique_ptr<int> up, int i)
         : sp(sp)
     {
         assert(dynamic_cast<impl*>(sp.get()));
         assert(d == 0.0); // default zero initialization
-        assert(*ap == 42);
+        assert(*up == 42);
         assert(i == 42);
     }
 
-    boost::shared_ptr<i> sp;
+    std::shared_ptr<i> sp;
 };
 
-struct world {
-    world(hello copy
+struct app {
+    app(module copy
         , boost::shared_ptr<i> sp
         , int i
         , di::named<const std::string&, some_name> s
@@ -48,7 +46,7 @@ struct world {
         assert(str == "some_name");
     }
 
-    world& operator=(const world&);
+    app& operator=(const app&);
 
     std::string str;
     float& f;
@@ -57,21 +55,21 @@ struct world {
 int main() {
     float f = 0.f;
 
-    BOOST_AUTO(injector, (di::make_injector(
+    auto injector = di::make_injector(
         di::bind<i, impl>()
       , di::bind_int<42>()
       , di::bind<std::string>::named<some_name>::to("some_name")
       , di::bind<float>::to(boost::ref(f))
-    )));
+    );
 
-    world hello_world = injector.create<world>();
+    auto module_app = injector.create<app>();
 
-    hello_world.f = 42.f;
+    module_app.f = 42.f;
     assert(f == 42.f);
 
     return 0;
 }
 
-//`full code example: [@example/cpp_03/dependency_injection.cpp dependency_injection.cpp]
+//`full code example: [@example/cpp_11/injection.cpp injection.cpp]
 //]
 

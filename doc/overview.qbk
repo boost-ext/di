@@ -4,12 +4,12 @@
 
 What is so unique about this library?
 
-* Compile time approach - no exceptions - if your application is compiling all dependencies will be be created accurately
-* Macro free - no macros - you don't have to specify constructor traits or register classes - less intrusive
-* Scopes deduction - scopes are deduced based on type based semantic in respect to smart pointers, references, pointers, ...
-* Automatic conversion between std/boost smart pointers - some libraries requires std and some boost smart pointers
-* Supports C++ 03 / C++ 11 / C++ 14 standards
-* Compile time policies - for example to detect circular dependencies or limit supported types only to smart pointers
+* Compile time approach - no exceptions - if application compiles all dependencies will be be created accurately
+* Macro free - no need to specify constructor traits or register anything (less intrusive)
+* Scopes deduction - scopes are deduced based on type semantic
+* Automatic conversion between std/boost smart pointers
+* Compile time policies - ex. to detect circular dependencies or limit supported types only to specified
+* Supports C++03 / C++11 / C++14 standards
 
 Main features:
 

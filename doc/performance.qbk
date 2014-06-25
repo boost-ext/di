@@ -1,12 +1,96 @@
 [section Performance]
 
 [section Compilation time]
-preprocessed headers
-precompiled headers
-note examine call stack
+
+Boost.DI is using heavy template meta programming, therefore compilation time was a big concern
+whilst creating the library. Library was optimised in terms of compilation times as long as
+changes haven't influence runtime performance.
+
+If compilation time is still a problem, Boost.DI contains a set of features to improve the situation.
+
+* Preprocessed Headers
+    * Contains Boost.DI library in one file after preprocessing stage
+    * Preprocessed Headers are generated for `BOOST_DI_CFG_CTOR_LIMIT_SIZE` equals 10 and for `BOOST_MPL_LIMIT_VECTOR_SIZE` equals 10, 20, 30, 40, 50
+    * To disable it `BOOST_DI_CFG_NO_PREPROCESSED_HEADERS` has to be defined
+    * Enabled by default 
+
+* Precompiled Headers
+    * Modern compilers feature to cache headers in precompiled stage
+
+```
+    //pch.hpp
+
+    #include <boost/di.hpp>
+    //... others headers
+```
+
+```
+    CXX pch.hpp
+```
+
+```
+    CXX -include pch.hpp example.cpp 
+```
+
+* Examine Call Stack
+    * Enables context (call stack) to be used for binding 
+    * This feature slow down the compilation, so it has to be turn on by defining `BOOST_DI_CFG_EXAMINE_CALL_STACK`
+    * Disabled by default
+
+[h5 Performance Test]
+
+Compilation time was tested using below example.
+
+```
+    struct level<N> {
+        level<N>();
+    };
+
+    struct level<N-1> {
+        level<N-1>(level<N><1>, level<N><2>, ..., level<N><M>);
+    };
+
+    struct level<2> {
+        level<2>(level<3><1>, level<3><2>, ..., level<3><M>);
+    };
+
+    struct level<1> {
+        level<1>(level<2><1>, level<2><2>, ..., level<2><M>);
+    };
+
+    int main() {
+        di::make_injector().create<level<1>>();
+    }
+```
+
+The test is very useful to verify how huge impact, regards the compilation, changes have.
+Scaling is the factor we are looking into. Basically we are going to look for curve as linear
+as possible.
+
+[table
+    [ [ N/M ] [ % ] ]
+    [ [ 1 ] [ 1 % ] ]
+    [ [ 2 ] [ ] ]
+    [ [ 3 ] [ ] ]
+    [ [ 4 ] [ ] ]
+    [ [ 5 ] [ ] ]
+    [ [ 6 ] [ ] ]
+    [ [ 7 ] [ ] ]
+    [ [ 8 ] [ ] ]
+    [ [ 9 ] [ ] ]
+    [ [ 10 ] [ ] ]
+]
+
 [endsect]
 
-[section Runtime execution]
+[section Runtime execution speed]
+
+Runtime execution speed was one of the concerns taken into account whilst implementing the library.
+Compile time approach was chosen not only, because of the safety (non exception driven) reasons,
+but also because of the runtime performance.
+
+Boost.DI library obviously introduces overhead on creating objects, but the effort was taken to make the overhead as small as possible.
+
 [endsect]
 
 [endsect]

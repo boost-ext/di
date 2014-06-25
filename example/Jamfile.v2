@@ -40,7 +40,7 @@ test-suite di :
 ;
 
 test-suite cpp_03 : # "di / c++ 03"
-    [ run-test c++03 : cpp_03/dependency_injection.cpp : dependency_injection_cpp_03 ]
+    [ run-test c++03 : cpp_03/injection.cpp : injection_cpp_03 ]
     [ run-test c++03 : cpp_03/modules.cpp : modules_cpp_03 ]
 ;
 
@@ -49,7 +49,7 @@ test-suite cpp_11 : # "di / c++ 11"
     [ run-test c++11 : cpp_11/concepts.cpp : concepts_cpp_11 ]
     [ run-test c++11 : cpp_11/custom_scope.cpp : custom_scope_cpp_11 ]
     [ run-test c++11 : cpp_11/deduce_scope.cpp : deduce_scope_cpp_11 ]
-    [ run-test c++11 : cpp_11/dependency_injection.cpp : dependency_injection_cpp_11 ]
+    [ run-test c++11 : cpp_11/injection.cpp : injection_cpp_11 ]
     [ run-test c++11 : cpp_11/externals.cpp : externals_cpp_11 ]
     [ run-test c++11 : cpp_11/factory.cpp : factory_cpp_11 ]
     [ run-test c++11 : cpp_11/inject.cpp : inject_cpp_11 ]
