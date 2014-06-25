@@ -78,6 +78,8 @@ Simple Match-3 game is an real life example using Boost Dependency Injection and
 
 * [@https://github.com/krzysztof-jusiak/match3/blob/master/include/config.hpp Dependency Injection Configuration]
 * [@https://github.com/krzysztof-jusiak/match3/blob/master/include/controller.hpp Meta State Machine Definition]
+* [@https://github.com/krzysztof-jusiak/match3/blob/master/include/actions.hpp Actions]
+* [@https://github.com/krzysztof-jusiak/match3/blob/master/include/guards.hpp Guards]
 
 [endsect]
 

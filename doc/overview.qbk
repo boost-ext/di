@@ -48,6 +48,8 @@ Main features:
 
 [section Supported Compilers]
 
+Boost.DI was sucessfuly test on below compilers
+
 * Linux (x86/x86-64)
    * Clang 3.2/3.3/3.4/3.4.1 (clean with Clang Static Analyzer and Valgrind)
    * GCC 4.7.3/4.8.2/4.9.0 (clean with Valgrind)

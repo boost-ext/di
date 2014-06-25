@@ -1,40 +1,59 @@
-[section Desing Rationale]
+[section Design Rationale]
 
 [@images/di.png [$images/di.png [width 75%] [height 75%] ]]
-
 Generated with [@http://plantuml.sourceforge.net PlantUML].
 
-Core
+During implementation of Boost.DI a lot of concepts were checked
+and a many approaches were taken. To track different design's
+please refer to commits history.
 
-* Responsible for resolving requested types (implementation detail)
+Boost.DI architecture might be split into few main parts
 
-Concepts
+[table
+    [ [Component] [Description] ]
+    [ [Core] [Responsible for resolving requested types (implementation detail)] ]
+    [ [Concepts] [DSL to create dependencies representation which will be used by core to resolve types] ]
+    [ [Scopes] [Responsible for maintain objects life time] ]
+    [ [Wrappers] [Responsible for conversion to required type] ]
+    [ [Policies] [Compile time assertions for types] ]
+]
 
-* DSL to create dependencies representation which will be used by core to resolve types
+[h5 Constructor Arguments Deduction]
 
-Scopes
+# for type T
+    # for N = 1 to `BOOST_DI_CFG_CTOR_LIMIT_SIZE`
+    # if T has constructor with N parameters goto `a`
+# generate list of `any_type` with N elements
 
-* Responsible for providing request object type accurately
+[h5 Binding Resolution Algorithm]
 
-Wrappers
+# for type T
+    # for all dependencies
+    # if scope was set to `deduce` rebind it accordingly to type definition (using `scope traits`)
 
-* Responsible for conversion to required type
+[table Scope Traits
+    [ [Type] [Scope] ]
+    [ [T&] [external] ]
+    [ [T] [unique] ]
+    [ [const T&] [unique] ]
+    [ [T*] [unique] ]
+    [ [const T*] [unique] ]
+    [ [unique_ptr<T>] [unique] ]
+    [ [const unique_ptr<T>&] [unique] ]
+    [ [T&&] [unique] ]
+    [ [const T&&] [unique] ]
+    [ [shared_ptr<T>] [shared] ]
+    [ [const shared_ptr<T>&] [shared] ]
+    [ [weak_ptr<T>] [shared] ]
+    [ [const weak_ptr<T>&] [shared] ]
+    [ [named<T, TName>] [scope Of T] ]
+]
 
-Policies
+[h5 Type Creation Algorithm]
 
-* Compile time assertions for types
-
-Binding resolution Algorithm
-
-#
-#
-#
-
-Type Creation Algorithm
-
-#
-#
-#
+# for type T
+    # for all dependencies
+    # if scope was set to `deduce` rebind it accordingly to type definition (using `scope traits`)
 
 [endsect]
 

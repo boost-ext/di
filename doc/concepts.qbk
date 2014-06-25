@@ -12,16 +12,16 @@ Library will go through the constructors and choose the longest one to pass the 
 class example
 {
 public:
-    example(int); 
-    example(int, double); 
-    example(int, double, float); // will be chosen by DI
+    example(int);
+    example(int, double);
+    example(int, double, float); // will be deduced by DI
 };
 ```
 
-If the default behavior should be changed there is a way of explicitly saying which constructor should be chosen by adding
+If the default behavior should be changed there is a way of explicitly saying which constructor should be deduced by adding
 BOOST_DI_INJECT to the constructor definition.
 
-[note DI is not able to distinguish between ambiguous constructors with the same (longest) amount of parameters, then BOOST_DI_INJECT has to be used to point which constructor should be chosen]
+[note DI is not able to distinguish between ambiguous constructors with the same (longest) amount of parameters, then BOOST_DI_INJECT has to be used to point which constructor should be dedced]
 
 [h5 BOOST_DI_INJECT]
 
@@ -29,8 +29,8 @@ BOOST_DI_INJECT to the constructor definition.
 class example
 {
 public:
-    example(int); 
-    BOOST_DI_INJECT(example, int, double); // will be chosen by DI
+    example(int);
+    BOOST_DI_INJECT(example, int, double); // will be deduced by DI
     example(int, double, float);
 };
 ```
@@ -39,7 +39,7 @@ public:
 [tip Requirement of brackets in BOOST_DI_INJECT might be switched with `BOOST_DI_CFG_INJECT_VA_ARGS` and `BOOST_DI_CFG_INJECT_BRACKET` ]
 
 Sometimes we can't, in case of third party libraries, or just don't want to be so intrusive, then we can use constructor traits to define
-which constructor should be chosen by DI.
+which constructor should be deduced by DI.
 
 [h5 BOOST_DI_INJECT_TRAITS]
 
@@ -80,7 +80,7 @@ struct bind
 { };
 ```
 
-DSL released with the library allows you to bind: 
+DSL released with the library allows you to bind:
 
 ```
 bind_int<42>();
