@@ -64,6 +64,45 @@ Main features:
 
 [endsect]
 
+[section Configuration]
+
+The macros listed in the table below may be used to control the behaviour of Boost.DI.
+
+[table
+  [[Macro][Description]]
+  [
+    [`BOOST_DI_CFG_NO_PREPROCESSED_HEADERS`]
+    [ default: `enabled` ]
+  ]
+  [
+
+    [`BOOST_DI_CFG_CTOR_LIMIT_SIZE`]
+    [ default: `10` ]
+  ]
+
+  [
+    [`BOOST_DI_CFG_EXAMINE_CALL_STACK`]
+    [ default: `disabled` ]
+  ]
+
+  [
+    [`BOOST_DI_CFG_INJECT_VA_ARGS`]
+    [ default: `enabled when C++11` ]
+  ]
+
+  [
+    [`BOOST_DI_CFG_INJECT_BRACKET`]
+    [ default: `enabled when C++03` ]
+  ]
+
+  [
+    [`BOOST_DI_INJECTOR`]
+    [ default: `boost_di_injector__` ]
+  ]
+]
+
+[endsect]
+
 [section Continuous Integration]
 
 [@https://travis-ci.org/krzysztof-jusiak/di [$https://travis-ci.org/krzysztof-jusiak/di.svg?branch=master [format PNG]]]

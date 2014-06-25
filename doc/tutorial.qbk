@@ -1,6 +1,6 @@
 [section Tutorial]
 
-Obviously first step would be to write a test, but for a sake of this tutorial we will skip this phase.
+Well, first step should be to write a test, but for a sake of this tutorial we will skip this phase for now.
 
 For the purposes of this tutorial we are going to implement simple application which will print
 some text on some condition.
