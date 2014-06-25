@@ -6,9 +6,9 @@ Usually doesn't require anything! Unless constructor can't be deduced due to amb
 [section Boost Meta State Machine]
 
 [@http://www.boost.org/doc/libs/1_55_0/libs/msm/doc/HTML/index.html Boost Meta State Machine] is a library allowing you to easily and quickly define state machines of very high performance.
-MSM is a great library, unfortunately `Service Locator` pattern is used within to accomplish actions or guards execution.
+MSM is a great library, unfortunately `Service Locator` pattern is used to accomplish actions or guards execution.
 This approach is a bit hard to maintain and test, therefore would be great to have the possibility just to 
-implement action/guards without FSM dependency and with proper dependencies instead and just let the dependency injection inject all requirements via constructor.
+implement action/guards without FSM dependency and with proper dependencies instead and just let the dependency injection inject all the requirements for us.
 
 ```
 #include <boost/di.hpp>
