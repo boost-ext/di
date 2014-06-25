@@ -14,4 +14,9 @@ boostbook standalone : di :
 ;
 
 install html/images : [ glob images/*.png ] ;
+install html/example : [ glob ../example/*.cpp ] ;
+install html/example/cpp_03 : [ glob ../example/cpp_03/*.cpp ] ;
+install html/example/cpp_11 : [ glob ../example/cpp_11/*.cpp ] ;
+install html/example/cpp_14 : [ glob ../example/cpp_14/*.cpp ] ;
+install html/example/cpp_14/tutorial : [ glob ../example/cpp_14/tutorial/*.cpp ] ;
 

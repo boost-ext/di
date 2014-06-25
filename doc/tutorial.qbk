@@ -18,12 +18,12 @@ public:
 
     void start() {
         if (value_)
-            std::cout << text << std::endl;
+            std::cout << text_ << std::endl;
     }
 
 private:
     int value_ = 0;
-    std::string text;
+    std::string text_;
 };
 ```
 
@@ -48,6 +48,8 @@ int main() {
 Thats all, our application should compile and don't print anything.
 'flag' should be false and 'text' should be an empty string.
 
+[[@example/cpp_14/tutorial/tutorial1.cpp full code example - tutorial1.cpp]]
+
 So far everything seems to be really easy, so the next step will be
 to configure our dependencies, meaning what exactly will be passed
 to the application. We will do it using make_injector functionality. Let's say
@@ -65,6 +67,8 @@ auto injector = di::make_injector(
 );
 ```
 
+[[@example/cpp_14/tutorial/tutorial2.cpp full code example - tutorial2.cpp]]
+
 So, right now we have injector configured and the output of our example application
 should always be "hello world".
 
@@ -74,14 +78,16 @@ line argument is not equal 0.
 ```
 int main(int argc, char** argv) {
     auto injector = di::make_injector(
-        di::bind<int>::to(std::atoi(argv[0])); // let's assume that user will always pass one argument
+        di::bind<int>::to(argc > 1 ? std::atoi(argv[1]) : 0)
       , di::bind<std::string>::to("hello world")
     );
     injector.create<app>().start();
 }
 ```
 
-Great! Seems like our example application is working they way was required.
+[[@example/cpp_14/tutorial/tutorial3.cpp full code example - tutorial3.cpp]]
+
+Great! Seems like our example application is working the way was required.
 
 But well, we aren't happy with that example, are we? Since we haven't written the test for it and we
 would like to do it right now we have just noticed that is hard to mock std::cout, how are we going
@@ -91,7 +97,7 @@ to test it then? Hmm, maybe helper class would be useful? Let's do it then.
 class iprinter
 {
 public:
-    virtual ~printer() { }
+    virtual ~iprinter() { }
     virtual void print(const std::string&) = 0;
 };
 
@@ -111,12 +117,12 @@ class app
 {
 public:
     app(int value, const std::string& text, std::unique_ptr<printer> printer)
-        : value_(value), text_(text), printer_(printer)
+        : value_(value), text_(text), printer_(std::move(printer))
     { }
 
     void start() {
         if (value_)
-            printer_->print(text);
+            printer_->print(text_);
     }
 
 private:
@@ -146,10 +152,13 @@ will be actually a printer. There is nothing easier, we just have to bind iprint
 ```
     auto injector = di::make_injector(
         di::bind<iprinter, printer>()
-      , di::bind<int>::to(std::atoi(argv[0])); // let's assume that user will always pass one argument
+      , di::bind<int>::to(argc > 1 ? std::atoi(argv[1]) : 0)
       , di::bind<std::string>::to("hello world")
     );
+    injector.create<std::unique_ptr<app>>()->start(); // unique_ptr is not copyable
 ```
+
+[[@example/cpp_14/tutorial/tutorial4.cpp full code example - tutorial4.cpp]]
 
 Yay, everything is working again. But oh, we wanted to use mock framework for tests, but we can't to do it,
 due to unique ptr stilling our pointer :/ Well, let's say we will switch to shared_ptr instead.
@@ -157,6 +166,8 @@ Our application code will looks like that:
 
 ```
 app(int value, const std::string& text, std::shared_ptr<iprinter> printer)
+    : value_(value), text_(text), printer_(printer)
+{ }
 ...
 std::shared_ptr<iprinter> printer_;
 ```
@@ -183,7 +194,7 @@ public:
     auto configure() const {
         return di::make_injector(
             di::deduce<printer>() // we can deduce the interface as well!
-          , di::bind<int>::to(i_);
+          , di::bind<int>::to(i_)
           , di::bind<std::string>::to("hello world")
         );
     }
@@ -197,7 +208,7 @@ and the main function
 
 ```
 int main(int argc, char** argv) {
-    auto injector = make_injector(module(std::atoi(argv[0])));
+    auto injector = di::make_injector(module(argc > 1 ? std::atoi(argv[1]) : 0));
     injector.create<app>().start();
 
     return 0;
@@ -224,12 +235,12 @@ public:
 
     void start() {
         if (value_)
-            std::cout << text << std::endl;
+            std::cout << print(text_) << std::endl;
     }
 
 private:
     int value_ = 0;
-    variant<std::string, our_string> text;
+    variant<std::string, our_string> text_;
 };
 ```
 
@@ -275,7 +286,7 @@ a problem for you anymore.
 
 Right now you can move on to more in depth stuff - concepts - or just straight away to examples.
 
-[full example code: ]
+[[@example/cpp_14/tutorial/tutorial5.cpp full code example - tutorial5.cpp]]
 
 [endsect]
 
