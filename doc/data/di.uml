@@ -1,61 +1,129 @@
 @startuml
 
-package core <<Rect>> {
-    class binder
-    class builder
-    class creator
-    class module
-    class pool
+package di {
+
+    package user <<Rect>> {
+        class named {
+            named(T)
+            operator T() const
+        }
+
+        class provider {
+            T get() const
+        }
+
+        class make_injector {
+        }
+
+    }
+
+    package core <<Rect>> {
+        class binder {
+            universal<T> resolve()
+        }
+        class builder {
+            universal<T> build(...)
+        }
+        class creator {
+            universal<T> create(...)
+        }
+        class module {
+            Dependencies deps
+            T create(...)
+            void visit()
+            void call(TAction)
+        }
+        class pool {
+            pool(...)
+            T get() const
+        }
+    }
+
+    package concepts <<Rect>> {
+        class dependency {
+            dependency(T);
+            dependency<T> to(T);
+        }
+        class bind
+        class scope
+    }
+
+    package scopes <<Rect>> {
+        class deduce {
+            T create(...)
+        }
+        class external {
+            T create(...)
+        }
+        class session {
+            T create(...)
+        }
+        class shared {
+            T create(...)
+        }
+        class unique {
+            T create(...)
+        }
+    }
+
+    package policies <<Rect>> {
+        class arguments_permission {
+            void assert_policy() const
+        }
+
+        class circular_dependencies {
+            void assert_policy() const
+        }
+
+        class creation_ownership {
+            void assert_policy() const
+        }
+
+        class scopes_permission {
+            void assert_policy() const
+        }
+    }
+
+    package wrappers <<Rect>> {
+        class copy {
+            T operator()(const type<T>&) const
+        }
+        class reference {
+            T operator()(const type<T>&) const
+        }
+        class wrappers.shared {
+            T operator()(const type<T>&) const
+        }
+        class universal {
+            T operator()(const type<T>&) const
+        }
+        class value {
+            T operator()(const type<T>&) const
+        }
+    }
+
+    class injector {
+        T create(policies...)
+        void visit()
+        void call(TAction)
+    }
+
+    user - injector
+    user - policies
+    dependency - scope
+    dependency - bind
+    injector - concepts
+    injector - policies
+    injector <|-- module
+    scopes - wrappers
+    dependency - module
+    concepts - scopes
+
+    module <|-- pool
+    module --* creator
+    creator --* binder
+    binder --* builder
 }
-
-package concepts <<Rect>> {
-    class dependency
-    class bind
-    class scope
-}
-
-package scopes <<Rect>> {
-    class deduce
-    class external
-    class session
-    class shared
-    class unique
-}
-
-package policies <<Rect>> {
-    class arguments_permission
-    class circular_dependencies
-    class creation_ownership
-    class scopes_permission
-}
-
-package wrappers <<Rect>> {
-    class copy
-    class reference
-    class shared
-    class universal
-    class value
-}
-
-class injector
-class make_injector
-class named
-class provider
-
-dependency - scope
-dependency - bind
-injector - make_injector
-injector - concepts
-injector - policies
-injector - module
-scopes - wrappers
-dependency - module
-concepts - scopes
-
-module <|-- pool
-module --* creator
-creator --* binder
-binder --* builder
 
 @enduml
 
