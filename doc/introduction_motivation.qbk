@@ -21,7 +21,8 @@ There are many forms of dependency injection about which you can read in [2]:
 * Setter injection
 * Member injection
 
-Constructor injection is the most powerful and the most clean way of dependency injection, it's also the preferable as well.
+Constructor injection is the most powerful and the cleanest way of dependency injection,
+it's also the preferable as well becauase you don't need to worry about objects arriving in an uninitialized state.
 This library provide the functionality for constructor and interface injection.
 
 Author in [1] widely explains advantages of using dependency injection, which might be sum up by:

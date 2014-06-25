@@ -4,159 +4,96 @@
 
 [section Constructor Injection]
 
-Constructor injection is straightforward. Because Java technology guarantees constructor invocation, you don't need to worry about objects arriving in an uninitialized state — whether or not Guice creates them. You can also mark your fields final.
-According to the Guice best practices guide, constructor injection is the preferred way to ask for your dependencies
+Constructor injection is the most powerful of the available injections. It guarantee initialized state of data members.
+Within DI, by default, is achieved without any additional work from the user than defining the constructor.
+Library will go through the constructors and choose the longest one to pass the dependencies.
 
-[section BOOST_DI_INJECT]
+```
+class example
+{
+public:
+    example(int); 
+    example(int, double); 
+    example(int, double, float); // will be chosen by DI
+};
+```
 
-[table BOOST_DI_INJECT
-    [
-        [
-            struct c {
-                BOOST_DI_INJECT(c, int i = 0, double = 0.0) { }
-            };
-        ]
-        [
-            struct c {
-                static void boost_di_ctor__(int i = 0, double = 0.0);
-                c(int i = 0, double = 0.0) { }
-            };
-        ]
-    ]
-]
+If the default behavior should be changed there is a way of explicitly saying which constructor should be chosen by adding
+BOOST_DI_INJECT to the constructor definition.
 
-[endsect]
+[note DI is not able to distinguish between ambiguous constructors with the same (longest) amount of parameters, then BOOST_DI_INJECT has to be used to point which constructor should be chosen]
 
-[section BOOST_DI_INJECT_TRAITS]
+[h5 BOOST_DI_INJECT]
 
-[table BOOST_DI_INJECT_TRAITS
-    [
-        [
-            struct c {
-                BOOST_DI_INJECT_TRAITS(int, named<double,  my_name>);
-                c(int, double) { }
-            };
-        ]
-        [
-            struct c {
-                static void boost_di_ctor__(int, named<double, my_name>);
-                c(int, double) { }
-            };
-        ]
-    ]
-]
+```
+class example
+{
+public:
+    example(int); 
+    BOOST_DI_INJECT(example, int, double); // will be chosen by DI
+    example(int, double, float);
+};
+```
 
-[endsect]
+[note In C++03 additional brackets are needed: `BOOST_DI_INJECT(example, (int, double))`]
+[tip Requirement of brackets in BOOST_DI_INJECT might be switched with `BOOST_DI_CFG_INJECT_VA_ARGS` and `BOOST_DI_CFG_INJECT_BRACKET` ]
 
-[section BOOST_DI_CREATE]
+Sometimes we can't, in case of third party libraries, or just don't want to be so intrusive, then we can use constructor traits to define
+which constructor should be chosen by DI.
 
-[table BOOST_DI_CREATE
-    [
-        [
-            struct i_factory {
-                i* BOOST_DI_CREATE(int i) {
-                    if (i) {
-                        return new impl();
-                    }
+[h5 BOOST_DI_INJECT_TRAITS]
 
-                    return nullptr;
-                }
-            };
-        ]
-        [
-            struct i_factory {
-                i* boost_di_create__(int i) {
-                    if (i) {
-                        return new impl();
-                    }
+```
+template<>
+struct ctor_traits<example>
+{
+    BOOST_DI_INJECT_TRAITS(int, double, float);
+};
 
-                    return nullptr;
-                }
-            };
-        ]
-    ]
-]
+```
 
-    class i_factory
-    {
-    public:
-        i* BOOST_DI_CREATE(eid id) {
-            switch(id) {
-                case e1: return new impl1();
-                case e2: return new impl2();
-            }
-
-            return nullptr;
-        }
-    };
-
-    int main() {
-        auto injector = di::make_injector(
-            di::bind<eid>::to(e1)
-          , di::bind<i, i_factory>()
-        );
-
-        injector.create<c>();
-
-        return 0;
-    }
-
-[endsect]
-
-[section di::ctor_traits]
-
-    struct c
-    {
-        c(int, int) { }
-    };
-
-    namespace boost {
-    namespace di {
-
-    template<>
-    struct ctor_traits<c>
-    {
-        static void ctor(int, di::named<int, name>);
-    };
-
-    } // namespace di
-    } // namespace boost
-
-    injector.create<c>();
-
-[endsect]
+[note BOOST_DI_INJECT_TRAITS might be also defined within the class, useful in case of named parameters]
 
 [endsect]
 
 [section Binding]
 
-DI is designed to do popular things easy:
+Binding in DI is done using provided DSL. The main purpose of binding DSL is to make easy things as easy
+as possible whilst giving possibility to accomplish more complicated problems.
+The glue between binding DSL and the core is dependency, so if you would like to write your own front end
+the only thing which you have to have in mind is to return list of dependencies.
 
-bind<int>::in_call<call_stack<c1>, call_stack<c1, c2, c3>>()
+```
+template<
+    typename TScope
+  , typename TExpected
+  , typename TGiven
+  , typename TBind
+>
+class dependency;
+```
 
-Binding Resolution
+```
+template<typename If, typename Impl>
+struct bind
+    : concepts::dependency<scopes::deduce, If, Impl>
+{ };
+```
 
-The injector's process of resolving an injection request depends on the bindings and the annotations of the types involved. Here's how an injection request is resolved:
+DSL released with the library allows you to bind: 
 
-Use explicit bindings.
-If the binding links to another, follow this resolution algorithm for that.
-If the binding specifies an instance, return that.
-If the binding specifies a provider, use that.
-Ask a parent injector. If this injector has a parent injector, ask that to resolve the binding. If it succeeds, use that. Otherwise proceed.
-Ask child injectors. If any child injector already has this binding, give up. A blacklist of bindings from child injectors is kept so injectors don't need to maintain references to their child injectors.
-Handle Provider injections. If the type is Provider<T>, resolve T instead, using the same binding annotation, if it exists.
-Convert constants. If there is a constant string bound with the same annotation, and a TypeConverter that supports this type, use the converted String.
-If the dependency has a binding annotation, give up. Guice will not create default bindings for annotated dependencies.
-If the dependency is an array or enum, give up.
-Handle TypeLiteral injections. If the type is TypeLiteral<T>, inject that value, using context for the value of the type parameter.
-Use resolution annotations. If the dependency's type has @ImplementedBy or @ProvidedBy, lookup the binding for the referenced type and use that.
-If the dependency is abstract or a non-static inner class, give up.
-Use a single @Inject or public no-arguments constructor.
-Validate bindings for all dependencies — the constructor's parameters, plus @Inject methods and fields of the type and all supertypes.
-Invoke the constructor.
-Inject all fields. Supertype fields are injected before subtype fields.
-Inject all methods. Supertype methods are injected before subtype methods.
+```
+bind_int<42>();
 
+bind<int>::to(42);
+bind<std::string>::to("text");
+
+bind<example>::to(make_shared<example>());
+bind<example>::to(cref(example_));
+bind<example>::to(ref(example_));
+
+bind<interface, implementation>();
+```
 [endsect]
 
 [section Injector]
