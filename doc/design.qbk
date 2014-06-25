@@ -1,6 +1,8 @@
 [section Desing Rationale]
 
-[$images/di.png]
+[@images/di.png [$images/di.png [width 75%] [height 75%] ]]
+
+Generated with [@http://plantuml.sourceforge.net PlantUML].
 
 Core
 
@@ -24,15 +26,15 @@ Policies
 
 Constructor Deduction Algorithm
 
-1.
-2.
-3.
+#
+#
+#
 
 Type Creation Algorithm
 
-1.
-2.
-3.
+#
+#
+#
 
 [endsect]
 

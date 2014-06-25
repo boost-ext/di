@@ -1,6 +1,6 @@
 @startuml
 
-package di {
+package Boost.DI {
 
     package user <<Rect>> {
         class named {
@@ -41,8 +41,8 @@ package di {
 
     package concepts <<Rect>> {
         class dependency {
-            dependency(T);
-            dependency<T> to(T);
+            dependency(T)
+            dependency<T> to(T)
         }
         class bind
         class scope
@@ -110,8 +110,8 @@ package di {
 
     user - injector
     user - policies
-    dependency - scope
-    dependency - bind
+    dependency <|-- scope
+    dependency <|-- bind
     injector - concepts
     injector - policies
     injector <|-- module
