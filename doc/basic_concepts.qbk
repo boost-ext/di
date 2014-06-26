@@ -1,0 +1,353 @@
+[def __BOOST_DI_INJECT [link di.reference.ctor `BOOST_DI_INJECT `]]
+
+[section Basic Concepts]
+
+[section Constructor Injection]
+
+Constructor injection is the most powerful of the available injections. It guarantee initialized state of data members.
+Within DI, by default, is achieved without any additional work from the user than defining the constructor.
+Library will go through the constructors and choose the longest one to pass the dependencies.
+
+```
+class example {
+public:
+    example(int);
+    example(int, double);
+    example(int, double, float); // will be deduced by DI
+};
+```
+
+If the default behavior should be changed there is a way of explicitly saying which constructor should be deduced by adding
+BOOST_DI_INJECT to the constructor definition.
+
+[note DI is not able to distinguish between ambiguous constructors with the same (longest) amount of parameters, then BOOST_DI_INJECT has to be used to point which constructor should be dedced]
+
+[h6 BOOST_DI_INJECT]
+
+```
+class example {
+public:
+    example(int);
+    BOOST_DI_INJECT(example, int, double); // will be deduced by DI
+    example(int, double, float);
+};
+```
+
+[note In C++03 additional brackets are needed: `BOOST_DI_INJECT(example, (int, double))`]
+[tip Requirement of brackets in BOOST_DI_INJECT might be switched with `BOOST_DI_CFG_INJECT_VA_ARGS` and `BOOST_DI_CFG_INJECT_BRACKET` ]
+
+Sometimes we can't, in case of third party libraries, or just don't want to be so intrusive, then we can use constructor traits to define
+which constructor should be deduced by DI.
+
+[h6 BOOST_DI_INJECT_TRAITS]
+
+```
+namespace boost { namespace di {
+
+template<>
+struct ctor_traits<example> {
+    BOOST_DI_INJECT_TRAITS(int, double, float);
+};
+
+}} // boost::di
+
+```
+
+[note BOOST_DI_INJECT_TRAITS might be also defined within the class, useful in case of named parameters]
+
+[endsect]
+
+[section Scope]
+
+Scopes are responsible for creating and maintaining the life time of the dependency.
+Boost.DI favor 5 types of scopes (deduce - default, external, unique, shared, session) which you can read more about
+in `Scopes` section.
+
+```
+    class some_scope {
+        typedef mpl::int_<N> priority; // N - priority, 1=lowest, N=highest
+
+        template<typename TExpected, typename TGiven = TExpected>
+        class scope {
+        public:
+            template<typename... T>
+            result_type create(T&&... args);
+        };
+    };
+```
+
+[endsect]
+
+[section Binding]
+
+Binding in DI is done by DSL. The main purpose of binding DSL is to make easy things as easy
+as possible whilst giving possibility to accomplish solutions for more complicated problems.
+The glue between DSL and the core is dependency, so if you would like to write your own front end
+the only thing which has to be in mind is to return list of dependencies.
+
+```
+template<
+    typename TScope
+  , typename TExpected
+  , typename TGiven
+  , typename TBind
+>
+class dependency;
+```
+
+```
+template<typename If, typename Impl>
+struct bind
+    : concepts::dependency<scopes::deduce, If, Impl>
+{ };
+```
+
+DSL released with the library allows you to bind:
+
+* bind to interface
+```
+    di::bind<interface, implementation>
+    di::bind<implementation>
+```
+
+* bind the same implementation to many interfaces
+```
+    di::bind<any_of<interface1, interface2, ..., interfaceN>, implementation>
+```
+[note The same might be achived with `bind<implementation>`]
+
+* bind to compile time value
+```
+    di::bind_int<42>()
+    di::bind_string<mpl::string<'str'>>
+```
+
+* bind to runtime value
+```
+    di::bind<int>::to(42)
+    di::bind<std::string>::to("text");
+```
+
+* bind to external runtime value
+```
+    di::bind<example>::to(make_shared<example>()) // bind to shared_ptr
+
+    example example_;
+    di::bind<example>::to(cref(example_)) // bind to const ref
+    di::bind<example>::to(ref(example_)) // bind to ref
+```
+[note Boost implementation of cref/ref has to be used]
+
+On top of binding to values user can bind to named parameters or using context.
+
+* bind using named parameters
+```
+    class my_value { };
+    class my_if { };
+
+    stuct example {
+        example(di::named<int, my_value> value, di::named<shared_ptr<interface>, my_if>);
+    };
+
+    di::bind_int<42>::named<my_value>()
+    di::bind<int>::named<my_value>::to(42)
+
+    di::bind<interface, implementation>::named<my_if>()
+    di::bind<implementation>::named<my_if>()
+```
+
+* bind using call stack context
+```
+    call_stack<c1, c2, ..., cN> // call stack definition
+
+    class c2 {
+    public:
+        c2(unique_ptr<interface>);
+    };
+
+    class c1 {
+    public:
+        c1(c2);
+    };
+
+    di::bind<interface, implementation>::when<call_stack<c1, c2>>()
+
+```
+[note `BOOST_DI_CFG_EXAMINE_CALL_STACK` has to be defined to enable this features]
+
+* bind using call stack context and named parameters
+```
+    class c2 {
+    public:
+        c2(di::named<unique_ptr<interface>, my_if>);
+    };
+
+    class c1 {
+    public:
+        c1(c2);
+    };
+
+    // bind interface to implementation for named
+    // parameter `my_if` when the class `c2` was created from class `c1`
+
+    di::bind<interface, implementation>::named<my_if>::when<call_stack<c1, c2>>()
+    di::bind<implementation>::named<my_if>::when<call_stack<c1, c2>>()
+    di::bind<interface, implementation>::when<call_stack<c1, c2>>::named<my_if>()
+    di::bind<implementation>::when<call_stack<c1, c2>>::named<my_if>()
+
+    // all bindings above are equivalent
+```
+
+[endsect]
+
+[section Injector]
+
+Injector is a component used for creating dependencies configuration using bindings.
+Injector might be created using `di::make_injector` or `di::injector type` it self.
+Preferable option is to use di::make_injector because it allows to bind dynamic values.
+
+
+[table
+[[di::make_injector][di::injector]]
+    [
+        [
+            ```
+                auto injector = di::make_injector();
+            ```
+        ]
+        [
+            ```
+                using injector_t = di::injector<>;
+                auto injector = injector_t();
+            ```
+        ]
+    ]
+
+    [
+        [
+            ```
+                auto injector = di::make_injector(
+                    di::deduce<implementation>()
+                );
+            ```
+        ]
+        [
+            ```
+                using injector = di::injector<implementation>;
+            ```
+        ]
+    ]
+]
+
+Injector
+
+* create
+```
+    template<typename T, typename... TPolicies>
+    T create(TPolicies&&...);
+```
+
+* visit
+```
+    template<typename T>
+    void visit();
+```
+
+* call
+```
+    template<typename TAction>
+    void call(const TAction&);
+```
+
+[endsect]
+
+[section Module]
+
+```
+    class module {
+    public:
+        auto configure() const {
+            return di::make_injector(
+                ...
+            );
+        }
+    }
+```
+[endsect]
+
+
+[section Named Parameter]
+
+Named parameters are useful when the constructor has more parameters of the same type.
+```
+    example(int value1, int value2);
+```
+In order to inject proper values to value and value2 they have to distinguish somehow.
+Boost.DI solution for this are `named parameters`, which basically are just wrappers
+for the type with automatic conversion to the based type.
+```
+    class my_name { };
+    di::named<int, my_name> named_parameter;
+    int i = named_parameter;
+```
+
+Named parameters are intrusive in a sens constructor has to be changed in order to support them.
+It doesn't has to be the case when constructor traits are being used.
+```
+    class example {
+    public:
+        example(int value1, int value2);
+    };
+
+    class my_value1 { };
+    class my_value2 { };
+
+    namespace boost { namespace di {
+
+    template<>
+    struct ctor_traits<example> {
+        BOOST_DI_INJECT_TRAITS(di::named<int, my_value1>, di::named<int, my_value2>);
+    };
+
+}} // boost::di
+```
+
+[endsect]
+
+[section Provider]
+
+With normal dependency injection, each type gets exactly one instance of each of its dependent types.
+Sometimes it's required to get many different instances. Then providers become handy.
+They produce a value when the get() method is invoked.
+
+```
+    template<typename T>
+    class provider
+    {
+    public:
+        virtual ~provider() { }
+        virtual T get() const = 0;
+    };
+```
+
+```
+    class example {
+    public:
+        example(provider<int> p) {
+            assert(p.get() != p.get());
+        }
+    };
+
+    class provider : iprovider<int> {
+    public:
+        int get() const override {
+            static int i = 0;
+            return i++;
+        }
+    };
+```
+
+[endsect]
+
+[endsect]
+

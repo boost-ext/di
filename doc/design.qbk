@@ -46,7 +46,7 @@ Boost.DI architecture might be split into few main parts
     [ [const shared_ptr<T>&] [shared] ]
     [ [weak_ptr<T>] [shared] ]
     [ [const weak_ptr<T>&] [shared] ]
-    [ [named<T, TName>] [scope Of T] ]
+    [ [named<T, TName>] [scope of T] ]
 ]
 
 [h5 Type Creation Algorithm]

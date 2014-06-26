@@ -27,7 +27,7 @@
 [include overview.qbk]
 [include design.qbk]
 [include tutorial.qbk]
-[include concepts.qbk]
+[include basic_concepts.qbk]
 [include scopes.qbk]
 [include policies.qbk]
 [include examples.qbk]
