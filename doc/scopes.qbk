@@ -54,7 +54,7 @@ Default scope which will be converted to one of the scopes shared/unique/externa
 ```
 
 [h5 Conversions]
-Refer to `Scopes Conversions` table
+Refer to `Scopes Conversions` table.
 
 [endsect]
 
@@ -80,7 +80,8 @@ Refer to `Scopes Conversions` table
 
 Scope representing external value (passed by user). The life time of the object depends on the user.
 Boost.DI is not responsible of managing of the passed object, however values and strings will be copied
-and managed by the library.
+and managed by the library. External scope has priority before other scopes which means that if some value/type
+will be binded using different scope as well then this binding won't be taken into account.
 
 [h5 Example]
 
@@ -93,9 +94,45 @@ and managed by the library.
     di::bind<example>::to(ref(example_))
 ```
 
+[h5 Conversions]
+Refer to `Scopes Conversions` table.
+
 [endsect]
 
 [section Unique]
+
+[h5 Synopsis]
+```
+    template<template<typename> class TWrapper = wrappers::copy>
+    class unique {
+    public:
+        typedef mpl::int_<0> priority;
+
+        template<typename TExpected, typename TGiven = TExpected>
+        class scope {
+        public:
+            template<typename... TArgs>
+            TWrapper<TExpected, TGiven> create(TArgs&&...);
+        };
+    };
+```
+
+[h5 Description]
+
+Scope representing unique value, meaning unique value always will be passed to the constructor.
+[note In case of pointers user will be responsible to take care of deleting them]
+
+[h5 Example]
+
+```
+    unique<di::bind_int<42>>()
+    unique<di::bind<interface, implementation>>()
+```
+[note Scope deduction has lower priority than explicit scope definition, so shared_ptr parameter might be forced to be unique]
+
+[h5 Conversions]
+Refer to `Scopes Conversions` table.
+
 [endsect]
 
 [section Shared]
