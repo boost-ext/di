@@ -1,95 +1,101 @@
 [section Scopes]
 
-By default, DI returns a deduced instance each time it supplies a value
+Boost.DI scopes create and maintain dependencies life time.
+If no scope will be given whilst binding deduce scope will be assumed.
 
-table - scope_traits
-    per_request, T*, T
-    singleton, T*, T
+Synopsis
+```
+    class scope_ {
+        typedef mpl::int_<N> priority; // N - priority, 1=lowest, N=highest
 
-Applying scopes:
-
-make_injector(
-    singleton<impl>
-  , per_request<impl2>
-);
-
-Singletons:
-    has to be thread safe
-
-    namespace boost {
-    namespace di {
-    namespace scopes {
-
-    class scope {
-    public:
-        template<typename T, typename = T>
+        template<typename TExpected, typename TGiven = TExpected>
         class scope {
         public:
-            typedef unspecified result_type;
-            // typedef unspecified is_priority;
-
             template<typename... T>
-            result_type create(const T&...);
+            result_type create(T&&... args);
         };
     };
+```
 
-    } // namespace scopes
-    } // namespace di
-    } // namespace boost
+Scopes use `wrappers` to return convertible objects.
+`Wrappers` are able to convert to requested types accurately to their definition.
+There are 5 basic types of wrappers.
+
+[table
+    [[Wrapper][Description]]
+    [[copy][conversion to lvalue/pointer/smart_ptr]]
+    [[reference][conversion to reference]]
+    [[shared][conversion to smart_ptr]]
+    [[universal][conversion to any type wrappers provide and to const ref/named on top of it]]
+    [[value][conversion to lvalue/rvalue/pointer/smart_pointer]]
+]
 
 [section Deduce (Default)]
 
-Synopsis
-
+[h5 Synopsis]
+```
     class deduce {
     public:
         template<typename T, typename = T>
         class scope;
     };
+```
 
-Description
+[h5 Description]
 
+Default scope which will be converted to one of the scopes shared/unique/external accordingly to `Scope Traits`.
 
-Header
+[h5 Example]
 
-    #include <boost/di/scopes/deduce.hpp>
+```
+    di::deduce<implementation>()
+    di::deduce<di::bind<interface, implementation>>()
+    di::deduce<di::bind_int<42>>()
+```
 
-Example
-
-    using injector_t = injector<impl>;
-    assert(injector_t().create<impl2>());
-
-
-    injector<
-        bind<i, impl>
-    >;
-
-    injector<
-        scope<deduce>::bind<
-            bind<i, impl>
-        >
-    >;
+[h5 Conversions]
+Refer to `Scopes Conversions` table
 
 [endsect]
 
 [section External]
 
-    auto injector = make_injector(
-        bind<int>::to(0)
-      , bind<int>::in_call<call_stack<some_class>>::to(1)
-      , bind<int>::in_call<call_stack<some_class>>::in_name<some_name>::to(2)
-    );
+[h5 Synopsis]
+```
+    template<template<typename> class TWrapper>
+    class external {
+    public:
+        typedef mpl::int_<1> priority;
 
+        template<typename TExpected, typename TGiven = TExpected>
+        class scope {
+        public:
+            template<typename... TArgs>
+            TWrapper<TExpected, TGiven> create(TArgs&&...);
+        };
+    };
+```
+
+[h5 Description]
+
+Scope representing external value (passed by user). The life time of the object depends on the user.
+Boost.DI is not responsible of managing of the passed object, however values and strings will be copied
+and managed by the library.
+
+[h5 Example]
+
+```
+    di::bind<int>::to(42)
+    di::bind<std::string>::to("text")
+    di::bind<example>::to(make_shared<example>())
+    example example_;
+    di::bind<example>::to(cref(example_))
+    di::bind<example>::to(ref(example_))
+```
 
 [endsect]
 
 [section Unique]
-
-    auto injector = make_injector(
-        per_request<int>
-      , per_request<
-    );
-
 [endsect]
 
 [section Shared]
@@ -99,38 +105,24 @@ Example
 [endsect]
 
 [section Custom]
-
-    struct entry { };
-    struct exit { };
-
-    struct custom_scope {
-        template<typename T, typename>
-        struct scope
-        {
-            typedef T result_type;
-            //typedef scope is_priority;
-
-            void call(const entry&);
-            void call(const exit&);
-
-            template<typename... Args>
-            result_type create(Args&&... args);
-        };
-    };
-
-    using injector_t = injector<
-        scope<custom_scope>::bind<
-            types...
-        >
-    >;
-
-    injector_t injector;
-
-    injector.call(entry());
-    injector.create<type>();
-    injector.call(exit());
-
 [endsect]
+
+[table Scopes Conversions
+    [[Type][external][session][shared][unique]]
+    [[T][X][X][X][X]]
+    [[T*][X][X][X][X]]
+    [[T&][X][X][X][X]]
+    [[const T&][X][X][X][X]]
+    [[T&&][X][X][X][X]]
+    [[const T*][X][X][X][X]]
+    [[std::shared_ptr<T>][X][X][X][X]]
+    [[boost::shared_ptr<T>][X][X][X][X]]
+    [[std::unique_ptr<T>][X][X][X][X]]
+    [[std::auto_ptr<T>][X][X][X][X]]
+    [[][][][][]]
+    [[const T&][X][X][X][X]]
+    [[named<T, name>][X][X][X][X]]
+]
 
 [endsect]
 

@@ -63,19 +63,6 @@ Scopes are responsible for creating and maintaining the life time of the depende
 Boost.DI favor 5 types of scopes (deduce - default, external, unique, shared, session) which you can read more about
 in `Scopes` section.
 
-```
-    class some_scope {
-        typedef mpl::int_<N> priority; // N - priority, 1=lowest, N=highest
-
-        template<typename TExpected, typename TGiven = TExpected>
-        class scope {
-        public:
-            template<typename... T>
-            result_type create(T&&... args);
-        };
-    };
-```
-
 [endsect]
 
 [section Binding]
@@ -241,19 +228,19 @@ Preferable option is to use di::make_injector because it allows to bind dynamic 
 
 Injector
 
-* create
+* `create`
 ```
     template<typename T, typename... TPolicies>
     T create(TPolicies&&...);
 ```
 
-* visit
+* `visit`
 ```
     template<typename T>
     void visit();
 ```
 
-* call
+* `call`
 ```
     template<typename TAction>
     void call(const TAction&);
