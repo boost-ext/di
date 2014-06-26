@@ -89,17 +89,27 @@ The macros listed in the table below may be used to control the behaviour of Boo
 
   [
     [`BOOST_DI_CFG_INJECT_VA_ARGS`]
-    [ default: `enabled when C++11` ]
+    [ default: `enabled when C++11`]
   ]
 
   [
     [`BOOST_DI_CFG_INJECT_BRACKET`]
-    [ default: `enabled when C++03` ]
+    [ default: `enabled when C++03`]
+  ]
+
+  [
+    [`BOOST_DI_CFG_STD_SMART_PTR`]
+    [ default: `enabled if supported by compiler`]
+  ]
+
+  [
+    [`BOOST_DI_CFG_BOOST_SMART_PTR`]
+    [ default: `enabled if std smart ptr aren't supported by compiler`]
   ]
 
   [
     [`BOOST_DI_INJECTOR`]
-    [ default: `boost_di_injector__` ]
+    [ default: `boost_di_injector__`]
   ]
 ]
 

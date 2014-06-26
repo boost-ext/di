@@ -13,6 +13,9 @@ Synopsis
         public:
             template<typename... T>
             result_type create(T&&... args);
+
+            template<typename TAction>
+            void call(const TAction&);
         };
     };
 ```
@@ -136,15 +139,136 @@ Refer to `Scopes Conversions` table.
 [endsect]
 
 [section Shared]
+
+[h5 Synopsis]
+```
+    template<template<typename> class TWrapper = wrappers::shared>
+    class shared {
+    public:
+        typedef mpl::int_<0> priority;
+
+        template<typename TExpected, typename TGiven = TExpected>
+        class scope {
+        public:
+            template<typename... TArgs>
+            TWrapper<TExpected, TGiven> create(TArgs&&...);
+        };
+    };
+```
+
+[h5 Description]
+
+Scope representing shared/session value, meaning passed value will be shared between all given instances.
+Boost.DI to achieve that is using smart shared pointers. This scope will be deduced in case of shared ptr.
+[note Shared scope will convert between std::shared_ptr and boost::shared_ptr if required.
+ Primary smart pointer might be set by `BOOST_DI_CFG_STD_SMART_PTR` and `BOOST_DI_CFG_BOOST_SMART_PTR`.
+ Only primary smart pointer will be able to be converted to weak_ptr.
+]
+[h5 Example]
+
+```
+    shared<di::bind_int<42>>()
+    shared<di::bind<interface, implementation>>()
+```
+
+[h5 Conversions]
+Refer to `Scopes Conversions` table.
+
 [endsect]
 
 [section Session]
+
+[h5 Synopsis]
+```
+    template<template<typename> class TWrapper = wrappers::shared>
+    class session {
+    public:
+        typedef mpl::int_<0> priority;
+
+        template<typename TExpected, typename TGiven = TExpected>
+        class scope {
+        public:
+            template<typename... TArgs>
+            TWrapper<TExpected, TGiven> create(TArgs&&...);
+
+            void call(const session_entry&);
+            void call(const session_exit&);
+        };
+    };
+```
+
+[h5 Description]
+
+Scope representing shared value, meaning passed value will be shared between all given instances
+and will be empty if it won't be in scope.
+Scope is activated by call of `call` method with `session_entry` parameter and deactivated by call of `call` method with `session_exit` parameter;
+
+[h5 Example]
+
+```
+    session<di::bind_int<42>>()
+    session<di::bind<interface, implementation>>()
+```
+
+```
+    auto injector = di::make_injector(
+        shared<bind<interface, implementation>>()
+    );
+
+    assert(!injector.create<std::unique_ptr<interface>>())
+
+    injector.call(di::scopes::session_entry());
+    assert(injector.create<std::unique_ptr<interface>>())
+
+    injector.call(di::scopes::session_exit());
+    assert(!injector.create<std::unique_ptr<interface>>())
+```
+
+[h5 Conversions]
+Refer to `Scopes Conversions` table.
 [endsect]
 
 [section Custom]
+
+Implementation of custom scope requires
+
+* Implementation of the scope
+* [optional] mapping to DSL binding to easier usage (custom_scope<...>)
+
+```
+class custom_scope {
+public:
+    typedef boost::mpl::int_<0> priority;
+
+    template<typename TExpected, typename TGiven>
+    class scope {
+    public:
+        typedef scope type;
+        typedef di::wrappers::shared result_type;
+
+        template<typename... Args>
+        result_type create(Args&&... args) {
+            return std::make_shared<TGiven>(std::forward(args)...);
+        }
+    };
+};
+
+namespace di {
+
+template<typename... T>
+struct custom_scope
+    : scope< ::custom_scope >::bind<T...>
+{ };
+
+} // namespace di
+
+```
+
 [endsect]
 
-[table Scopes Conversions
+[h6 Scopes Conversions]
+
+[table
     [[Type][external][session][shared][unique]]
     [[T][X][X][X][X]]
     [[T*][X][X][X][X]]
