@@ -104,7 +104,7 @@ The macros listed in the table below may be used to control the behaviour of Boo
 
   [
     [`BOOST_DI_CFG_BOOST_SMART_PTR`]
-    [ default: `enabled if std smart ptr aren't supported by compiler`]
+    [ default: `enabled if std smart ptr are not supported by compiler`]
   ]
 
   [

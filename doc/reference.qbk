@@ -35,6 +35,7 @@ This header exists simply as a convenience to the user, including all of the hea
 [endsect]
 
 [section Header <boost/di/inject.hpp>]
+
 [endsect]
 
 [section Header <boost/di/injector.hpp>]
@@ -143,42 +144,273 @@ This header exists simply as a convenience to the user, including all of the hea
 [section Type Traits]
 
 [section Header <boost/di/type_traits/create_traits.hpp>]
+```
+namespace boost {
+namespace di {
+namespace type_traits {
+
+template<typename, typename = void>
+struct is_mpl_string;
+
+template<typename T>
+struct is_explicit;
+
+template<typename TExpected, typename TGiven>
+typename disable_if<is_explicit<TGiven>, TExpected*>::type
+create_traits();
+
+template<typename TExpected, typename TGiven>
+typename enable_if<has_value<TGiven>, TExpected*>::type
+create_traits();
+
+template<typename TExpected, typename TGiven>
+typename enable_if<is_mpl_string<TGiven>, TExpected*>::type
+create_traits();
+
+template<typename TExpected, typename TGiven, typename TArgs...>
+TExpected* create_traits(TArgs&&...);
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+```
 [endsect]
 
 [section Header <boost/di/type_traits/ctor_traits.hpp>]
+```
+namespace boost {
+namespace di {
+
+namespace detail {
+
+struct any_type;
+
+template<typename T>
+struct get_value;
+
+template<typename T>
+struct get_longest_ctor;
+
+} // namespace detail
+
+namespace type_traits {
+
+template<typename T, typename = void>
+struct ctor_traits;
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+```
 [endsect]
 
 [section Header <boost/di/type_traits/has_call.hpp>]
+```
+namespace boost {
+namespace di {
+namespace type_traits {
+
+namespace detail {
+
+template<typename T>
+class has_call_impl;
+
+} // namespace detail
+
+template<
+    typename T
+  , typename TAction
+>
+class has_call;
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+```
 [endsect]
 
 [section Header <boost/di/type_traits/has_call_operator.hpp>]
+```
+namespace boost {
+namespace di {
+namespace type_traits {
+
+template<typename T>
+class has_call_operator;
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+```
+[endsect]
+
+[section Header <boost/di/type_traits/has_configure.hpp>]
+```
+namespace boost {
+namespace di {
+namespace type_traits {
+
+template<typename T>
+class has_configure;
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+```
 [endsect]
 
 [section Header <boost/di/type_traits/has_ctor.hpp>]
+```
+namespace boost {
+namespace di {
+namespace type_traits {
+
+template<typename T, typename TArgumentsSize>
+class has_ctor;
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+```
 [endsect]
 
 [section Header <boost/di/type_traits/has_injector.hpp>]
+```
+namespace boost {
+namespace di {
+namespace type_traits {
+
+template<typename T>
+class BOOST_PP_CAT(has_, BOOST_DI_INJECTOR);
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+```
 [endsect]
 
 [section Header <boost/di/type_traits/has_value.hpp>]
+```
+namespace boost {
+namespace di {
+namespace type_traits {
+
+template<typename T>
+class has_value;
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+```
 [endsect]
 
 [section Header <boost/di/type_traits/is_convertible_to_ref.hpp>]
+```
+namespace boost {
+namespace di {
+namespace type_traits {
+
+namespace detail {
+
+template<
+    typename T
+  , typename TSignature
+>
+class is_convertible;
+
+} // namespace detail
+
+template<
+    typename TValueType
+  , typename T
+>
+struct is_convertible_to_ref;
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+```
 [endsect]
 
 [section Header <boost/di/type_traits/is_same_base_of.hpp>]
+```
+namespace boost {
+namespace di {
+namespace type_traits {
+
+template<typename T, typename U = mpl::_1>
+struct is_same_base_of
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+```
 [endsect]
 
 [section Header <boost/di/type_traits/make_plain.hpp>]
+```
+namespace boost {
+namespace di {
+namespace type_traits {
+
+template<typename T>
+struct make_plain;
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+```
 [endsect]
 
 [section Header <boost/di/type_traits/parameter_types.hpp>]
+```
+namespace boost {
+namespace di {
+namespace type_traits {
+
+template<typename R, TArgs...>
+struct parameter_types<R(*)(TArgs...)>;
+
+template<typename R, typename T, TArgs...>
+struct parameter_types<R(T::*)(TArgs...)>;
+
+template<typename R, typename T, TArgs...>
+struct parameter_types<R(T::*)(TArgs...) const>;
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+```
 [endsect]
 
 [section Header <boost/di/type_traits/remove_accessors.hpp>]
+```
+namespace boost {
+namespace di {
+namespace type_traits {
+
+template<typename T>
+struct remove_accessors;
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+```
 [endsect]
 
 [section Header <boost/di/type_traits/scope_traits.hpp>]
+```
+namespace boost {
+namespace di {
+namespace type_traits {
+
+template<typename>
+struct scope_traits;
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+```
 [endsect]
 
 [endsect]
@@ -186,18 +418,219 @@ This header exists simply as a convenience to the user, including all of the hea
 [section Wrappers]
 
 [section Header <boost/di/wrappers/copy.hpp>]
+```
+namespace boost {
+namespace di {
+namespace wrappers {
+
+template<typename T>
+class copy {
+public:
+    template<typename TValueType>
+    copy(const TValueType&); // non explicit
+
+    template<typename I>
+    I operator()(const type<I>&, typename disable_if<is_polymorphic<I> >::type* = 0) const;
+
+    template<typename I>
+    I* operator()(const type<I*>&) const;
+
+    template<typename I>
+    const I* operator()(const type<const I*>&) const;
+
+    template<typename I>
+    aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const;
+
+    template<typename I>
+    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) const;
+
+    template<typename I>
+    aux::auto_ptr<I> operator()(const type<aux::auto_ptr<I> >&) const;
+
+    template<typename I>
+    aux::unique_ptr<I> operator()(const type<aux::unique_ptr<I> >&) const;
+};
+
+} // namespace wrappers
+} // namespace di
+} // namespace boost
+```
 [endsect]
 
 [section Header <boost/di/wrappers/reference.hpp>]
+```
+namespace boost {
+namespace di {
+namespace wrappers {
+
+template<typename T>
+class reference {
+public:
+    reference(const reference_wrapper<T>&); // non explicit
+
+    T& operator()(const type<T&>&) const;
+};
+} // namespace wrappers
+} // namespace di
+} // namespace boost
+```
 [endsect]
 
 [section Header <boost/di/wrappers/shared.hpp>]
+```
+namespace boost {
+namespace di {
+namespace wrappers {
+
+template<typename T>
+class shared {
+public:
+    shared() { }
+    shared(const aux::shared_ptr<T>&); // non explicit
+
+    bool operator!() const;
+    void reset(T* = 0);
+
+    template<typename I>
+    aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const;
+
+    template<typename I>
+    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) const;
+
+    template<typename I>
+    aux::weak_ptr<I> operator()(const type<aux::weak_ptr<I> >&) const;
+};
+
+} // namespace wrappers
+} // namespace di
+} // namespace boost
+```
 [endsect]
 
 [section Header <boost/di/wrappers/universal.hpp>]
+```
+namespace boost {
+namespace di {
+namespace wrappers {
+
+namespace detail {
+
+template<typename T>
+class universal_impl {
+public:
+    template<typename TValueType>
+    universal(std::vector<aux::shared_ptr<void> >&, const TValueType&);
+
+    operator T() const;
+};
+
+template<typename T>
+class universal_impl<aux::auto_ptr<T> > {
+public:
+    template<typename TValueType>
+    universal_impl(std::vector<aux::shared_ptr<void> >&, const TValueType&);
+
+    operator aux::auto_ptr<T>&();
+};
+
+template<typename T>
+class universal_impl<const T&> {
+public:
+    template<typename TValueType>
+    universal(std::vector<aux::shared_ptr<void> >&, const TValueType&);
+
+    operator const T&() const;
+};
+
+template<typename T, typename TName>
+class universal_impl<named<T, TName> > {
+public:
+    template<typename TValueType>
+    universal(std::vector<aux::shared_ptr<void> >&, const TValueType&);
+
+    operator T() const;
+    operator named<T, TName>() const;
+};
+
+template<typename T, typename TName>
+class universal_impl<named<const T&, TName> > {
+public:
+    template<typename TValueType>
+    universal(std::vector<aux::shared_ptr<void> >&, const TValueType&);
+
+    operator named<const T&, TName>() const;
+};
+
+template<typename T, typename TName>
+class universal_impl<const named<T, TName>&> {
+public:
+    template<typename TValueType>
+    universal(std::vector<aux::shared_ptr<void> >&, const TValueType&);
+
+    operator const named<T, TName>&() const;
+};
+
+template<typename T, typename TName>
+class universal_impl<const named<const T&, TName>&> {
+public:
+    template<typename TValueType>
+    universal(std::vector<aux::shared_ptr<void> >&, const TValueType&);
+
+    operator const named<const T&, TName>&() const;
+};
+
+} // namespace detail
+
+template<typename T>
+class universal : public detail::universal_impl<T> {
+public:
+    typedef universal type;
+    typedef T element_type;
+
+    template<typename TValueType>
+    universal(std::vector<aux::shared_ptr<void> >&, const TValueType&);
+};
+
+} // namespace wrappers
+} // namespace di
+} // namespace boost
+```
 [endsect]
 
 [section Header <boost/di/wrappers/value.hpp>]
+```
+namespace boost {
+namespace di {
+namespace wrappers {
+
+template<typename T>
+class value {
+public:
+    value(const T& value); // non explicit
+
+    T operator()(const type<T>&) const;
+    T&& operator()(const type<T&&>&);
+
+    T* operator()(const type<T*>&) const;
+    const T* operator()(const type<const T*>&) const;
+
+    template<typename I>
+    aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const;
+
+    template<typename I>
+    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) const;
+
+    template<typename I>
+    aux::auto_ptr<I> operator()(const type<aux::auto_ptr<I> >&) const;
+
+    template<typename I>
+    aux::unique_ptr<I> operator()(const type<aux::unique_ptr<I> >&) const;
+};
+
+} // namespace wrappers
+} // namespace di
+} // namespace boost
+```
 [endsect]
 
 [endsect]
