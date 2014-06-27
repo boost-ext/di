@@ -7,7 +7,7 @@ This is not an official Boost library yet and there is no guarantee it will ever
 ## Introduction
 Dependency Injection is C++03/C++11 header only library providing compile time, macro free constructor dependency injection functionality.
 
-## Hello World
+### Hello World
 
 ```cpp
 #include <boost/di.hpp>
@@ -48,7 +48,7 @@ int main() {
 }
 ```
 
-## Binding
+### Binding
 ```cpp
 #include <boost/di.hpp>
 
