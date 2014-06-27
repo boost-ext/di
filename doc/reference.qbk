@@ -35,19 +35,78 @@ This header exists simply as a convenience to the user, including all of the hea
 [endsect]
 
 [section Header <boost/di/inject.hpp>]
-
+```
+#define BOOST_DI_INJECT_TRAITS(...);
+#define BOOST_DI_INJECT(type, ...);
+```
 [endsect]
 
 [section Header <boost/di/injector.hpp>]
+```
+namespace boost {
+namespace di {
+
+template<typename... T>
+class injector {
+public:
+    typedef TDependecies deps;
+
+    template<typename... TArgs>
+    explicit injector(TArg&&...);
+
+    template<typename T, typename... TPolicies>
+    T create(TPolicies&&...);
+
+    template<typename T, typename Visitor>
+    T visit(const Visitor&);
+
+    template<typename TAction>
+    void call(const TAction&);
+};
+
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/mt/injector_mt.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/make_injector.hpp>]
+```
+namespace boost {
+namespace di {
+
+template<typename... TArgs>
+injector<typename detail::concepts<mpl::vector<TArgs...>>::type>
+inline make_injector(TArgs&&...);
+
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/mt/make_injector_mt.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/named.hpp>]
 [endsect]
 
 [section Header <boost/di/provider.hpp>]
+```
+namespace boost {
+namespace di {
+
+template<typename T>
+class provider {
+public:
+    virtual ~provider() { }
+    virtual T get() const = 0;
+};
+
+} // namespace di
+} // namespace boost
+```
 [endsect]
 
 [endsect]
@@ -55,18 +114,240 @@ This header exists simply as a convenience to the user, including all of the hea
 [section Core]
 
 [section Header <boost/di/core/binder.hpp>]
+```
+namespace boost {
+namespace di {
+namespace core {
+
+template<
+    typename TDependecies
+  , typename TBuilder = builder
+>
+class binder {
+public:
+    explicit binder(const TBuilder& = TBuilder());
+
+    template<
+        typename T
+      , typename TCallStack
+      , typename TDefault =
+            ::boost::di::concepts::dependency<
+                typename type_traits::scope_traits<T>::type
+              , typename type_traits::make_plain<T>::type
+            >
+    >
+    struct resolve;
+
+    template<
+        typename T
+      , typename TCtor
+      , typename TCallStack
+      , typename TDependency
+      , typename TCreator
+      , typename TDeps
+      , typename TRefs
+      , typename TVisitor
+      , typename TPolicies
+    >
+    wrappers::universal<T> resolve_impl(TCreator&, TDeps&, TRefs&, const TVisitor&, const TPolicies&);
+};
+
+} // namespace core
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/ut/core/binder_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/core/builder.hpp>]
+```
+namespace boost {
+namespace di {
+namespace core {
+
+class builder {
+public:
+    explicit builder(const scopes_type& = scopes_type());
+
+    template<
+        typename T
+      , typename TCtor
+      , typename TCallStack
+      , typename TDependency
+      , typename TCreator
+      , typename TDeps
+      , typename TRefs
+      , typename TVisitor
+      , typename TPolicies
+    >
+    wrappers::universal<T> build(TCreator&, TDeps&, TRefs&, const TVisitor&, const TPolicies&);
+};
+
+} // namespace core
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/ut/core/builder_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/core/creator.hpp>]
+```
+namespace boost {
+namespace di {
+namespace core {
+
+template<
+    typename TDependecies = mpl::vector0<>
+  , template<
+        typename
+      , typename = ::boost::di::core::builder
+    > class TBinder = binder
+>
+class creator {
+    template<
+        typename T
+      , typename TCallStack
+      , typename TDeps
+      , typename TRefs
+      , typename TVisitor
+      , typename TPolicies
+    >
+    class eager_creator {
+    public:
+        eager_creator(creator&, TDeps&, TRefs&, const TVisitor&, const TPolicies&);
+
+        template<
+            typename U
+          , typename = typename disable_if<
+                type_traits::is_same_base_of<
+                    typename type_traits::make_plain<U>::type
+                  , typename type_traits::make_plain<T>::type
+                >
+            >::type
+        >
+        operator U();
+    };
+
+public:
+    explicit creator(const TBinder<TDependecies>& = TBinder<TDependecies>());
+
+    template<
+        typename T
+      , typename TParent // to ignore copy/move ctor
+      , typename TCallStack
+      , typename TDeps
+      , typename TRefs
+      , typename TVisitor
+      , typename TPolicies
+    >
+    eager_creator<TParent, TCallStack, TDeps, TRefs, TVisitor, TPolicies>
+    create(TDeps&, TRefs&, const TVisitor&, const TPolicies&, typename enable_if<is_same<T, detail::any_type> >::type* = 0);
+
+    template<
+        typename T
+      , typename // TParent - not needed
+      , typename TCallStack
+      , typename TDeps
+      , typename TRefs
+      , typename TVisitor
+      , typename TPolicies
+    >
+    wrappers::universal<T> create(TDeps&, TRefs&, const TVisitor& , const TPolicies&, typename disable_if<is_same<T, detail::any_type> >::type* = 0);
+};
+
+} // namespace core
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/ut/core/creator_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/core/module.hpp>]
+```
+namespace boost {
+namespace di {
+namespace core {
+
+template<
+    typename TDependecies = mpl::vector0<>
+  , template<
+        typename
+      , template<typename, typename> class = ::boost::di::core::binder
+    > class TCreator = creator
+  , template<
+        typename = ::boost::mpl::vector0<>
+      , typename = ::boost::di::core::never< ::boost::mpl::_1 >
+      , typename = void
+    > class TPool = pool
+>
+class module {
+public:
+    typedef TDependecies deps;
+
+    template<typename... TArgs>
+    explicit module(TArg&&...);
+
+    template<typename T, typename... TPolicies>
+    T create(TPolicies&&...);
+
+    template<typename T, typename Visitor>
+    T visit(const Visitor&);
+
+    template<typename TAction>
+    void call(const TAction&);
+};
+
+} // namespace core
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/mt/core/module_mt.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/core/pool.hpp>]
+```
+namespace boost {
+namespace di {
+namespace core {
+
+class init { };
+
+template<typename>
+struct never;
+
+template<
+    typename TSeq = mpl::vector0<>
+  , typename TIgnore = never<mpl::_1>
+>
+class pool {
+public:
+    typedef TSeq types;
+
+    template<typename... T>
+    explicit pool(T&&...);
+
+    template<typename T>
+    explicit pool(const pool<T>&, const init&);
+
+    template<typename T>
+    const T& get() const;
+};
+
+} // namespace core
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/ut/core/pool_ut.cpp]]]
+]
 [endsect]
 
 [endsect]
@@ -238,7 +519,7 @@ public:
 
     template<typename T>
     static dependency<shared_type, expected, T>
-    to(const aux::shared_ptr<T>&);
+    to(const std::shared_ptr<T>&);
 };
 
 } // namespace concepts
@@ -1007,16 +1288,16 @@ public:
     const I* operator()(const type<const I*>&) const;
 
     template<typename I>
-    aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const;
+    std::shared_ptr<I> operator()(const type<std::shared_ptr<I> >&) const;
 
     template<typename I>
-    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) const;
+    shared_ptr<I> operator()(const type<shared_ptr<I> >&) const;
 
     template<typename I>
-    aux::auto_ptr<I> operator()(const type<aux::auto_ptr<I> >&) const;
+    std::auto_ptr<I> operator()(const type<std::auto_ptr<I> >&) const;
 
     template<typename I>
-    aux::unique_ptr<I> operator()(const type<aux::unique_ptr<I> >&) const;
+    std::unique_ptr<I> operator()(const type<std::unique_ptr<I> >&) const;
 };
 
 } // namespace wrappers
@@ -1060,19 +1341,19 @@ template<typename T>
 class shared {
 public:
     shared() { }
-    shared(const aux::shared_ptr<T>&); // non explicit
+    shared(const std::shared_ptr<T>&); // non explicit
 
     bool operator!() const;
     void reset(T* = 0);
 
     template<typename I>
-    aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const;
+    std::shared_ptr<I> operator()(const type<std::shared_ptr<I> >&) const;
 
     template<typename I>
-    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) const;
+    shared_ptr<I> operator()(const type<shared_ptr<I> >&) const;
 
     template<typename I>
-    aux::weak_ptr<I> operator()(const type<aux::weak_ptr<I> >&) const;
+    std::weak_ptr<I> operator()(const type<std::weak_ptr<I> >&) const;
 };
 
 } // namespace wrappers
@@ -1096,25 +1377,25 @@ template<typename T>
 class universal_impl {
 public:
     template<typename TValueType>
-    universal(std::vector<aux::shared_ptr<void> >&, const TValueType&);
+    universal(std::vector<std::shared_ptr<void> >&, const TValueType&);
 
     operator T() const;
 };
 
 template<typename T>
-class universal_impl<aux::auto_ptr<T> > {
+class universal_impl<std::auto_ptr<T> > {
 public:
     template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void> >&, const TValueType&);
+    universal_impl(std::vector<std::shared_ptr<void> >&, const TValueType&);
 
-    operator aux::auto_ptr<T>&();
+    operator std::auto_ptr<T>&();
 };
 
 template<typename T>
 class universal_impl<const T&> {
 public:
     template<typename TValueType>
-    universal(std::vector<aux::shared_ptr<void> >&, const TValueType&);
+    universal(std::vector<std::shared_ptr<void> >&, const TValueType&);
 
     operator const T&() const;
 };
@@ -1123,7 +1404,7 @@ template<typename T, typename TName>
 class universal_impl<named<T, TName> > {
 public:
     template<typename TValueType>
-    universal(std::vector<aux::shared_ptr<void> >&, const TValueType&);
+    universal(std::vector<std::shared_ptr<void> >&, const TValueType&);
 
     operator T() const;
     operator named<T, TName>() const;
@@ -1133,7 +1414,7 @@ template<typename T, typename TName>
 class universal_impl<named<const T&, TName> > {
 public:
     template<typename TValueType>
-    universal(std::vector<aux::shared_ptr<void> >&, const TValueType&);
+    universal(std::vector<std::shared_ptr<void> >&, const TValueType&);
 
     operator named<const T&, TName>() const;
 };
@@ -1142,7 +1423,7 @@ template<typename T, typename TName>
 class universal_impl<const named<T, TName>&> {
 public:
     template<typename TValueType>
-    universal(std::vector<aux::shared_ptr<void> >&, const TValueType&);
+    universal(std::vector<std::shared_ptr<void> >&, const TValueType&);
 
     operator const named<T, TName>&() const;
 };
@@ -1151,7 +1432,7 @@ template<typename T, typename TName>
 class universal_impl<const named<const T&, TName>&> {
 public:
     template<typename TValueType>
-    universal(std::vector<aux::shared_ptr<void> >&, const TValueType&);
+    universal(std::vector<std::shared_ptr<void> >&, const TValueType&);
 
     operator const named<const T&, TName>&() const;
 };
@@ -1165,7 +1446,7 @@ public:
     typedef T element_type;
 
     template<typename TValueType>
-    universal(std::vector<aux::shared_ptr<void> >&, const TValueType&);
+    universal(std::vector<std::shared_ptr<void> >&, const TValueType&);
 };
 
 } // namespace wrappers
@@ -1195,16 +1476,16 @@ public:
     const T* operator()(const type<const T*>&) const;
 
     template<typename I>
-    aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const;
+    std::shared_ptr<I> operator()(const type<std::shared_ptr<I> >&) const;
 
     template<typename I>
-    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) const;
+    shared_ptr<I> operator()(const type<shared_ptr<I> >&) const;
 
     template<typename I>
-    aux::auto_ptr<I> operator()(const type<aux::auto_ptr<I> >&) const;
+    std::auto_ptr<I> operator()(const type<std::auto_ptr<I> >&) const;
 
     template<typename I>
-    aux::unique_ptr<I> operator()(const type<aux::unique_ptr<I> >&) const;
+    std::unique_ptr<I> operator()(const type<std::unique_ptr<I> >&) const;
 };
 
 } // namespace wrappers

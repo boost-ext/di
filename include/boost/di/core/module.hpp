@@ -124,11 +124,11 @@
     // module<....>      -> get all dependencies from the module
     // dependency<....>  -> pass
 
-    template<BOOST_DI_TYPES(Args)>
-    explicit module(BOOST_DI_ARGS(Args, args))
+    template<BOOST_DI_TYPES(TArgs)>
+    explicit module(BOOST_DI_ARGS(TArgs, args))
         : TPool<deps>(
               TPool<
-                  BOOST_DI_MPL_VECTOR_TYPES_PASS(Args)
+                  BOOST_DI_MPL_VECTOR_TYPES_PASS(TArgs)
                 , mpl::not_<
                       mpl::or_<
                           mpl::contains<deps, mpl::_>
@@ -140,14 +140,14 @@
           )
     { }
 
-    template<typename T, BOOST_DI_TYPES(Args)>
-    T create(BOOST_DI_ARGS(Args, args)) {
+    template<typename T, BOOST_DI_TYPES(TPolicies)>
+    T create(BOOST_DI_ARGS(TPolicies, policies)) {
         typedef mpl::vector0<> call_stack;
-        TPool<BOOST_DI_MPL_VECTOR_TYPES_PASS(Args)> policies(BOOST_DI_ARGS_PASS(args));
+        TPool<BOOST_DI_MPL_VECTOR_TYPES_PASS(TPolicies)> policies_(BOOST_DI_ARGS_PASS(policies));
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies
+            static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
         );
     }
 

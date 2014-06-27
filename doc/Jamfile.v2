@@ -29,4 +29,6 @@ install html/test/ut/policies : [ glob ../test/ut/policies/*.cpp ] ;
 install html/test/ut/scopes : [ glob ../test/ut/scopes/*.cpp ] ;
 install html/test/ut/type_traits : [ glob ../test/ut/type_traits/*.cpp ] ;
 install html/test/ut/wrappers : [ glob ../test/ut/wrappers/*.cpp ] ;
+install html/test/mt : [ glob ../test/mt/*.cpp ] ;
+install html/test/mt/core : [ glob ../test/mt/core/*.cpp ] ;
 

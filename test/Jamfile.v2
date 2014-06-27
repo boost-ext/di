@@ -145,8 +145,8 @@ test-suite ut : # unit tests
 ;
 
 test-suite mt : # module tests
-    [ run-test c++11 : mt/detail/module_mt.cpp : : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
-    [ run-test c++11 : mt/detail/module_mt.cpp : ctor_module_mt : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
+    [ run-test c++11 : mt/core/module_mt.cpp : : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
+    [ run-test c++11 : mt/core/module_mt.cpp : ctor_module_mt : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
 
     [ run-test c++11 : mt/injector_mt.cpp : : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
     [ run-test c++11 : mt/injector_mt.cpp : ctor_injector_mt : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
