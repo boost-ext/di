@@ -1,5 +1,70 @@
 [section Design Rationale]
 
+Basic design of Boost.DI involves two main concepts:
+
+* verifying how many arguments constructor has using `has_ctor`
+* conversion to requested type using `type conversion operator`
+
+```
+struct any_type {
+    template<typename U> operator U();
+};
+
+template<typename T, typename... TArgs>
+struct has_ctor {
+    template<typename U> static yes_tag test(decltype(U(TArgs()...)*);
+    template<typename> static no_tag test(...);
+
+    static const bool value = sizeof(test<T>(0)) == sizeof(yes_tag);
+};
+
+struct converter {
+    template<typename T> operator T() {
+        return T();
+    }
+};
+
+class injector {
+    template<typename T>
+    struct ctor {
+        constexpr int max() const {
+            for (auto i = MAX_CTOR_SIZE; i > 0; --i) {
+                if (has_ctor<T, mpl::int_<i>>::value) {
+                    return i;
+                }
+            }
+
+            return 0;
+        }
+    };
+
+public:
+    template<typename T>
+    T create() const {
+        return create_impl<T, generate_converters<ctor<T>::max()>>();
+    }
+
+private:
+    template<typename T, typename... TConverters>
+    T create_impl() const {
+        return T(TConverters()...);
+    }
+};
+
+struct example {
+    example(int i, int double) { }
+};
+
+injector().create<example>();
+```
+[note Purpose of above pseudo code is to illustrate basic idea, if you interested in the implementation details take a look into Boost.DI source code.]
+[table
+    [[Tests: [@test/vt/compiler_support_vt.cpp]]]
+]
+
+That's the main idea, obviously Boost.DI is more complex that that.
+The latest design is shown below.
+
 [@images/di.png [$images/di.png [width 75%] [height 75%] ]]
 Generated with [@http://plantuml.sourceforge.net PlantUML].
 
@@ -30,8 +95,6 @@ Boost.DI architecture might be split into few main parts
 # for type T
     # for all dependencies
     # if scope was set to `deduce` rebind it accordingly to type definition (using `scope traits - see deduce scope`)
-
-
 
 [h5 Type Creation Algorithm]
 

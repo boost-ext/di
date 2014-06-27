@@ -20,6 +20,7 @@ install html/example/cpp_11 : [ glob ../example/cpp_11/*.cpp ] ;
 install html/example/cpp_14 : [ glob ../example/cpp_14/*.cpp ] ;
 install html/example/cpp_14/tutorial : [ glob ../example/cpp_14/tutorial/*.cpp ] ;
 
+install html/test/vt : [ glob ../test/vt/*.cpp ] ;
 install html/test/ut : [ glob ../test/ut/*.cpp ] ;
 install html/test/ut/concepts : [ glob ../test/ut/concepts/*.cpp ] ;
 install html/test/ut/concepts/detail : [ glob ../test/ut/concepts/detail/*.cpp ] ;
