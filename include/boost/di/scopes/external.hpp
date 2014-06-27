@@ -33,7 +33,6 @@
             typedef scope type;
             typedef TWrapper<TExpected> result_type;
 
-        public:
             template<typename T>
             explicit scope(const T& object
                          , typename enable_if_c<type_traits::has_call_operator<T>::value>::type* = 0)

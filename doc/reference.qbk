@@ -74,53 +74,491 @@ This header exists simply as a convenience to the user, including all of the hea
 [section Concepts]
 
 [section Header <boost/di/concepts.hpp>]
+```
+namespace boost {
+namespace di {
+
+template<typename TExpected, typename TGiven = TExpected>
+struct bind;
+
+template<int N>
+struct bind_int;
+
+template<typename T>
+struct bind_string;
+
+template<typename TScope>
+struct scope;
+
+template<typename... T>
+struct deduce;
+
+template<typename... T>
+struct unique
+
+template<typename... T>
+struct shared;
+
+template<typename... T>
+struct session;
+
+template<typename... T>
+struct call_stack;
+
+template<typename... T>
+struct any_of;
+
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/ut/concepts_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/concepts/bind.hpp>]
+```
+namespace boost {
+namespace di {
+namespace concepts {
+
+template<
+    typename TExpected
+  , typename TGiven
+  , template<
+        typename
+      , typename
+      , typename
+      , typename
+    > class TDependency
+>
+struct bind {
+    template<typename... T>
+    struct when {
+        template<typename TName>
+        struct named;
+    };
+
+    template<typename TName>
+    struct named {
+        template<typename... T>
+        struct when;
+    };
+};
+
+} // namespace concepts
+} // namespace di
+} // namespace boost
+```
 [endsect]
 
 [section Header <boost/di/concepts/call_stack.hpp>]
+```
+namespace boost {
+namespace di {
+namespace concepts {
+
+template<typename... T>
+class call_stack {
+public:
+    template<typename T>
+    struct apply;
+};
+
+} // namespace concepts
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/ut/concepts/call_stack_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/concepts/dependency.hpp>]
-[endsect]
+```
+namespace boost {
+namespace di {
+namespace concepts {
 
-[section Header <boost/di/concepts/detail/requires.hpp>]
-[endsect]
+template<
+    typename TScope
+  , typename TExpected
+  , typename TGiven = TExpected
+  , typename TBind =
+        detail::requires_<
+            concepts::type_traits::is_required_priority
+          , concepts::type_traits::is_required_type<TExpected>
+        >
+>
+class dependency {
+    typedef scopes::external<wrappers::reference> ref_type;
+    typedef scopes::external<wrappers::shared> shared_type;
+    typedef scopes::external<wrappers::value> value_type;
 
-[section Header <boost/di/concepts/detail/when.hpp>]
+public:
+    typedef dependency type;
+    typedef typename detail::scope_traits<TScope>::type scope;
+    typedef TExpected expected;
+    typedef TGiven given;
+    typedef TBind bind;
+
+    template<typename T>
+    struct rebind {
+        typedef dependency<
+            typename mpl::if_<
+                is_same<scope, scopes::deduce>
+              , T
+              , TScope
+            >::type
+          , TExpected
+          , TGiven
+          , TBind
+        > other;
+    };
+
+    dependency();
+
+    template<typename T>
+    explicit dependency(const T&);
+
+    template<typename T>
+    static dependency<value_type, expected, T, TBind>
+    to(const T&, typename disable_if<is_reference_wrapper<T> >::type* = 0
+               , typename disable_if<di::type_traits::has_call_operator<T> >::type* = 0);
+
+    template<typename T>
+    static dependency<ref_type, typename unwrap_reference<T>::type, T, TBind>
+    to(const T&, typename enable_if<is_reference_wrapper<T> >::type* = 0
+               , typename disable_if<di::type_traits::has_call_operator<T> >::type* = 0);
+
+    template<typename T>
+    static dependency<typename get_wrapper<T>::type, expected, T, TBind>
+    to(const T&, typename disable_if<is_reference_wrapper<T> >::type* = 0
+               , typename enable_if<di::type_traits::has_call_operator<T> >::type* = 0);
+
+    template<typename T>
+    static dependency<shared_type, expected, T>
+    to(const aux::shared_ptr<T>&);
+};
+
+} // namespace concepts
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/ut/concepts/dependency_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/concepts/scope.hpp>]
+```
+namespace boost {
+namespace di {
+namespace concepts {
+
+template<
+    typename TScope
+  , template<
+        typename
+      , typename
+      , typename
+      , typename
+    > class TDependency
+>
+class scope {
+public:
+    template<typename... T>
+    struct bind;
+};
+
+} // namespace concepts
+} // namespace di
+} // namespace boost
+```
+[endsect]
+
+[section Header <boost/di/concepts/detail/requires.hpp>]
+```
+namespace boost {
+namespace di {
+namespace concepts {
+namespace detail {
+
+template<typename... T
+class requires_ {
+public:
+    template<
+        typename T
+      , typename TMultiplicationFactor = mpl::integral_c<long, 10>
+    >
+    struct apply;
+};
+
+} // namespace detail
+} // namespace concepts
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/ut/concepts/detail/requires_ut.cpp]]]
+]
+[endsect]
+
+[section Header <boost/di/concepts/detail/when.hpp>]
+```
+namespace boost {
+namespace di {
+namespace concepts {
+namespace detail {
+
+template<typename TContext>
+class when_ {
+public:
+    template<typename T>
+    struct apply;
+};
+
+} // namespace detail
+} // namespace concepts
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/ut/concepts/detail/when_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/concepts/type_traits/is_required_name.hpp>]
+```
+namespace boost {
+namespace di {
+namespace concepts {
+namespace type_traits {
+
+template<typename TName>
+class is_required_name {
+public:
+    template<typename T>
+    struct apply;
+};
+
+} // namespace type_traits
+} // namespace concepts
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/ut/concepts/type_traits/is_required_name_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/concepts/type_traits/is_required_priority.hpp>]
+```
+namespace boost {
+namespace di {
+namespace concepts {
+namespace type_traits {
+
+struct is_required_priority {
+    template<typename T>
+    struct apply;
+};
+
+} // namespace type_traits
+} // namespace concepts
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/ut/concepts/type_traits/is_required_priority_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/concepts/type_traits/is_required_type.hpp>]
-[endsect]
+```
+namespace boost {
+namespace di {
+namespace concepts {
+namespace type_traits {
 
+template<typename TValueType, typename = void>
+struct is_required_type {
+    template<typename T>
+    struct apply;
+};
+
+template<typename TValueType>
+struct is_required_type<TValueType, typename enable_if<mpl::is_sequence<TValueType> >::type> {
+    template<typename T>
+    struct apply;
+};
+
+} // namespace type_traits
+} // namespace concepts
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/ut/concepts/type_traits/is_required_type_ut.cpp]]]
+]
+[endsect]
 
 [endsect]
 
 [section Scopes]
 
 [section Header <boost/di/scopes/deduce.hpp>]
+```
+namespace boost {
+namespace di {
+namespace scopes {
+
+class deduce {
+public:
+    typedef mpl::int_<0> priority;
+
+    template<typename, typename>
+    struct scope {
+        typedef none_t result_type;
+    };
+};
+
+} // namespace scopes
+} // namespace di
+} // namespace boost
+```
 [endsect]
 
 [section Header <boost/di/scopes/external.hpp>]
+```
+namespace boost {
+namespace di {
+namespace scopes {
+
+template<template<typename> class TWrapper = wrappers::value>
+class external {
+public:
+    typedef mpl::int_<1> priority;
+
+    template<typename TExpected, typename = TExpected>
+    class scope {
+    public:
+        typedef TWrapper<TExpected> result_type;
+
+        template<typename T>
+        explicit scope(const T&, typename enable_if_c<type_traits::has_call_operator<T>::value>::type* = 0);
+
+        template<typename T>
+        explicit scope(const T&, typename disable_if_c<type_traits::has_call_operator<T>::value>::type* = 0);
+
+        template<typename.. TArgs>
+        result_type create(TArgs&&...);
+    };
+};
+
+} // namespace scopes
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/ut/scopes/external_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/scopes/session.hpp>]
+```
+namespace boost {
+namespace di {
+namespace scopes {
+
+class session_entry { };
+class session_exit { };
+
+template<template<typename> class TWrapper = wrappers::shared>
+class session {
+public:
+    typedef mpl::int_<0> priority;
+
+    template<typename TExpected, typename TGiven = TExpected>
+    class scope {
+    public:
+        typedef TWrapper<TExpected> result_type;
+
+        void call(const session_entry&);
+        void call(const session_exit&);
+
+        template<typename.. TArgs>
+        result_type create(TArgs&&...);
+    };
+};
+
+} // namespace scopes
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/ut/scopes/session_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/scopes/shared.hpp>]
+```
+namespace boost {
+namespace di {
+namespace scopes {
+
+template<template<typename> class TWrapper = wrappers::shared>
+class shared {
+public:
+    typedef mpl::int_<0> priority;
+
+    template<typename TExpected, typename TGiven = TExpected>
+    class scope {
+    public:
+        typedef TWrapper<TExpected> result_type;
+
+        template<typename.. TArgs>
+        result_type create(TArgs&&...);
+    };
+};
+
+} // namespace scopes
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/ut/scopes/shared_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/scopes/unique.hpp>]
+```
+namespace boost {
+namespace di {
+namespace scopes {
+
+template<template<typename> class TWrapper = wrappers::copy>
+class unique {
+public:
+    typedef mpl::int_<0> priority;
+
+    template<typename TExpected, typename TGiven = TExpected>
+    class scope {
+    public:
+        typedef TWrapper<TExpected> result_type;
+
+        template<typename.. TArgs>
+        result_type create(TArgs&&...);
+    };
+};
+
+} // namespace scopes
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/ut/scopes/unique_ut.cpp]]]
+]
 [endsect]
 
 [endsect]
@@ -128,15 +566,104 @@ This header exists simply as a convenience to the user, including all of the hea
 [section Policies]
 
 [section Header <boost/di/policies/arguments_permission.hpp>]
+```
+namespace boost {
+namespace di {
+namespace policies {
+
+struct allow_smart_ptrs;
+struct allow_refs;
+struct allow_const_refs;
+struct allow_rvalue_refs;
+struct allow_ptrs;
+struct allow_copies;
+
+template<typename... T>
+class arguments_permission {
+public:
+    template<typename TDependency>
+    void assert_policy() const;
+};
+
+} // namespace policies
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/ut/policies/arguments_permission_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/policies/circular_dependencies.hpp>]
+```
+namespace boost {
+namespace di {
+namespace policies {
+
+class circular_dependencies {
+public:
+    template<typename TDependency>
+    void assert_policy() const;
+};
+
+} // namespace policies
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/ut/policies/circular_dependencies_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/policies/creation_ownership.hpp>]
+```
+namespace boost {
+namespace di {
+namespace policies {
+
+class creation_ownership {
+public:
+    template<typename TDependency>
+    typename disable_if<is_result_type_reference<TDependency> >::type
+    assert_policy() const;
+
+    template<typename TDependency>
+    typename enable_if<is_result_type_reference<TDependency> >::type
+    assert_policy() const;
+};
+
+} // namespace policies
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/ut/policies/creation_ownership_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/policies/scopes_permission.hpp>]
+```
+namespace boost {
+namespace di {
+namespace policies {
+
+template<typename TScope>
+struct allow_scope;
+
+template<typename... T>
+class scopes_permission {
+public:
+    template<typename TDependency>
+    void assert_policy() const;
+};
+
+} // namespace policies
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/ut/policies/scopes_permission_ut.cpp]]]
+]
 [endsect]
 
 [endsect]
@@ -174,6 +701,9 @@ TExpected* create_traits(TArgs&&...);
 } // namespace di
 } // namespace boost
 ```
+[table
+    [[Tests: [@test/ut/type_traits/create_traits_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/type_traits/ctor_traits.hpp>]
@@ -202,6 +732,9 @@ struct ctor_traits;
 } // namespace di
 } // namespace boost
 ```
+[table
+    [[Tests: [@test/ut/type_traits/ctor_traits_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/type_traits/has_call.hpp>]
@@ -227,6 +760,9 @@ class has_call;
 } // namespace di
 } // namespace boost
 ```
+[table
+    [[Tests: [@test/ut/type_traits/has_call_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/type_traits/has_call_operator.hpp>]
@@ -242,6 +778,9 @@ class has_call_operator;
 } // namespace di
 } // namespace boost
 ```
+[table
+    [[Tests: [@test/ut/type_traits/has_call_operator_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/type_traits/has_configure.hpp>]
@@ -257,6 +796,9 @@ class has_configure;
 } // namespace di
 } // namespace boost
 ```
+[table
+    [[Tests: [@test/ut/type_traits/has_configure_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/type_traits/has_ctor.hpp>]
@@ -272,6 +814,9 @@ class has_ctor;
 } // namespace di
 } // namespace boost
 ```
+[table
+    [[Tests: [@test/ut/type_traits/has_ctor_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/type_traits/has_injector.hpp>]
@@ -287,6 +832,9 @@ class BOOST_PP_CAT(has_, BOOST_DI_INJECTOR);
 } // namespace di
 } // namespace boost
 ```
+[table
+    [[Tests: [@test/ut/type_traits/has_injector_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/type_traits/has_value.hpp>]
@@ -302,6 +850,9 @@ class has_value;
 } // namespace di
 } // namespace boost
 ```
+[table
+    [[Tests: [@test/ut/type_traits/has_value_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/type_traits/is_convertible_to_ref.hpp>]
@@ -330,6 +881,9 @@ struct is_convertible_to_ref;
 } // namespace di
 } // namespace boost
 ```
+[table
+    [[Tests: [@test/ut/type_traits/is_convertible_to_ref_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/type_traits/is_same_base_of.hpp>]
@@ -345,6 +899,9 @@ struct is_same_base_of
 } // namespace di
 } // namespace boost
 ```
+[table
+    [[Tests: [@test/ut/type_traits/is_same_base_of_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/type_traits/make_plain.hpp>]
@@ -360,6 +917,9 @@ struct make_plain;
 } // namespace di
 } // namespace boost
 ```
+[table
+    [[Tests: [@test/ut/type_traits/make_plain_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/type_traits/parameter_types.hpp>]
@@ -381,6 +941,9 @@ struct parameter_types<R(T::*)(TArgs...) const>;
 } // namespace di
 } // namespace boost
 ```
+[table
+    [[Tests: [@test/ut/type_traits/parameter_types_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/type_traits/remove_accessors.hpp>]
@@ -396,6 +959,9 @@ struct remove_accessors;
 } // namespace di
 } // namespace boost
 ```
+[table
+    [[Tests: [@test/ut/type_traits/remove_accessors_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/type_traits/scope_traits.hpp>]

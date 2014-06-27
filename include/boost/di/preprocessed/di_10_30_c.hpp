@@ -599,6 +599,24 @@ public:
         : value_(value)
     { }
 
+    T operator()(const type<T>&) const {
+        return value_;
+    }
+
+    T* operator()(const type<T*>&) const {
+        return new T(value_);
+    }
+
+    const T* operator()(const type<const T*>&) const {
+        return new T(value_);
+    }
+
+    BOOST_DI_FEATURE(RVALUE_REFERENCES)(
+        T&& operator()(const type<T&&>&) {
+            return std::move(value_);
+        }
+    )
+
     template<typename I>
     aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const {
         return aux::shared_ptr<I>(new I(value_));
@@ -609,19 +627,15 @@ public:
         return aux_::shared_ptr<I>(new I(value_));
     }
 
-    T operator()(const type<T>&) const {
-  return value_;
- }
-
-    T* operator()(const type<T*>&) const {
-        return new T(value_);
+    template<typename I>
+    aux::auto_ptr<I> operator()(const type<aux::auto_ptr<I> >&) const {
+        return aux::auto_ptr<I>(new I(value_));
     }
 
-    BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-        T&& operator()(const type<T&&>&) const {
-            return std::move(value_);
-        }
-    )
+    template<typename I>
+    aux::unique_ptr<I> operator()(const type<aux::unique_ptr<I> >&) const {
+        return aux::unique_ptr<I>(new I(value_));
+    }
 
 private:
     T value_;
@@ -1562,7 +1576,6 @@ public:
             typedef scope type;
             typedef TWrapper<TExpected> result_type;
 
-        public:
             template<typename T>
             explicit scope(const T& object
                          , typename enable_if_c<type_traits::has_call_operator<T>::value>::type* = 0)
@@ -2167,6 +2180,11 @@ public:
 
     template<typename I>
     I* operator()(const type<I*>&) const {
+        return value_(); // ownership transfer
+    }
+
+    template<typename I>
+    const I* operator()(const type<const I*>&) const {
         return value_(); // ownership transfer
     }
 
@@ -6158,16 +6176,23 @@ template<
 >
 class named
 {
-    typedef typename type_traits::remove_accessors<T>::type object_type;
     typedef typename remove_reference<T>::type& ref_type;
+
+    //named& operator=(const named&);
 
 public:
     typedef T named_type;
     typedef TName name;
 
-    named(const object_type& object) // non explicit
+    named(const typename remove_reference<T>::type& object) // non explicit
         : object_(object)
     { }
+
+    BOOST_DI_FEATURE(RVALUE_REFERENCES)(
+        named(typename remove_reference<T>::type&& object) // non explicit
+            : object_(std::move(object))
+        { }
+    )
 
     operator T() const {
         return object_;
@@ -6178,7 +6203,7 @@ public:
     }
 
 private:
-    object_type object_;
+    T object_;
 };
 
 template<
@@ -6189,6 +6214,8 @@ class named<T, TName, typename enable_if<
     is_polymorphic<typename type_traits::remove_accessors<T>::type> >::type
 >
 {
+    //named& operator=(const named&);
+
 public:
     typedef T named_type;
     typedef TName name;
@@ -6202,8 +6229,9 @@ class named<T, TName, typename enable_if<
     has_element_type<typename type_traits::remove_accessors<T>::type> >::type
 >
 {
-    typedef typename type_traits::remove_accessors<T>::type object_type;
     typedef typename type_traits::make_plain<T>::type value_type;
+
+    //named& operator=(const named&);
 
 public:
     typedef T named_type;
@@ -6211,18 +6239,22 @@ public:
 
     named() { }
 
-    named(const object_type& object) // non explicit
+    named(const typename remove_reference<T>::type& object) // non explicit
         : object_(object)
     { }
 
-    named(typename object_type::element_type* ptr) // non explicit
+    named(typename type_traits::remove_accessors<T>::type::element_type* ptr) // non explicit
         : object_(ptr)
     { }
 
     BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-        named(object_type&& object) // non explicit
+        named(typename remove_reference<T>::type&& object) // non explicit
             : object_(std::move(object))
         { }
+
+        //TODO
+        template<typename I>
+        operator aux::unique_ptr<I>() { return std::move(object_); }
     )
 
     operator T() const { return object_; }
@@ -6235,12 +6267,12 @@ public:
         object_.reset();
     }
 
-    void reset(typename object_type::element_type* ptr) {
+    void reset(typename type_traits::remove_accessors<T>::type::element_type* ptr) {
         object_.reset(ptr);
     }
 
 private:
-    object_type object_;
+    T object_;
 };
 
 } // namespace di
@@ -6453,25 +6485,30 @@ class universal_impl<const named<const T&, TName>&>
 {
 public:
     template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void> >&
+    universal_impl(std::vector<aux::shared_ptr<void> >& refs
                  , const TValueType& value
                  , typename enable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : value_(boost::bind<const named<const T&, TName>&>(value, boost::type<const named<const T&, TName>&>()))
+        : refs_(refs)
+        , value_(boost::bind<const T&>(value, boost::type<const T&>()))
     { }
 
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >& refs
                  , const TValueType& value
                  , typename disable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : value_(boost::bind(&copy<named<const T&, TName>, T, TValueType>, boost::ref(refs), value))
+        : refs_(refs)
+        , value_(boost::bind(&copy<T, T, TValueType>, boost::ref(refs), value))
     { }
 
     operator const named<const T&, TName>&() const {
-        return value_();
+        aux::shared_ptr<holder<named<const T&, TName> > > object(new holder<named<const T&, TName> >(value_()));
+        refs_.push_back(object);
+        return object->held;
     }
 
 private:
-    function<const named<const T&, TName>&()> value_;
+    std::vector<aux::shared_ptr<void> >& refs_;
+    function<named<const T&, TName>()> value_;
 };
 
 } // namespace detail
@@ -7615,7 +7652,7 @@ template<typename T>
 class has_call_impl
 {
     struct base_impl { void call() { } };
-    struct base : T, base_impl { };
+    struct base : T, base_impl { base() { } };
 
     template<typename U>
     static mpl::aux::no_tag test(
@@ -8715,7 +8752,10 @@ template<typename T>
 class has_configure
 {
     struct base_impl { void configure() { } };
-    struct base : T, base_impl { };
+    struct base
+        : base_impl
+        , mpl::if_<is_class<T>, T, mpl::void_>::type
+    { base() { } };
 
     template<typename U>
     static mpl::aux::no_tag test(

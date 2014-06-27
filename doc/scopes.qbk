@@ -48,6 +48,24 @@ There are 5 basic types of wrappers.
 
 Default scope which will be converted to one of the scopes shared/unique/external accordingly to `Scope Traits`.
 
+[table Scope Traits
+    [ [Type] [Scope] ]
+    [ [T&] [external] ]
+    [ [T] [unique] ]
+    [ [const T&] [unique] ]
+    [ [T*] [unique] ]
+    [ [const T*] [unique] ]
+    [ [unique_ptr<T>] [unique] ]
+    [ [const unique_ptr<T>&] [unique] ]
+    [ [T&&] [unique] ]
+    [ [const T&&] [unique] ]
+    [ [shared_ptr<T>] [shared] ]
+    [ [const shared_ptr<T>&] [shared] ]
+    [ [weak_ptr<T>] [shared] ]
+    [ [const weak_ptr<T>&] [shared] ]
+    [ [named<T, TName>] [scope of T] ]
+]
+
 [h5 Example]
 
 ```
