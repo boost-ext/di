@@ -48,7 +48,7 @@ int main() {
 }
 ```
 
-## DI
+## Binding
 ```cpp
 #include <boost/di.hpp>
 
