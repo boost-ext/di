@@ -33,6 +33,41 @@ There are 5 basic types of wrappers.
     [[value][conversion to lvalue/rvalue/pointer/smart_pointer]]
 ]
 
+Implementation of custom scope requires
+
+* Implementation of the scope
+* [optional] mapping to DSL binding to easier usage (custom_scope<...>)
+
+```
+class custom_scope {
+public:
+    typedef boost::mpl::int_<0> priority;
+
+    template<typename TExpected, typename TGiven>
+    class scope {
+    public:
+        typedef scope type;
+        typedef di::wrappers::shared result_type;
+
+        template<typename... Args>
+        result_type create(Args&&... args) {
+            return std::make_shared<TGiven>(std::forward(args)...);
+        }
+    };
+};
+
+namespace di {
+
+template<typename... T>
+struct custom_scope
+    : scope< ::custom_scope >::bind<T...>
+{ };
+
+} // namespace di
+
+```
+
+
 [section Deduce (Default)]
 
 [h5 Synopsis]
@@ -244,44 +279,6 @@ Scope is activated by call of `call` method with `session_entry` parameter and d
 
 [h5 Conversions]
 Refer to `Scopes Conversions` table.
-[endsect]
-
-[section Custom]
-
-Implementation of custom scope requires
-
-* Implementation of the scope
-* [optional] mapping to DSL binding to easier usage (custom_scope<...>)
-
-```
-class custom_scope {
-public:
-    typedef boost::mpl::int_<0> priority;
-
-    template<typename TExpected, typename TGiven>
-    class scope {
-    public:
-        typedef scope type;
-        typedef di::wrappers::shared result_type;
-
-        template<typename... Args>
-        result_type create(Args&&... args) {
-            return std::make_shared<TGiven>(std::forward(args)...);
-        }
-    };
-};
-
-namespace di {
-
-template<typename... T>
-struct custom_scope
-    : scope< ::custom_scope >::bind<T...>
-{ };
-
-} // namespace di
-
-```
-
 [endsect]
 
 [h6 Scopes Conversions]

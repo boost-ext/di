@@ -98,16 +98,16 @@ struct allow_copies
 /**
  * @code
  * arguments_permission<>
- * struct c { c(int*); }; // error
+ * struct c { c(int*); }; // compile error
  *
  * arguments_permission<allow_refs>
- * struct c { c(int*); }; // error
+ * struct c { c(int*); }; // compile error
  *
  * arguments_permission<allow_ptrs>
- * struct c { c(int*); }; // ok
+ * struct c { c(int*); }; // compile ok
  *
  * arguments_permission<allow_copies>
- * struct c { c(std::vector<int*>); }; // error
+ * struct c { c(std::vector<int*>); }; // compile error
  *
  * @endcode
  */
@@ -153,8 +153,7 @@ class arguments_permission
     template<typename T>
     struct is_argument_permitted
         : mpl::bool_<
-              mpl::count_if<
-                  allow_types
+              mpl::count_if< allow_types
                 , mpl::and_<
                       is_argment_permitted_impl<mpl::_, T>
                     , is_argument_permitted_nested<T>

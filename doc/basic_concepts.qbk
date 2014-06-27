@@ -185,6 +185,38 @@ On top of binding to values user can bind to named parameters or using context.
     // all bindings above are equivalent
 ```
 
+* bind using custom concept
+
+Custom concepts requires `apply` class which should return compile time integer value.
+Given value will influence how dependencies will be resolved. Current algorithm might
+be found in `Design Rationale`.
+
+```
+struct longer_call_stack_first {
+    template<typename TDependency>
+    struct apply
+        : mpl::size<typename TDependency::call_stack>
+    { };
+}
+```
+
+Then concept might be used with `when` binding afterwards.
+
+```
+    auto injector = di::make_injector(
+        di::bind<int>::to(1)
+      , di::bind<int>::when<longer_call_stack_first>::to(42)
+    );
+
+    struct example {
+        explicit example(int i) : i(i){ };
+        int i = 0;
+    };
+
+    assert(1 == injector.create<int>());
+    assert(42 == injector.create<example>().i);
+```
+
 [endsect]
 
 [section Injector]

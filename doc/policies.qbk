@@ -1,30 +1,74 @@
 [section Policies]
 
+Policies are compile time components which operates on dependencies in order to limit allowed behaviour.
+Policy has to have `assert_policy` method defined.
+
+```
+class policy {
+public:
+    template<typename TDependency>
+    void assert_policy() const;
+};
+```
+
+In order for `injector` to verify policies they have to be passed to `create` method call.
+```
+    di::make_injector().create<int>(policy1(), policy2(), ..., policyN());
+```
+
+Boost.DI is released with policies which verifies `arguments permission`, check for `circular dependencies`, assert `creation ownership` and allow `scope permission`.
+[note No policies are enabled by default using Boost.DI]
+
 [section Arguments Permission]
-
-    injector<arguments_permission<>>().create<int>(); // compile fail
-    injector<arguments_permission<allow_copies>>().create<int>(); // ok
-    injector<arguments_permission<allow_copies, allow_ptrs>>().create<int*>(); // ok
-
+```
+    di::injector<arguments_permission<>>().create<int>(); // compile error
+    di::injector<arguments_permission<allow_copies>>().create<int>(); // compile ok
+    di::injector<arguments_permission<allow_copies, allow_ptrs>>().create<int*>(); // compile ok
+```
+[table
+    [[Tests: [@test/ut/policies/arguments_permission_ut.cpp]]]
+]
 [endsect]
 
 [section Circular Dependencies]
-
+`Circular Dependencies` policy verify if constructor parameters aren't overlapping.
+```
     struct cd2;
     struct cd1 { cd1(cd2*); };
     struct cd2 { cd2(cd1*); };
-    make_injector().create<cd1>(); //error
 
+    di::make_injector().create<cd1>(); // compile error
+```
+[note Requires BOOST_DI_CFG_EXAMINE_CALL_STACK to be defined]
+[table
+    [[Tests: [@test/ut/policies/circular_dependencies_ut.cpp]]]
+]
 [endsect]
 
 [section Creation Ownership]
-
-    injector_.create<const c1&>(); //error
-    injector_.create<c1&>(); //error
-
+`Creation Ownership` policy limit creation types to copies/pointers/smart pointers and disallow references.
+```
+    di::make_injector().create<const int&>(); // compile error
+    di::make_injector().create<int&>(); // compile error
+    di::make_injector().create<int>(); // compile ok
+```
+[table
+    [[Tests: [@test/ut/policies/creation_ownership_ut.cpp]]]
+]
 [endsect]
 
 [section Scopes Permission]
+`Creation Ownership` policy limit allowed scopes to be used whilst binding.
+```
+scopes_permission<>
+bind<deduce<int>> // compile error
+
+scopes_permission<allow_scope<scopes::unique>>
+bind<unique<int>> // compile ok
+```
+[table
+    [[Tests: [@test/ut/policies/scopes_permission_ut.cpp]]]
+]
 [endsect]
 
 [endsect]
