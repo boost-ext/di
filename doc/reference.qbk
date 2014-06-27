@@ -410,7 +410,9 @@ struct scope_traits;
 } // namespace type_traits
 } // namespace di
 } // namespace boost
-```
+```[table
+    [[Tests: [@test/ut/type_traits/scope_traits_ut.cpp]]]
+]
 [endsect]
 
 [endsect]
@@ -455,6 +457,9 @@ public:
 } // namespace di
 } // namespace boost
 ```
+[table
+    [[Tests: [@test/ut/wrappers/copy_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/wrappers/reference.hpp>]
@@ -474,6 +479,9 @@ public:
 } // namespace di
 } // namespace boost
 ```
+[table
+    [[Tests: [@test/ut/reference_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/wrappers/shared.hpp>]
@@ -505,6 +513,9 @@ public:
 } // namespace di
 } // namespace boost
 ```
+[table
+    [[Tests: [@test/ut/wrappers/shared_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/wrappers/universal.hpp>]
@@ -595,6 +606,9 @@ public:
 } // namespace di
 } // namespace boost
 ```
+[table
+    [[Tests: [@test/ut/wrappers/universal_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/wrappers/value.hpp>]
@@ -630,7 +644,12 @@ public:
 } // namespace wrappers
 } // namespace di
 } // namespace boost
+
 ```
+[table
+    [[Tests: [@test/ut/wrappers/value_ut.cpp]]]
+]
+
 [endsect]
 
 [endsect]

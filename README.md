@@ -135,6 +135,23 @@ int main() {
 [![Build Status](https://ci.appveyor.com/api/projects/status/1il4knxh7tq9o5ic)](https://ci.appveyor.com/project/krzysztof-jusiak/di)
 [![Coverage Status](https://coveralls.io/repos/krzysztof-jusiak/di/badge.png?branch=master)](https://coveralls.io/r/krzysztof-jusiak/di?branch=master)
 
+## Other Dependency Injection Frameworks for C++:
+ * [https://bitbucket.org/cheez/dicpp](https://bitbucket.org/cheez/dicpp)
+ * [https://github.com/phs/sauce](https://github.com/phs/sauce)
+ * [https://code.google.com/p/wallaroo](https://code.google.com/p/wallaroo)
+ * [https://code.google.com/p/hypodermic](https://code.google.com/p/hypodermic)
+ * [https://github.com/admiyo/CppInject](https://github.com/admiyo/CppInject)
+ * [http://qtioccontainer.sourceforge.net](http://qtioccontainer.sourceforge.net)
+ * [https://code.google.com/p/autumnframework](https://code.google.com/p/autumnframework)
+ * [http://sourceforge.net/projects/cpp-resolver](http://sourceforge.net/projects/cpp-resolver)
+ * [https://code.google.com/p/pococapsule](https://code.google.com/p/pococapsule)
+ * [https://code.google.com/p/spring-cpp](https://code.google.com/p/spring-cpp)
+ * [http://www.cs.utah.edu/~arichard/inject.html](http://www.cs.utah.edu/~arichard/inject.html)
+ * [http://bobah.net/d4d/source-code/misc/cpp-dependency-injection](http://bobah.net/d4d/source-code/misc/cpp-dependency-injection)
+ * [https://code.google.com/p/ffead-cpp](https://code.google.com/p/ffead-cpp)
+ * [http://codebros.github.io/DiLite](http://codebros.github.io/DiLite)
+ * [https://code.google.com/p/kindi](https://code.google.com/p/kindi)
+
 ## License
 Distributed under the [Boost Software License, Version 1.0](http://www.boost.org/LICENSE_1_0.txt).
 
