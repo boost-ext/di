@@ -27,20 +27,121 @@
 <a name="boost_di__dependency_injection_.integration_with_boost_libraries"></a><a class="link" href="integration_with_boost_libraries.html" title="Integration with Boost libraries">Integration
     with Boost libraries</a>
 </h2></div></div></div>
-<div class="toc"><dl class="toc">
-<dt><span class="section"><a href="integration_with_boost_libraries.html#boost_di__dependency_injection_.integration_with_boost_libraries.boost_meta_state_machine">Boost
-      Meta State Machine</a></span></dt>
-<dt><span class="section"><a href="integration_with_boost_libraries.html#boost_di__dependency_injection_.integration_with_boost_libraries.match_3_game">Match-3
-      Game</a></span></dt>
-</dl></div>
-<div class="section"><div class="titlepage"><div><div><h3 class="title">
+<div class="toc"><dl class="toc"><dt><span class="section"><a href="integration_with_boost_libraries.html#boost_di__dependency_injection_.integration_with_boost_libraries.boost_meta_state_machine">Boost
+      Meta State Machine</a></span></dt></dl></div>
+<p>
+      Integration with existing libraries is really straight forward. Usually doesn't
+      require anything! Unless constructor can't be deduced due to ambiguity or it's
+      variadic.
+    </p>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
 <a name="boost_di__dependency_injection_.integration_with_boost_libraries.boost_meta_state_machine"></a><a class="link" href="integration_with_boost_libraries.html#boost_di__dependency_injection_.integration_with_boost_libraries.boost_meta_state_machine" title="Boost Meta State Machine">Boost
       Meta State Machine</a>
-</h3></div></div></div></div>
-<div class="section"><div class="titlepage"><div><div><h3 class="title">
-<a name="boost_di__dependency_injection_.integration_with_boost_libraries.match_3_game"></a><a class="link" href="integration_with_boost_libraries.html#boost_di__dependency_injection_.integration_with_boost_libraries.match_3_game" title="Match-3 Game">Match-3
-      Game</a>
-</h3></div></div></div></div>
+</h3></div></div></div>
+<p>
+        <a href="http://www.boost.org/doc/libs/1_55_0/libs/msm/doc/HTML/index.html" target="_top">Boost
+        Meta State Machine</a> is a library allowing you to easily and quickly
+        define state machines of very high performance. MSM is a great library, unfortunately
+        <code class="computeroutput"><span class="identifier">Service</span> <span class="identifier">Locator</span></code>
+        pattern is used to accomplish actions or guards execution. This approach
+        is a bit hard to maintain and test, therefore would be great to have the
+        possibility just to implement action/guards without FSM dependency and with
+        proper dependencies instead and just let the dependency injection inject
+        all the requirements for us.
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">struct</span> <span class="identifier">event</span> <span class="special">:</span> <span class="identifier">euml_event</span><span class="special">&lt;</span><span class="identifier">event</span><span class="special">&gt;</span> <span class="special">{</span> <span class="special">};</span>
+
+<span class="keyword">class</span> <span class="identifier">guard</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">euml_action</span><span class="special">&lt;</span><span class="identifier">guard</span><span class="special">&gt;</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">guard</span><span class="special">()</span> <span class="special">{</span> <span class="special">}</span> <span class="comment">// for euml</span>
+
+    <span class="keyword">explicit</span> <span class="identifier">guard</span><span class="special">(</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">dep</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">dep</span><span class="special">(</span><span class="identifier">dep</span><span class="special">)</span>
+    <span class="special">{</span> <span class="special">}</span>
+
+    <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="identifier">event</span><span class="special">&amp;)</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="special">*</span><span class="identifier">dep</span> <span class="special">!=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="special">}</span>
+
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">dep</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">class</span> <span class="identifier">action</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">euml_action</span><span class="special">&lt;</span><span class="identifier">action</span><span class="special">&gt;</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">action</span><span class="special">()</span> <span class="special">{</span> <span class="special">}</span> <span class="comment">// for euml</span>
+
+    <span class="keyword">explicit</span> <span class="identifier">action</span><span class="special">(</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">dep</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">dep</span><span class="special">(</span><span class="identifier">dep</span><span class="special">)</span>
+    <span class="special">{</span> <span class="special">}</span>
+
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="identifier">event</span><span class="special">&amp;)</span> <span class="special">{</span>
+        <span class="special">(*</span><span class="identifier">dep</span><span class="special">)++;</span>
+    <span class="special">}</span>
+
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">dep</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">class</span> <span class="identifier">state_machine_</span> <span class="special">:</span> <span class="identifier">state_machine_def</span><span class="special">&lt;</span><span class="identifier">state_machine_</span><span class="special">&gt;</span>
+<span class="special">{</span>
+    <span class="keyword">struct</span> <span class="identifier">state1</span> <span class="special">:</span> <span class="identifier">state</span><span class="special">&lt;&gt;,</span> <span class="identifier">euml_state</span><span class="special">&lt;</span><span class="identifier">state1</span><span class="special">&gt;</span> <span class="special">{</span> <span class="special">};</span>
+    <span class="keyword">struct</span> <span class="identifier">state2</span> <span class="special">:</span> <span class="identifier">state</span><span class="special">&lt;&gt;,</span> <span class="identifier">euml_state</span><span class="special">&lt;</span><span class="identifier">state2</span><span class="special">&gt;</span> <span class="special">{</span> <span class="special">};</span>
+
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">state1</span> <span class="identifier">initial_state</span><span class="special">;</span>
+
+    <span class="identifier">BOOST_MSM_EUML_DECLARE_TRANSITION_TABLE</span><span class="special">((</span>
+        <span class="identifier">state1</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">event</span><span class="special">()</span> <span class="special">[</span><span class="identifier">guard</span><span class="special">]</span> <span class="special">/</span> <span class="identifier">action</span> <span class="special">==</span> <span class="identifier">state2</span><span class="special">()</span>
+    <span class="special">),</span> <span class="identifier">transition_table</span><span class="special">)</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">auto</span> <span class="identifier">sm_</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">&lt;&gt;().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">state_machine</span><span class="special">&lt;</span><span class="identifier">state_machine_</span><span class="special">&gt;&gt;();</span>
+    <span class="identifier">sm_</span><span class="special">.</span><span class="identifier">process_event</span><span class="special">(</span><span class="identifier">event</span><span class="special">());</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<p>
+        Full example and implementation might be found in <a href="https://github.com/krzysztof-jusiak/msm" target="_top">Boost
+        Meta State Machine with Dependency Injection</a>.
+      </p>
+<h6>
+<a name="boost_di__dependency_injection_.integration_with_boost_libraries.boost_meta_state_machine.h0"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.integration_with_boost_libraries.boost_meta_state_machine.match_3_game"></a></span><a class="link" href="integration_with_boost_libraries.html#boost_di__dependency_injection_.integration_with_boost_libraries.boost_meta_state_machine.match_3_game">Match-3
+        Game</a>
+      </h6>
+<p>
+        Simple Match-3 game is an real life example using Boost Dependency Injection
+        and Boost Meta State Machine.
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+            <a href="https://github.com/krzysztof-jusiak/match3/blob/master/include/config.hpp" target="_top">Dependency
+            Injection Configuration</a>
+          </li>
+<li class="listitem">
+            <a href="https://github.com/krzysztof-jusiak/match3/blob/master/include/controller.hpp" target="_top">Meta
+            State Machine Definition</a>
+          </li>
+<li class="listitem">
+            <a href="https://github.com/krzysztof-jusiak/match3/blob/master/include/actions.hpp" target="_top">Actions</a>
+          </li>
+<li class="listitem">
+            <a href="https://github.com/krzysztof-jusiak/match3/blob/master/include/guards.hpp" target="_top">Guards</a>
+          </li>
+</ul></div>
+</div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>

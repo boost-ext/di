@@ -29,8 +29,8 @@
 <div class="toc"><dl class="toc">
 <dt><span class="section"><a href="performance.html#boost_di__dependency_injection_.performance.compilation_time">Compilation
       time</a></span></dt>
-<dt><span class="section"><a href="performance.html#boost_di__dependency_injection_.performance.runtime_execution">Runtime
-      execution</a></span></dt>
+<dt><span class="section"><a href="performance.html#boost_di__dependency_injection_.performance.runtime_execution_speed">Runtime
+      execution speed</a></span></dt>
 </dl></div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
@@ -38,13 +38,246 @@
       time</a>
 </h3></div></div></div>
 <p>
-        preprocessed headers precompiled headers note examine call stack
+        Boost.DI is using heavy template meta programming, therefore compilation
+        time was a big concern whilst creating the library. Library was optimised
+        in terms of compilation times as long as changes haven't influence runtime
+        performance.
+      </p>
+<p>
+        If compilation time is still a problem, Boost.DI contains a set of features
+        to improve the situation.
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+            Preprocessed Headers
+            <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
+<li class="listitem">
+                  Contains Boost.DI library in one file after preprocessing stage
+                </li>
+<li class="listitem">
+                  Preprocessed Headers are generated for <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_CTOR_LIMIT_SIZE</span></code>
+                  equals 10 and for <code class="computeroutput"><span class="identifier">BOOST_MPL_LIMIT_VECTOR_SIZE</span></code>
+                  equals 10, 20, 30, 40, 50
+                </li>
+<li class="listitem">
+                  To disable it <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_NO_PREPROCESSED_HEADERS</span></code>
+                  has to be defined
+                </li>
+<li class="listitem">
+                  Enabled by default
+                </li>
+</ul></div>
+          </li>
+<li class="listitem">
+            Precompiled Headers
+            <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem">
+                  Modern compilers feature to cache headers in precompiled stage
+                </li></ul></div>
+          </li>
+</ul></div>
+<p>
+</p>
+<pre class="programlisting"><span class="comment">//pch.hpp</span>
+
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="comment">//... others headers</span>
+</pre>
+<p>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">CXX</span> <span class="identifier">pch</span><span class="special">.</span><span class="identifier">hpp</span>
+</pre>
+<p>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">CXX</span> <span class="special">-</span><span class="identifier">include</span> <span class="identifier">pch</span><span class="special">.</span><span class="identifier">hpp</span> <span class="identifier">example</span><span class="special">.</span><span class="identifier">cpp</span>
+</pre>
+<p>
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+            Examine Call Stack
+            <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
+<li class="listitem">
+                  Enables context (call stack) to be used for binding
+                </li>
+<li class="listitem">
+                  This feature slow down the compilation, so it has to be turn on
+                  by defining <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_EXAMINE_CALL_STACK</span></code>
+                </li>
+<li class="listitem">
+                  Disabled by default
+                </li>
+</ul></div>
+          </li></ul></div>
+<h6>
+<a name="boost_di__dependency_injection_.performance.compilation_time.h0"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.performance.compilation_time.performance_test"></a></span><a class="link" href="performance.html#boost_di__dependency_injection_.performance.compilation_time.performance_test">Performance
+        Test</a>
+      </h6>
+<p>
+        Compilation time was tested using below example.
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">level</span><span class="special">&lt;</span><span class="identifier">N</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="identifier">level</span><span class="special">&lt;</span><span class="identifier">N</span><span class="special">&gt;();</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">level</span><span class="special">&lt;</span><span class="identifier">N</span><span class="special">-</span><span class="number">1</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="identifier">level</span><span class="special">&lt;</span><span class="identifier">N</span><span class="special">-</span><span class="number">1</span><span class="special">&gt;(</span><span class="identifier">level</span><span class="special">&lt;</span><span class="identifier">N</span><span class="special">&gt;&lt;</span><span class="number">1</span><span class="special">&gt;,</span> <span class="identifier">level</span><span class="special">&lt;</span><span class="identifier">N</span><span class="special">&gt;&lt;</span><span class="number">2</span><span class="special">&gt;,</span> <span class="special">...,</span> <span class="identifier">level</span><span class="special">&lt;</span><span class="identifier">N</span><span class="special">&gt;&lt;</span><span class="identifier">M</span><span class="special">&gt;);</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">level</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="identifier">level</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;(</span><span class="identifier">level</span><span class="special">&lt;</span><span class="number">3</span><span class="special">&gt;&lt;</span><span class="number">1</span><span class="special">&gt;,</span> <span class="identifier">level</span><span class="special">&lt;</span><span class="number">3</span><span class="special">&gt;&lt;</span><span class="number">2</span><span class="special">&gt;,</span> <span class="special">...,</span> <span class="identifier">level</span><span class="special">&lt;</span><span class="number">3</span><span class="special">&gt;&lt;</span><span class="identifier">M</span><span class="special">&gt;);</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">level</span><span class="special">&lt;</span><span class="number">1</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="identifier">level</span><span class="special">&lt;</span><span class="number">1</span><span class="special">&gt;(</span><span class="identifier">level</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;&lt;</span><span class="number">1</span><span class="special">&gt;,</span> <span class="identifier">level</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;&lt;</span><span class="number">2</span><span class="special">&gt;,</span> <span class="special">...,</span> <span class="identifier">level</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;&lt;</span><span class="identifier">M</span><span class="special">&gt;);</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">level</span><span class="special">&lt;</span><span class="number">1</span><span class="special">&gt;&gt;();</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<p>
+        The test is very useful to verify how huge impact, regards the compilation,
+        changes have. Scaling is the factor we are looking into. Basically we are
+        going to look for curve as linear as possible.
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  N/M
+                </p>
+              </th>
+<th>
+                <p>
+                  %
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  1
+                </p>
+              </td>
+<td>
+                <p>
+                  1 %
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  2
+                </p>
+              </td>
+<td>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  3
+                </p>
+              </td>
+<td>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  4
+                </p>
+              </td>
+<td>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  5
+                </p>
+              </td>
+<td>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  6
+                </p>
+              </td>
+<td>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  7
+                </p>
+              </td>
+<td>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  8
+                </p>
+              </td>
+<td>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  9
+                </p>
+              </td>
+<td>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  10
+                </p>
+              </td>
+<td>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_di__dependency_injection_.performance.runtime_execution_speed"></a><a class="link" href="performance.html#boost_di__dependency_injection_.performance.runtime_execution_speed" title="Runtime execution speed">Runtime
+      execution speed</a>
+</h3></div></div></div>
+<p>
+        Runtime execution speed was one of the concerns taken into account whilst
+        implementing the library. Compile time approach was chosen not only, because
+        of the safety (non exception driven) reasons, but also because of the runtime
+        performance.
+      </p>
+<p>
+        Boost.DI library obviously introduces overhead on creating objects, but the
+        effort was taken to make the overhead as small as possible.
       </p>
 </div>
-<div class="section"><div class="titlepage"><div><div><h3 class="title">
-<a name="boost_di__dependency_injection_.performance.runtime_execution"></a><a class="link" href="performance.html#boost_di__dependency_injection_.performance.runtime_execution" title="Runtime execution">Runtime
-      execution</a>
-</h3></div></div></div></div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>

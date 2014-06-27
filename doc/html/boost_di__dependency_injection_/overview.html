@@ -7,7 +7,7 @@
 <link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.DI (Dependency Injection) 1.0">
 <link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.DI (Dependency Injection) 1.0">
 <link rel="prev" href="../index.html" title="Chapter&#160;1.&#160;Boost.DI (Dependency Injection) 1.0">
-<link rel="next" href="desing_rationale.html" title="Desing Rationale">
+<link rel="next" href="design_rationale.html" title="Design Rationale">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,7 +20,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../index.html"><img src=".././doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src=".././doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="desing_rationale.html"><img src=".././doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../index.html"><img src=".././doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src=".././doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="design_rationale.html"><img src=".././doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
@@ -31,6 +31,7 @@
 <dt><span class="section"><a href="overview.html#boost_di__dependency_injection_.overview.dependencies">Dependencies</a></span></dt>
 <dt><span class="section"><a href="overview.html#boost_di__dependency_injection_.overview.supported_compilers">Supported
       Compilers</a></span></dt>
+<dt><span class="section"><a href="overview.html#boost_di__dependency_injection_.overview.configuration">Configuration</a></span></dt>
 <dt><span class="section"><a href="overview.html#boost_di__dependency_injection_.overview.continuous_integration">Continuous
       Integration</a></span></dt>
 </dl></div>
@@ -43,27 +44,25 @@
       </p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
-            Compile time approach - no exceptions - if your application is compiling
-            all dependencies will be be created accurately
+            Compile time approach - no exceptions - if application compiles all dependencies
+            will be be created accurately
           </li>
 <li class="listitem">
-            Macro free - no macros - you don't have to specify constructor traits
-            or register classes - less intrusive
+            Macro free - no need to specify constructor traits or register anything
+            (less intrusive)
           </li>
 <li class="listitem">
-            Scopes deduction - scopes are deduced based on type based semantic in
-            respect to smart pointers, references, pointers, ...
+            Scopes deduction - scopes are deduced based on type semantic
           </li>
 <li class="listitem">
-            Automatic conversion between std/boost smart pointers - some libraries
-            requires std and some boost smart pointers
+            Automatic conversion between std/boost smart pointers
           </li>
 <li class="listitem">
-            Supports C++ 03 / C++ 11 / C++ 14 standards
+            Compile time policies - ex. to detect circular dependencies or limit
+            supported types only to specified
           </li>
 <li class="listitem">
-            Compile time policies - for example to detect circular dependencies or
-            limit supported types only to smart pointers
+            Supports C++03 / C++11 / C++14 standards
           </li>
 </ul></div>
 <p>
@@ -164,6 +163,9 @@
 <a name="boost_di__dependency_injection_.overview.supported_compilers"></a><a class="link" href="overview.html#boost_di__dependency_injection_.overview.supported_compilers" title="Supported Compilers">Supported
       Compilers</a>
 </h3></div></div></div>
+<p>
+        Boost.DI was sucessfuly test on below compilers
+      </p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
             Linux (x86/x86-64)
@@ -210,6 +212,136 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
+<a name="boost_di__dependency_injection_.overview.configuration"></a><a class="link" href="overview.html#boost_di__dependency_injection_.overview.configuration" title="Configuration">Configuration</a>
+</h3></div></div></div>
+<p>
+        The macros listed in the table below may be used to control the behaviour
+        of Boost.DI.
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Macro
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_NO_PREPROCESSED_HEADERS</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  default: <code class="computeroutput"><span class="identifier">enabled</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_CTOR_LIMIT_SIZE</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  default: <code class="computeroutput"><span class="number">10</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_EXAMINE_CALL_STACK</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  default: <code class="computeroutput"><span class="identifier">disabled</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_INJECT_VA_ARGS</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  default: <code class="computeroutput"><span class="identifier">enabled</span> <span class="identifier">when</span> <span class="identifier">C</span><span class="special">++</span><span class="number">11</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_INJECT_BRACKET</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  default: <code class="computeroutput"><span class="identifier">enabled</span> <span class="identifier">when</span> <span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_STD_SMART_PTR</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  default: <code class="computeroutput"><span class="identifier">enabled</span> <span class="keyword">if</span> <span class="identifier">supported</span>
+                  <span class="identifier">by</span> <span class="identifier">compiler</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_BOOST_SMART_PTR</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  default: <code class="computeroutput"><span class="identifier">enabled</span> <span class="keyword">if</span> <span class="identifier">std</span>
+                  <span class="identifier">smart</span> <span class="identifier">ptr</span>
+                  <span class="identifier">are</span> <span class="keyword">not</span>
+                  <span class="identifier">supported</span> <span class="identifier">by</span>
+                  <span class="identifier">compiler</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">BOOST_DI_INJECTOR</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  default: <code class="computeroutput"><span class="identifier">boost_di_injector__</span></code>
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
 <a name="boost_di__dependency_injection_.overview.continuous_integration"></a><a class="link" href="overview.html#boost_di__dependency_injection_.overview.continuous_integration" title="Continuous Integration">Continuous
       Integration</a>
 </h3></div></div></div>
@@ -228,7 +360,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../index.html"><img src=".././doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src=".././doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="desing_rationale.html"><img src=".././doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../index.html"><img src=".././doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src=".././doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="design_rationale.html"><img src=".././doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
