@@ -12,6 +12,6 @@ The main question should be though - in real life projects how often configurati
 
     * Constructor injection is the most powerful and the preferable injection method which avoid uninitialized state of members.
 According to author setter/member injection should be avoided at all costs in order to keep the solutions as clean as possible.
- 
+
 [endsect]
 
