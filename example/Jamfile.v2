@@ -28,10 +28,11 @@ rule run-test ( std : src : property * ) {
     if $(std) = c++1y {
         run $(src) : : :
             <define>BOOST_DI_CFG_EXAMINE_CALL_STACK
-            <toolset>gcc-4.9.0:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
-            <toolset>gcc:<cxxflags>"-std=c++11 -include ../test/common/config.hpp"
-            <toolset>clang-3.4.2:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
-            <toolset>clang:<cxxflags>"-std=c++11 -include ../test/common/config.hpp"
+            <toolset>gcc:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
+            #<toolset>gcc-4.8.2:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
+            #<toolset>gcc:<cxxflags>"-std=c++11 -include ../test/common/config.hpp"
+            #<toolset>clang-3.4.2:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
+            #<toolset>clang:<cxxflags>"-std=c++11 -include ../test/common/config.hpp"
         : $(property) ;
     }
 }
@@ -54,7 +55,6 @@ test-suite cpp_11 : # "di / c++ 11"
     [ run-test c++11 : cpp_11/injection.cpp : injection_cpp_11 ]
     [ run-test c++11 : cpp_11/externals.cpp : externals_cpp_11 ]
     [ run-test c++11 : cpp_11/inject.cpp : inject_cpp_11 ]
-    [ run-test c++11 : cpp_11/injector.cpp : injector_cpp_11 ]
     [ run-test c++11 : cpp_11/multiple_interfaces.cpp : multiple_interfaces_cpp_11 ]
     [ run-test c++11 : cpp_11/motivation.cpp : motivation_cpp_11 ]
     [ run-test c++11 : cpp_11/named.cpp : named_cpp_11 ]

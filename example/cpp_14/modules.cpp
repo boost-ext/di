@@ -8,10 +8,6 @@
 //[modules_cpp_14
 //`[h6 C++ 14]
 //<-
-#if (__cplusplus < 201300L)
-    int main() { return 0; }
-#else
-
 #include <memory>
 #include <utility>
 //->
@@ -65,8 +61,5 @@ int main() {
 }
 
 //`full code example: [@example/cpp_14/modules.cpp modules.cpp]
-//<-
-#endif
-//->
 //]
 

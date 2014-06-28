@@ -283,6 +283,8 @@ Refer to `Scopes Conversions` table.
 
 [h6 Scopes Conversions]
 
+[warning In current version of Boost.DI rvalue references aren't available for `Microsoft Visual Studio Compiler`]
+
 [table
     [[Type][external][session][shared][unique]]
     [[T][X][X][X][X]]

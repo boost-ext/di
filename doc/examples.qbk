@@ -5,9 +5,9 @@
 [hello_world]
 [endsect]
 
-[section Concepts]
-[import ../example/cpp_11/concepts.cpp]
-[concepts_cpp_11]
+[section Inject]
+[import ../example/cpp_11/inject.cpp]
+[inject_cpp_11]
 [endsect]
 
 [section Named]
@@ -20,14 +20,9 @@
 [provider_cpp_11]
 [endsect]
 
-[section Inject]
-[import ../example/cpp_11/inject.cpp]
-[inject_cpp_11]
-[endsect]
-
-[section Externals]
-[import ../example/cpp_11/externals.cpp]
-[externals_cpp_11]
+[section Concepts]
+[import ../example/cpp_11/concepts.cpp]
+[concepts_cpp_11]
 [endsect]
 
 [section Deduce Scope]
@@ -35,14 +30,9 @@
 [deduce_scope_cpp_11]
 [endsect]
 
-[section Custom Scope]
-[import ../example/cpp_11/custom_scope.cpp]
-[custom_scope_cpp_11]
-[endsect]
-
-[section Injector]
-[import ../example/cpp_11/injector.cpp]
-[injector_cpp_11]
+[section Externals]
+[import ../example/cpp_11/externals.cpp]
+[externals_cpp_11]
 [endsect]
 
 [section Injection]
@@ -50,6 +40,11 @@
 [injection_cpp_11]
 [import ../example/cpp_03/injection.cpp]
 [injection_cpp_03]
+[endsect]
+
+[section Multiple Interfaces]
+[import ../example/cpp_11/multiple_interfaces.cpp]
+[multiple_interfaces_cpp_11]
 [endsect]
 
 [section Modules]
@@ -61,17 +56,17 @@
 
 [section Factory]
 [import ../example/cpp_14/factory.cpp]
-[factory_cpp_11]
-[endsect]
-
-[section Multiple Interfaces]
-[import ../example/cpp_11/multiple_interfaces.cpp]
-[multiple_interfaces_cpp_11]
+[factory_cpp_14]
 [endsect]
 
 [section Allow Only Smart Ptr Policy]
 [import ../example/cpp_11/allow_only_smart_ptr_policy.cpp]
 [allow_only_smart_ptr_policy_cpp_11]
+[endsect]
+
+[section Custom Scope]
+[import ../example/cpp_11/custom_scope.cpp]
+[custom_scope_cpp_11]
 [endsect]
 
 [section Testing]
