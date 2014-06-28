@@ -20,11 +20,11 @@
 namespace boost {
 namespace di {
 
-//struct no_name { };
+struct no_name { };
 
 template<
     typename T
-  , typename TName = void
+  , typename TName = no_name
   , typename = void
 >
 class named

@@ -8107,9 +8107,11 @@ struct any_of
 namespace boost {
 namespace di {
 
+struct no_name { };
+
 template<
     typename T
-  , typename TName = void
+  , typename TName = no_name
   , typename = void
 >
 class named

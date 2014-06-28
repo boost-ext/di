@@ -9,6 +9,7 @@
 
 #include "boost/di/concepts/dependency.hpp"
 
+#include "boost/di/named.hpp"
 #include "boost/di/concepts/detail/requires.hpp"
 #include "boost/di/concepts/detail/when.hpp"
 #include "boost/di/concepts/type_traits/is_required_name.hpp"
@@ -19,8 +20,6 @@
 
 namespace boost {
 namespace di {
-
-struct no_name { };
 
 template<typename T, typename TName, typename TCallStack>
 struct get_bind

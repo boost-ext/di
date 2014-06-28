@@ -90,6 +90,118 @@ inline make_injector(TArgs&&...);
 [endsect]
 
 [section Header <boost/di/named.hpp>]
+```
+namespace boost {
+namespace di {
+
+struct no_name { };
+
+template<
+    typename T
+  , typename TName = no_name
+>
+class named {
+    named& operator=(const named&);
+
+public:
+    typedef T named_type;
+    typedef TName name;
+
+    named(T); // non explicit
+    named(const named&);
+
+    operator T() const;
+};
+
+template<
+    typename T
+  , typename TName
+>
+class named<const T&, TName> {
+    named& operator=(const named&);
+
+public:
+    typedef const T& named_type;
+    typedef TName name;
+
+    named(const T&); // non explicit
+    named(const named&);
+
+    operator const T&() const;
+};
+
+template<
+    typename T
+  , typename TName
+>
+class named<T&, TName> {
+    named& operator=(const named&);
+
+public:
+    typedef T& named_type;
+    typedef TName name;
+
+    named(T&); // non explicit
+    named(const named&);
+
+    operator T&();
+};
+
+template<
+    typename T
+  , typename TName
+>
+class named<T&&, TName> {
+    named& operator=(const named&);
+
+public:
+    typedef T&& named_type;
+    typedef TName name;
+
+    named(T&&); // non explicit
+    named(const named&);
+
+    operator T&&();
+};
+
+template<
+    typename T
+  , typename TName
+>
+class named<aux::unique_ptr<T>, TName>
+{
+    named& operator=(const named&);
+
+public:
+    typedef aux::unique_ptr<T> named_type;
+    typedef TName name;
+
+    named(aux::unique_ptr<T>); // non explicit
+    named(const named&);
+
+    operator aux::unique_ptr<T>();
+};
+
+template<
+    typename T
+  , typename TName
+>
+class named<
+    T
+  , TName
+  , typename enable_if<is_polymorphic<typename type_traits::remove_accessors<T>::type>>::type
+> {
+public:
+    typedef T named_type;
+    typedef TName name;
+};
+
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/ut/named_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/provider.hpp>]

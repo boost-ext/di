@@ -60,7 +60,7 @@
 [endsect]
 
 [section Factory]
-[import ../example/cpp_11/factory.cpp]
+[import ../example/cpp_14/factory.cpp]
 [factory_cpp_11]
 [endsect]
 
