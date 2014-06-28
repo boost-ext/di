@@ -30,7 +30,7 @@ rule run-test ( std : src : property * ) {
             <define>BOOST_DI_CFG_EXAMINE_CALL_STACK
             <toolset>gcc-4.9.0:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
             <toolset>gcc:<cxxflags>"-std=c++11 -include ../test/common/config.hpp"
-            <toolset>clang-3.4:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
+            <toolset>clang-3.4.2:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
             <toolset>clang:<cxxflags>"-std=c++11 -include ../test/common/config.hpp"
         : $(property) ;
     }
