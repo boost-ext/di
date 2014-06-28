@@ -29,8 +29,8 @@ rule run-test ( std : src : property * ) {
         run $(src) : : :
             <define>BOOST_DI_CFG_EXAMINE_CALL_STACK
             <toolset>gcc-4.9.0:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
-            <toolset>clang-3.4:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
             <toolset>gcc:<cxxflags>"-std=c++11 -include ../test/common/config.hpp"
+            <toolset>clang-3.4:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
             <toolset>clang:<cxxflags>"-std=c++11 -include ../test/common/config.hpp"
         : $(property) ;
     }
@@ -53,7 +53,6 @@ test-suite cpp_11 : # "di / c++ 11"
     [ run-test c++11 : cpp_11/deduce_scope.cpp : deduce_scope_cpp_11 ]
     [ run-test c++11 : cpp_11/injection.cpp : injection_cpp_11 ]
     [ run-test c++11 : cpp_11/externals.cpp : externals_cpp_11 ]
-    [ run-test c++11 : cpp_11/factory.cpp : factory_cpp_11 ]
     [ run-test c++11 : cpp_11/inject.cpp : inject_cpp_11 ]
     [ run-test c++11 : cpp_11/injector.cpp : injector_cpp_11 ]
     [ run-test c++11 : cpp_11/multiple_interfaces.cpp : multiple_interfaces_cpp_11 ]
@@ -71,6 +70,7 @@ test-suite cpp_14 : # "di / c++ 14"
     [ run-test c++1y : cpp_14/tutorial/tutorial3.cpp : tutorial3_cpp_14 ]
     [ run-test c++1y : cpp_14/tutorial/tutorial4.cpp : tutorial4_cpp_14 ]
     [ run-test c++1y : cpp_14/tutorial/tutorial5.cpp : tutorial5_cpp_14 ]
+    [ run-test c++1y : cpp_14/factory.cpp : factory_cpp_14 ]
     [ run-test c++1y : cpp_14/modules.cpp : modules_cpp_14 ]
 ;
 
