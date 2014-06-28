@@ -42,7 +42,7 @@ struct impl2 : i {
         assert(id == e2);
     }
 
-    void dummy() override {}
+    void dummy() override { }
 };
 
 template<typename T>

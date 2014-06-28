@@ -182,6 +182,8 @@ private:
 template<typename T, typename TName>
 class universal_impl<const named<const T&, TName>&>
 {
+    universal_impl& operator=(const universal_impl&);
+
 public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >& refs

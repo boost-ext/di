@@ -537,8 +537,10 @@ struct wrappers_types
                   , named<short*, d> ss
                   , const double* d
                   , named<const double*, c> dd
-                  , char&& c
-                  , named<char, e> cc //TOOD char&&
+                  BOOST_DI_WKND(MSVC)(, char c)
+                  BOOST_DI_WKND(NO_MSVC)(, char&& c)
+                  BOOST_DI_WKND(MSVC)(, named<char, e> cc)
+                  BOOST_DI_WKND(NO_MSVC)(, named<char&&, e> cc)
                   , const long& l
                   , const named<const long&>& ll)
         : i_(i)
@@ -549,8 +551,10 @@ struct wrappers_types
         , ss_(ss)
         , d_(d)
         , dd_(dd)
-        , c_(std::move(c))
-        , cc_(cc)//std::move(cc))
+        BOOST_DI_WKND(MSVC)(, c_(c))
+        BOOST_DI_WKND(NO_MSVC)(, c_(std::move(c)))
+        BOOST_DI_WKND(MSVC)(, cc_(cc))
+        BOOST_DI_WKND(NO_MSVC)(, cc_(std::move(cc)))
         , l_(std::move(l))
         , ll_(std::move(ll))
     { }
@@ -664,8 +668,7 @@ struct transaction_usage
 {
     BOOST_DI_INJECT(transaction_usage
         , aux::shared_ptr<provider<aux::shared_ptr<transaction>>> p
-    )
-        : p(p)
+    ) : p(p)
     { }
 
     aux::shared_ptr<provider<aux::shared_ptr<transaction>>> p;
