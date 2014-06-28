@@ -6,7 +6,7 @@
 //
 
 //[testing_cpp_11
-//`[h6 C++ 11]
+//````C++11```
 //<-
 #include <memory>
 //->
@@ -53,6 +53,7 @@ int main() {
     return 0;
 }
 
-//`full code example: [@example/cpp_11/testing.cpp testing.cpp]
+//`[table
+//`[[Full code example: [@example/cpp_11/testing.cpp testing.cpp]]]]
 //]
 

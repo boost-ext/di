@@ -6,7 +6,7 @@
 //
 
 //[allow_only_smart_ptr_policy_cpp_11
-//`[h6 C++ 11]
+//````C++11```
 
 //<-
 #include <boost/shared_ptr.hpp>
@@ -66,7 +66,7 @@ int main() {
 }
 
 //`[note conversion between standard smart pointers and boost smart pointers - weak ptr]
-//`full code example:  [@example/cpp_111/allow_only_smart_ptr_policy.cpp allow_only_smart_ptr_policy.cpp]
-
+//`[table
+//`[[Full code example: [@example/cpp_111/allow_only_smart_ptr_policy.cpp allow_only_smart_ptr_policy.cpp]]]]
 //]
 

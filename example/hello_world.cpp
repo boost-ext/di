@@ -6,7 +6,7 @@
 //
 
 //[hello_world]
-//`[h6 C++ 98/03/11/14]
+//````C++98/03/11/14```
 //<-
 #include <cassert>
 #include <boost/shared_ptr.hpp>
@@ -48,6 +48,7 @@ int main() {
     return 0;
 }
 
-//`full code example: [@example/hello_world.cpp hello_world.cpp]
+//`[table
+//`[[Full code example: [@example/hello_world.cpp hello_world.cpp]]]]
 //]
 

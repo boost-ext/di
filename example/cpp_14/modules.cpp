@@ -6,7 +6,7 @@
 //
 
 //[modules_cpp_14
-//`[h6 C++ 14]
+//````C++14```
 //<-
 #include <memory>
 #include <utility>
@@ -60,6 +60,7 @@ int main() {
     return 0;
 }
 
-//`full code example: [@example/cpp_14/modules.cpp modules.cpp]
+//`[table
+//`[[Full code example: [@example/cpp_14/modules.cpp modules.cpp]]]]
 //]
 

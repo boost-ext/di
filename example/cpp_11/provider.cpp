@@ -6,7 +6,7 @@
 //
 
 //[provider_cpp_11
-//`[h6 C++ 11]
+//````C++11```
 //<-
 #include <cassert>
 #include <memory>
@@ -48,6 +48,7 @@ int main() {
     injector_t().create<usage>();
 }
 
-//`full code example: [@example/cpp_11/provider.cpp provider.cpp]
+//`[table
+//`[[Full code example: [@example/cpp_11/provider.cpp provider.cpp]]]]
 //]
 

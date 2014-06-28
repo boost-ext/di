@@ -6,7 +6,7 @@
 //
 
 //[uml_visitor_cpp_11
-//`[h6 C++ 11]
+//````C++11```
 //<-
 #include <iostream>
 #include <sstream>
@@ -145,6 +145,7 @@ int main() {
 // "(anonymous namespace)::c2" .. "char"
 // @enduml
 
-//`full code example: [@example/cpp_11/uml_visitor.cpp uml_visitor.cpp]
+//`[table
+//`[[Full code example: [@example/cpp_11/uml_visitor.cpp uml_visitor.cpp]]]]
 //]
 

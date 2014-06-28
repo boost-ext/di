@@ -6,7 +6,7 @@
 //
 
 //[factory_cpp_14
-//`[h6 C++ 14]
+//````C++14```
 //<-
 #include <cassert>
 #include <memory>
@@ -97,6 +97,7 @@ int main() {
     return 0;
 }
 
-//`full code example: [@example/cpp_14/factory.cpp factory.cpp]
+//`[table
+//`[[Full code example: [@example/cpp_14/factory.cpp factory.cpp]]]]
 //]
 

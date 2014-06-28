@@ -6,7 +6,7 @@
 //
 
 //[inject_cpp_11
-//`[h6 C++ 11]
+//````C++11```
 //<-
 #include <cassert>
 //->
@@ -86,6 +86,7 @@ int main() {
     injector.create<c4>();
 }
 
-//`full code example: [@example/cpp_11/inject.cpp inject.cpp]
+//`[table
+//`[[Full code example: [@example/cpp_11/inject.cpp inject.cpp]]]]
 //]
 
