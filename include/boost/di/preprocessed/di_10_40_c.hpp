@@ -8107,8 +8107,6 @@ struct any_of
 namespace boost {
 namespace di {
 
-BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
-
 template<
     typename T
   , typename TName = void
@@ -8116,103 +8114,159 @@ template<
 >
 class named
 {
-    typedef typename remove_reference<T>::type& ref_type;
-
-    //named& operator=(const named&);
+    named& operator=(const named&);
 
 public:
     typedef T named_type;
     typedef TName name;
 
-    named(const typename remove_reference<T>::type& object) // non explicit
+    named(T object) // non explicit
         : object_(object)
     { }
 
-    BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-        named(typename remove_reference<T>::type&& object) // non explicit
-            : object_(std::move(object))
-        { }
-    )
+    named(const named& other)
+        : object_(other.object_)
+    { }
 
     operator T() const {
         return object_;
     }
 
-    operator ref_type() {
+private:
+    T object_;
+};
+
+template<
+    typename T
+  , typename TName
+>
+class named<const T&, TName>
+{
+    named& operator=(const named&);
+
+public:
+    typedef const T& named_type;
+    typedef TName name;
+
+    named(const T& object) // non explicit
+        : object_(object)
+    { }
+
+    named(const named& other)
+        : object_(other.object_)
+    { }
+
+    operator const T&() const {
         return object_;
     }
 
 private:
-    T object_;
+    const T& object_;
 };
 
 template<
     typename T
   , typename TName
 >
-class named<T, TName, typename enable_if<
-    is_polymorphic<typename type_traits::remove_accessors<T>::type> >::type
->
+class named<T&, TName>
 {
-    //named& operator=(const named&);
+    named& operator=(const named&);
 
 public:
-    typedef T named_type;
-    typedef TName name;
-};
-
-template<
-    typename T
-  , typename TName
->
-class named<T, TName, typename enable_if<
-    has_element_type<typename type_traits::remove_accessors<T>::type> >::type
->
-{
-    typedef typename type_traits::make_plain<T>::type value_type;
-
-    //named& operator=(const named&);
-
-public:
-    typedef T named_type;
+    typedef T& named_type;
     typedef TName name;
 
-    named() { }
-
-    named(const typename remove_reference<T>::type& object) // non explicit
+    named(T& object) // non explicit
         : object_(object)
     { }
 
-    named(typename type_traits::remove_accessors<T>::type::element_type* ptr) // non explicit
-        : object_(ptr)
+    named(const named& other)
+        : object_(other.object_)
     { }
 
-    BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-        named(typename remove_reference<T>::type&& object) // non explicit
-            : object_(std::move(object))
-        { }
-
-        //TODO
-        template<typename I>
-        operator aux::unique_ptr<I>() { return std::move(object_); }
-    )
-
-    operator T() const { return object_; }
-
-    value_type* operator->() const { return object_.get(); }
-    value_type& operator*() const { return *object_; }
-    value_type* get() const { return object_.get(); }
-
-    void reset() {
-        object_.reset();
-    }
-
-    void reset(typename type_traits::remove_accessors<T>::type::element_type* ptr) {
-        object_.reset(ptr);
+    operator T&() {
+        return object_;
     }
 
 private:
-    T object_;
+    T& object_;
+};
+
+BOOST_DI_FEATURE(RVALUE_REFERENCES)(
+    template<
+        typename T
+      , typename TName
+    >
+    class named<T&&, TName>
+    {
+        named& operator=(const named&);
+
+    public:
+        typedef T&& named_type;
+        typedef TName name;
+
+        named(T&& object) // non explicit
+            : object_(std::move(object))
+        { }
+
+        named(const named& other)
+            : object_(other.object_)
+        { }
+
+        operator T&&() {
+            return std::move(object_);
+        }
+
+    private:
+        T object_;
+    };
+)
+
+template<
+    typename T
+  , typename TName
+>
+class named<aux::unique_ptr<T>, TName>
+{
+    named& operator=(const named&);
+
+public:
+    typedef aux::unique_ptr<T> named_type;
+    typedef TName name;
+
+    BOOST_DI_FEATURE(RVALUE_REFERENCES)(
+        named(aux::unique_ptr<T> object) // non explicit
+            : object_(std::move(object))
+        { }
+
+        operator aux::unique_ptr<T>() {
+            return std::move(object_);
+        }
+    )
+
+    named(const named& other)
+        : object_(new T(*other.object_))
+    { }
+
+private:
+    aux::unique_ptr<T> object_;
+};
+
+template<
+    typename T
+  , typename TName
+>
+class named<
+    T
+  , TName
+  , typename enable_if<
+        is_polymorphic<typename type_traits::remove_accessors<T>::type>
+    >::type
+>
+{
+public:
+    typedef T named_type;
+    typedef TName name;
 };
 
 } // namespace di
@@ -8423,6 +8477,8 @@ private:
 template<typename T, typename TName>
 class universal_impl<const named<const T&, TName>&>
 {
+    universal_impl& operator=(const universal_impl&);
+
 public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >& refs
@@ -12161,8 +12217,7 @@ class arguments_permission
     template<typename T>
     struct is_argument_permitted
         : mpl::bool_<
-              mpl::count_if<
-                  allow_types
+              mpl::count_if< allow_types
                 , mpl::and_<
                       is_argment_permitted_impl<mpl::_, T>
                     , is_argument_permitted_nested<T>

@@ -9,11 +9,17 @@ import testing ;
 import feature : extend-feature compose ;
 
 extend-feature variant : coverage ;
-
 compose <variant>coverage :
     <cxxflags>-fprofile-arcs
     <cxxflags>-ftest-coverage
     <linkflags>-fprofile-arcs
+    <optimization>off
+;
+
+extend-feature variant : analyze ;
+compose <variant>analyze :
+    #<toolset>clang:<cxxflags>"--analyze -Xanalyzer -analyzer-output=text"
+    <toolset>msvc:<cxxflags>"/analyze"
     <optimization>off
 ;
 
