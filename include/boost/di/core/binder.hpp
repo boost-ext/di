@@ -59,7 +59,7 @@ public:
       , typename TCallStack
       , typename TDefault =
             ::boost::di::concepts::dependency<
-                typename type_traits::scope_traits<T>::type
+                scopes::deduce
               , typename type_traits::make_plain<T>::type
             >
     >
