@@ -13,6 +13,7 @@
 #include "boost/di/concepts/type_traits/is_required_name.hpp"
 #include "boost/di/concepts/type_traits/is_required_priority.hpp"
 #include "boost/di/concepts/type_traits/is_required_type.hpp"
+#include "boost/di/scopes/deduce.hpp"
 
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/is_sequence.hpp>
@@ -47,7 +48,7 @@ template<
 >
 struct bind
     : TDependency<
-          mpl::_1
+          scopes::deduce
         , typename detail::get_expected<TExpected, TGiven>::type
         , TGiven
         , detail::requires_<
@@ -59,7 +60,7 @@ struct bind
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     struct when
         : TDependency<
-              mpl::_1
+              scopes::deduce
             , typename detail::get_expected<TExpected, TGiven>::type
             , TGiven
             , detail::requires_<
@@ -72,7 +73,7 @@ struct bind
         template<typename TName>
         struct named
             : TDependency<
-                  mpl::_1
+                  scopes::deduce
                 , typename detail::get_expected<TExpected, TGiven>::type
                 , TGiven
                 , detail::requires_<
@@ -88,7 +89,7 @@ struct bind
     template<typename TName>
     struct named
         : TDependency<
-              mpl::_1
+              scopes::deduce
             , typename detail::get_expected<TExpected, TGiven>::type
             , TGiven
             , detail::requires_<
@@ -101,7 +102,7 @@ struct bind
         template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
         struct when
             : TDependency<
-                  mpl::_1
+                  scopes::deduce
                 , typename detail::get_expected<TExpected, TGiven>::type
                 , TGiven
                 , detail::requires_<

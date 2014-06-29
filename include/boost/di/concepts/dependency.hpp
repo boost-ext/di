@@ -20,42 +20,13 @@
 #include "boost/di/concepts/type_traits/is_required_type.hpp"
 #include "boost/di/type_traits/create_traits.hpp"
 
-#include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/if.hpp>
-#include <boost/mpl/placeholders.hpp>
 
 namespace boost {
 namespace di {
 namespace concepts {
-
-namespace detail {
-
-template<typename T>
-struct scope_traits
-{
-    typedef T type;
-};
-
-template<>
-struct scope_traits<mpl::_1>
-{
-    typedef scopes::deduce type;
-};
-
-template<
-    typename TExpected
-  , typename TGiven
-  , typename TScope
->
-struct get_scope
-    : detail::scope_traits<TScope>::type::template
-         scope<TExpected, TGiven>
-{
-    get_scope() { }
-};
-
-} // namespace detail
 
 template<
     typename TScope
@@ -67,9 +38,9 @@ template<
           , concepts::type_traits::is_required_type<TExpected>
         >
 >
-class dependency : public detail::get_scope<TExpected, TGiven, TScope>::type
+class dependency : public TScope::template scope<TExpected, TGiven>
 {
-    typedef typename detail::get_scope<TExpected, TGiven, TScope>::type scope_type;
+    typedef typename TScope::template scope<TExpected, TGiven> scope_type;
     typedef scopes::external<wrappers::reference> ref_type;
     typedef scopes::external<wrappers::shared> shared_type;
     typedef scopes::external<wrappers::value> value_type;
@@ -109,7 +80,7 @@ class dependency : public detail::get_scope<TExpected, TGiven, TScope>::type
 
 public:
     typedef dependency type;
-    typedef typename detail::scope_traits<TScope>::type scope;
+    typedef TScope scope;
     typedef TExpected expected;
     typedef TGiven given;
     typedef TBind bind;

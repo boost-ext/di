@@ -41,7 +41,7 @@ class scope
     template<typename T>
     struct dependency
         : TDependency<
-              mpl::_1
+              TScope
             , T
             , T
             , detail::requires_<
@@ -67,7 +67,7 @@ public:
                 , mpl::if_<
                       is_dependency<mpl::_2>
                     , rebind<mpl::_2, TScope>
-                    , rebind<dependency<mpl::_2>, TScope>
+                    , dependency<mpl::_2>
                   >
               >
           >::type
