@@ -82,7 +82,7 @@
         >
         class BOOST_PP_CAT(callback, n)
         {
-            typedef R(*f_t)(BOOST_DI_ARGS_NOT_USED(Args));
+            typedef R(*f_t)(BOOST_DI_ARGS_COPY_NOT_USED(Args));
 
         public:
             #define BOOST_DI_CALLBACK_ARGS_PASS(z, n, na) \

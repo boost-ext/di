@@ -1,6 +1,6 @@
 [def __BOOST_DI_INJECT [link di.reference.ctor `BOOST_DI_INJECT `]]
 
-[section Basic Concepts]
+[section Concepts]
 
 [section Constructor Injection]
 

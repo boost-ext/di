@@ -14,6 +14,7 @@
     #include "boost/di/type_traits/create_traits.hpp"
     #include "boost/di/type_traits/has_call_operator.hpp"
 
+    #include <boost/function.hpp>
     #include <boost/utility/enable_if.hpp>
 
     namespace boost {
@@ -33,20 +34,38 @@
             typedef scope type;
             typedef TWrapper<TExpected> result_type;
 
+        private:
+            class result_type_holder
+            {
+            public:
+                template<typename T>
+                explicit result_type_holder(const T& object)
+                    : object_(object)
+                { }
+
+                result_type operator()() const {
+                    return object_;
+                }
+
+            private:
+                result_type object_;
+            };
+
+        public:
             template<typename T>
             explicit scope(const T& object
                          , typename enable_if_c<type_traits::has_call_operator<T>::value>::type* = 0)
-                : object_(object())
+                : object_(object)
             { }
 
             template<typename T>
             explicit scope(const T& object
                          , typename disable_if_c<type_traits::has_call_operator<T>::value>::type* = 0)
-                : object_(object)
+                : object_(result_type_holder(object))
             { }
 
             result_type create() {
-                return object_;
+                return object_();
             }
 
             #define BOOST_PP_FILENAME_1 "boost/di/scopes/external.hpp"
@@ -54,7 +73,7 @@
             #include BOOST_PP_ITERATE()
 
         private:
-            result_type object_;
+            function<result_type()> object_;
         };
     };
 
@@ -68,7 +87,7 @@
 
     template<BOOST_DI_TYPES(Args)>
     result_type create(BOOST_DI_ARGS_NOT_USED(Args)) {
-        return object_;
+        return object_();
     }
 
 #endif

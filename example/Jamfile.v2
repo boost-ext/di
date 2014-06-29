@@ -14,27 +14,14 @@ project di :
 ;
 
 rule run-test ( std : src : property * ) {
-    if $(std) = c++03 || $(std) = c++11 {
-        run $(src) : : :
-            <define>BOOST_DI_CFG_EXAMINE_CALL_STACK
-            <toolset>gcc:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
-            <toolset>clang:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
-            <toolset>darwin:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
-            <toolset>intel:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
-            <toolset>msvc:<cxxflags>"/FI ../test/common/config.hpp"
-        : $(property) ;
-    }
-
-    if $(std) = c++1y {
-        run $(src) : : :
-            <define>BOOST_DI_CFG_EXAMINE_CALL_STACK
-            <toolset>gcc:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
-            #<toolset>gcc-4.8.2:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
-            #<toolset>gcc:<cxxflags>"-std=c++11 -include ../test/common/config.hpp"
-            #<toolset>clang-3.4.2:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
-            #<toolset>clang:<cxxflags>"-std=c++11 -include ../test/common/config.hpp"
-        : $(property) ;
-    }
+    run $(src) : : :
+        <define>BOOST_DI_CFG_EXAMINE_CALL_STACK
+        <toolset>gcc:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
+        <toolset>clang:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
+        <toolset>darwin:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
+        <toolset>intel:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
+        <toolset>msvc:<cxxflags>"/FI ../test/common/config.hpp"
+    : $(property) ;
 }
 
 test-suite di :

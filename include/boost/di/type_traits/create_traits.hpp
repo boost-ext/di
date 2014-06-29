@@ -80,7 +80,7 @@
 #else
 
     template<typename TExpected, typename TGiven, BOOST_DI_TYPES(Args)>
-    TExpected* create_traits(BOOST_DI_ARGS(Args, args)) {
+    TExpected* create_traits(BOOST_DI_ARGS_COPY(Args, args)) {
         return new TGiven(BOOST_DI_ARGS_PASS(args));
     }
 

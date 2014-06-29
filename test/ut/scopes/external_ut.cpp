@@ -73,6 +73,24 @@ BOOST_AUTO_TEST_CASE(from_if_shared_ptr) {
     BOOST_CHECK_EQUAL(c0_, c1_);
 }
 
+BOOST_AUTO_TEST_CASE(from_function_expr) {
+    bool flag = false;
+    external<wrappers::shared>::scope<if0> external_(
+        [&flag]() -> aux::shared_ptr<if0> {
+            if (!flag) {
+                return aux::shared_ptr<c0if0>(new c0if0);
+            }
+
+            return aux::shared_ptr<c1if0>(new c1if0);
+        }
+    );
+
+    BOOST_CHECK(dynamic_cast<c0if0*>(external_.create()(type<aux::shared_ptr<if0>>()).get()));
+
+    flag = true;
+    BOOST_CHECK(dynamic_cast<c1if0*>(external_.create()(type<aux::shared_ptr<if0>>()).get()));
+}
+
 } // namespace scopes
 } // namespace di
 } // namespace boost

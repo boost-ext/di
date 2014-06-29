@@ -20,6 +20,12 @@
 namespace boost {
 namespace di {
 
+struct empty_module {
+    auto configure() const -> decltype(make_injector()) {
+        return make_injector();
+    }
+};
+
 struct module1 {
     using injector_t = injector<c0if0>;
 
@@ -231,7 +237,8 @@ BOOST_AUTO_TEST_CASE(modules_mix_make_injector) {
     );
 
     auto injector_ = di::make_injector(
-        bind<double>::to(d)
+        empty_module()
+      , bind<double>::to(d)
       , module1()
       , di::make_injector(
             bind<float>::to(f)

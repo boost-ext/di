@@ -48,7 +48,9 @@ int main() {
 Thats all, our application should compile and don't print anything.
 'flag' should be false and 'text' should be an empty string.
 
-[@example/cpp_14/tutorial/tutorial1.cpp full code example - tutorial1.cpp]
+[table
+    [[Full code example: [@example/cpp_14/tutorial/tutorial1.cpp]]]
+]
 
 So far everything seems to be really easy, so the next step will be
 to configure our dependencies, meaning what exactly will be passed
@@ -66,8 +68,9 @@ auto injector = di::make_injector(
   , di::bind<std::string>::to("hello world") // dynamic value
 );
 ```
-
-[@example/cpp_14/tutorial/tutorial2.cpp full code example - tutorial2.cpp]
+[table
+    [[Full code example: [@example/cpp_14/tutorial/tutorial2.cpp]]]
+]
 
 So, right now we have injector configured and the output of our example application
 should always be "hello world".
@@ -84,8 +87,9 @@ int main(int argc, char** argv) {
     injector.create<app>().start();
 }
 ```
-
-[@example/cpp_14/tutorial/tutorial3.cpp full code example - tutorial3.cpp]
+[table
+    [[Full code example: [@example/cpp_14/tutorial/tutorial3.cpp]]]
+]
 
 Great! Seems like our example application is working the way was required.
 
@@ -157,8 +161,9 @@ will be actually a printer. There is nothing easier, we just have to bind iprint
     );
     injector.create<std::unique_ptr<app>>()->start(); // unique_ptr is not copyable
 ```
-
-[@example/cpp_14/tutorial/tutorial4.cpp full code example - tutorial4.cpp]
+[table
+    [[Full code example: [@example/cpp_14/tutorial/tutorial4.cpp]]]
+]
 
 Yay, everything is working again. But oh, we wanted to use mock framework for tests, but we can't to do it,
 due to unique ptr stilling our pointer :/ Well, let's say we will switch to shared_ptr instead.
@@ -286,7 +291,9 @@ a problem for you anymore.
 
 Right now you can move on to more in depth stuff - concepts - or just straight away to examples.
 
-[@example/cpp_14/tutorial/tutorial5.cpp full code example - tutorial5.cpp]
+[table
+    [[Full code example: [@example/cpp_14/tutorial/tutorial5.cpp]]]
+]
 
 [endsect]
 
