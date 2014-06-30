@@ -7,7 +7,8 @@
 #ifndef BOOST_DI_SCOPES_DEDUCE_HPP
 #define BOOST_DI_SCOPES_DEDUCE_HPP
 
-#include <boost/none_t.hpp>
+#include "boost/di/type_traits/scope_traits.hpp"
+
 #include <boost/mpl/int.hpp>
 
 namespace boost {
@@ -27,7 +28,13 @@ public:
     struct scope
     {
         typedef scope type;
-        typedef none_t result_type;
+        typedef void result_type;
+    };
+
+    template<typename T>
+    struct rebind
+    {
+        typedef typename type_traits::scope_traits<T>::type other;
     };
 };
 

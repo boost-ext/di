@@ -7,11 +7,11 @@
 #define BOOST_DI_CORE_BINDER_HPP
 
 #include "boost/di/type_traits/make_plain.hpp"
-#include "boost/di/type_traits/scope_traits.hpp"
 #include "boost/di/type_traits/remove_accessors.hpp"
-#include "boost/di/wrappers/universal.hpp"
 #include "boost/di/core/builder.hpp"
+#include "boost/di/wrappers/universal.hpp"
 #include "boost/di/concepts/dependency.hpp"
+#include "boost/di/scopes/deduce.hpp"
 
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/deref.hpp>
@@ -83,9 +83,8 @@ public:
                       >
                   >::type
               >
-          >::type::template rebind<
-              typename type_traits::scope_traits<T>::type
-          >::other
+          >::type::template
+              rebind<typename scopes::deduce::rebind<T>::other>::other
     { };
 
     template<

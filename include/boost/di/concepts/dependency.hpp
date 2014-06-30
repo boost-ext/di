@@ -11,19 +11,16 @@
 #include "boost/di/wrappers/shared.hpp"
 #include "boost/di/wrappers/reference.hpp"
 #include "boost/di/wrappers/value.hpp"
-#include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/type_traits/parameter_types.hpp"
 #include "boost/di/type_traits/has_call_operator.hpp"
 #include "boost/di/concepts/detail/requires.hpp"
 #include "boost/di/concepts/type_traits/is_required_priority.hpp"
 #include "boost/di/concepts/type_traits/is_required_type.hpp"
-#include "boost/di/type_traits/create_traits.hpp"
 
 #include <boost/utility/enable_if.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/mpl/if.hpp>
 
+#include "boost/di/scopes/deduce.hpp"
 namespace boost {
 namespace di {
 namespace concepts {
