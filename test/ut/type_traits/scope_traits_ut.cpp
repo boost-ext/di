@@ -9,7 +9,11 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/type_traits/is_same.hpp>
 
+#include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/memory.hpp"
+#include "boost/di/scopes/external.hpp"
+#include "boost/di/scopes/unique.hpp"
+#include "boost/di/scopes/shared.hpp"
 #include "boost/di/named.hpp"
 
 namespace boost {

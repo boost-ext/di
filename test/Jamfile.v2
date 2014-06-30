@@ -107,6 +107,7 @@ test-suite ut : # unit tests
     [ run-test c++11 : ut/policies/creation_ownership_ut.cpp ]
     [ run-test c++11 : ut/policies/scopes_permission_ut.cpp ]
 
+    [ run-test c++11 : ut/scopes/deduce_ut.cpp : scope_deduce_ut ]
     [ run-test c++11 : ut/scopes/external_ut.cpp : scope_external_ut ]
     [ run-test c++11 : ut/scopes/session_ut.cpp : scope_session_ut ]
     [ run-test c++11 : ut/scopes/shared_ut.cpp : scope_shared_ut ]
