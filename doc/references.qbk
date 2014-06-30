@@ -1,43 +1,44 @@
 [section References]
 
-# "Dependency Injection in .NET"
+[#See11][See11] "Dependency Injection in .NET"
   , Mark Seemann
   , Manning Publications
   , September 28, 2011
 
-# "Google Guice: Agile Lightweight Dependency Injection Framework"
+[#Van08][Van08] "Google Guice: Agile Lightweight Dependency Injection Framework"
   , Robbie Vanbrabant
   , Apress
   , April 2008
 
-# "The Dependency Inversion principle "
+[#Mar96][Mar96] "The Dependency Inversion principle"
   , Robert C. Martin
+  , 1996
 
-# "Inversion of Control Containers and the Dependency Injection pattern"
+[#Fow04][Fow04] "Inversion of Control Containers and the Dependency Injection pattern"
   , Martin Fowler
   , 2004
 
-# "Mastering Ninject for Dependency Injection"
+[#Bah13][Bah13] "Mastering Ninject for Dependency Injection"
   , Daniel Baharestani
   , Packt Publishing
   , September 25, 2013
 
-# "Dependency Injection: Design patterns using Spring and Guice"
+[#Pra09][Pra09] "Dependency Injection: Design patterns using Spring and Guice"
   , Dhanji R. Prasanna
   , Manning Publications
   , August 10, 2009
 
-# "Design Patterns: Elements of Reusable Object-Oriented Software"
+[#Gam94][Gam94] "Design Patterns: Elements of Reusable Object-Oriented Software"
   , Erich Gamma, Richard Helm, Ralph Johnson, John Vlissides
   , Addison-Wesley Professional
   , October 31, 1994
 
-# "C++ Template Metaprogramming: Concepts, Tools, and Techniques from Boost and Beyond"
+[#Abr04][Abr04] "C++ Template Metaprogramming: Concepts, Tools, and Techniques from Boost and Beyond"
   , David Abrahams, Aleksey Gurtovoy
   , Addison-Wesley Professional
   , December 10, 2004
 
-# "C++ Coding Standards: 101 Rules, Guidelines, and Best Practices"
+[#Sut04][Sut04] "C++ Coding Standards: 101 Rules, Guidelines, and Best Practices"
   , Herb Sutter, Andrei Alexandrescu
   , Addison-Wesley Professional
   , October 25, 2004

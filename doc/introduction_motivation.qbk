@@ -22,7 +22,7 @@ Constructor injection is the most powerful and the cleanest way of dependency in
 it's also the preferable as well becauase you don't need to worry about objects arriving in an uninitialized state.
 This library provide the functionality for constructor and interface injection.
 
-[1] widely explains advantages of using dependency injection, which might be sum up by:
+[link See11] widely explains advantages of using dependency injection, which might be sum up by:
 
 * Parallel Development
     * allows many teams to work separately on different modules
