@@ -1,21 +1,21 @@
 [section Examples]
 
-[section Hello World]
+[section:hello_world Hello World]
 [import ../example/hello_world.cpp]
 [hello_world]
 [endsect]
 
-[section Constructor Injection]
+[section:ctor Constructor Injection]
 [import ../example/cpp_11/inject.cpp]
 [inject_cpp_11]
 [endsect]
 
-[section Using Named Parameters]
+[section:named Using Named Parameters]
 [import ../example/cpp_11/named.cpp]
 [named_cpp_11]
 [endsect]
 
-[section Using Providers]
+[section:provider Using Providers]
 [import ../example/cpp_11/provider.cpp]
 [provider_cpp_11]
 [endsect]

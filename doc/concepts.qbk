@@ -18,12 +18,17 @@ public:
 ```
 
 If the default behavior should be changed there is a way of explicitly saying which constructor should be deduced by adding
-BOOST_DI_INJECT to the constructor definition.
+`BOOST_DI_INJECT` to the constructor definition.
 
 [note DI is not able to distinguish between ambiguous constructors with the same (longest) amount of parameters, then BOOST_DI_INJECT has to be used to point which constructor should be dedced]
 [warning In C++03 one argument constructors might be ambiguous with copy constructors, therefore is advised to use `BOOST_DI_INJECT` for 1 argument constructors in C++03.]
 
 [h6 BOOST_DI_INJECT]
+
+TODO
+```
+macro expansion here
+```
 
 ```
 class example {
@@ -292,7 +297,8 @@ Preferable option is to use di::make_injector because it allows to bind dynamic 
 [endsect]
 
 [section Module]
-
+Modules allow to split the configurations into smaller injectors.
+Module is a class with `configure` method returning `injector` type.
 ```
     class module {
     public:
@@ -303,15 +309,34 @@ Preferable option is to use di::make_injector because it allows to bind dynamic 
         }
     }
 ```
+Activation of `Module` is done by passing it into injector.
+[table
+[[di::make_injector][di::injector]]
+    [
+        [
+            ```
+                auto injector = di::make_injector(module(), ...);
+            ```
+        ]
+        [
+            ```
+                using injector = di::injector<module, ...>;
+            ```
+        ]
+    ]
+]
+
+[tip Modules/Concepts/Types might be mixed whilst creating an injector, order is not important]
+
 [endsect]
 
 [section Named Parameter]
 
-Named parameters are useful when the constructor has more parameters of the same type.
+Named parameters are useful when constructor has more parameters of the same type.
 ```
     example(int value1, int value2);
 ```
-In order to inject proper values to value and value2 they have to distinguish somehow.
+In order to inject proper values into value and value2 they have to distinguish somehow.
 Boost.DI solution for this are `named parameters`, which basically are just wrappers
 for the type with automatic conversion to the based type.
 ```
@@ -349,7 +374,7 @@ It doesn't has to be the case when constructor traits are being used.
 
 With normal dependency injection, each type gets exactly one instance of each of its dependent types.
 Sometimes it's required to get many different instances. Then providers become handy.
-They produce a value when the get() method is invoked.
+They create a new value whenever get() method is invoked.
 
 ```
     template<typename T>
@@ -377,7 +402,9 @@ They produce a value when the get() method is invoked.
         }
     };
 ```
-
+[table
+    [[Example: [link di.provider]]]
+]
 [endsect]
 
 [endsect]

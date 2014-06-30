@@ -74,42 +74,83 @@ The macros listed in the table below may be used to control the behaviour of Boo
   [[Macro][Description]]
   [
     [`BOOST_DI_CFG_NO_PREPROCESSED_HEADERS`]
-    [ default: `enabled` ]
+    [
+        Boost.DI by default uses preprocessed headers. See `Compilation time` for further specification.
+        To explicitly disable preprocessed headers `BOOST_DI_CFG_NO_PREPROCESSED_HEADERS` has to be defined.
+
+        default: `enabled`
+    ]
   ]
   [
 
     [`BOOST_DI_CFG_CTOR_LIMIT_SIZE`]
-    [ default: `10` ]
+    [
+        Constructor injection is limited by `BOOST_DI_CFG_CTOR_LIMIT_SIZE`, which means that constructor can't
+        have more parameters then defined in order for Boost.DI to works correctly. Value might be redefined
+        to any number, the only repercussion will be longer compilation times. Might be used as well to limit
+        clients from having long parameter list constructors.
+
+        default: `10`
+    ]
   ]
 
   [
     [`BOOST_DI_CFG_EXAMINE_CALL_STACK`]
-    [ default: `disabled` ]
+    [
+        Context concepts (`when` syntax) have to be explicitly turned on using `BOOST_DI_CFG_EXAMINE_CALL_STACK`. Reason being
+        much longer compilation times.
+
+        default: `disabled`
+    ]
   ]
 
   [
     [`BOOST_DI_CFG_INJECT_VA_ARGS`]
-    [ default: `enabled when C++11`]
+    [
+        `BOOST_DI_INJECT(ctor, arg1, arg2, ..., argN)`
+
+        default: `enabled when C++11`
+    ]
   ]
 
   [
     [`BOOST_DI_CFG_INJECT_BRACKET`]
-    [ default: `enabled when C++03`]
+    [
+        `BOOST_DI_INJECT(ctor, (arg1, arg2, ..., argN))`
+
+        default: `enabled when C++03`
+    ]
   ]
 
   [
     [`BOOST_DI_CFG_STD_SMART_PTR`]
-    [ default: `enabled if supported by compiler`]
+    [
+        Default `smart pointer` type is set accordingly to compiler support, but
+        might standard smart pointers might be forced by `BOOST_DI_CFG_STD_SMART_PTR`.
+        Then Boost.DI internally will use standard smart pointers instead of boost smart
+        pointers. Additionally conversion to weak_ptr is only allowed from default `smart pointer type`.
+
+        default: `enabled if supported by compiler`
+    ]
   ]
 
   [
     [`BOOST_DI_CFG_BOOST_SMART_PTR`]
-    [ default: `enabled if std smart ptr are not supported by compiler`]
+    [
+        Analogously as `BOOST_DI_CFG_STD_SMART_PTR`, but with boost smart pointers to be chosen.
+
+        default: `enabled if std smart ptr are not supported by compiler`
+    ]
   ]
 
   [
     [`BOOST_DI_INJECTOR`]
-    [ default: `boost_di_injector__`]
+    [
+        Named used internally by Boost.DI when `BOOST_DI_INJECT` or `BOOST_DI_INJECT_TRAITS` is used
+        to define constructor traits.
+
+        default: `boost_di_injector__`
+    ]
   ]
 ]
 

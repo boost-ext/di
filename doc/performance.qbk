@@ -12,7 +12,7 @@ If compilation time is still a problem, Boost.DI contains a set of features to i
     * Contains Boost.DI library in one file after preprocessing stage
     * Preprocessed Headers are generated for `BOOST_DI_CFG_CTOR_LIMIT_SIZE` equals 10 and for `BOOST_MPL_LIMIT_VECTOR_SIZE` equals 10, 20, 30, 40, 50
     * To disable it `BOOST_DI_CFG_NO_PREPROCESSED_HEADERS` has to be defined
-    * Enabled by default 
+    * Enabled by default
 
 * Precompiled Headers
     * Modern compilers feature to cache headers in precompiled stage
@@ -29,11 +29,11 @@ If compilation time is still a problem, Boost.DI contains a set of features to i
 ```
 
 ```
-    CXX -include pch.hpp example.cpp 
+    CXX -include pch.hpp example.cpp
 ```
 
 * Examine Call Stack
-    * Enables context (call stack) to be used for binding 
+    * Enables context (call stack) to be used for binding
     * This feature slow down the compilation, so it has to be turn on by defining `BOOST_DI_CFG_EXAMINE_CALL_STACK`
     * Disabled by default
 
@@ -143,7 +143,7 @@ In order to verify how huge overhead is basic example was introduced and generat
                0x0000000000400ac5 <+117>:	pop    %rbx
                0x0000000000400ac6 <+118>:	pop    %rbp
                0x0000000000400ac7 <+119>:	pop    %r12
-               0x0000000000400ac9 <+121>:	retq   
+               0x0000000000400ac9 <+121>:	retq
                0x0000000000400aca <+122>:	nopw   0x0(%rax,%rax,1)
                0x0000000000400ad0 <+128>:	mov    (%rbx),%rax
                0x0000000000400ad3 <+131>:	mov    %rbx,%rdi
