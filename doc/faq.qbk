@@ -11,9 +11,12 @@ The main question should be though - in real life projects how often configurati
 # Why Boost.DI doesn't support setter/member injection?
 
     * Constructor injection is the most powerful and the preferable injection method which avoid uninitialized state of members.
-According to author setter/member injection should be avoided at all costs in order to keep the solutions as clean as possible.
+According to author `setter/member` injection should be avoided at all costs in order to keep the solutions as clean as possible.
 
 # Why Boost.DI doesn't have `singleton` scope?
-#
+
+    * Singleton pattern is usually overused and makes code really hard to test. Thread safety has to be considered as well whilst using it.
+Boost.DI provides `shared` scope which behaves like non-multi threaded singleton. `Singleton` scope might be implemented using Boost.DI `scope` functionality.
+
 [endsect]
 

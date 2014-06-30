@@ -42,13 +42,6 @@ This library provide the functionality for constructor and interface injection.
 
 [note Service locator - similar in a lot of cases to dependency injection - anti pattern, because force unnatural code structure and a lot of resolve calls]
 
-[h6 The Clean Code Talks]
-
-The Clean Code Talks are great for basic understanding why dependency injection is so useful:
-
-* [@http://www.youtube.com/watch?v=wEhu57pih5w Unit Testing]
-* [@http://www.youtube.com/watch?v=RlfLCWKxHJ0 Don't Look For Things]
-
 [h6 Dependency Injection Library?]
 
 But do we really need dependency injection library, we can inject all dependencies ourselves?
