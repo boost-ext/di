@@ -4,14 +4,11 @@ Boost.DI is C++ 03 / C++ 11 header only library providing compile time, macro fr
 
 [h6 Dependency Injection?]
 
-According to [1] "Dependency Injection is a set of software design principles and patterns that enable us to develop loosely coupled code".
-And loose coupling code make code more maintainable, which is one of an obvious goals in software engineering.
-On the other hand Dependency Injection might be described with the Hollywood principle: "Don't call us, we'll call you".
-Wikipedia definition says [@http://en.wikipedia.org/wiki/Dependency_injection Dependency injection] is a
-[@http://en.wikipedia.org/wiki/Software_design_pattern software design pattern] that implements
-[@http://en.wikipedia.org/wiki/Inversion_of_control inversion of control] and allows a program design to follow the dependency inversion principle.
+"Dependency Injection is a set of software design principles and patterns that enable us to develop loosely coupled code" [1].
+Loose coupling code make code more maintainable, which is one of an obvious goals in software engineering.
+In simple worlds might be described with the Hollywood principle: "Don't call us, we'll call you".
 
-Basically Dependency Injection allow us to separate business logic and object creation,
+Dependency Injection allow us to separate business logic and object creation,
 which is a really good thing, because it give us the possibility to write maintainable and testable code.
 
 There are many forms of dependency injection about which you can read in [2]:
@@ -25,19 +22,23 @@ Constructor injection is the most powerful and the cleanest way of dependency in
 it's also the preferable as well becauase you don't need to worry about objects arriving in an uninitialized state.
 This library provide the functionality for constructor and interface injection.
 
-Author in [1] widely explains advantages of using dependency injection, which might be sum up by:
+[1] widely explains advantages of using dependency injection, which might be sum up by:
 
 * Parallel Development
     * allows many teams to work separately on different modules
 
 * Extensibility
     * lose coupling, declarative approach are features which make code easy to extend
+    * promotes business logic code over boilerplate code
 
 * Maintainability
     * separation between object creation and business logic make code easy maintainable
+    * reduce `Dependency Carrying` - passing dependnecies which aren't used directly and passed further
 
 * Testability
     * possibility of passing all required parameters via constructor give the opportunity to use fakes for testing purposes
+
+* Readbility
 
 [note Service locator - similar in a lot of cases to dependency injection - anti pattern, because force unnatural code structure and a lot of resolve calls]
 
@@ -56,6 +57,8 @@ Programmers should be `lazy` and shouldn't have to write tedious, boilerplate co
 Frameworks needs are scaling with the project size, the bigger project is, the more frameworks will be used.
 Using library may give you additional advantages like logging, generating diagrams, compile time checking or restrictions,
 additional conversions, etc... in general it give you full control of what and how will be injected in easy and user friendly way.
+Depenendy injection frameowkr of some sort will be created either way during the implemention of the project
+With that said, if you do not use a dependency injection framework, you end up in creating one (or parts of it) yourself. Furthermore, dependencies can be passed through constructors or setters and this can be achieved without dependency injection. The benefit of dependency injection is that the framework takes care of all objects creation and configuration for you. Therefore instead of creating and configuring the objects yourself, the dependency framework does it for you.
 
 [h6 Motivation example]
 
@@ -63,6 +66,116 @@ additional conversions, etc... in general it give you full control of what and h
 [motivation_cpp_11]
 
 [tip Good practise: composition root is a (preferably) unique location in an application where modules are composed together in 1]
+
+```
+class email
+{
+public:
+    void send(const std::string& message) { ... }
+};
+```
+
+```
+class person
+{
+public:
+    void send_hello_world() {
+        email_.send("hello world");
+    }
+
+private:
+    email email_;
+};
+```
+
+* coupeld (person depends on email)
+
+Let's follow "define, implement and use" principle
+
+define
+```
+class imessage
+{
+public:
+    virtual ~imessage() { }
+    virtual void send(const std::string&) = 0;
+};
+```
+
+implement
+```
+class email : public imessage
+{
+public:
+    virtual ~email() { }
+    void send(const std::string& message) override { ... }
+};
+```
+
+```
+class person
+{
+public:
+    person(const service_locator& sl)
+        : message_(sl.resolve<imessage>())
+    { }
+
+    void send_hello_world() {
+        message_->send("hello world");
+    }
+
+private:
+    std::unique_ptr<imessage> message_;
+};
+```
+
+use
+```
+class person
+{
+public:
+    person(std::unique_ptr<imessage> message)
+        : message_(message)
+    { }
+
+    void send_hello_world() {
+        message_->send("hello world");
+    }
+
+private:
+    std::unique_ptr<imessage> message_;
+};
+```
+
+```
+```
+
+implement others
+```
+class tweet : public imessage
+{
+public:
+    virtual ~email() { }
+    void send(const std::string& message) override { ... }
+};
+```
+
+complexity was added but we can use di then
+
+```
+auto injector = di::make_injector(
+    bind<imessage, email>();
+);
+
+auto person_ = injector.create<person>();
+```
+
+* Benefits of using Dependency Injection Framework
+
+ * changing the signature won't require any changes
+ * changing will only require change the module service
+ * we cant easily make integreation tests
+ * unit tests, we won't need it but for
 
 [endsect]
 

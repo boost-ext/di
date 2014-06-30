@@ -56,6 +56,9 @@ struct ctor_traits<example> {
 
 [note BOOST_DI_INJECT_TRAITS might be also defined within the class, useful in case of named parameters]
 
+[table
+    [[Tests: [@test/ut/inject_va_args_ut.cpp] | [@test/ut/inject_bracket_ut.cpp]]]
+]
 [endsect]
 
 [section Scope]
@@ -217,15 +220,38 @@ Then concept might be used with `when` binding afterwards.
     assert(1 == injector.create<int>());
     assert(42 == injector.create<example>().i);
 ```
-
+[table
+    [[Tests: [@test/ut/concepts_ut.cpp] | [@test/ut/core/binder_ut.cpp]]]
+]
 [endsect]
 
 [section Injector]
 
 Injector is a component used for creating dependencies configuration using bindings.
+
+* `create`
+```
+    template<typename T, typename... TPolicies>
+    T create(TPolicies&&...);
+```
+
+* `visit`
+```
+    template<typename T>
+    void visit();
+```
+
+* `call`
+```
+    template<typename TAction>
+    void call(const TAction&);
+```
+[table
+    [[Tests: [@test/ut/injector_ut.cpp]]]
+]
+
 Injector might be created using `di::make_injector` or `di::injector type` it self.
 Preferable option is to use di::make_injector because it allows to bind dynamic values.
-
 
 [table
 [[di::make_injector][di::injector]]
@@ -259,26 +285,10 @@ Preferable option is to use di::make_injector because it allows to bind dynamic 
     ]
 ]
 
-Injector
 
-* `create`
-```
-    template<typename T, typename... TPolicies>
-    T create(TPolicies&&...);
-```
-
-* `visit`
-```
-    template<typename T>
-    void visit();
-```
-
-* `call`
-```
-    template<typename TAction>
-    void call(const TAction&);
-```
-
+[table
+    [[Tests: [@test/mt/make_injector_mt.cpp] | [@test/mt/injector_mt.cpp]]]
+]
 [endsect]
 
 [section Module]
@@ -294,7 +304,6 @@ Injector
     }
 ```
 [endsect]
-
 
 [section Named Parameter]
 
@@ -331,7 +340,9 @@ It doesn't has to be the case when constructor traits are being used.
 
 }} // boost::di
 ```
-
+[table
+    [[Tests: [@test/ut/named_ut.cpp]]]
+]
 [endsect]
 
 [section Provider]

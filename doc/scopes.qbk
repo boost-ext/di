@@ -33,6 +33,10 @@ There are 5 basic types of wrappers.
     [[value][conversion to lvalue/rvalue/pointer/smart_pointer]]
 ]
 
+[table
+    [[Tests: [@test/ut/wrappers/universal_ut.cpp]]]
+]
+
 Implementation of custom scope requires
 
 * Implementation of the scope
@@ -111,6 +115,9 @@ Default scope which will be converted to one of the scopes shared/unique/externa
 [h5 Conversions]
 Refer to `Scopes Conversions` table.
 
+[table
+    [[Tests: [@test/ut/scopes/deduce_ut.cpp]]]
+]
 [endsect]
 
 [section External]
@@ -152,6 +159,9 @@ will be binded using different scope as well then this binding won't be taken in
 [h5 Conversions]
 Refer to `Scopes Conversions` table.
 
+[table
+    [[Tests: [@test/ut/scopes/external_ut.cpp] | [@test/ut/wrappers/value_ut.cpp] | [@test/ut/wrappers/reference_ut.cpp] | [@test/ut/wrappers/shared_ut.cpp]]]
+]
 [endsect]
 
 [section Unique]
@@ -188,6 +198,9 @@ Scope representing unique value, meaning unique value always will be passed to t
 [h5 Conversions]
 Refer to `Scopes Conversions` table.
 
+[table
+    [[Tests: [@test/ut/scopes/unique_ut.cpp] | [@test/ut/wrappers/copy_ut.cpp]]]
+]
 [endsect]
 
 [section Shared]
@@ -226,6 +239,9 @@ Boost.DI to achieve that is using smart shared pointers. This scope will be dedu
 [h5 Conversions]
 Refer to `Scopes Conversions` table.
 
+[table
+    [[Tests: [@test/ut/scopes/shared_ut.cpp] | [@test/ut/wrappers/shared_ut.cpp]]]
+]
 [endsect]
 
 [section Session]
@@ -278,6 +294,10 @@ Scope is activated by call of `call` method with `session_entry` parameter and d
 
 [h5 Conversions]
 Refer to `Scopes Conversions` table.
+
+[table
+    [[Tests: [@test/ut/scopes/session_ut.cpp] | [@test/ut/wrappers/shared_ut.cpp]]]
+]
 [endsect]
 
 [h6 Scopes Conversions]

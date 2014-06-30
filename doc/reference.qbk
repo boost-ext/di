@@ -39,6 +39,9 @@ This header exists simply as a convenience to the user, including all of the hea
 #define BOOST_DI_INJECT_TRAITS(...);
 #define BOOST_DI_INJECT(type, ...);
 ```
+[table
+    [[Tests: [@test/ut/inject_va_args_ut.cpp] | [@test/ut/inject_bracket_ut.cpp]]]
+]
 [endsect]
 
 [section Header <boost/di/injector.hpp>]
@@ -68,7 +71,7 @@ public:
 } // namespace boost
 ```
 [table
-    [[Tests: [@test/mt/injector_mt.cpp]]]
+    [[Tests: [@test/ut/injector_ut.cpp] | [@test/mt/injector_mt.cpp]]]
 ]
 [endsect]
 
@@ -596,18 +599,7 @@ public:
     typedef TBind bind;
 
     template<typename T>
-    struct rebind {
-        typedef dependency<
-            typename mpl::if_<
-                is_same<scope, scopes::deduce>
-              , T
-              , TScope
-            >::type
-          , TExpected
-          , TGiven
-          , TBind
-        > other;
-    };
+    struct rebind;
 
     dependency();
 
@@ -811,15 +803,20 @@ public:
     typedef mpl::int_<0> priority;
 
     template<typename, typename>
-    struct scope {
-        typedef none_t result_type;
-    };
+    struct scope;
+
+    template<typename T>
+    struct rebind;
 };
 
 } // namespace scopes
 } // namespace di
 } // namespace boost
 ```
+[table
+    [[Tests: [@test/ut/scopes/deduce_ut.cpp]]]
+]
+[ends
 [endsect]
 
 [section Header <boost/di/scopes/external.hpp>]
