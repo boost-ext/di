@@ -114,7 +114,7 @@ int main() {
 * Runtime visitor throughout created objects (useful for generation dependency diagrams)
 
 ## More information
-* [Documentation](http://krzysztof-jusiak.github.com/di/doc/html)
+* [Documentation](http://krzysztof-jusiak.github.com/di)
 * [Todo/Issues] (https://github.com/krzysztof-jusiak/di/issues?state=open)
 
 ## Tested compilers
