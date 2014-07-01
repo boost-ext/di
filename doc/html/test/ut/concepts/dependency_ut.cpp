@@ -14,6 +14,7 @@
 #include <boost/type_traits/is_same.hpp>
 
 #include "boost/di/aux_/config.hpp"
+#include "boost/di/scopes/deduce.hpp"
 
 #include "common/fakes/fake_scope.hpp"
 
@@ -47,7 +48,7 @@ BOOST_AUTO_TEST_CASE(rebind_scope) {
               , detail::requires_<is_same<mpl::_1, int>>
             >
           , dependency<
-                mpl::_1
+                scopes::deduce
               , int
               , int
               , detail::requires_<is_same<mpl::_1, int>>

@@ -6,7 +6,7 @@
 //
 
 //[injection_cpp_03
-//`[h6 C++ 98/03]
+//````C++98/03```
 //<-
 #include <cassert>
 #include <memory>
@@ -72,6 +72,7 @@ int main() {
     return 0;
 }
 
-//`full code example: [@example/cpp_03/injection.cpp injection.cpp]
+//`[table
+//`[[Full code example: [@example/cpp_03/injection.cpp injection.cpp]]]]
 //]
 

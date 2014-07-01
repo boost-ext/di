@@ -28,6 +28,95 @@
     Rationale</a>
 </h2></div></div></div>
 <p>
+      Basic design of Boost.DI involves two main concepts:
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          verifying how many arguments constructor has using <code class="computeroutput"><span class="identifier">has_ctor</span></code>
+        </li>
+<li class="listitem">
+          conversion to requested type using <code class="computeroutput"><span class="identifier">type</span>
+          <span class="identifier">conversion</span> <span class="keyword">operator</span></code>
+        </li>
+</ul></div>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">any_type</span> <span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="keyword">operator</span> <span class="identifier">U</span><span class="special">();</span>
+<span class="special">};</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TArgs</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">has_ctor</span> <span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="keyword">static</span> <span class="identifier">yes_tag</span> <span class="identifier">test</span><span class="special">(</span><span class="keyword">decltype</span><span class="special">(</span><span class="identifier">U</span><span class="special">(</span><span class="identifier">TArgs</span><span class="special">()...)*);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">&gt;</span> <span class="keyword">static</span> <span class="identifier">no_tag</span> <span class="identifier">test</span><span class="special">(...);</span>
+
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">test</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="number">0</span><span class="special">))</span> <span class="special">==</span> <span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">yes_tag</span><span class="special">);</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">converter</span> <span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">operator</span> <span class="identifier">T</span><span class="special">()</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">T</span><span class="special">();</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">class</span> <span class="identifier">injector</span> <span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">ctor</span> <span class="special">{</span>
+        <span class="keyword">constexpr</span> <span class="keyword">int</span> <span class="identifier">max</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+            <span class="keyword">for</span> <span class="special">(</span><span class="keyword">auto</span> <span class="identifier">i</span> <span class="special">=</span> <span class="identifier">MAX_CTOR_SIZE</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&gt;</span> <span class="number">0</span><span class="special">;</span> <span class="special">--</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
+                <span class="keyword">if</span> <span class="special">(</span><span class="identifier">has_ctor</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">int_</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">&gt;&gt;::</span><span class="identifier">value</span><span class="special">)</span> <span class="special">{</span>
+                    <span class="keyword">return</span> <span class="identifier">i</span><span class="special">;</span>
+                <span class="special">}</span>
+            <span class="special">}</span>
+
+            <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+        <span class="special">}</span>
+    <span class="special">};</span>
+
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="identifier">T</span> <span class="identifier">create</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">create_impl</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">generate_converters</span><span class="special">&lt;</span><span class="identifier">ctor</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">max</span><span class="special">()&gt;&gt;();</span>
+    <span class="special">}</span>
+
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TConverters</span><span class="special">&gt;</span>
+    <span class="identifier">T</span> <span class="identifier">create_impl</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">T</span><span class="special">(</span><span class="identifier">TConverters</span><span class="special">()...);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
+    <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">,</span> <span class="keyword">int</span> <span class="keyword">double</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="identifier">injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;();</span>
+</pre>
+<p>
+    </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src=".././doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        Purpose of above pseudo code is to illustrate basic idea, if you interested
+        in the implementation details take a look into Boost.DI source code.
+      </p></td></tr>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<tbody><tr><td>
+              <p>
+                Tests: <a href="../test/vt/compiler_support_vt.cpp" target="_top">test/vt/compiler_support_vt.cpp</a>
+              </p>
+            </td></tr></tbody>
+</table></div>
+<p>
+      That's the main idea, obviously Boost.DI is more complex that that. The latest
+      design is shown below.
+    </p>
+<p>
       <a href="../images/di.png" target="_top"><span class="inlinemediaobject"><img src="../images/di.png" width="75%" alt="di"></span></a> Generated with <a href="http://plantuml.sourceforge.net" target="_top">PlantUML</a>.
     </p>
 <p>

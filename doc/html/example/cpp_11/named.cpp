@@ -6,7 +6,7 @@
 //
 
 //[named_cpp_11
-//`[h6 C++ 11]
+//````C++11```
 //<-
 #include <cassert>
 #include <boost/mpl/string.hpp>
@@ -44,6 +44,7 @@ int main() {
     return 0;
 }
 
-//`full code example: [@example/cpp_11/named.cpp named.cpp]
+//`[table
+//`[[Full code example: [@example/cpp_11/named.cpp named.cpp]]]]
 //]
 

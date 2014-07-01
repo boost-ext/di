@@ -103,6 +103,15 @@
 </pre>
 <p>
         </p>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<tbody><tr><td>
+                  <p>
+                    Tests: <a href="../test/ut/inject_va_args_ut.cpp" target="_top">test/ut/inject_va_args_ut.cpp</a>
+                    | <a href="../test/ut/inject_bracket_ut.cpp" target="_top">test/ut/inject_bracket_ut.cpp</a>
+                  </p>
+                </td></tr></tbody>
+</table></div>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
@@ -141,7 +150,8 @@
 <colgroup><col></colgroup>
 <tbody><tr><td>
                   <p>
-                    Tests: <a href="../test/mt/injector_mt.cpp" target="_top">test/mt/injector_mt.cpp</a>
+                    Tests: <a href="../test/ut/injector_ut.cpp" target="_top">test/ut/injector_ut.cpp</a>
+                    | <a href="../test/mt/injector_mt.cpp" target="_top">test/mt/injector_mt.cpp</a>
                   </p>
                 </td></tr></tbody>
 </table></div>
@@ -174,10 +184,132 @@
                 </td></tr></tbody>
 </table></div>
 </div>
-<div class="section"><div class="titlepage"><div><div><h4 class="title">
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
 <a name="boost_di__dependency_injection_.reference.___.header__boost_di_named_hpp_"></a><a class="link" href="reference.html#boost_di__dependency_injection_.reference.___.header__boost_di_named_hpp_" title="Header &lt;boost/di/named.hpp&gt;">Header
         &lt;boost/di/named.hpp&gt;</a>
-</h4></div></div></div></div>
+</h4></div></div></div>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">{</span>
+
+<span class="keyword">struct</span> <span class="identifier">no_name</span> <span class="special">{</span> <span class="special">};</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span>
+    <span class="keyword">typename</span> <span class="identifier">T</span>
+  <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TName</span> <span class="special">=</span> <span class="identifier">no_name</span>
+<span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">named</span> <span class="special">{</span>
+    <span class="identifier">named</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="keyword">const</span> <span class="identifier">named</span><span class="special">&amp;);</span>
+
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">T</span> <span class="identifier">named_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">TName</span> <span class="identifier">name</span><span class="special">;</span>
+
+    <span class="identifier">named</span><span class="special">(</span><span class="identifier">T</span><span class="special">);</span> <span class="comment">// non explicit</span>
+    <span class="identifier">named</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">named</span><span class="special">&amp;);</span>
+
+    <span class="keyword">operator</span> <span class="identifier">T</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span>
+    <span class="keyword">typename</span> <span class="identifier">T</span>
+  <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TName</span>
+<span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">named</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;,</span> <span class="identifier">TName</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="identifier">named</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="keyword">const</span> <span class="identifier">named</span><span class="special">&amp;);</span>
+
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">named_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">TName</span> <span class="identifier">name</span><span class="special">;</span>
+
+    <span class="identifier">named</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;);</span> <span class="comment">// non explicit</span>
+    <span class="identifier">named</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">named</span><span class="special">&amp;);</span>
+
+    <span class="keyword">operator</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span>
+    <span class="keyword">typename</span> <span class="identifier">T</span>
+  <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TName</span>
+<span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;,</span> <span class="identifier">TName</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="identifier">named</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="keyword">const</span> <span class="identifier">named</span><span class="special">&amp;);</span>
+
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">named_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">TName</span> <span class="identifier">name</span><span class="special">;</span>
+
+    <span class="identifier">named</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;);</span> <span class="comment">// non explicit</span>
+    <span class="identifier">named</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">named</span><span class="special">&amp;);</span>
+
+    <span class="keyword">operator</span> <span class="identifier">T</span><span class="special">&amp;();</span>
+<span class="special">};</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span>
+    <span class="keyword">typename</span> <span class="identifier">T</span>
+  <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TName</span>
+<span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&amp;,</span> <span class="identifier">TName</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="identifier">named</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="keyword">const</span> <span class="identifier">named</span><span class="special">&amp;);</span>
+
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">T</span><span class="special">&amp;&amp;</span> <span class="identifier">named_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">TName</span> <span class="identifier">name</span><span class="special">;</span>
+
+    <span class="identifier">named</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;&amp;);</span> <span class="comment">// non explicit</span>
+    <span class="identifier">named</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">named</span><span class="special">&amp;);</span>
+
+    <span class="keyword">operator</span> <span class="identifier">T</span><span class="special">&amp;&amp;();</span>
+<span class="special">};</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span>
+    <span class="keyword">typename</span> <span class="identifier">T</span>
+  <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TName</span>
+<span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span> <span class="identifier">TName</span><span class="special">&gt;</span>
+<span class="special">{</span>
+    <span class="identifier">named</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="keyword">const</span> <span class="identifier">named</span><span class="special">&amp;);</span>
+
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">aux</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">named_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">TName</span> <span class="identifier">name</span><span class="special">;</span>
+
+    <span class="identifier">named</span><span class="special">(</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;);</span> <span class="comment">// non explicit</span>
+    <span class="identifier">named</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">named</span><span class="special">&amp;);</span>
+
+    <span class="keyword">operator</span> <span class="identifier">aux</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;();</span>
+<span class="special">};</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span>
+    <span class="keyword">typename</span> <span class="identifier">T</span>
+  <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TName</span>
+<span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">named</span><span class="special">&lt;</span>
+    <span class="identifier">T</span>
+  <span class="special">,</span> <span class="identifier">TName</span>
+  <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">enable_if</span><span class="special">&lt;</span><span class="identifier">is_polymorphic</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">remove_accessors</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">&gt;&gt;::</span><span class="identifier">type</span>
+<span class="special">&gt;</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">T</span> <span class="identifier">named_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">TName</span> <span class="identifier">name</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="special">}</span> <span class="comment">// namespace di</span>
+<span class="special">}</span> <span class="comment">// namespace boost</span>
+</pre>
+<p>
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<tbody><tr><td>
+                  <p>
+                    Tests: <a href="../test/ut/named_ut.cpp" target="_top">test/ut/named_ut.cpp</a>
+                  </p>
+                </td></tr></tbody>
+</table></div>
+</div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_di__dependency_injection_.reference.___.header__boost_di_provider_hpp_"></a><a class="link" href="reference.html#boost_di__dependency_injection_.reference.___.header__boost_di_provider_hpp_" title="Header &lt;boost/di/provider.hpp&gt;">Header
@@ -700,18 +832,7 @@
     <span class="keyword">typedef</span> <span class="identifier">TBind</span> <span class="identifier">bind</span><span class="special">;</span>
 
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
-    <span class="keyword">struct</span> <span class="identifier">rebind</span> <span class="special">{</span>
-        <span class="keyword">typedef</span> <span class="identifier">dependency</span><span class="special">&lt;</span>
-            <span class="keyword">typename</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">if_</span><span class="special">&lt;</span>
-                <span class="identifier">is_same</span><span class="special">&lt;</span><span class="identifier">scope</span><span class="special">,</span> <span class="identifier">scopes</span><span class="special">::</span><span class="identifier">deduce</span><span class="special">&gt;</span>
-              <span class="special">,</span> <span class="identifier">T</span>
-              <span class="special">,</span> <span class="identifier">TScope</span>
-            <span class="special">&gt;::</span><span class="identifier">type</span>
-          <span class="special">,</span> <span class="identifier">TExpected</span>
-          <span class="special">,</span> <span class="identifier">TGiven</span>
-          <span class="special">,</span> <span class="identifier">TBind</span>
-        <span class="special">&gt;</span> <span class="identifier">other</span><span class="special">;</span>
-    <span class="special">};</span>
+    <span class="keyword">struct</span> <span class="identifier">rebind</span><span class="special">;</span>
 
     <span class="identifier">dependency</span><span class="special">();</span>
 
@@ -1000,9 +1121,10 @@
     <span class="keyword">typedef</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">int_</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;</span> <span class="identifier">priority</span><span class="special">;</span>
 
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">&gt;</span>
-    <span class="keyword">struct</span> <span class="identifier">scope</span> <span class="special">{</span>
-        <span class="keyword">typedef</span> <span class="identifier">none_t</span> <span class="identifier">result_type</span><span class="special">;</span>
-    <span class="special">};</span>
+    <span class="keyword">struct</span> <span class="identifier">scope</span><span class="special">;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">rebind</span><span class="special">;</span>
 <span class="special">};</span>
 
 <span class="special">}</span> <span class="comment">// namespace scopes</span>
@@ -1010,6 +1132,17 @@
 <span class="special">}</span> <span class="comment">// namespace boost</span>
 </pre>
 <p>
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<tbody><tr><td>
+                  <p>
+                    Tests: <a href="../test/ut/scopes/deduce_ut.cpp" target="_top">test/ut/scopes/deduce_ut.cpp</a>
+                  </p>
+                </td></tr></tbody>
+</table></div>
+<p>
+          [ends
         </p>
 </div>
 <div class="section">

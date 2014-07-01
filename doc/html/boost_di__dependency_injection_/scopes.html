@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.0">
 <link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.DI (Dependency Injection) 1.0">
 <link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.DI (Dependency Injection) 1.0">
-<link rel="prev" href="basic_concepts.html" title="Basic Concepts">
+<link rel="prev" href="concepts.html" title="Concepts">
 <link rel="next" href="policies.html" title="Policies">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -20,7 +20,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="basic_concepts.html"><img src=".././doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src=".././doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="policies.html"><img src=".././doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="concepts.html"><img src=".././doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src=".././doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="policies.html"><img src=".././doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
@@ -143,6 +143,14 @@
             </td>
 </tr>
 </tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<tbody><tr><td>
+              <p>
+                Tests: <a href="../test/ut/wrappers/universal_ut.cpp" target="_top">test/ut/wrappers/universal_ut.cpp</a>
+              </p>
+            </td></tr></tbody>
 </table></div>
 <p>
       Implementation of custom scope requires
@@ -423,6 +431,14 @@
         Refer to <code class="computeroutput"><span class="identifier">Scopes</span> <span class="identifier">Conversions</span></code>
         table.
       </p>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<tbody><tr><td>
+                <p>
+                  Tests: <a href="../test/ut/scopes/deduce_ut.cpp" target="_top">test/ut/scopes/deduce_ut.cpp</a>
+                </p>
+              </td></tr></tbody>
+</table></div>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
@@ -484,6 +500,17 @@
         Refer to <code class="computeroutput"><span class="identifier">Scopes</span> <span class="identifier">Conversions</span></code>
         table.
       </p>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<tbody><tr><td>
+                <p>
+                  Tests: <a href="../test/ut/scopes/external_ut.cpp" target="_top">test/ut/scopes/external_ut.cpp</a>
+                  | <a href="../test/ut/wrappers/value_ut.cpp" target="_top">test/ut/wrappers/value_ut.cpp</a>
+                  | <a href="../test/ut/wrappers/reference_ut.cpp" target="_top">test/ut/wrappers/reference_ut.cpp</a>
+                  | <a href="../test/ut/wrappers/shared_ut.cpp" target="_top">test/ut/wrappers/shared_ut.cpp</a>
+                </p>
+              </td></tr></tbody>
+</table></div>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
@@ -556,6 +583,15 @@
         Refer to <code class="computeroutput"><span class="identifier">Scopes</span> <span class="identifier">Conversions</span></code>
         table.
       </p>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<tbody><tr><td>
+                <p>
+                  Tests: <a href="../test/ut/scopes/unique_ut.cpp" target="_top">test/ut/scopes/unique_ut.cpp</a>
+                  | <a href="../test/ut/wrappers/copy_ut.cpp" target="_top">test/ut/wrappers/copy_ut.cpp</a>
+                </p>
+              </td></tr></tbody>
+</table></div>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
@@ -622,6 +658,15 @@
         Refer to <code class="computeroutput"><span class="identifier">Scopes</span> <span class="identifier">Conversions</span></code>
         table.
       </p>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<tbody><tr><td>
+                <p>
+                  Tests: <a href="../test/ut/scopes/shared_ut.cpp" target="_top">test/ut/scopes/shared_ut.cpp</a>
+                  | <a href="../test/ut/wrappers/shared_ut.cpp" target="_top">test/ut/wrappers/shared_ut.cpp</a>
+                </p>
+              </td></tr></tbody>
+</table></div>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
@@ -699,12 +744,31 @@
         Refer to <code class="computeroutput"><span class="identifier">Scopes</span> <span class="identifier">Conversions</span></code>
         table.
       </p>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<tbody><tr><td>
+                <p>
+                  Tests: <a href="../test/ut/scopes/session_ut.cpp" target="_top">test/ut/scopes/session_ut.cpp</a>
+                  | <a href="../test/ut/wrappers/shared_ut.cpp" target="_top">test/ut/wrappers/shared_ut.cpp</a>
+                </p>
+              </td></tr></tbody>
+</table></div>
 </div>
 <h3>
 <a name="boost_di__dependency_injection_.scopes.h0"></a>
       <span class="phrase"><a name="boost_di__dependency_injection_.scopes.scopes_conversions"></a></span><a class="link" href="scopes.html#boost_di__dependency_injection_.scopes.scopes_conversions">Scopes
       Conversions</a>
     </h3>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src=".././doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        In current version of Boost.DI rvalue references aren't available for <code class="computeroutput"><span class="identifier">Microsoft</span> <span class="identifier">Visual</span>
+        <span class="identifier">Studio</span> <span class="identifier">Compiler</span></code>
+      </p></td></tr>
+</table></div>
 <div class="informaltable"><table class="table">
 <colgroup>
 <col>
@@ -1090,7 +1154,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="basic_concepts.html"><img src=".././doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src=".././doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="policies.html"><img src=".././doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="concepts.html"><img src=".././doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src=".././doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="policies.html"><img src=".././doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

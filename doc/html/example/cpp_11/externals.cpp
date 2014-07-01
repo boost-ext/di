@@ -6,7 +6,7 @@
 //
 
 //[externals_cpp_11
-//`[h6 C++ 11]
+//````C++11```
 //<-
 #include <cassert>
 #include <memory>
@@ -45,6 +45,7 @@ int main() {
     injector.create<c>();
 }
 
-//`full code example: [@example/cpp_11/externals.cpp externals.cpp]
+//`[table
+//`[[Full code example: [@example/cpp_11/externals.cpp externals.cpp]]]]
 //]
 

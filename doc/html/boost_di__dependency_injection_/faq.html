@@ -45,8 +45,30 @@
           <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
                 Constructor injection is the most powerful and the preferable injection
                 method which avoid uninitialized state of members. According to author
-                setter/member injection should be avoided at all costs in order to
-                keep the solutions as clean as possible.
+                <code class="computeroutput"><span class="identifier">setter</span><span class="special">/</span><span class="identifier">member</span></code> injection should be avoided
+                at all costs in order to keep the solutions as clean as possible.
+              </li></ul></div>
+        </li>
+<li class="listitem">
+          Why Boost.DI doesn't have <code class="computeroutput"><span class="identifier">singleton</span></code>
+          scope?
+          <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+                Singleton pattern is usually overused and makes code really hard
+                to test. Thread safety has to be considered as well whilst using
+                it. Boost.DI provides <code class="computeroutput"><span class="identifier">shared</span></code>
+                scope which behaves like non-multi threaded singleton. <code class="computeroutput"><span class="identifier">Singleton</span></code> scope might be implemented
+                using Boost.DI <code class="computeroutput"><span class="identifier">scope</span></code>
+                functionality.
+              </li></ul></div>
+        </li>
+<li class="listitem">
+          HOw many construtors arguments are supporrted and how many dependnecies
+          i can use?
+        </li>
+<li class="listitem">
+          How injection works since there is no registraction/reflection/traits ?
+          <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+                See
               </li></ul></div>
         </li>
 </ol></div>

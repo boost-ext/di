@@ -6,7 +6,7 @@
 //
 
 //[deduce_scope_cpp_11
-//````C++ 11```
+//````C++11```
 //<-
 #include <memory>
 //->

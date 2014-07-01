@@ -244,6 +244,12 @@
               </td>
 <td>
                 <p>
+                  Boost.DI by default uses preprocessed headers. See <code class="computeroutput"><span class="identifier">Compilation</span> <span class="identifier">time</span></code>
+                  for further specification. To explicitly disable preprocessed headers
+                  <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_NO_PREPROCESSED_HEADERS</span></code>
+                  has to be defined.
+                </p>
+                <p>
                   default: <code class="computeroutput"><span class="identifier">enabled</span></code>
                 </p>
               </td>
@@ -255,6 +261,14 @@
                 </p>
               </td>
 <td>
+                <p>
+                  Constructor injection is limited by <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_CTOR_LIMIT_SIZE</span></code>,
+                  which means that constructor can't have more parameters then defined
+                  in order for Boost.DI to works correctly. Value might be redefined
+                  to any number, the only repercussion will be longer compilation
+                  times. Might be used as well to limit clients from having long
+                  parameter list constructors.
+                </p>
                 <p>
                   default: <code class="computeroutput"><span class="number">10</span></code>
                 </p>
@@ -268,6 +282,11 @@
               </td>
 <td>
                 <p>
+                  Context concepts (<code class="computeroutput"><span class="identifier">when</span></code>
+                  syntax) have to be explicitly turned on using <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_EXAMINE_CALL_STACK</span></code>.
+                  Reason being much longer compilation times.
+                </p>
+                <p>
                   default: <code class="computeroutput"><span class="identifier">disabled</span></code>
                 </p>
               </td>
@@ -279,6 +298,10 @@
                 </p>
               </td>
 <td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT</span><span class="special">(</span><span class="identifier">ctor</span><span class="special">,</span> <span class="identifier">arg1</span><span class="special">,</span> <span class="identifier">arg2</span><span class="special">,</span> <span class="special">...,</span>
+                  <span class="identifier">argN</span><span class="special">)</span></code>
+                </p>
                 <p>
                   default: <code class="computeroutput"><span class="identifier">enabled</span> <span class="identifier">when</span> <span class="identifier">C</span><span class="special">++</span><span class="number">11</span></code>
                 </p>
@@ -292,6 +315,11 @@
               </td>
 <td>
                 <p>
+                  <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT</span><span class="special">(</span><span class="identifier">ctor</span><span class="special">,</span> <span class="special">(</span><span class="identifier">arg1</span><span class="special">,</span>
+                  <span class="identifier">arg2</span><span class="special">,</span>
+                  <span class="special">...,</span> <span class="identifier">argN</span><span class="special">))</span></code>
+                </p>
+                <p>
                   default: <code class="computeroutput"><span class="identifier">enabled</span> <span class="identifier">when</span> <span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code>
                 </p>
               </td>
@@ -303,6 +331,15 @@
                 </p>
               </td>
 <td>
+                <p>
+                  Default <code class="computeroutput"><span class="identifier">smart</span> <span class="identifier">pointer</span></code> type is set accordingly
+                  to compiler support, but might standard smart pointers might be
+                  forced by <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_STD_SMART_PTR</span></code>.
+                  Then Boost.DI internally will use standard smart pointers instead
+                  of boost smart pointers. Additionally conversion to weak_ptr is
+                  only allowed from default <code class="computeroutput"><span class="identifier">smart</span>
+                  <span class="identifier">pointer</span> <span class="identifier">type</span></code>.
+                </p>
                 <p>
                   default: <code class="computeroutput"><span class="identifier">enabled</span> <span class="keyword">if</span> <span class="identifier">supported</span>
                   <span class="identifier">by</span> <span class="identifier">compiler</span></code>
@@ -316,6 +353,10 @@
                 </p>
               </td>
 <td>
+                <p>
+                  Analogously as <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_STD_SMART_PTR</span></code>,
+                  but with boost smart pointers to be chosen.
+                </p>
                 <p>
                   default: <code class="computeroutput"><span class="identifier">enabled</span> <span class="keyword">if</span> <span class="identifier">std</span>
                   <span class="identifier">smart</span> <span class="identifier">ptr</span>
@@ -332,6 +373,11 @@
                 </p>
               </td>
 <td>
+                <p>
+                  Named used internally by Boost.DI when <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT</span></code>
+                  or <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT_TRAITS</span></code>
+                  is used to define constructor traits.
+                </p>
                 <p>
                   default: <code class="computeroutput"><span class="identifier">boost_di_injector__</span></code>
                 </p>

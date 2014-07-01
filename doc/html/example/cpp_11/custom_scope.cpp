@@ -6,7 +6,7 @@
 //
 
 //[custom_scope_cpp_11
-//`[h6 C++ 11]
+//````C++11```
 //<-
 #include <memory>
 #include <utility>
@@ -103,6 +103,7 @@ int main() {
     injector.create<c2>(); // not in custom scope
 }
 
-//`full code example: [@example/cpp_11/custom_scope.cpp custom_scope.cpp]
+//`[table
+//`[[Full code example: [@example/cpp_11/custom_scope.cpp custom_scope.cpp]]]]
 //]
 

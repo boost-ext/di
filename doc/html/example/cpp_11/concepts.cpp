@@ -6,7 +6,7 @@
 //
 
 //[concepts_cpp_11
-//`[h6 C++ 11]
+//````C++11```
 //<-
 #include <boost/shared_ptr.hpp>
 #include <boost/mpl/string.hpp>
@@ -85,6 +85,7 @@ int main() {
     );
 }
 
-//`full code example: [@example/cpp_11/concepts.cpp concepts.cpp]
+//`[table
+//`[[Full code example: [@example/cpp_11/concepts.cpp concepts.cpp]]]]
 //]
 
