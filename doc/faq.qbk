@@ -11,26 +11,29 @@
 
 # Is configuration via XML supported by Boost.DI?
 
-    * Short answer will be NO. Boost.DI configuration is configured in the source code using C++ features.
-According to my experience configuration driven by XML seems to be a bit smelly and not giving as many benefits.
-Usually lazy binding requires exceptions and destroy performance, but obviously it depends on projects needs.
-Although it might be hard it is possible to achieve it with Boost.DI, but no approach was taken so far.
-The main question should be though - in real life projects how often configuration was actually changed via XML?
+    * Short answer is NO. Boost.DI dependencies are configured in the source code using C++ features.
+Usually lazy binding requires exceptions handling and is a performance killer, but obviously it depends on a projects needs.
+Although it might be hard it is possible to achieve it with Boost.DI.
+The question which should be asked though - how often configuration is dynamically changed via XML?
 
 # Why Boost.DI doesn't support setter/member injection?
 
     * Constructor injection is the most powerful and the preferable injection method which avoid uninitialized state of members.
-According to author `setter/member` injection should be avoided at all costs in order to keep the solutions as clean as possible.
+`Setter/Member` injection should be avoided at all costs in order to keep the solutions as clean as possible. Therefore Boost.DI
+doesn't support it by default.
 
 # Why Boost.DI doesn't have `singleton` scope?
 
     * Singleton pattern is usually overused and makes code really hard to test. Thread safety has to be considered as well whilst using it.
-Boost.DI provides `shared` scope which behaves like non-multi threaded singleton. `Singleton` scope might be implemented using Boost.DI `scope` functionality.
+Boost.DI provides `shared` scope which behaves like non-multi threaded singleton.
+`Singleton` scope might be implemented using Boost.DI `scope` functionality.
 
-# HOw many construtors arguments are supporrted and how many dependnecies i can use?
+# How many constructors parameters are supported and how many bindings I can have?
+    * Boost.DI by default supports up to 10 constructor parameters. Configuration might be changed by `BOOST_DI_CFG_CTOR_LIMIT_SIZE`.
+The number of allowed bindings is limited by `BOOST_MPL_LIMIT_VECTOR_SIZE` value.
 
-# How injection works since there is no registraction/reflection/traits ?
-    * See
+# How injection works since there is no registration/reflection/traits ?
+    * See [link boost_di.design Design Rationale] for further explanations.
 
 [endsect]
 

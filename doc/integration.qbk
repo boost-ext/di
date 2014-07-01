@@ -9,15 +9,23 @@
 
 [section Integration with Boost libraries]
 
-Integration with existing libraries is really straight forward.
-Usually doesn't require anything! Unless constructor can't be deduced due to ambiguity or it's variadic.
+Integration with existing libraries should be straight forward.
+Usually doesn't require anything! Unless constructor can't be deduced due to ambiguity or takes variadic number of arguments.
 
 [section Boost Meta State Machine]
 
 [@http://www.boost.org/doc/libs/1_55_0/libs/msm/doc/HTML/index.html Boost Meta State Machine] is a library allowing you to easily and quickly define state machines of very high performance.
-MSM is a great library, unfortunately `Service Locator` pattern is used to accomplish actions or guards execution.
-This approach is a bit hard to maintain and test, therefore would be great to have the possibility just to 
-implement action/guards without FSM dependency and with proper dependencies instead and just let the dependency injection inject all the requirements for us.
+Boost.MSM is a great library, unfortunately `Service Locator` pattern is used to accomplish actions/guards execution.
+Such approach is hard to maintain and test. Would be great to have possibility to 
+implement action/guards without FSM dependency and with proper dependency injection instead.
+Such functionality might be achieved with Boost.DI and it's presented below.
+
+In order to support dependency injection, few changes to Boost.MSM were made.
+
+* actions/guards list was generated from transition table
+* generated list was passed into state machine constructor 
+
+With that changes in mind Boost.DI could have been used without more changes needed.
 
 ```
 #include <boost/di.hpp>
@@ -29,16 +37,16 @@ class guard : public euml_action<guard>
 public:
     guard() { } // for euml
 
-    explicit guard(shared_ptr<int> dep)
-        : dep(dep)
+    guard(shared_ptr<int> i)
+        : i(i)
     { }
 
     bool operator()(const event&) const {
-        return *dep != 0;
+        return *i != 0;
     }
 
 private:
-    shared_ptr<int> dep;
+    shared_ptr<int> i;
 };
 
 class action : public euml_action<action>
@@ -46,16 +54,16 @@ class action : public euml_action<action>
 public:
     action() { } // for euml
 
-    explicit action(shared_ptr<int> dep)
-        : dep(dep)
+    action(shared_ptr<int> i)
+        : i(i)
     { }
 
     void operator()(const event&) {
-        (*dep)++;
+        (*i)++;
     }
 
 private:
-    shared_ptr<int> dep;
+    shared_ptr<int> i;
 };
 
 class state_machine_ : state_machine_def<state_machine_>
@@ -72,8 +80,8 @@ public:
 };
 
 int main() {
-    auto sm_ = injector<>().create<state_machine<state_machine_>>();
-    sm_.process_event(event());
+    auto sm = di::make_injector.create<state_machine<state_machine_>>();
+    sm.process_event(event());
 
     return 0;
 }
@@ -81,9 +89,9 @@ int main() {
 
 Full example and implementation might be found in [@https://github.com/krzysztof-jusiak/msm Boost Meta State Machine with Dependency Injection].
 
-[h5 Match-3 Game]
+[h6 Match-3 Game]
 
-Simple Match-3 game is an real life example using Boost Dependency Injection and Boost Meta State Machine.
+Simple Match-3 game is an example using `Boost Dependency Injection` and `Boost Meta State Machine`.
 
 * [@https://github.com/krzysztof-jusiak/match3/blob/master/include/config.hpp Dependency Injection Configuration]
 * [@https://github.com/krzysztof-jusiak/match3/blob/master/include/controller.hpp Meta State Machine Definition]

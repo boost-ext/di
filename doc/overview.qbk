@@ -161,6 +161,16 @@ The macros listed in the table below may be used to control the behaviour of Boo
         default: `boost_di_injector__`
     ]
   ]
+
+  [
+    [`BOOST_MPL_LIMIT_VECTOR_SIZE`]
+    [
+        Number of allowed bindings is limited by Boost.MPL vector size.
+
+        default: 20 (defined by Boost.MPL)
+    ]
+  ]
+
 ]
 
 [endsect]
