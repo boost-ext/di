@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[provider_cpp_11
-//````C++11```
+//[provider
+//````C++98/03/11/14```
 //<-
 #include <cassert>
 #include <memory>
@@ -17,9 +17,10 @@ namespace di = boost::di;
 
 namespace {
 
-struct transaction
-    : di::provider<int>
+/*<<`transaction` provider>>*/
+struct transaction : di::provider<int>
 {
+    /*<<implementation of `di::provider` requirement >>*/
     virtual int get() const {
         return next();
     }
@@ -30,9 +31,11 @@ struct transaction
     }
 };
 
+/*<<example `usage ` class>>*/
 struct usage
 {
-    usage(std::unique_ptr<di::provider<int>> p) {
+    usage(int i, std::auto_ptr<di::provider<int> > p) {
+        assert(i == 0);
         assert(p->get() == 1);
         assert(p->get() == 2);
     }
@@ -41,14 +44,12 @@ struct usage
 } // namespace
 
 int main() {
-    using injector_t = di::injector<
-        transaction
-    >;
+    /*<<define injector>>*/
+    di::injector<transaction> injector;
 
-    injector_t().create<usage>();
+    /*<<create `usage`>>*/
+    injector.create<usage>();
 }
 
-//`[table
-//`[[Full code example: [@example/cpp_11/provider.cpp provider.cpp]]]]
 //]
 

@@ -1,3 +1,12 @@
+[/
+ /
+ / Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+ /
+ / Distributed under the Boost Software License, Version 1.0.
+ / (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /
+ /]
+
 [def __BOOST_DI_INJECT [link di.reference.ctor `BOOST_DI_INJECT `]]
 
 [section Concepts]
@@ -25,16 +34,19 @@ If the default behavior should be changed there is a way of explicitly saying wh
 
 [h6 BOOST_DI_INJECT]
 
-TODO
+`BOOST_DI_INJECT` is a simple macro used to explicity say Boost.DI which constructor should be used.
+
 ```
-macro expansion here
+#define BOOST_DI_INJECT(type, ...)
+    static void BOOST_DI_INJECTOR(__VA_ARGS__);
+    type(__VA_ARGS__)
 ```
 
 ```
 class example {
 public:
     example(int);
-    BOOST_DI_INJECT(example, int, double); // will be deduced by DI
+    BOOST_DI_INJECT(example, int, double); // will be chosen by DI
     example(int, double, float);
 };
 ```
@@ -46,6 +58,13 @@ Sometimes we can't, in case of third party libraries, or just don't want to be s
 which constructor should be deduced by DI.
 
 [h6 BOOST_DI_INJECT_TRAITS]
+
+`BOOST_DI_INJECT_TRAITS` is a simple macro used to define constructor traits.
+
+```
+#define BOOST_DI_INJECT_TRAITS(...)
+    static void BOOST_DI_INJECTOR(__VA_ARGS__)
+```
 
 ```
 namespace boost { namespace di {
@@ -403,7 +422,7 @@ They create a new value whenever get() method is invoked.
     };
 ```
 [table
-    [[Example: [link di.provider]]]
+    [[Example: [link boost_di.examples.provider provider]]]
 ]
 [endsect]
 

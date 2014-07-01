@@ -1,3 +1,12 @@
+[/
+ /
+ / Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+ /
+ / Distributed under the Boost Software License, Version 1.0.
+ / (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /
+ /]
+
 [section Performance]
 
 [section Compilation time]
@@ -107,7 +116,7 @@ In order to verify how huge overhead is basic example was introduced and generat
     [[][Boost.DI]]
     [
         [
-            ```
+            [pre
             Dump of assembler code for function _Z6createv:
                0x0000000000400a50 <+0>:	push   %r12
                0x0000000000400a52 <+2>:	mov    $0x20,%edi
@@ -206,7 +215,7 @@ In order to verify how huge overhead is basic example was introduced and generat
                0x0000000000400b78 <+296>:	mov    0xc(%rbx),%edx
                0x0000000000400b7b <+299>:	lea    -0x1(%rdx),%eax
                0x0000000000400b7e <+302>:	mov    %eax,0xc(%rbx)
-            ```
+            ]
         ]
         []
     ]

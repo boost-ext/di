@@ -10,7 +10,7 @@
 [library Boost.DI (Dependency Injection)
     [quickbook 1.5]
     [version 1.0]
-    [id di]
+    [id boost_di]
     [copyright 2014 Krzysztof Jusiak]
     [authors [Jusiak, Krzysztof]]
     [license

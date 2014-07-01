@@ -1,3 +1,12 @@
+[/
+ /
+ / Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+ /
+ / Distributed under the Boost Software License, Version 1.0.
+ / (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /
+ /]
+
 [section Policies]
 
 Policies are compile time components which operates on dependencies in order to limit allowed behaviour.
@@ -15,6 +24,10 @@ In order for `injector` to verify policies they have to be passed to `create` me
 ```
     di::make_injector().create<int>(policy1(), policy2(), ..., policyN());
 ```
+
+[table
+    [[Example policy: [@example.cpp]]]
+]
 
 Boost.DI is released with policies which verifies `arguments permission`, check for `circular dependencies`, assert `creation ownership` and allow `scope permission`.
 [note No policies are enabled by default using Boost.DI]

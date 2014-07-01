@@ -1,4 +1,13 @@
-[section Examples]
+[/
+ /
+ / Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+ /
+ / Distributed under the Boost Software License, Version 1.0.
+ / (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /
+ /]
+
+[section:examples Examples]
 
 To make example's more readable data classes were moved into separated file.
 [import ../example/common/data.hpp]
@@ -26,8 +35,11 @@ To make example's more readable data classes were moved into separated file.
 [endsect]
 
 [section:provider Using Providers]
-[import ../example/cpp_11/provider.cpp]
-[provider_cpp_11]
+[import ../example/provider.cpp]
+[provider]
+[table
+    [[Full code example: [@example/provider.cpp]]]
+]
 [endsect]
 
 [section How To Bind?]
