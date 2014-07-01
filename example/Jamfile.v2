@@ -10,6 +10,7 @@ import testing ;
 project di :
     requirements
         <include>../include
+        <include>.
         <warnings>all
 ;
 
@@ -27,6 +28,10 @@ rule run-test ( std : src : property * ) {
 test-suite di :
     [ run-test c++03 : hello_world.cpp : hello_world_cpp_03 ]
     [ run-test c++11 : hello_world.cpp : hello_world_cpp_11 ]
+    [ run-test c++03 : text_visitor.cpp : text_visitor_cpp_03 ]
+    [ run-test c++11 : text_visitor.cpp : text_visitor_cpp_11 ]
+    [ run-test c++03 : uml_visitor.cpp : uml_visitor_cpp_03 ]
+    [ run-test c++11 : uml_visitor.cpp : uml_visitor_cpp_11 ]
 ;
 
 test-suite cpp_03 : # "di / c++ 03"
@@ -47,8 +52,6 @@ test-suite cpp_11 : # "di / c++ 11"
     [ run-test c++11 : cpp_11/named.cpp : named_cpp_11 ]
     [ run-test c++11 : cpp_11/provider.cpp : provider_cpp_11 ]
     [ run-test c++11 : cpp_11/testing.cpp : testing_cpp_11 ]
-    [ run-test c++11 : cpp_11/text_visitor.cpp : text_visitor_cpp_11 ]
-    [ run-test c++11 : cpp_11/uml_visitor.cpp : uml_visitor_cpp_11 ]
 ;
 
 test-suite cpp_14 : # "di / c++ 14"

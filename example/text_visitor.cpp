@@ -5,34 +5,29 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[text_visitor_cpp_11
-//````C++11```
+//[text_visitor
+//````C++98/03/11/14```
 //<-
 #include <iostream>
 #include <memory>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/units/detail/utility.hpp>
+#include "common/data.hpp"
 //->
 #include <boost/di.hpp>
 
-namespace mpl   = boost::mpl;
+//<-
+namespace mpl = boost::mpl;
 namespace utils = boost::units::detail;
-namespace di    = boost::di;
+//->
+namespace di = boost::di;
 
-namespace {
-
-struct i0 { virtual ~i0() { }; };
-struct c0 : i0 { };
-struct c1 { c1(std::shared_ptr<i0>) { } };
-struct c2 { c2(int, double, char) { } };
-struct c3 { c3(std::shared_ptr<c1>, std::shared_ptr<c2>) { } };
-
-} // namespace
-
+/*<<Definition of text visitor>>*/
 class text_visitor
 {
 public:
+    /*<<Definition of the visitor call operator requirement>>*/
     template<typename T>
     void operator()(const T&) const {
         int size = mpl::size<typename T::call_stack>::value;
@@ -44,25 +39,24 @@ public:
 };
 
 int main() {
-    di::injector<
-        di::bind_int<42>
-      , c0
-    > injector;
+    /*<<define injector>>*/
+    di::injector<c0> injector; // or auto injector = di::make_injector<di::deduce<c0>>();
 
+    /*<<iterate through created objects with `text_visitor`>>*/
     injector.visit<c3>(text_visitor());
 
+    /*<< output [pre
+    c3
+        boost::shared_ptr<c1>
+            boost::shared_ptr<i0>
+            int
+        boost::shared_ptr<c2>
+            int
+            double
+            char
+    ]>>*/
     return 0;
 }
 
-// (anonymous namespace)::c3
-//     std::shared_ptr<(anonymous namespace)::c1>
-//         std::shared_ptr<(anonymous namespace)::i0>
-//     std::shared_ptr<(anonymous namespace)::c2>
-//         int
-//         double
-//         char
-
-//`[table
-//`[[Full code example: [@example/cpp_11/text_visitor.cpp text_visitor.cpp]]]]
 //]
 

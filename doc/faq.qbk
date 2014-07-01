@@ -18,5 +18,10 @@ According to author `setter/member` injection should be avoided at all costs in 
     * Singleton pattern is usually overused and makes code really hard to test. Thread safety has to be considered as well whilst using it.
 Boost.DI provides `shared` scope which behaves like non-multi threaded singleton. `Singleton` scope might be implemented using Boost.DI `scope` functionality.
 
+# HOw many construtors arguments are supporrted and how many dependnecies i can use?
+
+# How injection works since there is no registraction/reflection/traits ?
+    * See
+
 [endsect]
 

@@ -5,35 +5,29 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[uml_visitor_cpp_11
-//````C++11```
+//[uml_visitor
+//````C++98/03/11/14```
 //<-
 #include <iostream>
 #include <sstream>
 #include <vector>
 #include <boost/mpl/size.hpp>
 #include <boost/units/detail/utility.hpp>
+#include "common/data.hpp"
 //->
 #include <boost/di.hpp>
 
-namespace mpl   = boost::mpl;
+//<-
+namespace mpl = boost::mpl;
 namespace utils = boost::units::detail;
-namespace di    = boost::di;
-
-namespace {
-
-struct i0 { virtual ~i0() { }; };
-struct c0 : i0 { };
-struct c1 { c1(std::shared_ptr<i0>) { } };
-struct c2 { c2(int, double, char) { } };
-struct c3 { c3(std::shared_ptr<c1>, std::shared_ptr<c2>) { } };
-
-} // namespace
+//->
+namespace di = boost::di;
 
 /**
  * http://plantuml.sourceforge.net/objects.html
  * ./uml_visitor | java -jar plantuml.jar -p > uml_visitor.png
  */
+/*<<define `plant_uml` printer>>*/
 class plant_uml
 {
 public:
@@ -60,9 +54,9 @@ public:
     }
 };
 
+/*<<define `uml_visitor` with policy parameter>>*/
 template<typename TPolicy>
-class uml_visitor
-    : public TPolicy
+class uml_visitor : public TPolicy
 {
     struct dependency
     {
@@ -93,6 +87,7 @@ public:
         this->on_end(stream_);
     }
 
+    /*<<Definition of the visitor call operator requirement>>*/
     template<typename T>
     void operator()(const T&) const {
         std::size_t call_stack_size = mpl::size<typename T::call_stack>::value;
@@ -126,26 +121,17 @@ public:
 };
 
 int main() {
+    /*<<define injector>>*/
     di::injector<c0> injector;
 
+    /*<<iterate through created objects with `uml_visitor`>>*/
     std::stringstream stream;
     injector.visit<c3>(uml_visitor<plant_uml>(stream));
     std::cout << stream.str();
 
+    /*<<output [@images/uml_visitor.png [$images/uml_visitor.png [width 75%] [height 75%] ]]>>*/
     return 0;
 }
 
-// @startuml uml_visitor.png
-// "(anonymous namespace)::c3" .. "(anonymous namespace)::c1"
-// "(anonymous namespace)::i0" <|-- "(anonymous namespace)::c0"
-// "(anonymous namespace)::c1" .. "(anonymous namespace)::i0"
-// "(anonymous namespace)::c3" .. "(anonymous namespace)::c2"
-// "(anonymous namespace)::c2" .. "int"
-// "(anonymous namespace)::c2" .. "double"
-// "(anonymous namespace)::c2" .. "char"
-// @enduml
-
-//`[table
-//`[[Full code example: [@example/cpp_11/uml_visitor.cpp uml_visitor.cpp]]]]
 //]
 

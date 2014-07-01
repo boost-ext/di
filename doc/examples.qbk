@@ -1,8 +1,18 @@
 [section Examples]
 
+To make example's more readable data classes were moved into separated file.
+[import ../example/common/data.hpp]
+[data]
+[table
+    [[Data code: [@example/common/data.hpp]]]
+]
+
 [section:hello_world Hello World]
 [import ../example/hello_world.cpp]
 [hello_world]
+[table
+    [[Full code example: [@example/hello_world.cpp]]]
+]
 [endsect]
 
 [section:ctor Constructor Injection]
@@ -68,13 +78,19 @@
 [endsect]
 
 [section Text Visitor]
-[import ../example/cpp_11/text_visitor.cpp]
-[text_visitor_cpp_11]
+[import ../example/text_visitor.cpp]
+[text_visitor]
+[table
+    [[Full code example: [@example/text_visitor.cpp]]]
+]
 [endsect]
 
 [section UML Visitor]
-[import ../example/cpp_11/uml_visitor.cpp]
-[uml_visitor_cpp_11]
+[import ../example/uml_visitor.cpp]
+[uml_visitor]
+[table
+    [[Full code example: [@example/uml_visitor.cpp]]]
+]
 [endsect]
 
 [section Complex Example with Simple App]
