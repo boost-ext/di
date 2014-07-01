@@ -30,8 +30,11 @@ To make example's more readable data classes were moved into separated file.
 [endsect]
 
 [section:named Using Named Parameters]
-[import ../example/cpp_11/named.cpp]
-[named_cpp_11]
+[import ../example/named.cpp]
+[named]
+[table
+    [[Full code example: [@example/named.cpp]]]
+]
 [endsect]
 
 [section:provider Using Providers]

@@ -15,8 +15,6 @@
 
 namespace di = boost::di;
 
-namespace {
-
 /*<<`transaction` provider>>*/
 struct transaction : di::provider<int>
 {
@@ -40,8 +38,6 @@ struct usage
         assert(p->get() == 2);
     }
 };
-
-} // namespace
 
 int main() {
     /*<<define injector>>*/
