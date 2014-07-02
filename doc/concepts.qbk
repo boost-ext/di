@@ -180,19 +180,30 @@ DSL released with the library allows you to bind:
 ```
 
 * bind to external runtime value
-```
-    di::bind<example>::to(make_shared<example>()) // bind to shared_ptr
 
-    di::bind<int>::to([]{ return 42; })
+    * to shared ptr
+    ```
+        di::bind<example>::to(make_shared<example>()) // bind to shared_ptr
+    ```
 
-    di::bind<std::function<int()>>::to([]{ return 42; })
-    di::bind<std::function<int()>>::to(boost::bind(&return_int, 42))
+    * to reference
+    ```
+        example example_;
+        di::bind<example>::to(cref(example_)) // bind to const ref
+        di::bind<example>::to(ref(example_)) // bind to ref
+    ```
+    [note Boost implementation of cref/ref has to be used]
 
-    example example_;
-    di::bind<example>::to(cref(example_)) // bind to const ref
-    di::bind<example>::to(ref(example_)) // bind to ref
-```
-[note Boost implementation of cref/ref has to be used]
+    * to functor
+    ```
+        di::bind<std::function<int()>>::to([]{ return 42; })
+        di::bind<std::function<int()>>::to(boost::bind(&return_int, 42))
+    ```
+
+    * to functor factory
+    ```
+        di::bind<int>::to([]{ return 42; })
+    ```
 
 On top of binding to values user can bind to named parameters or using context.
 
