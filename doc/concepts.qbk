@@ -183,6 +183,11 @@ DSL released with the library allows you to bind:
 ```
     di::bind<example>::to(make_shared<example>()) // bind to shared_ptr
 
+    di::bind<int>::to([]{ return 42; })
+
+    di::bind<std::function<int()>>::to([]{ return 42; })
+    di::bind<std::function<int()>>::to(boost::bind(&return_int, 42))
+
     example example_;
     di::bind<example>::to(cref(example_)) // bind to const ref
     di::bind<example>::to(ref(example_)) // bind to ref
