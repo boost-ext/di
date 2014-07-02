@@ -67,13 +67,13 @@
         public:
             template<typename T>
             explicit scope(const T& object
-                         , typename enable_if<type_traits::has_call_operator<T> >::type* = 0)
+                         , typename enable_if_c<type_traits::has_call_operator<T>::value>::type* = 0)
                 : object_(convert_when_function<TExpected>(object))
             { }
 
             template<typename T>
             explicit scope(const T& object
-                         , typename disable_if<type_traits::has_call_operator<T> >::type* = 0)
+                         , typename disable_if_c<type_traits::has_call_operator<T>::value>::type* = 0)
                 : object_(result_type_holder(object))
             { }
 
