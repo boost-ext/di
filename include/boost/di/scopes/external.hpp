@@ -15,6 +15,7 @@
     #include "boost/di/type_traits/has_call_operator.hpp"
 
     #include <boost/function.hpp>
+    #include <boost/mpl/if.hpp>
     #include <boost/utility/enable_if.hpp>
 
     namespace boost {
@@ -51,16 +52,28 @@
                 result_type object_;
             };
 
+            template<typename TValueType, typename T>
+            typename disable_if<type_traits::has_call_operator<TValueType>, function<result_type()> >::type
+            convert_when_function(const T& object) {
+                return object;
+            }
+
+            template<typename TValueType, typename T>
+            typename enable_if<type_traits::has_call_operator<TValueType>, result_type_holder>::type
+            convert_when_function(const T& object) {
+                return result_type_holder(object);
+            }
+
         public:
             template<typename T>
             explicit scope(const T& object
-                         , typename enable_if_c<type_traits::has_call_operator<T>::value>::type* = 0)
-                : object_(object)
+                         , typename enable_if<type_traits::has_call_operator<T> >::type* = 0)
+                : object_(convert_when_function<TExpected>(object))
             { }
 
             template<typename T>
             explicit scope(const T& object
-                         , typename disable_if_c<type_traits::has_call_operator<T>::value>::type* = 0)
+                         , typename disable_if<type_traits::has_call_operator<T> >::type* = 0)
                 : object_(result_type_holder(object))
             { }
 

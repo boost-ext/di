@@ -7,6 +7,7 @@
 #include "boost/di/make_injector.hpp"
 
 #include <boost/test/unit_test.hpp>
+#include <boost/bind.hpp>
 #include <boost/typeof/typeof.hpp>
 
 #include "boost/di/aux_/memory.hpp"
@@ -295,6 +296,24 @@ BOOST_AUTO_TEST_CASE(wrappers_types_mix) {
     BOOST_CHECK_EQUAL(ch2, wrappers_->cc_);
     BOOST_CHECK_EQUAL(l, wrappers_->l_);
     BOOST_CHECK_EQUAL(l, wrappers_->ll_);
+}
+
+int return_int(int i) { return i; }
+
+BOOST_AUTO_TEST_CASE(bind_to_function_ptr) {
+    const int i = 42;
+    const std::string text = "text";
+
+    auto injector = di::make_injector(
+        di::bind<std::function<int()>>::to([]{ return 42; })
+        //di::bind<std::function<int()>>::to(boost::bind(&return_int, i))
+      , di::bind<std::string>::to(text)
+    );
+
+    auto c17_ = injector.create<c17>();
+
+    BOOST_CHECK_EQUAL(i, c17_.f_());
+    BOOST_CHECK_EQUAL(text, c17_.s_);
 }
 
 } // namespace di

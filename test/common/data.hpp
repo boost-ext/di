@@ -315,14 +315,14 @@ struct c17
 {
     BOOST_DI_INJECT(c17
         , const c3& c3_
-        , function<int()> f_
+        , std::function<int()> f_
         , const std::string& s_
     )
         : c3_(c3_), f_(f_), s_(s_)
     { }
 
     c3 c3_;
-    function<int()> f_;
+    std::function<int()> f_;
     std::string s_;
 };
 

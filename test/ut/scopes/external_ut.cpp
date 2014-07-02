@@ -6,6 +6,7 @@
 //
 #include "boost/di/scopes/external.hpp"
 
+#include <functional>
 #include <boost/test/unit_test.hpp>
 #include <boost/ref.hpp>
 #include <boost/type.hpp>
@@ -89,6 +90,12 @@ BOOST_AUTO_TEST_CASE(from_function_expr) {
 
     flag = true;
     BOOST_CHECK(dynamic_cast<c1if0*>(external_.create()(type<aux::shared_ptr<if0>>()).get()));
+}
+
+BOOST_AUTO_TEST_CASE(from_function_expr_with_expected_function_expr) {
+    const int i = 42;
+    external<wrappers::value>::scope<std::function<int()>> external_([]{ return i; });
+    BOOST_CHECK_EQUAL(i, external_.create()(type<std::function<int()>>())());
 }
 
 } // namespace scopes
