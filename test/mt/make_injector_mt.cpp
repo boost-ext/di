@@ -300,6 +300,7 @@ BOOST_AUTO_TEST_CASE(wrappers_types_mix) {
 
 double return_double(double d) { return d; }
 
+#if 0
 BOOST_AUTO_TEST_CASE(bind_to_function_ptr) {
     const int i = 42;
     const double d = 87.0;
@@ -314,6 +315,7 @@ BOOST_AUTO_TEST_CASE(bind_to_function_ptr) {
     BOOST_CHECK_EQUAL(i, functions_.fi_());
     BOOST_CHECK_EQUAL(d, functions_.fd_());
 }
+#endif
 
 } // namespace di
 } // namespace boost
