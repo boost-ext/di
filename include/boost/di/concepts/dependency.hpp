@@ -21,10 +21,13 @@
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/has_xxx.hpp>
 
 namespace boost {
 namespace di {
 namespace concepts {
+
+BOOST_MPL_HAS_XXX_TRAIT_DEF(result_type)
 
 template<
     typename TScope
@@ -61,14 +64,20 @@ class dependency : public TScope::template scope<TExpected, TGiven>
         typedef shared_type type;
     };
 
-    template<typename T, typename = void>
+    template<typename T, typename = void, typename = void>
     struct get_wrapper
     {
         typedef T type;
     };
 
     template<typename T>
-    struct get_wrapper<T, typename enable_if<di::type_traits::has_call_operator<T> >::type>
+    struct get_wrapper<T, typename enable_if<has_result_type<T> >::type>
+        : get_wrapper_impl<typename T::result_type>
+    { };
+
+    template<typename T>
+    struct get_wrapper<T, typename enable_if<di::type_traits::has_call_operator<T> >::type
+                        , typename disable_if<has_result_type<T> >::type>
         : get_wrapper_impl<
               typename di::type_traits::parameter_types<
                   BOOST_DI_FEATURE_DECLTYPE(&T::operator())

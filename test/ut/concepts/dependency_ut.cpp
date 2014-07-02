@@ -7,6 +7,7 @@
 #include "boost/di/concepts/dependency.hpp"
 
 #include <typeinfo>
+#include <functional>
 #include <boost/test/unit_test.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/mpl/vector.hpp>
@@ -108,6 +109,15 @@ BOOST_AUTO_TEST_CASE(to_shared_ptr) {
 BOOST_AUTO_TEST_CASE(to_lambda_shared_ptr) {
     using expected = scopes::external<wrappers::shared>;
     auto given = dependency<fake_scope<>, int>::to([]{ return aux::shared_ptr<int>(); });
+    using external = decltype(given);
+    BOOST_CHECK_EQUAL(&typeid(expected), &typeid(external::scope));
+}
+
+int return_int(int i) { return i; }
+
+BOOST_AUTO_TEST_CASE(to_bind_int) {
+    using expected = scopes::external<wrappers::value>;
+    auto given = dependency<fake_scope<>, int>::to(std::bind(&return_int, 0));
     using external = decltype(given);
     BOOST_CHECK_EQUAL(&typeid(expected), &typeid(external::scope));
 }

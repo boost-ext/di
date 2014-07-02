@@ -298,22 +298,21 @@ BOOST_AUTO_TEST_CASE(wrappers_types_mix) {
     BOOST_CHECK_EQUAL(l, wrappers_->ll_);
 }
 
-int return_int(int i) { return i; }
+double return_double(double d) { return d; }
 
 BOOST_AUTO_TEST_CASE(bind_to_function_ptr) {
     const int i = 42;
-    const std::string text = "text";
+    const double d = 87.0;
 
     auto injector = di::make_injector(
-        di::bind<std::function<int()>>::to([]{ return 42; })
-        //di::bind<std::function<int()>>::to(boost::bind(&return_int, i))
-      , di::bind<std::string>::to(text)
+        di::bind<std::function<int()>>::to([]{ return i; })
+      , di::bind<std::function<double()>>::to(boost::bind(&return_double, d))
     );
 
-    auto c17_ = injector.create<c17>();
+    auto functions_ = injector.create<functions>();
 
-    BOOST_CHECK_EQUAL(i, c17_.f_());
-    BOOST_CHECK_EQUAL(text, c17_.s_);
+    BOOST_CHECK_EQUAL(i, functions_.fi_());
+    BOOST_CHECK_EQUAL(d, functions_.fd_());
 }
 
 } // namespace di

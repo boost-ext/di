@@ -311,21 +311,6 @@ struct c16
     const c3& c3_;
 };
 
-struct c17
-{
-    BOOST_DI_INJECT(c17
-        , const c3& c3_
-        , std::function<int()> f_
-        , const std::string& s_
-    )
-        : c3_(c3_), f_(f_), s_(s_)
-    { }
-
-    c3 c3_;
-    std::function<int()> f_;
-    std::string s_;
-};
-
 struct c18
 {
     BOOST_DI_INJECT(c18
@@ -578,6 +563,19 @@ struct wrappers_types
     char cc_ = '0';
     long l_ = 0;
     long ll_ = 0;
+};
+
+struct functions
+{
+    BOOST_DI_INJECT(functions
+        , std::function<int()> fi
+        , const std::function<double()>& fd
+    )
+        : fi_(fi), fd_(fd)
+    { }
+
+    std::function<int()> fi_;
+    std::function<double()> fd_;
 };
 
 enum eid { e0 = 1 , e1 = 2 };
