@@ -52,7 +52,7 @@ If the default behavior should be changed there is a way of explicitly saying wh
 
                     void boost_di_injector__(int = 0, double = 0.0);
                     explicit example(int = 0, double = 0.0);
-           ``` 
+           ```
         ]
     ]
 ]
@@ -94,7 +94,7 @@ which constructor should be deduced by DI.
                 BOOST_DI_INJECT_TRAITS(int, double, float);
 
                     void boost_di_injector__(int, double, float);
-           ``` 
+           ```
         ]
     ]
 ]
@@ -192,7 +192,6 @@ DSL released with the library allows you to bind:
         di::bind<example>::to(cref(example_)) // bind to const ref
         di::bind<example>::to(ref(example_)) // bind to ref
     ```
-    [note Boost implementation of cref/ref has to be used]
 
     * to functor
     ```
