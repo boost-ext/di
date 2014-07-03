@@ -568,14 +568,14 @@ struct wrappers_types
 struct functions
 {
     BOOST_DI_INJECT(functions
-        , std::function<int()> fi
-        , const std::function<double()>& fd
+        , function<int()> fi
+        , const function<double()>& fd
     )
         : fi_(fi), fd_(fd)
     { }
 
-    std::function<int()> fi_;
-    std::function<double()> fd_;
+    function<int()> fi_;
+    function<double()> fd_;
 };
 
 enum eid { e0 = 1 , e1 = 2 };
@@ -649,8 +649,7 @@ struct transaction_provider
     : provider<aux::shared_ptr<transaction>>
 {
     BOOST_DI_INJECT(transaction_provider
-        , aux::shared_ptr<c3> c3_
-    )
+                  , aux::shared_ptr<c3> c3_)
         : c3_(c3_)
     { }
 

@@ -300,14 +300,13 @@ BOOST_AUTO_TEST_CASE(wrappers_types_mix) {
 
 double return_double(double d) { return d; }
 
-#if 0
 BOOST_AUTO_TEST_CASE(bind_to_function_ptr) {
     const int i = 42;
     const double d = 87.0;
 
     auto injector = di::make_injector(
-        di::bind<std::function<int()>>::to([]{ return i; })
-      , di::bind<std::function<double()>>::to(boost::bind(&return_double, d))
+        di::bind<function<int()>>::to([]{ return i; })
+      , di::bind<function<double()>>::to(boost::bind(&return_double, d))
     );
 
     auto functions_ = injector.create<functions>();
@@ -315,7 +314,6 @@ BOOST_AUTO_TEST_CASE(bind_to_function_ptr) {
     BOOST_CHECK_EQUAL(i, functions_.fi_());
     BOOST_CHECK_EQUAL(d, functions_.fd_());
 }
-#endif
 
 } // namespace di
 } // namespace boost
