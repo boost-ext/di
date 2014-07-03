@@ -18,14 +18,14 @@ What is so unique about this library?
 * Scopes deduction - scopes are deduced based on type semantic
 * Automatic conversion between std/boost smart pointers
 * Compile time policies - ex. to detect circular dependencies or limit supported types only to specified
-* Supports C++03 / C++11 / C++14 standards
+* Supports `C++03` / `C++11` / `C++14` standards
 
 Main features:
 
 * Header only library
 * Architecture independent (tested on x86/x86-64)
 * Supports all POSIX and Windows operating systems (tested on Linux/Windows/Mac/Darwin)
-* Supports C++03/C++11 standard
+* Supports `C++03` / `C++11` / `C++14` standards
 * Exception safe guaranty
 * Thread safe guaranty
 * Constructor injection (macro free)
@@ -36,6 +36,9 @@ Main features:
 * Supports copies, references, pointers, boost and std smart pointers / rvalue references(C++11)
 * Named parameters (named\<int, my\_int\>)
 * Runtime visitor throughout created objects (useful for generation dependency diagrams)
+
+Although library supports `C++03` and `C++11`, only `C++14` shows the full potential of Boost.DI.
+To achieve the same behaviour with previous standards sometimes will just require a bit more hassle.
 
 [endsect]
 
