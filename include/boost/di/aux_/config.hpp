@@ -173,6 +173,13 @@
     #define BOOST_DI_WKND_NO_MSVC(...) __VA_ARGS__
 #endif
 
+#if (__cplusplus >= 201100L)
+    #include <type_traits>
+    #define BOOST_DI_WKND_STD_CPP_11(...) __VA_ARGS__
+#else
+    #define BOOST_DI_WKND_STD_CPP_11(...)
+#endif
+
 #if !defined(BOOST_DI_ASSERT_MSG)
     #include <boost/mpl/assert.hpp>
     #define BOOST_DI_ASSERT_MSG(c, msg, type)   \

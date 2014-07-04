@@ -138,5 +138,28 @@ struct is_integral<di::core::any_type<T, TCallStack, TCreator, TDeps, TRefs, TVi
 
 } // namespace boost
 
+BOOST_DI_WKND(STD_CPP_11)(
+    namespace std {
+
+    /**
+     * Workaround to support std::function and disable
+     * it conversion constructor which cause ambiguity (gcc < 4.8)
+     */
+    template<
+        typename T
+      , typename TCallStack
+      , typename TCreator
+      , typename TDeps
+      , typename TRefs
+      , typename TVisitor
+      , typename TPolicies
+    >
+    struct is_integral<boost::di::core::any_type<T, TCallStack, TCreator, TDeps, TRefs, TVisitor, TPolicies> >
+        : ::boost::mpl::true_
+    { };
+
+    } // namespace std
+)
+
 #endif
 
