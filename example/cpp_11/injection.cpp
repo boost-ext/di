@@ -10,7 +10,7 @@
 //<-
 #include <cassert>
 #include <memory>
-#include <functional>
+#include <boost/function.hpp>
 //->
 #include <boost/di.hpp>
 
@@ -21,7 +21,7 @@ struct impl : i { };
 struct some_name { };
 
 struct service {
-    service(const std::shared_ptr<i>& sp, double d, std::unique_ptr<int> up, std::function<int()> f)
+    service(const std::shared_ptr<i>& sp, double d, std::unique_ptr<int> up, boost::function<int()> f)
         : sp(sp)
     {
         assert(dynamic_cast<impl*>(sp.get()));
@@ -61,7 +61,7 @@ int main() {
       , di::bind_int<42>()
       , di::bind<std::string>::named<some_name>::to("some_name")
       , di::bind<float>::to(boost::ref(f))
-      , di::bind<std::function<int()>>::to([]{return 87;})
+      , di::bind<boost::function<int()>>::to([]{return 87;})
     );
 
     auto service_app = injector.create<app>();

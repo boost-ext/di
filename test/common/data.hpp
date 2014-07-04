@@ -11,7 +11,6 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include <functional>
 #include <boost/function.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/mpl/string.hpp>
@@ -571,13 +570,13 @@ struct functions
 {
     BOOST_DI_INJECT(functions
         , function<int()> fi
-        , const std::function<double()>& fd
+        , const function<double()>& fd
     )
         : fi_(fi), fd_(fd)
     { }
 
     function<int()> fi_;
-    std::function<double()> fd_;
+    function<double()> fd_;
 };
 
 enum eid { e0 = 1 , e1 = 2 };
