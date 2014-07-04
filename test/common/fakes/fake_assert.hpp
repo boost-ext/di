@@ -26,7 +26,7 @@ public:
         : msg_(msg), type_(type)
     { }
 
-    const char* what() const BOOST_NOEXCEPT override { return msg_; }
+    const char* what() const BOOST_NOEXCEPT_OR_NOTHROW override { return msg_; }
     const std::type_info& get_type() const { return *type_; }
 
 private:
