@@ -7,13 +7,15 @@
 #ifndef BOOST_DI_DATA_HPP
 #define BOOST_DI_DATA_HPP
 
+#include <cassert>
 #include <memory>
 #include <string>
 #include <vector>
-#include <cassert>
+#include <functional>
 #include <boost/function.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/mpl/string.hpp>
+
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/inject.hpp"
 #include "boost/di/named.hpp"
@@ -569,7 +571,7 @@ struct functions
 {
     BOOST_DI_INJECT(functions
         , function<int()> fi
-        , const function<double()>& fd
+        , const std::function<double()>& fd
     )
         : fi_(fi), fd_(fd)
     { }

@@ -173,11 +173,11 @@
     #define BOOST_DI_WKND_NO_MSVC(...) __VA_ARGS__
 #endif
 
-#if (__cplusplus >= 201100L)
-    #include <type_traits>
-    #define BOOST_DI_WKND_STD_CPP_11(...) __VA_ARGS__
+#if defined(BOOST_NO_CXX11_HDR_TYPE_TRAITS) || (__cplusplus < 201100L)
+    #define BOOST_DI_WKND_CPP_11_TYPE_TRAITS(...)
 #else
-    #define BOOST_DI_WKND_STD_CPP_11(...)
+    #include <type_traits>
+    #define BOOST_DI_WKND_CPP_11_TYPE_TRAITS(...) __VA_ARGS__
 #endif
 
 #if !defined(BOOST_DI_ASSERT_MSG)

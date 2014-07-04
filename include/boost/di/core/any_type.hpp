@@ -119,10 +119,6 @@ private:
 } // namespace core
 } // namespace di
 
-/**
- * Workaround to support boost::function and disable
- * it conversion constructor which cause ambiguity
- */
 template<
     typename T
   , typename TCallStack
@@ -138,13 +134,9 @@ struct is_integral<di::core::any_type<T, TCallStack, TCreator, TDeps, TRefs, TVi
 
 } // namespace boost
 
-BOOST_DI_WKND(STD_CPP_11)(
+BOOST_DI_WKND(CPP_11_TYPE_TRAITS)(
     namespace std {
 
-    /**
-     * Workaround to support std::function and disable
-     * it conversion constructor which cause ambiguity (gcc < 4.8)
-     */
     template<
         typename T
       , typename TCallStack

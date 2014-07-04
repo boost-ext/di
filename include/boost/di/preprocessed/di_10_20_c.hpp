@@ -534,7 +534,7 @@ struct is_integral<di::core::any_type<T, TCallStack, TCreator, TDeps, TRefs, TVi
 
 } // namespace boost
 
-BOOST_DI_WKND(STD_CPP_11)(
+BOOST_DI_WKND(CPP_11_TYPE_TRAITS)(
     namespace std {
 
     template<
