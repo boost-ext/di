@@ -305,7 +305,7 @@ BOOST_AUTO_TEST_CASE(bind_to_function_ptr) {
     const double d = 87.0;
 
     auto injector = di::make_injector(
-        di::bind<function<int()>>::to([]{ return i; })
+        di::bind<function<int()>>::to([&]{ return i; })
       , di::bind<std::function<double()>>::to(boost::bind(&return_double, d))
     );
 

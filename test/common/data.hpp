@@ -577,7 +577,7 @@ struct functions
     { }
 
     function<int()> fi_;
-    function<double()> fd_;
+    std::function<double()> fd_;
 };
 
 enum eid { e0 = 1 , e1 = 2 };
