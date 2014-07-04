@@ -34,13 +34,13 @@
           , typename = ::boost::di::core::builder
         > class TBinder = binder
       , template<
-            typename
-          , typename
-          , typename
-          , typename
-          , typename
-          , typename
-          , typename
+            typename = none_t
+          , typename = mpl::vector0<>
+          , typename = none_t
+          , typename = none_t
+          , typename = none_t
+          , typename = none_t
+          , typename = none_t
         >
         class TAnyType = ::boost::di::core::any_type
     >
@@ -82,7 +82,7 @@
         >
         TAnyType<TParent, TCallStack, creator, TDeps, TRefs, TVisitor, TPolicies>
         create(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies
-             , typename enable_if<is_same<T, detail::any_type> >::type* = 0) {
+             , typename enable_if<is_same<T, TAnyType<> > >::type* = 0) {
             return TAnyType<TParent, TCallStack, creator, TDeps, TRefs, TVisitor, TPolicies>(
                 *this, deps, refs, visitor, policies
             );
@@ -102,7 +102,7 @@
           , TRefs& refs
           , const TVisitor& visitor
           , const TPolicies& policies
-          , typename disable_if<is_same<T, detail::any_type> >::type* = 0) {
+          , typename disable_if<is_same<T, TAnyType<> > >::type* = 0) {
             return create_impl<T, TCallStack>(deps, refs, visitor, policies);
         }
 

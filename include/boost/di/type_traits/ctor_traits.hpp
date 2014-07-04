@@ -9,6 +9,7 @@
 
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/inject.hpp"
+#include "boost/di/core/any_type.hpp"
 #include "boost/di/type_traits/parameter_types.hpp"
 #include "boost/di/type_traits/has_ctor.hpp"
 #include "boost/di/type_traits/has_injector.hpp"
@@ -25,8 +26,6 @@
 namespace boost {
 namespace di {
 namespace detail {
-
-struct any_type { };
 
 template<typename T>
 struct get_value
@@ -53,7 +52,7 @@ struct ctor_traits
     : mpl::fold<
           mpl::range_c<int, 0, detail::get_longest_ctor<T>::value>
         , mpl::vector0<>
-        , mpl::push_back<mpl::_1, detail::any_type>
+        , mpl::push_back<mpl::_1, core::any_type<> >
       >
 { };
 

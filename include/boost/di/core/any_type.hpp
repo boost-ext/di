@@ -22,7 +22,7 @@ namespace di {
 namespace core {
 
 template<
-    typename T
+    typename T = none_t
   , typename TCallStack = mpl::vector0<>
   , typename TCreator = none_t
   , typename TDeps = none_t
