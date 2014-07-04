@@ -32,7 +32,7 @@
 #include <boost/type.hpp>
 #include <boost/ref.hpp>
 #include <boost/non_type.hpp>
-#include <boost/none.hpp>
+#include <boost/none_t.hpp>
 #include <boost/mpl/void.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/transform_view.hpp>
@@ -7248,16 +7248,6 @@ private:
     >
     class creator
     {
-       template<
-            typename
-          , typename
-          , typename
-          , typename
-          , typename
-          , typename
-          , typename
-        > friend class TAnyType;
-
         template<typename TDependency>
         struct ctor
             : type_traits::ctor_traits<typename TDependency::given>::type
@@ -7610,6 +7600,7 @@ private:
             >(deps, refs, visitor, policies);
         }
 
+    private:
         template<typename TSeq, typename T, typename TPolicies>
         static typename enable_if<mpl::empty<TSeq> >::type assert_policies(const TPolicies&) { }
 

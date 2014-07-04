@@ -47,16 +47,6 @@
     >
     class creator
     {
-       template<
-            typename
-          , typename
-          , typename
-          , typename
-          , typename
-          , typename
-          , typename
-        > friend class TAnyType;
-
         template<typename TDependency>
         struct ctor
             : type_traits::ctor_traits<typename TDependency::given>::type
