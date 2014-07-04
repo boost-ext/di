@@ -11,13 +11,8 @@
 
     #include "boost/di/aux_/config.hpp"
     #include "boost/di/aux_/memory.hpp"
-    #include "boost/di/type_traits/make_plain.hpp"
-    #include "boost/di/type_traits/is_same_base_of.hpp"
+    #include "boost/di/core/any_type.hpp"
 
-    #include <memory>
-    #include <boost/config.hpp>
-    #include <boost/utility/enable_if.hpp>
-    #include <boost/type_traits/is_integral.hpp>
     #include <boost/mpl/aux_/yes_no.hpp>
 
     namespace boost {
@@ -28,60 +23,10 @@
     class has_ctor;
 
     template<typename T>
-    class any_type
-    {
-    public:
-        template<
-            typename U
-            BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-              , typename = typename disable_if<
-                    is_same_base_of<
-                        typename make_plain<U>::type
-                      , typename make_plain<T>::type
-                    >
-                >::type
-            )
-        >
-        operator const U&() const;
-
-        template<
-            typename U
-            BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-              , typename = typename disable_if<
-                    is_same_base_of<
-                        typename make_plain<U>::type
-                      , typename make_plain<T>::type
-                    >
-                >::type
-            )
-        >
-        operator U&() const;
-
-        BOOST_DI_WKND(NO_MSVC)(
-            template<
-                typename U
-                BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-                  , typename = typename disable_if<
-                        is_same_base_of<
-                            typename make_plain<U>::type
-                          , typename make_plain<T>::type
-                        >
-                    >::type
-                )
-            >
-            operator U();
-        )
-
-        template<typename U>
-        operator aux::auto_ptr<U>&();
-    };
-
-    template<typename T>
     class has_ctor<T, mpl::int_<1> >
     {
-    public:
         template<typename U>
-        static mpl::aux::yes_tag test(BOOST_DI_FEATURE_DECLTYPE(U(any_type<T>()))*);
+        static mpl::aux::yes_tag test(BOOST_DI_FEATURE_DECLTYPE(U(di::core::any_type<T>()))*);
 
         template<typename>
         static mpl::aux::no_tag test(...);
@@ -110,12 +55,6 @@
 
     } // namespace type_traits
     } // namespace di
-
-    template<typename T>
-    struct is_integral<di::type_traits::any_type<T> >
-        : mpl::true_
-    { };
-
     } // namespace boost
 
     #endif
@@ -129,7 +68,7 @@
         template<typename U>
         static mpl::aux::yes_tag test(
             BOOST_DI_FEATURE_DECLTYPE(U(
-                BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), any_type<T>() BOOST_PP_INTERCEPT))
+                BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(), di::core::any_type<T>() BOOST_PP_INTERCEPT))
             )*
         );
 

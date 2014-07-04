@@ -31,6 +31,16 @@
       , template<
             typename
           , template<typename, typename> class = ::boost::di::core::binder
+          , template<
+                typename
+              , typename
+              , typename
+              , typename
+              , typename
+              , typename
+              , typename
+            >
+            class = ::boost::di::core::any_type
         > class TCreator = creator
       , template<
             typename = ::boost::mpl::vector0<>
@@ -43,7 +53,16 @@
     {
         template<
             typename
-          , template<typename, template<typename, typename> class> class
+          , template<typename, template<typename, typename> class ,template<
+                typename
+              , typename
+              , typename
+              , typename
+              , typename
+              , typename
+              , typename
+            >
+            class> class
           , template<typename, typename, typename> class
         > friend class module;
 

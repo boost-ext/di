@@ -12,12 +12,10 @@
     #include "boost/di/aux_/config.hpp"
     #include "boost/di/aux_/memory.hpp"
     #include "boost/di/type_traits/ctor_traits.hpp"
-    #include "boost/di/type_traits/create_traits.hpp"
-    #include "boost/di/type_traits/make_plain.hpp"
-    #include "boost/di/type_traits/is_same_base_of.hpp"
     #include "boost/di/wrappers/universal.hpp"
     #include "boost/di/core/binder.hpp"
     #include "boost/di/core/builder.hpp"
+    #include "boost/di/core/any_type.hpp"
 
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/vector.hpp>
@@ -35,162 +33,38 @@
             typename
           , typename = ::boost::di::core::builder
         > class TBinder = binder
+      , template<
+            typename
+          , typename
+          , typename
+          , typename
+          , typename
+          , typename
+          , typename
+        >
+        class TAnyType = ::boost::di::core::any_type
     >
     class creator
     {
-        template<typename T, typename TCallStack>
-        struct resolve
-            : TBinder<TDependecies>::template resolve<T, TCallStack>::type
-        { };
+       template<
+            typename
+          , typename
+          , typename
+          , typename
+          , typename
+          , typename
+          , typename
+        > friend class TAnyType;
 
         template<typename TDependency>
         struct ctor
             : type_traits::ctor_traits<typename TDependency::given>::type
         { };
 
-        template<
-            typename T
-          , typename TCallStack
-          , typename TDeps
-          , typename TRefs
-          , typename TVisitor
-          , typename TPolicies
-        >
-        class eager_creator
-        {
-            eager_creator& operator=(const eager_creator&);
-
-        public:
-            eager_creator(creator& c, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies)
-                : c_(c), deps_(deps), refs_(refs), visitor_(visitor), policies_(policies)
-            { }
-
-            template<
-                typename U
-                BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-                    , typename = typename disable_if<
-                        type_traits::is_same_base_of<
-                            typename type_traits::make_plain<U>::type
-                          , typename type_traits::make_plain<T>::type
-                        >
-                    >::type
-                )
-            >
-            operator const U&() const {
-                return c_.create_impl<
-                    const U&
-                    BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
-                      , typename mpl::push_back<
-                            TCallStack
-                          , const U&
-                        >::type
-                    )
-                    BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
-                      , TCallStack
-                    )
-                  , resolve<const U&, TCallStack>
-                >(deps_, refs_, visitor_, policies_);
-            }
-
-            template<
-                typename U
-                BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-                    , typename = typename disable_if<
-                        type_traits::is_same_base_of<
-                            typename type_traits::make_plain<U>::type
-                          , typename type_traits::make_plain<T>::type
-                        >
-                    >::type
-                )
-            >
-            operator U&() const {
-                return c_.create_impl<
-                    U&
-                    BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
-                      , typename mpl::push_back<
-                            TCallStack
-                          , U&
-                        >::type
-                    )
-                    BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
-                      , TCallStack
-                    )
-                  , resolve<U&, TCallStack>
-                >(deps_, refs_, visitor_, policies_);
-            }
-
-            template<typename U>
-            operator aux::auto_ptr<U>&() {
-                return c_.create_impl<
-                    aux::auto_ptr<U>
-                    BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
-                      , typename mpl::push_back<
-                            TCallStack
-                          , aux::auto_ptr<U>
-                        >::type
-                    )
-                    BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
-                      , TCallStack
-                    )
-                  , resolve<aux::auto_ptr<U>, TCallStack>
-                >(deps_, refs_, visitor_, policies_);
-            }
-
-            BOOST_DI_WKND(MSVC)(
-                template<typename U>
-                operator aux::unique_ptr<U>() {
-                    return c_.create_impl<
-                        aux::unique_ptr<U>
-                        BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
-                          , typename mpl::push_back<
-                                TCallStack
-                              , aux::unique_ptr<U>
-                            >::type
-                        )
-                        BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
-                          , TCallStack
-                        )
-                      , resolve<aux::unique_ptr<U>, TCallStack>
-                    >(deps_, refs_, visitor_, policies_);
-                }
-            )
-
-            BOOST_DI_WKND(NO_MSVC)(
-                template<
-                    typename U
-                    BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-                        , typename = typename disable_if<
-                            type_traits::is_same_base_of<
-                                typename type_traits::make_plain<U>::type
-                              , typename type_traits::make_plain<T>::type
-                            >
-                        >::type
-                    )
-                >
-                operator U() {
-                    return c_.create_impl<
-                        U
-                        BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
-                          , typename mpl::push_back<
-                                TCallStack
-                              , U
-                            >::type
-                        )
-                        BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
-                          , TCallStack
-                        )
-                      , resolve<U, TCallStack>
-                    >(deps_, refs_, visitor_, policies_);
-                }
-            )
-
-        private:
-            creator& c_;
-            TDeps& deps_;
-            TRefs& refs_;
-            const TVisitor& visitor_;
-            const TPolicies& policies_;
-        };
+        template<typename T, typename TCallStack>
+        struct resolve
+            : TBinder<TDependecies>::template resolve<T, TCallStack>::type
+        { };
 
     public:
         explicit creator(const TBinder<TDependecies>& binder = TBinder<TDependecies>())
@@ -199,24 +73,24 @@
 
         template<
             typename T
-          , typename TParent // to ignore copy/move ctor
+          , typename TParent // ignore copy/move ctor
           , typename TCallStack
           , typename TDeps
           , typename TRefs
           , typename TVisitor
           , typename TPolicies
         >
-        eager_creator<TParent, TCallStack, TDeps, TRefs, TVisitor, TPolicies>
+        TAnyType<TParent, TCallStack, creator, TDeps, TRefs, TVisitor, TPolicies>
         create(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies
              , typename enable_if<is_same<T, detail::any_type> >::type* = 0) {
-            return eager_creator<TParent, TCallStack, TDeps, TRefs, TVisitor, TPolicies>(
+            return TAnyType<TParent, TCallStack, creator, TDeps, TRefs, TVisitor, TPolicies>(
                 *this, deps, refs, visitor, policies
             );
         }
 
         template<
             typename T
-          , typename // TParent - not needed
+          , typename // TParent - not used
           , typename TCallStack
           , typename TDeps
           , typename TRefs
@@ -229,6 +103,23 @@
           , const TVisitor& visitor
           , const TPolicies& policies
           , typename disable_if<is_same<T, detail::any_type> >::type* = 0) {
+            return create_impl<T, TCallStack>(deps, refs, visitor, policies);
+        }
+
+    private:
+        #define BOOST_PP_FILENAME_1 "boost/di/core/creator.hpp"
+        #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM(0)
+        #include BOOST_PP_ITERATE()
+
+        template<
+            typename T
+          , typename TCallStack
+          , typename TDeps
+          , typename TRefs
+          , typename TVisitor
+          , typename TPolicies
+        >
+        wrappers::universal<T> create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
             return create_impl<
                 T
                 BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
@@ -243,11 +134,6 @@
               , resolve<T, TCallStack>
             >(deps, refs, visitor, policies);
         }
-
-    private:
-        #define BOOST_PP_FILENAME_1 "boost/di/core/creator.hpp"
-        #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM(0)
-        #include BOOST_PP_ITERATE()
 
         template<typename TSeq, typename T, typename TPolicies>
         static typename enable_if<mpl::empty<TSeq> >::type assert_policies(const TPolicies&) { }
