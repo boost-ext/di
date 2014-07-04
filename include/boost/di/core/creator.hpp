@@ -17,6 +17,7 @@
     #include "boost/di/core/builder.hpp"
     #include "boost/di/core/any_type.hpp"
 
+    #include <boost/none_t.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/vector.hpp>
     #include <boost/mpl/size.hpp>
@@ -111,6 +112,7 @@
         #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM(0)
         #include BOOST_PP_ITERATE()
 
+    public:
         template<
             typename T
           , typename TCallStack
@@ -135,6 +137,7 @@
             >(deps, refs, visitor, policies);
         }
 
+    private:
         template<typename TSeq, typename T, typename TPolicies>
         static typename enable_if<mpl::empty<TSeq> >::type assert_policies(const TPolicies&) { }
 

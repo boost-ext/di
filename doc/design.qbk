@@ -178,7 +178,7 @@ injector().create<example>();
         ]
     ]
 
-    * Constructor with types having `conversion constructor`
+    * Constructor with types which have `conversion constructor`
     [table
         [[Issue][Solution]]
         [
@@ -208,6 +208,13 @@ injector().create<example>();
                         template<typename T>
                         explicit example(T);
                     };
+
+                if conversion constructor might be disabled, might be worth to do so
+                boost::function has a conversion constructor from any type but integral types
+                    template<>
+                    struct is_integral<any_type>
+                        : mpl::true_
+                    { };
                 ```
             ]
         ]
