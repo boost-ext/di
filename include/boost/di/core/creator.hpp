@@ -35,13 +35,13 @@
           , typename = ::boost::di::core::builder
         > class TBinder = binder
       , template<
-            typename = none_t
-          , typename = mpl::vector0<>
-          , typename = none_t
-          , typename = none_t
-          , typename = none_t
-          , typename = none_t
-          , typename = none_t
+            typename = ::boost::none_t
+          , typename = ::boost::mpl::vector0<>
+          , typename = ::boost::none_t
+          , typename = ::boost::none_t
+          , typename = ::boost::none_t
+          , typename = ::boost::none_t
+          , typename = ::boost::none_t
         >
         class TAnyType = ::boost::di::core::any_type
     >
