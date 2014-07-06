@@ -98,7 +98,6 @@ test-suite ut : # unit tests
     [ run-test c++11 : ut/concepts/dependency_ut.cpp ]
 
     [ run-test c++11 : ut/core/binder_ut.cpp ]
-    [ run-test c++11 : ut/core/builder_ut.cpp ]
     [ run-test c++11 : ut/core/creator_ut.cpp ]
     [ run-test c++11 : ut/core/pool_ut.cpp ]
 
@@ -122,6 +121,8 @@ test-suite ut : # unit tests
     [ run-test c++11 : ut/type_traits/create_traits_ut.cpp ]
     [ run-test c++11 : ut/type_traits/ctor_traits_ut.cpp : ctor_traits_ut_cpp_11 ]
     [ run-test c++03 : ut/type_traits/ctor_traits_ut.cpp : ctor_traits_ut_cpp_03 ]
+    [ run-test c++11 : ut/type_traits/function_traits.cpp : function_traits_ut_cpp_11 ]
+    [ run-test c++03 : ut/type_traits/function_traits.cpp : function_traits_ut_cpp_03 ]
     [ run-test c++11 : ut/type_traits/has_call_operator_ut.cpp : has_call_operator_ut_cpp_11 ]
     [ run-test c++03 : ut/type_traits/has_call_operator_ut.cpp : has_call_operator_ut_cpp_03 ]
     [ run-test c++11 : ut/type_traits/has_call_ut.cpp : has_call_ut_cpp_11 ]
