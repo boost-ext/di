@@ -6978,7 +6978,7 @@ public:
         )
     >
     operator const U&() const {
-        return creator_.template create_impl<const U&, TCallStack>(deps_, refs_, visitor_, policies_);
+        return creator_.template create<const U&, none_t, TCallStack>(deps_, refs_, visitor_, policies_);
     }
 
     template<
@@ -6993,18 +6993,18 @@ public:
         )
     >
     operator U&() const {
-        return creator_.template create_impl<U&, TCallStack>(deps_, refs_, visitor_, policies_);
+        return creator_.template create<U&, none_t, TCallStack>(deps_, refs_, visitor_, policies_);
     }
 
     template<typename U>
     operator aux::auto_ptr<U>&() {
-        return creator_.template create_impl<aux::auto_ptr<U>, TCallStack>(deps_, refs_, visitor_, policies_);
+        return creator_.template create<aux::auto_ptr<U>, none_t, TCallStack>(deps_, refs_, visitor_, policies_);
     }
 
     BOOST_DI_WKND(MSVC)(
         template<typename U>
         operator aux::unique_ptr<U>() {
-            return creator_.create_impl<aux::unique_ptr<U>, TCallStack>(deps_, refs_, visitor_, policies_);
+            return creator_.create<aux::unique_ptr<U>, none_t, TCallStack>(deps_, refs_, visitor_, policies_);
         }
     )
 
@@ -7021,7 +7021,7 @@ public:
             )
         >
         operator U() {
-            return creator_.template create_impl<U, TCallStack>(deps_, refs_, visitor_, policies_);
+            return creator_.template create<U, none_t, TCallStack>(deps_, refs_, visitor_, policies_);
         }
     )
 
@@ -7754,693 +7754,57 @@ public:
         }
 
     template<typename TExpected, typename TGiven, typename Args0>
-    TExpected* create( const Args0 & args0) const {
+    TExpected* create(BOOST_DI_ARGS_COPY(Args, args)) const { // copy for gcc
         return new TGiven( args0);
     }
 
     template<typename TExpected, typename TGiven, typename Args0 , typename Args1>
-    TExpected* create( const Args0 & args0 , const Args1 & args1) const {
+    TExpected* create(BOOST_DI_ARGS_COPY(Args, args)) const { // copy for gcc
         return new TGiven( args0 , args1);
     }
 
     template<typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2>
-    TExpected* create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2) const {
+    TExpected* create(BOOST_DI_ARGS_COPY(Args, args)) const { // copy for gcc
         return new TGiven( args0 , args1 , args2);
     }
 
     template<typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3>
-    TExpected* create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3) const {
+    TExpected* create(BOOST_DI_ARGS_COPY(Args, args)) const { // copy for gcc
         return new TGiven( args0 , args1 , args2 , args3);
     }
 
     template<typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
-    TExpected* create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4) const {
+    TExpected* create(BOOST_DI_ARGS_COPY(Args, args)) const { // copy for gcc
         return new TGiven( args0 , args1 , args2 , args3 , args4);
     }
 
     template<typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
-    TExpected* create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5) const {
+    TExpected* create(BOOST_DI_ARGS_COPY(Args, args)) const { // copy for gcc
         return new TGiven( args0 , args1 , args2 , args3 , args4 , args5);
     }
 
     template<typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
-    TExpected* create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6) const {
+    TExpected* create(BOOST_DI_ARGS_COPY(Args, args)) const { // copy for gcc
         return new TGiven( args0 , args1 , args2 , args3 , args4 , args5 , args6);
     }
 
     template<typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
-    TExpected* create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7) const {
+    TExpected* create(BOOST_DI_ARGS_COPY(Args, args)) const { // copy for gcc
         return new TGiven( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7);
     }
 
     template<typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
-    TExpected* create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8) const {
+    TExpected* create(BOOST_DI_ARGS_COPY(Args, args)) const { // copy for gcc
         return new TGiven( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8);
     }
 
     template<typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
-    TExpected* create( const Args0 & args0 , const Args1 & args1 , const Args2 & args2 , const Args3 & args3 , const Args4 & args4 , const Args5 & args5 , const Args6 & args6 , const Args7 & args7 , const Args8 & args8 , const Args9 & args9) const {
+    TExpected* create(BOOST_DI_ARGS_COPY(Args, args)) const { // copy for gcc
         return new TGiven( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9);
     }
     };
 
     } // namespace type_traits
-    } // namespace di
-    } // namespace boost
-
-
-    namespace boost {
-    namespace di {
-    namespace core {
-
-    class builder
-    {
-        class type_comparator
-        {
-        public:
-            bool operator()(const std::type_info* lhs, const std::type_info* rhs) const {
-                return lhs->before(*rhs);
-            }
-        };
-
-        typedef std::map<
-            const std::type_info*
-          , aux::shared_ptr<void>
-          , type_comparator
-        > scopes_type;
-
-    public:
-        explicit builder(const scopes_type& scopes = scopes_type())
-            : scopes_(scopes)
-        { }
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TArgs
-    >
-    typename enable_if_c<mpl::size<TCtor>::value == 0, wrappers::universal<T> >::type
-    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
-        return wrappers::universal<T>(
-            refs
-          , acquire<typename TDependency::type>(deps).create(
-                boost::bind(
-                    &builder::build_impl<T, typename TDependency::type, TCtor, TCallStack, TCreator, TDeps, TRefs, TVisitor, TArgs>
-                  , this
-                  , boost::ref(creator)
-                  , boost::ref(deps)
-                  , boost::ref(refs)
-                  , boost::cref(visitor)
-                  , boost::cref(args)
-                )
-            )
-        );
-    }
-
-    template<
-        typename T
-      , typename TDependency
-      , typename TCtor
-      , typename TCallStack
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TArgs
-    >
-    typename enable_if_c<mpl::size<TCtor>::value == 0, typename TDependency::expected*>::type
-    build_impl(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
-        (void)creator;
-        (void)visitor;
-        (void)args;
-        return new_creator_.create<typename TDependency::expected, typename TDependency::given>(
-           
-
-        );
-
-      }
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TArgs
-    >
-    typename enable_if_c<mpl::size<TCtor>::value == 1, wrappers::universal<T> >::type
-    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
-        return wrappers::universal<T>(
-            refs
-          , acquire<typename TDependency::type>(deps).create(
-                boost::bind(
-                    &builder::build_impl<T, typename TDependency::type, TCtor, TCallStack, TCreator, TDeps, TRefs, TVisitor, TArgs>
-                  , this
-                  , boost::ref(creator)
-                  , boost::ref(deps)
-                  , boost::ref(refs)
-                  , boost::cref(visitor)
-                  , boost::cref(args)
-                )
-            )
-        );
-    }
-
-    template<
-        typename T
-      , typename TDependency
-      , typename TCtor
-      , typename TCallStack
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TArgs
-    >
-    typename enable_if_c<mpl::size<TCtor>::value == 1, typename TDependency::expected*>::type
-    build_impl(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
-        (void)creator;
-        (void)visitor;
-        (void)args;
-        return new_creator_.create<typename TDependency::expected, typename TDependency::given>(
-           
-
- creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, args)
-        );
-
-      }
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TArgs
-    >
-    typename enable_if_c<mpl::size<TCtor>::value == 2, wrappers::universal<T> >::type
-    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
-        return wrappers::universal<T>(
-            refs
-          , acquire<typename TDependency::type>(deps).create(
-                boost::bind(
-                    &builder::build_impl<T, typename TDependency::type, TCtor, TCallStack, TCreator, TDeps, TRefs, TVisitor, TArgs>
-                  , this
-                  , boost::ref(creator)
-                  , boost::ref(deps)
-                  , boost::ref(refs)
-                  , boost::cref(visitor)
-                  , boost::cref(args)
-                )
-            )
-        );
-    }
-
-    template<
-        typename T
-      , typename TDependency
-      , typename TCtor
-      , typename TCallStack
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TArgs
-    >
-    typename enable_if_c<mpl::size<TCtor>::value == 2, typename TDependency::expected*>::type
-    build_impl(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
-        (void)creator;
-        (void)visitor;
-        (void)args;
-        return new_creator_.create<typename TDependency::expected, typename TDependency::given>(
-           
-
- creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, args)
-        );
-
-      }
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TArgs
-    >
-    typename enable_if_c<mpl::size<TCtor>::value == 3, wrappers::universal<T> >::type
-    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
-        return wrappers::universal<T>(
-            refs
-          , acquire<typename TDependency::type>(deps).create(
-                boost::bind(
-                    &builder::build_impl<T, typename TDependency::type, TCtor, TCallStack, TCreator, TDeps, TRefs, TVisitor, TArgs>
-                  , this
-                  , boost::ref(creator)
-                  , boost::ref(deps)
-                  , boost::ref(refs)
-                  , boost::cref(visitor)
-                  , boost::cref(args)
-                )
-            )
-        );
-    }
-
-    template<
-        typename T
-      , typename TDependency
-      , typename TCtor
-      , typename TCallStack
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TArgs
-    >
-    typename enable_if_c<mpl::size<TCtor>::value == 3, typename TDependency::expected*>::type
-    build_impl(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
-        (void)creator;
-        (void)visitor;
-        (void)args;
-        return new_creator_.create<typename TDependency::expected, typename TDependency::given>(
-           
-
- creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, args)
-        );
-
-      }
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TArgs
-    >
-    typename enable_if_c<mpl::size<TCtor>::value == 4, wrappers::universal<T> >::type
-    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
-        return wrappers::universal<T>(
-            refs
-          , acquire<typename TDependency::type>(deps).create(
-                boost::bind(
-                    &builder::build_impl<T, typename TDependency::type, TCtor, TCallStack, TCreator, TDeps, TRefs, TVisitor, TArgs>
-                  , this
-                  , boost::ref(creator)
-                  , boost::ref(deps)
-                  , boost::ref(refs)
-                  , boost::cref(visitor)
-                  , boost::cref(args)
-                )
-            )
-        );
-    }
-
-    template<
-        typename T
-      , typename TDependency
-      , typename TCtor
-      , typename TCallStack
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TArgs
-    >
-    typename enable_if_c<mpl::size<TCtor>::value == 4, typename TDependency::expected*>::type
-    build_impl(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
-        (void)creator;
-        (void)visitor;
-        (void)args;
-        return new_creator_.create<typename TDependency::expected, typename TDependency::given>(
-           
-
- creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, args)
-        );
-
-      }
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TArgs
-    >
-    typename enable_if_c<mpl::size<TCtor>::value == 5, wrappers::universal<T> >::type
-    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
-        return wrappers::universal<T>(
-            refs
-          , acquire<typename TDependency::type>(deps).create(
-                boost::bind(
-                    &builder::build_impl<T, typename TDependency::type, TCtor, TCallStack, TCreator, TDeps, TRefs, TVisitor, TArgs>
-                  , this
-                  , boost::ref(creator)
-                  , boost::ref(deps)
-                  , boost::ref(refs)
-                  , boost::cref(visitor)
-                  , boost::cref(args)
-                )
-            )
-        );
-    }
-
-    template<
-        typename T
-      , typename TDependency
-      , typename TCtor
-      , typename TCallStack
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TArgs
-    >
-    typename enable_if_c<mpl::size<TCtor>::value == 5, typename TDependency::expected*>::type
-    build_impl(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
-        (void)creator;
-        (void)visitor;
-        (void)args;
-        return new_creator_.create<typename TDependency::expected, typename TDependency::given>(
-           
-
- creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(deps, refs, visitor, args)
-        );
-
-      }
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TArgs
-    >
-    typename enable_if_c<mpl::size<TCtor>::value == 6, wrappers::universal<T> >::type
-    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
-        return wrappers::universal<T>(
-            refs
-          , acquire<typename TDependency::type>(deps).create(
-                boost::bind(
-                    &builder::build_impl<T, typename TDependency::type, TCtor, TCallStack, TCreator, TDeps, TRefs, TVisitor, TArgs>
-                  , this
-                  , boost::ref(creator)
-                  , boost::ref(deps)
-                  , boost::ref(refs)
-                  , boost::cref(visitor)
-                  , boost::cref(args)
-                )
-            )
-        );
-    }
-
-    template<
-        typename T
-      , typename TDependency
-      , typename TCtor
-      , typename TCallStack
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TArgs
-    >
-    typename enable_if_c<mpl::size<TCtor>::value == 6, typename TDependency::expected*>::type
-    build_impl(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
-        (void)creator;
-        (void)visitor;
-        (void)args;
-        return new_creator_.create<typename TDependency::expected, typename TDependency::given>(
-           
-
- creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(deps, refs, visitor, args)
-        );
-
-      }
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TArgs
-    >
-    typename enable_if_c<mpl::size<TCtor>::value == 7, wrappers::universal<T> >::type
-    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
-        return wrappers::universal<T>(
-            refs
-          , acquire<typename TDependency::type>(deps).create(
-                boost::bind(
-                    &builder::build_impl<T, typename TDependency::type, TCtor, TCallStack, TCreator, TDeps, TRefs, TVisitor, TArgs>
-                  , this
-                  , boost::ref(creator)
-                  , boost::ref(deps)
-                  , boost::ref(refs)
-                  , boost::cref(visitor)
-                  , boost::cref(args)
-                )
-            )
-        );
-    }
-
-    template<
-        typename T
-      , typename TDependency
-      , typename TCtor
-      , typename TCallStack
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TArgs
-    >
-    typename enable_if_c<mpl::size<TCtor>::value == 7, typename TDependency::expected*>::type
-    build_impl(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
-        (void)creator;
-        (void)visitor;
-        (void)args;
-        return new_creator_.create<typename TDependency::expected, typename TDependency::given>(
-           
-
- creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(deps, refs, visitor, args)
-        );
-
-      }
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TArgs
-    >
-    typename enable_if_c<mpl::size<TCtor>::value == 8, wrappers::universal<T> >::type
-    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
-        return wrappers::universal<T>(
-            refs
-          , acquire<typename TDependency::type>(deps).create(
-                boost::bind(
-                    &builder::build_impl<T, typename TDependency::type, TCtor, TCallStack, TCreator, TDeps, TRefs, TVisitor, TArgs>
-                  , this
-                  , boost::ref(creator)
-                  , boost::ref(deps)
-                  , boost::ref(refs)
-                  , boost::cref(visitor)
-                  , boost::cref(args)
-                )
-            )
-        );
-    }
-
-    template<
-        typename T
-      , typename TDependency
-      , typename TCtor
-      , typename TCallStack
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TArgs
-    >
-    typename enable_if_c<mpl::size<TCtor>::value == 8, typename TDependency::expected*>::type
-    build_impl(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
-        (void)creator;
-        (void)visitor;
-        (void)args;
-        return new_creator_.create<typename TDependency::expected, typename TDependency::given>(
-           
-
- creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(deps, refs, visitor, args)
-        );
-
-      }
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TArgs
-    >
-    typename enable_if_c<mpl::size<TCtor>::value == 9, wrappers::universal<T> >::type
-    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
-        return wrappers::universal<T>(
-            refs
-          , acquire<typename TDependency::type>(deps).create(
-                boost::bind(
-                    &builder::build_impl<T, typename TDependency::type, TCtor, TCallStack, TCreator, TDeps, TRefs, TVisitor, TArgs>
-                  , this
-                  , boost::ref(creator)
-                  , boost::ref(deps)
-                  , boost::ref(refs)
-                  , boost::cref(visitor)
-                  , boost::cref(args)
-                )
-            )
-        );
-    }
-
-    template<
-        typename T
-      , typename TDependency
-      , typename TCtor
-      , typename TCallStack
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TArgs
-    >
-    typename enable_if_c<mpl::size<TCtor>::value == 9, typename TDependency::expected*>::type
-    build_impl(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
-        (void)creator;
-        (void)visitor;
-        (void)args;
-        return new_creator_.create<typename TDependency::expected, typename TDependency::given>(
-           
-
- creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack >(deps, refs, visitor, args)
-        );
-
-      }
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TArgs
-    >
-    typename enable_if_c<mpl::size<TCtor>::value == 10, wrappers::universal<T> >::type
-    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
-        return wrappers::universal<T>(
-            refs
-          , acquire<typename TDependency::type>(deps).create(
-                boost::bind(
-                    &builder::build_impl<T, typename TDependency::type, TCtor, TCallStack, TCreator, TDeps, TRefs, TVisitor, TArgs>
-                  , this
-                  , boost::ref(creator)
-                  , boost::ref(deps)
-                  , boost::ref(refs)
-                  , boost::cref(visitor)
-                  , boost::cref(args)
-                )
-            )
-        );
-    }
-
-    template<
-        typename T
-      , typename TDependency
-      , typename TCtor
-      , typename TCallStack
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TArgs
-    >
-    typename enable_if_c<mpl::size<TCtor>::value == 10, typename TDependency::expected*>::type
-    build_impl(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
-        (void)creator;
-        (void)visitor;
-        (void)args;
-        return new_creator_.create<typename TDependency::expected, typename TDependency::given>(
-           
-
- creator.template create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack >(deps, refs, visitor, args) , creator.template create< typename mpl::at_c<TCtor, 9>::type , T , TCallStack >(deps, refs, visitor, args)
-        );
-
-      }
-
-    private:
-        template<typename TDependency, typename TDeps>
-        typename enable_if<is_base_of<TDependency, TDeps>, TDependency&>::type
-        acquire(TDeps& deps) {
-            return static_cast<TDependency&>(deps);
-        }
-
-        template<typename TDependency, typename TDeps>
-        typename disable_if<is_base_of<TDependency, TDeps>, TDependency&>::type
-        acquire(TDeps&) {
-            typename scopes_type::const_iterator it = scopes_.find(&typeid(TDependency));
-            if (it != scopes_.end()) {
-                return *static_cast<TDependency*>(it->second.get());
-            }
-
-            aux::shared_ptr<TDependency> dependency(new TDependency());
-            scopes_[&typeid(TDependency)] = dependency;
-            return *dependency;
-        }
-
-        scopes_type scopes_;
-        creators::new_creator new_creator_; // todo remove
-    };
-
-    } // namespace core
     } // namespace di
     } // namespace boost
 
@@ -8460,10 +7824,7 @@ struct data
     typedef TDependency dependency;
 };
 
-template<
-    typename TDependecies
-  , typename TBuilder = builder
->
+template<typename TDependecies>
 class binder
 {
     template<
@@ -8476,10 +7837,6 @@ class binder
     { };
 
 public:
-    explicit binder(const TBuilder& builder = TBuilder())
-        : builder_(builder)
-    { }
-
     template<
         typename T
       , typename TCallStack
@@ -8489,7 +7846,7 @@ public:
               , typename type_traits::make_plain<T>::type
             >
     >
-    struct resolve_type
+    struct resolve
         : mpl::deref<
               mpl::second<
                   typename mpl::fold<
@@ -8512,31 +7869,6 @@ public:
           >::type::template
               rebind<typename scopes::deduce::rebind<T>::other>::other
     { };
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TArgs
-    >
-    wrappers::universal<T>
-    resolve_(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
-        return builder_.template build<
-            T
-          , TCtor
-          , TCallStack
-          , TDependency
-          , TCreator
-        >(creator, deps, refs, visitor, args);
-    }
-
-private:
-    TBuilder builder_;
 };
 
 } // namespace core
@@ -8550,10 +7882,7 @@ private:
 
     template<
         typename TDependecies = mpl::vector0<>
-      , template<
-            typename
-          , typename = ::boost::di::core::builder
-        > class TBinder = binder
+      , template<typename> class TBinder = binder
       , template<
             typename = ::boost::none_t
           , typename = ::boost::mpl::vector0<>
@@ -8567,6 +7896,14 @@ private:
     >
     class creator
     {
+        class type_comparator
+        {
+        public:
+            bool operator()(const std::type_info* lhs, const std::type_info* rhs) const {
+                return lhs->before(*rhs);
+            }
+        };
+
         template<typename TDependency>
         struct ctor
             : type_traits::ctor_traits<typename TDependency::given>::type
@@ -8574,12 +7911,20 @@ private:
 
         template<typename T, typename TCallStack>
         struct resolve
-            : TBinder<TDependecies>::template resolve_type<T, TCallStack>::type
+            : TBinder<TDependecies>::template resolve<T, TCallStack>::type
         { };
 
+        typedef std::map<
+            const std::type_info*
+          , aux::shared_ptr<void>
+          , type_comparator
+        > scopes_type;
+
     public:
-        explicit creator(const TBinder<TDependecies>& binder = TBinder<TDependecies>())
+        explicit creator(const TBinder<TDependecies>& binder = TBinder<TDependecies>()
+                       , const scopes_type& scopes = scopes_type())
             : binder_(binder)
+            , scopes_(scopes)
         { }
 
         template<
@@ -8589,13 +7934,13 @@ private:
           , typename TDeps
           , typename TRefs
           , typename TVisitor
-          , typename TPolicies
+          , typename TArgs
         >
-        TAnyType<TParent, TCallStack, creator, TDeps, TRefs, TVisitor, TPolicies>
-        create(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies
+        TAnyType<TParent, TCallStack, creator, TDeps, TRefs, TVisitor, TArgs>
+        create(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args
              , typename enable_if<is_same<T, TAnyType<> > >::type* = 0) {
-            return TAnyType<TParent, TCallStack, creator, TDeps, TRefs, TVisitor, TPolicies>(
-                *this, deps, refs, visitor, policies
+            return TAnyType<TParent, TCallStack, creator, TDeps, TRefs, TVisitor, TArgs>(
+                *this, deps, refs, visitor, args
             );
         }
 
@@ -8606,309 +7951,332 @@ private:
           , typename TDeps
           , typename TRefs
           , typename TVisitor
-          , typename TPolicies
+          , typename TArgs
         >
-        wrappers::universal<T> create(
-            TDeps& deps
-          , TRefs& refs
-          , const TVisitor& visitor
-          , const TPolicies& policies
-          , typename disable_if<is_same<T, TAnyType<> > >::type* = 0) {
-            return create_impl<T, TCallStack>(deps, refs, visitor, policies);
+        wrappers::universal<T>
+        create(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args
+             , typename disable_if<is_same<T, TAnyType<> > >::type* = 0) {
+
+            typedef resolve<T, TCallStack> dependency_type;
+
+            return wrappers::universal<T>(
+                refs
+              , acquire<typename dependency_type::type>(deps).create(
+                    boost::bind(
+                        &creator::create_impl<
+                            T
+                          , typename dependency_type::type
+                          , typename ctor<dependency_type>::type
+                            BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
+                              , typename mpl::push_back<
+                                    TCallStack
+                                  , T
+                                >::type
+                            )
+                            BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
+                              , TCallStack
+                            )
+                          , TDeps
+                          , TRefs
+                          , TVisitor
+                          , TArgs
+                        >
+                      , this
+                      , boost::ref(deps)
+                      , boost::ref(refs)
+                      , boost::cref(visitor)
+                      , boost::cref(args)
+                    )
+                )
+            );
         }
 
     private:
 
     template<
         typename T
-      , typename TCallStack
       , typename TDependency
+      , typename TCtor
+      , typename TCallStack
       , typename TDeps
       , typename TRefs
       , typename TVisitor
-      , typename TPolicies
+      , typename TArgs
     >
-    typename enable_if_c<mpl::size<typename ctor<TDependency>::type>::value == 0, wrappers::universal<T> >::type
-    create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<mpl::size<TCtor>::value == 0, typename TDependency::expected*>::type
+    create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
         typedef data<T, TCallStack, TDependency> data_type;
-        assert_policies<typename TPolicies::types, data_type>(policies);
+        assert_policies<typename TArgs::types, data_type>(args);
         (visitor)(data_type());
+        return new_creator_.create<typename TDependency::expected, typename TDependency::given>(
+           
 
-        return binder_.template resolve_<
-            T
-          , typename ctor<TDependency>::type
-          , TCallStack
-          , TDependency
-        >(*this, deps, refs, visitor, policies);
-    }
+        );
+
+      }
 
     template<
         typename T
-      , typename TCallStack
       , typename TDependency
+      , typename TCtor
+      , typename TCallStack
       , typename TDeps
       , typename TRefs
       , typename TVisitor
-      , typename TPolicies
+      , typename TArgs
     >
-    typename enable_if_c<mpl::size<typename ctor<TDependency>::type>::value == 1, wrappers::universal<T> >::type
-    create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<mpl::size<TCtor>::value == 1, typename TDependency::expected*>::type
+    create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
         typedef data<T, TCallStack, TDependency> data_type;
-        assert_policies<typename TPolicies::types, data_type>(policies);
+        assert_policies<typename TArgs::types, data_type>(args);
         (visitor)(data_type());
+        return new_creator_.create<typename TDependency::expected, typename TDependency::given>(
+           
 
-        return binder_.template resolve_<
-            T
-          , typename ctor<TDependency>::type
-          , TCallStack
-          , TDependency
-        >(*this, deps, refs, visitor, policies);
-    }
+ create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, args)
+        );
+
+      }
 
     template<
         typename T
-      , typename TCallStack
       , typename TDependency
+      , typename TCtor
+      , typename TCallStack
       , typename TDeps
       , typename TRefs
       , typename TVisitor
-      , typename TPolicies
+      , typename TArgs
     >
-    typename enable_if_c<mpl::size<typename ctor<TDependency>::type>::value == 2, wrappers::universal<T> >::type
-    create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<mpl::size<TCtor>::value == 2, typename TDependency::expected*>::type
+    create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
         typedef data<T, TCallStack, TDependency> data_type;
-        assert_policies<typename TPolicies::types, data_type>(policies);
+        assert_policies<typename TArgs::types, data_type>(args);
         (visitor)(data_type());
+        return new_creator_.create<typename TDependency::expected, typename TDependency::given>(
+           
 
-        return binder_.template resolve_<
-            T
-          , typename ctor<TDependency>::type
-          , TCallStack
-          , TDependency
-        >(*this, deps, refs, visitor, policies);
-    }
+ create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, args)
+        );
+
+      }
 
     template<
         typename T
-      , typename TCallStack
       , typename TDependency
+      , typename TCtor
+      , typename TCallStack
       , typename TDeps
       , typename TRefs
       , typename TVisitor
-      , typename TPolicies
+      , typename TArgs
     >
-    typename enable_if_c<mpl::size<typename ctor<TDependency>::type>::value == 3, wrappers::universal<T> >::type
-    create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<mpl::size<TCtor>::value == 3, typename TDependency::expected*>::type
+    create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
         typedef data<T, TCallStack, TDependency> data_type;
-        assert_policies<typename TPolicies::types, data_type>(policies);
+        assert_policies<typename TArgs::types, data_type>(args);
         (visitor)(data_type());
+        return new_creator_.create<typename TDependency::expected, typename TDependency::given>(
+           
 
-        return binder_.template resolve_<
-            T
-          , typename ctor<TDependency>::type
-          , TCallStack
-          , TDependency
-        >(*this, deps, refs, visitor, policies);
-    }
+ create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, args)
+        );
+
+      }
 
     template<
         typename T
-      , typename TCallStack
       , typename TDependency
+      , typename TCtor
+      , typename TCallStack
       , typename TDeps
       , typename TRefs
       , typename TVisitor
-      , typename TPolicies
+      , typename TArgs
     >
-    typename enable_if_c<mpl::size<typename ctor<TDependency>::type>::value == 4, wrappers::universal<T> >::type
-    create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<mpl::size<TCtor>::value == 4, typename TDependency::expected*>::type
+    create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
         typedef data<T, TCallStack, TDependency> data_type;
-        assert_policies<typename TPolicies::types, data_type>(policies);
+        assert_policies<typename TArgs::types, data_type>(args);
         (visitor)(data_type());
+        return new_creator_.create<typename TDependency::expected, typename TDependency::given>(
+           
 
-        return binder_.template resolve_<
-            T
-          , typename ctor<TDependency>::type
-          , TCallStack
-          , TDependency
-        >(*this, deps, refs, visitor, policies);
-    }
+ create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, args)
+        );
+
+      }
 
     template<
         typename T
-      , typename TCallStack
       , typename TDependency
+      , typename TCtor
+      , typename TCallStack
       , typename TDeps
       , typename TRefs
       , typename TVisitor
-      , typename TPolicies
+      , typename TArgs
     >
-    typename enable_if_c<mpl::size<typename ctor<TDependency>::type>::value == 5, wrappers::universal<T> >::type
-    create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<mpl::size<TCtor>::value == 5, typename TDependency::expected*>::type
+    create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
         typedef data<T, TCallStack, TDependency> data_type;
-        assert_policies<typename TPolicies::types, data_type>(policies);
+        assert_policies<typename TArgs::types, data_type>(args);
         (visitor)(data_type());
+        return new_creator_.create<typename TDependency::expected, typename TDependency::given>(
+           
 
-        return binder_.template resolve_<
-            T
-          , typename ctor<TDependency>::type
-          , TCallStack
-          , TDependency
-        >(*this, deps, refs, visitor, policies);
-    }
+ create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(deps, refs, visitor, args)
+        );
+
+      }
 
     template<
         typename T
-      , typename TCallStack
       , typename TDependency
+      , typename TCtor
+      , typename TCallStack
       , typename TDeps
       , typename TRefs
       , typename TVisitor
-      , typename TPolicies
+      , typename TArgs
     >
-    typename enable_if_c<mpl::size<typename ctor<TDependency>::type>::value == 6, wrappers::universal<T> >::type
-    create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<mpl::size<TCtor>::value == 6, typename TDependency::expected*>::type
+    create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
         typedef data<T, TCallStack, TDependency> data_type;
-        assert_policies<typename TPolicies::types, data_type>(policies);
+        assert_policies<typename TArgs::types, data_type>(args);
         (visitor)(data_type());
+        return new_creator_.create<typename TDependency::expected, typename TDependency::given>(
+           
 
-        return binder_.template resolve_<
-            T
-          , typename ctor<TDependency>::type
-          , TCallStack
-          , TDependency
-        >(*this, deps, refs, visitor, policies);
-    }
+ create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(deps, refs, visitor, args)
+        );
+
+      }
 
     template<
         typename T
-      , typename TCallStack
       , typename TDependency
+      , typename TCtor
+      , typename TCallStack
       , typename TDeps
       , typename TRefs
       , typename TVisitor
-      , typename TPolicies
+      , typename TArgs
     >
-    typename enable_if_c<mpl::size<typename ctor<TDependency>::type>::value == 7, wrappers::universal<T> >::type
-    create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<mpl::size<TCtor>::value == 7, typename TDependency::expected*>::type
+    create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
         typedef data<T, TCallStack, TDependency> data_type;
-        assert_policies<typename TPolicies::types, data_type>(policies);
+        assert_policies<typename TArgs::types, data_type>(args);
         (visitor)(data_type());
+        return new_creator_.create<typename TDependency::expected, typename TDependency::given>(
+           
 
-        return binder_.template resolve_<
-            T
-          , typename ctor<TDependency>::type
-          , TCallStack
-          , TDependency
-        >(*this, deps, refs, visitor, policies);
-    }
+ create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(deps, refs, visitor, args)
+        );
+
+      }
 
     template<
         typename T
-      , typename TCallStack
       , typename TDependency
+      , typename TCtor
+      , typename TCallStack
       , typename TDeps
       , typename TRefs
       , typename TVisitor
-      , typename TPolicies
+      , typename TArgs
     >
-    typename enable_if_c<mpl::size<typename ctor<TDependency>::type>::value == 8, wrappers::universal<T> >::type
-    create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<mpl::size<TCtor>::value == 8, typename TDependency::expected*>::type
+    create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
         typedef data<T, TCallStack, TDependency> data_type;
-        assert_policies<typename TPolicies::types, data_type>(policies);
+        assert_policies<typename TArgs::types, data_type>(args);
         (visitor)(data_type());
+        return new_creator_.create<typename TDependency::expected, typename TDependency::given>(
+           
 
-        return binder_.template resolve_<
-            T
-          , typename ctor<TDependency>::type
-          , TCallStack
-          , TDependency
-        >(*this, deps, refs, visitor, policies);
-    }
+ create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(deps, refs, visitor, args)
+        );
+
+      }
 
     template<
         typename T
-      , typename TCallStack
       , typename TDependency
+      , typename TCtor
+      , typename TCallStack
       , typename TDeps
       , typename TRefs
       , typename TVisitor
-      , typename TPolicies
+      , typename TArgs
     >
-    typename enable_if_c<mpl::size<typename ctor<TDependency>::type>::value == 9, wrappers::universal<T> >::type
-    create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<mpl::size<TCtor>::value == 9, typename TDependency::expected*>::type
+    create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
         typedef data<T, TCallStack, TDependency> data_type;
-        assert_policies<typename TPolicies::types, data_type>(policies);
+        assert_policies<typename TArgs::types, data_type>(args);
         (visitor)(data_type());
+        return new_creator_.create<typename TDependency::expected, typename TDependency::given>(
+           
 
-        return binder_.template resolve_<
-            T
-          , typename ctor<TDependency>::type
-          , TCallStack
-          , TDependency
-        >(*this, deps, refs, visitor, policies);
-    }
+ create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack >(deps, refs, visitor, args)
+        );
+
+      }
 
     template<
         typename T
-      , typename TCallStack
       , typename TDependency
+      , typename TCtor
+      , typename TCallStack
       , typename TDeps
       , typename TRefs
       , typename TVisitor
-      , typename TPolicies
+      , typename TArgs
     >
-    typename enable_if_c<mpl::size<typename ctor<TDependency>::type>::value == 10, wrappers::universal<T> >::type
-    create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<mpl::size<TCtor>::value == 10, typename TDependency::expected*>::type
+    create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
         typedef data<T, TCallStack, TDependency> data_type;
-        assert_policies<typename TPolicies::types, data_type>(policies);
+        assert_policies<typename TArgs::types, data_type>(args);
         (visitor)(data_type());
+        return new_creator_.create<typename TDependency::expected, typename TDependency::given>(
+           
 
-        return binder_.template resolve_<
-            T
-          , typename ctor<TDependency>::type
-          , TCallStack
-          , TDependency
-        >(*this, deps, refs, visitor, policies);
-    }
+ create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack >(deps, refs, visitor, args) , create< typename mpl::at_c<TCtor, 9>::type , T , TCallStack >(deps, refs, visitor, args)
+        );
 
-    public:
-        template<
-            typename T
-          , typename TCallStack
-          , typename TDeps
-          , typename TRefs
-          , typename TVisitor
-          , typename TPolicies
-        >
-        wrappers::universal<T> create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-            return create_impl<
-                T
-                BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
-                  , typename mpl::push_back<
-                        TCallStack
-                      , T
-                    >::type
-                )
-                BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
-                  , TCallStack
-                )
-              , resolve<T, TCallStack>
-            >(deps, refs, visitor, policies);
-        }
+      }
 
-    private:
-        template<typename TSeq, typename T, typename TPolicies>
-        static typename enable_if<mpl::empty<TSeq> >::type assert_policies(const TPolicies&) { }
+        template<typename TSeq, typename T, typename TArgs>
+        static typename enable_if<mpl::empty<TSeq> >::type assert_policies(const TArgs&) { }
 
-        template<typename TSeq, typename T, typename TPolicies>
-        static typename disable_if<mpl::empty<TSeq> >::type assert_policies(const TPolicies& policies) {
+        template<typename TSeq, typename T, typename TArgs>
+        static typename disable_if<mpl::empty<TSeq> >::type assert_policies(const TArgs& args) {
             typedef typename mpl::front<TSeq>::type policy;
-            static_cast<const policy&>(policies).template assert_policy<T>();
-            assert_policies<typename mpl::pop_front<TSeq>::type, T>(policies);
+            static_cast<const policy&>(args).template assert_policy<T>();
+            assert_policies<typename mpl::pop_front<TSeq>::type, T>(args);
+        }
+
+        template<typename TDependency, typename TDeps>
+        typename enable_if<is_base_of<TDependency, TDeps>, TDependency&>::type
+        acquire(TDeps& deps) {
+            return static_cast<TDependency&>(deps);
+        }
+
+        template<typename TDependency, typename TDeps>
+        typename disable_if<is_base_of<TDependency, TDeps>, TDependency&>::type
+        acquire(TDeps&) {
+            typename scopes_type::const_iterator it = scopes_.find(&typeid(TDependency));
+            if (it != scopes_.end()) {
+                return *static_cast<TDependency*>(it->second.get());
+            }
+
+            aux::shared_ptr<TDependency> dependency(new TDependency());
+            scopes_[&typeid(TDependency)] = dependency;
+            return *dependency;
         }
 
         TBinder<TDependecies> binder_;
+        scopes_type scopes_;
+        creators::new_creator new_creator_; // todo remove
     };
 
     } // namespace core
@@ -9005,7 +8373,7 @@ public :
         typename TDependecies = mpl::vector0<>
       , template<
             typename
-          , template<typename, typename> class = ::boost::di::core::binder
+          , template<typename> class = ::boost::di::core::binder
           , template<
                 typename
               , typename
@@ -9030,7 +8398,7 @@ public :
             typename
           , template<
                 typename
-              , template<typename, typename> class
+              , template<typename> class
               , template<
                     typename
                   , typename

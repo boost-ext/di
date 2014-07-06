@@ -6,8 +6,8 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-    #ifndef BOOST_DI_AUX_DETAIL_PARAMETER_TYPES_HPP
-    #define BOOST_DI_AUX_DETAIL_PARAMETER_TYPES_HPP
+    #ifndef BOOST_DI_AUX_DETAIL_FUNCTION_TRAITS_HPP
+    #define BOOST_DI_AUX_DETAIL_FUNCTION_TRAITS_HPP
 
     #include "boost/di/aux_/config.hpp"
 
@@ -15,39 +15,37 @@
 
     namespace boost {
     namespace di {
-    namespace aux {
-    namespace detail {
+    namespace type_traits {
 
     template<typename>
-    struct parameter_types;
+    struct function_traits;
 
     template<typename R>
-    struct parameter_types<R(*)()>
+    struct function_traits<R(*)()>
     {
         typedef R result_type;
         typedef mpl::vector0<> type;
     };
 
     template<typename R, typename T>
-    struct parameter_types<R(T::*)()>
+    struct function_traits<R(T::*)()>
     {
         typedef R result_type;
         typedef mpl::vector0<> type;
     };
 
     template<typename R, typename T>
-    struct parameter_types<R(T::*)() const>
+    struct function_traits<R(T::*)() const>
     {
         typedef R result_type;
         typedef mpl::vector0<> type;
     };
 
-    #define BOOST_PP_FILENAME_1 "boost/di/aux_/detail/parameter_types.hpp"
+    #define BOOST_PP_FILENAME_1 "boost/di/type_traits/function_traits.hpp"
     #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM(1)
     #include BOOST_PP_ITERATE()
 
-    } // namespace detail
-    } // namespace aux
+    } // namespace type_traits
     } // namespace di
     } // namespace boost
 
@@ -56,21 +54,21 @@
 #else
 
     template<typename R, BOOST_DI_TYPES(Args)>                          \
-    struct parameter_types<R(*)(BOOST_DI_TYPES_PASS(Args))>             \
+    struct function_traits<R(*)(BOOST_DI_TYPES_PASS(Args))>             \
     {                                                                   \
         typedef R result_type;                                          \
         typedef BOOST_DI_MPL_VECTOR_TYPES_PASS(Args) type;              \
     };
 
     template<typename R, typename T, BOOST_DI_TYPES(Args)>              \
-    struct parameter_types<R(T::*)(BOOST_DI_TYPES_PASS(Args))>          \
+    struct function_traits<R(T::*)(BOOST_DI_TYPES_PASS(Args))>          \
     {                                                                   \
         typedef R result_type;                                          \
         typedef BOOST_DI_MPL_VECTOR_TYPES_PASS(Args) type;              \
     };
 
     template<typename R, typename T, BOOST_DI_TYPES(Args)>              \
-    struct parameter_types<R(T::*)(BOOST_DI_TYPES_PASS(Args)) const>    \
+    struct function_traits<R(T::*)(BOOST_DI_TYPES_PASS(Args)) const>    \
     {                                                                   \
         typedef R result_type;                                          \
         typedef BOOST_DI_MPL_VECTOR_TYPES_PASS(Args) type;              \

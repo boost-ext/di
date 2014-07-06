@@ -8,11 +8,11 @@
 #define BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 
 #include "boost/di/aux_/config.hpp"
-#include "boost/di/aux_/detail/parameter_types.hpp"
 #include "boost/di/inject.hpp"
 #include "boost/di/core/any_type.hpp"
 #include "boost/di/type_traits/has_ctor.hpp"
 #include "boost/di/type_traits/has_injector.hpp"
+#include "boost/di/type_traits/function_traits.hpp"
 
 #include <string>
 #include <boost/preprocessor/cat.hpp>
@@ -71,12 +71,12 @@ struct ctor_traits
 
 template<typename T>
 struct ctor_traits<T, typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_INJECTOR)<di::ctor_traits<T> > >::type>
-    : aux::detail::parameter_types<BOOST_DI_FEATURE_DECLTYPE(&di::ctor_traits<T>::BOOST_DI_INJECTOR)>::type
+    : function_traits<BOOST_DI_FEATURE_DECLTYPE(&di::ctor_traits<T>::BOOST_DI_INJECTOR)>::type
 { };
 
 template<typename T>
 struct ctor_traits<T, typename enable_if<BOOST_PP_CAT(has_, BOOST_DI_INJECTOR)<T> >::type>
-    : aux::detail::parameter_types<BOOST_DI_FEATURE_DECLTYPE(&T::BOOST_DI_INJECTOR)>::type
+    : function_traits<BOOST_DI_FEATURE_DECLTYPE(&T::BOOST_DI_INJECTOR)>::type
 { };
 
 } // namespace type_traits

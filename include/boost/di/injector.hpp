@@ -10,12 +10,12 @@
     #define BOOST_DI_INJECTOR_HPP
 
     #include "boost/di/aux_/config.hpp"
-    #include "boost/di/aux_/detail/parameter_types.hpp"
     #include "boost/di/core/module.hpp"
     #include "boost/di/core/pool.hpp"
     #include "boost/di/scopes/deduce.hpp"
     #include "boost/di/concepts.hpp"
     #include "boost/di/type_traits/has_configure.hpp"
+    #include "boost/di/type_traits/function_traits.hpp"
 
     #include <boost/preprocessor/iteration/iterate.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
@@ -61,7 +61,7 @@
     template<typename T>
     struct get_module<T, typename enable_if<type_traits::has_configure<T> >::type>
     {
-        typedef typename aux::detail::parameter_types<
+        typedef typename type_traits::function_traits<
             BOOST_DI_FEATURE_DECLTYPE(&T::configure)
         >::result_type type;
     };
