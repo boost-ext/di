@@ -108,24 +108,10 @@
           , typename TVisitor
           , typename TArgs
         >
-        wrappers::universal<T> create(
-            TDeps& deps
-          , TRefs& refs
-          , const TVisitor& visitor
-          , const TArgs& args
-          , typename disable_if<is_same<T, TAnyType<> > >::type* = 0) {
-            return create<T, TCallStack>(deps, refs, visitor, args);
-        }
+        wrappers::universal<T>
+        create(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args
+             , typename disable_if<is_same<T, TAnyType<> > >::type* = 0) {
 
-        template<
-            typename T
-          , typename TCallStack
-          , typename TDeps
-          , typename TRefs
-          , typename TVisitor
-          , typename TArgs
-        >
-        wrappers::universal<T> create(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
             typedef resolve<T, TCallStack> dependency_type;
 
             return wrappers::universal<T>(
