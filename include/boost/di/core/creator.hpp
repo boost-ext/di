@@ -152,13 +152,13 @@
         #include BOOST_PP_ITERATE()
 
         template<typename TSeq, typename T, typename TArgs>
-        static typename enable_if<mpl::empty<TSeq> >::type assert_args(const TArgs&) { }
+        static typename enable_if<mpl::empty<TSeq> >::type assert_policies(const TArgs&) { }
 
         template<typename TSeq, typename T, typename TArgs>
-        static typename disable_if<mpl::empty<TSeq> >::type assert_args(const TArgs& args) {
+        static typename disable_if<mpl::empty<TSeq> >::type assert_policies(const TArgs& args) {
             typedef typename mpl::front<TSeq>::type policy;
             static_cast<const policy&>(args).template assert_policy<T>();
-            assert_args<typename mpl::pop_front<TSeq>::type, T>(args);
+            assert_policies<typename mpl::pop_front<TSeq>::type, T>(args);
         }
 
         template<typename TDependency, typename TDeps>
@@ -206,7 +206,7 @@
     typename enable_if_c<mpl::size<TCtor>::value == BOOST_PP_ITERATION(), typename TDependency::expected*>::type
     create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
         typedef data<T, TCallStack, TDependency> data_type;
-        assert_args<typename TArgs::types, data_type>(args);
+        assert_policies<typename TArgs::types, data_type>(args);
         (visitor)(data_type());
 
         #define BOOST_DI_CREATOR_CREATE(z, n, _)    \

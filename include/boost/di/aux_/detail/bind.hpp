@@ -53,7 +53,7 @@
             const f_t& f
           , const T& object
             BOOST_PP_COMMA_IF(n)
-            BOOST_DI_ARGS(Args, args)
+            BOOST_DI_ARGS_COPY(Args, args)
         ) : f_(f)
           , object_(object)
             BOOST_PP_COMMA_IF(n)
