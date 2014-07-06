@@ -8,6 +8,7 @@
 
 #include <utility>
 #include <boost/type.hpp>
+#include <boost/function.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_same.hpp>
 
@@ -68,10 +69,9 @@ struct fake_scope
             exit_calls()++;
         }
 
-        template<typename... Args>
-        result_type create(Args&&... args) {
+        result_type create(const function<T*()>& f) {
             if (entry_calls() > exit_calls()) {
-                return aux::shared_ptr<T>(new T(std::forward<Args>(args)...));
+                return aux::shared_ptr<T>(f());
             }
 
             return result_type(aux::shared_ptr<T>());

@@ -83,7 +83,7 @@
 #else
 
     template<typename TExpected, typename TGiven, BOOST_DI_TYPES(Args)>
-    TExpected* create(BOOST_DI_ARGS_COPY(Args, args)) const {
+    TExpected* create(BOOST_DI_ARGS_COPY(Args, args)) const { // copy for gcc
         return new TGiven(BOOST_DI_ARGS_PASS(args));
     }
 

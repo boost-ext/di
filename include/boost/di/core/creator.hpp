@@ -11,6 +11,7 @@
 
     #include "boost/di/aux_/config.hpp"
     #include "boost/di/aux_/memory.hpp"
+    #include "boost/di/aux_/detail/bind.hpp"
     #include "boost/di/type_traits/ctor_traits.hpp"
     #include "boost/di/wrappers/universal.hpp"
     #include "boost/di/creators/new_creator.hpp"
@@ -34,6 +35,47 @@
     namespace boost {
     namespace di {
     namespace core {
+
+    template<
+        typename R
+      , typename T
+      , typename TDeps
+      , typename TRefs
+      , typename TVisitor
+      , typename TArgs
+    >
+    class bind_
+    {
+        typedef R(T::*f_t)(TDeps&, TRefs&, const TVisitor&, const TArgs&);
+
+    public:
+        bind_(
+            const f_t& f
+          , T& object
+          , TDeps& deps
+          , TRefs& refs
+          , const TVisitor& visitor
+          , const TArgs& args
+        ) : f_(f)
+          , object_(object)
+          , deps_(deps)
+          , refs_(refs)
+          , visitor_(visitor)
+          , args_(args)
+        { }
+
+        R operator()() {
+            return (object_.*f_)(deps_, refs_, visitor_, args_);
+        }
+
+    private:
+        T& object_;
+        f_t f_;
+        TDeps& deps_;
+        TRefs& refs_;
+        const TVisitor& visitor_;
+        const TArgs& args_;
+    };
 
     template<
         typename TDependecies = mpl::vector0<>
@@ -117,7 +159,7 @@
             return wrappers::universal<T>(
                 refs
               , acquire<typename dependency_type::type>(deps).create(
-                    boost::bind(
+                    bind_<typename dependency_type::expected*, creator, TDeps, TRefs, TVisitor, TArgs>(
                         &creator::create_impl<
                             T
                           , typename dependency_type::type
@@ -136,11 +178,11 @@
                           , TVisitor
                           , TArgs
                         >
-                      , this
-                      , boost::ref(deps)
-                      , boost::ref(refs)
-                      , boost::cref(visitor)
-                      , boost::cref(args)
+                      , *this
+                      , deps
+                      , refs
+                      , visitor
+                      , args
                     )
                 )
             );
