@@ -54,7 +54,7 @@
 
         template<typename T, typename TCallStack>
         struct resolve
-            : TBinder<TDependecies>::template resolve<T, TCallStack>::type
+            : TBinder<TDependecies>::template resolve_type<T, TCallStack>::type
         { };
 
     public:
@@ -158,15 +158,13 @@
       , typename TVisitor
       , typename TPolicies
     >
-    typename enable_if_c<
-        mpl::size<typename ctor<TDependency>::type>::value == BOOST_PP_ITERATION()
-      , wrappers::universal<T>
-    >::type create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<mpl::size<typename ctor<TDependency>::type>::value == BOOST_PP_ITERATION(), wrappers::universal<T> >::type
+    create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
         typedef data<T, TCallStack, TDependency> data_type;
         assert_policies<typename TPolicies::types, data_type>(policies);
         (visitor)(data_type());
 
-        return binder_.template resolve_impl<
+        return binder_.template resolve_<
             T
           , typename ctor<TDependency>::type
           , TCallStack

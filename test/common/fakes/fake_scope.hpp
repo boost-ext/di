@@ -49,7 +49,7 @@ struct fake_scope
         aux::shared_ptr<T> obj_;
     };
 
-    template<typename T, typename>
+    template<typename T>
     class scope
     {
     public:

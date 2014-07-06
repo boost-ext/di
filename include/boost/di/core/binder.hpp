@@ -63,7 +63,7 @@ public:
               , typename type_traits::make_plain<T>::type
             >
     >
-    struct resolve
+    struct resolve_type
         : mpl::deref<
               mpl::second<
                   typename mpl::fold<
@@ -96,17 +96,17 @@ public:
       , typename TDeps
       , typename TRefs
       , typename TVisitor
-      , typename TPolicies
+      , typename TArgs
     >
     wrappers::universal<T>
-    resolve_impl(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    resolve_(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
         return builder_.template build<
             T
           , TCtor
           , TCallStack
           , TDependency
           , TCreator
-        >(creator, deps, refs, visitor, policies);
+        >(creator, deps, refs, visitor, args);
     }
 
 private:

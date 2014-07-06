@@ -53,16 +53,20 @@
     {
         template<
             typename
-          , template<typename, template<typename, typename> class ,template<
+          , template<
                 typename
-              , typename
-              , typename
-              , typename
-              , typename
-              , typename
-              , typename
-            >
-            class> class
+              , template<typename, typename> class
+              , template<
+                    typename
+                  , typename
+                  , typename
+                  , typename
+                  , typename
+                  , typename
+                  , typename
+                >
+                class
+            > class
           , template<typename, typename, typename> class
         > friend class module;
 
@@ -159,14 +163,14 @@
           )
     { }
 
-    template<typename T, BOOST_DI_TYPES(TPolicies)>
-    T create(BOOST_DI_ARGS(TPolicies, policies)) {
+    template<typename T, BOOST_DI_TYPES(TArgs)>
+    T create(BOOST_DI_ARGS(TArgs, args)) {
         typedef mpl::vector0<> call_stack;
-        TPool<BOOST_DI_MPL_VECTOR_TYPES_PASS(TPolicies)> policies_(BOOST_DI_ARGS_PASS(policies));
+        TPool<BOOST_DI_MPL_VECTOR_TYPES_PASS(TArgs)> args_(BOOST_DI_ARGS_PASS(args));
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), args_
         );
     }
 

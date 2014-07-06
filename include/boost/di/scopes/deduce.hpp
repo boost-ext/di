@@ -24,10 +24,9 @@ class deduce
 public:
     typedef mpl::int_<0> priority;
 
-    template<typename, typename>
+    template<typename>
     struct scope
     {
-        typedef scope type;
         typedef void result_type;
     };
 

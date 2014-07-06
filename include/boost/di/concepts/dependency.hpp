@@ -8,12 +8,12 @@
 #define BOOST_DI_CONCEPTS_DEPENDENCY_HPP
 
 #include "boost/di/aux_/memory.hpp"
+#include "boost/di/aux_/detail/parameter_types.hpp"
 #include "boost/di/wrappers/shared.hpp"
 #include "boost/di/wrappers/reference.hpp"
 #include "boost/di/wrappers/value.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/scopes/deduce.hpp"
-#include "boost/di/type_traits/parameter_types.hpp"
 #include "boost/di/type_traits/has_call_operator.hpp"
 #include "boost/di/concepts/detail/requires.hpp"
 #include "boost/di/concepts/type_traits/is_required_priority.hpp"
@@ -39,9 +39,9 @@ template<
           , concepts::type_traits::is_required_type<TExpected>
         >
 >
-class dependency : public TScope::template scope<TExpected, TGiven>
+class dependency : public TScope::template scope<TExpected>
 {
-    typedef typename TScope::template scope<TExpected, TGiven> scope_type;
+    typedef typename TScope::template scope<TExpected> scope_type;
     typedef scopes::external<wrappers::reference> ref_type;
     typedef scopes::external<wrappers::shared> shared_type;
     typedef scopes::external<wrappers::value> value_type;
@@ -79,7 +79,7 @@ class dependency : public TScope::template scope<TExpected, TGiven>
     struct get_wrapper<T, typename enable_if<di::type_traits::has_call_operator<T> >::type
                         , typename disable_if<has_result_type<T> >::type>
         : get_wrapper_impl<
-              typename di::type_traits::parameter_types<
+              typename di::aux::detail::parameter_types<
                   BOOST_DI_FEATURE_DECLTYPE(&T::operator())
               >::result_type
           >

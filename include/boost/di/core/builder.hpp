@@ -12,13 +12,14 @@
     #include "boost/di/aux_/config.hpp"
     #include "boost/di/aux_/memory.hpp"
     #include "boost/di/type_traits/ctor_traits.hpp"
-    #include "boost/di/type_traits/create_traits.hpp"
     #include "boost/di/type_traits/make_plain.hpp"
     #include "boost/di/type_traits/is_same_base_of.hpp"
+    #include "boost/di/creators/new_creator.hpp"
     #include "boost/di/wrappers/universal.hpp"
 
     #include <typeinfo>
     #include <map>
+    #include <boost/ref.hpp>
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/type_traits/is_base_of.hpp>
     #include <boost/utility/enable_if.hpp>
@@ -55,19 +56,13 @@
         #include BOOST_PP_ITERATE()
 
     private:
-        template<
-            typename TDependency
-          , typename TDeps
-        >
+        template<typename TDependency, typename TDeps>
         typename enable_if<is_base_of<TDependency, TDeps>, TDependency&>::type
         acquire(TDeps& deps) {
             return static_cast<TDependency&>(deps);
         }
 
-        template<
-            typename TDependency
-          , typename TDeps
-        >
+        template<typename TDependency, typename TDeps>
         typename disable_if<is_base_of<TDependency, TDeps>, TDependency&>::type
         acquire(TDeps&) {
             typename scopes_type::const_iterator it = scopes_.find(&typeid(TDependency));
@@ -81,6 +76,7 @@
         }
 
         scopes_type scopes_;
+        creators::new_creator new_creator_; // todo remove
     };
 
     } // namespace core
@@ -100,38 +96,61 @@
       , typename TDeps
       , typename TRefs
       , typename TVisitor
-      , typename TPolicies
+      , typename TArgs
     >
-    typename enable_if_c<
-        mpl::size<TCtor>::value == BOOST_PP_ITERATION()
-      , wrappers::universal<T>
-    >::type
-    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<mpl::size<TCtor>::value == BOOST_PP_ITERATION(), wrappers::universal<T> >::type
+    build(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
+        return wrappers::universal<T>(
+            refs
+          , acquire<typename TDependency::type>(deps).create(
+                boost::bind(
+                    &builder::build_impl<T, typename TDependency::type, TCtor, TCallStack, TCreator, TDeps, TRefs, TVisitor, TArgs>
+                  , this
+                  , boost::ref(creator)
+                  , boost::ref(deps)
+                  , boost::ref(refs)
+                  , boost::cref(visitor)
+                  , boost::cref(args)
+                )
+            )
+        );
+    }
+
+    template<
+        typename T
+      , typename TDependency
+      , typename TCtor
+      , typename TCallStack
+      , typename TCreator
+      , typename TDeps
+      , typename TRefs
+      , typename TVisitor
+      , typename TArgs
+    >
+    typename enable_if_c<mpl::size<TCtor>::value == BOOST_PP_ITERATION(), typename TDependency::expected*>::type
+    build_impl(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
         (void)creator;
         (void)visitor;
-        (void)policies;
+        (void)args;
 
-        #define BOOST_DI_CREATOR_EXECUTE(z, n, _)   \
+        #define BOOST_DI_BUILDER_BUILD(z, n, _)     \
             BOOST_PP_COMMA_IF(n)                    \
             creator.template create<                \
                 typename mpl::at_c<TCtor, n>::type  \
               , T                                   \
               , TCallStack                          \
-            >(deps, refs, visitor, policies)
+            >(deps, refs, visitor, args)
 
-        return wrappers::universal<T>(
-            refs
-          , acquire<typename TDependency::type>(deps).create(
-                BOOST_PP_REPEAT(
-                    BOOST_PP_ITERATION()
-                  , BOOST_DI_CREATOR_EXECUTE
-                  , ~
-                )
+        return new_creator_.create<typename TDependency::expected, typename TDependency::given>(
+            BOOST_PP_REPEAT(
+                BOOST_PP_ITERATION()
+              , BOOST_DI_BUILDER_BUILD
+              , ~
             )
         );
 
-        #undef BOOST_DI_CREATOR_EXECUTE
-    }
+        #undef BOOST_DI_BUILDER_BUILD
+      }
 
 #endif
 
