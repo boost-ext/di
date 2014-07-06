@@ -8,7 +8,6 @@
 
 #include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/type_traits/remove_accessors.hpp"
-#include "boost/di/core/builder.hpp"
 #include "boost/di/wrappers/universal.hpp"
 #include "boost/di/concepts/dependency.hpp"
 #include "boost/di/scopes/deduce.hpp"
@@ -34,10 +33,7 @@ struct data
     typedef TDependency dependency;
 };
 
-template<
-    typename TDependecies
-  , typename TBuilder = builder
->
+template<typename TDependecies>
 class binder
 {
     template<
@@ -50,10 +46,6 @@ class binder
     { };
 
 public:
-    explicit binder(const TBuilder& builder = TBuilder())
-        : builder_(builder)
-    { }
-
     template<
         typename T
       , typename TCallStack
@@ -63,7 +55,7 @@ public:
               , typename type_traits::make_plain<T>::type
             >
     >
-    struct resolve_type
+    struct resolve
         : mpl::deref<
               mpl::second<
                   typename mpl::fold<
@@ -86,31 +78,6 @@ public:
           >::type::template
               rebind<typename scopes::deduce::rebind<T>::other>::other
     { };
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TArgs
-    >
-    wrappers::universal<T>
-    resolve_(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
-        return builder_.template build<
-            T
-          , TCtor
-          , TCallStack
-          , TDependency
-          , TCreator
-        >(creator, deps, refs, visitor, args);
-    }
-
-private:
-    TBuilder builder_;
 };
 
 } // namespace core

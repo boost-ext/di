@@ -13,13 +13,20 @@
     #include "boost/di/aux_/memory.hpp"
     #include "boost/di/type_traits/ctor_traits.hpp"
     #include "boost/di/wrappers/universal.hpp"
+    #include "boost/di/creators/new_creator.hpp"
     #include "boost/di/core/binder.hpp"
-    #include "boost/di/core/builder.hpp"
     #include "boost/di/core/any_type.hpp"
 
+    #include <typeinfo>
+    #include <map>
+    #include <boost/preprocessor/repetition/repeat.hpp>
+    #include <boost/ref.hpp>
     #include <boost/none_t.hpp>
+    #include <boost/bind.hpp>
+    #include <boost/type_traits/is_base_of.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/vector.hpp>
+    #include <boost/mpl/at.hpp>
     #include <boost/mpl/size.hpp>
     #include <boost/mpl/empty.hpp>
     #include <boost/mpl/push_back.hpp>
@@ -30,10 +37,7 @@
 
     template<
         typename TDependecies = mpl::vector0<>
-      , template<
-            typename
-          , typename = ::boost::di::core::builder
-        > class TBinder = binder
+      , template<typename> class TBinder = binder
       , template<
             typename = ::boost::none_t
           , typename = ::boost::mpl::vector0<>
@@ -47,6 +51,14 @@
     >
     class creator
     {
+        class type_comparator
+        {
+        public:
+            bool operator()(const std::type_info* lhs, const std::type_info* rhs) const {
+                return lhs->before(*rhs);
+            }
+        };
+
         template<typename TDependency>
         struct ctor
             : type_traits::ctor_traits<typename TDependency::given>::type
@@ -54,12 +66,20 @@
 
         template<typename T, typename TCallStack>
         struct resolve
-            : TBinder<TDependecies>::template resolve_type<T, TCallStack>::type
+            : TBinder<TDependecies>::template resolve<T, TCallStack>::type
         { };
 
+        typedef std::map<
+            const std::type_info*
+          , aux::shared_ptr<void>
+          , type_comparator
+        > scopes_type;
+
     public:
-        explicit creator(const TBinder<TDependecies>& binder = TBinder<TDependecies>())
+        explicit creator(const TBinder<TDependecies>& binder = TBinder<TDependecies>()
+                       , const scopes_type& scopes = scopes_type())
             : binder_(binder)
+            , scopes_(scopes)
         { }
 
         template<
@@ -69,13 +89,13 @@
           , typename TDeps
           , typename TRefs
           , typename TVisitor
-          , typename TPolicies
+          , typename TArgs
         >
-        TAnyType<TParent, TCallStack, creator, TDeps, TRefs, TVisitor, TPolicies>
-        create(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies
+        TAnyType<TParent, TCallStack, creator, TDeps, TRefs, TVisitor, TArgs>
+        create(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args
              , typename enable_if<is_same<T, TAnyType<> > >::type* = 0) {
-            return TAnyType<TParent, TCallStack, creator, TDeps, TRefs, TVisitor, TPolicies>(
-                *this, deps, refs, visitor, policies
+            return TAnyType<TParent, TCallStack, creator, TDeps, TRefs, TVisitor, TArgs>(
+                *this, deps, refs, visitor, args
             );
         }
 
@@ -86,15 +106,58 @@
           , typename TDeps
           , typename TRefs
           , typename TVisitor
-          , typename TPolicies
+          , typename TArgs
         >
         wrappers::universal<T> create(
             TDeps& deps
           , TRefs& refs
           , const TVisitor& visitor
-          , const TPolicies& policies
+          , const TArgs& args
           , typename disable_if<is_same<T, TAnyType<> > >::type* = 0) {
-            return create_impl<T, TCallStack>(deps, refs, visitor, policies);
+            return create<T, TCallStack>(deps, refs, visitor, args);
+        }
+
+        template<
+            typename T
+          , typename TCallStack
+          , typename TDeps
+          , typename TRefs
+          , typename TVisitor
+          , typename TArgs
+        >
+        wrappers::universal<T> create(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
+            typedef resolve<T, TCallStack> dependency_type;
+
+            return wrappers::universal<T>(
+                refs
+              , acquire<typename dependency_type::type>(deps).create(
+                    boost::bind(
+                        &creator::create_impl<
+                            T
+                          , typename dependency_type::type
+                          , typename ctor<dependency_type>::type
+                            BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
+                              , typename mpl::push_back<
+                                    TCallStack
+                                  , T
+                                >::type
+                            )
+                            BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
+                              , TCallStack
+                            )
+                          , TDeps
+                          , TRefs
+                          , TVisitor
+                          , TArgs
+                        >
+                      , this
+                      , boost::ref(deps)
+                      , boost::ref(refs)
+                      , boost::cref(visitor)
+                      , boost::cref(args)
+                    )
+                )
+            );
         }
 
     private:
@@ -102,43 +165,38 @@
         #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM(0)
         #include BOOST_PP_ITERATE()
 
-    public:
-        template<
-            typename T
-          , typename TCallStack
-          , typename TDeps
-          , typename TRefs
-          , typename TVisitor
-          , typename TPolicies
-        >
-        wrappers::universal<T> create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-            return create_impl<
-                T
-                BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
-                  , typename mpl::push_back<
-                        TCallStack
-                      , T
-                    >::type
-                )
-                BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
-                  , TCallStack
-                )
-              , resolve<T, TCallStack>
-            >(deps, refs, visitor, policies);
+        template<typename TSeq, typename T, typename TArgs>
+        static typename enable_if<mpl::empty<TSeq> >::type assert_args(const TArgs&) { }
+
+        template<typename TSeq, typename T, typename TArgs>
+        static typename disable_if<mpl::empty<TSeq> >::type assert_args(const TArgs& args) {
+            typedef typename mpl::front<TSeq>::type policy;
+            static_cast<const policy&>(args).template assert_policy<T>();
+            assert_args<typename mpl::pop_front<TSeq>::type, T>(args);
         }
 
-    private:
-        template<typename TSeq, typename T, typename TPolicies>
-        static typename enable_if<mpl::empty<TSeq> >::type assert_policies(const TPolicies&) { }
+        template<typename TDependency, typename TDeps>
+        typename enable_if<is_base_of<TDependency, TDeps>, TDependency&>::type
+        acquire(TDeps& deps) {
+            return static_cast<TDependency&>(deps);
+        }
 
-        template<typename TSeq, typename T, typename TPolicies>
-        static typename disable_if<mpl::empty<TSeq> >::type assert_policies(const TPolicies& policies) {
-            typedef typename mpl::front<TSeq>::type policy;
-            static_cast<const policy&>(policies).template assert_policy<T>();
-            assert_policies<typename mpl::pop_front<TSeq>::type, T>(policies);
+        template<typename TDependency, typename TDeps>
+        typename disable_if<is_base_of<TDependency, TDeps>, TDependency&>::type
+        acquire(TDeps&) {
+            typename scopes_type::const_iterator it = scopes_.find(&typeid(TDependency));
+            if (it != scopes_.end()) {
+                return *static_cast<TDependency*>(it->second.get());
+            }
+
+            aux::shared_ptr<TDependency> dependency(new TDependency());
+            scopes_[&typeid(TDependency)] = dependency;
+            return *dependency;
         }
 
         TBinder<TDependecies> binder_;
+        scopes_type scopes_;
+        creators::new_creator new_creator_; // todo remove
     };
 
     } // namespace core
@@ -151,26 +209,38 @@
 
     template<
         typename T
-      , typename TCallStack
       , typename TDependency
+      , typename TCtor
+      , typename TCallStack
       , typename TDeps
       , typename TRefs
       , typename TVisitor
-      , typename TPolicies
+      , typename TArgs
     >
-    typename enable_if_c<mpl::size<typename ctor<TDependency>::type>::value == BOOST_PP_ITERATION(), wrappers::universal<T> >::type
-    create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<mpl::size<TCtor>::value == BOOST_PP_ITERATION(), typename TDependency::expected*>::type
+    create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
         typedef data<T, TCallStack, TDependency> data_type;
-        assert_policies<typename TPolicies::types, data_type>(policies);
+        assert_args<typename TArgs::types, data_type>(args);
         (visitor)(data_type());
 
-        return binder_.template resolve_<
-            T
-          , typename ctor<TDependency>::type
-          , TCallStack
-          , TDependency
-        >(*this, deps, refs, visitor, policies);
-    }
+        #define BOOST_DI_CREATOR_CREATE(z, n, _)    \
+            BOOST_PP_COMMA_IF(n)                    \
+            create<                                 \
+                typename mpl::at_c<TCtor, n>::type  \
+              , T                                   \
+              , TCallStack                          \
+            >(deps, refs, visitor, args)
+
+        return new_creator_.create<typename TDependency::expected, typename TDependency::given>(
+            BOOST_PP_REPEAT(
+                BOOST_PP_ITERATION()
+              , BOOST_DI_CREATOR_CREATE
+              , ~
+            )
+        );
+
+        #undef BOOST_DI_CREATOR_CREATE
+      }
 
 #endif
 

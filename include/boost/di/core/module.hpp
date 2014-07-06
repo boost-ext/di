@@ -30,7 +30,7 @@
         typename TDependecies = mpl::vector0<>
       , template<
             typename
-          , template<typename, typename> class = ::boost::di::core::binder
+          , template<typename> class = ::boost::di::core::binder
           , template<
                 typename
               , typename
@@ -55,7 +55,7 @@
             typename
           , template<
                 typename
-              , template<typename, typename> class
+              , template<typename> class
               , template<
                     typename
                   , typename
