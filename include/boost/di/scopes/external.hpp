@@ -72,7 +72,7 @@ public:
             : object_(result_type_holder(object))
         { }
 
-        result_type create(const function<TExpected*()>&) {
+        result_type create() {
             return object_();
         }
 

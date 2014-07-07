@@ -55,6 +55,13 @@
       , & BOOST_PP_INTERCEPT                    \
     )
 
+#define BOOST_DI_ARGS_COPY(T, arg)              \
+    BOOST_PP_ENUM_BINARY_PARAMS(                \
+        BOOST_PP_ITERATION()                    \
+      , T                                       \
+      , arg                                     \
+    )
+
 #define BOOST_DI_ARGS_PASS(arg)                 \
     BOOST_PP_ENUM_PARAMS(                       \
         BOOST_PP_ITERATION()                    \

@@ -11,11 +11,12 @@
 
     #include "boost/di/aux_/config.hpp"
     #include "boost/di/aux_/memory.hpp"
-    #include "boost/di/type_traits/ctor_traits.hpp"
-    #include "boost/di/wrappers/universal.hpp"
-    #include "boost/di/creators/new_creator.hpp"
     #include "boost/di/core/binder.hpp"
     #include "boost/di/core/any_type.hpp"
+    #include "boost/di/type_traits/ctor_traits.hpp"
+    #include "boost/di/type_traits/function_traits.hpp"
+    #include "boost/di/wrappers/universal.hpp"
+    #include "boost/di/creators/new_creator.hpp"
 
     #include <typeinfo>
     #include <map>
@@ -51,6 +52,11 @@
     >
     class creator
     {
+        template<typename TDependency>
+        struct scope_create
+            : type_traits::function_traits<BOOST_DI_FEATURE_DECLTYPE(&TDependency::create)>::type
+        { };
+
         class type_comparator
         {
         public:
@@ -58,16 +64,6 @@
                 return lhs->before(*rhs);
             }
         };
-
-        template<typename TDependency>
-        struct ctor
-            : type_traits::ctor_traits<typename TDependency::given>::type
-        { };
-
-        template<typename T, typename TCallStack>
-        struct resolve
-            : TBinder<TDependecies>::template resolve<T, TCallStack>::type
-        { };
 
         typedef std::map<
             const std::type_info*
@@ -89,12 +85,9 @@
           , typename TVisitor
           , typename TArgs
         >
-        TAnyType<TParent, TCallStack, creator, TDeps, TRefs, TVisitor, TArgs>
-        create(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args
-             , typename enable_if<is_same<T, TAnyType<> > >::type* = 0) {
-            return TAnyType<TParent, TCallStack, creator, TDeps, TRefs, TVisitor, TArgs>(
-                *this, deps, refs, visitor, args
-            );
+        typename enable_if<is_same<T, TAnyType<> >, TAnyType<TParent, TCallStack, creator, TDeps, TRefs, TVisitor, TArgs> >::type
+        create(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
+            return TAnyType<TParent, TCallStack, creator, TDeps, TRefs, TVisitor, TArgs>(*this, deps, refs, visitor, args);
         }
 
         template<
@@ -106,28 +99,67 @@
           , typename TVisitor
           , typename TArgs
         >
-        wrappers::universal<T>
-        create(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args
-             , typename disable_if<is_same<T, TAnyType<> > >::type* = 0) {
-            typedef resolve<T, TCallStack> dependency_type;
+        typename disable_if<is_same<T, TAnyType<> >, wrappers::universal<T> >::type
+        create(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
+            typedef typename TBinder<TDependecies>::template
+                resolve<T, TCallStack>::type dependency_type;
+
+            BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
+                typedef typename mpl::push_back<TCallStack, T>::type call_stack_type;
+            )
+
+            BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
+                typedef TCallStack call_stack_type;
+            )
+
+            typedef data<T, TCallStack, dependency_type> data_type;
+            assert_policies<typename TArgs::types, data_type>(args);
+            (visitor)(data_type());
+
+            return create_impl<T, dependency_type, call_stack_type>(deps, refs, visitor, args);
+        }
+
+    private:
+        #define BOOST_PP_FILENAME_1 "boost/di/core/creator.hpp"
+        #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM(0)
+        #include BOOST_PP_ITERATE()
+
+        template<
+            typename T
+          , typename TDependency
+          , typename TCallStack
+          , typename TDeps
+          , typename TRefs
+          , typename TVisitor
+          , typename TArgs
+        >
+        typename enable_if_c<!mpl::size<scope_create<TDependency> >::value, wrappers::universal<T> >::type
+        create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
+            return wrappers::universal<T>(refs, acquire<TDependency>(deps).create());
+        }
+
+        template<
+            typename T
+          , typename TDependency
+          , typename TCallStack
+          , typename TDeps
+          , typename TRefs
+          , typename TVisitor
+          , typename TArgs
+        >
+        typename disable_if_c<!mpl::size<scope_create<TDependency> >::value, wrappers::universal<T> >::type
+        create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
+            typedef typename type_traits::ctor_traits<typename TDependency::given>::type ctor_type;
 
             return wrappers::universal<T>(
                 refs
-              , acquire<typename dependency_type::type>(deps).create(
+              , acquire<TDependency>(deps).create(
                     boost::bind(
                         &creator::create_impl<
                             T
-                          , typename dependency_type::type
-                          , typename ctor<dependency_type>::type
-                            BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
-                              , typename mpl::push_back<
-                                    TCallStack
-                                  , T
-                                >::type
-                            )
-                            BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
-                              , TCallStack
-                            )
+                          , TDependency
+                          , ctor_type
+                          , TCallStack
                           , TDeps
                           , TRefs
                           , TVisitor
@@ -143,12 +175,7 @@
             );
         }
 
-    private:
-        #define BOOST_PP_FILENAME_1 "boost/di/core/creator.hpp"
-        #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM(0)
-        #include BOOST_PP_ITERATE()
-
-        template<typename TSeq, typename T, typename TArgs>
+        template<typename TSeq, typename, typename TArgs>
         static typename enable_if<mpl::empty<TSeq> >::type assert_policies(const TArgs&) { }
 
         template<typename TSeq, typename T, typename TArgs>
@@ -202,23 +229,19 @@
     >
     typename enable_if_c<mpl::size<TCtor>::value == BOOST_PP_ITERATION(), typename TDependency::expected*>::type
     create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
-        typedef data<T, TCallStack, TDependency> data_type;
-        assert_policies<typename TArgs::types, data_type>(args);
-        (visitor)(data_type());
-
-        #define BOOST_DI_CREATOR_CREATE(z, n, _)    \
-            BOOST_PP_COMMA_IF(n)                    \
-            create<                                 \
-                typename mpl::at_c<TCtor, n>::type  \
-              , T                                   \
-              , TCallStack                          \
+        #define BOOST_DI_CREATOR_CREATE(_, n, create)   \
+            BOOST_PP_COMMA_IF(n)                        \
+            create<                                     \
+                typename mpl::at_c<TCtor, n>::type      \
+              , T                                       \
+              , TCallStack                              \
             >(deps, refs, visitor, args)
 
         return new_creator_.create<typename TDependency::expected, typename TDependency::given>(
             BOOST_PP_REPEAT(
                 BOOST_PP_ITERATION()
               , BOOST_DI_CREATOR_CREATE
-              , ~
+              , create
             )
         );
 
