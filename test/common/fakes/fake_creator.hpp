@@ -7,12 +7,32 @@
 #ifndef BOOST_DI_FAKE_CREATOR_HPP
 #define BOOST_DI_FAKE_CREATOR_HPP
 
+#include <typeinfo>
+#include <boost/test/unit_test.hpp>
+
+#include "boost/di/type_traits/remove_accessors.hpp"
+
 namespace boost {
 namespace di {
 
-template<typename>
+template<typename TExpected = void>
 struct fake_creator
-{ };
+{
+    template<
+        typename T
+      , typename TParent
+      , typename TCallStack
+      , typename TDeps
+      , typename TRefs
+      , typename TVisitor
+      , typename TArgs
+    >
+    T create(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
+        BOOST_CHECK_EQUAL(typeid(TExpected).name(), typeid(T).name());
+        static typename type_traits::remove_accessors<T>::type object;
+        return object;
+    }
+};
 
 } // namespace di
 } // namespace boost
