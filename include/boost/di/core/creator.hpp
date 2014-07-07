@@ -134,7 +134,7 @@
           , typename TArgs
         >
         typename enable_if_c<!mpl::size<scope_create<TDependency> >::value, wrappers::universal<T> >::type
-        create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
+        create_impl(TDeps& deps, TRefs& refs, const TVisitor&, const TArgs&) {
             return wrappers::universal<T>(refs, acquire<TDependency>(deps).create());
         }
 
@@ -229,6 +229,11 @@
     >
     typename enable_if_c<mpl::size<TCtor>::value == BOOST_PP_ITERATION(), typename TDependency::expected*>::type
     create_impl(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
+        (void)deps;
+        (void)refs;
+        (void)visitor;
+        (void)args;
+
         #define BOOST_DI_CREATOR_CREATE(_, n, create)   \
             BOOST_PP_COMMA_IF(n)                        \
             create<                                     \
