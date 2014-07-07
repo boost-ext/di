@@ -102,7 +102,7 @@ test-suite ut : # unit tests
     [ run-test c++11 : ut/core/creator_ut.cpp ]
     [ run-test c++11 : ut/core/pool_ut.cpp ]
 
-    #[ run-test c++11 : ut/creators/new_creator_ut.cpp ]
+    [ run-test c++11 : ut/creators/new_creator_ut.cpp ]
 
     [ run-test c++11 : ut/policies/arguments_permission_ut.cpp ]
     [ run-test c++11 : ut/policies/circular_dependencies_ut.cpp ]
