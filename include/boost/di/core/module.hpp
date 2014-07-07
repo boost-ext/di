@@ -99,7 +99,11 @@
             std::vector<aux::shared_ptr<void> > refs_;
 
             return creator_.template create<T, T, call_stack>(
-                TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), TPool<>()
+                TDefaultAllocator()
+              , static_cast<TPool<deps>&>(*this)
+              , refs_
+              , empty_visitor()
+              , TPool<>()
             );
         }
 
@@ -109,7 +113,11 @@
             std::vector<aux::shared_ptr<void> > refs_;
 
             return creator_.template create<T, T, call_stack>(
-                allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), TPool<>()
+                allocator
+              , static_cast<TPool<deps>&>(*this)
+              , refs_
+              , empty_visitor()
+              , TPool<>()
             );
         }
 
@@ -119,7 +127,11 @@
             std::vector<aux::shared_ptr<void> > refs_;
 
             return creator_.template create<T, T, call_stack>(
-                TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, visitor, TPool<>()
+                TDefaultAllocator()
+              , static_cast<TPool<deps>&>(*this)
+              , refs_
+              , visitor
+              , TPool<>()
             );
         }
 
@@ -187,7 +199,11 @@
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            TDefaultAllocator()
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -198,7 +214,11 @@
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            allocator
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 

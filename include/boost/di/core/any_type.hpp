@@ -35,11 +35,30 @@ class any_type
 {
     any_type& operator=(const any_type&);
 
+    template<typename TValueType, typename TRefType>
+    struct ref_type
+        : mpl::if_<
+              is_same<TValueType, none_t>
+            , TValueType
+            , TRefType
+          >
+    { };
+
 public:
     any_type() { }
 
-    any_type(TCreator& creator, const TAllocator& allocator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies)
-        : creator_(creator), allocator_(allocator), deps_(deps), refs_(refs), visitor_(visitor), policies_(policies)
+    any_type(TCreator& creator
+           , const TAllocator& allocator
+           , TDeps& deps
+           , TRefs& refs
+           , const TVisitor& visitor
+           , const TPolicies& policies)
+        : creator_(creator)
+        , allocator_(allocator)
+        , deps_(deps)
+        , refs_(refs)
+        , visitor_(visitor)
+        , policies_(policies)
     { }
 
     any_type(const any_type& other)
@@ -63,7 +82,9 @@ public:
         )
     >
     operator const U&() const {
-        return creator_.template create<const U&, none_t, TCallStack>(allocator_, deps_, refs_, visitor_, policies_);
+        return creator_.template create<const U&, none_t, TCallStack>(
+            allocator_, deps_, refs_, visitor_, policies_
+        );
     }
 
     template<
@@ -78,18 +99,24 @@ public:
         )
     >
     operator U&() const {
-        return creator_.template create<U&, none_t, TCallStack>(allocator_, deps_, refs_, visitor_, policies_);
+        return creator_.template create<U&, none_t, TCallStack>(
+            allocator_, deps_, refs_, visitor_, policies_
+        );
     }
 
     template<typename U>
     operator aux::auto_ptr<U>&() {
-        return creator_.template create<aux::auto_ptr<U>, none_t, TCallStack>(allocator_, deps_, refs_, visitor_, policies_);
+        return creator_.template create<aux::auto_ptr<U>, none_t, TCallStack>(
+            allocator_, deps_, refs_, visitor_, policies_
+        );
     }
 
     BOOST_DI_WKND(MSVC)(
         template<typename U>
         operator aux::unique_ptr<U>() {
-            return creator_.create<aux::unique_ptr<U>, none_t, TCallStack>(allocator_, deps_, refs_, visitor_, policies_);
+            return creator_.template create<aux::unique_ptr<U>, none_t, TCallStack>(
+                allocator_, deps_, refs_, visitor_, policies_
+            );
         }
     )
 
@@ -106,17 +133,19 @@ public:
             )
         >
         operator U() {
-            return creator_.template create<U, none_t, TCallStack>(allocator_, deps_, refs_, visitor_, policies_);
+            return creator_.template create<U, none_t, TCallStack>(
+                allocator_, deps_, refs_, visitor_, policies_
+            );
         }
     )
 
 private:
-    typename mpl::if_<is_same<TCreator, none_t>, TCreator, TCreator&>::type creator_;
-    typename mpl::if_<is_same<TAllocator, none_t>, TAllocator, const TAllocator&>::type allocator_;
-    typename mpl::if_<is_same<TDeps, none_t>, TDeps, TDeps&>::type deps_;
-    typename mpl::if_<is_same<TRefs, none_t>, TRefs, TRefs&>::type refs_;
-    typename mpl::if_<is_same<TVisitor, none_t>, TVisitor, const TVisitor&>::type visitor_;
-    typename mpl::if_<is_same<TPolicies, none_t>, TPolicies, const TPolicies&>::type policies_;
+    typename ref_type<TCreator, TCreator&>::type creator_;
+    typename ref_type<TAllocator, const TAllocator&>::type allocator_;
+    typename ref_type<TDeps, TDeps&>::type deps_;
+    typename ref_type<TRefs, TRefs&>::type refs_;
+    typename ref_type<TVisitor, const TVisitor&>::type visitor_;
+    typename ref_type<TPolicies, const TPolicies&>::type policies_;
 };
 
 } // namespace core
@@ -126,14 +155,24 @@ template<
     typename T
   , typename TCallStack
   , typename TCreator
+  , typename TAllocator
   , typename TDeps
   , typename TRefs
   , typename TVisitor
   , typename TPolicies
 >
-struct is_integral<di::core::any_type<T, TCallStack, TCreator, TDeps, TRefs, TVisitor, TPolicies> >
-    : mpl::true_
-{ };
+struct is_integral<
+    di::core::any_type<
+        T
+      , TCallStack
+      , TCreator
+      , TAllocator
+      , TDeps
+      , TRefs
+      , TVisitor
+      , TPolicies
+   >
+> : mpl::true_ { };
 
 } // namespace boost
 
@@ -144,14 +183,24 @@ BOOST_DI_WKND(CPP_11_TYPE_TRAITS)(
         typename T
       , typename TCallStack
       , typename TCreator
+      , typename TAllocator
       , typename TDeps
       , typename TRefs
       , typename TVisitor
       , typename TPolicies
     >
-    struct is_integral<boost::di::core::any_type<T, TCallStack, TCreator, TDeps, TRefs, TVisitor, TPolicies> >
-        : ::boost::mpl::true_
-    { };
+    struct is_integral<
+        boost::di::core::any_type<
+            T
+          , TCallStack
+          , TCreator
+          , TAllocator
+          , TDeps
+          , TRefs
+          , TVisitor
+          , TPolicies
+        >
+    > : ::boost::mpl::true_ { };
 
     } // namespace std
 )

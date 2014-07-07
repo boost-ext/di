@@ -4015,11 +4015,30 @@ class any_type
 {
     any_type& operator=(const any_type&);
 
+    template<typename TValueType, typename TRefType>
+    struct ref_type
+        : mpl::if_<
+              is_same<TValueType, none_t>
+            , TValueType
+            , TRefType
+          >
+    { };
+
 public:
     any_type() { }
 
-    any_type(TCreator& creator, const TAllocator& allocator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies)
-        : creator_(creator), allocator_(allocator), deps_(deps), refs_(refs), visitor_(visitor), policies_(policies)
+    any_type(TCreator& creator
+           , const TAllocator& allocator
+           , TDeps& deps
+           , TRefs& refs
+           , const TVisitor& visitor
+           , const TPolicies& policies)
+        : creator_(creator)
+        , allocator_(allocator)
+        , deps_(deps)
+        , refs_(refs)
+        , visitor_(visitor)
+        , policies_(policies)
     { }
 
     any_type(const any_type& other)
@@ -4043,7 +4062,9 @@ public:
         )
     >
     operator const U&() const {
-        return creator_.template create<const U&, none_t, TCallStack>(allocator_, deps_, refs_, visitor_, policies_);
+        return creator_.template create<const U&, none_t, TCallStack>(
+            allocator_, deps_, refs_, visitor_, policies_
+        );
     }
 
     template<
@@ -4058,18 +4079,24 @@ public:
         )
     >
     operator U&() const {
-        return creator_.template create<U&, none_t, TCallStack>(allocator_, deps_, refs_, visitor_, policies_);
+        return creator_.template create<U&, none_t, TCallStack>(
+            allocator_, deps_, refs_, visitor_, policies_
+        );
     }
 
     template<typename U>
     operator aux::auto_ptr<U>&() {
-        return creator_.template create<aux::auto_ptr<U>, none_t, TCallStack>(allocator_, deps_, refs_, visitor_, policies_);
+        return creator_.template create<aux::auto_ptr<U>, none_t, TCallStack>(
+            allocator_, deps_, refs_, visitor_, policies_
+        );
     }
 
     BOOST_DI_WKND(MSVC)(
         template<typename U>
         operator aux::unique_ptr<U>() {
-            return creator_.create<aux::unique_ptr<U>, none_t, TCallStack>(allocator_, deps_, refs_, visitor_, policies_);
+            return creator_.template create<aux::unique_ptr<U>, none_t, TCallStack>(
+                allocator_, deps_, refs_, visitor_, policies_
+            );
         }
     )
 
@@ -4086,17 +4113,19 @@ public:
             )
         >
         operator U() {
-            return creator_.template create<U, none_t, TCallStack>(allocator_, deps_, refs_, visitor_, policies_);
+            return creator_.template create<U, none_t, TCallStack>(
+                allocator_, deps_, refs_, visitor_, policies_
+            );
         }
     )
 
 private:
-    typename mpl::if_<is_same<TCreator, none_t>, TCreator, TCreator&>::type creator_;
-    typename mpl::if_<is_same<TAllocator, none_t>, TAllocator, const TAllocator&>::type allocator_;
-    typename mpl::if_<is_same<TDeps, none_t>, TDeps, TDeps&>::type deps_;
-    typename mpl::if_<is_same<TRefs, none_t>, TRefs, TRefs&>::type refs_;
-    typename mpl::if_<is_same<TVisitor, none_t>, TVisitor, const TVisitor&>::type visitor_;
-    typename mpl::if_<is_same<TPolicies, none_t>, TPolicies, const TPolicies&>::type policies_;
+    typename ref_type<TCreator, TCreator&>::type creator_;
+    typename ref_type<TAllocator, const TAllocator&>::type allocator_;
+    typename ref_type<TDeps, TDeps&>::type deps_;
+    typename ref_type<TRefs, TRefs&>::type refs_;
+    typename ref_type<TVisitor, const TVisitor&>::type visitor_;
+    typename ref_type<TPolicies, const TPolicies&>::type policies_;
 };
 
 } // namespace core
@@ -4106,14 +4135,24 @@ template<
     typename T
   , typename TCallStack
   , typename TCreator
+  , typename TAllocator
   , typename TDeps
   , typename TRefs
   , typename TVisitor
   , typename TPolicies
 >
-struct is_integral<di::core::any_type<T, TCallStack, TCreator, TDeps, TRefs, TVisitor, TPolicies> >
-    : mpl::true_
-{ };
+struct is_integral<
+    di::core::any_type<
+        T
+      , TCallStack
+      , TCreator
+      , TAllocator
+      , TDeps
+      , TRefs
+      , TVisitor
+      , TPolicies
+   >
+> : mpl::true_ { };
 
 } // namespace boost
 
@@ -4124,14 +4163,24 @@ BOOST_DI_WKND(CPP_11_TYPE_TRAITS)(
         typename T
       , typename TCallStack
       , typename TCreator
+      , typename TAllocator
       , typename TDeps
       , typename TRefs
       , typename TVisitor
       , typename TPolicies
     >
-    struct is_integral<boost::di::core::any_type<T, TCallStack, TCreator, TDeps, TRefs, TVisitor, TPolicies> >
-        : ::boost::mpl::true_
-    { };
+    struct is_integral<
+        boost::di::core::any_type<
+            T
+          , TCallStack
+          , TCreator
+          , TAllocator
+          , TDeps
+          , TRefs
+          , TVisitor
+          , TPolicies
+        >
+    > : ::boost::mpl::true_ { };
 
     } // namespace std
 )
@@ -4502,7 +4551,9 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
     {
         template<typename TDependency>
         struct scope_create
-            : type_traits::function_traits<BOOST_DI_FEATURE_DECLTYPE(&TDependency::create)>::type
+            : type_traits::function_traits<
+                  BOOST_DI_FEATURE_DECLTYPE(&TDependency::create)
+              >::type
         { };
 
         class type_comparator
@@ -4535,12 +4586,33 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
           , typename TPolicies
         >
         typename enable_if<
-            is_same<T, TAnyType<> >, TAnyType<TParent, TCallStack, creator, TAllocator, TDeps, TRefs, TVisitor, TPolicies>
+            is_same<T, TAnyType<> >
+          , TAnyType<
+                TParent
+              , TCallStack
+              , creator
+              , TAllocator
+              , TDeps
+              , TRefs
+              , TVisitor
+              , TPolicies
+            >
         >::type
-        create(const TAllocator& allocator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-            return TAnyType<TParent, TCallStack, creator, TAllocator, TDeps, TRefs, TVisitor, TPolicies>(
-                *this, allocator, deps, refs, visitor, policies
-            );
+        create(const TAllocator& allocator
+             , TDeps& deps
+             , TRefs& refs
+             , const TVisitor& visitor
+             , const TPolicies& policies) {
+            return TAnyType<
+                TParent
+              , TCallStack
+              , creator
+              , TAllocator
+              , TDeps
+              , TRefs
+              , TVisitor
+              , TPolicies
+            >(*this, allocator, deps, refs, visitor, policies);
         }
 
         template<
@@ -4554,7 +4626,11 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
           , typename TPolicies
         >
         typename disable_if<is_same<T, TAnyType<> >, wrappers::universal<T> >::type
-        create(const TAllocator& allocator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+        create(const TAllocator& allocator
+             , TDeps& deps
+             , TRefs& refs
+             , const TVisitor& visitor
+             , const TPolicies& policies) {
             typedef typename TBinder<TDependecies>::template
                 resolve<T, TCallStack>::type dependency_type;
 
@@ -4570,7 +4646,9 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
             assert_policies<typename TPolicies::types, data_type>(policies);
             (visitor)(data_type());
 
-            return create_impl<T, dependency_type, call_stack_type>(allocator, deps, refs, visitor, policies);
+            return create_impl<T, dependency_type, call_stack_type>(
+                allocator, deps, refs, visitor, policies
+            );
         }
 
     private:
@@ -4586,16 +4664,24 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
       , typename TVisitor
       , typename TPolicies
     >
-    typename enable_if_c<mpl::size<TCtor>::value == 0, typename TDependency::expected*>::type
-    create_impl(const TAllocator& allocator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<
+        mpl::size<TCtor>::value == 0
+      , typename TDependency::expected*
+    >::type
+    create_impl(const TAllocator& allocator
+              , TDeps& deps
+              , TRefs& refs
+              , const TVisitor& visitor
+              , const TPolicies& policies) {
         (void)deps;
         (void)refs;
         (void)visitor;
         (void)policies;
-        return allocator.template allocate<typename TDependency::expected, typename TDependency::given>(
-           
+        return allocator.template
+            allocate<typename TDependency::expected, typename TDependency::given>(
+               
 
-        );
+            );
 
       }
 
@@ -4610,17 +4696,25 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
       , typename TVisitor
       , typename TPolicies
     >
-    typename enable_if_c<mpl::size<TCtor>::value == 1, typename TDependency::expected*>::type
-    create_impl(const TAllocator& allocator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<
+        mpl::size<TCtor>::value == 1
+      , typename TDependency::expected*
+    >::type
+    create_impl(const TAllocator& allocator
+              , TDeps& deps
+              , TRefs& refs
+              , const TVisitor& visitor
+              , const TPolicies& policies) {
         (void)deps;
         (void)refs;
         (void)visitor;
         (void)policies;
-        return allocator.template allocate<typename TDependency::expected, typename TDependency::given>(
-           
+        return allocator.template
+            allocate<typename TDependency::expected, typename TDependency::given>(
+               
 
  create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
-        );
+            );
 
       }
 
@@ -4635,17 +4729,25 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
       , typename TVisitor
       , typename TPolicies
     >
-    typename enable_if_c<mpl::size<TCtor>::value == 2, typename TDependency::expected*>::type
-    create_impl(const TAllocator& allocator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<
+        mpl::size<TCtor>::value == 2
+      , typename TDependency::expected*
+    >::type
+    create_impl(const TAllocator& allocator
+              , TDeps& deps
+              , TRefs& refs
+              , const TVisitor& visitor
+              , const TPolicies& policies) {
         (void)deps;
         (void)refs;
         (void)visitor;
         (void)policies;
-        return allocator.template allocate<typename TDependency::expected, typename TDependency::given>(
-           
+        return allocator.template
+            allocate<typename TDependency::expected, typename TDependency::given>(
+               
 
  create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
-        );
+            );
 
       }
 
@@ -4660,17 +4762,25 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
       , typename TVisitor
       , typename TPolicies
     >
-    typename enable_if_c<mpl::size<TCtor>::value == 3, typename TDependency::expected*>::type
-    create_impl(const TAllocator& allocator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<
+        mpl::size<TCtor>::value == 3
+      , typename TDependency::expected*
+    >::type
+    create_impl(const TAllocator& allocator
+              , TDeps& deps
+              , TRefs& refs
+              , const TVisitor& visitor
+              , const TPolicies& policies) {
         (void)deps;
         (void)refs;
         (void)visitor;
         (void)policies;
-        return allocator.template allocate<typename TDependency::expected, typename TDependency::given>(
-           
+        return allocator.template
+            allocate<typename TDependency::expected, typename TDependency::given>(
+               
 
  create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
-        );
+            );
 
       }
 
@@ -4685,17 +4795,25 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
       , typename TVisitor
       , typename TPolicies
     >
-    typename enable_if_c<mpl::size<TCtor>::value == 4, typename TDependency::expected*>::type
-    create_impl(const TAllocator& allocator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<
+        mpl::size<TCtor>::value == 4
+      , typename TDependency::expected*
+    >::type
+    create_impl(const TAllocator& allocator
+              , TDeps& deps
+              , TRefs& refs
+              , const TVisitor& visitor
+              , const TPolicies& policies) {
         (void)deps;
         (void)refs;
         (void)visitor;
         (void)policies;
-        return allocator.template allocate<typename TDependency::expected, typename TDependency::given>(
-           
+        return allocator.template
+            allocate<typename TDependency::expected, typename TDependency::given>(
+               
 
  create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
-        );
+            );
 
       }
 
@@ -4710,17 +4828,25 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
       , typename TVisitor
       , typename TPolicies
     >
-    typename enable_if_c<mpl::size<TCtor>::value == 5, typename TDependency::expected*>::type
-    create_impl(const TAllocator& allocator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<
+        mpl::size<TCtor>::value == 5
+      , typename TDependency::expected*
+    >::type
+    create_impl(const TAllocator& allocator
+              , TDeps& deps
+              , TRefs& refs
+              , const TVisitor& visitor
+              , const TPolicies& policies) {
         (void)deps;
         (void)refs;
         (void)visitor;
         (void)policies;
-        return allocator.template allocate<typename TDependency::expected, typename TDependency::given>(
-           
+        return allocator.template
+            allocate<typename TDependency::expected, typename TDependency::given>(
+               
 
  create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
-        );
+            );
 
       }
 
@@ -4735,17 +4861,25 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
       , typename TVisitor
       , typename TPolicies
     >
-    typename enable_if_c<mpl::size<TCtor>::value == 6, typename TDependency::expected*>::type
-    create_impl(const TAllocator& allocator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<
+        mpl::size<TCtor>::value == 6
+      , typename TDependency::expected*
+    >::type
+    create_impl(const TAllocator& allocator
+              , TDeps& deps
+              , TRefs& refs
+              , const TVisitor& visitor
+              , const TPolicies& policies) {
         (void)deps;
         (void)refs;
         (void)visitor;
         (void)policies;
-        return allocator.template allocate<typename TDependency::expected, typename TDependency::given>(
-           
+        return allocator.template
+            allocate<typename TDependency::expected, typename TDependency::given>(
+               
 
  create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
-        );
+            );
 
       }
 
@@ -4760,17 +4894,25 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
       , typename TVisitor
       , typename TPolicies
     >
-    typename enable_if_c<mpl::size<TCtor>::value == 7, typename TDependency::expected*>::type
-    create_impl(const TAllocator& allocator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<
+        mpl::size<TCtor>::value == 7
+      , typename TDependency::expected*
+    >::type
+    create_impl(const TAllocator& allocator
+              , TDeps& deps
+              , TRefs& refs
+              , const TVisitor& visitor
+              , const TPolicies& policies) {
         (void)deps;
         (void)refs;
         (void)visitor;
         (void)policies;
-        return allocator.template allocate<typename TDependency::expected, typename TDependency::given>(
-           
+        return allocator.template
+            allocate<typename TDependency::expected, typename TDependency::given>(
+               
 
  create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
-        );
+            );
 
       }
 
@@ -4785,17 +4927,25 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
       , typename TVisitor
       , typename TPolicies
     >
-    typename enable_if_c<mpl::size<TCtor>::value == 8, typename TDependency::expected*>::type
-    create_impl(const TAllocator& allocator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<
+        mpl::size<TCtor>::value == 8
+      , typename TDependency::expected*
+    >::type
+    create_impl(const TAllocator& allocator
+              , TDeps& deps
+              , TRefs& refs
+              , const TVisitor& visitor
+              , const TPolicies& policies) {
         (void)deps;
         (void)refs;
         (void)visitor;
         (void)policies;
-        return allocator.template allocate<typename TDependency::expected, typename TDependency::given>(
-           
+        return allocator.template
+            allocate<typename TDependency::expected, typename TDependency::given>(
+               
 
  create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
-        );
+            );
 
       }
 
@@ -4810,17 +4960,25 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
       , typename TVisitor
       , typename TPolicies
     >
-    typename enable_if_c<mpl::size<TCtor>::value == 9, typename TDependency::expected*>::type
-    create_impl(const TAllocator& allocator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<
+        mpl::size<TCtor>::value == 9
+      , typename TDependency::expected*
+    >::type
+    create_impl(const TAllocator& allocator
+              , TDeps& deps
+              , TRefs& refs
+              , const TVisitor& visitor
+              , const TPolicies& policies) {
         (void)deps;
         (void)refs;
         (void)visitor;
         (void)policies;
-        return allocator.template allocate<typename TDependency::expected, typename TDependency::given>(
-           
+        return allocator.template
+            allocate<typename TDependency::expected, typename TDependency::given>(
+               
 
  create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
-        );
+            );
 
       }
 
@@ -4835,17 +4993,25 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
       , typename TVisitor
       , typename TPolicies
     >
-    typename enable_if_c<mpl::size<TCtor>::value == 10, typename TDependency::expected*>::type
-    create_impl(const TAllocator& allocator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<
+        mpl::size<TCtor>::value == 10
+      , typename TDependency::expected*
+    >::type
+    create_impl(const TAllocator& allocator
+              , TDeps& deps
+              , TRefs& refs
+              , const TVisitor& visitor
+              , const TPolicies& policies) {
         (void)deps;
         (void)refs;
         (void)visitor;
         (void)policies;
-        return allocator.template allocate<typename TDependency::expected, typename TDependency::given>(
-           
+        return allocator.template
+            allocate<typename TDependency::expected, typename TDependency::given>(
+               
 
  create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 9>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
-        );
+            );
 
       }
 
@@ -4859,9 +5025,18 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
           , typename TVisitor
           , typename TPolicies
         >
-        typename enable_if_c<!mpl::size<scope_create<TDependency> >::value, wrappers::universal<T> >::type
-        create_impl(const TAllocator&, TDeps& deps, TRefs& refs, const TVisitor&, const TPolicies&) {
-            return wrappers::universal<T>(refs, acquire<TDependency>(deps).create());
+        typename enable_if_c<
+            !mpl::size<scope_create<TDependency> >::value
+          , wrappers::universal<T>
+        >::type
+        create_impl(const TAllocator&
+                  , TDeps& deps
+                  , TRefs& refs
+                  , const TVisitor&
+                  , const TPolicies&) {
+            return wrappers::universal<T>(
+                refs, acquire<TDependency>(deps).create()
+            );
         }
 
         template<
@@ -4874,9 +5049,17 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
           , typename TVisitor
           , typename TPolicies
         >
-        typename disable_if_c<!mpl::size<scope_create<TDependency> >::value, wrappers::universal<T> >::type
-        create_impl(const TAllocator& allocator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-            typedef typename type_traits::ctor_traits<typename TDependency::given>::type ctor_type;
+        typename disable_if_c<
+            !mpl::size<scope_create<TDependency> >::value
+          , wrappers::universal<T> >::type
+        create_impl(const TAllocator& allocator
+                  , TDeps& deps
+                  , TRefs& refs
+                  , const TVisitor& visitor
+                  , const TPolicies& policies) {
+            typedef typename type_traits::ctor_traits<
+                typename TDependency::given
+            >::type ctor_type;
 
             return wrappers::universal<T>(
                 refs
@@ -4905,10 +5088,12 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
         }
 
         template<typename TSeq, typename, typename TPolicies>
-        static typename enable_if<mpl::empty<TSeq> >::type assert_policies(const TPolicies&) { }
+        static typename enable_if<mpl::empty<TSeq> >::type
+        assert_policies(const TPolicies&) { }
 
         template<typename TSeq, typename T, typename TPolicies>
-        static typename disable_if<mpl::empty<TSeq> >::type assert_policies(const TPolicies& policies) {
+        static typename disable_if<mpl::empty<TSeq> >::type
+        assert_policies(const TPolicies& policies) {
             typedef typename mpl::front<TSeq>::type policy;
             static_cast<const policy&>(policies).template assert_policy<T>();
             assert_policies<typename mpl::pop_front<TSeq>::type, T>(policies);
@@ -5011,67 +5196,70 @@ public:
     {
     public:
         template<typename TExpected, typename TGiven>
-        typename disable_if<is_explicit<TGiven>, TExpected*>::type allocate() const {
+        typename disable_if<is_explicit<TGiven>, TExpected*>::type
+        allocate() const {
             return new TGiven();
         }
 
         template<typename TExpected, typename TGiven>
-        typename enable_if<type_traits::has_value<TGiven>, TExpected*>::type allocate() const {
+        typename enable_if<type_traits::has_value<TGiven>, TExpected*>::type
+        allocate() const {
             return new TExpected(TGiven::value);
         }
 
         template<typename TExpected, typename TGiven>
-        typename enable_if<is_mpl_string<TGiven>, TExpected*>::type allocate() const {
+        typename enable_if<is_mpl_string<TGiven>, TExpected*>::type
+        allocate() const {
             return new TExpected(mpl::c_str<TGiven>::value);
         }
 
-    template<typename TExpected, typename TGiven, typename Args0>
-    TExpected* allocate( Args0 args0) const {
+    template<typename TExpected, typename TGiven, typename TArgs0>
+    TExpected* allocate( TArgs0 args0) const {
         return new TGiven( args0);
     }
 
-    template<typename TExpected, typename TGiven, typename Args0 , typename Args1>
-    TExpected* allocate( Args0 args0 , Args1 args1) const {
+    template<typename TExpected, typename TGiven, typename TArgs0 , typename TArgs1>
+    TExpected* allocate( TArgs0 args0 , TArgs1 args1) const {
         return new TGiven( args0 , args1);
     }
 
-    template<typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2>
-    TExpected* allocate( Args0 args0 , Args1 args1 , Args2 args2) const {
+    template<typename TExpected, typename TGiven, typename TArgs0 , typename TArgs1 , typename TArgs2>
+    TExpected* allocate( TArgs0 args0 , TArgs1 args1 , TArgs2 args2) const {
         return new TGiven( args0 , args1 , args2);
     }
 
-    template<typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3>
-    TExpected* allocate( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3) const {
+    template<typename TExpected, typename TGiven, typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3>
+    TExpected* allocate( TArgs0 args0 , TArgs1 args1 , TArgs2 args2 , TArgs3 args3) const {
         return new TGiven( args0 , args1 , args2 , args3);
     }
 
-    template<typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4>
-    TExpected* allocate( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4) const {
+    template<typename TExpected, typename TGiven, typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4>
+    TExpected* allocate( TArgs0 args0 , TArgs1 args1 , TArgs2 args2 , TArgs3 args3 , TArgs4 args4) const {
         return new TGiven( args0 , args1 , args2 , args3 , args4);
     }
 
-    template<typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5>
-    TExpected* allocate( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5) const {
+    template<typename TExpected, typename TGiven, typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5>
+    TExpected* allocate( TArgs0 args0 , TArgs1 args1 , TArgs2 args2 , TArgs3 args3 , TArgs4 args4 , TArgs5 args5) const {
         return new TGiven( args0 , args1 , args2 , args3 , args4 , args5);
     }
 
-    template<typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6>
-    TExpected* allocate( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6) const {
+    template<typename TExpected, typename TGiven, typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6>
+    TExpected* allocate( TArgs0 args0 , TArgs1 args1 , TArgs2 args2 , TArgs3 args3 , TArgs4 args4 , TArgs5 args5 , TArgs6 args6) const {
         return new TGiven( args0 , args1 , args2 , args3 , args4 , args5 , args6);
     }
 
-    template<typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7>
-    TExpected* allocate( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7) const {
+    template<typename TExpected, typename TGiven, typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7>
+    TExpected* allocate( TArgs0 args0 , TArgs1 args1 , TArgs2 args2 , TArgs3 args3 , TArgs4 args4 , TArgs5 args5 , TArgs6 args6 , TArgs7 args7) const {
         return new TGiven( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7);
     }
 
-    template<typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8>
-    TExpected* allocate( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8) const {
+    template<typename TExpected, typename TGiven, typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8>
+    TExpected* allocate( TArgs0 args0 , TArgs1 args1 , TArgs2 args2 , TArgs3 args3 , TArgs4 args4 , TArgs5 args5 , TArgs6 args6 , TArgs7 args7 , TArgs8 args8) const {
         return new TGiven( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8);
     }
 
-    template<typename TExpected, typename TGiven, typename Args0 , typename Args1 , typename Args2 , typename Args3 , typename Args4 , typename Args5 , typename Args6 , typename Args7 , typename Args8 , typename Args9>
-    TExpected* allocate( Args0 args0 , Args1 args1 , Args2 args2 , Args3 args3 , Args4 args4 , Args5 args5 , Args6 args6 , Args7 args7 , Args8 args8 , Args9 args9) const {
+    template<typename TExpected, typename TGiven, typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8 , typename TArgs9>
+    TExpected* allocate( TArgs0 args0 , TArgs1 args1 , TArgs2 args2 , TArgs3 args3 , TArgs4 args4 , TArgs5 args5 , TArgs6 args6 , TArgs7 args7 , TArgs8 args8 , TArgs9 args9) const {
         return new TGiven( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9);
     }
     };
@@ -5249,7 +5437,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            TDefaultAllocator()
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5260,7 +5452,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            allocator
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5291,7 +5487,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            TDefaultAllocator()
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5302,7 +5502,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            allocator
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5333,7 +5537,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            TDefaultAllocator()
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5344,7 +5552,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            allocator
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5375,7 +5587,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            TDefaultAllocator()
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5386,7 +5602,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            allocator
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5417,7 +5637,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            TDefaultAllocator()
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5428,7 +5652,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            allocator
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5459,7 +5687,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            TDefaultAllocator()
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5470,7 +5702,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            allocator
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5501,7 +5737,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            TDefaultAllocator()
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5512,7 +5752,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            allocator
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5543,7 +5787,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            TDefaultAllocator()
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5554,7 +5802,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            allocator
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5585,7 +5837,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            TDefaultAllocator()
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5596,7 +5852,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            allocator
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5627,7 +5887,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            TDefaultAllocator()
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5638,7 +5902,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            allocator
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5669,7 +5937,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            TDefaultAllocator()
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5680,7 +5952,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            allocator
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5711,7 +5987,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            TDefaultAllocator()
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5722,7 +6002,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            allocator
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5753,7 +6037,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            TDefaultAllocator()
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5764,7 +6052,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            allocator
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5795,7 +6087,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            TDefaultAllocator()
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5806,7 +6102,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            allocator
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5837,7 +6137,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            TDefaultAllocator()
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5848,7 +6152,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            allocator
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5879,7 +6187,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            TDefaultAllocator()
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5890,7 +6202,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            allocator
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5921,7 +6237,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            TDefaultAllocator()
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5932,7 +6252,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            allocator
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5963,7 +6287,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            TDefaultAllocator()
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -5974,7 +6302,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            allocator
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -6005,7 +6337,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            TDefaultAllocator()
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -6016,7 +6352,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            allocator
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -6047,7 +6387,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            TDefaultAllocator()
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -6058,7 +6402,11 @@ public :
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+            allocator
+          , static_cast<TPool<deps>&>(*this)
+          , refs_
+          , empty_visitor()
+          , policies_
         );
     }
 
@@ -6068,7 +6416,11 @@ public :
             std::vector<aux::shared_ptr<void> > refs_;
 
             return creator_.template create<T, T, call_stack>(
-                TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), TPool<>()
+                TDefaultAllocator()
+              , static_cast<TPool<deps>&>(*this)
+              , refs_
+              , empty_visitor()
+              , TPool<>()
             );
         }
 
@@ -6078,7 +6430,11 @@ public :
             std::vector<aux::shared_ptr<void> > refs_;
 
             return creator_.template create<T, T, call_stack>(
-                allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), TPool<>()
+                allocator
+              , static_cast<TPool<deps>&>(*this)
+              , refs_
+              , empty_visitor()
+              , TPool<>()
             );
         }
 
@@ -6088,7 +6444,11 @@ public :
             std::vector<aux::shared_ptr<void> > refs_;
 
             return creator_.template create<T, T, call_stack>(
-                TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, visitor, TPool<>()
+                TDefaultAllocator()
+              , static_cast<TPool<deps>&>(*this)
+              , refs_
+              , visitor
+              , TPool<>()
             );
         }
 
@@ -6396,7 +6756,8 @@ public:
 
     private:
         template<typename T>
-        const T& pass_arg(const T& arg, typename disable_if<type_traits::has_configure<T> >::type* = 0) const {
+        const T& pass_arg(const T& arg
+                        , typename disable_if<type_traits::has_configure<T> >::type* = 0) const {
             return arg;
         }
 

@@ -52,17 +52,20 @@
     {
     public:
         template<typename TExpected, typename TGiven>
-        typename disable_if<is_explicit<TGiven>, TExpected*>::type allocate() const {
+        typename disable_if<is_explicit<TGiven>, TExpected*>::type
+        allocate() const {
             return new TGiven();
         }
 
         template<typename TExpected, typename TGiven>
-        typename enable_if<type_traits::has_value<TGiven>, TExpected*>::type allocate() const {
+        typename enable_if<type_traits::has_value<TGiven>, TExpected*>::type
+        allocate() const {
             return new TExpected(TGiven::value);
         }
 
         template<typename TExpected, typename TGiven>
-        typename enable_if<is_mpl_string<TGiven>, TExpected*>::type allocate() const {
+        typename enable_if<is_mpl_string<TGiven>, TExpected*>::type
+        allocate() const {
             return new TExpected(mpl::c_str<TGiven>::value);
         }
 

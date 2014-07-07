@@ -54,7 +54,9 @@
     {
         template<typename TDependency>
         struct scope_create
-            : type_traits::function_traits<BOOST_DI_FEATURE_DECLTYPE(&TDependency::create)>::type
+            : type_traits::function_traits<
+                  BOOST_DI_FEATURE_DECLTYPE(&TDependency::create)
+              >::type
         { };
 
         class type_comparator
@@ -87,12 +89,33 @@
           , typename TPolicies
         >
         typename enable_if<
-            is_same<T, TAnyType<> >, TAnyType<TParent, TCallStack, creator, TAllocator, TDeps, TRefs, TVisitor, TPolicies>
+            is_same<T, TAnyType<> >
+          , TAnyType<
+                TParent
+              , TCallStack
+              , creator
+              , TAllocator
+              , TDeps
+              , TRefs
+              , TVisitor
+              , TPolicies
+            >
         >::type
-        create(const TAllocator& allocator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-            return TAnyType<TParent, TCallStack, creator, TAllocator, TDeps, TRefs, TVisitor, TPolicies>(
-                *this, allocator, deps, refs, visitor, policies
-            );
+        create(const TAllocator& allocator
+             , TDeps& deps
+             , TRefs& refs
+             , const TVisitor& visitor
+             , const TPolicies& policies) {
+            return TAnyType<
+                TParent
+              , TCallStack
+              , creator
+              , TAllocator
+              , TDeps
+              , TRefs
+              , TVisitor
+              , TPolicies
+            >(*this, allocator, deps, refs, visitor, policies);
         }
 
         template<
@@ -106,7 +129,11 @@
           , typename TPolicies
         >
         typename disable_if<is_same<T, TAnyType<> >, wrappers::universal<T> >::type
-        create(const TAllocator& allocator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+        create(const TAllocator& allocator
+             , TDeps& deps
+             , TRefs& refs
+             , const TVisitor& visitor
+             , const TPolicies& policies) {
             typedef typename TBinder<TDependecies>::template
                 resolve<T, TCallStack>::type dependency_type;
 
@@ -122,7 +149,9 @@
             assert_policies<typename TPolicies::types, data_type>(policies);
             (visitor)(data_type());
 
-            return create_impl<T, dependency_type, call_stack_type>(allocator, deps, refs, visitor, policies);
+            return create_impl<T, dependency_type, call_stack_type>(
+                allocator, deps, refs, visitor, policies
+            );
         }
 
     private:
@@ -140,9 +169,18 @@
           , typename TVisitor
           , typename TPolicies
         >
-        typename enable_if_c<!mpl::size<scope_create<TDependency> >::value, wrappers::universal<T> >::type
-        create_impl(const TAllocator&, TDeps& deps, TRefs& refs, const TVisitor&, const TPolicies&) {
-            return wrappers::universal<T>(refs, acquire<TDependency>(deps).create());
+        typename enable_if_c<
+            !mpl::size<scope_create<TDependency> >::value
+          , wrappers::universal<T>
+        >::type
+        create_impl(const TAllocator&
+                  , TDeps& deps
+                  , TRefs& refs
+                  , const TVisitor&
+                  , const TPolicies&) {
+            return wrappers::universal<T>(
+                refs, acquire<TDependency>(deps).create()
+            );
         }
 
         template<
@@ -155,9 +193,17 @@
           , typename TVisitor
           , typename TPolicies
         >
-        typename disable_if_c<!mpl::size<scope_create<TDependency> >::value, wrappers::universal<T> >::type
-        create_impl(const TAllocator& allocator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
-            typedef typename type_traits::ctor_traits<typename TDependency::given>::type ctor_type;
+        typename disable_if_c<
+            !mpl::size<scope_create<TDependency> >::value
+          , wrappers::universal<T> >::type
+        create_impl(const TAllocator& allocator
+                  , TDeps& deps
+                  , TRefs& refs
+                  , const TVisitor& visitor
+                  , const TPolicies& policies) {
+            typedef typename type_traits::ctor_traits<
+                typename TDependency::given
+            >::type ctor_type;
 
             return wrappers::universal<T>(
                 refs
@@ -186,10 +232,12 @@
         }
 
         template<typename TSeq, typename, typename TPolicies>
-        static typename enable_if<mpl::empty<TSeq> >::type assert_policies(const TPolicies&) { }
+        static typename enable_if<mpl::empty<TSeq> >::type
+        assert_policies(const TPolicies&) { }
 
         template<typename TSeq, typename T, typename TPolicies>
-        static typename disable_if<mpl::empty<TSeq> >::type assert_policies(const TPolicies& policies) {
+        static typename disable_if<mpl::empty<TSeq> >::type
+        assert_policies(const TPolicies& policies) {
             typedef typename mpl::front<TSeq>::type policy;
             static_cast<const policy&>(policies).template assert_policy<T>();
             assert_policies<typename mpl::pop_front<TSeq>::type, T>(policies);
@@ -237,8 +285,15 @@
       , typename TVisitor
       , typename TPolicies
     >
-    typename enable_if_c<mpl::size<TCtor>::value == BOOST_PP_ITERATION(), typename TDependency::expected*>::type
-    create_impl(const TAllocator& allocator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    typename enable_if_c<
+        mpl::size<TCtor>::value == BOOST_PP_ITERATION()
+      , typename TDependency::expected*
+    >::type
+    create_impl(const TAllocator& allocator
+              , TDeps& deps
+              , TRefs& refs
+              , const TVisitor& visitor
+              , const TPolicies& policies) {
         (void)deps;
         (void)refs;
         (void)visitor;
@@ -252,13 +307,14 @@
               , TCallStack                              \
             >(allocator, deps, refs, visitor, policies)
 
-        return allocator.template allocate<typename TDependency::expected, typename TDependency::given>(
-            BOOST_PP_REPEAT(
-                BOOST_PP_ITERATION()
-              , BOOST_DI_CREATOR_CREATE
-              , create
-            )
-        );
+        return allocator.template
+            allocate<typename TDependency::expected, typename TDependency::given>(
+                BOOST_PP_REPEAT(
+                    BOOST_PP_ITERATION()
+                  , BOOST_DI_CREATOR_CREATE
+                  , create
+                )
+            );
 
         #undef BOOST_DI_CREATOR_CREATE
       }

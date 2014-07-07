@@ -130,7 +130,8 @@
 
     private:
         template<typename T>
-        const T& pass_arg(const T& arg, typename disable_if<type_traits::has_configure<T> >::type* = 0) const {
+        const T& pass_arg(const T& arg
+                        , typename disable_if<type_traits::has_configure<T> >::type* = 0) const {
             return arg;
         }
 
