@@ -56,15 +56,15 @@ BOOST_AUTO_TEST_CASE(from_context) {
     aux::shared_ptr<c> c2_(new c);
 
     BOOST_CHECK((
-        (external<>::scope<int, a>(87).create())(type<int>())
+        (external<>::scope<int>(87).create())(type<int>())
         !=
-        (external<>::scope<int, b>(42).create())(type<int>())
+        (external<>::scope<int>(42).create())(type<int>())
     ));
 
     BOOST_CHECK((
-        (external<wrappers::shared>::scope<c, a>(c1_).create())(type<aux::shared_ptr<c>>())
+        (external<wrappers::shared>::scope<c>(c1_).create())(type<aux::shared_ptr<c>>())
         !=
-        (external<wrappers::shared>::scope<c, b>(c2_).create())(type<aux::shared_ptr<c>>())
+        (external<wrappers::shared>::scope<c>(c2_).create())(type<aux::shared_ptr<c>>())
     ));
 }
 

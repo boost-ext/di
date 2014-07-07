@@ -8,12 +8,8 @@
 
 #include <string>
 #include <boost/test/unit_test.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/equal.hpp>
 
 #include "boost/di/aux_/memory.hpp"
-#include "common/fakes/fake_wrapper.hpp"
-#include "common/data.hpp"
 
 namespace boost {
 namespace di {
@@ -23,48 +19,36 @@ struct double_value
 {
     static double value;
 };
-double double_value::value = 42.0;
+double double_value::value = 0.0;
+
+auto new_int = []{ return new int(); };
 
 BOOST_AUTO_TEST_CASE(create) {
     unique<>::scope<int> unique_;
 
     BOOST_CHECK((
-        (unique_.create())(type<aux::shared_ptr<int>>())
+        (unique_.create(new_int))(type<aux::shared_ptr<int>>())
         !=
-        (unique_.create())(type<aux::shared_ptr<int>>())
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(create_args) {
-    unique<>::scope<c2> unique_;
-
-    fake_wrapper<int> i(0);
-    fake_wrapper<double> d(0.0);
-    fake_wrapper<char> c('0');
-
-    BOOST_CHECK((
-        (unique_.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
-        !=
-        (unique_.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
+        (unique_.create(new_int))(type<aux::shared_ptr<int>>())
     ));
 }
 
 BOOST_AUTO_TEST_CASE(create_value_mpl_int) {
     const int i = 42;
-    auto i_ = unique<>::scope<int, mpl::int_<i>>().create();
+    auto i_ = unique<>::scope<int>().create([]{return new int(i); });
     BOOST_CHECK_EQUAL(i, i_(type<int>()));
 }
 
 BOOST_AUTO_TEST_CASE(create_value_mpl_string) {
-    auto s_ = unique<>::scope<std::string, mpl::string<'s'>>().create();
+    auto s_ = unique<>::scope<std::string>().create([]{return new std::string("s");});
     BOOST_CHECK_EQUAL("s", s_(type<std::string>()));
 }
 
 BOOST_AUTO_TEST_CASE(create_value_has_value_type) {
     const double d = 42.0;
     double_value::value = d;
-    auto d_ = unique<>::scope<double, double_value>().create();
-    BOOST_CHECK_EQUAL(d, d_(type<double>()));
+    auto d_ = unique<>::scope<double>().create([]{return new double(double_value::value);});
+    BOOST_CHECK_EQUAL(double_value::value, d_(type<double>()));
 }
 
 } // namespace scopes
