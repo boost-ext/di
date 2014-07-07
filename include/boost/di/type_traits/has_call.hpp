@@ -18,10 +18,11 @@ namespace boost {
 namespace di {
 namespace type_traits {
 
-namespace detail {
+template<typename, typename = void>
+class has_call;
 
 template<typename T>
-class has_call_impl
+class has_call<T, void>
 {
     struct base_impl { void call() { } };
     struct base : T, base_impl { base() { } };
@@ -36,7 +37,7 @@ class has_call_impl
     static mpl::aux::yes_tag test(...);
 
 public:
-    typedef has_call_impl type;
+    typedef has_call type;
 
     BOOST_STATIC_CONSTANT(
         bool
@@ -44,12 +45,7 @@ public:
     );
 };
 
-} // namespace detail
-
-template<
-    typename T
-  , typename TAction
->
+template<typename T, typename TAction>
 class has_call
 {
     template<typename>
@@ -84,9 +80,7 @@ public :
 
     BOOST_STATIC_CONSTANT(
         bool
-      , value = base_call<
-            mpl::bool_<detail::has_call_impl<T>::value>
-        >::value
+      , value = base_call<mpl::bool_<has_call<T>::value> >::value
     );
 };
 
