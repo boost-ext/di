@@ -27,7 +27,7 @@ struct fake_creator
       , typename TVisitor
       , typename TArgs
     >
-    T create(TDeps& deps, TRefs& refs, const TVisitor& visitor, const TArgs& args) {
+    T create(TDeps&, TRefs&, const TVisitor&, const TArgs&) {
         BOOST_CHECK_EQUAL(typeid(TExpected).name(), typeid(T).name());
         static typename type_traits::remove_accessors<T>::type object;
         return object;
