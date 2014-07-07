@@ -68,6 +68,9 @@
       , arg                                     \
     )
 
+#define BOOST_DI_COMMA_IF()                     \
+    BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
+
 #define BOOST_DI_TYPES_MPL_LIMIT_FROM(begin)    \
     (begin, BOOST_MPL_LIMIT_VECTOR_SIZE)
 

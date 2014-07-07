@@ -23,8 +23,9 @@ namespace core {
 
 template<
     typename T = none_t
-  , typename TCallStack = mpl::vector0<>
+  , typename TCallStack = none_t
   , typename TCreator = none_t
+  , typename TAllocator = none_t
   , typename TDeps = none_t
   , typename TRefs = none_t
   , typename TVisitor = none_t
@@ -37,12 +38,13 @@ class any_type
 public:
     any_type() { }
 
-    any_type(TCreator& creator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies)
-        : creator_(creator), deps_(deps), refs_(refs), visitor_(visitor), policies_(policies)
+    any_type(TCreator& creator, const TAllocator& allocator, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies)
+        : creator_(creator), allocator_(allocator), deps_(deps), refs_(refs), visitor_(visitor), policies_(policies)
     { }
 
     any_type(const any_type& other)
         : creator_(other.creator_)
+        , allocator_(other.allocator_)
         , deps_(other.deps_)
         , refs_(other.refs_)
         , visitor_(other.visitor_)
@@ -61,7 +63,7 @@ public:
         )
     >
     operator const U&() const {
-        return creator_.template create<const U&, none_t, TCallStack>(deps_, refs_, visitor_, policies_);
+        return creator_.template create<const U&, none_t, TCallStack>(allocator_, deps_, refs_, visitor_, policies_);
     }
 
     template<
@@ -76,18 +78,18 @@ public:
         )
     >
     operator U&() const {
-        return creator_.template create<U&, none_t, TCallStack>(deps_, refs_, visitor_, policies_);
+        return creator_.template create<U&, none_t, TCallStack>(allocator_, deps_, refs_, visitor_, policies_);
     }
 
     template<typename U>
     operator aux::auto_ptr<U>&() {
-        return creator_.template create<aux::auto_ptr<U>, none_t, TCallStack>(deps_, refs_, visitor_, policies_);
+        return creator_.template create<aux::auto_ptr<U>, none_t, TCallStack>(allocator_, deps_, refs_, visitor_, policies_);
     }
 
     BOOST_DI_WKND(MSVC)(
         template<typename U>
         operator aux::unique_ptr<U>() {
-            return creator_.create<aux::unique_ptr<U>, none_t, TCallStack>(deps_, refs_, visitor_, policies_);
+            return creator_.create<aux::unique_ptr<U>, none_t, TCallStack>(allocator_, deps_, refs_, visitor_, policies_);
         }
     )
 
@@ -104,12 +106,13 @@ public:
             )
         >
         operator U() {
-            return creator_.template create<U, none_t, TCallStack>(deps_, refs_, visitor_, policies_);
+            return creator_.template create<U, none_t, TCallStack>(allocator_, deps_, refs_, visitor_, policies_);
         }
     )
 
 private:
     typename mpl::if_<is_same<TCreator, none_t>, TCreator, TCreator&>::type creator_;
+    typename mpl::if_<is_same<TAllocator, none_t>, TAllocator, const TAllocator&>::type allocator_;
     typename mpl::if_<is_same<TDeps, none_t>, TDeps, TDeps&>::type deps_;
     typename mpl::if_<is_same<TRefs, none_t>, TRefs, TRefs&>::type refs_;
     typename mpl::if_<is_same<TVisitor, none_t>, TVisitor, const TVisitor&>::type visitor_;

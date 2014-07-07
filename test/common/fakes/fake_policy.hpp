@@ -7,8 +7,6 @@
 #ifndef BOOST_DI_FAKE_POLICY_HPP
 #define BOOST_DI_FAKE_POLICY_HPP
 
-#include <boost/mpl/bool.hpp>
-
 namespace boost {
 namespace di {
 

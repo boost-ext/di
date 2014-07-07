@@ -22,12 +22,13 @@ struct fake_creator
         typename T
       , typename TParent
       , typename TCallStack
+      , typename TAllocator
       , typename TDeps
       , typename TRefs
       , typename TVisitor
       , typename TArgs
     >
-    T create(TDeps&, TRefs&, const TVisitor&, const TArgs&) {
+    T create(const TAllocator&, TDeps&, TRefs&, const TVisitor&, const TArgs&) {
         BOOST_CHECK_EQUAL(typeid(TExpected).name(), typeid(T).name());
         static typename type_traits::remove_accessors<T>::type object;
         return object;

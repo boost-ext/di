@@ -13,6 +13,7 @@
     #include "boost/di/aux_/memory.hpp"
     #include "boost/di/core/pool.hpp"
     #include "boost/di/core/creator.hpp"
+    #include "boost/di/core/allocator.hpp"
     #include "boost/di/type_traits/has_call.hpp"
 
     #include <vector>
@@ -39,6 +40,7 @@
               , typename
               , typename
               , typename
+              , typename
             >
             class = ::boost::di::core::any_type
         > class TCreator = creator
@@ -47,6 +49,7 @@
           , typename = ::boost::di::core::never< ::boost::mpl::_1 >
           , typename = void
         > class TPool = pool
+      , typename TDefaultAllocator = allocator
     >
     class module
         : public TPool<TDependecies>
@@ -64,10 +67,12 @@
                   , typename
                   , typename
                   , typename
+                  , typename
                 >
                 class
             > class
           , template<typename, typename, typename> class
+          , typename
         > friend class module;
 
         class empty_visitor
@@ -85,17 +90,8 @@
         { }
 
         #define BOOST_PP_FILENAME_1 "boost/di/core/module.hpp"
-        #define BOOST_PP_ITERATION_LIMITS BOOST_DI_TYPES_MPL_LIMIT_FROM(1)
+        #define BOOST_PP_ITERATION_LIMITS BOOST_DI_TYPES_MPL_LIMIT_FROM(0)
         #include BOOST_PP_ITERATE()
-
-        template<typename T>
-        T create() {
-            typedef mpl::vector0<> call_stack;
-            std::vector<aux::shared_ptr<void> > refs_;
-
-            return creator_.template create<T, T, call_stack>(
-                static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), TPool<>());
-        }
 
         template<typename T, typename Visitor>
         T visit(const Visitor& visitor) {
@@ -103,7 +99,8 @@
             std::vector<aux::shared_ptr<void> > refs_;
 
             return creator_.template create<T, T, call_stack>(
-                static_cast<TPool<deps>&>(*this), refs_, visitor, TPool<>());
+                TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, visitor, TPool<>()
+            );
         }
 
         template<typename TAction>
@@ -163,14 +160,25 @@
           )
     { }
 
-    template<typename T, BOOST_DI_TYPES(TArgs)>
-    T create(BOOST_DI_ARGS(TArgs, args)) {
+    template<typename T BOOST_DI_COMMA_IF() BOOST_DI_TYPES(TPolicies)>
+    T create(BOOST_DI_ARGS(TPolicies, policies)) {
         typedef mpl::vector0<> call_stack;
-        TPool<BOOST_DI_MPL_VECTOR_TYPES_PASS(TArgs)> args_(BOOST_DI_ARGS_PASS(args));
+        TPool<BOOST_DI_MPL_VECTOR_TYPES_PASS(TPolicies)> policies_(BOOST_DI_ARGS_PASS(policies));
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
-            static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), args_
+            TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
+        );
+    }
+
+    template<typename T BOOST_DI_COMMA_IF() typename TAllocator BOOST_DI_COMMA_IF() BOOST_DI_TYPES(TPolicies)>
+    T allocate(const TAllocator& allocator BOOST_DI_COMMA_IF() BOOST_DI_ARGS(TPolicies, policies)) {
+        typedef mpl::vector0<> call_stack;
+        TPool<BOOST_DI_MPL_VECTOR_TYPES_PASS(TPolicies)> policies_(BOOST_DI_ARGS_PASS(policies));
+        std::vector<aux::shared_ptr<void> > refs_;
+
+        return creator_.template create<T, T, call_stack>(
+            allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
         );
     }
 

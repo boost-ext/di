@@ -16,6 +16,7 @@
 #include "boost/di/policies/creation_ownership.hpp"
 #include "boost/di/policies/circular_dependencies.hpp"
 
+#include "common/fakes/fake_allocator.hpp"
 #include "common/data.hpp"
 
 namespace boost {
@@ -313,6 +314,11 @@ BOOST_AUTO_TEST_CASE(bind_to_function_ptr) {
 
     BOOST_CHECK_EQUAL(i, functions_.fi_());
     BOOST_CHECK_EQUAL(d, functions_.fd_());
+}
+
+BOOST_AUTO_TEST_CASE(allocate) {
+    auto injector = di::make_injector();
+    injector.allocate<int>(fake_allocator());
 }
 
 } // namespace di
