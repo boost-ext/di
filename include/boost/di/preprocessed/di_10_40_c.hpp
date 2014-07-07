@@ -7983,42 +7983,39 @@ public:
 
     BOOST_MPL_HAS_XXX_TRAIT_DEF(tag)
 
+    template<typename, typename = void>
+    struct is_mpl_string
+        : mpl::false_
+    { };
+
+    template<typename T>
+    struct is_mpl_string<T, typename enable_if<has_tag<T> >::type>
+        : is_same<mpl::string_tag, typename T::tag>
+    { };
+
+    template<typename T>
+    struct is_explicit
+        : mpl::or_<
+              type_traits::has_value<T>
+            , is_mpl_string<T>
+          >
+    { };
+
     class new_creator
     {
-        template<typename, typename = void>
-        struct is_mpl_string
-            : mpl::false_
-        { };
-
-        template<typename T>
-        struct is_mpl_string<T, typename enable_if<has_tag<T> >::type>
-            : is_same<mpl::string_tag, typename T::tag>
-        { };
-
-        template<typename T>
-        struct is_explicit
-            : mpl::or_<
-                  type_traits::has_value<T>
-                , is_mpl_string<T>
-              >
-        { };
-
     public:
         template<typename TExpected, typename TGiven>
-        typename disable_if<is_explicit<TGiven>, TExpected*>::type
-        create() const {
+        typename disable_if<is_explicit<TGiven>, TExpected*>::type create() const {
             return new TGiven();
         }
 
         template<typename TExpected, typename TGiven>
-        typename enable_if<type_traits::has_value<TGiven>, TExpected*>::type
-        create() const {
+        typename enable_if<type_traits::has_value<TGiven>, TExpected*>::type create() const {
             return new TExpected(TGiven::value);
         }
 
         template<typename TExpected, typename TGiven>
-        typename enable_if<is_mpl_string<TGiven>, TExpected*>::type
-        create() const {
+        typename enable_if<is_mpl_string<TGiven>, TExpected*>::type create() const {
             return new TExpected(mpl::c_str<TGiven>::value);
         }
 
@@ -8158,7 +8155,7 @@ public:
                 typedef TCallStack call_stack_type;
             )
 
-            typedef data<T, TCallStack, dependency_type> data_type;
+            typedef data<T, call_stack_type, dependency_type> data_type;
             assert_policies<typename TArgs::types, data_type>(args);
             (visitor)(data_type());
 

@@ -112,7 +112,7 @@
                 typedef TCallStack call_stack_type;
             )
 
-            typedef data<T, TCallStack, dependency_type> data_type;
+            typedef data<T, call_stack_type, dependency_type> data_type;
             assert_policies<typename TArgs::types, data_type>(args);
             (visitor)(data_type());
 

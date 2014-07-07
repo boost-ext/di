@@ -178,7 +178,7 @@ test-suite fail : # compile fail tests
     [ compile-fail-test c++11 : fail/policies/arguments_permission_fail.cpp : ctor_arguments_permission_fail ]
     [ compile-fail-test c++11 : fail/policies/circular_dependencies_fail.cpp : : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
     [ compile-fail-test c++11 : fail/policies/circular_dependencies_fail.cpp : ctor_circular_dependencies_fail : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
-    #[ compile-fail-test c++11 : fail/policies/creation_ownership_fail.cpp : : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
+    [ compile-fail-test c++11 : fail/policies/creation_ownership_fail.cpp : : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
     [ compile-fail-test c++11 : fail/policies/scopes_permission_fail.cpp : ]
     [ compile-fail-test c++11 : fail/injector_ctor_ambiguous_fail.cpp ]
     [ compile-fail-test c++11 : fail/injector_ctor_ambiguous_fail.cpp : ctor_injector_ctor_ambiguous_fail ]
