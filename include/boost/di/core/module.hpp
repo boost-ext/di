@@ -90,8 +90,28 @@
         { }
 
         #define BOOST_PP_FILENAME_1 "boost/di/core/module.hpp"
-        #define BOOST_PP_ITERATION_LIMITS BOOST_DI_TYPES_MPL_LIMIT_FROM(0)
+        #define BOOST_PP_ITERATION_LIMITS BOOST_DI_TYPES_MPL_LIMIT_FROM(1)
         #include BOOST_PP_ITERATE()
+
+        template<typename T>
+        T create() {
+            typedef mpl::vector0<> call_stack;
+            std::vector<aux::shared_ptr<void> > refs_;
+
+            return creator_.template create<T, T, call_stack>(
+                TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), TPool<>()
+            );
+        }
+
+        template<typename T, typename TAllocator>
+        T allocate(const TAllocator& allocator) {
+            typedef mpl::vector0<> call_stack;
+            std::vector<aux::shared_ptr<void> > refs_;
+
+            return creator_.template create<T, T, call_stack>(
+                allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), TPool<>()
+            );
+        }
 
         template<typename T, typename Visitor>
         T visit(const Visitor& visitor) {
@@ -160,7 +180,7 @@
           )
     { }
 
-    template<typename T BOOST_DI_COMMA_IF() BOOST_DI_TYPES(TPolicies)>
+    template<typename T, BOOST_DI_TYPES(TPolicies)>
     T create(BOOST_DI_ARGS(TPolicies, policies)) {
         typedef mpl::vector0<> call_stack;
         TPool<BOOST_DI_MPL_VECTOR_TYPES_PASS(TPolicies)> policies_(BOOST_DI_ARGS_PASS(policies));
@@ -171,8 +191,8 @@
         );
     }
 
-    template<typename T BOOST_DI_COMMA_IF() typename TAllocator BOOST_DI_COMMA_IF() BOOST_DI_TYPES(TPolicies)>
-    T allocate(const TAllocator& allocator BOOST_DI_COMMA_IF() BOOST_DI_ARGS(TPolicies, policies)) {
+    template<typename T, typename TAllocator, BOOST_DI_TYPES(TPolicies)>
+    T allocate(const TAllocator& allocator, BOOST_DI_ARGS(TPolicies, policies)) {
         typedef mpl::vector0<> call_stack;
         TPool<BOOST_DI_MPL_VECTOR_TYPES_PASS(TPolicies)> policies_(BOOST_DI_ARGS_PASS(policies));
         std::vector<aux::shared_ptr<void> > refs_;

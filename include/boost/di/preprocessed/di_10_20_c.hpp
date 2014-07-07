@@ -1773,8 +1773,9 @@ struct any_of
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 1>::type>
-        : public mpl::at_c<TSeq, 0>::type
+        :
 
+ public mpl::at_c<TSeq, 0>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -1829,8 +1830,9 @@ struct any_of
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 2>::type>
-        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type
+        :
 
+ public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -1889,8 +1891,9 @@ struct any_of
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 3>::type>
-        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type
+        :
 
+ public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -1953,8 +1956,9 @@ struct any_of
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 4>::type>
-        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type
+        :
 
+ public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -2021,8 +2025,9 @@ struct any_of
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 5>::type>
-        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type
+        :
 
+ public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -2093,8 +2098,9 @@ struct any_of
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 6>::type>
-        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type
+        :
 
+ public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -2169,8 +2175,9 @@ struct any_of
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 7>::type>
-        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type
+        :
 
+ public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -2249,8 +2256,9 @@ struct any_of
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 8>::type>
-        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type
+        :
 
+ public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -2333,8 +2341,9 @@ struct any_of
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 9>::type>
-        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type
+        :
 
+ public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -2421,8 +2430,9 @@ struct any_of
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 10>::type>
-        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type
+        :
 
+ public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -2513,8 +2523,9 @@ struct any_of
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 11>::type>
-        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type
+        :
 
+ public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -2609,8 +2620,9 @@ struct any_of
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 12>::type>
-        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type
+        :
 
+ public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -2709,8 +2721,9 @@ struct any_of
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 13>::type>
-        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type
+        :
 
+ public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -2813,8 +2826,9 @@ struct any_of
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 14>::type>
-        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type
+        :
 
+ public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -2921,8 +2935,9 @@ struct any_of
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 15>::type>
-        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type
+        :
 
+ public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -3033,8 +3048,9 @@ struct any_of
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 16>::type>
-        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type
+        :
 
+ public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -3149,8 +3165,9 @@ struct any_of
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 17>::type>
-        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type
+        :
 
+ public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -3269,8 +3286,9 @@ struct any_of
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 18>::type>
-        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type
+        :
 
+ public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -3393,8 +3411,9 @@ struct any_of
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 19>::type>
-        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type
+        :
 
+ public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -3521,8 +3540,9 @@ struct any_of
 
     template<typename TSeq, typename TIgnore>
     class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == 20>::type>
-        : public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type
+        :
 
+ public mpl::at_c<TSeq, 0>::type , public mpl::at_c<TSeq, 1>::type , public mpl::at_c<TSeq, 2>::type , public mpl::at_c<TSeq, 3>::type , public mpl::at_c<TSeq, 4>::type , public mpl::at_c<TSeq, 5>::type , public mpl::at_c<TSeq, 6>::type , public mpl::at_c<TSeq, 7>::type , public mpl::at_c<TSeq, 8>::type , public mpl::at_c<TSeq, 9>::type , public mpl::at_c<TSeq, 10>::type , public mpl::at_c<TSeq, 11>::type , public mpl::at_c<TSeq, 12>::type , public mpl::at_c<TSeq, 13>::type , public mpl::at_c<TSeq, 14>::type , public mpl::at_c<TSeq, 15>::type , public mpl::at_c<TSeq, 16>::type , public mpl::at_c<TSeq, 17>::type , public mpl::at_c<TSeq, 18>::type , public mpl::at_c<TSeq, 19>::type
     {
         template<typename T, typename = void>
         struct pool_type
@@ -4597,8 +4617,9 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
         (void)visitor;
         (void)policies;
         return allocator.template allocate<typename TDependency::expected, typename TDependency::given>(
-            create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+           
 
+ create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
         );
 
       }
@@ -4621,8 +4642,9 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
         (void)visitor;
         (void)policies;
         return allocator.template allocate<typename TDependency::expected, typename TDependency::given>(
-            create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+           
 
+ create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
         );
 
       }
@@ -4645,8 +4667,9 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
         (void)visitor;
         (void)policies;
         return allocator.template allocate<typename TDependency::expected, typename TDependency::given>(
-            create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+           
 
+ create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
         );
 
       }
@@ -4669,8 +4692,9 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
         (void)visitor;
         (void)policies;
         return allocator.template allocate<typename TDependency::expected, typename TDependency::given>(
-            create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+           
 
+ create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
         );
 
       }
@@ -4693,8 +4717,9 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
         (void)visitor;
         (void)policies;
         return allocator.template allocate<typename TDependency::expected, typename TDependency::given>(
-            create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+           
 
+ create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
         );
 
       }
@@ -4717,8 +4742,9 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
         (void)visitor;
         (void)policies;
         return allocator.template allocate<typename TDependency::expected, typename TDependency::given>(
-            create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+           
 
+ create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
         );
 
       }
@@ -4741,8 +4767,9 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
         (void)visitor;
         (void)policies;
         return allocator.template allocate<typename TDependency::expected, typename TDependency::given>(
-            create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+           
 
+ create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
         );
 
       }
@@ -4765,8 +4792,9 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
         (void)visitor;
         (void)policies;
         return allocator.template allocate<typename TDependency::expected, typename TDependency::given>(
-            create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+           
 
+ create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
         );
 
       }
@@ -4789,8 +4817,9 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
         (void)visitor;
         (void)policies;
         return allocator.template allocate<typename TDependency::expected, typename TDependency::given>(
-            create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+           
 
+ create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
         );
 
       }
@@ -4813,8 +4842,9 @@ struct ctor_traits<T, typename enable_if<has_BOOST_DI_INJECTOR<T> >::type>
         (void)visitor;
         (void)policies;
         return allocator.template allocate<typename TDependency::expected, typename TDependency::given>(
-            create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 9>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+           
 
+ create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 9>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
         );
 
       }
@@ -5196,48 +5226,6 @@ public :
     // module<....>      -> get all dependencies from the module
     // dependency<....>  -> pass
 
-    template<>
-    explicit module()
-        : TPool<deps>(
-              TPool<
-                  mpl::vector0<>
-                , mpl::not_<
-                      mpl::or_<
-                          mpl::contains<deps, mpl::_>
-                        , has_types<mpl::_>
-                      >
-                  >
-              >()
-            , init()
-          )
-    { }
-
-    template<typename T >
-    T create() {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector0<> > policies_();
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
-        );
-    }
-
-    template<typename T typename TAllocator >
-    T allocate(const TAllocator& allocator ) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector0<> > policies_();
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
-        );
-    }
-
-    // bind<...>, etc.   -> ignore
-    // module<....>      -> get all dependencies from the module
-    // dependency<....>  -> pass
-
     template< typename TArgs0>
     explicit module( const TArgs0 & args0)
         : TPool<deps>(
@@ -5254,7 +5242,7 @@ public :
           )
     { }
 
-    template<typename T , typename TPolicies0>
+    template<typename T, typename TPolicies0>
     T create( const TPolicies0 & policies0) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector1< TPolicies0> > policies_( policies0);
@@ -5265,8 +5253,8 @@ public :
         );
     }
 
-    template<typename T , typename TAllocator , typename TPolicies0>
-    T allocate(const TAllocator& allocator , const TPolicies0 & policies0) {
+    template<typename T, typename TAllocator, typename TPolicies0>
+    T allocate(const TAllocator& allocator, const TPolicies0 & policies0) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector1< TPolicies0> > policies_( policies0);
         std::vector<aux::shared_ptr<void> > refs_;
@@ -5296,7 +5284,7 @@ public :
           )
     { }
 
-    template<typename T , typename TPolicies0 , typename TPolicies1>
+    template<typename T, typename TPolicies0 , typename TPolicies1>
     T create( const TPolicies0 & policies0 , const TPolicies1 & policies1) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector2< TPolicies0 , TPolicies1> > policies_( policies0 , policies1);
@@ -5307,8 +5295,8 @@ public :
         );
     }
 
-    template<typename T , typename TAllocator , typename TPolicies0 , typename TPolicies1>
-    T allocate(const TAllocator& allocator , const TPolicies0 & policies0 , const TPolicies1 & policies1) {
+    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1>
+    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector2< TPolicies0 , TPolicies1> > policies_( policies0 , policies1);
         std::vector<aux::shared_ptr<void> > refs_;
@@ -5338,7 +5326,7 @@ public :
           )
     { }
 
-    template<typename T , typename TPolicies0 , typename TPolicies1 , typename TPolicies2>
+    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2>
     T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector3< TPolicies0 , TPolicies1 , TPolicies2> > policies_( policies0 , policies1 , policies2);
@@ -5349,8 +5337,8 @@ public :
         );
     }
 
-    template<typename T , typename TAllocator , typename TPolicies0 , typename TPolicies1 , typename TPolicies2>
-    T allocate(const TAllocator& allocator , const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2) {
+    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2>
+    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector3< TPolicies0 , TPolicies1 , TPolicies2> > policies_( policies0 , policies1 , policies2);
         std::vector<aux::shared_ptr<void> > refs_;
@@ -5380,7 +5368,7 @@ public :
           )
     { }
 
-    template<typename T , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3>
+    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3>
     T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector4< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3> > policies_( policies0 , policies1 , policies2 , policies3);
@@ -5391,8 +5379,8 @@ public :
         );
     }
 
-    template<typename T , typename TAllocator , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3>
-    T allocate(const TAllocator& allocator , const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3) {
+    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3>
+    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector4< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3> > policies_( policies0 , policies1 , policies2 , policies3);
         std::vector<aux::shared_ptr<void> > refs_;
@@ -5422,7 +5410,7 @@ public :
           )
     { }
 
-    template<typename T , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4>
+    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4>
     T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector5< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4> > policies_( policies0 , policies1 , policies2 , policies3 , policies4);
@@ -5433,8 +5421,8 @@ public :
         );
     }
 
-    template<typename T , typename TAllocator , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4>
-    T allocate(const TAllocator& allocator , const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4) {
+    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4>
+    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector5< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4> > policies_( policies0 , policies1 , policies2 , policies3 , policies4);
         std::vector<aux::shared_ptr<void> > refs_;
@@ -5464,7 +5452,7 @@ public :
           )
     { }
 
-    template<typename T , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5>
+    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5>
     T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector6< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5);
@@ -5475,8 +5463,8 @@ public :
         );
     }
 
-    template<typename T , typename TAllocator , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5>
-    T allocate(const TAllocator& allocator , const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5) {
+    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5>
+    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector6< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5);
         std::vector<aux::shared_ptr<void> > refs_;
@@ -5506,7 +5494,7 @@ public :
           )
     { }
 
-    template<typename T , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6>
+    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6>
     T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector7< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6);
@@ -5517,8 +5505,8 @@ public :
         );
     }
 
-    template<typename T , typename TAllocator , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6>
-    T allocate(const TAllocator& allocator , const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6) {
+    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6>
+    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector7< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6);
         std::vector<aux::shared_ptr<void> > refs_;
@@ -5548,7 +5536,7 @@ public :
           )
     { }
 
-    template<typename T , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7>
+    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7>
     T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector8< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7);
@@ -5559,8 +5547,8 @@ public :
         );
     }
 
-    template<typename T , typename TAllocator , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7>
-    T allocate(const TAllocator& allocator , const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7) {
+    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7>
+    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector8< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7);
         std::vector<aux::shared_ptr<void> > refs_;
@@ -5590,7 +5578,7 @@ public :
           )
     { }
 
-    template<typename T , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8>
+    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8>
     T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector9< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8);
@@ -5601,8 +5589,8 @@ public :
         );
     }
 
-    template<typename T , typename TAllocator , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8>
-    T allocate(const TAllocator& allocator , const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8) {
+    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8>
+    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector9< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8);
         std::vector<aux::shared_ptr<void> > refs_;
@@ -5632,7 +5620,7 @@ public :
           )
     { }
 
-    template<typename T , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9>
+    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9>
     T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector10< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9);
@@ -5643,8 +5631,8 @@ public :
         );
     }
 
-    template<typename T , typename TAllocator , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9>
-    T allocate(const TAllocator& allocator , const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9) {
+    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9>
+    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector10< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9);
         std::vector<aux::shared_ptr<void> > refs_;
@@ -5674,7 +5662,7 @@ public :
           )
     { }
 
-    template<typename T , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10>
+    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10>
     T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector11< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10);
@@ -5685,8 +5673,8 @@ public :
         );
     }
 
-    template<typename T , typename TAllocator , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10>
-    T allocate(const TAllocator& allocator , const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10) {
+    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10>
+    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector11< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10);
         std::vector<aux::shared_ptr<void> > refs_;
@@ -5716,7 +5704,7 @@ public :
           )
     { }
 
-    template<typename T , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11>
+    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11>
     T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector12< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11);
@@ -5727,8 +5715,8 @@ public :
         );
     }
 
-    template<typename T , typename TAllocator , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11>
-    T allocate(const TAllocator& allocator , const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11) {
+    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11>
+    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector12< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11);
         std::vector<aux::shared_ptr<void> > refs_;
@@ -5758,7 +5746,7 @@ public :
           )
     { }
 
-    template<typename T , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12>
+    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12>
     T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector13< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12);
@@ -5769,8 +5757,8 @@ public :
         );
     }
 
-    template<typename T , typename TAllocator , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12>
-    T allocate(const TAllocator& allocator , const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12) {
+    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12>
+    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector13< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12);
         std::vector<aux::shared_ptr<void> > refs_;
@@ -5800,7 +5788,7 @@ public :
           )
     { }
 
-    template<typename T , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13>
+    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13>
     T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector14< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13);
@@ -5811,8 +5799,8 @@ public :
         );
     }
 
-    template<typename T , typename TAllocator , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13>
-    T allocate(const TAllocator& allocator , const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13) {
+    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13>
+    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector14< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13);
         std::vector<aux::shared_ptr<void> > refs_;
@@ -5842,7 +5830,7 @@ public :
           )
     { }
 
-    template<typename T , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14>
+    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14>
     T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector15< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13 , TPolicies14> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13 , policies14);
@@ -5853,8 +5841,8 @@ public :
         );
     }
 
-    template<typename T , typename TAllocator , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14>
-    T allocate(const TAllocator& allocator , const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14) {
+    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14>
+    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector15< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13 , TPolicies14> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13 , policies14);
         std::vector<aux::shared_ptr<void> > refs_;
@@ -5884,7 +5872,7 @@ public :
           )
     { }
 
-    template<typename T , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15>
+    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15>
     T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14 , const TPolicies15 & policies15) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector16< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13 , TPolicies14 , TPolicies15> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13 , policies14 , policies15);
@@ -5895,8 +5883,8 @@ public :
         );
     }
 
-    template<typename T , typename TAllocator , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15>
-    T allocate(const TAllocator& allocator , const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14 , const TPolicies15 & policies15) {
+    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15>
+    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14 , const TPolicies15 & policies15) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector16< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13 , TPolicies14 , TPolicies15> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13 , policies14 , policies15);
         std::vector<aux::shared_ptr<void> > refs_;
@@ -5926,7 +5914,7 @@ public :
           )
     { }
 
-    template<typename T , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15 , typename TPolicies16>
+    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15 , typename TPolicies16>
     T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14 , const TPolicies15 & policies15 , const TPolicies16 & policies16) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector17< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13 , TPolicies14 , TPolicies15 , TPolicies16> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13 , policies14 , policies15 , policies16);
@@ -5937,8 +5925,8 @@ public :
         );
     }
 
-    template<typename T , typename TAllocator , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15 , typename TPolicies16>
-    T allocate(const TAllocator& allocator , const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14 , const TPolicies15 & policies15 , const TPolicies16 & policies16) {
+    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15 , typename TPolicies16>
+    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14 , const TPolicies15 & policies15 , const TPolicies16 & policies16) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector17< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13 , TPolicies14 , TPolicies15 , TPolicies16> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13 , policies14 , policies15 , policies16);
         std::vector<aux::shared_ptr<void> > refs_;
@@ -5968,7 +5956,7 @@ public :
           )
     { }
 
-    template<typename T , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15 , typename TPolicies16 , typename TPolicies17>
+    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15 , typename TPolicies16 , typename TPolicies17>
     T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14 , const TPolicies15 & policies15 , const TPolicies16 & policies16 , const TPolicies17 & policies17) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector18< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13 , TPolicies14 , TPolicies15 , TPolicies16 , TPolicies17> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13 , policies14 , policies15 , policies16 , policies17);
@@ -5979,8 +5967,8 @@ public :
         );
     }
 
-    template<typename T , typename TAllocator , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15 , typename TPolicies16 , typename TPolicies17>
-    T allocate(const TAllocator& allocator , const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14 , const TPolicies15 & policies15 , const TPolicies16 & policies16 , const TPolicies17 & policies17) {
+    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15 , typename TPolicies16 , typename TPolicies17>
+    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14 , const TPolicies15 & policies15 , const TPolicies16 & policies16 , const TPolicies17 & policies17) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector18< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13 , TPolicies14 , TPolicies15 , TPolicies16 , TPolicies17> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13 , policies14 , policies15 , policies16 , policies17);
         std::vector<aux::shared_ptr<void> > refs_;
@@ -6010,7 +5998,7 @@ public :
           )
     { }
 
-    template<typename T , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15 , typename TPolicies16 , typename TPolicies17 , typename TPolicies18>
+    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15 , typename TPolicies16 , typename TPolicies17 , typename TPolicies18>
     T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14 , const TPolicies15 & policies15 , const TPolicies16 & policies16 , const TPolicies17 & policies17 , const TPolicies18 & policies18) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector19< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13 , TPolicies14 , TPolicies15 , TPolicies16 , TPolicies17 , TPolicies18> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13 , policies14 , policies15 , policies16 , policies17 , policies18);
@@ -6021,8 +6009,8 @@ public :
         );
     }
 
-    template<typename T , typename TAllocator , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15 , typename TPolicies16 , typename TPolicies17 , typename TPolicies18>
-    T allocate(const TAllocator& allocator , const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14 , const TPolicies15 & policies15 , const TPolicies16 & policies16 , const TPolicies17 & policies17 , const TPolicies18 & policies18) {
+    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15 , typename TPolicies16 , typename TPolicies17 , typename TPolicies18>
+    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14 , const TPolicies15 & policies15 , const TPolicies16 & policies16 , const TPolicies17 & policies17 , const TPolicies18 & policies18) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector19< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13 , TPolicies14 , TPolicies15 , TPolicies16 , TPolicies17 , TPolicies18> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13 , policies14 , policies15 , policies16 , policies17 , policies18);
         std::vector<aux::shared_ptr<void> > refs_;
@@ -6052,7 +6040,7 @@ public :
           )
     { }
 
-    template<typename T , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15 , typename TPolicies16 , typename TPolicies17 , typename TPolicies18 , typename TPolicies19>
+    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15 , typename TPolicies16 , typename TPolicies17 , typename TPolicies18 , typename TPolicies19>
     T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14 , const TPolicies15 & policies15 , const TPolicies16 & policies16 , const TPolicies17 & policies17 , const TPolicies18 & policies18 , const TPolicies19 & policies19) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector20< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13 , TPolicies14 , TPolicies15 , TPolicies16 , TPolicies17 , TPolicies18 , TPolicies19> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13 , policies14 , policies15 , policies16 , policies17 , policies18 , policies19);
@@ -6063,8 +6051,8 @@ public :
         );
     }
 
-    template<typename T , typename TAllocator , typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15 , typename TPolicies16 , typename TPolicies17 , typename TPolicies18 , typename TPolicies19>
-    T allocate(const TAllocator& allocator , const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14 , const TPolicies15 & policies15 , const TPolicies16 & policies16 , const TPolicies17 & policies17 , const TPolicies18 & policies18 , const TPolicies19 & policies19) {
+    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15 , typename TPolicies16 , typename TPolicies17 , typename TPolicies18 , typename TPolicies19>
+    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14 , const TPolicies15 & policies15 , const TPolicies16 & policies16 , const TPolicies17 & policies17 , const TPolicies18 & policies18 , const TPolicies19 & policies19) {
         typedef mpl::vector0<> call_stack;
         TPool<mpl::vector20< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13 , TPolicies14 , TPolicies15 , TPolicies16 , TPolicies17 , TPolicies18 , TPolicies19> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13 , policies14 , policies15 , policies16 , policies17 , policies18 , policies19);
         std::vector<aux::shared_ptr<void> > refs_;
@@ -6073,6 +6061,26 @@ public :
             allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), policies_
         );
     }
+
+        template<typename T>
+        T create() {
+            typedef mpl::vector0<> call_stack;
+            std::vector<aux::shared_ptr<void> > refs_;
+
+            return creator_.template create<T, T, call_stack>(
+                TDefaultAllocator(), static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), TPool<>()
+            );
+        }
+
+        template<typename T, typename TAllocator>
+        T allocate(const TAllocator& allocator) {
+            typedef mpl::vector0<> call_stack;
+            std::vector<aux::shared_ptr<void> > refs_;
+
+            return creator_.template create<T, T, call_stack>(
+                allocator, static_cast<TPool<deps>&>(*this), refs_, empty_visitor(), TPool<>()
+            );
+        }
 
         template<typename T, typename Visitor>
         T visit(const Visitor& visitor) {

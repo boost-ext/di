@@ -7,7 +7,10 @@
 #ifndef BOOST_DI_FAKE_ALLOCATOR_HPP
 #define BOOST_DI_FAKE_ALLOCATOR_HPP
 
+#include "boost/di/type_traits/has_value.hpp"
+
 #include <utility>
+#include <boost/utility/enable_if.hpp>
 
 namespace boost {
 namespace di {
@@ -15,6 +18,12 @@ namespace di {
 class fake_allocator
 {
 public:
+
+    template<typename TExpected, typename TGiven>
+    typename enable_if<type_traits::has_value<TGiven>, TExpected*>::type allocate() const {
+        return new TExpected(TGiven::value);
+    }
+
     template<typename TExpected, typename TGiven, typename... TArgs>
     TExpected* allocate(TArgs&&... args) const {
         return new TGiven(std::forward<TArgs>(args)...);

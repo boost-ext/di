@@ -84,9 +84,6 @@
           , arg                                     \
         )
 
-    #define BOOST_DI_COMMA_IF()                     \
-        BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
-
 // mpl
 
     #define BOOST_DI_TYPES_MPL_LIMIT_FROM(begin)    \
