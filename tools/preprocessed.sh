@@ -7,7 +7,6 @@
 #
 
 [ -z "$CXX" ] && CXX="g++"
-[ -z "$1" ] && CONFIG="config.hpp" || CONFIG=$1
 
 dump_file() {
     args=${@:4}
@@ -82,7 +81,7 @@ genereate_files() {
 
 generate_name() {
     tmp=`mktemp`
-    echo "BOOST_DI_CFG_CTOR_LIMIT_SIZE BOOST_MPL_LIMIT_VECTOR_SIZE" > $tmp.hpp
+    echo "BOOST_DI_CFG_CTOR_LIMIT_SIZE BOOST_MPL_LIMIT_VECTOR_SIZE STD" > $tmp.hpp
     $CXX -E -P $@ $tmp.hpp | tr ' ' '_' | xargs -i% echo di_%_c.hpp
     rm -f $tmp
 }
@@ -90,6 +89,7 @@ generate_name() {
 generate_preprocessed() {
     args=${@:4}
     name=`generate_name $args`
+
     rm -f /tmp/i.hpp /tmp/f.hpp
     mkdir -p boost/di/preprocessed 2>/dev/null
 
@@ -112,17 +112,23 @@ generate_preprocessed() {
     guard_end >> boost/di/preprocessed/$name
 }
 
-generate() {
-    generate_preprocessed "boost" "di\/preprocessed" "$dir/$CONFIG" $@
+generate_pph() {
+    generate_preprocessed "boost" "di\/preprocessed" "$1" ${@:2}
     echo "done -> boost/di/preprocessed/$name"
+}
+
+generate() {
+    generate_pph `readlink -f $PWD`/boost/di/aux_/config/cpp_11.hpp -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=$1 -DBOOST_MPL_LIMIT_VECTOR_SIZE=$2 -DBOOST_DI_INJECTOR=boost_di_injector__ -DSTD=cpp_11
+    generate_pph `readlink -f $PWD`/boost/di/aux_/config/cpp_03.hpp -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=$1 -DBOOST_MPL_LIMIT_VECTOR_SIZE=$2 -DBOOST_DI_INJECTOR=boost_di_injector__ -DSTD=cpp_03
 }
 
 dir=`readlink -f \`dirname $0\``
 cd $dir/../include
 genereate_files "boost/di.hpp" | cat -n | sort -uk2 | sort -nk1 | cut -f2- > /tmp/files.hpp
 
-generate -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=10 -DBOOST_MPL_LIMIT_VECTOR_SIZE=20
-generate -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=10 -DBOOST_MPL_LIMIT_VECTOR_SIZE=30
-generate -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=10 -DBOOST_MPL_LIMIT_VECTOR_SIZE=40
-generate -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=10 -DBOOST_MPL_LIMIT_VECTOR_SIZE=50
+generate 10 10
+generate 10 20
+generate 10 30
+generate 10 40
+generate 10 50
 

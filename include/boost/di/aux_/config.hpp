@@ -8,6 +8,8 @@
 #define BOOST_DI_AUX_CONFIG_HPP
 
 #include <boost/config.hpp>
+#include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/stringize.hpp>
 #include <boost/mpl/limits/vector.hpp>
 
 #if !defined(BOOST_DI_INJECTOR)
@@ -18,15 +20,19 @@
     #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
 #endif
 
+#if (__cplusplus >= 201100L)
+    #define BOOST_DI_CFG_STD cpp_11
+#else
+    #define BOOST_DI_CFG_STD cpp_03
+#endif
+
 #if defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS) || \
     (BOOST_DI_CFG_CTOR_LIMIT_SIZE % 10) ||           \
     (BOOST_MPL_LIMIT_VECTOR_SIZE % 10)
 
-    #if (__cplusplus >= 201100L)
-        #include "boost/di/aux_/config/cpp_11.hpp"
-    #else
-        #include "boost/di/aux_/config/cpp_03.hpp"
-    #endif
+    #define BOOST_DI_CFG_FILE boost/di/aux_/config/BOOST_DI_CFG_STD.hpp
+    #include BOOST_PP_STRINGIZE(BOOST_DI_CFG_FILE)
+    #undef BOOST_DI_CFG_FILE
 
 #endif
 

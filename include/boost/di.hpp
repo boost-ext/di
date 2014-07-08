@@ -27,8 +27,10 @@
         BOOST_PP_CAT(boost/di/preprocessed/di_,             \
         BOOST_PP_CAT(BOOST_DI_CFG_CTOR_LIMIT_SIZE,          \
         BOOST_PP_CAT(_,                                     \
-        BOOST_PP_CAT(BOOST_MPL_LIMIT_VECTOR_SIZE, _c.hpp    \
-    )))))
+        BOOST_PP_CAT(BOOST_MPL_LIMIT_VECTOR_SIZE,           \
+        BOOST_PP_CAT(_,                                     \
+        BOOST_PP_CAT(BOOST_DI_CFG_STD, _c.hpp               \
+    )))))))
 
 #else
 

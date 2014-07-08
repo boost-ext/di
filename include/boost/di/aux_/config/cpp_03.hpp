@@ -13,10 +13,8 @@
 #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
-#include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/preprocessor/arithmetic/sub.hpp>
 #include <boost/preprocessor/cat.hpp>
-#include <boost/mpl/aux_/na.hpp>
 
 #define BOOST_DI_CTOR_LIMIT_FROM(begin)             \
     (begin, BOOST_DI_CFG_CTOR_LIMIT_SIZE)

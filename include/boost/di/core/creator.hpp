@@ -20,6 +20,7 @@
     #include <typeinfo>
     #include <map>
     #include <boost/preprocessor/repetition/repeat.hpp>
+    #include <boost/preprocessor/punctuation/comma_if.hpp>
     #include <boost/ref.hpp>
     #include <boost/none_t.hpp>
     #include <boost/bind.hpp>

@@ -13,6 +13,8 @@
     #include "boost/di/aux_/memory.hpp"
     #include "boost/di/core/any_type.hpp"
 
+    #include <boost/preprocessor/repetition/enum_params.hpp>
+    #include <boost/preprocessor/facilities/intercept.hpp>
     #include <boost/mpl/aux_/yes_no.hpp>
 
     namespace boost {
