@@ -155,8 +155,7 @@
     template<BOOST_DI_TYPES(TArgs)>
     explicit injector(BOOST_DI_ARGS(TArgs, args))
         : core::module<typename joint_concepts<>::type>(
-                BOOST_DI_ARGS_PASS(args)
-            //BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_PASS_ARG, args)
+            BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_PASS_ARG, args)
           )
     { }
 

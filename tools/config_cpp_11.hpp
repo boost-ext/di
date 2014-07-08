@@ -77,8 +77,8 @@
 #define BOOST_DI_ARGS(T, arg)                   \
     BOOST_PP_ENUM_BINARY_PARAMS(                \
         BOOST_PP_ITERATION()                    \
-      , T                                 \
-      , && arg                                   \
+      , const T                                 \
+      , & arg                                   \
     )
 
 #define BOOST_DI_ARGS_NOT_USED(T)               \
@@ -96,7 +96,7 @@
     )
 
 #define PASSS(_, n, arg) \
-    BOOST_PP_COMMA_IF(n) std::forward<decltype(arg##n)>(arg##n)
+    BOOST_PP_COMMA_IF(n) arg##n
 
 
 #define BOOST_DI_ARGS_PASS(arg)                 \
