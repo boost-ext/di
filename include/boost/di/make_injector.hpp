@@ -35,12 +35,12 @@
 
 #else
 
-    template<BOOST_DI_TYPES_(TArgs)>
-    injector<typename detail::concepts<BOOST_DI_MPL_VECTOR_TYPES_PASS_(TArgs)>::type>
+    template<BOOST_DI_TYPES(TArgs)>
+    injector<typename detail::concepts<BOOST_DI_MPL_VECTOR_TYPES_PASS(TArgs)>::type>
     inline make_injector(BOOST_DI_ARGS(TArgs, args)) {
         return injector<
             typename detail::concepts<
-                BOOST_DI_MPL_VECTOR_TYPES_PASS_(TArgs)
+                BOOST_DI_MPL_VECTOR_TYPES_PASS(TArgs)
               , mpl::if_<
                     has_scope<mpl::_2>
                   , detail::default_scope<mpl::_2>

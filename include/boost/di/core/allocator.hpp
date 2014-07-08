@@ -70,7 +70,7 @@
         }
 
         #define BOOST_PP_FILENAME_1 "boost/di/core/allocator.hpp"
-        #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM_(1)
+        #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM_FORCE(1)
         #include BOOST_PP_ITERATE()
     };
 
@@ -82,7 +82,7 @@
 
 #else
 
-    template<typename TExpected, typename TGiven, BOOST_DI_TYPES_(TArgs)>
+    template<typename TExpected, typename TGiven, BOOST_DI_TYPES(TArgs)>
     TExpected* allocate(BOOST_DI_FORWARD_ARGS(TArgs, args)) const {
         return new TGiven(BOOST_DI_ARGS_FORWARD(args));
     }

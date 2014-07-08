@@ -152,7 +152,7 @@
 
     #define BOOST_DI_PASS_ARG(_, n, arg) BOOST_PP_COMMA_IF(n) arg##n
 
-    template<BOOST_DI_TYPES_(TArgs)>
+    template<BOOST_DI_TYPES(TArgs)>
     explicit injector(BOOST_DI_ARGS(TArgs, args))
         : core::module<typename joint_concepts<>::type>(
                 pass_arg(args)...

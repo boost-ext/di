@@ -25,23 +25,23 @@ rule run-test ( std : src : property * ) {
     : $(property) ;
 }
 
-#test-suite di :
-    #[ run-test c++03 : hello_world.cpp : hello_world_cpp_03 ]
-    #[ run-test c++11 : hello_world.cpp : hello_world_cpp_11 ]
-    #[ run-test c++03 : text_visitor.cpp : text_visitor_cpp_03 ]
-    #[ run-test c++11 : text_visitor.cpp : text_visitor_cpp_11 ]
-    #[ run-test c++03 : uml_visitor.cpp : uml_visitor_cpp_03 ]
-    #[ run-test c++11 : uml_visitor.cpp : uml_visitor_cpp_11 ]
-    #[ run-test c++03 : provider.cpp : provider_cpp_03 ]
-    #[ run-test c++11 : provider.cpp : provider_cpp_11 ]
-    #[ run-test c++03 : named.cpp : named_cpp_03 ]
-    #[ run-test c++11 : named.cpp : named_cpp_11 ]
-#;
+test-suite di :
+    [ run-test c++03 : hello_world.cpp : hello_world_cpp_03 ]
+    [ run-test c++11 : hello_world.cpp : hello_world_cpp_11 ]
+    [ run-test c++03 : text_visitor.cpp : text_visitor_cpp_03 ]
+    [ run-test c++11 : text_visitor.cpp : text_visitor_cpp_11 ]
+    [ run-test c++03 : uml_visitor.cpp : uml_visitor_cpp_03 ]
+    [ run-test c++11 : uml_visitor.cpp : uml_visitor_cpp_11 ]
+    [ run-test c++03 : provider.cpp : provider_cpp_03 ]
+    [ run-test c++11 : provider.cpp : provider_cpp_11 ]
+    [ run-test c++03 : named.cpp : named_cpp_03 ]
+    [ run-test c++11 : named.cpp : named_cpp_11 ]
+;
 
-#test-suite cpp_03 : # "di / c++ 03"
-    #[ run-test c++03 : cpp_03/injection.cpp : injection_cpp_03 ]
-    #[ run-test c++03 : cpp_03/modules.cpp : modules_cpp_03 ]
-#;
+test-suite cpp_03 : # "di / c++ 03"
+    [ run-test c++03 : cpp_03/injection.cpp : injection_cpp_03 ]
+    [ run-test c++03 : cpp_03/modules.cpp : modules_cpp_03 ]
+;
 
 test-suite cpp_11 : # "di / c++ 11"
     [ run-test c++11 : cpp_11/allow_only_smart_ptr_policy.cpp : allow_only_smart_ptr_policy_cpp_11 ]
@@ -56,13 +56,13 @@ test-suite cpp_11 : # "di / c++ 11"
     [ run-test c++11 : cpp_11/testing.cpp : testing_cpp_11 ]
 ;
 
-#test-suite cpp_14 : # "di / c++ 14"
-    #[ run-test c++1y : cpp_14/tutorial/tutorial1.cpp : tutorial1_cpp_14 ]
-    #[ run-test c++1y : cpp_14/tutorial/tutorial2.cpp : tutorial2_cpp_14 ]
-    #[ run-test c++1y : cpp_14/tutorial/tutorial3.cpp : tutorial3_cpp_14 ]
-    #[ run-test c++1y : cpp_14/tutorial/tutorial4.cpp : tutorial4_cpp_14 ]
-    #[ run-test c++1y : cpp_14/tutorial/tutorial5.cpp : tutorial5_cpp_14 ]
-    #[ run-test c++1y : cpp_14/factory.cpp : factory_cpp_14 ]
-    #[ run-test c++1y : cpp_14/modules.cpp : modules_cpp_14 ]
-#;
+test-suite cpp_14 : # "di / c++ 14"
+    [ run-test c++1y : cpp_14/tutorial/tutorial1.cpp : tutorial1_cpp_14 ]
+    [ run-test c++1y : cpp_14/tutorial/tutorial2.cpp : tutorial2_cpp_14 ]
+    [ run-test c++1y : cpp_14/tutorial/tutorial3.cpp : tutorial3_cpp_14 ]
+    [ run-test c++1y : cpp_14/tutorial/tutorial4.cpp : tutorial4_cpp_14 ]
+    [ run-test c++1y : cpp_14/tutorial/tutorial5.cpp : tutorial5_cpp_14 ]
+    [ run-test c++1y : cpp_14/factory.cpp : factory_cpp_14 ]
+    [ run-test c++1y : cpp_14/modules.cpp : modules_cpp_14 ]
+;
 

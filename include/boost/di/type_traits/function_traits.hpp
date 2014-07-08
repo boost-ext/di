@@ -42,7 +42,7 @@
     };
 
     #define BOOST_PP_FILENAME_1 "boost/di/type_traits/function_traits.hpp"
-    #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM_(1)
+    #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM_FORCE(1)
     #include BOOST_PP_ITERATE()
 
     } // namespace type_traits
@@ -53,25 +53,25 @@
 
 #else
 
-    template<typename R, BOOST_DI_TYPES_(Args)>                          \
-    struct function_traits<R(*)(BOOST_DI_TYPES_PASS_(Args))>             \
+    template<typename R, BOOST_DI_TYPES(Args)>                          \
+    struct function_traits<R(*)(BOOST_DI_TYPES_PASS(Args))>             \
     {                                                                   \
         typedef R result_type;                                          \
-        typedef BOOST_DI_MPL_VECTOR_TYPES_PASS_(Args) type;              \
+        typedef BOOST_DI_MPL_VECTOR_TYPES_PASS(Args) type;              \
     };
 
-    template<typename R, typename T, BOOST_DI_TYPES_(Args)>              \
-    struct function_traits<R(T::*)(BOOST_DI_TYPES_PASS_(Args))>          \
+    template<typename R, typename T, BOOST_DI_TYPES(Args)>              \
+    struct function_traits<R(T::*)(BOOST_DI_TYPES_PASS(Args))>          \
     {                                                                   \
         typedef R result_type;                                          \
-        typedef BOOST_DI_MPL_VECTOR_TYPES_PASS_(Args) type;              \
+        typedef BOOST_DI_MPL_VECTOR_TYPES_PASS(Args) type;              \
     };
 
-    template<typename R, typename T, BOOST_DI_TYPES_(Args)>              \
-    struct function_traits<R(T::*)(BOOST_DI_TYPES_PASS_(Args)) const>    \
+    template<typename R, typename T, BOOST_DI_TYPES(Args)>              \
+    struct function_traits<R(T::*)(BOOST_DI_TYPES_PASS(Args)) const>    \
     {                                                                   \
         typedef R result_type;                                          \
-        typedef BOOST_DI_MPL_VECTOR_TYPES_PASS_(Args) type;              \
+        typedef BOOST_DI_MPL_VECTOR_TYPES_PASS(Args) type;              \
     };
 
 #endif
