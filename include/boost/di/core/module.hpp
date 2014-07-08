@@ -93,7 +93,7 @@
         { }
 
         #define BOOST_PP_FILENAME_1 "boost/di/core/module.hpp"
-        #define BOOST_PP_ITERATION_LIMITS BOOST_DI_TYPES_MPL_LIMIT_FROM__(1)
+        #define BOOST_PP_ITERATION_LIMITS BOOST_DI_TYPES_MPL_LIMIT_FROM_(1)
         #include BOOST_PP_ITERATE()
 
         template<typename T>
@@ -185,26 +185,26 @@
     // module<....>      -> get all dependencies from the module
     // dependency<....>  -> pass
 
-    template<BOOST_DI_TYPES(TArgs)>
-    explicit module(BOOST_DI_ARGS(TArgs, args))
+    template<BOOST_DI_TYPES_(TArgs)>
+    explicit module(BOOST_DI_ARGS__(TArgs, args))
         : TPool<deps>(
               TPool<
-                  BOOST_DI_MPL_VECTOR_TYPES_PASS(TArgs)
+                  BOOST_DI_MPL_VECTOR_TYPES_PASS_(TArgs)
                 , mpl::not_<
                       mpl::or_<
                           mpl::contains<deps, mpl::_>
                         , has_types<mpl::_>
                       >
                   >
-              >(BOOST_DI_ARGS_PASS(args))
+              >(BOOST_DI_ARGS_PASS__(args))
             , init()
           )
     { }
 
-    template<typename T, BOOST_DI_TYPES(TPolicies)>
-    T create(BOOST_DI_ARGS(TPolicies, policies)) {
+    template<typename T, BOOST_DI_TYPES_(TPolicies)>
+    T create(BOOST_DI_ARGS__(TPolicies, policies)) {
         typedef mpl::vector0<> call_stack;
-        TPool<BOOST_DI_MPL_VECTOR_TYPES_PASS(TPolicies)> policies_(BOOST_DI_ARGS_PASS(policies));
+        TPool<BOOST_DI_MPL_VECTOR_TYPES_PASS_(TPolicies)> policies_(BOOST_DI_ARGS_PASS__(policies));
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
@@ -216,10 +216,10 @@
         );
     }
 
-    template<typename T, typename TAllocator, BOOST_DI_TYPES(TPolicies)>
-    T allocate(const TAllocator& allocator, BOOST_DI_ARGS(TPolicies, policies)) {
+    template<typename T, typename TAllocator, BOOST_DI_TYPES_(TPolicies)>
+    T allocate(const TAllocator& allocator, BOOST_DI_ARGS__(TPolicies, policies)) {
         typedef mpl::vector0<> call_stack;
-        TPool<BOOST_DI_MPL_VECTOR_TYPES_PASS(TPolicies)> policies_(BOOST_DI_ARGS_PASS(policies));
+        TPool<BOOST_DI_MPL_VECTOR_TYPES_PASS_(TPolicies)> policies_(BOOST_DI_ARGS_PASS__(policies));
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(

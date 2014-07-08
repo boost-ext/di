@@ -88,7 +88,7 @@ namespace di {
 namespace concepts {
 namespace detail {
 
-template<typename... TArgs>
+template<typename... TArgs_>
 class requires_
 {
     template<
@@ -109,7 +109,7 @@ public:
     struct apply
         : mpl::second<
               typename mpl::fold<
-                  mpl::vector<TArgs...>
+                  mpl::vector<TArgs_...>
                 , mpl::pair<mpl::integral_c<long, 1>, mpl::integral_c<long, 1> >
                 , mpl::pair<
                       mpl::times<
@@ -1076,7 +1076,7 @@ struct bind
           >
       >
 {
-    template<typename... TArgs>
+    template<typename... TArgs_>
     struct when
         : TDependency<
               scopes::deduce
@@ -1085,7 +1085,7 @@ struct bind
             , detail::requires_<
                   type_traits::is_required_priority
                 , type_traits::is_required_type<TExpected>
-                , detail::when_<mpl::vector<TArgs...> >
+                , detail::when_<mpl::vector<TArgs_...> >
               >
           >
     {
@@ -1099,7 +1099,7 @@ struct bind
                       type_traits::is_required_priority
                     , type_traits::is_required_type<TExpected>
                     , type_traits::is_required_name<TName>
-                    , detail::when_<mpl::vector<TArgs...> >
+                    , detail::when_<mpl::vector<TArgs_...> >
                   >
               >
         { };
@@ -1118,7 +1118,7 @@ struct bind
               >
           >
     {
-        template<typename... TArgs>
+        template<typename... TArgs_>
         struct when
             : TDependency<
                   scopes::deduce
@@ -1128,7 +1128,7 @@ struct bind
                       type_traits::is_required_priority
                     , type_traits::is_required_type<TExpected>
                     , type_traits::is_required_name<TName>
-                    , detail::when_<mpl::vector<TArgs...> >
+                    , detail::when_<mpl::vector<TArgs_...> >
                   >
               >
         { };
@@ -1144,10 +1144,10 @@ namespace boost {
 namespace di {
 namespace concepts {
 
-template<typename... TArgs>
+template<typename... TArgs_>
 class call_stack
 {
-    typedef mpl::vector<TArgs...> context_type;
+    typedef mpl::vector<TArgs_...> context_type;
 
     template<typename TContext, typename TCallStack>
     struct equal
@@ -1453,10 +1453,10 @@ class scope
     { };
 
 public:
-    template<typename... TArgs>
+    template<typename... TArgs_>
     struct bind
         : mpl::fold<
-              mpl::vector<TArgs...>
+              mpl::vector<TArgs_...>
             , mpl::vector0<>
             , mpl::push_back<
                   mpl::_1
@@ -1547,34 +1547,34 @@ struct scope
     : concepts::scope<TScope, concepts::dependency>
 { };
 
-template<typename... TArgs>
+template<typename... TArgs_>
 struct deduce
-    : scope<scopes::deduce>::bind<TArgs...>
+    : scope<scopes::deduce>::bind<TArgs_...>
 { };
 
-template<typename... TArgs>
+template<typename... TArgs_>
 struct unique
-    : scope<scopes::unique<> >::bind<TArgs...>
+    : scope<scopes::unique<> >::bind<TArgs_...>
 { };
 
-template<typename... TArgs>
+template<typename... TArgs_>
 struct shared
-    : scope<scopes::shared<> >::bind<TArgs...>
+    : scope<scopes::shared<> >::bind<TArgs_...>
 { };
 
-template<typename... TArgs>
+template<typename... TArgs_>
 struct session
-    : scope<scopes::session<> >::bind<TArgs...>
+    : scope<scopes::session<> >::bind<TArgs_...>
 { };
 
-template<typename... TArgs>
+template<typename... TArgs_>
 struct call_stack
-    : concepts::call_stack<TArgs...>
+    : concepts::call_stack<TArgs_...>
 { };
 
-template<typename... TArgs>
+template<typename... TArgs_>
 struct any_of
-    : mpl::vector<TArgs...>
+    : mpl::vector<TArgs_...>
 { };
 
 } // namespace di
@@ -5187,26 +5187,26 @@ public :
     // module<....>      -> get all dependencies from the module
     // dependency<....>  -> pass
 
-    template< typename TArgs0>
-    explicit module( const TArgs0 & args0)
+    template<typename... TArgs>
+    explicit module(const TArgs&... args)
         : TPool<deps>(
               TPool<
-                  mpl::vector1< TArgs0>
+                  mpl::vector<TArgs...>
                 , mpl::not_<
                       mpl::or_<
                           mpl::contains<deps, mpl::_>
                         , has_types<mpl::_>
                       >
                   >
-              >( args0)
+              >(args...)
             , init()
           )
     { }
 
-    template<typename T, typename TPolicies0>
-    T create( const TPolicies0 & policies0) {
+    template<typename T, typename... TArgs>
+    T create(const TArgs&... policies) {
         typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector1< TPolicies0> > policies_( policies0);
+        TPool<mpl::vector<TArgs...> > policies_(policies...);
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
@@ -5218,960 +5218,10 @@ public :
         );
     }
 
-    template<typename T, typename TAllocator, typename TPolicies0>
-    T allocate(const TAllocator& allocator, const TPolicies0 & policies0) {
+    template<typename T, typename TAllocator, typename... TArgs>
+    T allocate(const TAllocator& allocator, const TArgs&... policies) {
         typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector1< TPolicies0> > policies_( policies0);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            allocator
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    // bind<...>, etc.   -> ignore
-    // module<....>      -> get all dependencies from the module
-    // dependency<....>  -> pass
-
-    template< typename TArgs0 , typename TArgs1>
-    explicit module( const TArgs0 & args0 , const TArgs1 & args1)
-        : TPool<deps>(
-              TPool<
-                  mpl::vector2< TArgs0 , TArgs1>
-                , mpl::not_<
-                      mpl::or_<
-                          mpl::contains<deps, mpl::_>
-                        , has_types<mpl::_>
-                      >
-                  >
-              >( args0 , args1)
-            , init()
-          )
-    { }
-
-    template<typename T, typename TPolicies0 , typename TPolicies1>
-    T create( const TPolicies0 & policies0 , const TPolicies1 & policies1) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector2< TPolicies0 , TPolicies1> > policies_( policies0 , policies1);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator()
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1>
-    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector2< TPolicies0 , TPolicies1> > policies_( policies0 , policies1);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            allocator
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    // bind<...>, etc.   -> ignore
-    // module<....>      -> get all dependencies from the module
-    // dependency<....>  -> pass
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2>
-    explicit module( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2)
-        : TPool<deps>(
-              TPool<
-                  mpl::vector3< TArgs0 , TArgs1 , TArgs2>
-                , mpl::not_<
-                      mpl::or_<
-                          mpl::contains<deps, mpl::_>
-                        , has_types<mpl::_>
-                      >
-                  >
-              >( args0 , args1 , args2)
-            , init()
-          )
-    { }
-
-    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2>
-    T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector3< TPolicies0 , TPolicies1 , TPolicies2> > policies_( policies0 , policies1 , policies2);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator()
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2>
-    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector3< TPolicies0 , TPolicies1 , TPolicies2> > policies_( policies0 , policies1 , policies2);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            allocator
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    // bind<...>, etc.   -> ignore
-    // module<....>      -> get all dependencies from the module
-    // dependency<....>  -> pass
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3>
-    explicit module( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3)
-        : TPool<deps>(
-              TPool<
-                  mpl::vector4< TArgs0 , TArgs1 , TArgs2 , TArgs3>
-                , mpl::not_<
-                      mpl::or_<
-                          mpl::contains<deps, mpl::_>
-                        , has_types<mpl::_>
-                      >
-                  >
-              >( args0 , args1 , args2 , args3)
-            , init()
-          )
-    { }
-
-    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3>
-    T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector4< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3> > policies_( policies0 , policies1 , policies2 , policies3);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator()
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3>
-    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector4< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3> > policies_( policies0 , policies1 , policies2 , policies3);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            allocator
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    // bind<...>, etc.   -> ignore
-    // module<....>      -> get all dependencies from the module
-    // dependency<....>  -> pass
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4>
-    explicit module( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4)
-        : TPool<deps>(
-              TPool<
-                  mpl::vector5< TArgs0 , TArgs1 , TArgs2 , TArgs3 , TArgs4>
-                , mpl::not_<
-                      mpl::or_<
-                          mpl::contains<deps, mpl::_>
-                        , has_types<mpl::_>
-                      >
-                  >
-              >( args0 , args1 , args2 , args3 , args4)
-            , init()
-          )
-    { }
-
-    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4>
-    T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector5< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4> > policies_( policies0 , policies1 , policies2 , policies3 , policies4);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator()
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4>
-    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector5< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4> > policies_( policies0 , policies1 , policies2 , policies3 , policies4);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            allocator
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    // bind<...>, etc.   -> ignore
-    // module<....>      -> get all dependencies from the module
-    // dependency<....>  -> pass
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5>
-    explicit module( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5)
-        : TPool<deps>(
-              TPool<
-                  mpl::vector6< TArgs0 , TArgs1 , TArgs2 , TArgs3 , TArgs4 , TArgs5>
-                , mpl::not_<
-                      mpl::or_<
-                          mpl::contains<deps, mpl::_>
-                        , has_types<mpl::_>
-                      >
-                  >
-              >( args0 , args1 , args2 , args3 , args4 , args5)
-            , init()
-          )
-    { }
-
-    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5>
-    T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector6< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator()
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5>
-    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector6< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            allocator
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    // bind<...>, etc.   -> ignore
-    // module<....>      -> get all dependencies from the module
-    // dependency<....>  -> pass
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6>
-    explicit module( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6)
-        : TPool<deps>(
-              TPool<
-                  mpl::vector7< TArgs0 , TArgs1 , TArgs2 , TArgs3 , TArgs4 , TArgs5 , TArgs6>
-                , mpl::not_<
-                      mpl::or_<
-                          mpl::contains<deps, mpl::_>
-                        , has_types<mpl::_>
-                      >
-                  >
-              >( args0 , args1 , args2 , args3 , args4 , args5 , args6)
-            , init()
-          )
-    { }
-
-    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6>
-    T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector7< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator()
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6>
-    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector7< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            allocator
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    // bind<...>, etc.   -> ignore
-    // module<....>      -> get all dependencies from the module
-    // dependency<....>  -> pass
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7>
-    explicit module( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7)
-        : TPool<deps>(
-              TPool<
-                  mpl::vector8< TArgs0 , TArgs1 , TArgs2 , TArgs3 , TArgs4 , TArgs5 , TArgs6 , TArgs7>
-                , mpl::not_<
-                      mpl::or_<
-                          mpl::contains<deps, mpl::_>
-                        , has_types<mpl::_>
-                      >
-                  >
-              >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7)
-            , init()
-          )
-    { }
-
-    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7>
-    T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector8< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator()
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7>
-    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector8< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            allocator
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    // bind<...>, etc.   -> ignore
-    // module<....>      -> get all dependencies from the module
-    // dependency<....>  -> pass
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8>
-    explicit module( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7 , const TArgs8 & args8)
-        : TPool<deps>(
-              TPool<
-                  mpl::vector9< TArgs0 , TArgs1 , TArgs2 , TArgs3 , TArgs4 , TArgs5 , TArgs6 , TArgs7 , TArgs8>
-                , mpl::not_<
-                      mpl::or_<
-                          mpl::contains<deps, mpl::_>
-                        , has_types<mpl::_>
-                      >
-                  >
-              >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8)
-            , init()
-          )
-    { }
-
-    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8>
-    T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector9< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator()
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8>
-    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector9< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            allocator
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    // bind<...>, etc.   -> ignore
-    // module<....>      -> get all dependencies from the module
-    // dependency<....>  -> pass
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8 , typename TArgs9>
-    explicit module( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7 , const TArgs8 & args8 , const TArgs9 & args9)
-        : TPool<deps>(
-              TPool<
-                  mpl::vector10< TArgs0 , TArgs1 , TArgs2 , TArgs3 , TArgs4 , TArgs5 , TArgs6 , TArgs7 , TArgs8 , TArgs9>
-                , mpl::not_<
-                      mpl::or_<
-                          mpl::contains<deps, mpl::_>
-                        , has_types<mpl::_>
-                      >
-                  >
-              >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9)
-            , init()
-          )
-    { }
-
-    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9>
-    T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector10< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator()
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9>
-    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector10< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            allocator
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    // bind<...>, etc.   -> ignore
-    // module<....>      -> get all dependencies from the module
-    // dependency<....>  -> pass
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8 , typename TArgs9 , typename TArgs10>
-    explicit module( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7 , const TArgs8 & args8 , const TArgs9 & args9 , const TArgs10 & args10)
-        : TPool<deps>(
-              TPool<
-                  mpl::vector11< TArgs0 , TArgs1 , TArgs2 , TArgs3 , TArgs4 , TArgs5 , TArgs6 , TArgs7 , TArgs8 , TArgs9 , TArgs10>
-                , mpl::not_<
-                      mpl::or_<
-                          mpl::contains<deps, mpl::_>
-                        , has_types<mpl::_>
-                      >
-                  >
-              >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10)
-            , init()
-          )
-    { }
-
-    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10>
-    T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector11< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator()
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10>
-    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector11< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            allocator
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    // bind<...>, etc.   -> ignore
-    // module<....>      -> get all dependencies from the module
-    // dependency<....>  -> pass
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8 , typename TArgs9 , typename TArgs10 , typename TArgs11>
-    explicit module( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7 , const TArgs8 & args8 , const TArgs9 & args9 , const TArgs10 & args10 , const TArgs11 & args11)
-        : TPool<deps>(
-              TPool<
-                  mpl::vector12< TArgs0 , TArgs1 , TArgs2 , TArgs3 , TArgs4 , TArgs5 , TArgs6 , TArgs7 , TArgs8 , TArgs9 , TArgs10 , TArgs11>
-                , mpl::not_<
-                      mpl::or_<
-                          mpl::contains<deps, mpl::_>
-                        , has_types<mpl::_>
-                      >
-                  >
-              >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11)
-            , init()
-          )
-    { }
-
-    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11>
-    T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector12< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator()
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11>
-    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector12< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            allocator
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    // bind<...>, etc.   -> ignore
-    // module<....>      -> get all dependencies from the module
-    // dependency<....>  -> pass
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8 , typename TArgs9 , typename TArgs10 , typename TArgs11 , typename TArgs12>
-    explicit module( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7 , const TArgs8 & args8 , const TArgs9 & args9 , const TArgs10 & args10 , const TArgs11 & args11 , const TArgs12 & args12)
-        : TPool<deps>(
-              TPool<
-                  mpl::vector13< TArgs0 , TArgs1 , TArgs2 , TArgs3 , TArgs4 , TArgs5 , TArgs6 , TArgs7 , TArgs8 , TArgs9 , TArgs10 , TArgs11 , TArgs12>
-                , mpl::not_<
-                      mpl::or_<
-                          mpl::contains<deps, mpl::_>
-                        , has_types<mpl::_>
-                      >
-                  >
-              >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12)
-            , init()
-          )
-    { }
-
-    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12>
-    T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector13< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator()
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12>
-    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector13< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            allocator
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    // bind<...>, etc.   -> ignore
-    // module<....>      -> get all dependencies from the module
-    // dependency<....>  -> pass
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8 , typename TArgs9 , typename TArgs10 , typename TArgs11 , typename TArgs12 , typename TArgs13>
-    explicit module( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7 , const TArgs8 & args8 , const TArgs9 & args9 , const TArgs10 & args10 , const TArgs11 & args11 , const TArgs12 & args12 , const TArgs13 & args13)
-        : TPool<deps>(
-              TPool<
-                  mpl::vector14< TArgs0 , TArgs1 , TArgs2 , TArgs3 , TArgs4 , TArgs5 , TArgs6 , TArgs7 , TArgs8 , TArgs9 , TArgs10 , TArgs11 , TArgs12 , TArgs13>
-                , mpl::not_<
-                      mpl::or_<
-                          mpl::contains<deps, mpl::_>
-                        , has_types<mpl::_>
-                      >
-                  >
-              >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13)
-            , init()
-          )
-    { }
-
-    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13>
-    T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector14< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator()
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13>
-    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector14< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            allocator
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    // bind<...>, etc.   -> ignore
-    // module<....>      -> get all dependencies from the module
-    // dependency<....>  -> pass
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8 , typename TArgs9 , typename TArgs10 , typename TArgs11 , typename TArgs12 , typename TArgs13 , typename TArgs14>
-    explicit module( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7 , const TArgs8 & args8 , const TArgs9 & args9 , const TArgs10 & args10 , const TArgs11 & args11 , const TArgs12 & args12 , const TArgs13 & args13 , const TArgs14 & args14)
-        : TPool<deps>(
-              TPool<
-                  mpl::vector15< TArgs0 , TArgs1 , TArgs2 , TArgs3 , TArgs4 , TArgs5 , TArgs6 , TArgs7 , TArgs8 , TArgs9 , TArgs10 , TArgs11 , TArgs12 , TArgs13 , TArgs14>
-                , mpl::not_<
-                      mpl::or_<
-                          mpl::contains<deps, mpl::_>
-                        , has_types<mpl::_>
-                      >
-                  >
-              >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14)
-            , init()
-          )
-    { }
-
-    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14>
-    T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector15< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13 , TPolicies14> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13 , policies14);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator()
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14>
-    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector15< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13 , TPolicies14> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13 , policies14);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            allocator
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    // bind<...>, etc.   -> ignore
-    // module<....>      -> get all dependencies from the module
-    // dependency<....>  -> pass
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8 , typename TArgs9 , typename TArgs10 , typename TArgs11 , typename TArgs12 , typename TArgs13 , typename TArgs14 , typename TArgs15>
-    explicit module( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7 , const TArgs8 & args8 , const TArgs9 & args9 , const TArgs10 & args10 , const TArgs11 & args11 , const TArgs12 & args12 , const TArgs13 & args13 , const TArgs14 & args14 , const TArgs15 & args15)
-        : TPool<deps>(
-              TPool<
-                  mpl::vector16< TArgs0 , TArgs1 , TArgs2 , TArgs3 , TArgs4 , TArgs5 , TArgs6 , TArgs7 , TArgs8 , TArgs9 , TArgs10 , TArgs11 , TArgs12 , TArgs13 , TArgs14 , TArgs15>
-                , mpl::not_<
-                      mpl::or_<
-                          mpl::contains<deps, mpl::_>
-                        , has_types<mpl::_>
-                      >
-                  >
-              >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15)
-            , init()
-          )
-    { }
-
-    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15>
-    T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14 , const TPolicies15 & policies15) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector16< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13 , TPolicies14 , TPolicies15> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13 , policies14 , policies15);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator()
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15>
-    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14 , const TPolicies15 & policies15) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector16< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13 , TPolicies14 , TPolicies15> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13 , policies14 , policies15);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            allocator
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    // bind<...>, etc.   -> ignore
-    // module<....>      -> get all dependencies from the module
-    // dependency<....>  -> pass
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8 , typename TArgs9 , typename TArgs10 , typename TArgs11 , typename TArgs12 , typename TArgs13 , typename TArgs14 , typename TArgs15 , typename TArgs16>
-    explicit module( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7 , const TArgs8 & args8 , const TArgs9 & args9 , const TArgs10 & args10 , const TArgs11 & args11 , const TArgs12 & args12 , const TArgs13 & args13 , const TArgs14 & args14 , const TArgs15 & args15 , const TArgs16 & args16)
-        : TPool<deps>(
-              TPool<
-                  mpl::vector17< TArgs0 , TArgs1 , TArgs2 , TArgs3 , TArgs4 , TArgs5 , TArgs6 , TArgs7 , TArgs8 , TArgs9 , TArgs10 , TArgs11 , TArgs12 , TArgs13 , TArgs14 , TArgs15 , TArgs16>
-                , mpl::not_<
-                      mpl::or_<
-                          mpl::contains<deps, mpl::_>
-                        , has_types<mpl::_>
-                      >
-                  >
-              >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16)
-            , init()
-          )
-    { }
-
-    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15 , typename TPolicies16>
-    T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14 , const TPolicies15 & policies15 , const TPolicies16 & policies16) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector17< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13 , TPolicies14 , TPolicies15 , TPolicies16> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13 , policies14 , policies15 , policies16);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator()
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15 , typename TPolicies16>
-    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14 , const TPolicies15 & policies15 , const TPolicies16 & policies16) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector17< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13 , TPolicies14 , TPolicies15 , TPolicies16> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13 , policies14 , policies15 , policies16);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            allocator
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    // bind<...>, etc.   -> ignore
-    // module<....>      -> get all dependencies from the module
-    // dependency<....>  -> pass
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8 , typename TArgs9 , typename TArgs10 , typename TArgs11 , typename TArgs12 , typename TArgs13 , typename TArgs14 , typename TArgs15 , typename TArgs16 , typename TArgs17>
-    explicit module( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7 , const TArgs8 & args8 , const TArgs9 & args9 , const TArgs10 & args10 , const TArgs11 & args11 , const TArgs12 & args12 , const TArgs13 & args13 , const TArgs14 & args14 , const TArgs15 & args15 , const TArgs16 & args16 , const TArgs17 & args17)
-        : TPool<deps>(
-              TPool<
-                  mpl::vector18< TArgs0 , TArgs1 , TArgs2 , TArgs3 , TArgs4 , TArgs5 , TArgs6 , TArgs7 , TArgs8 , TArgs9 , TArgs10 , TArgs11 , TArgs12 , TArgs13 , TArgs14 , TArgs15 , TArgs16 , TArgs17>
-                , mpl::not_<
-                      mpl::or_<
-                          mpl::contains<deps, mpl::_>
-                        , has_types<mpl::_>
-                      >
-                  >
-              >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17)
-            , init()
-          )
-    { }
-
-    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15 , typename TPolicies16 , typename TPolicies17>
-    T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14 , const TPolicies15 & policies15 , const TPolicies16 & policies16 , const TPolicies17 & policies17) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector18< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13 , TPolicies14 , TPolicies15 , TPolicies16 , TPolicies17> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13 , policies14 , policies15 , policies16 , policies17);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator()
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15 , typename TPolicies16 , typename TPolicies17>
-    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14 , const TPolicies15 & policies15 , const TPolicies16 & policies16 , const TPolicies17 & policies17) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector18< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13 , TPolicies14 , TPolicies15 , TPolicies16 , TPolicies17> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13 , policies14 , policies15 , policies16 , policies17);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            allocator
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    // bind<...>, etc.   -> ignore
-    // module<....>      -> get all dependencies from the module
-    // dependency<....>  -> pass
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8 , typename TArgs9 , typename TArgs10 , typename TArgs11 , typename TArgs12 , typename TArgs13 , typename TArgs14 , typename TArgs15 , typename TArgs16 , typename TArgs17 , typename TArgs18>
-    explicit module( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7 , const TArgs8 & args8 , const TArgs9 & args9 , const TArgs10 & args10 , const TArgs11 & args11 , const TArgs12 & args12 , const TArgs13 & args13 , const TArgs14 & args14 , const TArgs15 & args15 , const TArgs16 & args16 , const TArgs17 & args17 , const TArgs18 & args18)
-        : TPool<deps>(
-              TPool<
-                  mpl::vector19< TArgs0 , TArgs1 , TArgs2 , TArgs3 , TArgs4 , TArgs5 , TArgs6 , TArgs7 , TArgs8 , TArgs9 , TArgs10 , TArgs11 , TArgs12 , TArgs13 , TArgs14 , TArgs15 , TArgs16 , TArgs17 , TArgs18>
-                , mpl::not_<
-                      mpl::or_<
-                          mpl::contains<deps, mpl::_>
-                        , has_types<mpl::_>
-                      >
-                  >
-              >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18)
-            , init()
-          )
-    { }
-
-    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15 , typename TPolicies16 , typename TPolicies17 , typename TPolicies18>
-    T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14 , const TPolicies15 & policies15 , const TPolicies16 & policies16 , const TPolicies17 & policies17 , const TPolicies18 & policies18) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector19< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13 , TPolicies14 , TPolicies15 , TPolicies16 , TPolicies17 , TPolicies18> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13 , policies14 , policies15 , policies16 , policies17 , policies18);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator()
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15 , typename TPolicies16 , typename TPolicies17 , typename TPolicies18>
-    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14 , const TPolicies15 & policies15 , const TPolicies16 & policies16 , const TPolicies17 & policies17 , const TPolicies18 & policies18) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector19< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13 , TPolicies14 , TPolicies15 , TPolicies16 , TPolicies17 , TPolicies18> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13 , policies14 , policies15 , policies16 , policies17 , policies18);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            allocator
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    // bind<...>, etc.   -> ignore
-    // module<....>      -> get all dependencies from the module
-    // dependency<....>  -> pass
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8 , typename TArgs9 , typename TArgs10 , typename TArgs11 , typename TArgs12 , typename TArgs13 , typename TArgs14 , typename TArgs15 , typename TArgs16 , typename TArgs17 , typename TArgs18 , typename TArgs19>
-    explicit module( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7 , const TArgs8 & args8 , const TArgs9 & args9 , const TArgs10 & args10 , const TArgs11 & args11 , const TArgs12 & args12 , const TArgs13 & args13 , const TArgs14 & args14 , const TArgs15 & args15 , const TArgs16 & args16 , const TArgs17 & args17 , const TArgs18 & args18 , const TArgs19 & args19)
-        : TPool<deps>(
-              TPool<
-                  mpl::vector20< TArgs0 , TArgs1 , TArgs2 , TArgs3 , TArgs4 , TArgs5 , TArgs6 , TArgs7 , TArgs8 , TArgs9 , TArgs10 , TArgs11 , TArgs12 , TArgs13 , TArgs14 , TArgs15 , TArgs16 , TArgs17 , TArgs18 , TArgs19>
-                , mpl::not_<
-                      mpl::or_<
-                          mpl::contains<deps, mpl::_>
-                        , has_types<mpl::_>
-                      >
-                  >
-              >( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19)
-            , init()
-          )
-    { }
-
-    template<typename T, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15 , typename TPolicies16 , typename TPolicies17 , typename TPolicies18 , typename TPolicies19>
-    T create( const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14 , const TPolicies15 & policies15 , const TPolicies16 & policies16 , const TPolicies17 & policies17 , const TPolicies18 & policies18 , const TPolicies19 & policies19) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector20< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13 , TPolicies14 , TPolicies15 , TPolicies16 , TPolicies17 , TPolicies18 , TPolicies19> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13 , policies14 , policies15 , policies16 , policies17 , policies18 , policies19);
-        std::vector<aux::shared_ptr<void> > refs_;
-
-        return creator_.template create<T, T, call_stack>(
-            TDefaultAllocator()
-          , static_cast<TPool<deps>&>(*this)
-          , refs_
-          , empty_visitor()
-          , policies_
-        );
-    }
-
-    template<typename T, typename TAllocator, typename TPolicies0 , typename TPolicies1 , typename TPolicies2 , typename TPolicies3 , typename TPolicies4 , typename TPolicies5 , typename TPolicies6 , typename TPolicies7 , typename TPolicies8 , typename TPolicies9 , typename TPolicies10 , typename TPolicies11 , typename TPolicies12 , typename TPolicies13 , typename TPolicies14 , typename TPolicies15 , typename TPolicies16 , typename TPolicies17 , typename TPolicies18 , typename TPolicies19>
-    T allocate(const TAllocator& allocator, const TPolicies0 & policies0 , const TPolicies1 & policies1 , const TPolicies2 & policies2 , const TPolicies3 & policies3 , const TPolicies4 & policies4 , const TPolicies5 & policies5 , const TPolicies6 & policies6 , const TPolicies7 & policies7 , const TPolicies8 & policies8 , const TPolicies9 & policies9 , const TPolicies10 & policies10 , const TPolicies11 & policies11 , const TPolicies12 & policies12 , const TPolicies13 & policies13 , const TPolicies14 & policies14 , const TPolicies15 & policies15 , const TPolicies16 & policies16 , const TPolicies17 & policies17 , const TPolicies18 & policies18 , const TPolicies19 & policies19) {
-        typedef mpl::vector0<> call_stack;
-        TPool<mpl::vector20< TPolicies0 , TPolicies1 , TPolicies2 , TPolicies3 , TPolicies4 , TPolicies5 , TPolicies6 , TPolicies7 , TPolicies8 , TPolicies9 , TPolicies10 , TPolicies11 , TPolicies12 , TPolicies13 , TPolicies14 , TPolicies15 , TPolicies16 , TPolicies17 , TPolicies18 , TPolicies19> > policies_( policies0 , policies1 , policies2 , policies3 , policies4 , policies5 , policies6 , policies7 , policies8 , policies9 , policies10 , policies11 , policies12 , policies13 , policies14 , policies15 , policies16 , policies17 , policies18 , policies19);
+        TPool<mpl::vector<TArgs...> > policies_(policies...);
         std::vector<aux::shared_ptr<void> > refs_;
 
         return creator_.template create<T, T, call_stack>(
@@ -6372,11 +5422,11 @@ public:
 
     } // namespace detail
 
-    template<typename... TArgs>
+    template<typename... TArgs_>
     class injector
         : public core::module<
               typename detail::concepts<
-                  mpl::vector<TArgs...>
+                  mpl::vector<TArgs_...>
               >::type
           >
     {
@@ -6384,7 +5434,7 @@ public:
         struct joint_concepts
             : detail::concepts<
                   mpl::joint_view<
-                      mpl::vector<TArgs...>
+                      mpl::vector<TArgs_...>
                     , TSeq
                   >
               >::type
@@ -6393,143 +5443,11 @@ public:
     public:
         injector() { }
 
-    template< typename TArgs0>
-    explicit injector( const TArgs0 & args0)
+    template<typename... TArgs>
+    explicit injector(const TArgs&... args)
         : core::module<typename joint_concepts<>::type>(
-            args0
-          )
-    { }
-
-    template< typename TArgs0 , typename TArgs1>
-    explicit injector( const TArgs0 & args0 , const TArgs1 & args1)
-        : core::module<typename joint_concepts<>::type>(
-            args0 , args1
-          )
-    { }
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2>
-    explicit injector( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2)
-        : core::module<typename joint_concepts<>::type>(
-            args0 , args1 , args2
-          )
-    { }
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3>
-    explicit injector( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3)
-        : core::module<typename joint_concepts<>::type>(
-            args0 , args1 , args2 , args3
-          )
-    { }
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4>
-    explicit injector( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4)
-        : core::module<typename joint_concepts<>::type>(
-            args0 , args1 , args2 , args3 , args4
-          )
-    { }
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5>
-    explicit injector( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5)
-        : core::module<typename joint_concepts<>::type>(
-            args0 , args1 , args2 , args3 , args4 , args5
-          )
-    { }
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6>
-    explicit injector( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6)
-        : core::module<typename joint_concepts<>::type>(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6
-          )
-    { }
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7>
-    explicit injector( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7)
-        : core::module<typename joint_concepts<>::type>(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7
-          )
-    { }
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8>
-    explicit injector( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7 , const TArgs8 & args8)
-        : core::module<typename joint_concepts<>::type>(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8
-          )
-    { }
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8 , typename TArgs9>
-    explicit injector( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7 , const TArgs8 & args8 , const TArgs9 & args9)
-        : core::module<typename joint_concepts<>::type>(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9
-          )
-    { }
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8 , typename TArgs9 , typename TArgs10>
-    explicit injector( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7 , const TArgs8 & args8 , const TArgs9 & args9 , const TArgs10 & args10)
-        : core::module<typename joint_concepts<>::type>(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10
-          )
-    { }
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8 , typename TArgs9 , typename TArgs10 , typename TArgs11>
-    explicit injector( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7 , const TArgs8 & args8 , const TArgs9 & args9 , const TArgs10 & args10 , const TArgs11 & args11)
-        : core::module<typename joint_concepts<>::type>(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11
-          )
-    { }
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8 , typename TArgs9 , typename TArgs10 , typename TArgs11 , typename TArgs12>
-    explicit injector( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7 , const TArgs8 & args8 , const TArgs9 & args9 , const TArgs10 & args10 , const TArgs11 & args11 , const TArgs12 & args12)
-        : core::module<typename joint_concepts<>::type>(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12
-          )
-    { }
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8 , typename TArgs9 , typename TArgs10 , typename TArgs11 , typename TArgs12 , typename TArgs13>
-    explicit injector( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7 , const TArgs8 & args8 , const TArgs9 & args9 , const TArgs10 & args10 , const TArgs11 & args11 , const TArgs12 & args12 , const TArgs13 & args13)
-        : core::module<typename joint_concepts<>::type>(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13
-          )
-    { }
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8 , typename TArgs9 , typename TArgs10 , typename TArgs11 , typename TArgs12 , typename TArgs13 , typename TArgs14>
-    explicit injector( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7 , const TArgs8 & args8 , const TArgs9 & args9 , const TArgs10 & args10 , const TArgs11 & args11 , const TArgs12 & args12 , const TArgs13 & args13 , const TArgs14 & args14)
-        : core::module<typename joint_concepts<>::type>(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14
-          )
-    { }
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8 , typename TArgs9 , typename TArgs10 , typename TArgs11 , typename TArgs12 , typename TArgs13 , typename TArgs14 , typename TArgs15>
-    explicit injector( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7 , const TArgs8 & args8 , const TArgs9 & args9 , const TArgs10 & args10 , const TArgs11 & args11 , const TArgs12 & args12 , const TArgs13 & args13 , const TArgs14 & args14 , const TArgs15 & args15)
-        : core::module<typename joint_concepts<>::type>(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15
-          )
-    { }
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8 , typename TArgs9 , typename TArgs10 , typename TArgs11 , typename TArgs12 , typename TArgs13 , typename TArgs14 , typename TArgs15 , typename TArgs16>
-    explicit injector( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7 , const TArgs8 & args8 , const TArgs9 & args9 , const TArgs10 & args10 , const TArgs11 & args11 , const TArgs12 & args12 , const TArgs13 & args13 , const TArgs14 & args14 , const TArgs15 & args15 , const TArgs16 & args16)
-        : core::module<typename joint_concepts<>::type>(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16
-          )
-    { }
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8 , typename TArgs9 , typename TArgs10 , typename TArgs11 , typename TArgs12 , typename TArgs13 , typename TArgs14 , typename TArgs15 , typename TArgs16 , typename TArgs17>
-    explicit injector( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7 , const TArgs8 & args8 , const TArgs9 & args9 , const TArgs10 & args10 , const TArgs11 & args11 , const TArgs12 & args12 , const TArgs13 & args13 , const TArgs14 & args14 , const TArgs15 & args15 , const TArgs16 & args16 , const TArgs17 & args17)
-        : core::module<typename joint_concepts<>::type>(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17
-          )
-    { }
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8 , typename TArgs9 , typename TArgs10 , typename TArgs11 , typename TArgs12 , typename TArgs13 , typename TArgs14 , typename TArgs15 , typename TArgs16 , typename TArgs17 , typename TArgs18>
-    explicit injector( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7 , const TArgs8 & args8 , const TArgs9 & args9 , const TArgs10 & args10 , const TArgs11 & args11 , const TArgs12 & args12 , const TArgs13 & args13 , const TArgs14 & args14 , const TArgs15 & args15 , const TArgs16 & args16 , const TArgs17 & args17 , const TArgs18 & args18)
-        : core::module<typename joint_concepts<>::type>(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18
-          )
-    { }
-
-    template< typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8 , typename TArgs9 , typename TArgs10 , typename TArgs11 , typename TArgs12 , typename TArgs13 , typename TArgs14 , typename TArgs15 , typename TArgs16 , typename TArgs17 , typename TArgs18 , typename TArgs19>
-    explicit injector( const TArgs0 & args0 , const TArgs1 & args1 , const TArgs2 & args2 , const TArgs3 & args3 , const TArgs4 & args4 , const TArgs5 & args5 , const TArgs6 & args6 , const TArgs7 & args7 , const TArgs8 & args8 , const TArgs9 & args9 , const TArgs10 & args10 , const TArgs11 & args11 , const TArgs12 & args12 , const TArgs13 & args13 , const TArgs14 & args14 , const TArgs15 & args15 , const TArgs16 & args16 , const TArgs17 & args17 , const TArgs18 & args18 , const TArgs19 & args19)
-        : core::module<typename joint_concepts<>::type>(
-            args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9 , args10 , args11 , args12 , args13 , args14 , args15 , args16 , args17 , args18 , args19
+                pass_arg(args)...
+            //BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_PASS_ARG, args)
           )
     { }
 
@@ -6666,10 +5584,10 @@ struct allow_copies
     { };
 };
 
-template<typename... TArgs>
+template<typename... TArgs_>
 class arguments_permission
 {
-    typedef mpl::vector<TArgs...> allow_types;
+    typedef mpl::vector<TArgs_...> allow_types;
 
     template<typename T>
     struct value_type
@@ -6812,10 +5730,10 @@ struct allow_scope
     { };
 };
 
-template<typename... TArgs>
+template<typename... TArgs_>
 class scopes_permission
 {
-    typedef mpl::vector<TArgs...> permitted_types;
+    typedef mpl::vector<TArgs_...> permitted_types;
 
     template<typename TAllow, typename T>
     struct is_scope_permitted_impl

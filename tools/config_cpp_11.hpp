@@ -109,16 +109,16 @@
     (begin, begin)
 
 #define BOOST_DI_TYPES_DEFAULT_MPL(T)           \
-    typename... TArgs
+    typename... TArgs_
 
 #define BOOST_DI_TYPES_MPL(T)                   \
-    typename... TArgs
+    typename... TArgs_
 
 #define BOOST_DI_TYPES_PASS_MPL(T)              \
-    TArgs...
+    TArgs_...
 
 #define BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)   \
-    mpl::vector<TArgs...>
+    mpl::vector<TArgs_...>
 
 #if !defined(BOOST_DI_ASSERT_MSG)
     #define BOOST_DI_ASSERT_MSG(c, msg, type)   \
