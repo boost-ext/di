@@ -150,13 +150,10 @@
 
 #else
 
-    #define BOOST_DI_PASS_ARG(_, n, arg) BOOST_PP_COMMA_IF(n) arg##n
-
     template<BOOST_DI_TYPES(TArgs)>
     explicit injector(BOOST_DI_ARGS(TArgs, args))
         : core::module<typename joint_concepts<>::type>(
-                pass_arg(args)...
-            //BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_PASS_ARG, args)
+                BOOST_DI_ARGS_CALL(args, pass_arg)
           )
     { }
 
