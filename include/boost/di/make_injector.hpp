@@ -25,7 +25,7 @@
     }
 
     #define BOOST_PP_FILENAME_1 "boost/di/make_injector.hpp"
-    #define BOOST_PP_ITERATION_LIMITS BOOST_DI_TYPES_MPL_LIMIT_FROM(1)
+    #define BOOST_PP_ITERATION_LIMITS BOOST_DI_TYPES_MPL_LIMIT_FROM_(1)
     #include BOOST_PP_ITERATE()
 
     } // namespace di
@@ -35,19 +35,19 @@
 
 #else
 
-    template<BOOST_DI_TYPES(TArgs)>
-    injector<typename detail::concepts<BOOST_DI_MPL_VECTOR_TYPES_PASS(TArgs)>::type>
-    inline make_injector(BOOST_DI_ARGS(TArgs, args)) {
+    template<BOOST_DI_TYPES_(TArgs)>
+    injector<typename detail::concepts<BOOST_DI_MPL_VECTOR_TYPES_PASS_(TArgs)>::type>
+    inline make_injector(BOOST_DI_ARGS_(TArgs, args)) {
         return injector<
             typename detail::concepts<
-                BOOST_DI_MPL_VECTOR_TYPES_PASS(TArgs)
+                BOOST_DI_MPL_VECTOR_TYPES_PASS_(TArgs)
               , mpl::if_<
                     has_scope<mpl::_2>
                   , detail::default_scope<mpl::_2>
                   , mpl::_2 // argument not supported
                 >
             >::type
-        >(BOOST_DI_ARGS_PASS(args));
+        >(BOOST_DI_ARGS_PASS_(args));
     }
 
 #endif

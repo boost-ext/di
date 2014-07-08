@@ -7,6 +7,7 @@
 #
 
 [ -z "$CXX" ] && CXX="g++"
+[ -z "$1" ] && CONFIG="config.hpp" || CONFIG=$1
 
 dump_file() {
     args=${@:4}
@@ -112,7 +113,7 @@ generate_preprocessed() {
 }
 
 generate() {
-    generate_preprocessed "boost" "di\/preprocessed" "$dir/config.hpp" $@
+    generate_preprocessed "boost" "di\/preprocessed" "$dir/$CONFIG" $@
     echo "done -> boost/di/preprocessed/$name"
 }
 
@@ -121,7 +122,7 @@ cd $dir/../include
 genereate_files "boost/di.hpp" | cat -n | sort -uk2 | sort -nk1 | cut -f2- > /tmp/files.hpp
 
 generate -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=10 -DBOOST_MPL_LIMIT_VECTOR_SIZE=20
-generate -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=10 -DBOOST_MPL_LIMIT_VECTOR_SIZE=30
-generate -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=10 -DBOOST_MPL_LIMIT_VECTOR_SIZE=40
-generate -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=10 -DBOOST_MPL_LIMIT_VECTOR_SIZE=50
+#generate -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=10 -DBOOST_MPL_LIMIT_VECTOR_SIZE=30
+#generate -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=10 -DBOOST_MPL_LIMIT_VECTOR_SIZE=40
+#generate -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=10 -DBOOST_MPL_LIMIT_VECTOR_SIZE=50
 

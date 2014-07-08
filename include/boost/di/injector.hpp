@@ -125,7 +125,7 @@
         injector() { }
 
         #define BOOST_PP_FILENAME_1 "boost/di/injector.hpp"
-        #define BOOST_PP_ITERATION_LIMITS BOOST_DI_TYPES_MPL_LIMIT_FROM(1)
+        #define BOOST_PP_ITERATION_LIMITS BOOST_DI_TYPES_MPL_LIMIT_FROM__(1)
         #include BOOST_PP_ITERATE()
 
     private:
@@ -150,12 +150,13 @@
 
 #else
 
-    #define BOOST_DI_PASS_ARG(_, n, arg) BOOST_PP_COMMA_IF(n) pass_arg(arg##n)
+    #define BOOST_DI_PASS_ARG(_, n, arg) BOOST_PP_COMMA_IF(n) arg##n
 
     template<BOOST_DI_TYPES(TArgs)>
     explicit injector(BOOST_DI_ARGS(TArgs, args))
         : core::module<typename joint_concepts<>::type>(
-            BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_PASS_ARG, args)
+                BOOST_DI_ARGS_PASS(args)
+            //BOOST_PP_REPEAT(BOOST_PP_ITERATION(), BOOST_DI_PASS_ARG, args)
           )
     { }
 
