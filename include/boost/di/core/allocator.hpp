@@ -83,8 +83,8 @@
 #else
 
     template<typename TExpected, typename TGiven, BOOST_DI_TYPES_(TArgs)>
-    TExpected* allocate(BOOST_DI_ARGS_COPY_(TArgs, args)) const {
-        return new TGiven(BOOST_DI_ARGS_PASS_(args));
+    TExpected* allocate(BOOST_DI_FORWARD_ARGS(TArgs, args)) const {
+        return new TGiven(BOOST_DI_ARGS_FORWARD(args));
     }
 
 #endif

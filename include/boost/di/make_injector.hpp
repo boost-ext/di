@@ -25,7 +25,7 @@
     }
 
     #define BOOST_PP_FILENAME_1 "boost/di/make_injector.hpp"
-    #define BOOST_PP_ITERATION_LIMITS BOOST_DI_TYPES_MPL_LIMIT_FROM_(1)
+    #define BOOST_PP_ITERATION_LIMITS BOOST_DI_TYPES_MPL_LIMIT_FROM(1)
     #include BOOST_PP_ITERATE()
 
     } // namespace di

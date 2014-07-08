@@ -20,9 +20,6 @@
 #define BOOST_DI_CTOR_LIMIT_FROM_(begin)    \
     (begin, begin)
 
-#define BOOST_DI_TYPES_MPL_LIMIT_FROM_(begin)         \
-    (begin, begin)
-
 #define BOOST_DI_TYPES_(T)                       \
     typename... TArgs
 
@@ -41,13 +38,10 @@
 #define BOOST_DI_ARGS_PASS__(arg)                 \
     arg...
 
-#define BOOST_DI_ARGS_PASS_(arg)                 \
+#define BOOST_DI_ARGS_FORWARD(arg)                 \
     std::forward<TArgs>(arg)...
 
-#define BOOST_DI_ARGS_NOT_USED_(T)               \
-    TArgs&&...
-
-#define BOOST_DI_ARGS_COPY_(T, arg)              \
+#define BOOST_DI_FORWARD_ARGS(T, arg)              \
     TArgs&&... arg
 
 #define BOOST_DI_CTOR_LIMIT_FROM(begin)         \
@@ -81,26 +75,18 @@
       , & arg                                   \
     )
 
-#define BOOST_DI_ARGS_NOT_USED(T)               \
-    BOOST_PP_ENUM_BINARY_PARAMS(                \
-        BOOST_PP_ITERATION()                    \
-      , T                                 \
-      , && BOOST_PP_INTERCEPT                    \
-    )
-
-#define BOOST_DI_ARGS_COPY(T, arg)              \
-    BOOST_PP_ENUM_BINARY_PARAMS(                \
-        BOOST_PP_ITERATION()                    \
-      , T                                       \
-      , && arg                                     \
-    )
-
-#define PASSS(_, n, arg) \
-    BOOST_PP_COMMA_IF(n) arg##n
-
+//#define BOOST_DI_FORWARD_ARGS(T, arg)              \
+    //BOOST_PP_ENUM_BINARY_PARAMS(                \
+        //BOOST_PP_ITERATION()                    \
+      //, T                                       \
+      //, && arg                                     \
+    //)
 
 #define BOOST_DI_ARGS_PASS(arg)                 \
-    BOOST_PP_REPEAT(BOOST_PP_ITERATION(), PASSS, arg)
+    BOOST_PP_ENUM_PARAMS(                       \
+        BOOST_PP_ITERATION()                    \
+      , arg                                     \
+    )
 
 #define BOOST_DI_TYPES_MPL_LIMIT_FROM__(begin)    \
     (begin, BOOST_MPL_LIMIT_VECTOR_SIZE)
