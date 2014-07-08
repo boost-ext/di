@@ -52,7 +52,7 @@
     (begin, begin)
 
 #define BOOST_DI_TYPES_MPL_LIMIT_FROM_FORCE(begin)  \
-    (begin, begin)
+    (begin, BOOST_MPL_LIMIT_VECTOR_SIZE)
 
 #define BOOST_DI_TYPES_DEFAULT_MPL(T)               \
     typename... TArgs_

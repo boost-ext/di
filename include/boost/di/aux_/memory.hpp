@@ -51,7 +51,7 @@
     using ::boost::weak_ptr;
 
     #if defined(BOOST_NO_CXX11_SMART_PTR)
-        template<typename> struct unique_ptr { }; // compile clean
+        template<typename> struct unique_ptr { };
     #else
         using ::std::unique_ptr;
     #endif
