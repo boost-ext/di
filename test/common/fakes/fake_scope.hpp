@@ -62,11 +62,11 @@ struct fake_scope
         explicit scope(const T&) { }
 
         void call(const fake_scope_entry&) {
-            entry_calls()++;
+            ++entry_calls();
         }
 
         void call(const fake_scope_exit&) {
-            exit_calls()++;
+            ++exit_calls();
         }
 
         result_type create(const function<T*()>& f) {
@@ -79,12 +79,12 @@ struct fake_scope
     };
 
     static int& entry_calls() {
-        static int calls;
+        static int calls = 0;
         return calls;
     }
 
     static int& exit_calls() {
-        static int calls;
+        static int calls = 0;
         return calls;
     }
 };

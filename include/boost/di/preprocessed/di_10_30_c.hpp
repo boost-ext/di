@@ -626,6 +626,24 @@ public:
 } // namespace di
 } // namespace boost
 
+BOOST_DI_FEATURE(CPP_11_FUNCTIONAL)(
+    namespace boost {
+
+    template<typename T>
+    class is_reference_wrapper< ::std::reference_wrapper<T> >
+        : public mpl::true_
+    { };
+
+    template<typename T>
+    class unwrap_reference< ::std::reference_wrapper<T> >
+    {
+    public:
+        typedef T type;
+    };
+
+    } // namespace
+)
+
 namespace boost {
 namespace di {
 namespace scopes {
@@ -674,13 +692,19 @@ public:
     public:
         template<typename T>
         explicit scope(const T& object
-                     , typename enable_if_c<type_traits::has_call_operator<T>::value>::type* = 0)
+                     , typename enable_if_c<
+                           type_traits::has_call_operator<T>::value &&
+                           !is_reference_wrapper<T>::value
+                       >::type* = 0)
             : object_(convert_when_function<TExpected>(object))
         { }
 
         template<typename T>
         explicit scope(const T& object
-                     , typename disable_if_c<type_traits::has_call_operator<T>::value>::type* = 0)
+                     , typename disable_if_c<
+                           type_traits::has_call_operator<T>::value &&
+                           !is_reference_wrapper<T>::value
+                       >::type* = 0)
             : object_(result_type_holder(object))
         { }
 
@@ -1182,9 +1206,15 @@ namespace wrappers {
 template<typename T>
 class reference
 {
+    reference& operator=(const reference&);
+
 public:
-    reference(const reference_wrapper<T>& value) // non explicit
+    reference(T& value) // non explicit
         : value_(value)
+    { }
+
+    reference(const reference& other)
+        : value_(other.value_)
     { }
 
     T& operator()(const type<T&>&) const {
@@ -1192,7 +1222,7 @@ public:
     }
 
 private:
-    reference_wrapper<T> value_;
+    T& value_;
 };
 
 } // namespace wrappers
@@ -1465,16 +1495,10 @@ class dependency : public TScope::template scope<TExpected>
     typedef scopes::external<wrappers::shared> shared_type;
     typedef scopes::external<wrappers::value> value_type;
 
-    template<typename>
+    template<typename, typename = void>
     struct get_wrapper_impl
     {
         typedef value_type type;
-    };
-
-    template<typename T>
-    struct get_wrapper_impl<reference_wrapper<T> >
-    {
-        typedef ref_type type;
     };
 
     template<typename T>
@@ -1483,7 +1507,18 @@ class dependency : public TScope::template scope<TExpected>
         typedef shared_type type;
     };
 
-    template<typename T, typename = void, typename = void>
+    template<typename T>
+    struct get_wrapper_impl<T, typename enable_if<is_reference_wrapper<T> >::type>
+    {
+        typedef ref_type type;
+    };
+
+    template<
+        typename T
+      , typename = void
+      , typename = void
+      , typename = void
+    >
     struct get_wrapper
     {
         typedef T type;
@@ -1496,7 +1531,8 @@ class dependency : public TScope::template scope<TExpected>
 
     template<typename T>
     struct get_wrapper<T, typename enable_if<di::type_traits::has_call_operator<T> >::type
-                        , typename disable_if<has_result_type<T> >::type>
+                        , typename disable_if<has_result_type<T> >::type
+                        , typename disable_if<is_reference_wrapper<T> >::type>
         : get_wrapper_impl<
               typename di::type_traits::function_traits<
                   BOOST_DI_FEATURE_DECLTYPE(&T::operator())
@@ -1542,8 +1578,7 @@ public:
 
     template<typename T>
     static dependency<ref_type, typename unwrap_reference<T>::type, T, TBind>
-    to(const T& object, typename enable_if<is_reference_wrapper<T> >::type* = 0
-                      , typename disable_if<di::type_traits::has_call_operator<T> >::type* = 0) {
+    to(const T& object, typename enable_if<is_reference_wrapper<T> >::type* = 0) {
         return dependency<ref_type, typename unwrap_reference<T>::type, T, TBind>(object);
     }
 
@@ -5450,7 +5485,9 @@ public:
     { }
 
     operator const named<const T&, TName>&() const {
-        aux::shared_ptr<holder<named<const T&, TName> > > object(new holder<named<const T&, TName> >(value_()));
+        aux::shared_ptr<holder<named<const T&, TName> > > object(
+            new holder<named<const T&, TName> >(value_())
+        );
         refs_.push_back(object);
         return object->held;
     }
@@ -5706,7 +5743,7 @@ struct is_integral<
 
 } // namespace boost
 
-BOOST_DI_WKND(CPP_11_TYPE_TRAITS)(
+BOOST_DI_FEATURE(CPP_11_TYPE_TRAITS)(
     namespace std {
 
     template<
@@ -8512,19 +8549,25 @@ public :
         typename enable_if<mpl::empty<TSeq> >::type call_impl(T&, const TAction&) { }
 
         template<typename TSeq, typename T, typename TAction>
-        typename disable_if<mpl::empty<TSeq> >::type call_impl(
-            T& deps
-          , const TAction& action
-          , typename enable_if<type_traits::has_call<typename mpl::front<TSeq>::type, TAction> >::type* = 0) {
+        typename enable_if<
+            mpl::and_<
+                mpl::not_<mpl::empty<TSeq> >
+              , type_traits::has_call<typename mpl::front<TSeq>::type, TAction>
+            >
+        >::type
+        call_impl(T& deps, const TAction& action) {
             static_cast<typename mpl::front<TSeq>::type&>(deps).call(action);
             call_impl<typename mpl::pop_front<TSeq>::type>(deps, action);
         }
 
         template<typename TSeq, typename T, typename TAction>
-        typename disable_if<mpl::empty<TSeq> >::type call_impl(
-            T& deps
-          , const TAction& action
-          , typename disable_if<type_traits::has_call<typename mpl::front<TSeq>::type, TAction> >::type* = 0) {
+        typename disable_if<
+            mpl::or_<
+                mpl::empty<TSeq>
+              , type_traits::has_call<typename mpl::front<TSeq>::type, TAction>
+            >
+        >::type
+        call_impl(T& deps, const TAction& action) {
             call_impl<typename mpl::pop_front<TSeq>::type>(deps, action);
         }
 

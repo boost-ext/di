@@ -176,7 +176,7 @@ struct is_integral<
 
 } // namespace boost
 
-BOOST_DI_WKND(CPP_11_TYPE_TRAITS)(
+BOOST_DI_FEATURE(CPP_11_TYPE_TRAITS)(
     namespace std {
 
     template<

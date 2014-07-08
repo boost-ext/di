@@ -20,7 +20,10 @@
 #include "boost/di/concepts/type_traits/is_required_type.hpp"
 
 #include <boost/utility/enable_if.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/mpl/not.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/bool.hpp>
 #include <boost/mpl/has_xxx.hpp>
 
 namespace boost {
@@ -46,16 +49,10 @@ class dependency : public TScope::template scope<TExpected>
     typedef scopes::external<wrappers::shared> shared_type;
     typedef scopes::external<wrappers::value> value_type;
 
-    template<typename>
+    template<typename, typename = void>
     struct get_wrapper_impl
     {
         typedef value_type type;
-    };
-
-    template<typename T>
-    struct get_wrapper_impl<reference_wrapper<T> >
-    {
-        typedef ref_type type;
     };
 
     template<typename T>
@@ -64,7 +61,18 @@ class dependency : public TScope::template scope<TExpected>
         typedef shared_type type;
     };
 
-    template<typename T, typename = void, typename = void>
+    template<typename T>
+    struct get_wrapper_impl<T, typename enable_if<is_reference_wrapper<T> >::type>
+    {
+        typedef ref_type type;
+    };
+
+    template<
+        typename T
+      , typename = void
+      , typename = void
+      , typename = void
+    >
     struct get_wrapper
     {
         typedef T type;
@@ -77,7 +85,8 @@ class dependency : public TScope::template scope<TExpected>
 
     template<typename T>
     struct get_wrapper<T, typename enable_if<di::type_traits::has_call_operator<T> >::type
-                        , typename disable_if<has_result_type<T> >::type>
+                        , typename disable_if<has_result_type<T> >::type
+                        , typename disable_if<is_reference_wrapper<T> >::type>
         : get_wrapper_impl<
               typename di::type_traits::function_traits<
                   BOOST_DI_FEATURE_DECLTYPE(&T::operator())
@@ -123,8 +132,7 @@ public:
 
     template<typename T>
     static dependency<ref_type, typename unwrap_reference<T>::type, T, TBind>
-    to(const T& object, typename enable_if<is_reference_wrapper<T> >::type* = 0
-                      , typename disable_if<di::type_traits::has_call_operator<T> >::type* = 0) {
+    to(const T& object, typename enable_if<is_reference_wrapper<T> >::type* = 0) {
         return dependency<ref_type, typename unwrap_reference<T>::type, T, TBind>(object);
     }
 

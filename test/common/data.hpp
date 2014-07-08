@@ -566,17 +566,40 @@ struct wrappers_types
     long ll_ = 0;
 };
 
+struct refs
+{
+    BOOST_DI_INJECT(refs
+        , int& i
+        , const double& d
+        , short& s
+        , const char& c
+    ) : i_(i)
+      , d_(d)
+      , s_(s)
+      , c_(c)
+    { }
+
+    int& i_;
+    const double& d_;
+    short& s_;
+    const char& c_;
+};
+
 struct functions
 {
     BOOST_DI_INJECT(functions
         , function<int()> fi
         , const function<double()>& fd
+        , function<long()> fl
     )
-        : fi_(fi), fd_(fd)
+        : fi_(fi)
+        , fd_(fd)
+        , fl_(fl)
     { }
 
     function<int()> fi_;
     function<double()> fd_;
+    function<long()> fl_;
 };
 
 enum eid { e0 = 1 , e1 = 2 };

@@ -18,15 +18,21 @@ namespace di {
 class fake_allocator
 {
 public:
-
     template<typename TExpected, typename TGiven>
     typename enable_if<type_traits::has_value<TGiven>, TExpected*>::type allocate() const {
+        ++allocate_calls();
         return new TExpected(TGiven::value);
     }
 
     template<typename TExpected, typename TGiven, typename... TArgs>
     TExpected* allocate(TArgs&&... args) const {
+        ++allocate_calls();
         return new TGiven(std::forward<TArgs>(args)...);
+    }
+
+    static int& allocate_calls() {
+        static int calls = 0;
+        return calls;
     }
 };
 

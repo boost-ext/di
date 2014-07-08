@@ -10,9 +10,28 @@
 #include "boost/di/wrappers/value.hpp"
 #include "boost/di/type_traits/has_call_operator.hpp"
 
+#include <boost/ref.hpp>
 #include <boost/function.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/utility/enable_if.hpp>
+
+BOOST_DI_FEATURE(CPP_11_FUNCTIONAL)(
+    namespace boost {
+
+    template<typename T>
+    class is_reference_wrapper< ::std::reference_wrapper<T> >
+        : public mpl::true_
+    { };
+
+    template<typename T>
+    class unwrap_reference< ::std::reference_wrapper<T> >
+    {
+    public:
+        typedef T type;
+    };
+
+    } // namespace
+)
 
 namespace boost {
 namespace di {
@@ -62,13 +81,19 @@ public:
     public:
         template<typename T>
         explicit scope(const T& object
-                     , typename enable_if_c<type_traits::has_call_operator<T>::value>::type* = 0)
+                     , typename enable_if_c<
+                           type_traits::has_call_operator<T>::value &&
+                           !is_reference_wrapper<T>::value
+                       >::type* = 0)
             : object_(convert_when_function<TExpected>(object))
         { }
 
         template<typename T>
         explicit scope(const T& object
-                     , typename disable_if_c<type_traits::has_call_operator<T>::value>::type* = 0)
+                     , typename disable_if_c<
+                           type_traits::has_call_operator<T>::value &&
+                           !is_reference_wrapper<T>::value
+                       >::type* = 0)
             : object_(result_type_holder(object))
         { }
 

@@ -9,6 +9,7 @@
 #include <typeinfo>
 #include <functional>
 #include <boost/test/unit_test.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/int.hpp>
@@ -22,6 +23,13 @@
 namespace boost {
 namespace di {
 namespace concepts {
+
+BOOST_AUTO_TEST_CASE(is_reference_wrapper_unwrap_reference) {
+    BOOST_CHECK((is_reference_wrapper<std::reference_wrapper<int> >::value));
+    BOOST_CHECK((is_same<unwrap_reference<std::reference_wrapper<int> >::type, int>::value));
+    BOOST_CHECK((is_reference_wrapper<boost::reference_wrapper<int> >::value));
+    BOOST_CHECK((is_same<unwrap_reference<boost::reference_wrapper<int> >::type, int>::value));
+}
 
 BOOST_AUTO_TEST_CASE(ctor) {
     dependency<fake_scope<>, int> dep(42);
@@ -89,12 +97,31 @@ BOOST_AUTO_TEST_CASE(to_const_ref) {
     BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
 }
 
+BOOST_AUTO_TEST_CASE(to_std_const_ref) {
+    struct c { } c_;
+    (void)c_;
+    using expected = scopes::external<wrappers::reference>;
+    using external = decltype(dependency<fake_scope<>, c>::to(std::cref(c_)));
+    using given = external::scope;
+    BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
+}
+
 BOOST_AUTO_TEST_CASE(to_ref) {
     struct c { } c_;
     c& c_ref_ = c_;
     (void)c_ref_;
     using expected = scopes::external<wrappers::reference>;
     using external = decltype(dependency<fake_scope<>, c>::to(ref(c_ref_)));
+    using given = external::scope;
+    BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
+}
+
+BOOST_AUTO_TEST_CASE(to_std_ref) {
+    struct c { } c_;
+    c& c_ref_ = c_;
+    (void)c_ref_;
+    using expected = scopes::external<wrappers::reference>;
+    using external = decltype(dependency<fake_scope<>, c>::to(std::ref(c_ref_)));
     using given = external::scope;
     BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
 }

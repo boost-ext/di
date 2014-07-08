@@ -8,7 +8,6 @@
 #define BOOST_DI_WRAPPERS_REFERENCE_HPP
 
 #include <boost/type.hpp>
-#include <boost/ref.hpp>
 
 namespace boost {
 namespace di {
@@ -17,9 +16,15 @@ namespace wrappers {
 template<typename T>
 class reference
 {
+    reference& operator=(const reference&);
+
 public:
-    reference(const reference_wrapper<T>& value) // non explicit
+    reference(T& value) // non explicit
         : value_(value)
+    { }
+
+    reference(const reference& other)
+        : value_(other.value_)
     { }
 
     T& operator()(const type<T&>&) const {
@@ -27,7 +32,7 @@ public:
     }
 
 private:
-    reference_wrapper<T> value_;
+    T& value_;
 };
 
 } // namespace wrappers

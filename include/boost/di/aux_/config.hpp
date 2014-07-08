@@ -147,6 +147,20 @@
     #define BOOST_DI_FEATURE_DECLTYPE(...) decltype(__VA_ARGS__)
 #endif
 
+#if defined(BOOST_NO_CXX11_TYPE_TRAITS) || (__cplusplus < 201100L)
+    #define BOOST_DI_FEATURE_CPP_11_TYPE_TRAITS(...)
+#else
+    #include <type_traits>
+    #define BOOST_DI_FEATURE_CPP_11_TYPE_TRAITS(...) __VA_ARGS__
+#endif
+
+#if defined(BOOST_NO_CXX11_FUNCTIONAL) || (__cplusplus < 201100L)
+    #define BOOST_DI_FEATURE_CPP_11_FUNCTIONAL(...)
+#else
+    #include <functional>
+    #define BOOST_DI_FEATURE_CPP_11_FUNCTIONAL(...) __VA_ARGS__
+#endif
+
 #if defined(BOOST_DI_CFG_EXAMINE_CALL_STACK)
     #define BOOST_DI_FEATURE_EXAMINE_CALL_STACK(...) __VA_ARGS__
     #define BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(...)
@@ -164,13 +178,6 @@
 #else
     #define BOOST_DI_WKND_MSVC(...)
     #define BOOST_DI_WKND_NO_MSVC(...) __VA_ARGS__
-#endif
-
-#if defined(BOOST_NO_CXX11_TYPE_TRAITS) || (__cplusplus < 201100L)
-    #define BOOST_DI_WKND_CPP_11_TYPE_TRAITS(...)
-#else
-    #include <type_traits>
-    #define BOOST_DI_WKND_CPP_11_TYPE_TRAITS(...) __VA_ARGS__
 #endif
 
 #if !defined(BOOST_DI_ASSERT_MSG)

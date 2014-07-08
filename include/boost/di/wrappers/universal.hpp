@@ -202,7 +202,9 @@ public:
     { }
 
     operator const named<const T&, TName>&() const {
-        aux::shared_ptr<holder<named<const T&, TName> > > object(new holder<named<const T&, TName> >(value_()));
+        aux::shared_ptr<holder<named<const T&, TName> > > object(
+            new holder<named<const T&, TName> >(value_())
+        );
         refs_.push_back(object);
         return object->held;
     }
