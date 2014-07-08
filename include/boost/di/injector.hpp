@@ -153,7 +153,7 @@
     template<BOOST_DI_TYPES(TArgs)>
     explicit injector(BOOST_DI_ARGS(TArgs, args))
         : core::module<typename joint_concepts<>::type>(
-                BOOST_DI_ARGS_CALL(args, pass_arg)
+              BOOST_DI_ARGS_CALL(args, pass_arg)
           )
     { }
 
