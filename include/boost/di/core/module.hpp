@@ -186,7 +186,7 @@
     // dependency<....>  -> pass
 
     template<BOOST_DI_TYPES_(TArgs)>
-    explicit module(BOOST_DI_ARGS__(TArgs, args))
+    explicit module(BOOST_DI_ARGS(TArgs, args))
         : TPool<deps>(
               TPool<
                   BOOST_DI_MPL_VECTOR_TYPES_PASS_(TArgs)
@@ -202,7 +202,7 @@
     { }
 
     template<typename T, BOOST_DI_TYPES_(TPolicies)>
-    T create(BOOST_DI_ARGS__(TPolicies, policies)) {
+    T create(BOOST_DI_ARGS(TPolicies, policies)) {
         typedef mpl::vector0<> call_stack;
         TPool<BOOST_DI_MPL_VECTOR_TYPES_PASS_(TPolicies)> policies_(BOOST_DI_ARGS_PASS(policies));
         std::vector<aux::shared_ptr<void> > refs_;
@@ -217,7 +217,7 @@
     }
 
     template<typename T, typename TAllocator, BOOST_DI_TYPES_(TPolicies)>
-    T allocate(const TAllocator& allocator, BOOST_DI_ARGS__(TPolicies, policies)) {
+    T allocate(const TAllocator& allocator, BOOST_DI_ARGS(TPolicies, policies)) {
         typedef mpl::vector0<> call_stack;
         TPool<BOOST_DI_MPL_VECTOR_TYPES_PASS_(TPolicies)> policies_(BOOST_DI_ARGS_PASS(policies));
         std::vector<aux::shared_ptr<void> > refs_;

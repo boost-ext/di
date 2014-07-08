@@ -29,7 +29,7 @@
 #define BOOST_DI_MPL_VECTOR_TYPES_PASS_(T)       \
     mpl::vector<TArgs...>
 
-#define BOOST_DI_ARGS__(T, arg)                   \
+#define BOOST_DI_ARGS(T, arg)                   \
     const TArgs&... arg
 
 #define BOOST_DI_ARGS_PASS(arg)                 \
@@ -65,12 +65,12 @@
       , T                                       \
     )>
 
-#define BOOST_DI_ARGS(T, arg)                   \
-    BOOST_PP_ENUM_BINARY_PARAMS(                \
-        BOOST_PP_ITERATION()                    \
-      , const T                                 \
-      , & arg                                   \
-    )
+//#define BOOST_DI_ARGS(T, arg)                   \
+    //BOOST_PP_ENUM_BINARY_PARAMS(                \
+        //BOOST_PP_ITERATION()                    \
+      //, const T                                 \
+      //, & arg                                   \
+    //)
 
 //#define BOOST_DI_FORWARD_ARGS(T, arg)              \
     //BOOST_PP_ENUM_BINARY_PARAMS(                \

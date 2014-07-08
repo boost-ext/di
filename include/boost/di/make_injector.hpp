@@ -37,7 +37,7 @@
 
     template<BOOST_DI_TYPES_(TArgs)>
     injector<typename detail::concepts<BOOST_DI_MPL_VECTOR_TYPES_PASS_(TArgs)>::type>
-    inline make_injector(BOOST_DI_ARGS__(TArgs, args)) {
+    inline make_injector(BOOST_DI_ARGS(TArgs, args)) {
         return injector<
             typename detail::concepts<
                 BOOST_DI_MPL_VECTOR_TYPES_PASS_(TArgs)
