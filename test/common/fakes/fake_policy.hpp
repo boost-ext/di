@@ -15,8 +15,14 @@ class fake_policy
 {
 public:
     template<typename>
-    void assert_policy() const
-    { }
+    void assert_policy() const {
+        ++assert_calls();
+    }
+
+    static int& assert_calls() {
+        static int calls = 0;
+        return calls;
+    }
 };
 
 } // namespace di
