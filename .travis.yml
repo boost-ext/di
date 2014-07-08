@@ -32,7 +32,7 @@ script:
   - popd
   - pushd .
   - if [ "$CXX" == "g++" ] && [ "$TRAVIS_OS_NAME" != "osx" ]; then cd libs/di/test && ../../../b2 -q coverage ; fi
-  - if [ "$CXX" == "clang++" ]; then cd libs/di/test && ../../../b2 -j2 -q cxxflags="-Wno-c99-extensions -Wno-variadic-macros"; fi
+  - if [ "$CXX" == "clang++" ]; then cd libs/di/test && ../../../b2 -q cxxflags="-Wno-c99-extensions -Wno-variadic-macros"; fi
   - popd
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then find bin.v2/libs/di -type f -executable | xargs -i% valgrind --quiet --error-exitcode=-1 % >/dev/null; fi
 
