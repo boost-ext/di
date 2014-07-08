@@ -19,6 +19,9 @@
     #include <vector>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/vector.hpp>
+    #include <boost/mpl/and.hpp>
+    #include <boost/mpl/not.hpp>
+    #include <boost/mpl/or.hpp>
     #include <boost/mpl/pop_front.hpp>
     #include <boost/mpl/front.hpp>
     #include <boost/mpl/contains.hpp>
@@ -145,19 +148,25 @@
         typename enable_if<mpl::empty<TSeq> >::type call_impl(T&, const TAction&) { }
 
         template<typename TSeq, typename T, typename TAction>
-        typename disable_if<mpl::empty<TSeq> >::type call_impl(
-            T& deps
-          , const TAction& action
-          , typename enable_if<type_traits::has_call<typename mpl::front<TSeq>::type, TAction> >::type* = 0) {
+        typename enable_if<
+            mpl::and_<
+                mpl::not_<mpl::empty<TSeq> >
+              , type_traits::has_call<typename mpl::front<TSeq>::type, TAction>
+            >
+        >::type
+        call_impl(T& deps, const TAction& action) {
             static_cast<typename mpl::front<TSeq>::type&>(deps).call(action);
             call_impl<typename mpl::pop_front<TSeq>::type>(deps, action);
         }
 
         template<typename TSeq, typename T, typename TAction>
-        typename disable_if<mpl::empty<TSeq> >::type call_impl(
-            T& deps
-          , const TAction& action
-          , typename disable_if<type_traits::has_call<typename mpl::front<TSeq>::type, TAction> >::type* = 0) {
+        typename disable_if<
+            mpl::or_<
+                mpl::empty<TSeq>
+              , type_traits::has_call<typename mpl::front<TSeq>::type, TAction>
+            >
+        >::type
+        call_impl(T& deps, const TAction& action) {
             call_impl<typename mpl::pop_front<TSeq>::type>(deps, action);
         }
 
