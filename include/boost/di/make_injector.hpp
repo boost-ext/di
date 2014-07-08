@@ -47,7 +47,7 @@
                   , mpl::_2 // argument not supported
                 >
             >::type
-        >(BOOST_DI_ARGS_PASS__(args));
+        >(BOOST_DI_ARGS_PASS(args));
     }
 
 #endif

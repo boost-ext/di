@@ -29,13 +29,10 @@
 #define BOOST_DI_MPL_VECTOR_TYPES_PASS_(T)       \
     mpl::vector<TArgs...>
 
-#define BOOST_DI_ARGS_(T, arg)                   \
-    TArgs&&... arg
-
 #define BOOST_DI_ARGS__(T, arg)                   \
     const TArgs&... arg
 
-#define BOOST_DI_ARGS_PASS__(arg)                 \
+#define BOOST_DI_ARGS_PASS(arg)                 \
     arg...
 
 #define BOOST_DI_ARGS_FORWARD(arg)                 \
@@ -82,13 +79,13 @@
       //, && arg                                     \
     //)
 
-#define BOOST_DI_ARGS_PASS(arg)                 \
-    BOOST_PP_ENUM_PARAMS(                       \
-        BOOST_PP_ITERATION()                    \
-      , arg                                     \
-    )
+//#define BOOST_DI_ARGS_PASS(arg)                 \
+    //BOOST_PP_ENUM_PARAMS(                       \
+        //BOOST_PP_ITERATION()                    \
+      //, arg                                     \
+    //)
 
-#define BOOST_DI_TYPES_MPL_LIMIT_FROM__(begin)    \
+#define BOOST_DI_TYPES_MPL_LIMIT_FROM_FORCE(begin)    \
     (begin, BOOST_MPL_LIMIT_VECTOR_SIZE)
     
 #define BOOST_DI_TYPES_MPL_LIMIT_FROM(begin)    \
