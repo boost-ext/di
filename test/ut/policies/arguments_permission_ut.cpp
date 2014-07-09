@@ -8,9 +8,13 @@
 #include "boost/di/aux_/config.hpp"
 #undef BOOST_DI_WKND_NO_MSVC
 #define BOOST_DI_WKND_NO_MSVC(...) __VA_ARGS__
+#undef BOOST_DI_WKND_MSVC
+#define BOOST_DI_WKND_MSVC(...)
 #include "boost/di/policies/arguments_permission.hpp"
 #undef BOOST_DI_WKND_NO_MSVC
 #define BOOST_DI_WKND_NO_MSVC(...)
+#undef BOOST_DI_WKND_MSVC
+#define BOOST_DI_WKND_MSVC(...) __VA_ARGS__
 
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/identity.hpp>
