@@ -60,7 +60,8 @@ BOOST_AUTO_TEST_CASE(conversion_to_copy) {
     BOOST_CHECK_EQUAL(
         0
       , type(any_type<void, mpl::vector0<>, fake_creator<type>, fake_allocator>(
-            creator, allocator, deps, refs, none_t(), none_t()))
+            creator, allocator, deps, refs, none_t(), none_t())
+        )
     );
 }
 

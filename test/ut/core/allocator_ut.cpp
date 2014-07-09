@@ -7,6 +7,7 @@
 #include "boost/di/core/allocator.hpp"
 
 #include <memory>
+#include <utility>
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/string.hpp>
@@ -38,7 +39,7 @@ BOOST_AUTO_TEST_CASE(create_empty) {
 BOOST_AUTO_TEST_CASE(create_ctor) {
     fake_wrapper<int> i(42);
     fake_wrapper<double> d(42.0);
-    aux::unique_ptr<ctor> ctor_(allocator().allocate<ctor, ctor, decltype(i), decltype(d)>(i, d));
+    aux::unique_ptr<ctor> ctor_(allocator().allocate<ctor, ctor, decltype(i), decltype(d)>(std::move(i), std::move(d)));
     BOOST_CHECK(ctor_.get());
 }
 

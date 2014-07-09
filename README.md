@@ -137,6 +137,7 @@ int main() {
 
 ## Other Dependency Injection Frameworks for C++:
  * [https://bitbucket.org/cheez/dicpp](https://bitbucket.org/cheez/dicpp)
+ * [https://code.google.com/p/infectorpp](https://code.google.com/p/infectorpp)
  * [https://github.com/phs/sauce](https://github.com/phs/sauce)
  * [https://code.google.com/p/wallaroo](https://code.google.com/p/wallaroo)
  * [https://code.google.com/p/hypodermic](https://code.google.com/p/hypodermic)

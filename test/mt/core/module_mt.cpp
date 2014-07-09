@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include "boost/di/core/module.hpp"
-#include <memory>
 
+#include <memory>
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/int.hpp>
@@ -17,6 +17,7 @@
 #include "boost/di/scopes/shared.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/concepts.hpp"
+
 #include "common/fakes/fake_allocator.hpp"
 #include "common/fakes/fake_dependency.hpp"
 #include "common/fakes/fake_visitor.hpp"
