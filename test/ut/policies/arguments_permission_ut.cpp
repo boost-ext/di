@@ -5,6 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include "common/fakes/fake_assert.hpp" // has to be first
+#define BOOST_CONFIG_HPP
 #include "boost/di/policies/arguments_permission.hpp"
 
 #include <boost/test/unit_test.hpp>

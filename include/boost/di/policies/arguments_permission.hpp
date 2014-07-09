@@ -111,71 +111,74 @@ struct allow_copies
  *
  * @endcode
  */
-template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-class arguments_permission
-{
-    typedef BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T) allow_types;
 
-    template<typename T>
-    struct value_type
+BOOST_DI_WKND(NO_MSVC)(
+    template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
+    class arguments_permission
     {
-        typedef typename T::value_type type;
+        typedef BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T) allow_types;
+
+        template<typename T>
+        struct value_type
+        {
+            typedef typename T::value_type type;
+        };
+
+        template<typename TAllow, typename T>
+        struct is_argment_permitted_impl
+            : TAllow::template allow<T>
+        { };
+
+        template<typename, typename, typename = void>
+        struct is_argument_permitted_nested_impl
+            : mpl::true_
+        { };
+
+        template<typename TAllow, typename T>
+        struct is_argument_permitted_nested_impl<
+            TAllow
+          , T
+          , typename enable_if<has_value_type<T> >::type
+        >
+            : TAllow::template allow<typename value_type<T>::type>
+        { };
+
+        template<typename T>
+        struct is_argument_permitted_nested
+            : mpl::bool_<
+                  mpl::count_if<
+                      allow_types
+                    , is_argument_permitted_nested_impl<
+                          mpl::_
+                        , typename type_traits::remove_accessors<T>::type
+                      >
+                  >::value != 0
+              >
+        { };
+
+        template<typename T>
+        struct is_argument_permitted
+            : mpl::bool_<
+                  mpl::count_if< allow_types
+                    , mpl::and_<
+                          is_argment_permitted_impl<mpl::_, T>
+                        , is_argument_permitted_nested<T>
+                      >
+                  >::value != 0
+              >
+        { };
+
+    public:
+        template<typename TDependency>
+        void assert_policy() const {
+            BOOST_DI_ASSERT_MSG(
+                is_argument_permitted<typename TDependency::type>::value
+              , ARGUMENT_NOT_PERMITTED
+              , typename TDependency::type
+            );
+        }
     };
-
-    template<typename TAllow, typename T>
-    struct is_argment_permitted_impl
-        : TAllow::template allow<T>
-    { };
-
-    template<typename, typename, typename = void>
-    struct is_argument_permitted_nested_impl
-        : mpl::true_
-    { };
-
-    template<typename TAllow, typename T>
-    struct is_argument_permitted_nested_impl<
-        TAllow
-      , T
-      , typename enable_if<has_value_type<T> >::type
-    >
-        : TAllow::template allow<typename value_type<T>::type>
-    { };
-
-    template<typename T>
-    struct is_argument_permitted_nested
-        : mpl::bool_<
-              mpl::count_if<
-                  allow_types
-                , is_argument_permitted_nested_impl<
-                      mpl::_
-                    , typename type_traits::remove_accessors<T>::type
-                  >
-              >::value != 0
-          >
-    { };
-
-    template<typename T>
-    struct is_argument_permitted
-        : mpl::bool_<
-              mpl::count_if< allow_types
-                , mpl::and_<
-                      is_argment_permitted_impl<mpl::_, T>
-                    , is_argument_permitted_nested<T>
-                  >
-              >::value != 0
-          >
-    { };
-
-public:
-    template<typename TDependency>
-    void assert_policy() const {
-        BOOST_DI_ASSERT_MSG(
-            is_argument_permitted<typename TDependency::type>::value
-          , ARGUMENT_NOT_PERMITTED
-          , typename TDependency::type
-        );
-    }
-};
+)
 
 } // namespace policies
 } // namespace di
