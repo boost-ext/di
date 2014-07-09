@@ -71,14 +71,14 @@
     #define BOOST_DI_FEATURE_DECLTYPE(...) decltype(__VA_ARGS__)
 #endif
 
-#if defined(BOOST_NO_CXX11_TYPE_TRAITS) || (__cplusplus < 201100L)
+#if (defined(BOOST_NO_CXX11_TYPE_TRAITS) || (__cplusplus < 201100L)) && !defined(BOOST_MSVC) 
     #define BOOST_DI_FEATURE_CPP_11_TYPE_TRAITS(...)
 #else
     #include <type_traits>
     #define BOOST_DI_FEATURE_CPP_11_TYPE_TRAITS(...) __VA_ARGS__
 #endif
 
-#if defined(BOOST_NO_CXX11_FUNCTIONAL) || (__cplusplus < 201100L)
+#if (defined(BOOST_NO_CXX11_FUNCTIONAL) || (__cplusplus < 201100L)) && !defined(BOOST_MSVC) 
     #define BOOST_DI_FEATURE_CPP_11_FUNCTIONAL(...)
 #else
     #include <functional>

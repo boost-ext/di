@@ -568,6 +568,8 @@ struct wrappers_types
 
 struct refs
 {
+    refs& operator=(const refs&);
+
     BOOST_DI_INJECT(refs
         , int& i
         , const double& d

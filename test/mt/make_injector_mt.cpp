@@ -352,7 +352,7 @@ long return_long(long l) { return l; }
 BOOST_AUTO_TEST_CASE(bind_to_function_ptr) {
     const int i = 42;
     const double d = 87.0;
-    const long l = 0.0;
+    const long l = 0;
 
     auto injector = make_injector(
         bind<function<int()>>::to([&]{ return i; })
