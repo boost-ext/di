@@ -133,7 +133,11 @@ class arguments_permission
     { };
 
     template<typename TAllow, typename T>
-    struct is_argument_permitted_nested_impl<TAllow, T, typename enable_if<has_value_type<T> >::type>
+    struct is_argument_permitted_nested_impl<
+        TAllow
+      , T
+      , typename enable_if<has_value_type<T> >::type
+    >
         : TAllow::template allow<typename value_type<T>::type>
     { };
 

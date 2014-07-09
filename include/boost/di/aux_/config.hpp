@@ -20,7 +20,11 @@
     #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
 #endif
 
-#if (__cplusplus >= 201100L)
+#if (__cplusplus >= 201100L) &&                                 \
+    !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) &&              \
+    !defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS) &&  \
+    !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) &&               \
+    !defined(BOOST_NO_CXX11_DECLTYPE)
     #define BOOST_DI_CFG_STD cpp_11
 #else
     #define BOOST_DI_CFG_STD cpp_03

@@ -16,16 +16,16 @@
     (begin, begin)
 
 #define BOOST_DI_TYPES(T)                           \
-    typename... TArgs
+    typename... T
 
 #define BOOST_DI_TYPES_PASS(T)                      \
-    TArgs...
+    T...
 
 #define BOOST_DI_MPL_VECTOR_TYPES_PASS(T)           \
-    mpl::vector<TArgs...>
+    ::boost::mpl::vector<T...>
 
 #define BOOST_DI_ARGS(T, arg)                       \
-    const TArgs&... arg
+    const T&... arg
 
 #define BOOST_DI_ARGS_PASS(arg)                     \
     arg...
@@ -34,10 +34,10 @@
     f(arg)...
 
 #define BOOST_DI_FORWARD_ARGS(T, arg)               \
-    TArgs&&... arg
+    T&&... arg
 
 #define BOOST_DI_ARGS_FORWARD(arg)                  \
-    std::forward<TArgs>(arg)...
+    ::std::forward<decltype(arg)>(arg)...
 
 #define BOOST_DI_TYPES_MPL_LIMIT_FROM(begin)        \
     (begin, begin)
@@ -46,16 +46,16 @@
     (begin, BOOST_MPL_LIMIT_VECTOR_SIZE)
 
 #define BOOST_DI_TYPES_DEFAULT_MPL(T)               \
-    typename... TArgs_
+    typename... T##_MPL
 
 #define BOOST_DI_TYPES_MPL(T)                       \
-    typename... TArgs_
+    typename... T##_MPL
 
 #define BOOST_DI_TYPES_PASS_MPL(T)                  \
-    TArgs_...
+    T##_MPL...
 
 #define BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)       \
-    mpl::vector<TArgs_...>
+    ::boost::mpl::vector<T##_MPL...>
 
 #endif
 
