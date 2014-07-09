@@ -92,12 +92,12 @@ BOOST_AUTO_TEST_CASE(create_complex) {
         di::policies::creation_ownership()
       , di::policies::circular_dependencies()
       BOOST_DI_WKND(NO_MSVC)(
-          , di::policies::arguments_permission<
-                di::policies::allow_smart_ptrs
-              , di::policies::allow_copies
-              , di::policies::allow_const_refs
-              , di::policies::allow_refs
-            >()
+        , di::policies::arguments_permission<
+              di::policies::allow_smart_ptrs
+            , di::policies::allow_copies
+            , di::policies::allow_const_refs
+            , di::policies::allow_refs
+          >()
       )
     );
 
