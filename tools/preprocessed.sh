@@ -7,12 +7,11 @@
 #
 
 [ -z "$CXX" ] && CXX="g++"
+tmp_dir=`mktemp -d`
 
 dump_file() {
     args=${@:4}
-    tmp=`mktemp`
-    rm -rf $tmp
-    mkdir $tmp
+    tmp=`mktemp -d`
 
     cat $1 | grep "#include" | grep -v PP_ | grep -v "preprocess" | while read include; do
         if [[ "$include" =~ "di/aux_/config.hpp" ]]; then
@@ -20,9 +19,9 @@ dump_file() {
         elif [[ "$include" =~ "di/aux_" ]] ||
            [[ "$include" =~ "inject.hpp" ]] ||
            [[ "$include" =~ "di.hpp" ]]; then
-            echo $include >> /tmp/i.hpp
+            echo $include >> $tmp_dir/includes.hpp
         else
-            echo $include | sed "s/boost\/di\//boost\/$3\//g" >> /tmp/i.hpp
+            echo $include | sed "s/boost\/di\//boost\/$3\//g" >> $tmp_dir/includes.hpp
         fi
 
         file=`echo $include | sed "s/[^<^\"]*[\"<]\([^>\"]*\)[\">].*/\1/"`
@@ -61,8 +60,8 @@ guard_end() {
 }
 
 includes() {
-    echo "#include \"boost/di/aux_/config.hpp\"" >> /tmp/i.hpp
-    cat /tmp/i.hpp | grep -v preprocess | sort -u -r
+    echo "#include \"boost/di/aux_/config.hpp\"" >> $tmp_dir/includes.hpp
+    cat $tmp_dir/includes.hpp | grep -v preprocess | sort -u -r
 }
 
 genereate_files() {
@@ -80,23 +79,21 @@ genereate_files() {
 }
 
 generate_name() {
-    tmp=`mktemp`
-    echo "BOOST_DI_CFG_CTOR_LIMIT_SIZE BOOST_MPL_LIMIT_VECTOR_SIZE STD" > $tmp.hpp
-    $CXX -E -P $@ $tmp.hpp | tr ' ' '_' | xargs -i% echo di_%_c.hpp
-    rm -f $tmp
+    echo "BOOST_DI_CFG_CTOR_LIMIT_SIZE BOOST_MPL_LIMIT_VECTOR_SIZE STD" > $tmp_dir/name.hpp
+    $CXX -E -P $@ $tmp_dir/name.hpp | tr ' ' '_' | xargs -i% echo di_%_c.hpp
 }
 
 generate_preprocessed() {
     args=${@:4}
     name=`generate_name $args`
 
-    rm -f /tmp/i.hpp /tmp/f.hpp
+    rm -f $tmp_dir/includes.hpp $tmp_dir/dump.hpp
     mkdir -p boost/di/preprocessed 2>/dev/null
 
     guard_begin $name > boost/di/preprocessed/$name
 
     echo -n .
-    for file in `cat /tmp/files.hpp`; do
+    for file in `cat $tmp_dir/files.hpp`; do
         if [[ "$file" =~ "di/aux_" ]] ||
            [[ "$file" =~ "inject.hpp" ]] ||
            [[ "$file" =~ "di.hpp" ]]; then
@@ -104,10 +101,10 @@ generate_preprocessed() {
         fi
 
         echo -n .
-        dump_file $file $3 $2 $args >> /tmp/f.hpp
+        dump_file $file $3 $2 $args >> $tmp_dir/dump.hpp
     done
     includes >> boost/di/preprocessed/$name
-    cat /tmp/f.hpp >> boost/di/preprocessed/$name
+    cat $tmp_dir/dump.hpp >> boost/di/preprocessed/$name
 
     guard_end >> boost/di/preprocessed/$name
 }
@@ -122,13 +119,20 @@ generate() {
     generate_pph `readlink -f $PWD`/boost/di/aux_/config/cpp_03.hpp -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=$1 -DBOOST_MPL_LIMIT_VECTOR_SIZE=$2 -DBOOST_DI_INJECTOR=boost_di_injector__ -DSTD=cpp_03
 }
 
+cleanup() {
+    rm -rf $tmp_dir
+}
+
 dir=`readlink -f \`dirname $0\``
 cd $dir/../include
-genereate_files "boost/di.hpp" | cat -n | sort -uk2 | sort -nk1 | cut -f2- > /tmp/files.hpp
+
+genereate_files "boost/di.hpp" | cat -n | sort -uk2 | sort -nk1 | cut -f2- > $tmp_dir/files.hpp
 
 generate 10 10
 generate 10 20
 generate 10 30
 generate 10 40
 generate 10 50
+
+cleanup
 
