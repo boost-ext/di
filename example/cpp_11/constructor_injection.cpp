@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[inject_cpp_11
+//[constructor_injection
 //````C++11```
 //<-
 #include <cassert>

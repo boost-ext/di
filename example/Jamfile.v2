@@ -26,6 +26,8 @@ rule run-test ( std : src : property * ) {
 }
 
 test-suite di :
+    [ run-test c++03 : constructor_injection.cpp : constructor_injection_cpp_03 ]
+    [ run-test c++11 : constructor_injection.cpp : constructor_injection_cpp_11 ]
     [ run-test c++03 : hello_world.cpp : hello_world_cpp_03 ]
     [ run-test c++11 : hello_world.cpp : hello_world_cpp_11 ]
     [ run-test c++03 : text_visitor.cpp : text_visitor_cpp_03 ]
@@ -50,7 +52,6 @@ test-suite cpp_11 : # "di / c++ 11"
     [ run-test c++11 : cpp_11/deduce_scope.cpp : deduce_scope_cpp_11 ]
     [ run-test c++11 : cpp_11/injection.cpp : injection_cpp_11 ]
     [ run-test c++11 : cpp_11/externals.cpp : externals_cpp_11 ]
-    [ run-test c++11 : cpp_11/inject.cpp : inject_cpp_11 ]
     [ run-test c++11 : cpp_11/multiple_interfaces.cpp : multiple_interfaces_cpp_11 ]
     [ run-test c++11 : cpp_11/motivation.cpp : motivation_cpp_11 ]
     [ run-test c++11 : cpp_11/testing.cpp : testing_cpp_11 ]

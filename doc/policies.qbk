@@ -32,6 +32,34 @@ In order for `injector` to verify policies they have to be passed to `create` me
 Boost.DI is released with policies which verifies `parameter permission`, check for `circular dependencies`, assert `creation ownership` and allow `scope permission`.
 [note No policies are enabled by default using Boost.DI]
 
+[section Circular Dependencies]
+`Circular Dependencies` policy verify if constructor parameters aren't overlapping.
+```
+    struct cd2;
+    struct cd1 { cd1(cd2*); };
+    struct cd2 { cd2(cd1*); };
+
+    di::make_injector().create<cd1>(); // compile error
+```
+[note Requires BOOST_DI_CFG_EXAMINE_CALL_STACK to be defined]
+[table
+    [[Tests: [@test/ut/policies/circular_dependencies_ut.cpp]]]
+]
+[endsect]
+
+[section Creation Ownership]
+`Creation Ownership` policy limit creation types to copies/pointers/smart pointers and disallow references.
+```
+    di::make_injector().create<const int&>(); // compile error
+    di::make_injector().create<int&>(); // compile error
+    di::make_injector().create<int>(); // compile ok
+```
+[table
+    [[Tests: [@test/ut/policies/creation_ownership_ut.cpp]]]
+]
+[warning Creation Ownership Policy requires `EXAMINE_CALL_STACK` being defined]
+[endsect]
+
 [section Parameters Permission]
 
 By default no parameters are allowed.
@@ -59,35 +87,9 @@ Synopsis
 [warning Parameters Permission Policy is not supported by Microsoft Visual Studio]
 [endsect]
 
-[section Circular Dependencies]
-`Circular Dependencies` policy verify if constructor parameters aren't overlapping.
-```
-    struct cd2;
-    struct cd1 { cd1(cd2*); };
-    struct cd2 { cd2(cd1*); };
-
-    di::make_injector().create<cd1>(); // compile error
-```
-[note Requires BOOST_DI_CFG_EXAMINE_CALL_STACK to be defined]
-[table
-    [[Tests: [@test/ut/policies/circular_dependencies_ut.cpp]]]
-]
-[endsect]
-
-[section Creation Ownership]
-`Creation Ownership` policy limit creation types to copies/pointers/smart pointers and disallow references.
-```
-    di::make_injector().create<const int&>(); // compile error
-    di::make_injector().create<int&>(); // compile error
-    di::make_injector().create<int>(); // compile ok
-```
-[table
-    [[Tests: [@test/ut/policies/creation_ownership_ut.cpp]]]
-]
-[endsect]
 
 [section Scopes Permission]
-`Creation Ownership` policy limit allowed scopes to be used whilst binding.
+`Scopes Permission` policy limit allowed scopes to be used whilst binding.
 By default no scopes are allowed.
 
 Synposis

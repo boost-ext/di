@@ -25,8 +25,8 @@ To make example's more readable data classes were moved into separated file.
 [endsect]
 
 [section:ctor Constructor Injection]
-[import ../example/cpp_11/inject.cpp]
-[inject_cpp_11]
+[import ../example/constructor_injection.cpp]
+[constructor_injection]
 [endsect]
 
 [section Binding]
