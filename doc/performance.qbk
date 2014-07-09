@@ -112,6 +112,15 @@ In order to verify how huge overhead is basic example was introduced and generat
     }
 ```
 
+* sequence diagram of int creation
+    injector.create<int>
+
+* possible imporvements
+    - allocactor may not allocate pods on heap
+    - boost::function performance
+
+C++11 uses perferct forwarding whilst c++11 copy value once
+
 [table Assembly code (x86-64) g++ -O3
     [[][Boost.DI]]
     [

@@ -29,18 +29,34 @@ In order for `injector` to verify policies they have to be passed to `create` me
     [[Example policy: [@example.cpp]]]
 ]
 
-Boost.DI is released with policies which verifies `arguments permission`, check for `circular dependencies`, assert `creation ownership` and allow `scope permission`.
+Boost.DI is released with policies which verifies `parameter permission`, check for `circular dependencies`, assert `creation ownership` and allow `scope permission`.
 [note No policies are enabled by default using Boost.DI]
 
-[section Arguments Permission]
+[section Parameters Permission]
+
+By default no parameters are allowed.
+
+Synopsis
 ```
-    di::injector<arguments_permission<>>().create<int>(); // compile error
-    di::injector<arguments_permission<allow_copies>>().create<int>(); // compile ok
-    di::injector<arguments_permission<allow_copies, allow_ptrs>>().create<int*>(); // compile ok
+    di::scopes::parameter_permission<Allowances...>
+```
+
+* allow_smart_ptrs
+* allow_copies
+* allow_refs
+* allow_const_refs
+* allow_rvalue_refs
+* allow_ptrs
+
+```
+    di::injector<parameters_permission<>>().create<int>(); // compile error
+    di::injector<parameters_permission<allow_copies>>().create<int>(); // compile ok
+    di::injector<parameters_permission<allow_copies, allow_ptrs>>().create<int*>(); // compile ok
 ```
 [table
-    [[Tests: [@test/ut/policies/arguments_permission_ut.cpp]]]
+    [[Tests: [@test/ut/policies/parameters_permission_ut.cpp]]]
 ]
+[warning Parameters Permission Policy is not supported by Microsoft Visual Studio]
 [endsect]
 
 [section Circular Dependencies]
@@ -72,6 +88,23 @@ Boost.DI is released with policies which verifies `arguments permission`, check 
 
 [section Scopes Permission]
 `Creation Ownership` policy limit allowed scopes to be used whilst binding.
+By default no scopes are allowed.
+
+Synposis
+```
+    scopes_permission<allow_scope<Scope>...>
+```
+
+Allowed scopes:
+    * allow_scope<scopes::unique<>>
+    * allow_scope<scopes::shared<>>
+    * allow_scope<scopes::session<>>
+    * allow_scope<scopes::external<>>
+
+[note Scope verfication happens after scope is deduced, therefore allow_scope<scopes::deduce> is not supported]
+
+Example:
+
 ```
 scopes_permission<>
 bind<deduce<int>> // compile error

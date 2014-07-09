@@ -12105,71 +12105,73 @@ struct allow_copies
     { };
 };
 
-template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na , typename T10 = ::boost::mpl::na , typename T11 = ::boost::mpl::na , typename T12 = ::boost::mpl::na , typename T13 = ::boost::mpl::na , typename T14 = ::boost::mpl::na , typename T15 = ::boost::mpl::na , typename T16 = ::boost::mpl::na , typename T17 = ::boost::mpl::na , typename T18 = ::boost::mpl::na , typename T19 = ::boost::mpl::na , typename T20 = ::boost::mpl::na , typename T21 = ::boost::mpl::na , typename T22 = ::boost::mpl::na , typename T23 = ::boost::mpl::na , typename T24 = ::boost::mpl::na , typename T25 = ::boost::mpl::na , typename T26 = ::boost::mpl::na , typename T27 = ::boost::mpl::na , typename T28 = ::boost::mpl::na , typename T29 = ::boost::mpl::na , typename T30 = ::boost::mpl::na , typename T31 = ::boost::mpl::na , typename T32 = ::boost::mpl::na , typename T33 = ::boost::mpl::na , typename T34 = ::boost::mpl::na , typename T35 = ::boost::mpl::na , typename T36 = ::boost::mpl::na , typename T37 = ::boost::mpl::na , typename T38 = ::boost::mpl::na , typename T39 = ::boost::mpl::na >
-class arguments_permission
-{
-    typedef ::boost::mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19 , T20 , T21 , T22 , T23 , T24 , T25 , T26 , T27 , T28 , T29 , T30 , T31 , T32 , T33 , T34 , T35 , T36 , T37 , T38 , T39> allow_types;
-
-    template<typename T>
-    struct value_type
+BOOST_DI_WKND(NO_MSVC)(
+    template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na , typename T10 = ::boost::mpl::na , typename T11 = ::boost::mpl::na , typename T12 = ::boost::mpl::na , typename T13 = ::boost::mpl::na , typename T14 = ::boost::mpl::na , typename T15 = ::boost::mpl::na , typename T16 = ::boost::mpl::na , typename T17 = ::boost::mpl::na , typename T18 = ::boost::mpl::na , typename T19 = ::boost::mpl::na , typename T20 = ::boost::mpl::na , typename T21 = ::boost::mpl::na , typename T22 = ::boost::mpl::na , typename T23 = ::boost::mpl::na , typename T24 = ::boost::mpl::na , typename T25 = ::boost::mpl::na , typename T26 = ::boost::mpl::na , typename T27 = ::boost::mpl::na , typename T28 = ::boost::mpl::na , typename T29 = ::boost::mpl::na , typename T30 = ::boost::mpl::na , typename T31 = ::boost::mpl::na , typename T32 = ::boost::mpl::na , typename T33 = ::boost::mpl::na , typename T34 = ::boost::mpl::na , typename T35 = ::boost::mpl::na , typename T36 = ::boost::mpl::na , typename T37 = ::boost::mpl::na , typename T38 = ::boost::mpl::na , typename T39 = ::boost::mpl::na >
+    class parameters_permission
     {
-        typedef typename T::value_type type;
+        typedef ::boost::mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19 , T20 , T21 , T22 , T23 , T24 , T25 , T26 , T27 , T28 , T29 , T30 , T31 , T32 , T33 , T34 , T35 , T36 , T37 , T38 , T39> allow_types;
+
+        template<typename T>
+        struct value_type
+        {
+            typedef typename T::value_type type;
+        };
+
+        template<typename TAllow, typename T>
+        struct is_parameter_permitted_impl
+            : TAllow::template allow<T>
+        { };
+
+        template<typename, typename, typename = void>
+        struct is_parameter_permitted_nested_impl
+            : mpl::true_
+        { };
+
+        template<typename TAllow, typename T>
+        struct is_parameter_permitted_nested_impl<
+            TAllow
+          , T
+          , typename enable_if<has_value_type<T> >::type
+        >
+            : TAllow::template allow<typename value_type<T>::type>
+        { };
+
+        template<typename T>
+        struct is_parameter_permitted_nested
+            : mpl::bool_<
+                  mpl::count_if<
+                      allow_types
+                    , is_parameter_permitted_nested_impl<
+                          mpl::_
+                        , typename type_traits::remove_accessors<T>::type
+                      >
+                  >::value != 0
+              >
+        { };
+
+        template<typename T>
+        struct is_parameter_permitted
+            : mpl::bool_<
+                  mpl::count_if< allow_types
+                    , mpl::and_<
+                          is_parameter_permitted_impl<mpl::_, T>
+                        , is_parameter_permitted_nested<T>
+                      >
+                  >::value != 0
+              >
+        { };
+
+    public:
+        template<typename TDependency>
+        void assert_policy() const {
+            BOOST_DI_ASSERT_MSG(
+                is_parameter_permitted<typename TDependency::type>::value
+              , PARAMETER_NOT_PERMITTED
+              , typename TDependency::type
+            );
+        }
     };
-
-    template<typename TAllow, typename T>
-    struct is_argment_permitted_impl
-        : TAllow::template allow<T>
-    { };
-
-    template<typename, typename, typename = void>
-    struct is_argument_permitted_nested_impl
-        : mpl::true_
-    { };
-
-    template<typename TAllow, typename T>
-    struct is_argument_permitted_nested_impl<
-        TAllow
-      , T
-      , typename enable_if<has_value_type<T> >::type
-    >
-        : TAllow::template allow<typename value_type<T>::type>
-    { };
-
-    template<typename T>
-    struct is_argument_permitted_nested
-        : mpl::bool_<
-              mpl::count_if<
-                  allow_types
-                , is_argument_permitted_nested_impl<
-                      mpl::_
-                    , typename type_traits::remove_accessors<T>::type
-                  >
-              >::value != 0
-          >
-    { };
-
-    template<typename T>
-    struct is_argument_permitted
-        : mpl::bool_<
-              mpl::count_if< allow_types
-                , mpl::and_<
-                      is_argment_permitted_impl<mpl::_, T>
-                    , is_argument_permitted_nested<T>
-                  >
-              >::value != 0
-          >
-    { };
-
-public:
-    template<typename TDependency>
-    void assert_policy() const {
-        BOOST_DI_ASSERT_MSG(
-            is_argument_permitted<typename TDependency::type>::value
-          , ARGUMENT_NOT_PERMITTED
-          , typename TDependency::type
-        );
-    }
-};
+)
 
 } // namespace policies
 } // namespace di
@@ -12260,6 +12262,9 @@ struct allow_scope
         : is_same<T, TScope>
     { };
 };
+
+template<>
+struct allow_scope<scopes::deduce>; // disabled
 
 template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na , typename T10 = ::boost::mpl::na , typename T11 = ::boost::mpl::na , typename T12 = ::boost::mpl::na , typename T13 = ::boost::mpl::na , typename T14 = ::boost::mpl::na , typename T15 = ::boost::mpl::na , typename T16 = ::boost::mpl::na , typename T17 = ::boost::mpl::na , typename T18 = ::boost::mpl::na , typename T19 = ::boost::mpl::na , typename T20 = ::boost::mpl::na , typename T21 = ::boost::mpl::na , typename T22 = ::boost::mpl::na , typename T23 = ::boost::mpl::na , typename T24 = ::boost::mpl::na , typename T25 = ::boost::mpl::na , typename T26 = ::boost::mpl::na , typename T27 = ::boost::mpl::na , typename T28 = ::boost::mpl::na , typename T29 = ::boost::mpl::na , typename T30 = ::boost::mpl::na , typename T31 = ::boost::mpl::na , typename T32 = ::boost::mpl::na , typename T33 = ::boost::mpl::na , typename T34 = ::boost::mpl::na , typename T35 = ::boost::mpl::na , typename T36 = ::boost::mpl::na , typename T37 = ::boost::mpl::na , typename T38 = ::boost::mpl::na , typename T39 = ::boost::mpl::na >
 class scopes_permission

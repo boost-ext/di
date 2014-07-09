@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_POLICIES_ARGUMENTS_PERMISSION_HPP
-#define BOOST_DI_POLICIES_ARGUMENTS_PERMISSION_HPP
+#ifndef BOOST_DI_POLICIES_PARAMETERS_PERMISSION_HPP
+#define BOOST_DI_POLICIES_PARAMETERS_PERMISSION_HPP
 
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/type_traits/remove_accessors.hpp"
@@ -97,16 +97,16 @@ struct allow_copies
 
 /**
  * @code
- * arguments_permission<>
+ * parameters_permission<>
  * struct c { c(int*); }; // compile error
  *
- * arguments_permission<allow_refs>
+ * parameters_permission<allow_refs>
  * struct c { c(int*); }; // compile error
  *
- * arguments_permission<allow_ptrs>
+ * parameters_permission<allow_ptrs>
  * struct c { c(int*); }; // compile ok
  *
- * arguments_permission<allow_copies>
+ * parameters_permission<allow_copies>
  * struct c { c(std::vector<int*>); }; // compile error
  *
  * @endcode
@@ -114,7 +114,7 @@ struct allow_copies
 
 BOOST_DI_WKND(NO_MSVC)(
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-    class arguments_permission
+    class parameters_permission
     {
         typedef BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T) allow_types;
 
@@ -125,17 +125,17 @@ BOOST_DI_WKND(NO_MSVC)(
         };
 
         template<typename TAllow, typename T>
-        struct is_argment_permitted_impl
+        struct is_parameter_permitted_impl
             : TAllow::template allow<T>
         { };
 
         template<typename, typename, typename = void>
-        struct is_argument_permitted_nested_impl
+        struct is_parameter_permitted_nested_impl
             : mpl::true_
         { };
 
         template<typename TAllow, typename T>
-        struct is_argument_permitted_nested_impl<
+        struct is_parameter_permitted_nested_impl<
             TAllow
           , T
           , typename enable_if<has_value_type<T> >::type
@@ -144,11 +144,11 @@ BOOST_DI_WKND(NO_MSVC)(
         { };
 
         template<typename T>
-        struct is_argument_permitted_nested
+        struct is_parameter_permitted_nested
             : mpl::bool_<
                   mpl::count_if<
                       allow_types
-                    , is_argument_permitted_nested_impl<
+                    , is_parameter_permitted_nested_impl<
                           mpl::_
                         , typename type_traits::remove_accessors<T>::type
                       >
@@ -157,12 +157,12 @@ BOOST_DI_WKND(NO_MSVC)(
         { };
 
         template<typename T>
-        struct is_argument_permitted
+        struct is_parameter_permitted
             : mpl::bool_<
                   mpl::count_if< allow_types
                     , mpl::and_<
-                          is_argment_permitted_impl<mpl::_, T>
-                        , is_argument_permitted_nested<T>
+                          is_parameter_permitted_impl<mpl::_, T>
+                        , is_parameter_permitted_nested<T>
                       >
                   >::value != 0
               >
@@ -172,8 +172,8 @@ BOOST_DI_WKND(NO_MSVC)(
         template<typename TDependency>
         void assert_policy() const {
             BOOST_DI_ASSERT_MSG(
-                is_argument_permitted<typename TDependency::type>::value
-              , ARGUMENT_NOT_PERMITTED
+                is_parameter_permitted<typename TDependency::type>::value
+              , PARAMETER_NOT_PERMITTED
               , typename TDependency::type
             );
         }

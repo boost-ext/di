@@ -76,6 +76,17 @@ Boost.DI was sucessfuly test on below compilers
 
 [note Older compilers might be supported, but weren't tested and probably can't be tested properly due to requirements of C++ 11 features by the tests.]
 
+[h6 Restrictions]
+
+see `Design.Problematic Cases`:
+
+[table
+  [[Issue][GCC][Clang][Intel][Visual Studio]]
+  [[Rvalue References][supported][supported][supported][not supported]]
+  [[std/boost function][supported][supported][supported][supported (has to be pass by const reference)]]
+  [[Arguments Permission Policy][supported][supported][supported][not supported]]
+]
+
 [endsect]
 
 [section Configuration]

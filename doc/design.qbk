@@ -306,6 +306,30 @@ injector().create<example>();
         ]
     ]
 
+    * Function parameters evaluation order with shared binding
+    [table
+        [[Issue][Solution]]
+        [
+            [
+                ```
+                    struct a { a(int); };
+                    struct b { b(aux::shared_ptr<a>); };
+                    struct c { c(aux::shared_ptr<a>, aux::shared_ptr<b>); }; // parameters evaluation order is not specified
+
+                    di::make_injector(
+                        bind<int>::when<call_stack<a>>::to(42)
+                      , shared<a>
+                    );
+                ```
+            ]
+            [
+                ```
+                be aware and avoid binding which may be affected by parameters evaluation order
+                ```
+            ]
+        ]
+    ]
+
 [table
     [[Tests: [@test/vt/compiler_support_vt.cpp]]]
 ]

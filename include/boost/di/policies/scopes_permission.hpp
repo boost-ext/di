@@ -8,6 +8,7 @@
 #define BOOST_DI_POLICIES_SCOPES_PERMISSION_HPP
 
 #include "boost/di/aux_/config.hpp"
+#include "boost/di/scopes/deduce.hpp"
 
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/vector.hpp>
@@ -26,6 +27,9 @@ struct allow_scope
         : is_same<T, TScope>
     { };
 };
+
+template<>
+struct allow_scope<scopes::deduce>; // disabled
 
 /**
  * @code

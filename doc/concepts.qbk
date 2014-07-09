@@ -129,6 +129,9 @@ in `Scopes` section.
 
 [endsect]
 
+[section Allocator]
+[endsect]
+
 [section Binding]
 
 Binding in DI is done by DSL. The main purpose of binding DSL is to make easy things as easy
@@ -307,7 +310,13 @@ Injector is a component used for creating dependencies configuration using bindi
 * `create`
 ```
     template<typename T, typename... TPolicies>
-    T create(TPolicies&&...);
+    T create(const TPolicies&...);
+```
+
+* `allocate`
+```
+    template<typename T>
+    T allocate(const allocator&, const TPolicies&...);
 ```
 
 * `visit`
@@ -359,7 +368,6 @@ Preferable option is to use di::make_injector because it allows to bind dynamic 
         ]
     ]
 ]
-
 
 [table
     [[Tests: [@test/mt/make_injector_mt.cpp] | [@test/mt/injector_mt.cpp]]]

@@ -13,6 +13,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/void.hpp>
 #include <boost/type_traits/is_class.hpp>
+#include <boost/mpl/aux_/yes_no.hpp>
 
 namespace boost {
 namespace di {

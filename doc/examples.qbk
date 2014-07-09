@@ -29,70 +29,47 @@ To make example's more readable data classes were moved into separated file.
 [inject_cpp_11]
 [endsect]
 
-[section:named Using Named Parameters]
-[import ../example/named.cpp]
-[named]
-[table
-    [[Full code example: [@example/named.cpp]]]
-]
-[endsect]
-
-[section:provider Using Providers]
-[import ../example/provider.cpp]
-[provider]
-[table
-    [[Full code example: [@example/provider.cpp]]]
-]
-[endsect]
-
-[section How To Bind?]
+[section Binding]
 [import ../example/cpp_11/concepts.cpp]
 [concepts_cpp_11]
 [endsect]
 
-[section Bind To Function]
-[import ../example/cpp_14/factory.cpp]
-[factory_cpp_14]
+[section Concepts]
+[import ../example/cpp_11/injection.cpp]
+[injection_cpp_11]
+[import ../example/cpp_03/injection.cpp]
+[injection_cpp_03]
 [endsect]
 
-[section Bind To Multiple Interfaces]
-[import ../example/cpp_11/multiple_interfaces.cpp]
-[multiple_interfaces_cpp_11]
-[endsect]
-
-[section Bind To External Dependencies]
-[import ../example/cpp_11/externals.cpp]
-[externals_cpp_11]
-[endsect]
-
-[section How Deduce Scope Works?]
-[import ../example/cpp_11/deduce_scope.cpp]
-[deduce_scope_cpp_11]
-[endsect]
-
-[section Configuration Using Modules]
+[section Modules]
 [import ../example/cpp_14/modules.cpp]
 [modules_cpp_14]
 [import ../example/cpp_03/modules.cpp]
 [modules_cpp_03]
 [endsect]
 
-[section Allow Only Smart Ptr Policy]
+[section Deduce Scope]
+[import ../example/cpp_11/deduce_scope.cpp]
+[deduce_scope_cpp_11]
+[endsect]
+
+[section Custom Scope]
+[endsect]
+
+[section Custom Allocator]
+[endsect]
+
+[section Custom Policy]
 [import ../example/cpp_11/allow_only_smart_ptr_policy.cpp]
 [allow_only_smart_ptr_policy_cpp_11]
 [endsect]
 
-[section How To Define Custom Scope?]
-[import ../example/cpp_11/custom_scope.cpp]
-[custom_scope_cpp_11]
-[endsect]
-
-[section How To Test?]
+[section Testing]
 [import ../example/cpp_11/testing.cpp]
 [testing_cpp_11]
 [endsect]
 
-[section Text Visitor]
+[section C++ Generation Visitor]
 [import ../example/text_visitor.cpp]
 [text_visitor]
 [table
@@ -106,13 +83,6 @@ To make example's more readable data classes were moved into separated file.
 [table
     [[Full code example: [@example/uml_visitor.cpp]]]
 ]
-[endsect]
-
-[section Complex Example with Simple App]
-[import ../example/cpp_11/injection.cpp]
-[injection_cpp_11]
-[import ../example/cpp_03/injection.cpp]
-[injection_cpp_03]
 [endsect]
 
 [endsect]
