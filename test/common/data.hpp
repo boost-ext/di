@@ -589,10 +589,11 @@ struct refs
 
 struct functions
 {
-    BOOST_DI_INJECT(functions
-        , function<int()> fi
+    BOOST_DI_INJECT(functions,
+        BOOST_DI_WKND(MSVC)(const function<int()>& fi)
+        BOOST_DI_WKND(NO_MSVC)(function<int()> fi)
         , const function<double()>& fd
-        , function<long()> fl
+        , const function<long()>& fl
     )
         : fi_(fi)
         , fd_(fd)
