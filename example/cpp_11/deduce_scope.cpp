@@ -9,23 +9,51 @@
 //````C++11```
 //<-
 #include <memory>
+#include <boost/shared_ptr.hpp>
 //->
 #include <boost/di.hpp>
 
 namespace di = boost::di;
 
-namespace {
-struct if0 { virtual ~if0() { } virtual void dummy() = 0; };
-struct c0if0 : if0 { void dummy() override { } };
-struct c2 { c2(std::shared_ptr<if0> /*shared*/) { } };
-struct c3 { c3(std::shared_ptr<if0> /*shared*/) { } };
-struct c4 { c4(std::unique_ptr<c2> /*unique*/, std::unique_ptr<c3> /*unique*/) { } };
-} // namespace
+struct i { virtual ~i() { } virtual void dummy() = 0; };
+struct impl : i { void dummy() override { } };
+
+struct c2 {
+    c2(std::shared_ptr<i> spi /*shared*/
+     , const boost::shared_ptr<i>& spi_ /*shared*/)
+        : spi_(spi), spi__(spi_)
+    {
+        assert(spi.get() == spi_.get());
+    }
+
+    std::shared_ptr<i> spi_;
+    boost::shared_ptr<i> spi__;
+};
+
+struct c3 {
+    c3(std::shared_ptr<i> spi/*shared*/
+     , int i/*unique*/)
+        : spi_(spi)
+    {
+        assert(i == 0);
+    }
+
+    std::shared_ptr<i> spi_;
+};
+
+struct c4 {
+    c4(std::unique_ptr<c2> c2_ /*unique*/
+     , const c3& c3_ /*unique temporary*/)
+    {
+        assert(c3_.spi_.get() == c2_->spi_.get());
+        assert(c3_.spi_.get() == c2_->spi__.get());
+    }
+};
 
 int main() {
     {
         auto injector = di::make_injector(
-            di::deduce<c0if0>()
+            di::deduce<impl>()
         );
 
         injector.create<c4>();
@@ -33,7 +61,7 @@ int main() {
 
     {
         using injector = di::injector<
-            c0if0
+            impl
         >;
 
         injector().create<c4>();
@@ -42,7 +70,5 @@ int main() {
     return 0;
 }
 
-//`[table
-//`[[Full code example: [@example/cpp_11/deduce_scope.cpp deduce_scope.cpp]]]]
 //]
 

@@ -15,8 +15,6 @@
 
 namespace di  = boost::di;
 
-namespace {
-
 struct name1 { };
 struct name2 { };
 struct name3 { };
@@ -50,8 +48,6 @@ struct c10 { c10(c9, c8) { } };
 struct c11 { c11(c9, c10) { } };
 struct c12 { c12(c9, c11) { } };
 struct c13 { c13(std::shared_ptr<c12>) { } };
-
-} // namespace
 
 int main() {
     using injector_t = di::injector<

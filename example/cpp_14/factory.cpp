@@ -70,7 +70,5 @@ int main() {
     return 0;
 }
 
-//`[table
-//`[[Full code example: [@example/cpp_14/factory.cpp factory.cpp]]]]
 //]
 

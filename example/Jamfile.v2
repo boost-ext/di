@@ -41,20 +41,20 @@ test-suite di :
 ;
 
 test-suite cpp_03 : # "di / c++ 03"
-    [ run-test c++03 : cpp_03/injection.cpp : injection_cpp_03 ]
     [ run-test c++03 : cpp_03/modules.cpp : modules_cpp_03 ]
 ;
 
 test-suite cpp_11 : # "di / c++ 11"
-    [ run-test c++11 : cpp_11/allow_only_smart_ptr_policy.cpp : allow_only_smart_ptr_policy_cpp_11 ]
+    [ run-test c++11 : cpp_11/custom_policy.cpp : custom_policy_cpp_11 ]
     [ run-test c++11 : cpp_11/concepts.cpp : concepts_cpp_11 ]
     [ run-test c++11 : cpp_11/custom_scope.cpp : custom_scope_cpp_11 ]
     [ run-test c++11 : cpp_11/deduce_scope.cpp : deduce_scope_cpp_11 ]
-    [ run-test c++11 : cpp_11/injection.cpp : injection_cpp_11 ]
+    [ run-test c++11 : cpp_11/binding.cpp : binding_cpp_11 ]
     [ run-test c++11 : cpp_11/externals.cpp : externals_cpp_11 ]
     [ run-test c++11 : cpp_11/multiple_interfaces.cpp : multiple_interfaces_cpp_11 ]
     [ run-test c++11 : cpp_11/motivation.cpp : motivation_cpp_11 ]
     [ run-test c++11 : cpp_11/testing.cpp : testing_cpp_11 ]
+    [ run-test c++11 : cpp_11/cpp_generation_visitor.cpp : cpp_generation_visitor_cpp_11 ]
 ;
 
 test-suite cpp_14 : # "di / c++ 14"

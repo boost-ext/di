@@ -10,6 +10,7 @@
 //<-
 #include <cassert>
 #include <boost/shared_ptr.hpp>
+#include <boost/function.hpp>
 //->
 #include <boost/di.hpp>
 
@@ -17,12 +18,12 @@ namespace di = boost::di;
 
 /*<define `hello` class as usual>*/
 struct hello {
-    hello(const boost::shared_ptr<int>& sp, std::auto_ptr<int> ap, double d)
+    hello(const boost::shared_ptr<int>& sp, std::auto_ptr<int> ap, const boost::function<int()>& f)
         : sp(sp)
     {
         assert(*sp == 0.0); // value initialized with 0
         assert(*ap == 0); // value initialized with 0
-        assert(d == 0.0); // value initialized with 0
+        assert(f.empty()); // empty function
     }
 
     boost::shared_ptr<int> sp;
@@ -36,7 +37,7 @@ struct world {
         , int i)
     {
         assert(copy.sp.get() == sp.get()); // the same shared_ptr (scope deduction)
-        assert(str == ""); // value initialized with empty sring
+        assert(str == ""); // value initialized with empty string
         assert(i == 0); // value initialized with 0
     }
 };

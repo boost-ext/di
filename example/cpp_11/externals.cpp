@@ -45,7 +45,5 @@ int main() {
     injector.create<c>();
 }
 
-//`[table
-//`[[Full code example: [@example/cpp_11/externals.cpp externals.cpp]]]]
 //]
 
