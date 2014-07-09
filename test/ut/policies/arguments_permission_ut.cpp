@@ -5,8 +5,12 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include "common/fakes/fake_assert.hpp" // has to be first
-#define BOOST_CONFIG_HPP
+#include "boost/di/aux_/config.hpp"
+#undef BOOST_DI_WKND_NO_MSVC
+#define BOOST_DI_WKND_NO_MSVC(...) __VA_ARGS__
 #include "boost/di/policies/arguments_permission.hpp"
+#undef BOOST_DI_WKND_NO_MSVC
+#define BOOST_DI_WKND_NO_MSVC(...)
 
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/identity.hpp>
