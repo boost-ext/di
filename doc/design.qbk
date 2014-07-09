@@ -76,6 +76,7 @@ injector().create<example>();
         [
             [
                 ```
+                                                                                                             .
                 struct example {
                     explicit example(int);
                     example(int, double);
@@ -86,6 +87,7 @@ injector().create<example>();
             ]
             [
                 ```
+                                                                                                             .
                 use BOOST_DI_INJECT to point which constructor should be chosen by Boost.DI
                     struct example {
                         explicit example(int);
@@ -104,6 +106,7 @@ injector().create<example>();
         [
             [
                 ```
+                                                                                                             .
                 struct example {
                     template<typename... TArgs>
                     explicit example(TArgs&&...);
@@ -112,6 +115,7 @@ injector().create<example>();
             ]
             [
                 ```
+                                                                                                             .
                 use BOOST_DI_INJECT_TRAITS to define the constructor
                     namespace boost { namespace di {
                         template<>
@@ -131,6 +135,7 @@ injector().create<example>();
         [
             [
                 ```
+                                                                                                             .
                 struct example {
                     example(const example&);
                     example(int); // ambiguous in C++03
@@ -139,6 +144,7 @@ injector().create<example>();
             ]
             [
                 ```
+                                                                                                             .
                 In C++11 copy constructors ambiguity might be disabled using default template parameters
                     template<
                         typename U
@@ -162,13 +168,16 @@ injector().create<example>();
         [
             [
                 ```
+                                                                                                             .
                 struct example {
-                    example(std::auto_ptr<int>, std::unique_ptr<int>); // moveable types are supported
+                     // moveable types are supported
+                    example(std::auto_ptr<int>, std::unique_ptr<int>);
                 };
                 ```
             ]
             [
                 ```
+                                                                                                             .
                 struct any_type {
                     template<typename U> operator U();
                     template<typename U> operator aux::auto_ptr<U>&(); // for std::auto_ptr
@@ -184,6 +193,7 @@ injector().create<example>();
         [
             [
                 ```
+                                                                                                             .
                 template<typename>
                 struct example {
                     template<typename T>
@@ -197,6 +207,7 @@ injector().create<example>();
             ]
             [
                 ```
+                                                                                                             .
                 use BOOST_DI_INJECT to explicitly point out the constructor parameters
                     struct app {
                         BOOST_DI_INJECT(app, example<int>);
@@ -226,6 +237,7 @@ injector().create<example>();
         [
             [
                 ```
+                                                                                                             .
                 struct a {
                     a(int, double);
                     a(int, double, float);
@@ -242,6 +254,7 @@ injector().create<example>();
             ]
             [
                 ```
+                                                                                                             .
                 Support without any workarounds
                 ```
             ]
@@ -254,6 +267,7 @@ injector().create<example>();
         [
             [
                 ```
+                                                                                                             .
                 struct example {
                     BOOST_DI_INJECT(explicit example, int = 0, double = 0.0);
                 };
@@ -261,6 +275,7 @@ injector().create<example>();
             ]
             [
                 ```
+                                                                                                             .
                 BOOST_DI_INJECT creates a function instead of direct traits
                     struct example {
                         static void boost_di_injector__(int = 0, double = 0.0);
@@ -279,6 +294,7 @@ injector().create<example>();
         [
             [
                 ```
+                                                                                                             .
                 struct a {
                     BOOST_DI_INJECT(a, int, double);
                 };
@@ -290,6 +306,7 @@ injector().create<example>();
             ]
             [
                 ```
+                                                                                                             .
                 use BOOST_DI_INJECT or BOOST_DI_INJECT_TRAITS to explicitly point that constructor is empty
 
                 struct a {
@@ -312,18 +329,22 @@ injector().create<example>();
         [
             [
                 ```
-                    struct a { a(int); };
-                    struct b { b(aux::shared_ptr<a>); };
-                    struct c { c(aux::shared_ptr<a>, aux::shared_ptr<b>); }; // parameters evaluation order is not specified
+                                                                                                             .
+                struct a { a(int); };
+                struct b { b(aux::shared_ptr<a>); };
 
-                    di::make_injector(
-                        bind<int>::when<call_stack<a>>::to(42)
-                      , shared<a>
-                    );
+                // parameters evaluation order is not specified
+                struct c { c(aux::shared_ptr<a>, aux::shared_ptr<b>); };
+
+                di::make_injector(
+                    bind<int>::when<call_stack<a>>::to(42)
+                  , shared<a>
+                );
                 ```
             ]
             [
                 ```
+                                                                                                             .
                 be aware and avoid binding which may be affected by parameters evaluation order
                 ```
             ]
