@@ -22,6 +22,7 @@ What is so unique about this library?
 
 Main features:
 
+* Type safe
 * Header only library
 * Architecture independent (tested on x86/x86-64)
 * Supports all POSIX and Windows operating systems (tested on Linux/Windows/Mac/Darwin)
@@ -87,6 +88,20 @@ see `Design.Problematic Cases`:
   [[Arguments Permission Policy][supported][supported][supported][not supported]]
 ]
 
+[h6 Recommendations]
+
+Boost.DI supports variety of compilers and standards. Not all features are supported the same way or in general
+by all of them. Below table shows author recommendations (based on testing) what to be careful about whilst using
+a specific combinations.
+
+[table
+  [[Standard][Compiler][Recommendation]]
+  [[`C++03`][`GCC >= 4.7`][Module::configure() ]]
+  [[`C++03`][`Clang >= 3.4`][`Modules` configure  ]]
+  [[`C++11`][`Clang >= 3.4`][`Modules` configure  ]]
+  [[`C++14`][`Clang >= 3.4`][Go for it!]]
+]
+
 [endsect]
 
 [section Configuration]
@@ -108,13 +123,14 @@ The macros listed in the table below may be used to control the behaviour of Boo
   [
     [`BOOST_DI_CFG_STD`]
     [
-        Defines which compilator features will be used. When `cpp_11` below features will be used:
-        * variadic templates
-        * function template default arguments
-        * rvalue references and perfet forwarding
-        * decltype
-
-        Configuration affects preprocessed headers, which are generated for both configurations.
+        Defines which compiler features will be used. When `cpp_11` below features will be used:
+        [pre
+* variadic templates
+* function template default arguments
+* rvalue references and perfet forwarding
+* decltype
+        ]
+        Configuration affects `preprocessed headers`, which are generated for both configurations.
         default: `cpp_11 when C++11 cpp_03 otherwise`
     ]
   ]

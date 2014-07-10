@@ -7,7 +7,6 @@
 
 //[custom_policy_cpp_11
 //````C++11```
-
 //<-
 #include <boost/shared_ptr.hpp>
 #include <boost/utility/enable_if.hpp>

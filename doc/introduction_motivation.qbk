@@ -28,7 +28,7 @@ There are many forms of dependency injection about which you can read in [2]:
 * Member injection
 
 Constructor injection is the most powerful and the cleanest way of dependency injection,
-it's also the preferable as well becauase you don't need to worry about objects arriving in an uninitialized state.
+it's also the preferable as well because you don't need to worry about objects arriving in an uninitialized state.
 This library provide the functionality for constructor and interface injection.
 
 [link See11] widely explains advantages of using dependency injection, which might be sum up by:
@@ -178,6 +178,11 @@ auto person_ = injector.create<person>();
  * changing will only require change the module service
  * we cant easily make integreation tests
  * unit tests, we won't need it but for
+
+[table
+  [[No Dependency Injection Framework][Dependency Injection Framework]]
+  [[][]]
+]
 
 [endsect]
 

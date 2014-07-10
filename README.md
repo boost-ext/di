@@ -98,6 +98,7 @@ int main() {
 ```
 
 ## Main Features
+* Type safe
 * Header only library
 * Architecture independent (tested on x86/x86-64)
 * Supports all POSIX and Windows operating systems (tested on Linux 3.8/Windows 7/8)
@@ -119,7 +120,7 @@ int main() {
 
 ## Tested compilers
 * Linux (x86/x86-64)
-   * Clang 3.2/3.3/3.4/3.4.1 (clean with Clang Static Analyzer and Valgrind)
+   * Clang 3.2/3.3/3.4.2 (clean with Clang Static Analyzer and Valgrind)
    * GCC 4.7.3/4.8.2/4.9.0 (clean with Valgrind)
    * Intel C++ 14.0.3 (clean with Valgrind)
 

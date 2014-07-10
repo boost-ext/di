@@ -30,15 +30,13 @@ To make example's more readable data classes were moved into separated file.
 [endsect]
 
 [section Binding]
-[import ../example/cpp_11/concepts.cpp]
-[concepts_cpp_11]
+[import ../example/cpp_11/binding.cpp]
+[binding_cpp_11]
 [endsect]
 
 [section Concepts]
-[import ../example/cpp_11/injection.cpp]
-[injection_cpp_11]
-[import ../example/cpp_03/injection.cpp]
-[injection_cpp_03]
+[import ../example/cpp_11/concepts.cpp]
+[concepts_cpp_11]
 [endsect]
 
 [section Modules]
@@ -60,8 +58,8 @@ To make example's more readable data classes were moved into separated file.
 [endsect]
 
 [section Custom Policy]
-[import ../example/cpp_11/allow_only_smart_ptr_policy.cpp]
-[allow_only_smart_ptr_policy_cpp_11]
+[import ../example/cpp_11/custom_policy.cpp]
+[custom_policy_cpp_11]
 [endsect]
 
 [section Testing]
