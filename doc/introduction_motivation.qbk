@@ -9,11 +9,7 @@
 
 [section Introduction & Motivation]
 
-Boost.DI is C++ 03 / C++ 11 header only library providing compile time, macro free constructor dependency injection functionality.
-
 [h6 Dependency Injection?]
-
-Dependency Injection principle: "Don't call us, we'll call you" Hollywood principle or "Ask, Don't look".
 
 "Dependency Injection is a set of software design principles and patterns that enable us to develop loosely coupled code" [1].
 Dependency Injection allows us to separate business logic to object creation, which give possibility to write maintainable and testable code.
@@ -33,33 +29,33 @@ any sort of different patterns like Service Locator, Static Factory or Abstract
 Factory itself.
 
 Table below shows how Dependency Injection might be realised and how it will
-influence the code:
+influence the code (based on [9][@http://www.loosecouplings.com/2011/01/dependency-injection-using-di-container.html]
 
-    		no di framework 										| di framework
-no di  		highly coupled code (Spaghetti code) 					| Static Factory/Abstract Factory or Service Locator (Anti pattern)
-di 			manual di (tedious/hard to maintain in large scale)     | Enhanced Dependency Injection
-
-see http://www.loosecouplings.com/2011/01/dependency-injection-using-di-container.html
+[table
+    [[][No Dependency Injection Framework][Dependency Injection Framework]]
+    [[No Dependency Injection][highly coupled code (Spaghetti code)][Static Factory/Abstract Factory or Service Locator (Anti pattern)]]
+    [[Dependency Injection][manual di (tedious/hard to maintain in large scale)][Enhanced Dependency Injection]]
+]
 
 Spaghetti code which is highly coupled is really hard to change/maintain/test,
 therefore is not really good practise to write it.
 
 ```
-	class app {
-	public:
-		app() {
-			auto logger = std::make_unique<logger>();
-			init(logger);
-		}
+    class app {
+    public:
+        app() {
+            auto logger = std::make_unique<logger>();
+            init(logger);
+        }
 
-		void init(std::unique_ptr<ilogger>);
-		void start();
-	};
+        void init(std::unique_ptr<ilogger>);
+        void start();
+    };
 
-	int main() {
-		//composition root
-		std::make_unique<app>()->start();
-	}
+    int main() {
+        //composition root
+        std::make_unique<app>()->start();
+    }
 ```
 
 Manual Dependency Injection requires that all dependencies will be created by
@@ -68,19 +64,29 @@ Anyway it's a tedious/boilerplate code and sooner or later - depending on the pr
 scale - project will end up with some sort of automatization.
 
 ```
-	class app {
-	public:
-		app(std::unique_ptr<ilogger>);
-		void start();
-	};
+    class app {
+    public:
+        app(std::unique_ptr<ilogger>);
+        void start();
+    };
 
-	int main() {
-		//creation of dependencies
-		auto logger = std::make_shared<logger>();
+    int main() {
+        //creation of dependencies
+        auto logger_ = std::make_shared<logger>();
 
-		//composition root
-		std::make_unique<app>(logger)->start();
-	}
+        //composition root
+        std::make_unique<app>(logger_)->start();
+    }
+```
+
+If we want to support our app with different type of loggers we need to write
+a bit of boilerplate code over and over again.
+
+```
+    auto text_logger_ = std::make_shared<text_logger>();
+    auto ci_logger_ = std::make_shared<ci_logger>();
+    auto file_logger_ = std::make_shared<file_logger>();
+    ...
 ```
 
 Static Factory hides the choice of implementation and instance management of a certain component, from the objects using this component.
@@ -90,27 +96,27 @@ because creation is inside the component. Despite that it's hard to inject
 dependencies into not default constructor.
 
 ```
-	class logger_factory {
-	public:
-		std::unique_ptr<ilogger> static create() const {
-			return std::make_unique<logger>();
-		}
-	};
+    class logger_factory {
+    public:
+        std::unique_ptr<ilogger> static create() const {
+            return std::make_unique<logger>();
+        }
+    };
 
-	class app {
-	public:
-		app()
-			: logger(logger_factory::create())
-		{ }
+    class app {
+    public:
+        app()
+            : logger(logger_factory::create())
+        { }
 
-	private:
-		std::unique_ptr<ilogger> logger;
-	};
+    private:
+        std::unique_ptr<ilogger> logger;
+    };
 
-	int main() {
-		//composition root
-		std::make_unique<app>()->start();
-	}
+    int main() {
+        //composition root
+        std::make_unique<app>()->start();
+    }
 ```
 
 Abstract Factory solve the issues with creating of many static factories by
@@ -124,42 +130,42 @@ Factory is similar to Service Locator pattern, which is described next and
 which avoid creation of many tedious code.
 
 ```
-	class ilogger_factory {
-	public:
-		virtual std::unique_ptr<T> create() const = 0;
-	};
+    class ilogger_factory {
+    public:
+        virtual std::unique_ptr<T> create() const = 0;
+    };
 
-	class logger_factory {
-	public:
-		std::unique_ptr<T> create() const override {
-			return std::make_unique<logger>();
-		}
-	};
+    class logger_factory {
+    public:
+        std::unique_ptr<T> create() const override {
+            return std::make_unique<logger>();
+        }
+    };
 
-	class logger_abstract_factory {
-	public:
-		void add(const std::string& name, std::unique_ptr<ilogger_factory> factory);
-		std::unique_ptr<ilogger_factory> get(const std::string& name);
-	};
+    class logger_abstract_factory {
+    public:
+        void add(const std::string& name, std::unique_ptr<ilogger_factory> factory);
+        std::unique_ptr<ilogger_factory> get(const std::string& name);
+    };
 
-	class app {
-	public:
-		app(const logger_abstract_factory& laf)
-			: logger(laf.get("logger_factory").create())
-		{ }
+    class app {
+    public:
+        app(const logger_abstract_factory& laf)
+            : logger(laf.get("logger_factory").create())
+        { }
 
-	private:
-		std::unique_ptr<ilogger> logger;
-	};
+    private:
+        std::unique_ptr<ilogger> logger;
+    };
 
-	int main() {
-		//Abstract Factory configuration
-		logger_abstract_factory laf;
-		laf.add("logger_factory", std::make_unique<logger_factory>());
+    int main() {
+        //Abstract Factory configuration
+        logger_abstract_factory laf;
+        laf.add("logger_factory", std::make_unique<logger_factory>());
 
-		//composition root
-		std::make_unique<app>(*laf)->start();
-	}
+        //composition root
+        std::make_unique<app>(*laf)->start();
+    }
 ```
 
 Service Locator by many (including me) is consider as anti-pattern, because it
@@ -171,24 +177,24 @@ calls. Because always whole Service Locator is passed it's harder to find out
 which dependencies are needed for the class which testing unclear and harder.
 
 ```
-	class app {
-	public:
-		app(const service_locator& sl)
-			: logger(sl.resolve<ilogger>())
-		{ }
+    class app {
+    public:
+        app(const service_locator& sl)
+            : logger(sl.resolve<ilogger>())
+        { }
 
-	private:
-		std::unique_ptr<ilogger> logger;
-	};
+    private:
+        std::unique_ptr<ilogger> logger;
+    };
 
-	int main() {
-		//service locator configuration
-		service_locator sl;
-		sl.register_singleton<ilogger>().to<logger>();
+    int main() {
+        //service locator configuration
+        service_locator sl;
+        sl.register_singleton<ilogger>().to<logger>();
 
-		//composition root
-		std::make_unique<app>(sl)->start();
-	}
+        //composition root
+        std::make_unique<app>(sl)->start();
+    }
 ```
 
 Enhanced Dependency Injection done right still will be just a Dependency Injection
@@ -201,21 +207,21 @@ the design/implementation/structure of the code except for well-defined cases
 like "composition root".
 
 ```
-	class app {
-	public:
-		app(std::unique_ptr<ilogger>);
-		void start();
-	};
+    class app {
+    public:
+        app(std::unique_ptr<ilogger>);
+        void start();
+    };
 
-	int main() {
-		//dependency injection configuration
-		auto injector = di::make_injector(
-			di::bind<ilogger, logger>()
-		);
+    int main() {
+        //dependency injection configuration
+        auto injector = di::make_injector(
+            di::bind<ilogger, logger>()
+        );
 
-		//composition root
-		injector.create<app>().start();
-	}
+        //composition root
+        injector.create<app>().start();
+    }
 ```
 Notice similarities to manual dependency injection. Of course for such a small
 example DI might be consider a bit of overhead, but it will shows its strength in
@@ -225,25 +231,26 @@ more complex examples.
 everything. Used wrong will make code highly coupled / hard to test and
 maintain, which is presented below.]
 
-"Evil" usage of Dependency Injection Framework | Don't do this at home!
+"Evil" usage of Dependency Injection Framework
+[warning Don't do this at home!]
 ```
-	auto global_injector = di::make_injector(
-		bind<i, impl>()
-	);
+    auto global_injector = di::make_injector(
+        bind<i, impl>()
+    );
 
-	class app {
-	public:
-		app()
-			: logger(global_injector.create<ilogger>())
-		{ }
+    class app {
+    public:
+        app()
+            : logger(global_injector.create<ilogger>())
+        { }
 
-	private:
-		std::unique_ptr<ilogger> logger;
-	};
+    private:
+        std::unique_ptr<ilogger> logger;
+    };
 
-	int main() {
-		global_injector.create<app>().start();
-	}
+    int main() {
+        global_injector.create<app>().start();
+    }
 ```
 
 To make it clear, we don't need Dependency Injection Framework to apply all the "goods" of Dependency Injection, but it may make our life easier.
@@ -266,19 +273,34 @@ Therefore instead of creating and configuring the objects yourself, the dependen
 
 * Maintainability
     * separation between object creation and business logic make code easy to maintain
-    * reduce `Dependency Carrying` - passing dependencies which aren't used directly and passed further
- 	* changing constructor signature may not require any changes in dependencies configuration (if such dependency might be deduced or is used)
+    * reduce `Dependency Carrying` - passing dependencies which aren't used directly and passed further as well as
+      singletons which weren't passed by constructor because they would have to be passed everywhere
+     * changing constructor signature may not require any changes in dependencies configuration (if such dependency might be deduced or is used)
 
 * Testability
     * possibility of passing all required parameters via constructor give the opportunity to use fakes for testing purposes
-	* integration tests might be done easily written by injection fakes
-	* we won't need hard to write tests for manual injection or factories
+    * integration tests might be done easily written by injection fakes
+    * we won't need hard to write tests for manual injection or factories
 
 * Readability
-	* code is easier to read since there is a proper separation between business logic and object creation as well as there is no boilerplate code just making chaos
+    * code is easier to read since there is a proper separation between business logic and object creation as well as there is no boilerplate code just making chaos
 
+Dependency Injection Framework might be really useful and may make your code to be loosely coupled and easy to maintain.
+Followed by a few good practises/principles will get most out of Dependency Injection Framework:
 
-Boost.DI provides the functionality for constructor and interface injection.
+* Avoid Service Locator pattern and don't use Dependency Injection the same way
+* Avoid global states and Singleton pattern
+* Follow Single Responsibility principle while designing your classes
+* Follow Law of Demeter principle while using dependencies
+* Follow Open/closed principle
+* Prefer to have one composition root
+
+And always follow Hollywood principle: "Don't call us, we'll call you".
+
+[h6 Boost.DI]
+
+Boost.DI is C++ 03 / C++ 11 header only, type safe, library providing compile time, macro free constructor/interface dependency injection functionality.
+[See Overview]
 
 [h6 Motivation example]
 
