@@ -104,8 +104,22 @@ The macros listed in the table below may be used to control the behaviour of Boo
         default: `enabled`
     ]
   ]
-  [
 
+  [
+    [`BOOST_DI_CFG_STD`]
+    [
+        Defines which compilator features will be used. When `cpp_11` below features will be used:
+        * variadic templates
+        * function template default arguments
+        * rvalue references and perfet forwarding
+        * decltype
+
+        Configuration affects preprocessed headers, which are generated for both configurations.
+        default: `cpp_11 when C++11 cpp_03 otherwise`
+    ]
+  ]
+
+  [
     [`BOOST_DI_CFG_CTOR_LIMIT_SIZE`]
     [
         Constructor injection is limited by `BOOST_DI_CFG_CTOR_LIMIT_SIZE`, which means that constructor can't
