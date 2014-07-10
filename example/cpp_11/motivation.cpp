@@ -13,30 +13,21 @@
 /*<<include di headers>>*/
 #include <boost/di.hpp>
 
-/*<<Define class as usual>>*/
+/*<<define class as usual>>*/
 class app {
 public:
-    app(const std::shared_ptr<int>&
-      , boost::shared_ptr<int>
-      , std::unique_ptr<int>
-      , double
-      , int
-      , const std::string&)
-    { }
-
-    void start() { }
+    app(std::unique_ptr<ilogger>);
+    void start();
 };
 
 int main() {
-    /*<<make injector>>*/
-    auto injector = boost::di::make_injector();
+    /*<<dependency injection configuration>>*/
+    auto injector = di::make_injector(
+        di::bind<ilogger, logger>()
+    );
 
-    /*<<create app>>*/
+    /*<<composition root>>*/
     auto my_app = injector.create<app>();
-
-    /*<<use my_app>>*/
-    my_app.start();
-    //...
 
     return 0;
 }

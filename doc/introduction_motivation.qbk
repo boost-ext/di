@@ -9,35 +9,37 @@
 
 [section Introduction & Motivation]
 
-[h6 Dependency Injection?]
-
-"Dependency Injection is a set of software design principles and patterns that enable us to develop loosely coupled code" [1].
+"[*Dependency Injection] is a set of software design principles and patterns that enable us to develop [*loosely coupled] code" [[link See11]].
 Dependency Injection allows us to separate business logic to object creation, which give possibility to write maintainable and testable code.
-There are many forms of dependency injection which you can read more about in [2]:
+There are many forms of dependency injection which you can read more about in [[link Van08]].
 
 * Constructor injection
 * Interface injection
 * Setter injection
 * Member injection
 
-Constructor injection is the most powerful and the cleanest way of dependency injection,
+[*Constructor injection] is the most powerful and the cleanest way of dependency injection,
 it's also preferable, because there is no need to worry about objects arriving in an uninitialized state.
 
 Dependency Injection doesn't really require Dependency Injection
-Framework(Dependency Injection Container/Inversion Of Control Container) or
+Framework (Dependency Injection Container/Inversion Of Control Container) or
 any sort of different patterns like Service Locator, Static Factory or Abstract
-Factory itself.
+Factory itself, but it make your life easier, which will be described in this introduction.
 
-Table below shows how Dependency Injection might be realised and how it will
-influence the code (based on [9][@http://www.loosecouplings.com/2011/01/dependency-injection-using-di-container.html]
+[h6 Problem]
+For the purposes of this introduction we are going to implement simple application with logger dependency.
+
+[h6 Solution]
+Dependency Injection might be implemented in many different ways. Table below shows how
+Dependency Injection may be realised and how it will affects the source code design [[link Lus11]].
 
 [table
     [[][No Dependency Injection Framework][Dependency Injection Framework]]
-    [[No Dependency Injection][highly coupled code (Spaghetti code)][Static Factory/Abstract Factory or Service Locator (Anti pattern)]]
-    [[Dependency Injection][manual di (tedious/hard to maintain in large scale)][Enhanced Dependency Injection]]
+    [[[*No Dependency Injection]][Highly coupled code (Spaghetti code)][Static Factory/Abstract Factory or Service Locator (Anti pattern)]]
+    [[[*Dependency Injection]][Manual Dependency Injection (tedious/hard to maintain in large scale)][Enhanced Dependency Injection ([*Boost.DI])]]
 ]
 
-Spaghetti code which is highly coupled is really hard to change/maintain/test,
+* [*Spaghetti code] which is highly coupled is really hard to change/maintain/test,
 therefore is not really good practise to write it.
 
 ```
@@ -58,7 +60,7 @@ therefore is not really good practise to write it.
     }
 ```
 
-Manual Dependency Injection requires that all dependencies will be created by
+* [*Manual Dependency] Injection requires that all dependencies will be created by
 yourself, but done right will produce loosely coupled code.
 Anyway it's a tedious/boilerplate code and sooner or later - depending on the project
 scale - project will end up with some sort of automatization.
@@ -89,7 +91,7 @@ a bit of boilerplate code over and over again.
     ...
 ```
 
-Static Factory hides the choice of implementation and instance management of a certain component, from the objects using this component.
+* [*Static Factory] hides the choice of implementation and instance management of a certain component, from the objects using this component.
 The drawbacks of using them are that they we have to create a lot of tedious
 factories ourselves as well as that we can't test the functionality really
 because creation is inside the component. Despite that it's hard to inject
@@ -119,7 +121,7 @@ dependencies into not default constructor.
     }
 ```
 
-Abstract Factory solve the issues with creating of many static factories by
+* [*Abstract Factory] solve the issues with creating of many static factories by
 first obtaining a factory of a certain kind, and then ask that factory for
 instances. With Abstract Factories we can easily change the implementation
 of the component in runtime, but we still have the same issues as with
@@ -168,7 +170,7 @@ which avoid creation of many tedious code.
     }
 ```
 
-Service Locator by many (including me) is consider as anti-pattern, because it
+* [*Service Locator] by many (including me) is consider as anti-pattern, because it
 follows principle in which components asks for its dependencies instead of be
 given them. On the other hand Service Locator pattern is usually very
 intrusive, requiring components having the same constructor with Service
@@ -197,7 +199,7 @@ which dependencies are needed for the class which testing unclear and harder.
     }
 ```
 
-Enhanced Dependency Injection done right still will be just a Dependency Injection
+* [*Enhanced Dependency Injection] done right still will be just a Dependency Injection
 with automation behind the scenes. Dependencies should be automatically
 resolved and it should be as less intrusive as possible, which means that if
 framework will be changed or removed code shouldn't require any changes.
@@ -206,32 +208,48 @@ applies to the framework itself as well. To sum up framework shouldn't affect
 the design/implementation/structure of the code except for well-defined cases
 like "composition root".
 
-```
-    class app {
-    public:
-        app(std::unique_ptr<ilogger>);
-        void start();
-    };
+[table
+    [[Boost.DI]]
+    [[
+        Boost.DI is C++ 03 / C++ 11 header only, type safe, library providing compile time, macro free constructor/interface dependency injection functionality.
+        See Overview to learn more.
+    ]]
+]
 
-    int main() {
-        //dependency injection configuration
-        auto injector = di::make_injector(
-            di::bind<ilogger, logger>()
-        );
+[table
+    [[Motivation Example]]
+    [[
+    ```
+        class app {
+        public:
+            app(std::unique_ptr<ilogger>);
+            void start();
+        };
 
-        //composition root
-        injector.create<app>().start();
-    }
-```
-Notice similarities to manual dependency injection. Of course for such a small
-example DI might be consider a bit of overhead, but it will shows its strength in
-more complex examples.
+        int main() {
+            // dependency injection configuration
+            auto injector = di::make_injector(
+                di::bind<ilogger, logger>()
+            );
 
-[note Remember that dependency Injection Framework is not a remedy for
-everything. Used wrong will make code highly coupled / hard to test and
-maintain, which is presented below.]
+            // composition root
+            auto my_app = injector.create<app>();
 
-"Evil" usage of Dependency Injection Framework
+            return 0;
+        }
+    ```
+    ]]
+    [[
+        Notice similarities to manual dependency injection. Of course for such a small
+        example DI might be consider a bit of overhead, but it will shows its strength in
+        more complex examples. Remember though that dependency Injection Framework is not a remedy for
+        everything. Used wrong will make code highly coupled code / hard to test and
+        maintain, which is presented below.
+    ]]
+]
+[tip Good practise: composition root is a (preferably) unique location in an application where modules are composed together]
+
+* [*"Pure Evil"] usage of Dependency Injection Framework
 [warning Don't do this at home!]
 ```
     auto global_injector = di::make_injector(
@@ -264,50 +282,38 @@ Therefore instead of creating and configuring the objects yourself, the dependen
 
 [link See11] widely explains advantages of using dependency injection, which might be sum up by:
 
-* Parallel Development
+* [*Parallel Development]
     * allows many teams to work separately on different modules
 
-* Extensibility
+* [*Extensibility]
     * lose coupling, declarative approach are features which make code easy to extend
     * promotes business logic code over boilerplate code
 
-* Maintainability
+* [*Maintainability]
     * separation between object creation and business logic make code easy to maintain
     * reduce `Dependency Carrying` - passing dependencies which aren't used directly and passed further as well as
       singletons which weren't passed by constructor because they would have to be passed everywhere
-     * changing constructor signature may not require any changes in dependencies configuration (if such dependency might be deduced or is used)
+     * changing constructor signature may not require any changes in dependencies configuration (if such dependency might be deduced or is already used)
 
-* Testability
+* [*Testability]
     * possibility of passing all required parameters via constructor give the opportunity to use fakes for testing purposes
     * integration tests might be done easily written by injection fakes
     * we won't need hard to write tests for manual injection or factories
 
-* Readability
+* [*Readability]
     * code is easier to read since there is a proper separation between business logic and object creation as well as there is no boilerplate code just making chaos
 
-Dependency Injection Framework might be really useful and may make your code to be loosely coupled and easy to maintain.
-Followed by a few good practises/principles will get most out of Dependency Injection Framework:
+[*Dependency Injection Framework] might be really useful and may make your code to be loosely coupled and easy to maintain.
+Followed by a few good practises/principles will get most out of Dependency Injection Framework.
 
-* Avoid Service Locator pattern and don't use Dependency Injection the same way
-* Avoid global states and Singleton pattern
-* Follow Single Responsibility principle while designing your classes
-* Follow Law of Demeter principle while using dependencies
-* Follow Open/closed principle
-* Prefer to have one composition root
+* Avoid [@http://en.wikipedia.org/wiki/Service_locator_pattern Service Locator] pattern and don't use Dependency Injection the same way
+* Avoid global states and [@http://en.wikipedia.org/wiki/Singleton_pattern Singleton pattern]
+* Follow [@http://en.wikipedia.org/wiki/Single_responsibility_principle Single Responsibility principle] while designing your classes
+* Follow [@http://en.wikipedia.org/wiki/Law_of_Demeter Law of Demeter principle] while using dependencies
+* Follow [@http://en.wikipedia.org/wiki/Open/closed_principle Open/closed] principle
+* Follow Composition Root principle
 
-And always follow Hollywood principle: "Don't call us, we'll call you".
-
-[h6 Boost.DI]
-
-Boost.DI is C++ 03 / C++ 11 header only, type safe, library providing compile time, macro free constructor/interface dependency injection functionality.
-[See Overview]
-
-[h6 Motivation example]
-
-[import ../example/cpp_11/motivation.cpp]
-[motivation_cpp_11]
-
-[tip Good practise: composition root is a (preferably) unique location in an application where modules are composed together in 1]
+And always follow Hollywood principle: [*"Don't call us, we'll call you"].
 
 [endsect]
 
