@@ -27,36 +27,11 @@ struct has_ctor {
     static const bool value = sizeof(test<T>(0)) == sizeof(yes_tag);
 };
 
-struct converter {
-    template<typename T> operator T() {
-        return T();
-    }
-};
-
 class injector {
-    template<typename T>
-    struct ctor {
-        constexpr int max() const {
-            for (auto i = MAX_CTOR_SIZE; i > 0; --i) {
-                if (has_ctor<T, mpl::int_<i>>::value) {
-                    return i;
-                }
-            }
-
-            return 0;
-        }
-    };
-
 public:
     template<typename T>
-    T create() const {
-        return create_impl<T, generate_converters<ctor<T>::max()>>();
-    }
-
-private:
-    template<typename T, typename... TConverters>
-    T create_impl() const {
-        return T(TConverters()...);
+    T create(enable_if<has_ctor<T, any_type...>>::type* = 0) const {
+        return T(any_type()...);
     }
 };
 
@@ -76,7 +51,7 @@ injector().create<example>();
         [
             [
                 ```
-                                                                                                             .
+                                                                          .
                 struct example {
                     explicit example(int);
                     example(int, double);
@@ -106,7 +81,7 @@ injector().create<example>();
         [
             [
                 ```
-                                                                                                             .
+                                                                          .
                 struct example {
                     template<typename... TArgs>
                     explicit example(TArgs&&...);
@@ -135,7 +110,7 @@ injector().create<example>();
         [
             [
                 ```
-                                                                                                             .
+                                                                          .
                 struct example {
                     example(const example&);
                     example(int); // ambiguous in C++03
@@ -168,7 +143,7 @@ injector().create<example>();
         [
             [
                 ```
-                                                                                                             .
+                                                                          .
                 struct example {
                      // moveable types are supported
                     example(std::auto_ptr<int>, std::unique_ptr<int>);
@@ -193,7 +168,7 @@ injector().create<example>();
         [
             [
                 ```
-                                                                                                             .
+                                                                          .
                 template<typename>
                 struct example {
                     template<typename T>
@@ -237,7 +212,7 @@ injector().create<example>();
         [
             [
                 ```
-                                                                                                             .
+                                                                          .
                 struct a {
                     a(int, double);
                     a(int, double, float);
@@ -267,9 +242,11 @@ injector().create<example>();
         [
             [
                 ```
-                                                                                                             .
+                                                                          .
                 struct example {
-                    BOOST_DI_INJECT(explicit example, int = 0, double = 0.0);
+                    BOOST_DI_INJECT(explicit example
+                                  , int = 0
+                                  , double = 0.0);
                 };
                 ```
             ]
@@ -294,14 +271,15 @@ injector().create<example>();
         [
             [
                 ```
-                                                                                                             .
+                                                                          .
                 struct a {
                     BOOST_DI_INJECT(a, int, double);
                 };
 
                 struct b : a { };
 
-                std::make_unique<b>(); // error b doesn't have constructor with 2 parameters
+                std::make_unique<b>(); // error b doesn't have
+                                       // constructor with 2 parameters
                 ```
             ]
             [
@@ -329,7 +307,7 @@ injector().create<example>();
         [
             [
                 ```
-                                                                                                             .
+                                                                          .
                 struct a { a(int); };
                 struct b { b(aux::shared_ptr<a>); };
 
