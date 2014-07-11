@@ -124,8 +124,8 @@
             );
         }
 
-        template<typename T, typename Visitor>
-        T visit(const Visitor& visitor) {
+        template<typename T, typename TVisitor>
+        T visit(const TVisitor& visitor) {
             typedef mpl::vector0<> call_stack;
             std::vector<aux::shared_ptr<void> > refs_;
 

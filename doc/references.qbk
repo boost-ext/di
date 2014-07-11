@@ -37,6 +37,15 @@
   , Manning Publications
   , August 10, 2009
 
+[#Bet13][Bet13] "Dependency Injection: Design patterns using Spring and Guice"
+  , Dominic Betts, Griogri Melnik, Fernando Simonazzi, Mani Subramanian
+  , Microsoft
+  , 2013
+
+[#Lus11][Lus11] "Loose Couplings: Dependency Injection != using a DI container"
+  , http://www.loosecouplings.com/2011/01/dependency-injection-using-di-container.html
+  , January 8, 2011
+
 [#Gam94][Gam94] "Design Patterns: Elements of Reusable Object-Oriented Software"
   , Erich Gamma, Richard Helm, Ralph Johnson, John Vlissides
   , Addison-Wesley Professional
@@ -52,9 +61,6 @@
   , Addison-Wesley Professional
   , October 25, 2004
 
-[#Lus11][Lus11] "Loose Couplings: Dependency Injection != using a DI container"
-  , http://www.loosecouplings.com/2011/01/dependency-injection-using-di-container.html
-  , January 8, 2011
 
 [endsect]
 

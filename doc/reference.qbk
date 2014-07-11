@@ -13,6 +13,7 @@
 
 [section Header <boost/di.hpp>]
 This header exists simply as a convenience to the user, including all of the headers in the boost/di directory.
+In case when `BOOST_DI_CFG_NO_PREPROCESSED_HEADERS` is defined appropriate preprocessed file will be used instead.
 
     // inject
     #include "boost/di/inject.hpp"
@@ -36,7 +37,7 @@ This header exists simply as a convenience to the user, including all of the hea
     #include "boost/di/provider.hpp"
 
     // policies
-    #include "boost/di/policies/arguments_permission.hpp"
+    #include "boost/di/policies/parameters_permission.hpp"
     #include "boost/di/policies/circular_dependencies.hpp"
     #include "boost/di/policies/creation_ownership.hpp"
     #include "boost/di/policies/scopes_permission.hpp"
@@ -45,8 +46,8 @@ This header exists simply as a convenience to the user, including all of the hea
 
 [section Header <boost/di/inject.hpp>]
 ```
-#define BOOST_DI_INJECT_TRAITS(...);
-#define BOOST_DI_INJECT(type, ...);
+#define BOOST_DI_INJECT_TRAITS(...)
+#define BOOST_DI_INJECT(type, ...)
 ```
 [table
     [[Tests: [@test/ut/inject_va_args_ut.cpp] | [@test/ut/inject_bracket_ut.cpp]]]
@@ -64,13 +65,16 @@ public:
     typedef TDependecies deps;
 
     template<typename... TArgs>
-    explicit injector(TArg&&...);
+    explicit injector(const TArgs&...);
 
     template<typename T, typename... TPolicies>
-    T create(TPolicies&&...);
+    T create(const TPolicies&...);
 
-    template<typename T, typename Visitor>
-    T visit(const Visitor&);
+    template<typename T, typename TAllocator, typename... TPolicies>
+    T allocate(const TAllocator&, const TPolicies&...) {
+
+    template<typename T, typename TVisitor>
+    T visit(const TVisitor&);
 
     template<typename TAction>
     void call(const TAction&);
@@ -235,7 +239,221 @@ public:
 
 [endsect]
 
+[section Aux]
+
+[section Header <boost/di/aux_/config.hpp>]
+```
+#define BOOST_DI_INJECTOR // boost_di_injector__
+#define BOOST_DI_CFG_CTOR_LIMIT_SIZE // 10
+
+#define BOOST_DI_CFG_STD // cpp_11 or cpp_03
+
+#include "boost/di/aux_/config/BOOST_DI_CFG_STD.hpp"
+
+#define BOOST_DI_FEATURE(feature)
+#define BOOST_DI_FEATURE_RVALUE_REFERENCES(...)
+#define BOOST_DI_FEATURE_NO_RVALUE_REFERENCES(...)
+#define BOOST_DI_FEATURE_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS(...)
+#define BOOST_DI_FEATURE_FUNCTION_TEMPLATE_DEFAULT_ARGS(...)
+#define BOOST_DI_FEATURE_DECLTYPE(...)
+#define BOOST_DI_FEATURE_CPP_11_TYPE_TRAITS(...)
+#define BOOST_DI_FEATURE_CPP_11_FUNCTIONAL(...)
+#define BOOST_DI_FEATURE_EXAMINE_CALL_STACK(...)
+#define BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(...)
+
+#define BOOST_DI_WKND(wknd)
+#define BOOST_DI_WKND_MSVC(...)
+#define BOOST_DI_WKND_NO_MSVC(...)
+
+#define BOOST_DI_ASSERT_MSG(c, msg, type)
+```
+[endsect]
+
+[section Header <boost/di/aux_/memory.hpp>]
+```
+namespace boost {
+namespace di {
+namespace aux {
+
+using ::std::auto_ptr;
+using ::std::unique_ptr;
+using ::std::shared_ptr;
+using ::std::weak_ptr;
+
+} // namespace aux
+
+namespace aux_ {
+using ::boost::shared_ptr;
+} // namespace aux_
+
+} // namespace boost
+} // namespace di
+```
+[endsect]
+
+[section Header <boost/di/aux_/config/cpp_03.hpp>]
+This header contains configuration when `c++ 03` standard will be used.
+
+```
+#define BOOST_DI_CTOR_LIMIT_FROM(begin)
+#define BOOST_DI_CTOR_LIMIT_FROM_FORCE(begin)
+#define BOOST_DI_TYPES(T)
+#define BOOST_DI_TYPES_PASS(T)
+#define BOOST_DI_MPL_VECTOR_TYPES_PASS(T)
+#define BOOST_DI_ARGS(T, arg)
+#define BOOST_DI_ARGS_PASS(arg)
+#define BOOST_DI_ARGS_CALL(arg, f)
+#define BOOST_DI_FORWARD_ARGS(T, arg)
+#define BOOST_DI_ARGS_FORWARD(arg)
+#define BOOST_DI_TYPES_MPL_LIMIT_FROM(begin)
+#define BOOST_DI_TYPES_MPL_LIMIT_FROM_FORCE(begin)
+#define BOOST_DI_TYPES_DEFAULT_MPL(T)
+#define BOOST_DI_TYPES_MPL(T)
+#define BOOST_DI_TYPES_PASS_MPL(T)
+#define BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)
+```
+[endsect]
+
+[section Header <boost/di/aux_/config/cpp_11.hpp>]
+This header contains configuration when `c++ 11` standard will be used.
+
+```
+#define BOOST_DI_CTOR_LIMIT_FROM(begin)
+#define BOOST_DI_CTOR_LIMIT_FROM_FORCE(begin)
+#define BOOST_DI_TYPES(T)
+#define BOOST_DI_TYPES_PASS(T)
+#define BOOST_DI_MPL_VECTOR_TYPES_PASS(T)
+#define BOOST_DI_ARGS(T, arg)
+#define BOOST_DI_ARGS_PASS(arg)
+#define BOOST_DI_ARGS_CALL(arg, f)
+#define BOOST_DI_FORWARD_ARGS(T, arg)
+#define BOOST_DI_ARGS_FORWARD(arg)
+#define BOOST_DI_TYPES_MPL_LIMIT_FROM(begin)
+#define BOOST_DI_TYPES_MPL_LIMIT_FROM_FORCE(begin)
+#define BOOST_DI_TYPES_DEFAULT_MPL(T)
+#define BOOST_DI_TYPES_MPL(T)
+#define BOOST_DI_TYPES_PASS_MPL(T)
+#define BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)
+```
+[endsect]
+
+[endsect]
+
 [section Core]
+
+[section Header <boost/di/core/allocator.hpp>]
+```
+namespace boost {
+namespace di {
+namespace core {
+
+template<typename>
+struct is_mpl_string;
+
+template<typename T>
+struct is_explicit;
+
+class allocator {
+public:
+    template<typename TExpected, typename TGiven>
+    typename disable_if<is_explicit<TGiven>, TExpected*>::type
+    allocate() const;
+
+    template<typename TExpected, typename TGiven>
+    typename enable_if<type_traits::has_value<TGiven>, TExpected*>::type
+    allocate() const;
+
+    template<typename TExpected, typename TGiven>
+    typename enable_if<is_mpl_string<TGiven>, TExpected*>::type
+    allocate() const;
+
+    template<typename TExpected, typename TGiven, typename... TArgs>
+    TExpected* allocate(TArgs&&...) const;
+};
+
+} // namespace core
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/ut/core/allocator_ut.cpp]]]
+]
+[endsect]
+
+[section Header <boost/di/core/any_type.hpp>]
+```
+namespace boost {
+namespace di {
+namespace core {
+
+template<
+    typename T = none_t
+  , typename TCallStack = none_t
+  , typename TCreator = none_t
+  , typename TAllocator = none_t
+  , typename TDeps = none_t
+  , typename TRefs = none_t
+  , typename TVisitor = none_t
+  , typename TPolicies = none_t
+>
+class any_type {
+public:
+    any_type() { }
+
+    any_type(TCreator&
+           , const TAllocator&
+           , TDeps&
+           , TRefs&
+           , const TVisitor&
+           , const TPolicies&);
+
+    any_type(const any_type&);
+
+    template<
+        typename U
+      , typename = typename disable_if<
+            type_traits::is_same_base_of<
+                typename type_traits::make_plain<U>::type
+              , typename type_traits::make_plain<T>::type
+            >
+        >::type
+    >
+    operator const U&() const;
+
+    template<
+        typename U
+      , typename = typename disable_if<
+            type_traits::is_same_base_of<
+                typename type_traits::make_plain<U>::type
+              , typename type_traits::make_plain<T>::type
+            >
+        >::type
+    >
+    operator U&() const;
+
+    template<typename U>
+    operator aux::auto_ptr<U>&();
+
+    template<
+        typename U
+      , typename = typename disable_if<
+            type_traits::is_same_base_of<
+                typename type_traits::make_plain<U>::type
+              , typename type_traits::make_plain<T>::type
+            >
+        >::type
+    >
+    operator U();
+};
+
+} // namespace core
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/ut/core/any_type_ut.cpp]]]
+]
+[endsect]
 
 [section Header <boost/di/core/binder.hpp>]
 ```
@@ -243,37 +461,19 @@ namespace boost {
 namespace di {
 namespace core {
 
-template<
-    typename TDependecies
-  , typename TBuilder = builder
->
+template<typename TDependecies>
 class binder {
 public:
-    explicit binder(const TBuilder& = TBuilder());
-
     template<
         typename T
       , typename TCallStack
       , typename TDefault =
             ::boost::di::concepts::dependency<
-                typename type_traits::scope_traits<T>::type
+                scopes::deduce
               , typename type_traits::make_plain<T>::type
             >
     >
     struct resolve;
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TPolicies
-    >
-    wrappers::universal<T> resolve_impl(TCreator&, TDeps&, TRefs&, const TVisitor&, const TPolicies&);
 };
 
 } // namespace core
@@ -285,39 +485,6 @@ public:
 ]
 [endsect]
 
-[section Header <boost/di/core/builder.hpp>]
-```
-namespace boost {
-namespace di {
-namespace core {
-
-class builder {
-public:
-    explicit builder(const scopes_type& = scopes_type());
-
-    template<
-        typename T
-      , typename TCtor
-      , typename TCallStack
-      , typename TDependency
-      , typename TCreator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TPolicies
-    >
-    wrappers::universal<T> build(TCreator&, TDeps&, TRefs&, const TVisitor&, const TPolicies&);
-};
-
-} // namespace core
-} // namespace di
-} // namespace boost
-```
-[table
-    [[Tests: [@test/ut/core/builder_ut.cpp]]]
-]
-[endsect]
-
 [section Header <boost/di/core/creator.hpp>]
 ```
 namespace boost {
@@ -326,61 +493,68 @@ namespace core {
 
 template<
     typename TDependecies = mpl::vector0<>
+  , template<typename> class TBinder = binder
   , template<
-        typename
-      , typename = ::boost::di::core::builder
-    > class TBinder = binder
+        typename = ::boost::none_t
+      , typename = ::boost::none_t
+      , typename = ::boost::none_t
+      , typename = ::boost::none_t
+      , typename = ::boost::none_t
+      , typename = ::boost::none_t
+      , typename = ::boost::none_t
+      , typename = ::boost::none_t
+    >
+    class TAnyType = ::boost::di::core::any_type
 >
 class creator {
-    template<
-        typename T
-      , typename TCallStack
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TPolicies
-    >
-    class eager_creator {
-    public:
-        eager_creator(creator&, TDeps&, TRefs&, const TVisitor&, const TPolicies&);
-
-        template<
-            typename U
-          , typename = typename disable_if<
-                type_traits::is_same_base_of<
-                    typename type_traits::make_plain<U>::type
-                  , typename type_traits::make_plain<T>::type
-                >
-            >::type
-        >
-        operator U();
-    };
-
 public:
-    explicit creator(const TBinder<TDependecies>& = TBinder<TDependecies>());
+    explicit creator(const TBinder<TDependecies>& binder = TBinder<TDependecies>());
 
     template<
         typename T
-      , typename TParent // to ignore copy/move ctor
+      , typename TParent // ignore copy/move ctor
       , typename TCallStack
+      , typename TAllocator
       , typename TDeps
       , typename TRefs
       , typename TVisitor
       , typename TPolicies
     >
-    eager_creator<TParent, TCallStack, TDeps, TRefs, TVisitor, TPolicies>
-    create(TDeps&, TRefs&, const TVisitor&, const TPolicies&, typename enable_if<is_same<T, detail::any_type> >::type* = 0);
+    typename enable_if<
+        is_same<T, TAnyType<> >
+      , TAnyType<
+            TParent
+          , TCallStack
+          , creator
+          , TAllocator
+          , TDeps
+          , TRefs
+          , TVisitor
+          , TPolicies
+        >
+    >::type
+    create(const TAllocator&
+         , TDeps&
+         , TRefs&
+         , const TVisitor&
+         , const TPolicies&);
 
     template<
         typename T
-      , typename // TParent - not needed
+      , typename // TParent - not used
       , typename TCallStack
+      , typename TAllocator
       , typename TDeps
       , typename TRefs
       , typename TVisitor
       , typename TPolicies
     >
-    wrappers::universal<T> create(TDeps&, TRefs&, const TVisitor& , const TPolicies&, typename disable_if<is_same<T, detail::any_type> >::type* = 0);
+    typename disable_if<is_same<T, TAnyType<> >, wrappers::universal<T> >::type
+    create(const TAllocator
+         , TDeps&
+         , TRefs&
+         , const TVisitor&
+         , const TPolicies&);
 };
 
 } // namespace core
@@ -402,23 +576,38 @@ template<
     typename TDependecies = mpl::vector0<>
   , template<
         typename
-      , template<typename, typename> class = ::boost::di::core::binder
+      , template<typename> class = ::boost::di::core::binder
+      , template<
+            typename
+          , typename
+          , typename
+          , typename
+          , typename
+          , typename
+          , typename
+          , typename
+        >
+        class = ::boost::di::core::any_type
     > class TCreator = creator
   , template<
         typename = ::boost::mpl::vector0<>
       , typename = ::boost::di::core::never< ::boost::mpl::_1 >
       , typename = void
     > class TPool = pool
+  , typename TDefaultAllocator = allocator
 >
 class module {
 public:
     typedef TDependecies deps;
 
     template<typename... TArgs>
-    explicit module(TArg&&...);
+    explicit module(const TArg&...);
 
     template<typename T, typename... TPolicies>
-    T create(TPolicies&&...);
+    T create(const TPolicies&...);
+
+    template<typename T, typename TAllocator, typename... TPolicies>
+    T allocate(const TAllocator&, const TPolicies&...) {
 
     template<typename T, typename Visitor>
     T visit(const Visitor&);
@@ -456,7 +645,7 @@ public:
     typedef TSeq types;
 
     template<typename... T>
-    explicit pool(T&&...);
+    explicit pool(const T&...);
 
     template<typename T>
     explicit pool(const pool<T>&, const init&);
@@ -602,7 +791,7 @@ class dependency {
 
 public:
     typedef dependency type;
-    typedef typename detail::scope_traits<TScope>::type scope;
+    typedef TScope scope;
     typedef TExpected expected;
     typedef TGiven given;
     typedef TBind bind;
@@ -622,8 +811,7 @@ public:
 
     template<typename T>
     static dependency<ref_type, typename unwrap_reference<T>::type, T, TBind>
-    to(const T&, typename enable_if<is_reference_wrapper<T> >::type* = 0
-               , typename disable_if<di::type_traits::has_call_operator<T> >::type* = 0);
+    to(const T&, typename enable_if<is_reference_wrapper<T> >::type* = 0);
 
     template<typename T>
     static dependency<typename get_wrapper<T>::type, expected, T, TBind>
@@ -632,7 +820,7 @@ public:
 
     template<typename T>
     static dependency<shared_type, expected, T>
-    to(const std::shared_ptr<T>&);
+    to(const aux::shared_ptr<T>&);
 };
 
 } // namespace concepts
@@ -839,19 +1027,26 @@ class external {
 public:
     typedef mpl::int_<1> priority;
 
-    template<typename TExpected, typename = TExpected>
+    template<typename TExpected>
     class scope {
     public:
-        typedef TWrapper<TExpected> result_type;
+        typedef TWrapper<T> result_type;
 
         template<typename T>
-        explicit scope(const T&, typename enable_if_c<type_traits::has_call_operator<T>::value>::type* = 0);
+        explicit scope(const T&
+                     , typename enable_if_c<
+                           type_traits::has_call_operator<T>::value &&
+                           !is_reference_wrapper<T>::value
+                       >::type* = 0);
 
         template<typename T>
-        explicit scope(const T&, typename disable_if_c<type_traits::has_call_operator<T>::value>::type* = 0);
+        explicit scope(const T&
+                     , typename disable_if_c<
+                           type_traits::has_call_operator<T>::value &&
+                           !is_reference_wrapper<T>::value
+                       >::type* = 0);
 
-        template<typename.. TArgs>
-        result_type create(TArgs&&...);
+        result_type create();
     };
 };
 
@@ -878,7 +1073,7 @@ class session {
 public:
     typedef mpl::int_<0> priority;
 
-    template<typename TExpected, typename TGiven = TExpected>
+    template<typename TExpected>
     class scope {
     public:
         typedef TWrapper<TExpected> result_type;
@@ -886,8 +1081,7 @@ public:
         void call(const session_entry&);
         void call(const session_exit&);
 
-        template<typename.. TArgs>
-        result_type create(TArgs&&...);
+        result_type create(const function<TExpected*()>&);
     };
 };
 
@@ -911,13 +1105,12 @@ class shared {
 public:
     typedef mpl::int_<0> priority;
 
-    template<typename TExpected, typename TGiven = TExpected>
+    template<typename TExpected>
     class scope {
     public:
         typedef TWrapper<TExpected> result_type;
 
-        template<typename.. TArgs>
-        result_type create(TArgs&&...);
+        result_type create(const function<TExpected*()>&);
     };
 };
 
@@ -941,13 +1134,12 @@ class unique {
 public:
     typedef mpl::int_<0> priority;
 
-    template<typename TExpected, typename TGiven = TExpected>
+    template<typename TExpected>
     class scope {
     public:
         typedef TWrapper<TExpected> result_type;
 
-        template<typename.. TArgs>
-        result_type create(TArgs&&...);
+        result_type create(const function<TExpected*()>&);
     };
 };
 
@@ -963,35 +1155,6 @@ public:
 [endsect]
 
 [section Policies]
-
-[section Header <boost/di/policies/arguments_permission.hpp>]
-```
-namespace boost {
-namespace di {
-namespace policies {
-
-struct allow_smart_ptrs;
-struct allow_refs;
-struct allow_const_refs;
-struct allow_rvalue_refs;
-struct allow_ptrs;
-struct allow_copies;
-
-template<typename... T>
-class arguments_permission {
-public:
-    template<typename TDependency>
-    void assert_policy() const;
-};
-
-} // namespace policies
-} // namespace di
-} // namespace boost
-```
-[table
-    [[Tests: [@test/ut/policies/arguments_permission_ut.cpp]]]
-]
-[endsect]
 
 [section Header <boost/di/policies/circular_dependencies.hpp>]
 ```
@@ -1065,45 +1228,38 @@ public:
 ]
 [endsect]
 
-[endsect]
-
-[section Type Traits]
-
-[section Header <boost/di/type_traits/create_traits.hpp>]
+[section Header <boost/di/policies/parameters_permission.hpp>]
 ```
 namespace boost {
 namespace di {
-namespace type_traits {
+namespace policies {
 
-template<typename, typename = void>
-struct is_mpl_string;
+struct allow_smart_ptrs;
+struct allow_refs;
+struct allow_const_refs;
+struct allow_rvalue_refs;
+struct allow_ptrs;
+struct allow_copies;
 
-template<typename T>
-struct is_explicit;
+template<typename... T>
+class parameters_permission {
+public:
+    template<typename TDependency>
+    void assert_policy() const;
+};
 
-template<typename TExpected, typename TGiven>
-typename disable_if<is_explicit<TGiven>, TExpected*>::type
-create_traits();
-
-template<typename TExpected, typename TGiven>
-typename enable_if<has_value<TGiven>, TExpected*>::type
-create_traits();
-
-template<typename TExpected, typename TGiven>
-typename enable_if<is_mpl_string<TGiven>, TExpected*>::type
-create_traits();
-
-template<typename TExpected, typename TGiven, typename TArgs...>
-TExpected* create_traits(TArgs&&...);
-
-} // namespace type_traits
+} // namespace policies
 } // namespace di
 } // namespace boost
 ```
 [table
-    [[Tests: [@test/ut/type_traits/create_traits_ut.cpp]]]
+    [[Tests: [@test/ut/policies/parameters_permission_ut.cpp]]]
 ]
 [endsect]
+
+[endsect]
+
+[section Type Traits]
 
 [section Header <boost/di/type_traits/ctor_traits.hpp>]
 ```
@@ -1111,8 +1267,6 @@ namespace boost {
 namespace di {
 
 namespace detail {
-
-struct any_type;
 
 template<typename T>
 struct get_value;
@@ -1124,7 +1278,7 @@ struct get_longest_ctor;
 
 namespace type_traits {
 
-template<typename T, typename = void>
+template<typename T>
 struct ctor_traits;
 
 } // namespace type_traits
@@ -1135,6 +1289,34 @@ struct ctor_traits;
     [[Tests: [@test/ut/type_traits/ctor_traits_ut.cpp]]]
 ]
 [endsect]
+
+[section Header <boost/di/type_traits/function_traits.hpp>]
+```
+namespace boost {
+namespace di {
+namespace type_traits {
+
+template<typename>
+struct function_traits;
+
+template<typename R, typename... TArgs>
+struct function_traits<R(*)(TArgs...)>;
+
+template<typename R, typename T, typename... TArgs>
+struct function_traits<R(T::*)(TArgs...)>;
+
+template<typename R, typename T, typename... TArgs>
+struct function_traits<R(T::*)(TArgs...) const>;
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/ut/type_traits/function_traits_ut.cpp]]]
+]
+[endsect]
+
 
 [section Header <boost/di/type_traits/has_call.hpp>]
 ```
@@ -1206,7 +1388,7 @@ namespace boost {
 namespace di {
 namespace type_traits {
 
-template<typename T, typename TArgumentsSize>
+template<typename T, typename TSize>
 class has_ctor;
 
 } // namespace type_traits
@@ -1318,30 +1500,6 @@ struct make_plain;
 ```
 [table
     [[Tests: [@test/ut/type_traits/make_plain_ut.cpp]]]
-]
-[endsect]
-
-[section Header <boost/di/type_traits/parameter_types.hpp>]
-```
-namespace boost {
-namespace di {
-namespace type_traits {
-
-template<typename R, TArgs...>
-struct parameter_types<R(*)(TArgs...)>;
-
-template<typename R, typename T, TArgs...>
-struct parameter_types<R(T::*)(TArgs...)>;
-
-template<typename R, typename T, TArgs...>
-struct parameter_types<R(T::*)(TArgs...) const>;
-
-} // namespace type_traits
-} // namespace di
-} // namespace boost
-```
-[table
-    [[Tests: [@test/ut/type_traits/parameter_types_ut.cpp]]]
 ]
 [endsect]
 

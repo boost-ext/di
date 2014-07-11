@@ -39,6 +39,8 @@ Dependency Injection may be realised and how it will affects the source code des
     [[[*Dependency Injection]][Manual Dependency Injection (tedious/hard to maintain in large scale)][Enhanced Dependency Injection ([*Boost.DI])]]
 ]
 
+Skip other solutions and go straight away to [link boost_di Boost.DI].
+
 * [*Spaghetti code] which is highly coupled is really hard to change/maintain/test,
 therefore is not really good practise to write it.
 
@@ -81,7 +83,7 @@ scale - project will end up with some sort of automatization.
     }
 ```
 
-If we want to support our app with different type of loggers we need to write
+If we want to support different types of logger we need to write
 a bit of boilerplate code over and over again.
 
 ```
@@ -208,6 +210,7 @@ applies to the framework itself as well. To sum up framework shouldn't affect
 the design/implementation/structure of the code except for well-defined cases
 like "composition root".
 
+[#boost_di]
 [table
     [[Boost.DI]]
     [[
@@ -306,12 +309,15 @@ Therefore instead of creating and configuring the objects yourself, the dependen
 [*Dependency Injection Framework] might be really useful and may make your code to be loosely coupled and easy to maintain.
 Followed by a few good practises/principles will get most out of Dependency Injection Framework.
 
-* Avoid [@http://en.wikipedia.org/wiki/Service_locator_pattern Service Locator] pattern and don't use Dependency Injection the same way
 * Avoid global states and [@http://en.wikipedia.org/wiki/Singleton_pattern Singleton pattern]
-* Follow [@http://en.wikipedia.org/wiki/Single_responsibility_principle Single Responsibility principle] while designing your classes
-* Follow [@http://en.wikipedia.org/wiki/Law_of_Demeter Law of Demeter principle] while using dependencies
-* Follow [@http://en.wikipedia.org/wiki/Open/closed_principle Open/closed] principle
-* Follow Composition Root principle
+* Avoid [@http://en.wikipedia.org/wiki/Service_locator_pattern Service Locator] pattern
+* Follow [@http://en.wikipedia.org/wiki/Single_responsibility_principle Single Responsibility] principle
+* Follow [@http://en.wikipedia.org/wiki/Open/closed_principle Open/Closed] principle
+* Follow [@http://en.wikipedia.org/wiki/Interface_segregation_principle Interface Segregation] principle
+* Follow [@http://en.wikipedia.org/wiki/Liskov_substitution_principle Liskov Substitution] principle
+* Follow [@http://en.wikipedia.org/wiki/Law_of_Demeter Law of Demeter] principle
+* Follow [@http://en.wikipedia.org/wiki/Dependency_inversion_principle Dependency inversion] principle
+* Apply Composition Root
 
 And always follow Hollywood principle: [*"Don't call us, we'll call you"].
 
