@@ -24,18 +24,23 @@ package Boost.DI {
     }
 
     package core <<Rect>> {
-        class binder {
-            universal<T> resolve()
+        class allocator {
+            T* allocate(...) const
         }
-        class builder {
-            universal<T> build(...)
+        class any_type {
+            operator T()
+        }
+        class binder {
+            typedef resolve
         }
         class creator {
-            universal<T> create(...)
+            universal<T> create(policies...)
         }
         class module {
-            Dependencies deps
-            T create(...)
+            typedef deps
+            module(TArgs...)
+            T create(policies...)
+            T allocate(allocator, policies...)
             void visit()
             void call(TAction)
         }
@@ -47,6 +52,7 @@ package Boost.DI {
 
     package concepts <<Rect>> {
         class dependency {
+            dependency()
             dependency(T)
             dependency<T> to(T)
         }
@@ -56,24 +62,23 @@ package Boost.DI {
 
     package scopes <<Rect>> {
         class deduce {
-            T create(...)
         }
         class external {
-            T create(...)
+            T create()
         }
         class session {
-            T create(...)
+            T create(function<T*()>)
         }
         class shared {
-            T create(...)
+            T create(function<T*()>)
         }
         class unique {
-            T create(...)
+            T create(function<T*()>)
         }
     }
 
     package policies <<Rect>> {
-        class arguments_permission {
+        class parameters_permission {
             void assert_policy() const
         }
 
@@ -92,24 +97,26 @@ package Boost.DI {
 
     package wrappers <<Rect>> {
         class copy {
-            T operator()(const type<T>&) const
+            T operator()(type<T>) const
         }
         class reference {
-            T operator()(const type<T>&) const
+            T operator()(type<T>) const
         }
         class wrappers.shared {
-            T operator()(const type<T>&) const
+            T operator()(type<T>) const
         }
         class universal {
-            T operator()(const type<T>&) const
+            T operator()(type<T>) const
         }
         class value {
-            T operator()(const type<T>&) const
+            T operator()(type<T>) const
         }
     }
 
     class injector {
+        injector(TArgs...)
         T create(policies...)
+        T allocate(allocate, policies...)
         void visit()
         void call(TAction)
     }
@@ -128,7 +135,8 @@ package Boost.DI {
     module <|-- pool
     module --* creator
     creator --* binder
-    binder --* builder
+    any_type - creator
+    allocator - creator
 }
 
 @enduml
