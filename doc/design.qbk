@@ -378,7 +378,7 @@ Boost.DI architecture might be split into few main parts
     [ [Policies] [Compile time assertions for types] ]
 ]
 
-[h5 Constructor Arguments Deduction]
+[h5 Constructor Parameters Deduction]
 
 # for type T
     # for N = 1 to `BOOST_DI_CFG_CTOR_LIMIT_SIZE`

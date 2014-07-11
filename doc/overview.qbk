@@ -88,6 +88,10 @@ see `Design.Problematic Cases`:
   [[Arguments Permission Policy][supported][supported][supported][not supported]]
 ]
 
+[table
+  [[][Constructor Deduction][`BOOST_DI_INJECT`]]
+]
+
 [h6 Recommendations]
 
 Boost.DI supports variety of compilers and standards. Not all features are supported the same way or in general

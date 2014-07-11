@@ -52,7 +52,6 @@ test-suite cpp_11 : # "di / c++ 11"
     [ run-test c++11 : cpp_11/binding.cpp : binding_cpp_11 ]
     [ run-test c++11 : cpp_11/externals.cpp : externals_cpp_11 ]
     [ run-test c++11 : cpp_11/multiple_interfaces.cpp : multiple_interfaces_cpp_11 ]
-    [ run-test c++11 : cpp_11/motivation.cpp : motivation_cpp_11 ]
     [ run-test c++11 : cpp_11/testing.cpp : testing_cpp_11 ]
     [ run-test c++11 : cpp_11/cpp_generation_visitor.cpp : cpp_generation_visitor_cpp_11 ]
 ;

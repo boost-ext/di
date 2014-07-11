@@ -13,23 +13,22 @@
 
 [section Constructor Injection]
 
-Constructor injection is the most powerful of the available injections. It guarantee initialized state of data members.
-Within DI, by default, is achieved without any additional work from the user than defining the constructor.
-Library will go through the constructors and choose the longest one to pass the dependencies.
+[*Constructor Injection] is the most powerful of the available injections. It guarantee initialized state of data members.
+In Boost.DI Constructor Injection is achieved without any additional work from the user except defining the constructor.
+Boost.DI will deduce the best available constructor to be used for injection. See `Constructor Parameters Deduction` to read more.
 
 ```
 class example {
 public:
     example(int);
     example(int, double);
-    example(int, double, float); // will be deduced by DI
+    example(int, double, float); // will be deduced by Boost.DI
 };
 ```
 
-If the default behavior should be changed there is a way of explicitly saying which constructor should be deduced by adding
-`BOOST_DI_INJECT` to the constructor definition.
+If the default behavior should be changed is should explicitly marked using by adding `BOOST_DI_INJECT` to the constructor definition.
 
-[note DI is not able to distinguish between ambiguous constructors with the same (longest) amount of parameters, then BOOST_DI_INJECT has to be used to point which constructor should be dedced]
+[note Boost.DI is not able to distinguish between ambiguous constructors with the same (longest) amount of parameters, then BOOST_DI_INJECT has to be used to point which constructor should be dedced]
 [warning In C++03 constructors with one argument might be ambiguous with copy constructors, therefore is advised to use `BOOST_DI_INJECT` for 1 argument constructors in C++03.]
 
 [h6 BOOST_DI_INJECT]
