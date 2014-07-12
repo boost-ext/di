@@ -14,15 +14,25 @@ project di :
         <warnings>all
 ;
 
-rule run-test ( std : src : property * ) {
-    run $(src) : : :
-        <define>BOOST_DI_CFG_EXAMINE_CALL_STACK
-        <toolset>gcc:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
-        <toolset>clang:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
-        <toolset>darwin:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
-        <toolset>intel:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
-        <toolset>msvc:<cxxflags>"/FI ../test/common/config.hpp"
-    : $(property) ;
+rule run-test ( std : src : property * : cxxflags * ) {
+    if $(cxxflags) {
+        run $(src) : : :
+            <toolset>gcc:<cxxflags>"-std=$(std) -include ../test/common/config.hpp $(cxxflags)"
+            <toolset>clang:<cxxflags>"-std=$(std) -include ../test/common/config.hpp $(cxxflags)"
+            <toolset>darwin:<cxxflags>"-std=$(std) -include ../test/common/config.hpp $(cxxflags)"
+            <toolset>intel:<cxxflags>"-std=$(std) -include ../test/common/config.hpp $(cxxflags)"
+            <toolset>msvc:<cxxflags>"/FI ../test/common/config.hpp $(cxxflags)"
+        : $(property) ;
+    } else {
+        run $(src) : : :
+            <define>BOOST_DI_CFG_EXAMINE_CALL_STACK
+            <toolset>gcc:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
+            <toolset>clang:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
+            <toolset>darwin:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
+            <toolset>intel:<cxxflags>"-std=$(std) -include ../test/common/config.hpp"
+            <toolset>msvc:<cxxflags>"/FI ../test/common/config.hpp"
+        : $(property) ;
+    }
 }
 
 test-suite di :
@@ -62,8 +72,8 @@ test-suite cpp_14 : # "di / c++ 14"
     [ run-test c++1y : cpp_14/modules.cpp : modules_cpp_14 ]
 ;
 
-#test-suite tutorial :
-    #[ run-test c++1y : cpp_14/tutorial/tutorial1/main.cpp : tutorial1_main_cpp_14 : -Icpp_14/tutorial -Icpp_14/tutorial/tutorial1 ]
-    #[ run-test c++1y : cpp_14/tutorial/tutorial1/app_ut.cpp : tutorial1_app_ut_cpp_14 : -Icpp_14/tutorial -Icpp_14/tutorial/tutorial1 ]
-#;
+test-suite tutorial :
+    [ run-test c++1y : cpp_14/tutorial/tutorial1/main.cpp : tutorial1_main_cpp_14 : -Icpp_14/tutorial -Icpp_14/tutorial/tutorial1 ]
+    [ run-test c++1y : cpp_14/tutorial/tutorial1/app_ut.cpp : tutorial1_app_ut_cpp_14 : -Icpp_14/tutorial -Icpp_14/tutorial/tutorial1 ]
+;
 

@@ -113,7 +113,7 @@ injector().create<example>();
                                                                           .
                 struct example {
                     example(const example&);
-                    example(int); // ambiguous in C++03
+                    example(int); // ambiguous in c++03
                 };
                 ```
             ]
@@ -130,7 +130,13 @@ injector().create<example>();
                 In C++03 constructor has to be explicitly pointed out
                 struct example {
                     example(const example&);
-                    BOOST_DI_INJECT(example, (int));
+                    BOOST_DI_INJECT(example, (int)); // ok in c++03
+                };
+
+                Or by adding dummy parameter to the constructor
+                struct example {
+                    example(const example&);
+                    example(int, int = 0); // ok in c++03
                 };
                 ```
             ]
