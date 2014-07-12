@@ -9,13 +9,6 @@
 
 [section:examples Examples]
 
-To make example's more readable data classes were moved into separated file.
-[import ../example/common/data.hpp]
-[data]
-[table
-    [[Data code: [@example/common/data.hpp]]]
-]
-
 [section:hello_world Hello World]
 [import ../example/hello_world.cpp]
 [hello_world]
@@ -81,6 +74,9 @@ To make example's more readable data classes were moved into separated file.
 [table
     [[Full code example: [@example/uml_visitor.cpp]]]
 ]
+[endsect]
+
+[section More Examples]
 [endsect]
 
 [endsect]
