@@ -300,8 +300,10 @@ Therefore instead of creating and configuring the objects yourself, the dependen
 
 * [*Testability]
     * possibility of passing all required parameters via constructor give the opportunity to use fakes for testing purposes
-    * integration tests might be done easily written by injection fakes
-    * we won't need hard to write tests for manual injection or factories
+    * we won't need to write tests for manual injection or factories
+    * integration tests might be written easily by passing fakes from framework
+    * unit tests doesn't require framework at all to pass dependencies, but to avoid boilerplate code dependency injection framework
+      may inject fakes automatically
 
 * [*Readability]
     * code is easier to read since there is a proper separation between business logic and object creation as well as there is no boilerplate code just making chaos

@@ -17,8 +17,7 @@
 
 namespace di = boost::di;
 
-struct example
-{
+struct example {
     explicit example(const std::shared_ptr<int>& sp)
         : sp_(sp)
     { }
@@ -29,7 +28,7 @@ struct example
 class custom_scope
 {
 public:
-    typedef boost::mpl::int_<0> priority; // lowest = 0, highest = N
+    using priority = boost::mpl::int_<0>; // lowest = 0, highest = N
 
     class entry { };
     class exit { };
@@ -37,10 +36,10 @@ public:
     template<typename T>
     class scope
     {
-        class wrapper
+        class custom_wrapper
         {
         public:
-            wrapper(const std::shared_ptr<T>& object) // non explicit
+            custom_wrapper(const std::shared_ptr<T>& object) // non explicit
                 : object_(object)
             { }
 
@@ -53,7 +52,8 @@ public:
         };
 
     public:
-        typedef wrapper result_type;
+        using result_type = custom_wrapper;
+        //using result_type = di::wrappers::shared<T>;
 
         void call(const entry&) {
             in_scope_ = true;
@@ -63,7 +63,7 @@ public:
             in_scope_ = false;
         }
 
-        result_type create(const boost::function<T*()>& f) {
+        result_type create(const boost::function<T*()>& f) const {
             if (in_scope_) {
                 return std::shared_ptr<T>(f());
             }

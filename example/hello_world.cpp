@@ -48,7 +48,7 @@ struct app {
 };
 
 int main() {
-    /*<<make injector with no configuration and create `app`>>*/
+    /*<<make injector with empty configuration and create `app`>>*/
     di::make_injector().create<app>();
 
     return 0;

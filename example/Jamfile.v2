@@ -45,6 +45,7 @@ test-suite cpp_03 : # "di / c++ 03"
 ;
 
 test-suite cpp_11 : # "di / c++ 11"
+    [ run-test c++11 : cpp_11/custom_allocator.cpp : custom_allocator_cpp_11 ]
     [ run-test c++11 : cpp_11/custom_policy.cpp : custom_policy_cpp_11 ]
     [ run-test c++11 : cpp_11/concepts.cpp : concepts_cpp_11 ]
     [ run-test c++11 : cpp_11/custom_scope.cpp : custom_scope_cpp_11 ]
