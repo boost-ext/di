@@ -11,15 +11,21 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <boost/shared_ptr.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/units/detail/utility.hpp>
-#include "common/data.hpp"
 //->
 #include <boost/di.hpp>
 
 //<-
 namespace mpl = boost::mpl;
 namespace utils = boost::units::detail;
+
+struct i0 { virtual ~i0() { }; };
+struct c0 : i0 { };
+struct c1 { c1(boost::shared_ptr<i0>, int) { } };
+struct c2 { c2(int, double, char) { } };
+struct c3 { c3(boost::shared_ptr<c1>, boost::shared_ptr<c2>) { } };
 //->
 namespace di = boost::di;
 
