@@ -11,12 +11,13 @@
 
 # Is configuration via XML supported by Boost.DI?
 
-    * Short answer is NO. Boost.DI dependencies are configured in the source code using C++ features.
+    * Short answer is NO. Boost.DI dependencies are configured in the source code using C++ features which allows compile time checking.
+    Long story short, fluent configuration you don't have to remember of changing the configuration file, compiler will take care of it for you.
 Usually lazy binding requires exceptions handling and is a performance killer, but obviously it depends on a projects needs.
 Although it might be hard it is possible to achieve it with Boost.DI.
 The question which should be asked though - how often configuration is dynamically changed via XML?
 
-# Why Boost.DI doesn't support setter/member injection?
+# Why Boost.DI doesn't support `setter/member`` injection?
 
     * Constructor injection is the most powerful and the preferable injection method which avoid uninitialized state of members.
 `Setter/Member` injection should be avoided at all costs in order to keep the solutions as clean as possible. Therefore Boost.DI

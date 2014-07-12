@@ -34,8 +34,9 @@ public:
     { }
 
     void start() {
-        if (value_)
+        if (value_) {
             printer_->print(text_);
+        }
     }
 
 private:

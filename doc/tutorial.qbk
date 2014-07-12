@@ -9,50 +9,34 @@
 
 [section Tutorial]
 
-Well, first step should be to write a test, but for a sake of this tutorial we will skip this phase for now.
-
 For the purposes of this tutorial we are going to implement simple application which will print
-some text on some condition.
+log "hello_world" using our logger implementation from introduction when first command line argument is not equal 0.
 
-So, the first step would be to define app class.
-There is nothing special about it, no macros, no registration, nothing.
+[table
+    [[Logger/Fake logger implementation: [@example/cpp_14/tutorial/ilogger.hpp] | [@example/cpp_14/tutorial/logger.hpp] | [@example/cpp_14/tutorial/fake_logger.hpp]]]
+]
 
-```
-class app
-{
-public:
-    app(int value, const std::string& text)
-        : value_(value), text_(text)
-    { }
+Having logger in place let's write basic implementation. Let's assume we have test written already, so let's
+focus on the `app` then.
 
-    void start() {
-        if (value_)
-            std::cout << text_ << std::endl;
-    }
+So, the first step would be to define `app` class.
+There is nothing special about it which is required by Boost.DI, no macros, no registration, nothing.
 
-private:
-    int value_ = 0;
-    std::string text_;
-};
-```
+[import ../example/cpp_14/tutorial/tutorial1/app.hpp]
+[tutorial1_app]
 
-After this is completed we would like to create our app. This step will be different than normal flow, because
+After this is completed we would like to create our `app`. This step will be different than usual, because
 we are going to use dependency injection framework to create our dependencies for us.
 We are going to apply composition root in our example application and start the app class.
 
-Remember to include DI headers
+Remember to include DI header and alias the `di` namespace.
 ```
 #include <boost/di.hpp>
+namespace di = boost::di;
 ```
 
-```
-int main() {
-    auto injector = di::make_injector();
-    injector.create<app>().start();
-
-    return 0;
-}
-```
+[import ../example/cpp_14/tutorial/tutorial1/main.cpp]
+[tutorial1_main]
 
 Thats all, our application should compile and don't print anything.
 'flag' should be false and 'text' should be an empty string.

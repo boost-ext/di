@@ -17,8 +17,9 @@ public:
     { }
 
     void start() {
-        if (value_)
+        if (value_) {
             std::cout << text_ << std::endl;
+        }
     }
 
 private:
@@ -27,8 +28,10 @@ private:
 };
 
 int main() {
-    auto injector = di::make_injector();
-    injector.create<app>().start();
+    auto injector = di::make_injector(
+        di::bind_int<1>() // static value
+      , di::bind<std::string>::to("hello world") // dynamic value
+    );
 
     return 0;
 }

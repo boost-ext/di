@@ -19,7 +19,8 @@ install html/example/common : [ glob ../example/common/*.hpp ] ;
 install html/example/cpp_03 : [ glob ../example/cpp_03/*.cpp ] ;
 install html/example/cpp_11 : [ glob ../example/cpp_11/*.cpp ] ;
 install html/example/cpp_14 : [ glob ../example/cpp_14/*.cpp ] ;
-install html/example/cpp_14/tutorial : [ glob ../example/cpp_14/tutorial/*.cpp ] ;
+install html/example/cpp_14/tutorial : [ glob ../example/cpp_14/tutorial/*.hpp ] ;
+install html/example/cpp_14/tutorial/tutorial1 : [ glob ../example/cpp_14/tutorial/tutorial1/*.* ] ;
 
 install html/test/vt : [ glob ../test/vt/*.cpp ] ;
 install html/test/ut : [ glob ../test/ut/*.cpp ] ;
