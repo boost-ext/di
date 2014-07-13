@@ -31,6 +31,7 @@
     struct function_traits<R(T::*)()>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef mpl::vector0<> type;
     };
 
@@ -38,6 +39,7 @@
     struct function_traits<R(T::*)() const>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef mpl::vector0<> type;
     };
 
@@ -64,6 +66,7 @@
     struct function_traits<R(T::*)(BOOST_DI_TYPES_PASS(Args))>          \
     {                                                                   \
         typedef R result_type;                                          \
+        typedef T base_type;                                            \
         typedef BOOST_DI_MPL_VECTOR_TYPES_PASS(Args) type;              \
     };
 
@@ -71,6 +74,7 @@
     struct function_traits<R(T::*)(BOOST_DI_TYPES_PASS(Args)) const>    \
     {                                                                   \
         typedef R result_type;                                          \
+        typedef T base_type;                                            \
         typedef BOOST_DI_MPL_VECTOR_TYPES_PASS(Args) type;              \
     };
 

@@ -1248,6 +1248,7 @@ private:
     struct function_traits<R(T::*)()>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef mpl::vector0<> type;
     };
 
@@ -1255,6 +1256,7 @@ private:
     struct function_traits<R(T::*)() const>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef mpl::vector0<> type;
     };
 
@@ -1269,6 +1271,7 @@ private:
     struct function_traits<R(T::*)( Args0)>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef ::boost::mpl::vector1< Args0> type;
     };
 
@@ -1276,6 +1279,7 @@ private:
     struct function_traits<R(T::*)( Args0) const>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef ::boost::mpl::vector1< Args0> type;
     };
 
@@ -1290,6 +1294,7 @@ private:
     struct function_traits<R(T::*)( Args0 , Args1)>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef ::boost::mpl::vector2< Args0 , Args1> type;
     };
 
@@ -1297,6 +1302,7 @@ private:
     struct function_traits<R(T::*)( Args0 , Args1) const>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef ::boost::mpl::vector2< Args0 , Args1> type;
     };
 
@@ -1311,6 +1317,7 @@ private:
     struct function_traits<R(T::*)( Args0 , Args1 , Args2)>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef ::boost::mpl::vector3< Args0 , Args1 , Args2> type;
     };
 
@@ -1318,6 +1325,7 @@ private:
     struct function_traits<R(T::*)( Args0 , Args1 , Args2) const>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef ::boost::mpl::vector3< Args0 , Args1 , Args2> type;
     };
 
@@ -1332,6 +1340,7 @@ private:
     struct function_traits<R(T::*)( Args0 , Args1 , Args2 , Args3)>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef ::boost::mpl::vector4< Args0 , Args1 , Args2 , Args3> type;
     };
 
@@ -1339,6 +1348,7 @@ private:
     struct function_traits<R(T::*)( Args0 , Args1 , Args2 , Args3) const>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef ::boost::mpl::vector4< Args0 , Args1 , Args2 , Args3> type;
     };
 
@@ -1353,6 +1363,7 @@ private:
     struct function_traits<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4)>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef ::boost::mpl::vector5< Args0 , Args1 , Args2 , Args3 , Args4> type;
     };
 
@@ -1360,6 +1371,7 @@ private:
     struct function_traits<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4) const>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef ::boost::mpl::vector5< Args0 , Args1 , Args2 , Args3 , Args4> type;
     };
 
@@ -1374,6 +1386,7 @@ private:
     struct function_traits<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5)>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef ::boost::mpl::vector6< Args0 , Args1 , Args2 , Args3 , Args4 , Args5> type;
     };
 
@@ -1381,6 +1394,7 @@ private:
     struct function_traits<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5) const>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef ::boost::mpl::vector6< Args0 , Args1 , Args2 , Args3 , Args4 , Args5> type;
     };
 
@@ -1395,6 +1409,7 @@ private:
     struct function_traits<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6)>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef ::boost::mpl::vector7< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6> type;
     };
 
@@ -1402,6 +1417,7 @@ private:
     struct function_traits<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6) const>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef ::boost::mpl::vector7< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6> type;
     };
 
@@ -1416,6 +1432,7 @@ private:
     struct function_traits<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7)>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef ::boost::mpl::vector8< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7> type;
     };
 
@@ -1423,6 +1440,7 @@ private:
     struct function_traits<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7) const>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef ::boost::mpl::vector8< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7> type;
     };
 
@@ -1437,6 +1455,7 @@ private:
     struct function_traits<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8)>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef ::boost::mpl::vector9< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8> type;
     };
 
@@ -1444,6 +1463,7 @@ private:
     struct function_traits<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8) const>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef ::boost::mpl::vector9< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8> type;
     };
 
@@ -1458,6 +1478,7 @@ private:
     struct function_traits<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9)>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef ::boost::mpl::vector10< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9> type;
     };
 
@@ -1465,6 +1486,7 @@ private:
     struct function_traits<R(T::*)( Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9) const>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef ::boost::mpl::vector10< Args0 , Args1 , Args2 , Args3 , Args4 , Args5 , Args6 , Args7 , Args8 , Args9> type;
     };
 
@@ -6445,8 +6467,8 @@ public :
             );
         }
 
-        template<typename T, typename Visitor>
-        T visit(const Visitor& visitor) {
+        template<typename T, typename TVisitor>
+        T visit(const TVisitor& visitor) {
             typedef mpl::vector0<> call_stack;
             std::vector<aux::shared_ptr<void> > refs_;
 

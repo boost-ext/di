@@ -1248,6 +1248,7 @@ private:
     struct function_traits<R(T::*)()>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef mpl::vector0<> type;
     };
 
@@ -1255,6 +1256,7 @@ private:
     struct function_traits<R(T::*)() const>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef mpl::vector0<> type;
     };
 
@@ -1269,6 +1271,7 @@ private:
     struct function_traits<R(T::*)(Args...)>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef ::boost::mpl::vector<Args...> type;
     };
 
@@ -1276,6 +1279,7 @@ private:
     struct function_traits<R(T::*)(Args...) const>
     {
         typedef R result_type;
+        typedef T base_type;
         typedef ::boost::mpl::vector<Args...> type;
     };
 
@@ -6801,8 +6805,8 @@ public :
             );
         }
 
-        template<typename T, typename Visitor>
-        T visit(const Visitor& visitor) {
+        template<typename T, typename TVisitor>
+        T visit(const TVisitor& visitor) {
             typedef mpl::vector0<> call_stack;
             std::vector<aux::shared_ptr<void> > refs_;
 

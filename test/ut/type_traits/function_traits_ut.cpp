@@ -46,12 +46,15 @@ BOOST_AUTO_TEST_CASE(parameters_type_functions) {
 
 BOOST_AUTO_TEST_CASE(parameters_type_methods) {
     BOOST_CHECK((is_same<void, typename function_traits<decltype(&c1::f1)>::result_type>::value));
+    BOOST_CHECK((is_same<c1, typename function_traits<decltype(&c1::f1)>::base_type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector<>, typename function_traits<decltype(&c1::f1)>::type>::value));
 
     BOOST_CHECK((is_same<int, typename function_traits<decltype(&c1::f2)>::result_type>::value));
+    BOOST_CHECK((is_same<c1, typename function_traits<decltype(&c1::f2)>::base_type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector<int>, typename function_traits<decltype(&c1::f2)>::type>::value));
 
     BOOST_CHECK((is_same<int, typename function_traits<decltype(&c1::f3)>::result_type>::value));
+    BOOST_CHECK((is_same<c1, typename function_traits<decltype(&c1::f3)>::base_type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector<int, const double&>, typename function_traits<decltype(&c1::f3)>::type>::value));
 }
 
@@ -60,9 +63,11 @@ BOOST_AUTO_TEST_CASE(parameters_type_const_methods) {
     BOOST_CHECK((mpl::equal<mpl::vector<>, typename function_traits<decltype(&c2::f1)>::type>::value));
 
     BOOST_CHECK((is_same<int, typename function_traits<decltype(&c2::f2)>::result_type>::value));
+    BOOST_CHECK((is_same<c2, typename function_traits<decltype(&c2::f2)>::base_type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector<int>, typename function_traits<decltype(&c2::f2)>::type>::value));
 
     BOOST_CHECK((is_same<int, typename function_traits<decltype(&c2::f3)>::result_type>::value));
+    BOOST_CHECK((is_same<c2, typename function_traits<decltype(&c2::f3)>::base_type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector<int, const double&>, typename function_traits<decltype(&c2::f3)>::type>::value));
 }
 
