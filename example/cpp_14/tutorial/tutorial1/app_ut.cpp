@@ -14,7 +14,7 @@ void test_dont_print_hello_world_when_value_equal_0() {
     const auto fake_logger_ = std::make_shared<fake_logger>();
 
     //when
-    app(fake_logger_, 0).start();
+    app(fake_logger_, 0).run();
 
     //then
     assert(0 == fake_logger_->log_calls_.size());
@@ -26,7 +26,7 @@ void test_print_hello_world_when_value_not_equal_to_0() {
     const auto fake_logger_ = std::make_shared<fake_logger>();
 
     //when
-    app(fake_logger_, 1).start();
+    app(fake_logger_, 1).run();
 
     //then
     assert(1 == fake_logger_->log_calls_.size());

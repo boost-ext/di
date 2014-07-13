@@ -19,7 +19,7 @@ public:
         : logger_(logger), value_(value)
     { }
 
-    void start() {
+    void run() {
         if (value_) {
             logger_->log("hello world");
         }

@@ -1,0 +1,80 @@
+[/
+ /
+ / Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+ /
+ / Distributed under the Boost Software License, Version 1.0.
+ / (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /
+ /]
+
+[section Testing]
+
+* unit tests
+
+For unit tests Dependnecy Injection Framework is not needed. It's enough that we have possibility to fake dependencies by constructor.
+
+```
+    class example {
+    public:
+        example(std::shared_ptr<ilogic>, std::shared_ptr<ilogger>);
+    };
+```
+
+To test `example` we just need fakes/mocks/stubs for `ilogic`  and `ilogger` and pass them to constructor.
+
+```
+    void test_example() {
+        auto logic_mock = std::make_shared<logic_mock>();
+        auto logger_mock = std::make_shared<logger_mock>();
+
+        example sut((logic_mock, logger_mock));
+
+        // ...
+    }
+```
+
+However to avoid boilerplate code, especially with test classes.
+
+```
+    class example_test {
+    public:
+        void set_up() {
+            logic_mock_.reset(new logic_mock());
+            logger_mock_.reset(new logger_mock());
+        }
+
+        void tear_down() { }
+
+        void test_example() {
+            example sut((logic_mock_, logger_mock_));
+        }
+
+        std::shared_ptr<iloggic> logic_mock_;
+        std::shared_ptr<ilogger> logger_mock;
+    };
+```
+
+Instead of writing above we can use `Boost.DI` to generate mocks for us.
+[note We will need handy mock framework to achieve it like `hippomocks`]
+
+So our example may looks 
+```
+    void test_example() {
+        mock_allocator ma;
+        auto sut = di::make_injector().allocate<example>(ma);
+
+        // expectations on ma
+    }
+
+```
+
+* integration tests
+
+Integration tests will require building hierarchy of objects as well as some fakes
+
+```
+    di::make_injector(fake_module(), real_module());
+```
+
+[endsect]
+

@@ -30,6 +30,7 @@
 [include concepts.qbk]
 [include scopes.qbk]
 [include policies.qbk]
+[include testing.qbk]
 [include examples.qbk]
 [include integration.qbk]
 [include performance.qbk]
