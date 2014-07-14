@@ -5,7 +5,7 @@
 This is not an official Boost library yet and there is no guarantee it will ever be!
 
 ## Introduction
-Dependency Injection is C++03/C++11 header only library providing type safe, compile time, macro free constructor dependency injection functionality.
+Dependency Injection is C++03/C++11/C++14 header only library providing type safe, compile time, macro free constructor dependency injection functionality.
 
 ### Hello World
 
