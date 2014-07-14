@@ -9,7 +9,60 @@
 
 [section Extensions]
 
-[h6 Constructor Traits Generator]
+[section Automatic Mocks Injector]
+
+C++11 header only library providing following functionality:
+
+* Automatically create required mocks
+* Automatically inject mocks to tested classes via constructor
+* Automatically register for required destructor's in case of smart pointers (supports testing of unique_ptr)
+* Uses [@https://github.com/dascandy/hippomocks HippoMocks] as Mocking library
+
+Example
+```
+#include <mocks_injector.hpp>
+
+struct ilogger { virtual ~ilogger() { }; virtual void log(const std::string&) = 0; };
+struct ilogic { virtual ~ilogic() { }; virtual void do_it() = 0; };
+
+class example {
+public:
+    example(std::shared_ptr<ilogger> logger, const std::unique_ptr<ilogic>& logic)
+        : logger_(logger), logic_(std::move(logic))
+    { }
+
+    void run() {
+        logic_->do_it();
+        logger_->log("hello world");
+    }
+
+private:
+    std::shared_ptr<ilogger> logger_;
+    std::unique_ptr<ilogic> logic_;
+};
+
+int main() {
+    //1. create mocks injector
+    auto mi = di::make_mocks_injector();
+
+    //2. set up expectations
+    EXPECT_CALL(mi, ilogic::do_it);
+    EXPECT_CALL(mi, ilogger::log).With("hello world");
+
+    //3. create example class and run it
+    mi.create<example>().run(); // or mi.create<std::unique_ptr<example>>()->run();
+
+    return 0;
+}
+```
+
+[table
+    [[Download: [@https://github.com/krzysztof-jusiak/mocks_injector.git]]]
+]
+
+[endsect]
+
+[section Constructor Traits Generator]
 
 Python script based on lib clang generating constructor traits. Useful for third party libraries, which can't be changed.
 
@@ -23,24 +76,24 @@ Options:
 
 ```
 
-Example:
+Example
 ```
-
 ./di_ctor_traits.py -o di_ctor_traits.hpp -l "namespace::class" files...
 
 ```
 
 [table
-    [[Download: [@https://github.com/krzysztof-jusiak/di_ctor_traits di_ctor_traits]]]
+    [[Download: [@https://github.com/krzysztof-jusiak/di_ctor_traits.git]]]
 ]
 
-[h6 Runtime (Experimental)]
+[endsect]
+
+[section Runtime Injector (Experimental)]
 
 Implementation of experimental runtime extension giving possibility to install dependencies during runtime.
 
-Example:
+Example
 ```
-
 di::injector<> injector;
 
 injector.install(
@@ -58,8 +111,10 @@ injector.create<app>();
 ```
 
 [table
-    [[Download: [@https://github.com/krzysztof-jusiak/di_extensions di_runtime]]]
+    [[Download: [@https://github.com/krzysztof-jusiak/di_runtime_injector.git]]]
 ]
+
+[endsect]
 
 [endsect]
 
