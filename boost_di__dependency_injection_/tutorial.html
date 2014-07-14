@@ -27,56 +27,79 @@
 <a name="boost_di__dependency_injection_.tutorial"></a><a class="link" href="tutorial.html" title="Tutorial">Tutorial</a>
 </h2></div></div></div>
 <p>
-      Well, first step should be to write a test, but for a sake of this tutorial
-      we will skip this phase for now.
-    </p>
-<p>
       For the purposes of this tutorial we are going to implement simple application
-      which will print some text on some condition.
+      which will print log "hello_world" using our logger implementation
+      from introduction when first command line argument is not equal 0.
+    </p>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<tbody><tr><td>
+              <p>
+                Logger/Fake logger implementation: <a href="../example/cpp_14/tutorial/ilogger.hpp" target="_top">example/cpp_14/tutorial/ilogger.hpp</a>
+                | <a href="../example/cpp_14/tutorial/logger.hpp" target="_top">example/cpp_14/tutorial/logger.hpp</a>
+                | <a href="../example/cpp_14/tutorial/fake_logger.hpp" target="_top">example/cpp_14/tutorial/fake_logger.hpp</a>
+              </p>
+            </td></tr></tbody>
+</table></div>
+<p>
+      Having logger in place let's write basic implementation. Let's assume we have
+      test written already, so let's focus on the <code class="computeroutput"><span class="identifier">app</span></code>
+      then.
     </p>
 <p>
-      So, the first step would be to define app class. There is nothing special about
-      it, no macros, no registration, nothing.
+      So, the first step would be to define <code class="computeroutput"><span class="identifier">app</span></code>
+      class. There is nothing special about it which is required by Boost.DI, no
+      macros, no registration, nothing.
     </p>
 <p>
 </p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">app</span>
-<span class="special">{</span>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">app</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-    <span class="identifier">app</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">value</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">text</span><span class="special">)</span>
-        <span class="special">:</span> <span class="identifier">value_</span><span class="special">(</span><span class="identifier">value</span><span class="special">),</span> <span class="identifier">text_</span><span class="special">(</span><span class="identifier">text</span><span class="special">)</span>
+    <span class="identifier">app</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;</span> <span class="identifier">logger</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">value</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">logger_</span><span class="special">(</span><span class="identifier">logger</span><span class="special">),</span> <span class="identifier">value_</span><span class="special">(</span><span class="identifier">value</span><span class="special">)</span>
     <span class="special">{</span> <span class="special">}</span>
 
-    <span class="keyword">void</span> <span class="identifier">start</span><span class="special">()</span> <span class="special">{</span>
-        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">value_</span><span class="special">)</span>
-            <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">text_</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="keyword">void</span> <span class="identifier">run</span><span class="special">()</span> <span class="special">{</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">value_</span><span class="special">)</span> <span class="special">{</span>
+            <span class="identifier">logger_</span><span class="special">-&gt;</span><span class="identifier">log</span><span class="special">(</span><span class="string">"hello world"</span><span class="special">);</span>
+        <span class="special">}</span>
     <span class="special">}</span>
 
 <span class="keyword">private</span><span class="special">:</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;</span> <span class="identifier">logger_</span><span class="special">;</span>
     <span class="keyword">int</span> <span class="identifier">value_</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">text_</span><span class="special">;</span>
 <span class="special">};</span>
 </pre>
 <p>
     </p>
 <p>
-      After this is completed we would like to create our app. This step will be
-      different than normal flow, because we are going to use dependency injection
-      framework to create our dependencies for us. We are going to apply composition
-      root in our example application and start the app class.
+      After this is completed we would like to create our <code class="computeroutput"><span class="identifier">app</span></code>.
+      This step will be different than usual, because we are going to use dependency
+      injection framework to create our dependencies for us. We are going to apply
+      composition root in our example application and start the app class.
     </p>
 <p>
-      Remember to include DI headers
+      Remember to include DI header and alias the <code class="computeroutput"><span class="identifier">di</span></code>
+      namespace.
 </p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
 </pre>
 <p>
     </p>
 <p>
 </p>
-<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">();</span>
-    <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;().</span><span class="identifier">start</span><span class="special">();</span>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">,</span> <span class="identifier">logger</span><span class="special">&gt;()</span>
+    <span class="special">);</span>
+
+    <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;().</span><span class="identifier">run</span><span class="special">();</span>
 
     <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>

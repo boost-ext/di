@@ -5,16 +5,15 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[inject_cpp_11
-//````C++11```
+//[constructor_injection
+//````C++98/03/11/14```
 //<-
 #include <cassert>
+#define BOOST_DI_CFG_INJECT_BRACKET
 //->
 #include <boost/di.hpp>
 
 namespace di = boost::di;
-
-namespace {
 
 struct name { };
 
@@ -28,7 +27,7 @@ struct c0
 
 struct c1
 {
-    BOOST_DI_INJECT(c1, int i1, di::named<int, name> i2 = 0) {
+    BOOST_DI_INJECT(c1, (int i1, di::named<int, name> i2 = 0)) {
         assert(i1 == 0);
         assert(i2 == 42);
     }
@@ -36,7 +35,7 @@ struct c1
 
 struct c2
 {
-    BOOST_DI_INJECT_TRAITS(int, di::named<int, name>);
+    BOOST_DI_INJECT_TRAITS((int, di::named<int, name>));
     c2(int i1, int i2 = 0) {
         assert(i1 == 0);
         assert(i2 == 42);
@@ -60,15 +59,13 @@ struct c4
     }
 };
 
-} // namespace
-
 namespace boost {
 namespace di {
 
 template<>
 struct ctor_traits<c4>
 {
-    BOOST_DI_INJECT_TRAITS(int, di::named<int, name>);
+    BOOST_DI_INJECT_TRAITS((int, di::named<int, name>));
 };
 
 } // namespace di
@@ -86,7 +83,5 @@ int main() {
     injector.create<c4>();
 }
 
-//`[table
-//`[[Full code example: [@example/cpp_11/inject.cpp inject.cpp]]]]
 //]
 

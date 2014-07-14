@@ -7,7 +7,9 @@
 #include "boost/di/concepts/dependency.hpp"
 
 #include <typeinfo>
+#include <functional>
 #include <boost/test/unit_test.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/int.hpp>
@@ -88,12 +90,31 @@ BOOST_AUTO_TEST_CASE(to_const_ref) {
     BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
 }
 
+BOOST_AUTO_TEST_CASE(to_std_const_ref) {
+    struct c { } c_;
+    (void)c_;
+    using expected = scopes::external<wrappers::reference>;
+    using external = decltype(dependency<fake_scope<>, c>::to(std::cref(c_)));
+    using given = external::scope;
+    BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
+}
+
 BOOST_AUTO_TEST_CASE(to_ref) {
     struct c { } c_;
     c& c_ref_ = c_;
     (void)c_ref_;
     using expected = scopes::external<wrappers::reference>;
     using external = decltype(dependency<fake_scope<>, c>::to(ref(c_ref_)));
+    using given = external::scope;
+    BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
+}
+
+BOOST_AUTO_TEST_CASE(to_std_ref) {
+    struct c { } c_;
+    c& c_ref_ = c_;
+    (void)c_ref_;
+    using expected = scopes::external<wrappers::reference>;
+    using external = decltype(dependency<fake_scope<>, c>::to(std::ref(c_ref_)));
     using given = external::scope;
     BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
 }
@@ -108,6 +129,15 @@ BOOST_AUTO_TEST_CASE(to_shared_ptr) {
 BOOST_AUTO_TEST_CASE(to_lambda_shared_ptr) {
     using expected = scopes::external<wrappers::shared>;
     auto given = dependency<fake_scope<>, int>::to([]{ return aux::shared_ptr<int>(); });
+    using external = decltype(given);
+    BOOST_CHECK_EQUAL(&typeid(expected), &typeid(external::scope));
+}
+
+int return_int(int i) { return i; }
+
+BOOST_AUTO_TEST_CASE(to_bind_int) {
+    using expected = scopes::external<wrappers::value>;
+    auto given = dependency<fake_scope<>, int>::to(std::bind(&return_int, 0));
     using external = decltype(given);
     BOOST_CHECK_EQUAL(&typeid(expected), &typeid(external::scope));
 }

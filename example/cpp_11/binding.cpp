@@ -5,11 +5,12 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[injection_cpp_11
+//[binding_cpp_11
 //````C++11```
 //<-
 #include <cassert>
 #include <memory>
+#include <boost/function.hpp>
 //->
 #include <boost/di.hpp>
 
@@ -19,21 +20,21 @@ struct i { virtual ~i() { } };
 struct impl : i { };
 struct some_name { };
 
-struct module {
-    module(const std::shared_ptr<i>& sp, double d, std::unique_ptr<int> up, int i)
+struct service {
+    service(const std::shared_ptr<i>& sp, double d, std::unique_ptr<int> up, boost::function<int()> f)
         : sp(sp)
     {
         assert(dynamic_cast<impl*>(sp.get()));
         assert(d == 0.0); // default zero initialization
         assert(*up == 42);
-        assert(i == 42);
+        assert(f() == 87);
     }
 
     std::shared_ptr<i> sp;
 };
 
 struct app {
-    app(module copy
+    app(service copy
         , boost::shared_ptr<i> sp
         , int i
         , di::named<const std::string&, some_name> s
@@ -60,17 +61,16 @@ int main() {
       , di::bind_int<42>()
       , di::bind<std::string>::named<some_name>::to("some_name")
       , di::bind<float>::to(boost::ref(f))
+      , di::bind<boost::function<int()>>::to([]{return 87;})
     );
 
-    auto module_app = injector.create<app>();
+    auto service_app = injector.create<app>();
 
-    module_app.f = 42.f;
+    service_app.f = 42.f;
     assert(f == 42.f);
 
     return 0;
 }
 
-//`[table
-//`[[Full code example: [@example/cpp_11/injection.cpp injection.cpp]]]]
 //]
 

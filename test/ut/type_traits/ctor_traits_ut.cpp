@@ -10,10 +10,11 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/equal.hpp>
-#include "boost/mpl/string.hpp"
-#include "boost/config.hpp"
+#include <boost/mpl/string.hpp>
+#include <boost/config.hpp>
 
 #include "boost/di/aux_/memory.hpp"
+#include "boost/di/core/any_type.hpp"
 #include "boost/di/inject.hpp"
 #include "boost/di/named.hpp"
 
@@ -91,8 +92,8 @@ BOOST_AUTO_TEST_CASE(ctors) {
     BOOST_CHECK((mpl::equal<mpl::vector0<>, ctor_traits<empty>::type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector2<int, double>, ctor_traits<int_double>::type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector2<char*, const int&>, ctor_traits<extensions>::type>::value));
-    BOOST_CHECK((mpl::equal<mpl::vector2<detail::any_type, detail::any_type>, ctor_traits<ctor2>::type>::value));
-    BOOST_CHECK((mpl::equal<mpl::vector<detail::any_type, detail::any_type, detail::any_type, detail::any_type, detail::any_type, detail::any_type, detail::any_type, detail::any_type>, ctor_traits<ctor_complex>::type>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector2<core::any_type<>, core::any_type<> >, ctor_traits<ctor2>::type>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector<core::any_type<>, core::any_type<>, core::any_type<>, core::any_type<>, core::any_type<>, core::any_type<>, core::any_type<>, core::any_type<> >, ctor_traits<ctor_complex>::type>::value));
     BOOST_CHECK((mpl::equal<
         mpl::vector2<
             named<int, mpl::string<'1'> >
@@ -105,12 +106,12 @@ BOOST_AUTO_TEST_CASE(ctors) {
     BOOST_CHECK((mpl::equal<mpl::vector<>, ctor_traits<ctor1>::type>::value));
     BOOST_CHECK((mpl::equal<mpl::vector<>, ctor_traits<ctor_auto_ptr>::type>::value));
 #else
-    BOOST_CHECK((mpl::equal<mpl::vector1<detail::any_type>, ctor_traits<ctor1>::type>::value));
-    BOOST_CHECK((mpl::equal<mpl::vector1<detail::any_type>, ctor_traits<ctor_auto_ptr>::type>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector1<core::any_type<> >, ctor_traits<ctor1>::type>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector1<core::any_type<> >, ctor_traits<ctor_auto_ptr>::type>::value));
 #endif
 
 #if !defined(BOOST_NO_RVALUE_REFERENCES) && !defined(BOOST_MSVC)
-    BOOST_CHECK((mpl::equal<mpl::vector1<detail::any_type>, ctor_traits<rvalue>::type>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector1<core::any_type<> >, ctor_traits<rvalue>::type>::value));
 #endif
 }
 
@@ -123,8 +124,8 @@ BOOST_AUTO_TEST_CASE(inheriting_ctors) {
     struct c0 { c0(int, double) { } };
     struct c1 : public c0 { using c0::c0; };
 
-    BOOST_CHECK((mpl::equal<mpl::vector2<detail::any_type, detail::any_type>, ctor_traits<c0>::type>::value));
-    BOOST_CHECK((mpl::equal<mpl::vector2<detail::any_type, detail::any_type>, ctor_traits<c1>::type>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector2<core::any_type<>, core::any_type<> >, ctor_traits<c0>::type>::value));
+    BOOST_CHECK((mpl::equal<mpl::vector2<core::any_type<>, core::any_type<> >, ctor_traits<c1>::type>::value));
 }
 
 BOOST_AUTO_TEST_CASE(inheriting_ctors_inject) {

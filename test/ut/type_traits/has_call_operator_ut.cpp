@@ -52,8 +52,15 @@ BOOST_AUTO_TEST_CASE(function) {
     BOOST_CHECK(has_call_operator<boost::function<int()> >::value);
 }
 
-BOOST_AUTO_TEST_CASE(bind) {
+BOOST_AUTO_TEST_CASE(bind_with_class) {
     typedef BOOST_TYPEOF(boost::bind<void>(call_operator_void_const())) bind_t;
+    BOOST_CHECK(has_call_operator<bind_t>::value);
+}
+
+int return_int(int i) { return i; }
+
+BOOST_AUTO_TEST_CASE(bind_with_function) {
+    typedef BOOST_TYPEOF(boost::bind(&return_int, 0)) bind_t;
     BOOST_CHECK(has_call_operator<bind_t>::value);
 }
 

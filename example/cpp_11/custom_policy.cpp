@@ -5,10 +5,10 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[allow_only_smart_ptr_policy_cpp_11
+//[custom_policy_cpp_11
 //````C++11```
-
 //<-
+#include <memory>
 #include <boost/shared_ptr.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/remove_reference.hpp>
@@ -18,17 +18,11 @@
 //->
 #include <boost/di.hpp>
 
-namespace mpl = boost::mpl;
 namespace di  = boost::di;
 
-namespace {
-
-struct c
-{
-    c(std::shared_ptr<int>, std::unique_ptr<double>, boost::shared_ptr<char>) { }
+struct example {
+    example(std::shared_ptr<int>, std::unique_ptr<double>, boost::shared_ptr<char>) { }
 };
-
-} // namespace
 
 class allow_only_smart_ptr_policy
 {
@@ -58,15 +52,11 @@ public:
 };
 
 int main() {
-    di::injector<> injector;
-    injector.create<std::shared_ptr<c>>(allow_only_smart_ptr_policy());
-    //injector.create<c>(allow_only_smart_ptr_policy()); //compile error (CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED)
+    di::make_injector().create<std::shared_ptr<example>>(allow_only_smart_ptr_policy());
+    //di::make_injector().create<example>(allow_only_smart_ptr_policy()); // compile error (CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED)
 
     return 0;
 }
 
-//`[note conversion between standard smart pointers and boost smart pointers - weak ptr]
-//`[table
-//`[[Full code example: [@example/cpp_111/allow_only_smart_ptr_policy.cpp allow_only_smart_ptr_policy.cpp]]]]
 //]
 

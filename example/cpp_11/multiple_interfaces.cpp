@@ -16,8 +16,6 @@
 namespace mpl = boost::mpl;
 namespace di  = boost::di;
 
-namespace {
-
 struct i1 { virtual ~i1() { } };
 struct i2 { virtual ~i2() { } };
 struct impl : i1, i2 { };
@@ -25,15 +23,12 @@ struct impl : i1, i2 { };
 class multiple_interfaces
 {
 public:
-    multiple_interfaces(const std::shared_ptr<i1>& i1_, const std::shared_ptr<i2>& i2_)
-    {
+    multiple_interfaces(const std::shared_ptr<i1>& i1_, const std::shared_ptr<i2>& i2_) {
         assert(dynamic_cast<impl*>(i1_.get()));
         assert(dynamic_cast<impl*>(i2_.get()));
         assert(static_cast<impl*>(i1_.get()) == static_cast<impl*>(i2_.get()));
     }
 };
-
-} // namespace
 
 int main() {
     {
@@ -57,7 +52,5 @@ int main() {
     return 0;
 }
 
-//`[table
-//`[[Full code example: [@example/cpp_11/multiple_interfaces.cpp multiple_interfaces.cpp]]]]
 //]
 

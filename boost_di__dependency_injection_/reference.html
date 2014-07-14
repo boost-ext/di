@@ -28,6 +28,7 @@
 </h2></div></div></div>
 <div class="toc"><dl class="toc">
 <dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.___">...</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.aux">Aux</a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.core">Core</a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.concepts">Concepts</a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.scopes">Scopes</a></span></dt>
@@ -61,7 +62,8 @@
 </h4></div></div></div>
 <p>
           This header exists simply as a convenience to the user, including all of
-          the headers in the boost/di directory.
+          the headers in the boost/di directory. In case when <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_NO_PREPROCESSED_HEADERS</span></code>
+          is defined appropriate preprocessed file will be used instead.
         </p>
 <pre class="programlisting"><span class="comment">// inject</span>
 <span class="preprocessor">#include</span> <span class="string">"boost/di/inject.hpp"</span>
@@ -85,7 +87,7 @@
 <span class="preprocessor">#include</span> <span class="string">"boost/di/provider.hpp"</span>
 
 <span class="comment">// policies</span>
-<span class="preprocessor">#include</span> <span class="string">"boost/di/policies/arguments_permission.hpp"</span>
+<span class="preprocessor">#include</span> <span class="string">"boost/di/policies/parameters_permission.hpp"</span>
 <span class="preprocessor">#include</span> <span class="string">"boost/di/policies/circular_dependencies.hpp"</span>
 <span class="preprocessor">#include</span> <span class="string">"boost/di/policies/creation_ownership.hpp"</span>
 <span class="preprocessor">#include</span> <span class="string">"boost/di/policies/scopes_permission.hpp"</span>
@@ -98,8 +100,8 @@
 </h4></div></div></div>
 <p>
 </p>
-<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_INJECT_TRAITS</span><span class="special">(...);</span>
-<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_INJECT</span><span class="special">(</span><span class="identifier">type</span><span class="special">,</span> <span class="special">...);</span>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_INJECT_TRAITS</span><span class="special">(...)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_INJECT</span><span class="special">(</span><span class="identifier">type</span><span class="special">,</span> <span class="special">...)</span>
 </pre>
 <p>
         </p>
@@ -129,13 +131,16 @@
     <span class="keyword">typedef</span> <span class="identifier">TDependecies</span> <span class="identifier">deps</span><span class="special">;</span>
 
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TArgs</span><span class="special">&gt;</span>
-    <span class="keyword">explicit</span> <span class="identifier">injector</span><span class="special">(</span><span class="identifier">TArg</span><span class="special">&amp;&amp;...);</span>
+    <span class="keyword">explicit</span> <span class="identifier">injector</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TArgs</span><span class="special">&amp;...);</span>
 
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TPolicies</span><span class="special">&gt;</span>
-    <span class="identifier">T</span> <span class="identifier">create</span><span class="special">(</span><span class="identifier">TPolicies</span><span class="special">&amp;&amp;...);</span>
+    <span class="identifier">T</span> <span class="identifier">create</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TPolicies</span><span class="special">&amp;...);</span>
 
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Visitor</span><span class="special">&gt;</span>
-    <span class="identifier">T</span> <span class="identifier">visit</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">Visitor</span><span class="special">&amp;);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TAllocator</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TPolicies</span><span class="special">&gt;</span>
+    <span class="identifier">T</span> <span class="identifier">allocate</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TAllocator</span><span class="special">&amp;,</span> <span class="keyword">const</span> <span class="identifier">TPolicies</span><span class="special">&amp;...)</span> <span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TVisitor</span><span class="special">&gt;</span>
+    <span class="identifier">T</span> <span class="identifier">visit</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TVisitor</span><span class="special">&amp;);</span>
 
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TAction</span><span class="special">&gt;</span>
     <span class="keyword">void</span> <span class="identifier">call</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TAction</span><span class="special">&amp;);</span>
@@ -336,13 +341,154 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
+<a name="boost_di__dependency_injection_.reference.aux"></a><a class="link" href="reference.html#boost_di__dependency_injection_.reference.aux" title="Aux">Aux</a>
+</h3></div></div></div>
+<div class="toc"><dl class="toc">
+<dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.aux.header__boost_di_aux__config_hpp_">Header
+        &lt;boost/di/aux_/config.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.aux.header__boost_di_aux__memory_hpp_">Header
+        &lt;boost/di/aux_/memory.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.aux.header__boost_di_aux__config_cpp_03_hpp_">Header
+        &lt;boost/di/aux_/config/cpp_03.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.aux.header__boost_di_aux__config_cpp_11_hpp_">Header
+        &lt;boost/di/aux_/config/cpp_11.hpp&gt;</a></span></dt>
+</dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_di__dependency_injection_.reference.aux.header__boost_di_aux__config_hpp_"></a><a class="link" href="reference.html#boost_di__dependency_injection_.reference.aux.header__boost_di_aux__config_hpp_" title="Header &lt;boost/di/aux_/config.hpp&gt;">Header
+        &lt;boost/di/aux_/config.hpp&gt;</a>
+</h4></div></div></div>
+<p>
+</p>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_INJECTOR</span> <span class="comment">// boost_di_injector__</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_CFG_CTOR_LIMIT_SIZE</span> <span class="comment">// 10</span>
+
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_CFG_STD</span> <span class="comment">// cpp_11 or cpp_03</span>
+
+<span class="preprocessor">#include</span> <span class="string">"boost/di/aux_/config/BOOST_DI_CFG_STD.hpp"</span>
+
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_FEATURE</span><span class="special">(</span><span class="identifier">feature</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_FEATURE_RVALUE_REFERENCES</span><span class="special">(...)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_FEATURE_NO_RVALUE_REFERENCES</span><span class="special">(...)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_FEATURE_NO_FUNCTION_TEMPLATE_DEFAULT_ARGS</span><span class="special">(...)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_FEATURE_FUNCTION_TEMPLATE_DEFAULT_ARGS</span><span class="special">(...)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_FEATURE_DECLTYPE</span><span class="special">(...)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_FEATURE_CPP_11_TYPE_TRAITS</span><span class="special">(...)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_FEATURE_CPP_11_FUNCTIONAL</span><span class="special">(...)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_FEATURE_EXAMINE_CALL_STACK</span><span class="special">(...)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK</span><span class="special">(...)</span>
+
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_WKND</span><span class="special">(</span><span class="identifier">wknd</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_WKND_MSVC</span><span class="special">(...)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_WKND_NO_MSVC</span><span class="special">(...)</span>
+
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_ASSERT_MSG</span><span class="special">(</span><span class="identifier">c</span><span class="special">,</span> <span class="identifier">msg</span><span class="special">,</span> <span class="identifier">type</span><span class="special">)</span>
+</pre>
+<p>
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_di__dependency_injection_.reference.aux.header__boost_di_aux__memory_hpp_"></a><a class="link" href="reference.html#boost_di__dependency_injection_.reference.aux.header__boost_di_aux__memory_hpp_" title="Header &lt;boost/di/aux_/memory.hpp&gt;">Header
+        &lt;boost/di/aux_/memory.hpp&gt;</a>
+</h4></div></div></div>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">aux</span> <span class="special">{</span>
+
+<span class="keyword">using</span> <span class="special">::</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="special">::</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="special">::</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="special">::</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">weak_ptr</span><span class="special">;</span>
+
+<span class="special">}</span> <span class="comment">// namespace aux</span>
+
+<span class="keyword">namespace</span> <span class="identifier">aux_</span> <span class="special">{</span>
+<span class="keyword">using</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">;</span>
+<span class="special">}</span> <span class="comment">// namespace aux_</span>
+
+<span class="special">}</span> <span class="comment">// namespace boost</span>
+<span class="special">}</span> <span class="comment">// namespace di</span>
+</pre>
+<p>
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_di__dependency_injection_.reference.aux.header__boost_di_aux__config_cpp_03_hpp_"></a><a class="link" href="reference.html#boost_di__dependency_injection_.reference.aux.header__boost_di_aux__config_cpp_03_hpp_" title="Header &lt;boost/di/aux_/config/cpp_03.hpp&gt;">Header
+        &lt;boost/di/aux_/config/cpp_03.hpp&gt;</a>
+</h4></div></div></div>
+<p>
+          This header contains configuration when <code class="computeroutput"><span class="identifier">c</span><span class="special">++</span> <span class="number">03</span></code> standard
+          will be used.
+        </p>
+<p>
+</p>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_CTOR_LIMIT_FROM</span><span class="special">(</span><span class="identifier">begin</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_CTOR_LIMIT_FROM_FORCE</span><span class="special">(</span><span class="identifier">begin</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_TYPES</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_TYPES_PASS</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_MPL_VECTOR_TYPES_PASS</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_ARGS</span><span class="special">(</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">arg</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_ARGS_PASS</span><span class="special">(</span><span class="identifier">arg</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_ARGS_CALL</span><span class="special">(</span><span class="identifier">arg</span><span class="special">,</span> <span class="identifier">f</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_FORWARD_ARGS</span><span class="special">(</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">arg</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_ARGS_FORWARD</span><span class="special">(</span><span class="identifier">arg</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_TYPES_MPL_LIMIT_FROM</span><span class="special">(</span><span class="identifier">begin</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_TYPES_MPL_LIMIT_FROM_FORCE</span><span class="special">(</span><span class="identifier">begin</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_TYPES_DEFAULT_MPL</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_TYPES_MPL</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_TYPES_PASS_MPL</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span>
+</pre>
+<p>
+        </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_di__dependency_injection_.reference.aux.header__boost_di_aux__config_cpp_11_hpp_"></a><a class="link" href="reference.html#boost_di__dependency_injection_.reference.aux.header__boost_di_aux__config_cpp_11_hpp_" title="Header &lt;boost/di/aux_/config/cpp_11.hpp&gt;">Header
+        &lt;boost/di/aux_/config/cpp_11.hpp&gt;</a>
+</h4></div></div></div>
+<p>
+          This header contains configuration when <code class="computeroutput"><span class="identifier">c</span><span class="special">++</span> <span class="number">11</span></code> standard
+          will be used.
+        </p>
+<p>
+</p>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_CTOR_LIMIT_FROM</span><span class="special">(</span><span class="identifier">begin</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_CTOR_LIMIT_FROM_FORCE</span><span class="special">(</span><span class="identifier">begin</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_TYPES</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_TYPES_PASS</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_MPL_VECTOR_TYPES_PASS</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_ARGS</span><span class="special">(</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">arg</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_ARGS_PASS</span><span class="special">(</span><span class="identifier">arg</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_ARGS_CALL</span><span class="special">(</span><span class="identifier">arg</span><span class="special">,</span> <span class="identifier">f</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_FORWARD_ARGS</span><span class="special">(</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">arg</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_ARGS_FORWARD</span><span class="special">(</span><span class="identifier">arg</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_TYPES_MPL_LIMIT_FROM</span><span class="special">(</span><span class="identifier">begin</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_TYPES_MPL_LIMIT_FROM_FORCE</span><span class="special">(</span><span class="identifier">begin</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_TYPES_DEFAULT_MPL</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_TYPES_MPL</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_TYPES_PASS_MPL</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span>
+</pre>
+<p>
+        </p>
+</div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
 <a name="boost_di__dependency_injection_.reference.core"></a><a class="link" href="reference.html#boost_di__dependency_injection_.reference.core" title="Core">Core</a>
 </h3></div></div></div>
 <div class="toc"><dl class="toc">
+<dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.core.header__boost_di_core_allocator_hpp_">Header
+        &lt;boost/di/core/allocator.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.core.header__boost_di_core_any_type_hpp_">Header
+        &lt;boost/di/core/any_type.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.core.header__boost_di_core_binder_hpp_">Header
         &lt;boost/di/core/binder.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.core.header__boost_di_core_builder_hpp_">Header
-        &lt;boost/di/core/builder.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.core.header__boost_di_core_creator_hpp_">Header
         &lt;boost/di/core/creator.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.core.header__boost_di_core_module_hpp_">Header
@@ -350,6 +496,142 @@
 <dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.core.header__boost_di_core_pool_hpp_">Header
         &lt;boost/di/core/pool.hpp&gt;</a></span></dt>
 </dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_di__dependency_injection_.reference.core.header__boost_di_core_allocator_hpp_"></a><a class="link" href="reference.html#boost_di__dependency_injection_.reference.core.header__boost_di_core_allocator_hpp_" title="Header &lt;boost/di/core/allocator.hpp&gt;">Header
+        &lt;boost/di/core/allocator.hpp&gt;</a>
+</h4></div></div></div>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">core</span> <span class="special">{</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">is_mpl_string</span><span class="special">;</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">is_explicit</span><span class="special">;</span>
+
+<span class="keyword">class</span> <span class="identifier">allocator</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TGiven</span><span class="special">&gt;</span>
+    <span class="keyword">typename</span> <span class="identifier">disable_if</span><span class="special">&lt;</span><span class="identifier">is_explicit</span><span class="special">&lt;</span><span class="identifier">TGiven</span><span class="special">&gt;,</span> <span class="identifier">TExpected</span><span class="special">*&gt;::</span><span class="identifier">type</span>
+    <span class="identifier">allocate</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TGiven</span><span class="special">&gt;</span>
+    <span class="keyword">typename</span> <span class="identifier">enable_if</span><span class="special">&lt;</span><span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">has_value</span><span class="special">&lt;</span><span class="identifier">TGiven</span><span class="special">&gt;,</span> <span class="identifier">TExpected</span><span class="special">*&gt;::</span><span class="identifier">type</span>
+    <span class="identifier">allocate</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TGiven</span><span class="special">&gt;</span>
+    <span class="keyword">typename</span> <span class="identifier">enable_if</span><span class="special">&lt;</span><span class="identifier">is_mpl_string</span><span class="special">&lt;</span><span class="identifier">TGiven</span><span class="special">&gt;,</span> <span class="identifier">TExpected</span><span class="special">*&gt;::</span><span class="identifier">type</span>
+    <span class="identifier">allocate</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TGiven</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TArgs</span><span class="special">&gt;</span>
+    <span class="identifier">TExpected</span><span class="special">*</span> <span class="identifier">allocate</span><span class="special">(</span><span class="identifier">TArgs</span><span class="special">&amp;&amp;...)</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="special">}</span> <span class="comment">// namespace core</span>
+<span class="special">}</span> <span class="comment">// namespace di</span>
+<span class="special">}</span> <span class="comment">// namespace boost</span>
+</pre>
+<p>
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<tbody><tr><td>
+                  <p>
+                    Tests: <a href="../test/ut/core/allocator_ut.cpp" target="_top">test/ut/core/allocator_ut.cpp</a>
+                  </p>
+                </td></tr></tbody>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_di__dependency_injection_.reference.core.header__boost_di_core_any_type_hpp_"></a><a class="link" href="reference.html#boost_di__dependency_injection_.reference.core.header__boost_di_core_any_type_hpp_" title="Header &lt;boost/di/core/any_type.hpp&gt;">Header
+        &lt;boost/di/core/any_type.hpp&gt;</a>
+</h4></div></div></div>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">core</span> <span class="special">{</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span>
+    <span class="keyword">typename</span> <span class="identifier">T</span> <span class="special">=</span> <span class="identifier">none_t</span>
+  <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TCallStack</span> <span class="special">=</span> <span class="identifier">none_t</span>
+  <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TCreator</span> <span class="special">=</span> <span class="identifier">none_t</span>
+  <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TAllocator</span> <span class="special">=</span> <span class="identifier">none_t</span>
+  <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TDeps</span> <span class="special">=</span> <span class="identifier">none_t</span>
+  <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TRefs</span> <span class="special">=</span> <span class="identifier">none_t</span>
+  <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TVisitor</span> <span class="special">=</span> <span class="identifier">none_t</span>
+  <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TPolicies</span> <span class="special">=</span> <span class="identifier">none_t</span>
+<span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">any_type</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">any_type</span><span class="special">()</span> <span class="special">{</span> <span class="special">}</span>
+
+    <span class="identifier">any_type</span><span class="special">(</span><span class="identifier">TCreator</span><span class="special">&amp;</span>
+           <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">TAllocator</span><span class="special">&amp;</span>
+           <span class="special">,</span> <span class="identifier">TDeps</span><span class="special">&amp;</span>
+           <span class="special">,</span> <span class="identifier">TRefs</span><span class="special">&amp;</span>
+           <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">TVisitor</span><span class="special">&amp;</span>
+           <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">TPolicies</span><span class="special">&amp;);</span>
+
+    <span class="identifier">any_type</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">any_type</span><span class="special">&amp;);</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span>
+        <span class="keyword">typename</span> <span class="identifier">U</span>
+      <span class="special">,</span> <span class="keyword">typename</span> <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">disable_if</span><span class="special">&lt;</span>
+            <span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">is_same_base_of</span><span class="special">&lt;</span>
+                <span class="keyword">typename</span> <span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">make_plain</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;::</span><span class="identifier">type</span>
+              <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">make_plain</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span>
+            <span class="special">&gt;</span>
+        <span class="special">&gt;::</span><span class="identifier">type</span>
+    <span class="special">&gt;</span>
+    <span class="keyword">operator</span> <span class="keyword">const</span> <span class="identifier">U</span><span class="special">&amp;()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span>
+        <span class="keyword">typename</span> <span class="identifier">U</span>
+      <span class="special">,</span> <span class="keyword">typename</span> <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">disable_if</span><span class="special">&lt;</span>
+            <span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">is_same_base_of</span><span class="special">&lt;</span>
+                <span class="keyword">typename</span> <span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">make_plain</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;::</span><span class="identifier">type</span>
+              <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">make_plain</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span>
+            <span class="special">&gt;</span>
+        <span class="special">&gt;::</span><span class="identifier">type</span>
+    <span class="special">&gt;</span>
+    <span class="keyword">operator</span> <span class="identifier">U</span><span class="special">&amp;()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span>
+    <span class="keyword">operator</span> <span class="identifier">aux</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;&amp;();</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span>
+        <span class="keyword">typename</span> <span class="identifier">U</span>
+      <span class="special">,</span> <span class="keyword">typename</span> <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">disable_if</span><span class="special">&lt;</span>
+            <span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">is_same_base_of</span><span class="special">&lt;</span>
+                <span class="keyword">typename</span> <span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">make_plain</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;::</span><span class="identifier">type</span>
+              <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">make_plain</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span>
+            <span class="special">&gt;</span>
+        <span class="special">&gt;::</span><span class="identifier">type</span>
+    <span class="special">&gt;</span>
+    <span class="keyword">operator</span> <span class="identifier">U</span><span class="special">();</span>
+<span class="special">};</span>
+
+<span class="special">}</span> <span class="comment">// namespace core</span>
+<span class="special">}</span> <span class="comment">// namespace di</span>
+<span class="special">}</span> <span class="comment">// namespace boost</span>
+</pre>
+<p>
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<tbody><tr><td>
+                  <p>
+                    Tests: <a href="../test/ut/core/any_type_ut.cpp" target="_top">test/ut/core/any_type_ut.cpp</a>
+                  </p>
+                </td></tr></tbody>
+</table></div>
+</div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_di__dependency_injection_.reference.core.header__boost_di_core_binder_hpp_"></a><a class="link" href="reference.html#boost_di__dependency_injection_.reference.core.header__boost_di_core_binder_hpp_" title="Header &lt;boost/di/core/binder.hpp&gt;">Header
@@ -361,37 +643,19 @@
 <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">{</span>
 <span class="keyword">namespace</span> <span class="identifier">core</span> <span class="special">{</span>
 
-<span class="keyword">template</span><span class="special">&lt;</span>
-    <span class="keyword">typename</span> <span class="identifier">TDependecies</span>
-  <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TBuilder</span> <span class="special">=</span> <span class="identifier">builder</span>
-<span class="special">&gt;</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependecies</span><span class="special">&gt;</span>
 <span class="keyword">class</span> <span class="identifier">binder</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">explicit</span> <span class="identifier">binder</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TBuilder</span><span class="special">&amp;</span> <span class="special">=</span> <span class="identifier">TBuilder</span><span class="special">());</span>
-
     <span class="keyword">template</span><span class="special">&lt;</span>
         <span class="keyword">typename</span> <span class="identifier">T</span>
       <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TCallStack</span>
       <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TDefault</span> <span class="special">=</span>
             <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">concepts</span><span class="special">::</span><span class="identifier">dependency</span><span class="special">&lt;</span>
-                <span class="keyword">typename</span> <span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">scope_traits</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span>
+                <span class="identifier">scopes</span><span class="special">::</span><span class="identifier">deduce</span>
               <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">make_plain</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span>
             <span class="special">&gt;</span>
     <span class="special">&gt;</span>
     <span class="keyword">struct</span> <span class="identifier">resolve</span><span class="special">;</span>
-
-    <span class="keyword">template</span><span class="special">&lt;</span>
-        <span class="keyword">typename</span> <span class="identifier">T</span>
-      <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TCtor</span>
-      <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TCallStack</span>
-      <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TDependency</span>
-      <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TCreator</span>
-      <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TDeps</span>
-      <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TRefs</span>
-      <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TVisitor</span>
-      <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TPolicies</span>
-    <span class="special">&gt;</span>
-    <span class="identifier">wrappers</span><span class="special">::</span><span class="identifier">universal</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">resolve_impl</span><span class="special">(</span><span class="identifier">TCreator</span><span class="special">&amp;,</span> <span class="identifier">TDeps</span><span class="special">&amp;,</span> <span class="identifier">TRefs</span><span class="special">&amp;,</span> <span class="keyword">const</span> <span class="identifier">TVisitor</span><span class="special">&amp;,</span> <span class="keyword">const</span> <span class="identifier">TPolicies</span><span class="special">&amp;);</span>
 <span class="special">};</span>
 
 <span class="special">}</span> <span class="comment">// namespace core</span>
@@ -411,50 +675,6 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_di__dependency_injection_.reference.core.header__boost_di_core_builder_hpp_"></a><a class="link" href="reference.html#boost_di__dependency_injection_.reference.core.header__boost_di_core_builder_hpp_" title="Header &lt;boost/di/core/builder.hpp&gt;">Header
-        &lt;boost/di/core/builder.hpp&gt;</a>
-</h4></div></div></div>
-<p>
-</p>
-<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
-<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">{</span>
-<span class="keyword">namespace</span> <span class="identifier">core</span> <span class="special">{</span>
-
-<span class="keyword">class</span> <span class="identifier">builder</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">explicit</span> <span class="identifier">builder</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">scopes_type</span><span class="special">&amp;</span> <span class="special">=</span> <span class="identifier">scopes_type</span><span class="special">());</span>
-
-    <span class="keyword">template</span><span class="special">&lt;</span>
-        <span class="keyword">typename</span> <span class="identifier">T</span>
-      <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TCtor</span>
-      <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TCallStack</span>
-      <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TDependency</span>
-      <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TCreator</span>
-      <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TDeps</span>
-      <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TRefs</span>
-      <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TVisitor</span>
-      <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TPolicies</span>
-    <span class="special">&gt;</span>
-    <span class="identifier">wrappers</span><span class="special">::</span><span class="identifier">universal</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">build</span><span class="special">(</span><span class="identifier">TCreator</span><span class="special">&amp;,</span> <span class="identifier">TDeps</span><span class="special">&amp;,</span> <span class="identifier">TRefs</span><span class="special">&amp;,</span> <span class="keyword">const</span> <span class="identifier">TVisitor</span><span class="special">&amp;,</span> <span class="keyword">const</span> <span class="identifier">TPolicies</span><span class="special">&amp;);</span>
-<span class="special">};</span>
-
-<span class="special">}</span> <span class="comment">// namespace core</span>
-<span class="special">}</span> <span class="comment">// namespace di</span>
-<span class="special">}</span> <span class="comment">// namespace boost</span>
-</pre>
-<p>
-        </p>
-<div class="informaltable"><table class="table">
-<colgroup><col></colgroup>
-<tbody><tr><td>
-                  <p>
-                    Tests: <a href="../test/ut/core/builder_ut.cpp" target="_top">test/ut/core/builder_ut.cpp</a>
-                  </p>
-                </td></tr></tbody>
-</table></div>
-</div>
-<div class="section">
-<div class="titlepage"><div><div><h4 class="title">
 <a name="boost_di__dependency_injection_.reference.core.header__boost_di_core_creator_hpp_"></a><a class="link" href="reference.html#boost_di__dependency_injection_.reference.core.header__boost_di_core_creator_hpp_" title="Header &lt;boost/di/core/creator.hpp&gt;">Header
         &lt;boost/di/core/creator.hpp&gt;</a>
 </h4></div></div></div>
@@ -466,61 +686,68 @@
 
 <span class="keyword">template</span><span class="special">&lt;</span>
     <span class="keyword">typename</span> <span class="identifier">TDependecies</span> <span class="special">=</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">vector0</span><span class="special">&lt;&gt;</span>
+  <span class="special">,</span> <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">TBinder</span> <span class="special">=</span> <span class="identifier">binder</span>
   <span class="special">,</span> <span class="keyword">template</span><span class="special">&lt;</span>
-        <span class="keyword">typename</span>
-      <span class="special">,</span> <span class="keyword">typename</span> <span class="special">=</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">core</span><span class="special">::</span><span class="identifier">builder</span>
-    <span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">TBinder</span> <span class="special">=</span> <span class="identifier">binder</span>
+        <span class="keyword">typename</span> <span class="special">=</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">none_t</span>
+      <span class="special">,</span> <span class="keyword">typename</span> <span class="special">=</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">none_t</span>
+      <span class="special">,</span> <span class="keyword">typename</span> <span class="special">=</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">none_t</span>
+      <span class="special">,</span> <span class="keyword">typename</span> <span class="special">=</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">none_t</span>
+      <span class="special">,</span> <span class="keyword">typename</span> <span class="special">=</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">none_t</span>
+      <span class="special">,</span> <span class="keyword">typename</span> <span class="special">=</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">none_t</span>
+      <span class="special">,</span> <span class="keyword">typename</span> <span class="special">=</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">none_t</span>
+      <span class="special">,</span> <span class="keyword">typename</span> <span class="special">=</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">none_t</span>
+    <span class="special">&gt;</span>
+    <span class="keyword">class</span> <span class="identifier">TAnyType</span> <span class="special">=</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">core</span><span class="special">::</span><span class="identifier">any_type</span>
 <span class="special">&gt;</span>
 <span class="keyword">class</span> <span class="identifier">creator</span> <span class="special">{</span>
-    <span class="keyword">template</span><span class="special">&lt;</span>
-        <span class="keyword">typename</span> <span class="identifier">T</span>
-      <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TCallStack</span>
-      <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TDeps</span>
-      <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TRefs</span>
-      <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TVisitor</span>
-      <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TPolicies</span>
-    <span class="special">&gt;</span>
-    <span class="keyword">class</span> <span class="identifier">eager_creator</span> <span class="special">{</span>
-    <span class="keyword">public</span><span class="special">:</span>
-        <span class="identifier">eager_creator</span><span class="special">(</span><span class="identifier">creator</span><span class="special">&amp;,</span> <span class="identifier">TDeps</span><span class="special">&amp;,</span> <span class="identifier">TRefs</span><span class="special">&amp;,</span> <span class="keyword">const</span> <span class="identifier">TVisitor</span><span class="special">&amp;,</span> <span class="keyword">const</span> <span class="identifier">TPolicies</span><span class="special">&amp;);</span>
-
-        <span class="keyword">template</span><span class="special">&lt;</span>
-            <span class="keyword">typename</span> <span class="identifier">U</span>
-          <span class="special">,</span> <span class="keyword">typename</span> <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">disable_if</span><span class="special">&lt;</span>
-                <span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">is_same_base_of</span><span class="special">&lt;</span>
-                    <span class="keyword">typename</span> <span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">make_plain</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;::</span><span class="identifier">type</span>
-                  <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">make_plain</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span>
-                <span class="special">&gt;</span>
-            <span class="special">&gt;::</span><span class="identifier">type</span>
-        <span class="special">&gt;</span>
-        <span class="keyword">operator</span> <span class="identifier">U</span><span class="special">();</span>
-    <span class="special">};</span>
-
 <span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">explicit</span> <span class="identifier">creator</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TBinder</span><span class="special">&lt;</span><span class="identifier">TDependecies</span><span class="special">&gt;&amp;</span> <span class="special">=</span> <span class="identifier">TBinder</span><span class="special">&lt;</span><span class="identifier">TDependecies</span><span class="special">&gt;());</span>
+    <span class="keyword">explicit</span> <span class="identifier">creator</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TBinder</span><span class="special">&lt;</span><span class="identifier">TDependecies</span><span class="special">&gt;&amp;</span> <span class="identifier">binder</span> <span class="special">=</span> <span class="identifier">TBinder</span><span class="special">&lt;</span><span class="identifier">TDependecies</span><span class="special">&gt;());</span>
 
     <span class="keyword">template</span><span class="special">&lt;</span>
         <span class="keyword">typename</span> <span class="identifier">T</span>
-      <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TParent</span> <span class="comment">// to ignore copy/move ctor</span>
+      <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TParent</span> <span class="comment">// ignore copy/move ctor</span>
       <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TCallStack</span>
+      <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TAllocator</span>
       <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TDeps</span>
       <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TRefs</span>
       <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TVisitor</span>
       <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TPolicies</span>
     <span class="special">&gt;</span>
-    <span class="identifier">eager_creator</span><span class="special">&lt;</span><span class="identifier">TParent</span><span class="special">,</span> <span class="identifier">TCallStack</span><span class="special">,</span> <span class="identifier">TDeps</span><span class="special">,</span> <span class="identifier">TRefs</span><span class="special">,</span> <span class="identifier">TVisitor</span><span class="special">,</span> <span class="identifier">TPolicies</span><span class="special">&gt;</span>
-    <span class="identifier">create</span><span class="special">(</span><span class="identifier">TDeps</span><span class="special">&amp;,</span> <span class="identifier">TRefs</span><span class="special">&amp;,</span> <span class="keyword">const</span> <span class="identifier">TVisitor</span><span class="special">&amp;,</span> <span class="keyword">const</span> <span class="identifier">TPolicies</span><span class="special">&amp;,</span> <span class="keyword">typename</span> <span class="identifier">enable_if</span><span class="special">&lt;</span><span class="identifier">is_same</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">any_type</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span><span class="special">*</span> <span class="special">=</span> <span class="number">0</span><span class="special">);</span>
+    <span class="keyword">typename</span> <span class="identifier">enable_if</span><span class="special">&lt;</span>
+        <span class="identifier">is_same</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">TAnyType</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span>
+      <span class="special">,</span> <span class="identifier">TAnyType</span><span class="special">&lt;</span>
+            <span class="identifier">TParent</span>
+          <span class="special">,</span> <span class="identifier">TCallStack</span>
+          <span class="special">,</span> <span class="identifier">creator</span>
+          <span class="special">,</span> <span class="identifier">TAllocator</span>
+          <span class="special">,</span> <span class="identifier">TDeps</span>
+          <span class="special">,</span> <span class="identifier">TRefs</span>
+          <span class="special">,</span> <span class="identifier">TVisitor</span>
+          <span class="special">,</span> <span class="identifier">TPolicies</span>
+        <span class="special">&gt;</span>
+    <span class="special">&gt;::</span><span class="identifier">type</span>
+    <span class="identifier">create</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TAllocator</span><span class="special">&amp;</span>
+         <span class="special">,</span> <span class="identifier">TDeps</span><span class="special">&amp;</span>
+         <span class="special">,</span> <span class="identifier">TRefs</span><span class="special">&amp;</span>
+         <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">TVisitor</span><span class="special">&amp;</span>
+         <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">TPolicies</span><span class="special">&amp;);</span>
 
     <span class="keyword">template</span><span class="special">&lt;</span>
         <span class="keyword">typename</span> <span class="identifier">T</span>
-      <span class="special">,</span> <span class="keyword">typename</span> <span class="comment">// TParent - not needed</span>
+      <span class="special">,</span> <span class="keyword">typename</span> <span class="comment">// TParent - not used</span>
       <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TCallStack</span>
+      <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TAllocator</span>
       <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TDeps</span>
       <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TRefs</span>
       <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TVisitor</span>
       <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TPolicies</span>
     <span class="special">&gt;</span>
-    <span class="identifier">wrappers</span><span class="special">::</span><span class="identifier">universal</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">create</span><span class="special">(</span><span class="identifier">TDeps</span><span class="special">&amp;,</span> <span class="identifier">TRefs</span><span class="special">&amp;,</span> <span class="keyword">const</span> <span class="identifier">TVisitor</span><span class="special">&amp;</span> <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">TPolicies</span><span class="special">&amp;,</span> <span class="keyword">typename</span> <span class="identifier">disable_if</span><span class="special">&lt;</span><span class="identifier">is_same</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">any_type</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span><span class="special">*</span> <span class="special">=</span> <span class="number">0</span><span class="special">);</span>
+    <span class="keyword">typename</span> <span class="identifier">disable_if</span><span class="special">&lt;</span><span class="identifier">is_same</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">TAnyType</span><span class="special">&lt;&gt;</span> <span class="special">&gt;,</span> <span class="identifier">wrappers</span><span class="special">::</span><span class="identifier">universal</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span>
+    <span class="identifier">create</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TAllocator</span>
+         <span class="special">,</span> <span class="identifier">TDeps</span><span class="special">&amp;</span>
+         <span class="special">,</span> <span class="identifier">TRefs</span><span class="special">&amp;</span>
+         <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">TVisitor</span><span class="special">&amp;</span>
+         <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">TPolicies</span><span class="special">&amp;);</span>
 <span class="special">};</span>
 
 <span class="special">}</span> <span class="comment">// namespace core</span>
@@ -553,23 +780,38 @@
     <span class="keyword">typename</span> <span class="identifier">TDependecies</span> <span class="special">=</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">vector0</span><span class="special">&lt;&gt;</span>
   <span class="special">,</span> <span class="keyword">template</span><span class="special">&lt;</span>
         <span class="keyword">typename</span>
-      <span class="special">,</span> <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="special">=</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">core</span><span class="special">::</span><span class="identifier">binder</span>
+      <span class="special">,</span> <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="special">=</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">core</span><span class="special">::</span><span class="identifier">binder</span>
+      <span class="special">,</span> <span class="keyword">template</span><span class="special">&lt;</span>
+            <span class="keyword">typename</span>
+          <span class="special">,</span> <span class="keyword">typename</span>
+          <span class="special">,</span> <span class="keyword">typename</span>
+          <span class="special">,</span> <span class="keyword">typename</span>
+          <span class="special">,</span> <span class="keyword">typename</span>
+          <span class="special">,</span> <span class="keyword">typename</span>
+          <span class="special">,</span> <span class="keyword">typename</span>
+          <span class="special">,</span> <span class="keyword">typename</span>
+        <span class="special">&gt;</span>
+        <span class="keyword">class</span> <span class="special">=</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">core</span><span class="special">::</span><span class="identifier">any_type</span>
     <span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">TCreator</span> <span class="special">=</span> <span class="identifier">creator</span>
   <span class="special">,</span> <span class="keyword">template</span><span class="special">&lt;</span>
         <span class="keyword">typename</span> <span class="special">=</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">vector0</span><span class="special">&lt;&gt;</span>
       <span class="special">,</span> <span class="keyword">typename</span> <span class="special">=</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">core</span><span class="special">::</span><span class="identifier">never</span><span class="special">&lt;</span> <span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">_1</span> <span class="special">&gt;</span>
       <span class="special">,</span> <span class="keyword">typename</span> <span class="special">=</span> <span class="keyword">void</span>
     <span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">TPool</span> <span class="special">=</span> <span class="identifier">pool</span>
+  <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TDefaultAllocator</span> <span class="special">=</span> <span class="identifier">allocator</span>
 <span class="special">&gt;</span>
 <span class="keyword">class</span> <span class="identifier">module</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">typedef</span> <span class="identifier">TDependecies</span> <span class="identifier">deps</span><span class="special">;</span>
 
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TArgs</span><span class="special">&gt;</span>
-    <span class="keyword">explicit</span> <span class="identifier">module</span><span class="special">(</span><span class="identifier">TArg</span><span class="special">&amp;&amp;...);</span>
+    <span class="keyword">explicit</span> <span class="identifier">module</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TArg</span><span class="special">&amp;...);</span>
 
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TPolicies</span><span class="special">&gt;</span>
-    <span class="identifier">T</span> <span class="identifier">create</span><span class="special">(</span><span class="identifier">TPolicies</span><span class="special">&amp;&amp;...);</span>
+    <span class="identifier">T</span> <span class="identifier">create</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TPolicies</span><span class="special">&amp;...);</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TAllocator</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TPolicies</span><span class="special">&gt;</span>
+    <span class="identifier">T</span> <span class="identifier">allocate</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TAllocator</span><span class="special">&amp;,</span> <span class="keyword">const</span> <span class="identifier">TPolicies</span><span class="special">&amp;...)</span> <span class="special">{</span>
 
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Visitor</span><span class="special">&gt;</span>
     <span class="identifier">T</span> <span class="identifier">visit</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">Visitor</span><span class="special">&amp;);</span>
@@ -618,7 +860,7 @@
     <span class="keyword">typedef</span> <span class="identifier">TSeq</span> <span class="identifier">types</span><span class="special">;</span>
 
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span> <span class="identifier">T</span><span class="special">&gt;</span>
-    <span class="keyword">explicit</span> <span class="identifier">pool</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;&amp;...);</span>
+    <span class="keyword">explicit</span> <span class="identifier">pool</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;...);</span>
 
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
     <span class="keyword">explicit</span> <span class="identifier">pool</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">pool</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;,</span> <span class="keyword">const</span> <span class="identifier">init</span><span class="special">&amp;);</span>
@@ -826,7 +1068,7 @@
 
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">typedef</span> <span class="identifier">dependency</span> <span class="identifier">type</span><span class="special">;</span>
-    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">scope_traits</span><span class="special">&lt;</span><span class="identifier">TScope</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">scope</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">TScope</span> <span class="identifier">scope</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">TExpected</span> <span class="identifier">expected</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">TGiven</span> <span class="identifier">given</span><span class="special">;</span>
     <span class="keyword">typedef</span> <span class="identifier">TBind</span> <span class="identifier">bind</span><span class="special">;</span>
@@ -846,8 +1088,7 @@
 
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
     <span class="keyword">static</span> <span class="identifier">dependency</span><span class="special">&lt;</span><span class="identifier">ref_type</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">unwrap_reference</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">,</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">TBind</span><span class="special">&gt;</span>
-    <span class="identifier">to</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;,</span> <span class="keyword">typename</span> <span class="identifier">enable_if</span><span class="special">&lt;</span><span class="identifier">is_reference_wrapper</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span><span class="special">*</span> <span class="special">=</span> <span class="number">0</span>
-               <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">disable_if</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">has_call_operator</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span><span class="special">*</span> <span class="special">=</span> <span class="number">0</span><span class="special">);</span>
+    <span class="identifier">to</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;,</span> <span class="keyword">typename</span> <span class="identifier">enable_if</span><span class="special">&lt;</span><span class="identifier">is_reference_wrapper</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span><span class="special">*</span> <span class="special">=</span> <span class="number">0</span><span class="special">);</span>
 
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
     <span class="keyword">static</span> <span class="identifier">dependency</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">get_wrapper</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">,</span> <span class="identifier">expected</span><span class="special">,</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">TBind</span><span class="special">&gt;</span>
@@ -856,7 +1097,7 @@
 
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
     <span class="keyword">static</span> <span class="identifier">dependency</span><span class="special">&lt;</span><span class="identifier">shared_type</span><span class="special">,</span> <span class="identifier">expected</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&gt;</span>
-    <span class="identifier">to</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
+    <span class="identifier">to</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">aux</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;);</span>
 <span class="special">};</span>
 
 <span class="special">}</span> <span class="comment">// namespace concepts</span>
@@ -1161,19 +1402,26 @@
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">typedef</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">int_</span><span class="special">&lt;</span><span class="number">1</span><span class="special">&gt;</span> <span class="identifier">priority</span><span class="special">;</span>
 
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="keyword">typename</span> <span class="special">=</span> <span class="identifier">TExpected</span><span class="special">&gt;</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TExpected</span><span class="special">&gt;</span>
     <span class="keyword">class</span> <span class="identifier">scope</span> <span class="special">{</span>
     <span class="keyword">public</span><span class="special">:</span>
-        <span class="keyword">typedef</span> <span class="identifier">TWrapper</span><span class="special">&lt;</span><span class="identifier">TExpected</span><span class="special">&gt;</span> <span class="identifier">result_type</span><span class="special">;</span>
+        <span class="keyword">typedef</span> <span class="identifier">TWrapper</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">result_type</span><span class="special">;</span>
 
         <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
-        <span class="keyword">explicit</span> <span class="identifier">scope</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;,</span> <span class="keyword">typename</span> <span class="identifier">enable_if_c</span><span class="special">&lt;</span><span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">has_call_operator</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">*</span> <span class="special">=</span> <span class="number">0</span><span class="special">);</span>
+        <span class="keyword">explicit</span> <span class="identifier">scope</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span>
+                     <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">enable_if_c</span><span class="special">&lt;</span>
+                           <span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">has_call_operator</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span> <span class="special">&amp;&amp;</span>
+                           <span class="special">!</span><span class="identifier">is_reference_wrapper</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span>
+                       <span class="special">&gt;::</span><span class="identifier">type</span><span class="special">*</span> <span class="special">=</span> <span class="number">0</span><span class="special">);</span>
 
         <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
-        <span class="keyword">explicit</span> <span class="identifier">scope</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;,</span> <span class="keyword">typename</span> <span class="identifier">disable_if_c</span><span class="special">&lt;</span><span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">has_call_operator</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">*</span> <span class="special">=</span> <span class="number">0</span><span class="special">);</span>
+        <span class="keyword">explicit</span> <span class="identifier">scope</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span>
+                     <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">disable_if_c</span><span class="special">&lt;</span>
+                           <span class="identifier">type_traits</span><span class="special">::</span><span class="identifier">has_call_operator</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span> <span class="special">&amp;&amp;</span>
+                           <span class="special">!</span><span class="identifier">is_reference_wrapper</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span>
+                       <span class="special">&gt;::</span><span class="identifier">type</span><span class="special">*</span> <span class="special">=</span> <span class="number">0</span><span class="special">);</span>
 
-        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">..</span> <span class="identifier">TArgs</span><span class="special">&gt;</span>
-        <span class="identifier">result_type</span> <span class="identifier">create</span><span class="special">(</span><span class="identifier">TArgs</span><span class="special">&amp;&amp;...);</span>
+        <span class="identifier">result_type</span> <span class="identifier">create</span><span class="special">();</span>
     <span class="special">};</span>
 <span class="special">};</span>
 
@@ -1211,7 +1459,7 @@
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">typedef</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">int_</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;</span> <span class="identifier">priority</span><span class="special">;</span>
 
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TGiven</span> <span class="special">=</span> <span class="identifier">TExpected</span><span class="special">&gt;</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TExpected</span><span class="special">&gt;</span>
     <span class="keyword">class</span> <span class="identifier">scope</span> <span class="special">{</span>
     <span class="keyword">public</span><span class="special">:</span>
         <span class="keyword">typedef</span> <span class="identifier">TWrapper</span><span class="special">&lt;</span><span class="identifier">TExpected</span><span class="special">&gt;</span> <span class="identifier">result_type</span><span class="special">;</span>
@@ -1219,8 +1467,7 @@
         <span class="keyword">void</span> <span class="identifier">call</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">session_entry</span><span class="special">&amp;);</span>
         <span class="keyword">void</span> <span class="identifier">call</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">session_exit</span><span class="special">&amp;);</span>
 
-        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">..</span> <span class="identifier">TArgs</span><span class="special">&gt;</span>
-        <span class="identifier">result_type</span> <span class="identifier">create</span><span class="special">(</span><span class="identifier">TArgs</span><span class="special">&amp;&amp;...);</span>
+        <span class="identifier">result_type</span> <span class="identifier">create</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">TExpected</span><span class="special">*()&gt;&amp;);</span>
     <span class="special">};</span>
 <span class="special">};</span>
 
@@ -1255,13 +1502,12 @@
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">typedef</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">int_</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;</span> <span class="identifier">priority</span><span class="special">;</span>
 
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TGiven</span> <span class="special">=</span> <span class="identifier">TExpected</span><span class="special">&gt;</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TExpected</span><span class="special">&gt;</span>
     <span class="keyword">class</span> <span class="identifier">scope</span> <span class="special">{</span>
     <span class="keyword">public</span><span class="special">:</span>
         <span class="keyword">typedef</span> <span class="identifier">TWrapper</span><span class="special">&lt;</span><span class="identifier">TExpected</span><span class="special">&gt;</span> <span class="identifier">result_type</span><span class="special">;</span>
 
-        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">..</span> <span class="identifier">TArgs</span><span class="special">&gt;</span>
-        <span class="identifier">result_type</span> <span class="identifier">create</span><span class="special">(</span><span class="identifier">TArgs</span><span class="special">&amp;&amp;...);</span>
+        <span class="identifier">result_type</span> <span class="identifier">create</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">TExpected</span><span class="special">*()&gt;&amp;);</span>
     <span class="special">};</span>
 <span class="special">};</span>
 
@@ -1296,13 +1542,12 @@
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">typedef</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">int_</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;</span> <span class="identifier">priority</span><span class="special">;</span>
 
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TGiven</span> <span class="special">=</span> <span class="identifier">TExpected</span><span class="special">&gt;</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TExpected</span><span class="special">&gt;</span>
     <span class="keyword">class</span> <span class="identifier">scope</span> <span class="special">{</span>
     <span class="keyword">public</span><span class="special">:</span>
         <span class="keyword">typedef</span> <span class="identifier">TWrapper</span><span class="special">&lt;</span><span class="identifier">TExpected</span><span class="special">&gt;</span> <span class="identifier">result_type</span><span class="special">;</span>
 
-        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">..</span> <span class="identifier">TArgs</span><span class="special">&gt;</span>
-        <span class="identifier">result_type</span> <span class="identifier">create</span><span class="special">(</span><span class="identifier">TArgs</span><span class="special">&amp;&amp;...);</span>
+        <span class="identifier">result_type</span> <span class="identifier">create</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">TExpected</span><span class="special">*()&gt;&amp;);</span>
     <span class="special">};</span>
 <span class="special">};</span>
 
@@ -1327,55 +1572,15 @@
 <a name="boost_di__dependency_injection_.reference.policies"></a><a class="link" href="reference.html#boost_di__dependency_injection_.reference.policies" title="Policies">Policies</a>
 </h3></div></div></div>
 <div class="toc"><dl class="toc">
-<dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.policies.header__boost_di_policies_arguments_permission_hpp_">Header
-        &lt;boost/di/policies/arguments_permission.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.policies.header__boost_di_policies_circular_dependencies_hpp_">Header
         &lt;boost/di/policies/circular_dependencies.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.policies.header__boost_di_policies_creation_ownership_hpp_">Header
         &lt;boost/di/policies/creation_ownership.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.policies.header__boost_di_policies_scopes_permission_hpp_">Header
         &lt;boost/di/policies/scopes_permission.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.policies.header__boost_di_policies_parameters_permission_hpp_">Header
+        &lt;boost/di/policies/parameters_permission.hpp&gt;</a></span></dt>
 </dl></div>
-<div class="section">
-<div class="titlepage"><div><div><h4 class="title">
-<a name="boost_di__dependency_injection_.reference.policies.header__boost_di_policies_arguments_permission_hpp_"></a><a class="link" href="reference.html#boost_di__dependency_injection_.reference.policies.header__boost_di_policies_arguments_permission_hpp_" title="Header &lt;boost/di/policies/arguments_permission.hpp&gt;">Header
-        &lt;boost/di/policies/arguments_permission.hpp&gt;</a>
-</h4></div></div></div>
-<p>
-</p>
-<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
-<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">{</span>
-<span class="keyword">namespace</span> <span class="identifier">policies</span> <span class="special">{</span>
-
-<span class="keyword">struct</span> <span class="identifier">allow_smart_ptrs</span><span class="special">;</span>
-<span class="keyword">struct</span> <span class="identifier">allow_refs</span><span class="special">;</span>
-<span class="keyword">struct</span> <span class="identifier">allow_const_refs</span><span class="special">;</span>
-<span class="keyword">struct</span> <span class="identifier">allow_rvalue_refs</span><span class="special">;</span>
-<span class="keyword">struct</span> <span class="identifier">allow_ptrs</span><span class="special">;</span>
-<span class="keyword">struct</span> <span class="identifier">allow_copies</span><span class="special">;</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">class</span> <span class="identifier">arguments_permission</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
-    <span class="keyword">void</span> <span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
-<span class="special">};</span>
-
-<span class="special">}</span> <span class="comment">// namespace policies</span>
-<span class="special">}</span> <span class="comment">// namespace di</span>
-<span class="special">}</span> <span class="comment">// namespace boost</span>
-</pre>
-<p>
-        </p>
-<div class="informaltable"><table class="table">
-<colgroup><col></colgroup>
-<tbody><tr><td>
-                  <p>
-                    Tests: <a href="../test/ut/policies/arguments_permission_ut.cpp" target="_top">test/ut/policies/arguments_permission_ut.cpp</a>
-                  </p>
-                </td></tr></tbody>
-</table></div>
-</div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_di__dependency_injection_.reference.policies.header__boost_di_policies_circular_dependencies_hpp_"></a><a class="link" href="reference.html#boost_di__dependency_injection_.reference.policies.header__boost_di_policies_circular_dependencies_hpp_" title="Header &lt;boost/di/policies/circular_dependencies.hpp&gt;">Header
@@ -1481,6 +1686,46 @@
                 </td></tr></tbody>
 </table></div>
 </div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_di__dependency_injection_.reference.policies.header__boost_di_policies_parameters_permission_hpp_"></a><a class="link" href="reference.html#boost_di__dependency_injection_.reference.policies.header__boost_di_policies_parameters_permission_hpp_" title="Header &lt;boost/di/policies/parameters_permission.hpp&gt;">Header
+        &lt;boost/di/policies/parameters_permission.hpp&gt;</a>
+</h4></div></div></div>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">policies</span> <span class="special">{</span>
+
+<span class="keyword">struct</span> <span class="identifier">allow_smart_ptrs</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">allow_refs</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">allow_const_refs</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">allow_rvalue_refs</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">allow_ptrs</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">allow_copies</span><span class="special">;</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">parameters_permission</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="special">}</span> <span class="comment">// namespace policies</span>
+<span class="special">}</span> <span class="comment">// namespace di</span>
+<span class="special">}</span> <span class="comment">// namespace boost</span>
+</pre>
+<p>
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<tbody><tr><td>
+                  <p>
+                    Tests: <a href="../test/ut/policies/parameters_permission_ut.cpp" target="_top">test/ut/policies/parameters_permission_ut.cpp</a>
+                  </p>
+                </td></tr></tbody>
+</table></div>
+</div>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
@@ -1488,10 +1733,10 @@
       Traits</a>
 </h3></div></div></div>
 <div class="toc"><dl class="toc">
-<dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.type_traits.header__boost_di_type_traits_create_traits_hpp_">Header
-        &lt;boost/di/type_traits/create_traits.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.type_traits.header__boost_di_type_traits_ctor_traits_hpp_">Header
         &lt;boost/di/type_traits/ctor_traits.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.type_traits.header__boost_di_type_traits_function_traits_hpp_">Header
+        &lt;boost/di/type_traits/function_traits.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.type_traits.header__boost_di_type_traits_has_call_hpp_">Header
         &lt;boost/di/type_traits/has_call.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.type_traits.header__boost_di_type_traits_has_call_operator_hpp_">Header
@@ -1510,60 +1755,11 @@
         &lt;boost/di/type_traits/is_same_base_of.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.type_traits.header__boost_di_type_traits_make_plain_hpp_">Header
         &lt;boost/di/type_traits/make_plain.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.type_traits.header__boost_di_type_traits_parameter_types_hpp_">Header
-        &lt;boost/di/type_traits/parameter_types.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.type_traits.header__boost_di_type_traits_remove_accessors_hpp_">Header
         &lt;boost/di/type_traits/remove_accessors.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.type_traits.header__boost_di_type_traits_scope_traits_hpp_">Header
         &lt;boost/di/type_traits/scope_traits.hpp&gt;</a></span></dt>
 </dl></div>
-<div class="section">
-<div class="titlepage"><div><div><h4 class="title">
-<a name="boost_di__dependency_injection_.reference.type_traits.header__boost_di_type_traits_create_traits_hpp_"></a><a class="link" href="reference.html#boost_di__dependency_injection_.reference.type_traits.header__boost_di_type_traits_create_traits_hpp_" title="Header &lt;boost/di/type_traits/create_traits.hpp&gt;">Header
-        &lt;boost/di/type_traits/create_traits.hpp&gt;</a>
-</h4></div></div></div>
-<p>
-</p>
-<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
-<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">{</span>
-<span class="keyword">namespace</span> <span class="identifier">type_traits</span> <span class="special">{</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">,</span> <span class="keyword">typename</span> <span class="special">=</span> <span class="keyword">void</span><span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">is_mpl_string</span><span class="special">;</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">is_explicit</span><span class="special">;</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TGiven</span><span class="special">&gt;</span>
-<span class="keyword">typename</span> <span class="identifier">disable_if</span><span class="special">&lt;</span><span class="identifier">is_explicit</span><span class="special">&lt;</span><span class="identifier">TGiven</span><span class="special">&gt;,</span> <span class="identifier">TExpected</span><span class="special">*&gt;::</span><span class="identifier">type</span>
-<span class="identifier">create_traits</span><span class="special">();</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TGiven</span><span class="special">&gt;</span>
-<span class="keyword">typename</span> <span class="identifier">enable_if</span><span class="special">&lt;</span><span class="identifier">has_value</span><span class="special">&lt;</span><span class="identifier">TGiven</span><span class="special">&gt;,</span> <span class="identifier">TExpected</span><span class="special">*&gt;::</span><span class="identifier">type</span>
-<span class="identifier">create_traits</span><span class="special">();</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TGiven</span><span class="special">&gt;</span>
-<span class="keyword">typename</span> <span class="identifier">enable_if</span><span class="special">&lt;</span><span class="identifier">is_mpl_string</span><span class="special">&lt;</span><span class="identifier">TGiven</span><span class="special">&gt;,</span> <span class="identifier">TExpected</span><span class="special">*&gt;::</span><span class="identifier">type</span>
-<span class="identifier">create_traits</span><span class="special">();</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TGiven</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TArgs</span><span class="special">...&gt;</span>
-<span class="identifier">TExpected</span><span class="special">*</span> <span class="identifier">create_traits</span><span class="special">(</span><span class="identifier">TArgs</span><span class="special">&amp;&amp;...);</span>
-
-<span class="special">}</span> <span class="comment">// namespace type_traits</span>
-<span class="special">}</span> <span class="comment">// namespace di</span>
-<span class="special">}</span> <span class="comment">// namespace boost</span>
-</pre>
-<p>
-        </p>
-<div class="informaltable"><table class="table">
-<colgroup><col></colgroup>
-<tbody><tr><td>
-                  <p>
-                    Tests: <a href="../test/ut/type_traits/create_traits_ut.cpp" target="_top">test/ut/type_traits/create_traits_ut.cpp</a>
-                  </p>
-                </td></tr></tbody>
-</table></div>
-</div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="boost_di__dependency_injection_.reference.type_traits.header__boost_di_type_traits_ctor_traits_hpp_"></a><a class="link" href="reference.html#boost_di__dependency_injection_.reference.type_traits.header__boost_di_type_traits_ctor_traits_hpp_" title="Header &lt;boost/di/type_traits/ctor_traits.hpp&gt;">Header
@@ -1576,8 +1772,6 @@
 
 <span class="keyword">namespace</span> <span class="identifier">detail</span> <span class="special">{</span>
 
-<span class="keyword">struct</span> <span class="identifier">any_type</span><span class="special">;</span>
-
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">get_value</span><span class="special">;</span>
 
@@ -1588,7 +1782,7 @@
 
 <span class="keyword">namespace</span> <span class="identifier">type_traits</span> <span class="special">{</span>
 
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="special">=</span> <span class="keyword">void</span><span class="special">&gt;</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">ctor_traits</span><span class="special">;</span>
 
 <span class="special">}</span> <span class="comment">// namespace type_traits</span>
@@ -1602,6 +1796,44 @@
 <tbody><tr><td>
                   <p>
                     Tests: <a href="../test/ut/type_traits/ctor_traits_ut.cpp" target="_top">test/ut/type_traits/ctor_traits_ut.cpp</a>
+                  </p>
+                </td></tr></tbody>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_di__dependency_injection_.reference.type_traits.header__boost_di_type_traits_function_traits_hpp_"></a><a class="link" href="reference.html#boost_di__dependency_injection_.reference.type_traits.header__boost_di_type_traits_function_traits_hpp_" title="Header &lt;boost/di/type_traits/function_traits.hpp&gt;">Header
+        &lt;boost/di/type_traits/function_traits.hpp&gt;</a>
+</h4></div></div></div>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">type_traits</span> <span class="special">{</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">function_traits</span><span class="special">;</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">R</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TArgs</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">function_traits</span><span class="special">&lt;</span><span class="identifier">R</span><span class="special">(*)(</span><span class="identifier">TArgs</span><span class="special">...)&gt;;</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">R</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TArgs</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">function_traits</span><span class="special">&lt;</span><span class="identifier">R</span><span class="special">(</span><span class="identifier">T</span><span class="special">::*)(</span><span class="identifier">TArgs</span><span class="special">...)&gt;;</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">R</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TArgs</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">function_traits</span><span class="special">&lt;</span><span class="identifier">R</span><span class="special">(</span><span class="identifier">T</span><span class="special">::*)(</span><span class="identifier">TArgs</span><span class="special">...)</span> <span class="keyword">const</span><span class="special">&gt;;</span>
+
+<span class="special">}</span> <span class="comment">// namespace type_traits</span>
+<span class="special">}</span> <span class="comment">// namespace di</span>
+<span class="special">}</span> <span class="comment">// namespace boost</span>
+</pre>
+<p>
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<tbody><tr><td>
+                  <p>
+                    Tests: <a href="../test/ut/type_traits/function_traits_ut.cpp" target="_top">test/ut/type_traits/function_traits_ut.cpp</a>
                   </p>
                 </td></tr></tbody>
 </table></div>
@@ -1714,7 +1946,7 @@
 <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">{</span>
 <span class="keyword">namespace</span> <span class="identifier">type_traits</span> <span class="special">{</span>
 
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TArgumentsSize</span><span class="special">&gt;</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TSize</span><span class="special">&gt;</span>
 <span class="keyword">class</span> <span class="identifier">has_ctor</span><span class="special">;</span>
 
 <span class="special">}</span> <span class="comment">// namespace type_traits</span>
@@ -1886,41 +2118,6 @@
 <tbody><tr><td>
                   <p>
                     Tests: <a href="../test/ut/type_traits/make_plain_ut.cpp" target="_top">test/ut/type_traits/make_plain_ut.cpp</a>
-                  </p>
-                </td></tr></tbody>
-</table></div>
-</div>
-<div class="section">
-<div class="titlepage"><div><div><h4 class="title">
-<a name="boost_di__dependency_injection_.reference.type_traits.header__boost_di_type_traits_parameter_types_hpp_"></a><a class="link" href="reference.html#boost_di__dependency_injection_.reference.type_traits.header__boost_di_type_traits_parameter_types_hpp_" title="Header &lt;boost/di/type_traits/parameter_types.hpp&gt;">Header
-        &lt;boost/di/type_traits/parameter_types.hpp&gt;</a>
-</h4></div></div></div>
-<p>
-</p>
-<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
-<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">{</span>
-<span class="keyword">namespace</span> <span class="identifier">type_traits</span> <span class="special">{</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">R</span><span class="special">,</span> <span class="identifier">TArgs</span><span class="special">...&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">parameter_types</span><span class="special">&lt;</span><span class="identifier">R</span><span class="special">(*)(</span><span class="identifier">TArgs</span><span class="special">...)&gt;;</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">R</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">TArgs</span><span class="special">...&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">parameter_types</span><span class="special">&lt;</span><span class="identifier">R</span><span class="special">(</span><span class="identifier">T</span><span class="special">::*)(</span><span class="identifier">TArgs</span><span class="special">...)&gt;;</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">R</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">TArgs</span><span class="special">...&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">parameter_types</span><span class="special">&lt;</span><span class="identifier">R</span><span class="special">(</span><span class="identifier">T</span><span class="special">::*)(</span><span class="identifier">TArgs</span><span class="special">...)</span> <span class="keyword">const</span><span class="special">&gt;;</span>
-
-<span class="special">}</span> <span class="comment">// namespace type_traits</span>
-<span class="special">}</span> <span class="comment">// namespace di</span>
-<span class="special">}</span> <span class="comment">// namespace boost</span>
-</pre>
-<p>
-        </p>
-<div class="informaltable"><table class="table">
-<colgroup><col></colgroup>
-<tbody><tr><td>
-                  <p>
-                    Tests: <a href="../test/ut/type_traits/parameter_types_ut.cpp" target="_top">test/ut/type_traits/parameter_types_ut.cpp</a>
                   </p>
                 </td></tr></tbody>
 </table></div>

@@ -62,13 +62,17 @@
             supported types only to specified
           </li>
 <li class="listitem">
-            Supports C++03 / C++11 / C++14 standards
+            Supports <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code> / <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">11</span></code> /
+            <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">14</span></code> standards
           </li>
 </ul></div>
 <p>
         Main features:
       </p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+            Type safe
+          </li>
 <li class="listitem">
             Header only library
           </li>
@@ -79,7 +83,8 @@
             Supports all POSIX and Windows operating systems (tested on Linux/Windows/Mac/Darwin)
           </li>
 <li class="listitem">
-            Supports C++03/C++11 standard
+            Supports <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code> / <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">11</span></code> /
+            <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">14</span></code> standards
           </li>
 <li class="listitem">
             Exception safe guaranty
@@ -117,6 +122,12 @@
             diagrams)
           </li>
 </ul></div>
+<p>
+        Although library supports <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code> and <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">11</span></code>,
+        only <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">14</span></code> shows the full potential of Boost.DI. To
+        achieve the same behaviour with previous standards sometimes will just require
+        a bit more hassle.
+      </p>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
@@ -209,6 +220,261 @@
           be tested properly due to requirements of C++ 11 features by the tests.
         </p></td></tr>
 </table></div>
+<h4>
+<a name="boost_di__dependency_injection_.overview.supported_compilers.h0"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.overview.supported_compilers.restrictions"></a></span><a class="link" href="overview.html#boost_di__dependency_injection_.overview.supported_compilers.restrictions">Restrictions</a>
+      </h4>
+<p>
+        see <code class="computeroutput"><span class="identifier">Design</span><span class="special">.</span><span class="identifier">Problematic</span> <span class="identifier">Cases</span></code>:
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Issue
+                </p>
+              </th>
+<th>
+                <p>
+                  GCC
+                </p>
+              </th>
+<th>
+                <p>
+                  Clang
+                </p>
+              </th>
+<th>
+                <p>
+                  Intel
+                </p>
+              </th>
+<th>
+                <p>
+                  Visual Studio
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  Rvalue References
+                </p>
+              </td>
+<td>
+                <p>
+                  supported
+                </p>
+              </td>
+<td>
+                <p>
+                  supported
+                </p>
+              </td>
+<td>
+                <p>
+                  supported
+                </p>
+              </td>
+<td>
+                <p>
+                  not supported
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  std/boost function
+                </p>
+              </td>
+<td>
+                <p>
+                  supported
+                </p>
+              </td>
+<td>
+                <p>
+                  supported
+                </p>
+              </td>
+<td>
+                <p>
+                  supported
+                </p>
+              </td>
+<td>
+                <p>
+                  supported (has to be pass by const reference)
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Arguments Permission Policy
+                </p>
+              </td>
+<td>
+                <p>
+                  supported
+                </p>
+              </td>
+<td>
+                <p>
+                  supported
+                </p>
+              </td>
+<td>
+                <p>
+                  supported
+                </p>
+              </td>
+<td>
+                <p>
+                  not supported
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody><tr>
+<td>
+              </td>
+<td>
+                <p>
+                  Constructor Deduction
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT</span></code>
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+<h4>
+<a name="boost_di__dependency_injection_.overview.supported_compilers.h1"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.overview.supported_compilers.recommendations"></a></span><a class="link" href="overview.html#boost_di__dependency_injection_.overview.supported_compilers.recommendations">Recommendations</a>
+      </h4>
+<p>
+        Boost.DI supports variety of compilers and standards. Not all features are
+        supported the same way or in general by all of them. Below table shows author
+        recommendations (based on testing) what to be careful about whilst using
+        a specific combinations.
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Standard
+                </p>
+              </th>
+<th>
+                <p>
+                  Compiler
+                </p>
+              </th>
+<th>
+                <p>
+                  Recommendation
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">GCC</span> <span class="special">&gt;=</span>
+                  <span class="number">4.7</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Module::configure()
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">Clang</span> <span class="special">&gt;=</span>
+                  <span class="number">3.4</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">Modules</span></code> configure
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">11</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">Clang</span> <span class="special">&gt;=</span>
+                  <span class="number">3.4</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">Modules</span></code> configure
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">14</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">Clang</span> <span class="special">&gt;=</span>
+                  <span class="number">3.4</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Go for it!
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
@@ -251,6 +517,30 @@
                 </p>
                 <p>
                   default: <code class="computeroutput"><span class="identifier">enabled</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_STD</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Defines which compiler features will be used. When <code class="computeroutput"><span class="identifier">cpp_11</span></code> below features will be
+                  used:
+                </p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">* variadic templates
+* function template default arguments
+* rvalue references and perfet forwarding
+* decltype
+        </pre>
+                <p>
+                  Configuration affects <code class="computeroutput"><span class="identifier">preprocessed</span>
+                  <span class="identifier">headers</span></code>, which are generated
+                  for both configurations. default: <code class="computeroutput"><span class="identifier">cpp_11</span>
+                  <span class="identifier">when</span> <span class="identifier">C</span><span class="special">++</span><span class="number">11</span> <span class="identifier">cpp_03</span> <span class="identifier">otherwise</span></code>
                 </p>
               </td>
 </tr>
@@ -380,6 +670,21 @@
                 </p>
                 <p>
                   default: <code class="computeroutput"><span class="identifier">boost_di_injector__</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">BOOST_MPL_LIMIT_VECTOR_SIZE</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Number of allowed bindings is limited by Boost.MPL vector size.
+                </p>
+                <p>
+                  default: 20 (defined by Boost.MPL)
                 </p>
               </td>
 </tr>

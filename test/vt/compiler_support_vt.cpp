@@ -13,19 +13,19 @@
 namespace boost {
 namespace di {
 
-struct converter {
+struct any_type {
     BOOST_DI_WKND(NO_MSVC)(
         template<typename T> operator T() {
             return T();
         }
     )
 
-    template<typename T> operator T&() const {
+    template<typename T> operator const T&() const {
         static T t;
         return t;
     }
 
-    template<typename T> operator const T&() const {
+    template<typename T> operator T&() const {
         static T t;
         return t;
     }
@@ -38,15 +38,6 @@ struct converter {
 
 template<typename T>
 struct ctor {
-    struct any_type {
-        BOOST_DI_WKND(NO_MSVC)(
-            template<typename U> operator U();
-        )
-        template<typename U> operator const U&() const;
-        template<typename U> operator U&() const;
-        template<typename U> operator std::auto_ptr<U>&();
-    };
-
     template<typename U>
     static mpl::aux::yes_tag test(BOOST_DI_FEATURE_DECLTYPE(
         U(any_type(), any_type(), any_type(), any_type(), any_type(), any_type()))*
@@ -68,7 +59,7 @@ struct app {
 };
 
 BOOST_AUTO_TEST_CASE(conversion) {
-    std::auto_ptr<app> app_(new app(converter(), converter(), converter(), converter(), converter(), converter()));
+    std::auto_ptr<app> app_(new app(any_type(), any_type(), any_type(), any_type(), any_type(), any_type()));
 }
 
 BOOST_AUTO_TEST_CASE(constructor) {

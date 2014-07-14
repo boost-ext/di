@@ -30,23 +30,25 @@
 <li class="listitem">
           Is configuration via XML supported by Boost.DI?
           <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
-                Short answer will be NO. Boost.DI configuration is configured in
-                the source code using C++ features. According to my experience configuration
-                driven by XML seems to be a bit smelly and not giving as many benefits.
-                Usually lazy binding requires exceptions and destroy performance,
-                but obviously it depends on projects needs. Although it might be
-                hard it is possible to achieve it with Boost.DI, but no approach
-                was taken so far. The main question should be though - in real life
-                projects how often configuration was actually changed via XML?
+                Short answer is NO. Boost.DI dependencies are configured in the source
+                code using C++ features which allows compile time checking. Long
+                story short, fluent configuration you don't have to remember of changing
+                the configuration file, compiler will take care of it for you. Usually
+                lazy binding requires exceptions handling and is a performance killer,
+                but obviously it depends on a projects needs. Although it might be
+                hard it is possible to achieve it with Boost.DI. The question which
+                should be asked though - how often configuration is dynamically changed
+                via XML?
               </li></ul></div>
         </li>
 <li class="listitem">
-          Why Boost.DI doesn't support setter/member injection?
+          Why Boost.DI doesn't support <code class="computeroutput"><span class="identifier">setter</span><span class="special">/</span><span class="identifier">member</span></code>`
+          injection?
           <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
                 Constructor injection is the most powerful and the preferable injection
-                method which avoid uninitialized state of members. According to author
-                <code class="computeroutput"><span class="identifier">setter</span><span class="special">/</span><span class="identifier">member</span></code> injection should be avoided
+                method which avoid uninitialized state of members. <code class="computeroutput"><span class="identifier">Setter</span><span class="special">/</span><span class="identifier">Member</span></code> injection should be avoided
                 at all costs in order to keep the solutions as clean as possible.
+                Therefore Boost.DI doesn't support it by default.
               </li></ul></div>
         </li>
 <li class="listitem">
@@ -62,13 +64,20 @@
               </li></ul></div>
         </li>
 <li class="listitem">
-          HOw many construtors arguments are supporrted and how many dependnecies
-          i can use?
+          How many constructors parameters are supported and how many bindings I
+          can have?
+          <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+                Boost.DI by default supports up to 10 constructor parameters. Configuration
+                might be changed by <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_CTOR_LIMIT_SIZE</span></code>.
+                The number of allowed bindings is limited by <code class="computeroutput"><span class="identifier">BOOST_MPL_LIMIT_VECTOR_SIZE</span></code>
+                value.
+              </li></ul></div>
         </li>
 <li class="listitem">
-          How injection works since there is no registraction/reflection/traits ?
+          How injection works since there is no registration/reflection/traits ?
           <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
-                See
+                See <a class="link" href="../">Design Rationale</a> for further
+                explanations.
               </li></ul></div>
         </li>
 </ol></div>

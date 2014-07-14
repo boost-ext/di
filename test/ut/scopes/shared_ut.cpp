@@ -11,34 +11,19 @@
 
 #include "boost/di/aux_/memory.hpp"
 
-#include "common/fakes/fake_wrapper.hpp"
-#include "common/data.hpp"
-
 namespace boost {
 namespace di {
 namespace scopes {
+
+auto new_int = []{ return new int(); };
 
 BOOST_AUTO_TEST_CASE(create) {
     shared<>::scope<int> shared_;
 
     BOOST_CHECK((
-        (shared_.create())(type<aux::shared_ptr<int>>())
+        (shared_.create(new_int))(type<aux::shared_ptr<int>>())
         ==
-        (shared_.create())(type<aux::shared_ptr<int>>())
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(create_args) {
-    shared<>::scope<c2> shared_;
-
-    fake_wrapper<int> i(0);
-    fake_wrapper<double> d(0.0);
-    fake_wrapper<char> c('0');
-
-    BOOST_CHECK((
-        (shared_.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
-        ==
-        (shared_.create<decltype(i), decltype(d), decltype(c)>(i, d, c))(type<aux::shared_ptr<c2>>())
+        (shared_.create(new_int))(type<aux::shared_ptr<int>>())
     ));
 }
 

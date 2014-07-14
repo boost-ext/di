@@ -53,7 +53,5 @@ int main() {
     return 0;
 }
 
-//`[table
-//`[[Full code example: [@example/cpp_11/testing.cpp testing.cpp]]]]
 //]
 

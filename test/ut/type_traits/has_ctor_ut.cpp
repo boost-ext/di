@@ -7,6 +7,7 @@
 #include "boost/di/type_traits/has_ctor.hpp"
 
 #include <boost/test/unit_test.hpp>
+#include <boost/function.hpp>
 
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/memory.hpp"
@@ -27,7 +28,7 @@ struct copy_ctor_and_many { copy_ctor_and_many(const copy_ctor_and_many&) { } co
 struct many { many(int, double, float) { } };
 struct many_2_3 { many_2_3(int, double) { } many_2_3(int, double, float) { } };
 struct many_ref { many_ref(int&, const double&) { } };
-struct many_complex { many_complex(const int&, double, float*, aux::shared_ptr<void>, char&) { }};
+struct many_complex { many_complex(const int&, double, float*, aux::shared_ptr<void>, char&, function<int()>) { }};
 
 #if (__cplusplus >= 201100L) || defined(BOOST_MSVC)
     struct many_sp { many_sp(aux::shared_ptr<int>, aux::unique_ptr<int>) { } };
@@ -89,9 +90,9 @@ BOOST_AUTO_TEST_CASE(many_arguments) {
     BOOST_CHECK((has_ctor<many_ref, mpl::int_<2> >::value));
     BOOST_CHECK((!has_ctor<many_ref, mpl::int_<3> >::value));
 
-    BOOST_CHECK((!has_ctor<many_complex, mpl::int_<4> >::value));
-    BOOST_CHECK((has_ctor<many_complex, mpl::int_<5> >::value));
-    BOOST_CHECK((!has_ctor<many_complex, mpl::int_<6> >::value));
+    BOOST_CHECK((!has_ctor<many_complex, mpl::int_<5> >::value));
+    BOOST_CHECK((has_ctor<many_complex, mpl::int_<6> >::value));
+    BOOST_CHECK((!has_ctor<many_complex, mpl::int_<7> >::value));
 
 #if (__cplusplus >= 201100L) && !defined(BOOST_MSVC)
     BOOST_CHECK((has_ctor<rvalue2, mpl::int_<2> >::value));

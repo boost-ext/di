@@ -6,6 +6,7 @@
 //
 #include "boost/di/scopes/external.hpp"
 
+#include <functional>
 #include <boost/test/unit_test.hpp>
 #include <boost/ref.hpp>
 #include <boost/type.hpp>
@@ -19,6 +20,13 @@
 namespace boost {
 namespace di {
 namespace scopes {
+
+BOOST_AUTO_TEST_CASE(is_reference_wrapper_unwrap_reference) {
+    BOOST_CHECK((is_reference_wrapper<std::reference_wrapper<int> >::value));
+    BOOST_CHECK((is_same<unwrap_reference<std::reference_wrapper<int> >::type, int>::value));
+    BOOST_CHECK((is_reference_wrapper<boost::reference_wrapper<int> >::value));
+    BOOST_CHECK((is_same<unwrap_reference<boost::reference_wrapper<int> >::type, int>::value));
+}
 
 BOOST_AUTO_TEST_CASE(from_arithmetic) {
     const int i = 42;
@@ -55,15 +63,15 @@ BOOST_AUTO_TEST_CASE(from_context) {
     aux::shared_ptr<c> c2_(new c);
 
     BOOST_CHECK((
-        (external<>::scope<int, a>(87).create())(type<int>())
+        (external<>::scope<int>(87).create())(type<int>())
         !=
-        (external<>::scope<int, b>(42).create())(type<int>())
+        (external<>::scope<int>(42).create())(type<int>())
     ));
 
     BOOST_CHECK((
-        (external<wrappers::shared>::scope<c, a>(c1_).create())(type<aux::shared_ptr<c>>())
+        (external<wrappers::shared>::scope<c>(c1_).create())(type<aux::shared_ptr<c>>())
         !=
-        (external<wrappers::shared>::scope<c, b>(c2_).create())(type<aux::shared_ptr<c>>())
+        (external<wrappers::shared>::scope<c>(c2_).create())(type<aux::shared_ptr<c>>())
     ));
 }
 
@@ -89,6 +97,12 @@ BOOST_AUTO_TEST_CASE(from_function_expr) {
 
     flag = true;
     BOOST_CHECK(dynamic_cast<c1if0*>(external_.create()(type<aux::shared_ptr<if0>>()).get()));
+}
+
+BOOST_AUTO_TEST_CASE(from_function_expr_with_expected_function_expr) {
+    const int i = 42;
+    external<wrappers::value>::scope<std::function<int()>> external_([&]{ return i; });
+    BOOST_CHECK_EQUAL(i, external_.create()(type<std::function<int()>>())());
 }
 
 } // namespace scopes

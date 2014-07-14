@@ -7,6 +7,9 @@
 #include "boost/di/make_injector.hpp"
 
 #include <boost/test/unit_test.hpp>
+#include <functional>
+#include <boost/bind.hpp>
+#include <boost/ref.hpp>
 #include <boost/typeof/typeof.hpp>
 
 #include "boost/di/aux_/memory.hpp"
@@ -15,6 +18,7 @@
 #include "boost/di/policies/creation_ownership.hpp"
 #include "boost/di/policies/circular_dependencies.hpp"
 
+#include "common/fakes/fake_allocator.hpp"
 #include "common/data.hpp"
 
 namespace boost {
@@ -103,7 +107,7 @@ BOOST_AUTO_TEST_CASE(with_policy_seperate) {
     ).i);
 }
 
-BOOST_AUTO_TEST_CASE(mix) {
+BOOST_AUTO_TEST_CASE(create_mix) {
     const int i = 42;
     const double d = 42.0;
 
@@ -138,11 +142,31 @@ BOOST_AUTO_TEST_CASE(mix) {
     BOOST_CHECK_EQUAL(0, c5_->c2_->c);
 }
 
+BOOST_AUTO_TEST_CASE(allocate) {
+    auto injector = make_injector();
+    fake_allocator::allocate_calls() = 0;
+    auto i = injector.allocate<int>(fake_allocator());
+    BOOST_CHECK_EQUAL(0, i);
+    BOOST_CHECK_EQUAL(1, fake_allocator::allocate_calls());
+}
+
+BOOST_AUTO_TEST_CASE(allocate_with_policies) {
+    auto injector = make_injector();
+    fake_allocator::allocate_calls() = 0;
+    auto i = injector.allocate<int>(
+        fake_allocator()
+      , policies::circular_dependencies()
+      , policies::creation_ownership()
+    );
+    BOOST_CHECK_EQUAL(0, i);
+    BOOST_CHECK_EQUAL(1, fake_allocator::allocate_calls());
+}
+
 BOOST_AUTO_TEST_CASE(externals_return_from_function) {
     const int i = 42;
     const double d = 87.0;
 
-    using externals = di::injector<
+    using externals = injector<
         c0if0
       , decltype(bind<int>::to(int()))
       , BOOST_TYPEOF(bind<double>::to(double()))
@@ -220,7 +244,7 @@ BOOST_AUTO_TEST_CASE(modules_injector) {
 
 BOOST_AUTO_TEST_CASE(modules_make_injector) {
     const int i = 42;
-    auto injector_ = di::make_injector(module1(), module2(i));
+    auto injector_ = make_injector(module1(), module2(i));
 
     BOOST_CHECK(dynamic_cast<c0if0*>(injector_.create<aux::auto_ptr<if0>>().get()));
     BOOST_CHECK_EQUAL(i, injector_.create<int>());
@@ -232,15 +256,15 @@ BOOST_AUTO_TEST_CASE(modules_mix_make_injector) {
     const float f = 123.0;
     const std::string s = "string";
 
-    auto injector_string = di::make_injector(
+    auto injector_string = make_injector(
         bind<std::string>::to(s)
     );
 
-    auto injector_ = di::make_injector(
+    auto injector_ = make_injector(
         empty_module()
       , bind<double>::to(d)
       , module1()
-      , di::make_injector(
+      , make_injector(
             bind<float>::to(f)
         )
       , injector_string
@@ -267,18 +291,18 @@ BOOST_AUTO_TEST_CASE(wrappers_types_mix) {
     const char ch2 = '1';
     const long l = 77;
 
-    auto injector_ = di::make_injector(
-        di::bind_int<i1>()
-      , di::bind_int<i2>::named<a>()
-      , di::bind<float>::to(f1)
-      , di::bind<float>::named<b>::to(f2)
-      , di::bind<double>::to(d1)
-      , di::bind<double>::named<c>::to(d2)
-      , di::bind<short>::to(s1)
-      , di::bind<short>::named<d>::to(s2)
-      , di::bind<char>::to(ch1)
-      , di::bind<char>::named<e>::to(ch2)
-      , di::bind<long>::to(l)
+    auto injector_ = make_injector(
+        bind_int<i1>()
+      , bind_int<i2>::named<a>()
+      , bind<float>::to(f1)
+      , bind<float>::named<b>::to(f2)
+      , bind<double>::to(d1)
+      , bind<double>::named<c>::to(d2)
+      , bind<short>::to(s1)
+      , bind<short>::named<d>::to(s2)
+      , bind<char>::to(ch1)
+      , bind<char>::named<e>::to(ch2)
+      , bind<long>::to(l)
     );
 
     auto wrappers_ = injector_.create<aux::unique_ptr<wrappers_types>>();
@@ -295,6 +319,52 @@ BOOST_AUTO_TEST_CASE(wrappers_types_mix) {
     BOOST_CHECK_EQUAL(ch2, wrappers_->cc_);
     BOOST_CHECK_EQUAL(l, wrappers_->l_);
     BOOST_CHECK_EQUAL(l, wrappers_->ll_);
+}
+
+BOOST_AUTO_TEST_CASE(externals_ref_cref) {
+    int i = 42;
+    const double d = 87.0;
+    short s = 0;
+    const char c = 'a';
+
+    auto injector = make_injector(
+        bind<int>::to(boost::ref(i))
+      , bind<double>::to(boost::cref(d))
+      , bind<short>::to(std::ref(s))
+      , bind<char>::to(std::cref(c))
+    );
+
+    auto refs_ = injector.create<refs>();
+
+    BOOST_CHECK_EQUAL(i, refs_.i_);
+    BOOST_CHECK_EQUAL(d, refs_.d_);
+    BOOST_CHECK_EQUAL(s, refs_.s_);
+    BOOST_CHECK_EQUAL(c, refs_.c_);
+}
+
+namespace {
+
+double return_double(double d) { return d; }
+long return_long(long l) { return l; }
+
+} // namespace
+
+BOOST_AUTO_TEST_CASE(bind_to_function_ptr) {
+    const int i = 42;
+    const double d = 87.0;
+    const long l = 0;
+
+    auto injector = make_injector(
+        bind<function<int()>>::to([&]{ return i; })
+      , bind<function<double()>>::to(boost::bind(&return_double, d))
+      , bind<function<long()>>::to(std::bind(&return_long, l))
+    );
+
+    auto functions_ = injector.create<functions>();
+
+    BOOST_CHECK_EQUAL(i, functions_.fi_());
+    BOOST_CHECK_EQUAL(d, functions_.fd_());
+    BOOST_CHECK_EQUAL(l, functions_.fl_());
 }
 
 } // namespace di

@@ -8,62 +8,52 @@
 //[custom_scope_cpp_11
 //````C++11```
 //<-
+#include <cassert>
 #include <memory>
-#include <utility>
-#include <iostream>
-#include <boost/shared_ptr.hpp>
+#include <boost/function.hpp>
 #include <boost/type.hpp>
 //->
 #include <boost/di.hpp>
 
 namespace di = boost::di;
 
-namespace {
+struct example {
+    explicit example(const std::shared_ptr<int>& sp)
+        : sp_(sp)
+    { }
 
-struct c1 { };
-
-struct c2
-{
-    c2(std::shared_ptr<c1> sp) {
-        if (sp) {
-            std::clog << "in custom scope" << std::endl;
-        } else {
-            std::clog << "not in custom scope" << std::endl;
-        }
-    }
+    std::shared_ptr<int> sp_;
 };
-
-} // namespace
 
 class custom_scope
 {
 public:
-    typedef boost::mpl::int_<0> priority;
+    using priority = boost::mpl::int_<0>; // lowest = 0, highest = N
 
     class entry { };
     class exit { };
 
-    template<typename TExpected, typename TGiven>
+    template<typename T>
     class scope
     {
-        class convertible
+        class custom_wrapper
         {
         public:
-            convertible(const std::shared_ptr<TExpected>& object) // non explicit
+            custom_wrapper(const std::shared_ptr<T>& object) // non explicit
                 : object_(object)
             { }
 
-            template<typename I>
-            std::shared_ptr<I> operator()(const boost::type<std::shared_ptr<I>>&) const {
+            const std::shared_ptr<T>&
+            operator()(const boost::type<std::shared_ptr<T>>&) const {
                 return object_;
             }
 
-            std::shared_ptr<TExpected> object_;
+            std::shared_ptr<T> object_;
         };
 
     public:
-        typedef scope type;
-        typedef convertible result_type;
+        using result_type = custom_wrapper;
+        //using result_type = di::wrappers::shared<T>;
 
         void call(const entry&) {
             in_scope_ = true;
@@ -73,13 +63,12 @@ public:
             in_scope_ = false;
         }
 
-        template<typename... Args>
-        result_type create(Args&&... args) {
+        result_type create(const boost::function<T*()>& f) const {
             if (in_scope_) {
-                return std::make_shared<TGiven>(std::forward(args)...);
+                return std::shared_ptr<T>(f());
             }
 
-            return std::shared_ptr<TGiven>();
+            return std::shared_ptr<T>();
         }
 
     private:
@@ -88,22 +77,18 @@ public:
 };
 
 int main() {
-    using injector_t = di::injector<
-        di::scope<custom_scope>::bind<
-            c1
-        >
-    >;;
+    auto injector = di::make_injector(
+        di::scope<custom_scope>::bind<int>()
+    );
 
-    di::injector<injector_t> injector;
+    assert(!injector.create<example>().sp_); // not in scope
 
-    injector.create<c2>(); // not in custom scope
     injector.call(custom_scope::entry());
-    injector.create<c2>(); // in custom scope
+    assert(injector.create<example>().sp_); // in scope
+
     injector.call(custom_scope::exit());
-    injector.create<c2>(); // not in custom scope
+    assert(!injector.create<example>().sp_); // not in scope
 }
 
-//`[table
-//`[[Full code example: [@example/cpp_11/custom_scope.cpp custom_scope.cpp]]]]
 //]
 

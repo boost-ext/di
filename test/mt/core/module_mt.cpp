@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include "boost/di/core/module.hpp"
-#include <memory>
 
+#include <memory>
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/int.hpp>
@@ -17,6 +17,8 @@
 #include "boost/di/scopes/shared.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/concepts.hpp"
+
+#include "common/fakes/fake_allocator.hpp"
 #include "common/fakes/fake_dependency.hpp"
 #include "common/fakes/fake_visitor.hpp"
 #include "common/fakes/fake_scope.hpp"
@@ -541,9 +543,6 @@ BOOST_AUTO_TEST_CASE(visit_external) {
           , mpl::pair<aux::shared_ptr<c1>, scopes::shared<>>
           , mpl::pair<int, scopes::unique<>>
           , mpl::pair<c3&, scopes::external<wrappers::reference>>
-#if !defined(BOOST_DI_CFG_TEST_CTOR)
-          , mpl::pair<int, scopes::unique<>>
-#endif
         >
     > visitor;
 
@@ -573,6 +572,35 @@ BOOST_AUTO_TEST_CASE(call) {
     module_.call(fake_scope_exit());
     BOOST_CHECK_EQUAL(0, fake_scope<>::entry_calls());
     BOOST_CHECK_EQUAL(1, fake_scope<>::exit_calls());
+}
+
+BOOST_AUTO_TEST_CASE(create_with_policies) {
+    module<> module_;
+    fake_policy<1>::assert_calls() = 0;
+    fake_policy<2>::assert_calls() = 0;
+
+    BOOST_CHECK_EQUAL(0, module_.create<int>(fake_policy<1>(), fake_policy<2>()));
+    BOOST_CHECK_EQUAL(1, fake_policy<1>::assert_calls());
+    BOOST_CHECK_EQUAL(1, fake_policy<1>::assert_calls());
+}
+
+BOOST_AUTO_TEST_CASE(allocate) {
+    module<> module_;
+    fake_allocator::allocate_calls() = 0;
+    BOOST_CHECK_EQUAL(0, module_.allocate<int>(fake_allocator()));
+    BOOST_CHECK_EQUAL(1, fake_allocator::allocate_calls());
+}
+
+BOOST_AUTO_TEST_CASE(allocate_with_policies) {
+    module<> module_;
+    fake_allocator::allocate_calls() = 0;
+    fake_policy<1>::assert_calls() = 0;
+    fake_policy<2>::assert_calls() = 0;
+
+    BOOST_CHECK_EQUAL(0, module_.allocate<int>(fake_allocator(), fake_policy<1>(), fake_policy<2>()));
+    BOOST_CHECK_EQUAL(1, fake_allocator::allocate_calls());
+    BOOST_CHECK_EQUAL(1, fake_policy<1>::assert_calls());
+    BOOST_CHECK_EQUAL(1, fake_policy<1>::assert_calls());
 }
 
 } // namespace core

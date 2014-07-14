@@ -30,6 +30,7 @@
 <dt><span class="section"><a href="concepts.html#boost_di__dependency_injection_.concepts.constructor_injection">Constructor
       Injection</a></span></dt>
 <dt><span class="section"><a href="concepts.html#boost_di__dependency_injection_.concepts.scope">Scope</a></span></dt>
+<dt><span class="section"><a href="concepts.html#boost_di__dependency_injection_.concepts.allocator">Allocator</a></span></dt>
 <dt><span class="section"><a href="concepts.html#boost_di__dependency_injection_.concepts.binding">Binding</a></span></dt>
 <dt><span class="section"><a href="concepts.html#boost_di__dependency_injection_.concepts.injector">Injector</a></span></dt>
 <dt><span class="section"><a href="concepts.html#boost_di__dependency_injection_.concepts.module">Module</a></span></dt>
@@ -43,11 +44,13 @@
       Injection</a>
 </h3></div></div></div>
 <p>
-        Constructor injection is the most powerful of the available injections. It
-        guarantee initialized state of data members. Within DI, by default, is achieved
-        without any additional work from the user than defining the constructor.
-        Library will go through the constructors and choose the longest one to pass
-        the dependencies.
+        <span class="bold"><strong>Constructor Injection</strong></span> is the most powerful
+        of the available injections. It guarantee initialized state of data members.
+        In Boost.DI Constructor Injection is achieved without any additional work
+        from the user except defining the constructor. Boost.DI will deduce the best
+        available constructor to be used for injection. See <code class="computeroutput"><span class="identifier">Constructor</span>
+        <span class="identifier">Parameters</span> <span class="identifier">Deduction</span></code>
+        to read more.
       </p>
 <p>
 </p>
@@ -55,14 +58,14 @@
 <span class="keyword">public</span><span class="special">:</span>
     <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">);</span>
     <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">);</span>
-    <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">,</span> <span class="keyword">float</span><span class="special">);</span> <span class="comment">// will be deduced by DI</span>
+    <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">,</span> <span class="keyword">float</span><span class="special">);</span> <span class="comment">// will be deduced by Boost.DI</span>
 <span class="special">};</span>
 </pre>
 <p>
       </p>
 <p>
-        If the default behavior should be changed there is a way of explicitly saying
-        which constructor should be deduced by adding <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT</span></code>
+        If the default behavior should be changed is should explicitly marked using
+        by adding <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT</span></code>
         to the constructor definition.
       </p>
 <div class="note"><table border="0" summary="Note">
@@ -71,9 +74,9 @@
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-          DI is not able to distinguish between ambiguous constructors with the same
-          (longest) amount of parameters, then BOOST_DI_INJECT has to be used to
-          point which constructor should be dedced
+          Boost.DI is not able to distinguish between ambiguous constructors with
+          the same (longest) amount of parameters, then BOOST_DI_INJECT has to be
+          used to point which constructor should be dedced
         </p></td></tr>
 </table></div>
 <div class="warning"><table border="0" summary="Warning">
@@ -82,7 +85,7 @@
 <th align="left">Warning</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-          In C++03 one argument constructors might be ambiguous with copy constructors,
+          In C++03 constructors with one argument might be ambiguous with copy constructors,
           therefore is advised to use <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT</span></code>
           for 1 argument constructors in C++03.
         </p></td></tr>
@@ -92,24 +95,62 @@
         <span class="phrase"><a name="boost_di__dependency_injection_.concepts.constructor_injection.boost_di_inject"></a></span><a class="link" href="concepts.html#boost_di__dependency_injection_.concepts.constructor_injection.boost_di_inject">BOOST_DI_INJECT</a>
       </h4>
 <p>
-        <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT</span></code> is a simple
-        macro used to explicity say Boost.DI which constructor should be used.
+        <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT</span></code> is a macro
+        definition used to explicity say Boost.DI which constructor should be used.
       </p>
-<p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Definition
+                </p>
+              </th>
+<th>
+                <p>
+                  Preprocessed
+                </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
 </p>
-<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_INJECT</span><span class="special">(</span><span class="identifier">type</span><span class="special">,</span> <span class="special">...)</span>
-    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">BOOST_DI_INJECTOR</span><span class="special">(</span><span class="identifier">__VA_ARGS__</span><span class="special">);</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_INJECT</span><span class="special">(</span><span class="identifier">type</span><span class="special">,</span> <span class="special">...)</span>              <span class="special">\</span>
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">BOOST_DI_INJECTOR</span><span class="special">(</span><span class="identifier">__VA_ARGS__</span><span class="special">);</span> <span class="special">\</span>
     <span class="identifier">type</span><span class="special">(</span><span class="identifier">__VA_ARGS__</span><span class="special">)</span>
 </pre>
 <p>
+                </p>
+              </td>
+<td>
+                <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">BOOST_DI_INJECT</span><span class="special">(</span><span class="keyword">explicit</span> <span class="identifier">example</span><span class="special">,</span> <span class="keyword">int</span> <span class="special">=</span> <span class="number">0</span><span class="special">,</span> <span class="keyword">double</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">);</span>
+
+    <span class="keyword">void</span> <span class="identifier">boost_di_injector__</span><span class="special">(</span><span class="keyword">int</span> <span class="special">=</span> <span class="number">0</span><span class="special">,</span> <span class="keyword">double</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">);</span>
+    <span class="keyword">explicit</span> <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span> <span class="special">=</span> <span class="number">0</span><span class="special">,</span> <span class="keyword">double</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">);</span>
+</pre>
+<p>
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+<p>
+        When class has more than one constructor Boost.DI will by default choose
+        the one with the longest parameter list. Then <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT</span></code>
+        become handy to point which constructor should be used.
       </p>
 <p>
 </p>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">example</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">);</span>
-    <span class="identifier">BOOST_DI_INJECT</span><span class="special">(</span><span class="identifier">example</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">);</span> <span class="comment">// will be chosen by DI</span>
-    <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">,</span> <span class="keyword">float</span><span class="special">);</span>
+    <span class="identifier">BOOST_DI_INJECT</span><span class="special">(</span><span class="identifier">example</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">);</span> <span class="comment">// will be chosen by Boost.DI</span>
+    <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">,</span> <span class="keyword">float</span><span class="special">);</span> <span class="comment">// would be chosen by Boost.DI</span>
 <span class="special">};</span>
 </pre>
 <p>
@@ -143,14 +184,51 @@
       </h4>
 <p>
         <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT_TRAITS</span></code> is
-        a simple macro used to define constructor traits.
+        a macro definition used to define constructor traits.
       </p>
-<p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Definition
+                </p>
+              </th>
+<th>
+                <p>
+                  Preprocessed
+                </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
 </p>
-<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_INJECT_TRAITS</span><span class="special">(...)</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_INJECT_TRAITS</span><span class="special">(...)</span> <span class="special">\</span>
     <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">BOOST_DI_INJECTOR</span><span class="special">(</span><span class="identifier">__VA_ARGS__</span><span class="special">)</span>
 </pre>
 <p>
+                </p>
+              </td>
+<td>
+                <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">BOOST_DI_INJECT_TRAITS</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">,</span> <span class="keyword">float</span><span class="special">);</span>
+
+    <span class="keyword">void</span> <span class="identifier">boost_di_injector__</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">,</span> <span class="keyword">float</span><span class="special">);</span>
+</pre>
+<p>
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+<p>
+        Boost.DI defines <code class="computeroutput"><span class="identifier">ctor_traits</span></code>
+        in order to handle cases when constructor can't be chosen using <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT</span></code> (useful for third party
+        libraries).
       </p>
 <p>
 </p>
@@ -196,6 +274,9 @@
         section.
       </p>
 </div>
+<div class="section"><div class="titlepage"><div><div><h3 class="title">
+<a name="boost_di__dependency_injection_.concepts.allocator"></a><a class="link" href="concepts.html#boost_di__dependency_injection_.concepts.allocator" title="Allocator">Allocator</a>
+</h3></div></div></div></div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_di__dependency_injection_.concepts.binding"></a><a class="link" href="concepts.html#boost_di__dependency_injection_.concepts.binding" title="Binding">Binding</a>
@@ -267,25 +348,33 @@
 </pre>
           </li>
 <li class="listitem">
-<p class="simpara">
             bind to external runtime value
+            <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
+<li class="listitem">
+                  to shared ptr
 <pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">make_shared</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;())</span> <span class="comment">// bind to shared_ptr</span>
-
-<span class="identifier">example</span> <span class="identifier">example_</span><span class="special">;</span>
+</pre>
+                </li>
+<li class="listitem">
+                  to reference
+<pre class="programlisting"><span class="identifier">example</span> <span class="identifier">example_</span><span class="special">;</span>
 <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">cref</span><span class="special">(</span><span class="identifier">example_</span><span class="special">))</span> <span class="comment">// bind to const ref</span>
 <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">ref</span><span class="special">(</span><span class="identifier">example_</span><span class="special">))</span> <span class="comment">// bind to ref</span>
 </pre>
-          </p>
-<div class="note"><table border="0" summary="Note">
-<tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src=".././doc/src/images/note.png"></td>
-<th align="left">Note</th>
-</tr>
-<tr><td align="left" valign="top"><p>
-              Boost implementation of cref/ref has to be used
-            </p></td></tr>
-</table></div>
-</li>
+                </li>
+<li class="listitem">
+                  to functor
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">()&gt;&gt;::</span><span class="identifier">to</span><span class="special">([]{</span> <span class="keyword">return</span> <span class="number">42</span><span class="special">;</span> <span class="special">})</span>
+<span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">()&gt;&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(&amp;</span><span class="identifier">return_int</span><span class="special">,</span> <span class="number">42</span><span class="special">))</span>
+</pre>
+                </li>
+<li class="listitem">
+                  to functor factory
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">([]{</span> <span class="keyword">return</span> <span class="number">42</span><span class="special">;</span> <span class="special">})</span>
+</pre>
+                </li>
+</ul></div>
+          </li>
 </ul></div>
 <p>
         On top of binding to values user can bind to named parameters or using context.
@@ -422,7 +511,13 @@
 <li class="listitem">
             <code class="computeroutput"><span class="identifier">create</span></code>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TPolicies</span><span class="special">&gt;</span>
-<span class="identifier">T</span> <span class="identifier">create</span><span class="special">(</span><span class="identifier">TPolicies</span><span class="special">&amp;&amp;...);</span>
+<span class="identifier">T</span> <span class="identifier">create</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TPolicies</span><span class="special">&amp;...);</span>
+</pre>
+          </li>
+<li class="listitem">
+            <code class="computeroutput"><span class="identifier">allocate</span></code>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="identifier">T</span> <span class="identifier">allocate</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">allocator</span><span class="special">&amp;,</span> <span class="keyword">const</span> <span class="identifier">TPolicies</span><span class="special">&amp;...);</span>
 </pre>
           </li>
 <li class="listitem">

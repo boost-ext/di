@@ -14,6 +14,7 @@
 #include <boost/type_traits/is_same.hpp>
 
 #include "boost/di/aux_/memory.hpp"
+#include "common/fakes/fake_allocator.hpp"
 #include "common/fakes/fake_dependency.hpp"
 #include "common/fakes/fake_binder.hpp"
 #include "common/fakes/fake_visitor.hpp"
@@ -28,13 +29,14 @@ BOOST_AUTO_TEST_CASE(create_pod) {
     const int i = 42;
 
     typedef fake_dependency<scopes::unique<>, int, mpl::int_<i>>::type dependency_type;
+    fake_allocator allocator;
     fake_pool<dependency_type> deps;
     std::vector<aux::shared_ptr<void>> refs;
 
     BOOST_CHECK_EQUAL(i, (
         creator<mpl::vector<dependency_type>>().create<
             int, int, mpl::vector0<>
-        >(deps, refs, fake_visitor<mpl::vector<int>>(), fake_pool<>())
+        >(allocator, deps, refs, fake_visitor<mpl::vector<int>>(), fake_pool<>())
     ));
 }
 

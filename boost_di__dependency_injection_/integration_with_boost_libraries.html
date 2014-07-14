@@ -30,9 +30,9 @@
 <div class="toc"><dl class="toc"><dt><span class="section"><a href="integration_with_boost_libraries.html#boost_di__dependency_injection_.integration_with_boost_libraries.boost_meta_state_machine">Boost
       Meta State Machine</a></span></dt></dl></div>
 <p>
-      Integration with existing libraries is really straight forward. Usually doesn't
-      require anything! Unless constructor can't be deduced due to ambiguity or it's
-      variadic.
+      Integration with existing libraries should be straight forward. Usually doesn't
+      require anything! Unless constructor can't be deduced due to ambiguity or takes
+      variadic number of arguments.
     </p>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
@@ -42,13 +42,28 @@
 <p>
         <a href="http://www.boost.org/doc/libs/1_55_0/libs/msm/doc/HTML/index.html" target="_top">Boost
         Meta State Machine</a> is a library allowing you to easily and quickly
-        define state machines of very high performance. MSM is a great library, unfortunately
-        <code class="computeroutput"><span class="identifier">Service</span> <span class="identifier">Locator</span></code>
-        pattern is used to accomplish actions or guards execution. This approach
-        is a bit hard to maintain and test, therefore would be great to have the
-        possibility just to implement action/guards without FSM dependency and with
-        proper dependencies instead and just let the dependency injection inject
-        all the requirements for us.
+        define state machines of very high performance. Boost.MSM is a great library,
+        unfortunately <code class="computeroutput"><span class="identifier">Service</span> <span class="identifier">Locator</span></code>
+        pattern is used to accomplish actions/guards execution. Such approach is
+        hard to maintain and test. Would be great to have possibility to implement
+        action/guards without FSM dependency and with proper dependency injection
+        instead. Such functionality might be achieved with Boost.DI and it's presented
+        below.
+      </p>
+<p>
+        In order to support dependency injection, few changes to Boost.MSM were made.
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+            actions/guards list was generated from transition table
+          </li>
+<li class="listitem">
+            generated list was passed into state machine constructor
+          </li>
+</ul></div>
+<p>
+        With that changes in mind Boost.DI could have been used without more changes
+        needed.
       </p>
 <p>
 </p>
@@ -61,16 +76,16 @@
 <span class="keyword">public</span><span class="special">:</span>
     <span class="identifier">guard</span><span class="special">()</span> <span class="special">{</span> <span class="special">}</span> <span class="comment">// for euml</span>
 
-    <span class="keyword">explicit</span> <span class="identifier">guard</span><span class="special">(</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">dep</span><span class="special">)</span>
-        <span class="special">:</span> <span class="identifier">dep</span><span class="special">(</span><span class="identifier">dep</span><span class="special">)</span>
+    <span class="identifier">guard</span><span class="special">(</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">i</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">i</span><span class="special">(</span><span class="identifier">i</span><span class="special">)</span>
     <span class="special">{</span> <span class="special">}</span>
 
     <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="identifier">event</span><span class="special">&amp;)</span> <span class="keyword">const</span> <span class="special">{</span>
-        <span class="keyword">return</span> <span class="special">*</span><span class="identifier">dep</span> <span class="special">!=</span> <span class="number">0</span><span class="special">;</span>
+        <span class="keyword">return</span> <span class="special">*</span><span class="identifier">i</span> <span class="special">!=</span> <span class="number">0</span><span class="special">;</span>
     <span class="special">}</span>
 
 <span class="keyword">private</span><span class="special">:</span>
-    <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">dep</span><span class="special">;</span>
+    <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">i</span><span class="special">;</span>
 <span class="special">};</span>
 
 <span class="keyword">class</span> <span class="identifier">action</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">euml_action</span><span class="special">&lt;</span><span class="identifier">action</span><span class="special">&gt;</span>
@@ -78,16 +93,16 @@
 <span class="keyword">public</span><span class="special">:</span>
     <span class="identifier">action</span><span class="special">()</span> <span class="special">{</span> <span class="special">}</span> <span class="comment">// for euml</span>
 
-    <span class="keyword">explicit</span> <span class="identifier">action</span><span class="special">(</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">dep</span><span class="special">)</span>
-        <span class="special">:</span> <span class="identifier">dep</span><span class="special">(</span><span class="identifier">dep</span><span class="special">)</span>
+    <span class="identifier">action</span><span class="special">(</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">i</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">i</span><span class="special">(</span><span class="identifier">i</span><span class="special">)</span>
     <span class="special">{</span> <span class="special">}</span>
 
     <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="identifier">event</span><span class="special">&amp;)</span> <span class="special">{</span>
-        <span class="special">(*</span><span class="identifier">dep</span><span class="special">)++;</span>
+        <span class="special">(*</span><span class="identifier">i</span><span class="special">)++;</span>
     <span class="special">}</span>
 
 <span class="keyword">private</span><span class="special">:</span>
-    <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">dep</span><span class="special">;</span>
+    <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">i</span><span class="special">;</span>
 <span class="special">};</span>
 
 <span class="keyword">class</span> <span class="identifier">state_machine_</span> <span class="special">:</span> <span class="identifier">state_machine_def</span><span class="special">&lt;</span><span class="identifier">state_machine_</span><span class="special">&gt;</span>
@@ -104,8 +119,8 @@
 <span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <span class="keyword">auto</span> <span class="identifier">sm_</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">&lt;&gt;().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">state_machine</span><span class="special">&lt;</span><span class="identifier">state_machine_</span><span class="special">&gt;&gt;();</span>
-    <span class="identifier">sm_</span><span class="special">.</span><span class="identifier">process_event</span><span class="special">(</span><span class="identifier">event</span><span class="special">());</span>
+    <span class="keyword">auto</span> <span class="identifier">sm</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">state_machine</span><span class="special">&lt;</span><span class="identifier">state_machine_</span><span class="special">&gt;&gt;();</span>
+    <span class="identifier">sm</span><span class="special">.</span><span class="identifier">process_event</span><span class="special">(</span><span class="identifier">event</span><span class="special">());</span>
 
     <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
@@ -116,14 +131,16 @@
         Full example and implementation might be found in <a href="https://github.com/krzysztof-jusiak/msm" target="_top">Boost
         Meta State Machine with Dependency Injection</a>.
       </p>
-<h6>
+<h4>
 <a name="boost_di__dependency_injection_.integration_with_boost_libraries.boost_meta_state_machine.h0"></a>
         <span class="phrase"><a name="boost_di__dependency_injection_.integration_with_boost_libraries.boost_meta_state_machine.match_3_game"></a></span><a class="link" href="integration_with_boost_libraries.html#boost_di__dependency_injection_.integration_with_boost_libraries.boost_meta_state_machine.match_3_game">Match-3
         Game</a>
-      </h6>
+      </h4>
 <p>
-        Simple Match-3 game is an real life example using Boost Dependency Injection
-        and Boost Meta State Machine.
+        Simple Match-3 game is an example using <code class="computeroutput"><span class="identifier">Boost</span>
+        <span class="identifier">Dependency</span> <span class="identifier">Injection</span></code>
+        and <code class="computeroutput"><span class="identifier">Boost</span> <span class="identifier">Meta</span>
+        <span class="identifier">State</span> <span class="identifier">Machine</span></code>.
       </p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
