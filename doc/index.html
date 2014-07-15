@@ -1,0 +1,718 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Chapter&#160;1.&#160;Boost.DI (Dependency Injection) 1.0</title>
+<link rel="stylesheet" href="./doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.0">
+<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Boost.DI (Dependency Injection) 1.0">
+<link rel="next" href="boost_di__dependency_injection_/overview.html" title="Overview">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="./boost.png"></td>
+<td align="center"><a href="./index.html">Home</a></td>
+<td align="center"><a href="./libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="./more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="boost_di__dependency_injection_/overview.html"><img src="./doc/src/images/next.png" alt="Next"></a></div>
+<div class="chapter">
+<div class="titlepage"><div>
+<div><h2 class="title">
+<a name="boost_di0"></a>Chapter&#160;1.&#160;Boost.DI (Dependency Injection) 1.0</h2></div>
+<div><div class="author"><h3 class="author">
+<span class="firstname">Krzysztof</span> <span class="surname">Jusiak</span>
+</h3></div></div>
+<div><p class="copyright">Copyright &#169; 2014 Krzysztof Jusiak</p></div>
+<div><div class="legalnotice">
+<a name="boost_di.legal"></a><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></div>
+</div></div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl class="toc">
+<dt><span class="section"><a href="index.html#boost_di__dependency_injection_.introduction___motivation">Introduction
+    &amp; Motivation</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/overview.html">Overview</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_di__dependency_injection_/overview.html#boost_di__dependency_injection_.overview.features">Features</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/overview.html#boost_di__dependency_injection_.overview.dependencies">Dependencies</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/overview.html#boost_di__dependency_injection_.overview.supported_compilers">Supported
+      Compilers</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/overview.html#boost_di__dependency_injection_.overview.configuration">Configuration</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/overview.html#boost_di__dependency_injection_.overview.continuous_integration">Continuous
+      Integration</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_di__dependency_injection_/design_rationale.html">Design
+    Rationale</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/tutorial.html">Tutorial</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/concepts.html">Concepts</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_di__dependency_injection_/concepts.html#boost_di__dependency_injection_.concepts.constructor_injection">Constructor
+      Injection</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/concepts.html#boost_di__dependency_injection_.concepts.scope">Scope</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/concepts.html#boost_di__dependency_injection_.concepts.allocator">Allocator</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/concepts.html#boost_di__dependency_injection_.concepts.binding">Binding</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/concepts.html#boost_di__dependency_injection_.concepts.injector">Injector</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/concepts.html#boost_di__dependency_injection_.concepts.module">Module</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/concepts.html#boost_di__dependency_injection_.concepts.named_parameter">Named
+      Parameter</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/concepts.html#boost_di__dependency_injection_.concepts.provider">Provider</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_di__dependency_injection_/scopes.html">Scopes</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_di__dependency_injection_/scopes.html#boost_di__dependency_injection_.scopes.deduce__default_">Deduce
+      (Default)</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/scopes.html#boost_di__dependency_injection_.scopes.external">External</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/scopes.html#boost_di__dependency_injection_.scopes.unique">Unique</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/scopes.html#boost_di__dependency_injection_.scopes.shared">Shared</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/scopes.html#boost_di__dependency_injection_.scopes.session">Session</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_di__dependency_injection_/policies.html">Policies</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_di__dependency_injection_/policies.html#boost_di__dependency_injection_.policies.circular_dependencies">Circular
+      Dependencies</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/policies.html#boost_di__dependency_injection_.policies.creation_ownership">Creation
+      Ownership</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/policies.html#boost_di__dependency_injection_.policies.parameters_permission">Parameters
+      Permission</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/policies.html#boost_di__dependency_injection_.policies.scopes_permission">Scopes
+      Permission</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_di__dependency_injection_/testing.html">Testing</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html">Examples</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.hello_world">Hello
+      World</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.ctor">Constructor
+      Injection</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.binding">Binding</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.concepts">Concepts</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.modules">Modules</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.deduce_scope">Deduce
+      Scope</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.custom_scope">Custom
+      Scope</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.custom_allocator">Custom
+      Allocator</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.custom_policy">Custom
+      Policy</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.testing">Testing</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.c___generation_visitor">C++
+      Generation Visitor</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.uml_visitor">UML
+      Visitor</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/examples.html#boost_di__dependency_injection_.examples.more_examples">More
+      Examples</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_di__dependency_injection_/integration_with_boost_libraries.html">Integration
+    with Boost libraries</a></span></dt>
+<dd><dl><dt><span class="section"><a href="boost_di__dependency_injection_/integration_with_boost_libraries.html#boost_di__dependency_injection_.integration_with_boost_libraries.boost_meta_state_machine">Boost
+      Meta State Machine</a></span></dt></dl></dd>
+<dt><span class="section"><a href="boost_di__dependency_injection_/performance.html">Performance</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_di__dependency_injection_/performance.html#boost_di__dependency_injection_.performance.compilation_time">Compilation
+      time</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/performance.html#boost_di__dependency_injection_.performance.runtime_execution_speed">Runtime
+      execution speed</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_di__dependency_injection_/extensions.html">Extensions</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_di__dependency_injection_/extensions.html#boost_di__dependency_injection_.extensions.automatic_mocks_injector">Automatic
+      Mocks Injector</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/extensions.html#boost_di__dependency_injection_.extensions.constructor_traits_generator">Constructor
+      Traits Generator</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/extensions.html#boost_di__dependency_injection_.extensions.runtime_injector__experimental_">Runtime
+      Injector (Experimental)</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_di__dependency_injection_/reference.html">Reference</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_di__dependency_injection_/reference.html#boost_di__dependency_injection_.reference.___">...</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/reference.html#boost_di__dependency_injection_.reference.aux">Aux</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/reference.html#boost_di__dependency_injection_.reference.core">Core</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/reference.html#boost_di__dependency_injection_.reference.concepts">Concepts</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/reference.html#boost_di__dependency_injection_.reference.scopes">Scopes</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/reference.html#boost_di__dependency_injection_.reference.policies">Policies</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/reference.html#boost_di__dependency_injection_.reference.type_traits">Type
+      Traits</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/reference.html#boost_di__dependency_injection_.reference.wrappers">Wrappers</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="boost_di__dependency_injection_/faq.html">FAQ</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/references.html">References</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/acknowledgements.html">Acknowledgements</a></span></dt>
+<dt><span class="section"><a href="boost_di__dependency_injection_/revision_history.html">Revision
+    History</a></span></dt>
+</dl>
+</div>
+<div class="caution"><table border="0" summary="Caution">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Caution]" src="./doc/src/images/caution.png"></td>
+<th align="left">Caution</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+      This is not an official Boost library yet and there is no guarantee it will
+      ever be!
+    </p></td></tr>
+</table></div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_di__dependency_injection_.introduction___motivation"></a><a class="link" href="index.html#boost_di__dependency_injection_.introduction___motivation" title="Introduction &amp; Motivation">Introduction
+    &amp; Motivation</a>
+</h2></div></div></div>
+<p>
+      "<span class="bold"><strong>Dependency Injection</strong></span> is a set of software
+      design principles and patterns that enable us to develop <span class="bold"><strong>loosely
+      coupled</strong></span> code" [<a class="link" href="boost_di__dependency_injection_/references.html#See11">See11</a>]. Dependency
+      Injection allows us to separate business logic to object creation, which give
+      possibility to write maintainable and testable code. There are many forms of
+      dependency injection which you can read more about in [<a class="link" href="boost_di__dependency_injection_/references.html#Van08">Van08</a>].
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          Constructor injection
+        </li>
+<li class="listitem">
+          Interface injection
+        </li>
+<li class="listitem">
+          Setter injection
+        </li>
+<li class="listitem">
+          Member injection
+        </li>
+</ul></div>
+<p>
+      <span class="bold"><strong>Constructor injection</strong></span> is the most powerful
+      and the cleanest way of dependency injection, it's also preferable, because
+      there is no need to worry about objects arriving in an uninitialized state.
+    </p>
+<p>
+      Dependency Injection doesn't really require Dependency Injection Framework
+      (Dependency Injection Container/Inversion Of Control Container) or any sort
+      of different patterns like Service Locator, Static Factory or Abstract Factory
+      itself, but it make your life easier, which will be described in this introduction.
+    </p>
+<h3>
+<a name="boost_di__dependency_injection_.introduction___motivation.h0"></a>
+      <span class="phrase"><a name="boost_di__dependency_injection_.introduction___motivation.problem"></a></span><a class="link" href="index.html#boost_di__dependency_injection_.introduction___motivation.problem">Problem</a>
+    </h3>
+<p>
+      For the purposes of this introduction we are going to implement simple application
+      with logger dependency.
+    </p>
+<h3>
+<a name="boost_di__dependency_injection_.introduction___motivation.h1"></a>
+      <span class="phrase"><a name="boost_di__dependency_injection_.introduction___motivation.solution"></a></span><a class="link" href="index.html#boost_di__dependency_injection_.introduction___motivation.solution">Solution</a>
+    </h3>
+<p>
+      Dependency Injection might be implemented in many different ways. Table below
+      shows how Dependency Injection may be realised and how it will affects the
+      source code design [<a class="link" href="boost_di__dependency_injection_/references.html#Lus11">Lus11</a>].
+    </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            </th>
+<th>
+              <p>
+                No Dependency Injection Framework
+              </p>
+            </th>
+<th>
+              <p>
+                Dependency Injection Framework
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                <span class="bold"><strong>No Dependency Injection</strong></span>
+              </p>
+            </td>
+<td>
+              <p>
+                Highly coupled code (Spaghetti code)
+              </p>
+            </td>
+<td>
+              <p>
+                Static Factory/Abstract Factory or Service Locator (Anti pattern)
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <span class="bold"><strong>Dependency Injection</strong></span>
+              </p>
+            </td>
+<td>
+              <p>
+                Manual Dependency Injection (tedious/hard to maintain in large scale)
+              </p>
+            </td>
+<td>
+              <p>
+                Enhanced Dependency Injection (<span class="bold"><strong>Boost.DI</strong></span>)
+              </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+<p>
+      Skip other solutions and go straight away to <a class="link" href="index.html#boost_di">Boost.DI</a>.
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+          <span class="bold"><strong>Spaghetti code</strong></span> which is highly coupled
+          is really hard to change/maintain/test, therefore is not really good practise
+          to write it.
+        </li></ul></div>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">app</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">app</span><span class="special">()</span> <span class="special">{</span>
+        <span class="keyword">auto</span> <span class="identifier">logger</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">logger</span><span class="special">&gt;();</span>
+        <span class="identifier">init</span><span class="special">(</span><span class="identifier">logger</span><span class="special">);</span>
+    <span class="special">}</span>
+
+    <span class="keyword">void</span> <span class="identifier">init</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;);</span>
+    <span class="keyword">void</span> <span class="identifier">run</span><span class="special">();</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="comment">//composition root</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;()-&gt;</span><span class="identifier">run</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<p>
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+          <span class="bold"><strong>Manual Dependency</strong></span> Injection requires that
+          all dependencies will be created by yourself, but done right will produce
+          loosely coupled code. Anyway it's a tedious/boilerplate code and sooner
+          or later - depending on the project scale - project will end up with some
+          sort of automatization.
+        </li></ul></div>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">app</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">app</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;);</span>
+    <span class="keyword">void</span> <span class="identifier">run</span><span class="special">();</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="comment">//creation of dependencies</span>
+    <span class="keyword">auto</span> <span class="identifier">logger_</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_shared</span><span class="special">&lt;</span><span class="identifier">logger</span><span class="special">&gt;();</span>
+
+    <span class="comment">//composition root</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;(</span><span class="identifier">logger_</span><span class="special">)-&gt;</span><span class="identifier">run</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<p>
+    </p>
+<p>
+      If we want to support different types of logger we need to write a bit of boilerplate
+      code over and over again.
+    </p>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">text_logger_</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_shared</span><span class="special">&lt;</span><span class="identifier">text_logger</span><span class="special">&gt;();</span>
+<span class="keyword">auto</span> <span class="identifier">ci_logger_</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_shared</span><span class="special">&lt;</span><span class="identifier">ci_logger</span><span class="special">&gt;();</span>
+<span class="keyword">auto</span> <span class="identifier">file_logger_</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_shared</span><span class="special">&lt;</span><span class="identifier">file_logger</span><span class="special">&gt;();</span>
+<span class="special">...</span>
+</pre>
+<p>
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+          <span class="bold"><strong>Static Factory</strong></span> hides the choice of implementation
+          and instance management of a certain component, from the objects using
+          this component. The drawbacks of using them are that they we have to create
+          a lot of tedious factories ourselves as well as that we can't test the
+          functionality really because creation is inside the component. Despite
+          that it's hard to inject dependencies into not default constructor.
+        </li></ul></div>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">logger_factory</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;</span> <span class="keyword">static</span> <span class="identifier">create</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">logger</span><span class="special">&gt;();</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">class</span> <span class="identifier">app</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">app</span><span class="special">()</span>
+        <span class="special">:</span> <span class="identifier">logger</span><span class="special">(</span><span class="identifier">logger_factory</span><span class="special">::</span><span class="identifier">create</span><span class="special">())</span>
+    <span class="special">{</span> <span class="special">}</span>
+
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;</span> <span class="identifier">logger</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="comment">//composition root</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;()-&gt;</span><span class="identifier">run</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<p>
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+          <span class="bold"><strong>Abstract Factory</strong></span> solve the issues with
+          creating of many static factories by first obtaining a factory of a certain
+          kind, and then ask that factory for instances. With Abstract Factories
+          we can easily change the implementation of the component in runtime, but
+          we still have the same issues as with Static Factories. A lot of tedious/boilerplate
+          code to write (which is hard to test - have you tried test factories?),
+          we still have creation within a component and we still have problems with
+          not default constructors. Abstract Factory is similar to Service Locator
+          pattern, which is described next and which avoid creation of many tedious
+          code.
+        </li></ul></div>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">ilogger_factory</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">create</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">class</span> <span class="identifier">logger_factory</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">create</span><span class="special">()</span> <span class="keyword">const</span> <span class="identifier">override</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">logger</span><span class="special">&gt;();</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">class</span> <span class="identifier">logger_abstract_factory</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">void</span> <span class="identifier">add</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">name</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger_factory</span><span class="special">&gt;</span> <span class="identifier">factory</span><span class="special">);</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger_factory</span><span class="special">&gt;</span> <span class="identifier">get</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">name</span><span class="special">);</span>
+<span class="special">};</span>
+
+<span class="keyword">class</span> <span class="identifier">app</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">app</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">logger_abstract_factory</span><span class="special">&amp;</span> <span class="identifier">laf</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">logger</span><span class="special">(</span><span class="identifier">laf</span><span class="special">.</span><span class="identifier">get</span><span class="special">(</span><span class="string">"logger_factory"</span><span class="special">).</span><span class="identifier">create</span><span class="special">())</span>
+    <span class="special">{</span> <span class="special">}</span>
+
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;</span> <span class="identifier">logger</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="comment">//Abstract Factory configuration</span>
+    <span class="identifier">logger_abstract_factory</span> <span class="identifier">laf</span><span class="special">;</span>
+    <span class="identifier">laf</span><span class="special">.</span><span class="identifier">add</span><span class="special">(</span><span class="string">"logger_factory"</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">logger_factory</span><span class="special">&gt;());</span>
+
+    <span class="comment">//composition root</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;(*</span><span class="identifier">laf</span><span class="special">)-&gt;</span><span class="identifier">run</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<p>
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+          <span class="bold"><strong>Service Locator</strong></span> by many (including me)
+          is consider as anti-pattern, because it follows principle in which components
+          asks for its dependencies instead of be given them. On the other hand Service
+          Locator pattern is usually very intrusive, requiring components having
+          the same constructor with Service Locator being passed. It force unnatural
+          code structure and a lot of resolve calls. Because always whole Service
+          Locator is passed it's harder to find out which dependencies are needed
+          for the class which testing unclear and harder.
+        </li></ul></div>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">app</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">app</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">service_locator</span><span class="special">&amp;</span> <span class="identifier">sl</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">logger</span><span class="special">(</span><span class="identifier">sl</span><span class="special">.</span><span class="identifier">resolve</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;())</span>
+    <span class="special">{</span> <span class="special">}</span>
+
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;</span> <span class="identifier">logger</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="comment">//service locator configuration</span>
+    <span class="identifier">service_locator</span> <span class="identifier">sl</span><span class="special">;</span>
+    <span class="identifier">sl</span><span class="special">.</span><span class="identifier">register_singleton</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">&lt;</span><span class="identifier">logger</span><span class="special">&gt;();</span>
+
+    <span class="comment">//composition root</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;(</span><span class="identifier">sl</span><span class="special">)-&gt;</span><span class="identifier">run</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<p>
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+          <span class="bold"><strong>Enhanced Dependency Injection</strong></span> done right
+          still will be just a Dependency Injection with automation behind the scenes.
+          Dependencies should be automatically resolved and it should be as less
+          intrusive as possible, which means that if framework will be changed or
+          removed code shouldn't require any changes. Remember DI should "enable
+          us to develop loosely coupled code" and this rule applies to the framework
+          itself as well. To sum up framework shouldn't affect the design/implementation/structure
+          of the code except for well-defined cases like "composition root".
+        </li></ul></div>
+<a name="boost_di"></a><div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<thead><tr><th>
+              <p>
+                Boost.DI
+              </p>
+            </th></tr></thead>
+<tbody><tr><td>
+              <p>
+                Boost.DI is <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code>/<code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">11</span></code>/<code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">14</span></code> header only, type safe, library
+                providing compile time, macro free constructor dependency injection.
+                See Overview to learn more.
+              </p>
+            </td></tr></tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<thead><tr><th>
+              <p>
+                Motivation Example
+              </p>
+            </th></tr></thead>
+<tbody>
+<tr><td>
+              <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">class</span> <span class="identifier">app</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">app</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;);</span>
+    <span class="keyword">void</span> <span class="identifier">run</span><span class="special">();</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="comment">// dependency injection configuration</span>
+    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">,</span> <span class="identifier">logger</span><span class="special">&gt;()</span>
+    <span class="special">);</span>
+
+    <span class="comment">// composition root</span>
+    <span class="keyword">auto</span> <span class="identifier">my_app</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;();</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+              </p>
+            </td></tr>
+<tr><td>
+              <p>
+                Notice similarities to manual dependency injection. Of course for
+                such a small example DI might be consider a bit of overhead, but
+                it will shows its strength in more complex examples. Remember though
+                that dependency Injection Framework is not a remedy for everything.
+                Used wrong will make code highly coupled code / hard to test and
+                maintain, which is presented below.
+              </p>
+            </td></tr>
+</tbody>
+</table></div>
+<div class="tip"><table border="0" summary="Tip">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="./doc/src/images/tip.png"></td>
+<th align="left">Tip</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        Good practise: composition root is a (preferably) unique location in an application
+        where modules are composed together
+      </p></td></tr>
+</table></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+<p class="simpara">
+          <span class="bold"><strong>"Evil"</strong></span> usage of Dependency Injection
+          Framework
+        </p>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="./doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Presented example is just for learning purposes, please don't follow
+            this anti-pattern approach!
+          </p></td></tr>
+</table></div>
+</li></ul></div>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">global_injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+    <span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">,</span> <span class="identifier">impl</span><span class="special">&gt;()</span>
+<span class="special">);</span>
+
+<span class="keyword">class</span> <span class="identifier">app</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">app</span><span class="special">()</span>
+        <span class="special">:</span> <span class="identifier">logger</span><span class="special">(</span><span class="identifier">global_injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;())</span>
+    <span class="special">{</span> <span class="special">}</span>
+
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;</span> <span class="identifier">logger</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">app</span><span class="special">().</span><span class="identifier">run</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<p>
+    </p>
+<p>
+      To make it clear, we don't need Dependency Injection Framework to apply all
+      the "goods" of Dependency Injection, but it may make our life easier.
+      Programmers should be "lazy" and shouldn't have to write tedious/boilerplate
+      code. Projects should scale and the bigger projects are, the more frameworks
+      will be used. So in the end all most projects will end up with some sort of
+      dependency injection framework. Using the library may give you additional advantages
+      like modules, logging, generating diagrams, compile time checking or restrictions,
+      additional conversions, etc. In general it give you full control of what and
+      how will be injected in easy and user friendly way. Therefore instead of creating
+      and configuring the objects yourself, the dependency framework does it for
+      you.
+    </p>
+<p>
+      <a class="link" href="boost_di__dependency_injection_/references.html#See11">See11</a> widely explains advantages of using dependency
+      injection, which might be sum up by:
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          <span class="bold"><strong>Parallel Development</strong></span>
+          <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem">
+                allows many teams to work separately on different modules
+              </li></ul></div>
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Extensibility</strong></span>
+          <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
+<li class="listitem">
+                lose coupling, declarative approach are features which make code
+                easy to extend
+              </li>
+<li class="listitem">
+                promotes business logic code over boilerplate code
+              </li>
+</ul></div>
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Maintainability</strong></span>
+          <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
+<li class="listitem">
+                separation between object creation and business logic make code easy
+                to maintain
+              </li>
+<li class="listitem">
+                reduce <code class="computeroutput"><span class="identifier">Dependency</span> <span class="identifier">Carrying</span></code> - passing dependencies
+                which aren't used directly and passed further as well as singletons
+                which weren't passed by constructor because they would have to be
+                passed everywhere
+                <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: square; "><li class="listitem">
+                      changing constructor signature may not require any changes
+                      in dependencies configuration (if such dependency might be
+                      deduced or is already used)
+                    </li></ul></div>
+              </li>
+</ul></div>
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Testability</strong></span>
+          <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
+<li class="listitem">
+                possibility of passing all required parameters via constructor give
+                the opportunity to use fakes for testing purposes
+              </li>
+<li class="listitem">
+                we won't need to write tests for manual injection or factories
+              </li>
+<li class="listitem">
+                integration tests might be written easily by passing fakes from framework
+              </li>
+<li class="listitem">
+                unit tests doesn't require framework at all to pass dependencies,
+                but to avoid boilerplate code dependency injection framework may
+                inject fakes automatically
+              </li>
+</ul></div>
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Readability</strong></span>
+          <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem">
+                code is easier to read since there is a proper separation between
+                business logic and object creation as well as there is no boilerplate
+                code just making chaos
+              </li></ul></div>
+        </li>
+</ul></div>
+<p>
+      <span class="bold"><strong>Dependency Injection Framework</strong></span> might be really
+      useful and may make your code to be loosely coupled and easy to maintain. Followed
+      by a few good practises/principles will get most out of Dependency Injection
+      Framework.
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          Avoid global states and <a href="http://en.wikipedia.org/wiki/Singleton_pattern" target="_top">Singleton
+          pattern</a>
+        </li>
+<li class="listitem">
+          Avoid <a href="http://en.wikipedia.org/wiki/Service_locator_pattern" target="_top">Service
+          Locator</a> pattern
+        </li>
+<li class="listitem">
+          Follow <a href="http://en.wikipedia.org/wiki/Single_responsibility_principle" target="_top">Single
+          Responsibility</a> principle
+        </li>
+<li class="listitem">
+          Follow <a href="http://en.wikipedia.org/wiki/Open/closed_principle" target="_top">Open/Closed</a>
+          principle
+        </li>
+<li class="listitem">
+          Follow <a href="http://en.wikipedia.org/wiki/Interface_segregation_principle" target="_top">Interface
+          Segregation</a> principle
+        </li>
+<li class="listitem">
+          Follow <a href="http://en.wikipedia.org/wiki/Liskov_substitution_principle" target="_top">Liskov
+          Substitution</a> principle
+        </li>
+<li class="listitem">
+          Follow <a href="http://en.wikipedia.org/wiki/Law_of_Demeter" target="_top">Law of
+          Demeter</a> principle
+        </li>
+<li class="listitem">
+          Follow <a href="http://en.wikipedia.org/wiki/Dependency_inversion_principle" target="_top">Dependency
+          inversion</a> principle
+        </li>
+<li class="listitem">
+          Apply Composition Root
+        </li>
+</ul></div>
+<p>
+      And always follow Hollywood principle: <span class="bold"><strong>"Don't call
+      us, we'll call you"</strong></span>.
+    </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><p><small>Last revised: July 15, 2014 at 09:40:52 GMT</small></p></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="boost_di__dependency_injection_/overview.html"><img src="./doc/src/images/next.png" alt="Next"></a></div>
+</body>
+</html>
