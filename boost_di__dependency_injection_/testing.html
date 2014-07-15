@@ -26,28 +26,43 @@
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="boost_di__dependency_injection_.testing"></a><a class="link" href="testing.html" title="Testing">Testing</a>
 </h2></div></div></div>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
-          unit tests
-        </li></ul></div>
+<div class="toc"><dl class="toc">
+<dt><span class="section"><a href="testing.html#boost_di__dependency_injection_.testing.unit_tests">Unit
+      Tests</a></span></dt>
+<dt><span class="section"><a href="testing.html#boost_di__dependency_injection_.testing.integration_tests">Integration
+      Tests</a></span></dt>
+</dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_di__dependency_injection_.testing.unit_tests"></a><a class="link" href="testing.html#boost_di__dependency_injection_.testing.unit_tests" title="Unit Tests">Unit
+      Tests</a>
+</h3></div></div></div>
 <p>
-      For unit tests Dependnecy Injection Framework is not needed. It's enough that
-      we have possibility to fake dependencies by constructor.
-    </p>
+        For Unit Tests Dependency Injection Framework is not really needed. It's
+        enough that usage of Dependency Injection make possible to pass dependencies
+        via constructor. Thanks to that we can easily pass fakes and test our class
+        in isolation.
+      </p>
 <p>
 </p>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">example</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="identifier">example</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogic</span><span class="special">&gt;,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;);</span>
+
+    <span class="keyword">void</span> <span class="identifier">run</span><span class="special">()</span> <span class="special">{</span>
+        <span class="identifier">logic_</span><span class="special">-&gt;</span><span class="identifier">do_it</span><span class="special">();</span>
+        <span class="identifier">logger_</span><span class="special">-&gt;</span><span class="identifier">log</span><span class="special">(</span><span class="string">"hello world"</span><span class="special">);</span>
+    <span class="special">}</span>
+
+    <span class="special">...</span>
 <span class="special">};</span>
 </pre>
 <p>
-    </p>
+      </p>
 <p>
-      To test <code class="computeroutput"><span class="identifier">example</span></code> we just need
-      fakes/mocks/stubs for <code class="computeroutput"><span class="identifier">ilogic</span></code>
-      and <code class="computeroutput"><span class="identifier">ilogger</span></code> and pass them to
-      constructor.
-    </p>
+        To test <code class="computeroutput"><span class="identifier">example</span></code> we just need
+        fakes for <code class="computeroutput"><span class="identifier">ilogic</span></code> and <code class="computeroutput"><span class="identifier">ilogger</span></code> and pass them to constructor.
+      </p>
 <p>
 </p>
 <pre class="programlisting"><span class="keyword">void</span> <span class="identifier">test_example</span><span class="special">()</span> <span class="special">{</span>
@@ -56,14 +71,19 @@
 
     <span class="identifier">example</span> <span class="identifier">sut</span><span class="special">((</span><span class="identifier">logic_mock</span><span class="special">,</span> <span class="identifier">logger_mock</span><span class="special">));</span>
 
-    <span class="comment">// ...</span>
+    <span class="identifier">EXPECT_CALL</span><span class="special">(*</span><span class="identifier">logic_mock</span><span class="special">,</span> <span class="identifier">do_it</span><span class="special">());</span>
+    <span class="identifier">EXPECT_CALL</span><span class="special">(*</span><span class="identifier">logger_mock</span><span class="special">,</span> <span class="identifier">log</span><span class="special">(</span><span class="string">"hello world"</span><span class="special">));</span>
+
+    <span class="identifier">sut</span><span class="special">.</span><span class="identifier">run</span><span class="special">();</span>
 <span class="special">}</span>
 </pre>
 <p>
-    </p>
+      </p>
 <p>
-      However to avoid boilerplate code, especially with test classes.
-    </p>
+        That's it, Dependency Injection make unit-testing straight forward. Nevertheless
+        to avoid writing boilerplate code like below example (avoid factory for object
+        and repetitions of mocks creation)...
+      </p>
 <p>
 </p>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">example_test</span> <span class="special">{</span>
@@ -77,6 +97,11 @@
 
     <span class="keyword">void</span> <span class="identifier">test_example</span><span class="special">()</span> <span class="special">{</span>
         <span class="identifier">example</span> <span class="identifier">sut</span><span class="special">((</span><span class="identifier">logic_mock_</span><span class="special">,</span> <span class="identifier">logger_mock_</span><span class="special">));</span>
+
+        <span class="identifier">EXPECT_CALL</span><span class="special">(*</span><span class="identifier">logic_mock</span><span class="special">,</span> <span class="identifier">do_it</span><span class="special">());</span>
+        <span class="identifier">EXPECT_CALL</span><span class="special">(*</span><span class="identifier">logger_mock</span><span class="special">,</span> <span class="identifier">log</span><span class="special">(</span><span class="string">"hello world"</span><span class="special">));</span>
+
+        <span class="identifier">sut</span><span class="special">.</span><span class="identifier">run</span><span class="special">();</span>
     <span class="special">}</span>
 
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">iloggic</span><span class="special">&gt;</span> <span class="identifier">logic_mock_</span><span class="special">;</span>
@@ -84,45 +109,139 @@
 <span class="special">};</span>
 </pre>
 <p>
-    </p>
+      </p>
 <p>
-      Instead of writing above we can use <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> to generate
-      mocks for us.
-    </p>
+        ... we can take full advantage of <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> and
+        generate required mocks for us.
+      </p>
 <div class="note"><table border="0" summary="Note">
 <tr>
 <td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src=".././doc/src/images/note.png"></td>
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-        We will need handy mock framework to achieve it like <code class="computeroutput"><span class="identifier">hippomocks</span></code>
-      </p></td></tr>
+          <a href="https://github.com/dascandy/hippomocks" target="_top">HippoMocks</a>
+          was used as Mocking library.
+        </p></td></tr>
 </table></div>
 <p>
-      So our example may looks
+        So our example might be refactored to.
 </p>
 <pre class="programlisting"><span class="keyword">void</span> <span class="identifier">test_example</span><span class="special">()</span> <span class="special">{</span>
-    <span class="identifier">mock_allocator</span> <span class="identifier">ma</span><span class="special">;</span>
-    <span class="keyword">auto</span> <span class="identifier">sut</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">allocate</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;(</span><span class="identifier">ma</span><span class="special">);</span>
+    <span class="keyword">auto</span> <span class="identifier">mi</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_mocks_injector</span><span class="special">();</span>
 
-    <span class="comment">// expectations on ma</span>
+    <span class="identifier">EXPECT_CALL</span><span class="special">(</span><span class="identifier">mi</span><span class="special">,</span> <span class="identifier">ilogic</span><span class="special">::</span><span class="identifier">do_it</span><span class="special">);</span>
+    <span class="identifier">EXPECT_CALL</span><span class="special">(</span><span class="identifier">mi</span><span class="special">,</span> <span class="identifier">ilogger</span><span class="special">::</span><span class="identifier">log</span><span class="special">).</span><span class="identifier">With</span><span class="special">(</span><span class="string">"hello world"</span><span class="special">);</span>
+
+    <span class="identifier">mi</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;().</span><span class="identifier">run</span><span class="special">();</span>
 <span class="special">}</span>
 </pre>
 <p>
-    </p>
+      </p>
+<p>
+        Above example has few advantages
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+            Insensitive for constructor signature change (for example when <code class="computeroutput"><span class="identifier">logic</span></code> and <code class="computeroutput"><span class="identifier">logger</span></code>
+            parameters order would be swapped)
+          </li>
+<li class="listitem">
+            Allow to easily test smart pointers (verifying destruction call automatically)
+            as well as allows to test <code class="computeroutput"><span class="identifier">unique_ptr</span></code>
+          </li>
+<li class="listitem">
+            Automatically manage mocks lifetime
+          </li>
+<li class="listitem">
+            Less boilerplate code
+          </li>
+</ul></div>
+<p>
+        To learn more about <code class="computeroutput"><span class="identifier">Automatic</span> <span class="identifier">Mocks</span> <span class="identifier">Injector</span></code>
+        see <a class="link" href="../">Extensions section</a>.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_di__dependency_injection_.testing.integration_tests"></a><a class="link" href="testing.html#boost_di__dependency_injection_.testing.integration_tests" title="Integration Tests">Integration
+      Tests</a>
+</h3></div></div></div>
+<p>
+        Integration tests usually will require building whole hierarchy of objects.
+        However some fakes might be required as well for example to fake data base
+        calls. With <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> we can achieve such functionality in
+        few ways.
+      </p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
-          integration tests
-        </li></ul></div>
+            Fake modules configuration
+          </li></ul></div>
 <p>
-      Integration tests will require building hierarchy of objects as well as some
-      fakes
-    </p>
-<p>
+        Example application configuration.
 </p>
-<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">fake_module</span><span class="special">(),</span> <span class="identifier">real_module</span><span class="special">());</span>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">module</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+            <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">,</span> <span class="identifier">logger</span><span class="special">&gt;()</span>
+          <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">idb</span><span class="special">,</span> <span class="identifier">db</span><span class="special">&gt;()</span>
+          <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ilogic</span><span class="special">,</span> <span class="identifier">logic</span><span class="special">&gt;()</span>
+          <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">iuser</span><span class="special">,</span> <span class="identifier">user</span><span class="special">&gt;()</span>
+        <span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">module</span><span class="special">()).</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;();</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
 </pre>
 <p>
-    </p>
+      </p>
+<p>
+        Testing module with fake <code class="computeroutput"><span class="identifier">logger</span></code>
+        and <code class="computeroutput"><span class="identifier">db</span></code>, but original <code class="computeroutput"><span class="identifier">logic</span></code> and <code class="computeroutput"><span class="identifier">user</span></code>.
+</p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">fake_module</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+            <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">,</span> <span class="identifier">fake_logger</span><span class="special">&gt;()</span>
+          <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">idb</span><span class="special">,</span> <span class="identifier">fake_db</span><span class="special">&gt;()</span>
+        <span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">void</span> <span class="identifier">test_app</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">auto</span> <span class="identifier">sut</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">module</span><span class="special">(),</span> <span class="identifier">fake_module</span><span class="special">()).</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;();</span>
+    <span class="comment">// test sut...</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+            Write custom allocator which automatically inject fakes for specified
+            components with binding integration. See <a class="link" href="../">Automatic
+            Mocks Injector</a> for further information.
+          </li></ul></div>
+<p>
+        Example user interface may looks like that.
+</p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">test_app</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+        <span class="identifier">module</span><span class="special">()</span>
+      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">fake</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;()</span>
+      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">fake</span><span class="special">&lt;</span><span class="identifier">idb</span><span class="special">&gt;()</span>
+    <span class="special">);</span>
+
+    <span class="keyword">auto</span> <span class="identifier">sut</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">allocate</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;(</span><span class="identifier">test_allocator</span><span class="special">());</span>
+
+    <span class="comment">// test sut...</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+</div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
