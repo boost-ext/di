@@ -5,7 +5,7 @@
 This is not an official Boost library yet and there is no guarantee it will ever be!
 
 ## Introduction
-Dependency Injection is C++03/C++11/C++14 header only library providing type safe, compile time, macro free constructor dependency injection functionality.
+Boost.DI is C++03/C++11/C++14 header only library providing type safe, compile time, macro free constructor dependency injection.
 
 ### Hello World
 
@@ -117,6 +117,7 @@ int main() {
 ## More information
 * [Documentation](http://krzysztof-jusiak.github.com/di)
 * [Todo/Issues] (https://github.com/krzysztof-jusiak/di/issues?state=open)
+* [Boost Library Incubator - DI](http://rrsd.com/blincubator.com/bi_library/di/)
 
 ## Tested compilers
 * Linux (x86/x86-64)

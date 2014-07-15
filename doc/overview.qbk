@@ -61,10 +61,10 @@ To achieve the same behaviour with previous standards sometimes will just requir
 
 [section Supported Compilers]
 
-Boost.DI was sucessfuly test on below compilers
+Boost.DI was successfully test on below compilers
 
 * Linux (x86/x86-64)
-   * Clang 3.2/3.3/3.4/3.4.1 (clean with Clang Static Analyzer and Valgrind)
+   * Clang 3.2/3.3/3.4/3.4.2 (clean with Clang Static Analyzer and Valgrind)
    * GCC 4.7.3/4.8.2/4.9.0 (clean with Valgrind)
    * Intel C++ 14.0.3 (clean with Valgrind)
 

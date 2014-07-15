@@ -53,12 +53,12 @@ therefore is not really good practise to write it.
         }
 
         void init(std::unique_ptr<ilogger>);
-        void start();
+        void run();
     };
 
     int main() {
         //composition root
-        std::make_unique<app>()->start();
+        std::make_unique<app>()->run();
     }
 ```
 
@@ -71,7 +71,7 @@ scale - project will end up with some sort of automatization.
     class app {
     public:
         app(std::unique_ptr<ilogger>);
-        void start();
+        void run();
     };
 
     int main() {
@@ -79,7 +79,7 @@ scale - project will end up with some sort of automatization.
         auto logger_ = std::make_shared<logger>();
 
         //composition root
-        std::make_unique<app>(logger_)->start();
+        std::make_unique<app>(logger_)->run();
     }
 ```
 
@@ -119,7 +119,7 @@ dependencies into not default constructor.
 
     int main() {
         //composition root
-        std::make_unique<app>()->start();
+        std::make_unique<app>()->run();
     }
 ```
 
@@ -168,7 +168,7 @@ which avoid creation of many tedious code.
         laf.add("logger_factory", std::make_unique<logger_factory>());
 
         //composition root
-        std::make_unique<app>(*laf)->start();
+        std::make_unique<app>(*laf)->run();
     }
 ```
 
@@ -197,7 +197,7 @@ which dependencies are needed for the class which testing unclear and harder.
         sl.register_singleton<ilogger>().to<logger>();
 
         //composition root
-        std::make_unique<app>(sl)->start();
+        std::make_unique<app>(sl)->run();
     }
 ```
 
@@ -214,7 +214,7 @@ like "composition root".
 [table
     [[Boost.DI]]
     [[
-        Boost.DI is C++ 03 / C++ 11 header only, type safe, library providing compile time, macro free constructor/interface dependency injection functionality.
+        Boost.DI is `C++03`/`C++11`/`C++14` header only, type safe, library providing compile time, macro free constructor dependency injection.
         See Overview to learn more.
     ]]
 ]
@@ -226,7 +226,7 @@ like "composition root".
         class app {
         public:
             app(std::unique_ptr<ilogger>);
-            void start();
+            void run();
         };
 
         int main() {
@@ -252,8 +252,8 @@ like "composition root".
 ]
 [tip Good practise: composition root is a (preferably) unique location in an application where modules are composed together]
 
-* [*"Pure Evil"] usage of Dependency Injection Framework
-[warning Don't do this at home!]
+* [*"Evil"] usage of Dependency Injection Framework
+[warning Presented example is just for learning purposes, please don't follow this anti-pattern approach!]
 ```
     auto global_injector = di::make_injector(
         bind<i, impl>()
@@ -270,7 +270,7 @@ like "composition root".
     };
 
     int main() {
-        global_injector.create<app>().start();
+        app().run();
     }
 ```
 
