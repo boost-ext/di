@@ -286,27 +286,27 @@ Therefore instead of creating and configuring the objects yourself, the dependen
 [link See11] widely explains advantages of using dependency injection, which might be sum up by:
 
 * [*Parallel Development]
-    * allows many teams to work separately on different modules
+    * Allows many teams to work separately on different modules
 
 * [*Extensibility]
-    * lose coupling, declarative approach are features which make code easy to extend
-    * promotes business logic code over boilerplate code
+    * Lose coupling, declarative approach are features which make code easy to extend
+    * Promotes business logic code over boilerplate code
 
 * [*Maintainability]
-    * separation between object creation and business logic make code easy to maintain
-    * reduce `Dependency Carrying` - passing dependencies which aren't used directly and passed further as well as
-      singletons which weren't passed by constructor because they would have to be passed everywhere
-     * changing constructor signature may not require any changes in dependencies configuration (if such dependency might be deduced or is already used)
+    * Separation between object creation and business logic make code easy to maintain
+    * Reduce `Dependency Carrying` - passing dependencies which aren't used directly and passed further as well as
+      Singletons which weren't passed by constructor because they would have to be passed everywhere
+        * changing constructor signature may not require any changes in dependencies configuration (if such dependency might be deduced or is already used)
 
 * [*Testability]
-    * possibility of passing all required parameters via constructor give the opportunity to use fakes for testing purposes
-    * we won't need to write tests for manual injection or factories
-    * integration tests might be written easily by passing fakes from framework
-    * unit tests doesn't require framework at all to pass dependencies, but to avoid boilerplate code dependency injection framework
+    * Possibility of passing all required parameters via constructor give the opportunity to use fakes for testing purposes
+    * We won't need to write tests for manual injection or factories
+    * Integration tests might be written easily by passing fakes from framework
+    * Unit tests doesn't require framework at all to pass dependencies, but to avoid boilerplate code dependency injection framework
       may inject fakes automatically
 
 * [*Readability]
-    * code is easier to read since there is a proper separation between business logic and object creation as well as there is no boilerplate code just making chaos
+    * Code is easier to read since there is a proper separation between business logic and object creation as well as there is no boilerplate code just making chaos
 
 [*Dependency Injection Framework] might be really useful and may make your code to be loosely coupled and easy to maintain.
 Followed by a few good practises/principles will get most out of Dependency Injection Framework.
