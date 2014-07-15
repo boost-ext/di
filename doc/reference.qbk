@@ -1203,31 +1203,6 @@ public:
 ]
 [endsect]
 
-[section Header <boost/di/policies/scopes_permission.hpp>]
-```
-namespace boost {
-namespace di {
-namespace policies {
-
-template<typename TScope>
-struct allow_scope;
-
-template<typename... T>
-class scopes_permission {
-public:
-    template<typename TDependency>
-    void assert_policy() const;
-};
-
-} // namespace policies
-} // namespace di
-} // namespace boost
-```
-[table
-    [[Tests: [@test/ut/policies/scopes_permission_ut.cpp]]]
-]
-[endsect]
-
 [section Header <boost/di/policies/parameters_permission.hpp>]
 ```
 namespace boost {
@@ -1254,6 +1229,34 @@ public:
 ```
 [table
     [[Tests: [@test/ut/policies/parameters_permission_ut.cpp]]]
+]
+[endsect]
+
+[section Header <boost/di/policies/scopes_permission.hpp>]
+```
+namespace boost {
+namespace di {
+namespace policies {
+
+template<typename TScope>
+struct allow_scope;
+
+template<>
+struct allow_scope<scopes::deduce>; // disabled
+
+template<typename... T>
+class scopes_permission {
+public:
+    template<typename TDependency>
+    void assert_policy() const;
+};
+
+} // namespace policies
+} // namespace di
+} // namespace boost
+```
+[table
+    [[Tests: [@test/ut/policies/scopes_permission_ut.cpp]]]
 ]
 [endsect]
 

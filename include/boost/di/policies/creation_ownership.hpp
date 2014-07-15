@@ -20,9 +20,9 @@ namespace policies {
 
 /**
  * @code
- * injector_.create<const int&>(); // compile error
- * injector_.create<int&>(); // compile error
- * injector_.create<int>(); // compile ok
+ * injector_.create<const int&>(creation_ownership()); // compile error
+ * injector_.create<int&>(creation_ownership()); // compile error
+ * injector_.create<int>(creation_ownership()); // compile ok
  * @endcode
  */
 class creation_ownership
