@@ -9,10 +9,54 @@
 
 [section Design Rationale]
 
-Basic design of Boost.DI involves two main concepts:
+`Boost.DI` design was driven by few main goals:
 
-* verifying how many arguments constructor has using `has_ctor`
-* conversion to requested type using `type conversion operator`
+* User interface should be compact and eliminate boilerplate code as much as possible (common things should be achieved in easy way and harder should be possible)
+    * achieved with automatic scopes deduction/automatic interface deduction
+
+```
+    class example {
+    public:
+        example(std::shared_ptr<i>);
+    };
+```
+
+```
+    Dependency configuration and creation.
+
+        di::make_injector(di::deduce<impl>()).create<example>();
+
+            equals...
+
+        di::make_injector(di::bind<i, impl>()).create<example>();
+
+            equals...
+
+        di::make_injector(di::shared<di::bind<i, impl>>()).create<example>();
+```
+
+* Dependencies should be resolved during compilation time (no runtime exceptions that dependency can't be resolved)
+    * achieved with compile time dependency resolving
+
+* Constructor injection should be as less intrusive as possible
+    * see [link constructor_injection Constructor Injection]
+
+* Creation overhead should be as small as possible
+    * achieved with compile time dependency resolving to minimize runtime overhead
+
+* Binding front end should be easily extensible
+    * achieved with `Dependency` class, user interface for binding has to return list of `Dependency` classes
+
+and maybe the most important that `Boost.DI` shouldn't be a copy of existing frameworks for Java and other languages like `Google Guice`
+and use whole potential of `C++` instead whilst not ignoring useful concepts in the same time.
+
+[#constructor_injection]
+[h5 Constructor Injection]
+Having above in mind, main concern was related how to make constructor injection as less intrusive as possible (avoid macros/registration/reflection).
+Problem was solved purely in `C++` with.
+
+* Verifying how many arguments constructor has using `has_ctor`
+* Conversion to requested type using `type conversion operator`
 
 ```
 struct any_type {
@@ -41,7 +85,9 @@ struct example {
 
 injector().create<example>();
 ```
-[note Purpose of above pseudo code is to illustrate basic idea, if you interested in the implementation details take a look into Boost.DI source code.]
+[note Purpose of above pseudo code is to illustrate basic idea, if you interested in the implementation details take a look into `Boost.DI` source code.]
+
+Approach presented above although meet all the requirements cause a lot of tricky issues as well, which are listed below.
 
 * Problematic cases
 
@@ -339,19 +385,18 @@ injector().create<example>();
     [[Tests: [@test/vt/compiler_support_vt.cpp]]]
 ]
 
-[warning GCC/Clang/MSVC/Intel all compilers differ with they way template conversion operator is handled]
+[warning GCC/Clang/MSVC/Intel compilers differ with they way template conversion operator is handled.]
 
-That's the main idea, obviously Boost.DI is more complex that that.
-The latest design is shown below.
+Having core feature - `constructor injection` in place `Boost.DI` design presents as follows.
 
 [@images/di.png [$images/di.png [width 75%] [height 75%] ]]
 Generated with [@http://plantuml.sourceforge.net PlantUML].
 
-During implementation of Boost.DI a lot of concepts were checked
+[note During implementation of `Boost.DI` a lot of concepts were checked
 and a many approaches were taken. To track different design's
-please refer to commits history.
+please refer to commits history.]
 
-Boost.DI architecture might be split into few main parts
+`Boost.DI` architecture.
 
 [table
     [ [Component] [Description] ]
@@ -366,20 +411,34 @@ Boost.DI architecture might be split into few main parts
 
 # for type T
     # for N = 1 to `BOOST_DI_CFG_CTOR_LIMIT_SIZE`
-    # if T has constructor with N parameters goto `a`
-# generate list of `any_type` with N elements
+    # if T has constructor with N parameters (which might be converted using `conversion operator`) (see `has_ctor`) then goto `2`
+# generate list of `any_type` with N elements which represents constructor parameters (notice that `any_type` is convertible to actual constructor parameter)
 
 [h5 Binding Resolution Algorithm]
 
 # for type T
-    # for all dependencies
-    # if scope was set to `deduce` rebind it accordingly to type definition (using `scope traits - see deduce scope`)
+    # set `current_weight` to 0 and `best_dependency` to default dependency (TDefault)
+    # for all given dependencies
+        # if `dependency` scope is set to `deduce` rebind it accordingly to one of non virtual scopes (using `scope traits - see deduce scope`)
+        # for all given dependency requirements (TBind) calculate weight
+            # `weight` = requirement1 * 10, requirement2 * 100, ..., requirementN * (N times 10)
+        # if `weight` > `current_weight`
+            # set `current_weight` to `weight`
+            # set `best_dependency` to `dependency`
+    # return `best_dependency`
 
 [h5 Type Creation Algorithm]
 
 # for type T
-    # for all dependencies
-    # if scope was set to `deduce` rebind it accordingly to type definition (using `scope traits`)
+    # get constructor parameters
+        # if T has `constructor` traits (set using `BOOST_DI_INJECT`)
+            # get `constructor` parameters from traits
+        # else
+            # deduce `constructor` using `Constructor Parameters Deduction`
+    # create T with `constructor` parameters T(`constructor parameters`...)
+        # for all `constructor` parameters resolve best dependency using `Binding Resolution Algorithm`
+            # allocate required type and pass it to `dependency` scope
+            # return wrappered type from scope which is converted to actual constructor parameter
 
 [endsect]
 

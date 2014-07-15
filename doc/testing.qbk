@@ -108,27 +108,35 @@ as well for example to fake data base calls. With `Boost.DI` we can achieve such
 
 Example application configuration.
 ```
-    class module {
+    class module_common {
     public:
         auto configure() const {
             return di::make_injector(
                 di::bind<ilogger, logger>()
               , di::bind<idb, db>()
-              , di::bind<ilogic, logic>()
+            );
+        }
+    };
+
+    class module_controller {
+    public:
+        auto configure() const {
+            return di::make_injector(
+                di::bind<ilogic, logic>()
               , di::bind<iuser, user>()
             );
         }
     };
 
     int main() {
-        di::make_injector(module()).create<app>();
+        di::make_injector(module_common(), module_controller()).create<app>();
         return 0;
     }
 ```
 
 Testing module with fake `logger` and `db`, but original `logic` and `user`.
 ```
-    class fake_module {
+    class fake_module_common {
     public:
         auto configure() const {
             return di::make_injector(
@@ -139,28 +147,27 @@ Testing module with fake `logger` and `db`, but original `logic` and `user`.
     };
 
     void test_app() {
-        auto sut = di::make_injector(module(), fake_module()).create<app>();
+        auto sut = di::make_injector(module_controller(), fake_module_common()).create<app>();
         // test sut...
     }
 ```
 
-* Write custom allocator which automatically inject fakes for specified components with binding integration.
-See [link boost_di.extensions Automatic Mocks Injector] for further information.
+* Write custom allocator which automatically inject fakes for specified components.
 
-Example user interface may looks like that.
+To achieve this we can use [link boost_di.extensions Automatic Mocks Injector].
 ```
     void test_app() {
-        auto injector = di::make_injector(
-            module()
-          , di::fake<ilogger>()
-          , di::fake<idb>()
+        auto mi = di::make_mocks_injector(
+            module_controller() // bind originals
         );
-        
-        auto sut = injector.allocate<app>(test_allocator());
 
+        auto sut = mi.create<app>()
         // test sut...
     }
 ```
+
+This way all dependencies will be faked, except specified in `module_controller`,
+which in is this example means `ilogger` and `idb`.
 
 [endsect]
 
