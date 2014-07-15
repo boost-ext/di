@@ -1,0 +1,783 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Design Rationale</title>
+<link rel="stylesheet" href=".././doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.0">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.DI (Dependency Injection) 1.0">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.DI (Dependency Injection) 1.0">
+<link rel="prev" href="overview.html" title="Overview">
+<link rel="next" href="tutorial.html" title="Tutorial">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src=".././boost.png"></td>
+<td align="center"><a href=".././index.html">Home</a></td>
+<td align="center"><a href=".././libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href=".././more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="overview.html"><img src=".././doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src=".././doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="tutorial.html"><img src=".././doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_di__dependency_injection_.design_rationale"></a><a class="link" href="design_rationale.html" title="Design Rationale">Design
+    Rationale</a>
+</h2></div></div></div>
+<p>
+      Basic design of Boost.DI involves two main concepts:
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          verifying how many arguments constructor has using <code class="computeroutput"><span class="identifier">has_ctor</span></code>
+        </li>
+<li class="listitem">
+          conversion to requested type using <code class="computeroutput"><span class="identifier">type</span>
+          <span class="identifier">conversion</span> <span class="keyword">operator</span></code>
+        </li>
+</ul></div>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">any_type</span> <span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="keyword">operator</span> <span class="identifier">U</span><span class="special">();</span>
+<span class="special">};</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TArgs</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">has_ctor</span> <span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="keyword">static</span> <span class="identifier">yes_tag</span> <span class="identifier">test</span><span class="special">(</span><span class="keyword">decltype</span><span class="special">(</span><span class="identifier">U</span><span class="special">(</span><span class="identifier">TArgs</span><span class="special">()...)*);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">&gt;</span> <span class="keyword">static</span> <span class="identifier">no_tag</span> <span class="identifier">test</span><span class="special">(...);</span>
+
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">test</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="number">0</span><span class="special">))</span> <span class="special">==</span> <span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">yes_tag</span><span class="special">);</span>
+<span class="special">};</span>
+
+<span class="keyword">class</span> <span class="identifier">injector</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="identifier">T</span> <span class="identifier">create</span><span class="special">(</span><span class="identifier">enable_if</span><span class="special">&lt;</span><span class="identifier">has_ctor</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">any_type</span><span class="special">...&gt;&gt;::</span><span class="identifier">type</span><span class="special">*</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">T</span><span class="special">(</span><span class="identifier">any_type</span><span class="special">()...);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
+    <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">,</span> <span class="keyword">int</span> <span class="keyword">double</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="identifier">injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;();</span>
+</pre>
+<p>
+    </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src=".././doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        Purpose of above pseudo code is to illustrate basic idea, if you interested
+        in the implementation details take a look into Boost.DI source code.
+      </p></td></tr>
+</table></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+          Problematic cases
+          <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
+<li class="listitem">
+<p class="simpara">
+                Ambiguous constructors with the same - longest - number of parameters
+              </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                        <p>
+                          Issue
+                        </p>
+                      </th>
+<th>
+                        <p>
+                          Solution
+                        </p>
+                      </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                        <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">                                                          <span class="special">.</span>
+<span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
+    <span class="keyword">explicit</span> <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">);</span>
+    <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">);</span>
+    <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">,</span> <span class="keyword">float</span><span class="special">);</span> <span class="comment">// ambiguity</span>
+    <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">float</span><span class="special">,</span> <span class="keyword">double</span><span class="special">);</span> <span class="comment">// ambiguity</span>
+<span class="special">};</span>
+</pre>
+<p>
+                        </p>
+                      </td>
+<td>
+                        <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">                                                                                             <span class="special">.</span>
+<span class="identifier">use</span> <span class="identifier">BOOST_DI_INJECT</span> <span class="identifier">to</span> <span class="identifier">point</span> <span class="identifier">which</span> <span class="identifier">constructor</span> <span class="identifier">should</span> <span class="identifier">be</span> <span class="identifier">chosen</span> <span class="identifier">by</span> <span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span>
+    <span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
+        <span class="keyword">explicit</span> <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">);</span>
+        <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">);</span>
+        <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">,</span> <span class="keyword">float</span><span class="special">);</span>
+        <span class="identifier">BOOST_DI_INJECT</span><span class="special">(</span><span class="identifier">example</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">float</span><span class="special">,</span> <span class="keyword">double</span><span class="special">);</span>
+    <span class="special">};</span>
+</pre>
+<p>
+                        </p>
+                      </td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<p class="simpara">
+                Constructor with variadic number of parameters
+              </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                        <p>
+                          Issue
+                        </p>
+                      </th>
+<th>
+                        <p>
+                          Solution
+                        </p>
+                      </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                        <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">                                                          <span class="special">.</span>
+<span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TArgs</span><span class="special">&gt;</span>
+    <span class="keyword">explicit</span> <span class="identifier">example</span><span class="special">(</span><span class="identifier">TArgs</span><span class="special">&amp;&amp;...);</span>
+<span class="special">};</span>
+</pre>
+<p>
+                        </p>
+                      </td>
+<td>
+                        <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">                                                                                             <span class="special">.</span>
+<span class="identifier">use</span> <span class="identifier">BOOST_DI_INJECT_TRAITS</span> <span class="identifier">to</span> <span class="identifier">define</span> <span class="identifier">the</span> <span class="identifier">constructor</span>
+    <span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">{</span>
+        <span class="keyword">template</span><span class="special">&lt;&gt;</span>
+        <span class="keyword">struct</span> <span class="identifier">ctor_traits</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;</span> <span class="special">{</span>
+            <span class="identifier">BOOST_DI_INJECT_TRAITS</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">);</span> <span class="comment">// or in definition of the class</span>
+        <span class="special">};</span>
+    <span class="special">}}</span> <span class="comment">// boost::di</span>
+</pre>
+<p>
+                        </p>
+                      </td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<p class="simpara">
+                Copy constructors
+              </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                        <p>
+                          Issue
+                        </p>
+                      </th>
+<th>
+                        <p>
+                          Solution
+                        </p>
+                      </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                        <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">                                                          <span class="special">.</span>
+<span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
+    <span class="identifier">example</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">example</span><span class="special">&amp;);</span>
+    <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">);</span> <span class="comment">// ambiguous in c++03</span>
+<span class="special">};</span>
+</pre>
+<p>
+                        </p>
+                      </td>
+<td>
+                        <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">                                                                                             <span class="special">.</span>
+<span class="identifier">In</span> <span class="identifier">C</span><span class="special">++</span><span class="number">11</span> <span class="identifier">copy</span> <span class="identifier">constructors</span> <span class="identifier">ambiguity</span> <span class="identifier">might</span> <span class="identifier">be</span> <span class="identifier">disabled</span> <span class="keyword">using</span> <span class="keyword">default</span> <span class="keyword">template</span> <span class="identifier">parameters</span>
+    <span class="keyword">template</span><span class="special">&lt;</span>
+        <span class="keyword">typename</span> <span class="identifier">U</span>
+      <span class="special">,</span> <span class="keyword">typename</span> <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">disable_if</span><span class="special">&lt;</span><span class="identifier">is_same_base_of</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">U</span><span class="special">&gt;&gt;::</span><span class="identifier">type</span>
+    <span class="special">&gt;</span>
+    <span class="keyword">operator</span> <span class="identifier">U</span><span class="special">();</span>
+
+<span class="identifier">In</span> <span class="identifier">C</span><span class="special">++</span><span class="number">03</span> <span class="identifier">constructor</span> <span class="identifier">has</span> <span class="identifier">to</span> <span class="identifier">be</span> <span class="identifier">explicitly</span> <span class="identifier">pointed</span> <span class="identifier">out</span>
+<span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
+    <span class="identifier">example</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">example</span><span class="special">&amp;);</span>
+    <span class="identifier">BOOST_DI_INJECT</span><span class="special">(</span><span class="identifier">example</span><span class="special">,</span> <span class="special">(</span><span class="keyword">int</span><span class="special">));</span> <span class="comment">// ok in c++03</span>
+<span class="special">};</span>
+
+<span class="identifier">Or</span> <span class="identifier">by</span> <span class="identifier">adding</span> <span class="identifier">dummy</span> <span class="identifier">parameter</span> <span class="identifier">to</span> <span class="identifier">the</span> <span class="identifier">constructor</span>
+<span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
+    <span class="identifier">example</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">example</span><span class="special">&amp;);</span>
+    <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span> <span class="special">=</span> <span class="number">0</span><span class="special">);</span> <span class="comment">// ok in c++03</span>
+<span class="special">};</span>
+</pre>
+<p>
+                        </p>
+                      </td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<p class="simpara">
+                Constructor with non-copyable types
+              </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                        <p>
+                          Issue
+                        </p>
+                      </th>
+<th>
+                        <p>
+                          Solution
+                        </p>
+                      </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                        <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">                                                          <span class="special">.</span>
+<span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
+     <span class="comment">// moveable types are supported</span>
+    <span class="identifier">example</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;);</span>
+<span class="special">};</span>
+</pre>
+<p>
+                        </p>
+                      </td>
+<td>
+                        <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">                                                                                             <span class="special">.</span>
+<span class="keyword">struct</span> <span class="identifier">any_type</span> <span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="keyword">operator</span> <span class="identifier">U</span><span class="special">();</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="keyword">operator</span> <span class="identifier">aux</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;&amp;();</span> <span class="comment">// for std::auto_ptr</span>
+<span class="special">};</span>
+</pre>
+<p>
+                        </p>
+                      </td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<p class="simpara">
+                Constructor with types which have <code class="computeroutput"><span class="identifier">conversion</span>
+                <span class="identifier">constructor</span></code>
+              </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                        <p>
+                          Issue
+                        </p>
+                      </th>
+<th>
+                        <p>
+                          Solution
+                        </p>
+                      </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                        <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">                                                          <span class="special">.</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="identifier">example</span><span class="special">(</span><span class="identifier">T</span><span class="special">);</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">app</span> <span class="special">{</span>
+    <span class="identifier">app</span><span class="special">(</span><span class="identifier">example</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;);</span>
+<span class="special">};</span>
+</pre>
+<p>
+                        </p>
+                      </td>
+<td>
+                        <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">                                                                                             <span class="special">.</span>
+<span class="identifier">use</span> <span class="identifier">BOOST_DI_INJECT</span> <span class="identifier">to</span> <span class="identifier">explicitly</span> <span class="identifier">point</span> <span class="identifier">out</span> <span class="identifier">the</span> <span class="identifier">constructor</span> <span class="identifier">parameters</span>
+    <span class="keyword">struct</span> <span class="identifier">app</span> <span class="special">{</span>
+        <span class="identifier">BOOST_DI_INJECT</span><span class="special">(</span><span class="identifier">app</span><span class="special">,</span> <span class="identifier">example</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;);</span>
+    <span class="special">};</span>
+
+<span class="identifier">make</span> <span class="identifier">example</span> <span class="identifier">constructor</span> <span class="keyword">explicit</span> <span class="keyword">if</span> <span class="identifier">possible</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
+        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+        <span class="keyword">explicit</span> <span class="identifier">example</span><span class="special">(</span><span class="identifier">T</span><span class="special">);</span>
+    <span class="special">};</span>
+
+<span class="keyword">if</span> <span class="identifier">conversion</span> <span class="identifier">constructor</span> <span class="identifier">might</span> <span class="identifier">be</span> <span class="identifier">disabled</span><span class="special">,</span> <span class="identifier">might</span> <span class="identifier">be</span> <span class="identifier">worth</span> <span class="identifier">to</span> <span class="keyword">do</span> <span class="identifier">so</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span> <span class="identifier">has</span> <span class="identifier">a</span> <span class="identifier">conversion</span> <span class="identifier">constructor</span> <span class="identifier">from</span> <span class="identifier">any</span> <span class="identifier">type</span> <span class="identifier">but</span> <span class="identifier">integral</span> <span class="identifier">types</span>
+    <span class="keyword">template</span><span class="special">&lt;&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">is_integral</span><span class="special">&lt;</span><span class="identifier">any_type</span><span class="special">&gt;</span>
+        <span class="special">:</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">true_</span>
+    <span class="special">{</span> <span class="special">};</span>
+</pre>
+<p>
+                        </p>
+                      </td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<p class="simpara">
+                Inheriting constructors
+              </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                        <p>
+                          Issue
+                        </p>
+                      </th>
+<th>
+                        <p>
+                          Solution
+                        </p>
+                      </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                        <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">                                                          <span class="special">.</span>
+<span class="keyword">struct</span> <span class="identifier">a</span> <span class="special">{</span>
+    <span class="identifier">a</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">);</span>
+    <span class="identifier">a</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">,</span> <span class="keyword">float</span><span class="special">);</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">b</span> <span class="special">:</span> <span class="identifier">a</span> <span class="special">{</span>
+    <span class="keyword">using</span> <span class="identifier">a</span><span class="special">::</span><span class="identifier">a</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">app</span> <span class="special">{</span>
+    <span class="identifier">app</span><span class="special">(</span><span class="identifier">b</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+<p>
+                        </p>
+                      </td>
+<td>
+                        <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">                                                                                             <span class="special">.</span>
+<span class="identifier">Support</span> <span class="identifier">without</span> <span class="identifier">any</span> <span class="identifier">workarounds</span>
+</pre>
+<p>
+                        </p>
+                      </td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<p class="simpara">
+                <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT</span></code> and
+                default parameters
+              </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                        <p>
+                          Issue
+                        </p>
+                      </th>
+<th>
+                        <p>
+                          Solution
+                        </p>
+                      </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                        <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">                                                          <span class="special">.</span>
+<span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
+    <span class="identifier">BOOST_DI_INJECT</span><span class="special">(</span><span class="keyword">explicit</span> <span class="identifier">example</span>
+                  <span class="special">,</span> <span class="keyword">int</span> <span class="special">=</span> <span class="number">0</span>
+                  <span class="special">,</span> <span class="keyword">double</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+<p>
+                        </p>
+                      </td>
+<td>
+                        <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">                                                                                             <span class="special">.</span>
+<span class="identifier">BOOST_DI_INJECT</span> <span class="identifier">creates</span> <span class="identifier">a</span> <span class="identifier">function</span> <span class="identifier">instead</span> <span class="identifier">of</span> <span class="identifier">direct</span> <span class="identifier">traits</span>
+    <span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
+        <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">boost_di_injector__</span><span class="special">(</span><span class="keyword">int</span> <span class="special">=</span> <span class="number">0</span><span class="special">,</span> <span class="keyword">double</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">);</span>
+        <span class="keyword">explicit</span> <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span> <span class="special">=</span> <span class="number">0</span><span class="special">,</span> <span class="keyword">double</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">);</span>
+    <span class="special">};</span>
+
+    <span class="identifier">paramter_types</span><span class="special">&lt;</span><span class="keyword">decltype</span><span class="special">(&amp;</span><span class="identifier">example</span><span class="special">::</span><span class="identifier">boost_di_injector__</span><span class="special">)&gt;::</span><span class="identifier">type</span> <span class="special">-&gt;</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">&gt;</span>
+</pre>
+<p>
+                        </p>
+                      </td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<p class="simpara">
+                <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT</span></code> with
+                inheritance
+              </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                        <p>
+                          Issue
+                        </p>
+                      </th>
+<th>
+                        <p>
+                          Solution
+                        </p>
+                      </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                        <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">                                                          <span class="special">.</span>
+<span class="keyword">struct</span> <span class="identifier">a</span> <span class="special">{</span>
+    <span class="identifier">BOOST_DI_INJECT</span><span class="special">(</span><span class="identifier">a</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">);</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">b</span> <span class="special">:</span> <span class="identifier">a</span> <span class="special">{</span> <span class="special">};</span>
+
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">b</span><span class="special">&gt;();</span> <span class="comment">// error b doesn't have</span>
+                       <span class="comment">// constructor with 2 parameters</span>
+</pre>
+<p>
+                        </p>
+                      </td>
+<td>
+                        <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">                                                                                             <span class="special">.</span>
+<span class="identifier">use</span> <span class="identifier">BOOST_DI_INJECT</span> <span class="keyword">or</span> <span class="identifier">BOOST_DI_INJECT_TRAITS</span> <span class="identifier">to</span> <span class="identifier">explicitly</span> <span class="identifier">point</span> <span class="identifier">that</span> <span class="identifier">constructor</span> <span class="identifier">is</span> <span class="identifier">empty</span>
+
+<span class="keyword">struct</span> <span class="identifier">a</span> <span class="special">{</span>
+    <span class="identifier">BOOST_DI_INJECT</span><span class="special">(</span><span class="identifier">a</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">);</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">b</span> <span class="special">:</span> <span class="identifier">a</span> <span class="special">{</span>
+    <span class="identifier">BOOST_DI_INJECT_TRAITS</span><span class="special">();</span> <span class="comment">// or BOOST_DI_INJECT(b);</span>
+<span class="special">};</span>
+
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">b</span><span class="special">&gt;();</span>
+</pre>
+<p>
+                        </p>
+                      </td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<p class="simpara">
+                Function parameters evaluation order with shared binding
+              </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                        <p>
+                          Issue
+                        </p>
+                      </th>
+<th>
+                        <p>
+                          Solution
+                        </p>
+                      </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                        <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">                                                          <span class="special">.</span>
+<span class="keyword">struct</span> <span class="identifier">a</span> <span class="special">{</span> <span class="identifier">a</span><span class="special">(</span><span class="keyword">int</span><span class="special">);</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">b</span> <span class="special">{</span> <span class="identifier">b</span><span class="special">(</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">a</span><span class="special">&gt;);</span> <span class="special">};</span>
+
+<span class="comment">// parameters evaluation order is not specified</span>
+<span class="keyword">struct</span> <span class="identifier">c</span> <span class="special">{</span> <span class="identifier">c</span><span class="special">(</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">a</span><span class="special">&gt;,</span> <span class="identifier">aux</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">b</span><span class="special">&gt;);</span> <span class="special">};</span>
+
+<span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+    <span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">when</span><span class="special">&lt;</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">a</span><span class="special">&gt;&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
+  <span class="special">,</span> <span class="identifier">shared</span><span class="special">&lt;</span><span class="identifier">a</span><span class="special">&gt;</span>
+<span class="special">);</span>
+</pre>
+<p>
+                        </p>
+                      </td>
+<td>
+                        <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">                                                                                             <span class="special">.</span>
+<span class="identifier">be</span> <span class="identifier">aware</span> <span class="keyword">and</span> <span class="identifier">avoid</span> <span class="identifier">binding</span> <span class="identifier">which</span> <span class="identifier">may</span> <span class="identifier">be</span> <span class="identifier">affected</span> <span class="identifier">by</span> <span class="identifier">parameters</span> <span class="identifier">evaluation</span> <span class="identifier">order</span>
+</pre>
+<p>
+                        </p>
+                      </td>
+</tr></tbody>
+</table></div>
+</li>
+</ul></div>
+        </li></ul></div>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<tbody><tr><td>
+              <p>
+                Tests: <a href="../test/vt/compiler_support_vt.cpp" target="_top">test/vt/compiler_support_vt.cpp</a>
+              </p>
+            </td></tr></tbody>
+</table></div>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src=".././doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        GCC/Clang/MSVC/Intel all compilers differ with they way template conversion
+        operator is handled
+      </p></td></tr>
+</table></div>
+<p>
+      That's the main idea, obviously Boost.DI is more complex that that. The latest
+      design is shown below.
+    </p>
+<p>
+      <a href="../images/di.png" target="_top"><span class="inlinemediaobject"><img src="../images/di.png" width="75%" alt="di"></span></a> Generated with <a href="http://plantuml.sourceforge.net" target="_top">PlantUML</a>.
+    </p>
+<p>
+      During implementation of Boost.DI a lot of concepts were checked and a many
+      approaches were taken. To track different design's please refer to commits
+      history.
+    </p>
+<p>
+      Boost.DI architecture might be split into few main parts
+    </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Component
+              </p>
+            </th>
+<th>
+              <p>
+                Description
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                Core
+              </p>
+            </td>
+<td>
+              <p>
+                Responsible for resolving requested types (implementation detail)
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                Concepts
+              </p>
+            </td>
+<td>
+              <p>
+                DSL to create dependencies representation which will be used by core
+                to resolve types
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                Scopes
+              </p>
+            </td>
+<td>
+              <p>
+                Responsible for maintain objects life time
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                Wrappers
+              </p>
+            </td>
+<td>
+              <p>
+                Responsible for conversion to required type
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                Policies
+              </p>
+            </td>
+<td>
+              <p>
+                Compile time assertions for types
+              </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+<h6>
+<a name="boost_di__dependency_injection_.design_rationale.h0"></a>
+      <span class="phrase"><a name="boost_di__dependency_injection_.design_rationale.constructor_parameters_deduction"></a></span><a class="link" href="design_rationale.html#boost_di__dependency_injection_.design_rationale.constructor_parameters_deduction">Constructor
+      Parameters Deduction</a>
+    </h6>
+<div class="orderedlist"><ol class="orderedlist" type="1">
+<li class="listitem">
+          for type T
+          <div class="orderedlist"><ol class="orderedlist" type="a">
+<li class="listitem">
+                for N = 1 to <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_CTOR_LIMIT_SIZE</span></code>
+              </li>
+<li class="listitem">
+                if T has constructor with N parameters goto <code class="computeroutput"><span class="identifier">a</span></code>
+              </li>
+</ol></div>
+        </li>
+<li class="listitem">
+          generate list of <code class="computeroutput"><span class="identifier">any_type</span></code>
+          with N elements
+        </li>
+</ol></div>
+<h6>
+<a name="boost_di__dependency_injection_.design_rationale.h1"></a>
+      <span class="phrase"><a name="boost_di__dependency_injection_.design_rationale.binding_resolution_algorithm"></a></span><a class="link" href="design_rationale.html#boost_di__dependency_injection_.design_rationale.binding_resolution_algorithm">Binding
+      Resolution Algorithm</a>
+    </h6>
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
+          for type T
+          <div class="orderedlist"><ol class="orderedlist" type="a">
+<li class="listitem">
+                for all dependencies
+              </li>
+<li class="listitem">
+                if scope was set to <code class="computeroutput"><span class="identifier">deduce</span></code>
+                rebind it accordingly to type definition (using <code class="computeroutput"><span class="identifier">scope</span>
+                <span class="identifier">traits</span> <span class="special">-</span>
+                <span class="identifier">see</span> <span class="identifier">deduce</span>
+                <span class="identifier">scope</span></code>)
+              </li>
+</ol></div>
+        </li></ol></div>
+<h6>
+<a name="boost_di__dependency_injection_.design_rationale.h2"></a>
+      <span class="phrase"><a name="boost_di__dependency_injection_.design_rationale.type_creation_algorithm"></a></span><a class="link" href="design_rationale.html#boost_di__dependency_injection_.design_rationale.type_creation_algorithm">Type
+      Creation Algorithm</a>
+    </h6>
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
+          for type T
+          <div class="orderedlist"><ol class="orderedlist" type="a">
+<li class="listitem">
+                for all dependencies
+              </li>
+<li class="listitem">
+                if scope was set to <code class="computeroutput"><span class="identifier">deduce</span></code>
+                rebind it accordingly to type definition (using <code class="computeroutput"><span class="identifier">scope</span>
+                <span class="identifier">traits</span></code>)
+              </li>
+</ol></div>
+        </li></ol></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2014 Krzysztof Jusiak<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="overview.html"><img src=".././doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src=".././doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="tutorial.html"><img src=".././doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,1017 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Examples</title>
+<link rel="stylesheet" href=".././doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.0">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.DI (Dependency Injection) 1.0">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.DI (Dependency Injection) 1.0">
+<link rel="prev" href="testing.html" title="Testing">
+<link rel="next" href="integration_with_boost_libraries.html" title="Integration with Boost libraries">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src=".././boost.png"></td>
+<td align="center"><a href=".././index.html">Home</a></td>
+<td align="center"><a href=".././libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href=".././more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="testing.html"><img src=".././doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src=".././doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="integration_with_boost_libraries.html"><img src=".././doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_di__dependency_injection_.examples"></a><a class="link" href="examples.html" title="Examples">Examples</a>
+</h2></div></div></div>
+<div class="toc"><dl class="toc">
+<dt><span class="section"><a href="examples.html#boost_di__dependency_injection_.examples.hello_world">Hello
+      World</a></span></dt>
+<dt><span class="section"><a href="examples.html#boost_di__dependency_injection_.examples.ctor">Constructor
+      Injection</a></span></dt>
+<dt><span class="section"><a href="examples.html#boost_di__dependency_injection_.examples.binding">Binding</a></span></dt>
+<dt><span class="section"><a href="examples.html#boost_di__dependency_injection_.examples.concepts">Concepts</a></span></dt>
+<dt><span class="section"><a href="examples.html#boost_di__dependency_injection_.examples.modules">Modules</a></span></dt>
+<dt><span class="section"><a href="examples.html#boost_di__dependency_injection_.examples.deduce_scope">Deduce
+      Scope</a></span></dt>
+<dt><span class="section"><a href="examples.html#boost_di__dependency_injection_.examples.custom_scope">Custom
+      Scope</a></span></dt>
+<dt><span class="section"><a href="examples.html#boost_di__dependency_injection_.examples.custom_allocator">Custom
+      Allocator</a></span></dt>
+<dt><span class="section"><a href="examples.html#boost_di__dependency_injection_.examples.custom_policy">Custom
+      Policy</a></span></dt>
+<dt><span class="section"><a href="examples.html#boost_di__dependency_injection_.examples.testing">Testing</a></span></dt>
+<dt><span class="section"><a href="examples.html#boost_di__dependency_injection_.examples.c___generation_visitor">C++
+      Generation Visitor</a></span></dt>
+<dt><span class="section"><a href="examples.html#boost_di__dependency_injection_.examples.uml_visitor">UML
+      Visitor</a></span></dt>
+<dt><span class="section"><a href="examples.html#boost_di__dependency_injection_.examples.more_examples">More
+      Examples</a></span></dt>
+</dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_di__dependency_injection_.examples.hello_world"></a><a class="link" href="examples.html#boost_di__dependency_injection_.examples.hello_world" title="Hello World">Hello
+      World</a>
+</h3></div></div></div>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">C</span><span class="special">++</span><span class="number">98</span><span class="special">/</span><span class="number">03</span><span class="special">/</span><span class="number">11</span><span class="special">/</span><span class="number">14</span></pre>
+<p>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
+
+<a class="co" name="boost_di__dependency_injection_.examples.hello_world.c0" href="examples.html#boost_di__dependency_injection_.examples.hello_world.c1"><img src=".././doc/src/images/callouts/1.png" alt="1" border="0"></a>
+<span class="keyword">struct</span> <span class="identifier">hello</span> <span class="special">{</span>
+    <span class="identifier">hello</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;&amp;</span> <span class="identifier">sp</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">ap</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">()&gt;&amp;</span> <span class="identifier">f</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">sp</span><span class="special">(</span><span class="identifier">sp</span><span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">assert</span><span class="special">(*</span><span class="identifier">sp</span> <span class="special">==</span> <span class="number">0.0</span><span class="special">);</span> <span class="comment">// value initialized with 0</span>
+        <span class="identifier">assert</span><span class="special">(*</span><span class="identifier">ap</span> <span class="special">==</span> <span class="number">0</span><span class="special">);</span> <span class="comment">// value initialized with 0</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">f</span><span class="special">.</span><span class="identifier">empty</span><span class="special">());</span> <span class="comment">// empty function</span>
+    <span class="special">}</span>
+
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">sp</span><span class="special">;</span>
+<span class="special">};</span>
+
+<a class="co" name="boost_di__dependency_injection_.examples.hello_world.c2" href="examples.html#boost_di__dependency_injection_.examples.hello_world.c3"><img src=".././doc/src/images/callouts/2.png" alt="2" border="0"></a>
+<span class="keyword">struct</span> <span class="identifier">world</span> <span class="special">{</span>
+    <span class="identifier">world</span><span class="special">(</span><span class="identifier">hello</span> <span class="identifier">copy</span>
+        <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">sp</span>
+        <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">str</span>
+        <span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">copy</span><span class="special">.</span><span class="identifier">sp</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">sp</span><span class="special">.</span><span class="identifier">get</span><span class="special">());</span> <span class="comment">// the same shared_ptr (scope deduction)</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">str</span> <span class="special">==</span> <span class="string">""</span><span class="special">);</span> <span class="comment">// value initialized with empty string</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i</span> <span class="special">==</span> <span class="number">0</span><span class="special">);</span> <span class="comment">// value initialized with 0</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<a class="co" name="boost_di__dependency_injection_.examples.hello_world.c4" href="examples.html#boost_di__dependency_injection_.examples.hello_world.c5"><img src=".././doc/src/images/callouts/3.png" alt="3" border="0"></a>
+<span class="keyword">struct</span> <span class="identifier">app</span> <span class="special">{</span>
+    <span class="identifier">app</span><span class="special">(</span><span class="identifier">hello</span><span class="special">,</span> <span class="identifier">world</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <a class="co" name="boost_di__dependency_injection_.examples.hello_world.c6" href="examples.html#boost_di__dependency_injection_.examples.hello_world.c7"><img src=".././doc/src/images/callouts/4.png" alt="4" border="0"></a><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;();</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<div class="calloutlist"><table border="0" summary="Callout list">
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_di__dependency_injection_.examples.hello_world.c1"></a><a href="#boost_di__dependency_injection_.examples.hello_world.c0"><img src=".././doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+            define <code class="computeroutput"><span class="identifier">hello</span></code> class as
+            usual
+          </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_di__dependency_injection_.examples.hello_world.c3"></a><a href="#boost_di__dependency_injection_.examples.hello_world.c2"><img src=".././doc/src/images/callouts/2.png" alt="2" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+            define <code class="computeroutput"><span class="identifier">world</span></code> class as
+            usual
+          </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_di__dependency_injection_.examples.hello_world.c5"></a><a href="#boost_di__dependency_injection_.examples.hello_world.c4"><img src=".././doc/src/images/callouts/3.png" alt="3" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+            define <code class="computeroutput"><span class="identifier">app</span></code> class as usual
+          </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_di__dependency_injection_.examples.hello_world.c7"></a><a href="#boost_di__dependency_injection_.examples.hello_world.c6"><img src=".././doc/src/images/callouts/4.png" alt="4" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+            make injector with empty configuration and create <code class="computeroutput"><span class="identifier">app</span></code>
+          </p></td>
+</tr>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<tbody><tr><td>
+                <p>
+                  Full code example: <a href="../example/hello_world.cpp" target="_top">example/hello_world.cpp</a>
+                </p>
+              </td></tr></tbody>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_di__dependency_injection_.examples.ctor"></a><a class="link" href="examples.html#boost_di__dependency_injection_.examples.ctor" title="Constructor Injection">Constructor
+      Injection</a>
+</h3></div></div></div>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">C</span><span class="special">++</span><span class="number">98</span><span class="special">/</span><span class="number">03</span><span class="special">/</span><span class="number">11</span><span class="special">/</span><span class="number">14</span></pre>
+<p>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">name</span> <span class="special">{</span> <span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">c0</span>
+<span class="special">{</span>
+    <span class="identifier">c0</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">i1</span><span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">name</span><span class="special">&gt;</span> <span class="identifier">i2</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i1</span> <span class="special">==</span> <span class="number">0</span><span class="special">);</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i2</span> <span class="special">==</span> <span class="number">42</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">c1</span>
+<span class="special">{</span>
+    <span class="identifier">BOOST_DI_INJECT</span><span class="special">(</span><span class="identifier">c1</span><span class="special">,</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">i1</span><span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">name</span><span class="special">&gt;</span> <span class="identifier">i2</span> <span class="special">=</span> <span class="number">0</span><span class="special">))</span> <span class="special">{</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i1</span> <span class="special">==</span> <span class="number">0</span><span class="special">);</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i2</span> <span class="special">==</span> <span class="number">42</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">c2</span>
+<span class="special">{</span>
+    <span class="identifier">BOOST_DI_INJECT_TRAITS</span><span class="special">((</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">name</span><span class="special">&gt;));</span>
+    <span class="identifier">c2</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">i1</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i2</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i1</span> <span class="special">==</span> <span class="number">0</span><span class="special">);</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i2</span> <span class="special">==</span> <span class="number">42</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">c3</span>
+<span class="special">{</span>
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">BOOST_DI_INJECTOR</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">name</span><span class="special">&gt;);</span>
+    <span class="identifier">c3</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">i1</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i2</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i1</span> <span class="special">==</span> <span class="number">0</span><span class="special">);</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i2</span> <span class="special">==</span> <span class="number">42</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">c4</span>
+<span class="special">{</span>
+    <span class="identifier">c4</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">i1</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i2</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i1</span> <span class="special">==</span> <span class="number">0</span><span class="special">);</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i2</span> <span class="special">==</span> <span class="number">42</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">{</span>
+
+<span class="keyword">template</span><span class="special">&lt;&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">ctor_traits</span><span class="special">&lt;</span><span class="identifier">c4</span><span class="special">&gt;</span>
+<span class="special">{</span>
+    <span class="identifier">BOOST_DI_INJECT_TRAITS</span><span class="special">((</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">name</span><span class="special">&gt;));</span>
+<span class="special">};</span>
+
+<span class="special">}</span> <span class="comment">// namespace di</span>
+<span class="special">}</span> <span class="comment">// namespace boost</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span>
+        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind_int</span><span class="special">&lt;</span><span class="number">42</span><span class="special">&gt;::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">name</span><span class="special">&gt;</span>
+    <span class="special">&gt;</span> <span class="identifier">injector</span><span class="special">;</span>
+
+    <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">c0</span><span class="special">&gt;();</span>
+    <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">&gt;();</span>
+    <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">c2</span><span class="special">&gt;();</span>
+    <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">c3</span><span class="special">&gt;();</span>
+    <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">c4</span><span class="special">&gt;();</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_di__dependency_injection_.examples.binding"></a><a class="link" href="examples.html#boost_di__dependency_injection_.examples.binding" title="Binding">Binding</a>
+</h3></div></div></div>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">C</span><span class="special">++</span><span class="number">11</span></pre>
+<p>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">i</span> <span class="special">{</span> <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">i</span><span class="special">()</span> <span class="special">{</span> <span class="special">}</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">impl</span> <span class="special">:</span> <span class="identifier">i</span> <span class="special">{</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">some_name</span> <span class="special">{</span> <span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">service</span> <span class="special">{</span>
+    <span class="identifier">service</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">&gt;&amp;</span> <span class="identifier">sp</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">d</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">up</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">()&gt;</span> <span class="identifier">f</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">sp</span><span class="special">(</span><span class="identifier">sp</span><span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl</span><span class="special">*&gt;(</span><span class="identifier">sp</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">d</span> <span class="special">==</span> <span class="number">0.0</span><span class="special">);</span> <span class="comment">// default zero initialization</span>
+        <span class="identifier">assert</span><span class="special">(*</span><span class="identifier">up</span> <span class="special">==</span> <span class="number">42</span><span class="special">);</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">f</span><span class="special">()</span> <span class="special">==</span> <span class="number">87</span><span class="special">);</span>
+    <span class="special">}</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">&gt;</span> <span class="identifier">sp</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">app</span> <span class="special">{</span>
+    <span class="identifier">app</span><span class="special">(</span><span class="identifier">service</span> <span class="identifier">copy</span>
+        <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">&gt;</span> <span class="identifier">sp</span>
+        <span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i</span>
+        <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;,</span> <span class="identifier">some_name</span><span class="special">&gt;</span> <span class="identifier">s</span>
+        <span class="special">,</span> <span class="keyword">float</span><span class="special">&amp;</span> <span class="identifier">f</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">str</span><span class="special">(</span><span class="identifier">s</span><span class="special">),</span> <span class="identifier">f</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl</span><span class="special">*&gt;(</span><span class="identifier">sp</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">copy</span><span class="special">.</span><span class="identifier">sp</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">sp</span><span class="special">.</span><span class="identifier">get</span><span class="special">());</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i</span> <span class="special">==</span> <span class="number">42</span><span class="special">);</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">str</span> <span class="special">==</span> <span class="string">"some_name"</span><span class="special">);</span>
+    <span class="special">}</span>
+
+    <span class="identifier">app</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="keyword">const</span> <span class="identifier">app</span><span class="special">&amp;);</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">str</span><span class="special">;</span>
+    <span class="keyword">float</span><span class="special">&amp;</span> <span class="identifier">f</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">float</span> <span class="identifier">f</span> <span class="special">=</span> <span class="number">0.f</span><span class="special">;</span>
+
+    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">,</span> <span class="identifier">impl</span><span class="special">&gt;()</span>
+      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind_int</span><span class="special">&lt;</span><span class="number">42</span><span class="special">&gt;()</span>
+      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">some_name</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="string">"some_name"</span><span class="special">)</span>
+      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">float</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span><span class="identifier">f</span><span class="special">))</span>
+      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">()&gt;&gt;::</span><span class="identifier">to</span><span class="special">([]{</span><span class="keyword">return</span> <span class="number">87</span><span class="special">;})</span>
+    <span class="special">);</span>
+
+    <span class="keyword">auto</span> <span class="identifier">service_app</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;();</span>
+
+    <span class="identifier">service_app</span><span class="special">.</span><span class="identifier">f</span> <span class="special">=</span> <span class="number">42.f</span><span class="special">;</span>
+    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">f</span> <span class="special">==</span> <span class="number">42.f</span><span class="special">);</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_di__dependency_injection_.examples.concepts"></a><a class="link" href="examples.html#boost_di__dependency_injection_.examples.concepts" title="Concepts">Concepts</a>
+</h3></div></div></div>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">C</span><span class="special">++</span><span class="number">11</span></pre>
+<p>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">di</span>  <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">name1</span> <span class="special">{</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">name2</span> <span class="special">{</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">name3</span> <span class="special">{</span> <span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">i</span> <span class="special">{</span> <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">i</span><span class="special">()</span> <span class="special">{</span> <span class="special">};</span> <span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">impl</span> <span class="special">:</span> <span class="identifier">i</span> <span class="special">{</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">impl1</span> <span class="special">:</span> <span class="identifier">i</span> <span class="special">{</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">impl2</span> <span class="special">:</span> <span class="identifier">i</span> <span class="special">{</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">impl3</span> <span class="special">:</span> <span class="identifier">i</span> <span class="special">{</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">impl4</span> <span class="special">:</span> <span class="identifier">i</span> <span class="special">{</span> <span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">c0</span> <span class="special">{</span> <span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">c1</span> <span class="special">{</span> <span class="identifier">c1</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">,</span> <span class="identifier">name1</span><span class="special">&gt;)</span> <span class="special">{</span> <span class="special">}</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">c2</span> <span class="special">{</span> <span class="identifier">c2</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">,</span> <span class="identifier">name1</span><span class="special">&gt;,</span> <span class="identifier">c1</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">c3</span>
+<span class="special">{</span>
+    <span class="identifier">c3</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span>
+     <span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">&gt;</span>
+     <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">&gt;,</span> <span class="identifier">name2</span><span class="special">&gt;&amp;</span>
+    <span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+<span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">c4</span> <span class="special">{</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">c5</span> <span class="special">{</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">c6</span> <span class="special">{</span> <span class="identifier">c6</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">&gt;)</span> <span class="special">{</span> <span class="special">}</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">c7</span> <span class="special">{</span> <span class="identifier">c7</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">&gt;,</span> <span class="identifier">name3</span><span class="special">&gt;)</span> <span class="special">{</span> <span class="special">}</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">c8</span> <span class="special">{</span> <span class="identifier">c8</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">&gt;,</span> <span class="identifier">c7</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">c9</span> <span class="special">{</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">c10</span> <span class="special">{</span> <span class="identifier">c10</span><span class="special">(</span><span class="identifier">c9</span><span class="special">,</span> <span class="identifier">c8</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">c11</span> <span class="special">{</span> <span class="identifier">c11</span><span class="special">(</span><span class="identifier">c9</span><span class="special">,</span> <span class="identifier">c10</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">c12</span> <span class="special">{</span> <span class="identifier">c12</span><span class="special">(</span><span class="identifier">c9</span><span class="special">,</span> <span class="identifier">c11</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">c13</span> <span class="special">{</span> <span class="identifier">c13</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">c12</span><span class="special">&gt;)</span> <span class="special">{</span> <span class="special">}</span> <span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">using</span> <span class="identifier">injector_t</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span>
+        <span class="identifier">c0</span>
+      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind_int</span><span class="special">&lt;</span><span class="number">42</span><span class="special">&gt;::</span><span class="identifier">when</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">&gt;&gt;</span>
+      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind_string</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">string</span><span class="special">&lt;</span><span class="char">'s'</span><span class="special">&gt;&gt;</span>
+      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">shared</span><span class="special">&lt;</span>
+            <span class="identifier">c1</span>
+        <span class="special">&gt;</span>
+      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">shared</span><span class="special">&lt;</span>
+            <span class="identifier">c3</span><span class="special">,</span> <span class="identifier">c4</span>
+        <span class="special">&gt;</span>
+      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">unique</span><span class="special">&lt;</span>
+            <span class="identifier">impl</span>
+          <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">,</span> <span class="identifier">impl1</span><span class="special">&gt;</span>
+          <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">,</span> <span class="identifier">impl2</span><span class="special">&gt;::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">name2</span><span class="special">&gt;</span>
+          <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">,</span> <span class="identifier">impl3</span><span class="special">&gt;::</span><span class="identifier">when</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c6</span><span class="special">&gt;&gt;</span>
+          <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">,</span> <span class="identifier">impl4</span><span class="special">&gt;::</span><span class="identifier">when</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c8</span><span class="special">,</span> <span class="identifier">c7</span><span class="special">&gt;&gt;::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">name3</span><span class="special">&gt;</span>
+        <span class="special">&gt;</span>
+      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">shared</span><span class="special">&lt;</span>
+            <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">c9</span><span class="special">&gt;::</span><span class="identifier">when</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c10</span><span class="special">&gt;,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c11</span><span class="special">&gt;,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c13</span><span class="special">,</span> <span class="identifier">c12</span><span class="special">&gt;&gt;</span>
+        <span class="special">&gt;</span>
+    <span class="special">&gt;;</span>
+
+    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+        <span class="identifier">injector_t</span><span class="special">()</span>
+      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">unique</span><span class="special">&lt;</span><span class="identifier">c5</span><span class="special">&gt;()</span>
+      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
+      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42.0</span><span class="special">)</span>
+      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;::</span><span class="identifier">when</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">&gt;,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c2</span><span class="special">&gt;&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">87.0</span><span class="special">)</span>
+    <span class="special">);</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<tbody><tr><td>
+                <p>
+                  Full code example: <a href="../example/cpp_11/concepts.cpp" target="_top">concepts.cpp</a>
+                </p>
+              </td></tr></tbody>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_di__dependency_injection_.examples.modules"></a><a class="link" href="examples.html#boost_di__dependency_injection_.examples.modules" title="Modules">Modules</a>
+</h3></div></div></div>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">C</span><span class="special">++</span><span class="number">14</span></pre>
+<p>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">i</span> <span class="special">{</span> <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">i</span><span class="special">()</span> <span class="special">{</span> <span class="special">}</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">impl</span> <span class="special">:</span> <span class="identifier">i</span> <span class="special">{</span> <span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">app</span> <span class="special">{</span>
+    <span class="identifier">app</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">&gt;</span> <span class="identifier">up</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl</span><span class="special">*&gt;(</span><span class="identifier">up</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i</span> <span class="special">==</span> <span class="number">42</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">class</span> <span class="identifier">module1</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+            <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">,</span> <span class="identifier">impl</span><span class="special">&gt;()</span>
+        <span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">class</span> <span class="identifier">module2</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">explicit</span> <span class="identifier">module2</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">i_</span><span class="special">(</span><span class="identifier">i</span><span class="special">)</span>
+    <span class="special">{</span> <span class="special">}</span>
+
+    <span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+            <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">i_</span><span class="special">)</span>
+        <span class="special">);</span>
+    <span class="special">}</span>
+
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="keyword">int</span> <span class="identifier">i_</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">42</span><span class="special">;</span>
+
+    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">module1</span><span class="special">(),</span> <span class="identifier">module2</span><span class="special">(</span><span class="identifier">i</span><span class="special">));</span>
+    <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;();</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<tbody><tr><td>
+                <p>
+                  Full code example: <a href="../example/cpp_14/modules.cpp" target="_top">modules.cpp</a>
+                </p>
+              </td></tr></tbody>
+</table></div>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">C</span><span class="special">++</span><span class="number">98</span><span class="special">/</span><span class="number">03</span></pre>
+<p>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">i</span> <span class="special">{</span> <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">i</span><span class="special">()</span> <span class="special">{</span> <span class="special">}</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">impl</span> <span class="special">:</span> <span class="identifier">i</span> <span class="special">{</span> <span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">app</span> <span class="special">{</span>
+    <span class="identifier">app</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">&gt;</span> <span class="identifier">ap</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl</span><span class="special">*&gt;(</span><span class="identifier">ap</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i</span> <span class="special">==</span> <span class="number">42</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">class</span> <span class="identifier">module1</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span>
+        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">,</span> <span class="identifier">impl</span><span class="special">&gt;</span>
+    <span class="special">&gt;</span> <span class="identifier">injector_t</span><span class="special">;</span>
+
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">injector_t</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">injector_t</span><span class="special">();</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">class</span> <span class="identifier">module2</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span>
+        <span class="identifier">BOOST_TYPEOF</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="keyword">int</span><span class="special">()))</span>
+    <span class="special">&gt;</span> <span class="identifier">injector_t</span><span class="special">;</span>
+
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">explicit</span> <span class="identifier">module2</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">i_</span><span class="special">(</span><span class="identifier">i</span><span class="special">)</span>
+    <span class="special">{</span> <span class="special">}</span>
+
+    <span class="identifier">injector_t</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">injector_t</span><span class="special">(</span>
+            <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">i_</span><span class="special">)</span>
+        <span class="special">);</span>
+    <span class="special">}</span>
+
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="keyword">int</span> <span class="identifier">i_</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">42</span><span class="special">;</span>
+
+    <span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">injector</span><span class="special">,</span> <span class="special">(</span>
+        <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">module1</span><span class="special">(),</span> <span class="identifier">module2</span><span class="special">(</span><span class="identifier">i</span><span class="special">))</span>
+    <span class="special">));</span>
+
+    <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;();</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<tbody><tr><td>
+                <p>
+                  Full code example: <a href="../example/cpp_03/modules.cpp" target="_top">modules.cpp</a>
+                </p>
+              </td></tr></tbody>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_di__dependency_injection_.examples.deduce_scope"></a><a class="link" href="examples.html#boost_di__dependency_injection_.examples.deduce_scope" title="Deduce Scope">Deduce
+      Scope</a>
+</h3></div></div></div>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">C</span><span class="special">++</span><span class="number">11</span></pre>
+<p>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">i</span> <span class="special">{</span> <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">i</span><span class="special">()</span> <span class="special">{</span> <span class="special">}</span> <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">dummy</span><span class="special">()</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">impl</span> <span class="special">:</span> <span class="identifier">i</span> <span class="special">{</span> <span class="keyword">void</span> <span class="identifier">dummy</span><span class="special">()</span> <span class="identifier">override</span> <span class="special">{</span> <span class="special">}</span> <span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">c2</span> <span class="special">{</span>
+    <span class="identifier">c2</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">&gt;</span> <span class="identifier">spi</span> <span class="comment">/*shared*/</span>
+     <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">&gt;&amp;</span> <span class="identifier">spi_</span> <span class="comment">/*shared*/</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">spi_</span><span class="special">(</span><span class="identifier">spi</span><span class="special">),</span> <span class="identifier">spi__</span><span class="special">(</span><span class="identifier">spi_</span><span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">spi</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">spi_</span><span class="special">.</span><span class="identifier">get</span><span class="special">());</span>
+    <span class="special">}</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">&gt;</span> <span class="identifier">spi_</span><span class="special">;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">&gt;</span> <span class="identifier">spi__</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">c3</span> <span class="special">{</span>
+    <span class="identifier">c3</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">&gt;</span> <span class="identifier">spi</span><span class="comment">/*shared*/</span>
+     <span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="comment">/*unique*/</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">spi_</span><span class="special">(</span><span class="identifier">spi</span><span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i</span> <span class="special">==</span> <span class="number">0</span><span class="special">);</span>
+    <span class="special">}</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">&gt;</span> <span class="identifier">spi_</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">c4</span> <span class="special">{</span>
+    <span class="identifier">c4</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">c2</span><span class="special">&gt;</span> <span class="identifier">c2_</span> <span class="comment">/*unique*/</span>
+     <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">c3</span><span class="special">&amp;</span> <span class="identifier">c3_</span> <span class="comment">/*unique temporary*/</span><span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">c3_</span><span class="special">.</span><span class="identifier">spi_</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">c2_</span><span class="special">-&gt;</span><span class="identifier">spi_</span><span class="special">.</span><span class="identifier">get</span><span class="special">());</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">c3_</span><span class="special">.</span><span class="identifier">spi_</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">c2_</span><span class="special">-&gt;</span><span class="identifier">spi__</span><span class="special">.</span><span class="identifier">get</span><span class="special">());</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="special">{</span>
+        <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+            <span class="identifier">di</span><span class="special">::</span><span class="identifier">deduce</span><span class="special">&lt;</span><span class="identifier">impl</span><span class="special">&gt;()</span>
+        <span class="special">);</span>
+
+        <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">c4</span><span class="special">&gt;();</span>
+    <span class="special">}</span>
+
+    <span class="special">{</span>
+        <span class="keyword">using</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span>
+            <span class="identifier">impl</span>
+        <span class="special">&gt;;</span>
+
+        <span class="identifier">injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">c4</span><span class="special">&gt;();</span>
+    <span class="special">}</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+</div>
+<div class="section"><div class="titlepage"><div><div><h3 class="title">
+<a name="boost_di__dependency_injection_.examples.custom_scope"></a><a class="link" href="examples.html#boost_di__dependency_injection_.examples.custom_scope" title="Custom Scope">Custom
+      Scope</a>
+</h3></div></div></div></div>
+<div class="section"><div class="titlepage"><div><div><h3 class="title">
+<a name="boost_di__dependency_injection_.examples.custom_allocator"></a><a class="link" href="examples.html#boost_di__dependency_injection_.examples.custom_allocator" title="Custom Allocator">Custom
+      Allocator</a>
+</h3></div></div></div></div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_di__dependency_injection_.examples.custom_policy"></a><a class="link" href="examples.html#boost_di__dependency_injection_.examples.custom_policy" title="Custom Policy">Custom
+      Policy</a>
+</h3></div></div></div>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">C</span><span class="special">++</span><span class="number">11</span></pre>
+<p>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">di</span>  <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
+    <span class="identifier">example</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;)</span> <span class="special">{</span> <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">class</span> <span class="identifier">allow_only_smart_ptr_policy</span>
+<span class="special">{</span>
+    <span class="identifier">BOOST_MPL_HAS_XXX_TRAIT_DEF</span><span class="special">(</span><span class="identifier">element_type</span><span class="special">)</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">is_creation_by_smart_ptr</span>
+        <span class="special">:</span> <span class="identifier">has_element_type</span><span class="special">&lt;</span>
+              <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">remove_reference</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">::</span><span class="identifier">type</span><span class="special">&gt;::</span><span class="identifier">type</span>
+          <span class="special">&gt;</span>
+    <span class="special">{</span> <span class="special">};</span>
+
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
+    <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">enable_if</span><span class="special">&lt;</span><span class="identifier">is_creation_by_smart_ptr</span><span class="special">&lt;</span><span class="identifier">TDependency</span><span class="special">&gt;&gt;::</span><span class="identifier">type</span>
+    <span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span> <span class="special">}</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
+    <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">disable_if</span><span class="special">&lt;</span><span class="identifier">is_creation_by_smart_ptr</span><span class="special">&lt;</span><span class="identifier">TDependency</span><span class="special">&gt;&gt;::</span><span class="identifier">type</span>
+    <span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="identifier">BOOST_MPL_ASSERT_MSG</span><span class="special">(</span>
+            <span class="keyword">false</span>
+          <span class="special">,</span> <span class="identifier">CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED</span>
+          <span class="special">,</span> <span class="special">(</span><span class="identifier">TDependency</span><span class="special">)</span>
+        <span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;&gt;(</span><span class="identifier">allow_only_smart_ptr_policy</span><span class="special">());</span>
+    <span class="comment">//di::make_injector().create&lt;example&gt;(allow_only_smart_ptr_policy()); // compile error (CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED)</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_di__dependency_injection_.examples.testing"></a><a class="link" href="examples.html#boost_di__dependency_injection_.examples.testing" title="Testing">Testing</a>
+</h3></div></div></div>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">C</span><span class="special">++</span><span class="number">11</span></pre>
+<p>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
+
+<span class="keyword">namespace</span> <span class="special">{</span>
+
+<span class="keyword">struct</span> <span class="identifier">i</span> <span class="special">{</span> <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">i</span><span class="special">()</span> <span class="special">{</span> <span class="special">}</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">impl</span> <span class="special">:</span> <span class="identifier">i</span> <span class="special">{</span> <span class="special">};</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Config</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">app</span>
+<span class="special">{</span>
+    <span class="identifier">app</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">&gt;)</span> <span class="special">{</span> <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">using</span> <span class="identifier">injector_t</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">impl</span><span class="special">&gt;;</span>
+
+<span class="special">}</span> <span class="comment">// namespace</span>
+
+<span class="keyword">namespace</span> <span class="identifier">ut</span> <span class="special">{</span>
+
+<span class="keyword">struct</span> <span class="identifier">fake</span> <span class="special">:</span> <span class="identifier">i</span> <span class="special">{</span> <span class="special">};</span>
+
+<span class="keyword">using</span> <span class="identifier">injector_t</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">fake</span><span class="special">&gt;;</span>
+
+<span class="special">}</span> <span class="comment">// namespace ut</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;&gt;</span> <span class="identifier">injector</span><span class="special">;</span>
+
+    <span class="comment">//code</span>
+    <span class="special">{</span>
+        <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&lt;</span><span class="identifier">injector_t</span><span class="special">&gt;&gt;();</span>
+    <span class="special">}</span>
+
+    <span class="comment">//test</span>
+    <span class="special">{</span>
+        <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&lt;</span><span class="identifier">ut</span><span class="special">::</span><span class="identifier">injector_t</span><span class="special">&gt;&gt;();</span>
+    <span class="special">}</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_di__dependency_injection_.examples.c___generation_visitor"></a><a class="link" href="examples.html#boost_di__dependency_injection_.examples.c___generation_visitor" title="C++ Generation Visitor">C++
+      Generation Visitor</a>
+</h3></div></div></div>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">C</span><span class="special">++</span><span class="number">98</span><span class="special">/</span><span class="number">03</span><span class="special">/</span><span class="number">11</span><span class="special">/</span><span class="number">14</span></pre>
+<p>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
+
+<a class="co" name="boost_di__dependency_injection_.examples.c___generation_visitor.c0" href="examples.html#boost_di__dependency_injection_.examples.c___generation_visitor.c1"><img src=".././doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="keyword">class</span> <span class="identifier">text_visitor</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <a class="co" name="boost_di__dependency_injection_.examples.c___generation_visitor.c2" href="examples.html#boost_di__dependency_injection_.examples.c___generation_visitor.c3"><img src=".././doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;)</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">int</span> <span class="identifier">size</span> <span class="special">=</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">size</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">::</span><span class="identifier">call_stack</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span>
+        <span class="keyword">while</span><span class="special">(--</span><span class="identifier">size</span><span class="special">)</span> <span class="special">{</span>
+            <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\t"</span><span class="special">;</span>
+        <span class="special">}</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">utils</span><span class="special">::</span><span class="identifier">demangle</span><span class="special">(</span><span class="keyword">typeid</span><span class="special">(</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">::</span><span class="identifier">type</span><span class="special">).</span><span class="identifier">name</span><span class="special">())</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <a class="co" name="boost_di__dependency_injection_.examples.c___generation_visitor.c4" href="examples.html#boost_di__dependency_injection_.examples.c___generation_visitor.c5"><img src=".././doc/src/images/callouts/3.png" alt="3" border="0"></a><span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">c0</span><span class="special">&gt;</span> <span class="identifier">injector</span><span class="special">;</span> <span class="comment">// or auto injector = di::make_injector&lt;di::deduce&lt;c0&gt;&gt;();</span>
+
+    <a class="co" name="boost_di__dependency_injection_.examples.c___generation_visitor.c6" href="examples.html#boost_di__dependency_injection_.examples.c___generation_visitor.c7"><img src=".././doc/src/images/callouts/4.png" alt="4" border="0"></a><span class="identifier">injector</span><span class="special">.</span><span class="identifier">visit</span><span class="special">&lt;</span><span class="identifier">c3</span><span class="special">&gt;(</span><span class="identifier">text_visitor</span><span class="special">());</span>
+
+    <a class="co" name="boost_di__dependency_injection_.examples.c___generation_visitor.c8" href="examples.html#boost_di__dependency_injection_.examples.c___generation_visitor.c9"><img src=".././doc/src/images/callouts/5.png" alt="5" border="0"></a><span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<div class="calloutlist"><table border="0" summary="Callout list">
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_di__dependency_injection_.examples.c___generation_visitor.c1"></a><a href="#boost_di__dependency_injection_.examples.c___generation_visitor.c0"><img src=".././doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+            Definition of text visitor
+          </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_di__dependency_injection_.examples.c___generation_visitor.c3"></a><a href="#boost_di__dependency_injection_.examples.c___generation_visitor.c2"><img src=".././doc/src/images/callouts/2.png" alt="2" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+            Definition of the visitor call operator requirement
+          </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_di__dependency_injection_.examples.c___generation_visitor.c5"></a><a href="#boost_di__dependency_injection_.examples.c___generation_visitor.c4"><img src=".././doc/src/images/callouts/3.png" alt="3" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+            define injector
+          </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_di__dependency_injection_.examples.c___generation_visitor.c7"></a><a href="#boost_di__dependency_injection_.examples.c___generation_visitor.c6"><img src=".././doc/src/images/callouts/4.png" alt="4" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+            iterate through created objects with <code class="computeroutput"><span class="identifier">text_visitor</span></code>
+          </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_di__dependency_injection_.examples.c___generation_visitor.c9"></a><a href="#boost_di__dependency_injection_.examples.c___generation_visitor.c8"><img src=".././doc/src/images/callouts/5.png" alt="5" border="0"></a> </p></td>
+<td valign="top" align="left">
+<p>
+            output
+          </p>
+<pre class="programlisting">c3
+        boost::shared_ptr&lt;c1&gt;
+            boost::shared_ptr&lt;i0&gt;
+            int
+        boost::shared_ptr&lt;c2&gt;
+            int
+            double
+            char
+    </pre>
+</td>
+</tr>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<tbody><tr><td>
+                <p>
+                  Full code example: <a href="../example/text_visitor.cpp" target="_top">example/text_visitor.cpp</a>
+                </p>
+              </td></tr></tbody>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_di__dependency_injection_.examples.uml_visitor"></a><a class="link" href="examples.html#boost_di__dependency_injection_.examples.uml_visitor" title="UML Visitor">UML
+      Visitor</a>
+</h3></div></div></div>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">C</span><span class="special">++</span><span class="number">98</span><span class="special">/</span><span class="number">03</span><span class="special">/</span><span class="number">11</span><span class="special">/</span><span class="number">14</span></pre>
+<p>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
+
+<span class="comment">/**
+ * http://plantuml.sourceforge.net/objects.html
+ * ./uml_visitor | java -jar plantuml.jar -p &gt; uml_visitor.png
+ */</span>
+<a class="co" name="boost_di__dependency_injection_.examples.uml_visitor.c0" href="examples.html#boost_di__dependency_injection_.examples.uml_visitor.c1"><img src=".././doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="keyword">class</span> <span class="identifier">plant_uml</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">void</span> <span class="identifier">on_begin</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">stringstream</span><span class="special">&amp;</span> <span class="identifier">stream</span><span class="special">)</span> <span class="keyword">const</span>
+    <span class="special">{</span>
+        <span class="identifier">stream</span> <span class="special">&lt;&lt;</span> <span class="string">"@startuml uml_visitor.png"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span>
+
+    <span class="keyword">void</span> <span class="identifier">on_end</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">stringstream</span><span class="special">&amp;</span> <span class="identifier">stream</span><span class="special">)</span> <span class="keyword">const</span>
+    <span class="special">{</span>
+        <span class="identifier">stream</span> <span class="special">&lt;&lt;</span> <span class="string">"@enduml"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">on_call</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">stringstream</span><span class="special">&amp;</span> <span class="identifier">stream</span>
+               <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">TDependency</span><span class="special">&amp;</span> <span class="identifier">from</span>
+               <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">TDependency</span><span class="special">&amp;</span> <span class="identifier">to</span><span class="special">)</span> <span class="keyword">const</span>
+    <span class="special">{</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">to</span><span class="special">.</span><span class="identifier">expected</span> <span class="special">!=</span> <span class="identifier">to</span><span class="special">.</span><span class="identifier">given</span><span class="special">)</span> <span class="special">{</span>
+            <span class="identifier">stream</span> <span class="special">&lt;&lt;</span> <span class="string">"\""</span> <span class="special">&lt;&lt;</span> <span class="identifier">to</span><span class="special">.</span><span class="identifier">expected</span> <span class="special">&lt;&lt;</span> <span class="string">"\" &lt;|-- \""</span> <span class="special">&lt;&lt;</span> <span class="identifier">to</span><span class="special">.</span><span class="identifier">given</span> <span class="special">&lt;&lt;</span> <span class="string">"\""</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+        <span class="special">}</span>
+
+        <span class="identifier">stream</span> <span class="special">&lt;&lt;</span> <span class="string">"\""</span> <span class="special">&lt;&lt;</span> <span class="identifier">from</span><span class="special">.</span><span class="identifier">expected</span> <span class="special">&lt;&lt;</span> <span class="string">"\" .. \""</span> <span class="special">&lt;&lt;</span> <span class="identifier">to</span><span class="special">.</span><span class="identifier">expected</span> <span class="special">&lt;&lt;</span> <span class="string">"\""</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<a class="co" name="boost_di__dependency_injection_.examples.uml_visitor.c2" href="examples.html#boost_di__dependency_injection_.examples.uml_visitor.c3"><img src=".././doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TPolicy</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">uml_visitor</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">TPolicy</span>
+<span class="special">{</span>
+    <span class="keyword">struct</span> <span class="identifier">dependency</span>
+    <span class="special">{</span>
+        <span class="identifier">dependency</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">expected</span>
+                 <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">given</span>
+                 <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">scope</span>
+                 <span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">context_size</span><span class="special">)</span>
+            <span class="special">:</span> <span class="identifier">expected</span><span class="special">(</span><span class="identifier">expected</span><span class="special">)</span>
+            <span class="special">,</span> <span class="identifier">given</span><span class="special">(</span><span class="identifier">given</span><span class="special">)</span>
+            <span class="special">,</span> <span class="identifier">scope</span><span class="special">(</span><span class="identifier">scope</span><span class="special">)</span>
+            <span class="special">,</span> <span class="identifier">context_size</span><span class="special">(</span><span class="identifier">context_size</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">expected</span><span class="special">;</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">given</span><span class="special">;</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">scope</span><span class="special">;</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">context_size</span><span class="special">;</span>
+    <span class="special">};</span>
+
+    <span class="identifier">uml_visitor</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="keyword">const</span> <span class="identifier">uml_visitor</span><span class="special">&amp;);</span>
+
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">explicit</span> <span class="identifier">uml_visitor</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">stringstream</span><span class="special">&amp;</span> <span class="identifier">stream</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">stream_</span><span class="special">(</span><span class="identifier">stream</span><span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">on_begin</span><span class="special">(</span><span class="identifier">stream_</span><span class="special">);</span>
+    <span class="special">}</span>
+
+    <span class="special">~</span><span class="identifier">uml_visitor</span><span class="special">()</span> <span class="special">{</span>
+        <span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">on_end</span><span class="special">(</span><span class="identifier">stream_</span><span class="special">);</span>
+    <span class="special">}</span>
+
+    <a class="co" name="boost_di__dependency_injection_.examples.uml_visitor.c4" href="examples.html#boost_di__dependency_injection_.examples.uml_visitor.c5"><img src=".././doc/src/images/callouts/3.png" alt="3" border="0"></a><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;)</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">call_stack_size</span> <span class="special">=</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">size</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">::</span><span class="identifier">call_stack</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">;</span>
+
+        <span class="keyword">while</span> <span class="special">(!</span><span class="identifier">context_</span><span class="special">.</span><span class="identifier">empty</span><span class="special">()</span> <span class="special">&amp;&amp;</span> <span class="identifier">context_</span><span class="special">.</span><span class="identifier">back</span><span class="special">().</span><span class="identifier">context_size</span> <span class="special">&gt;=</span> <span class="identifier">call_stack_size</span><span class="special">)</span> <span class="special">{</span>
+            <span class="identifier">context_</span><span class="special">.</span><span class="identifier">pop_back</span><span class="special">();</span>
+        <span class="special">}</span>
+
+        <span class="identifier">context_</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span>
+            <span class="identifier">dependency</span><span class="special">(</span>
+                <span class="identifier">utils</span><span class="special">::</span><span class="identifier">demangle</span><span class="special">(</span><span class="keyword">typeid</span><span class="special">(</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">::</span><span class="identifier">dependency</span><span class="special">::</span><span class="identifier">expected</span><span class="special">).</span><span class="identifier">name</span><span class="special">())</span>
+              <span class="special">,</span> <span class="identifier">utils</span><span class="special">::</span><span class="identifier">demangle</span><span class="special">(</span><span class="keyword">typeid</span><span class="special">(</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">::</span><span class="identifier">dependency</span><span class="special">::</span><span class="identifier">given</span><span class="special">).</span><span class="identifier">name</span><span class="special">())</span>
+              <span class="special">,</span> <span class="identifier">utils</span><span class="special">::</span><span class="identifier">demangle</span><span class="special">(</span><span class="keyword">typeid</span><span class="special">(</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">::</span><span class="identifier">dependency</span><span class="special">::</span><span class="identifier">scope</span><span class="special">).</span><span class="identifier">name</span><span class="special">())</span>
+              <span class="special">,</span> <span class="identifier">call_stack_size</span>
+            <span class="special">)</span>
+        <span class="special">);</span>
+
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">context_size</span> <span class="special">=</span> <span class="identifier">context_</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span>
+
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">context_size</span> <span class="special">&gt;</span> <span class="number">1</span> <span class="special">&amp;&amp;</span> <span class="identifier">context_size</span> <span class="special">&gt;</span> <span class="special">(</span><span class="identifier">call_stack_size</span> <span class="special">-</span> <span class="number">2</span><span class="special">))</span> <span class="special">{</span>
+            <span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">on_call</span><span class="special">(</span>
+                <span class="identifier">stream_</span>
+              <span class="special">,</span> <span class="identifier">context_</span><span class="special">[</span><span class="identifier">context_size</span> <span class="special">-</span> <span class="number">2</span><span class="special">]</span>
+              <span class="special">,</span> <span class="identifier">context_</span><span class="special">[</span><span class="identifier">context_size</span> <span class="special">-</span> <span class="number">1</span><span class="special">]</span>
+            <span class="special">);</span>
+        <span class="special">}</span>
+    <span class="special">}</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">stringstream</span><span class="special">&amp;</span> <span class="identifier">stream_</span><span class="special">;</span>
+    <span class="keyword">mutable</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">dependency</span><span class="special">&gt;</span> <span class="identifier">context_</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <a class="co" name="boost_di__dependency_injection_.examples.uml_visitor.c6" href="examples.html#boost_di__dependency_injection_.examples.uml_visitor.c7"><img src=".././doc/src/images/callouts/4.png" alt="4" border="0"></a><span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">c0</span><span class="special">&gt;</span> <span class="identifier">injector</span><span class="special">;</span>
+
+    <a class="co" name="boost_di__dependency_injection_.examples.uml_visitor.c8" href="examples.html#boost_di__dependency_injection_.examples.uml_visitor.c9"><img src=".././doc/src/images/callouts/5.png" alt="5" border="0"></a><span class="identifier">std</span><span class="special">::</span><span class="identifier">stringstream</span> <span class="identifier">stream</span><span class="special">;</span>
+    <span class="identifier">injector</span><span class="special">.</span><span class="identifier">visit</span><span class="special">&lt;</span><span class="identifier">c3</span><span class="special">&gt;(</span><span class="identifier">uml_visitor</span><span class="special">&lt;</span><span class="identifier">plant_uml</span><span class="special">&gt;(</span><span class="identifier">stream</span><span class="special">));</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">stream</span><span class="special">.</span><span class="identifier">str</span><span class="special">();</span>
+
+    <a class="co" name="boost_di__dependency_injection_.examples.uml_visitor.c10" href="examples.html#boost_di__dependency_injection_.examples.uml_visitor.c11"><img src=".././doc/src/images/callouts/6.png" alt="6" border="0"></a><span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<div class="calloutlist"><table border="0" summary="Callout list">
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_di__dependency_injection_.examples.uml_visitor.c1"></a><a href="#boost_di__dependency_injection_.examples.uml_visitor.c0"><img src=".././doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+            define <code class="computeroutput"><span class="identifier">plant_uml</span></code> printer
+          </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_di__dependency_injection_.examples.uml_visitor.c3"></a><a href="#boost_di__dependency_injection_.examples.uml_visitor.c2"><img src=".././doc/src/images/callouts/2.png" alt="2" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+            define <code class="computeroutput"><span class="identifier">uml_visitor</span></code> with
+            policy parameter
+          </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_di__dependency_injection_.examples.uml_visitor.c5"></a><a href="#boost_di__dependency_injection_.examples.uml_visitor.c4"><img src=".././doc/src/images/callouts/3.png" alt="3" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+            Definition of the visitor call operator requirement
+          </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_di__dependency_injection_.examples.uml_visitor.c7"></a><a href="#boost_di__dependency_injection_.examples.uml_visitor.c6"><img src=".././doc/src/images/callouts/4.png" alt="4" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+            define injector
+          </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_di__dependency_injection_.examples.uml_visitor.c9"></a><a href="#boost_di__dependency_injection_.examples.uml_visitor.c8"><img src=".././doc/src/images/callouts/5.png" alt="5" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+            iterate through created objects with <code class="computeroutput"><span class="identifier">uml_visitor</span></code>
+          </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="boost_di__dependency_injection_.examples.uml_visitor.c11"></a><a href="#boost_di__dependency_injection_.examples.uml_visitor.c10"><img src=".././doc/src/images/callouts/6.png" alt="6" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+            output <a href="../images/uml_visitor.png" target="_top"><span class="inlinemediaobject"><img src="../images/uml_visitor.png" width="75%" alt="uml_visitor"></span></a>
+          </p></td>
+</tr>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<tbody><tr><td>
+                <p>
+                  Full code example: <a href="../example/uml_visitor.cpp" target="_top">example/uml_visitor.cpp</a>
+                </p>
+              </td></tr></tbody>
+</table></div>
+</div>
+<div class="section"><div class="titlepage"><div><div><h3 class="title">
+<a name="boost_di__dependency_injection_.examples.more_examples"></a><a class="link" href="examples.html#boost_di__dependency_injection_.examples.more_examples" title="More Examples">More
+      Examples</a>
+</h3></div></div></div></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2014 Krzysztof Jusiak<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="testing.html"><img src=".././doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src=".././doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src=".././doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="integration_with_boost_libraries.html"><img src=".././doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
