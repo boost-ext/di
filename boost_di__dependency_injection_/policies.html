@@ -37,8 +37,8 @@
       Permission</a></span></dt>
 </dl></div>
 <p>
-      Policies are compile time components which operates on dependencies in order
-      to limit allowed behaviour. Policy has to have <code class="computeroutput"><span class="identifier">assert_policy</span></code>
+      Policies are compile time components operates on dependencies in order to limit
+      allowed behaviour. Policy has to have <code class="computeroutput"><span class="identifier">assert_policy</span></code>
       method defined.
     </p>
 <p>
@@ -53,10 +53,16 @@
     </p>
 <p>
       In order for <code class="computeroutput"><span class="identifier">injector</span></code> to verify
-      policies they have to be passed to <code class="computeroutput"><span class="identifier">create</span></code>
-      method call.
+      policies they have to be passed to <code class="computeroutput"><span class="identifier">create</span></code>,
+      <code class="computeroutput"><span class="identifier">allocate</span></code> call.
 </p>
 <pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">policy1</span><span class="special">(),</span> <span class="identifier">policy2</span><span class="special">(),</span> <span class="special">...,</span> <span class="identifier">policyN</span><span class="special">());</span>
+</pre>
+<p>
+    </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">allocate</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">allocator</span><span class="special">(),</span> <span class="identifier">policy1</span><span class="special">(),</span> <span class="identifier">policy2</span><span class="special">(),</span> <span class="special">...,</span> <span class="identifier">policyN</span><span class="special">());</span>
 </pre>
 <p>
     </p>
@@ -64,23 +70,38 @@
 <colgroup><col></colgroup>
 <tbody><tr><td>
               <p>
-                Example policy: <a href="../example.cpp" target="_top">example.cpp</a>
+                Example policy: <a href="../example/cpp_11/custom_policy.cpp" target="_top">example/cpp_11/custom_policy.cpp</a>
               </p>
             </td></tr></tbody>
 </table></div>
 <p>
-      Boost.DI is released with policies which verifies <code class="computeroutput"><span class="identifier">parameter</span>
-      <span class="identifier">permission</span></code>, check for <code class="computeroutput"><span class="identifier">circular</span> <span class="identifier">dependencies</span></code>,
-      assert <code class="computeroutput"><span class="identifier">creation</span> <span class="identifier">ownership</span></code>
-      and allow <code class="computeroutput"><span class="identifier">scope</span> <span class="identifier">permission</span></code>.
+      <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> is released with following policies
     </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          <code class="computeroutput"><span class="identifier">Circular</span> <span class="identifier">Dependencies</span></code>
+          - verify circular dependencies occurrence
+        </li>
+<li class="listitem">
+          <code class="computeroutput"><span class="identifier">Creation</span> <span class="identifier">Ownership</span></code>
+          - verify objection creation permission
+        </li>
+<li class="listitem">
+          <code class="computeroutput"><span class="identifier">Parameters</span> <span class="identifier">Permission</span></code>
+          - verify constructor parameters permission
+        </li>
+<li class="listitem">
+          <code class="computeroutput"><span class="identifier">Scopes</span> <span class="identifier">Permission</span></code>
+          - verify scopes configuration permission
+        </li>
+</ul></div>
 <div class="note"><table border="0" summary="Note">
 <tr>
 <td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src=".././doc/src/images/note.png"></td>
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-        No policies are enabled by default using Boost.DI
+        By Default <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> has no policies enabled.
       </p></td></tr>
 </table></div>
 <div class="section">
@@ -88,15 +109,45 @@
 <a name="boost_di__dependency_injection_.policies.circular_dependencies"></a><a class="link" href="policies.html#boost_di__dependency_injection_.policies.circular_dependencies" title="Circular Dependencies">Circular
       Dependencies</a>
 </h3></div></div></div>
+<h6>
+<a name="boost_di__dependency_injection_.policies.circular_dependencies.h0"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.policies.circular_dependencies.synopsis"></a></span><a class="link" href="policies.html#boost_di__dependency_injection_.policies.circular_dependencies.synopsis">Synopsis</a>
+      </h6>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">circular_dependencies</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+      </p>
+<h6>
+<a name="boost_di__dependency_injection_.policies.circular_dependencies.h1"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.policies.circular_dependencies.description"></a></span><a class="link" href="policies.html#boost_di__dependency_injection_.policies.circular_dependencies.description">Description</a>
+      </h6>
 <p>
         <code class="computeroutput"><span class="identifier">Circular</span> <span class="identifier">Dependencies</span></code>
-        policy verify if constructor parameters aren't overlapping.
+        policy verifies constructor parameters overlapping.
+      </p>
+<h6>
+<a name="boost_di__dependency_injection_.policies.circular_dependencies.h2"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.policies.circular_dependencies.example"></a></span><a class="link" href="policies.html#boost_di__dependency_injection_.policies.circular_dependencies.example">Example</a>
+      </h6>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">circular_dependencies</span><span class="special">());</span> <span class="comment">// compile ok</span>
+</pre>
+<p>
+      </p>
+<p>
 </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">cd2</span><span class="special">;</span>
 <span class="keyword">struct</span> <span class="identifier">cd1</span> <span class="special">{</span> <span class="identifier">cd1</span><span class="special">(</span><span class="identifier">cd2</span><span class="special">*);</span> <span class="special">};</span>
 <span class="keyword">struct</span> <span class="identifier">cd2</span> <span class="special">{</span> <span class="identifier">cd2</span><span class="special">(</span><span class="identifier">cd1</span><span class="special">*);</span> <span class="special">};</span>
 
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">cd1</span><span class="special">&gt;();</span> <span class="comment">// compile error</span>
+<span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">cd1</span><span class="special">&gt;(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">circular_dependencies</span><span class="special">());</span> <span class="comment">// compile error</span>
 </pre>
 <p>
       </p>
@@ -106,9 +157,14 @@
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-          Requires BOOST_DI_CFG_EXAMINE_CALL_STACK to be defined
+          Requires <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_EXAMINE_CALL_STACK</span></code>
+          to be defined.
         </p></td></tr>
 </table></div>
+<h6>
+<a name="boost_di__dependency_injection_.policies.circular_dependencies.h3"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.policies.circular_dependencies.usage"></a></span><a class="link" href="policies.html#boost_di__dependency_injection_.policies.circular_dependencies.usage">Usage</a>
+      </h6>
 <div class="informaltable"><table class="table">
 <colgroup><col></colgroup>
 <tbody><tr><td>
@@ -123,17 +179,65 @@
 <a name="boost_di__dependency_injection_.policies.creation_ownership"></a><a class="link" href="policies.html#boost_di__dependency_injection_.policies.creation_ownership" title="Creation Ownership">Creation
       Ownership</a>
 </h3></div></div></div>
+<h6>
+<a name="boost_di__dependency_injection_.policies.creation_ownership.h0"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.policies.creation_ownership.synopsis"></a></span><a class="link" href="policies.html#boost_di__dependency_injection_.policies.creation_ownership.synopsis">Synopsis</a>
+      </h6>
 <p>
-        <code class="computeroutput"><span class="identifier">Creation</span> <span class="identifier">Ownership</span></code>
-        policy limit creation types to copies/pointers/smart pointers and disallow
-        references.
 </p>
-<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;&gt;();</span> <span class="comment">// compile error</span>
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&amp;&gt;();</span> <span class="comment">// compile error</span>
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;();</span> <span class="comment">// compile ok</span>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">creation_ownership</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
 </pre>
 <p>
       </p>
+<h6>
+<a name="boost_di__dependency_injection_.policies.creation_ownership.h1"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.policies.creation_ownership.description"></a></span><a class="link" href="policies.html#boost_di__dependency_injection_.policies.creation_ownership.description">Description</a>
+      </h6>
+<p>
+        <code class="computeroutput"><span class="identifier">Creation</span> <span class="identifier">Ownership</span></code>
+        policy limits creation types to copies/pointers/smart pointers and disallow
+        references.
+      </p>
+<h6>
+<a name="boost_di__dependency_injection_.policies.creation_ownership.h2"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.policies.creation_ownership.example"></a></span><a class="link" href="policies.html#boost_di__dependency_injection_.policies.creation_ownership.example">Example</a>
+      </h6>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">creation_ownership</span><span class="special">());</span> <span class="comment">// compile ok</span>
+</pre>
+<p>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;&gt;(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">creation_ownership</span><span class="special">());</span> <span class="comment">// compile error</span>
+</pre>
+<p>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&amp;&gt;(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">creation_ownership</span><span class="special">());</span> <span class="comment">// compile error</span>
+</pre>
+<p>
+      </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src=".././doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          Requires <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_EXAMINE_CALL_STACK</span></code>
+          to be defined.
+        </p></td></tr>
+</table></div>
+<h6>
+<a name="boost_di__dependency_injection_.policies.creation_ownership.h3"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.policies.creation_ownership.usage"></a></span><a class="link" href="policies.html#boost_di__dependency_injection_.policies.creation_ownership.usage">Usage</a>
+      </h6>
 <div class="informaltable"><table class="table">
 <colgroup><col></colgroup>
 <tbody><tr><td>
@@ -142,60 +246,97 @@
                 </p>
               </td></tr></tbody>
 </table></div>
-<div class="warning"><table border="0" summary="Warning">
-<tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src=".././doc/src/images/warning.png"></td>
-<th align="left">Warning</th>
-</tr>
-<tr><td align="left" valign="top"><p>
-          Creation Ownership Policy requires <code class="computeroutput"><span class="identifier">EXAMINE_CALL_STACK</span></code>
-          being defined
-        </p></td></tr>
-</table></div>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_di__dependency_injection_.policies.parameters_permission"></a><a class="link" href="policies.html#boost_di__dependency_injection_.policies.parameters_permission" title="Parameters Permission">Parameters
       Permission</a>
 </h3></div></div></div>
+<h6>
+<a name="boost_di__dependency_injection_.policies.parameters_permission.h0"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.policies.parameters_permission.synopsis"></a></span><a class="link" href="policies.html#boost_di__dependency_injection_.policies.parameters_permission.synopsis">Synopsis</a>
+      </h6>
 <p>
-        By default no parameters are allowed.
-      </p>
-<p>
-        Synopsis
 </p>
-<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">parameter_permission</span><span class="special">&lt;</span><span class="identifier">Allowances</span><span class="special">...&gt;</span>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">allow_smart_ptrs</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">allow_refs</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">allow_const_refs</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">allow_rvalue_refs</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">allow_ptrs</span><span class="special">;</span>
+<span class="keyword">struct</span> <span class="identifier">allow_copies</span><span class="special">;</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">parameters_permission</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
 </pre>
 <p>
       </p>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem">
-            allow_smart_ptrs
-          </li>
-<li class="listitem">
-            allow_copies
-          </li>
-<li class="listitem">
-            allow_refs
-          </li>
-<li class="listitem">
-            allow_const_refs
-          </li>
-<li class="listitem">
-            allow_rvalue_refs
-          </li>
-<li class="listitem">
-            allow_ptrs
-          </li>
-</ul></div>
+<h6>
+<a name="boost_di__dependency_injection_.policies.parameters_permission.h1"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.policies.parameters_permission.description"></a></span><a class="link" href="policies.html#boost_di__dependency_injection_.policies.parameters_permission.description">Description</a>
+      </h6>
+<p>
+        <code class="computeroutput"><span class="identifier">Parameters</span> <span class="identifier">Permission</span></code>
+        policy limits allowed constructor parameters. By default, if used, all parameters
+        are disallowed.
+      </p>
+<h6>
+<a name="boost_di__dependency_injection_.policies.parameters_permission.h2"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.policies.parameters_permission.example"></a></span><a class="link" href="policies.html#boost_di__dependency_injection_.policies.parameters_permission.example">Example</a>
+      </h6>
 <p>
 </p>
-<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">parameters_permission</span><span class="special">&lt;&gt;&gt;().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;();</span> <span class="comment">// compile error</span>
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">parameters_permission</span><span class="special">&lt;</span><span class="identifier">allow_copies</span><span class="special">&gt;&gt;().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;();</span> <span class="comment">// compile ok</span>
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">parameters_permission</span><span class="special">&lt;</span><span class="identifier">allow_copies</span><span class="special">,</span> <span class="identifier">allow_ptrs</span><span class="special">&gt;&gt;().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">*&gt;();</span> <span class="comment">// compile ok</span>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">;</span>
 </pre>
 <p>
       </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">parameters_permission</span><span class="special">&lt;&gt;());</span> <span class="comment">// compile error, no parameters are allowed</span>
+</pre>
+<p>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">parameters_permission</span><span class="special">&lt;</span><span class="identifier">allow_copies</span><span class="special">&gt;());</span> <span class="comment">// compile ok</span>
+</pre>
+<p>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
+    <span class="identifier">example</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">*&gt;,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;,</span> <span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;);</span>
+<span class="special">};</span>
+
+<span class="identifier">Parameters</span>
+    <span class="special">*</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">*&gt;</span> <span class="special">-&gt;</span> <span class="identifier">allow_copies</span>
+        <span class="special">*</span> <span class="keyword">int</span><span class="special">*</span> <span class="special">-&gt;</span> <span class="identifier">allow_ptrs</span>
+    <span class="special">*</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="special">-&gt;</span> <span class="identifier">allow_smart_ptrs</span>
+    <span class="special">*</span> <span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;</span> <span class="special">-&gt;</span> <span class="identifier">allow_const_refs</span>
+
+<span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;(</span>
+    <span class="identifier">parameters_permission</span><span class="special">&lt;</span><span class="identifier">allow_copies</span><span class="special">,</span> <span class="identifier">allow_ptrs</span><span class="special">,</span> <span class="identifier">allow_smart_ptrs</span><span class="special">,</span> <span class="identifier">allow_const_refs</span><span class="special">&gt;()</span>
+<span class="special">);</span> <span class="comment">// compile ok</span>
+</pre>
+<p>
+      </p>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src=".././doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          <code class="computeroutput"><span class="identifier">Parameters</span> <span class="identifier">Permission</span></code>
+          policy is not supported by Microsoft Visual Studio.
+        </p></td></tr>
+</table></div>
+<h6>
+<a name="boost_di__dependency_injection_.policies.parameters_permission.h3"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.policies.parameters_permission.usage"></a></span><a class="link" href="policies.html#boost_di__dependency_injection_.policies.parameters_permission.usage">Usage</a>
+      </h6>
 <div class="informaltable"><table class="table">
 <colgroup><col></colgroup>
 <tbody><tr><td>
@@ -203,15 +344,6 @@
                   Tests: <a href="../test/ut/policies/parameters_permission_ut.cpp" target="_top">test/ut/policies/parameters_permission_ut.cpp</a>
                 </p>
               </td></tr></tbody>
-</table></div>
-<div class="warning"><table border="0" summary="Warning">
-<tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src=".././doc/src/images/warning.png"></td>
-<th align="left">Warning</th>
-</tr>
-<tr><td align="left" valign="top"><p>
-          Parameters Permission Policy is not supported by Microsoft Visual Studio
-        </p></td></tr>
 </table></div>
 </div>
 <div class="section">
@@ -221,19 +353,43 @@
 </h3></div></div></div>
 <p>
         <code class="computeroutput"><span class="identifier">Scopes</span> <span class="identifier">Permission</span></code>
-        policy limit allowed scopes to be used whilst binding. By default no scopes
-        are allowed.
+        policy limits allowed scopes to be used whilst binding. By default, if used,
+        all scopes are disallowed.
       </p>
+<h6>
+<a name="boost_di__dependency_injection_.policies.scopes_permission.h0"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.policies.scopes_permission.synopsis"></a></span><a class="link" href="policies.html#boost_di__dependency_injection_.policies.scopes_permission.synopsis">Synopsis</a>
+      </h6>
 <p>
-        Synposis
 </p>
-<pre class="programlisting"><span class="identifier">scopes_permission</span><span class="special">&lt;</span><span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">Scope</span><span class="special">&gt;...&gt;</span>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TScope</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">allow_scope</span><span class="special">;</span>
+
+<span class="keyword">template</span><span class="special">&lt;&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">deduce</span><span class="special">&gt;;</span> <span class="comment">// disabled</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">scopes_permission</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
 </pre>
 <p>
       </p>
+<h6>
+<a name="boost_di__dependency_injection_.policies.scopes_permission.h1"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.policies.scopes_permission.allowed_scopes"></a></span><a class="link" href="policies.html#boost_di__dependency_injection_.policies.scopes_permission.allowed_scopes">Allowed
+        Scopes</a>
+      </h6>
 <p>
-        Allowed scopes: * allow_scope&lt;scopes::unique&lt;&gt;&gt; * allow_scope&lt;scopes::shared&lt;&gt;&gt;
-        * allow_scope&lt;scopes::session&lt;&gt;&gt; * allow_scope&lt;scopes::external&lt;&gt;&gt;
+</p>
+<pre class="programlisting"><span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">unique</span><span class="special">&lt;&gt;&gt;</span>
+<span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">shared</span><span class="special">&lt;&gt;&gt;</span>
+<span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">session</span><span class="special">&lt;&gt;&gt;</span>
+<span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">external</span><span class="special">&lt;&gt;&gt;</span>
+</pre>
+<p>
       </p>
 <div class="note"><table border="0" summary="Note">
 <tr>
@@ -241,23 +397,74 @@
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-          Scope verfication happens after scope is deduced, therefore allow_scope&lt;scopes::deduce&gt;
-          is not supported
+          <code class="computeroutput"><span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">deduce</span><span class="special">&gt;</span></code>
+          is not allowed.
         </p></td></tr>
 </table></div>
-<p>
-        Example:
-      </p>
+<h6>
+<a name="boost_di__dependency_injection_.policies.scopes_permission.h2"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.policies.scopes_permission.example"></a></span><a class="link" href="policies.html#boost_di__dependency_injection_.policies.scopes_permission.example">Example</a>
+      </h6>
 <p>
 </p>
-<pre class="programlisting"><span class="identifier">scopes_permission</span><span class="special">&lt;&gt;</span>
-<span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">deduce</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;&gt;</span> <span class="comment">// compile error</span>
-
-<span class="identifier">scopes_permission</span><span class="special">&lt;</span><span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">unique</span><span class="special">&gt;&gt;</span>
-<span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">unique</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;&gt;</span> <span class="comment">// compile ok</span>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">;</span>
 </pre>
 <p>
       </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">scopes_permission</span><span class="special">&lt;&gt;());</span> <span class="comment">// compile error, no scopes are allowed</span>
+</pre>
+<p>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+    <span class="identifier">di</span><span class="special">::</span><span class="identifier">unique</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;()</span>
+<span class="special">).</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">scopes_permission</span><span class="special">&lt;</span><span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">unique</span><span class="special">&lt;&gt;&gt;&gt;());</span> <span class="comment">// compile ok</span>
+</pre>
+<p>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+    <span class="identifier">di</span><span class="special">::</span><span class="identifier">shared</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;()</span>
+<span class="special">).</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">scopes_permission</span><span class="special">&lt;</span><span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">unique</span><span class="special">&lt;&gt;&gt;&gt;());</span> <span class="comment">// compile error</span>
+</pre>
+<p>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
+    <span class="identifier">example</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;);</span>
+<span class="special">};</span>
+
+<span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+    <span class="identifier">di</span><span class="special">::</span><span class="identifier">deduce</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;()</span>
+<span class="special">).</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;(</span><span class="identifier">scopes_permission</span><span class="special">&lt;</span><span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">unique</span><span class="special">&lt;&gt;&gt;&gt;());</span> <span class="comment">// compile error</span>
+</pre>
+<p>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
+    <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">);</span>
+<span class="special">};</span>
+
+<span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+    <span class="identifier">di</span><span class="special">::</span><span class="identifier">deduce</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;()</span>
+<span class="special">).</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;(</span><span class="identifier">scopes_permission</span><span class="special">&lt;</span><span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">unique</span><span class="special">&lt;&gt;&gt;&gt;());</span> <span class="comment">// compile ok</span>
+</pre>
+<p>
+      </p>
+<p>
+        To understand <code class="computeroutput"><span class="identifier">scope</span> <span class="identifier">deduction</span></code>
+        mapping see <code class="computeroutput"><span class="identifier">Deduce</span> <span class="identifier">Scope</span></code>.
+      </p>
+<h6>
+<a name="boost_di__dependency_injection_.policies.scopes_permission.h3"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.policies.scopes_permission.usage"></a></span><a class="link" href="policies.html#boost_di__dependency_injection_.policies.scopes_permission.usage">Usage</a>
+      </h6>
 <div class="informaltable"><table class="table">
 <colgroup><col></colgroup>
 <tbody><tr><td>

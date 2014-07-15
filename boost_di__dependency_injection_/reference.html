@@ -1576,10 +1576,10 @@
         &lt;boost/di/policies/circular_dependencies.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.policies.header__boost_di_policies_creation_ownership_hpp_">Header
         &lt;boost/di/policies/creation_ownership.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.policies.header__boost_di_policies_scopes_permission_hpp_">Header
-        &lt;boost/di/policies/scopes_permission.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.policies.header__boost_di_policies_parameters_permission_hpp_">Header
         &lt;boost/di/policies/parameters_permission.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_di__dependency_injection_.reference.policies.header__boost_di_policies_scopes_permission_hpp_">Header
+        &lt;boost/di/policies/scopes_permission.hpp&gt;</a></span></dt>
 </dl></div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
@@ -1652,42 +1652,6 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_di__dependency_injection_.reference.policies.header__boost_di_policies_scopes_permission_hpp_"></a><a class="link" href="reference.html#boost_di__dependency_injection_.reference.policies.header__boost_di_policies_scopes_permission_hpp_" title="Header &lt;boost/di/policies/scopes_permission.hpp&gt;">Header
-        &lt;boost/di/policies/scopes_permission.hpp&gt;</a>
-</h4></div></div></div>
-<p>
-</p>
-<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
-<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">{</span>
-<span class="keyword">namespace</span> <span class="identifier">policies</span> <span class="special">{</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TScope</span><span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">allow_scope</span><span class="special">;</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">class</span> <span class="identifier">scopes_permission</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
-    <span class="keyword">void</span> <span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
-<span class="special">};</span>
-
-<span class="special">}</span> <span class="comment">// namespace policies</span>
-<span class="special">}</span> <span class="comment">// namespace di</span>
-<span class="special">}</span> <span class="comment">// namespace boost</span>
-</pre>
-<p>
-        </p>
-<div class="informaltable"><table class="table">
-<colgroup><col></colgroup>
-<tbody><tr><td>
-                  <p>
-                    Tests: <a href="../test/ut/policies/scopes_permission_ut.cpp" target="_top">test/ut/policies/scopes_permission_ut.cpp</a>
-                  </p>
-                </td></tr></tbody>
-</table></div>
-</div>
-<div class="section">
-<div class="titlepage"><div><div><h4 class="title">
 <a name="boost_di__dependency_injection_.reference.policies.header__boost_di_policies_parameters_permission_hpp_"></a><a class="link" href="reference.html#boost_di__dependency_injection_.reference.policies.header__boost_di_policies_parameters_permission_hpp_" title="Header &lt;boost/di/policies/parameters_permission.hpp&gt;">Header
         &lt;boost/di/policies/parameters_permission.hpp&gt;</a>
 </h4></div></div></div>
@@ -1722,6 +1686,45 @@
 <tbody><tr><td>
                   <p>
                     Tests: <a href="../test/ut/policies/parameters_permission_ut.cpp" target="_top">test/ut/policies/parameters_permission_ut.cpp</a>
+                  </p>
+                </td></tr></tbody>
+</table></div>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_di__dependency_injection_.reference.policies.header__boost_di_policies_scopes_permission_hpp_"></a><a class="link" href="reference.html#boost_di__dependency_injection_.reference.policies.header__boost_di_policies_scopes_permission_hpp_" title="Header &lt;boost/di/policies/scopes_permission.hpp&gt;">Header
+        &lt;boost/di/policies/scopes_permission.hpp&gt;</a>
+</h4></div></div></div>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">policies</span> <span class="special">{</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TScope</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">allow_scope</span><span class="special">;</span>
+
+<span class="keyword">template</span><span class="special">&lt;&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">deduce</span><span class="special">&gt;;</span> <span class="comment">// disabled</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">scopes_permission</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="special">}</span> <span class="comment">// namespace policies</span>
+<span class="special">}</span> <span class="comment">// namespace di</span>
+<span class="special">}</span> <span class="comment">// namespace boost</span>
+</pre>
+<p>
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<tbody><tr><td>
+                  <p>
+                    Tests: <a href="../test/ut/policies/scopes_permission_ut.cpp" target="_top">test/ut/policies/scopes_permission_ut.cpp</a>
                   </p>
                 </td></tr></tbody>
 </table></div>
