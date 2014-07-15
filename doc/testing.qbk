@@ -9,18 +9,27 @@
 
 [section Testing]
 
-* unit tests
+[section Unit Tests]
 
-For unit tests Dependnecy Injection Framework is not needed. It's enough that we have possibility to fake dependencies by constructor.
+For Unit Tests Dependency Injection Framework is not really needed.
+It's enough that usage of Dependency Injection make possible to pass dependencies via constructor.
+Thanks to that we can easily pass fakes and test our class in isolation.
 
 ```
     class example {
     public:
         example(std::shared_ptr<ilogic>, std::shared_ptr<ilogger>);
+
+        void run() {
+            logic_->do_it();
+            logger_->log("hello world");
+        }
+
+        ...
     };
 ```
 
-To test `example` we just need fakes/mocks/stubs for `ilogic`  and `ilogger` and pass them to constructor.
+To test `example` we just need fakes for `ilogic`  and `ilogger` and pass them to constructor.
 
 ```
     void test_example() {
@@ -29,11 +38,15 @@ To test `example` we just need fakes/mocks/stubs for `ilogic`  and `ilogger` and
 
         example sut((logic_mock, logger_mock));
 
-        // ...
+        EXPECT_CALL(*logic_mock, do_it());
+        EXPECT_CALL(*logger_mock, log("hello world"));
+
+        sut.run();
     }
 ```
 
-However to avoid boilerplate code, especially with test classes.
+That's it, Dependency Injection make unit-testing straight forward. Nevertheless to avoid
+writing boilerplate code like below example (avoid factory for object and repetitions of mocks creation)...
 
 ```
     class example_test {
@@ -47,6 +60,11 @@ However to avoid boilerplate code, especially with test classes.
 
         void test_example() {
             example sut((logic_mock_, logger_mock_));
+
+            EXPECT_CALL(*logic_mock, do_it());
+            EXPECT_CALL(*logger_mock, log("hello world"));
+
+            sut.run();
         }
 
         std::shared_ptr<iloggic> logic_mock_;
@@ -54,27 +72,97 @@ However to avoid boilerplate code, especially with test classes.
     };
 ```
 
-Instead of writing above we can use `Boost.DI` to generate mocks for us.
-[note We will need handy mock framework to achieve it like `hippomocks`]
+... we can take full advantage of `Boost.DI` and generate required mocks for us.
 
-So our example may looks 
+[note [@https://github.com/dascandy/hippomocks HippoMocks] was used as Mocking library.]
+
+So our example might be refactored to.
 ```
     void test_example() {
-        mock_allocator ma;
-        auto sut = di::make_injector().allocate<example>(ma);
+        auto mi = di::make_mocks_injector();
 
-        // expectations on ma
+        EXPECT_CALL(mi, ilogic::do_it);
+        EXPECT_CALL(mi, ilogger::log).With("hello world");
+
+        mi.create<example>().run();
     }
-
 ```
 
-* integration tests
+Above example has few advantages
 
-Integration tests will require building hierarchy of objects as well as some fakes
+* Insensitive for constructor signature change (for example when `logic` and `logger` parameters order would be swapped)
+* Allow to easily test smart pointers (verifying destruction call automatically) as well as allows to test `unique_ptr`
+* Automatically manage mocks lifetime
+* Less boilerplate code
 
+To learn more about `Automatic Mocks Injector` see [link boost_di.extensions Extensions section].
+
+[endsect]
+
+[section Integration Tests]
+
+Integration tests usually will require building whole hierarchy of objects. However some fakes might be required
+as well for example to fake data base calls. With `Boost.DI` we can achieve such functionality in few ways.
+
+* Fake modules configuration
+
+Example application configuration.
 ```
-    di::make_injector(fake_module(), real_module());
+    class module {
+    public:
+        auto configure() const {
+            return di::make_injector(
+                di::bind<ilogger, logger>()
+              , di::bind<idb, db>()
+              , di::bind<ilogic, logic>()
+              , di::bind<iuser, user>()
+            );
+        }
+    };
+
+    int main() {
+        di::make_injector(module()).create<app>();
+        return 0;
+    }
 ```
+
+Testing module with fake `logger` and `db`, but original `logic` and `user`.
+```
+    class fake_module {
+    public:
+        auto configure() const {
+            return di::make_injector(
+                di::bind<ilogger, fake_logger>()
+              , di::bind<idb, fake_db>()
+            );
+        }
+    };
+
+    void test_app() {
+        auto sut = di::make_injector(module(), fake_module()).create<app>();
+        // test sut...
+    }
+```
+
+* Write custom allocator which automatically inject fakes for specified components with binding integration.
+See [link boost_di.extensions Automatic Mocks Injector] for further information.
+
+Example user interface may looks like that.
+```
+    void test_app() {
+        auto injector = di::make_injector(
+            module()
+          , di::fake<ilogger>()
+          , di::fake<idb>()
+        );
+        
+        auto sut = injector.allocate<app>(test_allocator());
+
+        // test sut...
+    }
+```
+
+[endsect]
 
 [endsect]
 

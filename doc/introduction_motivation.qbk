@@ -274,7 +274,7 @@ like "composition root".
     }
 ```
 
-To make it clear, we don't need Dependency Injection Framework to apply all the "goods" of Dependency Injection, but it may make our life easier.
+We don't need Dependency Injection Framework to apply all the "goods" of Dependency Injection, but it may make our life easier.
 Programmers should be "lazy" and shouldn't have to write tedious/boilerplate
 code. Projects should scale and the bigger projects are, the more frameworks
 will be used. So in the end all most projects will end up with some sort of
