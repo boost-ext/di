@@ -289,12 +289,12 @@
     <span class="special">}</span>
 
     <span class="keyword">void</span> <span class="identifier">init</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;);</span>
-    <span class="keyword">void</span> <span class="identifier">start</span><span class="special">();</span>
+    <span class="keyword">void</span> <span class="identifier">run</span><span class="special">();</span>
 <span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
     <span class="comment">//composition root</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;()-&gt;</span><span class="identifier">start</span><span class="special">();</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;()-&gt;</span><span class="identifier">run</span><span class="special">();</span>
 <span class="special">}</span>
 </pre>
 <p>
@@ -311,7 +311,7 @@
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">app</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="identifier">app</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;);</span>
-    <span class="keyword">void</span> <span class="identifier">start</span><span class="special">();</span>
+    <span class="keyword">void</span> <span class="identifier">run</span><span class="special">();</span>
 <span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
@@ -319,7 +319,7 @@
     <span class="keyword">auto</span> <span class="identifier">logger_</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_shared</span><span class="special">&lt;</span><span class="identifier">logger</span><span class="special">&gt;();</span>
 
     <span class="comment">//composition root</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;(</span><span class="identifier">logger_</span><span class="special">)-&gt;</span><span class="identifier">start</span><span class="special">();</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;(</span><span class="identifier">logger_</span><span class="special">)-&gt;</span><span class="identifier">run</span><span class="special">();</span>
 <span class="special">}</span>
 </pre>
 <p>
@@ -366,7 +366,7 @@
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
     <span class="comment">//composition root</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;()-&gt;</span><span class="identifier">start</span><span class="special">();</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;()-&gt;</span><span class="identifier">run</span><span class="special">();</span>
 <span class="special">}</span>
 </pre>
 <p>
@@ -419,7 +419,7 @@
     <span class="identifier">laf</span><span class="special">.</span><span class="identifier">add</span><span class="special">(</span><span class="string">"logger_factory"</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">logger_factory</span><span class="special">&gt;());</span>
 
     <span class="comment">//composition root</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;(*</span><span class="identifier">laf</span><span class="special">)-&gt;</span><span class="identifier">start</span><span class="special">();</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;(*</span><span class="identifier">laf</span><span class="special">)-&gt;</span><span class="identifier">run</span><span class="special">();</span>
 <span class="special">}</span>
 </pre>
 <p>
@@ -452,7 +452,7 @@
     <span class="identifier">sl</span><span class="special">.</span><span class="identifier">register_singleton</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">&lt;</span><span class="identifier">logger</span><span class="special">&gt;();</span>
 
     <span class="comment">//composition root</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;(</span><span class="identifier">sl</span><span class="special">)-&gt;</span><span class="identifier">start</span><span class="special">();</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;(</span><span class="identifier">sl</span><span class="special">)-&gt;</span><span class="identifier">run</span><span class="special">();</span>
 <span class="special">}</span>
 </pre>
 <p>
@@ -476,9 +476,9 @@
             </th></tr></thead>
 <tbody><tr><td>
               <p>
-                Boost.DI is C++ 03 / C++ 11 header only, type safe, library providing
-                compile time, macro free constructor/interface dependency injection
-                functionality. See Overview to learn more.
+                Boost.DI is <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code>/<code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">11</span></code>/<code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">14</span></code> header only, type safe, library
+                providing compile time, macro free constructor dependency injection.
+                See Overview to learn more.
               </p>
             </td></tr></tbody>
 </table></div>
@@ -496,7 +496,7 @@
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">class</span> <span class="identifier">app</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="identifier">app</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;);</span>
-    <span class="keyword">void</span> <span class="identifier">start</span><span class="special">();</span>
+    <span class="keyword">void</span> <span class="identifier">run</span><span class="special">();</span>
 <span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
@@ -538,8 +538,8 @@
 </table></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
 <p class="simpara">
-          <span class="bold"><strong>"Pure Evil"</strong></span> usage of Dependency
-          Injection Framework
+          <span class="bold"><strong>"Evil"</strong></span> usage of Dependency Injection
+          Framework
         </p>
 <div class="warning"><table border="0" summary="Warning">
 <tr>
@@ -547,7 +547,8 @@
 <th align="left">Warning</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-            Don't do this at home!
+            Presented example is just for learning purposes, please don't follow
+            this anti-pattern approach!
           </p></td></tr>
 </table></div>
 </li></ul></div>
@@ -568,7 +569,7 @@
 <span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <span class="identifier">global_injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;().</span><span class="identifier">start</span><span class="special">();</span>
+    <span class="identifier">app</span><span class="special">().</span><span class="identifier">run</span><span class="special">();</span>
 <span class="special">}</span>
 </pre>
 <p>
@@ -708,7 +709,7 @@
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: July 14, 2014 at 19:09:13 GMT</small></p></td>
+<td align="left"><p><small>Last revised: July 15, 2014 at 09:57:43 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>
