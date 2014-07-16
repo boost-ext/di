@@ -115,7 +115,7 @@ int main() {
 * Runtime visitor throughout created objects (useful for generation dependency diagrams)
 
 ## More information
-* [Documentation](http://krzysztof-jusiak.github.com/di)
+* [Documentation](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html)
 * [Todo/Issues] (https://github.com/krzysztof-jusiak/di/issues?state=open)
 * [Boost Library Incubator - DI](http://rrsd.com/blincubator.com/bi_library/di/)
 
