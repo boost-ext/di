@@ -55,17 +55,23 @@ int main() {
 }
 ```
 
-## Main Features
+## Key features
 * Type safe
+* Compile time approach - no exceptions - if application compiles all dependencies will be be created accurately
+* Macro free - by default no need to specify constructor traits or register anything (less intrusive)
+* Scopes deduction - scopes are deduced based on type semantic
+* Automatic conversion between std/boost smart pointers
+* Compile time policies - ex. to detect circular dependencies or limit supported types only to specified
+* Supports C++03/C++11/C++14 standards
+
+## Other Features
 * Header only library
 * Architecture independent (tested on x86/x86-64)
 * Supports all POSIX and Windows operating systems (tested on Linux 3.8/Windows 7/8)
-* Supports C++03/C++11 standard
 * Exception safe guaranty
 * Thread safe guaranty
 * Constructor injection (macro free)
 * Compile time creation guaranty
-* Compile time policies (arguments permission, binding correctness, circular dependencies, creation ownership, scopes permission)
 * Dependencies life time management (scopes: deduce, external, unique, shared, session + custom scopes)
 * Scope deduction (shared\_ptr -> shared, unique\_ptr, lvalue -> unique, ...)
 * Supports copies, references, pointers, boost and std smart pointers / rvalue references(C++11)

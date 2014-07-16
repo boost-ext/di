@@ -97,7 +97,7 @@ Using `Boost.DI` have many advantages over `manual dependency injection`
 * Scopes deduction - scopes are deduced based on type semantic
 * Automatic conversion between std/boost smart pointers
 * Compile time policies - ex. to detect circular dependencies or limit supported types only to specified
-* Supports `C++03` / `C++11` / `C++14` standards
+* Supports `C++03`/`C++11`/`C++14` standards
 
 [endsect]
 
