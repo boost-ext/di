@@ -43,7 +43,7 @@ struct world {
 
 struct app {
     app(hello, world);
-    int run;
+    int run();
 };
 
 int main() {
