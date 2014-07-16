@@ -492,21 +492,38 @@ Activation of `Module` is done by passing it into injector.
 [section Utilities]
 
 [section provider]
+
+[heading Description]
 With normal dependency injection, each type gets exactly one instance of each of its dependent types.
 Sometimes it's required to get many different instances. Then providers become handy.
 They create a new value whenever get() method is invoked.
 
-```
+[heading Synopsis]
     template<typename T>
-    class provider
-    {
+    class provider {
     public:
         virtual ~provider() { }
         virtual T get() const = 0;
     };
-```
 
-```
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`T`][None][Type to be provided]]
+    [[`x.get()`][None][Returns type to be provided]]
+]
+
+[heading Header]
+    #include <boost/di/provider.hpp>
+
+[heading Example]
+    class provider : iprovider<int> {
+    public:
+        int get() const override {
+            static int i = 0;
+            return i++;
+        }
+    }; 
+
     class example {
     public:
         example(provider<int> p) {
@@ -514,17 +531,9 @@ They create a new value whenever get() method is invoked.
         }
     };
 
-    class provider : iprovider<int> {
-    public:
-        int get() const override {
-            static int i = 0;
-            return i++;
-        }
-    };
-```
-[table
-    [[Example: [link boost_di.examples.provider provider]]]
-]
+[heading Tests]
+    ``[@test/ut/provider_ut.cpp]``
+
 [endsect]
 
 [section allocator]
