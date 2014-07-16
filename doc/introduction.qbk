@@ -63,7 +63,7 @@ Using `Boost.DI` has many advantages over `manual dependency injection`.
 
 * [*Reduce boilerplate code] (no factories, no objects creation)
 * [*Reduce cost of maintenance effort] (constructor signature change won't affect `di` configuration)
-* [*Reduce testing effort] (automatic mocks injection - see [link boost_di.examples Automatic Mocks Injection]
+* [*Reduce testing effort] (automatic mocks injection - see [link boost_di.examples Automatic Mocks Injection])
 
 [table
 [[Manual Dependency Injection][`Boost.DI`]]
