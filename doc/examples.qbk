@@ -55,11 +55,6 @@
 [custom_policy_cpp_11]
 [endsect]
 
-[section Testing]
-[import ../example/cpp_11/testing.cpp]
-[testing_cpp_11]
-[endsect]
-
 [section C++ Generation Visitor]
 [import ../example/text_visitor.cpp]
 [text_visitor]
@@ -74,6 +69,36 @@
 [table
     [[Full code example: [@example/uml_visitor.cpp]]]
 ]
+[endsect]
+
+[include integration.qbk]
+
+[include testing.qbk]
+
+[section Constructor Traits Generator]
+
+Python script based on lib clang generating constructor traits. Useful for third party libraries, which can't be changed.
+
+```
+Usage: di_ctor_traits.py [options] files...
+
+Options:
+  -h, --help                    show this help message and exit
+  -o OUTPUT, --output=OUTPUT    output file (default='di_ctor_traits.hpp')
+  -l LIMIT, --limit=LIMIT       limit to constructors within declaration (default='')
+
+```
+
+Example
+```
+./di_ctor_traits.py -o di_ctor_traits.hpp -l "namespace::class" files...
+
+```
+
+[table
+    [[Download: [@https://github.com/krzysztof-jusiak/di_ctor_traits.git]]]
+]
+
 [endsect]
 
 [section More Examples]

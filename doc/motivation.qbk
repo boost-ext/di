@@ -7,7 +7,7 @@
  /
  /]
 
-[section Introduction & Motivation]
+[section Motivation]
 
 "[*Dependency Injection] is a set of software design principles and patterns that enable us to develop [*loosely coupled] code" [[link See11]].
 Dependency Injection allows us to separate business logic to object creation, which give possibility to write maintainable and testable code.
@@ -320,8 +320,6 @@ Followed by a few good practises/principles will get most out of Dependency Inje
 * Follow [@http://en.wikipedia.org/wiki/Law_of_Demeter Law of Demeter] principle
 * Follow [@http://en.wikipedia.org/wiki/Dependency_inversion_principle Dependency inversion] principle
 * Apply Composition Root
-
-And always follow Hollywood principle: [*"Don't call us, we'll call you"].
 
 [endsect]
 

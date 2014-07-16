@@ -7,10 +7,11 @@
  /
  /]
 
-[section Acknowledgements]
+[section Change log]
 
-* Thanks to Robert Ramey for [@http://blincubator.com Boost Library Incubator] and useful comments.
-* Thanks to Bartosz Kalinczuk, Rafal Przywarski for code review.
+[table
+	[[1.0][Initial version]]
+]
 
 [endsect]
 

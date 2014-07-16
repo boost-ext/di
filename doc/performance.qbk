@@ -9,7 +9,7 @@
 
 [section Performance]
 
-[section Compilation time]
+[h6 Compilation time]
 
 Boost.DI is using heavy template meta programming, therefore compilation time was a big concern
 whilst creating the library. Library was optimised in terms of compilation times as long as
@@ -90,9 +90,7 @@ as possible.
     [ [ 10 ] [ ] ]
 ]
 
-[endsect]
-
-[section Runtime execution speed]
+[h6 Runtime execution speed]
 
 Runtime execution speed was one of the concerns taken into account whilst implementing the library.
 Compile time approach was chosen not only, because of the safety (non exception driven) reasons,
@@ -229,8 +227,6 @@ C++11 uses perferct forwarding whilst c++11 copy value once
         []
     ]
 ]
-
-[endsect]
 
 [endsect]
 

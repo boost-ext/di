@@ -9,7 +9,7 @@
 
 [section Overview]
 
-[section Features]
+[h6 Features]
 
 What is so unique about this library?
 
@@ -41,9 +41,7 @@ Main features:
 Although library supports `C++03` and `C++11`, only `C++14` shows the full potential of Boost.DI.
 To achieve the same behaviour with previous standards sometimes will just require a bit more hassle.
 
-[endsect]
-
-[section Dependencies]
+[h6 Dependencies]
 
 * Boost.Bind
 * Boost.Config
@@ -57,9 +55,7 @@ To achieve the same behaviour with previous standards sometimes will just requir
 * Boost.Type_Traits
 * Boost.Utility
 
-[endsect]
-
-[section Supported Compilers]
+[h6 Supported Compilers]
 
 Boost.DI was successfully test on below compilers
 
@@ -106,9 +102,14 @@ a specific combinations.
   [[`C++14`][`Clang >= 3.4`][Go for it!]]
 ]
 
-[endsect]
+[h6 Installation]
+`Boost.DI` is header only library and doesn't require building.
+To start using library just include `Boost.DI` header.
+```
+    #include <boost/di.hpp>
+```
 
-[section Configuration]
+[h6 Configuration]
 
 The macros listed in the table below may be used to control the behaviour of Boost.DI.
 
@@ -221,15 +222,74 @@ The macros listed in the table below may be used to control the behaviour of Boo
 
 ]
 
-[endsect]
+[h6 Tests]
+Boost.DI is released with many levels of tests
 
-[section Continuous Integration]
+* Unit tests (ut)
+* Module/Integration tests (mt)
+* Functional tests (ft)
+* Performance tests (pt)
+* Compilation fail tests (ft)
+* Verification tests (vt) - verify compiler support
+
+To run tests go to `boost/di/test` directory and run.
+```
+    bjam
+```
+
+[h6 Similar libraries]
+
+* [@https://bitbucket.org/cheez/dicpp dicpp]
+* [@https://code.google.com/p/infectorpp infectorpp]
+* [@https://github.com/phs/sauce sauce]
+* [@https://code.google.com/p/wallaroo wallaroo]
+* [@https://code.google.com/p/hypodermic hypodermic]
+* [@https://github.com/admiyo/CppInject CppInject]
+* [@http://qtioccontainer.sourceforge.net qtioccontainer]
+* [@https://code.google.com/p/autumnframework autumnframework]
+* [@http://sourceforge.net/projects/cpp-resolver cpp-resolver]
+* [@https://code.google.com/p/pococapsule pococapsule]
+* [@https://code.google.com/p/spring-cpp spring-cpp]
+* [@http://www.cs.utah.edu/~arichard/inject.html inject]
+* [@http://bobah.net/d4d/source-code/misc/cpp-dependency-injection cpp-dependency-injection]
+* [@https://code.google.com/p/ffead-cpp ffead-cpp]
+* [@http://codebros.github.io/DiLite DiLite]
+* [@https://code.google.com/p/kindi kindi]
+
+[h6 FAQ]
+
+# Is configuration via XML supported by Boost.DI?
+
+    * Short answer is NO. Boost.DI dependencies are configured in the source code using C++ features which allows compile time checking.
+    Long story short, fluent configuration you don't have to remember of changing the configuration file, compiler will take care of it for you.
+Usually lazy binding requires exceptions handling and is a performance killer, but obviously it depends on a projects needs.
+Although it might be hard it is possible to achieve it with Boost.DI.
+The question which should be asked though - how often configuration is dynamically changed via XML?
+
+# Why Boost.DI doesn't support `setter/member`` injection?
+
+    * Constructor injection is the most powerful and the preferable injection method which avoid uninitialized state of members.
+`Setter/Member` injection should be avoided at all costs in order to keep the solutions as clean as possible. Therefore Boost.DI
+doesn't support it by default.
+
+# Why Boost.DI doesn't have `singleton` scope?
+
+    * Singleton pattern is usually overused and makes code really hard to test. Thread safety has to be considered as well whilst using it.
+Boost.DI provides `shared` scope which behaves like non-multi threaded singleton.
+`Singleton` scope might be implemented using Boost.DI `scope` functionality.
+
+# How many constructors parameters are supported and how many bindings I can have?
+    * Boost.DI by default supports up to 10 constructor parameters. Configuration might be changed by `BOOST_DI_CFG_CTOR_LIMIT_SIZE`.
+The number of allowed bindings is limited by `BOOST_MPL_LIMIT_VECTOR_SIZE` value.
+
+# How injection works since there is no registration/reflection/traits ?
+    * See [link boost_di.design Design Rationale] for further explanations.
+
+[h6 Continuous Integration]
 
 [@https://travis-ci.org/krzysztof-jusiak/di [$https://travis-ci.org/krzysztof-jusiak/di.svg?branch=master [format PNG]]]
 [@https://ci.appveyor.com/project/krzysztof-jusiak/di [$https://ci.appveyor.com/api/projects/status/1il4knxh7tq9o5ic [format PNG]]]
 [@https://coveralls.io/r/krzysztof-jusiak/di?branch=master [$https://coveralls.io/repos/krzysztof-jusiak/di/badge.png?branch=master [format PNG]]]
-
-[endsect]
 
 [endsect]
 

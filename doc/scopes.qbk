@@ -9,8 +9,12 @@
 
 [section Scopes]
 
+Scopes are responsible for creating and maintaining the life time of the dependency.
+Boost.DI favor 5 types of scopes (deduce - default, external, unique, shared, session) which you can read more about
+in `Scopes` section.
+
 Boost.DI scopes create and maintain dependencies life time.
-If no scope will be given whilst binding deduce scope will be assumed.
+If no scope will be given whilst binding `deduce` scope will be assumed.
 
 Synopsis
 ```
@@ -80,7 +84,7 @@ struct custom_scope
 
 ```
 
-[section Deduce (Default)]
+[section deduce (default)]
 
 [h5 Synopsis]
 ```
@@ -129,7 +133,7 @@ Refer to `Scopes Conversions` table.
 ]
 [endsect]
 
-[section External]
+[section external]
 
 [h5 Synopsis]
 ```
@@ -173,7 +177,7 @@ Refer to `Scopes Conversions` table.
 ]
 [endsect]
 
-[section Unique]
+[section unique]
 
 [h5 Synopsis]
 ```
@@ -212,7 +216,7 @@ Refer to `Scopes Conversions` table.
 ]
 [endsect]
 
-[section Shared]
+[section shared]
 
 [h5 Synopsis]
 ```
@@ -253,7 +257,7 @@ Refer to `Scopes Conversions` table.
 ]
 [endsect]
 
-[section Session]
+[section session]
 
 [h5 Synopsis]
 ```

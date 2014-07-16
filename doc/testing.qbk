@@ -9,6 +9,60 @@
 
 [section Testing]
 
+[section Automatic Mocks Injector]
+
+C++11 header only library providing following functionality:
+
+* Automatically create required mocks
+* Automatically inject mocks to tested classes via constructor
+* Automatically register for required destructor's in case of smart pointers (supports testing of unique_ptr)
+* Uses [@https://github.com/dascandy/hippomocks HippoMocks] as Mocking library
+
+Example
+```
+#include <mocks_injector.hpp>
+
+struct ilogger { virtual ~ilogger() { }; virtual void log(const std::string&) = 0; };
+struct ilogic { virtual ~ilogic() { }; virtual void do_it() = 0; };
+
+class example {
+public:
+    example(std::shared_ptr<ilogger> logger, const std::unique_ptr<ilogic>& logic)
+        : logger_(logger), logic_(std::move(logic))
+    { }
+
+    void run() {
+        logic_->do_it();
+        logger_->log("hello world");
+    }
+
+private:
+    std::shared_ptr<ilogger> logger_;
+    std::unique_ptr<ilogic> logic_;
+};
+
+int main() {
+    //1. create mocks injector
+    auto mi = di::make_mocks_injector();
+
+    //2. set up expectations
+    EXPECT_CALL(mi, ilogic::do_it);
+    EXPECT_CALL(mi, ilogger::log).With("hello world");
+
+    //3. create example class and run it
+    mi.create<example>().run(); // or mi.create<std::unique_ptr<example>>()->run();
+
+    return 0;
+}
+```
+
+[table
+    [[Download: [@https://github.com/krzysztof-jusiak/mocks_injector.git]]]
+]
+
+[endsect]
+
+
 [section Unit Tests]
 
 For Unit Tests Dependency Injection Framework is not really needed.

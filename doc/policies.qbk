@@ -42,7 +42,7 @@ In order for `injector` to verify policies they have to be passed to `create`, `
 
 [note By Default `Boost.DI` has no policies enabled.]
 
-[section Circular Dependencies]
+[section circular_dependencies]
 
 [h5 Synopsis]
 ```
@@ -78,7 +78,7 @@ public:
 
 [endsect]
 
-[section Creation Ownership]
+[section creation_ownership]
 
 [h5 Synopsis]
 ```
@@ -114,7 +114,7 @@ public:
 
 [endsect]
 
-[section Parameters Permission]
+[section parameters_permission]
 
 [h5 Synopsis]
 ```
@@ -174,7 +174,7 @@ public:
 
 [endsect]
 
-[section Scopes Permission]
+[section scopes_permission]
 `Scopes Permission` policy limits allowed scopes to be used whilst binding.  By default, if used, all scopes are disallowed.
 
 [h5 Synopsis]

@@ -11,10 +11,12 @@
 
 [section Concepts]
 
-[section Constructor Injection]
+[section Constructor Injections]
 
 [*Constructor Injection] is the most powerful of the available injections. It guarantee initialized state of data members.
 In Boost.DI Constructor Injection is achieved without any additional work from the user except defining the constructor.
+
+[section automatic (default)]
 Boost.DI will deduce the best available constructor to be used for injection. See `Constructor Parameters Deduction` to read more.
 
 ```
@@ -31,7 +33,12 @@ If the default behavior should be changed is should explicitly marked using by a
 [note Boost.DI is not able to distinguish between ambiguous constructors with the same (longest) amount of parameters, then BOOST_DI_INJECT has to be used to point which constructor should be dedced]
 [warning In C++03 constructors with one argument might be ambiguous with copy constructors, therefore is advised to use `BOOST_DI_INJECT` for 1 argument constructors in C++03.]
 
-[h6 BOOST_DI_INJECT]
+[endsect]
+
+[section ctor_traits]
+[endsect]
+
+[section BOOST_DI_INJECT]
 
 `BOOST_DI_INJECT` is a macro definition used to explicity say Boost.DI which constructor should be used.
 
@@ -75,7 +82,9 @@ public:
 Sometimes we can't, in case of third party libraries, or just don't want to be so intrusive, then we can use constructor traits to define
 which constructor should be deduced by DI.
 
-[h6 BOOST_DI_INJECT_TRAITS]
+[endsect]
+
+[section BOOST_DI_INJECT_TRAITS]
 
 `BOOST_DI_INJECT_TRAITS` is a macro definition used to define constructor traits.
 
@@ -119,19 +128,55 @@ struct ctor_traits<example> {
     [[Tests: [@test/ut/inject_va_args_ut.cpp] | [@test/ut/inject_bracket_ut.cpp]]]
 ]
 [endsect]
+[endsect]
 
-[section Scope]
+[section Annotations]
 
-Scopes are responsible for creating and maintaining the life time of the dependency.
-Boost.DI favor 5 types of scopes (deduce - default, external, unique, shared, session) which you can read more about
-in `Scopes` section.
+[section named]
+Named parameters are useful when constructor has more parameters of the same type.
+```
+    example(int value1, int value2);
+```
+In order to inject proper values into value and value2 they have to distinguish somehow.
+Boost.DI solution for this are `named parameters`, which basically are just wrappers
+for the type with automatic conversion to the based type.
+```
+    class my_name { };
+    di::named<int, my_name> named_parameter;
+    int i = named_parameter;
+```
+
+Named parameters are intrusive in a sens constructor has to be changed in order to support them.
+It doesn't has to be the case when constructor traits are being used.
+```
+    class example {
+    public:
+        example(int value1, int value2);
+    };
+
+    class my_value1 { };
+    class my_value2 { };
+
+    namespace boost { namespace di {
+
+    template<>
+    struct ctor_traits<example> {
+        BOOST_DI_INJECT_TRAITS(di::named<int, my_value1>, di::named<int, my_value2>);
+    };
+
+}} // boost::di
+```
+[table
+    [[Tests: [@test/ut/named_ut.cpp]]]
+]
+[endsect]
 
 [endsect]
 
-[section Allocator]
-[endsect]
 
-[section Binding]
+[include scopes.qbk]
+
+[section Bindings]
 
 Binding in DI is done by DSL. The main purpose of binding DSL is to make easy things as easy
 as possible whilst giving possibility to accomplish solutions for more complicated problems.
@@ -147,6 +192,8 @@ template<
 >
 class dependency;
 ```
+
+[section bind]
 
 ```
 template<typename If, typename Impl>
@@ -302,8 +349,38 @@ Then concept might be used with `when` binding afterwards.
 ]
 [endsect]
 
-[section Injector]
+[section bind_int]
+[endsect]
 
+[section bind_string]
+[endsect]
+
+[section scope]
+[endsect]
+
+[section deduce]
+[endsect]
+
+[section unique]
+[endsect]
+
+[section shared]
+[endsect]
+
+[section session]
+[endsect]
+
+[section call_stack]
+[endsect]
+
+[section any_of]
+[endsect]
+
+[endsect]
+
+[section Injectors]
+
+[section injector]
 Injector is a component used for creating dependencies configuration using bindings.
 
 * `create`
@@ -333,6 +410,9 @@ Injector is a component used for creating dependencies configuration using bindi
     [[Tests: [@test/ut/injector_ut.cpp]]]
 ]
 
+[endsect]
+
+[section make_injector]
 Injector might be created using `di::make_injector` or `di::injector type` it self.
 Preferable option is to use di::make_injector because it allows to bind dynamic values.
 
@@ -373,7 +453,9 @@ Preferable option is to use di::make_injector because it allows to bind dynamic 
 ]
 [endsect]
 
-[section Module]
+[endsect]
+
+[section Modules]
 Modules allow to split the configurations into smaller injectors.
 Module is a class with `configure` method returning `injector` type.
 ```
@@ -407,48 +489,9 @@ Activation of `Module` is done by passing it into injector.
 
 [endsect]
 
-[section Named Parameter]
+[section Utilities]
 
-Named parameters are useful when constructor has more parameters of the same type.
-```
-    example(int value1, int value2);
-```
-In order to inject proper values into value and value2 they have to distinguish somehow.
-Boost.DI solution for this are `named parameters`, which basically are just wrappers
-for the type with automatic conversion to the based type.
-```
-    class my_name { };
-    di::named<int, my_name> named_parameter;
-    int i = named_parameter;
-```
-
-Named parameters are intrusive in a sens constructor has to be changed in order to support them.
-It doesn't has to be the case when constructor traits are being used.
-```
-    class example {
-    public:
-        example(int value1, int value2);
-    };
-
-    class my_value1 { };
-    class my_value2 { };
-
-    namespace boost { namespace di {
-
-    template<>
-    struct ctor_traits<example> {
-        BOOST_DI_INJECT_TRAITS(di::named<int, my_value1>, di::named<int, my_value2>);
-    };
-
-}} // boost::di
-```
-[table
-    [[Tests: [@test/ut/named_ut.cpp]]]
-]
-[endsect]
-
-[section Provider]
-
+[section provider]
 With normal dependency injection, each type gets exactly one instance of each of its dependent types.
 Sometimes it's required to get many different instances. Then providers become handy.
 They create a new value whenever get() method is invoked.
@@ -483,6 +526,13 @@ They create a new value whenever get() method is invoked.
     [[Example: [link boost_di.examples.provider provider]]]
 ]
 [endsect]
+
+[section allocator]
+[endsect]
+
+[endsect]
+
+[include policies.qbk]
 
 [endsect]
 

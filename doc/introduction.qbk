@@ -7,11 +7,13 @@
  /
  /]
 
-[section Revision History]
+[section Introduction]
 
-[h5 1.0]
+And always follow Hollywood principle: [*"Don't call us, we'll call you"].
 
-Initial version
+“what is dependency injection?”
+“what problems does it solve (or create?)?”
+“how does this library help?”
 
 [endsect]
 

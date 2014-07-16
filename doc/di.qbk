@@ -10,7 +10,7 @@
 [library Boost.DI (Dependency Injection)
     [quickbook 1.5]
     [version 1.0]
-    [id boost_di]
+    [id di]
     [copyright 2014 Krzysztof Jusiak]
     [authors [Jusiak, Krzysztof]]
     [license
@@ -23,21 +23,14 @@
 
 [caution This is not an official Boost library yet and there is no guarantee it will ever be!]
 
-[include introduction_motivation.qbk]
+[include introduction.qbk]
+[include motivation.qbk]
 [include overview.qbk]
-[include design.qbk]
 [include tutorial.qbk]
 [include concepts.qbk]
-[include scopes.qbk]
-[include policies.qbk]
-[include testing.qbk]
 [include examples.qbk]
-[include integration.qbk]
-[include performance.qbk]
-[include extensions.qbk]
-[include reference.qbk]
-[include faq.qbk]
-[include references.qbk]
+[include rationale.qbk]
+[include changelog.qbk]
 [include acknowledgements.qbk]
-[include revision_history.qbk]
+[include references.qbk]
 
