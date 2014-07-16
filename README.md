@@ -15,12 +15,12 @@ Boost.DI is C++03/C++11/C++14 header only library providing type safe, compile t
 namespace di = boost::di;
 
 struct hello {
-    hello(const std::shared_ptr<int>& sp, std::unique_ptr<int> up, double d)
+    hello(const std::shared_ptr<i>& sp, std::unique_ptr<int> up, boost::function<int()> f)
         : sp(sp)
     {
-        assert(*sp == 0.0);
+        assert(dynamic_cast<impl*>(sp.get()));
         assert(*up == 0);
-        assert(d == 0.0);
+        assert(f.empty());
     }
 
     std::shared_ptr<int> sp;
@@ -28,10 +28,11 @@ struct hello {
 
 struct world {
     world(hello copy
-        , boost::shared_ptr<int> sp
+        , boost::shared_ptr<i> sp
         , const std::string& str
         , int i)
     {
+        assert(dynamic_cast<impl*>(sp.get()));
         assert(copy.sp.get() == sp.get());
         assert(str == "");
         assert(i == 0);
@@ -39,61 +40,16 @@ struct world {
 };
 
 struct app {
-    app(hello, world) { }
-};
-
-int main() {
-    di::make_injector().create<app>();
-    return 0;
-}
-```
-
-### Binding
-```cpp
-#include <boost/di.hpp>
-
-namespace di = boost::di;
-
-struct i { virtual ~i() { } };
-struct impl : i { };
-struct some_name { };
-
-struct hello
-{
-    hello(const std::shared_ptr<i>& sp, double d)
-        : sp(sp)
-    {
-        assert(dynamic_cast<impl*>(sp.get()));
-        assert(d == 0.0); // default zero initialization
-    }
-
-    std::shared_ptr<i> sp;
-};
-
-struct world {
-    world(hello copy
-        , boost::shared_ptr<i> sp
-        , int i
-        , di::named<const std::string&, some_name> str)
-    {
-        std::string s = str;
-        assert(dynamic_cast<impl*>(sp.get()));
-        assert(copy.sp.get() == sp.get());
-        assert(i == 42);
-        assert(s == "some_name");
-    }
+    app(hello, world);
+    int run;
 };
 
 int main() {
     auto injector = di::make_injector(
-        di::bind_int<42>() // static value
-      , di::bind<std::string>::named<some_name>::to("some_name") // external value
-      , di::bind<i, impl>() // scope deduction -> di::shared<di::bind<i, impl>>
+        di::bind<i, impl>() // scope deduction -> di::shared<di::bind<i, impl>>
     );
-
-    auto hello_world = injector.create<world>();
-
-    return 0;
+        
+    return injector.create<app>().run();
 }
 ```
 
