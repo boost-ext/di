@@ -300,16 +300,15 @@ Therefore instead of creating and configuring the objects yourself, the dependen
     * Code is easier to read due to separation between business logic and object creation as well as lack of boilerplate code just making chaos
 
 [*Dependency Injection Framework] might be really useful and may make your code to be loosely coupled and easy to maintain.
-Followed by a few good practices/principles will get most out of Dependency Injection Framework.
+Followed by few good practices/principles will get most out of Dependency Injection Framework.
 
-* Avoid global states and [@http://en.wikipedia.org/wiki/Singleton_pattern Singleton pattern]
-* Avoid [@http://en.wikipedia.org/wiki/Service_locator_pattern Service Locator] pattern
-* Follow [@http://en.wikipedia.org/wiki/Single_responsibility_principle Single Responsibility] principle
-* Follow [@http://en.wikipedia.org/wiki/Open/closed_principle Open/Closed] principle
-* Follow [@http://en.wikipedia.org/wiki/Interface_segregation_principle Interface Segregation] principle
-* Follow [@http://en.wikipedia.org/wiki/Liskov_substitution_principle Liskov Substitution] principle
+* Follow [@http://en.wikipedia.org/wiki/Single_responsibility_principle [*S]ingle Responsibility] principle
+* Follow [@http://en.wikipedia.org/wiki/Open/closed_principle [*O]pen/Closed] principle
+* Follow [@http://en.wikipedia.org/wiki/Liskov_substitution_principle [*L]iskov Substitution] principle
+* Follow [@http://en.wikipedia.org/wiki/Interface_segregation_principle [*I]nterface Segregation] principle
+* Follow [@http://en.wikipedia.org/wiki/Dependency_inversion_principle [*D]ependency inversion] principle
 * Follow [@http://en.wikipedia.org/wiki/Law_of_Demeter Law of Demeter] principle
-* Follow [@http://en.wikipedia.org/wiki/Dependency_inversion_principle Dependency inversion] principle
+* Avoid global states and [@http://en.wikipedia.org/wiki/Singleton_pattern Singleton pattern] and [@http://en.wikipedia.org/wiki/Service_locator_pattern Service Locator] pattern
 * Apply Composition Root
 
 [endsect]
