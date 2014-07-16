@@ -15,7 +15,9 @@ Boost.DI is C++03/C++11/C++14 header only library providing type safe, compile t
 namespace di = boost::di;
 
 struct hello {
-    hello(const std::shared_ptr<i>& sp, std::unique_ptr<int> up, boost::function<int()> f)
+    hello(const std::shared_ptr<i>& sp
+        , std::unique_ptr<int> up
+        , boost::function<int()> f)
         : sp(sp)
     {
         assert(dynamic_cast<impl*>(sp.get()));
