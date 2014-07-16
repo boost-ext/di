@@ -64,7 +64,7 @@ int main() {
 * Compile time policies - ex. to detect circular dependencies or limit supported types only to specified
 * Supports C++03/C++11/C++14 standards
 
-## Other Features
+## Other features
 * Header only library
 * Architecture independent (tested on x86/x86-64)
 * Supports all POSIX and Windows operating systems (tested on Linux 3.8/Windows 7/8)
