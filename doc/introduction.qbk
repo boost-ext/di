@@ -9,11 +9,95 @@
 
 [section Introduction]
 
-And always follow Hollywood principle: [*"Don't call us, we'll call you"].
+[:['["Don't call us, we'll call you.]]]
+[:*--Hollywood principle*]
 
-“what is dependency injection?”
-“what problems does it solve (or create?)?”
-“how does this library help?”
+[*Dependency injection] is a practice providing dependencies required by an object.
+Following this approach has many advantages.
+
+* [*Provide loosely coupled code] (separation of business logic and object creation)
+* [*Provide easier to maintain code] (new objects might be injected)
+* [*Provide easier to test code] (fakes might be injected)
+
+[table
+[[No Dependency Injection][Dependency Injection]]
+    [
+        [
+            ```
+                class example {
+                public:
+                    example()
+                        : logic_(new logic())
+                        , logger_(logger_factory::create())
+                    { }
+
+                    int run();
+
+                    std::unique_ptr<logic> logic_;
+                    std::shared_ptr<logger> logger_;
+                };
+            ```
+        ]
+        [
+            ```
+                class example {
+                public:
+                    // dependencies are passed via constructor
+                    example(std::unique_ptr<logic> logic, std::shared_ptr<logger> logger)
+                        : logic_(logic), logger_(logger)
+                    { }
+
+                    int run();
+
+                private:
+                    std::unique_ptr<logic> logic_;
+                    std::shared_ptr<logger> logger_;
+                };
+            ```
+        ]
+    ]
+]
+
+`Boost.DI` is a `Dependency Injection library` improving `manual dependency injection` by simplifying object instantiation with automatic dependencies injection.
+Using `Boost.DI` have many advantages over `manual dependency injection`
+
+* [*Reduce boilerplate code] (no factories, no objects creation)
+* [*Reduce cost of maintain effort] (constructor signature change won't affect `di` configuration)
+* [*Reduce testing effort] (automatic mocks injection - see [link boost_di.examples Automatic Mocks Injection]
+
+[table
+[[Manual Dependency Injection][`Boost.DI`]]
+    [
+        [
+            ```
+                int main() {
+                    // boilerplate code
+                    auto logic = std::make_unique<logic>();
+                    auto logger = std::make_shared<logger>();
+
+                    return example(logic, logger).run();
+                }
+            ```
+        ]
+        [
+            ```
+                int main() {
+                    return di::make_injector().create<example>().run();                     .
+                }
+            ```
+        ]
+    ]
+]
+
+`Boost.DI` [*key] features.
+
+* [*Type safe]
+* [*Compile time] approach - no exceptions - if application compiles all dependencies will be be created accurately
+* [*Macro free] - by default no need to specify constructor traits or register anything (less intrusive)
+* Scopes deduction - scopes are deduced based on type semantic
+* Automatic conversion between std/boost smart pointers
+* Compile time policies - ex. to detect circular dependencies or limit supported types only to specified
+* Supports `C++03` / `C++11` / `C++14` standards
 
 [endsect]
 

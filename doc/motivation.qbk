@@ -42,7 +42,7 @@ Dependency Injection may be realised and how it will affects the source code des
 Skip other solutions and go straight away to [link boost_di Boost.DI].
 
 * [*Spaghetti code] which is highly coupled is really hard to change/maintain/test,
-therefore is not really good practise to write it.
+therefore is not really good practice to write it.
 
 ```
     class app {
@@ -53,12 +53,12 @@ therefore is not really good practise to write it.
         }
 
         void init(std::unique_ptr<ilogger>);
-        void run();
+        int run();
     };
 
     int main() {
         //composition root
-        std::make_unique<app>()->run();
+        return std::make_unique<app>()->run();
     }
 ```
 
@@ -71,7 +71,7 @@ scale - project will end up with some sort of automatization.
     class app {
     public:
         app(std::unique_ptr<ilogger>);
-        void run();
+        int run();
     };
 
     int main() {
@@ -79,7 +79,7 @@ scale - project will end up with some sort of automatization.
         auto logger_ = std::make_shared<logger>();
 
         //composition root
-        std::make_unique<app>(logger_)->run();
+        return std::make_unique<app>(logger_)->run();
     }
 ```
 
@@ -119,7 +119,7 @@ dependencies into not default constructor.
 
     int main() {
         //composition root
-        std::make_unique<app>()->run();
+        return std::make_unique<app>()->run();
     }
 ```
 
@@ -168,7 +168,7 @@ which avoid creation of many tedious code.
         laf.add("logger_factory", std::make_unique<logger_factory>());
 
         //composition root
-        std::make_unique<app>(*laf)->run();
+        return std::make_unique<app>(*laf)->run();
     }
 ```
 
@@ -197,7 +197,7 @@ which dependencies are needed for the class which testing unclear and harder.
         sl.register_singleton<ilogger>().to<logger>();
 
         //composition root
-        std::make_unique<app>(sl)->run();
+        return std::make_unique<app>(sl)->run();
     }
 ```
 
@@ -211,13 +211,6 @@ the design/implementation/structure of the code except for well-defined cases
 like "composition root".
 
 [#boost_di]
-[table
-    [[Boost.DI]]
-    [[
-        Boost.DI is `C++03`/`C++11`/`C++14` header only, type safe, library providing compile time, macro free constructor dependency injection.
-        See Overview to learn more.
-    ]]
-]
 
 [table
     [[Motivation Example]]
@@ -226,7 +219,7 @@ like "composition root".
         class app {
         public:
             app(std::unique_ptr<ilogger>);
-            void run();
+            int run();
         };
 
         int main() {
@@ -236,9 +229,7 @@ like "composition root".
             );
 
             // composition root
-            auto my_app = injector.create<app>();
-
-            return 0;
+            return injector.create<app>().run();
         }
     ```
     ]]
@@ -250,7 +241,7 @@ like "composition root".
         maintain, which is presented below.
     ]]
 ]
-[tip Good practise: composition root is a (preferably) unique location in an application where modules are composed together]
+[tip Good practice: composition root is a (preferably) unique location in an application where modules are composed together]
 
 * [*"Evil"] usage of Dependency Injection Framework
 [warning Presented example is just for learning purposes, please don't follow this anti-pattern approach!]
@@ -270,7 +261,7 @@ like "composition root".
     };
 
     int main() {
-        app().run();
+        return app().run();
     }
 ```
 
@@ -306,10 +297,10 @@ Therefore instead of creating and configuring the objects yourself, the dependen
       may inject fakes automatically
 
 * [*Readability]
-    * Code is easier to read since there is a proper separation between business logic and object creation as well as there is no boilerplate code just making chaos
+    * Code is easier to read due to separation between business logic and object creation as well as lack of boilerplate code just making chaos
 
 [*Dependency Injection Framework] might be really useful and may make your code to be loosely coupled and easy to maintain.
-Followed by a few good practises/principles will get most out of Dependency Injection Framework.
+Followed by a few good practices/principles will get most out of Dependency Injection Framework.
 
 * Avoid global states and [@http://en.wikipedia.org/wiki/Singleton_pattern Singleton pattern]
 * Avoid [@http://en.wikipedia.org/wiki/Service_locator_pattern Service Locator] pattern

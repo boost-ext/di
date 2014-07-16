@@ -9,18 +9,9 @@
 
 [section Overview]
 
+Boost.DI is `C++03`/`C++11`/`C++14` header only, type safe, library providing compile time, macro free constructor dependency injection.
+
 [h6 Features]
-
-What is so unique about this library?
-
-* Compile time approach - no exceptions - if application compiles all dependencies will be be created accurately
-* Macro free - no need to specify constructor traits or register anything (less intrusive)
-* Scopes deduction - scopes are deduced based on type semantic
-* Automatic conversion between std/boost smart pointers
-* Compile time policies - ex. to detect circular dependencies or limit supported types only to specified
-* Supports `C++03` / `C++11` / `C++14` standards
-
-Main features:
 
 * Type safe
 * Header only library
