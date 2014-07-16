@@ -59,7 +59,7 @@ Following this approach has many advantages.
 ]
 
 `Boost.DI` is a `Dependency Injection library` improving `manual dependency injection` by simplifying object instantiation with automatic dependencies injection.
-Using `Boost.DI` have many advantages over `manual dependency injection`
+Using `Boost.DI` has many advantages over `manual dependency injection`.
 
 * [*Reduce boilerplate code] (no factories, no objects creation)
 * [*Reduce cost of maintain effort] (constructor signature change won't affect `di` configuration)
