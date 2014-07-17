@@ -45,9 +45,13 @@
 [endsect]
 
 [section Custom Scope]
+[import ../example/cpp_11/custom_scope.cpp]
+[custom_scope_cpp_11]
 [endsect]
 
 [section Custom Allocator]
+[import ../example/cpp_11/custom_allocator.cpp]
+[custom_allocator_cpp_11]
 [endsect]
 
 [section Custom Policy]
@@ -102,6 +106,12 @@ Example
 [endsect]
 
 [section More Examples]
+
+[table
+    [[Description][Example]]
+    [[Text Visitor][[@example/test_visistor.cpp]]]
+]
+
 [endsect]
 
 [endsect]
