@@ -40,6 +40,9 @@
     // concepts
     #include "boost/di/concepts.hpp"
 
+    // annotations
+    #include "boost/di/named.hpp"
+
     // scopes
     #include "boost/di/scopes/deduce.hpp"
     #include "boost/di/scopes/external.hpp"
@@ -51,8 +54,7 @@
     #include "boost/di/injector.hpp"
     #include "boost/di/make_injector.hpp"
 
-    // utilities
-    #include "boost/di/named.hpp"
+    //utilities
     #include "boost/di/provider.hpp"
 
     // policies

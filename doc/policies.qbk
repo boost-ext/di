@@ -37,7 +37,7 @@ In order for `injector` to verify policies they have to be passed to `create`, `
 [heading Namespace]
     boost::di::policies
 
-[heading Example]
+[heading Examples]
     di::make_injector().create<int>(policy1(), policy2(), ..., policyN());
     di::make_injector().allocate<int>(allocator(), policy1(), policy2(), ..., policyN());
 
@@ -73,7 +73,7 @@ Verifies constructor parameters overlapping.
 [heading Namespace]
     boost::di::policies
 
-[heading Example]
+[heading Examples]
     di::make_injector().create<int>(di::policies::circular_dependencies()); // compile ok
 
     struct cd2;
@@ -117,7 +117,7 @@ Limits creation types to copies/pointers/smart pointers and disallow references.
 [heading Namespace]
     boost::di::policies
 
-[heading Example]
+[heading Examples]
     di::make_injector().create<int>(di::policies::creation_ownership()); // compile ok
     di::make_injector().create<const int&>(di::policies::creation_ownership()); // compile error
     di::make_injector().create<int&>(di::policies::creation_ownership()); // compile error
@@ -166,7 +166,7 @@ Limits allowed constructor parameters. By default, if used, all parameters are d
 [heading Namespace]
     boost::di::policies
 
-[heading Example]
+[heading Examples]
     using namespace di::policies;
     di::make_injector().create<int>(parameters_permission<>()); // compile error, no parameters are allowed
     di::make_injector().create<int>(parameters_permission<allow_copies>()); // compile ok
@@ -236,7 +236,7 @@ Limits allowed scopes to be used whilst binding.  By default, if used, all scope
 [heading Namespace]
     boost::di::policies
 
-[heading Example]
+[heading Examples]
     using namespace di::policies;
 
     di::make_injector().create<int>(scopes_permission<>()); // compile error, no scopes are allowed

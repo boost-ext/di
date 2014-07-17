@@ -1,0 +1,84 @@
+[/
+ /
+ / Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+ /
+ / Distributed under the Boost Software License, Version 1.0.
+ / (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /
+ /]
+
+[section Modules]
+
+[heading Description]
+Modules allow to split the configurations into smaller injectors.
+Module is a type with `configure` method returning `injector` type.
+Activation of `Module` is done by passing it into injector.
+
+[heading Synopsis `C++14`]
+    class module {
+    public:
+        auto configure() const {
+            return di::make_injector(...);
+        }
+    }
+
+[heading Synopsis `C++11`]
+    class module {
+    public:
+        auto configure() const -> decltype(di::make_injector(...)) {
+            return di::make_injector(...);
+        }
+    }
+
+[heading Synopsis `C++03`]
+    class module {
+        typedef di::injector<...> injector;
+
+    public:
+        injector configure() const {
+            return injector(...);
+        }
+    }
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`x.configure()`][None][Returns `di::injector` object with configured dependencies]]
+]
+
+[heading Expression Semantics]
+    module().configure();
+
+[*Return type]: `di::injector<...>`
+
+[heading Header]
+    #include <boost/di.hpp>
+
+[heading Examples]
+    class module {
+    public:
+        auto configure() const {
+            return di::make_injector(
+                di::bind<i, impl>()
+            );
+        }
+    };
+
+    // many modules might be passed and they might be mixed with bindings
+    {
+        auto injector = di::make_injector(module(), ...);
+    }
+
+    {
+        using injector = di::injector<module, ...>;
+    }
+
+[tip Modules/Bindings/Types might be mixed whilst creating an injector, order is not important.]
+
+[heading More Examples]
+    ``[link di.examples Modules]``
+
+[heading Tests]
+    ``[@test/mt/injector_mt.cpp]`` | ``[@test/mt/make_injector_mt.cpp]``
+
+[endsect]
+
