@@ -28,10 +28,16 @@
 </h4></div></div></div>
 <h6>
 <a name="boost_di__dependency_injection_.concepts.policies.parameters_permission.h0"></a>
-          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.parameters_permission.synopsis"></a></span><a class="link" href="parameters_permission.html#boost_di__dependency_injection_.concepts.policies.parameters_permission.synopsis">Synopsis</a>
+          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.parameters_permission.description"></a></span><a class="link" href="parameters_permission.html#boost_di__dependency_injection_.concepts.policies.parameters_permission.description">Description</a>
         </h6>
 <p>
-</p>
+          Limits allowed constructor parameters. By default, if used, all parameters
+          are disallowed.
+        </p>
+<h6>
+<a name="boost_di__dependency_injection_.concepts.policies.parameters_permission.h1"></a>
+          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.parameters_permission.synopsis"></a></span><a class="link" href="parameters_permission.html#boost_di__dependency_injection_.concepts.policies.parameters_permission.synopsis">Synopsis</a>
+        </h6>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">allow_smart_ptrs</span><span class="special">;</span>
 <span class="keyword">struct</span> <span class="identifier">allow_refs</span><span class="special">;</span>
 <span class="keyword">struct</span> <span class="identifier">allow_const_refs</span><span class="special">;</span>
@@ -46,42 +52,103 @@
     <span class="keyword">void</span> <span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
 <span class="special">};</span>
 </pre>
-<p>
-        </p>
-<h6>
-<a name="boost_di__dependency_injection_.concepts.policies.parameters_permission.h1"></a>
-          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.parameters_permission.description"></a></span><a class="link" href="parameters_permission.html#boost_di__dependency_injection_.concepts.policies.parameters_permission.description">Description</a>
-        </h6>
-<p>
-          <code class="computeroutput"><span class="identifier">Parameters</span> <span class="identifier">Permission</span></code>
-          policy limits allowed constructor parameters. By default, if used, all
-          parameters are disallowed.
-        </p>
-<h6>
+<div class="table">
+<a name="boost_di__dependency_injection_.concepts.policies.parameters_permission.parameters"></a><p class="title"><b>Table&#160;10.&#160;Parameters</b></p>
+<div class="table-contents"><table class="table" summary="Parameters">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Parameter
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Requirement
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">T</span><span class="special">...</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Allow Parameter Model type
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Parameters to be allowed
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">TDependency</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Dependency Model type
+                  </p>
+                </td>
+<td>
+                  <p>
+                    dependency to be verified
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><h6>
 <a name="boost_di__dependency_injection_.concepts.policies.parameters_permission.h2"></a>
+          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.parameters_permission.expression_semantics"></a></span><a class="link" href="parameters_permission.html#boost_di__dependency_injection_.concepts.policies.parameters_permission.expression_semantics">Expression
+          Semantics</a>
+        </h6>
+<pre class="programlisting"><span class="identifier">parameters_permission</span><span class="special">&lt;</span><span class="identifier">allow_refs</span><span class="special">,</span> <span class="identifier">allow_smart_ptrs</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">allow_copies</span><span class="special">&gt;();</span>
+</pre>
+<p>
+          <span class="bold"><strong>Result</strong></span>: <code class="computeroutput"><span class="identifier">BOOST_MPL_ASSERT</span>
+          <span class="identifier">with</span> <span class="identifier">PARAMETER_NOT_PERMITTED</span>
+          <span class="keyword">or</span> <span class="identifier">clean</span>
+          <span class="identifier">compilation</span></code>
+        </p>
+<h6>
+<a name="boost_di__dependency_injection_.concepts.policies.parameters_permission.h3"></a>
+          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.parameters_permission.header"></a></span><a class="link" href="parameters_permission.html#boost_di__dependency_injection_.concepts.policies.parameters_permission.header">Header</a>
+        </h6>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<h6>
+<a name="boost_di__dependency_injection_.concepts.policies.parameters_permission.h4"></a>
+          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.parameters_permission.namespace"></a></span><a class="link" href="parameters_permission.html#boost_di__dependency_injection_.concepts.policies.parameters_permission.namespace">Namespace</a>
+        </h6>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span>
+</pre>
+<h6>
+<a name="boost_di__dependency_injection_.concepts.policies.parameters_permission.h5"></a>
           <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.parameters_permission.example"></a></span><a class="link" href="parameters_permission.html#boost_di__dependency_injection_.concepts.policies.parameters_permission.example">Example</a>
         </h6>
-<p>
-</p>
 <pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">;</span>
-</pre>
-<p>
-        </p>
-<p>
-</p>
-<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">parameters_permission</span><span class="special">&lt;&gt;());</span> <span class="comment">// compile error, no parameters are allowed</span>
-</pre>
-<p>
-        </p>
-<p>
-</p>
-<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">parameters_permission</span><span class="special">&lt;</span><span class="identifier">allow_copies</span><span class="special">&gt;());</span> <span class="comment">// compile ok</span>
-</pre>
-<p>
-        </p>
-<p>
-</p>
-<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
+<span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">parameters_permission</span><span class="special">&lt;&gt;());</span> <span class="comment">// compile error, no parameters are allowed</span>
+<span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">parameters_permission</span><span class="special">&lt;</span><span class="identifier">allow_copies</span><span class="special">&gt;());</span> <span class="comment">// compile ok</span>
+
+<span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
     <span class="identifier">example</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">*&gt;,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;,</span> <span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;);</span>
 <span class="special">};</span>
 
@@ -95,8 +162,6 @@
     <span class="identifier">parameters_permission</span><span class="special">&lt;</span><span class="identifier">allow_copies</span><span class="special">,</span> <span class="identifier">allow_ptrs</span><span class="special">,</span> <span class="identifier">allow_smart_ptrs</span><span class="special">,</span> <span class="identifier">allow_const_refs</span><span class="special">&gt;()</span>
 <span class="special">);</span> <span class="comment">// compile ok</span>
 </pre>
-<p>
-        </p>
 <div class="warning"><table border="0" summary="Warning">
 <tr>
 <td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../../../../doc/src/images/warning.png"></td>
@@ -108,17 +173,11 @@
           </p></td></tr>
 </table></div>
 <h6>
-<a name="boost_di__dependency_injection_.concepts.policies.parameters_permission.h3"></a>
-          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.parameters_permission.usage"></a></span><a class="link" href="parameters_permission.html#boost_di__dependency_injection_.concepts.policies.parameters_permission.usage">Usage</a>
+<a name="boost_di__dependency_injection_.concepts.policies.parameters_permission.h6"></a>
+          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.parameters_permission.tests"></a></span><a class="link" href="parameters_permission.html#boost_di__dependency_injection_.concepts.policies.parameters_permission.tests">Tests</a>
         </h6>
-<div class="informaltable"><table class="table">
-<colgroup><col></colgroup>
-<tbody><tr><td>
-                  <p>
-                    Tests: <a href="../../../test/ut/policies/parameters_permission_ut.cpp" target="_top">test/ut/policies/parameters_permission_ut.cpp</a>
-                  </p>
-                </td></tr></tbody>
-</table></div>
+<pre class="programlisting"><a href="../../../test/ut/policies/parameters_permission_ut.cpp" target="_top">test/ut/policies/parameters_permission_ut.cpp</a>
+</pre>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>

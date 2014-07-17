@@ -30,15 +30,24 @@
 <div class="toc"><dl class="toc">
 <dt><span class="section"><a href="constructor_injections/automatic__default_.html">automatic
         (default)</a></span></dt>
-<dt><span class="section"><a href="constructor_injections/ctor_traits.html">ctor_traits</a></span></dt>
 <dt><span class="section"><a href="constructor_injections/boost_di_inject.html">BOOST_DI_INJECT</a></span></dt>
 <dt><span class="section"><a href="constructor_injections/boost_di_inject_traits.html">BOOST_DI_INJECT_TRAITS</a></span></dt>
+<dt><span class="section"><a href="constructor_injections/ctor_traits.html">ctor_traits</a></span></dt>
 </dl></div>
 <p>
         <span class="bold"><strong>Constructor Injection</strong></span> is the most powerful
-        of the available injections. It guarantee initialized state of data members.
-        In Boost.DI Constructor Injection is achieved without any additional work
-        from the user except defining the constructor.
+        of the available injections. It guarantees initialized state of data members.
+        <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> constructor injection is achieved without
+        any additional work from the user except defining the constructor.
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">example</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">);</span> <span class="comment">// will be deduced by `Boost.DI` and int, double will be injected</span>
+<span class="special">};</span>
+</pre>
+<p>
       </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

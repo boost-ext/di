@@ -32,46 +32,16 @@
 <dt><span class="section"><a href="policies/parameters_permission.html">parameters_permission</a></span></dt>
 <dt><span class="section"><a href="policies/scopes_permission.html">scopes_permission</a></span></dt>
 </dl></div>
+<h5>
+<a name="boost_di__dependency_injection_.concepts.policies.h0"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.description"></a></span><a class="link" href="policies.html#boost_di__dependency_injection_.concepts.policies.description">Description</a>
+      </h5>
 <p>
         Policies are compile time components operates on dependencies in order to
         limit allowed behaviour. Policy has to have <code class="computeroutput"><span class="identifier">assert_policy</span></code>
-        method defined.
-      </p>
-<p>
-</p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">policy</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
-    <span class="keyword">void</span> <span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
-<span class="special">};</span>
-</pre>
-<p>
-      </p>
-<p>
-        In order for <code class="computeroutput"><span class="identifier">injector</span></code> to
-        verify policies they have to be passed to <code class="computeroutput"><span class="identifier">create</span></code>,
-        <code class="computeroutput"><span class="identifier">allocate</span></code> call.
-</p>
-<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">policy1</span><span class="special">(),</span> <span class="identifier">policy2</span><span class="special">(),</span> <span class="special">...,</span> <span class="identifier">policyN</span><span class="special">());</span>
-</pre>
-<p>
-      </p>
-<p>
-</p>
-<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">allocate</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">allocator</span><span class="special">(),</span> <span class="identifier">policy1</span><span class="special">(),</span> <span class="identifier">policy2</span><span class="special">(),</span> <span class="special">...,</span> <span class="identifier">policyN</span><span class="special">());</span>
-</pre>
-<p>
-      </p>
-<div class="informaltable"><table class="table">
-<colgroup><col></colgroup>
-<tbody><tr><td>
-                <p>
-                  Example policy: <a href="../../example/cpp_11/custom_policy.cpp" target="_top">example/cpp_11/custom_policy.cpp</a>
-                </p>
-              </td></tr></tbody>
-</table></div>
-<p>
-        <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> is released with following policies
+        method defined. In order for <code class="computeroutput"><span class="identifier">injector</span></code>
+        to verify policies they have to be passed to <code class="computeroutput"><span class="identifier">create</span></code>,
+        <code class="computeroutput"><span class="identifier">allocate</span></code> call. <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> is released with following policies
       </p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
@@ -100,6 +70,80 @@
           By Default <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> has no policies enabled.
         </p></td></tr>
 </table></div>
+<h5>
+<a name="boost_di__dependency_injection_.concepts.policies.h1"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.synopsis"></a></span><a class="link" href="policies.html#boost_di__dependency_injection_.concepts.policies.synopsis">Synopsis</a>
+      </h5>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">policy</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<div class="table">
+<a name="boost_di__dependency_injection_.concepts.policies.parameters"></a><p class="title"><b>Table&#160;7.&#160;Parameters</b></p>
+<div class="table-contents"><table class="table" summary="Parameters">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Parameter
+                </p>
+              </th>
+<th>
+                <p>
+                  Requirement
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">TDependency</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Dependency Model type
+                </p>
+              </td>
+<td>
+                <p>
+                  dependency to be verified
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+</div>
+<br class="table-break"><h5>
+<a name="boost_di__dependency_injection_.concepts.policies.h2"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.namespace"></a></span><a class="link" href="policies.html#boost_di__dependency_injection_.concepts.policies.namespace">Namespace</a>
+      </h5>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span>
+</pre>
+<h5>
+<a name="boost_di__dependency_injection_.concepts.policies.h3"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.example"></a></span><a class="link" href="policies.html#boost_di__dependency_injection_.concepts.policies.example">Example</a>
+      </h5>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">policy1</span><span class="special">(),</span> <span class="identifier">policy2</span><span class="special">(),</span> <span class="special">...,</span> <span class="identifier">policyN</span><span class="special">());</span>
+<span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">allocate</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">allocator</span><span class="special">(),</span> <span class="identifier">policy1</span><span class="special">(),</span> <span class="identifier">policy2</span><span class="special">(),</span> <span class="special">...,</span> <span class="identifier">policyN</span><span class="special">());</span>
+</pre>
+<h5>
+<a name="boost_di__dependency_injection_.concepts.policies.h4"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.more_examples"></a></span><a class="link" href="policies.html#boost_di__dependency_injection_.concepts.policies.more_examples">More
+        Examples</a>
+      </h5>
+<pre class="programlisting"><a class="link" href="../../">Custom Policy</a>
+</pre>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>

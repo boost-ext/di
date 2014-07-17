@@ -28,46 +28,102 @@
 </h4></div></div></div>
 <h6>
 <a name="boost_di__dependency_injection_.concepts.policies.circular_dependencies.h0"></a>
-          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.circular_dependencies.synopsis"></a></span><a class="link" href="circular_dependencies.html#boost_di__dependency_injection_.concepts.policies.circular_dependencies.synopsis">Synopsis</a>
+          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.circular_dependencies.description"></a></span><a class="link" href="circular_dependencies.html#boost_di__dependency_injection_.concepts.policies.circular_dependencies.description">Description</a>
         </h6>
 <p>
-</p>
+          Verifies constructor parameters overlapping.
+        </p>
+<h6>
+<a name="boost_di__dependency_injection_.concepts.policies.circular_dependencies.h1"></a>
+          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.circular_dependencies.synopsis"></a></span><a class="link" href="circular_dependencies.html#boost_di__dependency_injection_.concepts.policies.circular_dependencies.synopsis">Synopsis</a>
+        </h6>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">circular_dependencies</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
     <span class="keyword">void</span> <span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
 <span class="special">};</span>
 </pre>
-<p>
-        </p>
-<h6>
-<a name="boost_di__dependency_injection_.concepts.policies.circular_dependencies.h1"></a>
-          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.circular_dependencies.description"></a></span><a class="link" href="circular_dependencies.html#boost_di__dependency_injection_.concepts.policies.circular_dependencies.description">Description</a>
-        </h6>
-<p>
-          <code class="computeroutput"><span class="identifier">Circular</span> <span class="identifier">Dependencies</span></code>
-          policy verifies constructor parameters overlapping.
-        </p>
-<h6>
+<div class="table">
+<a name="boost_di__dependency_injection_.concepts.policies.circular_dependencies.parameters"></a><p class="title"><b>Table&#160;8.&#160;Parameters</b></p>
+<div class="table-contents"><table class="table" summary="Parameters">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Parameter
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Requirement
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">TDependency</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Dependency Model type
+                  </p>
+                </td>
+<td>
+                  <p>
+                    dependency to be verified
+                  </p>
+                </td>
+</tr></tbody>
+</table></div>
+</div>
+<br class="table-break"><h6>
 <a name="boost_di__dependency_injection_.concepts.policies.circular_dependencies.h2"></a>
-          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.circular_dependencies.example"></a></span><a class="link" href="circular_dependencies.html#boost_di__dependency_injection_.concepts.policies.circular_dependencies.example">Example</a>
+          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.circular_dependencies.expression_semantics"></a></span><a class="link" href="circular_dependencies.html#boost_di__dependency_injection_.concepts.policies.circular_dependencies.expression_semantics">Expression
+          Semantics</a>
         </h6>
-<p>
-</p>
-<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">circular_dependencies</span><span class="special">());</span> <span class="comment">// compile ok</span>
+<pre class="programlisting"><span class="identifier">circular_dependencies</span><span class="special">();</span>
 </pre>
 <p>
+          <span class="bold"><strong>Result</strong></span>: <code class="computeroutput"><span class="identifier">BOOST_MPL_ASSERT</span>
+          <span class="identifier">with</span> <span class="identifier">CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED</span>
+          <span class="keyword">or</span> <span class="identifier">clean</span>
+          <span class="identifier">compilation</span></code>
         </p>
-<p>
-</p>
-<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">cd2</span><span class="special">;</span>
+<h6>
+<a name="boost_di__dependency_injection_.concepts.policies.circular_dependencies.h3"></a>
+          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.circular_dependencies.header"></a></span><a class="link" href="circular_dependencies.html#boost_di__dependency_injection_.concepts.policies.circular_dependencies.header">Header</a>
+        </h6>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<h6>
+<a name="boost_di__dependency_injection_.concepts.policies.circular_dependencies.h4"></a>
+          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.circular_dependencies.namespace"></a></span><a class="link" href="circular_dependencies.html#boost_di__dependency_injection_.concepts.policies.circular_dependencies.namespace">Namespace</a>
+        </h6>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span>
+</pre>
+<h6>
+<a name="boost_di__dependency_injection_.concepts.policies.circular_dependencies.h5"></a>
+          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.circular_dependencies.example"></a></span><a class="link" href="circular_dependencies.html#boost_di__dependency_injection_.concepts.policies.circular_dependencies.example">Example</a>
+        </h6>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">circular_dependencies</span><span class="special">());</span> <span class="comment">// compile ok</span>
+
+<span class="keyword">struct</span> <span class="identifier">cd2</span><span class="special">;</span>
 <span class="keyword">struct</span> <span class="identifier">cd1</span> <span class="special">{</span> <span class="identifier">cd1</span><span class="special">(</span><span class="identifier">cd2</span><span class="special">*);</span> <span class="special">};</span>
 <span class="keyword">struct</span> <span class="identifier">cd2</span> <span class="special">{</span> <span class="identifier">cd2</span><span class="special">(</span><span class="identifier">cd1</span><span class="special">*);</span> <span class="special">};</span>
 
 <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">cd1</span><span class="special">&gt;(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">circular_dependencies</span><span class="special">());</span> <span class="comment">// compile error</span>
 </pre>
-<p>
-        </p>
 <div class="note"><table border="0" summary="Note">
 <tr>
 <td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../../doc/src/images/note.png"></td>
@@ -79,17 +135,11 @@
           </p></td></tr>
 </table></div>
 <h6>
-<a name="boost_di__dependency_injection_.concepts.policies.circular_dependencies.h3"></a>
-          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.circular_dependencies.usage"></a></span><a class="link" href="circular_dependencies.html#boost_di__dependency_injection_.concepts.policies.circular_dependencies.usage">Usage</a>
+<a name="boost_di__dependency_injection_.concepts.policies.circular_dependencies.h6"></a>
+          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.policies.circular_dependencies.tests"></a></span><a class="link" href="circular_dependencies.html#boost_di__dependency_injection_.concepts.policies.circular_dependencies.tests">Tests</a>
         </h6>
-<div class="informaltable"><table class="table">
-<colgroup><col></colgroup>
-<tbody><tr><td>
-                  <p>
-                    Tests: <a href="../../../test/ut/policies/circular_dependencies_ut.cpp" target="_top">test/ut/policies/circular_dependencies_ut.cpp</a>
-                  </p>
-                </td></tr></tbody>
-</table></div>
+<pre class="programlisting"><a href="../../../test/ut/policies/circular_dependencies_ut.cpp" target="_top">test/ut/policies/circular_dependencies_ut.cpp</a>
+</pre>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
