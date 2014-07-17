@@ -1,0 +1,86 @@
+[/
+ /
+ / Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+ /
+ / Distributed under the Boost Software License, Version 1.0.
+ / (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /
+ /]
+
+[section Injectors]
+
+[section injector]
+Injector is a component used for creating dependencies configuration using bindings.
+
+* `create`
+```
+    template<typename T, typename... TPolicies>
+    T create(const TPolicies&...);
+```
+
+* `allocate`
+```
+    template<typename T>
+    T allocate(const allocator&, const TPolicies&...);
+```
+
+* `visit`
+```
+    template<typename T>
+    void visit();
+```
+
+* `call`
+```
+    template<typename TAction>
+    void call(const TAction&);
+```
+[table
+    [[Tests: [@test/ut/injector_ut.cpp]]]
+]
+
+[endsect]
+
+[section make_injector]
+Injector might be created using `di::make_injector` or `di::injector type` it self.
+Preferable option is to use di::make_injector because it allows to bind dynamic values.
+
+[table
+[[di::make_injector][di::injector]]
+    [
+        [
+            ```
+                auto injector = di::make_injector();
+            ```
+        ]
+        [
+            ```
+                using injector_t = di::injector<>;
+                auto injector = injector_t();
+            ```
+        ]
+    ]
+
+    [
+        [
+            ```
+                auto injector = di::make_injector(
+                    di::deduce<implementation>()
+                );
+            ```
+        ]
+        [
+            ```
+                using injector = di::injector<implementation>;
+            ```
+        ]
+    ]
+]
+
+[table
+    [[Tests: [@test/mt/make_injector_mt.cpp] | [@test/mt/injector_mt.cpp]]]
+]
+[endsect]
+
+[endsect]
+

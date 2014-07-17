@@ -12,53 +12,8 @@
 [heading Description]
 Provides common `Boost.DI` functionality to be externally implemented.
 `Boost.DI` is released with following utilities:
-* provider
 * allocator
-
-[section provider]
-
-[heading Description]
-With normal dependency injection, each type gets exactly one instance of each of its dependent types.
-Sometimes it's required to get many different instances. Then providers become handy.
-They create a new value whenever get() method is invoked.
-
-[heading Synopsis]
-    template<typename T>
-    class provider {
-    public:
-        virtual ~provider() { }
-        virtual T get() const = 0;
-    };
-
-[table Parameters
-    [[Parameter][Requirement][Description]]
-    [[`T`][None][Type to be provided]]
-    [[`x.get()`][None][Returns type to be provided]]
-]
-
-[heading Header]
-    #include <boost/di.hpp>
-
-[heading Example]
-    class provider : iprovider<int> {
-    public:
-        int get() const override {
-            static int i = 0;
-            return i++;
-        }
-    };
-
-    class example {
-    public:
-        example(provider<int> p) {
-            assert(p.get() != p.get());
-        }
-    };
-
-[heading Tests]
-    ``[@test/ut/provider_ut.cpp]``
-
-[endsect]
+* provider
 
 [section allocator]
 
@@ -114,6 +69,51 @@ Allocate and create objects. By default objects are allocated on heap using `new
 
 [heading Tests]
     ``[@test/ut/core/allocator_ut.cpp]``
+
+[endsect]
+
+[section provider]
+
+[heading Description]
+With normal dependency injection, each type gets exactly one instance of each of its dependent types.
+Sometimes it's required to get many different instances. Then providers become handy.
+They create a new value whenever get() method is invoked.
+
+[heading Synopsis]
+    template<typename T>
+    class provider {
+    public:
+        virtual ~provider() { }
+        virtual T get() const = 0;
+    };
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`T`][None][Type to be provided]]
+    [[`x.get()`][None][Returns type to be provided]]
+]
+
+[heading Header]
+    #include <boost/di.hpp>
+
+[heading Example]
+    class provider : iprovider<int> {
+    public:
+        int get() const override {
+            static int i = 0;
+            return i++;
+        }
+    };
+
+    class example {
+    public:
+        example(provider<int> p) {
+            assert(p.get() != p.get());
+        }
+    };
+
+[heading Tests]
+    ``[@test/ut/provider_ut.cpp]``
 
 [endsect]
 

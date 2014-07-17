@@ -1,0 +1,52 @@
+[/
+ /
+ / Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+ /
+ / Distributed under the Boost Software License, Version 1.0.
+ / (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /
+ /]
+
+[section Annotations]
+
+[section named]
+Named parameters are useful when constructor has more parameters of the same type.
+```
+    example(int value1, int value2);
+```
+In order to inject proper values into value and value2 they have to distinguish somehow.
+Boost.DI solution for this are `named parameters`, which basically are just wrappers
+for the type with automatic conversion to the based type.
+```
+    class my_name { };
+    di::named<int, my_name> named_parameter;
+    int i = named_parameter;
+```
+
+Named parameters are intrusive in a sens constructor has to be changed in order to support them.
+It doesn't has to be the case when constructor traits are being used.
+```
+    class example {
+    public:
+        example(int value1, int value2);
+    };
+
+    class my_value1 { };
+    class my_value2 { };
+
+    namespace boost { namespace di {
+
+    template<>
+    struct ctor_traits<example> {
+        BOOST_DI_INJECT_TRAITS(di::named<int, my_value1>, di::named<int, my_value2>);
+    };
+
+}} // boost::di
+```
+[table
+    [[Tests: [@test/ut/named_ut.cpp]]]
+]
+[endsect]
+
+[endsect]
+

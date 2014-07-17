@@ -1,0 +1,212 @@
+[/
+ /
+ / Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+ /
+ / Distributed under the Boost Software License, Version 1.0.
+ / (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /
+ /]
+
+[section Bindings]
+
+Binding in DI is done by DSL. The main purpose of binding DSL is to make easy things as easy
+as possible whilst giving possibility to accomplish solutions for more complicated problems.
+The glue between DSL and the core is dependency, so if you would like to write your own front end
+the only thing which has to be in mind is to return list of dependencies.
+
+```
+template<
+    typename TScope
+  , typename TExpected
+  , typename TGiven
+  , typename TBind
+>
+class dependency;
+```
+
+[section bind]
+
+```
+template<typename If, typename Impl>
+struct bind
+    : concepts::dependency<scopes::deduce, If, Impl>
+{ };
+```
+
+DSL released with the library allows you to bind:
+
+* bind to interface
+```
+    di::bind<interface, implementation>
+    di::bind<implementation>
+```
+
+* bind the same implementation to many interfaces
+```
+    di::bind<any_of<interface1, interface2, ..., interfaceN>, implementation>
+```
+[note The same might be achived with `bind<implementation>`]
+
+* bind to compile time value
+```
+    di::bind_int<42>()
+    di::bind_string<mpl::string<'str'>>
+```
+
+* bind to runtime value
+```
+    di::bind<int>::to(42)
+    di::bind<std::string>::to("text");
+```
+
+* bind to external runtime value
+
+    * to shared ptr
+    ```
+        di::bind<example>::to(make_shared<example>()) // bind to shared_ptr
+    ```
+
+    * to reference
+    ```
+        example example_;
+        di::bind<example>::to(cref(example_)) // bind to const ref
+        di::bind<example>::to(ref(example_)) // bind to ref
+    ```
+
+    * to functor
+    ```
+        di::bind<std::function<int()>>::to([]{ return 42; })
+        di::bind<std::function<int()>>::to(boost::bind(&return_int, 42))
+    ```
+
+    * to functor factory
+    ```
+        di::bind<int>::to([]{ return 42; })
+    ```
+
+On top of binding to values user can bind to named parameters or using context.
+
+* bind using named parameters
+```
+    class my_value { };
+    class my_if { };
+
+    stuct example {
+        example(di::named<int, my_value> value, di::named<shared_ptr<interface>, my_if>);
+    };
+
+    di::bind_int<42>::named<my_value>()
+    di::bind<int>::named<my_value>::to(42)
+
+    di::bind<interface, implementation>::named<my_if>()
+    di::bind<implementation>::named<my_if>()
+```
+
+* bind using call stack context
+```
+    call_stack<c1, c2, ..., cN> // call stack definition
+
+    class c2 {
+    public:
+        c2(unique_ptr<interface>);
+    };
+
+    class c1 {
+    public:
+        c1(c2);
+    };
+
+    di::bind<interface, implementation>::when<call_stack<c1, c2>>()
+
+```
+[note `BOOST_DI_CFG_EXAMINE_CALL_STACK` has to be defined to enable this features]
+
+* bind using call stack context and named parameters
+```
+    class c2 {
+    public:
+        c2(di::named<unique_ptr<interface>, my_if>);
+    };
+
+    class c1 {
+    public:
+        c1(c2);
+    };
+
+    // bind interface to implementation for named
+    // parameter `my_if` when the class `c2` was created from class `c1`
+
+    di::bind<interface, implementation>::named<my_if>::when<call_stack<c1, c2>>()
+    di::bind<implementation>::named<my_if>::when<call_stack<c1, c2>>()
+    di::bind<interface, implementation>::when<call_stack<c1, c2>>::named<my_if>()
+    di::bind<implementation>::when<call_stack<c1, c2>>::named<my_if>()
+
+    // all bindings above are equivalent
+```
+
+* bind using custom concept
+
+Custom concepts requires `apply` class which should return compile time integer value.
+Given value will influence how dependencies will be resolved. Current algorithm might
+be found in `Design Rationale`.
+
+```
+struct longer_call_stack_first {
+    template<typename TDependency>
+    struct apply
+        : mpl::size<typename TDependency::call_stack>
+    { };
+}
+```
+
+Then concept might be used with `when` binding afterwards.
+
+```
+    auto injector = di::make_injector(
+        di::bind<int>::to(1)
+      , di::bind<int>::when<longer_call_stack_first>::to(42)
+    );
+
+    struct example {
+        explicit example(int i) : i(i){ };
+        int i = 0;
+    };
+
+    assert(1 == injector.create<int>());
+    assert(42 == injector.create<example>().i);
+```
+[table
+    [[Tests: [@test/ut/concepts_ut.cpp] | [@test/ut/core/binder_ut.cpp]]]
+]
+[endsect]
+
+[section bind_int]
+[endsect]
+
+[section bind_string]
+[endsect]
+
+[section scope]
+[endsect]
+
+[section deduce]
+[endsect]
+
+[section unique]
+[endsect]
+
+[section shared]
+[endsect]
+
+[section session]
+[endsect]
+
+[section call_stack]
+[endsect]
+
+[section any_of]
+[endsect]
+
+[endsect]
+
+
