@@ -34,11 +34,8 @@
 
 #else
 
-    // inject
+    // injections
     #include "boost/di/inject.hpp"
-
-    // bindings
-    #include "boost/di/bindings.hpp"
 
     // annotations
     #include "boost/di/named.hpp"
@@ -50,7 +47,10 @@
     #include "boost/di/scopes/shared.hpp"
     #include "boost/di/scopes/unique.hpp"
 
-    // injector
+    // bindings
+    #include "boost/di/bindings.hpp"
+
+    // injectors
     #include "boost/di/injector.hpp"
     #include "boost/di/make_injector.hpp"
 
