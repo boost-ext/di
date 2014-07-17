@@ -9,30 +9,10 @@
 
 [section Policies]
 
+[heading Description]
 Policies are compile time components operates on dependencies in order to limit allowed behaviour.
 Policy has to have `assert_policy` method defined.
-
-```
-class policy {
-public:
-    template<typename TDependency>
-    void assert_policy() const;
-};
-```
-
 In order for `injector` to verify policies they have to be passed to `create`, `allocate` call.
-```
-    di::make_injector().create<int>(policy1(), policy2(), ..., policyN());
-```
-
-```
-    di::make_injector().allocate<int>(allocator(), policy1(), policy2(), ..., policyN());
-```
-
-[table
-    [[Example policy: [@example/cpp_11/custom_policy.cpp]]]
-]
-
 `Boost.DI` is released with following policies
 
 * `Circular Dependencies` - verify circular dependencies occurrence
@@ -42,82 +22,119 @@ In order for `injector` to verify policies they have to be passed to `create`, `
 
 [note By Default `Boost.DI` has no policies enabled.]
 
+[heading Synopsis]
+    class policy {
+    public:
+        template<typename TDependency>
+        void assert_policy() const;
+    };
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`TDependency`][Dependency Model type][dependency to be verified]]
+]
+
+[heading Namespace]
+    boost::di::policies
+
+[heading Example]
+    di::make_injector().create<int>(policy1(), policy2(), ..., policyN());
+    di::make_injector().allocate<int>(allocator(), policy1(), policy2(), ..., policyN());
+
+
+[heading More Examples]
+    ``[link di.examples Custom Policy]``
+
 [section circular_dependencies]
 
-[h5 Synopsis]
-```
-class circular_dependencies {
-public:
-    template<typename TDependency>
-    void assert_policy() const;
-};
-```
+[heading Description]
+Verifies constructor parameters overlapping.
 
-[h5 Description]
-`Circular Dependencies` policy verifies constructor parameters overlapping.
+[heading Synopsis]
+    class circular_dependencies {
+    public:
+        template<typename TDependency>
+        void assert_policy() const;
+    };
 
-[h5 Example]
-```
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`TDependency`][Dependency Model type][dependency to be verified]]
+]
+
+[heading Expression Semantics]
+    circular_dependencies();
+
+[*Result]: `BOOST_MPL_ASSERT with CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED or clean compilation`
+
+[heading Header]
+    #include <boost/di.hpp>
+
+[heading Namespace]
+    boost::di::policies
+
+[heading Example]
     di::make_injector().create<int>(di::policies::circular_dependencies()); // compile ok
-```
 
-```
     struct cd2;
     struct cd1 { cd1(cd2*); };
     struct cd2 { cd2(cd1*); };
 
     di::make_injector().create<cd1>(di::policies::circular_dependencies()); // compile error
-```
+
 [note Requires `BOOST_DI_CFG_EXAMINE_CALL_STACK` to be defined.]
 
-[h5 Usage]
-
-[table
-    [[Tests: [@test/ut/policies/circular_dependencies_ut.cpp]]]
-]
+[heading Tests]
+    ``[@test/ut/policies/circular_dependencies_ut.cpp]``
 
 [endsect]
 
 [section creation_ownership]
 
-[h5 Synopsis]
-```
-class creation_ownership {
-public:
-    template<typename TDependency>
-    void assert_policy() const;
-};
-```
+[heading Description]
+Limits creation types to copies/pointers/smart pointers and disallow references.
 
-[h5 Description]
-`Creation Ownership` policy limits creation types to copies/pointers/smart pointers and disallow references.
+[heading Synopsis]
+    class creation_ownership {
+    public:
+        template<typename TDependency>
+        void assert_policy() const;
+    };
 
-[h5 Example]
-```
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`TDependency`][Dependency Model type][dependency to be verified]]
+]
+
+[heading Expression Semantics]
+    creation_ownership();
+
+[*Result]: `BOOST_MPL_ASSERT with CREATION_OWNERSHIP_IS_NOT_CLEAR or clean compilation`
+
+[heading Header]
+    #include <boost/di.hpp>
+
+[heading Namespace]
+    boost::di::policies
+
+[heading Example]
     di::make_injector().create<int>(di::policies::creation_ownership()); // compile ok
-```
-
-```
     di::make_injector().create<const int&>(di::policies::creation_ownership()); // compile error
-```
-
-```
     di::make_injector().create<int&>(di::policies::creation_ownership()); // compile error
-```
+
 [note Requires `BOOST_DI_CFG_EXAMINE_CALL_STACK` to be defined.]
 
-[h5 Usage]
-
-[table
-    [[Tests: [@test/ut/policies/creation_ownership_ut.cpp]]]
-]
+[heading Tests]
+    ``[@test/ut/policies/creation_ownership_ut.cpp]``
 
 [endsect]
 
 [section parameters_permission]
 
-[h5 Synopsis]
-```
+[heading Description]
+Limits allowed constructor parameters. By default, if used, all parameters are disallowed.
+
+[heading Synopsis]
     struct allow_smart_ptrs;
     struct allow_refs;
     struct allow_const_refs;
@@ -131,25 +148,29 @@ public:
         template<typename TDependency>
         void assert_policy() const;
     };
-```
 
-[h5 Description]
-`Parameters Permission` policy limits allowed constructor parameters. By default, if used, all parameters are disallowed.
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`T...`][Allow Parameter Model type][Parameters to be allowed]]
+    [[`TDependency`][Dependency Model type][dependency to be verified]]
+]
 
-[h5 Example]
-```
+[heading Expression Semantics]
+    parameters_permission<allow_refs, allow_smart_ptrs, ..., allow_copies>();
+
+[*Result]: `BOOST_MPL_ASSERT with PARAMETER_NOT_PERMITTED or clean compilation`
+
+[heading Header]
+    #include <boost/di.hpp>
+
+[heading Namespace]
+    boost::di::policies
+
+[heading Example]
     using namespace di::policies;
-```
-
-```
     di::make_injector().create<int>(parameters_permission<>()); // compile error, no parameters are allowed
-```
-
-```
     di::make_injector().create<int>(parameters_permission<allow_copies>()); // compile ok
-```
 
-```
     struct example {
         example(std::vector<int*>, std::shared_ptr<int>, const int&);
     };
@@ -163,22 +184,20 @@ public:
     di::make_injector().create<example>(
         parameters_permission<allow_copies, allow_ptrs, allow_smart_ptrs, allow_const_refs>()
     ); // compile ok
-```
+
 [warning `Parameters Permission` policy is not supported by Microsoft Visual Studio.]
 
-[h5 Usage]
-
-[table
-    [[Tests: [@test/ut/policies/parameters_permission_ut.cpp]]]
-]
+[heading Tests]
+    ``[@test/ut/policies/parameters_permission_ut.cpp]``
 
 [endsect]
 
 [section scopes_permission]
-`Scopes Permission` policy limits allowed scopes to be used whilst binding.  By default, if used, all scopes are disallowed.
 
-[h5 Synopsis]
-```
+[heading Description]
+Limits allowed scopes to be used whilst binding.  By default, if used, all scopes are disallowed.
+
+[heading Synopsis]
     template<typename TScope>
     struct allow_scope;
 
@@ -191,41 +210,45 @@ public:
         template<typename TDependency>
         void assert_policy() const;
     };
-```
 
-[h5 Allowed Scopes]
-```
-    allow_scope<scopes::unique<>>
-    allow_scope<scopes::shared<>>
-    allow_scope<scopes::session<>>
-    allow_scope<scopes::external<>>
-```
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`TScope`][Scope Model type][scope to be allowed]]
+    [[`T...`][Allow Scope Model type][Scopes to be allowed]]
+    [[`TDependency`][Dependency Model type][dependency to be verified]]
+]
+
+[heading Expression Semantics]
+    scopes_permission<
+        allow_scope<scopes::unique<>>
+      , allow_scope<scopes::shared<>>
+      , allow_scope<scopes::session<>>
+      , allow_scope<scopes::external<>>
+    >()
 
 [note `allow_scope<scopes::deduce>` is not allowed.]
 
-[h5 Example]
+[*Result]: `BOOST_MPL_ASSERT with SCOPE_NOT_PERMITTED or clean compilation`
 
-```
+[heading Header]
+    #include <boost/di.hpp>
+
+[heading Namespace]
+    boost::di::policies
+
+[heading Example]
     using namespace di::policies;
-```
 
-```
     di::make_injector().create<int>(scopes_permission<>()); // compile error, no scopes are allowed
-```
 
-```
     di::make_injector(
         di::unique<int>()
     ).create<int>(scopes_permission<allow_scope<di::scopes::unique<>>>()); // compile ok
-```
 
-```
     di::make_injector(
         di::shared<int>()
     ).create<int>(scopes_permission<allow_scope<di::scopes::unique<>>>()); // compile error
-```
 
-```
     struct example {
         example(std::shared_ptr<int>);
     };
@@ -233,9 +256,7 @@ public:
     di::make_injector(
         di::deduce<int>()
     ).create<example>(scopes_permission<allow_scope<di::scopes::unique<>>>()); // compile error
-```
 
-```
     struct example {
         example(int);
     };
@@ -243,15 +264,11 @@ public:
     di::make_injector(
         di::deduce<int>()
     ).create<example>(scopes_permission<allow_scope<di::scopes::unique<>>>()); // compile ok
-```
 
-To understand `scope deduction` mapping see `Deduce Scope`.
+[note To understand `scope deduction` mapping see `Deduce Scope`.]
 
-[h5 Usage]
-
-[table
-    [[Tests: [@test/ut/policies/scopes_permission_ut.cpp]]]
-]
+[heading Tests]
+    ``[@test/ut/policies/scopes_permission_ut.cpp]``
 
 [endsect]
 

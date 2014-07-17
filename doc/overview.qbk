@@ -572,7 +572,7 @@ Boost.DI provides `shared` scope which behaves like non-multi threaded singleton
 The number of allowed bindings is limited by `BOOST_MPL_LIMIT_VECTOR_SIZE` value.
 
 # How injection works since there is no registration/reflection/traits ?
-    * See [link boost_di.design Design Rationale] for further explanations.
+    * See [link di.design Design Rationale] for further explanations.
 
 [h6 Continuous Integration]
 

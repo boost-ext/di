@@ -1,0 +1,193 @@
+[/
+ /
+ / Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+ /
+ / Distributed under the Boost Software License, Version 1.0.
+ / (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /
+ /]
+
+[section Constructor Injections]
+
+[*Constructor Injection] is the most powerful of the available injections.
+It guarantees initialized state of data members. `Boost.DI` constructor injection is achieved without any additional work from the user except defining the constructor.
+
+```
+    class example {
+    public:
+        example(int, double); // will be deduced by `Boost.DI` and int, double will be injected
+    };
+```
+
+[section automatic (default)]
+
+[heading Description]
+`Boost.DI` will deduce the best available constructor to be used for injection - unique constructor with longest parameter list.
+See [link di.rationale.algorithms Constructor Parameters Deduction] for further reading.
+If the default behavior should be changed constructor should be explicitly marked with `BOOST_DI_INJECT` or `BOOST_DI_INJECT_TRAITS`.
+
+[heading Synopsis]
+    class example {
+    public:
+        example(parameter1, parameter2, ..., parameterN);
+    };
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`parameterX`][None][Constructor parameter]]
+]
+
+[heading Header]
+    #include <boost/di.hpp>
+
+[heading Example]
+    class example {
+    public:
+        example(int);
+        example(int, double);
+        example(int, double, float); // will be deduced by Boost.DI
+    };
+
+[note `Boost.DI` is not able to distinguish between ambiguous constructors with the same (longest) amount of parameters, then BOOST_DI_INJECT has to be used to point which constructor should be deduced.]
+[warning In `C++03` constructors with one argument might be ambiguous with copy constructors, therefore is advised to use `BOOST_DI_INJECT` for 1 argument constructors in C++03.]
+
+[heading Tests]
+    ``[@test/vt/compiler_support_vt.cpp]``
+
+[endsect]
+
+[section BOOST_DI_INJECT]
+
+[heading Description]
+`BOOST_DI_INJECT` is a macro definition used to explicitly say `Boost.DI` which constructor should be used.
+When class has more than one constructor `Boost.DI` will by default choose the one with
+the longest parameter list. In case of constructors ambiguity `Boost.DI` is not able to choose the best one.
+Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
+
+[heading Synopsis]
+    #define BOOST_DI_INJECT(type, ...)
+        static void BOOST_DI_INJECTOR(__VA_ARGS__);
+        type(__VA_ARGS__)
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`type`][None][Class type]]
+    [[`...`][None][Class type constructor parameters]]
+]
+
+[heading Expression Semantics]
+    BOOST_DI_INJECT(explicit example, int = 0, double = 0.0);
+
+[*Preprocessed type]:
+```
+    void boost_di_injector__(int = 0, double = 0.0);
+    explicit example(int = 0, double = 0.0);
+```
+
+[heading Header]
+    #include <boost/di.hpp>
+
+[heading Example]
+    class example {
+    public:
+        example(int);
+        BOOST_DI_INJECT(example, int, double); // will be chosen by Boost.DI
+        example(int, double, float);
+    };
+
+[note In `C++03` additional brackets are needed: `BOOST_DI_INJECT(example, (int, double))`.]
+[tip Requirement of brackets in BOOST_DI_INJECT might be switched with `BOOST_DI_CFG_INJECT_VA_ARGS` and `BOOST_DI_CFG_INJECT_BRACKET`.]
+
+[heading More Examples]
+    ``[link di.examples]``
+
+[heading Tests]
+    ``[@test/ut/inject_va_args_ut.cpp]`` | ``[@test/ut/inject_bracket_ut.cpp]``
+
+[endsect]
+
+[section BOOST_DI_INJECT_TRAITS]
+
+[heading Description]
+`BOOST_DI_INJECT_TRAITS` is a macro definition used to define constructor traits.
+
+[heading Synopsis]
+    #define BOOST_DI_INJECT_TRAITS(...)
+        static void BOOST_DI_INJECTOR(__VA_ARGS__)
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`...`][None][Constructor parameters]]
+]
+
+[heading Expression Semantics]
+    BOOST_DI_INJECT_TRAITS(int, double, float);
+
+[*Preprocessed type]:
+```
+    void boost_di_injector__(int, double, float);
+```
+
+[heading Header]
+    #include <boost/di.hpp>
+
+[heading Example]
+    class example {
+    public:
+        BOOST_DI_INJECT_TRAITS(int, double);
+        example(int, double);
+        example(double, int);
+    };
+
+[heading More Examples]
+    ``[link di.examples]``
+
+[heading Tests]
+    ``[@test/ut/inject_va_args_ut.cpp]`` | ``[@test/ut/inject_bracket_ut.cpp]``
+
+[endsect]
+
+[section ctor_traits]
+
+[heading Description]
+Constructor traits let specify explicitly constructor parameters in no intrusive way.
+In case of third party libraries or to be less intrusive in case of ambiguous constructors we can use `constructor traits`
+to define which constructor should be used by `Boost.DI`.
+
+[heading Synopsis]
+    template<typename T>
+    struct ctor_traits {
+        BOOST_DI_INJECT_TRAITS(parameter1, parameter2, ..., parameterN);
+    };
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`parameterX`][None][Constructor parameter]]
+]
+
+[heading Header]
+    #include <boost/di.hpp>
+
+[heading Example]
+    class example {
+    public:
+        example(int, double, float);
+    };
+
+    namespace boost { namespace di {
+
+    template<>
+    struct ctor_traits<example> {
+        BOOST_DI_INJECT_TRAITS(int, double, float);
+    };
+
+    }} // boost::di
+
+[heading More Examples]
+    ``[link di.examples Constructor Traits Generator]`` | ``[link di.examples]``
+
+[heading Tests]
+    ``[@test/ut/type_traits/ctor_traits_ut.cpp]``
+
+[endsect]
+

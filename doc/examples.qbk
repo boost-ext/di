@@ -109,7 +109,7 @@ Example
 
 [table
     [[Description][Example]]
-    [[Text Visitor][[@example/test_visistor.cpp]]]
+    [[Text Visitor][[@example/text_visitor.cpp]]]
 ]
 
 [endsect]

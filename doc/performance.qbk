@@ -11,14 +11,14 @@
 
 [h6 Compilation time]
 
-Boost.DI is using heavy template meta programming, therefore compilation time was a big concern
+`Boost.DI` uses heavy template meta programming, therefore compilation time was a big concern
 whilst creating the library. Library was optimised in terms of compilation times as long as
 changes haven't influence runtime performance.
 
-If compilation time is still a problem, Boost.DI contains a set of features to improve the situation.
+If compilation time is still a problem, `Boost.DI` contains a set of features to improve the situation.
 
 * Preprocessed Headers
-    * Contains Boost.DI library in one file after preprocessing stage
+    * Contains `Boost.DI` library in one file after preprocessing stage
     * Preprocessed Headers are generated for `BOOST_DI_CFG_CTOR_LIMIT_SIZE` equals 10 and for `BOOST_MPL_LIMIT_VECTOR_SIZE` equals 10, 20, 30, 40, 50
     * To disable it `BOOST_DI_CFG_NO_PREPROCESSED_HEADERS` has to be defined
     * Enabled by default
@@ -124,104 +124,6 @@ C++11 uses perferct forwarding whilst c++11 copy value once
     [
         [
             [pre
-            Dump of assembler code for function _Z6createv:
-               0x0000000000400a50 <+0>:	push   %r12
-               0x0000000000400a52 <+2>:	mov    $0x20,%edi
-               0x0000000000400a57 <+7>:	push   %rbp
-               0x0000000000400a58 <+8>:	push   %rbx
-               0x0000000000400a59 <+9>:	callq  0x400900 <_Znwm@plt>
-               0x0000000000400a5e <+14>:	test   %rax,%rax
-               0x0000000000400a61 <+17>:	mov    %rax,%rbx
-               0x0000000000400a64 <+20>:	je     0x400a8b <_Z6createv+59>
-               0x0000000000400a66 <+22>:	movl   $0x1,0x8(%rax)
-               0x0000000000400a6d <+29>:	movl   $0x1,0xc(%rax)
-               0x0000000000400a74 <+36>:	lea    0x18(%rax),%rax
-               0x0000000000400a78 <+40>:	movq   $0x400eb0,-0x18(%rax)
-               0x0000000000400a80 <+48>:	movl   $0x0,0x18(%rbx)
-               0x0000000000400a87 <+55>:	mov    %rax,0x10(%rbx)
-               0x0000000000400a8b <+59>:	mov    $0x1,%edi
-               0x0000000000400a90 <+64>:	callq  0x400900 <_Znwm@plt>
-               0x0000000000400a95 <+69>:	test   %rax,%rax
-               0x0000000000400a98 <+72>:	je     0x400aa2 <_Z6createv+82>
-               0x0000000000400a9a <+74>:	mov    %rax,%rdi
-               0x0000000000400a9d <+77>:	callq  0x400890 <_ZdlPv@plt>
-               0x0000000000400aa2 <+82>:	test   %rbx,%rbx
-               0x0000000000400aa5 <+85>:	je     0x400ac5 <_Z6createv+117>
-               0x0000000000400aa7 <+87>:	mov    $0x0,%ebp
-               0x0000000000400aac <+92>:	lea    0x8(%rbx),%rax
-               0x0000000000400ab0 <+96>:	test   %rbp,%rbp
-               0x0000000000400ab3 <+99>:	je     0x400b02 <_Z6createv+178>
-               0x0000000000400ab5 <+101>:	mov    $0xffffffff,%edx
-               0x0000000000400aba <+106>:	lock xadd %edx,(%rax)
-               0x0000000000400abe <+110>:	mov    %edx,%eax
-               0x0000000000400ac0 <+112>:	cmp    $0x1,%eax
-               0x0000000000400ac3 <+115>:	je     0x400ad0 <_Z6createv+128>
-               0x0000000000400ac5 <+117>:	pop    %rbx
-               0x0000000000400ac6 <+118>:	pop    %rbp
-               0x0000000000400ac7 <+119>:	pop    %r12
-               0x0000000000400ac9 <+121>:	retq
-               0x0000000000400aca <+122>:	nopw   0x0(%rax,%rax,1)
-               0x0000000000400ad0 <+128>:	mov    (%rbx),%rax
-               0x0000000000400ad3 <+131>:	mov    %rbx,%rdi
-               0x0000000000400ad6 <+134>:	callq  *0x10(%rax)
-               0x0000000000400ad9 <+137>:	test   %rbp,%rbp
-               0x0000000000400adc <+140>:	lea    0xc(%rbx),%rax
-               0x0000000000400ae0 <+144>:	je     0x400b0d <_Z6createv+189>
-               0x0000000000400ae2 <+146>:	mov    $0xffffffff,%edx
-               0x0000000000400ae7 <+151>:	lock xadd %edx,(%rax)
-               0x0000000000400aeb <+155>:	mov    %edx,%eax
-               0x0000000000400aed <+157>:	cmp    $0x1,%eax
-               0x0000000000400af0 <+160>:	jne    0x400ac5 <_Z6createv+117>
-               0x0000000000400af2 <+162>:	mov    (%rbx),%rax
-               0x0000000000400af5 <+165>:	mov    %rbx,%rdi
-               0x0000000000400af8 <+168>:	pop    %rbx
-               0x0000000000400af9 <+169>:	pop    %rbp
-               0x0000000000400afa <+170>:	pop    %r12
-               0x0000000000400afc <+172>:	mov    0x18(%rax),%rax
-               0x0000000000400b00 <+176>:	jmpq   *%rax
-               0x0000000000400b02 <+178>:	mov    0x8(%rbx),%eax
-               0x0000000000400b05 <+181>:	lea    -0x1(%rax),%edx
-               0x0000000000400b08 <+184>:	mov    %edx,0x8(%rbx)
-               0x0000000000400b0b <+187>:	jmp    0x400ac0 <_Z6createv+112>
-               0x0000000000400b0d <+189>:	mov    0xc(%rbx),%eax
-               0x0000000000400b10 <+192>:	lea    -0x1(%rax),%edx
-               0x0000000000400b13 <+195>:	mov    %edx,0xc(%rbx)
-               0x0000000000400b16 <+198>:	jmp    0x400aed <_Z6createv+157>
-               0x0000000000400b18 <+200>:	test   %rbx,%rbx
-               0x0000000000400b1b <+203>:	mov    %rax,%r12
-               0x0000000000400b1e <+206>:	je     0x400b3a <_Z6createv+234>
-               0x0000000000400b20 <+208>:	mov    $0x0,%ebp
-               0x0000000000400b25 <+213>:	lea    0x8(%rbx),%rdx
-               0x0000000000400b29 <+217>:	test   %rbp,%rbp
-               0x0000000000400b2c <+220>:	je     0x400b6d <_Z6createv+285>
-               0x0000000000400b2e <+222>:	or     $0xffffffff,%eax
-               0x0000000000400b31 <+225>:	lock xadd %eax,(%rdx)
-               0x0000000000400b35 <+229>:	sub    $0x1,%eax
-               0x0000000000400b38 <+232>:	je     0x400b42 <_Z6createv+242>
-               0x0000000000400b3a <+234>:	mov    %r12,%rdi
-               0x0000000000400b3d <+237>:	callq  0x400910 <_Unwind_Resume@plt>
-               0x0000000000400b42 <+242>:	mov    (%rbx),%rax
-               0x0000000000400b45 <+245>:	mov    %rbx,%rdi
-               0x0000000000400b48 <+248>:	callq  *0x10(%rax)
-               0x0000000000400b4b <+251>:	test   %rbp,%rbp
-               0x0000000000400b4e <+254>:	lea    0xc(%rbx),%rdx
-               0x0000000000400b52 <+258>:	je     0x400b78 <_Z6createv+296>
-               0x0000000000400b54 <+260>:	or     $0xffffffff,%eax
-               0x0000000000400b57 <+263>:	lock xadd %eax,(%rdx)
-               0x0000000000400b5b <+267>:	mov    %eax,%edx
-               0x0000000000400b5d <+269>:	sub    $0x1,%edx
-               0x0000000000400b60 <+272>:	jne    0x400b3a <_Z6createv+234>
-               0x0000000000400b62 <+274>:	mov    (%rbx),%rax
-               0x0000000000400b65 <+277>:	mov    %rbx,%rdi
-               0x0000000000400b68 <+280>:	callq  *0x18(%rax)
-               0x0000000000400b6b <+283>:	jmp    0x400b3a <_Z6createv+234>
-               0x0000000000400b6d <+285>:	mov    0x8(%rbx),%eax
-               0x0000000000400b70 <+288>:	lea    -0x1(%rax),%edx
-               0x0000000000400b73 <+291>:	mov    %edx,0x8(%rbx)
-               0x0000000000400b76 <+294>:	jmp    0x400b35 <_Z6createv+229>
-               0x0000000000400b78 <+296>:	mov    0xc(%rbx),%edx
-               0x0000000000400b7b <+299>:	lea    -0x1(%rdx),%eax
-               0x0000000000400b7e <+302>:	mov    %eax,0xc(%rbx)
             ]
         ]
         []
