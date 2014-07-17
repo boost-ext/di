@@ -27,11 +27,6 @@
 [binding_cpp_11]
 [endsect]
 
-[section Concepts]
-[import ../example/cpp_11/concepts.cpp]
-[concepts_cpp_11]
-[endsect]
-
 [section Modules]
 [import ../example/cpp_14/modules.cpp]
 [modules_cpp_14]

@@ -36,39 +36,243 @@ the only thing which has to be in mind is to return list of dependencies.
 [heading Header]
     #include <boost/di.hpp>
 
+[heading Examples]
+    template<typename TIf, typename TImpl>
+    struct bind
+        : bindings::dependency<scopes::deduce, TIf, TImpl>
+    { };
+
+    di::make_injector(
+        bind<i, impl>()
+    );
+
+[heading More Examples]
+    ``[link di.examples Binding]``
+
 [heading Tests]
     ``[@test/ut/bindings_ut.cpp]``
 
-[heading Examples]
-
 [section bind]
 
-```
-template<typename If, typename Impl>
-struct bind
-    : concepts::dependency<scopes::deduce, If, Impl>
-{ };
-```
+[heading Description]
+Allows bind interface to implementation.
 
-DSL released with the library allows you to bind:
+[heading Synopsis]
+    template<typename TInterface, typename TImplementation>
+    struct bind
+        : bindings::dependency<scopes::deduce, TInterface, TImplementation>
+    { };
 
-* bind to interface
-```
-    di::bind<interface, implementation>
-    di::bind<implementation>
-```
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`TInterface`][None][Interface type]]
+    [[`TImplementation`][None][Implementation type]]
+]
+
+[heading Expression Semantics]
+    bind<i, impl>()
+
+[*Return type]: `dependency`
+
+[heading Header]
+    #include <boost/di.hpp>
+
+[heading Examples]
+    di::make_injector(
+        di::bind<interface, implementation>()
+      , di::bind<implementation>()
+    );
+
+    di::injector<
+        di::bind<interface, implementation>
+      , di::bind<implementation>
+    >;
+
+[heading Tests]
+    ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
+
+[endsect]
+
+[section bind_int]
+Allows bind compile time integer value.
+
+[heading Synopsis]
+    template<int N>
+    struct bind_int
+        : bind<int, mpl::int_<N> >
+    { };
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`N`][Integer number][Value to be binded to `int` parameters]]
+]
+
+[heading Expression Semantics]
+    bind_int<42>();
+
+[*Return type]: `dependency`
+
+[heading Header]
+    #include <boost/di.hpp>
+
+[heading Examples]
+    di::make_injector(
+        di::bind_int<42>()
+    );
+
+    di::injector<
+        di::bind_int<42>
+    >;
+
+[heading Tests]
+    ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
+
+[endsect]
+
+[section bind_string]
+Allows bind compile time string value.
+
+[heading Synopsis]
+    template<typename T>
+    struct bind_string
+        : bind<std::string, T>
+    { };
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`T`][`mpl::string` Model type][Value to be binded to `std::string` parameters]]
+]
+
+[heading Expression Semantics]
+    bind_string<mpl::string<'str'>>();
+
+[*Return type]: `dependency`
+
+[heading Header]
+    #include <boost/di.hpp>
+
+[heading Examples]
+    di::make_injector(
+        di::bind_string<mpl::string<'str'>>()
+    );
+
+    di::injector<
+        di::bind_string<mpl::string<'str'>>
+    >;
+
+[heading Tests]
+    ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
+
+[endsect]
+
+[section scope]
+Allows to bind bindings to defined/custom scope.
+
+[heading Synopsis]
+    template<typename TScope>
+    struct scope
+        : bindings::scope<TScope>
+    { };
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`TScope`][Scope Model type][scope to be binded]]
+]
+
+[heading Expression Semantics]
+    scope<scopes::unique<>>::bind<...>()
+
+[*Return type]: `dependency`
+
+[heading Header]
+    #include <boost/di.hpp>
+
+[heading Examples]
+    di::make_injector(
+        di::scope<scopes::unique<>>::bind<
+            di::bind<i, impl>
+        >()
+    );
+
+    di::injector<
+        di::scope<scopes::unique<>>::bind<
+            di::bind<i, impl>
+        >
+    >;
+
+[heading Tests]
+    ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
+
+[endsect]
+
+[section deduce]
+Allows to bind bindings to `deduce` scope. Interface type will be deduced, if not given.
+
+[heading Synopsis]
+    template<typename... TArgs>
+    struct deduce
+        : scope<scopes::deduce>::bind<TArgs...>
+    { };
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`TArgs...`][Binding Model type][Bindings to be binded with `deduce` scope]]
+]
+
+[heading Expression Semantics]
+    deduce<bind<i, impl>>()
+
+[*Return type]: `dependency`
+
+[heading Header]
+    #include <boost/di.hpp>
+
+[heading Examples]
+    di::make_injector(
+        di::deduce<impl>() // interface type deduction
+    );
+
+    di::injector<
+        di::deduce<impl> // interface type deduction
+    >;
+
+    di::make_injector(
+        di::deduce<
+            di::bind<i, impl>
+        >()
+    );
+
+    di::injector<
+        di::deduce<
+            di::bind<i, impl>
+        >()
+    >;
+
+[heading Tests]
+    ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
+
+[endsect]
+
+[section unique]
+[endsect]
+
+[section shared]
+[endsect]
+
+[section session]
+[endsect]
+
+[section call_stack]
+[endsect]
+
+[section any_of]
+[endsect]
 
 * bind the same implementation to many interfaces
 ```
     di::bind<any_of<interface1, interface2, ..., interfaceN>, implementation>
 ```
 [note The same might be achived with `bind<implementation>`]
-
-* bind to compile time value
-```
-    di::bind_int<42>()
-    di::bind_string<mpl::string<'str'>>
-```
 
 * bind to runtime value
 ```
@@ -163,7 +367,7 @@ On top of binding to values user can bind to named parameters or using context.
 
 * bind using custom concept
 
-Custom concepts requires `apply` class which should return compile time integer value.
+Custom bindings requires `apply` class which should return compile time integer value.
 Given value will influence how dependencies will be resolved. Current algorithm might
 be found in `Design Rationale`.
 
@@ -193,36 +397,8 @@ Then concept might be used with `when` binding afterwards.
     assert(42 == injector.create<example>().i);
 ```
 [table
-    [[Tests: [@test/ut/concepts_ut.cpp] | [@test/ut/core/binder_ut.cpp]]]
+    [[Tests: [@test/ut/bindings_ut.cpp] | [@test/ut/core/binder_ut.cpp]]]
 ]
 [endsect]
 
-[section bind_int]
-[endsect]
-
-[section bind_string]
-[endsect]
-
-[section scope]
-[endsect]
-
-[section deduce]
-[endsect]
-
-[section unique]
-[endsect]
-
-[section shared]
-[endsect]
-
-[section session]
-[endsect]
-
-[section call_stack]
-[endsect]
-
-[section any_of]
-[endsect]
-
-[endsect]
 
