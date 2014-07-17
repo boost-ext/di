@@ -14,7 +14,7 @@
 
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/config.hpp"
-#include "boost/di/concepts.hpp"
+#include "boost/di/bindings.hpp"
 #include "boost/di/policies/creation_ownership.hpp"
 #include "boost/di/policies/circular_dependencies.hpp"
 

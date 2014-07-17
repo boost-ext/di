@@ -33,8 +33,8 @@ boost_di__dependency_injection_/concepts/injectors/injector.html
 boost_di__dependency_injection_/concepts/injectors/make_injector.html
 boost_di__dependency_injection_/concepts/modules.html
 boost_di__dependency_injection_/concepts/utilities.html
-boost_di__dependency_injection_/concepts/utilities/provider.html
 boost_di__dependency_injection_/concepts/utilities/allocator.html
+boost_di__dependency_injection_/concepts/utilities/provider.html
 boost_di__dependency_injection_/concepts/policies.html
 boost_di__dependency_injection_/concepts/policies/circular_dependencies.html
 boost_di__dependency_injection_/concepts/policies/creation_ownership.html
@@ -44,7 +44,6 @@ boost_di__dependency_injection_/examples.html
 boost_di__dependency_injection_/examples/hello_world.html
 boost_di__dependency_injection_/examples/ctor.html
 boost_di__dependency_injection_/examples/binding.html
-boost_di__dependency_injection_/examples/concepts.html
 boost_di__dependency_injection_/examples/modules.html
 boost_di__dependency_injection_/examples/deduce_scope.html
 boost_di__dependency_injection_/examples/custom_scope.html

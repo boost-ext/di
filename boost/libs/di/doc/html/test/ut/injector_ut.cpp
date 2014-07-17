@@ -17,7 +17,7 @@
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/unique.hpp"
 #include "boost/di/scopes/shared.hpp"
-#include "boost/di/concepts.hpp"
+#include "boost/di/bindings.hpp"
 
 #include "common/fakes/fake_dependency.hpp"
 #include "common/fakes/fake_visitor.hpp"
