@@ -1,0 +1,198 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Modules</title>
+<link rel="stylesheet" href="../../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.0">
+<link rel="home" href="../../index.html" title="Boost.DI (Dependency Injection) 1.0">
+<link rel="up" href="../concepts.html" title="Concepts">
+<link rel="prev" href="injectors/make_injector.html" title="make_injector">
+<link rel="next" href="utilities.html" title="Utilities">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="injectors/make_injector.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../concepts.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="utilities.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_di__dependency_injection_.concepts.modules"></a><a class="link" href="modules.html" title="Modules">Modules</a>
+</h3></div></div></div>
+<h5>
+<a name="boost_di__dependency_injection_.concepts.modules.h0"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.concepts.modules.description"></a></span><a class="link" href="modules.html#boost_di__dependency_injection_.concepts.modules.description">Description</a>
+      </h5>
+<p>
+        Modules allow to split the configurations into smaller injectors. Module
+        is a type with <code class="computeroutput"><span class="identifier">configure</span></code>
+        method returning <code class="computeroutput"><span class="identifier">injector</span></code>
+        type. Activation of <code class="computeroutput"><span class="identifier">Module</span></code>
+        is done by passing it into injector.
+      </p>
+<h5>
+<a name="boost_di__dependency_injection_.concepts.modules.h1"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.concepts.modules.synopsis__code__phrase_role__identifier__c__phrase__phrase_role__special______phrase__phrase_role__number__14__phrase___code_"></a></span><a class="link" href="modules.html#boost_di__dependency_injection_.concepts.modules.synopsis__code__phrase_role__identifier__c__phrase__phrase_role__special______phrase__phrase_role__number__14__phrase___code_">Synopsis
+        <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">14</span></code></a>
+      </h5>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">module</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(...);</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<h5>
+<a name="boost_di__dependency_injection_.concepts.modules.h2"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.concepts.modules.synopsis__code__phrase_role__identifier__c__phrase__phrase_role__special______phrase__phrase_role__number__11__phrase___code_"></a></span><a class="link" href="modules.html#boost_di__dependency_injection_.concepts.modules.synopsis__code__phrase_role__identifier__c__phrase__phrase_role__special______phrase__phrase_role__number__11__phrase___code_">Synopsis
+        <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">11</span></code></a>
+      </h5>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">module</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">-&gt;</span> <span class="keyword">decltype</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(...))</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(...);</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<h5>
+<a name="boost_di__dependency_injection_.concepts.modules.h3"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.concepts.modules.synopsis__code__phrase_role__identifier__c__phrase__phrase_role__special______phrase__phrase_role__number__03__phrase___code_"></a></span><a class="link" href="modules.html#boost_di__dependency_injection_.concepts.modules.synopsis__code__phrase_role__identifier__c__phrase__phrase_role__special______phrase__phrase_role__number__03__phrase___code_">Synopsis
+        <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code></a>
+      </h5>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">module</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;...&gt;</span> <span class="identifier">injector</span><span class="special">;</span>
+
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">injector</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">injector</span><span class="special">(...);</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<div class="table">
+<a name="boost_di__dependency_injection_.concepts.modules.parameters"></a><p class="title"><b>Table&#160;13.&#160;Parameters</b></p>
+<div class="table-contents"><table class="table" summary="Parameters">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Parameter
+                </p>
+              </th>
+<th>
+                <p>
+                  Requirement
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">x</span><span class="special">.</span><span class="identifier">configure</span><span class="special">()</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  None
+                </p>
+              </td>
+<td>
+                <p>
+                  Returns <code class="computeroutput"><span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span></code> object with configured
+                  dependencies
+                </p>
+              </td>
+</tr></tbody>
+</table></div>
+</div>
+<br class="table-break"><h5>
+<a name="boost_di__dependency_injection_.concepts.modules.h4"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.concepts.modules.expression_semantics"></a></span><a class="link" href="modules.html#boost_di__dependency_injection_.concepts.modules.expression_semantics">Expression
+        Semantics</a>
+      </h5>
+<pre class="programlisting"><span class="identifier">module</span><span class="special">().</span><span class="identifier">configure</span><span class="special">();</span>
+</pre>
+<p>
+        <span class="bold"><strong>Return type</strong></span>: <code class="computeroutput"><span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;...&gt;</span></code>
+      </p>
+<h5>
+<a name="boost_di__dependency_injection_.concepts.modules.h5"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.concepts.modules.header"></a></span><a class="link" href="modules.html#boost_di__dependency_injection_.concepts.modules.header">Header</a>
+      </h5>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<h5>
+<a name="boost_di__dependency_injection_.concepts.modules.h6"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.concepts.modules.examples"></a></span><a class="link" href="modules.html#boost_di__dependency_injection_.concepts.modules.examples">Examples</a>
+      </h5>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">module</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+            <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">,</span> <span class="identifier">impl</span><span class="special">&gt;()</span>
+        <span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="comment">// many modules might be passed and they might be mixed with bindings</span>
+<span class="special">{</span>
+    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">module</span><span class="special">(),</span> <span class="special">...);</span>
+<span class="special">}</span>
+
+<span class="special">{</span>
+    <span class="keyword">using</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">module</span><span class="special">,</span> <span class="special">...&gt;;</span>
+<span class="special">}</span>
+</pre>
+<div class="tip"><table border="0" summary="Tip">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="../../../../../../doc/src/images/tip.png"></td>
+<th align="left">Tip</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          Modules/Bindings/Types might be mixed whilst creating an injector, order
+          is not important.
+        </p></td></tr>
+</table></div>
+<h5>
+<a name="boost_di__dependency_injection_.concepts.modules.h7"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.concepts.modules.more_examples"></a></span><a class="link" href="modules.html#boost_di__dependency_injection_.concepts.modules.more_examples">More
+        Examples</a>
+      </h5>
+<pre class="programlisting"><a class="link" href="../../">Modules</a>
+</pre>
+<h5>
+<a name="boost_di__dependency_injection_.concepts.modules.h8"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.concepts.modules.tests"></a></span><a class="link" href="modules.html#boost_di__dependency_injection_.concepts.modules.tests">Tests</a>
+      </h5>
+<pre class="programlisting"><a href="../../test/mt/injector_mt.cpp" target="_top">test/mt/injector_mt.cpp</a> <span class="special">|</span> <a href="../../test/mt/make_injector_mt.cpp" target="_top">test/mt/make_injector_mt.cpp</a>
+</pre>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2014 Krzysztof Jusiak<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="injectors/make_injector.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../concepts.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="utilities.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
