@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_CONCEPTS_CALL_STACK_HPP
-#define BOOST_DI_CONCEPTS_CALL_STACK_HPP
+#ifndef BOOST_DI_BINDINGS_CALL_STACK_HPP
+#define BOOST_DI_BINDINGS_CALL_STACK_HPP
 
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
@@ -23,7 +23,7 @@
 
 namespace boost {
 namespace di {
-namespace concepts {
+namespace bindings {
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 class call_stack
@@ -76,7 +76,7 @@ public:
     { };
 };
 
-} // namespace concepts
+} // namespace bindings
 } // namespace di
 } // namespace boost
 

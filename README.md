@@ -50,7 +50,7 @@ int main() {
     auto injector = di::make_injector(
         di::bind<i, impl>() // scope deduction -> di::shared<di::bind<i, impl>>
     );
-        
+
     return injector.create<app>().run();
 }
 ```

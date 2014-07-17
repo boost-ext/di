@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/concepts/call_stack.hpp"
+#include "boost/di/bindings/call_stack.hpp"
 
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
@@ -14,7 +14,7 @@
 
 namespace boost {
 namespace di {
-namespace concepts {
+namespace bindings {
 
 BOOST_AUTO_TEST_CASE(empty_call_stack) {
     BOOST_CHECK_EQUAL(0, (call_stack<>::apply<fake_data<int, mpl::vector0<>, fake_scope<>>>::type::value));
@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(equal_call_stack_advance) {
     BOOST_CHECK_EQUAL(3, (call_stack<int, double, float>::apply<fake_data<int, mpl::vector<char, int, double, float>, fake_scope<>>>::type::value));
 }
 
-} // namespace concepts
+} // namespace bindings
 } // namespace di
 } // namespace boost
 

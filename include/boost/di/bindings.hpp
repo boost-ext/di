@@ -4,14 +4,14 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_CONCEPTS_HPP
-#define BOOST_DI_CONCEPTS_HPP
+#ifndef BOOST_DI_bindings_HPP
+#define BOOST_DI_bindings_HPP
 
 #include "boost/di/aux_/config.hpp"
-#include "boost/di/concepts/bind.hpp"
-#include "boost/di/concepts/call_stack.hpp"
-#include "boost/di/concepts/dependency.hpp"
-#include "boost/di/concepts/scope.hpp"
+#include "boost/di/bindings/bind.hpp"
+#include "boost/di/bindings/call_stack.hpp"
+#include "boost/di/bindings/dependency.hpp"
+#include "boost/di/bindings/scope.hpp"
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/session.hpp"
 #include "boost/di/scopes/shared.hpp"
@@ -26,7 +26,7 @@ namespace di {
 
 template<typename TExpected, typename TGiven = TExpected>
 struct bind
-    : concepts::bind<TExpected, TGiven, concepts::dependency>
+    : bindings::bind<TExpected, TGiven, bindings::dependency>
 { };
 
 template<int N>
@@ -41,7 +41,7 @@ struct bind_string
 
 template<typename TScope>
 struct scope
-    : concepts::scope<TScope, concepts::dependency>
+    : bindings::scope<TScope, bindings::dependency>
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
@@ -66,7 +66,7 @@ struct session
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 struct call_stack
-    : concepts::call_stack<BOOST_DI_TYPES_PASS_MPL(T)>
+    : bindings::call_stack<BOOST_DI_TYPES_PASS_MPL(T)>
 { };
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>

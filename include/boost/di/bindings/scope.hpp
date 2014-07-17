@@ -4,13 +4,13 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_CONCEPTS_SCOPE_HPP
-#define BOOST_DI_CONCEPTS_SCOPE_HPP
+#ifndef BOOST_DI_BINDINGS_SCOPE_HPP
+#define BOOST_DI_BINDINGS_SCOPE_HPP
 
 #include "boost/di/aux_/config.hpp"
-#include "boost/di/concepts/detail/requires.hpp"
-#include "boost/di/concepts/type_traits/is_required_type.hpp"
-#include "boost/di/concepts/type_traits/is_required_priority.hpp"
+#include "boost/di/bindings/detail/requires.hpp"
+#include "boost/di/bindings/type_traits/is_required_type.hpp"
+#include "boost/di/bindings/type_traits/is_required_priority.hpp"
 
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
@@ -18,7 +18,7 @@
 
 namespace boost {
 namespace di {
-namespace concepts {
+namespace bindings {
 
 template<
     typename TScope
@@ -74,7 +74,7 @@ public:
     { };
 };
 
-} // namespace concepts
+} // namespace bindings
 } // namespace di
 } // namespace boost
 

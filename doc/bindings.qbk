@@ -9,20 +9,37 @@
 
 [section Bindings]
 
-Binding in DI is done by DSL. The main purpose of binding DSL is to make easy things as easy
+[heading Description]
+Bindings in `Boost.DI` are done using specially defined Domain Specific Language (DSL).
+The main purpose of binding DSL is to make easy things as easy
 as possible whilst giving possibility to accomplish solutions for more complicated problems.
-The glue between DSL and the core is dependency, so if you would like to write your own front end
+The glue between DSL and the core is `dependency`, so if you would like to write your own front end
 the only thing which has to be in mind is to return list of dependencies.
 
-```
-template<
-    typename TScope
-  , typename TExpected
-  , typename TGiven
-  , typename TBind
->
-class dependency;
-```
+[heading Synopsis]
+    template<
+        typename TScope
+      , typename TExpected
+      , typename TGiven
+      , typename TBind
+    >
+    class dependency;
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`TScope`][Scope Model type][Scope to be used]]
+    [[`TExpected`][None][Type to be returned]]
+    [[`TGiven`][None][Type to be created]]
+    [[`TBind`][Bind Model type][Expression to be evaluated to verify dependency match during resolving]]
+]
+
+[heading Header]
+    #include <boost/di.hpp>
+
+[heading Tests]
+    ``[@test/ut/bindings_ut.cpp]``
+
+[heading Examples]
 
 [section bind]
 
@@ -208,5 +225,4 @@ Then concept might be used with `when` binding afterwards.
 [endsect]
 
 [endsect]
-
 

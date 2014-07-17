@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_CONCEPTS_DEPENDENCY_HPP
-#define BOOST_DI_CONCEPTS_DEPENDENCY_HPP
+#ifndef BOOST_DI_BINDINGS_DEPENDENCY_HPP
+#define BOOST_DI_BINDINGS_DEPENDENCY_HPP
 
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/wrappers/shared.hpp"
@@ -15,9 +15,9 @@
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/type_traits/has_call_operator.hpp"
 #include "boost/di/type_traits/function_traits.hpp"
-#include "boost/di/concepts/detail/requires.hpp"
-#include "boost/di/concepts/type_traits/is_required_priority.hpp"
-#include "boost/di/concepts/type_traits/is_required_type.hpp"
+#include "boost/di/bindings/detail/requires.hpp"
+#include "boost/di/bindings/type_traits/is_required_priority.hpp"
+#include "boost/di/bindings/type_traits/is_required_type.hpp"
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/and.hpp>
@@ -28,7 +28,7 @@
 
 namespace boost {
 namespace di {
-namespace concepts {
+namespace bindings {
 
 BOOST_MPL_HAS_XXX_TRAIT_DEF(result_type)
 
@@ -38,8 +38,8 @@ template<
   , typename TGiven = TExpected
   , typename TBind =
         detail::requires_<
-            concepts::type_traits::is_required_priority
-          , concepts::type_traits::is_required_type<TExpected>
+            bindings::type_traits::is_required_priority
+          , bindings::type_traits::is_required_type<TExpected>
         >
 >
 class dependency : public TScope::template scope<TExpected>
@@ -150,7 +150,7 @@ public:
     }
 };
 
-} // namespace concepts
+} // namespace bindings
 } // namespace di
 } // namespace boost
 

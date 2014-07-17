@@ -9,7 +9,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/mpl/vector.hpp>
 
-#include "boost/di/concepts/dependency.hpp"
+#include "boost/di/bindings/dependency.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "common/data.hpp"
 
@@ -18,12 +18,12 @@ namespace di {
 namespace core {
 
 BOOST_AUTO_TEST_CASE(module_externals_fail) {
-    concepts::dependency<scopes::external<>, int> i_(42);
+    bindings::dependency<scopes::external<>, int> i_(42);
 
     module<
         mpl::vector<
-            concepts::dependency<scopes::external<>, int>
-          , concepts::dependency<scopes::external<>, double>
+            bindings::dependency<scopes::external<>, int>
+          , bindings::dependency<scopes::external<>, double>
         >
     > module_(i_); // missing double external
 

@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/concepts/detail/when.hpp"
+#include "boost/di/bindings/detail/when.hpp"
 
 #include <boost/test/unit_test.hpp>
 
@@ -14,7 +14,7 @@
 
 namespace boost {
 namespace di {
-namespace concepts {
+namespace bindings {
 namespace detail {
 
 BOOST_AUTO_TEST_CASE(empty_context) {
@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE(one_concept_pass) {
     );
 }
 
-BOOST_AUTO_TEST_CASE(many_concepts_max_element) {
+BOOST_AUTO_TEST_CASE(many_bindings_max_element) {
     BOOST_CHECK_EQUAL(8, (
         when_<
             mpl::vector<
@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_CASE(many_concepts_max_element) {
 }
 
 } // namespace detail
-} // namespace concepts
+} // namespace bindings
 } // namespace di
 } // namespace boost
 

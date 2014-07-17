@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/concepts.hpp"
+#include "boost/di/bindings.hpp"
 #include <boost/mpl/int.hpp>
 
 #include <boost/test/unit_test.hpp>
@@ -198,9 +198,9 @@ BOOST_AUTO_TEST_CASE(bind_any_of) {
                   , cif0if1
                   , no_name
                   , mpl::vector0<>
-                  , concepts::detail::requires_<
-                        concepts::type_traits::is_required_priority
-                      , concepts::type_traits::is_required_type<any_of<if0, if1>>
+                  , bindings::detail::requires_<
+                        bindings::type_traits::is_required_priority
+                      , bindings::type_traits::is_required_type<any_of<if0, if1>>
                     >
                 >::type
             >

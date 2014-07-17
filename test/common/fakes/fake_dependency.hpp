@@ -7,14 +7,14 @@
 #ifndef BOOST_DI_FAKE_DEPENDENCY_HPP
 #define BOOST_DI_FAKE_DEPENDENCY_HPP
 
-#include "boost/di/concepts/dependency.hpp"
+#include "boost/di/bindings/dependency.hpp"
 
 #include "boost/di/named.hpp"
-#include "boost/di/concepts/detail/requires.hpp"
-#include "boost/di/concepts/detail/when.hpp"
-#include "boost/di/concepts/type_traits/is_required_name.hpp"
-#include "boost/di/concepts/type_traits/is_required_priority.hpp"
-#include "boost/di/concepts/type_traits/is_required_type.hpp"
+#include "boost/di/bindings/detail/requires.hpp"
+#include "boost/di/bindings/detail/when.hpp"
+#include "boost/di/bindings/type_traits/is_required_name.hpp"
+#include "boost/di/bindings/type_traits/is_required_priority.hpp"
+#include "boost/di/bindings/type_traits/is_required_type.hpp"
 
 #include <boost/mpl/if.hpp>
 
@@ -23,37 +23,37 @@ namespace di {
 
 template<typename T, typename TName, typename TCallStack>
 struct get_bind
-    : concepts::detail::requires_<
-          concepts::type_traits::is_required_priority
-        , concepts::type_traits::is_required_type<T>
-        , concepts::type_traits::is_required_name<TName>
-        , concepts::detail::when_<TCallStack>
+    : bindings::detail::requires_<
+          bindings::type_traits::is_required_priority
+        , bindings::type_traits::is_required_type<T>
+        , bindings::type_traits::is_required_name<TName>
+        , bindings::detail::when_<TCallStack>
       >
 { };
 
 template<typename T, typename TName>
 struct get_bind<T, TName, mpl::vector0<>>
-    : concepts::detail::requires_<
-          concepts::type_traits::is_required_priority
-        , concepts::type_traits::is_required_type<T>
-        , concepts::type_traits::is_required_name<TName>
+    : bindings::detail::requires_<
+          bindings::type_traits::is_required_priority
+        , bindings::type_traits::is_required_type<T>
+        , bindings::type_traits::is_required_name<TName>
       >
 { };
 
 template<typename T, typename TCallStack>
 struct get_bind<T, no_name, TCallStack>
-    : concepts::detail::requires_<
-          concepts::type_traits::is_required_priority
-        , concepts::type_traits::is_required_type<T>
-        , concepts::detail::when_<TCallStack>
+    : bindings::detail::requires_<
+          bindings::type_traits::is_required_priority
+        , bindings::type_traits::is_required_type<T>
+        , bindings::detail::when_<TCallStack>
       >
 { };
 
 template<typename T>
 struct get_bind<T, no_name, mpl::vector0<>>
-    : concepts::detail::requires_<
-          concepts::type_traits::is_required_priority
-        , concepts::type_traits::is_required_type<T>
+    : bindings::detail::requires_<
+          bindings::type_traits::is_required_priority
+        , bindings::type_traits::is_required_type<T>
       >
 { };
 
@@ -72,7 +72,7 @@ struct fake_dependency
     typedef TGiven given;
     typedef TBind bind;
 
-    typedef typename concepts::dependency<
+    typedef typename bindings::dependency<
         TScope
       , TExpected
       , TGiven

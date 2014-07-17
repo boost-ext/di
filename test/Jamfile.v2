@@ -88,14 +88,14 @@ test-suite vt : # verification tests
 ;
 
 test-suite ut : # unit tests
-    [ run-test c++11 : ut/concepts_ut.cpp ]
-    [ run-test c++11 : ut/concepts/detail/requires_ut.cpp ]
-    [ run-test c++11 : ut/concepts/detail/when_ut.cpp ]
-    [ run-test c++11 : ut/concepts/type_traits/is_required_name_ut.cpp ]
-    [ run-test c++11 : ut/concepts/type_traits/is_required_priority_ut.cpp ]
-    [ run-test c++11 : ut/concepts/type_traits/is_required_type_ut.cpp ]
-    [ run-test c++11 : ut/concepts/call_stack_ut.cpp ]
-    [ run-test c++11 : ut/concepts/dependency_ut.cpp ]
+    [ run-test c++11 : ut/bindings_ut.cpp ]
+    [ run-test c++11 : ut/bindings/detail/requires_ut.cpp ]
+    [ run-test c++11 : ut/bindings/detail/when_ut.cpp ]
+    [ run-test c++11 : ut/bindings/type_traits/is_required_name_ut.cpp ]
+    [ run-test c++11 : ut/bindings/type_traits/is_required_priority_ut.cpp ]
+    [ run-test c++11 : ut/bindings/type_traits/is_required_type_ut.cpp ]
+    [ run-test c++11 : ut/bindings/call_stack_ut.cpp ]
+    [ run-test c++11 : ut/bindings/dependency_ut.cpp ]
 
     [ run-test c++11 : ut/core/allocator_ut.cpp ]
     [ run-test c++11 : ut/core/any_type_ut.cpp ]

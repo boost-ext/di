@@ -31,9 +31,9 @@ install html/example/cpp_14/tutorial/tutorial1 : [ glob ../example/cpp_14/tutori
 
 install html/test/vt : [ glob ../test/vt/*.cpp ] ;
 install html/test/ut : [ glob ../test/ut/*.cpp ] ;
-install html/test/ut/concepts : [ glob ../test/ut/concepts/*.cpp ] ;
-install html/test/ut/concepts/detail : [ glob ../test/ut/concepts/detail/*.cpp ] ;
-install html/test/ut/concepts/type_traits : [ glob ../test/ut/concepts/type_traits/*.cpp ] ;
+install html/test/ut/bindings : [ glob ../test/ut/bindings/*.cpp ] ;
+install html/test/ut/bindings/detail : [ glob ../test/ut/bindings/detail/*.cpp ] ;
+install html/test/ut/bindings/type_traits : [ glob ../test/ut/bindings/type_traits/*.cpp ] ;
 install html/test/ut/core : [ glob ../test/ut/core/*.cpp ] ;
 install html/test/ut/policies : [ glob ../test/ut/policies/*.cpp ] ;
 install html/test/ut/scopes : [ glob ../test/ut/scopes/*.cpp ] ;

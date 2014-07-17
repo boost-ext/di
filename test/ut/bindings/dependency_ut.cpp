@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/concepts/dependency.hpp"
+#include "boost/di/bindings/dependency.hpp"
 
 #include <typeinfo>
 #include <functional>
@@ -22,7 +22,7 @@
 
 namespace boost {
 namespace di {
-namespace concepts {
+namespace bindings {
 
 BOOST_AUTO_TEST_CASE(ctor) {
     dependency<fake_scope<>, int> dep(42);
@@ -33,8 +33,8 @@ BOOST_AUTO_TEST_CASE(default_value) {
 
     BOOST_CHECK((is_same<
         detail::requires_<
-            concepts::type_traits::is_required_priority
-          , concepts::type_traits::is_required_type<int>
+            bindings::type_traits::is_required_priority
+          , bindings::type_traits::is_required_type<int>
         >
       , dependency_t::bind
     >::value));
@@ -142,7 +142,7 @@ BOOST_AUTO_TEST_CASE(to_bind_int) {
     BOOST_CHECK_EQUAL(&typeid(expected), &typeid(external::scope));
 }
 
-} // namespace concepts
+} // namespace bindings
 } // namespace di
 } // namespace boost
 

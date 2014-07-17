@@ -85,7 +85,7 @@
 
 namespace boost {
 namespace di {
-namespace concepts {
+namespace bindings {
 namespace detail {
 
 template<typename... T_MPL>
@@ -128,13 +128,13 @@ public:
 };
 
 } // namespace detail
-} // namespace concepts
+} // namespace bindings
 } // namespace di
 } // namespace boost
 
 namespace boost {
 namespace di {
-namespace concepts {
+namespace bindings {
 namespace detail {
 
 template<typename TContext>
@@ -167,7 +167,7 @@ public:
 };
 
 } // namespace detail
-} // namespace concepts
+} // namespace bindings
 } // namespace di
 } // namespace boost
 
@@ -190,7 +190,7 @@ struct remove_accessors
 
 namespace boost {
 namespace di {
-namespace concepts {
+namespace bindings {
 namespace type_traits {
 
 BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
@@ -221,13 +221,13 @@ public:
 };
 
 } // namespace type_traits
-} // namespace concepts
+} // namespace bindings
 } // namespace di
 } // namespace boost
 
 namespace boost {
 namespace di {
-namespace concepts {
+namespace bindings {
 namespace type_traits {
 
 struct is_required_priority
@@ -242,7 +242,7 @@ struct is_required_priority
 };
 
 } // namespace type_traits
-} // namespace concepts
+} // namespace bindings
 } // namespace di
 } // namespace boost
 
@@ -307,7 +307,7 @@ struct is_same_base_of
 
 namespace boost {
 namespace di {
-namespace concepts {
+namespace bindings {
 namespace type_traits {
 
 template<typename TValueType, typename = void>
@@ -338,7 +338,7 @@ struct is_required_type<TValueType, typename enable_if<mpl::is_sequence<TValueTy
 };
 
 } // namespace type_traits
-} // namespace concepts
+} // namespace bindings
 } // namespace di
 } // namespace boost
 
@@ -1040,7 +1040,7 @@ public:
 
 namespace boost {
 namespace di {
-namespace concepts {
+namespace bindings {
 
 namespace detail {
 
@@ -1135,14 +1135,14 @@ struct bind
     };
 };
 
-} // namespace concepts
+} // namespace bindings
 } // namespace di
 } // namespace boost
 
 
 namespace boost {
 namespace di {
-namespace concepts {
+namespace bindings {
 
 template<typename... T_MPL>
 class call_stack
@@ -1195,7 +1195,7 @@ public:
     { };
 };
 
-} // namespace concepts
+} // namespace bindings
 } // namespace di
 } // namespace boost
 
@@ -1289,7 +1289,7 @@ private:
 
 namespace boost {
 namespace di {
-namespace concepts {
+namespace bindings {
 
 BOOST_MPL_HAS_XXX_TRAIT_DEF(result_type)
 
@@ -1299,8 +1299,8 @@ template<
   , typename TGiven = TExpected
   , typename TBind =
         detail::requires_<
-            concepts::type_traits::is_required_priority
-          , concepts::type_traits::is_required_type<TExpected>
+            bindings::type_traits::is_required_priority
+          , bindings::type_traits::is_required_type<TExpected>
         >
 >
 class dependency : public TScope::template scope<TExpected>
@@ -1411,14 +1411,14 @@ public:
     }
 };
 
-} // namespace concepts
+} // namespace bindings
 } // namespace di
 } // namespace boost
 
 
 namespace boost {
 namespace di {
-namespace concepts {
+namespace bindings {
 
 template<
     typename TScope
@@ -1474,7 +1474,7 @@ public:
     { };
 };
 
-} // namespace concepts
+} // namespace bindings
 } // namespace di
 } // namespace boost
 
@@ -1533,7 +1533,7 @@ namespace di {
 
 template<typename TExpected, typename TGiven = TExpected>
 struct bind
-    : concepts::bind<TExpected, TGiven, concepts::dependency>
+    : bindings::bind<TExpected, TGiven, bindings::dependency>
 { };
 
 template<int N>
@@ -1548,7 +1548,7 @@ struct bind_string
 
 template<typename TScope>
 struct scope
-    : concepts::scope<TScope, concepts::dependency>
+    : bindings::scope<TScope, bindings::dependency>
 { };
 
 template<typename... T_MPL>
@@ -1573,7 +1573,7 @@ struct session
 
 template<typename... T_MPL>
 struct call_stack
-    : concepts::call_stack<T_MPL...>
+    : bindings::call_stack<T_MPL...>
 { };
 
 template<typename... T_MPL>
@@ -3794,7 +3794,7 @@ public:
         typename T
       , typename TCallStack
       , typename TDefault =
-            ::boost::di::concepts::dependency<
+            ::boost::di::bindings::dependency<
                 scopes::deduce
               , typename type_traits::make_plain<T>::type
             >

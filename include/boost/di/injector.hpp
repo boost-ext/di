@@ -13,7 +13,7 @@
     #include "boost/di/core/module.hpp"
     #include "boost/di/core/pool.hpp"
     #include "boost/di/scopes/deduce.hpp"
-    #include "boost/di/concepts.hpp"
+    #include "boost/di/bindings.hpp"
     #include "boost/di/type_traits/has_configure.hpp"
     #include "boost/di/type_traits/function_traits.hpp"
 

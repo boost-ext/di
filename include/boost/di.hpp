@@ -37,8 +37,8 @@
     // inject
     #include "boost/di/inject.hpp"
 
-    // concepts
-    #include "boost/di/concepts.hpp"
+    // bindings
+    #include "boost/di/bindings.hpp"
 
     // annotations
     #include "boost/di/named.hpp"

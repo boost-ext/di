@@ -9,7 +9,7 @@
 #include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/type_traits/remove_accessors.hpp"
 #include "boost/di/wrappers/universal.hpp"
-#include "boost/di/concepts/dependency.hpp"
+#include "boost/di/bindings/dependency.hpp"
 #include "boost/di/scopes/deduce.hpp"
 
 #include <boost/mpl/if.hpp>
@@ -50,7 +50,7 @@ public:
         typename T
       , typename TCallStack
       , typename TDefault =
-            ::boost::di::concepts::dependency<
+            ::boost::di::bindings::dependency<
                 scopes::deduce
               , typename type_traits::make_plain<T>::type
             >

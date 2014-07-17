@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_CONCEPTS_DETAIL_REQUIRES_HPP
-#define BOOST_DI_CONCEPTS_DETAIL_REQUIRES_HPP
+#ifndef BOOST_DI_BINDINGS_DETAIL_REQUIRES_HPP
+#define BOOST_DI_BINDINGS_DETAIL_REQUIRES_HPP
 
 #include "boost/di/aux_/config.hpp"
 
@@ -17,7 +17,7 @@
 
 namespace boost {
 namespace di {
-namespace concepts {
+namespace bindings {
 namespace detail {
 
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
@@ -60,7 +60,7 @@ public:
 };
 
 } // namespace detail
-} // namespace concepts
+} // namespace bindings
 } // namespace di
 } // namespace boost
 
