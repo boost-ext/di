@@ -18,7 +18,7 @@ compose <variant>coverage :
 
 extend-feature variant : analyze ;
 compose <variant>analyze :
-    <cxxflags>"--analyze -Xanalyzer -analyzer-output=text"
+    <cxxflags>"--analyze -Xanalyzer -analyzer-output=text -fsanitize=address -fsanitize=memory -fsanitize=undefined"
 ;
 
 project :
