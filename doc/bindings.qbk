@@ -52,25 +52,77 @@ the only thing which has to be in mind is to return list of dependencies.
 [heading Tests]
     ``[@test/ut/bindings_ut.cpp]``
 
+[heading Description]
+Custom bindings requires `apply` class which should return compile time integer value.
+Given value will influence how dependencies will be resolved. Current algorithm might
+be found in `Design Rationale`.
+
+[heading Synopsis]
+    struct unspecified {
+        template<typename TDependency>
+        struct apply
+            : TResult
+        { };
+    }
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`TDependency`][Dependency Model type][Dependency type]]
+    [[`TResult`][Integral value][Returns integer value represents importance of binding]]
+]
+
+[heading Header]
+    #include <boost/di.hpp>
+
+[heading Examples]
+    struct longer_call_stack_first {
+        template<typename TDependency>
+        struct apply
+            : mpl::size<typename TDependency::call_stack>
+        { };
+    }
+
+    auto injector = di::make_injector(
+        di::bind<int>::to(1)
+      , di::bind<int>::when<longer_call_stack_first>::to(42)
+    );
+
+    struct example {
+        explicit example(int i) : i(i) { };
+        int i = 0;
+    };
+
+    assert(1 == injector.create<int>());
+    assert(42 == injector.create<example>().i);
+
+[heading Tests]
+    ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
+
 [section bind]
 
 [heading Description]
-Allows bind interface to implementation.
+Allows bind interface to implementation and associate value with `dependency`.
 
 [heading Synopsis]
     template<typename TInterface, typename TImplementation>
     struct bind
         : bindings::dependency<scopes::deduce, TInterface, TImplementation>
-    { };
+    {
+        template<typename T>
+        static dependency to(const T&);
+    };
 
 [table Parameters
     [[Parameter][Requirement][Description]]
     [[`TInterface`][None][Interface type]]
     [[`TImplementation`][None][Implementation type]]
+    [[`T`][`POD`/`reference_wrapper`/`shared_ptr`][Value type]]
+    [[`x.to(...)`][None][Returns new `dependency` with associated `T` value]]
 ]
 
 [heading Expression Semantics]
     bind<i, impl>()
+    bind<int>::to(int())
 
 [*Return type]: `dependency`
 
@@ -78,15 +130,21 @@ Allows bind interface to implementation.
     #include <boost/di.hpp>
 
 [heading Examples]
-    di::make_injector(
-        di::bind<interface, implementation>()
-      , di::bind<implementation>()
-    );
-
-    di::injector<
-        di::bind<interface, implementation>
-      , di::bind<implementation>
-    >;
+[table
+    [[Binding][Description]]
+    [[```di::bind<interface, implementation>())```][bind interface to implementation]]
+    [[```di::bind<implementation>())```][bind to implementation with deduced interface]]
+    [[```di::bind<int>::to(42)```][bind to number]]
+    [[```di::bind<std::string>::to("text")```][bind to text value]]
+    [[```di::bind<example>::to(cref(example_))```][bind to const reference]]
+    [[```di::bind<example>::to(ref(example_))```][bind to reference]]
+    [[```di::bind<interface>::to(make_shared<implementation>())```][bind to shared_ptr]]
+    [[```di::bind<int>::to([]{ return 42; })```][bind value to functor expression]]
+    [[```di::bind<function<int()>>::to([]{ return 42; })```][bind to lambda expression]]
+    [[```di::bind<std::function<int()>>::to(boost::bind(&return_int, 42))```][bind to functor expression]]
+    [[```di::bind_int<42>::named<mpl::string<'rnt'>>()```][bind annotated int to value named with `int`]]
+    [[```di::bind<interface, implementation>::named<my_if>```][bind annotated interface to implementation named with `my_if`]]
+]
 
 [heading Tests]
     ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
@@ -263,66 +321,6 @@ Allows to bind bindings to `deduce` scope. Interface type will be deduced, if no
 [endsect]
 
 [section call_stack]
-[endsect]
-
-[section any_of]
-[endsect]
-
-* bind the same implementation to many interfaces
-```
-    di::bind<any_of<interface1, interface2, ..., interfaceN>, implementation>
-```
-[note The same might be achived with `bind<implementation>`]
-
-* bind to runtime value
-```
-    di::bind<int>::to(42)
-    di::bind<std::string>::to("text");
-```
-
-* bind to external runtime value
-
-    * to shared ptr
-    ```
-        di::bind<example>::to(make_shared<example>()) // bind to shared_ptr
-    ```
-
-    * to reference
-    ```
-        example example_;
-        di::bind<example>::to(cref(example_)) // bind to const ref
-        di::bind<example>::to(ref(example_)) // bind to ref
-    ```
-
-    * to functor
-    ```
-        di::bind<std::function<int()>>::to([]{ return 42; })
-        di::bind<std::function<int()>>::to(boost::bind(&return_int, 42))
-    ```
-
-    * to functor factory
-    ```
-        di::bind<int>::to([]{ return 42; })
-    ```
-
-On top of binding to values user can bind to named parameters or using context.
-
-* bind using named parameters
-```
-    class my_value { };
-    class my_if { };
-
-    stuct example {
-        example(di::named<int, my_value> value, di::named<shared_ptr<interface>, my_if>);
-    };
-
-    di::bind_int<42>::named<my_value>()
-    di::bind<int>::named<my_value>::to(42)
-
-    di::bind<interface, implementation>::named<my_if>()
-    di::bind<implementation>::named<my_if>()
-```
-
 * bind using call stack context
 ```
     call_stack<c1, c2, ..., cN> // call stack definition
@@ -365,40 +363,18 @@ On top of binding to values user can bind to named parameters or using context.
     // all bindings above are equivalent
 ```
 
-* bind using custom concept
 
-Custom bindings requires `apply` class which should return compile time integer value.
-Given value will influence how dependencies will be resolved. Current algorithm might
-be found in `Design Rationale`.
-
-```
-struct longer_call_stack_first {
-    template<typename TDependency>
-    struct apply
-        : mpl::size<typename TDependency::call_stack>
-    { };
-}
-```
-
-Then concept might be used with `when` binding afterwards.
-
-```
-    auto injector = di::make_injector(
-        di::bind<int>::to(1)
-      , di::bind<int>::when<longer_call_stack_first>::to(42)
-    );
-
-    struct example {
-        explicit example(int i) : i(i){ };
-        int i = 0;
-    };
-
-    assert(1 == injector.create<int>());
-    assert(42 == injector.create<example>().i);
-```
-[table
-    [[Tests: [@test/ut/bindings_ut.cpp] | [@test/ut/core/binder_ut.cpp]]]
-]
 [endsect]
 
+[section any_of]
+
+* bind the same implementation to many interfaces
+```
+    di::bind<any_of<interface1, interface2, ..., interfaceN>, implementation>
+```
+[note The same might be achived with `bind<implementation>`]
+
+[endsect]
+
+[endsect]
 
