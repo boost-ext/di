@@ -28,6 +28,7 @@
 </h3></div></div></div>
 <div class="toc"><dl class="toc">
 <dt><span class="section"><a href="bindings/bind.html">bind</a></span></dt>
+<dt><span class="section"><a href="bindings/bind_bool.html">bind_bool</a></span></dt>
 <dt><span class="section"><a href="bindings/bind_int.html">bind_int</a></span></dt>
 <dt><span class="section"><a href="bindings/bind_string.html">bind_string</a></span></dt>
 <dt><span class="section"><a href="bindings/scope.html">scope</a></span></dt>
@@ -169,13 +170,13 @@
 <a name="boost_di__dependency_injection_.concepts.bindings.h3"></a>
         <span class="phrase"><a name="boost_di__dependency_injection_.concepts.bindings.examples"></a></span><a class="link" href="bindings.html#boost_di__dependency_injection_.concepts.bindings.examples">Examples</a>
       </h5>
-<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TIf</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TImpl</span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TIinterface</span> <span class="keyword">typename</span> <span class="identifier">TImplementation</span><span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">bind</span>
-    <span class="special">:</span> <span class="identifier">bindings</span><span class="special">::</span><span class="identifier">dependency</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">deduce</span><span class="special">,</span> <span class="identifier">TIf</span><span class="special">,</span> <span class="identifier">TImpl</span><span class="special">&gt;</span>
+    <span class="special">:</span> <span class="identifier">bindings</span><span class="special">::</span><span class="identifier">dependency</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">deduce</span><span class="special">,</span> <span class="identifier">TInterface</span><span class="special">,</span> <span class="identifier">TImplementation</span><span class="special">&gt;</span>
 <span class="special">{</span> <span class="special">};</span>
 
 <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-    <span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">,</span> <span class="identifier">impl</span><span class="special">&gt;()</span>
+    <span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;()</span>
 <span class="special">);</span>
 </pre>
 <h5>
@@ -191,180 +192,125 @@
       </h5>
 <pre class="programlisting"><a href="../../test/ut/bindings_ut.cpp" target="_top">test/ut/bindings_ut.cpp</a>
 </pre>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem">
-<p class="simpara">
-            bind the same implementation to many interfaces
-<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">any_of</span><span class="special">&lt;</span><span class="identifier">interface1</span><span class="special">,</span> <span class="identifier">interface2</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">interfaceN</span><span class="special">&gt;,</span> <span class="identifier">implementation</span><span class="special">&gt;</span>
-</pre>
-          </p>
-<div class="note"><table border="0" summary="Note">
-<tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../doc/src/images/note.png"></td>
-<th align="left">Note</th>
-</tr>
-<tr><td align="left" valign="top"><p>
-              The same might be achived with <code class="computeroutput"><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">&gt;</span></code>
-            </p></td></tr>
-</table></div>
-</li>
-<li class="listitem">
-            bind to runtime value
-<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="string">"text"</span><span class="special">);</span>
-</pre>
-          </li>
-<li class="listitem">
-            bind to external runtime value
-            <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
-<li class="listitem">
-                  to shared ptr
-<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">make_shared</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;())</span> <span class="comment">// bind to shared_ptr</span>
-</pre>
-                </li>
-<li class="listitem">
-                  to reference
-<pre class="programlisting"><span class="identifier">example</span> <span class="identifier">example_</span><span class="special">;</span>
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">cref</span><span class="special">(</span><span class="identifier">example_</span><span class="special">))</span> <span class="comment">// bind to const ref</span>
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">ref</span><span class="special">(</span><span class="identifier">example_</span><span class="special">))</span> <span class="comment">// bind to ref</span>
-</pre>
-                </li>
-<li class="listitem">
-                  to functor
-<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">()&gt;&gt;::</span><span class="identifier">to</span><span class="special">([]{</span> <span class="keyword">return</span> <span class="number">42</span><span class="special">;</span> <span class="special">})</span>
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">()&gt;&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(&amp;</span><span class="identifier">return_int</span><span class="special">,</span> <span class="number">42</span><span class="special">))</span>
-</pre>
-                </li>
-<li class="listitem">
-                  to functor factory
-<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">([]{</span> <span class="keyword">return</span> <span class="number">42</span><span class="special">;</span> <span class="special">})</span>
-</pre>
-                </li>
-</ul></div>
-          </li>
-</ul></div>
-<p>
-        On top of binding to values user can bind to named parameters or using context.
-      </p>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem">
-            bind using named parameters
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">my_value</span> <span class="special">{</span> <span class="special">};</span>
-<span class="keyword">class</span> <span class="identifier">my_if</span> <span class="special">{</span> <span class="special">};</span>
-
-<span class="identifier">stuct</span> <span class="identifier">example</span> <span class="special">{</span>
-    <span class="identifier">example</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">my_value</span><span class="special">&gt;</span> <span class="identifier">value</span><span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;,</span> <span class="identifier">my_if</span><span class="special">&gt;);</span>
-<span class="special">};</span>
-
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">bind_int</span><span class="special">&lt;</span><span class="number">42</span><span class="special">&gt;::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">my_value</span><span class="special">&gt;()</span>
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">my_value</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
-
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">my_if</span><span class="special">&gt;()</span>
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">&gt;::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">my_if</span><span class="special">&gt;()</span>
-</pre>
-          </li>
-<li class="listitem">
-<p class="simpara">
-            bind using call stack context
-<pre class="programlisting"><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">,</span> <span class="identifier">c2</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">cN</span><span class="special">&gt;</span> <span class="comment">// call stack definition</span>
-
-<span class="keyword">class</span> <span class="identifier">c2</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="identifier">c2</span><span class="special">(</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;);</span>
-<span class="special">};</span>
-
-<span class="keyword">class</span> <span class="identifier">c1</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="identifier">c1</span><span class="special">(</span><span class="identifier">c2</span><span class="special">);</span>
-<span class="special">};</span>
-
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;::</span><span class="identifier">when</span><span class="special">&lt;</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">,</span> <span class="identifier">c2</span><span class="special">&gt;&gt;()</span>
-</pre>
-          </p>
-<div class="note"><table border="0" summary="Note">
-<tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../doc/src/images/note.png"></td>
-<th align="left">Note</th>
-</tr>
-<tr><td align="left" valign="top"><p>
-              <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_EXAMINE_CALL_STACK</span></code>
-              has to be defined to enable this features
-            </p></td></tr>
-</table></div>
-</li>
-<li class="listitem">
-            bind using call stack context and named parameters
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">c2</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="identifier">c2</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;,</span> <span class="identifier">my_if</span><span class="special">&gt;);</span>
-<span class="special">};</span>
-
-<span class="keyword">class</span> <span class="identifier">c1</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="identifier">c1</span><span class="special">(</span><span class="identifier">c2</span><span class="special">);</span>
-<span class="special">};</span>
-
-<span class="comment">// bind interface to implementation for named</span>
-<span class="comment">// parameter `my_if` when the class `c2` was created from class `c1`</span>
-
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">my_if</span><span class="special">&gt;::</span><span class="identifier">when</span><span class="special">&lt;</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">,</span> <span class="identifier">c2</span><span class="special">&gt;&gt;()</span>
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">&gt;::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">my_if</span><span class="special">&gt;::</span><span class="identifier">when</span><span class="special">&lt;</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">,</span> <span class="identifier">c2</span><span class="special">&gt;&gt;()</span>
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;::</span><span class="identifier">when</span><span class="special">&lt;</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">,</span> <span class="identifier">c2</span><span class="special">&gt;&gt;::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">my_if</span><span class="special">&gt;()</span>
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">&gt;::</span><span class="identifier">when</span><span class="special">&lt;</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">,</span> <span class="identifier">c2</span><span class="special">&gt;&gt;::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">my_if</span><span class="special">&gt;()</span>
-
-<span class="comment">// all bindings above are equivalent</span>
-</pre>
-          </li>
-<li class="listitem">
-            bind using custom concept
-          </li>
-</ul></div>
+<h5>
+<a name="boost_di__dependency_injection_.concepts.bindings.h6"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.concepts.bindings.description0"></a></span><a class="link" href="bindings.html#boost_di__dependency_injection_.concepts.bindings.description0">Description</a>
+      </h5>
 <p>
         Custom bindings requires <code class="computeroutput"><span class="identifier">apply</span></code>
         class which should return compile time integer value. Given value will influence
         how dependencies will be resolved. Current algorithm might be found in <code class="computeroutput"><span class="identifier">Design</span> <span class="identifier">Rationale</span></code>.
       </p>
-<p>
-</p>
+<h5>
+<a name="boost_di__dependency_injection_.concepts.bindings.h7"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.concepts.bindings.synopsis0"></a></span><a class="link" href="bindings.html#boost_di__dependency_injection_.concepts.bindings.synopsis0">Synopsis</a>
+      </h5>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">unspecified</span> <span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">apply</span>
+        <span class="special">:</span> <span class="identifier">TResult</span>
+    <span class="special">{</span> <span class="special">};</span>
+<span class="special">}</span>
+</pre>
+<div class="table">
+<a name="boost_di__dependency_injection_.concepts.bindings.parameters0"></a><p class="title"><b>Table&#160;7.&#160;Parameters</b></p>
+<div class="table-contents"><table class="table" summary="Parameters">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Parameter
+                </p>
+              </th>
+<th>
+                <p>
+                  Requirement
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">TDependency</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Dependency Model type
+                </p>
+              </td>
+<td>
+                <p>
+                  Dependency type
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">TResult</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Integral value
+                </p>
+              </td>
+<td>
+                <p>
+                  Returns integer value represents importance of binding
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><h5>
+<a name="boost_di__dependency_injection_.concepts.bindings.h8"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.concepts.bindings.header0"></a></span><a class="link" href="bindings.html#boost_di__dependency_injection_.concepts.bindings.header0">Header</a>
+      </h5>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<h5>
+<a name="boost_di__dependency_injection_.concepts.bindings.h9"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.concepts.bindings.examples0"></a></span><a class="link" href="bindings.html#boost_di__dependency_injection_.concepts.bindings.examples0">Examples</a>
+      </h5>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">longer_call_stack_first</span> <span class="special">{</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
     <span class="keyword">struct</span> <span class="identifier">apply</span>
         <span class="special">:</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">size</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">::</span><span class="identifier">call_stack</span><span class="special">&gt;</span>
     <span class="special">{</span> <span class="special">};</span>
 <span class="special">}</span>
-</pre>
-<p>
-      </p>
-<p>
-        Then concept might be used with <code class="computeroutput"><span class="identifier">when</span></code>
-        binding afterwards.
-      </p>
-<p>
-</p>
-<pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
     <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">1</span><span class="special">)</span>
   <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">when</span><span class="special">&lt;</span><span class="identifier">longer_call_stack_first</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
 <span class="special">);</span>
 
 <span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
-    <span class="keyword">explicit</span> <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">i</span><span class="special">(</span><span class="identifier">i</span><span class="special">){</span> <span class="special">};</span>
+    <span class="keyword">explicit</span> <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">i</span><span class="special">(</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span> <span class="special">};</span>
     <span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">};</span>
 
 <span class="identifier">assert</span><span class="special">(</span><span class="number">1</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
 <span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;().</span><span class="identifier">i</span><span class="special">);</span>
 </pre>
-<p>
-      </p>
-<div class="informaltable"><table class="table">
-<colgroup><col></colgroup>
-<tbody><tr><td>
-                <p>
-                  Tests: <a href="../../test/ut/bindings_ut.cpp" target="_top">test/ut/bindings_ut.cpp</a>
-                  | <a href="../../test/ut/core/binder_ut.cpp" target="_top">test/ut/core/binder_ut.cpp</a>
-                </p>
-              </td></tr></tbody>
-</table></div>
+<h5>
+<a name="boost_di__dependency_injection_.concepts.bindings.h10"></a>
+        <span class="phrase"><a name="boost_di__dependency_injection_.concepts.bindings.tests0"></a></span><a class="link" href="bindings.html#boost_di__dependency_injection_.concepts.bindings.tests0">Tests</a>
+      </h5>
+<pre class="programlisting"><a href="../../test/ut/bindings_ut.cpp" target="_top">test/ut/bindings_ut.cpp</a> <span class="special">|</span> <a href="../../test/ut/core/binder_ut.cpp" target="_top">test/ut/core/binder_ut.cpp</a>
+</pre>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>

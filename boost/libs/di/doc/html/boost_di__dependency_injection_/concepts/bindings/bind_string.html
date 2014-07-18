@@ -27,7 +27,7 @@
 <a name="boost_di__dependency_injection_.concepts.bindings.bind_string"></a><a class="link" href="bind_string.html" title="bind_string">bind_string</a>
 </h4></div></div></div>
 <p>
-          Allows bind compile time string value.
+          Allows to bind compile time string value.
         </p>
 <h6>
 <a name="boost_di__dependency_injection_.concepts.bindings.bind_string.h0"></a>
@@ -39,7 +39,7 @@
 <span class="special">{</span> <span class="special">};</span>
 </pre>
 <div class="table">
-<a name="boost_di__dependency_injection_.concepts.bindings.bind_string.parameters"></a><p class="title"><b>Table&#160;9.&#160;Parameters</b></p>
+<a name="boost_di__dependency_injection_.concepts.bindings.bind_string.parameters"></a><p class="title"><b>Table&#160;11.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
 <col>
@@ -103,16 +103,71 @@
 <a name="boost_di__dependency_injection_.concepts.bindings.bind_string.h3"></a>
           <span class="phrase"><a name="boost_di__dependency_injection_.concepts.bindings.bind_string.examples"></a></span><a class="link" href="bind_string.html#boost_di__dependency_injection_.concepts.bindings.bind_string.examples">Examples</a>
         </h6>
-<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Binding
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind_string</span><span class="special">&lt;</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">string</span><span class="special">&lt;</span><span class="char">'str'</span><span class="special">&gt;&gt;())</span></pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    bind <code class="computeroutput"><span class="identifier">str</span></code> to
+                    <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code> parameters
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind_string</span><span class="special">&lt;</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">string</span><span class="special">&lt;</span><span class="char">'str'</span><span class="special">&gt;&gt;::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">my_string</span><span class="special">&gt;()</span></pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    bind <code class="computeroutput"><span class="identifier">str</span></code> value
+                    to <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code> parameters named <code class="computeroutput"><span class="identifier">my_string</span></code>
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
     <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind_string</span><span class="special">&lt;</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">string</span><span class="special">&lt;</span><span class="char">'str'</span><span class="special">&gt;&gt;()</span>
 <span class="special">);</span>
 
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span>
-    <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind_string</span><span class="special">&lt;</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">string</span><span class="special">&lt;</span><span class="char">'str'</span><span class="special">&gt;&gt;</span>
-<span class="special">&gt;;</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="string">"str"</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;());</span>
 </pre>
 <h6>
 <a name="boost_di__dependency_injection_.concepts.bindings.bind_string.h4"></a>
+          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.bindings.bind_string.more_examples"></a></span><a class="link" href="bind_string.html#boost_di__dependency_injection_.concepts.bindings.bind_string.more_examples">More
+          Examples</a>
+        </h6>
+<pre class="programlisting"><a class="link" href="../../../">Binding</a>
+</pre>
+<h6>
+<a name="boost_di__dependency_injection_.concepts.bindings.bind_string.h5"></a>
           <span class="phrase"><a name="boost_di__dependency_injection_.concepts.bindings.bind_string.tests"></a></span><a class="link" href="bind_string.html#boost_di__dependency_injection_.concepts.bindings.bind_string.tests">Tests</a>
         </h6>
 <pre class="programlisting"><a href="../../../test/ut/bindings_ut.cpp" target="_top">test/ut/bindings_ut.cpp</a> <span class="special">|</span> <a href="../../../test/ut/core/binder_ut.cpp" target="_top">test/ut/core/binder_ut.cpp</a>

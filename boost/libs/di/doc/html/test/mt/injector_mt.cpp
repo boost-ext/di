@@ -34,6 +34,7 @@ using injector_1_t = injector<
       , bind_int<3>::named<mpl::string<'1'>>::when<call_stack<c7, c6, c4>>
       , bind_int<4>::named<mpl::string<'2'>>::when<call_stack<c7, c6, c4>>
       , bind_int<5>::when<call_stack<c2>>
+      , bind_bool<true>
     >
 >;
 
@@ -44,6 +45,7 @@ using injector_2_t = injector<
   , scope<scopes::unique<>>::bind<
         bind_int<0>::named<mpl::string<'1'>>
       , bind_int<1>
+      , bind_bool<true>
     >
 >;
 
@@ -87,6 +89,7 @@ auto injector_1 = make_injector(
       , bind_int<3>::named<mpl::string<'1'>>::when<call_stack<c7, c6, c4>>
       , bind_int<4>::named<mpl::string<'2'>>::when<call_stack<c7, c6, c4>>
       , bind_int<5>::when<call_stack<c2>>
+      , bind_bool<true>
     >()
 );
 
@@ -107,6 +110,7 @@ auto injector_3 = make_injector(
   , unique<
         bind_int<0>::named<mpl::string<'1'>>
       , bind_int<1>
+      , bind_bool<true>
     >()
 );
 
@@ -160,6 +164,7 @@ void check(const c8& c8_) {
     BOOST_CHECK_EQUAL(5, c8_.c7_->c6_->c5_.c2_->i);
     BOOST_CHECK_EQUAL(0.0, c8_.c7_->c6_->c5_.c2_->d);
     BOOST_CHECK_EQUAL(0, c8_.c7_->c6_->c5_.c2_->c);
+    BOOST_CHECK_EQUAL(true, c8_.c7_->c6_->c5_.c2_->b);
 }
 
 void check(const aux::shared_ptr<c8>& c8_) {
@@ -177,6 +182,7 @@ void check(const aux::shared_ptr<c8>& c8_) {
     BOOST_CHECK_EQUAL(1, c8_->c7_->c6_->c5_.c2_->i);
     BOOST_CHECK_EQUAL(0.0, c8_->c7_->c6_->c5_.c2_->d);
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
+    BOOST_CHECK_EQUAL(true, c8_->c7_->c6_->c5_.c2_->b);
 }
 
 using one_injector_types = mpl::vector<

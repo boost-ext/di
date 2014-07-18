@@ -1,0 +1,190 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>bind_bool</title>
+<link rel="stylesheet" href="../../../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.0">
+<link rel="home" href="../../../index.html" title="Boost.DI (Dependency Injection) 1.0">
+<link rel="up" href="../bindings.html" title="Bindings">
+<link rel="prev" href="bind.html" title="bind">
+<link rel="next" href="bind_int.html" title="bind_int">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="bind.html"><img src="../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../bindings.html"><img src="../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="bind_int.html"><img src="../../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_di__dependency_injection_.concepts.bindings.bind_bool"></a><a class="link" href="bind_bool.html" title="bind_bool">bind_bool</a>
+</h4></div></div></div>
+<p>
+          Allows to bind compile time bool value.
+        </p>
+<h6>
+<a name="boost_di__dependency_injection_.concepts.bindings.bind_bool.h0"></a>
+          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.bindings.bind_bool.synopsis"></a></span><a class="link" href="bind_bool.html#boost_di__dependency_injection_.concepts.bindings.bind_bool.synopsis">Synopsis</a>
+        </h6>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">bool</span> <span class="identifier">Value</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">bind_bool</span>
+    <span class="special">:</span> <span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">,</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">bool_</span><span class="special">&lt;</span><span class="identifier">Value</span><span class="special">&gt;&gt;</span>
+<span class="special">{</span> <span class="special">};</span>
+</pre>
+<div class="table">
+<a name="boost_di__dependency_injection_.concepts.bindings.bind_bool.parameters"></a><p class="title"><b>Table&#160;9.&#160;Parameters</b></p>
+<div class="table-contents"><table class="table" summary="Parameters">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Parameter
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Requirement
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">Value</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Boolean value
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Value to be binded to <code class="computeroutput"><span class="keyword">bool</span></code>
+                    parameters
+                  </p>
+                </td>
+</tr></tbody>
+</table></div>
+</div>
+<br class="table-break"><h6>
+<a name="boost_di__dependency_injection_.concepts.bindings.bind_bool.h1"></a>
+          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.bindings.bind_bool.expression_semantics"></a></span><a class="link" href="bind_bool.html#boost_di__dependency_injection_.concepts.bindings.bind_bool.expression_semantics">Expression
+          Semantics</a>
+        </h6>
+<pre class="programlisting"><span class="identifier">bind_bool</span><span class="special">&lt;</span><span class="keyword">true</span><span class="special">&gt;();</span>
+</pre>
+<p>
+          <span class="bold"><strong>Return type</strong></span>: <code class="computeroutput"><span class="identifier">dependency</span></code>
+        </p>
+<h6>
+<a name="boost_di__dependency_injection_.concepts.bindings.bind_bool.h2"></a>
+          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.bindings.bind_bool.header"></a></span><a class="link" href="bind_bool.html#boost_di__dependency_injection_.concepts.bindings.bind_bool.header">Header</a>
+        </h6>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<h6>
+<a name="boost_di__dependency_injection_.concepts.bindings.bind_bool.h3"></a>
+          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.bindings.bind_bool.examples"></a></span><a class="link" href="bind_bool.html#boost_di__dependency_injection_.concepts.bindings.bind_bool.examples">Examples</a>
+        </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Binding
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind_bool</span><span class="special">&lt;</span><span class="keyword">true</span><span class="special">&gt;())</span></pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    bind true value to <code class="computeroutput"><span class="keyword">bool</span></code>
+                    parameters
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind_bool</span><span class="special">&lt;</span><span class="keyword">true</span><span class="special">&gt;::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">my_bool</span><span class="special">&gt;())</span></pre>
+<p>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    bind <code class="computeroutput"><span class="keyword">true</span></code> value
+                    to <code class="computeroutput"><span class="keyword">bool</span></code> parameters
+                    named <code class="computeroutput"><span class="identifier">my_bool</span></code>
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+    <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind_bool</span><span class="special">&lt;</span><span class="keyword">true</span><span class="special">&gt;()</span>
+<span class="special">);</span>
+
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">true</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">&gt;());</span>
+</pre>
+<h6>
+<a name="boost_di__dependency_injection_.concepts.bindings.bind_bool.h4"></a>
+          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.bindings.bind_bool.more_examples"></a></span><a class="link" href="bind_bool.html#boost_di__dependency_injection_.concepts.bindings.bind_bool.more_examples">More
+          Examples</a>
+        </h6>
+<pre class="programlisting"><a class="link" href="../../../">Binding</a>
+</pre>
+<h6>
+<a name="boost_di__dependency_injection_.concepts.bindings.bind_bool.h5"></a>
+          <span class="phrase"><a name="boost_di__dependency_injection_.concepts.bindings.bind_bool.tests"></a></span><a class="link" href="bind_bool.html#boost_di__dependency_injection_.concepts.bindings.bind_bool.tests">Tests</a>
+        </h6>
+<pre class="programlisting"><a href="../../../test/ut/bindings_ut.cpp" target="_top">test/ut/bindings_ut.cpp</a> <span class="special">|</span> <a href="../../../test/ut/core/binder_ut.cpp" target="_top">test/ut/core/binder_ut.cpp</a>
+</pre>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2014 Krzysztof Jusiak<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="bind.html"><img src="../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../bindings.html"><img src="../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="bind_int.html"><img src="../../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
