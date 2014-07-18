@@ -52,52 +52,6 @@ the only thing which has to be in mind is to return list of dependencies.
 [heading Tests]
     ``[@test/ut/bindings_ut.cpp]``
 
-[heading Description]
-Custom bindings requires `apply` class which should return compile time integer value.
-Given value will influence how dependencies will be resolved. Current algorithm might
-be found in `Design Rationale`.
-
-[heading Synopsis]
-    struct unspecified {
-        template<typename TDependency>
-        struct apply
-            : TResult
-        { };
-    }
-
-[table Parameters
-    [[Parameter][Requirement][Description]]
-    [[`TDependency`][Dependency Model type][Dependency type]]
-    [[`TResult`][Integral value][Returns integer value represents importance of binding]]
-]
-
-[heading Header]
-    #include <boost/di.hpp>
-
-[heading Examples]
-    struct longer_call_stack_first {
-        template<typename TDependency>
-        struct apply
-            : mpl::size<typename TDependency::call_stack>
-        { };
-    }
-
-    auto injector = di::make_injector(
-        di::bind<int>::to(1)
-      , di::bind<int>::when<longer_call_stack_first>::to(42)
-    );
-
-    struct example {
-        explicit example(int i) : i(i) { };
-        int i = 0;
-    };
-
-    assert(1 == injector.create<int>());
-    assert(42 == injector.create<example>().i);
-
-[heading Tests]
-    ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
-
 [section bind]
 
 [heading Description]
@@ -149,7 +103,7 @@ Allows bind interface to implementation and associate value with `dependency`.
       , di::bind<int>::to(42)
     );
 
-    assert(dynamic_cast<implementation*>(injector.create<std::unique_ptr<interface>>().get()));
+    assert(dynamic_cast<implementation*>(injector.create<unique_ptr<interface>>().get()));
     assert(42 == injector.create<int>());
 
 [note Values bind with `bind<...>::to(...)` always have higher priority than other bindings. See `External scope` for further information.]
@@ -160,6 +114,7 @@ Allows bind interface to implementation and associate value with `dependency`.
 [heading Tests]
     ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
 
+[section any_of]
 [endsect]
 
 [section bind_bool]
@@ -291,8 +246,10 @@ Allows to bind compile time string value.
 
 [endsect]
 
+[endsect]
+
 [section scope]
-Allows to bind bindings to defined/custom scope.
+Allows to bind other bindings to defined/custom scope. If not used `deduce` scope is assumed.
 
 [heading Synopsis]
     template<typename TScope>
@@ -306,7 +263,7 @@ Allows to bind bindings to defined/custom scope.
 ]
 
 [heading Expression Semantics]
-    scope<scopes::unique<>>::bind<...>()
+    scope<Scope>::bind<...>()
 
 [*Return type]: `dependency`
 
@@ -314,25 +271,32 @@ Allows to bind bindings to defined/custom scope.
     #include <boost/di.hpp>
 
 [heading Examples]
-    di::make_injector(
+[table
+    [[Binding][Description]]
+    [[```di::scope<scopes::unique<>::bind<di::bind<interface, implementation>>```][bind `interface` to `implementation` in `unique` scope]]
+    [[```di::scope<scopes::shared<>::bind<di::bind<interface, implementation>>```][bind `interface` to `implementation` in `shared` scope]]
+    [[```di::scope<scopes::session<>::bind<di::bind<interface, implementation>>```][bind `interface` to `implementation` in `session` scope]]
+]
+
+    auto injector = di::make_injector(
         di::scope<scopes::unique<>>::bind<
-            di::bind<i, impl>
+            bind<interface, implementation>
         >()
     );
 
-    di::injector<
-        di::scope<scopes::unique<>>::bind<
-            di::bind<i, impl>
-        >
-    >;
+    assert(injector.create<shared_ptr<interface>>() != injector.create<shared_ptr<interface>>());
+
+[note `external` scope can be only binded using `bind<...>::to(...)` semantic.]
+
+[heading More Examples]
+    ``[link di.examples.binding Binding]``
 
 [heading Tests]
     ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
 
-[endsect]
-
 [section deduce]
-Allows to bind bindings to `deduce` scope. Interface type will be deduced, if not given.
+Allows to bind other bindings to `deduce` scope. Interface type will be deduced, if not given.
+Scoped will be deduced accordingly to constructor parameter type. See `Deduce Scope` for further information.
 
 [heading Synopsis]
     template<typename... TArgs>
@@ -354,25 +318,20 @@ Allows to bind bindings to `deduce` scope. Interface type will be deduced, if no
     #include <boost/di.hpp>
 
 [heading Examples]
-    di::make_injector(
-        di::deduce<impl>() // interface type deduction
+[table
+    [[Binding][Description]]
+    [[```di::deduce<implementation>()```][bind deduced interface to `implementation`]]
+    [[```di::deduce<bind<interface, implementation>>()```][bind `interface` to `implementation`]]
+]
+
+    auto injector = di::make_injector(
+        di::deduce<implementation>()
     );
 
-    di::injector<
-        di::deduce<impl> // interface type deduction
-    >;
+    assert(injector.create<unique_ptr<implementation>>() != injector.create<unique_ptr<implementation>>());
 
-    di::make_injector(
-        di::deduce<
-            di::bind<i, impl>
-        >()
-    );
-
-    di::injector<
-        di::deduce<
-            di::bind<i, impl>
-        >()
-    >;
+[heading More Examples]
+    ``[link di.examples.deduce_scope Deduce Scope]``
 
 [heading Tests]
     ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
@@ -387,6 +346,56 @@ Allows to bind bindings to `deduce` scope. Interface type will be deduced, if no
 
 [section session]
 [endsect]
+
+[endsect]
+
+[section when]
+
+[heading Description]
+Custom bindings requires `apply` class which should return compile time integer value.
+Given value will influence how dependencies will be resolved. Current algorithm might
+be found in `Design Rationale`.
+
+[heading Synopsis]
+    struct unspecified {
+        template<typename TDependency>
+        struct apply
+            : TResult
+        { };
+    }
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`TDependency`][Dependency Model type][Dependency type]]
+    [[`TResult`][Integral value][Returns integer value represents importance of binding]]
+]
+
+[heading Header]
+    #include <boost/di.hpp>
+
+[heading Examples]
+    struct longer_call_stack_first {
+        template<typename TDependency>
+        struct apply
+            : mpl::size<typename TDependency::call_stack>
+        { };
+    }
+
+    auto injector = di::make_injector(
+        di::bind<int>::to(1)
+      , di::bind<int>::when<longer_call_stack_first>::to(42)
+    );
+
+    struct example {
+        explicit example(int i) : i(i) { };
+        int i = 0;
+    };
+
+    assert(1 == injector.create<int>());
+    assert(42 == injector.create<example>().i);
+
+[heading Tests]
+    ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
 
 [section call_stack]
 * bind using call stack context
@@ -433,14 +442,6 @@ Allows to bind bindings to `deduce` scope. Interface type will be deduced, if no
 
 
 [endsect]
-
-[section any_of]
-
-* bind the same implementation to many interfaces
-```
-    di::bind<any_of<interface1, interface2, ..., interfaceN>, implementation>
-```
-[note The same might be achived with `bind<implementation>`]
 
 [endsect]
 

@@ -95,6 +95,8 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
         example(int, double, float);
     };
 
+    assert(di::make_injector().create<example>());
+
 [note In `C++03` additional brackets are needed: `BOOST_DI_INJECT(example, (int, double))`.]
 [tip Requirement of brackets in BOOST_DI_INJECT might be switched with `BOOST_DI_CFG_INJECT_VA_ARGS` and `BOOST_DI_CFG_INJECT_BRACKET`.]
 
