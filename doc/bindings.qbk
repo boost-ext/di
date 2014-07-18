@@ -37,13 +37,13 @@ the only thing which has to be in mind is to return list of dependencies.
     #include <boost/di.hpp>
 
 [heading Examples]
-    template<typename TIf, typename TImpl>
+    template<typename TIinterface typename TImplementation>
     struct bind
-        : bindings::dependency<scopes::deduce, TIf, TImpl>
+        : bindings::dependency<scopes::deduce, TInterface, TImplementation>
     { };
 
     di::make_injector(
-        bind<i, impl>()
+        bind<interface, implementation>()
     );
 
 [heading More Examples]
@@ -121,7 +121,7 @@ Allows bind interface to implementation and associate value with `dependency`.
 ]
 
 [heading Expression Semantics]
-    bind<i, impl>()
+    bind<interface, implementation>()
     bind<int>::to(int())
 
 [*Return type]: `dependency`
@@ -141,10 +141,21 @@ Allows bind interface to implementation and associate value with `dependency`.
     [[```di::bind<interface>::to(make_shared<implementation>())```][bind to shared_ptr]]
     [[```di::bind<int>::to([]{ return 42; })```][bind value to functor expression]]
     [[```di::bind<function<int()>>::to([]{ return 42; })```][bind to lambda expression]]
-    [[```di::bind<std::function<int()>>::to(boost::bind(&return_int, 42))```][bind to functor expression]]
-    [[```di::bind_int<42>::named<mpl::string<'rnt'>>()```][bind annotated int to value named with `int`]]
-    [[```di::bind<interface, implementation>::named<my_if>```][bind annotated interface to implementation named with `my_if`]]
+    [[```di::bind<function<int()>>::to(boost::bind(&return_int, 42))```][bind to functor expression]]
+    [[```di::bind<interface, implementation>::named<my_interface>```][bind annotated interface to implementation named with `my_interface`]]
 ]
+    auto injector = di::make_injector(
+        di::bind<interface, implementation>()
+      , di::bind<int>::to(42)
+    );
+
+    assert(dynamic_cast<implementation*>(injector.create<std::unique_ptr<interface>>().get()));
+    assert(42 == injector.create<int>());
+
+[note Values bind with `bind<...>::to(...)` always have higher priority than other bindings. See `External scope` for further information.]
+
+[heading More Examples]
+    ``[link di.examples.binding Binding]``
 
 [heading Tests]
     ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
@@ -152,15 +163,55 @@ Allows bind interface to implementation and associate value with `dependency`.
 [endsect]
 
 [section bind_bool]
+Allows to bind compile time bool value.
+
+[heading Synopsis]
+    template<bool Value>
+    struct bind_bool
+        : bind<bool, mpl::bool_<Value>>
+    { };
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`Value`][Boolean value][Value to be binded to `bool` parameters]]
+]
+
+[heading Expression Semantics]
+    bind_bool<true>();
+
+[*Return type]: `dependency`
+
+[heading Header]
+    #include <boost/di.hpp>
+
+[heading Examples]
+[table
+    [[Binding][Description]]
+    [[```di::bind_bool<true>())```][bind true value to `bool` parameters]]
+    [[```di::bind_bool<true>::named<my_bool>())```][bind `true` value to `bool` parameters named `my_bool`]]
+]
+
+    auto injector = di::make_injector(
+        di::bind_bool<true>()
+    );
+
+    assert(true == injector.create<bool>());
+
+[heading More Examples]
+    ``[link di.examples.binding Binding]``
+
+[heading Tests]
+    ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
+
 [endsect]
 
 [section bind_int]
-Allows bind compile time integer value.
+Allows to bind compile time integer value.
 
 [heading Synopsis]
     template<int N>
     struct bind_int
-        : bind<int, mpl::int_<N> >
+        : bind<int, mpl::int_<N>>
     { };
 
 [table Parameters
@@ -177,13 +228,20 @@ Allows bind compile time integer value.
     #include <boost/di.hpp>
 
 [heading Examples]
-    di::make_injector(
+[table
+    [[Binding][Description]]
+    [[```di::bind_int<42>())```][bind `42` to `int` parameters]]
+    [[```di::bind_int<42>::named<my_int>()```][bind `42` value to `int` parameters named `my_int`]]
+]
+
+    auto injector = di::make_injector(
         di::bind_int<42>()
     );
 
-    di::injector<
-        di::bind_int<42>
-    >;
+    assert(42 == injector.create<int>());
+
+[heading More Examples]
+    ``[link di.examples.binding Binding]``
 
 [heading Tests]
     ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
@@ -191,7 +249,7 @@ Allows bind compile time integer value.
 [endsect]
 
 [section bind_string]
-Allows bind compile time string value.
+Allows to bind compile time string value.
 
 [heading Synopsis]
     template<typename T>
@@ -213,13 +271,20 @@ Allows bind compile time string value.
     #include <boost/di.hpp>
 
 [heading Examples]
-    di::make_injector(
+[table
+    [[Binding][Description]]
+    [[```di::bind_string<mpl::string<'str'>>())```][bind `str` to `std::string` parameters]]
+    [[```di::bind_string<mpl::string<'str'>>::named<my_string>()```][bind `str` value to `std::string` parameters named `my_string`]]
+]
+
+    auto injector = di::make_injector(
         di::bind_string<mpl::string<'str'>>()
     );
 
-    di::injector<
-        di::bind_string<mpl::string<'str'>>
-    >;
+    assert("str" == injector.create<std::string>());
+
+[heading More Examples]
+    ``[link di.examples.binding Binding]``
 
 [heading Tests]
     ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
@@ -347,7 +412,7 @@ Allows to bind bindings to `deduce` scope. Interface type will be deduced, if no
 ```
     class c2 {
     public:
-        c2(di::named<unique_ptr<interface>, my_if>);
+        c2(di::named<unique_ptr<interface>, my_interface>);
     };
 
     class c1 {
@@ -356,12 +421,12 @@ Allows to bind bindings to `deduce` scope. Interface type will be deduced, if no
     };
 
     // bind interface to implementation for named
-    // parameter `my_if` when the class `c2` was created from class `c1`
+    // parameter `my_interface` when the class `c2` was created from class `c1`
 
-    di::bind<interface, implementation>::named<my_if>::when<call_stack<c1, c2>>()
-    di::bind<implementation>::named<my_if>::when<call_stack<c1, c2>>()
-    di::bind<interface, implementation>::when<call_stack<c1, c2>>::named<my_if>()
-    di::bind<implementation>::when<call_stack<c1, c2>>::named<my_if>()
+    di::bind<interface, implementation>::named<my_interface>::when<call_stack<c1, c2>>()
+    di::bind<implementation>::named<my_interface>::when<call_stack<c1, c2>>()
+    di::bind<interface, implementation>::when<call_stack<c1, c2>>::named<my_interface>()
+    di::bind<implementation>::when<call_stack<c1, c2>>::named<my_interface>()
 
     // all bindings above are equivalent
 ```

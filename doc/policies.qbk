@@ -168,6 +168,7 @@ Limits allowed constructor parameters. By default, if used, all parameters are d
 
 [heading Examples]
     using namespace di::policies;
+
     di::make_injector().create<int>(parameters_permission<>()); // compile error, no parameters are allowed
     di::make_injector().create<int>(parameters_permission<allow_copies>()); // compile ok
 
@@ -175,11 +176,11 @@ Limits allowed constructor parameters. By default, if used, all parameters are d
         example(std::vector<int*>, std::shared_ptr<int>, const int&);
     };
 
-    Parameters
-        * std::vector<int*> -> allow_copies
-            * int* -> allow_ptrs
-        * std::shared_ptr<int> -> allow_smart_ptrs
-        * const int& -> allow_const_refs
+    // Parameters
+    //    * std::vector<int*> -> allow_copies
+    //        * int* -> allow_ptrs
+    //    * std::shared_ptr<int> -> allow_smart_ptrs
+    //    * const int& -> allow_const_refs
 
     di::make_injector().create<example>(
         parameters_permission<allow_copies, allow_ptrs, allow_smart_ptrs, allow_const_refs>()
