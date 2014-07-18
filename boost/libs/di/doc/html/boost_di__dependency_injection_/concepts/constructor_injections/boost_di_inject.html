@@ -140,6 +140,8 @@
     <span class="identifier">BOOST_DI_INJECT</span><span class="special">(</span><span class="identifier">example</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">);</span> <span class="comment">// will be chosen by Boost.DI</span>
     <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">,</span> <span class="keyword">float</span><span class="special">);</span>
 <span class="special">};</span>
+
+<span class="identifier">assert</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;());</span>
 </pre>
 <div class="note"><table border="0" summary="Note">
 <tr>

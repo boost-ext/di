@@ -28,16 +28,21 @@
 </h3></div></div></div>
 <div class="toc"><dl class="toc">
 <dt><span class="section"><a href="bindings/bind.html">bind</a></span></dt>
-<dt><span class="section"><a href="bindings/bind_bool.html">bind_bool</a></span></dt>
-<dt><span class="section"><a href="bindings/bind_int.html">bind_int</a></span></dt>
-<dt><span class="section"><a href="bindings/bind_string.html">bind_string</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="bindings/bind/any_of.html">any_of</a></span></dt>
+<dt><span class="section"><a href="bindings/bind/bind_bool.html">bind_bool</a></span></dt>
+<dt><span class="section"><a href="bindings/bind/bind_int.html">bind_int</a></span></dt>
+<dt><span class="section"><a href="bindings/bind/bind_string.html">bind_string</a></span></dt>
+</dl></dd>
 <dt><span class="section"><a href="bindings/scope.html">scope</a></span></dt>
-<dt><span class="section"><a href="bindings/deduce.html">deduce</a></span></dt>
-<dt><span class="section"><a href="bindings/unique.html">unique</a></span></dt>
-<dt><span class="section"><a href="bindings/shared.html">shared</a></span></dt>
-<dt><span class="section"><a href="bindings/session.html">session</a></span></dt>
-<dt><span class="section"><a href="bindings/call_stack.html">call_stack</a></span></dt>
-<dt><span class="section"><a href="bindings/any_of.html">any_of</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="bindings/scope/deduce.html">deduce</a></span></dt>
+<dt><span class="section"><a href="bindings/scope/unique.html">unique</a></span></dt>
+<dt><span class="section"><a href="bindings/scope/shared.html">shared</a></span></dt>
+<dt><span class="section"><a href="bindings/scope/session.html">session</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="bindings/when.html">when</a></span></dt>
+<dd><dl><dt><span class="section"><a href="bindings/when/call_stack.html">call_stack</a></span></dt></dl></dd>
 </dl></div>
 <h5>
 <a name="boost_di__dependency_injection_.concepts.bindings.h0"></a>
@@ -191,125 +196,6 @@
         <span class="phrase"><a name="boost_di__dependency_injection_.concepts.bindings.tests"></a></span><a class="link" href="bindings.html#boost_di__dependency_injection_.concepts.bindings.tests">Tests</a>
       </h5>
 <pre class="programlisting"><a href="../../test/ut/bindings_ut.cpp" target="_top">test/ut/bindings_ut.cpp</a>
-</pre>
-<h5>
-<a name="boost_di__dependency_injection_.concepts.bindings.h6"></a>
-        <span class="phrase"><a name="boost_di__dependency_injection_.concepts.bindings.description0"></a></span><a class="link" href="bindings.html#boost_di__dependency_injection_.concepts.bindings.description0">Description</a>
-      </h5>
-<p>
-        Custom bindings requires <code class="computeroutput"><span class="identifier">apply</span></code>
-        class which should return compile time integer value. Given value will influence
-        how dependencies will be resolved. Current algorithm might be found in <code class="computeroutput"><span class="identifier">Design</span> <span class="identifier">Rationale</span></code>.
-      </p>
-<h5>
-<a name="boost_di__dependency_injection_.concepts.bindings.h7"></a>
-        <span class="phrase"><a name="boost_di__dependency_injection_.concepts.bindings.synopsis0"></a></span><a class="link" href="bindings.html#boost_di__dependency_injection_.concepts.bindings.synopsis0">Synopsis</a>
-      </h5>
-<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">unspecified</span> <span class="special">{</span>
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
-    <span class="keyword">struct</span> <span class="identifier">apply</span>
-        <span class="special">:</span> <span class="identifier">TResult</span>
-    <span class="special">{</span> <span class="special">};</span>
-<span class="special">}</span>
-</pre>
-<div class="table">
-<a name="boost_di__dependency_injection_.concepts.bindings.parameters0"></a><p class="title"><b>Table&#160;7.&#160;Parameters</b></p>
-<div class="table-contents"><table class="table" summary="Parameters">
-<colgroup>
-<col>
-<col>
-<col>
-</colgroup>
-<thead><tr>
-<th>
-                <p>
-                  Parameter
-                </p>
-              </th>
-<th>
-                <p>
-                  Requirement
-                </p>
-              </th>
-<th>
-                <p>
-                  Description
-                </p>
-              </th>
-</tr></thead>
-<tbody>
-<tr>
-<td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">TDependency</span></code>
-                </p>
-              </td>
-<td>
-                <p>
-                  Dependency Model type
-                </p>
-              </td>
-<td>
-                <p>
-                  Dependency type
-                </p>
-              </td>
-</tr>
-<tr>
-<td>
-                <p>
-                  <code class="computeroutput"><span class="identifier">TResult</span></code>
-                </p>
-              </td>
-<td>
-                <p>
-                  Integral value
-                </p>
-              </td>
-<td>
-                <p>
-                  Returns integer value represents importance of binding
-                </p>
-              </td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<br class="table-break"><h5>
-<a name="boost_di__dependency_injection_.concepts.bindings.h8"></a>
-        <span class="phrase"><a name="boost_di__dependency_injection_.concepts.bindings.header0"></a></span><a class="link" href="bindings.html#boost_di__dependency_injection_.concepts.bindings.header0">Header</a>
-      </h5>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-</pre>
-<h5>
-<a name="boost_di__dependency_injection_.concepts.bindings.h9"></a>
-        <span class="phrase"><a name="boost_di__dependency_injection_.concepts.bindings.examples0"></a></span><a class="link" href="bindings.html#boost_di__dependency_injection_.concepts.bindings.examples0">Examples</a>
-      </h5>
-<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">longer_call_stack_first</span> <span class="special">{</span>
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
-    <span class="keyword">struct</span> <span class="identifier">apply</span>
-        <span class="special">:</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">size</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">::</span><span class="identifier">call_stack</span><span class="special">&gt;</span>
-    <span class="special">{</span> <span class="special">};</span>
-<span class="special">}</span>
-
-<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-    <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">1</span><span class="special">)</span>
-  <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">when</span><span class="special">&lt;</span><span class="identifier">longer_call_stack_first</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
-<span class="special">);</span>
-
-<span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
-    <span class="keyword">explicit</span> <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">i</span><span class="special">(</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span> <span class="special">};</span>
-    <span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
-<span class="special">};</span>
-
-<span class="identifier">assert</span><span class="special">(</span><span class="number">1</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;().</span><span class="identifier">i</span><span class="special">);</span>
-</pre>
-<h5>
-<a name="boost_di__dependency_injection_.concepts.bindings.h10"></a>
-        <span class="phrase"><a name="boost_di__dependency_injection_.concepts.bindings.tests0"></a></span><a class="link" href="bindings.html#boost_di__dependency_injection_.concepts.bindings.tests0">Tests</a>
-      </h5>
-<pre class="programlisting"><a href="../../test/ut/bindings_ut.cpp" target="_top">test/ut/bindings_ut.cpp</a> <span class="special">|</span> <a href="../../test/ut/core/binder_ut.cpp" target="_top">test/ut/core/binder_ut.cpp</a>
 </pre>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
