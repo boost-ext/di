@@ -19,6 +19,7 @@
 
 #include <string>
 #include <boost/mpl/int.hpp>
+#include <boost/mpl/bool.hpp>
 #include <boost/mpl/vector.hpp>
 
 namespace boost {
@@ -27,6 +28,11 @@ namespace di {
 template<typename TExpected, typename TGiven = TExpected>
 struct bind
     : bindings::bind<TExpected, TGiven, bindings::dependency>
+{ };
+
+template<bool V>
+struct bind_bool
+    : bind<bool, mpl::bool_<V> >
 { };
 
 template<int N>

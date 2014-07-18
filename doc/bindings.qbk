@@ -151,6 +151,9 @@ Allows bind interface to implementation and associate value with `dependency`.
 
 [endsect]
 
+[section bind_bool]
+[endsect]
+
 [section bind_int]
 Allows bind compile time integer value.
 

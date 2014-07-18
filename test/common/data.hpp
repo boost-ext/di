@@ -115,13 +115,15 @@ struct c2
         , int i
         , double d
         , char c
+        , bool b
     )
-        : i(i), d(d), c(c)
+        : i(i), d(d), c(c), b(b)
     { }
 
     int i = 0;
     double d = 0.0;
     char c = 0;
+    bool b = false;
 };
 
 struct c3
@@ -216,7 +218,8 @@ struct c9 : c2
         , char c
         , std::string s = "string"
     )
-        : c2(i, d, c), s(s)
+        : c2(i, d, c, false)
+        , s(s)
     { }
 
     std::string s;

@@ -102,6 +102,76 @@ BOOST_AUTO_TEST_CASE(bind_int_value_when_named) {
     ));
 }
 
+BOOST_AUTO_TEST_CASE(bind_bool_value) {
+    const bool b = true;
+    BOOST_CHECK((
+        contains_all<
+            scope<fake_scope<>>::bind<
+                bind_bool<b>::type
+            >
+          , mpl::vector<
+                fake_dependency<fake_scope<>, bool, mpl::bool_<b>>::type
+            >
+        >::value
+    ));
+}
+
+BOOST_AUTO_TEST_CASE(bind_bool_value_named) {
+    const bool b = true;
+    BOOST_CHECK((
+        contains_all<
+            scope<fake_scope<>>::bind<
+                bind_bool<b>::named<void>::type
+            >
+          , mpl::vector<
+                fake_dependency<fake_scope<>, bool, mpl::bool_<b>, void>::type
+            >
+        >::value
+    ));
+}
+
+BOOST_AUTO_TEST_CASE(bind_bool_value_when) {
+    const bool b = true;
+    BOOST_CHECK((
+        contains_all<
+            scope<fake_scope<>>::bind<
+                bind_bool<b>::when<call_stack<c0>>::type
+            >
+          , mpl::vector<
+                fake_dependency<fake_scope<>, bool, mpl::bool_<b>, no_name, mpl::vector<call_stack<c0>>>::type
+            >
+        >::value
+    ));
+}
+
+BOOST_AUTO_TEST_CASE(bind_bool_value_named_when) {
+    const bool b = true;
+    BOOST_CHECK((
+        contains_all<
+            scope<fake_scope<>>::bind<
+                bind_bool<b>::named<void>::when<call_stack<c0>>::type
+            >
+          , mpl::vector<
+                fake_dependency<fake_scope<>, bool, mpl::bool_<b>, void, mpl::vector<call_stack<c0>>>::type
+            >
+        >::value
+    ));
+}
+
+BOOST_AUTO_TEST_CASE(bind_bool_value_when_named) {
+    const bool b = true;
+    BOOST_CHECK((
+        contains_all<
+            scope<fake_scope<>>::bind<
+                bind_bool<b>::when<call_stack<c0>>::named<void>::type
+            >
+          , mpl::vector<
+                fake_dependency<fake_scope<>, bool, mpl::bool_<b>, void, mpl::vector<call_stack<c0>>>::type
+            >
+        >::value
+    ));
+}
+
 BOOST_AUTO_TEST_CASE(bind_string_value) {
     using s = mpl::string<'s'>;
     BOOST_CHECK((

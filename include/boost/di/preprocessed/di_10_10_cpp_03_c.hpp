@@ -82,95 +82,6 @@
 #include <boost/config.hpp>
 #include <boost/bind.hpp>
 
-
-namespace boost {
-namespace di {
-namespace bindings {
-namespace detail {
-
-template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na >
-class requires_
-{
-    template<
-        typename TBind
-      , typename T
-    >
-    struct apply_bind
-        : TBind::template apply<T>::type
-    { };
-
-public:
-    typedef requires_ type;
-
-    template<
-        typename T
-      , typename TMultiplicationFactor = mpl::integral_c<long, 10>
-    >
-    struct apply
-        : mpl::second<
-              typename mpl::fold<
-                  ::boost::mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9>
-                , mpl::pair<mpl::integral_c<long, 1>, mpl::integral_c<long, 1> >
-                , mpl::pair<
-                      mpl::times<
-                          mpl::first<mpl::_1>
-                        , TMultiplicationFactor
-                      >
-                    , mpl::times<
-                          mpl::first<mpl::_1>
-                        , mpl::second<mpl::_1>
-                        , apply_bind<mpl::_2, T>
-                      >
-                  >
-              >::type
-          >
-    { };
-};
-
-} // namespace detail
-} // namespace bindings
-} // namespace di
-} // namespace boost
-
-namespace boost {
-namespace di {
-namespace bindings {
-namespace detail {
-
-template<typename TContext>
-class when_
-{
-    template<
-        typename TBind
-      , typename T
-    >
-    struct apply_bind
-        : TBind::template apply<T>::type
-    { };
-
-public:
-    template<typename T>
-    struct apply
-        : mpl::if_<
-              mpl::empty<TContext>
-            , mpl::int_<1>
-            , typename mpl::deref<
-                  mpl::max_element<
-                      mpl::transform_view<
-                          TContext
-                        , apply_bind<mpl::_1, T>
-                      >
-                  >
-              >::type
-          >::type
-    { };
-};
-
-} // namespace detail
-} // namespace bindings
-} // namespace di
-} // namespace boost
-
 namespace boost {
 namespace di {
 namespace type_traits {
@@ -185,64 +96,6 @@ struct remove_accessors
 { };
 
 } // namespace type_traits
-} // namespace di
-} // namespace boost
-
-namespace boost {
-namespace di {
-namespace bindings {
-namespace type_traits {
-
-BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
-
-template<typename TName>
-class is_required_name
-{
-    template<typename T, typename = void>
-    struct get_name
-    {
-        struct no_name { };
-        typedef no_name type;
-    };
-
-    template<typename T>
-    struct get_name<T, typename enable_if<
-        has_name<typename di::type_traits::remove_accessors<T>::type> >::type
-    >
-    {
-        typedef typename di::type_traits::remove_accessors<T>::type::name type;
-    };
-
-public:
-    template<typename T>
-    struct apply
-        : is_same<typename get_name<typename T::type>::type, TName>
-    { };
-};
-
-} // namespace type_traits
-} // namespace bindings
-} // namespace di
-} // namespace boost
-
-namespace boost {
-namespace di {
-namespace bindings {
-namespace type_traits {
-
-struct is_required_priority
-{
-    template<typename T>
-    struct apply
-        : mpl::plus<
-              mpl::int_<1>
-            , typename T::dependency::scope::priority // lowest = 0, highest = N
-          >
-    { };
-};
-
-} // namespace type_traits
-} // namespace bindings
 } // namespace di
 } // namespace boost
 
@@ -289,56 +142,174 @@ struct make_plain
 } // namespace di
 } // namespace boost
 
-namespace boost {
-namespace di {
-namespace type_traits {
-
-template<typename T, typename U = mpl::_1>
-struct is_same_base_of
-    : mpl::or_<
-          is_base_of<U, T>
-        , is_same<U, T>
-      >
-{ };
-
-} // namespace type_traits
-} // namespace di
-} // namespace boost
 
 namespace boost {
 namespace di {
-namespace bindings {
-namespace type_traits {
 
-template<typename TValueType, typename = void>
-struct is_required_type
+struct no_name { };
+
+template<
+    typename T
+  , typename TName = no_name
+  , typename = void
+>
+class named
 {
-    template<typename T>
-    struct apply
-        : di::type_traits::is_same_base_of<
-              TValueType
-            , typename di::type_traits::make_plain<typename T::type>::type
-          >
-    { };
+    named& operator=(const named&);
+
+public:
+    typedef T named_type;
+    typedef TName name;
+
+    named(T object) // non explicit
+        : object_(object)
+    { }
+
+    named(const named& other)
+        : object_(other.object_)
+    { }
+
+    operator T() const {
+        return object_;
+    }
+
+private:
+    T object_;
 };
 
-template<typename TValueType>
-struct is_required_type<TValueType, typename enable_if<mpl::is_sequence<TValueType> >::type>
+template<
+    typename T
+  , typename TName
+>
+class named<const T&, TName>
 {
-    template<typename T>
-    struct apply
-        : mpl::count_if<
-              TValueType
-            , di::type_traits::is_same_base_of<
-                  typename di::type_traits::make_plain<typename T::type>::type
-                , mpl::_
-              >
-          >
-    { };
+    named& operator=(const named&);
+
+public:
+    typedef const T& named_type;
+    typedef TName name;
+
+    named(const T& object) // non explicit
+        : object_(object)
+    { }
+
+    named(const named& other)
+        : object_(other.object_)
+    { }
+
+    operator const T&() const {
+        return object_;
+    }
+
+private:
+    const T& object_;
 };
 
-} // namespace type_traits
-} // namespace bindings
+template<
+    typename T
+  , typename TName
+>
+class named<T&, TName>
+{
+    named& operator=(const named&);
+
+public:
+    typedef T& named_type;
+    typedef TName name;
+
+    named(T& object) // non explicit
+        : object_(object)
+    { }
+
+    named(const named& other)
+        : object_(other.object_)
+    { }
+
+    operator T&() {
+        return object_;
+    }
+
+private:
+    T& object_;
+};
+
+BOOST_DI_FEATURE(RVALUE_REFERENCES)(
+    template<
+        typename T
+      , typename TName
+    >
+    class named<T&&, TName>
+    {
+        named& operator=(const named&);
+
+    public:
+        typedef T&& named_type;
+        typedef TName name;
+
+        named(T&& object) // non explicit
+            : object_(std::move(object))
+        { }
+
+        named(const named& other)
+            : object_(other.object_)
+        { }
+
+        operator T&&() {
+            return std::move(object_);
+        }
+
+    private:
+        T object_;
+    };
+)
+
+template<
+    typename T
+  , typename TName
+>
+class named<aux::unique_ptr<T>, TName>
+{
+    named& operator=(const named&);
+
+public:
+    typedef aux::unique_ptr<T> named_type;
+    typedef TName name;
+
+    BOOST_DI_FEATURE(RVALUE_REFERENCES)(
+        named(aux::unique_ptr<T> object) // non explicit
+            : object_(std::move(object))
+        { }
+
+        operator aux::unique_ptr<T>() {
+            return std::move(object_);
+        }
+    )
+
+    named(const named& other)
+        : object_(new T(*other.object_))
+    { }
+
+private:
+    aux::unique_ptr<T> object_;
+};
+
+template<
+    typename T
+  , typename TName
+>
+class named<
+    T
+  , TName
+  , typename enable_if<
+        is_polymorphic<typename type_traits::remove_accessors<T>::type>
+    >::type
+>
+{
+public:
+    typedef T named_type;
+    typedef TName name;
+};
+
 } // namespace di
 } // namespace boost
 
@@ -724,177 +695,6 @@ public:
 
 namespace boost {
 namespace di {
-
-struct no_name { };
-
-template<
-    typename T
-  , typename TName = no_name
-  , typename = void
->
-class named
-{
-    named& operator=(const named&);
-
-public:
-    typedef T named_type;
-    typedef TName name;
-
-    named(T object) // non explicit
-        : object_(object)
-    { }
-
-    named(const named& other)
-        : object_(other.object_)
-    { }
-
-    operator T() const {
-        return object_;
-    }
-
-private:
-    T object_;
-};
-
-template<
-    typename T
-  , typename TName
->
-class named<const T&, TName>
-{
-    named& operator=(const named&);
-
-public:
-    typedef const T& named_type;
-    typedef TName name;
-
-    named(const T& object) // non explicit
-        : object_(object)
-    { }
-
-    named(const named& other)
-        : object_(other.object_)
-    { }
-
-    operator const T&() const {
-        return object_;
-    }
-
-private:
-    const T& object_;
-};
-
-template<
-    typename T
-  , typename TName
->
-class named<T&, TName>
-{
-    named& operator=(const named&);
-
-public:
-    typedef T& named_type;
-    typedef TName name;
-
-    named(T& object) // non explicit
-        : object_(object)
-    { }
-
-    named(const named& other)
-        : object_(other.object_)
-    { }
-
-    operator T&() {
-        return object_;
-    }
-
-private:
-    T& object_;
-};
-
-BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-    template<
-        typename T
-      , typename TName
-    >
-    class named<T&&, TName>
-    {
-        named& operator=(const named&);
-
-    public:
-        typedef T&& named_type;
-        typedef TName name;
-
-        named(T&& object) // non explicit
-            : object_(std::move(object))
-        { }
-
-        named(const named& other)
-            : object_(other.object_)
-        { }
-
-        operator T&&() {
-            return std::move(object_);
-        }
-
-    private:
-        T object_;
-    };
-)
-
-template<
-    typename T
-  , typename TName
->
-class named<aux::unique_ptr<T>, TName>
-{
-    named& operator=(const named&);
-
-public:
-    typedef aux::unique_ptr<T> named_type;
-    typedef TName name;
-
-    BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-        named(aux::unique_ptr<T> object) // non explicit
-            : object_(std::move(object))
-        { }
-
-        operator aux::unique_ptr<T>() {
-            return std::move(object_);
-        }
-    )
-
-    named(const named& other)
-        : object_(new T(*other.object_))
-    { }
-
-private:
-    aux::unique_ptr<T> object_;
-};
-
-template<
-    typename T
-  , typename TName
->
-class named<
-    T
-  , TName
-  , typename enable_if<
-        is_polymorphic<typename type_traits::remove_accessors<T>::type>
-    >::type
->
-{
-public:
-    typedef T named_type;
-    typedef TName name;
-};
-
-} // namespace di
-} // namespace boost
-
-
-namespace boost {
-namespace di {
 namespace type_traits {
 
 template<typename T>
@@ -1034,6 +834,255 @@ public:
 };
 
 } // namespace scopes
+} // namespace di
+} // namespace boost
+
+namespace boost {
+namespace di {
+namespace scopes {
+
+class session_entry { };
+class session_exit { };
+
+template<template<typename> class TWrapper = wrappers::shared>
+class session
+{
+public:
+    typedef mpl::int_<0> priority;
+
+    template<typename TExpected>
+    class scope
+    {
+    public:
+        typedef TWrapper<TExpected> result_type;
+
+        scope()
+            : in_scope_(false)
+        { }
+
+        void call(const session_entry&) {
+            in_scope_ = true;
+        }
+
+        void call(const session_exit&) {
+            in_scope_ = false;
+            object_.reset();
+        }
+
+        result_type create(const function<TExpected*()>& f) {
+            if (in_scope_ && !object_) {
+                object_.reset(f());
+            }
+            return object_;
+        }
+
+    private:
+        result_type object_;
+        bool in_scope_;
+    };
+};
+
+} // namespace scopes
+} // namespace di
+} // namespace boost
+
+
+namespace boost {
+namespace di {
+namespace bindings {
+namespace detail {
+
+template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na >
+class requires_
+{
+    template<
+        typename TBind
+      , typename T
+    >
+    struct apply_bind
+        : TBind::template apply<T>::type
+    { };
+
+public:
+    typedef requires_ type;
+
+    template<
+        typename T
+      , typename TMultiplicationFactor = mpl::integral_c<long, 10>
+    >
+    struct apply
+        : mpl::second<
+              typename mpl::fold<
+                  ::boost::mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9>
+                , mpl::pair<mpl::integral_c<long, 1>, mpl::integral_c<long, 1> >
+                , mpl::pair<
+                      mpl::times<
+                          mpl::first<mpl::_1>
+                        , TMultiplicationFactor
+                      >
+                    , mpl::times<
+                          mpl::first<mpl::_1>
+                        , mpl::second<mpl::_1>
+                        , apply_bind<mpl::_2, T>
+                      >
+                  >
+              >::type
+          >
+    { };
+};
+
+} // namespace detail
+} // namespace bindings
+} // namespace di
+} // namespace boost
+
+namespace boost {
+namespace di {
+namespace bindings {
+namespace detail {
+
+template<typename TContext>
+class when_
+{
+    template<
+        typename TBind
+      , typename T
+    >
+    struct apply_bind
+        : TBind::template apply<T>::type
+    { };
+
+public:
+    template<typename T>
+    struct apply
+        : mpl::if_<
+              mpl::empty<TContext>
+            , mpl::int_<1>
+            , typename mpl::deref<
+                  mpl::max_element<
+                      mpl::transform_view<
+                          TContext
+                        , apply_bind<mpl::_1, T>
+                      >
+                  >
+              >::type
+          >::type
+    { };
+};
+
+} // namespace detail
+} // namespace bindings
+} // namespace di
+} // namespace boost
+
+namespace boost {
+namespace di {
+namespace bindings {
+namespace type_traits {
+
+BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
+
+template<typename TName>
+class is_required_name
+{
+    template<typename T, typename = void>
+    struct get_name
+    {
+        struct no_name { };
+        typedef no_name type;
+    };
+
+    template<typename T>
+    struct get_name<T, typename enable_if<
+        has_name<typename di::type_traits::remove_accessors<T>::type> >::type
+    >
+    {
+        typedef typename di::type_traits::remove_accessors<T>::type::name type;
+    };
+
+public:
+    template<typename T>
+    struct apply
+        : is_same<typename get_name<typename T::type>::type, TName>
+    { };
+};
+
+} // namespace type_traits
+} // namespace bindings
+} // namespace di
+} // namespace boost
+
+namespace boost {
+namespace di {
+namespace bindings {
+namespace type_traits {
+
+struct is_required_priority
+{
+    template<typename T>
+    struct apply
+        : mpl::plus<
+              mpl::int_<1>
+            , typename T::dependency::scope::priority // lowest = 0, highest = N
+          >
+    { };
+};
+
+} // namespace type_traits
+} // namespace bindings
+} // namespace di
+} // namespace boost
+
+namespace boost {
+namespace di {
+namespace type_traits {
+
+template<typename T, typename U = mpl::_1>
+struct is_same_base_of
+    : mpl::or_<
+          is_base_of<U, T>
+        , is_same<U, T>
+      >
+{ };
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+
+namespace boost {
+namespace di {
+namespace bindings {
+namespace type_traits {
+
+template<typename TValueType, typename = void>
+struct is_required_type
+{
+    template<typename T>
+    struct apply
+        : di::type_traits::is_same_base_of<
+              TValueType
+            , typename di::type_traits::make_plain<typename T::type>::type
+          >
+    { };
+};
+
+template<typename TValueType>
+struct is_required_type<TValueType, typename enable_if<mpl::is_sequence<TValueType> >::type>
+{
+    template<typename T>
+    struct apply
+        : mpl::count_if<
+              TValueType
+            , di::type_traits::is_same_base_of<
+                  typename di::type_traits::make_plain<typename T::type>::type
+                , mpl::_
+              >
+          >
+    { };
+};
+
+} // namespace type_traits
+} // namespace bindings
 } // namespace di
 } // namespace boost
 
@@ -1685,55 +1734,6 @@ public:
 } // namespace di
 } // namespace boost
 
-namespace boost {
-namespace di {
-namespace scopes {
-
-class session_entry { };
-class session_exit { };
-
-template<template<typename> class TWrapper = wrappers::shared>
-class session
-{
-public:
-    typedef mpl::int_<0> priority;
-
-    template<typename TExpected>
-    class scope
-    {
-    public:
-        typedef TWrapper<TExpected> result_type;
-
-        scope()
-            : in_scope_(false)
-        { }
-
-        void call(const session_entry&) {
-            in_scope_ = true;
-        }
-
-        void call(const session_exit&) {
-            in_scope_ = false;
-            object_.reset();
-        }
-
-        result_type create(const function<TExpected*()>& f) {
-            if (in_scope_ && !object_) {
-                object_.reset(f());
-            }
-            return object_;
-        }
-
-    private:
-        result_type object_;
-        bool in_scope_;
-    };
-};
-
-} // namespace scopes
-} // namespace di
-} // namespace boost
-
 
 namespace boost {
 namespace di {
@@ -1741,6 +1741,11 @@ namespace di {
 template<typename TExpected, typename TGiven = TExpected>
 struct bind
     : bindings::bind<TExpected, TGiven, bindings::dependency>
+{ };
+
+template<bool V>
+struct bind_bool
+    : bind<bool, mpl::bool_<V> >
 { };
 
 template<int N>
