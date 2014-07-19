@@ -545,6 +545,14 @@ To run tests go to `boost/di/test` directory and run.
     bjam
 ```
 
+[h6 Preprocessed headers]
+`Boost.DI` is released with preprocessed headers for `BOOST_DI_CFG_CTOR_LIMIT_SIZE` and `BOOST_MPL_LIMIT_VECTOR_SIZE`
+as well as with tool to generate them. Generation of preprocessed headers might be done with tools provided.
+
+```
+    tools/preprocessed.sh
+```
+
 [h6 Similar libraries]
 
 * [@https://bitbucket.org/cheez/dicpp dicpp]
