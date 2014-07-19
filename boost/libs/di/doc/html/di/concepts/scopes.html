@@ -323,7 +323,9 @@
           <span class="identifier">Studio</span> <span class="identifier">Compiler</span></code>.
         </p></td></tr>
 </table></div>
-<div class="informaltable"><table class="table">
+<div class="table">
+<a name="di.concepts.scopes.conversions"></a><p class="title"><b>Table&#160;7.&#160;Conversions</b></p>
+<div class="table-contents"><table class="table" summary="Conversions">
 <colgroup>
 <col>
 <col>
@@ -367,7 +369,7 @@
               </td>
 <td>
                 <p>
-                  X
+                  X - with lvalues
                 </p>
               </td>
 <td>
@@ -377,12 +379,12 @@
               </td>
 <td>
                 <p>
-                  X
+                  -
                 </p>
               </td>
 <td>
                 <p>
-                  X
+                  -
                 </p>
               </td>
 </tr>
@@ -394,7 +396,7 @@
               </td>
 <td>
                 <p>
-                  X
+                  X - with lvalues
                 </p>
               </td>
 <td>
@@ -404,12 +406,12 @@
               </td>
 <td>
                 <p>
-                  X
+                  -
                 </p>
               </td>
 <td>
                 <p>
-                  X
+                  -
                 </p>
               </td>
 </tr>
@@ -426,17 +428,17 @@
               </td>
 <td>
                 <p>
-                  X
+                  -
                 </p>
               </td>
 <td>
                 <p>
-                  X
+                  -
                 </p>
               </td>
 <td>
                 <p>
-                  X
+                  -
                 </p>
               </td>
 </tr>
@@ -453,17 +455,17 @@
               </td>
 <td>
                 <p>
-                  X
+                  -
                 </p>
               </td>
 <td>
                 <p>
-                  X
+                  -
                 </p>
               </td>
 <td>
                 <p>
-                  X
+                  -
                 </p>
               </td>
 </tr>
@@ -475,22 +477,22 @@
               </td>
 <td>
                 <p>
-                  X
+                  X - with lvalues
                 </p>
               </td>
 <td>
                 <p>
-                  X
+                  -
                 </p>
               </td>
 <td>
                 <p>
-                  X
+                  -
                 </p>
               </td>
 <td>
                 <p>
-                  X
+                  -
                 </p>
               </td>
 </tr>
@@ -502,7 +504,7 @@
               </td>
 <td>
                 <p>
-                  X
+                  X - with lvalues
                 </p>
               </td>
 <td>
@@ -512,12 +514,12 @@
               </td>
 <td>
                 <p>
-                  X
+                  -
                 </p>
               </td>
 <td>
                 <p>
-                  X
+                  -
                 </p>
               </td>
 </tr>
@@ -583,7 +585,7 @@
               </td>
 <td>
                 <p>
-                  X
+                  X - with lvalues
                 </p>
               </td>
 <td>
@@ -593,12 +595,12 @@
               </td>
 <td>
                 <p>
-                  X
+                  -
                 </p>
               </td>
 <td>
                 <p>
-                  X
+                  -
                 </p>
               </td>
 </tr>
@@ -610,7 +612,7 @@
               </td>
 <td>
                 <p>
-                  X
+                  X - with lvalues
                 </p>
               </td>
 <td>
@@ -620,12 +622,12 @@
               </td>
 <td>
                 <p>
-                  X
+                  -
                 </p>
               </td>
 <td>
                 <p>
-                  X
+                  -
                 </p>
               </td>
 </tr>
@@ -644,7 +646,12 @@
 <tr>
 <td>
                 <p>
-                  const T&amp;
+                  temporary const T&amp;
+                </p>
+              </td>
+<td>
+                <p>
+                  X - with lvalues
                 </p>
               </td>
 <td>
@@ -654,17 +661,12 @@
               </td>
 <td>
                 <p>
-                  X
+                  -
                 </p>
               </td>
 <td>
                 <p>
-                  X
-                </p>
-              </td>
-<td>
-                <p>
-                  X
+                  -
                 </p>
               </td>
 </tr>
@@ -676,7 +678,7 @@
               </td>
 <td>
                 <p>
-                  X
+                  X - with lvalues
                 </p>
               </td>
 <td>
@@ -686,18 +688,19 @@
               </td>
 <td>
                 <p>
-                  X
+                  X with T=shared_ptr&lt;T&gt;
                 </p>
               </td>
 <td>
                 <p>
-                  X
+                  X with T=shared_ptr&lt;T&gt;
                 </p>
               </td>
 </tr>
 </tbody>
 </table></div>
-<h5>
+</div>
+<br class="table-break"><h5>
 <a name="di.concepts.scopes.h7"></a>
         <span class="phrase"><a name="di.concepts.scopes.tests"></a></span><a class="link" href="scopes.html#di.concepts.scopes.tests">Tests</a>
       </h5>

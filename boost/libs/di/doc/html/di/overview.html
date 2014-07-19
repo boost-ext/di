@@ -27,7 +27,7 @@
 <a name="di.overview"></a><a class="link" href="overview.html" title="Overview">Overview</a>
 </h2></div></div></div>
 <p>
-      Boost.DI is <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code>/<code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">11</span></code>/<code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">14</span></code>
+      <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> is <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code>/<code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">11</span></code>/<code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">14</span></code>
       header only, type safe, library providing compile time, macro free constructor
       dependency injection.
     </p>
@@ -90,9 +90,9 @@
 </ul></div>
 <p>
       Although library supports <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code> and <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">11</span></code>,
-      only <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">14</span></code> shows the full potential of Boost.DI. To achieve
-      the same behaviour with previous standards sometimes will just require a bit
-      more hassle.
+      only <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">14</span></code> shows the full potential of <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code>.
+      To achieve the same behaviour with previous standards sometimes will just require
+      a bit more hassle.
     </p>
 <h3>
 <a name="di.overview.h1"></a>
@@ -139,7 +139,7 @@
       Compilers</a>
     </h3>
 <p>
-      Boost.DI was successfully test on below compilers
+      <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> was successfully test on below compilers
     </p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
@@ -189,7 +189,7 @@
       <span class="phrase"><a name="di.overview.restrictions"></a></span><a class="link" href="overview.html#di.overview.restrictions">Restrictions</a>
     </h3>
 <p>
-      see <code class="computeroutput"><span class="identifier">Design</span><span class="special">.</span><span class="identifier">Problematic</span> <span class="identifier">Cases</span></code>:
+      See <a class="link" href="overview.html#Notes">Notes</a> for further information.
     </p>
 <div class="informaltable"><table class="table">
 <colgroup>
@@ -257,7 +257,7 @@
 <tr>
 <td>
               <p>
-                std/boost function
+                std::function/boost::function
               </p>
             </td>
 <td>
@@ -277,7 +277,7 @@
             </td>
 <td>
               <p>
-                supported (has to be pass by const reference)
+                supported (boost::function supported when pass by const reference)
               </p>
             </td>
 </tr>
@@ -315,31 +315,86 @@
 <col>
 <col>
 <col>
+<col>
 </colgroup>
-<tbody><tr>
-<td>
-            </td>
+<thead><tr>
+<th>
+              <p>
+                Feature
+              </p>
+            </th>
+<th>
+              <p>
+                <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code>
+              </p>
+            </th>
+<th>
+              <p>
+                <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">11</span></code>
+              </p>
+            </th>
+<th>
+              <p>
+                <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">14</span></code>
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
 <td>
               <p>
-                Constructor Deduction
+                Automatic Constructor Injection
               </p>
             </td>
 <td>
               <p>
-                <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT</span></code>
+                supported, except constructor with 1 parameter
               </p>
             </td>
-</tr></tbody>
+<td>
+              <p>
+                supported
+              </p>
+            </td>
+<td>
+              <p>
+                supported
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT</span></code>/<code class="computeroutput"><span class="identifier">BOOST_DI_INJECT_TRAITS</span></code>/<code class="computeroutput"><span class="identifier">ctor_traits</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                supported
+              </p>
+            </td>
+<td>
+              <p>
+                supported
+              </p>
+            </td>
+<td>
+              <p>
+                supported
+              </p>
+            </td>
+</tr>
+</tbody>
 </table></div>
 <h3>
 <a name="di.overview.h4"></a>
       <span class="phrase"><a name="di.overview.recommendations"></a></span><a class="link" href="overview.html#di.overview.recommendations">Recommendations</a>
     </h3>
 <p>
-      Boost.DI supports variety of compilers and standards. Not all features are
-      supported the same way or in general by all of them. Below table shows author
-      recommendations (based on testing) what to be careful about whilst using a
-      specific combinations.
+      <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> supports variety of compilers and standards.
+      Not all features are supported the same way or in general by all of them. Below
+      table shows recommendations (based on testing) what to be careful about whilst
+      using a specific combination.
     </p>
 <div class="informaltable"><table class="table">
 <colgroup>
@@ -368,19 +423,29 @@
 <tr>
 <td>
               <p>
-                <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code>
+                <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">14</span></code>
               </p>
             </td>
 <td>
               <p>
-                <code class="computeroutput"><span class="identifier">GCC</span> <span class="special">&gt;=</span>
-                <span class="number">4.7</span></code>
+                <code class="computeroutput"><span class="identifier">Visual</span> <span class="identifier">Studio</span>
+                <span class="number">12.0</span></code>
               </p>
             </td>
 <td>
-              <p>
-                Module::configure()
-              </p>
+              <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+                    <code class="computeroutput"><span class="identifier">Modules</span><span class="special">::</span><span class="identifier">configure</span><span class="special">()</span></code>
+                    harder syntax
+                  </li>
+<li class="listitem">
+                    Rvalue references aren't supported
+                  </li>
+<li class="listitem">
+                    Policy <code class="computeroutput"><span class="identifier">arguments_permission</span></code>
+                    not supported
+                  </li>
+</ul></div>
             </td>
 </tr>
 <tr>
@@ -391,14 +456,26 @@
             </td>
 <td>
               <p>
-                <code class="computeroutput"><span class="identifier">Clang</span> <span class="special">&gt;=</span>
-                <span class="number">3.4</span></code>
+                <code class="computeroutput"><span class="identifier">GCC</span> <span class="special">&gt;=</span>
+                <span class="number">4.7</span></code>, <code class="computeroutput"><span class="identifier">Clang</span>
+                <span class="special">&gt;=</span> <span class="number">3.2</span></code>
               </p>
             </td>
 <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">Modules</span></code> configure
-              </p>
+              <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+                    <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">Typeof</span></code> has to be used
+                  </li>
+<li class="listitem">
+                    <code class="computeroutput"><span class="identifier">Modules</span><span class="special">::</span><span class="identifier">configure</span><span class="special">()</span></code>
+                    harder syntax
+                  </li>
+<li class="listitem">
+                    <code class="computeroutput"><span class="identifier">Automatic</span> <span class="identifier">Constructor</span>
+                    <span class="identifier">Injection</span></code> doesn't work
+                    with 1 parameter constructors
+                  </li>
+</ul></div>
             </td>
 </tr>
 <tr>
@@ -409,14 +486,16 @@
             </td>
 <td>
               <p>
-                <code class="computeroutput"><span class="identifier">Clang</span> <span class="special">&gt;=</span>
-                <span class="number">3.4</span></code>
+                <code class="computeroutput"><span class="identifier">GCC</span> <span class="special">&gt;=</span>
+                <span class="number">4.7</span></code>, <code class="computeroutput"><span class="identifier">Clang</span>
+                <span class="special">&gt;=</span> <span class="number">3.2</span></code>
               </p>
             </td>
 <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">Modules</span></code> configure
-              </p>
+              <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+                    <code class="computeroutput"><span class="identifier">Modules</span><span class="special">::</span><span class="identifier">configure</span><span class="special">()</span></code>
+                    harder syntax
+                  </li></ul></div>
             </td>
 </tr>
 <tr>
@@ -428,13 +507,14 @@
 <td>
               <p>
                 <code class="computeroutput"><span class="identifier">Clang</span> <span class="special">&gt;=</span>
-                <span class="number">3.4</span></code>
+                <span class="number">3.4</span></code>, <code class="computeroutput"><span class="identifier">GCC</span>
+                <span class="special">&gt;=</span> <span class="number">4.9</span></code>
               </p>
             </td>
 <td>
-              <p>
-                Go for it!
-              </p>
+              <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+                    Go for it!
+                  </li></ul></div>
             </td>
 </tr>
 </tbody>
@@ -455,7 +535,7 @@
     </h3>
 <p>
       The macros listed in the table below may be used to control the behaviour of
-      Boost.DI.
+      <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code>.
     </p>
 <div class="informaltable"><table class="table">
 <colgroup>
@@ -483,9 +563,10 @@
             </td>
 <td>
               <p>
-                Boost.DI by default uses preprocessed headers. See <code class="computeroutput"><span class="identifier">Compilation</span> <span class="identifier">time</span></code>
-                for further specification. To explicitly disable preprocessed headers
-                <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_NO_PREPROCESSED_HEADERS</span></code>
+                <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> by default uses preprocessed
+                headers. See <code class="computeroutput"><span class="identifier">Compilation</span>
+                <span class="identifier">time</span></code> for further specification.
+                To explicitly disable preprocessed headers <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_NO_PREPROCESSED_HEADERS</span></code>
                 has to be defined.
               </p>
               <p>
@@ -526,10 +607,10 @@
               <p>
                 Constructor injection is limited by <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_CTOR_LIMIT_SIZE</span></code>,
                 which means that constructor can't have more parameters then defined
-                in order for Boost.DI to works correctly. Value might be redefined
-                to any number, the only repercussion will be longer compilation times.
-                Might be used as well to limit clients from having long parameter
-                list constructors.
+                in order for <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code>
+                to works correctly. Value might be redefined to any number, the only
+                repercussion will be longer compilation times. Might be used as well
+                to limit clients from having long parameter list constructors.
               </p>
               <p>
                 default: <code class="computeroutput"><span class="number">10</span></code>
@@ -598,9 +679,9 @@
                 Default <code class="computeroutput"><span class="identifier">smart</span> <span class="identifier">pointer</span></code>
                 type is set accordingly to compiler support, but might standard smart
                 pointers might be forced by <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_STD_SMART_PTR</span></code>.
-                Then Boost.DI internally will use standard smart pointers instead
-                of boost smart pointers. Additionally conversion to weak_ptr is only
-                allowed from default <code class="computeroutput"><span class="identifier">smart</span>
+                Then <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> internally will use standard
+                smart pointers instead of boost smart pointers. Additionally conversion
+                to weak_ptr is only allowed from default <code class="computeroutput"><span class="identifier">smart</span>
                 <span class="identifier">pointer</span> <span class="identifier">type</span></code>.
               </p>
               <p>
@@ -637,7 +718,8 @@
             </td>
 <td>
               <p>
-                Named used internally by Boost.DI when <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT</span></code>
+                Named used internally by <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code>
+                when <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT</span></code>
                 or <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT_TRAITS</span></code>
                 is used to define constructor traits.
               </p>
@@ -667,7 +749,7 @@
 <a name="di.overview.h7"></a>
       <span class="phrase"><a name="di.overview.notes"></a></span><a class="link" href="overview.html#di.overview.notes">Notes</a>
     </h3>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<a name="Notes"></a><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
 <p class="simpara">
           Ambiguous constructors with the same - longest - number of parameters
@@ -1127,7 +1209,7 @@
       <span class="phrase"><a name="di.overview.tests"></a></span><a class="link" href="overview.html#di.overview.tests">Tests</a>
     </h3>
 <p>
-      Boost.DI is released with many levels of tests
+      <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> is released with many levels of tests
     </p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
@@ -1216,38 +1298,39 @@
     </h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
-          Is configuration via XML supported by Boost.DI?
+          Is configuration via XML supported by <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code>?
           <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
-                Short answer is NO. Boost.DI dependencies are configured in the source
-                code using C++ features which allows compile time checking. Long
-                story short, fluent configuration you don't have to remember of changing
-                the configuration file, compiler will take care of it for you. Usually
-                lazy binding requires exceptions handling and is a performance killer,
-                but obviously it depends on a projects needs. Although it might be
-                hard it is possible to achieve it with Boost.DI. The question which
-                should be asked though - how often configuration is dynamically changed
-                via XML?
+                Short answer is NO. <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code>
+                dependencies are configured in the source code using C++ features
+                which allows compile time checking. Long story short, fluent configuration
+                you don't have to remember of changing the configuration file, compiler
+                will take care of it for you. Usually lazy binding requires exceptions
+                handling and is a performance killer, but obviously it depends on
+                a projects needs. Although it might be hard it is possible to achieve
+                it with <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code>. The question which should be
+                asked though - how often configuration is dynamically changed via
+                XML?
               </li></ul></div>
         </li>
 <li class="listitem">
-          Why Boost.DI doesn't support <code class="computeroutput"><span class="identifier">setter</span><span class="special">/</span><span class="identifier">member</span></code>`
+          Why <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> doesn't support <code class="computeroutput"><span class="identifier">setter</span><span class="special">/</span><span class="identifier">member</span></code>`
           injection?
           <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
                 Constructor injection is the most powerful and the preferable injection
                 method which avoid uninitialized state of members. <code class="computeroutput"><span class="identifier">Setter</span><span class="special">/</span><span class="identifier">Member</span></code> injection should be avoided
                 at all costs in order to keep the solutions as clean as possible.
-                Therefore Boost.DI doesn't support it by default.
+                Therefore <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> doesn't support it by default.
               </li></ul></div>
         </li>
 <li class="listitem">
-          Why Boost.DI doesn't have <code class="computeroutput"><span class="identifier">singleton</span></code>
+          Why <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> doesn't have <code class="computeroutput"><span class="identifier">singleton</span></code>
           scope?
           <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
                 Singleton pattern is usually overused and makes code really hard
                 to test. Thread safety has to be considered as well whilst using
-                it. Boost.DI provides <code class="computeroutput"><span class="identifier">shared</span></code>
+                it. <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> provides <code class="computeroutput"><span class="identifier">shared</span></code>
                 scope which behaves like non-multi threaded singleton. <code class="computeroutput"><span class="identifier">Singleton</span></code> scope might be implemented
-                using Boost.DI <code class="computeroutput"><span class="identifier">scope</span></code>
+                using <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> <code class="computeroutput"><span class="identifier">scope</span></code>
                 functionality.
               </li></ul></div>
         </li>
@@ -1255,9 +1338,9 @@
           How many constructors parameters are supported and how many bindings I
           can have?
           <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
-                Boost.DI by default supports up to 10 constructor parameters. Configuration
-                might be changed by <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_CTOR_LIMIT_SIZE</span></code>.
-                The number of allowed bindings is limited by <code class="computeroutput"><span class="identifier">BOOST_MPL_LIMIT_VECTOR_SIZE</span></code>
+                <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> by default supports up to 10
+                constructor parameters. Configuration might be changed by <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_CTOR_LIMIT_SIZE</span></code>. The
+                number of allowed bindings is limited by <code class="computeroutput"><span class="identifier">BOOST_MPL_LIMIT_VECTOR_SIZE</span></code>
                 value.
               </li></ul></div>
         </li>
