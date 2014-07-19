@@ -18,7 +18,7 @@ If no scope will be given whilst binding `deduce` scope will be assumed.
 
 Synopsis
 ```
-    class scope_ {
+    class unspecified {
         typedef mpl::int_<N> priority; // N - priority, 1=lowest, N=highest
 
         template<typename TExpected, typename TGiven = TExpected>
@@ -84,7 +84,7 @@ struct custom_scope
 
 ```
 
-[section deduce (default)]
+[section:deduce deduce (default)]
 
 [h5 Synopsis]
 ```

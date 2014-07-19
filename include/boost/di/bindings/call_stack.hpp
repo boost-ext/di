@@ -64,12 +64,12 @@ class call_stack
     { };
 
 public:
-    template<typename T>
+    template<typename TDependency>
     struct apply
         : apply_impl<
               context_type
             , typename mpl::transform<
-                  typename T::call_stack
+                  typename TDependency::call_stack
                 , di::type_traits::make_plain<mpl::_>
               >::type
           >::type
