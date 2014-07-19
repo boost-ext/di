@@ -105,7 +105,7 @@ a specific combination.
   [
     * `Modules::configure()` harder syntax
   ]]
-  [[`C++14`][`Clang >= 3.4`, `GCC >= 4.9`]
+  [[`C++14`][`GCC >= 4.9`, `Clang >= 3.4`]
   [
     * Go for it!
   ]]
