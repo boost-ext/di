@@ -23,6 +23,15 @@
 
 [caution This is not an official Boost library yet and there is no guarantee it will ever be!]
 
+[def __injections__                                     [link di.concepts.injections Injections]]
+[def __injections_automatic__                           [link di.concepts.injections.automatic automatic]]
+[def __injections_boost_di_inject__                     [link di.concepts.injections.boost_di_inject BOOST_DI_INJECT]]
+[def __injections_boost_di_inject_traits__              [link di.concepts.injections.boost_di_inject_traits BOOST_DI_INJECT_TRAITS]]
+[def __injections_ctor_traits__                         [link di.concepts.injections.ctor_traits ctor_traits]]
+
+[def __annotations__                                    [link di.concepts.annotations Annotations]]
+[def __annotations_named__                              [link di.concepts.annotations.named named]]
+
 [def __scopes__                                         [link di.concepts.scopes Scopes]]
 [def __scopes_deduce__                                  [link di.concepts.scopes.deduce deduce scope]]
 [def __scopes_external__                                [link di.concepts.scopes.external external scope]]
@@ -32,8 +41,12 @@
 
 [def __bindings__                                       [link di.concepts.bindings Bindings]]
 [def __bindings_bind__                                  [link di.concepts.bindings.bind bind]]
+[def __bindings_bind_any_of__                           [link di.concepts.bindings.bind.any_of any_of]]
+[def __bindings_bind_bind_bool__                        [link di.concepts.bindings.bind.bind_bool bind_bool]]
+[def __bindings_bind_bind_int__                         [link di.concepts.bindings.bind.bind_int bind_int]]
+[def __bindings_bind_bind_string__                      [link di.concepts.bindings.bind.bind_string bind_string]]
 [def __bindings_deduce__                                [link di.concepts.bindings.scope.deduce deduce]]
-[def __bindings_scopes__                                [link di.concepts.bindings.scope scope]]
+[def __bindings_scope__                                 [link di.concepts.bindings.scope scope]]
 [def __bindings_scope_deduce__                          [link di.concepts.bindings.scope.deduce deduce]]
 [def __bindings_scope_unique__                          [link di.concepts.bindings.scope.unique unique]]
 [def __bindings_scope_shared__                          [link di.concepts.bindings.scope.shared shared]]
@@ -46,6 +59,15 @@
 [def __injectors_make_injector__                        [link di.concepts.injectors.make_injector make_injector]]
 
 [def __modules__                                        [link di.concepts.modules Modules]]
+
+[def __utilities_allocator__                            [link di.concepts.utilities.allocator allocator]]
+[def __utilities_provider__                             [link di.concepts.utilities.provider provider]]
+
+[def __policies__                                       [link di.concepts.policies Policies]]
+[def __policies_circular_dependencies__                 [link di.concepts.policies.circular_dependencies circular_dependencies]]
+[def __policies_creation_ownership__                    [link di.concepts.policies.creation_ownership creation_ownership]]
+[def __policies_parameters_permission__                 [link di.concepts.policies.parameters_permission parameters_permission]]
+[def __policies_scopes_permission__                     [link di.concepts.policies.scopes_permission scopes_permission]]
 
 [def __rationale__                                      [link di.rationale Rationale]]
 [def __rationale_constructor_parameters_deduction__     [link di.rationale.constructor_parameters_deduction Constructor Parameters Deduction]]

@@ -7,7 +7,7 @@
  /
  /]
 
-[section Constructor Injections]
+[section:injections Constructor Injections]
 
 [*Constructor Injection] is the most powerful of the available injections.
 It guarantees initialized state of data members. `Boost.DI` constructor injection is achieved without any additional work from the user except defining the constructor.
@@ -19,7 +19,14 @@ It guarantees initialized state of data members. `Boost.DI` constructor injectio
     };
 ```
 
-[section automatic (default)]
+[heading See Also]
+
+* __injections_automatic__
+* __injections_boost_di_inject__
+* __injections_boost_di_inject_traits__
+* __injections_ctor_traits__
+
+[section:automatic automatic (default)]
 
 [heading Description]
 `Boost.DI` will deduce the best available constructor to be used for injection - unique constructor with longest parameter list.
@@ -53,6 +60,13 @@ If the default behavior should be changed constructor should be explicitly marke
 
 [heading Tests]
     ``[@test/vt/compiler_support_vt.cpp]``
+
+[heading See Also]
+
+* __injections_automatic__
+* __injections_boost_di_inject__
+* __injections_boost_di_inject_traits__
+* __injections_ctor_traits__
 
 [endsect]
 
@@ -106,6 +120,13 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
 [heading Tests]
     ``[@test/ut/inject_va_args_ut.cpp]`` | ``[@test/ut/inject_bracket_ut.cpp]``
 
+[heading See Also]
+
+* __injections__
+* __injections_automatic__
+* __injections_boost_di_inject_traits__
+* __injections_ctor_traits__
+
 [endsect]
 
 [section BOOST_DI_INJECT_TRAITS]
@@ -146,6 +167,13 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
 
 [heading Tests]
     ``[@test/ut/inject_va_args_ut.cpp]`` | ``[@test/ut/inject_bracket_ut.cpp]``
+
+[heading See Also]
+
+* __injections__
+* __injections_automatic__
+* __injections_boost_di_inject__
+* __injections_ctor_traits__
 
 [endsect]
 
@@ -190,6 +218,13 @@ might be defined in order to point which constructor should be used by `Boost.DI
 
 [heading Tests]
     ``[@test/ut/type_traits/ctor_traits_ut.cpp]``
+
+[heading See Also]
+
+* __injections__
+* __injections_automatic__
+* __injections_boost_di_inject__
+* __injections_boost_di_inject_traits__
 
 [endsect]
 

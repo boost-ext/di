@@ -9,23 +9,90 @@
 
 [section Annotations]
 
+[heading Description]
+Annotations are intrusive, additional informations specified along with type in order to refer to given type by annotation instead of type it self.
+Useful, when there are more than one of the same type in constructor parameters.
+`Boost.DI` provides concept of `named` parameters, which are wrapper for types with given names.
+
 [section named]
 Named parameters are useful when constructor has more parameters of the same type.
 ```
     example(int value1, int value2);
 ```
-In order to inject proper values into value and value2 they have to distinguish somehow.
-Boost.DI solution for this are `named parameters`, which basically are just wrappers
+In order to inject proper values into `value1` and `value2` they have to distinguish somehow.
+`Boost.DI` solution for that problem are `named parameters`, which are just wrappers
 for the type with automatic conversion to the based type.
-```
-    class my_name { };
-    di::named<int, my_name> named_parameter;
-    int i = named_parameter;
-```
-
 Named parameters are intrusive in a sens constructor has to be changed in order to support them.
-It doesn't has to be the case when constructor traits are being used.
-```
+It doesn't has to be the case when __injections_ctor_traits__ are used.
+
+[heading Synopsis]
+    template<
+        typename T
+      , typename TName = no_name
+    >
+    class named {
+        named& operator=(const named&);
+
+    public:
+        typedef T named_type;
+        typedef TName name;
+
+        named(T); // non explicit
+        named(const named&);
+
+        operator T() const;
+    };
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`T`][None][Type to be annotated]]
+    [[`TName`][None][Type represent name, `no_name` by default, mpl::string<'str'> might be handy]]
+]
+
+[heading Expression Semantics]
+    named<int, mpl::string<'int'>>()
+
+[heading Header]
+    #include <boost/di.hpp>
+
+[heading Examples]
+[table
+    [[Binding][Description]]
+    [[
+        ```
+            class my_name { };
+            di::named<int, my_int> named_parameter;
+            int i = named_parameter;
+        ```
+      ][wrapped `int` type with `my_int` name]]
+]
+
+[heading Examples]
+    struct my_int { };
+
+    class example {
+    public:
+        example(named<int, my_int> i1, int i2);
+            : i1(i1)
+            , i2(i2)
+        { }
+
+        int i1 = 0;
+        int i2 = 0;
+    };
+
+    auto injector = di::make_injector(
+        di::bind<int>::named<my_int>::to(42)
+      , di::bind_int<0>
+    );
+
+    auto example_ = injector.create<example>();
+
+    assert(42 == example_.i1);
+    assert(0 == example_.i2);
+
+
+[heading Examples - __injections_ctor_traits__]
     class example {
     public:
         example(int value1, int value2);
@@ -41,11 +108,24 @@ It doesn't has to be the case when constructor traits are being used.
         BOOST_DI_INJECT_TRAITS(di::named<int, my_value1>, di::named<int, my_value2>);
     };
 
-}} // boost::di
-```
-[table
-    [[Tests: [@test/ut/named_ut.cpp]]]
-]
+    }} // boost::di
+
+    auto injector = di::make_injector(
+        di::bind<int>::named<my_value1>::to(1)
+        di::bind<int>::named<my_value2>::to(2)
+    );
+
+    auto example_ = injector.create<example>();
+
+    assert(1 == example_.i1);
+    assert(2 == example_.i2);
+
+[heading More Examples]
+    ``__examples_binding__``
+
+[heading Tests]
+    ``[@test/ut/named_ut.cpp]``
+
 [endsect]
 
 [endsect]

@@ -257,6 +257,7 @@ will be binded using different scope as well then this binding won't be taken in
     [[Parameter][Requirement][Description]]
     [[`TWrapper`][Wrapper Model type][consist available type conversions]]
     [[`TExpected`][None][type to be expected by constructor]]
+    [[`x.create()`][None][create wrapped type to be passed to constructor]]
 ]
 
 [table Conversions
@@ -318,119 +319,230 @@ will be binded using different scope as well then this binding won't be taken in
 
 [section unique]
 
-[h5 Synopsis]
-```
+[heading Description]
+Scope representing unique value, meaning unique value always will be passed to the constructor.
+[note In case of pointers user will be responsible to take care of deleting them.]
+
+[heading Synopsis]
     template<template<typename> class TWrapper = wrappers::copy>
     class unique {
     public:
         typedef mpl::int_<0> priority;
 
-        template<typename TExpected, typename TGiven = TExpected>
+        template<typename TExpected>
         class scope {
         public:
-            template<typename... TArgs>
-            TWrapper<TExpected, TGiven> create(TArgs&&...);
+            TWrapper<TExpected> create(const function<TExpected*()>&);
         };
     };
-```
 
-[h5 Description]
-
-Scope representing unique value, meaning unique value always will be passed to the constructor.
-[note In case of pointers user will be responsible to take care of deleting them]
-
-[h5 Example]
-
-```
-    unique<di::bind_int<42>>()
-    unique<di::bind<interface, implementation>>()
-```
-[note Scope deduction has lower priority than explicit scope definition, so shared_ptr parameter might be forced to be unique]
-
-[h5 Conversions]
-Refer to `Scopes Conversions` table.
-
-[table
-    [[Tests: [@test/ut/scopes/unique_ut.cpp] | [@test/ut/wrappers/copy_ut.cpp]]]
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`TWrapper`][Wrapper Model type][consist available type conversions]]
+    [[`TExpected`][None][type to be expected by constructor]]
+    [[`x.create(const function<TExpected*()>&)`][None][create wrapped type to be passed to constructor]]
 ]
+
+[table Conversions
+    [[Type][external]]
+    [[T][X]]
+    [[T*][X]]
+    [[T&][X]]
+    [[const T&][X]]
+    [[T&&][X]]
+    [[const T*][X]]
+    [[std::shared_ptr<T>][X]]
+    [[boost::shared_ptr<T>][X]]
+    [[std::unique_ptr<T>][X]]
+    [[std::auto_ptr<T>][X]]
+    [[][]]
+    [[const T&][X]]
+    [[named<T, name>][X]]
+]
+
+[heading Header]
+    #include <boost/di.hpp>
+
+[heading Namespace]
+    boost::di::scopes
+
+[heading Examples]
+[table
+    [[Binding][Description]]
+    [[```unique<di::bind<interface, implementation>>()```][bind `interface` to `implementation` in unique scope]]
+    [[`x.create(const function<TExpected*()>&)`][None][create wrapped type to be passed to constructor]]
+]
+
+    auto injector = di::make_injector(
+        di::unique<
+            di::bind<interface, implementation>
+          , di::bind_int<42>
+        >()
+      , di::scope<di::scopes::unique<>>::bind<
+            di::bind_string<mpl::string<'txt'>>
+        >()
+    );
+
+    assert(42 == injector.create<int>());
+    assert("txt" == injector.create<std::string>());
+    assert(dynamic_cast<implementation*>(injector.create<shared_ptr<interface>>().get()));
+    assert(injector.create<shared_ptr<interface>>() != injector.create<shared_ptr<interface>>());
+
+[note Scope deduction has lower priority than explicit scope definition, so `shared_ptr` parameter might be forced to be unique.]
+
+[heading Tests]
+    ``[@test/ut/scopes/unique_ut.cpp]`` | ``[@test/ut/wrappers/copy_ut.cpp]``
+
+[heading See Also]
+
+* __scopes__
+* __scopes_deduce__
+* __scopes_external__
+* __scopes_shared__
+* __scopes_session__
+
 [endsect]
 
 [section shared]
 
-[h5 Synopsis]
-```
+[heading Description]
+Scope representing shared/session value, meaning passed value will be shared between all given instances.
+`Boost.DI` to achieve that is using smart shared pointers. This scope will be deduced in case of shared ptr.
+[note Shared scope will convert between `std::shared_ptr` and `boost::shared_ptr` if required.
+ Primary smart pointer might be set by `BOOST_DI_CFG_STD_SMART_PTR` and `BOOST_DI_CFG_BOOST_SMART_PTR`.
+ Only primary smart pointer will be able to be converted to weak_ptr.
+]
+
+[heading Synopsis]
     template<template<typename> class TWrapper = wrappers::shared>
     class shared {
     public:
         typedef mpl::int_<0> priority;
 
-        template<typename TExpected, typename TGiven = TExpected>
+        template<typename TExpected>
         class scope {
         public:
-            template<typename... TArgs>
-            TWrapper<TExpected, TGiven> create(TArgs&&...);
+            TWrapper<TExpected> create(const function<TExpected*()>&);
         };
     };
-```
 
-[h5 Description]
-
-Scope representing shared/session value, meaning passed value will be shared between all given instances.
-Boost.DI to achieve that is using smart shared pointers. This scope will be deduced in case of shared ptr.
-[note Shared scope will convert between std::shared_ptr and boost::shared_ptr if required.
- Primary smart pointer might be set by `BOOST_DI_CFG_STD_SMART_PTR` and `BOOST_DI_CFG_BOOST_SMART_PTR`.
- Only primary smart pointer will be able to be converted to weak_ptr.
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`TWrapper`][Wrapper Model type][consist available type conversions]]
+    [[`TExpected`][None][type to be expected by constructor]]
+    [[`x.create(const function<TExpected*()>&)`][None][create wrapped type to be passed to constructor]]
 ]
-[h5 Example]
 
-```
-    shared<di::bind_int<42>>()
-    shared<di::bind<interface, implementation>>()
-```
+[table Conversions
+    [[Type][external]]
+    [[T][X]]
+    [[T*][X]]
+    [[T&][X]]
+    [[const T&][X]]
+    [[T&&][X]]
+    [[const T*][X]]
+    [[std::shared_ptr<T>][X]]
+    [[boost::shared_ptr<T>][X]]
+    [[std::unique_ptr<T>][X]]
+    [[std::auto_ptr<T>][X]]
+    [[][]]
+    [[const T&][X]]
+    [[named<T, name>][X]]
+]
 
-[h5 Conversions]
-Refer to `Scopes Conversions` table.
+[heading Header]
+    #include <boost/di.hpp>
 
+[heading Namespace]
+    boost::di::scopes
+
+[heading Examples]
 [table
-    [[Tests: [@test/ut/scopes/shared_ut.cpp] | [@test/ut/wrappers/shared_ut.cpp]]]
+    [[Binding][Description]]
+    [[```shared<di::bind<interface, implementation>>()```][bind `interface` to `implementation` in shared scope]]
 ]
+    auto injector = di::make_injector(
+        di::shared<
+            di::bind<interface, implementation>
+        >()
+    );
+
+    assert(dynamic_cast<implementation*>(injector.create<shared_ptr<interface>>().get()));
+    assert(injector.create<shared_ptr<interface>>() == injector.create<shared_ptr<interface>>());
+
+[heading Tests]
+    ``[@test/ut/scopes/shared_ut.cpp]`` | ``[@test/ut/wrappers/shared_ut.cpp]``
+
+[heading See Also]
+
+* __scopes__
+* __scopes_deduce__
+* __scopes_external__
+* __scopes_unique__
+* __scopes_session__
+
 [endsect]
 
 [section session]
 
-[h5 Synopsis]
-```
+[heading Description]
+Scope representing shared value, meaning passed value will be shared between all given instances
+and will be empty if it won't be in scope.
+Scope is activated by call of `call` method with `session_entry` parameter and deactivated by call of `call` method with `session_exit` parameter;
+
+[heading Synopsis]
     template<template<typename> class TWrapper = wrappers::shared>
     class session {
     public:
         typedef mpl::int_<0> priority;
 
-        template<typename TExpected, typename TGiven = TExpected>
+        template<typename TExpected>
         class scope {
         public:
-            template<typename... TArgs>
-            TWrapper<TExpected, TGiven> create(TArgs&&...);
-
+            TWrapper<TExpected> create(const function<TExpected*()>&);
             void call(const session_entry&);
             void call(const session_exit&);
         };
     };
-```
 
-[h5 Description]
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`TWrapper`][Wrapper Model type][consist available type conversions]]
+    [[`TExpected`][None][type to be expected by constructor]]
+    [[`x.create(const function<TExpected*()>&)`][None][create wrapped type to be passed to constructor]]
+    [[`x.call(const session_entry&)`][None][trigger  scope entry]]
+    [[`x.call(const session_exit&)`][None][trigger scope exit]]
+]
 
-Scope representing shared value, meaning passed value will be shared between all given instances
-and will be empty if it won't be in scope.
-Scope is activated by call of `call` method with `session_entry` parameter and deactivated by call of `call` method with `session_exit` parameter;
+[table Conversions
+    [[Type][external]]
+    [[T][X]]
+    [[T*][X]]
+    [[T&][X]]
+    [[const T&][X]]
+    [[T&&][X]]
+    [[const T*][X]]
+    [[std::shared_ptr<T>][X]]
+    [[boost::shared_ptr<T>][X]]
+    [[std::unique_ptr<T>][X]]
+    [[std::auto_ptr<T>][X]]
+    [[][]]
+    [[const T&][X]]
+    [[named<T, name>][X]]
+]
 
-[h5 Example]
+[heading Header]
+    #include <boost/di.hpp>
 
-```
-    session<di::bind_int<42>>()
-    session<di::bind<interface, implementation>>()
-```
+[heading Namespace]
+    boost::di::scopes
 
-```
+[heading Examples]
+[table
+    [[Binding][Description]]
+    [[```session<di::bind<interface, implementation>>()```][bind `interface` to `implementation` in session scope]]
+]
+
     auto injector = di::make_injector(
         shared<bind<interface, implementation>>()
     );
@@ -442,14 +554,18 @@ Scope is activated by call of `call` method with `session_entry` parameter and d
 
     injector.call(di::scopes::session_exit());
     assert(!injector.create<std::unique_ptr<interface>>())
-```
 
-[h5 Conversions]
-Refer to `Scopes Conversions` table.
+[heading Tests]
+    ``[@test/ut/scopes/session_ut.cpp]`` | ``[@test/ut/wrappers/shared_ut.cpp]``
 
-[table
-    [[Tests: [@test/ut/scopes/session_ut.cpp] | [@test/ut/wrappers/shared_ut.cpp]]]
-]
+[heading See Also]
+
+* __scopes__
+* __scopes_deduce__
+* __scopes_external__
+* __scopes_unique__
+* __scopes_session__
+
 [endsect]
 
 [endsect]
