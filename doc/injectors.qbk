@@ -139,6 +139,11 @@ Creates `injector` type. Allows to bind dynamic values in no boilerplate manner.
     template<typename... TArgs>
     injector<TArgs...> inline make_injector(const TArgs&...);
 
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`TArgs...`][Binding Model type][Bindings to be used as configuration]]
+]
+
 [heading Expression Semantics]
     make_injector(...);
 

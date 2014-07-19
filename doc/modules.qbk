@@ -54,7 +54,7 @@ Activation of `Module` is done by passing it into injector.
     #include <boost/di.hpp>
 
 [heading Examples]
-    class module {
+    class module_cpp_14 {
     public:
         auto configure() const {
             return di::make_injector(
@@ -63,22 +63,50 @@ Activation of `Module` is done by passing it into injector.
         }
     };
 
-    // many modules might be passed and they might be mixed with bindings
-    {
-        auto injector = di::make_injector(module(), ...);
-    }
+    class module_cpp_11 {
+    public:
+        auto configure() const -> decltype(di::make_injector(di::bind_int<42>())) {
+            return di::make_injector(
+                di::bind<int>::to(42)
+            );
+        }
+    };
 
-    {
-        using injector = di::injector<module, ...>;
-    }
+    class module_cpp_03 {
+    public:
+        typedef di::injector<
+            di::bind_bool<true>
+          , BOOST_TYPEOF_TPL(di::bind<long>::to(long()))
+        >;
 
-[tip Modules/Bindings/Types might be mixed whilst creating an injector, order is not important.]
+        injector_t configure() const {
+            return injector_t(di::bind<long>::to(87l)); // order of passed binding is not important
+        }
+    };
+
+    auto injector = di::make_injector(
+        module_cpp_03(), module_cpp_11(), module_cpp_14()
+        // module_cpp_14(), module_cpp_03(), module_cpp_11() // order of passed modules is not important
+    );
+
+    assert(dynamic_cast<implementation*>(injector.create<unique_ptr<interface>>().get()));
+    assert(42 == injector.create<int>());
+    assert(87l == injector.create<long>());
+    assert(true == injector.create<bool>());
+
+[tip `Modules/Bindings/Types` might be mixed whilst creating an injector, order is not important.]
 
 [heading More Examples]
     ``__examples_modules__``
 
 [heading Tests]
     ``[@test/mt/injector_mt.cpp]`` | ``[@test/mt/make_injector_mt.cpp]``
+
+[heading See Also]
+
+* __injectors__
+* __injectors_injector__
+* __injectors_make_injector__
 
 [endsect]
 

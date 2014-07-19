@@ -9,32 +9,19 @@
 
 [section Scopes]
 
-Scopes are responsible for creating and maintaining the life time of the dependency.
-Boost.DI favor 5 types of scopes (deduce - default, external, unique, shared, session) which you can read more about
-in `Scopes` section.
-
-Boost.DI scopes create and maintain dependencies life time.
+[heading Description]
+Scopes are responsible for creating and maintaining life time of the dependency.
 If no scope will be given whilst binding `deduce` scope will be assumed.
+`Boost.DI` favor 5 types of scopes
 
-Synopsis
-```
-    class unspecified {
-        typedef mpl::int_<N> priority; // N - priority, 1=lowest, N=highest
-
-        template<typename TExpected, typename TGiven = TExpected>
-        class scope {
-        public:
-            template<typename... T>
-            result_type create(T&&... args);
-
-            template<typename TAction>
-            void call(const TAction&);
-        };
-    };
-```
+* __scopes_deduce__
+* __scopes_external__
+* __scopes_unique__
+* __scopes_shared__
+* __scopes_session__
 
 Scopes use `wrappers` to return convertible objects.
-`Wrappers` are able to convert to requested types accurately to their definition.
+`Wrappers` are able to convert object to requested types accurately to their definition.
 There are 5 basic types of wrappers.
 
 [table
@@ -46,58 +33,114 @@ There are 5 basic types of wrappers.
     [[value][conversion to lvalue/rvalue/pointer/smart_pointer]]
 ]
 
-[table
-    [[Tests: [@test/ut/wrappers/universal_ut.cpp]]]
+[heading Synopsis]
+```
+    class unspecified {
+        typedef mpl::int_<N> priority; // N - priority, 1=lowest, N=highest
+
+        template<typename TExpected>
+        class scope {
+        public:
+            result_type create(); // mutually exclusive with create(const function<TExpected*>()>*), used when object is not required - external scope
+            result_type create(const function<TExpected*()>&); // mutually exclusive with create()
+
+            template<typename TAction>
+            void call(const TAction&);
+        };
+    };
+```
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`TExpected`][None][Object to be expected by constructor]]
+    [[`N`][Integer number value][Priority of the scope, 1=lowest, N=highest]]
+    [[`TAction`][None][Action to be passed to scopes which handle it]]
 ]
 
-Implementation of custom scope requires
+[heading Header]
+    #include <boost/di.hpp>
 
-* Implementation of the scope
-* [optional] mapping to DSL binding to easier usage (custom_scope<...>)
+[heading Namespace]
+    boost::di::scopes
 
-```
-class custom_scope {
-public:
-    typedef boost::mpl::int_<0> priority;
-
-    template<typename TExpected, typename TGiven>
-    class scope {
+[heading Examples]
+    class custom_scope {
     public:
-        typedef scope type;
-        typedef di::wrappers::shared result_type;
+        typedef boost::mpl::int_<0> priority;
 
-        template<typename... Args>
-        result_type create(Args&&... args) {
-            return std::make_shared<TGiven>(std::forward(args)...);
-        }
+        template<typename TExpected>
+        class scope {
+        public:
+            typedef scope type;
+            typedef di::wrappers::shared<TExpected> result_type;
+
+            result_type create(const function<TExpected*()>& f) {
+                return std::make_shared<TGiven>(f());
+            }
+        };
     };
-};
 
-namespace di {
+    namespace di {
 
-template<typename... T>
-struct custom_scope
-    : scope< ::custom_scope >::bind<T...>
-{ };
+    template<typename... T>
+    struct custom_scope
+        : scope< ::custom_scope >::bind<T...>
+    { };
 
-} // namespace di
+    } // namespace di
 
-```
+    auto injector = di::make_injector(
+        custom_scope<
+            di::bind<interface, implementation>
+        >()
+      , scope<custom_scope>::bind<
+            di::bind<interface1, implementation1>
+        >()
+    );
+
+    assert(dynamic_cast<implementation1*>(injector.create<shared_ptr<interface1>>().get()));
+    assert(dynamic_cast<implementation2*>(injector.create<shared_ptr<interface2>>().get()));
+    assert(injector.create<shared_ptr<interface1>>() != injector.create<shared_ptr<interface2>>());
+
+[heading More Examples]
+    ``__examples_custom_scope__``
+
+[heading Scopes Conversions]
+
+[warning Current version of `Boost.DI` doesn't support `rvalue references` with `Microsoft Visual Studio Compiler`.]
+
+[table
+    [[Type][external][unique][shared][session]]
+    [[T][X][X][X][X]]
+    [[T*][X][X][X][X]]
+    [[T&][X][X][X][X]]
+    [[const T&][X][X][X][X]]
+    [[T&&][X][X][X][X]]
+    [[const T*][X][X][X][X]]
+    [[std::shared_ptr<T>][X][X][X][X]]
+    [[boost::shared_ptr<T>][X][X][X][X]]
+    [[std::unique_ptr<T>][X][X][X][X]]
+    [[std::auto_ptr<T>][X][X][X][X]]
+    [[][][][][]]
+    [[const T&][X][X][X][X]]
+    [[named<T, name>][X][X][X][X]]
+]
+
+[heading Tests]
+    ``[@test/ut/wrappers/universal_ut.cpp]``
+
+[heading See Also]
+
+* __scopes_deduce__
+* __scopes_external__
+* __scopes_unique__
+* __scopes_shared__
+* __scopes_session__
 
 [section:deduce deduce (default)]
 
-[h5 Synopsis]
-```
-    class deduce {
-    public:
-        template<typename T, typename = T>
-        class scope;
-    };
-```
-
-[h5 Description]
-
-Default scope which will be converted to one of the scopes shared/unique/external accordingly to `Scope Traits`.
+[heading Description]
+Default scope which will be converted to one of the scopes `shared/unique/external` accordingly to `Scope Traits` transformation.
 
 [table Scope Traits
     [ [Type] [Scope] ]
@@ -117,20 +160,76 @@ Default scope which will be converted to one of the scopes shared/unique/externa
     [ [named<T, TName>] [scope of T] ]
 ]
 
-[h5 Example]
+[heading Synopsis]
+    class deduce {
+    public:
+        template<typename>
+        class scope {
+            template<typename T>
+            struct rebind {
+                typedef typename scope_traits<T>::type other;
+            };
+        };
+    };
 
-```
-    di::deduce<implementation>()
-    di::deduce<di::bind<interface, implementation>>()
-    di::deduce<di::bind_int<42>>()
-```
+[heading Header]
+    #include <boost/di.hpp>
 
-[h5 Conversions]
-Refer to `Scopes Conversions` table.
+[heading Namespace]
+    boost::di::scopes
 
-[table
-    [[Tests: [@test/ut/scopes/deduce_ut.cpp]]]
-]
+[heading Examples]
+    class example {
+    public:
+        example(shared_ptr<interface1> i1   // deduced as shared scope
+              , shared_ptr<interface1> i1_  // deduced as shared scope
+              , shared_ptr<interface2> i2   // deduce as unique scope
+              , unique_ptr<interface3> i3   // deduce as unique scope
+              , const interface4& i4)       // deduce as external scope
+            : i1(i1)
+            , i1_(i1_)
+            , i2(i2)
+            , i3(i4)
+            , i4(i4)
+        { }
+
+        shared_ptr<interface1> i1;
+        shared_ptr<interface1> i1_;
+        unique_ptr<interface2> i2;
+        unique_ptr<interface> i3;
+        const interface& i4;
+    };
+
+    auto injector = di::make_injector(
+        di::deduce<implementation1>() // bind deduced interface to implementation
+      , di::bind<interface2, implementation2>() // deduce scope by default
+      , di::scope<di::scopes::deduce>::bind<di::bind<interface3, implementation3>>() // long version of scope binding
+      , di::bind<interface4>::to(cref(implementation4)) // bind to external value
+    );
+
+    auto example_ = injector.create<example>();
+
+    assert(dynamic_cast<implementation1*>(example_->i1.get());
+    assert(dynamic_cast<implementation1*>(example_->i1_.get());
+    assert(example_->i1 == example->i1_);
+    assert(dynamic_cast<implementation2*>(example_->i2.get());
+    assert(dynamic_cast<implementation3*>(example_->i3.get());
+    assert(dynamic_cast<implementation4*>(example_->i4.get());
+
+[heading More Examples]
+    ``__examples_deduce_scope__``
+
+[heading Tests]
+    ``[@test/ut/scopes/deduce_ut.cpp]``
+
+[heading See Also]
+
+* __scopes__
+* __scopes_external__
+* __scopes_unique__
+* __scopes_shared__
+* __scopes_session__
+
 [endsect]
 
 [section external]
@@ -312,27 +411,6 @@ Refer to `Scopes Conversions` table.
     [[Tests: [@test/ut/scopes/session_ut.cpp] | [@test/ut/wrappers/shared_ut.cpp]]]
 ]
 [endsect]
-
-[h6 Scopes Conversions]
-
-[warning In current version of Boost.DI rvalue references aren't available for `Microsoft Visual Studio Compiler`]
-
-[table
-    [[Type][external][session][shared][unique]]
-    [[T][X][X][X][X]]
-    [[T*][X][X][X][X]]
-    [[T&][X][X][X][X]]
-    [[const T&][X][X][X][X]]
-    [[T&&][X][X][X][X]]
-    [[const T*][X][X][X][X]]
-    [[std::shared_ptr<T>][X][X][X][X]]
-    [[boost::shared_ptr<T>][X][X][X][X]]
-    [[std::unique_ptr<T>][X][X][X][X]]
-    [[std::auto_ptr<T>][X][X][X][X]]
-    [[][][][][]]
-    [[const T&][X][X][X][X]]
-    [[named<T, name>][X][X][X][X]]
-]
 
 [endsect]
 
