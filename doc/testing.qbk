@@ -144,7 +144,7 @@ So our example might be refactored to.
 
 Above example has few advantages
 
-* Insensitive for constructor signature change (for example when `logic` and `logger` parameters order would be swapped)
+* Is insensitive for constructor signature change (for example when `logic` and `logger` parameters order would be swapped)
 * Allow to easily test smart pointers (verifying destruction call automatically) as well as allows to test `unique_ptr`
 * Automatically manage mocks lifetime
 * Less boilerplate code
@@ -208,7 +208,7 @@ Testing module with fake `logger` and `db`, but original `logic` and `user`.
 
 * Write custom allocator which automatically inject fakes for specified components.
 
-To achieve this we can use __examples_testing_automatic_mocks_injector__.
+To achieve that we can use __examples_testing_automatic_mocks_injector__.
 ```
     void test_app() {
         auto mi = di::make_mocks_injector(

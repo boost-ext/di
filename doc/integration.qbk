@@ -15,17 +15,17 @@ Usually doesn't require anything! Unless constructor can't be deduced due to amb
 [section Boost Meta State Machine]
 
 [@http://www.boost.org/doc/libs/1_55_0/libs/msm/doc/HTML/index.html Boost Meta State Machine] is a library allowing you to easily and quickly define state machines of very high performance.
-Boost.MSM is a great library, unfortunately `Service Locator` pattern is used to accomplish actions/guards execution.
+`Boost.MSM is a great library, unfortunately `Service Locator` pattern is used to accomplish actions/guards execution.
 Such approach is hard to maintain and test. Would be great to have possibility to
 implement action/guards without FSM dependency and with proper dependency injection instead.
-Such functionality might be achieved with Boost.DI and it's presented below.
+Such functionality might be achieved with `Boost.DI` and it's presented below.
 
 In order to support dependency injection, few changes to Boost.MSM were made.
 
 * actions/guards list was generated from transition table
 * generated list was passed into state machine constructor
 
-With that changes in mind Boost.DI could have been used without more changes needed.
+With that changes in mind `Boost.DI` could have been used without more changes required.
 
 ```
 #include <boost/di.hpp>
@@ -91,7 +91,7 @@ Full example and implementation might be found in [@https://github.com/krzysztof
 
 [h6 Match-3 Game]
 
-Simple Match-3 game is an example using `Boost Dependency Injection` and `Boost Meta State Machine`.
+Simple Match-3 game is an example of `Boost Dependency Injection` and `Boost Meta State Machine` used together.
 
 * [@https://github.com/krzysztof-jusiak/match3/blob/master/include/config.hpp Dependency Injection Configuration]
 * [@https://github.com/krzysztof-jusiak/match3/blob/master/include/controller.hpp Meta State Machine Definition]
