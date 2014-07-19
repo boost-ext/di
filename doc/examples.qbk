@@ -7,7 +7,7 @@
  /
  /]
 
-[section:examples Examples]
+[section Examples]
 
 [section:hello_world Hello World]
 [import ../example/hello_world.cpp]

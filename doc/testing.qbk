@@ -149,7 +149,7 @@ Above example has few advantages
 * Automatically manage mocks lifetime
 * Less boilerplate code
 
-To learn more about `Automatic Mocks Injector` see [link di.extensions Extensions section].
+To learn more about `Automatic Mocks Injector` see __examples_testing_automatic_mocks_injector__.
 
 [endsect]
 
@@ -208,7 +208,7 @@ Testing module with fake `logger` and `db`, but original `logic` and `user`.
 
 * Write custom allocator which automatically inject fakes for specified components.
 
-To achieve this we can use [link di.extensions Automatic Mocks Injector].
+To achieve this we can use __examples_testing_automatic_mocks_injector__.
 ```
     void test_app() {
         auto mi = di::make_mocks_injector(

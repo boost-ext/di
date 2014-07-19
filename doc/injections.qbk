@@ -23,7 +23,7 @@ It guarantees initialized state of data members. `Boost.DI` constructor injectio
 
 [heading Description]
 `Boost.DI` will deduce the best available constructor to be used for injection - unique constructor with longest parameter list.
-See [link di.rationale.algorithms Constructor Parameters Deduction] for further reading.
+See __rationale_constructor_parameters_deduction__ for further reading.
 If the default behavior should be changed constructor should be explicitly marked with `BOOST_DI_INJECT` or `BOOST_DI_INJECT_TRAITS`.
 
 [heading Synopsis]
@@ -101,7 +101,7 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
 [tip Requirement of brackets in BOOST_DI_INJECT might be switched with `BOOST_DI_CFG_INJECT_VA_ARGS` and `BOOST_DI_CFG_INJECT_BRACKET`.]
 
 [heading More Examples]
-    ``[link di.examples]``
+    ``__examples__``
 
 [heading Tests]
     ``[@test/ut/inject_va_args_ut.cpp]`` | ``[@test/ut/inject_bracket_ut.cpp]``
@@ -142,7 +142,7 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
     };
 
 [heading More Examples]
-    ``[link di.examples]``
+    ``__examples__``
 
 [heading Tests]
     ``[@test/ut/inject_va_args_ut.cpp]`` | ``[@test/ut/inject_bracket_ut.cpp]``
@@ -186,7 +186,7 @@ to define which constructor should be used by `Boost.DI`.
     }} // boost::di
 
 [heading More Examples]
-    ``[link di.examples Constructor Traits Generator]`` | ``[link di.examples]``
+    ``__examples_constructor_traits_generator__`` | ``__examples__``
 
 [heading Tests]
     ``[@test/ut/type_traits/ctor_traits_ut.cpp]``

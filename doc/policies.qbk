@@ -43,7 +43,7 @@ In order for `injector` to verify policies they have to be passed to `create`, `
 
 
 [heading More Examples]
-    ``[link di.examples Custom Policy]``
+    ``__examples_custom_policy__``
 
 [section circular_dependencies]
 
