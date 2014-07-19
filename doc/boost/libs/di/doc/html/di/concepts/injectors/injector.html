@@ -1,0 +1,424 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>injector</title>
+<link rel="stylesheet" href="../../../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.0">
+<link rel="home" href="../../../index.html" title="Boost.DI (Dependency Injection) 1.0">
+<link rel="up" href="../injectors.html" title="Injectors">
+<link rel="prev" href="../injectors.html" title="Injectors">
+<link rel="next" href="make_injector.html" title="make_injector">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../injectors.html"><img src="../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../injectors.html"><img src="../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="make_injector.html"><img src="../../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="di.concepts.injectors.injector"></a><a class="link" href="injector.html" title="injector">injector</a>
+</h4></div></div></div>
+<h6>
+<a name="di.concepts.injectors.injector.h0"></a>
+          <span class="phrase"><a name="di.concepts.injectors.injector.description"></a></span><a class="link" href="injector.html#di.concepts.injectors.injector.description">Description</a>
+        </h6>
+<p>
+          Injector is a component used for creating dependencies configuration using
+          bindings.
+        </p>
+<h6>
+<a name="di.concepts.injectors.injector.h1"></a>
+          <span class="phrase"><a name="di.concepts.injectors.injector.synopsis"></a></span><a class="link" href="injector.html#di.concepts.injectors.injector.synopsis">Synopsis</a>
+        </h6>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TArgs</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">injector</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">TDependecies</span> <span class="identifier">deps</span><span class="special">;</span>
+
+    <span class="keyword">explicit</span> <span class="identifier">injector</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TArgs</span><span class="special">&amp;...);</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TPolicies</span><span class="special">&gt;</span>
+    <span class="identifier">T</span> <span class="identifier">create</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TPolicies</span><span class="special">&amp;...);</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TAllocator</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TPolicies</span><span class="special">&gt;</span>
+    <span class="identifier">T</span> <span class="identifier">allocate</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TAllocator</span><span class="special">&amp;,</span> <span class="keyword">const</span> <span class="identifier">TPolicies</span><span class="special">&amp;...)</span> <span class="special">{</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TVisitor</span><span class="special">&gt;</span>
+    <span class="identifier">T</span> <span class="identifier">visit</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TVisitor</span><span class="special">&amp;);</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TAction</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">call</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TAction</span><span class="special">&amp;);</span>
+<span class="special">};</span>
+</pre>
+<div class="table">
+<a name="di.concepts.injectors.injector.parameters"></a><p class="title"><b>Table&#160;29.&#160;Parameters</b></p>
+<div class="table-contents"><table class="table" summary="Parameters">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Parameter
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Requirement
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">TArgs</span><span class="special">...</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Binding Model type
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Bindings to be used as configuration
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">TDependecies</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">vector</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    List of dependencies
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">T</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    None
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Object to be created
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">TPolicies</span><span class="special">...</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Policy Model type
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Policies to be verified whilst creating objects
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">TAllocator</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Allocator Model type
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Allocator to be used when creating objects
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">TVisitor</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Visitor Model type
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Visitor to be called when visiting creating objects
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">TAction</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    None
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Action to be called for scopes having <code class="computeroutput"><span class="identifier">call</span><span class="special">(</span><span class="keyword">const</span>
+                    <span class="identifier">TAction</span><span class="special">&amp;)</span></code>
+                    method
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">x</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="keyword">const</span> <span class="identifier">TPolicies</span><span class="special">&amp;...))</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">TPolicies</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    create object <code class="computeroutput"><span class="identifier">T</span></code>
+                    with given policies
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">x</span><span class="special">.</span><span class="identifier">allocate</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="keyword">const</span> <span class="identifier">TAllocator</span><span class="special">&amp;,</span> <span class="keyword">const</span>
+                    <span class="identifier">TPolicies</span><span class="special">&amp;...))</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">TAllocator</span></code>,
+                    <code class="computeroutput"><span class="identifier">TPolicies</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    create object T with given policies using given allocator
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">x</span><span class="special">.</span><span class="identifier">visit</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;()</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    None
+                  </p>
+                </td>
+<td>
+                  <p>
+                    call visitor <code class="computeroutput"><span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span>
+                    <span class="identifier">TObject</span><span class="special">&amp;)</span></code>
+                    for all objects created during creation of object <code class="computeroutput"><span class="identifier">T</span></code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">x</span><span class="special">.</span><span class="identifier">call</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TAction</span><span class="special">&amp;)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">TAction</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    for all scopes having <code class="computeroutput"><span class="identifier">call</span><span class="special">(</span><span class="keyword">const</span>
+                    <span class="identifier">TAction</span><span class="special">&amp;)</span></code>
+                    call it with given action
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><h6>
+<a name="di.concepts.injectors.injector.h2"></a>
+          <span class="phrase"><a name="di.concepts.injectors.injector.expression_semantics"></a></span><a class="link" href="injector.html#di.concepts.injectors.injector.expression_semantics">Expression
+          Semantics</a>
+        </h6>
+<pre class="programlisting"><span class="identifier">injector</span><span class="special">&lt;...&gt;(...)</span>
+</pre>
+<h6>
+<a name="di.concepts.injectors.injector.h3"></a>
+          <span class="phrase"><a name="di.concepts.injectors.injector.header"></a></span><a class="link" href="injector.html#di.concepts.injectors.injector.header">Header</a>
+        </h6>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<h6>
+<a name="di.concepts.injectors.injector.h4"></a>
+          <span class="phrase"><a name="di.concepts.injectors.injector.examples"></a></span><a class="link" href="injector.html#di.concepts.injectors.injector.examples">Examples</a>
+        </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Injector
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;&gt;()</span></pre>
+                </td>
+<td>
+                  <p>
+                    create empty injector
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">&gt;()</span></pre>
+                </td>
+<td>
+                  <p>
+                    equivalent to
+                  </p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">deduce</span><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">&gt;&gt;</span></pre>
+                </td>
+</tr>
+<tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;&gt;()</span></pre>
+                </td>
+<td>
+                  <p>
+                    injector with <code class="computeroutput"><span class="identifier">interface</span></code>
+                    to <code class="computeroutput"><span class="identifier">implementation</span></code>
+                    binding configuration
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="keyword">decltype</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="keyword">int</span><span class="special">())&gt;(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">))</span></pre>
+                </td>
+<td>
+                  <p>
+                    injector with configuration binding <code class="computeroutput"><span class="number">42</span></code>
+                    value to <code class="computeroutput"><span class="keyword">int</span></code> parameters
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+<pre class="programlisting"><span class="keyword">using</span> <span class="identifier">injector_empty_t</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;&gt;;</span>
+
+<span class="keyword">using</span> <span class="identifier">injector_t</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span>
+    <span class="identifier">injector_empty_t</span>
+  <span class="special">,</span> <span class="identifier">implementation</span>
+  <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind_int</span><span class="special">&lt;</span><span class="number">42</span><span class="special">&gt;</span>
+  <span class="special">,</span> <span class="identifier">BOOST_TYPEOF_TPL</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="keyword">long</span><span class="special">()))</span>
+<span class="special">&gt;;</span>
+
+<span class="identifier">injector_t</span> <span class="identifier">injector</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">87l</span><span class="special">));</span>
+
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87l</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;());</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">*&gt;(</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;&gt;().</span><span class="identifier">get</span><span class="special">()));</span>
+</pre>
+<h6>
+<a name="di.concepts.injectors.injector.h5"></a>
+          <span class="phrase"><a name="di.concepts.injectors.injector.more_examples"></a></span><a class="link" href="injector.html#di.concepts.injectors.injector.more_examples">More
+          Examples</a>
+        </h6>
+<pre class="programlisting"><a class="link" href="../../examples/hello_world.html" title="Hello World">Hello World</a> <span class="special">|</span> <a class="link" href="../../examples/modules.html" title="Modules">Modules</a> <span class="special">|</span> <a class="link" href="../../examples/uml_visitor.html" title="UML Visitor">UML Visitor</a> <span class="special">|</span> <a class="link" href="../../examples/custom_allocator.html" title="Custom Allocator">Custom Allocator</a> <span class="special">|</span> <a class="link" href="../../examples/custom_scope.html" title="Custom Scope">Custom Scope</a>
+</pre>
+<h6>
+<a name="di.concepts.injectors.injector.h6"></a>
+          <span class="phrase"><a name="di.concepts.injectors.injector.tests"></a></span><a class="link" href="injector.html#di.concepts.injectors.injector.tests">Tests</a>
+        </h6>
+<pre class="programlisting"><a href="../../../test/ut/injector_ut.cpp" target="_top">test/ut/injector_ut.cpp</a> <span class="special">|</span> <a href="../../../test/mt/injector_mt.cpp" target="_top">test/mt/injector_mt.cpp</a> <span class="special">|</span> <a href="../../../test/mt/core/module_mt.cpp" target="_top">test/mt/core/module_mt.cpp</a>
+</pre>
+<h6>
+<a name="di.concepts.injectors.injector.h7"></a>
+          <span class="phrase"><a name="di.concepts.injectors.injector.see_also"></a></span><a class="link" href="injector.html#di.concepts.injectors.injector.see_also">See
+          Also</a>
+        </h6>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+              <a class="link" href="make_injector.html" title="make_injector">make_injector</a>
+            </li>
+<li class="listitem">
+              <a class="link" href="../injectors.html" title="Injectors">Injectors</a>
+            </li>
+<li class="listitem">
+              <a class="link" href="../modules.html" title="Modules">Modules</a>
+            </li>
+</ul></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2014 Krzysztof Jusiak<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../injectors.html"><img src="../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../injectors.html"><img src="../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="make_injector.html"><img src="../../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Bindings</title>
+<link rel="stylesheet" href="../../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.0">
+<link rel="home" href="../../index.html" title="Boost.DI (Dependency Injection) 1.0">
+<link rel="up" href="../concepts.html" title="Concepts">
+<link rel="prev" href="scopes/session.html" title="session">
+<link rel="next" href="bindings/bind.html" title="bind">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="scopes/session.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../concepts.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="bindings/bind.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="di.concepts.bindings"></a><a class="link" href="bindings.html" title="Bindings">Bindings</a>
+</h3></div></div></div>
+<div class="toc"><dl class="toc">
+<dt><span class="section"><a href="bindings/bind.html">bind</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="bindings/bind/any_of.html">any_of</a></span></dt>
+<dt><span class="section"><a href="bindings/bind/bind_bool.html">bind_bool</a></span></dt>
+<dt><span class="section"><a href="bindings/bind/bind_int.html">bind_int</a></span></dt>
+<dt><span class="section"><a href="bindings/bind/bind_string.html">bind_string</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="bindings/scope.html">scope</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="bindings/scope/deduce.html">deduce</a></span></dt>
+<dt><span class="section"><a href="bindings/scope/unique.html">unique</a></span></dt>
+<dt><span class="section"><a href="bindings/scope/shared.html">shared</a></span></dt>
+<dt><span class="section"><a href="bindings/scope/session.html">session</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="bindings/when.html">when</a></span></dt>
+<dd><dl><dt><span class="section"><a href="bindings/when/call_stack.html">call_stack</a></span></dt></dl></dd>
+</dl></div>
+<h5>
+<a name="di.concepts.bindings.h0"></a>
+        <span class="phrase"><a name="di.concepts.bindings.description"></a></span><a class="link" href="bindings.html#di.concepts.bindings.description">Description</a>
+      </h5>
+<p>
+        Bindings in <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> are done using specially defined Domain
+        Specific Language (DSL). The main purpose of binding DSL is to make easy
+        things as easy as possible whilst giving possibility to accomplish solutions
+        for more complicated problems. The glue between DSL and the core is <code class="computeroutput"><span class="identifier">dependency</span></code>, so if you would like to write
+        your own front end the only thing which has to be in mind is to return list
+        of dependencies.
+      </p>
+<h5>
+<a name="di.concepts.bindings.h1"></a>
+        <span class="phrase"><a name="di.concepts.bindings.synopsis"></a></span><a class="link" href="bindings.html#di.concepts.bindings.synopsis">Synopsis</a>
+      </h5>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span>
+    <span class="keyword">typename</span> <span class="identifier">TScope</span>
+  <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TExpected</span>
+  <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TGiven</span>
+  <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TBind</span>
+<span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">dependency</span><span class="special">;</span>
+</pre>
+<div class="table">
+<a name="di.concepts.bindings.parameters"></a><p class="title"><b>Table&#160;16.&#160;Parameters</b></p>
+<div class="table-contents"><table class="table" summary="Parameters">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Parameter
+                </p>
+              </th>
+<th>
+                <p>
+                  Requirement
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">TScope</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Scope Model type
+                </p>
+              </td>
+<td>
+                <p>
+                  Scope to be used
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">TExpected</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  None
+                </p>
+              </td>
+<td>
+                <p>
+                  Type to be returned
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">TGiven</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  None
+                </p>
+              </td>
+<td>
+                <p>
+                  Type to be created
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">TBind</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  Bind Model type
+                </p>
+              </td>
+<td>
+                <p>
+                  Expression to be evaluated to verify dependency match during resolving
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><h5>
+<a name="di.concepts.bindings.h2"></a>
+        <span class="phrase"><a name="di.concepts.bindings.header"></a></span><a class="link" href="bindings.html#di.concepts.bindings.header">Header</a>
+      </h5>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<h5>
+<a name="di.concepts.bindings.h3"></a>
+        <span class="phrase"><a name="di.concepts.bindings.examples"></a></span><a class="link" href="bindings.html#di.concepts.bindings.examples">Examples</a>
+      </h5>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TIinterface</span> <span class="keyword">typename</span> <span class="identifier">TImplementation</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">bind</span>
+    <span class="special">:</span> <span class="identifier">bindings</span><span class="special">::</span><span class="identifier">dependency</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">deduce</span><span class="special">,</span> <span class="identifier">TInterface</span><span class="special">,</span> <span class="identifier">TImplementation</span><span class="special">&gt;</span>
+<span class="special">{</span> <span class="special">};</span>
+
+<span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+    <span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;()</span>
+<span class="special">);</span>
+</pre>
+<h5>
+<a name="di.concepts.bindings.h4"></a>
+        <span class="phrase"><a name="di.concepts.bindings.more_examples"></a></span><a class="link" href="bindings.html#di.concepts.bindings.more_examples">More
+        Examples</a>
+      </h5>
+<pre class="programlisting"><a class="link" href="../examples/binding.html" title="Binding">Binding</a>
+</pre>
+<h5>
+<a name="di.concepts.bindings.h5"></a>
+        <span class="phrase"><a name="di.concepts.bindings.tests"></a></span><a class="link" href="bindings.html#di.concepts.bindings.tests">Tests</a>
+      </h5>
+<pre class="programlisting"><a href="../../test/ut/bindings_ut.cpp" target="_top">test/ut/bindings_ut.cpp</a>
+</pre>
+<h5>
+<a name="di.concepts.bindings.h6"></a>
+        <span class="phrase"><a name="di.concepts.bindings.see_also"></a></span><a class="link" href="bindings.html#di.concepts.bindings.see_also">See
+        Also</a>
+      </h5>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+            <a class="link" href="bindings/bind.html" title="bind">bind</a>
+          </li>
+<li class="listitem">
+            <a class="link" href="bindings/scope.html" title="scope">scope</a>
+          </li>
+<li class="listitem">
+            <a class="link" href="bindings/when.html" title="when">when</a>
+          </li>
+</ul></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2014 Krzysztof Jusiak<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="scopes/session.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../concepts.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="bindings/bind.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
