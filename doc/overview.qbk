@@ -66,31 +66,49 @@ Boost.DI was successfully test on below compilers
 
 [h6 Restrictions]
 
-see `Design.Problematic Cases`:
+See [link Notes] for further information.
 
 [table
   [[Issue][GCC][Clang][Intel][Visual Studio]]
   [[Rvalue References][supported][supported][supported][not supported]]
-  [[std/boost function][supported][supported][supported][supported (has to be pass by const reference)]]
+  [[std::function/boost::function][supported][supported][supported][supported (boost::function supported when pass by const reference)]]
   [[Arguments Permission Policy][supported][supported][supported][not supported]]
 ]
 
 [table
-  [[][Constructor Deduction][`BOOST_DI_INJECT`]]
+  [[Feature][`C++03`][`C++11`][`C++14`]]
+  [[Automatic Constructor Injection][supported, except constructor with 1 parameter][supported][supported]]
+  [[`BOOST_DI_INJECT`/`BOOST_DI_INJECT_TRAITS`/`ctor_traits`][supported][supported][supported]]
 ]
 
 [h6 Recommendations]
 
-Boost.DI supports variety of compilers and standards. Not all features are supported the same way or in general
-by all of them. Below table shows author recommendations (based on testing) what to be careful about whilst using
-a specific combinations.
+`Boost.DI` supports variety of compilers and standards. Not all features are supported the same way or in general
+by all of them. Below table shows recommendations (based on testing) what to be careful about whilst using
+a specific combination.
 
 [table
   [[Standard][Compiler][Recommendation]]
-  [[`C++03`][`GCC >= 4.7`][Module::configure() ]]
-  [[`C++03`][`Clang >= 3.4`][`Modules` configure  ]]
-  [[`C++11`][`Clang >= 3.4`][`Modules` configure  ]]
-  [[`C++14`][`Clang >= 3.4`][Go for it!]]
+  [[`C++14`][`Visual Studio 12.0`]
+  [
+    * `Modules::configure()` harder syntax
+    * Rvalue references aren't supported
+    * Policy `arguments_permission` not supported
+  ]]
+  [[`C++03`][`GCC >= 4.7`, `Clang >= 3.2`]
+  [
+    * `Boost.Typeof` has to be used
+    * `Modules::configure()` harder syntax
+    * `Automatic Constructor Injection` doesn't work with 1 parameter constructors
+  ]]
+  [[`C++11`][`GCC >= 4.7`, `Clang >= 3.2`]
+  [
+    * `Modules::configure()` harder syntax
+  ]]
+  [[`C++14`][`Clang >= 3.4`, `GCC >= 4.9`]
+  [
+    * Go for it!
+  ]]
 ]
 
 [h6 Installation]
@@ -215,6 +233,7 @@ The macros listed in the table below may be used to control the behaviour of Boo
 
 [h6 Notes]
 
+[#Notes]
 * Ambiguous constructors with the same - longest - number of parameters
 [table
     [[Issue][Solution]]
