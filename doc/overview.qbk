@@ -9,7 +9,7 @@
 
 [section Overview]
 
-Boost.DI is `C++03`/`C++11`/`C++14` header only, type safe, library providing compile time, macro free constructor dependency injection.
+`Boost.DI` is `C++03`/`C++11`/`C++14` header only, type safe, library providing compile time, macro free constructor dependency injection.
 
 [h6 Features]
 
@@ -29,7 +29,7 @@ Boost.DI is `C++03`/`C++11`/`C++14` header only, type safe, library providing co
 * Named parameters (named\<int, my\_int\>)
 * Runtime visitor throughout created objects (useful for generation dependency diagrams)
 
-Although library supports `C++03` and `C++11`, only `C++14` shows the full potential of Boost.DI.
+Although library supports `C++03` and `C++11`, only `C++14` shows the full potential of `Boost.DI`.
 To achieve the same behaviour with previous standards sometimes will just require a bit more hassle.
 
 [h6 Dependencies]
@@ -48,7 +48,7 @@ To achieve the same behaviour with previous standards sometimes will just requir
 
 [h6 Supported Compilers]
 
-Boost.DI was successfully test on below compilers
+`Boost.DI` was successfully test on below compilers
 
 * Linux (x86/x86-64)
    * Clang 3.2/3.3/3.4/3.4.2 (clean with Clang Static Analyzer and Valgrind)
@@ -120,14 +120,14 @@ To start using library just include `Boost.DI` header.
 
 [h6 Configuration]
 
-The macros listed in the table below may be used to control the behaviour of Boost.DI.
+The macros listed in the table below may be used to control the behaviour of `Boost.DI`.
 
 [table
   [[Macro][Description]]
   [
     [`BOOST_DI_CFG_NO_PREPROCESSED_HEADERS`]
     [
-        Boost.DI by default uses preprocessed headers. See `Compilation time` for further specification.
+        `Boost.DI` by default uses preprocessed headers. See `Compilation time` for further specification.
         To explicitly disable preprocessed headers `BOOST_DI_CFG_NO_PREPROCESSED_HEADERS` has to be defined.
 
         default: `enabled`
@@ -153,7 +153,7 @@ The macros listed in the table below may be used to control the behaviour of Boo
     [`BOOST_DI_CFG_CTOR_LIMIT_SIZE`]
     [
         Constructor injection is limited by `BOOST_DI_CFG_CTOR_LIMIT_SIZE`, which means that constructor can't
-        have more parameters then defined in order for Boost.DI to works correctly. Value might be redefined
+        have more parameters then defined in order for `Boost.DI` to works correctly. Value might be redefined
         to any number, the only repercussion will be longer compilation times. Might be used as well to limit
         clients from having long parameter list constructors.
 
@@ -194,7 +194,7 @@ The macros listed in the table below may be used to control the behaviour of Boo
     [
         Default `smart pointer` type is set accordingly to compiler support, but
         might standard smart pointers might be forced by `BOOST_DI_CFG_STD_SMART_PTR`.
-        Then Boost.DI internally will use standard smart pointers instead of boost smart
+        Then `Boost.DI` internally will use standard smart pointers instead of boost smart
         pointers. Additionally conversion to weak_ptr is only allowed from default `smart pointer type`.
 
         default: `enabled if supported by compiler`
@@ -213,7 +213,7 @@ The macros listed in the table below may be used to control the behaviour of Boo
   [
     [`BOOST_DI_INJECTOR`]
     [
-        Named used internally by Boost.DI when `BOOST_DI_INJECT` or `BOOST_DI_INJECT_TRAITS` is used
+        Named used internally by `Boost.DI` when `BOOST_DI_INJECT` or `BOOST_DI_INJECT_TRAITS` is used
         to define constructor traits.
 
         default: `boost_di_injector__`
@@ -531,7 +531,7 @@ The macros listed in the table below may be used to control the behaviour of Boo
 [warning GCC/Clang/MSVC/Intel compilers differ with they way template conversion operator is handled.]
 
 [h6 Tests]
-Boost.DI is released with many levels of tests
+`Boost.DI` is released with many levels of tests
 
 * Unit tests (ut)
 * Module/Integration tests (mt)
@@ -566,28 +566,28 @@ To run tests go to `boost/di/test` directory and run.
 
 [h6 FAQ]
 
-# Is configuration via XML supported by Boost.DI?
+# Is configuration via XML supported by `Boost.DI`?
 
-    * Short answer is NO. Boost.DI dependencies are configured in the source code using C++ features which allows compile time checking.
+    * Short answer is NO. `Boost.DI` dependencies are configured in the source code using C++ features which allows compile time checking.
     Long story short, fluent configuration you don't have to remember of changing the configuration file, compiler will take care of it for you.
 Usually lazy binding requires exceptions handling and is a performance killer, but obviously it depends on a projects needs.
-Although it might be hard it is possible to achieve it with Boost.DI.
+Although it might be hard it is possible to achieve it with `Boost.DI`.
 The question which should be asked though - how often configuration is dynamically changed via XML?
 
-# Why Boost.DI doesn't support `setter/member`` injection?
+# Why `Boost.DI` doesn't support `setter/member`` injection?
 
     * Constructor injection is the most powerful and the preferable injection method which avoid uninitialized state of members.
-`Setter/Member` injection should be avoided at all costs in order to keep the solutions as clean as possible. Therefore Boost.DI
+`Setter/Member` injection should be avoided at all costs in order to keep the solutions as clean as possible. Therefore `Boost.DI`
 doesn't support it by default.
 
-# Why Boost.DI doesn't have `singleton` scope?
+# Why `Boost.DI` doesn't have `singleton` scope?
 
     * Singleton pattern is usually overused and makes code really hard to test. Thread safety has to be considered as well whilst using it.
-Boost.DI provides `shared` scope which behaves like non-multi threaded singleton.
-`Singleton` scope might be implemented using Boost.DI `scope` functionality.
+`Boost.DI` provides `shared` scope which behaves like non-multi threaded singleton.
+`Singleton` scope might be implemented using `Boost.DI` `scope` functionality.
 
 # How many constructors parameters are supported and how many bindings I can have?
-    * Boost.DI by default supports up to 10 constructor parameters. Configuration might be changed by `BOOST_DI_CFG_CTOR_LIMIT_SIZE`.
+    * `Boost.DI` by default supports up to 10 constructor parameters. Configuration might be changed by `BOOST_DI_CFG_CTOR_LIMIT_SIZE`.
 The number of allowed bindings is limited by `BOOST_MPL_LIMIT_VECTOR_SIZE` value.
 
 # How injection works since there is no registration/reflection/traits ?

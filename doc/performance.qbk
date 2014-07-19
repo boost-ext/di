@@ -46,87 +46,10 @@ If compilation time is still a problem, `Boost.DI` contains a set of features to
     * This feature slow down the compilation, so it has to be turn on by defining `BOOST_DI_CFG_EXAMINE_CALL_STACK`
     * Disabled by default
 
-[h5 Performance Test]
-
-Compilation time was tested using below example.
-
-```
-    struct level<N> {
-        level<N>();
-    };
-
-    struct level<N-1> {
-        level<N-1>(level<N><1>, level<N><2>, ..., level<N><M>);
-    };
-
-    struct level<2> {
-        level<2>(level<3><1>, level<3><2>, ..., level<3><M>);
-    };
-
-    struct level<1> {
-        level<1>(level<2><1>, level<2><2>, ..., level<2><M>);
-    };
-
-    int main() {
-        di::make_injector().create<level<1>>();
-    }
-```
-
-The test is very useful to verify how huge impact, regards the compilation, changes have.
-Scaling is the factor we are looking into. Basically we are going to look for curve as linear
-as possible.
-
-[table
-    [ [ N/M ] [ % ] ]
-    [ [ 1 ] [ 1 % ] ]
-    [ [ 2 ] [ ] ]
-    [ [ 3 ] [ ] ]
-    [ [ 4 ] [ ] ]
-    [ [ 5 ] [ ] ]
-    [ [ 6 ] [ ] ]
-    [ [ 7 ] [ ] ]
-    [ [ 8 ] [ ] ]
-    [ [ 9 ] [ ] ]
-    [ [ 10 ] [ ] ]
-]
-
 [h6 Runtime execution speed]
 
 Runtime execution speed was one of the concerns taken into account whilst implementing the library.
 Compile time approach was chosen not only, because of the safety (non exception driven) reasons,
 but also because of the runtime performance.
-
-Boost.DI library obviously introduces overhead on creating objects, but the effort was taken to make the overhead as small as possible.
-In order to verify how huge overhead is basic example was introduced and generated assembly code was compared.
-
-```
-    struct example {
-        example(int, double, std::shared_ptr<int>);
-    };
-
-    int main() {
-        example(0, 0.0, std::make_shared<int>());
-        return 0;
-    }
-```
-
-* sequence diagram of int creation
-    injector.create<int>
-
-* possible imporvements
-    - allocactor may not allocate pods on heap
-    - boost::function performance
-
-C++11 uses perferct forwarding whilst c++11 copy value once
-
-[table Assembly code (x86-64) g++ -O3
-    [[][Boost.DI]]
-    [
-        [
-            [pre
-            ]
-        ]
-        []
-    ]
-]
+`Boost.DI` library obviously introduces overhead on creating objects, but the effort was taken to make the overhead as small as possible.
 
