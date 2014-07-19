@@ -234,46 +234,86 @@ Default scope which will be converted to one of the scopes `shared/unique/extern
 
 [section external]
 
-[h5 Synopsis]
-```
+[heading Description]
+Scope representing external value (passed by user). The life time of the object depends on the user.
+`Boost.DI` is not responsible of managing life time of passed object, however values and strings will be copied
+and managed by the library. External scope has priority before other scopes which means that if some value/type
+will be binded using different scope as well then this binding won't be taken into account.
+
+[heading Synopsis]
     template<template<typename> class TWrapper>
     class external {
     public:
         typedef mpl::int_<1> priority;
 
-        template<typename TExpected, typename TGiven = TExpected>
+        template<typename TExpected>
         class scope {
         public:
-            template<typename... TArgs>
-            TWrapper<TExpected, TGiven> create(TArgs&&...);
+            TWrapper<TExpected> create();
         };
     };
-```
 
-[h5 Description]
-
-Scope representing external value (passed by user). The life time of the object depends on the user.
-Boost.DI is not responsible of managing of the passed object, however values and strings will be copied
-and managed by the library. External scope has priority before other scopes which means that if some value/type
-will be binded using different scope as well then this binding won't be taken into account.
-
-[h5 Example]
-
-```
-    di::bind<int>::to(42)
-    di::bind<std::string>::to("text")
-    di::bind<example>::to(make_shared<example>())
-    example example_;
-    di::bind<example>::to(cref(example_))
-    di::bind<example>::to(ref(example_))
-```
-
-[h5 Conversions]
-Refer to `Scopes Conversions` table.
-
-[table
-    [[Tests: [@test/ut/scopes/external_ut.cpp] | [@test/ut/wrappers/value_ut.cpp] | [@test/ut/wrappers/reference_ut.cpp] | [@test/ut/wrappers/shared_ut.cpp]]]
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`TWrapper`][Wrapper Model type][consist available type conversions]]
+    [[`TExpected`][None][type to be expected by constructor]]
 ]
+
+[table Conversions
+    [[Type][external]]
+    [[T][X]]
+    [[T*][X]]
+    [[T&][X]]
+    [[const T&][X]]
+    [[T&&][X]]
+    [[const T*][X]]
+    [[std::shared_ptr<T>][X]]
+    [[boost::shared_ptr<T>][X]]
+    [[std::unique_ptr<T>][X]]
+    [[std::auto_ptr<T>][X]]
+    [[][]]
+    [[const T&][X]]
+    [[named<T, name>][X]]
+]
+
+[heading Header]
+    #include <boost/di.hpp>
+
+[heading Namespace]
+    boost::di::scopes
+
+[heading Examples]
+[table
+    [[Binding][Description]]
+    [[```di::bind<int>::to(42)```][bind `int` parameter to value `42`]]
+    [[```di::bind<std::string>::to("text")```][bind `std::string` parameter to value `text`]]
+    [[```di::bind<example>::to(make_shared<example>())```][bind example type to external `shared_ptr`]]
+    [[```di::bind<example>::to(cref(example_))```][bind example to const reference object]]
+    [[```di::bind<example>::to(ref(example_))```][bind example to reference object]]
+    [[```di::bind<int>::to([]{return 42;})```][bind `int` to lambda expression returning `42` value]]
+]
+
+    auto example_ = make_shared<example>();
+
+    auto injector = di::make_injector(
+        di::bind<int>::to(42)
+      , di::bind<example>::to(example_)
+    );
+
+    assert(42 == injector.create<int>());
+    assert(example_ == injector.create<shared_ptr<example>>());
+    
+[heading Tests]
+    ``[@test/ut/scopes/external_ut.cpp]`` | ``[@test/ut/wrappers/value_ut.cpp]`` | ``[@test/ut/wrappers/reference_ut.cpp]`` | ``[@test/ut/wrappers/shared_ut.cpp]``
+
+[heading See Also]
+
+* __scopes__
+* __scopes_deduce__
+* __scopes_unique__
+* __scopes_shared__
+* __scopes_session__
+
 [endsect]
 
 [section unique]
