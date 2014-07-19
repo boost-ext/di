@@ -8,78 +8,200 @@
  /]
 
 [section Injectors]
+Main component responsible for configuration is `injector`.
+`Boost.DI` injectors might be composed by mixing bindings, modules and other injectors.
+
+[heading Examples]
+    using injector_t = di::injector<>; // empty injector type
+    auto injector = di::make_injector(); // empty injector
+
+    class module {
+    public:
+        auto configure() const {
+            return di::make_injector(
+                di::deduce<implementation0>()
+            );
+        }
+    };
+
+    auto injector_complex = di::make_injector(
+        module
+      , di::bind<interface, implementation1>()
+      , di::unique<
+            implementation2
+        >
+      , di::make_injector(
+            di::bind_int<42>()
+        )
+      , injector<>()
+    );
+
+[heading Tests]
+    ``[@test/ut/injector_ut.cpp]`` | ``[@test/mt/injector_mt.cpp]`` | ``[@test/mt/core/module_mt.cpp]``
+
+[heading See Also]
+
+* __modules__
+* __injectors_injector__
+* __injectors_make_injector__
 
 [section injector]
+
+[heading Description]
 Injector is a component used for creating dependencies configuration using bindings.
 
-* `create`
-```
-    template<typename T, typename... TPolicies>
-    T create(const TPolicies&...);
-```
+[heading Synopsis]
+    template<typename... TArgs>
+    class injector {
+        typedef TDependecies deps;
 
-* `allocate`
-```
-    template<typename T>
-    T allocate(const allocator&, const TPolicies&...);
-```
+        explicit injector(const TArgs&...);
 
-* `visit`
-```
-    template<typename T>
-    void visit();
-```
+        template<typename T, typename... TPolicies>
+        T create(const TPolicies&...);
 
-* `call`
-```
-    template<typename TAction>
-    void call(const TAction&);
-```
-[table
-    [[Tests: [@test/ut/injector_ut.cpp]]]
+        template<typename T, typename TAllocator, typename... TPolicies>
+        T allocate(const TAllocator&, const TPolicies&...) {
+
+        template<typename T, typename TVisitor>
+        T visit(const TVisitor&);
+
+        template<typename TAction>
+        void call(const TAction&);
+    };
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`TArgs...`][Binding Model type][Bindings to be used as configuration]]
+    [[`TDependecies`][`mpl::vector`][List of dependencies]]
+    [[`T`][None][Object to be created]]
+    [[`TPolicies...`][Policy Model type][Policies to be verified whilst creating objects]]
+    [[`TAllocator`][Allocator Model type][Allocator to be used when creating objects]]
+    [[`TVisitor`][Visitor Model type][Visitor to be called when visiting creating objects]]
+    [[`TAction`][None][Action to be called for scopes having `call(const TAction&)` method]]
+
+    [[`x.create<T>(const TPolicies&...))`][`TPolicies`][create object `T` with given policies]]
+    [[`x.allocate<T>(const TAllocator&, const TPolicies&...))`][`TAllocator`, `TPolicies`][create object T with given policies using given allocator]]
+    [[`x.visit<T>()`][None][call visitor `operator()(const TObject&)` for all objects created during creation of object `T`]]
+    [[`x.call(const TAction&)`][`TAction`][for all scopes having `call(const TAction&)` call it with given action]]
 ]
+
+[heading Expression Semantics]
+    injector<...>(...)
+
+[heading Header]
+    #include <boost/di.hpp>
+
+[heading Examples]
+
+[table
+    [[Injector][Description]]
+    [[```di::injector<>()```][create empty injector]]
+    [[```di::injector<implementation>()```][equivalent to ```di::injector<di::deduce<implementation>>```]]
+    [[```di::injector<di::bind<interface, implementation>>()```][injector with `interface` to `implementation` binding configuration]]
+    [[```di::injector<decltype(di::bind<int>::to(int())>(di::bind<int>::to(42))```][injector with configuration binding `42` value to `int` parameters]]
+]
+    using injector_empty_t = di::injector<>;
+
+    using injector_t = di::injector<
+        injector_empty_t
+      , implementation
+      , di::bind_int<42>
+      , BOOST_TYPEOF_TPL(di::bind<long>::to(long()))
+    >;
+
+    injector_t injector(di::bind<long>::to(87l));
+
+    assert(42 == injector.create<int>());
+    assert(87l == injector.create<long>());
+    assert(dynamic_cast<implementation*>(injector.create<unique_ptr<interface>>().get()));
+    
+[heading More Examples]
+    ``__examples_hello_world__`` | ``__examples_modules__`` | ``__examples_uml_visitor__`` | ``__examples_custom_allocator__`` | ``__examples_custom_scope__``
+
+[heading Tests]
+    ``[@test/ut/injector_ut.cpp]`` | ``[@test/mt/injector_mt.cpp]`` | ``[@test/mt/core/module_mt.cpp]``
+
+[heading See Also]
+
+* __injectors_make_injector__
+* __injectors__
+* __modules__
 
 [endsect]
 
 [section make_injector]
-Injector might be created using `di::make_injector` or `di::injector type` it self.
-Preferable option is to use di::make_injector because it allows to bind dynamic values.
 
+[heading Description]
+Creates `injector` type. Allows to bind dynamic values in no boilerplate manner.
+
+[heading Synopsis]
+    template<typename... TArgs>
+    injector<TArgs...> inline make_injector(const TArgs&...);
+
+[heading Expression Semantics]
+    make_injector(...);
+
+[*Return type]: `injector<...>`
+
+[heading Header]
+    #include <boost/di.hpp>
+
+[heading Examples]
 [table
-[[di::make_injector][di::injector]]
-    [
-        [
-            ```
-                auto injector = di::make_injector();
-            ```
-        ]
-        [
-            ```
-                using injector_t = di::injector<>;
-                auto injector = injector_t();
-            ```
-        ]
-    ]
-
-    [
-        [
-            ```
-                auto injector = di::make_injector(
-                    di::deduce<implementation>()
-                );
-            ```
-        ]
-        [
-            ```
-                using injector = di::injector<implementation>;
-            ```
-        ]
-    ]
+    [[Injector][Description]]
+    [[```di::make_injector()```][create empty injector]]
+    [[```di::make_injector(di::deduce<implementation>>())```][creates configuration with binds `implementation` to deduced `interface`]]
+    [[```di::make_injector(di::bind<interface, implementation>>())```][injector with `interface` to `implementation` binding configuration]]
+    [[```di::make_injector(di::bind<int>::to([]{return 42;}))```][injector with configuration binding `int` parameters with lambda expression returning `42`]]
+    [[```di::make_injector(di::bind<example>::to(cref(example)))```][binds `example` to const reference given object]]
+    [[```di::make_injector(di::bind<int>::to(42))```][injector with configuration binding `42` value to `int` parameters]]
 ]
 
-[table
-    [[Tests: [@test/mt/make_injector_mt.cpp] | [@test/mt/injector_mt.cpp]]]
-]
+[heading Examples `C++11`]
+    auto injector_empty = di::make_injector();
+
+    auto injector = di::make_injector(
+        injector_empty
+      , di::deduce<implementation>()
+      , di::bind_int<42>()
+      , di::bind<long>::to(42l)
+    );
+
+    assert(42 == injector.create<int>());
+    assert(87l == injector.create<long>());
+    assert(dynamic_cast<implementation*>(injector.create<unique_ptr<interface>>().get()));
+
+[heading Examples `C++03`]
+    #include <boost/typeof/typeof.hpp>
+
+    BOOST_AUTO(injector_empty, (di::make_injector());
+
+    BOOST_AUTO(injector, (
+        di::make_injector(
+            injector_empty
+          , di::deduce<implementation>()
+          , di::bind_int<42>()
+          , di::bind<long>::to(42l)
+        )
+    );
+
+    assert(42 == injector.create<int>());
+    assert(87l == injector.create<long>());
+    assert(dynamic_cast<implementation*>(injector.create<unique_ptr<interface>>().get()));
+
+[heading More Examples]
+    ``__examples_hello_world__`` | ``__examples_modules__`` | ``__examples_uml_visitor__`` | ``__examples_custom_allocator__`` | ``__examples_custom_scope__``
+
+[heading Tests]
+    ``[@test/mt/make_injector_mt.cpp]``
+
+[heading See Also]
+
+* __injectors_injector__
+* __injectors__
+* __modules__
+
 [endsect]
 
 [endsect]

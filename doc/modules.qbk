@@ -46,7 +46,7 @@ Activation of `Module` is done by passing it into injector.
 ]
 
 [heading Expression Semantics]
-    module().configure();
+    di::make_injector(module());
 
 [*Return type]: `di::injector<...>`
 
@@ -75,7 +75,7 @@ Activation of `Module` is done by passing it into injector.
 [tip Modules/Bindings/Types might be mixed whilst creating an injector, order is not important.]
 
 [heading More Examples]
-    ``[link di.examples Modules]``
+    ``__examples_modules__``
 
 [heading Tests]
     ``[@test/mt/injector_mt.cpp]`` | ``[@test/mt/make_injector_mt.cpp]``

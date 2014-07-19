@@ -9,7 +9,7 @@
 
 [section Examples]
 
-[section:hello_world Hello World]
+[section Hello World]
 [import ../example/hello_world.cpp]
 [hello_world]
 [table
@@ -17,7 +17,7 @@
 ]
 [endsect]
 
-[section:ctor Constructor Injection]
+[section Constructor Injection]
 [import ../example/constructor_injection.cpp]
 [constructor_injection]
 [endsect]
