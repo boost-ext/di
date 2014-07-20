@@ -78,7 +78,7 @@ See [link Notes] for further information.
 [table
   [[Feature][`C++03`][`C++11`][`C++14`]]
   [[Automatic Constructor Injection][supported, except constructor with 1 parameter][supported][supported]]
-  [[`BOOST_DI_INJECT`/`BOOST_DI_INJECT_TRAITS`/`ctor_traits`][supported][supported][supported]]
+  [[`__injections_boost_di_inject__`/`__injections_boost_di_inject_traits__`/`__injections_ctor_traits__`][supported][supported][supported]]
 ]
 
 [h6 Recommendations]
@@ -174,7 +174,7 @@ The macros listed in the table below may be used to control the behaviour of `Bo
   [
     [`BOOST_DI_CFG_INJECT_VA_ARGS`]
     [
-        `BOOST_DI_INJECT(ctor, arg1, arg2, ..., argN)`
+        `__injections_boost_di_inject__(ctor, arg1, arg2, ..., argN)`
 
         default: `enabled when C++11`
     ]
@@ -183,7 +183,7 @@ The macros listed in the table below may be used to control the behaviour of `Bo
   [
     [`BOOST_DI_CFG_INJECT_BRACKET`]
     [
-        `BOOST_DI_INJECT(ctor, (arg1, arg2, ..., argN))`
+        `__injections_boost_di_inject__(ctor, (arg1, arg2, ..., argN))`
 
         default: `enabled when C++03`
     ]
@@ -213,7 +213,7 @@ The macros listed in the table below may be used to control the behaviour of `Bo
   [
     [`BOOST_DI_INJECTOR`]
     [
-        Named used internally by `Boost.DI` when `BOOST_DI_INJECT` or `BOOST_DI_INJECT_TRAITS` is used
+        Named used internally by `Boost.DI` when `__injections_boost_di_inject__` or `__injections_boost_di_inject_traits__` is used
         to define constructor traits.
 
         default: `boost_di_injector__`
@@ -252,12 +252,12 @@ The macros listed in the table below may be used to control the behaviour of `Bo
         [
             ```
                                                                                                          .
-            use BOOST_DI_INJECT to point which constructor should be chosen by Boost.DI
+            use __injections_boost_di_inject__ to point which constructor should be chosen by Boost.DI
                 struct example {
                     explicit example(int);
                     example(int, double);
                     example(int, double, float);
-                    BOOST_DI_INJECT(example, int, float, double);
+                    __injections_boost_di_inject__(example, int, float, double);
                 };
             ```
         ]
@@ -280,11 +280,11 @@ The macros listed in the table below may be used to control the behaviour of `Bo
         [
             ```
                                                                                                          .
-            use BOOST_DI_INJECT_TRAITS to define the constructor
+            use __injections_boost_di_inject_traits__ to define the constructor
                 namespace boost { namespace di {
                     template<>
                     struct ctor_traits<example> {
-                        BOOST_DI_INJECT_TRAITS(int, double); // or in definition of the class
+                        __injections_boost_di_inject_traits__(int, double); // or in definition of the class
                     };
                 }} // boost::di
             ```
@@ -319,7 +319,7 @@ The macros listed in the table below may be used to control the behaviour of `Bo
             In C++03 constructor has to be explicitly pointed out
             struct example {
                 example(const example&);
-                BOOST_DI_INJECT(example, (int)); // ok in c++03
+                __injections_boost_di_inject__(example, (int)); // ok in c++03
             };
 
             Or by adding dummy parameter to the constructor
@@ -378,9 +378,9 @@ The macros listed in the table below may be used to control the behaviour of `Bo
         [
             ```
                                                                                                          .
-            use BOOST_DI_INJECT to explicitly point out the constructor parameters
+            use __injections_boost_di_inject__ to explicitly point out the constructor parameters
                 struct app {
-                    BOOST_DI_INJECT(app, example<int>);
+                    __injections_boost_di_inject__(app, example<int>);
                 };
 
             make example constructor explicit if possible
@@ -431,7 +431,7 @@ The macros listed in the table below may be used to control the behaviour of `Bo
     ]
 ]
 
-* `BOOST_DI_INJECT` and default parameters
+* `__injections_boost_di_inject__` and default parameters
 [table
     [[Issue][Solution]]
     [
@@ -439,7 +439,7 @@ The macros listed in the table below may be used to control the behaviour of `Bo
             ```
                                                                       .
             struct example {
-                BOOST_DI_INJECT(explicit example
+                __injections_boost_di_inject__(explicit example
                               , int = 0
                               , double = 0.0);
             };
@@ -448,7 +448,7 @@ The macros listed in the table below may be used to control the behaviour of `Bo
         [
             ```
                                                                                                          .
-            BOOST_DI_INJECT creates a function instead of direct traits
+            __injections_boost_di_inject__ creates a function instead of direct traits
                 struct example {
                     static void boost_di_injector__(int = 0, double = 0.0);
                     explicit example(int = 0, double = 0.0);
@@ -460,7 +460,7 @@ The macros listed in the table below may be used to control the behaviour of `Bo
     ]
 ]
 
-* `BOOST_DI_INJECT` with inheritance
+* `__injections_boost_di_inject__` with inheritance
 [table
     [[Issue][Solution]]
     [
@@ -468,7 +468,7 @@ The macros listed in the table below may be used to control the behaviour of `Bo
             ```
                                                                       .
             struct a {
-                BOOST_DI_INJECT(a, int, double);
+                __injections_boost_di_inject__(a, int, double);
             };
 
             struct b : a { };
@@ -480,14 +480,14 @@ The macros listed in the table below may be used to control the behaviour of `Bo
         [
             ```
                                                                                                          .
-            use BOOST_DI_INJECT or BOOST_DI_INJECT_TRAITS to explicitly point that constructor is empty
+            use __injections_boost_di_inject__ or __injections_boost_di_inject_traits__ to explicitly point that constructor is empty
 
             struct a {
-                BOOST_DI_INJECT(a, int, double);
+                __injections_boost_di_inject__(a, int, double);
             };
 
             struct b : a {
-                BOOST_DI_INJECT_TRAITS(); // or BOOST_DI_INJECT(b);
+                __injections_boost_di_inject_traits__(); // or __injections_boost_di_inject__(b);
             };
 
             std::make_unique<b>();
@@ -509,9 +509,9 @@ The macros listed in the table below may be used to control the behaviour of `Bo
             // parameters evaluation order is not specified
             struct c { c(aux::shared_ptr<a>, aux::shared_ptr<b>); };
 
-            di::make_injector(
-                bind<int>::when<call_stack<a>>::to(42)
-              , shared<a>
+            di::__injectors_make_injector__(
+                di::__bindings_bind__<int>::when<call_stack<a>>::to(42)
+              , di::__bindings_scope_shared__<a>
             );
             ```
         ]
