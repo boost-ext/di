@@ -11,6 +11,7 @@
 
 [section Automatic Mocks Injector]
 
+[heading Description]
 `C++11` header only library providing following functionality:
 
 * Automatically create required mocks
@@ -18,7 +19,7 @@
 * Automatically register for required destructor's in case of smart pointers (supports testing of unique_ptr)
 * Uses [@https://github.com/dascandy/hippomocks HippoMocks] as Mocking library
 
-Example
+[heading Example]
 ```
 #include <mocks_injector.hpp>
 
