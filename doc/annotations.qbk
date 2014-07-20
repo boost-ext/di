@@ -121,7 +121,7 @@ It doesn't has to be the case when __injections_ctor_traits__ are used.
     assert(2 == example_.i2);
 
 [heading More Examples]
-    ``__examples_binding__``
+    ``__more_examples_named__`` | ``__examples_binding__``
 
 [heading Tests]
     ``[@test/ut/named_ut.cpp]``

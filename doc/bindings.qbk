@@ -166,7 +166,7 @@ Allows to bind multiple interfaces to one instance.
 [tip The same result might be achieved with `di::bind<implementation1>()`, but list of interfaces will be deduced instead.]
 
 [heading More Examples]
-    ``__examples_binding__``
+    ``__more_examples_multiple_interfaces__`` | ``__examples_binding__``
 
 [heading Tests]
     ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``

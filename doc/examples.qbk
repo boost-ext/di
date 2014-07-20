@@ -154,18 +154,7 @@ Python script based on lib clang generating constructor traits. Useful for third
 
 [endsect]
 
-[section More Examples]
-
-[table
-    [[Description][Example]]
-    [[Named Parameters][[@example/cpp_11/named.cpp]]]
-    [[Provider][[@example/cpp_11/provider.cpp]]]
-    [[Externals][[@example/cpp_11/externals.cpp]]]
-    [[Multiple Interfaces][[@example/cpp_11/multiple_interfaces.cpp]]]
-    [[Text Visitor][[@example/cpp_11/text_visitor.cpp]]]
-]
-
-[endsect]
+[include more_examples.qbk]
 
 [endsect]
 

@@ -116,6 +116,9 @@ They create a new value whenever get() method is invoked.
         }
     };
 
+[heading More Examples]
+    ``__more_examples_provider__``
+
 [heading Tests]
     ``[@test/ut/provider_ut.cpp]``
 

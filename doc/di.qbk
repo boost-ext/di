@@ -89,6 +89,13 @@
 [def __examples_extensions__                            [link di.examples.extensions Extensions]]
 [def __examples_testing_automatic_mocks_injector__      [link di.examples.testing.automatic_mocks_injector Automatic Mocks Injector]]
 
+[def __more_examples__                                  [link di.examples.more_examples More Examples]]
+[def __more_examples_named__                            [link di.examples.more_examples.named_parameters Named Parameters]]
+[def __more_examples_provider__                         [link di.examples.more_examples.provider Provider]]
+[def __more_examples_externals__                        [link di.examples.more_examples.externals Externals]]
+[def __more_examples_multiple_interfaces__              [link di.examples.more_examples.multiple_interfaces Multiple Interfaces]]
+[def __more_examples_text_visitor__                     [link di.examples.more_examples.text_visitor Text Visitor]]
+
 [include introduction.qbk]
 [include motivation.qbk]
 [include overview.qbk]

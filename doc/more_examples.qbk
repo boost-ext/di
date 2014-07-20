@@ -1,0 +1,54 @@
+[/
+ /
+ / Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+ /
+ / Distributed under the Boost Software License, Version 1.0.
+ / (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /
+ /]
+
+[section More Examples]
+
+* __more_examples_named__
+* __more_examples_provider__
+* __more_examples_externals__
+* __more_examples_multiple_interfaces__
+* __more_examples_text_visitor__
+
+[h6 Named Parameters]
+[import ../example/cpp_11/named.cpp]
+[named_cpp_11]
+[table
+    [[Full code example: [@example/cpp_11/named.cpp]]]
+]
+
+[h6 Provider]
+[import ../example/cpp_11/provider.cpp]
+[provider_cpp_11]
+[table
+    [[Full code example: [@example/cpp_11/provider.cpp]]]
+]
+
+[h6 Externals]
+[import ../example/cpp_11/externals.cpp]
+[externals_cpp_11]
+[table
+    [[Full code example: [@example/cpp_11/externals.cpp]]]
+]
+
+[h6 Multiple Interfaces]
+[import ../example/cpp_11/multiple_interfaces.cpp]
+[multiple_interfaces_cpp_11]
+[table
+    [[Full code example: [@example/cpp_11/multiple_interfaces.cpp]]]
+]
+
+[h6 Text Visitor]
+[import ../example/cpp_11/text_visitor.cpp]
+[text_visitor_cpp_11]
+[table
+    [[Full code example: [@example/cpp_11/text_visitor.cpp]]]
+]
+
+[endsect]
+

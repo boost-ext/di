@@ -304,6 +304,9 @@ will be binded using different scope as well then this binding won't be taken in
     assert(42 == injector.create<int>());
     assert(example_ == injector.create<shared_ptr<example>>());
     
+[heading More Examples]
+    ``__more_examples_externals__``
+
 [heading Tests]
     ``[@test/ut/scopes/external_ut.cpp]`` | ``[@test/ut/wrappers/value_ut.cpp]`` | ``[@test/ut/wrappers/reference_ut.cpp]`` | ``[@test/ut/wrappers/shared_ut.cpp]``
 
