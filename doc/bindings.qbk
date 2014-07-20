@@ -300,7 +300,7 @@ Allows to bind compile time string value.
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`T`][`mpl::string` Model type][Value to be binded to `std::string` parameters]]
+    [[`T`][`mpl::string` type][Value to be binded to `std::string` parameters]]
 ]
 
 [heading Expression Semantics]
