@@ -14,10 +14,10 @@
 namespace di = boost::di;
 
 int main() {
-    /*<<injector configuration>>*/
-    auto injector = di::make_injector();
+    auto injector = di::make_injector(
+        di::bind<ilogger, logger>()
+    );
 
-    /*<<composition root>>*/
     injector.create<app>().run();
 
     return 0;

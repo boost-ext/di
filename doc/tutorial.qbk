@@ -10,7 +10,7 @@
 [section Tutorial]
 
 For the purposes of this tutorial we are going to implement simple application which will print
-log "hello_world" using our logger implementation from introduction when first command line argument is not equal 0.
+log "hello_world" using our logger implementation from [link di.motivation Motivation] when first command line argument is not equal 0.
 
 [table
     [[Logger/Fake logger implementation: [@example/cpp_14/tutorial/ilogger.hpp] | [@example/cpp_14/tutorial/logger.hpp] | [@example/cpp_14/tutorial/fake_logger.hpp]]]
@@ -19,51 +19,63 @@ log "hello_world" using our logger implementation from introduction when first c
 Having logger in place let's write basic implementation. Let's assume we have test written already, so let's
 focus on the `app` then.
 
-So, the first step would be to define `app` class.
-There is nothing special about it which is required by Boost.DI, no macros, no registration, nothing.
+So, the first step would be to define `app` class. Let's make it as simple as possible then.
+There is nothing special about it which is required by `Boost.DI`, no macros, no registration, nothing.
+
 
 [import ../example/cpp_14/tutorial/tutorial1/app.hpp]
 [tutorial1_app]
 
-After this is completed we would like to create our `app`. This step will be different than usual, because
+After this is completed we would like to create and run our `app`. This step will be different than usual, because
 we are going to use dependency injection framework to create our dependencies for us.
-We are going to apply composition root in our example application and start the app class.
+We are going to apply composition root in our example application and run the app class.
 
-Remember to include DI header and alias the `di` namespace.
+Remember to include `Boost.DI` header and alias the `di` namespace for convenience.
 ```
 #include <boost/di.hpp>
 
 namespace di = boost::di;
 ```
 
-[import ../example/cpp_14/tutorial/tutorial1/main.cpp]
-[tutorial1_main]
+```
+#include <boost/di.hpp>
+
+namespace di = boost::di;
+
+int main() {
+    auto injector = di::__injectors_make_injector__(); // injector configuration
+
+    injector.create<app>().run(); // composition root
+
+    return 0;
+}
+```
 
 Thats all, our application should compile and don't print anything.
-'flag' should be false and 'text' should be an empty string.
+'value' should be false and 'text' should be an empty string.
 
 [table
-    [[Full code example: [@example/cpp_14/tutorial/tutorial1.cpp]]]
+    [[Full code example: [@example/cpp_14/tutorial/tutorial1/app.hpp] | [@example/cpp_14/tutorial/tutorial1/main.cpp] | [@example/cpp_14/tutorial/tutorial1/app_ut.cpp] ]]
 ]
 
 So far everything seems to be really easy, so the next step will be
 to configure our dependencies, meaning what exactly will be passed
-to the application. We will do it using make_injector functionality. Let's say
-we would like to print "hello world" if first command line argument
+to the application. We will do it using __injectors_make_injector__ functionality.
+To remind our requirements - we would like to print "hello world" if first command line argument
 is not equal 0.
 
 First step will be to configure the text and value. To demonstrate different
-between static(compile time) values and externals(given by client) we set
-the value to 1 for now:
+between static (compile time - __bindings_bind_bind_int__) values and externals (given by user - __bindings_bind__) we set
+the value to `1` for now:
 
 ```
-auto injector = di::make_injector(
-    di::bind_int<1>() // static value
-  , di::bind<std::string>::to("hello world") // dynamic value
+auto injector = di::__injectors_make_injector__(
+    di::__bindings_bind_bind_int__<1>() // static value
+  , di::__bindings_bind__<std::string>::to("hello world") // dynamic value
 );
 ```
 [table
-    [[Full code example: [@example/cpp_14/tutorial/tutorial2.cpp]]]
+    [[Full code example: [@example/cpp_14/tutorial/tutorial2/app.hpp] | [@example/cpp_14/tutorial/tutorial2/main.cpp] | [@example/cpp_14/tutorial/tutorial2/app_ut.cpp] ]]
 ]
 
 So, right now we have injector configured and the output of our example application
@@ -74,132 +86,120 @@ line argument is not equal 0.
 
 ```
 int main(int argc, char** argv) {
-    auto injector = di::make_injector(
-        di::bind<int>::to(argc > 1 ? std::atoi(argv[1]) : 0)
-      , di::bind<std::string>::to("hello world")
+    auto injector = di::__injectors_make_injector__(
+        di::__bindings_bind__<int>::to(argc > 1 ? std::atoi(argv[1]) : 0)
+      , di::__bindings_bind__<std::string>::to("hello world")
     );
     injector.create<app>().start();
 }
 ```
 [table
-    [[Full code example: [@example/cpp_14/tutorial/tutorial3.cpp]]]
+    [[Full code example: [@example/cpp_14/tutorial/tutorial3/app.hpp] | [@example/cpp_14/tutorial/tutorial3/main.cpp] | [@example/cpp_14/tutorial/tutorial3/app_ut.cpp] ]]
 ]
 
 Great! Seems like our example application is working the way was required.
 
-But well, we aren't happy with that example, are we? Since we haven't written the test for it and we
-would like to do it right now we have just noticed that is hard to mock std::cout, how are we going
-to test it then? Hmm, maybe helper class would be useful? Let's do it then.
+But well, we aren't happy with that example, are we? We haven't used our `logger` implementation yet and because of that tests are hard to write.
+So, let's try again with our `logger` instead.
 
-```
-class iprinter
-{
-public:
-    virtual ~iprinter() { }
-    virtual void print(const std::string&) = 0;
-};
+[import ../example/cpp_14/tutorial/ilogger.hpp]
+[ilogger]
 
-class printer : public iprinter
-{
-public:
-    void print(const std::string& s) override {
-        std::cout << s << std::endl;
-    }
-};
-```
+[import ../example/cpp_14/tutorial/logger.hpp]
+[logger]
 
-Having a printer interface and implementation, we just have to add it to our example application:
+Having a `logger` implementation, we just have to add it to our example application:
 
 ```
 class app
 {
 public:
-    app(int value, const std::string& text, std::unique_ptr<printer> printer)
-        : value_(value), text_(text), printer_(std::move(printer))
+    app(int value, const std::string& text, std::unique_ptr<logger> logger)
+        : value_(value), text_(text), logger_(std::move(logger))
     { }
 
-    void start() {
-        if (value_)
-            printer_->print(text_);
+    void run() {
+        if (value_) {
+            logger_->log(text_);
+        }
     }
 
 private:
     int value_ = 0;
     std::string text;
-    std::unique_ptr<printer> printer_;
+    std::unique_ptr<logger> logger_;
 };
 ```
 
-So what we have to do in order to printer to be created by dependency injection framework.
-Absolutely nothing actually! DI will find out that printer is needed and create appropriate
+So what we have to do in order to `logger` to be created by `Boost.DI`.
+Absolutely nothing actually! `Boost.DI` will find out that `logger` is needed and create appropriate
 instance. So our main function remains the same. Isn't that great?
 
 But wait a minute, shouldn't we pass interface instead? Of course we should, we wanted to
-write a test, so we have to be able to fake printer behavior. Let's do some changes then.
+easy test it, so we have to be able to fake `logger` behavior. Let's do some changes then.
 
 ```
-app(int value, const std::string& text, std::unique_ptr<iprinter> printer)
+app(int value, const std::string& text, std::unique_ptr<ilogger> logger)
 ...
-std::unique_ptr<iprinter> printer_;
+std::unique_ptr<ilogger> logger_;
 ```
 
-Hmm, right now our example project isn't compiling, because iprinter can't be instantiated due
-to pure virtual method print not being implemented. Well, we have to configure DI the way iprinter
-will be actually a printer. There is nothing easier, we just have to bind iprinter interface to printer implementation.
+Hmm, right now our example project isn't compiling, because `ilogger` can't be instantiated due
+to pure virtual method `log` not being implemented. Well, we have to configure `Boost.DI` the way `ilogger`
+will be actually instantiated by `logger`. There is nothing easier, we just have to bind `ilogger` interface to `logger` implementation.
 
 ```
-    auto injector = di::make_injector(
-        di::bind<iprinter, printer>()
-      , di::bind<int>::to(argc > 1 ? std::atoi(argv[1]) : 0)
-      , di::bind<std::string>::to("hello world")
+    auto injector = di::__injectors_make_injector__(
+        di::__bindings_bind__<iprinter, printer>()
+      , di::__bindings_bind__<int>::to(argc > 1 ? std::atoi(argv[1]) : 0)
+      , di::__bindings_bind__<std::string>::to("hello world")
     );
     injector.create<std::unique_ptr<app>>()->start(); // unique_ptr is not copyable
 ```
 [table
-    [[Full code example: [@example/cpp_14/tutorial/tutorial4.cpp]]]
+    [[Full code example: [@example/cpp_14/tutorial/tutorial4/app.hpp] | [@example/cpp_14/tutorial/tutorial4/main.cpp] | [@example/cpp_14/tutorial/tutorial4/app_ut.cpp] ]]
 ]
 
 Yay, everything is working again. But oh, we wanted to use mock framework for tests, but we can't to do it,
-due to unique ptr stilling our pointer :/ Well, let's say we will switch to shared_ptr instead.
+due to unique ptr stilling our pointer :/ Well, let's say we will switch to `shared_ptr` instead for now and later in this tutorial we will solve this issue in a better way - without limiting ourselves.
 Our application code will looks like that:
 
 ```
-app(int value, const std::string& text, std::shared_ptr<iprinter> printer)
-    : value_(value), text_(text), printer_(printer)
+app(int value, const std::string& text, std::shared_ptr<ilogger> logger)
+    : value_(value), text_(text), logger_(logger)
 { }
 ...
-std::shared_ptr<iprinter> printer_;
+std::shared_ptr<ilogger> logger_;
 ```
 
-Again, we don't have to change anything with the DI configuration, it will be figured out automatically for us.
+Again, we don't have to change anything with the `Boost.DI` configuration, it will be figured out automatically for us.
 
-[note DI will by default deduce scope based on parameter type, therefore shared_ptr will be shared between many instances]
-[note If we pass raw pointer anywhere it always be our responsibility to delete it, DI will NEVER do it for us]
+[note `Boost.DI` will by default deduce scope based on parameter type, therefore `shared_ptr` will be shared between many instances - see __scopes_deduce__.]
+[warning If we pass raw pointer anywhere it always be our responsibility to delete it, `Boost.DI` will NEVER do it for us!]
 
-Finally we were able to easy write unit tests for our example application code :)
+Finally we were able to test our example application easier :)
 
 Yea, but this example is really easy, writing whole configuration within the main function is a bit smelly, what to do?
-Well, we can define module for our configuration. Module is a class with `configure` method returning dependencies configuration.
+Well, we can define module for our configuration. Module is a class with `configure` method returning dependencies configuration - see __modules__ for further information.
 So, let's do it.
 
 ```
-class module
-{
+class module {
 public:
-    explicit module(int i)
-        : i_(i)
+    explicit module(int value)
+        : value_(value)
     { }
 
     auto configure() const {
-        return di::make_injector(
-            di::deduce<printer>() // we can deduce the interface as well!
-          , di::bind<int>::to(i_)
-          , di::bind<std::string>::to("hello world")
+        return di::__injectors_make_injector__(
+            di::__bindings_deduce__<ilogger>() // we can deduce the interface as well!
+          , di::__bindings_bind__<int>::to(value_)
+          , di::__bindings_bind__<std::string>::to("hello world")
         );
     }
 
 private:
-    int i_ = 0;
+    int value_ = 0;
 };
 ```
 
@@ -207,87 +207,112 @@ and the main function
 
 ```
 int main(int argc, char** argv) {
-    auto injector = di::make_injector(module(argc > 1 ? std::atoi(argv[1]) : 0));
-    injector.create<app>().start();
+    auto injector = di::__injectors_make_injector__(module(argc > 1 ? std::atoi(argv[1]) : 0));
+    injector.create<app>().run();
 
     return 0;
 }
 
 ```
 
-But in our company we use custom string, but we still want to support std::string as well, how to do that?
+But in our company we have our `string` implementation, but we still want to support `std::string` as well, how to achieve that?
+For purpose of this tutorial let's assume our `custom_string` converts to `std::string`.
 Well, we will have to add second constructor accepting custom string, but then we have 2 constructors
-taking 2 parameters, that will be ambiguous, how DI will be able to figure out which one to use? Short answer: it won't, we will have
-to point which constructor we want to be used by DI. We do it using BOOST_DI_INJECT macro. Let's do it!
+taking 3 parameters, that will be ambiguous, how `Boost.DI` will be able to figure out which one to use? Short answer: it won't, we will have
+to point which constructor we want to be used by `Boost.DI`. We do it using __injections_boost_di_inject__ macro. Let's do it!
 
 ```
-class app
-{
+class app {
 public:
-    BOOST_DI_INJECT(app, int value, const std::string& text)
-        : value_(value), text_(text)
+    __injections_boost_di_inject__(app, int value, const std::string& text, std::shared_ptr<ilogger> logger) // inform Boost.DI to inject dependencies using this constructor
+        : value_(value), text_(text), logger_(logger)
     { }
 
-    app(int value, const our_string& text)
-        : value_(value), text_(text)
+    app(int value, const custom_string& text, std::shared_ptr<ilogger> logger)
+        : value_(value), text_(text), logger_(logger)
     { }
 
-    void start() {
-        if (value_)
-            std::cout << print(text_) << std::endl;
+    void run() {
+        if (value_) {
+            logger_->log(text_);
+        }
     }
 
 private:
     int value_ = 0;
-    variant<std::string, our_string> text_;
+    std::string text_;
 };
 ```
 
-[note We don't need to specify BOOST_DI_INJECT if there is a constructor with more parameters, DI will always use the longest one]
+[note We don't need to specify __injections_boost_di_inject__ if there is a constructor with more parameters, `Boost.DI` will always use the constructor with longest parameter list.]
 
 Hmm, so what if I have two command line parameters passed by user, how to distinguish them?
 We have few options in order to do so, some of them are more intrusive and some are less. First
-we can define different types for both of them. We can use named parameters like that:
+we can define different types for both of them. We can use __annotations_named__ parameters provided by `Boost.DI`.
 
 ```
     class first { };
     class second { };
 ...
-    app(named<int, first> value1, named<int, second> value2, const std::string& text)
+    app(__annotations_named__<int, first> value1, __annotations_named__<int, second> value2, const std::string& text, std::shared_ptr<ilogger> logger)
 ```
 
-[note named parameters will convert to the type there are named from, meaning - you can write: `int value = named<int, first>(42)`]
+[note __annotations_named__ parameters will convert to the type there are named from, meaning - you can write: `int value = named<int, first>(42)`.]
 
-The last option is less intrusive and uses traits to achieve named parameters.
+Or in less intrusive way - when we can't change constructor signature for example - by using __injections_ctor_traits__ to achieve __annotations_named__ parameters.
 
 ```
-    app(int value1, int value2, const std::string& text)
+    app(int value1, int value2, const std::string& text, std::shared_ptr<ilogger> logger)
+```
 
-...
-
+```
     namespace boost {
     namespace di {
 
     template<>
     struct ctor_traits<app>
     {
-        BOOST_DI_INJECT_TRAITS(named<int, first>, named<int, second>, const std::string&);
+        __injections_boost_di_inject_traits__(__annotations_named__<int, first>, __annotations_named__<int, second>, const std::string&, std::shared_ptr<ilogger> logger);
     };
 
     }} //boost::di
 ```
 
-[tip BOOST_DI_INJECT_TRAITS might be defined within a class as well]
+[tip __injections_boost_di_inject_traits__ might be defined within a class as well.]
+
+[table
+    [[Full code example: [@example/cpp_14/tutorial/tutorial5/app.hpp] | [@example/cpp_14/tutorial/tutorial5/main.cpp] | [@example/cpp_14/tutorial/tutorial5/app_ut.cpp] ]]
+]
 
 That's pretty much it. Hope this tutorial helped you a bit to understand
 basics concept of dependency injection framework and that creation dependencies won't be
 a problem for you anymore.
 
-Right now you can move on to more in depth stuff - concepts - or just straight away to examples.
+But oh, almost forgotten - I've promised to show how to handle `std::unique_ptr` issue with testing in a better way. So let's go back to our original example.
+
+```
+    app(int value, const std::string& text, std::unique_ptr<ilogger> logger);
+```
+
+To handle this issue properly we are going to use __examples_testing_automatic_mocks_injector__, which not only allow us to mock `unique_ptr` instances, but also
+will generate requires mocks for us! So, we don't have to change the implementation and we don't need `fake_logger` at all. Example test will looks like that.
+
+```
+    //1. create mocks injector
+    auto mi = di::make_mocks_injector();
+
+    //2. set up expectations
+    EXPECT_CALL(mi, ilogger::log).With("hello world");
+
+    //3. create example class and run it
+    mi.create<std::unique_ptr<example>>()->run();
+```
 
 [table
-    [[Full code example: [@example/cpp_14/tutorial/tutorial5.cpp]]]
+    [[Full code example: [@example/cpp_14/tutorial/tutorial6/app.hpp] | [@example/cpp_14/tutorial/tutorial6/main.cpp] | [@example/cpp_14/tutorial/tutorial6/app_ut.cpp] ]]
 ]
+
+This time is really the end, so right now you can move on to more in depth stuff - __concepts__ - or just straight away to __examples__ or if you interest in how it's made to __rationale__.
 
 [endsect]
 
