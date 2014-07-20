@@ -8,6 +8,7 @@
 //[deduce_scope_cpp_11
 //````C++11```
 //<-
+#include <cassert>
 #include <memory>
 #include <boost/shared_ptr.hpp>
 //->
@@ -15,56 +16,60 @@
 
 namespace di = boost::di;
 
-struct i { virtual ~i() { } virtual void dummy() = 0; };
-struct impl : i { void dummy() override { } };
+//<-
+struct interface { virtual ~interface() { } virtual void dummy() = 0; };
+struct implementation : interface { void dummy() override { } };
+//->
 
-struct c2 {
-    c2(std::shared_ptr<i> spi /*shared*/
-     , const boost::shared_ptr<i>& spi_ /*shared*/)
+struct dependency1 {
+    dependency1(std::shared_ptr<interface> spi /*shared*/, const boost::shared_ptr<interface>& spi_ /*shared*/)
         : spi_(spi), spi__(spi_)
     {
         assert(spi.get() == spi_.get());
     }
 
-    std::shared_ptr<i> spi_;
-    boost::shared_ptr<i> spi__;
+    std::shared_ptr<interface> spi_;
+    boost::shared_ptr<interface> spi__;
 };
 
-struct c3 {
-    c3(std::shared_ptr<i> spi/*shared*/
-     , int i/*unique*/)
+struct dependency2 {
+    dependency2(std::shared_ptr<interface> spi/*shared*/, int i/*unique*/)
         : spi_(spi)
     {
         assert(i == 0);
     }
 
-    std::shared_ptr<i> spi_;
+    std::shared_ptr<interface> spi_;
 };
 
-struct c4 {
-    c4(std::unique_ptr<c2> c2_ /*unique*/
-     , const c3& c3_ /*unique temporary*/)
+struct example {
+    example(std::unique_ptr<dependency1> dependency1_ /*unique*/
+     , const dependency2& dependency2_ /*unique temporary*/)
     {
-        assert(c3_.spi_.get() == c2_->spi_.get());
-        assert(c3_.spi_.get() == c2_->spi__.get());
+        assert(dependency2_.spi_.get() == dependency1_->spi_.get());
+        assert(dependency2_.spi_.get() == dependency1_->spi__.get());
     }
 };
 
 int main() {
     {
+        /*<<create injector with deduced `interface`>>*/
         auto injector = di::make_injector(
-            di::deduce<impl>()
+            di::deduce<implementation>()
         );
 
-        injector.create<c4>();
+        /*<<create `example`>>*/
+        injector.create<example>();
     }
 
     {
+        /*<<create injector with deduced `interface`>>*/
         using injector = di::injector<
-            impl
+            implementation
         >;
 
-        injector().create<c4>();
+        /*<<create `example`>>*/
+        injector().create<example>();
     }
 
     return 0;

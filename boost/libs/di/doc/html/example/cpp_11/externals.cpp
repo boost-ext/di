@@ -15,34 +15,34 @@
 
 namespace di = boost::di;
 
-namespace {
+//<-
+struct interface { virtual ~interface() { } };
+struct implementation1 : interface { };
+struct implementation2 : interface { };
+//->
 
-struct i { virtual ~i() { } };
-struct impl0 : i { };
-struct impl1 : i { };
-struct c
-{
-    c(std::shared_ptr<i> p, int i)
-    {
-        assert(dynamic_cast<impl1*>(p.get()));
+struct example {
+    example(std::shared_ptr<interface> p, int i) {
+        assert(dynamic_cast<implementation2*>(p.get()));
         assert(i == 42);
     }
 };
 
-} // namespace
-
 int main() {
-    auto module = di::make_injector(
-        di::bind<i, impl0>()
+    /*<<create injector with `interface` binding to `implementation1`>>*/
+    auto config = di::make_injector(
+        di::bind<interface, implementation1>()
     );
 
+    /*<<create injector with external `interface` binding to `implementation2`>>*/
     auto injector = di::make_injector(
-        module
+        config
       , di::bind<int>::to(42)
-      , di::bind<i>::to(std::make_shared<impl1>()) // external has priority
+      , di::bind<interface>::to(std::make_shared<implementation2>()) // external has priority
     );
 
-    injector.create<c>();
+    /*<<create `example`>>*/
+    injector.create<example>();
 }
 
 //]

@@ -11,33 +11,35 @@
 #include <memory>
 #include <boost/typeof/typeof.hpp>
 //->
-
 #include <boost/di.hpp>
 
 namespace di = boost::di;
 
-struct i { virtual ~i() { } };
-struct impl : i { };
+struct interface { virtual ~interface() { } };
+struct implementation : interface { };
 
 struct app {
-    app(std::auto_ptr<i> ap, int i) {
-        assert(dynamic_cast<impl*>(ap.get()));
+    app(std::auto_ptr<interface> ap, int i) {
+        assert(dynamic_cast<implementation*>(ap.get()));
         assert(i == 42);
     }
 };
 
 class module1 {
+    /*<<module declaration>>*/
     typedef di::injector<
-        di::bind<i, impl>
+        di::bind<interface, implementation>
     > injector_t;
 
 public:
+    /*<<module configuration>>*/
     injector_t configure() const {
         return injector_t();
     }
 };
 
 class module2 {
+    /*<<module declaration with lazy binding>>*/
     typedef di::injector<
         BOOST_TYPEOF(di::bind<int>::to(int()))
     > injector_t;
@@ -47,6 +49,7 @@ public:
         : i_(i)
     { }
 
+    /*<<module configuration>>*/
     injector_t configure() const {
         return injector_t(
             di::bind<int>::to(i_)
@@ -60,16 +63,16 @@ private:
 int main() {
     const int i = 42;
 
+    /*<<create injector and pass `module1`, `module2`>>*/
     BOOST_AUTO(injector, (
         di::make_injector(module1(), module2(i))
     ));
 
+    /*<<create `app`>>*/
     injector.create<app>();
 
     return 0;
 }
 
-//`[table
-//`[[Full code example: [@example/cpp_03/modules.cpp modules.cpp]]]]
 //]
 

@@ -51,7 +51,7 @@ di/examples/deduce_scope.html
 di/examples/custom_scope.html
 di/examples/custom_allocator.html
 di/examples/custom_policy.html
-di/examples/c_generation_visitor.html
+di/examples/dynamic_binding.html
 di/examples/uml_visitor.html
 di/examples/integration_with_boost_libraries.html
 di/examples/integration_with_boost_libraries/boost_meta_state_machine.html
