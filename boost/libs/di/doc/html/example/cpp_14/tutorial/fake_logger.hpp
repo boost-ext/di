@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_EXAMPLE_CPP_14_TUTORIAL_FAKE_LOGGER_HPP
 #define BOOST_DI_EXAMPLE_CPP_14_TUTORIAL_FAKE_LOGGER_HPP
 
+//[tutorial1_app]
 #include <vector>
 #include "ilogger.hpp"
 

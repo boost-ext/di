@@ -1,0 +1,447 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>session scope</title>
+<link rel="stylesheet" href="../../../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.0">
+<link rel="home" href="../../../index.html" title="Boost.DI (Dependency Injection) 1.0">
+<link rel="up" href="../scopes.html" title="Scopes">
+<link rel="prev" href="shared_scope.html" title="shared scope">
+<link rel="next" href="../bindings.html" title="Bindings">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="shared_scope.html"><img src="../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../scopes.html"><img src="../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../bindings.html"><img src="../../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="di.concepts.scopes.session_scope"></a><a class="link" href="session_scope.html" title="session scope">session scope</a>
+</h4></div></div></div>
+<h6>
+<a name="di.concepts.scopes.session_scope.h0"></a>
+          <span class="phrase"><a name="di.concepts.scopes.session_scope.description"></a></span><a class="link" href="session_scope.html#di.concepts.scopes.session_scope.description">Description</a>
+        </h6>
+<p>
+          Scope representing shared value, meaning passed value will be shared between
+          all given instances and will be empty if it won't be in scope. Scope is
+          activated by call of <code class="computeroutput"><span class="identifier">call</span></code>
+          method with <code class="computeroutput"><span class="identifier">session_entry</span></code>
+          parameter and deactivated by call of <code class="computeroutput"><span class="identifier">call</span></code>
+          method with <code class="computeroutput"><span class="identifier">session_exit</span></code>
+          parameter;
+        </p>
+<h6>
+<a name="di.concepts.scopes.session_scope.h1"></a>
+          <span class="phrase"><a name="di.concepts.scopes.session_scope.synopsis"></a></span><a class="link" href="session_scope.html#di.concepts.scopes.session_scope.synopsis">Synopsis</a>
+        </h6>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">TWrapper</span> <span class="special">=</span> <span class="identifier">wrappers</span><span class="special">::</span><span class="identifier">shared</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">session</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">int_</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;</span> <span class="identifier">priority</span><span class="special">;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TExpected</span><span class="special">&gt;</span>
+    <span class="keyword">class</span> <span class="identifier">scope</span> <span class="special">{</span>
+    <span class="keyword">public</span><span class="special">:</span>
+        <span class="identifier">TWrapper</span><span class="special">&lt;</span><span class="identifier">TExpected</span><span class="special">&gt;</span> <span class="identifier">create</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">TExpected</span><span class="special">*()&gt;&amp;);</span>
+        <span class="keyword">void</span> <span class="identifier">call</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">session_entry</span><span class="special">&amp;);</span>
+        <span class="keyword">void</span> <span class="identifier">call</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">session_exit</span><span class="special">&amp;);</span>
+    <span class="special">};</span>
+<span class="special">};</span>
+</pre>
+<div class="table">
+<a name="di.concepts.scopes.session_scope.parameters"></a><p class="title"><b>Table&#160;15.&#160;Parameters</b></p>
+<div class="table-contents"><table class="table" summary="Parameters">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Parameter
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Requirement
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">TWrapper</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Wrapper Model type
+                  </p>
+                </td>
+<td>
+                  <p>
+                    consist available type conversions
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">TExpected</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    None
+                  </p>
+                </td>
+<td>
+                  <p>
+                    type to be expected by constructor
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">x</span><span class="special">.</span><span class="identifier">create</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">TExpected</span><span class="special">*()&gt;&amp;)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    None
+                  </p>
+                </td>
+<td>
+                  <p>
+                    create wrapped type to be passed to constructor
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">x</span><span class="special">.</span><span class="identifier">call</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">session_entry</span><span class="special">&amp;)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    None
+                  </p>
+                </td>
+<td>
+                  <p>
+                    trigger scope entry
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">x</span><span class="special">.</span><span class="identifier">call</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">session_exit</span><span class="special">&amp;)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    None
+                  </p>
+                </td>
+<td>
+                  <p>
+                    trigger scope exit
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="table">
+<a name="di.concepts.scopes.session_scope.conversions"></a><p class="title"><b>Table&#160;16.&#160;Conversions</b></p>
+<div class="table-contents"><table class="table" summary="Conversions">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Type
+                  </p>
+                </th>
+<th>
+                  <p>
+                    session
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    T
+                  </p>
+                </td>
+<td>
+                  <p>
+                    -
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    T*
+                  </p>
+                </td>
+<td>
+                  <p>
+                    -
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    T&amp;
+                  </p>
+                </td>
+<td>
+                  <p>
+                    -
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    const T&amp;
+                  </p>
+                </td>
+<td>
+                  <p>
+                    -
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    T&amp;&amp;
+                  </p>
+                </td>
+<td>
+                  <p>
+                    -
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    const T*
+                  </p>
+                </td>
+<td>
+                  <p>
+                    -
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    std::shared_ptr&lt;T&gt;
+                  </p>
+                </td>
+<td>
+                  <p>
+                    X
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    boost::shared_ptr&lt;T&gt;
+                  </p>
+                </td>
+<td>
+                  <p>
+                    X
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    std::unique_ptr&lt;T&gt;
+                  </p>
+                </td>
+<td>
+                  <p>
+                    -
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    std::auto_ptr&lt;T&gt;
+                  </p>
+                </td>
+<td>
+                  <p>
+                    -
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                </td>
+<td>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    temporary const T&amp;
+                  </p>
+                </td>
+<td>
+                  <p>
+                    -
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    named&lt;T, name&gt;
+                  </p>
+                </td>
+<td>
+                  <p>
+                    X with T=shared_ptr&lt;T&gt;
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><h6>
+<a name="di.concepts.scopes.session_scope.h2"></a>
+          <span class="phrase"><a name="di.concepts.scopes.session_scope.header"></a></span><a class="link" href="session_scope.html#di.concepts.scopes.session_scope.header">Header</a>
+        </h6>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<h6>
+<a name="di.concepts.scopes.session_scope.h3"></a>
+          <span class="phrase"><a name="di.concepts.scopes.session_scope.namespace"></a></span><a class="link" href="session_scope.html#di.concepts.scopes.session_scope.namespace">Namespace</a>
+        </h6>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">scopes</span>
+</pre>
+<h6>
+<a name="di.concepts.scopes.session_scope.h4"></a>
+          <span class="phrase"><a name="di.concepts.scopes.session_scope.examples"></a></span><a class="link" href="session_scope.html#di.concepts.scopes.session_scope.examples">Examples</a>
+        </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Binding
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">session</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;&gt;()</span></pre>
+                </td>
+<td>
+                  <p>
+                    bind <code class="computeroutput"><span class="identifier">interface</span></code>
+                    to <code class="computeroutput"><span class="identifier">implementation</span></code>
+                    in session scope
+                  </p>
+                </td>
+</tr></tbody>
+</table></div>
+<pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+    <span class="identifier">shared</span><span class="special">&lt;</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;&gt;()</span>
+<span class="special">);</span>
+
+<span class="identifier">assert</span><span class="special">(!</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;&gt;())</span>
+
+<span class="identifier">injector</span><span class="special">.</span><span class="identifier">call</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">session_entry</span><span class="special">());</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;&gt;())</span>
+
+<span class="identifier">injector</span><span class="special">.</span><span class="identifier">call</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">session_exit</span><span class="special">());</span>
+<span class="identifier">assert</span><span class="special">(!</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;&gt;())</span>
+</pre>
+<h6>
+<a name="di.concepts.scopes.session_scope.h5"></a>
+          <span class="phrase"><a name="di.concepts.scopes.session_scope.tests"></a></span><a class="link" href="session_scope.html#di.concepts.scopes.session_scope.tests">Tests</a>
+        </h6>
+<pre class="programlisting"><a href="../../../test/ut/scopes/session_ut.cpp" target="_top">test/ut/scopes/session_ut.cpp</a> <span class="special">|</span> <a href="../../../test/ut/wrappers/shared_ut.cpp" target="_top">test/ut/wrappers/shared_ut.cpp</a>
+</pre>
+<h6>
+<a name="di.concepts.scopes.session_scope.h6"></a>
+          <span class="phrase"><a name="di.concepts.scopes.session_scope.see_also"></a></span><a class="link" href="session_scope.html#di.concepts.scopes.session_scope.see_also">See
+          Also</a>
+        </h6>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+              <a class="link" href="../scopes.html" title="Scopes">Scopes</a>
+            </li>
+<li class="listitem">
+              <a class="link" href="deduce.html" title="deduce scope (default)">deduce scope</a>
+            </li>
+<li class="listitem">
+              <a class="link" href="../../../">external scope</a>
+            </li>
+<li class="listitem">
+              <a class="link" href="../../../">unique scope</a>
+            </li>
+<li class="listitem">
+              <a class="link" href="../../../">session scope</a>
+            </li>
+</ul></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2014 Krzysztof Jusiak<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="shared_scope.html"><img src="../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../scopes.html"><img src="../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../bindings.html"><img src="../../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -4,19 +4,15 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#include <iostream>
+#include <boost/di.hpp>
 
-//[tutorial1_app]
-//<-
-#ifndef BOOST_DI_EXAMPLE_CPP_14_TUTORIAL_TUTORIAL1_APP_HPP
-#define BOOST_DI_EXAMPLE_CPP_14_TUTORIAL_TUTORIAL1_APP_HPP
-
-#include <memory>
-//->
+namespace di = boost::di;
 
 class app {
 public:
-    app(const std::string& text, int value)
-        : text_(text), value_(value)
+    app(int value, const std::string& text)
+        : value_(value), text_(text)
     { }
 
     void run() {
@@ -26,13 +22,18 @@ public:
     }
 
 private:
-    std::string text_;
     int value_ = 0;
+    std::string text_;
 };
 
-//<-
-#endif
-//->
+int main() {
+    auto injector = di::make_injector(
+        di::bind_int<1>() // static value
+      , di::bind<std::string>::to("hello world") // dynamic value
+    );
 
-//]
+    injector.create<app>().run();
+
+    return 0;
+}
 

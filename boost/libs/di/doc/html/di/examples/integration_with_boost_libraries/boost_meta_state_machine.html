@@ -30,12 +30,26 @@
 <p>
           <a href="http://www.boost.org/doc/libs/1_55_0/libs/msm/doc/HTML/index.html" target="_top">Boost
           Meta State Machine</a> is a library allowing you to easily and quickly
-          define state machines of very high performance. Boost.MSM is a great library,
-          unfortunately <code class="computeroutput"><span class="identifier">Service</span> <span class="identifier">Locator</span></code> pattern is used to accomplish
-          actions/guards execution. Such approach is hard to maintain and test. Would
-          be great to have possibility to implement action/guards without FSM dependency
-          and with proper dependency injection instead. Such functionality might
-          be achieved with Boost.DI and it's presented below.
+          define state machines of very high performance. <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">MSM</span> <span class="identifier">is</span> <span class="identifier">a</span> <span class="identifier">great</span> <span class="identifier">library</span><span class="special">,</span> <span class="identifier">unfortunately</span>
+          </code>Service Locator<code class="computeroutput"> <span class="identifier">pattern</span>
+          <span class="identifier">is</span> <span class="identifier">used</span>
+          <span class="identifier">to</span> <span class="identifier">accomplish</span>
+          <span class="identifier">actions</span><span class="special">/</span><span class="identifier">guards</span> <span class="identifier">execution</span><span class="special">.</span> <span class="identifier">Such</span> <span class="identifier">approach</span> <span class="identifier">is</span>
+          <span class="identifier">hard</span> <span class="identifier">to</span>
+          <span class="identifier">maintain</span> <span class="keyword">and</span>
+          <span class="identifier">test</span><span class="special">.</span>
+          <span class="identifier">Would</span> <span class="identifier">be</span>
+          <span class="identifier">great</span> <span class="identifier">to</span>
+          <span class="identifier">have</span> <span class="identifier">possibility</span>
+          <span class="identifier">to</span> <span class="identifier">implement</span>
+          <span class="identifier">action</span><span class="special">/</span><span class="identifier">guards</span> <span class="identifier">without</span>
+          <span class="identifier">FSM</span> <span class="identifier">dependency</span>
+          <span class="keyword">and</span> <span class="identifier">with</span>
+          <span class="identifier">proper</span> <span class="identifier">dependency</span>
+          <span class="identifier">injection</span> <span class="identifier">instead</span><span class="special">.</span> <span class="identifier">Such</span> <span class="identifier">functionality</span> <span class="identifier">might</span>
+          <span class="identifier">be</span> <span class="identifier">achieved</span>
+          <span class="identifier">with</span> </code>Boost.DI` and it's presented
+          below.
         </p>
 <p>
           In order to support dependency injection, few changes to Boost.MSM were
@@ -50,8 +64,8 @@
             </li>
 </ul></div>
 <p>
-          With that changes in mind Boost.DI could have been used without more changes
-          needed.
+          With that changes in mind <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> could
+          have been used without more changes required.
         </p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
@@ -121,10 +135,11 @@
           Game</a>
         </h5>
 <p>
-          Simple Match-3 game is an example using <code class="computeroutput"><span class="identifier">Boost</span>
+          Simple Match-3 game is an example of <code class="computeroutput"><span class="identifier">Boost</span>
           <span class="identifier">Dependency</span> <span class="identifier">Injection</span></code>
           and <code class="computeroutput"><span class="identifier">Boost</span> <span class="identifier">Meta</span>
-          <span class="identifier">State</span> <span class="identifier">Machine</span></code>.
+          <span class="identifier">State</span> <span class="identifier">Machine</span></code>
+          used together.
         </p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">

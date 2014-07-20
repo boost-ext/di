@@ -15,18 +15,18 @@
 
 class app {
 public:
-    app(const std::string& text, int value)
-        : text_(text), value_(value)
+    app(std::shared_ptr<logger> logger, int value)
+        : logger_(logger), value_(value)
     { }
 
     void run() {
         if (value_) {
-            std::cout << text_ << std::endl;
+            logger_->log("hello world");
         }
     }
 
 private:
-    std::string text_;
+    std::shared_ptr<logger> logger_;
     int value_ = 0;
 };
 
