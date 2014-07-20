@@ -9,49 +9,37 @@
 #include <cstdlib>
 #include <boost/di.hpp>
 
-namespace di  = boost::di;
+#include "ilogger.hpp"
+#include "logger.hpp"
 
-class iprinter
-{
-public:
-    virtual ~iprinter() { }
-    virtual void print(const std::string&) = 0;
-};
+namespace di = boost::di;
 
-class printer : public iprinter
-{
+class app {
 public:
-    void print(const std::string& s) override {
-        std::cout << s << std::endl;
-    }
-};
-
-class app
-{
-public:
-    app(int value, const std::string& text, std::unique_ptr<iprinter> printer)
-        : value_(value), text_(text), printer_(std::move(printer))
+    app(int value, const std::string& text, std::unique_ptr<ilogger> logger)
+        : value_(value), text_(text), logger_(std::move(logger))
     { }
 
-    void start() {
+    void run() {
         if (value_) {
-            printer_->print(text_);
+            logger_->log(text_);
         }
     }
 
 private:
     int value_ = 0;
     std::string text_;
-    std::unique_ptr<iprinter> printer_;
+    std::unique_ptr<ilogger> logger_;
 };
 
 int main(int argc, char** argv) {
     auto injector = di::make_injector(
-        di::bind<iprinter, printer>()
+        di::bind<ilogger, logger>()
       , di::bind<int>::to(argc > 1 ? std::atoi(argv[1]) : 0)
       , di::bind<std::string>::to("hello world")
     );
-    injector.create<std::unique_ptr<app>>()->start();
+
+    injector.create<std::unique_ptr<app>>()->run();
 
     return 0;
 }

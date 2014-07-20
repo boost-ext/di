@@ -7,42 +7,35 @@
 #include <iostream>
 #include <memory>
 #include <cstdlib>
+
 #include <boost/di.hpp>
 
-namespace di  = boost::di;
+#include "ilogger.hpp"
+#include "logger.hpp"
 
-class iprinter
-{
-public:
-    virtual ~iprinter() { }
-    virtual void print(const std::string&) = 0;
-};
+namespace di = boost::di;
 
-class printer : public iprinter
-{
-public:
-    void print(const std::string& s) override {
-        std::cout << s << std::endl;
-    }
-};
+class first { };
+class second { };
 
 class app
 {
 public:
-    app(int value, const std::string& text, std::shared_ptr<iprinter> printer)
-        : value_(value), text_(text), printer_(printer)
+    app(di::named<int, first> value1, di::named<int, second> value2, const std::string& text, std::shared_ptr<ilogger> logger)
+        : value1_(value1), value2_(value2) , text_(text), logger_(logger)
     { }
 
-    void start() {
-        if (value_) {
-            printer_->print(text_);
+    void run() {
+        if (value1_ || value2_) {
+            logger_->log(text_);
         }
     }
 
 private:
-    int value_ = 0;
+    int value1_ = 0;
+    int value2_ = 0;
     std::string text_;
-    std::shared_ptr<iprinter> printer_;
+    std::shared_ptr<ilogger> logger_;
 };
 
 class module
@@ -54,8 +47,9 @@ public:
 
     auto configure() const {
         return di::make_injector(
-            di::deduce<printer>() // we can deduce the interface as well!
-          , di::bind<int>::to(i_)
+            di::deduce<logger>() // we can deduce the interface as well!
+          , di::bind<int>::named<first>::to(i_)
+          , di::bind<int>::named<second>::to(0)
           , di::bind<std::string>::to("hello world")
         );
     }
@@ -66,7 +60,7 @@ private:
 
 int main(int argc, char** argv) {
     auto injector = di::make_injector(module(argc > 1 ? std::atoi(argv[1]) : 0));
-    injector.create<app>().start();
+    injector.create<app>().run();
 
     return 0;
 }

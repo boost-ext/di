@@ -13,7 +13,7 @@ For the purposes of this tutorial we are going to implement simple application w
 log "hello_world" using our logger implementation from [link di.motivation Motivation] when first command line argument is not equal 0.
 
 [table
-    [[Logger/Fake logger implementation: [@example/cpp_14/tutorial/ilogger.hpp] | [@example/cpp_14/tutorial/logger.hpp] | [@example/cpp_14/tutorial/fake_logger.hpp]]]
+    [[Logger/Fake logger implementation: [@example/cpp_14/tutorial/ilogger.hpp] | [@example/cpp_14/tutorial/logger.hpp]]]
 ]
 
 Having logger in place let's write basic implementation. Let's assume we have test written already, so let's
@@ -22,9 +22,24 @@ focus on the `app` then.
 So, the first step would be to define `app` class. Let's make it as simple as possible then.
 There is nothing special about it which is required by `Boost.DI`, no macros, no registration, nothing.
 
+```
+class app {
+public:
+    app(const std::string& text, int value)
+        : text_(text), value_(value)
+    { }
 
-[import ../example/cpp_14/tutorial/tutorial1/app.hpp]
-[tutorial1_app]
+    void run() {
+        if (value_) {
+            std::cout << text_ << std::endl;
+        }
+    }
+
+private:
+    std::string text_;
+    int value_ = 0;
+};
+```
 
 After this is completed we would like to create and run our `app`. This step will be different than usual, because
 we are going to use dependency injection framework to create our dependencies for us.
@@ -55,7 +70,7 @@ Thats all, our application should compile and don't print anything.
 'value' should be false and 'text' should be an empty string.
 
 [table
-    [[Full code example: [@example/cpp_14/tutorial/tutorial1/app.hpp] | [@example/cpp_14/tutorial/tutorial1/main.cpp] | [@example/cpp_14/tutorial/tutorial1/app_ut.cpp] ]]
+    [[Full code example: [@example/cpp_14/tutorial/tutorial1.cpp]]]
 ]
 
 So far everything seems to be really easy, so the next step will be
@@ -75,7 +90,7 @@ auto injector = di::__injectors_make_injector__(
 );
 ```
 [table
-    [[Full code example: [@example/cpp_14/tutorial/tutorial2/app.hpp] | [@example/cpp_14/tutorial/tutorial2/main.cpp] | [@example/cpp_14/tutorial/tutorial2/app_ut.cpp] ]]
+    [[Full code example: [@example/cpp_14/tutorial/tutorial2.cpp]]]
 ]
 
 So, right now we have injector configured and the output of our example application
@@ -94,7 +109,7 @@ int main(int argc, char** argv) {
 }
 ```
 [table
-    [[Full code example: [@example/cpp_14/tutorial/tutorial3/app.hpp] | [@example/cpp_14/tutorial/tutorial3/main.cpp] | [@example/cpp_14/tutorial/tutorial3/app_ut.cpp] ]]
+    [[Full code example: [@example/cpp_14/tutorial/tutorial3.cpp]]]
 ]
 
 Great! Seems like our example application is working the way was required.
@@ -150,14 +165,14 @@ will be actually instantiated by `logger`. There is nothing easier, we just have
 
 ```
     auto injector = di::__injectors_make_injector__(
-        di::__bindings_bind__<iprinter, printer>()
+        di::__bindings_bind__<ilogger, logger>()
       , di::__bindings_bind__<int>::to(argc > 1 ? std::atoi(argv[1]) : 0)
       , di::__bindings_bind__<std::string>::to("hello world")
     );
     injector.create<std::unique_ptr<app>>()->start(); // unique_ptr is not copyable
 ```
 [table
-    [[Full code example: [@example/cpp_14/tutorial/tutorial4/app.hpp] | [@example/cpp_14/tutorial/tutorial4/main.cpp] | [@example/cpp_14/tutorial/tutorial4/app_ut.cpp] ]]
+    [[Full code example: [@example/cpp_14/tutorial/tutorial4.cpp]]]
 ]
 
 Yay, everything is working again. But oh, we wanted to use mock framework for tests, but we can't to do it,
@@ -214,6 +229,10 @@ int main(int argc, char** argv) {
 }
 
 ```
+
+[table
+    [[Full code example: [@example/cpp_14/tutorial/tutorial5.cpp]]]
+]
 
 But in our company we have our `string` implementation, but we still want to support `std::string` as well, how to achieve that?
 For purpose of this tutorial let's assume our `custom_string` converts to `std::string`.
@@ -280,8 +299,23 @@ Or in less intrusive way - when we can't change constructor signature for exampl
 
 [tip __injections_boost_di_inject_traits__ might be defined within a class as well.]
 
+Right now, if we want to bind `value1` and `value2` we just need to use named property of __bindings_bind__.
+
+```
+    auto configure() const {
+        return di::make_injector(
+            di::__bindings_deduce__<logger>()
+          , di::__bindings_bind__<int>::named<first>::to(i_) // bind int named first to i
+          , di::__bindings_bind__<int>::named<second>::to(0) // bind int named second to 0
+          , di::__bindings_bind__<std::string>::to("hello world")
+        );
+    }
+```
+
+With such configuration `value1` will be set to first `int` command line argument and `value2` to `0`.
+
 [table
-    [[Full code example: [@example/cpp_14/tutorial/tutorial5/app.hpp] | [@example/cpp_14/tutorial/tutorial5/main.cpp] | [@example/cpp_14/tutorial/tutorial5/app_ut.cpp] ]]
+    [[Full code example: [@example/cpp_14/tutorial/tutorial6.cpp]]]
 ]
 
 That's pretty much it. Hope this tutorial helped you a bit to understand
@@ -309,7 +343,7 @@ will generate requires mocks for us! So, we don't have to change the implementat
 ```
 
 [table
-    [[Full code example: [@example/cpp_14/tutorial/tutorial6/app.hpp] | [@example/cpp_14/tutorial/tutorial6/main.cpp] | [@example/cpp_14/tutorial/tutorial6/app_ut.cpp] ]]
+    [[Full code example: [@example/cpp_14/tutorial/tutorial_ut.cpp]]]
 ]
 
 This time is really the end, so right now you can move on to more in depth stuff - __concepts__ - or just straight away to __examples__ or if you interest in how it's made to __rationale__.

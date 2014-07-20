@@ -7,42 +7,31 @@
 #include <iostream>
 #include <memory>
 #include <cstdlib>
+
 #include <boost/di.hpp>
 
-namespace di  = boost::di;
+#include "ilogger.hpp"
+#include "logger.hpp"
 
-class iprinter
-{
-public:
-    virtual ~iprinter() { }
-    virtual void print(const std::string&) = 0;
-};
-
-class printer : public iprinter
-{
-public:
-    void print(const std::string& s) override {
-        std::cout << s << std::endl;
-    }
-};
+namespace di = boost::di;
 
 class app
 {
 public:
-    app(int value, const std::string& text, std::shared_ptr<iprinter> printer)
-        : value_(value), text_(text), printer_(printer)
+    app(int value, const std::string& text, std::shared_ptr<ilogger> logger)
+        : value_(value), text_(text), logger_(logger)
     { }
 
-    void start() {
+    void run() {
         if (value_) {
-            printer_->print(text_);
+            logger_->log(text_);
         }
     }
 
 private:
     int value_ = 0;
     std::string text_;
-    std::shared_ptr<iprinter> printer_;
+    std::shared_ptr<ilogger> logger_;
 };
 
 class module
@@ -54,7 +43,7 @@ public:
 
     auto configure() const {
         return di::make_injector(
-            di::deduce<printer>() // we can deduce the interface as well!
+            di::deduce<logger>() // we can deduce the interface as well!
           , di::bind<int>::to(i_)
           , di::bind<std::string>::to("hello world")
         );
@@ -66,7 +55,7 @@ private:
 
 int main(int argc, char** argv) {
     auto injector = di::make_injector(module(argc > 1 ? std::atoi(argv[1]) : 0));
-    injector.create<app>().start();
+    injector.create<app>().run();
 
     return 0;
 }

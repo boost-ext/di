@@ -5,18 +5,18 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <iostream>
+#include <cstdlib>
 #include <boost/di.hpp>
 
-namespace di  = boost::di;
+namespace di = boost::di;
 
-class app
-{
+class app {
 public:
     app(int value, const std::string& text)
         : value_(value), text_(text)
     { }
 
-    void start() {
+    void run() {
         if (value_) {
             std::cout << text_ << std::endl;
         }
@@ -27,11 +27,13 @@ private:
     std::string text_;
 };
 
-int main() {
+int main(int argc, char** argv) {
     auto injector = di::make_injector(
-        di::bind_int<1>() // static value
-      , di::bind<std::string>::to("hello world") // dynamic value
+        di::bind<int>::to(argc > 1 ? std::atoi(argv[1]) : 0)
+      , di::bind<std::string>::to("hello world")
     );
+
+    injector.create<app>().run();
 
     return 0;
 }
