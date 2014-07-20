@@ -17,16 +17,16 @@
 namespace di = boost::di;
 
 //<-
-struct i { virtual ~i() { }; };
-struct impl : i { };
+struct interface { virtual ~interface() { }; };
+struct implementation : interface { };
 //->
 
 /*<define `example` class as usual>*/
 struct example {
-    explicit example(long l, std::unique_ptr<i> up)
+    explicit example(long l, std::unique_ptr<interface> up)
     {
         assert(l == 42l);
-        assert(dynamic_cast<impl*>(up.get()));
+        assert(dynamic_cast<implementation*>(up.get()));
     }
 };
 
@@ -38,14 +38,14 @@ public:
         return new TGiven(std::forward<TArgs>(args)...);
     }
 
-    /*<to support bind_int<i>(), bind_string<"s">() see core/allocator.hpp>*/
+    /*<to support `bind_int<interface>()`, `bind_string<"s">()` allocate needs support types with `value` or when `mpl::string`>*/
 };
 
 int main() {
     /*<<make injector with simple configuration>>*/
     auto injector = di::make_injector(
         di::bind<long>::to(42l)
-      , di::bind<i, impl>()
+      , di::bind<interface, implementation>()
     );
 
     /*<<create `example` using `custom_allocator`>>*/

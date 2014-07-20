@@ -18,8 +18,11 @@
 [endsect]
 
 [section Constructor Injection]
-[import ../example/constructor_injection.cpp]
-[constructor_injection]
+[import ../example/cpp_11/constructor_injection.cpp]
+[constructor_injection_cpp_11]
+[table
+    [[Full code example: [@example/cpp_11/constructor_injection.cpp]]]
+]
 [endsect]
 
 [section Binding]
@@ -30,41 +33,59 @@
 [section Modules]
 [import ../example/cpp_14/modules.cpp]
 [modules_cpp_14]
+[table
+    [[Full code example: [@example/cpp_14/modules.cpp]]]
+]
 [import ../example/cpp_03/modules.cpp]
 [modules_cpp_03]
+[table
+    [[Full code example: [@example/cpp_03/modules.cpp]]]
+]
 [endsect]
 
 [section Deduce Scope]
 [import ../example/cpp_11/deduce_scope.cpp]
 [deduce_scope_cpp_11]
+[table
+    [[Full code example: [@example/cpp_11/deduce_scope.cpp]]]
+]
 [endsect]
 
 [section Custom Scope]
 [import ../example/cpp_11/custom_scope.cpp]
 [custom_scope_cpp_11]
+[table
+    [[Full code example: [@example/cpp_11/custom_scope.cpp]]]
+]
 [endsect]
 
 [section Custom Allocator]
 [import ../example/cpp_11/custom_allocator.cpp]
 [custom_allocator_cpp_11]
+[table
+    [[Full code example: [@example/cpp_11/custom_allocator.cpp]]]
+]
 [endsect]
 
 [section Custom Policy]
 [import ../example/cpp_11/custom_policy.cpp]
 [custom_policy_cpp_11]
+[table
+    [[Full code example: [@example/cpp_11/custom_policy.cpp]]]
+]
 [endsect]
 
-[section C++ Generation Visitor]
-[import ../example/text_visitor.cpp]
-[text_visitor]
+[section Dynamic Binding]
+[import ../example/cpp_14/dynamic_binding.cpp]
+[dynamic_binding_cpp_14]
 [table
-    [[Full code example: [@example/text_visitor.cpp]]]
+    [[Full code example: [@example/cpp_14/dynamic_binding.cpp]]]
 ]
 [endsect]
 
 [section UML Visitor]
-[import ../example/uml_visitor.cpp]
-[uml_visitor]
+[import ../example/cpp_11/uml_visitor.cpp]
+[uml_visitor_cpp_11]
 [table
     [[Full code example: [@example/uml_visitor.cpp]]]
 ]
@@ -137,7 +158,11 @@ Python script based on lib clang generating constructor traits. Useful for third
 
 [table
     [[Description][Example]]
-    [[Text Visitor][[@example/text_visitor.cpp]]]
+    [[Named Parameters][[@example/cpp_11/named.cpp]]]
+    [[Provider][[@example/cpp_11/provider.cpp]]]
+    [[Externals][[@example/cpp_11/externals.cpp]]]
+    [[Multiple Interfaces][[@example/cpp_11/multiple_interfaces.cpp]]]
+    [[Text Visitor][[@example/cpp_11/text_visitor.cpp]]]
 ]
 
 [endsect]

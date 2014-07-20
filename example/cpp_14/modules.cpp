@@ -16,21 +16,24 @@
 
 namespace di = boost::di;
 
-struct i { virtual ~i() { } };
-struct impl : i { };
+//<-
+struct interface { virtual ~interface() { } };
+struct implementation : interface { };
+//->
 
 struct app {
-    app(std::unique_ptr<i> up, int i) {
-        assert(dynamic_cast<impl*>(up.get()));
+    app(std::unique_ptr<interface> up, int i) {
+        assert(dynamic_cast<implementation*>(up.get()));
         assert(i == 42);
     }
 };
 
 class module1 {
 public:
+    /*<<module configuration>>*/
     auto configure() const {
         return di::make_injector(
-            di::bind<i, impl>()
+            di::bind<interface, implementation>()
         );
     }
 };
@@ -41,6 +44,7 @@ public:
         : i_(i)
     { }
 
+    /*<<module configuration>>*/
     auto configure() const {
         return di::make_injector(
             di::bind<int>::to(i_)
@@ -54,13 +58,14 @@ private:
 int main() {
     const int i = 42;
 
+    /*<<create injector and pass `module1`, `module2`>>*/
     auto injector = di::make_injector(module1(), module2(i));
+
+    /*<<create `app`>>*/
     injector.create<app>();
 
     return 0;
 }
 
-//`[table
-//`[[Full code example: [@example/cpp_14/modules.cpp modules.cpp]]]]
 //]
 

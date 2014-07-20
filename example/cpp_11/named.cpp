@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[named
-//````C++98/03/11/14```
+//[named_cpp_11
+//````C++11```
 //<-
 #include <cassert>
 #include <boost/mpl/string.hpp>
@@ -18,8 +18,7 @@ namespace mpl = boost::mpl;
 //->
 namespace di = boost::di;
 
-class named
-{
+class named {
 public:
     /*<<Constructor with named parameters of the same `int` type>>*/
     named(di::named<int, mpl::string<'1'> > i1, di::named<int, mpl::string<'2'> > i2)
@@ -36,10 +35,13 @@ private:
 
 int main() {
     /*<<make injector and bind named parameters>>*/
-    di::make_injector(
+    auto injector = di::make_injector(
         di::bind_int<42>::named<mpl::string<'1'> >()
       , di::bind_int<87>::named<mpl::string<'2'> >()
-    ).create<named>();
+    );
+
+    /*<<create `named`>>*/
+    injector.create<named>();
 
     return 0;
 }

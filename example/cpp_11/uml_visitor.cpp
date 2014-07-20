@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[uml_visitor
-//````C++98/03/11/14```
+//[uml_visitor_cpp_11
+//````C++11```
 //<-
 #include <iostream>
 #include <sstream>
@@ -34,8 +34,7 @@ namespace di = boost::di;
  * ./uml_visitor | java -jar plantuml.jar -p > uml_visitor.png
  */
 /*<<define `plant_uml` printer>>*/
-class plant_uml
-{
+class plant_uml {
 public:
     void on_begin(std::stringstream& stream) const
     {
@@ -62,10 +61,8 @@ public:
 
 /*<<define `uml_visitor` with policy parameter>>*/
 template<typename TPolicy>
-class uml_visitor : public TPolicy
-{
-    struct dependency
-    {
+class uml_visitor : public TPolicy {
+    struct dependency {
         dependency(const std::string& expected
                  , const std::string& given
                  , const std::string& scope

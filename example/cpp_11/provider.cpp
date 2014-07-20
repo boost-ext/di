@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[provider
-//````C++98/03/11/14```
+//[provider_cpp_11
+//````C++11```
 //<-
 #include <cassert>
 #include <memory>
@@ -16,8 +16,7 @@
 namespace di = boost::di;
 
 /*<<`transaction` provider>>*/
-struct transaction : di::provider<int>
-{
+struct transaction : di::provider<int> {
     /*<<implementation of `di::provider` requirement >>*/
     virtual int get() const {
         return next();
@@ -30,8 +29,7 @@ struct transaction : di::provider<int>
 };
 
 /*<<example `usage ` class>>*/
-struct usage
-{
+struct usage {
     usage(int i, std::auto_ptr<di::provider<int> > p) {
         assert(i == 0);
         assert(p->get() == 1);

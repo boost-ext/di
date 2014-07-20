@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[text_visitor
-//````C++98/03/11/14```
+//[text_visitor_cpp_11
+//````C++11```
 //<-
 #include <iostream>
 #include <memory>
@@ -30,8 +30,7 @@ struct c3 { c3(boost::shared_ptr<c1>, boost::shared_ptr<c2>) { } };
 namespace di = boost::di;
 
 /*<<Definition of text visitor>>*/
-class text_visitor
-{
+class text_visitor {
 public:
     /*<<Definition of the visitor call operator requirement>>*/
     template<typename T>
