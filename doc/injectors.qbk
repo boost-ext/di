@@ -12,28 +12,28 @@ Main component responsible for configuration is `injector`.
 `Boost.DI` injectors might be composed by mixing bindings, modules and other injectors.
 
 [heading Examples]
-    using injector_t = di::injector<>; // empty injector type
-    auto injector = di::make_injector(); // empty injector
+    using injector_t = di::__injectors_injector__<>; // empty injector type
+    auto injector = di::__injectors_make_injector__(); // empty injector
 
     class module {
     public:
         auto configure() const {
-            return di::make_injector(
-                di::deduce<implementation0>()
+            return di::__injectors_make_injector__(
+                di::__bindings_deduce__<implementation0>()
             );
         }
     };
 
-    auto injector_complex = di::make_injector(
+    auto injector_complex = di::__injectors_make_injector__(
         module
-      , di::bind<interface, implementation1>()
-      , di::unique<
+      , di::__bindings_bind__<interface, implementation1>()
+      , di::__scopes_unique_scope__<
             implementation2
         >
-      , di::make_injector(
-            di::bind_int<42>()
+      , di::__injectors_make_injector__(
+            di::__bindings_bind_bind_int__<42>()
         )
-      , injector<>()
+      , di::__injectors_injector__<>()
     );
 
 [heading Tests]
@@ -100,7 +100,7 @@ Injector is a component used for creating dependencies configuration using bindi
 ]
 
 [heading Expression Semantics]
-    injector<...>(...)
+    di::injector<TArgs...>(args...)
 
 [heading Header]
     #include <boost/di.hpp>
@@ -110,17 +110,17 @@ Injector is a component used for creating dependencies configuration using bindi
 [table
     [[Injector][Description]]
     [[```di::injector<>()```][create empty injector]]
-    [[```di::injector<implementation>()```][equivalent to ```di::injector<di::deduce<implementation>>```]]
+    [[```di::injector<implementation>()```][equivalent to ```di::injector<di::__bindings_deduce__<implementation>>```]]
     [[```di::injector<di::bind<interface, implementation>>()```][injector with `interface` to `implementation` binding configuration]]
-    [[```di::injector<decltype(di::bind<int>::to(int())>(di::bind<int>::to(42))```][injector with configuration binding `42` value to `int` parameters]]
+    [[```di::injector<decltype(di::__bindings_bind__<int>::to(int())>(di::__bindings_bind__<int>::to(42))```][injector with configuration binding `42` value to `int` parameters]]
 ]
     using injector_empty_t = di::injector<>;
 
     using injector_t = di::injector<
         injector_empty_t
       , implementation
-      , di::bind_int<42>
-      , decltype(di::bind<long>::to(long()))
+      , di::__bindings_bind_bind_int__<42>
+      , decltype(di::__bindings_bind__<long>::to(long()))
     >;
 
     injector_t injector(di::bind<long>::to(87l));
@@ -160,7 +160,7 @@ Creates `injector` type. Allows to bind dynamic values in no boilerplate manner.
 ]
 
 [heading Expression Semantics]
-    make_injector(...);
+    di::make_injector(args...);
 
 [*Return type]: `injector<...>`
 
@@ -171,12 +171,12 @@ Creates `injector` type. Allows to bind dynamic values in no boilerplate manner.
 [table
     [[Injector][Description]]
     [[```di::make_injector()```][create empty injector]]
-    [[```di::make_injector(di::deduce<implementation>>())```][creates configuration with binds `implementation` to deduced `interface`]]
-    [[```di::make_injector(di::bind<interface, implementation>>())```][injector with `interface` to `implementation` binding configuration]]
-    [[```di::make_injector(di::bind<int>::to([]{return 42;}))```][injector with configuration binding `int` parameters with lambda expression returning `42`]]
-    [[```di::make_injector(di::bind<function<int()>>::to([]{return 42;}))```][injector with configuration binding `function<int()>` parameters with lambda expression returning `42`]]
-    [[```di::make_injector(di::bind<example>::to(cref(example)))```][binds `example` to const reference given object]]
-    [[```di::make_injector(di::bind<int>::to(42))```][injector with configuration binding `42` value to `int` parameters]]
+    [[```di::make_injector(di::__bindings_deduce__<implementation>>())```][creates configuration with binds `implementation` to deduced `interface`]]
+    [[```di::make_injector(di::__bindings_bind__<interface, implementation>>())```][injector with `interface` to `implementation` binding configuration]]
+    [[```di::make_injector(di::__bindings_bind__<int>::to([]{return 42;}))```][injector with configuration binding `int` parameters with lambda expression returning `42`]]
+    [[```di::make_injector(di::__bindings_bind__<function<int()>>::to([]{return 42;}))```][injector with configuration binding `function<int()>` parameters with lambda expression returning `42`]]
+    [[```di::make_injector(di::__bindings_bind__<example>::to(cref(example)))```][binds `example` to const reference given object]]
+    [[```di::make_injector(di::__bindings_bind__<int>::to(42))```][injector with configuration binding `42` value to `int` parameters]]
 ]
 
 [heading Examples `C++11`]
@@ -184,9 +184,9 @@ Creates `injector` type. Allows to bind dynamic values in no boilerplate manner.
 
     auto injector = di::make_injector(
         injector_empty
-      , di::deduce<implementation>()
-      , di::bind_int<42>()
-      , di::bind<long>::to(42l)
+      , di::__bindings_deduce__<implementation>()
+      , di::__bindings_bind_bind_int__<42>()
+      , di::__bindings_bind__<long>::to(42l)
     );
 
     assert(42 == injector.create<int>());
@@ -201,9 +201,9 @@ Creates `injector` type. Allows to bind dynamic values in no boilerplate manner.
     BOOST_AUTO(injector, (
         di::make_injector(
             injector_empty
-          , di::deduce<implementation>()
-          , di::bind_int<42>()
-          , di::bind<long>::to(42l)
+          , di::__bindings_deduce__<implementation>()
+          , di::__bindings_bind_bind_int__<42>()
+          , di::__bindings_bind__<long>::to(42l)
         )
     );
 

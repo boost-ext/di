@@ -80,7 +80,7 @@ public:
 };
 
 int main() {
-    auto sm = di::make_injector.create<state_machine<state_machine_>>();
+    auto sm = di::__injectors_make_injector__().create<state_machine<state_machine_>>();
     sm.process_event(event());
 
     return 0;

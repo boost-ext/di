@@ -15,10 +15,10 @@ Policy has to have `assert_policy` method defined.
 In order for `injector` to verify policies they have to be passed to `create`, `allocate` call.
 `Boost.DI` is released with following policies
 
-* `Circular Dependencies` - verify circular dependencies occurrence
-* `Creation Ownership`  - verify objection creation permission
-* `Parameters Permission` - verify constructor parameters permission
-* `Scopes Permission` - verify scopes configuration permission
+* __policies_circular_dependencies__ - verify circular dependencies occurrence
+* __policies_creation_ownership__  - verify objection creation permission
+* __policies_parameters_permission__ - verify constructor parameters permission
+* __policies_scopes_permission__ - verify scopes configuration permission
 
 [note By Default `Boost.DI` has no policies enabled.]
 
@@ -38,8 +38,8 @@ In order for `injector` to verify policies they have to be passed to `create`, `
     boost::di::policies
 
 [heading Examples]
-    di::make_injector().create<int>(policy1(), policy2(), ..., policyN());
-    di::make_injector().allocate<int>(allocator(), policy1(), policy2(), ..., policyN());
+    di::__injectors_make_injector__().create<int>(policy1(), policy2(), ..., policyN());
+    di::__injectors_make_injector__().allocate<int>(allocator(), policy1(), policy2(), ..., policyN());
 
 
 [heading More Examples]
@@ -63,9 +63,9 @@ Verifies constructor parameters overlapping.
 ]
 
 [heading Expression Semantics]
-    circular_dependencies();
+    di::policies::circular_dependencies()
 
-[*Result]: `BOOST_MPL_ASSERT with CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED or clean compilation`
+[*Result]: `static assert with CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED messge or clean compilation`
 
 [heading Header]
     #include <boost/di.hpp>
@@ -74,13 +74,13 @@ Verifies constructor parameters overlapping.
     boost::di::policies
 
 [heading Examples]
-    di::make_injector().create<int>(di::policies::circular_dependencies()); // compile ok
+    di::__injectors_make_injector__().create<int>(di::policies::circular_dependencies()); // compile ok
 
     struct cd2;
     struct cd1 { cd1(cd2*); };
     struct cd2 { cd2(cd1*); };
 
-    di::make_injector().create<cd1>(di::policies::circular_dependencies()); // compile error
+    di::__injectors_make_injector__().create<cd1>(di::policies::circular_dependencies()); // compile error
 
 [note Requires `BOOST_DI_CFG_EXAMINE_CALL_STACK` to be defined.]
 
@@ -114,9 +114,9 @@ Limits creation types to copies/pointers/smart pointers and disallow references.
 ]
 
 [heading Expression Semantics]
-    creation_ownership();
+    di::policies::creation_ownership()
 
-[*Result]: `BOOST_MPL_ASSERT with CREATION_OWNERSHIP_IS_NOT_CLEAR or clean compilation`
+[*Result]: `static assert with CREATION_OWNERSHIP_IS_NOT_CLEAR message or clean compilation`
 
 [heading Header]
     #include <boost/di.hpp>
@@ -125,9 +125,9 @@ Limits creation types to copies/pointers/smart pointers and disallow references.
     boost::di::policies
 
 [heading Examples]
-    di::make_injector().create<int>(di::policies::creation_ownership()); // compile ok
-    di::make_injector().create<const int&>(di::policies::creation_ownership()); // compile error
-    di::make_injector().create<int&>(di::policies::creation_ownership()); // compile error
+    di::__injectors_make_injector__().create<int>(di::policies::creation_ownership()); // compile ok
+    di::__injectors_make_injector__().create<const int&>(di::policies::creation_ownership()); // compile error
+    di::__injectors_make_injector__().create<int&>(di::policies::creation_ownership()); // compile error
 
 [note Requires `BOOST_DI_CFG_EXAMINE_CALL_STACK` to be defined.]
 
@@ -184,9 +184,10 @@ Limits allowed constructor parameters. By default, if used, all parameters are d
 ]
 
 [heading Expression Semantics]
-    parameters_permission<allow_refs, allow_smart_ptrs, ..., allow_copies>();
+    using namespace di::policies;
+    parameters_permission<allow_refs, allow_smart_ptrs, ..., allow_copies>()
 
-[*Result]: `BOOST_MPL_ASSERT with PARAMETER_NOT_PERMITTED or clean compilation`
+[*Result]: `static assert with PARAMETER_NOT_PERMITTED message or clean compilation`
 
 [heading Header]
     #include <boost/di.hpp>
@@ -197,8 +198,8 @@ Limits allowed constructor parameters. By default, if used, all parameters are d
 [heading Examples]
     using namespace di::policies;
 
-    di::make_injector().create<int>(parameters_permission<>()); // compile error, no parameters are allowed
-    di::make_injector().create<int>(parameters_permission<allow_copies>()); // compile ok
+    di::__injectors_make_injector__().create<int>(parameters_permission<>()); // compile error, no parameters are allowed
+    di::__injectors_make_injector__().create<int>(parameters_permission<allow_copies>()); // compile ok
 
     struct example {
         example(std::vector<int*>, std::shared_ptr<int>, const int&);
@@ -210,7 +211,7 @@ Limits allowed constructor parameters. By default, if used, all parameters are d
     //    * std::shared_ptr<int> -> allow_smart_ptrs
     //    * const int& -> allow_const_refs
 
-    di::make_injector().create<example>(
+    di::__injectors_make_injector__().create<example>(
         parameters_permission<allow_copies, allow_ptrs, allow_smart_ptrs, allow_const_refs>()
     ); // compile ok
 
@@ -269,16 +270,17 @@ Limits allowed scopes to be used whilst binding.  By default, if used, all scope
 ]
 
 [heading Expression Semantics]
+    using namespace di::policies;
     scopes_permission<
-        allow_scope<scopes::unique<>>
-      , allow_scope<scopes::shared<>>
-      , allow_scope<scopes::session<>>
-      , allow_scope<scopes::external<>>
+        allow_scope<scopes::__scopes_unique_scope__<>>
+      , allow_scope<scopes::__scopes_shared_scope__<>>
+      , allow_scope<scopes::__scopes_session_scope__<>>
+      , allow_scope<scopes::__scopes_external_scope__<>>
     >()
 
-[note `allow_scope<scopes::deduce>` is not allowed.]
+[note `allow_scope<scopes::__scopes_deduce__>` is not allowed.]
 
-[*Result]: `BOOST_MPL_ASSERT with SCOPE_NOT_PERMITTED or clean compilation`
+[*Result]: `static assert with SCOPE_NOT_PERMITTED message or clean compilation`
 
 [heading Header]
     #include <boost/di.hpp>
@@ -289,33 +291,33 @@ Limits allowed scopes to be used whilst binding.  By default, if used, all scope
 [heading Examples]
     using namespace di::policies;
 
-    di::make_injector().create<int>(scopes_permission<>()); // compile error, no scopes are allowed
+    di::__injectors_make_injector__().create<int>(scopes_permission<>()); // compile error, no scopes are allowed
 
-    di::make_injector(
-        di::unique<int>()
-    ).create<int>(scopes_permission<allow_scope<di::scopes::unique<>>>()); // compile ok
+    di::__injectors_make_injector__(
+        di::__bindings_scope_unique__<int>()
+    ).create<int>(scopes_permission<allow_scope<di::scopes::__scopes_unique_scope__<>>>()); // compile ok
 
-    di::make_injector(
-        di::shared<int>()
-    ).create<int>(scopes_permission<allow_scope<di::scopes::unique<>>>()); // compile error
+    di::__injectors_make_injector__(
+        di::__bindings_scope_shared__<int>()
+    ).create<int>(scopes_permission<allow_scope<di::scopes::__scopes_unique_scope__<>>>()); // compile error
 
     struct example {
         example(std::shared_ptr<int>);
     };
 
-    di::make_injector(
-        di::deduce<int>()
-    ).create<example>(scopes_permission<allow_scope<di::scopes::unique<>>>()); // compile error
+    di::__injectors_make_injector__(
+        di::__bindings_deduce__<int>()
+    ).create<example>(scopes_permission<allow_scope<di::scopes::__scopes_unique_scope__<>>>()); // compile error
 
     struct example {
         example(int);
     };
 
-    di::make_injector(
-        di::deduce<int>()
-    ).create<example>(scopes_permission<allow_scope<di::scopes::unique<>>>()); // compile ok
+    di::__injectors_make_injector__(
+        di::__bindings_deduce__<int>()
+    ).create<example>(scopes_permission<allow_scope<di::scopes::__scopes_unique_scope__<>>>()); // compile ok
 
-[note To understand `scope deduction` mapping see `Deduce Scope`.]
+[note To read more about `scope deduction` mapping see __scopes_deduce__.]
 
 [heading Tests]
     ``[@test/ut/policies/scopes_permission_ut.cpp]``

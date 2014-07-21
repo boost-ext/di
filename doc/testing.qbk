@@ -166,9 +166,9 @@ Example application configuration.
     class module_common {
     public:
         auto configure() const {
-            return di::make_injector(
-                di::bind<ilogger, logger>()
-              , di::bind<idb, db>()
+            return di::__injectors_make_injector__(
+                di::__bindings_bind__<ilogger, logger>()
+              , di::__bindings_bind__<idb, db>()
             );
         }
     };
@@ -176,15 +176,15 @@ Example application configuration.
     class module_controller {
     public:
         auto configure() const {
-            return di::make_injector(
-                di::bind<ilogic, logic>()
-              , di::bind<iuser, user>()
+            return di::__injectors_make_injector__(
+                di::__bindings_bind__<ilogic, logic>()
+              , di::__bindings_bind__<iuser, user>()
             );
         }
     };
 
     int main() {
-        di::make_injector(module_common(), module_controller()).create<app>();
+        di::__injectors_make_injector__(module_common(), module_controller()).create<app>();
         return 0;
     }
 ```
@@ -194,15 +194,15 @@ Testing module with fake `logger` and `db`, but original `logic` and `user`.
     class fake_module_common {
     public:
         auto configure() const {
-            return di::make_injector(
-                di::bind<ilogger, fake_logger>()
-              , di::bind<idb, fake_db>()
+            return di::__injectors_make_injector__(
+                di::__bindings_bind__<ilogger, fake_logger>()
+              , di::__bindings_bind__<idb, fake_db>()
             );
         }
     };
 
     void test_app() {
-        auto sut = di::make_injector(module_controller(), fake_module_common()).create<app>();
+        auto sut = di::__injectors_make_injector__(module_controller(), fake_module_common()).create<app>();
         // test sut...
     }
 ```

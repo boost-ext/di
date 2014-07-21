@@ -39,11 +39,11 @@ the only thing which has to be in mind is to return list of dependencies.
 [heading Examples]
     template<typename TIinterface typename TImplementation>
     struct bind
-        : bindings::dependency<scopes::deduce, TInterface, TImplementation>
+        : dependency<scopes::deduce, TInterface, TImplementation>
     { };
 
-    di::make_injector(
-        bind<interface, implementation>()
+    di::__injectors_make_injector__(
+        di::__bindings_bind__<interface, implementation>()
     );
 
 [heading More Examples]
@@ -57,6 +57,7 @@ the only thing which has to be in mind is to return list of dependencies.
 * __bindings_bind__
 * __bindings_scope__
 * __bindings_when__
+* __bindings_named__
 
 [section bind]
 
@@ -65,9 +66,7 @@ Allows bind interface to implementation and associate value with `dependency`.
 
 [heading Synopsis]
     template<typename TInterface, typename TImplementation>
-    struct bind
-        : bindings::dependency<scopes::deduce, TInterface, TImplementation>
-    {
+    struct bind {
         template<typename T>
         static dependency to(const T&);
     };
@@ -77,12 +76,12 @@ Allows bind interface to implementation and associate value with `dependency`.
     [[`TInterface`][None][Interface type]]
     [[`TImplementation`][None][Implementation type]]
     [[`T`][`POD`/`reference_wrapper`/`shared_ptr`][Value type]]
-    [[`x.to(...)`][None][Returns new `dependency` with associated `T` value]]
+    [[`x.to(T)`][None][Returns new `dependency` with associated `T` value]]
 ]
 
 [heading Expression Semantics]
-    bind<interface, implementation>()
-    bind<int>::to(int())
+    di::bind<interface, implementation>()
+    di::bind<int>::to(int())
 
 [*Return type]: `dependency`
 
@@ -104,7 +103,7 @@ Allows bind interface to implementation and associate value with `dependency`.
     [[```di::bind<function<int()>>::to(boost::bind(&return_int, 42))```][bind to functor expression]]
     [[```di::bind<interface, implementation>::named<my_interface>```][bind annotated interface to implementation named with `my_interface`]]
 ]
-    auto injector = di::make_injector(
+    auto injector = di::__injectors_make_injector__(
         di::bind<interface, implementation>()
       , di::bind<int>::to(42)
     );
@@ -112,7 +111,7 @@ Allows bind interface to implementation and associate value with `dependency`.
     assert(dynamic_cast<implementation*>(injector.create<unique_ptr<interface>>().get()));
     assert(42 == injector.create<int>());
 
-[note Values bind with `bind<...>::to(...)` always have higher priority than other bindings. See `External scope` for further information.]
+[note Values bind with `bind<T>::to(T)` always have higher priority than other bindings. See `External scope` for further information.]
 
 [heading More Examples]
     ``__examples_binding__`` | ``__examples_dynamic_binding__``
@@ -133,9 +132,7 @@ Allows to bind multiple interfaces to one instance.
 
 [heading Synopsis]
     template<typename... TArgs>
-    struct any_of
-        : mpl::vector<TArgs...>
-    { };
+    struct any_of;
 
 [table Parameters
     [[Parameter][Requirement][Description]]
@@ -143,7 +140,7 @@ Allows to bind multiple interfaces to one instance.
 ]
 
 [heading Expression Semantics]
-    any_of<interface1, interface2, ..., interfaceN>()
+    di::any_of<interface1, interface2, ..., interfaceN>()
 
 [*Return type]: `mpl::vector`
 
@@ -153,11 +150,11 @@ Allows to bind multiple interfaces to one instance.
 [heading Examples]
 [table
     [[Binding][Description]]
-    [[```di::bind<di::any_of<interface1, interface2>, implementation>())```][bind `interface1`, `interface2` to `implementation`]]
+    [[```di::__bindings_bind__<di::any_of<interface1, interface2>, implementation>())```][bind `interface1`, `interface2` to `implementation`]]
 ]
 
-    auto injector = di::make_injector(
-        di::bind<di::any_of<interface1, interface2>, implementation1>()
+    auto injector = di::__injectors_make_injector__(
+        di::__bindings_bind__<di::any_of<interface1, interface2>, implementation1>()
     );
 
     assert(dynamic_cast<implementation1*>(injector.create<unique_ptr<interface1>>().get()));
@@ -188,9 +185,7 @@ Allows to bind compile time bool value.
 
 [heading Synopsis]
     template<bool Value>
-    struct bind_bool
-        : bind<bool, mpl::bool_<Value>>
-    { };
+    struct bind_bool;
 
 [table Parameters
     [[Parameter][Requirement][Description]]
@@ -198,7 +193,7 @@ Allows to bind compile time bool value.
 ]
 
 [heading Expression Semantics]
-    bind_bool<true>();
+    di::bind_bool<true>();
 
 [*Return type]: `dependency`
 
@@ -212,7 +207,7 @@ Allows to bind compile time bool value.
     [[```di::bind_bool<true>::named<my_bool>())```][bind `true` value to `bool` parameters named `my_bool`]]
 ]
 
-    auto injector = di::make_injector(
+    auto injector = di::__injectors_make_injector__(
         di::bind_bool<true>()
     );
 
@@ -241,9 +236,7 @@ Allows to bind compile time integer value.
 
 [heading Synopsis]
     template<int N>
-    struct bind_int
-        : bind<int, mpl::int_<N>>
-    { };
+    struct bind_int;
 
 [table Parameters
     [[Parameter][Requirement][Description]]
@@ -251,7 +244,7 @@ Allows to bind compile time integer value.
 ]
 
 [heading Expression Semantics]
-    bind_int<42>();
+    di::bind_int<42>();
 
 [*Return type]: `dependency`
 
@@ -265,7 +258,7 @@ Allows to bind compile time integer value.
     [[```di::bind_int<42>::named<my_int>()```][bind `42` value to `int` parameters named `my_int`]]
 ]
 
-    auto injector = di::make_injector(
+    auto injector = di::__injectors_make_injector__(
         di::bind_int<42>()
     );
 
@@ -294,9 +287,7 @@ Allows to bind compile time string value.
 
 [heading Synopsis]
     template<typename T>
-    struct bind_string
-        : bind<std::string, T>
-    { };
+    struct bind_string;
 
 [table Parameters
     [[Parameter][Requirement][Description]]
@@ -304,7 +295,7 @@ Allows to bind compile time string value.
 ]
 
 [heading Expression Semantics]
-    bind_string<mpl::string<'str'>>();
+    di::bind_string<mpl::string<'str'>>();
 
 [*Return type]: `dependency`
 
@@ -318,7 +309,7 @@ Allows to bind compile time string value.
     [[```di::bind_string<mpl::string<'str'>>::named<my_string>()```][bind `str` value to `std::string` parameters named `my_string`]]
 ]
 
-    auto injector = di::make_injector(
+    auto injector = di::__injectors_make_injector__(
         di::bind_string<mpl::string<'str'>>()
     );
 
@@ -349,17 +340,19 @@ Allows to bind other bindings to defined/custom scope. If not used `deduce` scop
 
 [heading Synopsis]
     template<typename TScope>
-    struct scope
-        : bindings::scope<TScope>
-    { };
+    struct scope {
+        template<typename... TArgs>
+        struct bind;
+    };
 
 [table Parameters
     [[Parameter][Requirement][Description]]
     [[`TScope`][__scope_model__ type][scope to be binded]]
+    [[`TArgs...`][__binding_model__ type][types to be binded in `TScope`]]
 ]
 
 [heading Expression Semantics]
-    scope<Scope>::bind<...>()
+    di::scope<Scope>::bind<TArgs...>()
 
 [*Return type]: `dependency`
 
@@ -369,20 +362,20 @@ Allows to bind other bindings to defined/custom scope. If not used `deduce` scop
 [heading Examples]
 [table
     [[Binding][Description]]
-    [[```di::scope<scopes::unique<>::bind<di::bind<interface, implementation>>```][bind `interface` to `implementation` in `unique` scope]]
-    [[```di::scope<scopes::shared<>::bind<di::bind<interface, implementation>>```][bind `interface` to `implementation` in `shared` scope]]
-    [[```di::scope<scopes::session<>::bind<di::bind<interface, implementation>>```][bind `interface` to `implementation` in `session` scope]]
+    [[```di::scope<scopes::__scopes_unique_scope__<>>::bind<di::__bindings_bind__<interface, implementation>>```][bind `interface` to `implementation` in `unique` scope]]
+    [[```di::scope<scopes::__scopes_shared_scope__<>>::bind<di::__bindings_bind__<interface, implementation>>```][bind `interface` to `implementation` in `shared` scope]]
+    [[```di::scope<scopes::__scopes_session_scope__<>>::bind<di::__bindings_bind__<interface, implementation>>```][bind `interface` to `implementation` in `session` scope]]
 ]
 
-    auto injector = di::make_injector(
-        di::scope<scopes::unique<>>::bind<
-            bind<interface, implementation>
+    auto injector = di::__injectors_make_injector__(
+        di::scope<scopes::__scopes_unique_scope__>::bind<
+            di::__bindings_bind__<interface, implementation>
         >()
     );
 
     assert(injector.create<shared_ptr<interface>>() != injector.create<shared_ptr<interface>>());
 
-[note `external` scope can be only binded using `bind<...>::to(...)` semantic.]
+[note `external` scope can be only binded using `bind<T>::to(T)` semantic.]
 
 [heading More Examples]
     ``__examples_binding__``
@@ -416,7 +409,7 @@ Scoped will be deduced accordingly to constructor parameter type. See `Deduce Sc
 ]
 
 [heading Expression Semantics]
-    deduce<bind<i, impl>>()
+    di::deduce<di::__bindings_bind__<interface, implementation>>()
 
 [*Return type]: `dependency`
 
@@ -427,10 +420,10 @@ Scoped will be deduced accordingly to constructor parameter type. See `Deduce Sc
 [table
     [[Binding][Description]]
     [[```di::deduce<implementation>()```][bind deduced interface to `implementation`]]
-    [[```di::deduce<bind<interface, implementation>>()```][bind `interface` to `implementation`]]
+    [[```di::deduce<di::__bindings_bind__<interface, implementation>>()```][bind `interface` to `implementation`]]
 ]
 
-    auto injector = di::make_injector(
+    auto injector = di::__injectors_make_injector__(
         di::deduce<implementation>()
     );
 
@@ -469,7 +462,7 @@ Allows to bind other bindings to __scopes_unique__ scope.
 ]
 
 [heading Expression Semantics]
-    unique<bind<i, impl>>()
+    di::unique<di::__bindings_bind__<interface, implementation>>()
 
 [*Return type]: `dependency`
 
@@ -479,12 +472,12 @@ Allows to bind other bindings to __scopes_unique__ scope.
 [heading Examples]
 [table
     [[Binding][Description]]
-    [[```di::unique<bind<interface, implementation>>()```][bind `interface` to `implementation` with `unique` scope]]
+    [[```di::unique<di::__bindings_bind__<interface, implementation>>()```][bind `interface` to `implementation` with `unique` scope]]
 ]
 
-    auto injector = di::make_injector(
+    auto injector = di::__injectors_make_injector__(
         di::unique<
-            di::bind<interface, implementation>
+            di::__bindings_bind__<interface, implementation>
         >()
     );
 
@@ -522,7 +515,7 @@ Allows to bind other bindings to __scopes_shared__ scope.
 ]
 
 [heading Expression Semantics]
-    shared<bind<i, impl>>()
+    di::shared<di::__bindings_bind__<interface, implementation>>()
 
 [*Return type]: `dependency`
 
@@ -532,12 +525,12 @@ Allows to bind other bindings to __scopes_shared__ scope.
 [heading Examples]
 [table
     [[Binding][Description]]
-    [[```di::shared<bind<interface, implementation>>()```][bind `interface` to `implementation` with `shared` scope]]
+    [[```di::shared<di::__bindings_bind__<interface, implementation>>()```][bind `interface` to `implementation` with `shared` scope]]
 ]
 
-    auto injector = di::make_injector(
+    auto injector = di::__injectors_make_injector__(
         di::shared<
-            di::bind<interface, implementation>
+            di::__bindings_bind__<interface, implementation>
         >()
     );
 
@@ -575,7 +568,7 @@ Allows to bind other bindings to __scopes_session_ scope.
 ]
 
 [heading Expression Semantics]
-    session<bind<i, impl>>()
+    di::session<di::__bindings_bind__<interface, implementation>>()
 
 [*Return type]: `dependency`
 
@@ -585,12 +578,12 @@ Allows to bind other bindings to __scopes_session_ scope.
 [heading Examples]
 [table
     [[Binding][Description]]
-    [[```di::session<bind<interface, implementation>>()```][bind `interface` to `implementation` with `session` scope]]
+    [[```di::session<di::__bindings_bind__<interface, implementation>>()```][bind `interface` to `implementation` with `session` scope]]
 ]
 
-    auto injector = di::make_injector(
+    auto injector = di::__injectors_make_injector__(
         di::session<
-            di::bind<interface, implementation>
+            di::__bindings_bind__<interface, implementation>
         >()
     );
 
@@ -628,7 +621,7 @@ Allows to bind other bindings to __scopes_session_ scope.
 Given value will influence how dependencies will be resolved. Current algorithm might be found in __rationale_binding_resolution_algorithm__.
 
 [heading Synopsis]
-    struct unspecified {
+    struct when {
         template<typename TDependency>
         struct apply
             : TResult
@@ -652,9 +645,9 @@ Given value will influence how dependencies will be resolved. Current algorithm 
         { };
     }
 
-    auto injector = di::make_injector(
-        di::bind<int>::to(1)
-      , di::bind<int>::when<longer_call_stack_first>::to(42)
+    auto injector = di::__injectors_make_injector__(
+        di::__bindings_bind__<int>::to(1)
+      , di::__bindings_bind__<int>::when<longer_call_stack_first>::to(42)
     );
 
     struct example {
@@ -672,6 +665,7 @@ Given value will influence how dependencies will be resolved. Current algorithm 
 
 * __bindings__
 * __bindings_when_call_stack__
+* __bindings_named__
 
 [section call_stack]
 
@@ -692,7 +686,7 @@ Allows to choose binding regards the contextual call stack object was created wi
 ]
 
 [heading Expression Semantics]
-    call_stack<c1, c2, ..., cN>
+    di::call_stack<c1, c2, ..., cN>
 
 [*Semantics]: only last N objects are taken into account during `call stack` resolution, where N represents number of elements in `call_stack`.
 
@@ -781,9 +775,9 @@ Allows to choose binding regards the contextual call stack object was created wi
 
 [table
     [[Binding][Description]]
-    [[```di::bind_int<42>::when<di::call_stack<c1, c2>>()```][bind `int` parameter to `42` when class was created with `..., c1, c2` context]]
-    [[```di::bind<interface, implementation>::named<my_interface>::when<call_stack<c1, c2>>()```][bind `interface` to `implementation` when parameter named `my_interface` is called within `c1, c2` context]]
-    [[```di::bind<interface, implementation>::when<call_stack<c1, c2>>::named<my_interface>()```][same as above]]
+    [[```di::__bindings_bind_bind_int__<42>::__bindings_when__<di::call_stack<c1, c2>>()```][bind `int` parameter to `42` when class was created with `..., c1, c2` context]]
+    [[```di::__bindings_bind__<interface, implementation>::__bindings_named__<my_interface>::whe__bindings_when__n<call_stack<c1, c2>>()```][bind `interface` to `implementation` when parameter named `my_interface` is called within `c1, c2` context]]
+    [[```di::__bindings_bind__<interface, implementation>::__bindings_when__<call_stack<c1, c2>>::__bindings_named__<my_interface>()```][same as above]]
 ]
 
     struct c2 {
@@ -803,15 +797,15 @@ Allows to choose binding regards the contextual call stack object was created wi
         c2 c;
     };
 
-    auto injector = di::make_injector(
-        di::bind<interface, implementation>::when<di::call_stack<c1, c2>>()
+    auto injector = di::__injectors_make_injector__(
+        di::__bindings_bind__<interface, implementation>::__bindings_when__<di::call_stack<c1, c2>>()
     );
 
     assert(0 == injector.create<c1>().i);
     assert(42 == injector.create<c1>().c.i);
 
 [note `BOOST_DI_CFG_EXAMINE_CALL_STACK` has to be defined to enable __bindings_when_call_stack__ feature.]
-[tip __annotations_named__ and __bindings_when__ might be used alternately - order is not specified.]
+[tip __bindings_named__ and __bindings_when__ might be used alternately - order is not specified.]
 
 [heading More Examples]
     ``__examples_binding__``
@@ -825,6 +819,60 @@ Allows to choose binding regards the contextual call stack object was created wi
 * __bindings_when__
 
 [endsect]
+
+[endsect]
+
+[section named]
+
+[heading Description]
+Allows to connect __annotations_named__ annotation parameters with binding configuration.
+
+[heading Synopsis]
+    template<typename TName>
+    struct named;
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`TName`][None][Given name type]]
+]
+
+[heading Header]
+    #include <boost/di.hpp>
+
+[heading Examples]
+
+[table
+    [[Binding][Description]]
+    [[```di::__bindings_bind_bind_int__<42>::__bindings_named__<my_int>()```][bind named with `my_int` name `int` parameter to `42`]]
+    [[```di::__bindings_bind__<interface, implementation>::__bindings_named__<my_implementation>()```][bind named with `my_impementation` name `interface` to `implementation`]]
+]
+    struct my_int { };
+
+    class example {
+    public:
+        example(di::__annotations_named__<int, my_int> i)
+            : i(i)
+        { }
+
+        int i = 0;
+    };
+
+    auto injector = di::__injectors_make_injector__(
+        di::__bindings_bind_bind_int__<42>::__bindings_named__<my_int>()
+    );
+
+    assert(42 == injector.create<example>().i);
+
+[heading More Examples]
+    ``__more_examples_named__`` | ``__examples_binding__``
+
+[heading Tests]
+    ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
+
+[heading See Also]
+
+* __bindings__
+* __bindings_when__
 
 [endsect]
 

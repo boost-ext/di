@@ -247,7 +247,7 @@ like "composition root".
 [warning Presented example is just for learning purposes, please don't follow this anti-pattern approach!]
 ```
     auto global_injector = di::__injectors_make_injector__(
-        di::__bindings_bind__<i, impl>()
+        di::__bindings_bind__<interface, implementation>()
     );
 
     class app {

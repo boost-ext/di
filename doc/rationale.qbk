@@ -22,18 +22,18 @@
 ```
 
 ```
-    Dependency configuration and creation.
-
-        di::make_injector(di::deduce<impl>()).create<example>();
-
-            equals...
-
-        di::make_injector(di::bind<i, impl>()).create<example>();
-
-            equals...
-
-        di::make_injector(di::shared<di::bind<i, impl>>()).create<example>();
+        di::__injectors_make_injector__(di::__bindings_deduce__<implementation>()).create<example>();
 ```
+
+```
+        di::__injectors_make_injector__(di::__bindings_bind__<interface, implementation>()).create<example>();
+```
+
+```
+        di::__injectors_make_injector__(di::__scopes_shared_scope__<di::__bindings_bind__<interface, implementation>>()).create<example>();
+```
+
+[note All above expressions create the same configuration.]
 
 * Dependencies should be resolved during compilation time (no runtime exceptions that dependency can't be resolved)
     * achieved with compile time dependency resolving

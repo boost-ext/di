@@ -42,6 +42,12 @@
 [def __scopes_shared__                                  [link di.concepts.scopes.shared shared scope]]
 [def __scopes_session__                                 [link di.concepts.scopes.session session scope]]
 
+[def __scopes_deduce_scope__                            [link di.concepts.scopes.deduce deduce]]
+[def __scopes_external_scope__                          [link di.concepts.scopes.external external]]
+[def __scopes_unique_scope__                            [link di.concepts.scopes.unique unique]]
+[def __scopes_shared_scope__                            [link di.concepts.scopes.shared shared]]
+[def __scopes_session_scope__                           [link di.concepts.scopes.session session]]
+
 [def __bindings__                                       [link di.concepts.bindings Bindings]]
 [def __bindings_bind__                                  [link di.concepts.bindings.bind bind]]
 [def __bindings_bind_any_of__                           [link di.concepts.bindings.bind.any_of any_of]]
@@ -56,6 +62,7 @@
 [def __bindings_scope_session__                         [link di.concepts.bindings.scope.session unique]]
 [def __bindings_when__                                  [link di.concepts.bindings.when when]]
 [def __bindings_when_call_stack__                       [link di.concepts.bindings.when.call_stack call_stack]]
+[def __bindings_named__                                 [link di.concepts.bindings.named named]]
 
 [def __core__                                           [link di.concepts.injectors Core]]
 [def __injectors__                                      [link di.concepts.injectors Injectors]]

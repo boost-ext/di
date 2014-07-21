@@ -18,21 +18,21 @@ Activation of `Module` is done by passing it into injector.
     class module {
     public:
         auto configure() const {
-            return di::make_injector(...);
+            return di::__injectors_make_injector__(...);
         }
     }
 
 [heading Synopsis `C++11`]
     class module {
     public:
-        auto configure() const -> decltype(di::make_injector(...)) {
-            return di::make_injector(...);
+        auto configure() const -> decltype(di::__injectors_make_injector__(...)) {
+            return di::__injectors_make_injector__(...);
         }
     }
 
 [heading Synopsis `C++03`]
     class module {
-        typedef di::injector<...> injector;
+        typedef di::__injectors_injector__<...> injector;
 
     public:
         injector configure() const {
@@ -46,7 +46,7 @@ Activation of `Module` is done by passing it into injector.
 ]
 
 [heading Expression Semantics]
-    di::make_injector(module());
+    di::__injectors_make_injector__(module())
 
 [*Return type]: `di::injector<...>`
 
@@ -57,34 +57,34 @@ Activation of `Module` is done by passing it into injector.
     class module_cpp_14 {
     public:
         auto configure() const {
-            return di::make_injector(
-                di::bind<i, impl>()
+            return di::__injectors_make_injector__(
+                di::__bindings_bind__<interface, implementation>()
             );
         }
     };
 
     class module_cpp_11 {
     public:
-        auto configure() const -> decltype(di::make_injector(di::bind_int<42>())) {
-            return di::make_injector(
-                di::bind<int>::to(42)
+        auto configure() const -> decltype(di::__injectors_make_injector__(di::bind_int<42>())) {
+            return di::__injectors_make_injector__(
+                di::__bindings_bind__<int>::to(42)
             );
         }
     };
 
     class module_cpp_03 {
     public:
-        typedef di::injector<
-            di::bind_bool<true>
-          , BOOST_TYPEOF_TPL(di::bind<long>::to(long()))
+        typedef di::__injectors_injector__<
+            di::__bindings_bind_bind_bool__<true>
+          , BOOST_TYPEOF_TPL(di::__bindings_bind__<long>::to(long()))
         >;
 
         injector_t configure() const {
-            return injector_t(di::bind<long>::to(87l)); // order of passed binding is not important
+            return injector_t(di::__bindings_bind__<long>::to(87l)); // order of passed binding is not important
         }
     };
 
-    auto injector = di::make_injector(
+    auto injector = di::__injectors_make_injector__(
         module_cpp_03(), module_cpp_11(), module_cpp_14()
         // module_cpp_14(), module_cpp_03(), module_cpp_11() // order of passed modules is not important
     );
@@ -94,7 +94,7 @@ Activation of `Module` is done by passing it into injector.
     assert(87l == injector.create<long>());
     assert(true == injector.create<bool>());
 
-[tip `Modules/Bindings/Types` might be mixed whilst creating an injector, order is not important.]
+[tip `__modules__/__bindings__/Types` might be mixed whilst creating an injector, order is not important.]
 
 [heading More Examples]
     ``__examples_modules__``

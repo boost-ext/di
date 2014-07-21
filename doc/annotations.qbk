@@ -50,7 +50,7 @@ It doesn't has to be the case when __injections_ctor_traits__ are used.
 ]
 
 [heading Expression Semantics]
-    named<int, mpl::string<'int'>>()
+    di::named<int, mpl::string<'int'>>()
 
 [heading Header]
     #include <boost/di.hpp>
@@ -67,12 +67,12 @@ It doesn't has to be the case when __injections_ctor_traits__ are used.
       ][wrapped `int` type with `my_int` name]]
 ]
 
-[heading Examples]
+[heading Examples - __injections_automatic__]
     struct my_int { };
 
     class example {
     public:
-        example(named<int, my_int> i1, int i2);
+        example(di::named<int, my_int> i1, int i2);
             : i1(i1)
             , i2(i2)
         { }
@@ -81,9 +81,9 @@ It doesn't has to be the case when __injections_ctor_traits__ are used.
         int i2 = 0;
     };
 
-    auto injector = di::make_injector(
-        di::bind<int>::named<my_int>::to(42)
-      , di::bind_int<0>
+    auto injector = di::__injectors_make_injector__(
+        di::__bindings_bind__<int>::__bindings_named__<my_int>::to(42)
+      , di::__bindings_bind_bind_int__<0>
     );
 
     auto example_ = injector.create<example>();
@@ -105,14 +105,14 @@ It doesn't has to be the case when __injections_ctor_traits__ are used.
 
     template<>
     struct ctor_traits<example> {
-        BOOST_DI_INJECT_TRAITS(di::named<int, my_value1>, di::named<int, my_value2>);
+        __injections_boost_di_inject_traits__(di::named<int, my_value1>, di::named<int, my_value2>);
     };
 
     }} // boost::di
 
-    auto injector = di::make_injector(
-        di::bind<int>::named<my_value1>::to(1)
-        di::bind<int>::named<my_value2>::to(2)
+    auto injector = di::__injectors_make_injector__(
+        di::__bindings_bind__<int>::__bindings_named__<my_value1>::to(1)
+        di::__bindings_bind__<int>::__bindings_named__<my_value2>::to(2)
     );
 
     auto example_ = injector.create<example>();

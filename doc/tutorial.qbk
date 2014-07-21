@@ -303,10 +303,10 @@ Right now, if we want to bind `value1` and `value2` we just need to use named pr
 
 ```
     auto configure() const {
-        return di::make_injector(
+        return di::__injectors_make_injector__(
             di::__bindings_deduce__<logger>()
-          , di::__bindings_bind__<int>::named<first>::to(i_) // bind int named first to i
-          , di::__bindings_bind__<int>::named<second>::to(0) // bind int named second to 0
+          , di::__bindings_bind__<int>::__bindings_named__<first>::to(i_) // bind int named first to i
+          , di::__bindings_bind__<int>::__bindings_named__<second>::to(0) // bind int named second to 0
           , di::__bindings_bind__<std::string>::to("hello world")
         );
     }

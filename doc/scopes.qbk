@@ -103,12 +103,12 @@ There are 5 basic types of wrappers.
 
     } // namespace di
 
-    auto injector = di::make_injector(
+    auto injector = di::__injectors_make_injector__(
         custom_scope<
-            di::bind<interface, implementation>
+            di::__bindings_bind__<interface, implementation>
         >()
       , scope<custom_scope>::bind<
-            di::bind<interface1, implementation1>
+            di::__bindings_bind__<interface1, implementation1>
         >()
     );
 
@@ -154,7 +154,7 @@ There are 5 basic types of wrappers.
 [section:deduce deduce (default)]
 
 [heading Description]
-Default scope which will be converted to one of the scopes `shared/unique/external` accordingly to `Scope Traits` transformation.
+Default scope which will be converted to one of the scopes __scopes_external__ / __scopes_unique__ / __scopes_shared__ accordingly to `Scope Traits` transformation.
 
 [table Scope Traits
     [ [Type] [Scope] ]
@@ -214,11 +214,11 @@ Default scope which will be converted to one of the scopes `shared/unique/extern
         const interface& i4;
     };
 
-    auto injector = di::make_injector(
-        di::deduce<implementation1>() // bind deduced interface to implementation
-      , di::bind<interface2, implementation2>() // deduce scope by default
-      , di::scope<di::scopes::deduce>::bind<di::bind<interface3, implementation3>>() // long version of scope binding
-      , di::bind<interface4>::to(cref(implementation4)) // bind to external value
+    auto injector = di::__injectors_make_injector__(
+        di::__bindings_deduce__<implementation1>() // bind deduced interface to implementation
+      , di::__bindings_bind__<interface2, implementation2>() // deduce scope by default
+      , di::__bindings_scope__<di::scopes::deduce>::bind<di::__bindings_bind__<interface3, implementation3>>() // long version of scope binding
+      , di::__bindings_bind__<interface4>::to(cref(implementation4)) // bind to external value
     );
 
     auto example_ = injector.create<example>();
@@ -300,19 +300,19 @@ will be binded using different scope as well then this binding won't be taken in
 [heading Examples]
 [table
     [[Binding][Description]]
-    [[```di::bind<int>::to(42)```][bind `int` parameter to value `42`]]
-    [[```di::bind<std::string>::to("text")```][bind `std::string` parameter to value `text`]]
-    [[```di::bind<example>::to(make_shared<example>())```][bind example type to external `shared_ptr`]]
-    [[```di::bind<example>::to(cref(example_))```][bind example to const reference object]]
-    [[```di::bind<example>::to(ref(example_))```][bind example to reference object]]
-    [[```di::bind<int>::to([]{return 42;})```][bind `int` to lambda expression returning `42` value]]
+    [[```di::__bindings_bind__<int>::to(42)```][bind `int` parameter to value `42`]]
+    [[```di::__bindings_bind__<std::string>::to("text")```][bind `std::string` parameter to value `text`]]
+    [[```di::__bindings_bind__<example>::to(make_shared<example>())```][bind example type to external `shared_ptr`]]
+    [[```di::__bindings_bind__<example>::to(cref(example_))```][bind example to const reference object]]
+    [[```di::__bindings_bind__<example>::to(ref(example_))```][bind example to reference object]]
+    [[```di::__bindings_bind__<int>::to([]{return 42;})```][bind `int` to lambda expression returning `42` value]]
 ]
 
     auto example_ = make_shared<example>();
 
-    auto injector = di::make_injector(
-        di::bind<int>::to(42)
-      , di::bind<example>::to(example_)
+    auto injector = di::__injectors_make_injector__(
+        di::__bindings_bind__<int>::to(42)
+      , di::__bindings_bind__<example>::to(example_)
     );
 
     assert(42 == injector.create<int>());
@@ -386,17 +386,17 @@ Scope representing unique value, meaning unique value always will be passed to t
 [heading Examples]
 [table
     [[Binding][Description]]
-    [[```unique<di::bind<interface, implementation>>()```][bind `interface` to `implementation` in unique scope]]
+    [[```unique<di::__bindings_bind__<interface, implementation>>()```][bind `interface` to `implementation` in unique scope]]
     [[`x.create(const function<TExpected*()>&)`][None][create wrapped type to be passed to constructor]]
 ]
 
-    auto injector = di::make_injector(
+    auto injector = di::__injectors_make_injector__(
         di::unique<
-            di::bind<interface, implementation>
-          , di::bind_int<42>
+            di::__bindings_bind__<interface, implementation>
+          , di::__bindings_bind_bind_int__<42>
         >()
       , di::scope<di::scopes::unique<>>::bind<
-            di::bind_string<mpl::string<'txt'>>
+            di::__bindings_bind_bind_string__<mpl::string<'txt'>>
         >()
     );
 
@@ -476,11 +476,11 @@ Scope representing shared/session value, meaning passed value will be shared bet
 [heading Examples]
 [table
     [[Binding][Description]]
-    [[```shared<di::bind<interface, implementation>>()```][bind `interface` to `implementation` in shared scope]]
+    [[```shared<di::__bindings_bind__<interface, implementation>>()```][bind `interface` to `implementation` in shared scope]]
 ]
-    auto injector = di::make_injector(
+    auto injector = di::__injectors_make_injector__(
         di::shared<
-            di::bind<interface, implementation>
+            di::__bindings_bind__<interface, implementation>
         >()
     );
 
@@ -557,11 +557,11 @@ Scope is activated by call of `call` method with `session_entry` parameter and d
 [heading Examples]
 [table
     [[Binding][Description]]
-    [[```session<di::bind<interface, implementation>>()```][bind `interface` to `implementation` in session scope]]
+    [[```session<di::__bindings_bind__<interface, implementation>>()```][bind `interface` to `implementation` in session scope]]
 ]
 
-    auto injector = di::make_injector(
-        shared<bind<interface, implementation>>()
+    auto injector = di::__injectors_make_injector__(
+        di::session<bind<interface, implementation>>()
     );
 
     assert(!injector.create<std::unique_ptr<interface>>())
