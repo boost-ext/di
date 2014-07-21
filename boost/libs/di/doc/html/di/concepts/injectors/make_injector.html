@@ -136,7 +136,7 @@
 </tr>
 <tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><a class="link" href="../bindings/scope/deduce.html" title="deduce">deduce</a><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">&gt;&gt;())</span></pre>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><a class="link" href="../bindings/scope/deduce.html" title="deduce">di::deduce</a><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">&gt;&gt;())</span></pre>
                 </td>
 <td>
                   <p>
@@ -147,7 +147,7 @@
 </tr>
 <tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><a class="link" href="../bindings/bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;&gt;())</span></pre>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><a class="link" href="../bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;&gt;())</span></pre>
                 </td>
 <td>
                   <p>
@@ -159,7 +159,7 @@
 </tr>
 <tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><a class="link" href="../bindings/bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">([]{</span><span class="keyword">return</span> <span class="number">42</span><span class="special">;}))</span></pre>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><a class="link" href="../bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">([]{</span><span class="keyword">return</span> <span class="number">42</span><span class="special">;}))</span></pre>
                 </td>
 <td>
                   <p>
@@ -170,7 +170,7 @@
 </tr>
 <tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><a class="link" href="../bindings/bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">()&gt;&gt;::</span><span class="identifier">to</span><span class="special">([]{</span><span class="keyword">return</span> <span class="number">42</span><span class="special">;}))</span></pre>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><a class="link" href="../bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">()&gt;&gt;::</span><span class="identifier">to</span><span class="special">([]{</span><span class="keyword">return</span> <span class="number">42</span><span class="special">;}))</span></pre>
                 </td>
 <td>
                   <p>
@@ -181,7 +181,7 @@
 </tr>
 <tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><a class="link" href="../bindings/bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">cref</span><span class="special">(</span><span class="identifier">example</span><span class="special">)))</span></pre>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><a class="link" href="../bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">cref</span><span class="special">(</span><span class="identifier">example</span><span class="special">)))</span></pre>
                 </td>
 <td>
                   <p>
@@ -192,7 +192,7 @@
 </tr>
 <tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><a class="link" href="../bindings/bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">))</span></pre>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><a class="link" href="../bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">))</span></pre>
                 </td>
 <td>
                   <p>
@@ -212,9 +212,9 @@
 
 <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
     <span class="identifier">injector_empty</span>
-  <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="../bindings/scope/deduce.html" title="deduce">deduce</a><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">&gt;()</span>
-  <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="../bindings/bind/bind_int.html" title="bind_int">bind_int</a><span class="special">&lt;</span><span class="number">42</span><span class="special">&gt;()</span>
-  <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="../bindings/bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42l</span><span class="special">)</span>
+  <span class="special">,</span> <a class="link" href="../bindings/scope/deduce.html" title="deduce">di::deduce</a><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">&gt;()</span>
+  <span class="special">,</span> <a class="link" href="../bindings/bind/bind_int.html" title="bind_int">di::bind_int</a><span class="special">&lt;</span><span class="number">42</span><span class="special">&gt;()</span>
+  <span class="special">,</span> <a class="link" href="../bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42l</span><span class="special">)</span>
 <span class="special">);</span>
 
 <span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
@@ -233,9 +233,9 @@
 <span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">injector</span><span class="special">,</span> <span class="special">(</span>
     <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
         <span class="identifier">injector_empty</span>
-      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="../bindings/scope/deduce.html" title="deduce">deduce</a><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">&gt;()</span>
-      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="../bindings/bind/bind_int.html" title="bind_int">bind_int</a><span class="special">&lt;</span><span class="number">42</span><span class="special">&gt;()</span>
-      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="../bindings/bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42l</span><span class="special">)</span>
+      <span class="special">,</span> <a class="link" href="../bindings/scope/deduce.html" title="deduce">di::deduce</a><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">&gt;()</span>
+      <span class="special">,</span> <a class="link" href="../bindings/bind/bind_int.html" title="bind_int">di::bind_int</a><span class="special">&lt;</span><span class="number">42</span><span class="special">&gt;()</span>
+      <span class="special">,</span> <a class="link" href="../bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42l</span><span class="special">)</span>
     <span class="special">)</span>
 <span class="special">);</span>
 

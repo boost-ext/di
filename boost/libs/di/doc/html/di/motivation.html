@@ -322,8 +322,8 @@
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
     <span class="comment">// dependency injection configuration</span>
-    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="concepts/injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span>
-        <span class="identifier">di</span><span class="special">::</span><a class="link" href="concepts/bindings/bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">,</span> <span class="identifier">logger</span><span class="special">&gt;()</span>
+    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+        <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">,</span> <span class="identifier">logger</span><span class="special">&gt;()</span>
     <span class="special">);</span>
 
     <span class="comment">// composition root</span>
@@ -368,8 +368,8 @@
             this anti-pattern approach!
           </p></td></tr>
 </table></div>
-<pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">global_injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="concepts/injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span>
-    <span class="identifier">di</span><span class="special">::</span><a class="link" href="concepts/bindings/bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;()</span>
+<pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">global_injector</span> <span class="special">=</span> <a class="link" href="concepts/injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;()</span>
 <span class="special">);</span>
 
 <span class="keyword">class</span> <span class="identifier">app</span> <span class="special">{</span>

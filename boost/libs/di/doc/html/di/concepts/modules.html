@@ -45,7 +45,7 @@
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">module</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
-        <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(...);</span>
+        <span class="keyword">return</span> <a class="link" href="injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(...);</span>
     <span class="special">}</span>
 <span class="special">}</span>
 </pre>
@@ -56,8 +56,8 @@
       </h5>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">module</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">-&gt;</span> <span class="keyword">decltype</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><a class="link" href="injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(...))</span> <span class="special">{</span>
-        <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(...);</span>
+    <span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">-&gt;</span> <span class="keyword">decltype</span><span class="special">(</span><a class="link" href="injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(...))</span> <span class="special">{</span>
+        <span class="keyword">return</span> <a class="link" href="injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(...);</span>
     <span class="special">}</span>
 <span class="special">}</span>
 </pre>
@@ -67,7 +67,7 @@
         <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code></a>
       </h5>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">module</span> <span class="special">{</span>
-    <span class="keyword">typedef</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="injectors/injector.html" title="injector">injector</a><span class="special">&lt;...&gt;</span> <span class="identifier">injector</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <a class="link" href="injectors/injector.html" title="injector">di::injector</a><span class="special">&lt;...&gt;</span> <span class="identifier">injector</span><span class="special">;</span>
 
 <span class="keyword">public</span><span class="special">:</span>
     <span class="identifier">injector</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
@@ -113,8 +113,8 @@
               </td>
 <td>
                 <p>
-                  Returns <code class="computeroutput"><span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span></code> object with configured
-                  dependencies
+                  Returns <code class="computeroutput"><a class="link" href="injectors/injector.html" title="injector">di::injector</a></code>
+                  object with configured dependencies
                 </p>
               </td>
 </tr></tbody>
@@ -125,10 +125,10 @@
         <span class="phrase"><a name="di.concepts.modules.expression_semantics"></a></span><a class="link" href="modules.html#di.concepts.modules.expression_semantics">Expression
         Semantics</a>
       </h5>
-<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><a class="link" href="injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span><span class="identifier">module</span><span class="special">())</span>
+<pre class="programlisting"><a class="link" href="injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span><span class="identifier">module</span><span class="special">())</span>
 </pre>
 <p>
-        <span class="bold"><strong>Return type</strong></span>: <code class="computeroutput"><span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;...&gt;</span></code>
+        <span class="bold"><strong>Return type</strong></span>: <code class="computeroutput"><a class="link" href="injectors/injector.html" title="injector">di::injector</a><span class="special">&lt;...&gt;</span></code>
       </p>
 <h5>
 <a name="di.concepts.modules.h5"></a>
@@ -143,34 +143,34 @@
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">module_cpp_14</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
-        <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span>
-            <span class="identifier">di</span><span class="special">::</span><a class="link" href="bindings/bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;()</span>
+        <span class="keyword">return</span> <a class="link" href="injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+            <a class="link" href="bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;()</span>
         <span class="special">);</span>
     <span class="special">}</span>
 <span class="special">};</span>
 
 <span class="keyword">class</span> <span class="identifier">module_cpp_11</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">-&gt;</span> <span class="keyword">decltype</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><a class="link" href="injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind_int</span><span class="special">&lt;</span><span class="number">42</span><span class="special">&gt;()))</span> <span class="special">{</span>
-        <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span>
-            <span class="identifier">di</span><span class="special">::</span><a class="link" href="bindings/bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
+    <span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">-&gt;</span> <span class="keyword">decltype</span><span class="special">(</span><a class="link" href="injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span><a class="link" href="bindings/bind/bind_int.html" title="bind_int">di::bind_int</a><span class="special">&lt;</span><span class="number">42</span><span class="special">&gt;()))</span> <span class="special">{</span>
+        <span class="keyword">return</span> <a class="link" href="injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+            <a class="link" href="bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
         <span class="special">);</span>
     <span class="special">}</span>
 <span class="special">};</span>
 
 <span class="keyword">class</span> <span class="identifier">module_cpp_03</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">typedef</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="injectors/injector.html" title="injector">injector</a><span class="special">&lt;</span>
-        <span class="identifier">di</span><span class="special">::</span><a class="link" href="bindings/bind/bind_bool.html" title="bind_bool">bind_bool</a><span class="special">&lt;</span><span class="keyword">true</span><span class="special">&gt;</span>
-      <span class="special">,</span> <span class="identifier">BOOST_TYPEOF_TPL</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><a class="link" href="bindings/bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="keyword">long</span><span class="special">()))</span>
+    <span class="keyword">typedef</span> <a class="link" href="injectors/injector.html" title="injector">di::injector</a><span class="special">&lt;</span>
+        <a class="link" href="bindings/bind/bind_bool.html" title="bind_bool">di::bind_bool</a><span class="special">&lt;</span><span class="keyword">true</span><span class="special">&gt;</span>
+      <span class="special">,</span> <span class="identifier">BOOST_TYPEOF_TPL</span><span class="special">(</span><a class="link" href="bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="keyword">long</span><span class="special">()))</span>
     <span class="special">&gt;;</span>
 
     <span class="identifier">injector_t</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
-        <span class="keyword">return</span> <span class="identifier">injector_t</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><a class="link" href="bindings/bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">87l</span><span class="special">));</span> <span class="comment">// order of passed binding is not important</span>
+        <span class="keyword">return</span> <span class="identifier">injector_t</span><span class="special">(</span><a class="link" href="bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">87l</span><span class="special">));</span> <span class="comment">// order of passed binding is not important</span>
     <span class="special">}</span>
 <span class="special">};</span>
 
-<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span>
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
     <span class="identifier">module_cpp_03</span><span class="special">(),</span> <span class="identifier">module_cpp_11</span><span class="special">(),</span> <span class="identifier">module_cpp_14</span><span class="special">()</span>
     <span class="comment">// module_cpp_14(), module_cpp_03(), module_cpp_11() // order of passed modules is not important</span>
 <span class="special">);</span>

@@ -132,9 +132,9 @@
     <span class="special">{</span> <span class="special">};</span>
 <span class="special">}</span>
 
-<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="../injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span>
-    <span class="identifier">di</span><span class="special">::</span><a class="link" href="bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">1</span><span class="special">)</span>
-  <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">when</span><span class="special">&lt;</span><span class="identifier">longer_call_stack_first</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">1</span><span class="special">)</span>
+  <span class="special">,</span> <a class="link" href="bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">when</span><span class="special">&lt;</span><span class="identifier">longer_call_stack_first</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
 <span class="special">);</span>
 
 <span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>

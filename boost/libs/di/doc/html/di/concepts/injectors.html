@@ -39,28 +39,28 @@
 <a name="di.concepts.injectors.h0"></a>
         <span class="phrase"><a name="di.concepts.injectors.examples"></a></span><a class="link" href="injectors.html#di.concepts.injectors.examples">Examples</a>
       </h5>
-<pre class="programlisting"><span class="keyword">using</span> <span class="identifier">injector_t</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="injectors/injector.html" title="injector">injector</a><span class="special">&lt;&gt;;</span> <span class="comment">// empty injector type</span>
-<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">();</span> <span class="comment">// empty injector</span>
+<pre class="programlisting"><span class="keyword">using</span> <span class="identifier">injector_t</span> <span class="special">=</span> <a class="link" href="injectors/injector.html" title="injector">di::injector</a><span class="special">&lt;&gt;;</span> <span class="comment">// empty injector type</span>
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">();</span> <span class="comment">// empty injector</span>
 
 <span class="keyword">class</span> <span class="identifier">module</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
-        <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span>
-            <span class="identifier">di</span><span class="special">::</span><a class="link" href="bindings/scope/deduce.html" title="deduce">deduce</a><span class="special">&lt;</span><span class="identifier">implementation0</span><span class="special">&gt;()</span>
+        <span class="keyword">return</span> <a class="link" href="injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+            <a class="link" href="bindings/scope/deduce.html" title="deduce">di::deduce</a><span class="special">&lt;</span><span class="identifier">implementation0</span><span class="special">&gt;()</span>
         <span class="special">);</span>
     <span class="special">}</span>
 <span class="special">};</span>
 
-<span class="keyword">auto</span> <span class="identifier">injector_complex</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span>
+<span class="keyword">auto</span> <span class="identifier">injector_complex</span> <span class="special">=</span> <a class="link" href="injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
     <span class="identifier">module</span>
-  <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="bindings/bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation1</span><span class="special">&gt;()</span>
-  <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="scopes/unique.html" title="unique">unique</a><span class="special">&lt;</span>
+  <span class="special">,</span> <a class="link" href="bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation1</span><span class="special">&gt;()</span>
+  <span class="special">,</span> <a class="link" href="bindings/scope/unique.html" title="unique">di::unique</a><span class="special">&lt;</span>
         <span class="identifier">implementation2</span>
     <span class="special">&gt;</span>
-  <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span>
-        <span class="identifier">di</span><span class="special">::</span><a class="link" href="bindings/bind/bind_int.html" title="bind_int">bind_int</a><span class="special">&lt;</span><span class="number">42</span><span class="special">&gt;()</span>
+  <span class="special">,</span> <a class="link" href="injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+        <a class="link" href="bindings/bind/bind_int.html" title="bind_int">di::bind_int</a><span class="special">&lt;</span><span class="number">42</span><span class="special">&gt;()</span>
     <span class="special">)</span>
-  <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="injectors/injector.html" title="injector">injector</a><span class="special">&lt;&gt;()</span>
+  <span class="special">,</span> <a class="link" href="injectors/injector.html" title="injector">di::injector</a><span class="special">&lt;&gt;()</span>
 <span class="special">);</span>
 </pre>
 <h5>

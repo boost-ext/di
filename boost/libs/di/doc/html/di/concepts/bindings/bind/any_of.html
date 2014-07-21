@@ -119,7 +119,7 @@
 </tr></thead>
 <tbody><tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><a class="link" href="../bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">any_of</span><span class="special">&lt;</span><span class="identifier">interface1</span><span class="special">,</span> <span class="identifier">interface2</span><span class="special">&gt;,</span> <span class="identifier">implementation</span><span class="special">&gt;())</span></pre>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><a class="link" href="../bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">any_of</span><span class="special">&lt;</span><span class="identifier">interface1</span><span class="special">,</span> <span class="identifier">interface2</span><span class="special">&gt;,</span> <span class="identifier">implementation</span><span class="special">&gt;())</span></pre>
                   </td>
 <td>
                     <p>
@@ -130,8 +130,8 @@
                   </td>
 </tr></tbody>
 </table></div>
-<pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="../../injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span>
-    <span class="identifier">di</span><span class="special">::</span><a class="link" href="../bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">any_of</span><span class="special">&lt;</span><span class="identifier">interface1</span><span class="special">,</span> <span class="identifier">interface2</span><span class="special">&gt;,</span> <span class="identifier">implementation1</span><span class="special">&gt;()</span>
+<pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="../../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="../bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">any_of</span><span class="special">&lt;</span><span class="identifier">interface1</span><span class="special">,</span> <span class="identifier">interface2</span><span class="special">&gt;,</span> <span class="identifier">implementation1</span><span class="special">&gt;()</span>
 <span class="special">);</span>
 
 <span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">implementation1</span><span class="special">*&gt;(</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface1</span><span class="special">&gt;&gt;().</span><span class="identifier">get</span><span class="special">()));</span>
