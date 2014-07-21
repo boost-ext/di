@@ -810,7 +810,8 @@ Allows to choose binding regards the contextual call stack object was created wi
     assert(0 == injector.create<c1>().i);
     assert(42 == injector.create<c1>().c.i);
 
-[note `BOOST_DI_CFG_EXAMINE_CALL_STACK` has to be defined to enable this feature.]
+[note `BOOST_DI_CFG_EXAMINE_CALL_STACK` has to be defined to enable __bindings_when_call_stack__ feature.]
+[tip __annotations_named__ and __bindings_when__ might be used alternately - order is not specified.]
 
 [heading More Examples]
     ``__examples_binding__``

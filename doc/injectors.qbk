@@ -120,7 +120,7 @@ Injector is a component used for creating dependencies configuration using bindi
         injector_empty_t
       , implementation
       , di::bind_int<42>
-      , BOOST_TYPEOF_TPL(di::bind<long>::to(long()))
+      , decltype(di::bind<long>::to(long()))
     >;
 
     injector_t injector(di::bind<long>::to(87l));
@@ -128,6 +128,8 @@ Injector is a component used for creating dependencies configuration using bindi
     assert(42 == injector.create<int>());
     assert(87l == injector.create<long>());
     assert(dynamic_cast<implementation*>(injector.create<unique_ptr<interface>>().get()));
+
+[note In `C++03` `BOOST_TYPEOF_TPL` has to be used instead of `decltype`.]
     
 [heading More Examples]
     ``__examples_hello_world__`` | ``__examples_modules__`` | ``__examples_uml_visitor__`` | ``__examples_custom_allocator__`` | ``__examples_custom_scope__``
@@ -172,6 +174,7 @@ Creates `injector` type. Allows to bind dynamic values in no boilerplate manner.
     [[```di::make_injector(di::deduce<implementation>>())```][creates configuration with binds `implementation` to deduced `interface`]]
     [[```di::make_injector(di::bind<interface, implementation>>())```][injector with `interface` to `implementation` binding configuration]]
     [[```di::make_injector(di::bind<int>::to([]{return 42;}))```][injector with configuration binding `int` parameters with lambda expression returning `42`]]
+    [[```di::make_injector(di::bind<function<int()>>::to([]{return 42;}))```][injector with configuration binding `function<int()>` parameters with lambda expression returning `42`]]
     [[```di::make_injector(di::bind<example>::to(cref(example)))```][binds `example` to const reference given object]]
     [[```di::make_injector(di::bind<int>::to(42))```][injector with configuration binding `42` value to `int` parameters]]
 ]
