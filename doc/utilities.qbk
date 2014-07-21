@@ -47,7 +47,7 @@ Allocate and create objects. By default objects are allocated on heap using `new
     [[`x.allocate<TExpected, TGiven>()`][`TGiven` has no value and TGiven is not `mpl::string`][Returns allocated TGiven() object]]
     [[`x.allocate<TExpected, TGiven>()`][`TGiven` has value][Returns allocated `TGiven::value` object]]
     [[`x.allocate<TExpected, TGiven>()`][`TGiven` is `mpl::string`][Returns result of `mpl::c_str<TGiven>::value` expression]]
-    [[`x.allocate<TExpected, TGiven>(TArgs&&...)`][With parameters][Returns allocated `TGiven` constructed with `TArgs...`]]
+    [[`x.allocate<TExpected, TGiven>(TArgs&&...)`][Otherwise][Returns allocated `TGiven` constructed with `TArgs...`]]
 ]
 
 [heading Header]
