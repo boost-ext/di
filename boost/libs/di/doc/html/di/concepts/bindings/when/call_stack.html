@@ -7,7 +7,7 @@
 <link rel="home" href="../../../../index.html" title="Boost.DI (Dependency Injection) 1.0">
 <link rel="up" href="../when.html" title="when">
 <link rel="prev" href="../when.html" title="when">
-<link rel="next" href="../../injectors.html" title="Injectors">
+<link rel="next" href="../named.html" title="named">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,7 +20,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../when.html"><img src="../../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../when.html"><img src="../../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../../injectors.html"><img src="../../../../../../../../doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../when.html"><img src="../../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../when.html"><img src="../../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../named.html"><img src="../../../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h5 class="title">
@@ -113,7 +113,7 @@
             <span class="phrase"><a name="di.concepts.bindings.when.call_stack.expression_semantics"></a></span><a class="link" href="call_stack.html#di.concepts.bindings.when.call_stack.expression_semantics">Expression
             Semantics</a>
           </h6>
-<pre class="programlisting"><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">,</span> <span class="identifier">c2</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">cN</span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">,</span> <span class="identifier">c2</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">cN</span><span class="special">&gt;</span>
 </pre>
 <p>
             <span class="bold"><strong>Semantics</strong></span>: only last N objects are taken
@@ -236,7 +236,7 @@
 <tbody>
 <tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind_int</span><span class="special">&lt;</span><span class="number">42</span><span class="special">&gt;::</span><span class="identifier">when</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">,</span> <span class="identifier">c2</span><span class="special">&gt;&gt;()</span></pre>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><a class="link" href="../bind/bind_int.html" title="bind_int">bind_int</a><span class="special">&lt;</span><span class="number">42</span><span class="special">&gt;::</span><a class="link" href="../when.html" title="when">when</a><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">,</span> <span class="identifier">c2</span><span class="special">&gt;&gt;()</span></pre>
                   </td>
 <td>
                     <p>
@@ -250,7 +250,7 @@
 </tr>
 <tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">my_interface</span><span class="special">&gt;::</span><span class="identifier">when</span><span class="special">&lt;</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">,</span> <span class="identifier">c2</span><span class="special">&gt;&gt;()</span></pre>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><a class="link" href="../bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;::</span><a class="link" href="../named.html" title="named">named</a><span class="special">&lt;</span><span class="identifier">my_interface</span><span class="special">&gt;::</span><span class="identifier">whe__bindings_when__n</span><span class="special">&lt;</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">,</span> <span class="identifier">c2</span><span class="special">&gt;&gt;()</span></pre>
                   </td>
 <td>
                     <p>
@@ -264,7 +264,7 @@
 </tr>
 <tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;::</span><span class="identifier">when</span><span class="special">&lt;</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">,</span> <span class="identifier">c2</span><span class="special">&gt;&gt;::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">my_interface</span><span class="special">&gt;()</span></pre>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><a class="link" href="../bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;::</span><a class="link" href="../when.html" title="when">when</a><span class="special">&lt;</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">,</span> <span class="identifier">c2</span><span class="special">&gt;&gt;::</span><a class="link" href="../named.html" title="named">named</a><span class="special">&lt;</span><span class="identifier">my_interface</span><span class="special">&gt;()</span></pre>
                   </td>
 <td>
                     <p>
@@ -291,8 +291,8 @@
     <span class="identifier">c2</span> <span class="identifier">c</span><span class="special">;</span>
 <span class="special">};</span>
 
-<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-    <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;::</span><span class="identifier">when</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">,</span> <span class="identifier">c2</span><span class="special">&gt;&gt;()</span>
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="../../injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span>
+    <span class="identifier">di</span><span class="special">::</span><a class="link" href="../bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;::</span><a class="link" href="../when.html" title="when">when</a><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">,</span> <span class="identifier">c2</span><span class="special">&gt;&gt;()</span>
 <span class="special">);</span>
 
 <span class="identifier">assert</span><span class="special">(</span><span class="number">0</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">&gt;().</span><span class="identifier">i</span><span class="special">);</span>
@@ -315,8 +315,8 @@
 <th align="left">Tip</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-              <a class="link" href="../../annotations/named.html" title="named">named</a> and <a class="link" href="../when.html" title="when">when</a> might be used alternately
-              - order is not specified.
+              <a class="link" href="../named.html" title="named">named</a> and <a class="link" href="../when.html" title="when">when</a>
+              might be used alternately - order is not specified.
             </p></td></tr>
 </table></div>
 <h6>
@@ -355,7 +355,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../when.html"><img src="../../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../when.html"><img src="../../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../../injectors.html"><img src="../../../../../../../../doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../when.html"><img src="../../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../when.html"><img src="../../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../../index.html"><img src="../../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../named.html"><img src="../../../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

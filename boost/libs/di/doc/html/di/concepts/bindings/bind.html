@@ -44,9 +44,7 @@
           <span class="phrase"><a name="di.concepts.bindings.bind.synopsis"></a></span><a class="link" href="bind.html#di.concepts.bindings.bind.synopsis">Synopsis</a>
         </h6>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TInterface</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TImplementation</span><span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">bind</span>
-    <span class="special">:</span> <span class="identifier">bindings</span><span class="special">::</span><span class="identifier">dependency</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">deduce</span><span class="special">,</span> <span class="identifier">TInterface</span><span class="special">,</span> <span class="identifier">TImplementation</span><span class="special">&gt;</span>
-<span class="special">{</span>
+<span class="keyword">struct</span> <span class="identifier">bind</span> <span class="special">{</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
     <span class="keyword">static</span> <span class="identifier">dependency</span> <span class="identifier">to</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;);</span>
 <span class="special">};</span>
@@ -131,7 +129,7 @@
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">x</span><span class="special">.</span><span class="identifier">to</span><span class="special">(...)</span></code>
+                    <code class="computeroutput"><span class="identifier">x</span><span class="special">.</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span></code>
                   </p>
                 </td>
 <td>
@@ -155,8 +153,8 @@
           <span class="phrase"><a name="di.concepts.bindings.bind.expression_semantics"></a></span><a class="link" href="bind.html#di.concepts.bindings.bind.expression_semantics">Expression
           Semantics</a>
         </h6>
-<pre class="programlisting"><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;()</span>
-<span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="keyword">int</span><span class="special">())</span>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;()</span>
+<span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="keyword">int</span><span class="special">())</span>
 </pre>
 <p>
           <span class="bold"><strong>Return type</strong></span>: <code class="computeroutput"><span class="identifier">dependency</span></code>
@@ -301,7 +299,7 @@
 </tr>
 </tbody>
 </table></div>
-<pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+<pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="../injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span>
     <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;()</span>
   <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
 <span class="special">);</span>
@@ -315,9 +313,8 @@
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-            Values bind with <code class="computeroutput"><span class="identifier">bind</span><span class="special">&lt;...&gt;::</span><span class="identifier">to</span><span class="special">(...)</span></code> always have higher priority than
-            other bindings. See <code class="computeroutput"><span class="identifier">External</span>
-            <span class="identifier">scope</span></code> for further information.
+            Values bind with <code class="computeroutput"><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span></code> always have higher priority than other
+            bindings. See <code class="computeroutput"><span class="identifier">External</span> <span class="identifier">scope</span></code> for further information.
           </p></td></tr>
 </table></div>
 <h6>

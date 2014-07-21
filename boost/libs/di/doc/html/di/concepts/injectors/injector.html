@@ -46,7 +46,7 @@
 <span class="special">};</span>
 </pre>
 <div class="table">
-<a name="di.concepts.injectors.injector.parameters"></a><p class="title"><b>Table&#160;31.&#160;Parameters</b></p>
+<a name="di.concepts.injectors.injector.parameters"></a><p class="title"><b>Table&#160;32.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
 <col>
@@ -113,7 +113,7 @@
 <span class="special">};</span>
 </pre>
 <div class="table">
-<a name="di.concepts.injectors.injector.parameters0"></a><p class="title"><b>Table&#160;32.&#160;Parameters</b></p>
+<a name="di.concepts.injectors.injector.parameters0"></a><p class="title"><b>Table&#160;33.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
 <col>
@@ -346,7 +346,7 @@
           <span class="phrase"><a name="di.concepts.injectors.injector.expression_semantics"></a></span><a class="link" href="injector.html#di.concepts.injectors.injector.expression_semantics">Expression
           Semantics</a>
         </h6>
-<pre class="programlisting"><span class="identifier">injector</span><span class="special">&lt;...&gt;(...)</span>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">TArgs</span><span class="special">...&gt;(</span><span class="identifier">args</span><span class="special">...)</span>
 </pre>
 <h6>
 <a name="di.concepts.injectors.injector.h4"></a>
@@ -394,7 +394,7 @@
                   <p>
                     equivalent to
                   </p>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">deduce</span><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">&gt;&gt;</span></pre>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><a class="link" href="../bindings/scope/deduce.html" title="deduce">deduce</a><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">&gt;&gt;</span></pre>
                 </td>
 </tr>
 <tr>
@@ -411,7 +411,7 @@
 </tr>
 <tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="keyword">decltype</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="keyword">int</span><span class="special">())&gt;(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">))</span></pre>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="keyword">decltype</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><a class="link" href="../bindings/bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="keyword">int</span><span class="special">())&gt;(</span><span class="identifier">di</span><span class="special">::</span><a class="link" href="../bindings/bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">))</span></pre>
                 </td>
 <td>
                   <p>
@@ -427,8 +427,8 @@
 <span class="keyword">using</span> <span class="identifier">injector_t</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span>
     <span class="identifier">injector_empty_t</span>
   <span class="special">,</span> <span class="identifier">implementation</span>
-  <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind_int</span><span class="special">&lt;</span><span class="number">42</span><span class="special">&gt;</span>
-  <span class="special">,</span> <span class="keyword">decltype</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="keyword">long</span><span class="special">()))</span>
+  <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="../bindings/bind/bind_int.html" title="bind_int">bind_int</a><span class="special">&lt;</span><span class="number">42</span><span class="special">&gt;</span>
+  <span class="special">,</span> <span class="keyword">decltype</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><a class="link" href="../bindings/bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="keyword">long</span><span class="special">()))</span>
 <span class="special">&gt;;</span>
 
 <span class="identifier">injector_t</span> <span class="identifier">injector</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">87l</span><span class="special">));</span>

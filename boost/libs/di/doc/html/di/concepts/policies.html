@@ -45,19 +45,19 @@
       </p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
-            <code class="computeroutput"><span class="identifier">Circular</span> <span class="identifier">Dependencies</span></code>
+            <a class="link" href="policies/circular_dependencies.html" title="circular_dependencies">circular_dependencies</a>
             - verify circular dependencies occurrence
           </li>
 <li class="listitem">
-            <code class="computeroutput"><span class="identifier">Creation</span> <span class="identifier">Ownership</span></code>
+            <a class="link" href="policies/creation_ownership.html" title="creation_ownership">creation_ownership</a>
             - verify objection creation permission
           </li>
 <li class="listitem">
-            <code class="computeroutput"><span class="identifier">Parameters</span> <span class="identifier">Permission</span></code>
+            <a class="link" href="policies/parameters_permission.html" title="parameters_permission">parameters_permission</a>
             - verify constructor parameters permission
           </li>
 <li class="listitem">
-            <code class="computeroutput"><span class="identifier">Scopes</span> <span class="identifier">Permission</span></code>
+            <a class="link" href="policies/scopes_permission.html" title="scopes_permission">scopes_permission</a>
             - verify scopes configuration permission
           </li>
 </ul></div>
@@ -81,7 +81,7 @@
 <span class="special">};</span>
 </pre>
 <div class="table">
-<a name="di.concepts.policies.parameters"></a><p class="title"><b>Table&#160;37.&#160;Parameters</b></p>
+<a name="di.concepts.policies.parameters"></a><p class="title"><b>Table&#160;38.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
 <col>
@@ -135,8 +135,8 @@
 <a name="di.concepts.policies.h3"></a>
         <span class="phrase"><a name="di.concepts.policies.examples"></a></span><a class="link" href="policies.html#di.concepts.policies.examples">Examples</a>
       </h5>
-<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">policy1</span><span class="special">(),</span> <span class="identifier">policy2</span><span class="special">(),</span> <span class="special">...,</span> <span class="identifier">policyN</span><span class="special">());</span>
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">allocate</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">allocator</span><span class="special">(),</span> <span class="identifier">policy1</span><span class="special">(),</span> <span class="identifier">policy2</span><span class="special">(),</span> <span class="special">...,</span> <span class="identifier">policyN</span><span class="special">());</span>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><a class="link" href="injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">policy1</span><span class="special">(),</span> <span class="identifier">policy2</span><span class="special">(),</span> <span class="special">...,</span> <span class="identifier">policyN</span><span class="special">());</span>
+<span class="identifier">di</span><span class="special">::</span><a class="link" href="injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">().</span><span class="identifier">allocate</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">allocator</span><span class="special">(),</span> <span class="identifier">policy1</span><span class="special">(),</span> <span class="identifier">policy2</span><span class="special">(),</span> <span class="special">...,</span> <span class="identifier">policyN</span><span class="special">());</span>
 </pre>
 <h5>
 <a name="di.concepts.policies.h4"></a>

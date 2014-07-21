@@ -35,7 +35,8 @@
           to be used for injection - unique constructor with longest parameter list.
           See <a class="link" href="../../rationale.html#di.rationale.constructor_parameters_deduction">Constructor
           Parameters Deduction</a> for further reading. If the default behavior
-          should be changed constructor should be explicitly marked with <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT</span></code> or <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT_TRAITS</span></code>.
+          should be changed constructor should be explicitly marked with <a class="link" href="boost_di_inject.html" title="BOOST_DI_INJECT">BOOST_DI_INJECT</a>
+          or <a class="link" href="boost_di_inject_traits.html" title="BOOST_DI_INJECT_TRAITS">BOOST_DI_INJECT_TRAITS</a>.
         </p>
 <h6>
 <a name="di.concepts.injections.automatic.h1"></a>
@@ -102,10 +103,14 @@
         </h6>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">example</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-    <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">);</span>
-    <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">);</span>
-    <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">,</span> <span class="keyword">float</span><span class="special">);</span> <span class="comment">// will be deduced by Boost.DI</span>
+    <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">params</span><span class="special">(</span><span class="number">1</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+    <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">params</span><span class="special">(</span><span class="number">2</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+    <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">,</span> <span class="keyword">float</span><span class="special">);</span> <span class="special">:</span> <span class="identifier">params</span><span class="special">(</span><span class="number">3</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span> <span class="comment">// will be deduced by Boost.DI</span>
+
+    <span class="keyword">int</span> <span class="identifier">params</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">};</span>
+
+<span class="identifier">assert</span><span class="special">(</span><span class="number">3</span> <span class="special">==</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="../injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;().</span><span class="identifier">params</span><span class="special">);</span>
 </pre>
 <div class="note"><table border="0" summary="Note">
 <tr>
@@ -115,8 +120,8 @@
 <tr><td align="left" valign="top"><p>
             <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> is not able to distinguish between
             ambiguous constructors with the same (longest) amount of parameters,
-            then BOOST_DI_INJECT has to be used to point which constructor should
-            be deduced.
+            then <a class="link" href="boost_di_inject.html" title="BOOST_DI_INJECT">BOOST_DI_INJECT</a>
+            has to be used to point which constructor should be deduced.
           </p></td></tr>
 </table></div>
 <div class="warning"><table border="0" summary="Warning">
@@ -126,8 +131,9 @@
 </tr>
 <tr><td align="left" valign="top"><p>
             In <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code> constructors with one argument might
-            be ambiguous with copy constructors, therefore is advised to use <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT</span></code> for 1 argument constructors
-            in C++03.
+            be ambiguous with copy constructors, therefore is advised to always use
+            <a class="link" href="boost_di_inject.html" title="BOOST_DI_INJECT">BOOST_DI_INJECT</a>
+            for 1 argument constructors in <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code>.
           </p></td></tr>
 </table></div>
 <h6>
@@ -149,6 +155,9 @@
           Also</a>
         </h6>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+              <a class="link" href="../injections.html" title="Constructor Injections">Injections</a>
+            </li>
 <li class="listitem">
               <a class="link" href="automatic.html" title="automatic (default)">automatic</a>
             </li>

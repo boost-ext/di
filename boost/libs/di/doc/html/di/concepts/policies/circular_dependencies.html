@@ -44,7 +44,7 @@
 <span class="special">};</span>
 </pre>
 <div class="table">
-<a name="di.concepts.policies.circular_dependencies.parameters"></a><p class="title"><b>Table&#160;38.&#160;Parameters</b></p>
+<a name="di.concepts.policies.circular_dependencies.parameters"></a><p class="title"><b>Table&#160;39.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
 <col>
@@ -93,13 +93,14 @@
           <span class="phrase"><a name="di.concepts.policies.circular_dependencies.expression_semantics"></a></span><a class="link" href="circular_dependencies.html#di.concepts.policies.circular_dependencies.expression_semantics">Expression
           Semantics</a>
         </h6>
-<pre class="programlisting"><span class="identifier">circular_dependencies</span><span class="special">();</span>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">circular_dependencies</span><span class="special">()</span>
 </pre>
 <p>
-          <span class="bold"><strong>Result</strong></span>: <code class="computeroutput"><span class="identifier">BOOST_MPL_ASSERT</span>
-          <span class="identifier">with</span> <span class="identifier">CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED</span>
-          <span class="keyword">or</span> <span class="identifier">clean</span>
-          <span class="identifier">compilation</span></code>
+          <span class="bold"><strong>Result</strong></span>: <code class="computeroutput"><span class="keyword">static</span>
+          <span class="identifier">assert</span> <span class="identifier">with</span>
+          <span class="identifier">CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED</span>
+          <span class="identifier">messge</span> <span class="keyword">or</span>
+          <span class="identifier">clean</span> <span class="identifier">compilation</span></code>
         </p>
 <h6>
 <a name="di.concepts.policies.circular_dependencies.h3"></a>
@@ -117,13 +118,13 @@
 <a name="di.concepts.policies.circular_dependencies.h5"></a>
           <span class="phrase"><a name="di.concepts.policies.circular_dependencies.examples"></a></span><a class="link" href="circular_dependencies.html#di.concepts.policies.circular_dependencies.examples">Examples</a>
         </h6>
-<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">circular_dependencies</span><span class="special">());</span> <span class="comment">// compile ok</span>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><a class="link" href="../injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">circular_dependencies</span><span class="special">());</span> <span class="comment">// compile ok</span>
 
 <span class="keyword">struct</span> <span class="identifier">cd2</span><span class="special">;</span>
 <span class="keyword">struct</span> <span class="identifier">cd1</span> <span class="special">{</span> <span class="identifier">cd1</span><span class="special">(</span><span class="identifier">cd2</span><span class="special">*);</span> <span class="special">};</span>
 <span class="keyword">struct</span> <span class="identifier">cd2</span> <span class="special">{</span> <span class="identifier">cd2</span><span class="special">(</span><span class="identifier">cd1</span><span class="special">*);</span> <span class="special">};</span>
 
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">cd1</span><span class="special">&gt;(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">circular_dependencies</span><span class="special">());</span> <span class="comment">// compile error</span>
+<span class="identifier">di</span><span class="special">::</span><a class="link" href="../injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">cd1</span><span class="special">&gt;(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">circular_dependencies</span><span class="special">());</span> <span class="comment">// compile error</span>
 </pre>
 <div class="note"><table border="0" summary="Note">
 <tr>

@@ -43,6 +43,7 @@
 </dl></dd>
 <dt><span class="section"><a href="bindings/when.html">when</a></span></dt>
 <dd><dl><dt><span class="section"><a href="bindings/when/call_stack.html">call_stack</a></span></dt></dl></dd>
+<dt><span class="section"><a href="bindings/named.html">named</a></span></dt>
 </dl></div>
 <h5>
 <a name="di.concepts.bindings.h0"></a>
@@ -179,11 +180,11 @@
       </h5>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TIinterface</span> <span class="keyword">typename</span> <span class="identifier">TImplementation</span><span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">bind</span>
-    <span class="special">:</span> <span class="identifier">bindings</span><span class="special">::</span><span class="identifier">dependency</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">deduce</span><span class="special">,</span> <span class="identifier">TInterface</span><span class="special">,</span> <span class="identifier">TImplementation</span><span class="special">&gt;</span>
+    <span class="special">:</span> <span class="identifier">dependency</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">deduce</span><span class="special">,</span> <span class="identifier">TInterface</span><span class="special">,</span> <span class="identifier">TImplementation</span><span class="special">&gt;</span>
 <span class="special">{</span> <span class="special">};</span>
 
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-    <span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;()</span>
+<span class="identifier">di</span><span class="special">::</span><a class="link" href="injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span>
+    <span class="identifier">di</span><span class="special">::</span><a class="link" href="bindings/bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;()</span>
 <span class="special">);</span>
 </pre>
 <h5>
@@ -213,6 +214,9 @@
           </li>
 <li class="listitem">
             <a class="link" href="bindings/when.html" title="when">when</a>
+          </li>
+<li class="listitem">
+            <a class="link" href="bindings/named.html" title="named">named</a>
           </li>
 </ul></div>
 </div>

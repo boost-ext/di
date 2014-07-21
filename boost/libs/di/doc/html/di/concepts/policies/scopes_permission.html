@@ -47,7 +47,7 @@
 <span class="special">};</span>
 </pre>
 <div class="table">
-<a name="di.concepts.policies.scopes_permission.parameters"></a><p class="title"><b>Table&#160;42.&#160;Parameters</b></p>
+<a name="di.concepts.policies.scopes_permission.parameters"></a><p class="title"><b>Table&#160;43.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
 <col>
@@ -127,7 +127,7 @@
 <span class="special">};</span>
 </pre>
 <div class="table">
-<a name="di.concepts.policies.scopes_permission.parameters0"></a><p class="title"><b>Table&#160;43.&#160;Parameters</b></p>
+<a name="di.concepts.policies.scopes_permission.parameters0"></a><p class="title"><b>Table&#160;44.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
 <col>
@@ -214,11 +214,12 @@
           <span class="phrase"><a name="di.concepts.policies.scopes_permission.expression_semantics"></a></span><a class="link" href="scopes_permission.html#di.concepts.policies.scopes_permission.expression_semantics">Expression
           Semantics</a>
         </h6>
-<pre class="programlisting"><span class="identifier">scopes_permission</span><span class="special">&lt;</span>
-    <span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">unique</span><span class="special">&lt;&gt;&gt;</span>
-  <span class="special">,</span> <span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">shared</span><span class="special">&lt;&gt;&gt;</span>
-  <span class="special">,</span> <span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">session</span><span class="special">&lt;&gt;&gt;</span>
-  <span class="special">,</span> <span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">external</span><span class="special">&lt;&gt;&gt;</span>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">;</span>
+<span class="identifier">scopes_permission</span><span class="special">&lt;</span>
+    <span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><a class="link" href="../scopes/unique.html" title="unique">unique</a><span class="special">&lt;&gt;&gt;</span>
+  <span class="special">,</span> <span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><a class="link" href="../scopes/shared.html" title="shared">shared</a><span class="special">&lt;&gt;&gt;</span>
+  <span class="special">,</span> <span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><a class="link" href="../scopes/session.html" title="session">session</a><span class="special">&lt;&gt;&gt;</span>
+  <span class="special">,</span> <span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><a class="link" href="../scopes/external.html" title="external">external</a><span class="special">&lt;&gt;&gt;</span>
 <span class="special">&gt;()</span>
 </pre>
 <div class="note"><table border="0" summary="Note">
@@ -227,13 +228,14 @@
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-            <code class="computeroutput"><span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">deduce</span><span class="special">&gt;</span></code>
+            <code class="computeroutput"><span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><a class="link" href="../scopes/deduce.html" title="deduce (default)">deduce scope</a><span class="special">&gt;</span></code>
             is not allowed.
           </p></td></tr>
 </table></div>
 <p>
-          <span class="bold"><strong>Result</strong></span>: <code class="computeroutput"><span class="identifier">BOOST_MPL_ASSERT</span>
-          <span class="identifier">with</span> <span class="identifier">SCOPE_NOT_PERMITTED</span>
+          <span class="bold"><strong>Result</strong></span>: <code class="computeroutput"><span class="keyword">static</span>
+          <span class="identifier">assert</span> <span class="identifier">with</span>
+          <span class="identifier">SCOPE_NOT_PERMITTED</span> <span class="identifier">message</span>
           <span class="keyword">or</span> <span class="identifier">clean</span>
           <span class="identifier">compilation</span></code>
         </p>
@@ -255,31 +257,31 @@
         </h6>
 <pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">;</span>
 
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">scopes_permission</span><span class="special">&lt;&gt;());</span> <span class="comment">// compile error, no scopes are allowed</span>
+<span class="identifier">di</span><span class="special">::</span><a class="link" href="../injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">scopes_permission</span><span class="special">&lt;&gt;());</span> <span class="comment">// compile error, no scopes are allowed</span>
 
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-    <span class="identifier">di</span><span class="special">::</span><span class="identifier">unique</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;()</span>
-<span class="special">).</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">scopes_permission</span><span class="special">&lt;</span><span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">unique</span><span class="special">&lt;&gt;&gt;&gt;());</span> <span class="comment">// compile ok</span>
+<span class="identifier">di</span><span class="special">::</span><a class="link" href="../injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span>
+    <span class="identifier">di</span><span class="special">::</span><a class="link" href="../bindings/scope/unique.html" title="unique">unique</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;()</span>
+<span class="special">).</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">scopes_permission</span><span class="special">&lt;</span><span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">scopes</span><span class="special">::</span><a class="link" href="../scopes/unique.html" title="unique">unique</a><span class="special">&lt;&gt;&gt;&gt;());</span> <span class="comment">// compile ok</span>
 
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-    <span class="identifier">di</span><span class="special">::</span><span class="identifier">shared</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;()</span>
-<span class="special">).</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">scopes_permission</span><span class="special">&lt;</span><span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">unique</span><span class="special">&lt;&gt;&gt;&gt;());</span> <span class="comment">// compile error</span>
+<span class="identifier">di</span><span class="special">::</span><a class="link" href="../injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span>
+    <span class="identifier">di</span><span class="special">::</span><a class="link" href="../bindings/scope/shared.html" title="shared">shared</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;()</span>
+<span class="special">).</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">scopes_permission</span><span class="special">&lt;</span><span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">scopes</span><span class="special">::</span><a class="link" href="../scopes/unique.html" title="unique">unique</a><span class="special">&lt;&gt;&gt;&gt;());</span> <span class="comment">// compile error</span>
 
 <span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
     <span class="identifier">example</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;);</span>
 <span class="special">};</span>
 
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-    <span class="identifier">di</span><span class="special">::</span><span class="identifier">deduce</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;()</span>
-<span class="special">).</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;(</span><span class="identifier">scopes_permission</span><span class="special">&lt;</span><span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">unique</span><span class="special">&lt;&gt;&gt;&gt;());</span> <span class="comment">// compile error</span>
+<span class="identifier">di</span><span class="special">::</span><a class="link" href="../injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span>
+    <span class="identifier">di</span><span class="special">::</span><a class="link" href="../bindings/scope/deduce.html" title="deduce">deduce</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;()</span>
+<span class="special">).</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;(</span><span class="identifier">scopes_permission</span><span class="special">&lt;</span><span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">scopes</span><span class="special">::</span><a class="link" href="../scopes/unique.html" title="unique">unique</a><span class="special">&lt;&gt;&gt;&gt;());</span> <span class="comment">// compile error</span>
 
 <span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
     <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">);</span>
 <span class="special">};</span>
 
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-    <span class="identifier">di</span><span class="special">::</span><span class="identifier">deduce</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;()</span>
-<span class="special">).</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;(</span><span class="identifier">scopes_permission</span><span class="special">&lt;</span><span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">unique</span><span class="special">&lt;&gt;&gt;&gt;());</span> <span class="comment">// compile ok</span>
+<span class="identifier">di</span><span class="special">::</span><a class="link" href="../injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span>
+    <span class="identifier">di</span><span class="special">::</span><a class="link" href="../bindings/scope/deduce.html" title="deduce">deduce</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;()</span>
+<span class="special">).</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;(</span><span class="identifier">scopes_permission</span><span class="special">&lt;</span><span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">scopes</span><span class="special">::</span><a class="link" href="../scopes/unique.html" title="unique">unique</a><span class="special">&lt;&gt;&gt;&gt;());</span> <span class="comment">// compile ok</span>
 </pre>
 <div class="note"><table border="0" summary="Note">
 <tr>
@@ -287,7 +289,8 @@
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-            To understand <code class="computeroutput"><span class="identifier">scope</span> <span class="identifier">deduction</span></code> mapping see <code class="computeroutput"><span class="identifier">Deduce</span> <span class="identifier">Scope</span></code>.
+            To read more about <code class="computeroutput"><span class="identifier">scope</span> <span class="identifier">deduction</span></code> mapping see <a class="link" href="../scopes/deduce.html" title="deduce (default)">deduce
+            scope</a>.
           </p></td></tr>
 </table></div>
 <h6>

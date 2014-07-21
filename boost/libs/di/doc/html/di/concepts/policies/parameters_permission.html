@@ -47,7 +47,7 @@
 <span class="special">};</span>
 </pre>
 <div class="table">
-<a name="di.concepts.policies.parameters_permission.parameters"></a><p class="title"><b>Table&#160;40.&#160;Parameters</b></p>
+<a name="di.concepts.policies.parameters_permission.parameters"></a><p class="title"><b>Table&#160;41.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
 <col>
@@ -128,7 +128,7 @@
 <span class="special">};</span>
 </pre>
 <div class="table">
-<a name="di.concepts.policies.parameters_permission.parameters0"></a><p class="title"><b>Table&#160;41.&#160;Parameters</b></p>
+<a name="di.concepts.policies.parameters_permission.parameters0"></a><p class="title"><b>Table&#160;42.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
 <col>
@@ -197,11 +197,13 @@
           <span class="phrase"><a name="di.concepts.policies.parameters_permission.expression_semantics"></a></span><a class="link" href="parameters_permission.html#di.concepts.policies.parameters_permission.expression_semantics">Expression
           Semantics</a>
         </h6>
-<pre class="programlisting"><span class="identifier">parameters_permission</span><span class="special">&lt;</span><span class="identifier">allow_refs</span><span class="special">,</span> <span class="identifier">allow_smart_ptrs</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">allow_copies</span><span class="special">&gt;();</span>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">;</span>
+<span class="identifier">parameters_permission</span><span class="special">&lt;</span><span class="identifier">allow_refs</span><span class="special">,</span> <span class="identifier">allow_smart_ptrs</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">allow_copies</span><span class="special">&gt;()</span>
 </pre>
 <p>
-          <span class="bold"><strong>Result</strong></span>: <code class="computeroutput"><span class="identifier">BOOST_MPL_ASSERT</span>
-          <span class="identifier">with</span> <span class="identifier">PARAMETER_NOT_PERMITTED</span>
+          <span class="bold"><strong>Result</strong></span>: <code class="computeroutput"><span class="keyword">static</span>
+          <span class="identifier">assert</span> <span class="identifier">with</span>
+          <span class="identifier">PARAMETER_NOT_PERMITTED</span> <span class="identifier">message</span>
           <span class="keyword">or</span> <span class="identifier">clean</span>
           <span class="identifier">compilation</span></code>
         </p>
@@ -223,8 +225,8 @@
         </h6>
 <pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">;</span>
 
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">parameters_permission</span><span class="special">&lt;&gt;());</span> <span class="comment">// compile error, no parameters are allowed</span>
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">parameters_permission</span><span class="special">&lt;</span><span class="identifier">allow_copies</span><span class="special">&gt;());</span> <span class="comment">// compile ok</span>
+<span class="identifier">di</span><span class="special">::</span><a class="link" href="../injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">parameters_permission</span><span class="special">&lt;&gt;());</span> <span class="comment">// compile error, no parameters are allowed</span>
+<span class="identifier">di</span><span class="special">::</span><a class="link" href="../injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">parameters_permission</span><span class="special">&lt;</span><span class="identifier">allow_copies</span><span class="special">&gt;());</span> <span class="comment">// compile ok</span>
 
 <span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
     <span class="identifier">example</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">*&gt;,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;,</span> <span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;);</span>
@@ -236,7 +238,7 @@
 <span class="comment">//    * std::shared_ptr&lt;int&gt; -&gt; allow_smart_ptrs</span>
 <span class="comment">//    * const int&amp; -&gt; allow_const_refs</span>
 
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;(</span>
+<span class="identifier">di</span><span class="special">::</span><a class="link" href="../injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;(</span>
     <span class="identifier">parameters_permission</span><span class="special">&lt;</span><span class="identifier">allow_copies</span><span class="special">,</span> <span class="identifier">allow_ptrs</span><span class="special">,</span> <span class="identifier">allow_smart_ptrs</span><span class="special">,</span> <span class="identifier">allow_const_refs</span><span class="special">&gt;()</span>
 <span class="special">);</span> <span class="comment">// compile ok</span>
 </pre>

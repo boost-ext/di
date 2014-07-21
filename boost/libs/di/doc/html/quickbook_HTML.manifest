@@ -30,6 +30,7 @@ di/concepts/bindings/scope/shared.html
 di/concepts/bindings/scope/session.html
 di/concepts/bindings/when.html
 di/concepts/bindings/when/call_stack.html
+di/concepts/bindings/named.html
 di/concepts/injectors.html
 di/concepts/injectors/injector.html
 di/concepts/injectors/make_injector.html

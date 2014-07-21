@@ -44,7 +44,7 @@
 <a name="di.concepts.bindings.when.h1"></a>
           <span class="phrase"><a name="di.concepts.bindings.when.synopsis"></a></span><a class="link" href="when.html#di.concepts.bindings.when.synopsis">Synopsis</a>
         </h6>
-<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">unspecified</span> <span class="special">{</span>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">when</span> <span class="special">{</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
     <span class="keyword">struct</span> <span class="identifier">apply</span>
         <span class="special">:</span> <span class="identifier">TResult</span>
@@ -132,9 +132,9 @@
     <span class="special">{</span> <span class="special">};</span>
 <span class="special">}</span>
 
-<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-    <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">1</span><span class="special">)</span>
-  <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">when</span><span class="special">&lt;</span><span class="identifier">longer_call_stack_first</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="../injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span>
+    <span class="identifier">di</span><span class="special">::</span><a class="link" href="bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">1</span><span class="special">)</span>
+  <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">when</span><span class="special">&lt;</span><span class="identifier">longer_call_stack_first</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
 <span class="special">);</span>
 
 <span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
@@ -162,6 +162,9 @@
             </li>
 <li class="listitem">
               <a class="link" href="when/call_stack.html" title="call_stack">call_stack</a>
+            </li>
+<li class="listitem">
+              <a class="link" href="named.html" title="named">named</a>
             </li>
 </ul></div>
 </div>

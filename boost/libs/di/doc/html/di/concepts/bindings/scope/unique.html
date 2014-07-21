@@ -94,7 +94,7 @@
             <span class="phrase"><a name="di.concepts.bindings.scope.unique.expression_semantics"></a></span><a class="link" href="unique.html#di.concepts.bindings.scope.unique.expression_semantics">Expression
             Semantics</a>
           </h6>
-<pre class="programlisting"><span class="identifier">unique</span><span class="special">&lt;</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">,</span> <span class="identifier">impl</span><span class="special">&gt;&gt;()</span>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">unique</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><a class="link" href="../bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;&gt;()</span>
 </pre>
 <p>
             <span class="bold"><strong>Return type</strong></span>: <code class="computeroutput"><span class="identifier">dependency</span></code>
@@ -128,7 +128,7 @@
 </tr></thead>
 <tbody><tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">unique</span><span class="special">&lt;</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;&gt;()</span></pre>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">unique</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><a class="link" href="../bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;&gt;()</span></pre>
                   </td>
 <td>
                     <p>
@@ -140,9 +140,9 @@
                   </td>
 </tr></tbody>
 </table></div>
-<pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+<pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="../../injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span>
     <span class="identifier">di</span><span class="special">::</span><span class="identifier">unique</span><span class="special">&lt;</span>
-        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;</span>
+        <span class="identifier">di</span><span class="special">::</span><a class="link" href="../bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;</span>
     <span class="special">&gt;()</span>
 <span class="special">);</span>
 

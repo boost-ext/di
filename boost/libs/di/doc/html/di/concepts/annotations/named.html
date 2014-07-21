@@ -132,7 +132,7 @@
           <span class="phrase"><a name="di.concepts.annotations.named.expression_semantics"></a></span><a class="link" href="named.html#di.concepts.annotations.named.expression_semantics">Expression
           Semantics</a>
         </h6>
-<pre class="programlisting"><span class="identifier">named</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">string</span><span class="special">&lt;</span><span class="char">'int'</span><span class="special">&gt;&gt;()</span>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">string</span><span class="special">&lt;</span><span class="char">'int'</span><span class="special">&gt;&gt;()</span>
 </pre>
 <h6>
 <a name="di.concepts.annotations.named.h2"></a>
@@ -178,13 +178,14 @@
 </table></div>
 <h6>
 <a name="di.concepts.annotations.named.h4"></a>
-          <span class="phrase"><a name="di.concepts.annotations.named.examples0"></a></span><a class="link" href="named.html#di.concepts.annotations.named.examples0">Examples</a>
+          <span class="phrase"><a name="di.concepts.annotations.named.examples_injections_automatic"></a></span><a class="link" href="named.html#di.concepts.annotations.named.examples_injections_automatic">Examples
+          - automatic</a>
         </h6>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">my_int</span> <span class="special">{</span> <span class="special">};</span>
 
 <span class="keyword">class</span> <span class="identifier">example</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-    <span class="identifier">example</span><span class="special">(</span><span class="identifier">named</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">my_int</span><span class="special">&gt;</span> <span class="identifier">i1</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i2</span><span class="special">);</span>
+    <span class="identifier">example</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">my_int</span><span class="special">&gt;</span> <span class="identifier">i1</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i2</span><span class="special">);</span>
         <span class="special">:</span> <span class="identifier">i1</span><span class="special">(</span><span class="identifier">i1</span><span class="special">)</span>
         <span class="special">,</span> <span class="identifier">i2</span><span class="special">(</span><span class="identifier">i2</span><span class="special">)</span>
     <span class="special">{</span> <span class="special">}</span>
@@ -193,9 +194,9 @@
     <span class="keyword">int</span> <span class="identifier">i2</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">};</span>
 
-<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-    <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">my_int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
-  <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind_int</span><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;</span>
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="../injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span>
+    <span class="identifier">di</span><span class="special">::</span><a class="link" href="../bindings/bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><a class="link" href="../bindings/named.html" title="named">named</a><span class="special">&lt;</span><span class="identifier">my_int</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
+  <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="../bindings/bind/bind_int.html" title="bind_int">bind_int</a><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;</span>
 <span class="special">);</span>
 
 <span class="keyword">auto</span> <span class="identifier">example_</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;();</span>
@@ -220,14 +221,14 @@
 
 <span class="keyword">template</span><span class="special">&lt;&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">ctor_traits</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;</span> <span class="special">{</span>
-    <span class="identifier">BOOST_DI_INJECT_TRAITS</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">my_value1</span><span class="special">&gt;,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">my_value2</span><span class="special">&gt;);</span>
+    <a class="link" href="../injections/boost_di_inject_traits.html" title="BOOST_DI_INJECT_TRAITS">BOOST_DI_INJECT_TRAITS</a><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">my_value1</span><span class="special">&gt;,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">my_value2</span><span class="special">&gt;);</span>
 <span class="special">};</span>
 
 <span class="special">}}</span> <span class="comment">// boost::di</span>
 
-<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-    <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">my_value1</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">1</span><span class="special">)</span>
-    <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><span class="identifier">named</span><span class="special">&lt;</span><span class="identifier">my_value2</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">2</span><span class="special">)</span>
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="../injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span>
+    <span class="identifier">di</span><span class="special">::</span><a class="link" href="../bindings/bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><a class="link" href="../bindings/named.html" title="named">named</a><span class="special">&lt;</span><span class="identifier">my_value1</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">1</span><span class="special">)</span>
+    <span class="identifier">di</span><span class="special">::</span><a class="link" href="../bindings/bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><a class="link" href="../bindings/named.html" title="named">named</a><span class="special">&lt;</span><span class="identifier">my_value2</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">2</span><span class="special">)</span>
 <span class="special">);</span>
 
 <span class="keyword">auto</span> <span class="identifier">example_</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;();</span>

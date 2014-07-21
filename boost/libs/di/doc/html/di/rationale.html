@@ -42,18 +42,21 @@
     <span class="identifier">example</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">&gt;);</span>
 <span class="special">};</span>
 </pre>
-<pre class="programlisting"><span class="identifier">Dependency</span> <span class="identifier">configuration</span> <span class="keyword">and</span> <span class="identifier">creation</span><span class="special">.</span>
-
-    <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">deduce</span><span class="special">&lt;</span><span class="identifier">impl</span><span class="special">&gt;()).</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;();</span>
-
-        <span class="identifier">equals</span><span class="special">...</span>
-
-    <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">,</span> <span class="identifier">impl</span><span class="special">&gt;()).</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;();</span>
-
-        <span class="identifier">equals</span><span class="special">...</span>
-
-    <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">shared</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">,</span> <span class="identifier">impl</span><span class="special">&gt;&gt;()).</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;();</span>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><a class="link" href="concepts/injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><a class="link" href="concepts/bindings/scope/deduce.html" title="deduce">deduce</a><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">&gt;()).</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;();</span>
 </pre>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><a class="link" href="concepts/injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><a class="link" href="concepts/bindings/bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;()).</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;();</span>
+</pre>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><a class="link" href="concepts/injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><a class="link" href="concepts/scopes/shared.html" title="shared">shared</a><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><a class="link" href="concepts/bindings/bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;&gt;()).</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;();</span>
+</pre>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        All above expressions create the same configuration.
+      </p></td></tr>
+</table></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
           Dependencies should be resolved during compilation time (no runtime exceptions

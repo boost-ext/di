@@ -119,7 +119,7 @@
 <span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <span class="keyword">auto</span> <span class="identifier">sm</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">state_machine</span><span class="special">&lt;</span><span class="identifier">state_machine_</span><span class="special">&gt;&gt;();</span>
+    <span class="keyword">auto</span> <span class="identifier">sm</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="../../concepts/injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">state_machine</span><span class="special">&lt;</span><span class="identifier">state_machine_</span><span class="special">&gt;&gt;();</span>
     <span class="identifier">sm</span><span class="special">.</span><span class="identifier">process_event</span><span class="special">(</span><span class="identifier">event</span><span class="special">());</span>
 
     <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>

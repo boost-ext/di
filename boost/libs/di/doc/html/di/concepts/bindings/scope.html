@@ -44,9 +44,10 @@
           <span class="phrase"><a name="di.concepts.bindings.scope.synopsis"></a></span><a class="link" href="scope.html#di.concepts.bindings.scope.synopsis">Synopsis</a>
         </h6>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TScope</span><span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">scope</span>
-    <span class="special">:</span> <span class="identifier">bindings</span><span class="special">::</span><span class="identifier">scope</span><span class="special">&lt;</span><span class="identifier">TScope</span><span class="special">&gt;</span>
-<span class="special">{</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">scope</span> <span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TArgs</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">bind</span><span class="special">;</span>
+<span class="special">};</span>
 </pre>
 <div class="table">
 <a name="di.concepts.bindings.scope.parameters"></a><p class="title"><b>Table&#160;24.&#160;Parameters</b></p>
@@ -73,7 +74,8 @@
                   </p>
                 </th>
 </tr></thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>
                   <p>
                     <code class="computeroutput"><span class="identifier">TScope</span></code>
@@ -90,7 +92,26 @@
                     scope to be binded
                   </p>
                 </td>
-</tr></tbody>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">TArgs</span><span class="special">...</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../bindings.html#di.concepts.bindings.synopsis">Binding Model</a>
+                    type
+                  </p>
+                </td>
+<td>
+                  <p>
+                    types to be binded in <code class="computeroutput"><span class="identifier">TScope</span></code>
+                  </p>
+                </td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <br class="table-break"><h6>
@@ -98,7 +119,7 @@
           <span class="phrase"><a name="di.concepts.bindings.scope.expression_semantics"></a></span><a class="link" href="scope.html#di.concepts.bindings.scope.expression_semantics">Expression
           Semantics</a>
         </h6>
-<pre class="programlisting"><span class="identifier">scope</span><span class="special">&lt;</span><span class="identifier">Scope</span><span class="special">&gt;::</span><span class="identifier">bind</span><span class="special">&lt;...&gt;()</span>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">scope</span><span class="special">&lt;</span><span class="identifier">Scope</span><span class="special">&gt;::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">TArgs</span><span class="special">...&gt;()</span>
 </pre>
 <p>
           <span class="bold"><strong>Return type</strong></span>: <code class="computeroutput"><span class="identifier">dependency</span></code>
@@ -133,7 +154,7 @@
 <tbody>
 <tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">unique</span><span class="special">&lt;&gt;::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;&gt;</span></pre>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><a class="link" href="../scopes/unique.html" title="unique">unique</a><span class="special">&lt;&gt;&gt;::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><a class="link" href="bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;&gt;</span></pre>
                 </td>
 <td>
                   <p>
@@ -145,7 +166,7 @@
 </tr>
 <tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">shared</span><span class="special">&lt;&gt;::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;&gt;</span></pre>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><a class="link" href="../scopes/shared.html" title="shared">shared</a><span class="special">&lt;&gt;&gt;::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><a class="link" href="bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;&gt;</span></pre>
                 </td>
 <td>
                   <p>
@@ -157,7 +178,7 @@
 </tr>
 <tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">session</span><span class="special">&lt;&gt;::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;&gt;</span></pre>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><a class="link" href="../scopes/session.html" title="session">session</a><span class="special">&lt;&gt;&gt;::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><a class="link" href="bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;&gt;</span></pre>
                 </td>
 <td>
                   <p>
@@ -169,9 +190,9 @@
 </tr>
 </tbody>
 </table></div>
-<pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-    <span class="identifier">di</span><span class="special">::</span><span class="identifier">scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">unique</span><span class="special">&lt;&gt;&gt;::</span><span class="identifier">bind</span><span class="special">&lt;</span>
-        <span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><a class="link" href="../injectors/make_injector.html" title="make_injector">make_injector</a><span class="special">(</span>
+    <span class="identifier">di</span><span class="special">::</span><span class="identifier">scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><a class="link" href="../scopes/unique.html" title="unique">unique</a><span class="special">&gt;::</span><span class="identifier">bind</span><span class="special">&lt;</span>
+        <span class="identifier">di</span><span class="special">::</span><a class="link" href="bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;</span>
     <span class="special">&gt;()</span>
 <span class="special">);</span>
 
@@ -184,7 +205,7 @@
 </tr>
 <tr><td align="left" valign="top"><p>
             <code class="computeroutput"><span class="identifier">external</span></code> scope can be
-            only binded using <code class="computeroutput"><span class="identifier">bind</span><span class="special">&lt;...&gt;::</span><span class="identifier">to</span><span class="special">(...)</span></code> semantic.
+            only binded using <code class="computeroutput"><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span></code> semantic.
           </p></td></tr>
 </table></div>
 <h6>
