@@ -58,7 +58,7 @@ int main() {
     di::make_injector().create<std::shared_ptr<example>>(allow_only_smart_ptr_policy());
 
     /*<<create lvalue `example` with `allow_only_smart_ptr_policy` policy - compile error>>*/
-    di::make_injector().create<example>(allow_only_smart_ptr_policy());
+    //di::make_injector().create<example>(allow_only_smart_ptr_policy());
 
     return 0;
 }

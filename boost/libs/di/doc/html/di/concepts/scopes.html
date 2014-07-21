@@ -66,7 +66,84 @@
         are able to convert object to requested types accurately to their definition.
         There are 5 basic types of wrappers.
       </p>
-<div class="informaltable"><table class="table">
+<h5>
+<a name="di.concepts.scopes.h1"></a>
+        <span class="phrase"><a name="di.concepts.scopes.wrapper_model"></a></span><a class="link" href="scopes.html#di.concepts.scopes.wrapper_model">Wrapper
+        Model</a>
+      </h5>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">wrapper_model</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TValueType</span><span class="special">&gt;</span>
+    <span class="identifier">wrapper_model</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TValueType</span><span class="special">&amp;</span> <span class="identifier">value</span><span class="special">);</span>
+
+    <span class="identifier">T</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="identifier">type</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;)</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<div class="table">
+<a name="di.concepts.scopes.parameters"></a><p class="title"><b>Table&#160;6.&#160;Parameters</b></p>
+<div class="table-contents"><table class="table" summary="Parameters">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Parameter
+                </p>
+              </th>
+<th>
+                <p>
+                  Requirement
+                </p>
+              </th>
+<th>
+                <p>
+                  Description
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">T</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  None
+                </p>
+              </td>
+<td>
+                <p>
+                  Type wrapper might be converted to
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">TValueType</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  None
+                </p>
+              </td>
+<td>
+                <p>
+                  Object type to be stored by wrapper
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="informaltable"><table class="table">
 <colgroup>
 <col>
 <col>
@@ -148,10 +225,10 @@
 </tbody>
 </table></div>
 <h5>
-<a name="di.concepts.scopes.h1"></a>
+<a name="di.concepts.scopes.h2"></a>
         <span class="phrase"><a name="di.concepts.scopes.synopsis"></a></span><a class="link" href="scopes.html#di.concepts.scopes.synopsis">Synopsis</a>
       </h5>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">unspecified</span> <span class="special">{</span>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">scope</span> <span class="special">{</span>
     <span class="keyword">typedef</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">int_</span><span class="special">&lt;</span><span class="identifier">N</span><span class="special">&gt;</span> <span class="identifier">priority</span><span class="special">;</span> <span class="comment">// N - priority, 1=lowest, N=highest</span>
 
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TExpected</span><span class="special">&gt;</span>
@@ -166,7 +243,7 @@
 <span class="special">};</span>
 </pre>
 <div class="table">
-<a name="di.concepts.scopes.parameters"></a><p class="title"><b>Table&#160;6.&#160;Parameters</b></p>
+<a name="di.concepts.scopes.parameters0"></a><p class="title"><b>Table&#160;7.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
 <col>
@@ -246,19 +323,19 @@
 </table></div>
 </div>
 <br class="table-break"><h5>
-<a name="di.concepts.scopes.h2"></a>
+<a name="di.concepts.scopes.h3"></a>
         <span class="phrase"><a name="di.concepts.scopes.header"></a></span><a class="link" href="scopes.html#di.concepts.scopes.header">Header</a>
       </h5>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 </pre>
 <h5>
-<a name="di.concepts.scopes.h3"></a>
+<a name="di.concepts.scopes.h4"></a>
         <span class="phrase"><a name="di.concepts.scopes.namespace"></a></span><a class="link" href="scopes.html#di.concepts.scopes.namespace">Namespace</a>
       </h5>
 <pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">scopes</span>
 </pre>
 <h5>
-<a name="di.concepts.scopes.h4"></a>
+<a name="di.concepts.scopes.h5"></a>
         <span class="phrase"><a name="di.concepts.scopes.examples"></a></span><a class="link" href="scopes.html#di.concepts.scopes.examples">Examples</a>
       </h5>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">custom_scope</span> <span class="special">{</span>
@@ -300,14 +377,14 @@
 <span class="identifier">assert</span><span class="special">(</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">interface1</span><span class="special">&gt;&gt;()</span> <span class="special">!=</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">interface2</span><span class="special">&gt;&gt;());</span>
 </pre>
 <h5>
-<a name="di.concepts.scopes.h5"></a>
+<a name="di.concepts.scopes.h6"></a>
         <span class="phrase"><a name="di.concepts.scopes.more_examples"></a></span><a class="link" href="scopes.html#di.concepts.scopes.more_examples">More
         Examples</a>
       </h5>
 <pre class="programlisting"><a class="link" href="../examples/custom_scope.html" title="Custom Scope">Custom Scope</a>
 </pre>
 <h5>
-<a name="di.concepts.scopes.h6"></a>
+<a name="di.concepts.scopes.h7"></a>
         <span class="phrase"><a name="di.concepts.scopes.scopes_conversions"></a></span><a class="link" href="scopes.html#di.concepts.scopes.scopes_conversions">Scopes
         Conversions</a>
       </h5>
@@ -324,7 +401,7 @@
         </p></td></tr>
 </table></div>
 <div class="table">
-<a name="di.concepts.scopes.conversions"></a><p class="title"><b>Table&#160;7.&#160;Conversions</b></p>
+<a name="di.concepts.scopes.conversions"></a><p class="title"><b>Table&#160;8.&#160;Conversions</b></p>
 <div class="table-contents"><table class="table" summary="Conversions">
 <colgroup>
 <col>
@@ -701,13 +778,13 @@
 </table></div>
 </div>
 <br class="table-break"><h5>
-<a name="di.concepts.scopes.h7"></a>
+<a name="di.concepts.scopes.h8"></a>
         <span class="phrase"><a name="di.concepts.scopes.tests"></a></span><a class="link" href="scopes.html#di.concepts.scopes.tests">Tests</a>
       </h5>
 <pre class="programlisting"><a href="../../test/ut/wrappers/universal_ut.cpp" target="_top">test/ut/wrappers/universal_ut.cpp</a>
 </pre>
 <h5>
-<a name="di.concepts.scopes.h8"></a>
+<a name="di.concepts.scopes.h9"></a>
         <span class="phrase"><a name="di.concepts.scopes.see_also"></a></span><a class="link" href="scopes.html#di.concepts.scopes.see_also">See
         Also</a>
       </h5>

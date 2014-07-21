@@ -46,12 +46,12 @@ di/examples.html
 di/examples/hello_world.html
 di/examples/constructor_injection.html
 di/examples/binding.html
+di/examples/dynamic_binding.html
 di/examples/modules.html
 di/examples/deduce_scope.html
 di/examples/custom_scope.html
 di/examples/custom_allocator.html
 di/examples/custom_policy.html
-di/examples/dynamic_binding.html
 di/examples/uml_visitor.html
 di/examples/integration_with_boost_libraries.html
 di/examples/integration_with_boost_libraries/boost_meta_state_machine.html

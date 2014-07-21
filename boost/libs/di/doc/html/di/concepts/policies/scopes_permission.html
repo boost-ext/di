@@ -36,23 +36,18 @@
         </p>
 <h6>
 <a name="di.concepts.policies.scopes_permission.h1"></a>
-          <span class="phrase"><a name="di.concepts.policies.scopes_permission.synopsis"></a></span><a class="link" href="scopes_permission.html#di.concepts.policies.scopes_permission.synopsis">Synopsis</a>
+          <span class="phrase"><a name="di.concepts.policies.scopes_permission.allow_scope_model"></a></span><a class="link" href="scopes_permission.html#di.concepts.policies.scopes_permission.allow_scope_model">Allow
+          Scope Model</a>
         </h6>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TScope</span><span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">allow_scope</span><span class="special">;</span>
-
-<span class="keyword">template</span><span class="special">&lt;&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">deduce</span><span class="special">&gt;;</span> <span class="comment">// disabled</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">class</span> <span class="identifier">scopes_permission</span> <span class="special">{</span>
+<span class="keyword">class</span> <span class="identifier">allow_scope_model</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
-    <span class="keyword">void</span> <span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">allow</span><span class="special">;</span> <span class="comment">// returns Boolean expression</span>
 <span class="special">};</span>
 </pre>
 <div class="table">
-<a name="di.concepts.policies.scopes_permission.parameters"></a><p class="title"><b>Table&#160;39.&#160;Parameters</b></p>
+<a name="di.concepts.policies.scopes_permission.parameters"></a><p class="title"><b>Table&#160;42.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
 <col>
@@ -85,7 +80,88 @@
                 </td>
 <td>
                   <p>
-                    Scope Model type
+                    <a class="link" href="../scopes.html#di.concepts.scopes.synopsis">Scope Model</a>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Scope to be allowed
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">T</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    None
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Dependency scope
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><h6>
+<a name="di.concepts.policies.scopes_permission.h2"></a>
+          <span class="phrase"><a name="di.concepts.policies.scopes_permission.synopsis"></a></span><a class="link" href="scopes_permission.html#di.concepts.policies.scopes_permission.synopsis">Synopsis</a>
+        </h6>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TScope</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">allow_scope</span><span class="special">;</span>
+
+<span class="keyword">template</span><span class="special">&lt;&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">allow_scope</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">deduce</span><span class="special">&gt;;</span> <span class="comment">// disabled</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TArgs</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">scopes_permission</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<div class="table">
+<a name="di.concepts.policies.scopes_permission.parameters0"></a><p class="title"><b>Table&#160;43.&#160;Parameters</b></p>
+<div class="table-contents"><table class="table" summary="Parameters">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Parameter
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Requirement
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">TScope</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../scopes.html#di.concepts.scopes.synopsis">Scope Model</a>
+                    type
                   </p>
                 </td>
 <td>
@@ -97,12 +173,13 @@
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">T</span><span class="special">...</span></code>
+                    <code class="computeroutput"><span class="identifier">TArgs</span><span class="special">...</span></code>
                   </p>
                 </td>
 <td>
                   <p>
-                    Allow Scope Model type
+                    <a class="link" href="scopes_permission.html#di.concepts.policies.scopes_permission.allow_scope_model">Allow
+                    Scope Model</a> type
                   </p>
                 </td>
 <td>
@@ -119,7 +196,8 @@
                 </td>
 <td>
                   <p>
-                    Dependency Model type
+                    <a class="link" href="../bindings.html#di.concepts.bindings.synopsis">Dependency Model</a>
+                    type
                   </p>
                 </td>
 <td>
@@ -132,7 +210,7 @@
 </table></div>
 </div>
 <br class="table-break"><h6>
-<a name="di.concepts.policies.scopes_permission.h2"></a>
+<a name="di.concepts.policies.scopes_permission.h3"></a>
           <span class="phrase"><a name="di.concepts.policies.scopes_permission.expression_semantics"></a></span><a class="link" href="scopes_permission.html#di.concepts.policies.scopes_permission.expression_semantics">Expression
           Semantics</a>
         </h6>
@@ -160,19 +238,19 @@
           <span class="identifier">compilation</span></code>
         </p>
 <h6>
-<a name="di.concepts.policies.scopes_permission.h3"></a>
+<a name="di.concepts.policies.scopes_permission.h4"></a>
           <span class="phrase"><a name="di.concepts.policies.scopes_permission.header"></a></span><a class="link" href="scopes_permission.html#di.concepts.policies.scopes_permission.header">Header</a>
         </h6>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 </pre>
 <h6>
-<a name="di.concepts.policies.scopes_permission.h4"></a>
+<a name="di.concepts.policies.scopes_permission.h5"></a>
           <span class="phrase"><a name="di.concepts.policies.scopes_permission.namespace"></a></span><a class="link" href="scopes_permission.html#di.concepts.policies.scopes_permission.namespace">Namespace</a>
         </h6>
 <pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span>
 </pre>
 <h6>
-<a name="di.concepts.policies.scopes_permission.h5"></a>
+<a name="di.concepts.policies.scopes_permission.h6"></a>
           <span class="phrase"><a name="di.concepts.policies.scopes_permission.examples"></a></span><a class="link" href="scopes_permission.html#di.concepts.policies.scopes_permission.examples">Examples</a>
         </h6>
 <pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">;</span>
@@ -213,13 +291,13 @@
           </p></td></tr>
 </table></div>
 <h6>
-<a name="di.concepts.policies.scopes_permission.h6"></a>
+<a name="di.concepts.policies.scopes_permission.h7"></a>
           <span class="phrase"><a name="di.concepts.policies.scopes_permission.tests"></a></span><a class="link" href="scopes_permission.html#di.concepts.policies.scopes_permission.tests">Tests</a>
         </h6>
 <pre class="programlisting"><a href="../../../test/ut/policies/scopes_permission_ut.cpp" target="_top">test/ut/policies/scopes_permission_ut.cpp</a>
 </pre>
 <h6>
-<a name="di.concepts.policies.scopes_permission.h7"></a>
+<a name="di.concepts.policies.scopes_permission.h8"></a>
           <span class="phrase"><a name="di.concepts.policies.scopes_permission.see_also"></a></span><a class="link" href="scopes_permission.html#di.concepts.policies.scopes_permission.see_also">See
           Also</a>
         </h6>
