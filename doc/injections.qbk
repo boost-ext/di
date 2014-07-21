@@ -23,7 +23,7 @@ It guarantees initialized state of data members. `Boost.DI` constructor injectio
         double d = 0.0;
     };
 
-    auto example_ = di::__injectors_make_injector__().create<example>();
+    auto example_ = __di_make_injector__().create<example>();
     assert(0 == example_.i);
     assert(0.0 == example_.d);
 ```
@@ -66,7 +66,7 @@ If the default behavior should be changed constructor should be explicitly marke
         int params = 0;
     };
 
-    assert(3 == di::__injectors_make_injector__().create<example>().params);
+    assert(3 == __di_make_injector__().create<example>().params);
 
 [note `Boost.DI` is not able to distinguish between ambiguous constructors with the same (longest) amount of parameters, then __injections_boost_di_inject__ has to be used to point which constructor should be deduced.]
 [warning In `C++03` constructors with one argument might be ambiguous with copy constructors, therefore is advised to always use __injections_boost_di_inject__ for 1 argument constructors in `C++03`.]
@@ -126,7 +126,7 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
         example(int, double, float);
     };
 
-    assert(di::__injectors_make_injector__().create<example>());
+    assert(__di_make_injector__().create<example>());
 
 [note In `C++03` additional brackets are needed: `BOOST_DI_INJECT(example, (int, double))`.]
 [tip Requirement of brackets in `BOOST_DI_INJECT` might be switched with `BOOST_DI_CFG_INJECT_VA_ARGS` and `BOOST_DI_CFG_INJECT_BRACKET`.]

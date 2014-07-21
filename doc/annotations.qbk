@@ -81,9 +81,9 @@ It doesn't has to be the case when __injections_ctor_traits__ are used.
         int i2 = 0;
     };
 
-    auto injector = di::__injectors_make_injector__(
-        di::__bindings_bind__<int>::__bindings_named__<my_int>::to(42)
-      , di::__bindings_bind_bind_int__<0>
+    auto injector = __di_make_injector__(
+        __di_bind__<int>::__di_bind_named__<my_int>::to(42)
+      , __di_bind_int__<0>
     );
 
     auto example_ = injector.create<example>();
@@ -110,9 +110,9 @@ It doesn't has to be the case when __injections_ctor_traits__ are used.
 
     }} // boost::di
 
-    auto injector = di::__injectors_make_injector__(
-        di::__bindings_bind__<int>::__bindings_named__<my_value1>::to(1)
-        di::__bindings_bind__<int>::__bindings_named__<my_value2>::to(2)
+    auto injector = __di_make_injector__(
+        __di_bind__<int>::__di_bind_named__<my_value1>::to(1)
+        __di_bind__<int>::__di_bind_named__<my_value2>::to(2)
     );
 
     auto example_ = injector.create<example>();

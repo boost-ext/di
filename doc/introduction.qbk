@@ -82,7 +82,7 @@ Using `Boost.DI` has many advantages over `manual dependency injection`.
         [
             ```
                 int main() {
-                    return di::__injectors_make_injector__().create<example>().run();                     .
+                    return __di_make_injector__().create<example>().run();                     .
                 }
             ```
         ]

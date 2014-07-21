@@ -509,9 +509,9 @@ The macros listed in the table below may be used to control the behaviour of `Bo
             // parameters evaluation order is not specified
             struct c { c(aux::shared_ptr<a>, aux::shared_ptr<b>); };
 
-            di::__injectors_make_injector__(
-                di::__bindings_bind__<int>::when<call_stack<a>>::to(42)
-              , di::__bindings_scope_shared__<a>
+            __di_make_injector__(
+                __di_bind__<int>::when<call_stack<a>>::to(42)
+              , __di_bind_shared__<a>
             );
             ```
         ]

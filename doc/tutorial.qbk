@@ -58,7 +58,7 @@ namespace di = boost::di;
 namespace di = boost::di;
 
 int main() {
-    auto injector = di::__injectors_make_injector__(); // injector configuration
+    auto injector = __di_make_injector__(); // injector configuration
 
     injector.create<app>().run(); // composition root
 
@@ -84,9 +84,9 @@ between static (compile time - __bindings_bind_bind_int__) values and externals 
 the value to `1` for now:
 
 ```
-auto injector = di::__injectors_make_injector__(
-    di::__bindings_bind_bind_int__<1>() // static value
-  , di::__bindings_bind__<std::string>::to("hello world") // dynamic value
+auto injector = __di_make_injector__(
+    __di_bind_int__<1>() // static value
+  , __di_bind__<std::string>::to("hello world") // dynamic value
 );
 ```
 [table
@@ -101,9 +101,9 @@ line argument is not equal 0.
 
 ```
 int main(int argc, char** argv) {
-    auto injector = di::__injectors_make_injector__(
-        di::__bindings_bind__<int>::to(argc > 1 ? std::atoi(argv[1]) : 0)
-      , di::__bindings_bind__<std::string>::to("hello world")
+    auto injector = __di_make_injector__(
+        __di_bind__<int>::to(argc > 1 ? std::atoi(argv[1]) : 0)
+      , __di_bind__<std::string>::to("hello world")
     );
     injector.create<app>().start();
 }
@@ -164,10 +164,10 @@ to pure virtual method `log` not being implemented. Well, we have to configure `
 will be actually instantiated by `logger`. There is nothing easier, we just have to bind `ilogger` interface to `logger` implementation.
 
 ```
-    auto injector = di::__injectors_make_injector__(
-        di::__bindings_bind__<ilogger, logger>()
-      , di::__bindings_bind__<int>::to(argc > 1 ? std::atoi(argv[1]) : 0)
-      , di::__bindings_bind__<std::string>::to("hello world")
+    auto injector = __di_make_injector__(
+        __di_bind__<ilogger, logger>()
+      , __di_bind__<int>::to(argc > 1 ? std::atoi(argv[1]) : 0)
+      , __di_bind__<std::string>::to("hello world")
     );
     injector.create<std::unique_ptr<app>>()->start(); // unique_ptr is not copyable
 ```
@@ -206,10 +206,10 @@ public:
     { }
 
     auto configure() const {
-        return di::__injectors_make_injector__(
-            di::__bindings_deduce__<ilogger>() // we can deduce the interface as well!
-          , di::__bindings_bind__<int>::to(value_)
-          , di::__bindings_bind__<std::string>::to("hello world")
+        return __di_make_injector__(
+            __di_bind_deduce__<ilogger>() // we can deduce the interface as well!
+          , __di_bind__<int>::to(value_)
+          , __di_bind__<std::string>::to("hello world")
         );
     }
 
@@ -222,7 +222,7 @@ and the main function
 
 ```
 int main(int argc, char** argv) {
-    auto injector = di::__injectors_make_injector__(module(argc > 1 ? std::atoi(argv[1]) : 0));
+    auto injector = __di_make_injector__(module(argc > 1 ? std::atoi(argv[1]) : 0));
     injector.create<app>().run();
 
     return 0;
@@ -303,11 +303,11 @@ Right now, if we want to bind `value1` and `value2` we just need to use named pr
 
 ```
     auto configure() const {
-        return di::__injectors_make_injector__(
-            di::__bindings_deduce__<logger>()
-          , di::__bindings_bind__<int>::__bindings_named__<first>::to(i_) // bind int named first to i
-          , di::__bindings_bind__<int>::__bindings_named__<second>::to(0) // bind int named second to 0
-          , di::__bindings_bind__<std::string>::to("hello world")
+        return __di_make_injector__(
+            __di_bind_deduce__<logger>()
+          , __di_bind__<int>::__di_bind_named__<first>::to(i_) // bind int named first to i
+          , __di_bind__<int>::__di_bind_named__<second>::to(0) // bind int named second to 0
+          , __di_bind__<std::string>::to("hello world")
         );
     }
 ```

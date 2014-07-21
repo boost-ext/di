@@ -224,8 +224,8 @@ like "composition root".
 
         int main() {
             // dependency injection configuration
-            auto injector = di::__injectors_make_injector__(
-                di::__bindings_bind__<ilogger, logger>()
+            auto injector = __di_make_injector__(
+                __di_bind__<ilogger, logger>()
             );
 
             // composition root
@@ -246,8 +246,8 @@ like "composition root".
 * [*"Evil"] usage of Dependency Injection Framework
 [warning Presented example is just for learning purposes, please don't follow this anti-pattern approach!]
 ```
-    auto global_injector = di::__injectors_make_injector__(
-        di::__bindings_bind__<interface, implementation>()
+    auto global_injector = __di_make_injector__(
+        __di_bind__<interface, implementation>()
     );
 
     class app {
