@@ -428,7 +428,7 @@
     <span class="identifier">injector_empty_t</span>
   <span class="special">,</span> <span class="identifier">implementation</span>
   <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind_int</span><span class="special">&lt;</span><span class="number">42</span><span class="special">&gt;</span>
-  <span class="special">,</span> <span class="identifier">BOOST_TYPEOF_TPL</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="keyword">long</span><span class="special">()))</span>
+  <span class="special">,</span> <span class="keyword">decltype</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="keyword">long</span><span class="special">()))</span>
 <span class="special">&gt;;</span>
 
 <span class="identifier">injector_t</span> <span class="identifier">injector</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">87l</span><span class="special">));</span>
@@ -437,6 +437,16 @@
 <span class="identifier">assert</span><span class="special">(</span><span class="number">87l</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;());</span>
 <span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">*&gt;(</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;&gt;().</span><span class="identifier">get</span><span class="special">()));</span>
 </pre>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            In <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code> <code class="computeroutput"><span class="identifier">BOOST_TYPEOF_TPL</span></code>
+            has to be used instead of <code class="computeroutput"><span class="keyword">decltype</span></code>.
+          </p></td></tr>
+</table></div>
 <h6>
 <a name="di.concepts.injectors.injector.h6"></a>
           <span class="phrase"><a name="di.concepts.injectors.injector.more_examples"></a></span><a class="link" href="injector.html#di.concepts.injectors.injector.more_examples">More

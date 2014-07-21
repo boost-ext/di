@@ -170,6 +170,17 @@
 </tr>
 <tr>
 <td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">()&gt;&gt;::</span><span class="identifier">to</span><span class="special">([]{</span><span class="keyword">return</span> <span class="number">42</span><span class="special">;}))</span></pre>
+                </td>
+<td>
+                  <p>
+                    injector with configuration binding <code class="computeroutput"><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">()&gt;</span></code> parameters with lambda
+                    expression returning <code class="computeroutput"><span class="number">42</span></code>
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">cref</span><span class="special">(</span><span class="identifier">example</span><span class="special">)))</span></pre>
                 </td>
 <td>
