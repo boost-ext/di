@@ -41,7 +41,7 @@ If compilation time is still a problem, `Boost.DI` contains a set of features to
     CXX -include pch.hpp example.cpp
 ```
 
-* Examine Call Stack
+* Examine __bindings_when_call_stack__
     * Enables context (call stack) to be used for binding
     * This feature slow down the compilation, so it has to be turn on by defining `BOOST_DI_CFG_EXAMINE_CALL_STACK`
     * Disabled by default

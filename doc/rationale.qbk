@@ -64,10 +64,10 @@ please refer to commits history.]
 
 [table
     [ [Component] [Description] ]
-    [ [Core] [Responsible for resolving requested types (implementation detail)] ]
+    [ [__core__] [Responsible for resolving requested types (implementation detail)] ]
     [ [__bindings__] [DSL to create dependencies representation which will be used by core to resolve types] ]
     [ [__scopes__] [Responsible for maintain objects life time] ]
-    [ [Wrappers] [Responsible for conversion to required type] ]
+    [ [__wrappers__] [Responsible for conversion to required type] ]
     [ [__policies__] [Compile time assertions for types] ]
 ]
 

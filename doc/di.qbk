@@ -35,6 +35,7 @@
 [def __annotations_named__                              [link di.concepts.annotations.named named]]
 
 [def __scopes__                                         [link di.concepts.scopes Scopes]]
+[def __wrappers__                                       [link di.concepts.scopes.wrapper_model Wrappers]]
 [def __scopes_deduce__                                  [link di.concepts.scopes.deduce deduce scope]]
 [def __scopes_external__                                [link di.concepts.scopes.external external scope]]
 [def __scopes_unique__                                  [link di.concepts.scopes.unique unique scope]]
@@ -56,6 +57,7 @@
 [def __bindings_when__                                  [link di.concepts.bindings.when when]]
 [def __bindings_when_call_stack__                       [link di.concepts.bindings.when.call_stack call_stack]]
 
+[def __core__                                           [link di.concepts.injectors Core]]
 [def __injectors__                                      [link di.concepts.injectors Injectors]]
 [def __injectors_injector__                             [link di.concepts.injectors.injector injector]]
 [def __injectors_make_injector__                        [link di.concepts.injectors.make_injector make_injector]]
