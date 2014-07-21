@@ -63,7 +63,7 @@ Using `Boost.DI` has many advantages over `manual dependency injection`.
 
 * [*Reduce boilerplate code] (no factories, no objects creation)
 * [*Reduce cost of maintenance effort] (constructor signature change won't affect `di` configuration)
-* [*Reduce testing effort] (automatic mocks injection - see [link di.examples Automatic Mocks Injection])
+* [*Reduce testing effort] (automatic mocks injection - see __examples_testing_automatic_mocks_injector__)
 
 [table
 [[Manual Dependency Injection][`Boost.DI`]]
@@ -94,9 +94,9 @@ Using `Boost.DI` has many advantages over `manual dependency injection`.
 * [*Type safe]
 * [*Compile time] approach - no exceptions - if application compiles all dependencies will be be created accurately
 * [*Macro free] - by default no need to specify constructor traits or register anything (less intrusive)
-* Scopes deduction - scopes are deduced based on type semantic
+* __scopes__ deduction - scopes are deduced based on type semantic
 * Automatic conversion between std/boost smart pointers
-* Compile time policies - ex. to detect circular dependencies or limit supported types only to specified
+* Compile time __policies__ - ex. to detect circular dependencies or limit supported types only to specified
 * Supports `C++03`/`C++11`/`C++14` standards
 
 [endsect]
