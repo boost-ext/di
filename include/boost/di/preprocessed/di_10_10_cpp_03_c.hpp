@@ -1232,12 +1232,12 @@ class call_stack
     { };
 
 public:
-    template<typename T>
+    template<typename TDependency>
     struct apply
         : apply_impl<
               context_type
             , typename mpl::transform<
-                  typename T::call_stack
+                  typename TDependency::call_stack
                 , di::type_traits::make_plain<mpl::_>
               >::type
           >::type
@@ -5353,10 +5353,10 @@ struct allow_copies
 };
 
 BOOST_DI_WKND(NO_MSVC)(
-    template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na >
+    template< typename TArgs0 = ::boost::mpl::na , typename TArgs1 = ::boost::mpl::na , typename TArgs2 = ::boost::mpl::na , typename TArgs3 = ::boost::mpl::na , typename TArgs4 = ::boost::mpl::na , typename TArgs5 = ::boost::mpl::na , typename TArgs6 = ::boost::mpl::na , typename TArgs7 = ::boost::mpl::na , typename TArgs8 = ::boost::mpl::na , typename TArgs9 = ::boost::mpl::na >
     class parameters_permission
     {
-        typedef ::boost::mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9> allow_types;
+        typedef ::boost::mpl::vector< TArgs0 , TArgs1 , TArgs2 , TArgs3 , TArgs4 , TArgs5 , TArgs6 , TArgs7 , TArgs8 , TArgs9> allow_types;
 
         template<typename T>
         struct value_type
@@ -5513,10 +5513,10 @@ struct allow_scope
 template<>
 struct allow_scope<scopes::deduce>; // disabled
 
-template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na >
+template< typename TArgs0 = ::boost::mpl::na , typename TArgs1 = ::boost::mpl::na , typename TArgs2 = ::boost::mpl::na , typename TArgs3 = ::boost::mpl::na , typename TArgs4 = ::boost::mpl::na , typename TArgs5 = ::boost::mpl::na , typename TArgs6 = ::boost::mpl::na , typename TArgs7 = ::boost::mpl::na , typename TArgs8 = ::boost::mpl::na , typename TArgs9 = ::boost::mpl::na >
 class scopes_permission
 {
-    typedef ::boost::mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9> permitted_types;
+    typedef ::boost::mpl::vector< TArgs0 , TArgs1 , TArgs2 , TArgs3 , TArgs4 , TArgs5 , TArgs6 , TArgs7 , TArgs8 , TArgs9> permitted_types;
 
     template<typename TAllow, typename T>
     struct is_scope_permitted_impl

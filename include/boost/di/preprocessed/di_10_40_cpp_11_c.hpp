@@ -1232,12 +1232,12 @@ class call_stack
     { };
 
 public:
-    template<typename T>
+    template<typename TDependency>
     struct apply
         : apply_impl<
               context_type
             , typename mpl::transform<
-                  typename T::call_stack
+                  typename TDependency::call_stack
                 , di::type_traits::make_plain<mpl::_>
               >::type
           >::type
@@ -9073,10 +9073,10 @@ struct allow_copies
 };
 
 BOOST_DI_WKND(NO_MSVC)(
-    template<typename... T_MPL>
+    template<typename... TArgs_MPL>
     class parameters_permission
     {
-        typedef ::boost::mpl::vector<T_MPL...> allow_types;
+        typedef ::boost::mpl::vector<TArgs_MPL...> allow_types;
 
         template<typename T>
         struct value_type
@@ -9233,10 +9233,10 @@ struct allow_scope
 template<>
 struct allow_scope<scopes::deduce>; // disabled
 
-template<typename... T_MPL>
+template<typename... TArgs_MPL>
 class scopes_permission
 {
-    typedef ::boost::mpl::vector<T_MPL...> permitted_types;
+    typedef ::boost::mpl::vector<TArgs_MPL...> permitted_types;
 
     template<typename TAllow, typename T>
     struct is_scope_permitted_impl

@@ -1232,12 +1232,12 @@ class call_stack
     { };
 
 public:
-    template<typename T>
+    template<typename TDependency>
     struct apply
         : apply_impl<
               context_type
             , typename mpl::transform<
-                  typename T::call_stack
+                  typename TDependency::call_stack
                 , di::type_traits::make_plain<mpl::_>
               >::type
           >::type
@@ -12133,10 +12133,10 @@ struct allow_copies
 };
 
 BOOST_DI_WKND(NO_MSVC)(
-    template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na , typename T10 = ::boost::mpl::na , typename T11 = ::boost::mpl::na , typename T12 = ::boost::mpl::na , typename T13 = ::boost::mpl::na , typename T14 = ::boost::mpl::na , typename T15 = ::boost::mpl::na , typename T16 = ::boost::mpl::na , typename T17 = ::boost::mpl::na , typename T18 = ::boost::mpl::na , typename T19 = ::boost::mpl::na , typename T20 = ::boost::mpl::na , typename T21 = ::boost::mpl::na , typename T22 = ::boost::mpl::na , typename T23 = ::boost::mpl::na , typename T24 = ::boost::mpl::na , typename T25 = ::boost::mpl::na , typename T26 = ::boost::mpl::na , typename T27 = ::boost::mpl::na , typename T28 = ::boost::mpl::na , typename T29 = ::boost::mpl::na , typename T30 = ::boost::mpl::na , typename T31 = ::boost::mpl::na , typename T32 = ::boost::mpl::na , typename T33 = ::boost::mpl::na , typename T34 = ::boost::mpl::na , typename T35 = ::boost::mpl::na , typename T36 = ::boost::mpl::na , typename T37 = ::boost::mpl::na , typename T38 = ::boost::mpl::na , typename T39 = ::boost::mpl::na >
+    template< typename TArgs0 = ::boost::mpl::na , typename TArgs1 = ::boost::mpl::na , typename TArgs2 = ::boost::mpl::na , typename TArgs3 = ::boost::mpl::na , typename TArgs4 = ::boost::mpl::na , typename TArgs5 = ::boost::mpl::na , typename TArgs6 = ::boost::mpl::na , typename TArgs7 = ::boost::mpl::na , typename TArgs8 = ::boost::mpl::na , typename TArgs9 = ::boost::mpl::na , typename TArgs10 = ::boost::mpl::na , typename TArgs11 = ::boost::mpl::na , typename TArgs12 = ::boost::mpl::na , typename TArgs13 = ::boost::mpl::na , typename TArgs14 = ::boost::mpl::na , typename TArgs15 = ::boost::mpl::na , typename TArgs16 = ::boost::mpl::na , typename TArgs17 = ::boost::mpl::na , typename TArgs18 = ::boost::mpl::na , typename TArgs19 = ::boost::mpl::na , typename TArgs20 = ::boost::mpl::na , typename TArgs21 = ::boost::mpl::na , typename TArgs22 = ::boost::mpl::na , typename TArgs23 = ::boost::mpl::na , typename TArgs24 = ::boost::mpl::na , typename TArgs25 = ::boost::mpl::na , typename TArgs26 = ::boost::mpl::na , typename TArgs27 = ::boost::mpl::na , typename TArgs28 = ::boost::mpl::na , typename TArgs29 = ::boost::mpl::na , typename TArgs30 = ::boost::mpl::na , typename TArgs31 = ::boost::mpl::na , typename TArgs32 = ::boost::mpl::na , typename TArgs33 = ::boost::mpl::na , typename TArgs34 = ::boost::mpl::na , typename TArgs35 = ::boost::mpl::na , typename TArgs36 = ::boost::mpl::na , typename TArgs37 = ::boost::mpl::na , typename TArgs38 = ::boost::mpl::na , typename TArgs39 = ::boost::mpl::na >
     class parameters_permission
     {
-        typedef ::boost::mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19 , T20 , T21 , T22 , T23 , T24 , T25 , T26 , T27 , T28 , T29 , T30 , T31 , T32 , T33 , T34 , T35 , T36 , T37 , T38 , T39> allow_types;
+        typedef ::boost::mpl::vector< TArgs0 , TArgs1 , TArgs2 , TArgs3 , TArgs4 , TArgs5 , TArgs6 , TArgs7 , TArgs8 , TArgs9 , TArgs10 , TArgs11 , TArgs12 , TArgs13 , TArgs14 , TArgs15 , TArgs16 , TArgs17 , TArgs18 , TArgs19 , TArgs20 , TArgs21 , TArgs22 , TArgs23 , TArgs24 , TArgs25 , TArgs26 , TArgs27 , TArgs28 , TArgs29 , TArgs30 , TArgs31 , TArgs32 , TArgs33 , TArgs34 , TArgs35 , TArgs36 , TArgs37 , TArgs38 , TArgs39> allow_types;
 
         template<typename T>
         struct value_type
@@ -12293,10 +12293,10 @@ struct allow_scope
 template<>
 struct allow_scope<scopes::deduce>; // disabled
 
-template< typename T0 = ::boost::mpl::na , typename T1 = ::boost::mpl::na , typename T2 = ::boost::mpl::na , typename T3 = ::boost::mpl::na , typename T4 = ::boost::mpl::na , typename T5 = ::boost::mpl::na , typename T6 = ::boost::mpl::na , typename T7 = ::boost::mpl::na , typename T8 = ::boost::mpl::na , typename T9 = ::boost::mpl::na , typename T10 = ::boost::mpl::na , typename T11 = ::boost::mpl::na , typename T12 = ::boost::mpl::na , typename T13 = ::boost::mpl::na , typename T14 = ::boost::mpl::na , typename T15 = ::boost::mpl::na , typename T16 = ::boost::mpl::na , typename T17 = ::boost::mpl::na , typename T18 = ::boost::mpl::na , typename T19 = ::boost::mpl::na , typename T20 = ::boost::mpl::na , typename T21 = ::boost::mpl::na , typename T22 = ::boost::mpl::na , typename T23 = ::boost::mpl::na , typename T24 = ::boost::mpl::na , typename T25 = ::boost::mpl::na , typename T26 = ::boost::mpl::na , typename T27 = ::boost::mpl::na , typename T28 = ::boost::mpl::na , typename T29 = ::boost::mpl::na , typename T30 = ::boost::mpl::na , typename T31 = ::boost::mpl::na , typename T32 = ::boost::mpl::na , typename T33 = ::boost::mpl::na , typename T34 = ::boost::mpl::na , typename T35 = ::boost::mpl::na , typename T36 = ::boost::mpl::na , typename T37 = ::boost::mpl::na , typename T38 = ::boost::mpl::na , typename T39 = ::boost::mpl::na >
+template< typename TArgs0 = ::boost::mpl::na , typename TArgs1 = ::boost::mpl::na , typename TArgs2 = ::boost::mpl::na , typename TArgs3 = ::boost::mpl::na , typename TArgs4 = ::boost::mpl::na , typename TArgs5 = ::boost::mpl::na , typename TArgs6 = ::boost::mpl::na , typename TArgs7 = ::boost::mpl::na , typename TArgs8 = ::boost::mpl::na , typename TArgs9 = ::boost::mpl::na , typename TArgs10 = ::boost::mpl::na , typename TArgs11 = ::boost::mpl::na , typename TArgs12 = ::boost::mpl::na , typename TArgs13 = ::boost::mpl::na , typename TArgs14 = ::boost::mpl::na , typename TArgs15 = ::boost::mpl::na , typename TArgs16 = ::boost::mpl::na , typename TArgs17 = ::boost::mpl::na , typename TArgs18 = ::boost::mpl::na , typename TArgs19 = ::boost::mpl::na , typename TArgs20 = ::boost::mpl::na , typename TArgs21 = ::boost::mpl::na , typename TArgs22 = ::boost::mpl::na , typename TArgs23 = ::boost::mpl::na , typename TArgs24 = ::boost::mpl::na , typename TArgs25 = ::boost::mpl::na , typename TArgs26 = ::boost::mpl::na , typename TArgs27 = ::boost::mpl::na , typename TArgs28 = ::boost::mpl::na , typename TArgs29 = ::boost::mpl::na , typename TArgs30 = ::boost::mpl::na , typename TArgs31 = ::boost::mpl::na , typename TArgs32 = ::boost::mpl::na , typename TArgs33 = ::boost::mpl::na , typename TArgs34 = ::boost::mpl::na , typename TArgs35 = ::boost::mpl::na , typename TArgs36 = ::boost::mpl::na , typename TArgs37 = ::boost::mpl::na , typename TArgs38 = ::boost::mpl::na , typename TArgs39 = ::boost::mpl::na >
 class scopes_permission
 {
-    typedef ::boost::mpl::vector< T0 , T1 , T2 , T3 , T4 , T5 , T6 , T7 , T8 , T9 , T10 , T11 , T12 , T13 , T14 , T15 , T16 , T17 , T18 , T19 , T20 , T21 , T22 , T23 , T24 , T25 , T26 , T27 , T28 , T29 , T30 , T31 , T32 , T33 , T34 , T35 , T36 , T37 , T38 , T39> permitted_types;
+    typedef ::boost::mpl::vector< TArgs0 , TArgs1 , TArgs2 , TArgs3 , TArgs4 , TArgs5 , TArgs6 , TArgs7 , TArgs8 , TArgs9 , TArgs10 , TArgs11 , TArgs12 , TArgs13 , TArgs14 , TArgs15 , TArgs16 , TArgs17 , TArgs18 , TArgs19 , TArgs20 , TArgs21 , TArgs22 , TArgs23 , TArgs24 , TArgs25 , TArgs26 , TArgs27 , TArgs28 , TArgs29 , TArgs30 , TArgs31 , TArgs32 , TArgs33 , TArgs34 , TArgs35 , TArgs36 , TArgs37 , TArgs38 , TArgs39> permitted_types;
 
     template<typename TAllow, typename T>
     struct is_scope_permitted_impl
