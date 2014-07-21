@@ -114,7 +114,7 @@
           <span class="phrase"><a name="di.concepts.injections.boost_di_inject.expression_semantics"></a></span><a class="link" href="boost_di_inject.html#di.concepts.injections.boost_di_inject.expression_semantics">Expression
           Semantics</a>
         </h6>
-<pre class="programlisting"><a class="link" href="boost_di_inject.html" title="BOOST_DI_INJECT">BOOST_DI_INJECT</a><span class="special">(</span><span class="keyword">explicit</span> <span class="identifier">example</span><span class="special">,</span> <span class="keyword">int</span> <span class="special">=</span> <span class="number">0</span><span class="special">,</span> <span class="keyword">double</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">);</span>
+<pre class="programlisting"><span class="identifier">BOOS_DI_INJECT</span><span class="special">(</span><span class="keyword">explicit</span> <span class="identifier">example</span><span class="special">,</span> <span class="keyword">int</span> <span class="special">=</span> <span class="number">0</span><span class="special">,</span> <span class="keyword">double</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">);</span>
 </pre>
 <p>
           <span class="bold"><strong>Preprocessed type</strong></span>:
@@ -135,7 +135,7 @@
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">example</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">);</span>
-    <a class="link" href="boost_di_inject.html" title="BOOST_DI_INJECT">BOOST_DI_INJECT</a><span class="special">(</span><span class="identifier">example</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">);</span> <span class="comment">// will be chosen by Boost.DI</span>
+    <span class="identifier">BOOS_DI_INJECT</span><span class="special">(</span><span class="identifier">example</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">);</span> <span class="comment">// will be chosen by Boost.DI</span>
     <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">,</span> <span class="keyword">float</span><span class="special">);</span>
 <span class="special">};</span>
 
@@ -147,7 +147,8 @@
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-            In <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code> additional brackets are needed: <code class="computeroutput"><a class="link" href="boost_di_inject.html" title="BOOST_DI_INJECT">BOOST_DI_INJECT</a><span class="special">(</span><span class="identifier">example</span><span class="special">,</span> <span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">))</span></code>.
+            In <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code> additional brackets are needed: <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT</span><span class="special">(</span><span class="identifier">example</span><span class="special">,</span>
+            <span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">))</span></code>.
           </p></td></tr>
 </table></div>
 <div class="tip"><table border="0" summary="Tip">
@@ -156,7 +157,7 @@
 <th align="left">Tip</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-            Requirement of brackets in <a class="link" href="boost_di_inject.html" title="BOOST_DI_INJECT">BOOST_DI_INJECT</a>
+            Requirement of brackets in <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT</span></code>
             might be switched with <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_INJECT_VA_ARGS</span></code>
             and <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_INJECT_BRACKET</span></code>.
           </p></td></tr>
