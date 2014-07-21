@@ -30,6 +30,14 @@
 [binding_cpp_11]
 [endsect]
 
+[section Dynamic Binding]
+[import ../example/cpp_14/dynamic_binding.cpp]
+[dynamic_binding_cpp_14]
+[table
+    [[Full code example: [@example/cpp_14/dynamic_binding.cpp]]]
+]
+[endsect]
+
 [section Modules]
 [import ../example/cpp_14/modules.cpp]
 [modules_cpp_14]
@@ -72,14 +80,6 @@
 [custom_policy_cpp_11]
 [table
     [[Full code example: [@example/cpp_11/custom_policy.cpp]]]
-]
-[endsect]
-
-[section Dynamic Binding]
-[import ../example/cpp_14/dynamic_binding.cpp]
-[dynamic_binding_cpp_14]
-[table
-    [[Full code example: [@example/cpp_14/dynamic_binding.cpp]]]
 ]
 [endsect]
 

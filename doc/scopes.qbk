@@ -24,6 +24,22 @@ Scopes use `wrappers` to return convertible objects.
 `Wrappers` are able to convert object to requested types accurately to their definition.
 There are 5 basic types of wrappers.
 
+[heading Wrapper Model]
+    template<typename T>
+    class wrapper_model {
+    public:
+        template<typename TValueType>
+        wrapper_model(const TValueType& value);
+
+        T operator()(const type<T>&) const;
+    };
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`T`][None][Type wrapper might be converted to]]
+    [[`TValueType`][None][Object type to be stored by wrapper]]
+]
+
 [table
     [[Wrapper][Description]]
     [[copy][conversion to lvalue/pointer/smart_ptr]]
@@ -34,8 +50,7 @@ There are 5 basic types of wrappers.
 ]
 
 [heading Synopsis]
-```
-    class unspecified {
+    class scope {
         typedef mpl::int_<N> priority; // N - priority, 1=lowest, N=highest
 
         template<typename TExpected>
@@ -48,7 +63,6 @@ There are 5 basic types of wrappers.
             void call(const TAction&);
         };
     };
-```
 
 [table Parameters
     [[Parameter][Requirement][Description]]
@@ -255,7 +269,7 @@ will be binded using different scope as well then this binding won't be taken in
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TWrapper`][Wrapper Model type][consist available type conversions]]
+    [[`TWrapper`][__wrapper_model__ type][consist available type conversions]]
     [[`TExpected`][None][type to be expected by constructor]]
     [[`x.create()`][None][create wrapped type to be passed to constructor]]
 ]
@@ -341,7 +355,7 @@ Scope representing unique value, meaning unique value always will be passed to t
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TWrapper`][Wrapper Model type][consist available type conversions]]
+    [[`TWrapper`][__wrapper_model__ type][consist available type conversions]]
     [[`TExpected`][None][type to be expected by constructor]]
     [[`x.create(const function<TExpected*()>&)`][None][create wrapped type to be passed to constructor]]
 ]
@@ -431,7 +445,7 @@ Scope representing shared/session value, meaning passed value will be shared bet
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TWrapper`][Wrapper Model type][consist available type conversions]]
+    [[`TWrapper`][__wrapper_model__ type][consist available type conversions]]
     [[`TExpected`][None][type to be expected by constructor]]
     [[`x.create(const function<TExpected*()>&)`][None][create wrapped type to be passed to constructor]]
 ]
@@ -510,7 +524,7 @@ Scope is activated by call of `call` method with `session_entry` parameter and d
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TWrapper`][Wrapper Model type][consist available type conversions]]
+    [[`TWrapper`][__wrapper_model__ type][consist available type conversions]]
     [[`TExpected`][None][type to be expected by constructor]]
     [[`x.create(const function<TExpected*()>&)`][None][create wrapped type to be passed to constructor]]
     [[`x.call(const session_entry&)`][None][trigger  scope entry]]

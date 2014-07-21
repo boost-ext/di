@@ -46,21 +46,21 @@ To achieve the same behaviour with previous standards sometimes will just requir
 * Boost.Type_Traits
 * Boost.Utility
 
-[h6 Supported Compilers]
+[h6 Supported Compilers - 100% test code coverage]
 
-`Boost.DI` was successfully test on below compilers
+`Boost.DI` was successfully test on following compilers.
 
 * Linux (x86/x86-64)
-   * Clang 3.2/3.3/3.4/3.4.2 (clean with Clang Static Analyzer and Valgrind)
-   * GCC 4.7.3/4.8.2/4.9.0 (clean with Valgrind)
-   * Intel C++ 14.0.3 (clean with Valgrind)
+   * Clang 3.2/3.3/3.4/3.4.2+ (clean with Clang Static Analyzer and Valgrind)
+   * GCC 4.7.3/4.8.2/4.9.0+ (clean with Valgrind)
+   * Intel C++ 14.0.3+ (clean with Valgrind)
 
 * Windows (x86/x86-64)
-   * MinGW 4.7.3/4.8.2
-   * Visual Studio 2013 (clean with DrMemory)
+   * MinGW 4.7.3/4.8.2+
+   * Visual Studio 2013+ (clean with DrMemory)
 
 * Darwin/Mac OS (x86-64)
-   * Clang 503.0.40 (Apple LLVM version 5.1)
+   * Clang 503.0.40+ (Apple LLVM version 5.1)
 
 [note Older compilers might be supported, but weren't tested and probably can't be tested properly due to requirements of C++11 features by the tests.]
 
@@ -531,7 +531,7 @@ The macros listed in the table below may be used to control the behaviour of `Bo
 [warning GCC/Clang/MSVC/Intel compilers differ with they way template conversion operator is handled.]
 
 [h6 Tests]
-`Boost.DI` is released with many levels of tests
+`Boost.DI` is released with many levels of tests.
 
 * Unit tests (ut)
 * Module/Integration tests (mt)
@@ -541,6 +541,14 @@ The macros listed in the table below may be used to control the behaviour of `Bo
 * Verification tests (vt) - verify compiler support
 
 To run tests go to `boost/di/test` directory and run.
+```
+    bjam
+```
+
+[h6 Examples]
+`Boost.DI` is released with __examples_ and __more_examples_.
+
+To run examples go to `boost/di/example` directory and run.
 ```
     bjam
 ```

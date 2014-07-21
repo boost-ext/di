@@ -31,7 +31,7 @@ In order for `injector` to verify policies they have to be passed to `create`, `
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TDependency`][Dependency Model type][dependency to be verified]]
+    [[`TDependency`][__dependency_model__ type][dependency to be verified]]
 ]
 
 [heading Namespace]
@@ -59,7 +59,7 @@ Verifies constructor parameters overlapping.
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TDependency`][Dependency Model type][dependency to be verified]]
+    [[`TDependency`][__dependency_model__ type][dependency to be verified]]
 ]
 
 [heading Expression Semantics]
@@ -110,7 +110,7 @@ Limits creation types to copies/pointers/smart pointers and disallow references.
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TDependency`][Dependency Model type][dependency to be verified]]
+    [[`TDependency`][__dependency_model__ type][dependency to be verified]]
 ]
 
 [heading Expression Semantics]
@@ -148,6 +148,20 @@ Limits creation types to copies/pointers/smart pointers and disallow references.
 [heading Description]
 Limits allowed constructor parameters. By default, if used, all parameters are disallowed.
 
+[heading Allow Parameter Model]
+    template<typename TParameter>
+    class allow_parameter_model {
+    public:
+        template<typename T>
+        struct allow; // returns Boolean expression
+    };
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`TParameter`][None][Parameter to be allowed]]
+    [[`T`][None][Dependency parameter type]]
+]
+
 [heading Synopsis]
     struct allow_smart_ptrs;
     struct allow_refs;
@@ -156,7 +170,7 @@ Limits allowed constructor parameters. By default, if used, all parameters are d
     struct allow_ptrs;
     struct allow_copies;
 
-    template<typename... T>
+    template<typename... TArgs>
     class parameters_permission {
     public:
         template<typename TDependency>
@@ -165,8 +179,8 @@ Limits allowed constructor parameters. By default, if used, all parameters are d
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`T...`][Allow Parameter Model type][Parameters to be allowed]]
-    [[`TDependency`][Dependency Model type][dependency to be verified]]
+    [[`TArgs...`][__allow_parameter_model__ type][Parameters to be allowed]]
+    [[`TDependency`][__dependency_model__ type][dependency to be verified]]
 ]
 
 [heading Expression Semantics]
@@ -219,6 +233,20 @@ Limits allowed constructor parameters. By default, if used, all parameters are d
 [heading Description]
 Limits allowed scopes to be used whilst binding.  By default, if used, all scopes are disallowed.
 
+[heading Allow Scope Model]
+    template<typename TScope>
+    class allow_scope_model {
+    public:
+        template<typename T>
+        struct allow; // returns Boolean expression
+    };
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`TScope`][__scope_model__][Scope to be allowed]]
+    [[`T`][None][Dependency scope]]
+]
+
 [heading Synopsis]
     template<typename TScope>
     struct allow_scope;
@@ -226,7 +254,7 @@ Limits allowed scopes to be used whilst binding.  By default, if used, all scope
     template<>
     struct allow_scope<scopes::deduce>; // disabled
 
-    template<typename... T>
+    template<typename... TArgs>
     class scopes_permission {
     public:
         template<typename TDependency>
@@ -235,9 +263,9 @@ Limits allowed scopes to be used whilst binding.  By default, if used, all scope
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TScope`][Scope Model type][scope to be allowed]]
-    [[`T...`][Allow Scope Model type][Scopes to be allowed]]
-    [[`TDependency`][Dependency Model type][dependency to be verified]]
+    [[`TScope`][__scope_model__ type][scope to be allowed]]
+    [[`TArgs...`][__allow_scope_model__ type][Scopes to be allowed]]
+    [[`TDependency`][__dependency_model__ type][dependency to be verified]]
 ]
 
 [heading Expression Semantics]

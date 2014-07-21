@@ -113,10 +113,10 @@ struct allow_copies
  */
 
 BOOST_DI_WKND(NO_MSVC)(
-    template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
+    template<BOOST_DI_TYPES_DEFAULT_MPL(TArgs)>
     class parameters_permission
     {
-        typedef BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T) allow_types;
+        typedef BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(TArgs) allow_types;
 
         template<typename T>
         struct value_type

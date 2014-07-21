@@ -27,10 +27,10 @@ the only thing which has to be in mind is to return list of dependencies.
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TScope`][Scope Model type][Scope to be used]]
+    [[`TScope`][__scope_model__ type][Scope to be used]]
     [[`TExpected`][None][Type to be returned]]
     [[`TGiven`][None][Type to be created]]
-    [[`TBind`][Bind Model type][Expression to be evaluated to verify dependency match during resolving]]
+    [[`TBind`][Boolean expression][Expression to be evaluated in order o verify dependency match during resolving]]
 ]
 
 [heading Header]
@@ -47,7 +47,7 @@ the only thing which has to be in mind is to return list of dependencies.
     );
 
 [heading More Examples]
-    ``__examples_binding__``
+    ``__examples_binding__`` | ``__examples_dynamic_binding__``
 
 [heading Tests]
     ``[@test/ut/bindings_ut.cpp]``
@@ -115,7 +115,7 @@ Allows bind interface to implementation and associate value with `dependency`.
 [note Values bind with `bind<...>::to(...)` always have higher priority than other bindings. See `External scope` for further information.]
 
 [heading More Examples]
-    ``__examples_binding__``
+    ``__examples_binding__`` | ``__examples_dynamic_binding__``
 
 [heading Tests]
     ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
@@ -355,7 +355,7 @@ Allows to bind other bindings to defined/custom scope. If not used `deduce` scop
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TScope`][Scope Model type][scope to be binded]]
+    [[`TScope`][__scope_model__ type][scope to be binded]]
 ]
 
 [heading Expression Semantics]
@@ -412,7 +412,7 @@ Scoped will be deduced accordingly to constructor parameter type. See `Deduce Sc
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TArgs...`][Binding Model type][Bindings to be binded with `deduce` scope]]
+    [[`TArgs...`][__binding_model__ type][Bindings to be binded with `deduce` scope]]
 ]
 
 [heading Expression Semantics]
@@ -465,7 +465,7 @@ Allows to bind other bindings to __scopes_unique__ scope.
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TArgs...`][Binding Model type][Bindings to be binded with `unique` scope]]
+    [[`TArgs...`][__binding_model__ type][Bindings to be binded with `unique` scope]]
 ]
 
 [heading Expression Semantics]
@@ -518,7 +518,7 @@ Allows to bind other bindings to __scopes_shared__ scope.
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TArgs...`][Binding Model type][Bindings to be binded with `unique` scope]]
+    [[`TArgs...`][__binding_model__ type][Bindings to be binded with `unique` scope]]
 ]
 
 [heading Expression Semantics]
@@ -571,7 +571,7 @@ Allows to bind other bindings to __scopes_session_ scope.
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TArgs...`][Binding Model type][Bindings to be binded with `unique` scope]]
+    [[`TArgs...`][__binding_model__ type][Bindings to be binded with `unique` scope]]
 ]
 
 [heading Expression Semantics]
@@ -637,7 +637,7 @@ Given value will influence how dependencies will be resolved. Current algorithm 
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TDependency`][Dependency Model type][Dependency type]]
+    [[`TDependency`][__dependency_model__ type][Dependency type]]
     [[`TResult`][Integral value][Returns integer value represents importance of binding]]
 ]
 
@@ -687,7 +687,7 @@ Allows to choose binding regards the contextual call stack object was created wi
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TDependency`][Dependency Model type][Dependency type]]
+    [[`TDependency`][__dependency_model__ type][Dependency type]]
     [[`TArgs...`][None][Represents objection creation call stack requirement]]
 ]
 

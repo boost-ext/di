@@ -65,10 +65,10 @@ please refer to commits history.]
 [table
     [ [Component] [Description] ]
     [ [Core] [Responsible for resolving requested types (implementation detail)] ]
-    [ [Concepts] [DSL to create dependencies representation which will be used by core to resolve types] ]
-    [ [Scopes] [Responsible for maintain objects life time] ]
+    [ [__bindings__] [DSL to create dependencies representation which will be used by core to resolve types] ]
+    [ [__scopes__] [Responsible for maintain objects life time] ]
     [ [Wrappers] [Responsible for conversion to required type] ]
-    [ [Policies] [Compile time assertions for types] ]
+    [ [__policies__] [Compile time assertions for types] ]
 ]
 
 [#constructor_injection]

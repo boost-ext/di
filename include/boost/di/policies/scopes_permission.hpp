@@ -41,10 +41,10 @@ struct allow_scope<scopes::deduce>; // disabled
  *
  * @endcode
  */
-template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
+template<BOOST_DI_TYPES_DEFAULT_MPL(TArgs)>
 class scopes_permission
 {
-    typedef BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T) permitted_types;
+    typedef BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(TArgs) permitted_types;
 
     template<typename TAllow, typename T>
     struct is_scope_permitted_impl

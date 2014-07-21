@@ -50,6 +50,19 @@ Main component responsible for configuration is `injector`.
 [heading Description]
 Injector is a component used for creating dependencies configuration using bindings.
 
+[heading Visitor Model]
+    class visitor_model {
+    public:
+        template<typename T>
+        void operator()(const T&) const
+    };
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`T`][None][Type being created]]
+]
+    
+
 [heading Synopsis]
     template<typename... TArgs>
     class injector {
@@ -72,18 +85,18 @@ Injector is a component used for creating dependencies configuration using bindi
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TArgs...`][Binding Model type][Bindings to be used as configuration]]
+    [[`TArgs...`][__binding_model__ type][Bindings to be used as configuration]]
     [[`TDependecies`][`mpl::vector`][List of dependencies]]
     [[`T`][None][Object to be created]]
-    [[`TPolicies...`][Policy Model type][Policies to be verified whilst creating objects]]
-    [[`TAllocator`][Allocator Model type][Allocator to be used when creating objects]]
-    [[`TVisitor`][Visitor Model type][Visitor to be called when visiting creating objects]]
+    [[`TPolicies...`][__policy_model__ type][Policies to be verified whilst creating objects]]
+    [[`TAllocator`][__allocator_model__ type][Allocator to be used when creating objects]]
+    [[`TVisitor`][__visitor_model__ type][Visitor to be called when visiting creating objects]]
     [[`TAction`][None][Action to be called for scopes having `call(const TAction&)` method]]
 
-    [[`x.create<T>(const TPolicies&...))`][`TPolicies`][create object `T` with given policies]]
-    [[`x.allocate<T>(const TAllocator&, const TPolicies&...))`][`TAllocator`, `TPolicies`][create object T with given policies using given allocator]]
-    [[`x.visit<T>()`][None][call visitor `operator()(const TObject&)` for all objects created during creation of object `T`]]
-    [[`x.call(const TAction&)`][`TAction`][for all scopes having `call(const TAction&)` call it with given action]]
+    [[`x.create<T>(const TPolicies&...))`][__policy_model__][create object `T` with given policies]]
+    [[`x.allocate<T>(const TAllocator&, const TPolicies&...))`][__allocator_model__, __policy_model__][create object T with given policies using given allocator]]
+    [[`x.visit<T>()`][__visitor_model__][call visitor `operator()(const TObject&)` for all objects created during creation of object `T`]]
+    [[`x.call(const TAction&)`][None][for all scopes which have `call(const TAction&)` call it with given action]]
 ]
 
 [heading Expression Semantics]
@@ -141,7 +154,7 @@ Creates `injector` type. Allows to bind dynamic values in no boilerplate manner.
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TArgs...`][Binding Model type][Bindings to be used as configuration]]
+    [[`TArgs...`][__binding_model__ type][Bindings to be used as configuration]]
 ]
 
 [heading Expression Semantics]
