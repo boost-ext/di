@@ -180,7 +180,7 @@
       </h5>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TIinterface</span> <span class="keyword">typename</span> <span class="identifier">TImplementation</span><span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">bind</span>
-    <span class="special">:</span> <span class="identifier">dependency</span><span class="special">&lt;</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">deduce</span><span class="special">,</span> <span class="identifier">TInterface</span><span class="special">,</span> <span class="identifier">TImplementation</span><span class="special">&gt;</span>
+    <span class="special">:</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">dependency</span><span class="special">&lt;</span><a class="link" href="scopes/deduce.html" title="deduce (default)">di::scopes::deduce</a><span class="special">,</span> <span class="identifier">TInterface</span><span class="special">,</span> <span class="identifier">TImplementation</span><span class="special">&gt;</span>
 <span class="special">{</span> <span class="special">};</span>
 
 <a class="link" href="injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>

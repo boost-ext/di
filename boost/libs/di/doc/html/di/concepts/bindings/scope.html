@@ -119,7 +119,7 @@
           <span class="phrase"><a name="di.concepts.bindings.scope.expression_semantics"></a></span><a class="link" href="scope.html#di.concepts.bindings.scope.expression_semantics">Expression
           Semantics</a>
         </h6>
-<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">scope</span><span class="special">&lt;</span><span class="identifier">Scope</span><span class="special">&gt;::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">TArgs</span><span class="special">...&gt;()</span>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">scope</span><span class="special">&lt;</span><span class="identifier">TScope</span><span class="special">&gt;::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">TArgs</span><span class="special">...&gt;()</span>
 </pre>
 <p>
           <span class="bold"><strong>Return type</strong></span>: <code class="computeroutput"><span class="identifier">dependency</span></code>
@@ -191,7 +191,7 @@
 </tbody>
 </table></div>
 <pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
-    <span class="identifier">di</span><span class="special">::</span><span class="identifier">scope</span><span class="special">&lt;</span><a class="link" href="../scopes/unique.html" title="unique">di::scopes::unique</a><span class="special">&gt;::</span><span class="identifier">bind</span><span class="special">&lt;</span>
+    <span class="identifier">di</span><span class="special">::</span><span class="identifier">scope</span><span class="special">&lt;</span><a class="link" href="../scopes/unique.html" title="unique">di::scopes::unique</a><span class="special">&lt;&gt;&gt;::</span><span class="identifier">bind</span><span class="special">&lt;</span>
         <a class="link" href="bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;</span>
     <span class="special">&gt;()</span>
 <span class="special">);</span>
