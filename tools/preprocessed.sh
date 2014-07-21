@@ -66,12 +66,12 @@ includes() {
 
 genereate_files() {
     cat $1 | grep "#include" | grep "boost\/di" | grep -v PP_ | grep -v "preprocess" | while read include; do
-		file=`echo $include | sed "s/[^<^\"]*[\"<]\([^>\"]*\)[\">].*/\1/"`
-		if [[ "$file" =~ "di/aux_" ]] ||
-		   [[ "$file" =~ "inject.hpp" ]] ||
-		   [[ "$file" =~ "di.hpp" ]]; then
-			continue;
-		fi
+        file=`echo $include | sed "s/[^<^\"]*[\"<]\([^>\"]*\)[\">].*/\1/"`
+        if [[ "$file" =~ "di/aux_" ]] ||
+           [[ "$file" =~ "inject.hpp" ]] ||
+           [[ "$file" =~ "di.hpp" ]]; then
+            continue;
+        fi
 
         genereate_files $file
         echo $file
