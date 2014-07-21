@@ -25,7 +25,8 @@
     !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) &&              \
     !defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS) &&  \
     !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) &&               \
-    !defined(BOOST_NO_CXX11_DECLTYPE)
+    !defined(BOOST_NO_CXX11_DECLTYPE) &&                        \
+    !defined(BOOST_INTEL)
     #define BOOST_DI_CFG_STD cpp_11
 #else
     #define BOOST_DI_CFG_STD cpp_03
