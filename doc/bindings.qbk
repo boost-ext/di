@@ -39,7 +39,7 @@ the only thing which has to be in mind is to return list of dependencies.
 [heading Examples]
     template<typename TIinterface typename TImplementation>
     struct bind
-        : dependency<scopes::deduce, TInterface, TImplementation>
+        : di::dependency<__di_scopes_deduce__, TInterface, TImplementation>
     { };
 
     __di_make_injector__(
@@ -352,7 +352,7 @@ Allows to bind other bindings to defined/custom scope. If not used `deduce` scop
 ]
 
 [heading Expression Semantics]
-    di::scope<Scope>::bind<TArgs...>()
+    di::scope<TScope>::bind<TArgs...>()
 
 [*Return type]: `dependency`
 
@@ -368,7 +368,7 @@ Allows to bind other bindings to defined/custom scope. If not used `deduce` scop
 ]
 
     auto injector = __di_make_injector__(
-        di::scope<__di_scopes_unique__>::bind<
+        di::scope<__di_scopes_unique__<>>::bind<
             __di_bind__<interface, implementation>
         >()
     );
@@ -400,7 +400,7 @@ Scoped will be deduced accordingly to constructor parameter type. See `Deduce Sc
 [heading Synopsis]
     template<typename... TArgs>
     struct deduce
-        : scope<scopes::deduce>::bind<TArgs...>
+        : __di_bind_scope__<scopes::deduce>::bind<TArgs...>
     { };
 
 [table Parameters
@@ -453,7 +453,7 @@ Allows to bind other bindings to __scopes_unique__ scope.
 [heading Synopsis]
     template<typename... TArgs>
     struct unique
-        : scope<scopes::unique>::bind<TArgs...>
+        : __di_bind_scope__<__di_scopes_unique__<>>::bind<TArgs...>
     { };
 
 [table Parameters
@@ -506,7 +506,7 @@ Allows to bind other bindings to __scopes_shared__ scope.
 [heading Synopsis]
     template<typename... TArgs>
     struct shared
-        : scope<scopes::shared>::bind<TArgs...>
+        : __di_bind_scope__<__di_scopes_shared__<>::bind<TArgs...>
     { };
 
 [table Parameters
@@ -559,7 +559,7 @@ Allows to bind other bindings to __scopes_session_ scope.
 [heading Synopsis]
     template<typename... TArgs>
     struct session
-        : scope<scopes::session>::bind<TArgs...>
+        : __di_bind_scope__<__di_scopes_session__<>>::bind<TArgs...>
     { };
 
 [table Parameters

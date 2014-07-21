@@ -129,6 +129,7 @@
 [def __di_bind_scope__                                  [link di.concepts.bindings.scope di::scope]]
 [def __di_injector__                                    [link di.concepts.injectors.injector di::injector]]
 [def __di_make_injector__                               [link di.concepts.injectors.make_injector di::make_injector]]
+[def __di_scopes_deduce__                               [link di.concepts.scopes.deduce di::scopes::deduce]]
 [def __di_scopes_unique__                               [link di.concepts.scopes.unique di::scopes::unique]]
 [def __di_scopes_shared__                               [link di.concepts.scopes.shared di::scopes::shared]]
 [def __di_scopes_session__                              [link di.concepts.scopes.session di::scopes::session]]
