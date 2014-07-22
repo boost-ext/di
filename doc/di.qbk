@@ -76,7 +76,7 @@
 
 [def __policies__                                       [link di.concepts.policies Policies]]
 [def __policies_circular_dependencies__                 [link di.concepts.policies.circular_dependencies circular_dependencies]]
-[def __policies_creation_ownership__                    [link di.concepts.policies.creation_ownership creation_ownership]]
+[def __policies_creation_permission__                    [link di.concepts.policies.creation_permission creation_permission]]
 [def __policies_parameters_permission__                 [link di.concepts.policies.parameters_permission parameters_permission]]
 [def __policies_scopes_permission__                     [link di.concepts.policies.scopes_permission scopes_permission]]
 

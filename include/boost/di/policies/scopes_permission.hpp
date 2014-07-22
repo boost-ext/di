@@ -62,12 +62,12 @@ class scopes_permission
     { };
 
 public:
-    template<typename TDependency>
+    template<typename T>
     void assert_policy() const {
         BOOST_DI_ASSERT_MSG(
-            is_scope_permitted<typename TDependency::scope>::value
+            is_scope_permitted<typename T::scope>::value
           , SCOPE_NOT_PERMITTED
-          , typename TDependency::scope
+          , typename T::scope
         );
     }
 };

@@ -2630,21 +2630,21 @@ namespace boost {
 namespace di {
 namespace core {
 
-template<
-    typename T
-  , typename TCallStack
-  , typename TDependency
->
-struct data
-{
-    typedef T type;
-    typedef TCallStack call_stack;
-    typedef TDependency dependency;
-};
-
 template<typename TDependecies>
 class binder
 {
+    template<
+        typename T
+      , typename TCallStack
+      , typename TDependency
+    >
+    struct data
+    {
+        typedef T type;
+        typedef TCallStack call_stack;
+        typedef TDependency dependency;
+    };
+
     template<
         typename TDependency
       , typename T
@@ -3266,6 +3266,19 @@ struct ctor_traits<T, typename enable_if<has_boost_di_injector__<T> >::type>
           , aux::shared_ptr<void>
           , type_comparator
         > scopes_type;
+
+        template<
+            typename T
+          , typename TCallStack
+          , typename TDependency
+        >
+        struct data
+        {
+            typedef T type;
+            typedef TCallStack call_stack;
+            typedef TDependency dependency;
+            typedef TBinder<TDependecies> binder;
+        };
 
     public:
         explicit creator(const TBinder<TDependecies>& binder = TBinder<TDependecies>())
@@ -4509,12 +4522,12 @@ BOOST_DI_WKND(NO_MSVC)(
         { };
 
     public:
-        template<typename TDependency>
+        template<typename T>
         void assert_policy() const {
             BOOST_DI_ASSERT_MSG(
-                is_parameter_permitted<typename TDependency::type>::value
+                is_parameter_permitted<typename T::type>::value
               , PARAMETER_NOT_PERMITTED
-              , typename TDependency::type
+              , typename T::type
             );
         }
     };
@@ -4547,12 +4560,12 @@ class circular_dependencies
     { };
 
 public:
-    template<typename TDependency>
+    template<typename T>
     void assert_policy() const {
        BOOST_DI_ASSERT_MSG(
-            is_unique_call_stack<typename TDependency::call_stack>::value
+            is_unique_call_stack<typename T::call_stack>::value
           , CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED
-          , typename TDependency::call_stack
+          , typename T::call_stack
         );
     }
 };
@@ -4566,28 +4579,72 @@ namespace boost {
 namespace di {
 namespace policies {
 
-class creation_ownership
+template<typename TValueType>
+struct allow_type
 {
-    template<typename TDependency>
-    struct is_result_type_reference
-        : mpl::bool_<
-             mpl::size<typename TDependency::call_stack>::value == 1 &&
-             is_reference<typename TDependency::type>::value
+    template<typename T>
+    struct allow
+        : is_same<T, TValueType>
+    { };
+};
+
+template<typename TExpr>
+struct allow_expr
+{
+    template<typename T>
+    struct allow
+        : mpl::apply<TExpr, T>::type
+    { };
+};
+
+template<typename... TArgs_MPL>
+class creation_permission
+{
+    typedef ::boost::mpl::vector<TArgs_MPL...> permitted_types;
+
+    struct not_resolved
+    {
+        typedef not_resolved type;
+
+        template<typename>
+        struct rebind
+        {
+            typedef not_resolved other;
+        };
+    };
+
+    template<typename TAllow, typename T>
+    struct is_type_permitted_impl
+        : TAllow::template allow<T>
+    { };
+
+    template<typename T>
+    struct is_type_permitted
+        : mpl::or_<
+              mpl::not_<
+                  is_same<
+                      typename T::binder::template resolve<
+                          typename T::type
+                        , mpl::vector0<>
+                        , not_resolved
+                      >::type
+                    , not_resolved
+                  >
+              >
+            , mpl::count_if<
+                  permitted_types
+                , is_type_permitted_impl<mpl::_, typename T::type>
+              >
           >
     { };
 
 public:
-    template<typename TDependency>
-    typename disable_if<is_result_type_reference<TDependency> >::type
-    assert_policy() const { }
-
-    template<typename TDependency>
-    typename enable_if<is_result_type_reference<TDependency> >::type
-    assert_policy() const {
-        BOOST_DI_ASSERT_MSG(
-            false
-          , CREATION_OWNERSHIP_IS_NOT_CLEAR
-          , typename TDependency::type
+    template<typename T>
+    void assert_policy() const {
+       BOOST_DI_ASSERT_MSG(
+            is_type_permitted<T>::value
+          , TYPE_HAS_TO_BE_EXPLICITLY_BINDED
+          , typename T::type
         );
     }
 };
@@ -4634,12 +4691,12 @@ class scopes_permission
     { };
 
 public:
-    template<typename TDependency>
+    template<typename T>
     void assert_policy() const {
         BOOST_DI_ASSERT_MSG(
-            is_scope_permitted<typename TDependency::scope>::value
+            is_scope_permitted<typename T::scope>::value
           , SCOPE_NOT_PERMITTED
-          , typename TDependency::scope
+          , typename T::scope
         );
     }
 };

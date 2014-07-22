@@ -13,10 +13,29 @@
 Policies are compile time components operates on dependencies in order to limit allowed behaviour.
 Policy has to have `assert_policy` method defined.
 In order for `injector` to verify policies they have to be passed to `create`, `allocate` call.
-`Boost.DI` is released with following policies
+`Boost.DI` is released with following policies.
+
+[heading Data Model]
+    template<
+        typename T
+      , typename TCallStack
+      , typename TDependency
+    >
+    struct data {
+        typedef T type;
+        typedef TCallStack call_stack;
+        typedef TDependency dependency;
+    };
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`T`][None][Type to be created]]
+    [[`TCallStack`][`mpl::vector` type][Context in which type is going to be created]]
+    [[`TDependency`][__dependency_model__ type][Resolved dependency]]
+]
 
 * __policies_circular_dependencies__ - verify circular dependencies occurrence
-* __policies_creation_ownership__  - verify objection creation permission
+* __policies_creation_permission__  - verify object creation permission
 * __policies_parameters_permission__ - verify constructor parameters permission
 * __policies_scopes_permission__ - verify scopes configuration permission
 
@@ -25,13 +44,13 @@ In order for `injector` to verify policies they have to be passed to `create`, `
 [heading Synopsis]
     class policy {
     public:
-        template<typename TDependency>
+        template<typename T>
         void assert_policy() const;
     };
 
 [table Parameters
     [[Parameter][Requirement][Description][Throw]]
-    [[`TDependency`][__dependency_model__ type][Dependency to be verified]]
+    [[`T`][__data_model__ type][Data to be verified]]
     [[`assert_policy() const`][None][Verify policy requirements][Does not throw]]
 ]
 
@@ -54,13 +73,13 @@ Verifies constructor parameters overlapping.
 [heading Synopsis]
     class circular_dependencies {
     public:
-        template<typename TDependency>
+        template<typename T>
         void assert_policy() const;
     };
 
 [table Parameters
     [[Parameter][Requirement][Description][Throw]]
-    [[`TDependency`][__dependency_model__ type][Dependency to be verified]]
+    [[`T`][__data_model__ type][Data to be verified]]
     [[`assert_policy() const`][None][Verify policy requirements][Does not throw]]
 ]
 
@@ -92,32 +111,32 @@ Verifies constructor parameters overlapping.
 [heading See Also]
 
 * __policies__
-* __policies_creation_ownership__
+* __policies_creation_permission__
 * __policies_parameters_permission__
 * __policies_scopes_permission__
 
 [endsect]
 
-[section creation_ownership]
+[section creation_permission]
 
 [heading Description]
-Limits creation types to copies/pointers/smart pointers and disallow references.
+Limits default constructible types not be created unless they are explicitly binded or allowed.
 
 [heading Synopsis]
-    class creation_ownership {
+    class creation_permission {
     public:
-        template<typename TDependency>
+        template<typename T>
         void assert_policy() const;
     };
 
 [table Parameters
     [[Parameter][Requirement][Description][Throw]]
-    [[`TDependency`][__dependency_model__ type][Dependency to be verified]]
+    [[`T`][__data_model__ type][Data to be verified]]
     [[`assert_policy() const`][None][Verify policy requirements][Does not throw]]
 ]
 
 [heading Expression Semantics]
-    di::policies::creation_ownership()
+    di::policies::creation_permission<...>()
 
 [*Result]: `static assert with `CREATION_OWNERSHIP_IS_NOT_CLEAR` message or clean compilation`
 
@@ -128,14 +147,14 @@ Limits creation types to copies/pointers/smart pointers and disallow references.
     boost::di::policies
 
 [heading Examples]
-    __di_make_injector__().create<int>(di::policies::creation_ownership()); // compile ok
-    __di_make_injector__().create<const int&>(di::policies::creation_ownership()); // compile error
-    __di_make_injector__().create<int&>(di::policies::creation_ownership()); // compile error
+    __di_make_injector__().create<int>(di::policies::creation_permission()); // compile ok
+    __di_make_injector__().create<const int&>(di::policies::creation_permission()); // compile error
+    __di_make_injector__().create<int&>(di::policies::creation_permission()); // compile error
 
 [note Requires [link di.overview.configuration BOOST_DI_CFG_EXAMINE_CALL_STACK] to be defined.]
 
 [heading Tests]
-    ``[@test/ut/policies/creation_ownership_ut.cpp]``
+    ``[@test/ut/policies/creation_permission_ut.cpp]``
 
 [heading See Also]
 
@@ -183,7 +202,7 @@ Limits allowed constructor parameters. By default, if used, all parameters are d
 [table Parameters
     [[Parameter][Requirement][Description][Throw]]
     [[`TArgs...`][__allow_parameter_model__ type][Parameters to be allowed]]
-    [[`TDependency`][__dependency_model__ type][Dependency to be verified]]
+    [[`T`][__data_model__ type][Data to be verified]]
     [[`assert_policy() const`][None][Verify policy requirements][Does not throw]]
 ]
 
@@ -228,7 +247,7 @@ Limits allowed constructor parameters. By default, if used, all parameters are d
 
 * __policies__
 * __policies_circular_dependencies__
-* __policies_creation_ownership__
+* __policies_creation_permission__
 * __policies_scopes_permission__
 
 [endsect]
@@ -271,7 +290,8 @@ Limits allowed scopes to be used whilst binding. By default, if used, all scopes
     [[Parameter][Requirement][Description]]
     [[`TScope`][__scope_model__ type][Scope to be allowed]]
     [[`TArgs...`][__allow_scope_model__ type][Scopes to be allowed]]
-    [[`TDependency`][__dependency_model__ type][Dependency to be verified]]
+    [[`T`][__data_model__ type][Data to be verified]]
+    [[`assert_policy() const`][None][Verify policy requirements][Does not throw]]
 ]
 
 [heading Expression Semantics]
@@ -331,7 +351,7 @@ Limits allowed scopes to be used whilst binding. By default, if used, all scopes
 
 * __policies__
 * __policies_circular_dependencies__
-* __policies_creation_ownership__
+* __policies_creation_permission__
 * __policies_parameters_permission__
 
 [endsect]

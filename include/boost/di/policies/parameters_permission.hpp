@@ -169,12 +169,12 @@ BOOST_DI_WKND(NO_MSVC)(
         { };
 
     public:
-        template<typename TDependency>
+        template<typename T>
         void assert_policy() const {
             BOOST_DI_ASSERT_MSG(
-                is_parameter_permitted<typename TDependency::type>::value
+                is_parameter_permitted<typename T::type>::value
               , PARAMETER_NOT_PERMITTED
-              , typename TDependency::type
+              , typename T::type
             );
         }
     };

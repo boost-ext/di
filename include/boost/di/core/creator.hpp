@@ -74,6 +74,19 @@
           , type_comparator
         > scopes_type;
 
+        template<
+            typename T
+          , typename TCallStack
+          , typename TDependency
+        >
+        struct data
+        {
+            typedef T type;
+            typedef TCallStack call_stack;
+            typedef TDependency dependency;
+            typedef TBinder<TDependecies> binder;
+        };
+
     public:
         explicit creator(const TBinder<TDependecies>& binder = TBinder<TDependecies>())
             : binder_(binder)

@@ -15,7 +15,6 @@
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/bindings.hpp"
-#include "boost/di/policies/creation_ownership.hpp"
 #include "boost/di/policies/circular_dependencies.hpp"
 
 #include "common/fakes/fake_allocator.hpp"
@@ -89,8 +88,7 @@ BOOST_AUTO_TEST_CASE(with_policy) {
     );
 
     BOOST_CHECK_EQUAL(i, injector_.create<c3>(
-        policies::creation_ownership()
-      , policies::circular_dependencies()
+        policies::circular_dependencies()
     ).i);
 }
 
@@ -102,8 +100,7 @@ BOOST_AUTO_TEST_CASE(with_policy_seperate) {
     );
 
     BOOST_CHECK_EQUAL(i, injector_.create<c3>(
-        policies::creation_ownership()
-      , policies::circular_dependencies()
+        policies::circular_dependencies()
     ).i);
 }
 
@@ -133,7 +130,6 @@ BOOST_AUTO_TEST_CASE(create_mix) {
 
     auto c5_ = injector_.create<aux::shared_ptr<c5>>(
         policies::circular_dependencies()
-      , policies::creation_ownership()
     );
 
     BOOST_CHECK(dynamic_cast<c0if0*>(c5_->if0_.get()));
@@ -156,7 +152,6 @@ BOOST_AUTO_TEST_CASE(allocate_with_policies) {
     auto i = injector.allocate<int>(
         fake_allocator()
       , policies::circular_dependencies()
-      , policies::creation_ownership()
     );
     BOOST_CHECK_EQUAL(0, i);
     BOOST_CHECK_EQUAL(1, fake_allocator::allocate_calls());

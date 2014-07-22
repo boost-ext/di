@@ -8,7 +8,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "boost/di/policies/creation_ownership.hpp"
+#include "boost/di/policies/creation_permission.hpp"
 #include "common/data.hpp"
 
 namespace boost {
@@ -16,7 +16,7 @@ namespace di {
 namespace detail {
 
 BOOST_AUTO_TEST_CASE(module_policy_fail) {
-    module<>().create<const c1&>(policies::creation_ownership());
+    module<>().create<const c1&>(policies::creation_permission());
 }
 
 } // namespace detail

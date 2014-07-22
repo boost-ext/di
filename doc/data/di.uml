@@ -86,7 +86,7 @@ package Boost.DI {
             void assert_policy() const
         }
 
-        class creation_ownership {
+        class creation_permission {
             void assert_policy() const
         }
 

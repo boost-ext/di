@@ -60,7 +60,7 @@
     // policies
     #include "boost/di/policies/parameters_permission.hpp"
     #include "boost/di/policies/circular_dependencies.hpp"
-    #include "boost/di/policies/creation_ownership.hpp"
+    #include "boost/di/policies/creation_permission.hpp"
     #include "boost/di/policies/scopes_permission.hpp"
 
 #endif

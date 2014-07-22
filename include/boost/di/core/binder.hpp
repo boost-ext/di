@@ -21,21 +21,21 @@ namespace boost {
 namespace di {
 namespace core {
 
-template<
-    typename T
-  , typename TCallStack
-  , typename TDependency
->
-struct data
-{
-    typedef T type;
-    typedef TCallStack call_stack;
-    typedef TDependency dependency;
-};
-
 template<typename TDependecies>
 class binder
 {
+    template<
+        typename T
+      , typename TCallStack
+      , typename TDependency
+    >
+    struct data
+    {
+        typedef T type;
+        typedef TCallStack call_stack;
+        typedef TDependency dependency;
+    };
+
     template<
         typename TDependency
       , typename T
