@@ -29,24 +29,26 @@ There are 5 basic types of wrappers.
     class wrapper_model {
     public:
         template<typename TValueType>
-        wrapper_model(const TValueType& value);
+        wrapper_model(const TValueType&);
 
         T operator()(const type<T>&) const;
     };
 
 [table Parameters
-    [[Parameter][Requirement][Description]]
-    [[`T`][None][Type wrapper might be converted to]]
+    [[Parameter][Requirement][Description][Returns][Throws]]
+    [[`T`][None][Type to which `wrapper_model` might be converted to]]
     [[`TValueType`][None][Object type to be stored by wrapper]]
+    [[`wrapper_model(const TValueType&)`][None][Conversion constructor - creates `wrapper_model` from `TValueType` type][][Does not throw]]
+    [[`T operator()(const type<T>&)`][None][Converts `wrapper_model` to `T` type][`T` instance][Does not throw]]
 ]
 
 [table
     [[Wrapper][Description]]
-    [[copy][conversion to lvalue/pointer/smart_ptr]]
-    [[reference][conversion to reference]]
-    [[shared][conversion to smart_ptr]]
-    [[universal][conversion to any type wrappers provide and to const ref/named on top of it]]
-    [[value][conversion to lvalue/rvalue/pointer/smart_pointer]]
+    [[copy][Conversion to lvalue/pointer/smart_ptr]]
+    [[reference][Conversion to reference]]
+    [[shared][Conversion to smart_ptr]]
+    [[universal][Conversion to any type wrappers provide and to const ref/named on top of it]]
+    [[value][Conversion to lvalue/rvalue/pointer/smart_pointer]]
 ]
 
 [heading Synopsis]
@@ -154,24 +156,24 @@ There are 5 basic types of wrappers.
 [section:deduce deduce (default)]
 
 [heading Description]
-Default scope which will be converted to one of the scopes __scopes_external__ / __scopes_unique__ / __scopes_shared__ accordingly to `Scope Traits` transformation.
+Default scope which will be converted to one of the scopes __scopes_external__ / __scopes_unique__ / __scopes_shared__ accordingly to [link di.concepts.scopes.deduce.scope_traits Scope Traits] mapping.
 
 [table Scope Traits
-    [ [Type] [Scope] ]
-    [ [T&] [external] ]
-    [ [T] [unique] ]
-    [ [const T&] [unique] ]
-    [ [T*] [unique] ]
-    [ [const T*] [unique] ]
-    [ [unique_ptr<T>] [unique] ]
-    [ [const unique_ptr<T>&] [unique] ]
-    [ [T&&] [unique] ]
-    [ [const T&&] [unique] ]
-    [ [shared_ptr<T>] [shared] ]
-    [ [const shared_ptr<T>&] [shared] ]
-    [ [weak_ptr<T>] [shared] ]
-    [ [const weak_ptr<T>&] [shared] ]
-    [ [named<T, TName>] [scope of T] ]
+    [[Type][Scope]]
+    [[T&][external]]
+    [[T][unique]]
+    [[const T&][unique]]
+    [[T*][unique]]
+    [[const T*][unique]]
+    [[unique_ptr<T>][unique]]
+    [[const unique_ptr<T>&][unique]]
+    [[T&&][unique]]
+    [[const T&&][unique]]
+    [[shared_ptr<T>][shared]]
+    [[const shared_ptr<T>&][shared]]
+    [[weak_ptr<T>][shared]]
+    [[const weak_ptr<T>&][shared]]
+    [[named<T, TName>][scope of T]]
 ]
 
 [heading Synopsis]
@@ -185,6 +187,11 @@ Default scope which will be converted to one of the scopes __scopes_external__ /
             };
         };
     };
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`T`][None][Type to be re-binded accordingly to [link di.concepts.scopes.deduce.scope_traits Scope Traits]]]
+]
 
 [heading Header]
     #include <boost/di.hpp>
@@ -268,10 +275,10 @@ will be binded using different scope as well then this binding won't be taken in
     };
 
 [table Parameters
-    [[Parameter][Requirement][Description]]
-    [[`TWrapper`][__wrapper_model__ type][consist available type conversions]]
-    [[`TExpected`][None][type to be expected by constructor]]
-    [[`x.create()`][None][create wrapped type to be passed to constructor]]
+    [[Parameter][Requirement][Description][Returns][Throw]]
+    [[`TWrapper`][__wrapper_model__ type][Consist available type conversions]]
+    [[`TExpected`][None][Type to be expected by constructor]]
+    [[`create()`][None][Create wrapped type to be passed to constructor][__wrapper_model__<TExpected>][Does not throw]]
 ]
 
 [table Conversions
@@ -300,12 +307,12 @@ will be binded using different scope as well then this binding won't be taken in
 [heading Examples]
 [table
     [[Binding][Description]]
-    [[```__di_bind__<int>::to(42)```][bind `int` parameter to value `42`]]
-    [[```__di_bind__<std::string>::to("text")```][bind `std::string` parameter to value `text`]]
-    [[```__di_bind__<example>::to(make_shared<example>())```][bind example type to external `shared_ptr`]]
-    [[```__di_bind__<example>::to(cref(example_))```][bind example to const reference object]]
-    [[```__di_bind__<example>::to(ref(example_))```][bind example to reference object]]
-    [[```__di_bind__<int>::to([]{return 42;})```][bind `int` to lambda expression returning `42` value]]
+    [[```__di_bind__<int>::to(42)```][Bind `int` parameter to value `42`]]
+    [[```__di_bind__<std::string>::to("text")```][Bind `std::string` parameter to value `text`]]
+    [[```__di_bind__<example>::to(make_shared<example>())```][Bind example type to external `shared_ptr`]]
+    [[```__di_bind__<example>::to(cref(example_))```][Bind example to const reference object]]
+    [[```__di_bind__<example>::to(ref(example_))```][Bind example to reference object]]
+    [[```__di_bind__<int>::to([]{return 42;})```][Bind `int` to lambda expression returning `42` value]]
 ]
 
     auto example_ = make_shared<example>();
@@ -354,10 +361,10 @@ Scope representing unique value, meaning unique value always will be passed to t
     };
 
 [table Parameters
-    [[Parameter][Requirement][Description]]
-    [[`TWrapper`][__wrapper_model__ type][consist available type conversions]]
-    [[`TExpected`][None][type to be expected by constructor]]
-    [[`x.create(const function<TExpected*()>&)`][None][create wrapped type to be passed to constructor]]
+    [[Parameter][Requirement][Description][Returns][Throws]]
+    [[`TWrapper`][__wrapper_model__ type][Consist available type conversions]]
+    [[`TExpected`][None][Type to be expected by constructor]]
+    [[`create(const function<TExpected*()>&)`][None][Create wrapped type to be passed to constructor][__wrapper_model__<TExpected>][Does not throw]]
 ]
 
 [table Conversions
@@ -386,8 +393,8 @@ Scope representing unique value, meaning unique value always will be passed to t
 [heading Examples]
 [table
     [[Binding][Description]]
-    [[```unique<__di_bind__<interface, implementation>>()```][bind `interface` to `implementation` in unique scope]]
-    [[`x.create(const function<TExpected*()>&)`][create wrapped type to be passed to constructor]]
+    [[```unique<__di_bind__<interface, implementation>>()```][Bind `interface` to `implementation` in unique scope]]
+    [[`create(const function<TExpected*()>&)`][Create wrapped type to be passed to constructor]]
 ]
 
     auto injector = __di_make_injector__(
@@ -444,10 +451,10 @@ Scope representing shared/session value, meaning passed value will be shared bet
     };
 
 [table Parameters
-    [[Parameter][Requirement][Description]]
-    [[`TWrapper`][__wrapper_model__ type][consist available type conversions]]
-    [[`TExpected`][None][type to be expected by constructor]]
-    [[`x.create(const function<TExpected*()>&)`][create wrapped type to be passed to constructor]]
+    [[Parameter][Requirement][Description][Returns][Throws]]
+    [[`TWrapper`][__wrapper_model__ type][Consist available type conversions]]
+    [[`TExpected`][None][Type to be expected by constructor]]
+    [[`create(const function<TExpected*()>&)`][None][Create wrapped type to be passed to constructor][__wrapper_model__<TExpected>][Does not throw]]
 ]
 
 [table Conversions
@@ -476,7 +483,7 @@ Scope representing shared/session value, meaning passed value will be shared bet
 [heading Examples]
 [table
     [[Binding][Description]]
-    [[```shared<__di_bind__<interface, implementation>>()```][bind `interface` to `implementation` in shared scope]]
+    [[```shared<__di_bind__<interface, implementation>>()```][Bind `interface` to `implementation` in shared scope]]
 ]
     auto injector = __di_make_injector__(
         di::shared<
@@ -523,12 +530,12 @@ Scope is activated by call of `call` method with `session_entry` parameter and d
     };
 
 [table Parameters
-    [[Parameter][Requirement][Description]]
-    [[`TWrapper`][__wrapper_model__ type][consist available type conversions]]
+    [[Parameter][Requirement][Description][Returns][Throw]]
+    [[`TWrapper`][__wrapper_model__ type][Consist available type conversions]]
     [[`TExpected`][None][type to be expected by constructor]]
-    [[`x.create(const function<TExpected*()>&)`][None][create wrapped type to be passed to constructor]]
-    [[`x.call(const session_entry&)`][None][trigger  scope entry]]
-    [[`x.call(const session_exit&)`][None][trigger scope exit]]
+    [[`create(const function<TExpected*()>&)`][None][Create wrapped type to be passed to constructor][__wrapper_model__<TExpected>][Does not throw]]
+    [[`call(const session_entry&)`][None][Trigger  scope entry][][Does not throw]]
+    [[`call(const session_exit&)`][None][Trigger scope exit][][Does not throw]]
 ]
 
 [table Conversions
@@ -557,7 +564,7 @@ Scope is activated by call of `call` method with `session_entry` parameter and d
 [heading Examples]
 [table
     [[Binding][Description]]
-    [[```session<__di_bind__<interface, implementation>>()```][bind `interface` to `implementation` in session scope]]
+    [[```session<__di_bind__<interface, implementation>>()```][Bind `interface` to `implementation` in session scope]]
 ]
 
     auto injector = __di_make_injector__(

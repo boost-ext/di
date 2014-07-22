@@ -30,8 +30,9 @@ In order for `injector` to verify policies they have to be passed to `create`, `
     };
 
 [table Parameters
-    [[Parameter][Requirement][Description]]
-    [[`TDependency`][__dependency_model__ type][dependency to be verified]]
+    [[Parameter][Requirement][Description][Throw]]
+    [[`TDependency`][__dependency_model__ type][Dependency to be verified]]
+    [[`assert_policy() const`][None][Verify policy requirements][Does not throw]]
 ]
 
 [heading Namespace]
@@ -58,14 +59,15 @@ Verifies constructor parameters overlapping.
     };
 
 [table Parameters
-    [[Parameter][Requirement][Description]]
-    [[`TDependency`][__dependency_model__ type][dependency to be verified]]
+    [[Parameter][Requirement][Description][Throw]]
+    [[`TDependency`][__dependency_model__ type][Dependency to be verified]]
+    [[`assert_policy() const`][None][Verify policy requirements][Does not throw]]
 ]
 
 [heading Expression Semantics]
     di::policies::circular_dependencies()
 
-[*Result]: `static assert with `CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED` messge or clean compilation`
+[*Result]: `static assert with `CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED` message or clean compilation`
 
 [heading Header]
     #include <boost/di.hpp>
@@ -82,7 +84,7 @@ Verifies constructor parameters overlapping.
 
     __di_make_injector__().create<cd1>(di::policies::circular_dependencies()); // compile error
 
-[note Requires `BOOST_DI_CFG_EXAMINE_CALL_STACK` to be defined.]
+[note Requires [link di.overview.configuration BOOST_DI_CFG_EXAMINE_CALL_STACK] to be defined.]
 
 [heading Tests]
     ``[@test/ut/policies/circular_dependencies_ut.cpp]``
@@ -109,8 +111,9 @@ Limits creation types to copies/pointers/smart pointers and disallow references.
     };
 
 [table Parameters
-    [[Parameter][Requirement][Description]]
-    [[`TDependency`][__dependency_model__ type][dependency to be verified]]
+    [[Parameter][Requirement][Description][Throw]]
+    [[`TDependency`][__dependency_model__ type][Dependency to be verified]]
+    [[`assert_policy() const`][None][Verify policy requirements][Does not throw]]
 ]
 
 [heading Expression Semantics]
@@ -129,7 +132,7 @@ Limits creation types to copies/pointers/smart pointers and disallow references.
     __di_make_injector__().create<const int&>(di::policies::creation_ownership()); // compile error
     __di_make_injector__().create<int&>(di::policies::creation_ownership()); // compile error
 
-[note Requires `BOOST_DI_CFG_EXAMINE_CALL_STACK` to be defined.]
+[note Requires [link di.overview.configuration BOOST_DI_CFG_EXAMINE_CALL_STACK] to be defined.]
 
 [heading Tests]
     ``[@test/ut/policies/creation_ownership_ut.cpp]``
@@ -178,9 +181,10 @@ Limits allowed constructor parameters. By default, if used, all parameters are d
     };
 
 [table Parameters
-    [[Parameter][Requirement][Description]]
+    [[Parameter][Requirement][Description][Throw]]
     [[`TArgs...`][__allow_parameter_model__ type][Parameters to be allowed]]
-    [[`TDependency`][__dependency_model__ type][dependency to be verified]]
+    [[`TDependency`][__dependency_model__ type][Dependency to be verified]]
+    [[`assert_policy() const`][None][Verify policy requirements][Does not throw]]
 ]
 
 [heading Expression Semantics]
@@ -243,9 +247,10 @@ Limits allowed scopes to be used whilst binding. By default, if used, all scopes
     };
 
 [table Parameters
-    [[Parameter][Requirement][Description]]
+    [[Parameter][Requirement][Description][Throw]]
     [[`TScope`][__scope_model__][Scope to be allowed]]
     [[`T`][None][Dependency scope]]
+    [[`assert_policy() const`][None][Verify policy requirements][Does not throw]]
 ]
 
 [heading Synopsis]
@@ -264,9 +269,9 @@ Limits allowed scopes to be used whilst binding. By default, if used, all scopes
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TScope`][__scope_model__ type][scope to be allowed]]
+    [[`TScope`][__scope_model__ type][Scope to be allowed]]
     [[`TArgs...`][__allow_scope_model__ type][Scopes to be allowed]]
-    [[`TDependency`][__dependency_model__ type][dependency to be verified]]
+    [[`TDependency`][__dependency_model__ type][Dependency to be verified]]
 ]
 
 [heading Expression Semantics]
@@ -280,7 +285,7 @@ Limits allowed scopes to be used whilst binding. By default, if used, all scopes
 
 [note `allow_scope<scopes::__scopes_deduce__>` is not allowed.]
 
-[*Result]: `static assert with SCOPE_NOT_PERMITTED message or clean compilation`
+[*Result]: `static assert with `SCOPE_NOT_PERMITTED` message or clean compilation`
 
 [heading Header]
     #include <boost/di.hpp>

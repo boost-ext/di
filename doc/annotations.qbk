@@ -44,9 +44,12 @@ It doesn't has to be the case when __injections_ctor_traits__ are used.
     };
 
 [table Parameters
-    [[Parameter][Requirement][Description]]
+    [[Parameter][Requirement][Description][Returns][Throws]]
     [[`T`][None][Type to be annotated]]
-    [[`TName`][None][Type represent name, `no_name` by default, mpl::string<'str'> might be handy]]
+    [[`TName`][None][Type represent name (default = `no_name`) / mpl::string<'str'> might be useful]]
+    [[`named(T)`][None][Conversion constructor - Create named from type `T`][][Does not throw]]
+    [[`named(const named&)`][None][Copy constructor][][Does not throw]]
+    [[`operator T() const`][None][Conversion operator - converts `named` to `T` type][`T` instance][Does not throw]]
 ]
 
 [heading Expression Semantics]

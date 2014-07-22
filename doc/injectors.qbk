@@ -58,8 +58,9 @@ Injector is a component used for creating dependencies configuration using bindi
     };
 
 [table Parameters
-    [[Parameter][Requirement][Description]]
-    [[`T`][None][Type being created]]
+    [[Parameter][Requirement][Description][Throw]]
+    [[`T`][None][Type to be created]]
+    [[`operator(const T&)`][None][Called when type `T` is created][Does not throw]]
 ]
 
 
@@ -84,7 +85,7 @@ Injector is a component used for creating dependencies configuration using bindi
     };
 
 [table Parameters
-    [[Parameter][Requirement][Description]]
+    [[Parameter][Requirement][Description][Returns][Throw]]
     [[`TArgs...`][__binding_model__ type][Bindings to be used as configuration]]
     [[`TDependecies`][`mpl::vector`][List of dependencies]]
     [[`T`][None][Object to be created]]
@@ -93,11 +94,13 @@ Injector is a component used for creating dependencies configuration using bindi
     [[`TVisitor`][__visitor_model__ type][Visitor to be called when visiting creating objects]]
     [[`TAction`][None][Action to be called for scopes having `call(const TAction&)` method]]
 
-    [[`x.create<T>(const TPolicies&...))`][__policy_model__][create object `T` with given policies]]
-    [[`x.allocate<T>(const TAllocator&, const TPolicies&...))`][__allocator_model__, __policy_model__][create object T with given policies using given allocator]]
-    [[`x.visit<T>()`][__visitor_model__][call visitor `operator()(const TObject&)` for all objects created during creation of object `T`]]
-    [[`x.call(const TAction&)`][None][for all scopes which have `call(const TAction&)` call it with given action]]
+    [[`create<T>(const TPolicies&...))`][__policy_model__][Create object `T` with given policies][`T` instance][Does not throw]]
+    [[`allocate<T>(const TAllocator&, const TPolicies&...))`][__allocator_model__, __policy_model__][Create object T with given policies using given allocator][`T` instance][Does not throw]]
+    [[`visit<T>()`][__visitor_model__][call visitor `operator()(const TObject&)` for all objects created during creation of object `T`][`T` instance][Does not throw]]
+    [[`call(const TAction&)`][None][for all scopes which have `call(const TAction&)` call it with given action][][Does not throw]]
 ]
+
+[warning In current version `visit` create an object due to compiler limitations - might be changed in the future that `visit` will not return.]
 
 [heading Expression Semantics]
     di::injector<TArgs...>(args...)
@@ -109,10 +112,10 @@ Injector is a component used for creating dependencies configuration using bindi
 
 [table
     [[Injector][Description]]
-    [[```di::injector<>()```][create empty injector]]
-    [[```di::injector<implementation>()```][equivalent to ```__di_injector__<__di_bind_deduce__<implementation>>```]]
-    [[```di::injector<__di_bind__<interface, implementation>>()```][injector with `interface` to `implementation` binding configuration]]
-    [[```di::injector<decltype(__di_bind__<int>::to(int())>(__di_bind__<int>::to(42))```][injector with configuration binding `42` value to `int` parameters]]
+    [[```di::injector<>()```][Create empty injector]]
+    [[```di::injector<implementation>()```][Equivalent to ```__di_injector__<__di_bind_deduce__<implementation>>```]]
+    [[```di::injector<__di_bind__<interface, implementation>>()```][Injector with `interface` to `implementation` binding configuration]]
+    [[```di::injector<decltype(__di_bind__<int>::to(int())>(__di_bind__<int>::to(42))```][Injector with configuration binding `42` value to `int` parameters]]
 ]
     using injector_empty_t = di::injector<>;
 
@@ -155,8 +158,9 @@ Creates `injector` type. Allows to bind dynamic values in no boilerplate manner.
     injector<TArgs...> inline make_injector(const TArgs&...);
 
 [table Parameters
-    [[Parameter][Requirement][Description]]
+    [[Parameter][Requirement][Description][Returns][Throw]]
     [[`TArgs...`][__binding_model__ type][Bindings to be used as configuration]]
+    [[`make_injector(TArgs...)`][None][Created __di_injector__ with bindings configuration][__di_injector__<TArgs...>][Does not throw]]
 ]
 
 [heading Expression Semantics]
@@ -170,13 +174,13 @@ Creates `injector` type. Allows to bind dynamic values in no boilerplate manner.
 [heading Examples]
 [table
     [[Injector][Description]]
-    [[```di::make_injector()```][create empty injector]]
-    [[```di::make_injector(__di_bind_deduce__<implementation>>())```][creates configuration with binds `implementation` to deduced `interface`]]
-    [[```di::make_injector(__di_bind__<interface, implementation>>())```][injector with `interface` to `implementation` binding configuration]]
-    [[```di::make_injector(__di_bind__<int>::to([]{return 42;}))```][injector with configuration binding `int` parameters with lambda expression returning `42`]]
-    [[```di::make_injector(__di_bind__<function<int()>>::to([]{return 42;}))```][injector with configuration binding `function<int()>` parameters with lambda expression returning `42`]]
-    [[```di::make_injector(__di_bind__<example>::to(cref(example)))```][binds `example` to const reference given object]]
-    [[```di::make_injector(__di_bind__<int>::to(42))```][injector with configuration binding `42` value to `int` parameters]]
+    [[```di::make_injector()```][Create empty injector]]
+    [[```di::make_injector(__di_bind_deduce__<implementation>>())```][Creates configuration with binds `implementation` to deduced `interface`]]
+    [[```di::make_injector(__di_bind__<interface, implementation>>())```][Injector with `interface` to `implementation` binding configuration]]
+    [[```di::make_injector(__di_bind__<int>::to([]{return 42;}))```][Injector with configuration binding `int` parameters with lambda expression returning `42`]]
+    [[```di::make_injector(__di_bind__<function<int()>>::to([]{return 42;}))```][Injector with configuration binding `function<int()>` parameters with lambda expression returning `42`]]
+    [[```di::make_injector(__di_bind__<example>::to(cref(example)))```][Binds `example` to const reference given object]]
+    [[```di::make_injector(__di_bind__<int>::to(42))```][Injector with configuration binding `42` value to `int` parameters]]
 ]
 
 [heading Examples `C++11`]

@@ -289,8 +289,7 @@ Or in less intrusive way - when we can't change constructor signature for exampl
     namespace di {
 
     template<>
-    struct ctor_traits<app>
-    {
+    struct ctor_traits<app> {
         __injections_boost_di_inject_traits__(__annotations_named__<int, first>, __annotations_named__<int, second>, const std::string&, std::shared_ptr<ilogger> logger);
     };
 

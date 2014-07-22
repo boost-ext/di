@@ -47,7 +47,7 @@
 * Binding front end should be easily extensible
     * achieved with `Dependency` class, user interface for binding has to return list of `Dependency` classes
 
-and maybe the most important that `Boost.DI` shouldn't be a copy of existing frameworks for Java and other languages like `Google Guice`
+and maybe the most important that `Boost.DI` shouldn't be a copy of existing frameworks for Java like [@https://github.com/google/guice Google Guice] and C# [@http://www.ninject.org Ninject] 
 and use whole potential of `C++` instead whilst not ignoring useful concepts in the same time.
 
 [h6 Design]

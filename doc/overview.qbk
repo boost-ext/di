@@ -112,10 +112,40 @@ a specific combination.
 ]
 
 [h6 Installation]
+
+```
+    git clone --recursive https://github.com/boostorg/boost.git
+    cd boost/libs
+    git clone https://github.com/krzysztof-jusiak/di.git
+```
+
 `Boost.DI` is header only library and doesn't require building.
 To start using library just include `Boost.DI` header.
 ```
     #include <boost/di.hpp>
+```
+
+[h6 Tests]
+`Boost.DI` is released with many levels of tests.
+
+* Unit tests (ut)
+* Module/Integration tests (mt)
+* Functional tests (ft)
+* Performance tests (pt)
+* Compilation fail tests (ft)
+* Verification tests (vt) - verify compiler support
+
+To run tests go to `boost/di/test` directory and run.
+```
+    bjam
+```
+
+[h6 Examples]
+`Boost.DI` is released with __examples__ and __more_examples__.
+
+To run examples go to `boost/di/example` directory and run.
+```
+    bjam
 ```
 
 [h6 Configuration]
@@ -530,29 +560,6 @@ The macros listed in the table below may be used to control the behaviour of `Bo
 
 [warning GCC/Clang/MSVC/Intel compilers differ with they way template conversion operator is handled.]
 
-[h6 Tests]
-`Boost.DI` is released with many levels of tests.
-
-* Unit tests (ut)
-* Module/Integration tests (mt)
-* Functional tests (ft)
-* Performance tests (pt)
-* Compilation fail tests (ft)
-* Verification tests (vt) - verify compiler support
-
-To run tests go to `boost/di/test` directory and run.
-```
-    bjam
-```
-
-[h6 Examples]
-`Boost.DI` is released with __examples_ and __more_examples_.
-
-To run examples go to `boost/di/example` directory and run.
-```
-    bjam
-```
-
 [h6 Preprocessed headers]
 `Boost.DI` is released with preprocessed headers for `BOOST_DI_CFG_CTOR_LIMIT_SIZE` and `BOOST_MPL_LIMIT_VECTOR_SIZE`
 as well as with tool to generate them. Generation of preprocessed headers might be done with tools provided.
@@ -579,6 +586,9 @@ as well as with tool to generate them. Generation of preprocessed headers might 
 * [@https://code.google.com/p/ffead-cpp ffead-cpp]
 * [@http://codebros.github.io/DiLite DiLite]
 * [@https://code.google.com/p/kindi kindi]
+*
+* Java: [@https://github.com/google/guice Google Guice]
+* C#: [@http://www.ninject.org Ninject]
 
 [h6 FAQ]
 

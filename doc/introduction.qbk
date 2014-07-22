@@ -12,7 +12,7 @@
 [:['["Don't call us, we'll call you.]]]
 [:*--Hollywood principle*]
 
-[*Dependency injection] is a practice providing required objects to an object.
+[*[@http://en.wikipedia.org/wiki/Dependency_injection Dependency injection]] is a programming practice providing required objects to an object.
 Following this approach has many advantages.
 
 * [*Provide loosely coupled code] (separation of business logic and object creation)
