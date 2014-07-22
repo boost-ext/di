@@ -32,7 +32,7 @@ namespace core {
 
 BOOST_AUTO_TEST_CASE(create_using_copy) {
     module<> module_;
-    c0 obj = module_.create<c0>();
+    auto obj = module_.create<c0>();
     (void)(obj);
 }
 
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE(create_using_const_ptr) {
 
 BOOST_AUTO_TEST_CASE(create_using_shared_ptr) {
     module<> module_;
-    aux::shared_ptr<c0> obj = module_.create<aux::shared_ptr<c0>>();
+    auto obj = module_.create<aux::shared_ptr<c0>>();
     BOOST_CHECK(obj);
 }
 
@@ -157,7 +157,7 @@ BOOST_AUTO_TEST_CASE(create_unique_shared_context_order) {
         >
     > module_;
 
-    aux::shared_ptr<c8> c8_ = module_.create<aux::shared_ptr<c8>>();
+    auto c8_ = module_.create<aux::shared_ptr<c8>>();
 
     BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -190,7 +190,7 @@ BOOST_AUTO_TEST_CASE(create_unique_shared_context_mix) {
         >
     > module_;
 
-    aux::shared_ptr<c8> c8_ = module_.create<aux::shared_ptr<c8>>();
+    auto c8_ = module_.create<aux::shared_ptr<c8>>();
 
     BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -215,7 +215,7 @@ BOOST_AUTO_TEST_CASE(create_shared_impl) {
         >
     > module_;
 
-    aux::shared_ptr<c8> c8_ = module_.create<aux::shared_ptr<c8>>();
+    auto c8_ = module_.create<aux::shared_ptr<c8>>();
 
     BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -242,7 +242,7 @@ BOOST_AUTO_TEST_CASE(create_shared_many) {
         >
     > module_;
 
-    aux::shared_ptr<c8> c8_ = module_.create<aux::shared_ptr<c8>>();
+    auto c8_ = module_.create<aux::shared_ptr<c8>>();
 
     BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -269,7 +269,7 @@ BOOST_AUTO_TEST_CASE(ctor_trait) {
         >
     > module_;
 
-    c14 obj = module_.create<c14>();
+    auto obj = module_.create<c14>();
 
     BOOST_CHECK_EQUAL(i, obj.i);
     BOOST_CHECK_EQUAL(0.0, obj.d);
@@ -286,7 +286,7 @@ BOOST_AUTO_TEST_CASE(class_ctor_traits) {
         >
     > module_;
 
-    c10 obj = module_.create<c10>();
+    auto obj = module_.create<c10>();
 
     BOOST_CHECK_EQUAL(i1, obj.i1);
     BOOST_CHECK_EQUAL(i2, obj.i2);
@@ -303,7 +303,7 @@ BOOST_AUTO_TEST_CASE(base_of) {
         >
     > module_;
 
-    aux::shared_ptr<c8> c8_ = module_.create<aux::shared_ptr<c8>>();
+    auto c8_ = module_.create<aux::shared_ptr<c8>>();
 
     BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -330,7 +330,7 @@ BOOST_AUTO_TEST_CASE(multiple_calls) {
         >
     > module_;
 
-    aux::shared_ptr<c15> c15_ = module_.create<aux::shared_ptr<c15>>();
+    auto c15_ = module_.create<aux::shared_ptr<c15>>();
 
     BOOST_CHECK(c15_->c3_ == c15_->c6_.c4_->c3_); BOOST_CHECK(c15_->c3_ != c15_->c6_.c3_);
 }
@@ -342,7 +342,7 @@ BOOST_AUTO_TEST_CASE(base_of_interface_not_trivial_ctor) {
         >
     > module_;
 
-    transaction_usage obj = module_.create<transaction_usage>();
+    auto obj = module_.create<transaction_usage>();
 
     BOOST_CHECK(obj.p->get().get() != obj.p->get().get());
 }
@@ -356,7 +356,7 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr_explicit_value) {
         >
     > module_;
 
-    c11 obj = module_.create<c11>();
+    auto obj = module_.create<c11>();
 
     BOOST_CHECK_EQUAL(i, *obj.i);
 }
@@ -370,7 +370,7 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr_base_of_explicit_value) {
         >
     > module_;
 
-    c11 obj = module_.create<c11>();
+    auto obj = module_.create<c11>();
 
     BOOST_CHECK_EQUAL(i, *obj.i);
 }
@@ -382,7 +382,7 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr_if) {
         >
     > module_;
 
-    c12 obj = module_.create<c12>();
+    auto obj = module_.create<c12>();
 
     BOOST_CHECK(dynamic_cast<c0if0*>(obj.if0_.get()));
     BOOST_CHECK_EQUAL(0, obj.c2_->i);
@@ -400,7 +400,7 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr_if_with_not_trivial_ctor) {
         >
     > module_;
 
-    c13 obj = module_.create<c13>();
+    auto obj = module_.create<c13>();
 
     c3if0* if0_ = dynamic_cast<c3if0*>(obj.if0_.get());
     BOOST_CHECK(if0_);
@@ -427,7 +427,7 @@ BOOST_AUTO_TEST_CASE(externals_create_by_explicit_value) {
         >
     > module_(i_, d_, c_);
 
-    c9 obj = module_.create<c9>();
+    auto obj = module_.create<c9>();
 
     BOOST_CHECK_EQUAL(i, obj.i);
     BOOST_CHECK_EQUAL(d, obj.d);
@@ -502,7 +502,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(externals_create_priority, TModule, externals_prio
 
     TModule module_(i1_, i2_);
 
-    c4 obj = module_.template create<c4>();
+    auto obj = module_.template create<c4>();
 
     BOOST_CHECK_EQUAL(i1, obj.i1);
     BOOST_CHECK_EQUAL(i2, obj.i2);

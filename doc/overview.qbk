@@ -57,7 +57,7 @@ To achieve the same behaviour with previous standards sometimes will just requir
 
 * Windows (x86/x86-64)
    * MinGW 4.7.3/4.8.2+
-   * Visual Studio 2013+ (clean with DrMemory)
+   * Microsoft Visual Studio 2013+ (clean with DrMemory)
 
 * Darwin/Mac OS (x86-64)
    * Clang 503.0.40+ (Apple LLVM version 5.1)
@@ -69,7 +69,7 @@ To achieve the same behaviour with previous standards sometimes will just requir
 See [link Notes] for further information.
 
 [table
-  [[Issue][GCC][Clang][Intel][Visual Studio]]
+  [[Issue][GCC][Clang][Intel][MSVC]]
   [[Rvalue References][supported][supported][supported][not supported]]
   [[std::function/boost::function][supported][supported][supported][supported (boost::function supported when pass by const reference)]]
   [[Arguments Permission Policy][supported][supported][supported][not supported]]
@@ -89,7 +89,7 @@ a specific combination.
 
 [table
   [[Standard][Compiler][Recommendation]]
-  [[`C++14`][`Visual Studio 12.0`]
+  [[`C++14`][`Microsoft Visual Studio 12.0`]
   [
     * `Modules::configure()` harder syntax
     * Rvalue references aren't supported
@@ -558,7 +558,7 @@ The macros listed in the table below may be used to control the behaviour of `Bo
     [[Tests: [@test/vt/compiler_support_vt.cpp]]]
 ]
 
-[warning GCC/Clang/MSVC/Intel compilers differ with they way template conversion operator is handled.]
+[warning GCC/Clang/MSVC/Intel compilers differ with the way template conversion operator is handled.]
 
 [h6 Preprocessed headers]
 `Boost.DI` is released with preprocessed headers for `BOOST_DI_CFG_CTOR_LIMIT_SIZE` and `BOOST_MPL_LIMIT_VECTOR_SIZE`

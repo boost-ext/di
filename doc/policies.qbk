@@ -86,7 +86,7 @@ Verifies constructor parameters overlapping.
 [heading Expression Semantics]
     di::policies::circular_dependencies()
 
-[*Result]: `static assert with `CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED` message or clean compilation`
+[*Result]: static assert with `CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED` message or clean compilation.
 
 [heading Header]
     #include <boost/di.hpp>
@@ -138,7 +138,7 @@ Limits default constructible types not be created unless they are explicitly bin
 [heading Expression Semantics]
     di::policies::creation_permission<...>()
 
-[*Result]: `static assert with `CREATION_OWNERSHIP_IS_NOT_CLEAR` message or clean compilation`
+[*Result]: static assert with `TYPE_HAS_TO_BE_EXPLICITLY_BINDED` message or clean compilation.
 
 [heading Header]
     #include <boost/di.hpp>
@@ -147,11 +147,12 @@ Limits default constructible types not be created unless they are explicitly bin
     boost::di::policies
 
 [heading Examples]
-    __di_make_injector__().create<int>(di::policies::creation_permission()); // compile ok
-    __di_make_injector__().create<const int&>(di::policies::creation_permission()); // compile error
-    __di_make_injector__().create<int&>(di::policies::creation_permission()); // compile error
+    using namespace di::policies;
 
-[note Requires [link di.overview.configuration BOOST_DI_CFG_EXAMINE_CALL_STACK] to be defined.]
+    __di_make_injector__().create<int>(creation_permission<>()); // compile error
+    __di_make_injector__(__di_bind_int__<42>()).create<int>(creation_permission<>()); // compile ok
+    __di_make_injector__().create<int>(creation_permission<allow_type<int>>()); // compile ok
+    __di_make_injector__().create<int>(creation_permission<allow_type_expr<is_pod<mpl::_>>>()); // compile ok
 
 [heading Tests]
     ``[@test/ut/policies/creation_permission_ut.cpp]``
@@ -210,7 +211,7 @@ Limits allowed constructor parameters. By default, if used, all parameters are d
     using namespace di::policies;
     parameters_permission<allow_refs, allow_smart_ptrs, ..., allow_copies>()
 
-[*Result]: `static assert with `PARAMETER_NOT_PERMITTED` message or clean compilation`
+[*Result]: static assert with `PARAMETER_NOT_PERMITTED` message or clean compilation.
 
 [heading Header]
     #include <boost/di.hpp>
@@ -287,7 +288,7 @@ Limits allowed scopes to be used whilst binding. By default, if used, all scopes
     };
 
 [table Parameters
-    [[Parameter][Requirement][Description]]
+    [[Parameter][Requirement][Description][Throw]]
     [[`TScope`][__scope_model__ type][Scope to be allowed]]
     [[`TArgs...`][__allow_scope_model__ type][Scopes to be allowed]]
     [[`T`][__data_model__ type][Data to be verified]]
@@ -305,7 +306,7 @@ Limits allowed scopes to be used whilst binding. By default, if used, all scopes
 
 [note `allow_scope<scopes::__scopes_deduce__>` is not allowed.]
 
-[*Result]: `static assert with `SCOPE_NOT_PERMITTED` message or clean compilation`
+[*Result]: static assert with `SCOPE_NOT_PERMITTED` message or clean compilation.
 
 [heading Header]
     #include <boost/di.hpp>
