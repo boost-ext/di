@@ -47,7 +47,7 @@
 <span class="special">};</span>
 </pre>
 <div class="table">
-<a name="di.concepts.policies.scopes_permission.parameters"></a><p class="title"><b>Table&#160;44.&#160;Parameters</b></p>
+<a name="di.concepts.policies.scopes_permission.parameters"></a><p class="title"><b>Table&#160;45.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
 <col>
@@ -157,9 +157,10 @@
 <span class="special">};</span>
 </pre>
 <div class="table">
-<a name="di.concepts.policies.scopes_permission.parameters0"></a><p class="title"><b>Table&#160;45.&#160;Parameters</b></p>
+<a name="di.concepts.policies.scopes_permission.parameters0"></a><p class="title"><b>Table&#160;46.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
+<col>
 <col>
 <col>
 <col>
@@ -178,6 +179,11 @@
 <th>
                   <p>
                     Description
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Throw
                   </p>
                 </th>
 </tr></thead>
@@ -199,6 +205,7 @@
                     Scope to be allowed
                   </p>
                 </td>
+<td class="auto-generated">&#160;</td>
 </tr>
 <tr>
 <td>
@@ -217,22 +224,46 @@
                     Scopes to be allowed
                   </p>
                 </td>
+<td class="auto-generated">&#160;</td>
 </tr>
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">TDependency</span></code>
+                    <code class="computeroutput"><span class="identifier">T</span></code>
                   </p>
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../bindings.html#di.concepts.bindings.synopsis">Dependency Model</a>
+                    <a class="link" href="../policies.html#di.concepts.policies.data_model">Data Model</a>
                     type
                   </p>
                 </td>
 <td>
                   <p>
-                    Dependency to be verified
+                    Data to be verified
+                  </p>
+                </td>
+<td class="auto-generated">&#160;</td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    None
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Verify policy requirements
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Does not throw
                   </p>
                 </td>
 </tr>
@@ -263,11 +294,8 @@
           </p></td></tr>
 </table></div>
 <p>
-          <span class="bold"><strong>Result</strong></span>: <code class="computeroutput"><span class="keyword">static</span>
-          <span class="identifier">assert</span> <span class="identifier">with</span>
-          </code>SCOPE_NOT_PERMITTED<code class="computeroutput"> <span class="identifier">message</span>
-          <span class="keyword">or</span> <span class="identifier">clean</span>
-          <span class="identifier">compilation</span></code>
+          <span class="bold"><strong>Result</strong></span>: static assert with <code class="computeroutput"><span class="identifier">SCOPE_NOT_PERMITTED</span></code> message or clean
+          compilation.
         </p>
 <h6>
 <a name="di.concepts.policies.scopes_permission.h4"></a>
@@ -342,7 +370,7 @@
               <a class="link" href="circular_dependencies.html" title="circular_dependencies">circular_dependencies</a>
             </li>
 <li class="listitem">
-              <a class="link" href="creation_ownership.html" title="creation_ownership">creation_ownership</a>
+              <a class="link" href="creation_permission.html" title="creation_permission">creation_permission</a>
             </li>
 <li class="listitem">
               <a class="link" href="parameters_permission.html" title="parameters_permission">parameters_permission</a>

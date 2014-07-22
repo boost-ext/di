@@ -40,7 +40,7 @@ di/concepts/utilities/allocator.html
 di/concepts/utilities/provider.html
 di/concepts/policies.html
 di/concepts/policies/circular_dependencies.html
-di/concepts/policies/creation_ownership.html
+di/concepts/policies/creation_permission.html
 di/concepts/policies/parameters_permission.html
 di/concepts/policies/scopes_permission.html
 di/examples.html
