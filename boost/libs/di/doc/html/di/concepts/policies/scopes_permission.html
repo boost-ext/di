@@ -47,9 +47,10 @@
 <span class="special">};</span>
 </pre>
 <div class="table">
-<a name="di.concepts.policies.scopes_permission.parameters"></a><p class="title"><b>Table&#160;43.&#160;Parameters</b></p>
+<a name="di.concepts.policies.scopes_permission.parameters"></a><p class="title"><b>Table&#160;44.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
+<col>
 <col>
 <col>
 <col>
@@ -70,6 +71,11 @@
                     Description
                   </p>
                 </th>
+<th>
+                  <p>
+                    Throw
+                  </p>
+                </th>
 </tr></thead>
 <tbody>
 <tr>
@@ -88,6 +94,7 @@
                     Scope to be allowed
                   </p>
                 </td>
+<td class="auto-generated">&#160;</td>
 </tr>
 <tr>
 <td>
@@ -103,6 +110,29 @@
 <td>
                   <p>
                     Dependency scope
+                  </p>
+                </td>
+<td class="auto-generated">&#160;</td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    None
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Verify policy requirements
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Does not throw
                   </p>
                 </td>
 </tr>
@@ -127,7 +157,7 @@
 <span class="special">};</span>
 </pre>
 <div class="table">
-<a name="di.concepts.policies.scopes_permission.parameters0"></a><p class="title"><b>Table&#160;44.&#160;Parameters</b></p>
+<a name="di.concepts.policies.scopes_permission.parameters0"></a><p class="title"><b>Table&#160;45.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
 <col>
@@ -166,7 +196,7 @@
                 </td>
 <td>
                   <p>
-                    scope to be allowed
+                    Scope to be allowed
                   </p>
                 </td>
 </tr>
@@ -202,7 +232,7 @@
                 </td>
 <td>
                   <p>
-                    dependency to be verified
+                    Dependency to be verified
                   </p>
                 </td>
 </tr>
@@ -235,7 +265,7 @@
 <p>
           <span class="bold"><strong>Result</strong></span>: <code class="computeroutput"><span class="keyword">static</span>
           <span class="identifier">assert</span> <span class="identifier">with</span>
-          <span class="identifier">SCOPE_NOT_PERMITTED</span> <span class="identifier">message</span>
+          </code>SCOPE_NOT_PERMITTED<code class="computeroutput"> <span class="identifier">message</span>
           <span class="keyword">or</span> <span class="identifier">clean</span>
           <span class="identifier">compilation</span></code>
         </p>

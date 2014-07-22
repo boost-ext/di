@@ -56,9 +56,11 @@
 <span class="special">};</span>
 </pre>
 <div class="table">
-<a name="di.concepts.scopes.external.parameters"></a><p class="title"><b>Table&#160;10.&#160;Parameters</b></p>
+<a name="di.concepts.scopes.external.parameters"></a><p class="title"><b>Table&#160;11.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
+<col>
+<col>
 <col>
 <col>
 <col>
@@ -79,6 +81,16 @@
                     Description
                   </p>
                 </th>
+<th>
+                  <p>
+                    Returns
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Throw
+                  </p>
+                </th>
 </tr></thead>
 <tbody>
 <tr>
@@ -95,9 +107,11 @@
                 </td>
 <td>
                   <p>
-                    consist available type conversions
+                    Consist available type conversions
                   </p>
                 </td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
 </tr>
 <tr>
 <td>
@@ -112,14 +126,16 @@
                 </td>
 <td>
                   <p>
-                    type to be expected by constructor
+                    Type to be expected by constructor
                   </p>
                 </td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
 </tr>
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">x</span><span class="special">.</span><span class="identifier">create</span><span class="special">()</span></code>
+                    <code class="computeroutput"><span class="identifier">create</span><span class="special">()</span></code>
                   </p>
                 </td>
 <td>
@@ -129,7 +145,17 @@
                 </td>
 <td>
                   <p>
-                    create wrapped type to be passed to constructor
+                    Create wrapped type to be passed to constructor
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../scopes.html#di.concepts.scopes.wrapper_model">Wrapper Model</a>&lt;TExpected&gt;
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Does not throw
                   </p>
                 </td>
 </tr>
@@ -137,7 +163,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="di.concepts.scopes.external.conversions"></a><p class="title"><b>Table&#160;11.&#160;Conversions</b></p>
+<a name="di.concepts.scopes.external.conversions"></a><p class="title"><b>Table&#160;12.&#160;Conversions</b></p>
 <div class="table-contents"><table class="table" summary="Conversions">
 <colgroup>
 <col>
@@ -349,7 +375,7 @@
                 </td>
 <td>
                   <p>
-                    bind <code class="computeroutput"><span class="keyword">int</span></code> parameter
+                    Bind <code class="computeroutput"><span class="keyword">int</span></code> parameter
                     to value <code class="computeroutput"><span class="number">42</span></code>
                   </p>
                 </td>
@@ -360,7 +386,7 @@
                 </td>
 <td>
                   <p>
-                    bind <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code> parameter to value
+                    Bind <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code> parameter to value
                     <code class="computeroutput"><span class="identifier">text</span></code>
                   </p>
                 </td>
@@ -371,7 +397,7 @@
                 </td>
 <td>
                   <p>
-                    bind example type to external <code class="computeroutput"><span class="identifier">shared_ptr</span></code>
+                    Bind example type to external <code class="computeroutput"><span class="identifier">shared_ptr</span></code>
                   </p>
                 </td>
 </tr>
@@ -381,7 +407,7 @@
                 </td>
 <td>
                   <p>
-                    bind example to const reference object
+                    Bind example to const reference object
                   </p>
                 </td>
 </tr>
@@ -391,7 +417,7 @@
                 </td>
 <td>
                   <p>
-                    bind example to reference object
+                    Bind example to reference object
                   </p>
                 </td>
 </tr>
@@ -401,7 +427,7 @@
                 </td>
 <td>
                   <p>
-                    bind <code class="computeroutput"><span class="keyword">int</span></code> to lambda
+                    Bind <code class="computeroutput"><span class="keyword">int</span></code> to lambda
                     expression returning <code class="computeroutput"><span class="number">42</span></code>
                     value
                   </p>

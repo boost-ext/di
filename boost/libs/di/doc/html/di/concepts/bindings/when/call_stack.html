@@ -45,7 +45,7 @@
 <span class="special">};</span>
 </pre>
 <div class="table">
-<a name="di.concepts.bindings.when.call_stack.parameters"></a><p class="title"><b>Table&#160;30.&#160;Parameters</b></p>
+<a name="di.concepts.bindings.when.call_stack.parameters"></a><p class="title"><b>Table&#160;31.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
 <col>
@@ -118,7 +118,7 @@
 <p>
             <span class="bold"><strong>Semantics</strong></span>: only last N objects are taken
             into account during <code class="computeroutput"><span class="identifier">call</span> <span class="identifier">stack</span></code> resolution, where N represents
-            number of elements in <code class="computeroutput"><span class="identifier">call_stack</span></code>.
+            number of elements in <code class="computeroutput"><span class="identifier">di</span><span class="special">::</span><span class="identifier">call_stack</span></code>.
           </p>
 <p>
             <span class="bold"><strong>Return type</strong></span>: <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">vector</span></code>
@@ -240,7 +240,7 @@
                   </td>
 <td>
                     <p>
-                      bind <code class="computeroutput"><span class="keyword">int</span></code> parameter
+                      Bind <code class="computeroutput"><span class="keyword">int</span></code> parameter
                       to <code class="computeroutput"><span class="number">42</span></code> when class
                       was created with <code class="computeroutput"><span class="special">...,</span>
                       <span class="identifier">c1</span><span class="special">,</span>
@@ -250,11 +250,11 @@
 </tr>
 <tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><a class="link" href="../bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;::</span><a class="link" href="../named.html" title="named">named</a><span class="special">&lt;</span><span class="identifier">my_interface</span><span class="special">&gt;::</span><span class="identifier">whe__bindings_when__n</span><span class="special">&lt;</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">,</span> <span class="identifier">c2</span><span class="special">&gt;&gt;()</span></pre>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><a class="link" href="../bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;::</span><a class="link" href="../named.html" title="named">named</a><span class="special">&lt;</span><span class="identifier">my_interface</span><span class="special">&gt;::</span><span class="identifier">__d_bind_when__</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">,</span> <span class="identifier">c2</span><span class="special">&gt;&gt;()</span></pre>
                   </td>
 <td>
                     <p>
-                      bind <code class="computeroutput"><span class="identifier">interface</span></code>
+                      Bind <code class="computeroutput"><span class="identifier">interface</span></code>
                       to <code class="computeroutput"><span class="identifier">implementation</span></code>
                       when parameter named <code class="computeroutput"><span class="identifier">my_interface</span></code>
                       is called within <code class="computeroutput"><span class="identifier">c1</span><span class="special">,</span> <span class="identifier">c2</span></code>
@@ -264,11 +264,11 @@
 </tr>
 <tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><a class="link" href="../bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;::</span><a class="link" href="../when.html" title="when">when</a><span class="special">&lt;</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">,</span> <span class="identifier">c2</span><span class="special">&gt;&gt;::</span><a class="link" href="../named.html" title="named">named</a><span class="special">&lt;</span><span class="identifier">my_interface</span><span class="special">&gt;()</span></pre>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><a class="link" href="../bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;::</span><a class="link" href="../when.html" title="when">when</a><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">,</span> <span class="identifier">c2</span><span class="special">&gt;&gt;::</span><a class="link" href="../named.html" title="named">named</a><span class="special">&lt;</span><span class="identifier">my_interface</span><span class="special">&gt;()</span></pre>
                   </td>
 <td>
                     <p>
-                      same as above
+                      Same as above
                     </p>
                   </td>
 </tr>
@@ -304,9 +304,20 @@
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-              <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_EXAMINE_CALL_STACK</span></code>
+              <a class="link" href="../../../overview.html#di.overview.configuration">BOOST_DI_CFG_EXAMINE_CALL_STACK</a>
               has to be defined to enable <a class="link" href="call_stack.html" title="call_stack">call_stack</a>
               feature.
+            </p></td></tr>
+</table></div>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../../../../../doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              Types passed to <code class="computeroutput"><span class="identifier">call_stack</span></code>
+              should reflects constructor parameters - <a class="link" href="../../annotations/named.html" title="named">di::named</a>
+              is not supported.
             </p></td></tr>
 </table></div>
 <div class="tip"><table border="0" summary="Tip">

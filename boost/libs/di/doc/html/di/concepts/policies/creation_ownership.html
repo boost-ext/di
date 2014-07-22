@@ -44,9 +44,10 @@
 <span class="special">};</span>
 </pre>
 <div class="table">
-<a name="di.concepts.policies.creation_ownership.parameters"></a><p class="title"><b>Table&#160;40.&#160;Parameters</b></p>
+<a name="di.concepts.policies.creation_ownership.parameters"></a><p class="title"><b>Table&#160;41.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
+<col>
 <col>
 <col>
 <col>
@@ -67,8 +68,14 @@
                     Description
                   </p>
                 </th>
+<th>
+                  <p>
+                    Throw
+                  </p>
+                </th>
 </tr></thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>
                   <p>
                     <code class="computeroutput"><span class="identifier">TDependency</span></code>
@@ -82,10 +89,34 @@
                 </td>
 <td>
                   <p>
-                    dependency to be verified
+                    Dependency to be verified
                   </p>
                 </td>
-</tr></tbody>
+<td class="auto-generated">&#160;</td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    None
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Verify policy requirements
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Does not throw
+                  </p>
+                </td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <br class="table-break"><h6>
@@ -128,7 +159,7 @@
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-            Requires <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_EXAMINE_CALL_STACK</span></code>
+            Requires <a class="link" href="../../overview.html#di.overview.configuration">BOOST_DI_CFG_EXAMINE_CALL_STACK</a>
             to be defined.
           </p></td></tr>
 </table></div>

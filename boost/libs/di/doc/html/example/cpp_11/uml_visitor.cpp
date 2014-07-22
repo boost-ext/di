@@ -36,21 +36,18 @@ namespace di = boost::di;
 /*<<define `plant_uml` printer>>*/
 class plant_uml {
 public:
-    void on_begin(std::stringstream& stream) const
-    {
+    void on_begin(std::stringstream& stream) const {
         stream << "@startuml uml_visitor.png" << std::endl;
     }
 
-    void on_end(std::stringstream& stream) const
-    {
+    void on_end(std::stringstream& stream) const {
         stream << "@enduml" << std::endl;
     }
 
     template<typename TDependency>
     void on_call(std::stringstream& stream
                , const TDependency& from
-               , const TDependency& to) const
-    {
+               , const TDependency& to) const {
         if (to.expected != to.given) {
             stream << "\"" << to.expected << "\" <|-- \"" << to.given << "\"" << std::endl;
         }

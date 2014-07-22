@@ -75,7 +75,7 @@
 <span class="keyword">class</span> <span class="identifier">wrapper_model</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TValueType</span><span class="special">&gt;</span>
-    <span class="identifier">wrapper_model</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TValueType</span><span class="special">&amp;</span> <span class="identifier">value</span><span class="special">);</span>
+    <span class="identifier">wrapper_model</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TValueType</span><span class="special">&amp;);</span>
 
     <span class="identifier">T</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="identifier">type</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;)</span> <span class="keyword">const</span><span class="special">;</span>
 <span class="special">};</span>
@@ -84,6 +84,8 @@
 <a name="di.concepts.scopes.parameters"></a><p class="title"><b>Table&#160;6.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
+<col>
+<col>
 <col>
 <col>
 <col>
@@ -104,6 +106,16 @@
                   Description
                 </p>
               </th>
+<th>
+                <p>
+                  Returns
+                </p>
+              </th>
+<th>
+                <p>
+                  Throws
+                </p>
+              </th>
 </tr></thead>
 <tbody>
 <tr>
@@ -119,9 +131,12 @@
               </td>
 <td>
                 <p>
-                  Type wrapper might be converted to
+                  Type to which <code class="computeroutput"><span class="identifier">wrapper_model</span></code>
+                  might be converted to
                 </p>
               </td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
 </tr>
 <tr>
 <td>
@@ -137,6 +152,63 @@
 <td>
                 <p>
                   Object type to be stored by wrapper
+                </p>
+              </td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">wrapper_model</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TValueType</span><span class="special">&amp;)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  None
+                </p>
+              </td>
+<td>
+                <p>
+                  Conversion constructor - creates <code class="computeroutput"><span class="identifier">wrapper_model</span></code>
+                  from <code class="computeroutput"><span class="identifier">TValueType</span></code>
+                  type
+                </p>
+              </td>
+<td>
+              </td>
+<td>
+                <p>
+                  Does not throw
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">T</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span>
+                  <span class="identifier">type</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  None
+                </p>
+              </td>
+<td>
+                <p>
+                  Converts <code class="computeroutput"><span class="identifier">wrapper_model</span></code>
+                  to <code class="computeroutput"><span class="identifier">T</span></code> type
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">T</span></code> instance
+                </p>
+              </td>
+<td>
+                <p>
+                  Does not throw
                 </p>
               </td>
 </tr>
@@ -169,7 +241,7 @@
               </td>
 <td>
                 <p>
-                  conversion to lvalue/pointer/smart_ptr
+                  Conversion to lvalue/pointer/smart_ptr
                 </p>
               </td>
 </tr>
@@ -181,7 +253,7 @@
               </td>
 <td>
                 <p>
-                  conversion to reference
+                  Conversion to reference
                 </p>
               </td>
 </tr>
@@ -193,7 +265,7 @@
               </td>
 <td>
                 <p>
-                  conversion to smart_ptr
+                  Conversion to smart_ptr
                 </p>
               </td>
 </tr>
@@ -205,7 +277,7 @@
               </td>
 <td>
                 <p>
-                  conversion to any type wrappers provide and to const ref/named
+                  Conversion to any type wrappers provide and to const ref/named
                   on top of it
                 </p>
               </td>
@@ -218,7 +290,7 @@
               </td>
 <td>
                 <p>
-                  conversion to lvalue/rvalue/pointer/smart_pointer
+                  Conversion to lvalue/rvalue/pointer/smart_pointer
                 </p>
               </td>
 </tr>

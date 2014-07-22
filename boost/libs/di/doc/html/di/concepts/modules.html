@@ -76,9 +76,11 @@
 <span class="special">}</span>
 </pre>
 <div class="table">
-<a name="di.concepts.modules.parameters"></a><p class="title"><b>Table&#160;35.&#160;Parameters</b></p>
+<a name="di.concepts.modules.parameters"></a><p class="title"><b>Table&#160;36.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
+<col>
+<col>
 <col>
 <col>
 <col>
@@ -99,11 +101,21 @@
                   Description
                 </p>
               </th>
+<th>
+                <p>
+                  Returns
+                </p>
+              </th>
+<th>
+                <p>
+                  Throw
+                </p>
+              </th>
 </tr></thead>
 <tbody><tr>
 <td>
                 <p>
-                  <code class="computeroutput"><span class="identifier">x</span><span class="special">.</span><span class="identifier">configure</span><span class="special">()</span></code>
+                  <code class="computeroutput"><span class="identifier">configure</span><span class="special">()</span></code>
                 </p>
               </td>
 <td>
@@ -113,8 +125,17 @@
               </td>
 <td>
                 <p>
-                  Returns <code class="computeroutput"><a class="link" href="injectors/injector.html" title="injector">di::injector</a></code>
-                  object with configured dependencies
+                  Create bindings configuration
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="injectors/make_injector.html" title="make_injector">di::make_injector</a>&lt;...&gt;
+                </p>
+              </td>
+<td>
+                <p>
+                  Does not throw
                 </p>
               </td>
 </tr></tbody>

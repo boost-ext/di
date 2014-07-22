@@ -61,9 +61,11 @@
 <span class="special">};</span>
 </pre>
 <div class="table">
-<a name="di.concepts.scopes.unique.parameters"></a><p class="title"><b>Table&#160;12.&#160;Parameters</b></p>
+<a name="di.concepts.scopes.unique.parameters"></a><p class="title"><b>Table&#160;13.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
+<col>
+<col>
 <col>
 <col>
 <col>
@@ -84,6 +86,16 @@
                     Description
                   </p>
                 </th>
+<th>
+                  <p>
+                    Returns
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Throws
+                  </p>
+                </th>
 </tr></thead>
 <tbody>
 <tr>
@@ -100,9 +112,11 @@
                 </td>
 <td>
                   <p>
-                    consist available type conversions
+                    Consist available type conversions
                   </p>
                 </td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
 </tr>
 <tr>
 <td>
@@ -117,14 +131,16 @@
                 </td>
 <td>
                   <p>
-                    type to be expected by constructor
+                    Type to be expected by constructor
                   </p>
                 </td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
 </tr>
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">x</span><span class="special">.</span><span class="identifier">create</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">TExpected</span><span class="special">*()&gt;&amp;)</span></code>
+                    <code class="computeroutput"><span class="identifier">create</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">TExpected</span><span class="special">*()&gt;&amp;)</span></code>
                   </p>
                 </td>
 <td>
@@ -134,7 +150,17 @@
                 </td>
 <td>
                   <p>
-                    create wrapped type to be passed to constructor
+                    Create wrapped type to be passed to constructor
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../scopes.html#di.concepts.scopes.wrapper_model">Wrapper Model</a>&lt;TExpected&gt;
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Does not throw
                   </p>
                 </td>
 </tr>
@@ -142,7 +168,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="di.concepts.scopes.unique.conversions"></a><p class="title"><b>Table&#160;13.&#160;Conversions</b></p>
+<a name="di.concepts.scopes.unique.conversions"></a><p class="title"><b>Table&#160;14.&#160;Conversions</b></p>
 <div class="table-contents"><table class="table" summary="Conversions">
 <colgroup>
 <col>
@@ -354,7 +380,7 @@
                 </td>
 <td>
                   <p>
-                    bind <code class="computeroutput"><span class="identifier">interface</span></code>
+                    Bind <code class="computeroutput"><span class="identifier">interface</span></code>
                     to <code class="computeroutput"><span class="identifier">implementation</span></code>
                     in unique scope
                   </p>
@@ -363,12 +389,12 @@
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">x</span><span class="special">.</span><span class="identifier">create</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">TExpected</span><span class="special">*()&gt;&amp;)</span></code>
+                    <code class="computeroutput"><span class="identifier">create</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">TExpected</span><span class="special">*()&gt;&amp;)</span></code>
                   </p>
                 </td>
 <td>
                   <p>
-                    create wrapped type to be passed to constructor
+                    Create wrapped type to be passed to constructor
                   </p>
                 </td>
 </tr>

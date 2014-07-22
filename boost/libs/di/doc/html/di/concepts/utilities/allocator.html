@@ -57,9 +57,11 @@
 <span class="special">};</span>
 </pre>
 <div class="table">
-<a name="di.concepts.utilities.allocator.parameters"></a><p class="title"><b>Table&#160;36.&#160;Parameters</b></p>
+<a name="di.concepts.utilities.allocator.parameters"></a><p class="title"><b>Table&#160;37.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
+<col>
+<col>
 <col>
 <col>
 <col>
@@ -80,6 +82,16 @@
                     Description
                   </p>
                 </th>
+<th>
+                  <p>
+                    Returns
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Throw
+                  </p>
+                </th>
 </tr></thead>
 <tbody>
 <tr>
@@ -98,6 +110,8 @@
                     Result type
                   </p>
                 </td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
 </tr>
 <tr>
 <td>
@@ -115,6 +129,8 @@
                     Type to be created
                   </p>
                 </td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
 </tr>
 <tr>
 <td>
@@ -132,11 +148,13 @@
                     List of types to be constructed
                   </p>
                 </td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
 </tr>
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">x</span><span class="special">.</span><span class="identifier">allocate</span><span class="special">&lt;</span><span class="identifier">TExpected</span><span class="special">,</span>
+                    <code class="computeroutput"><span class="identifier">allocate</span><span class="special">&lt;</span><span class="identifier">TExpected</span><span class="special">,</span>
                     <span class="identifier">TGiven</span><span class="special">&gt;()</span></code>
                   </p>
                 </td>
@@ -151,11 +169,21 @@
                     Returns allocated TGiven() object
                   </p>
                 </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">TExpected</span></code>*
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Does not throw
+                  </p>
+                </td>
 </tr>
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">x</span><span class="special">.</span><span class="identifier">allocate</span><span class="special">&lt;</span><span class="identifier">TExpected</span><span class="special">,</span>
+                    <code class="computeroutput"><span class="identifier">allocate</span><span class="special">&lt;</span><span class="identifier">TExpected</span><span class="special">,</span>
                     <span class="identifier">TGiven</span><span class="special">&gt;()</span></code>
                   </p>
                 </td>
@@ -170,11 +198,21 @@
                     object
                   </p>
                 </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">TExpected</span></code>*
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Does not throw
+                  </p>
+                </td>
 </tr>
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">x</span><span class="special">.</span><span class="identifier">allocate</span><span class="special">&lt;</span><span class="identifier">TExpected</span><span class="special">,</span>
+                    <code class="computeroutput"><span class="identifier">allocate</span><span class="special">&lt;</span><span class="identifier">TExpected</span><span class="special">,</span>
                     <span class="identifier">TGiven</span><span class="special">&gt;()</span></code>
                   </p>
                 </td>
@@ -189,11 +227,21 @@
                     expression
                   </p>
                 </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">TExpected</span></code>*
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Does not throw
+                  </p>
+                </td>
 </tr>
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">x</span><span class="special">.</span><span class="identifier">allocate</span><span class="special">&lt;</span><span class="identifier">TExpected</span><span class="special">,</span>
+                    <code class="computeroutput"><span class="identifier">allocate</span><span class="special">&lt;</span><span class="identifier">TExpected</span><span class="special">,</span>
                     <span class="identifier">TGiven</span><span class="special">&gt;(</span><span class="identifier">TArgs</span><span class="special">&amp;&amp;...)</span></code>
                   </p>
                 </td>
@@ -206,6 +254,16 @@
                   <p>
                     Returns allocated <code class="computeroutput"><span class="identifier">TGiven</span></code>
                     constructed with <code class="computeroutput"><span class="identifier">TArgs</span><span class="special">...</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">TExpected</span></code>*
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Does not throw
                   </p>
                 </td>
 </tr>

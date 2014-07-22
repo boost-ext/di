@@ -70,6 +70,8 @@
 <col>
 <col>
 <col>
+<col>
+<col>
 </colgroup>
 <thead><tr>
 <th>
@@ -85,6 +87,16 @@
 <th>
                   <p>
                     Description
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Returns
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Throws
                   </p>
                 </th>
 </tr></thead>
@@ -105,6 +117,8 @@
                     Type to be annotated
                   </p>
                 </td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
 </tr>
 <tr>
 <td>
@@ -119,8 +133,86 @@
                 </td>
 <td>
                   <p>
-                    Type represent name, <code class="computeroutput"><span class="identifier">no_name</span></code>
-                    by default, mpl::string&lt;'str'&gt; might be handy
+                    Type represent name (default = <code class="computeroutput"><span class="identifier">no_name</span></code>)
+                    / mpl::string&lt;'str'&gt; might be useful
+                  </p>
+                </td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">named</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    None
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Conversion constructor - Create named from type <code class="computeroutput"><span class="identifier">T</span></code>
+                  </p>
+                </td>
+<td>
+                </td>
+<td>
+                  <p>
+                    Does not throw
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">named</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">named</span><span class="special">&amp;)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    None
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Copy constructor
+                  </p>
+                </td>
+<td>
+                </td>
+<td>
+                  <p>
+                    Does not throw
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">operator</span> <span class="identifier">T</span><span class="special">()</span> <span class="keyword">const</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    None
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Conversion operator - converts <code class="computeroutput"><span class="identifier">named</span></code>
+                    to <code class="computeroutput"><span class="identifier">T</span></code> type
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">T</span></code> instance
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Does not throw
                   </p>
                 </td>
 </tr>

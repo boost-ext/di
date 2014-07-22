@@ -42,9 +42,11 @@
 <span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">TArgs</span><span class="special">...&gt;</span> <span class="keyword">inline</span> <span class="identifier">make_injector</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TArgs</span><span class="special">&amp;...);</span>
 </pre>
 <div class="table">
-<a name="di.concepts.injectors.make_injector.parameters"></a><p class="title"><b>Table&#160;34.&#160;Parameters</b></p>
+<a name="di.concepts.injectors.make_injector.parameters"></a><p class="title"><b>Table&#160;35.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
+<col>
+<col>
 <col>
 <col>
 <col>
@@ -65,8 +67,19 @@
                     Description
                   </p>
                 </th>
+<th>
+                  <p>
+                    Returns
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Throw
+                  </p>
+                </th>
 </tr></thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>
                   <p>
                     <code class="computeroutput"><span class="identifier">TArgs</span><span class="special">...</span></code>
@@ -83,7 +96,38 @@
                     Bindings to be used as configuration
                   </p>
                 </td>
-</tr></tbody>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">TArgs</span><span class="special">...)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    None
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Created <a class="link" href="injector.html" title="injector">di::injector</a>
+                    with bindings configuration
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="injector.html" title="injector">di::injector</a>&lt;TArgs...&gt;
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Does not throw
+                  </p>
+                </td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <br class="table-break"><h6>
@@ -130,7 +174,7 @@
                 </td>
 <td>
                   <p>
-                    create empty injector
+                    Create empty injector
                   </p>
                 </td>
 </tr>
@@ -140,7 +184,7 @@
                 </td>
 <td>
                   <p>
-                    creates configuration with binds <code class="computeroutput"><span class="identifier">implementation</span></code>
+                    Creates configuration with binds <code class="computeroutput"><span class="identifier">implementation</span></code>
                     to deduced <code class="computeroutput"><span class="identifier">interface</span></code>
                   </p>
                 </td>
@@ -151,7 +195,7 @@
                 </td>
 <td>
                   <p>
-                    injector with <code class="computeroutput"><span class="identifier">interface</span></code>
+                    Injector with <code class="computeroutput"><span class="identifier">interface</span></code>
                     to <code class="computeroutput"><span class="identifier">implementation</span></code>
                     binding configuration
                   </p>
@@ -163,7 +207,7 @@
                 </td>
 <td>
                   <p>
-                    injector with configuration binding <code class="computeroutput"><span class="keyword">int</span></code>
+                    Injector with configuration binding <code class="computeroutput"><span class="keyword">int</span></code>
                     parameters with lambda expression returning <code class="computeroutput"><span class="number">42</span></code>
                   </p>
                 </td>
@@ -174,7 +218,7 @@
                 </td>
 <td>
                   <p>
-                    injector with configuration binding <code class="computeroutput"><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">()&gt;</span></code> parameters with lambda
+                    Injector with configuration binding <code class="computeroutput"><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">()&gt;</span></code> parameters with lambda
                     expression returning <code class="computeroutput"><span class="number">42</span></code>
                   </p>
                 </td>
@@ -185,7 +229,7 @@
                 </td>
 <td>
                   <p>
-                    binds <code class="computeroutput"><span class="identifier">example</span></code>
+                    Binds <code class="computeroutput"><span class="identifier">example</span></code>
                     to const reference given object
                   </p>
                 </td>
@@ -196,7 +240,7 @@
                 </td>
 <td>
                   <p>
-                    injector with configuration binding <code class="computeroutput"><span class="number">42</span></code>
+                    Injector with configuration binding <code class="computeroutput"><span class="number">42</span></code>
                     value to <code class="computeroutput"><span class="keyword">int</span></code> parameters
                   </p>
                 </td>

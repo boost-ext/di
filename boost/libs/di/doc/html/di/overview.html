@@ -506,6 +506,10 @@
 <a name="di.overview.h5"></a>
       <span class="phrase"><a name="di.overview.installation"></a></span><a class="link" href="overview.html#di.overview.installation">Installation</a>
     </h3>
+<pre class="programlisting"><span class="identifier">git</span> <span class="identifier">clone</span> <span class="special">--</span><span class="identifier">recursive</span> <span class="identifier">https</span><span class="special">://</span><span class="identifier">github</span><span class="special">.</span><span class="identifier">com</span><span class="special">/</span><span class="identifier">boostorg</span><span class="special">/</span><span class="identifier">boost</span><span class="special">.</span><span class="identifier">git</span>
+<span class="identifier">cd</span> <span class="identifier">boost</span><span class="special">/</span><span class="identifier">libs</span>
+<span class="identifier">git</span> <span class="identifier">clone</span> <span class="identifier">https</span><span class="special">://</span><span class="identifier">github</span><span class="special">.</span><span class="identifier">com</span><span class="special">/</span><span class="identifier">krzysztof</span><span class="special">-</span><span class="identifier">jusiak</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">git</span>
+</pre>
 <p>
       <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> is header only library and doesn't require
       building. To start using library just include <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> header.
@@ -514,6 +518,52 @@
 </pre>
 <h3>
 <a name="di.overview.h6"></a>
+      <span class="phrase"><a name="di.overview.tests"></a></span><a class="link" href="overview.html#di.overview.tests">Tests</a>
+    </h3>
+<p>
+      <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> is released with many levels of tests.
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          Unit tests (ut)
+        </li>
+<li class="listitem">
+          Module/Integration tests (mt)
+        </li>
+<li class="listitem">
+          Functional tests (ft)
+        </li>
+<li class="listitem">
+          Performance tests (pt)
+        </li>
+<li class="listitem">
+          Compilation fail tests (ft)
+        </li>
+<li class="listitem">
+          Verification tests (vt) - verify compiler support
+        </li>
+</ul></div>
+<p>
+      To run tests go to <code class="computeroutput"><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">/</span><span class="identifier">test</span></code>
+      directory and run.
+    </p>
+<pre class="programlisting"><span class="identifier">bjam</span>
+</pre>
+<h3>
+<a name="di.overview.h7"></a>
+      <span class="phrase"><a name="di.overview.examples"></a></span><a class="link" href="overview.html#di.overview.examples">Examples</a>
+    </h3>
+<p>
+      <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> is released with <a class="link" href="examples.html" title="Examples">Examples</a>
+      and <a class="link" href="examples/more_examples.html" title="More Examples">More Examples</a>.
+    </p>
+<p>
+      To run examples go to <code class="computeroutput"><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">/</span><span class="identifier">example</span></code> directory and run.
+    </p>
+<pre class="programlisting"><span class="identifier">bjam</span>
+</pre>
+<h3>
+<a name="di.overview.h8"></a>
       <span class="phrase"><a name="di.overview.configuration"></a></span><a class="link" href="overview.html#di.overview.configuration">Configuration</a>
     </h3>
 <p>
@@ -727,7 +777,7 @@
 </tbody>
 </table></div>
 <h3>
-<a name="di.overview.h7"></a>
+<a name="di.overview.h9"></a>
       <span class="phrase"><a name="di.overview.notes"></a></span><a class="link" href="overview.html#di.overview.notes">Notes</a>
     </h3>
 <a name="Notes"></a><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
@@ -1187,51 +1237,6 @@
       </p></td></tr>
 </table></div>
 <h3>
-<a name="di.overview.h8"></a>
-      <span class="phrase"><a name="di.overview.tests"></a></span><a class="link" href="overview.html#di.overview.tests">Tests</a>
-    </h3>
-<p>
-      <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> is released with many levels of tests.
-    </p>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem">
-          Unit tests (ut)
-        </li>
-<li class="listitem">
-          Module/Integration tests (mt)
-        </li>
-<li class="listitem">
-          Functional tests (ft)
-        </li>
-<li class="listitem">
-          Performance tests (pt)
-        </li>
-<li class="listitem">
-          Compilation fail tests (ft)
-        </li>
-<li class="listitem">
-          Verification tests (vt) - verify compiler support
-        </li>
-</ul></div>
-<p>
-      To run tests go to <code class="computeroutput"><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">/</span><span class="identifier">test</span></code>
-      directory and run.
-    </p>
-<pre class="programlisting"><span class="identifier">bjam</span>
-</pre>
-<h3>
-<a name="di.overview.h9"></a>
-      <span class="phrase"><a name="di.overview.examples"></a></span><a class="link" href="overview.html#di.overview.examples">Examples</a>
-    </h3>
-<p>
-      <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> is released with __examples_ and __more_examples_.
-    </p>
-<p>
-      To run examples go to <code class="computeroutput"><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">/</span><span class="identifier">example</span></code> directory and run.
-    </p>
-<pre class="programlisting"><span class="identifier">bjam</span>
-</pre>
-<h3>
 <a name="di.overview.h10"></a>
       <span class="phrase"><a name="di.overview.preprocessed_headers"></a></span><a class="link" href="overview.html#di.overview.preprocessed_headers">Preprocessed
       headers</a>
@@ -1298,6 +1303,13 @@
         </li>
 <li class="listitem">
           <a href="https://code.google.com/p/kindi" target="_top">kindi</a>
+        </li>
+<li class="listitem">
+<li class="listitem">
+          Java: <a href="https://github.com/google/guice" target="_top">Google Guice</a>
+        </li>
+<li class="listitem">
+          C#: <a href="http://www.ninject.org" target="_top">Ninject</a>
         </li>
 </ul></div>
 <h3>

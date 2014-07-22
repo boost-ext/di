@@ -46,9 +46,10 @@
 <span class="special">};</span>
 </pre>
 <div class="table">
-<a name="di.concepts.injectors.injector.parameters"></a><p class="title"><b>Table&#160;32.&#160;Parameters</b></p>
+<a name="di.concepts.injectors.injector.parameters"></a><p class="title"><b>Table&#160;33.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
+<col>
 <col>
 <col>
 <col>
@@ -69,8 +70,14 @@
                     Description
                   </p>
                 </th>
+<th>
+                  <p>
+                    Throw
+                  </p>
+                </th>
 </tr></thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>
                   <p>
                     <code class="computeroutput"><span class="identifier">T</span></code>
@@ -83,10 +90,35 @@
                 </td>
 <td>
                   <p>
-                    Type being created
+                    Type to be created
                   </p>
                 </td>
-</tr></tbody>
+<td class="auto-generated">&#160;</td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="keyword">operator</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    None
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Called when type <code class="computeroutput"><span class="identifier">T</span></code>
+                    is created
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Does not throw
+                  </p>
+                </td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <br class="table-break"><h6>
@@ -113,9 +145,11 @@
 <span class="special">};</span>
 </pre>
 <div class="table">
-<a name="di.concepts.injectors.injector.parameters0"></a><p class="title"><b>Table&#160;33.&#160;Parameters</b></p>
+<a name="di.concepts.injectors.injector.parameters0"></a><p class="title"><b>Table&#160;34.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
+<col>
+<col>
 <col>
 <col>
 <col>
@@ -134,6 +168,16 @@
 <th>
                   <p>
                     Description
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Returns
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Throw
                   </p>
                 </th>
 </tr></thead>
@@ -155,6 +199,8 @@
                     Bindings to be used as configuration
                   </p>
                 </td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
 </tr>
 <tr>
 <td>
@@ -172,6 +218,8 @@
                     List of dependencies
                   </p>
                 </td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
 </tr>
 <tr>
 <td>
@@ -189,6 +237,8 @@
                     Object to be created
                   </p>
                 </td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
 </tr>
 <tr>
 <td>
@@ -206,6 +256,8 @@
                     Policies to be verified whilst creating objects
                   </p>
                 </td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
 </tr>
 <tr>
 <td>
@@ -224,6 +276,8 @@
                     Allocator to be used when creating objects
                   </p>
                 </td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
 </tr>
 <tr>
 <td>
@@ -242,6 +296,8 @@
                     Visitor to be called when visiting creating objects
                   </p>
                 </td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
 </tr>
 <tr>
 <td>
@@ -261,11 +317,13 @@
                     method
                   </p>
                 </td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
 </tr>
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">x</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="keyword">const</span> <span class="identifier">TPolicies</span><span class="special">&amp;...))</span></code>
+                    <code class="computeroutput"><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="keyword">const</span> <span class="identifier">TPolicies</span><span class="special">&amp;...))</span></code>
                   </p>
                 </td>
 <td>
@@ -275,15 +333,25 @@
                 </td>
 <td>
                   <p>
-                    create object <code class="computeroutput"><span class="identifier">T</span></code>
+                    Create object <code class="computeroutput"><span class="identifier">T</span></code>
                     with given policies
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">T</span></code> instance
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Does not throw
                   </p>
                 </td>
 </tr>
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">x</span><span class="special">.</span><span class="identifier">allocate</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="keyword">const</span> <span class="identifier">TAllocator</span><span class="special">&amp;,</span> <span class="keyword">const</span>
+                    <code class="computeroutput"><span class="identifier">allocate</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="keyword">const</span> <span class="identifier">TAllocator</span><span class="special">&amp;,</span> <span class="keyword">const</span>
                     <span class="identifier">TPolicies</span><span class="special">&amp;...))</span></code>
                   </p>
                 </td>
@@ -295,14 +363,24 @@
                 </td>
 <td>
                   <p>
-                    create object T with given policies using given allocator
+                    Create object T with given policies using given allocator
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">T</span></code> instance
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Does not throw
                   </p>
                 </td>
 </tr>
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">x</span><span class="special">.</span><span class="identifier">visit</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;()</span></code>
+                    <code class="computeroutput"><span class="identifier">visit</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;()</span></code>
                   </p>
                 </td>
 <td>
@@ -318,11 +396,21 @@
                     for all objects created during creation of object <code class="computeroutput"><span class="identifier">T</span></code>
                   </p>
                 </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">T</span></code> instance
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Does not throw
+                  </p>
+                </td>
 </tr>
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">x</span><span class="special">.</span><span class="identifier">call</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TAction</span><span class="special">&amp;)</span></code>
+                    <code class="computeroutput"><span class="identifier">call</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TAction</span><span class="special">&amp;)</span></code>
                   </p>
                 </td>
 <td>
@@ -337,11 +425,30 @@
                     call it with given action
                   </p>
                 </td>
+<td>
+                </td>
+<td>
+                  <p>
+                    Does not throw
+                  </p>
+                </td>
 </tr>
 </tbody>
 </table></div>
 </div>
-<br class="table-break"><h6>
+<br class="table-break"><div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../../../../doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            In current version <code class="computeroutput"><span class="identifier">visit</span></code>
+            create an object due to compiler limitations - might be changed in the
+            future that <code class="computeroutput"><span class="identifier">visit</span></code> will
+            not return.
+          </p></td></tr>
+</table></div>
+<h6>
 <a name="di.concepts.injectors.injector.h3"></a>
           <span class="phrase"><a name="di.concepts.injectors.injector.expression_semantics"></a></span><a class="link" href="injector.html#di.concepts.injectors.injector.expression_semantics">Expression
           Semantics</a>
@@ -382,7 +489,7 @@
                 </td>
 <td>
                   <p>
-                    create empty injector
+                    Create empty injector
                   </p>
                 </td>
 </tr>
@@ -392,7 +499,7 @@
                 </td>
 <td>
                   <p>
-                    equivalent to
+                    Equivalent to
                   </p>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><a class="link" href="injector.html" title="injector">di::injector</a><span class="special">&lt;</span><a class="link" href="../bindings/scope/deduce.html" title="deduce">di::deduce</a><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">&gt;&gt;</span></pre>
                 </td>
@@ -403,7 +510,7 @@
                 </td>
 <td>
                   <p>
-                    injector with <code class="computeroutput"><span class="identifier">interface</span></code>
+                    Injector with <code class="computeroutput"><span class="identifier">interface</span></code>
                     to <code class="computeroutput"><span class="identifier">implementation</span></code>
                     binding configuration
                   </p>
@@ -415,7 +522,7 @@
                 </td>
 <td>
                   <p>
-                    injector with configuration binding <code class="computeroutput"><span class="number">42</span></code>
+                    Injector with configuration binding <code class="computeroutput"><span class="number">42</span></code>
                     value to <code class="computeroutput"><span class="keyword">int</span></code> parameters
                   </p>
                 </td>
