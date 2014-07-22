@@ -88,10 +88,10 @@
 </ul></div>
 <p>
       and maybe the most important that <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> shouldn't
-      be a copy of existing frameworks for Java like <a href="https://github.com/google/guice" target="_top">Google
-      Guice</a> and C# <a href="http://www.ninject.org" target="_top">Ninject</a> and
-      use whole potential of <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span></code>
-      instead whilst not ignoring useful concepts in the same time.
+      be a copy of existing frameworks like <a href="https://github.com/google/guice" target="_top">Google
+      Guice</a> for <code class="computeroutput"><span class="identifier">Java</span></code> and
+      <a href="http://www.ninject.org" target="_top">Ninject</a> for <code class="computeroutput"><span class="identifier">C</span><span class="special">#</span></code> and use whole potential of <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span></code> instead whilst not ignoring useful concepts
+      in the same time.
     </p>
 <h3>
 <a name="di.rationale.h0"></a>
@@ -266,7 +266,7 @@
           for type T
           <div class="orderedlist"><ol class="orderedlist" type="a">
 <li class="listitem">
-                for N = 1 to <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_CTOR_LIMIT_SIZE</span></code>
+                for N = 1 to <a class="link" href="overview.html#di.overview.configuration">BOOST_DI_CFG_CTOR_LIMIT_SIZE</a>
               </li>
 <li class="listitem">
                 if T has constructor with N parameters (which might be converted
@@ -364,7 +364,7 @@
                 <div class="orderedlist"><ol class="orderedlist" type="i">
 <li class="listitem">
                       if T has <code class="computeroutput"><span class="identifier">constructor</span></code>
-                      traits (set using <code class="computeroutput"><span class="identifier">BOOST_DI_INJECT</span></code>)
+                      traits (set using <a class="link" href="concepts/injections/boost_di_inject.html" title="BOOST_DI_INJECT">BOOST_DI_INJECT</a>)
                       <div class="orderedlist"><ol class="orderedlist" type="A"><li class="listitem">
                             get <code class="computeroutput"><span class="identifier">constructor</span></code>
                             parameters from traits
@@ -442,12 +442,12 @@
                 stage
               </li>
 <li class="listitem">
-                Preprocessed Headers are generated for <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_CTOR_LIMIT_SIZE</span></code>
-                equals 10 and for <code class="computeroutput"><span class="identifier">BOOST_MPL_LIMIT_VECTOR_SIZE</span></code>
+                Preprocessed Headers are generated for <a class="link" href="overview.html#di.overview.configuration">BOOST_DI_CFG_CTOR_LIMIT_SIZE</a>
+                equals 10 and for <a class="link" href="overview.html#di.overview.configuration">BOOST_MPL_LIMIT_VECTOR_SIZE</a>
                 equals 10, 20, 30, 40, 50
               </li>
 <li class="listitem">
-                To disable it <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_NO_PREPROCESSED_HEADERS</span></code>
+                To disable it <a class="link" href="overview.html#di.overview.configuration">BOOST_DI_CFG_NO_PREPROCESSED_HEADERS</a>
                 has to be defined
               </li>
 <li class="listitem">
@@ -479,7 +479,7 @@
               </li>
 <li class="listitem">
                 This feature slow down the compilation, so it has to be turn on by
-                defining <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_EXAMINE_CALL_STACK</span></code>
+                defining <a class="link" href="overview.html#di.overview.configuration">BOOST_DI_CFG_EXAMINE_CALL_STACK</a>
               </li>
 <li class="listitem">
                 Disabled by default
