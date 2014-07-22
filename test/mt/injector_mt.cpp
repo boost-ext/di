@@ -548,7 +548,7 @@ BOOST_AUTO_TEST_CASE(named_parameters_all_externals) {
 
 }
 
-BOOST_AUTO_TEST_CASE(named_parameters_with_shared) {
+BOOST_AUTO_TEST_CASE(named_parameters_with_shared_scope) {
     auto injector = make_injector(
         shared<impl>()
       , bind<i>::named<b>::to(aux::shared_ptr<impl>(new impl()))
