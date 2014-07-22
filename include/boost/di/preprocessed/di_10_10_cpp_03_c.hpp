@@ -5489,7 +5489,7 @@ struct allow_type
 };
 
 template<typename TExpr>
-struct allow_expr
+struct allow_type_expr
 {
     template<typename T>
     struct allow

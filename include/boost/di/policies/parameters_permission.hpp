@@ -97,21 +97,13 @@ struct allow_copies
 
 /**
  * @code
- * parameters_permission<>
- * struct c { c(int*); }; // compile error
+ * using namespace di::policies;
  *
- * parameters_permission<allow_refs>
- * struct c { c(int*); }; // compile error
- *
- * parameters_permission<allow_ptrs>
- * struct c { c(int*); }; // compile ok
- *
- * parameters_permission<allow_copies>
- * struct c { c(std::vector<int*>); }; // compile error
- *
+ * di::make_injector().create<int>(parameters_permission<>()); // compile error
+ * di::make_injector().create<int>(parameters_permission<allow_refs>()); // compile error
+ * di::make_injector().create<int>(parameters_permission<allow_copies>()); // compile okay
  * @endcode
  */
-
 BOOST_DI_WKND(NO_MSVC)(
     template<BOOST_DI_TYPES_DEFAULT_MPL(TArgs)>
     class parameters_permission

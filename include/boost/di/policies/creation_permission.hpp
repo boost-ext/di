@@ -30,7 +30,7 @@ struct allow_type
 };
 
 template<typename TExpr>
-struct allow_expr
+struct allow_type_expr
 {
     template<typename T>
     struct allow
@@ -40,6 +40,12 @@ struct allow_expr
 
 /**
  * @code
+ * using namespace di::policies;
+ *
+ * di::make_injector().create<int>(creation_permission<>()); // compile error
+ * di::make_injector(di::bind_int<42>()).create<int>(creation_permission<>()); // compile ok
+ * di::make_injector().create<int>(creation_permission<allow_type<int>>()); // compile ok
+ * di::make_injector().create<int>(creation_permission<allow_type_expr<is_pod<mpl::_>>>()); // compile ok
  * @endcode
  */
 template<BOOST_DI_TYPES_DEFAULT_MPL(TArgs)>

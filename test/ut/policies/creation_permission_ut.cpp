@@ -94,20 +94,20 @@ BOOST_AUTO_TEST_CASE(allow_type_and_resolve) {
     );
 }
 
-BOOST_AUTO_TEST_CASE(allow_expr_not_resolve) {
+BOOST_AUTO_TEST_CASE(allow_type_expr_not_resolve) {
     BOOST_CHECK_NO_THROW(
         (
-            creation_permission<allow_expr<is_pod<mpl::_>>>().assert_policy<
+            creation_permission<allow_type_expr<is_pod<mpl::_>>>().assert_policy<
                 fake_dependency<int>
             >()
         )
     );
 }
 
-BOOST_AUTO_TEST_CASE(allow_expr_and_resolve) {
+BOOST_AUTO_TEST_CASE(allow_type_expr_and_resolve) {
     BOOST_CHECK_NO_THROW(
         (
-            creation_permission<allow_expr<is_pod<mpl::_>>>().assert_policy<
+            creation_permission<allow_type_expr<is_pod<mpl::_>>>().assert_policy<
                 fake_dependency<int, mpl::true_>
             >()
         )

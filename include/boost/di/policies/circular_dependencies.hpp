@@ -23,11 +23,14 @@ namespace policies {
 
 /**
  *@code
+ * using namespace di::policies;
+ *
  * struct cd2;
  * struct cd1 { cd1(cd2*); };
  * struct cd2 { cd2(cd1*); };
  *
- * make_injector().create<cd1>(circular_dependencies()); // compile error
+ * di::make_injector().create<cd1>(circular_dependencies()); // compile error
+ * di::make_injector().create<int>(circular_dependencies()); // compile ok
  *@endcode
  */
 class circular_dependencies

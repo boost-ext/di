@@ -33,12 +33,10 @@ struct allow_scope<scopes::deduce>; // disabled
 
 /**
  * @code
- * scopes_permission<>
- * bind<deduce<int>> // compile error
+ * using namespace di::policies;
  *
- * scopes_permission<allow_scope<scopes::unique>>
- * bind<unique<int>> // compile ok
- *
+ * di::make_injector().create<int>(scopes_permission<>()); // compile error
+ * di::make_injector().create<int>(scopes_permission<allow_scope<scopes::unique<>>>()); // compile ok
  * @endcode
  */
 template<BOOST_DI_TYPES_DEFAULT_MPL(TArgs)>
