@@ -529,6 +529,51 @@ BOOST_AUTO_TEST_CASE(scoped_injector_create_with_deduced_scope) {
     }
 }
 
+BOOST_AUTO_TEST_CASE(named_parameters_all_externals) {
+    const int i1 = 42;
+    const int i2 = 43;
+
+    auto injector = make_injector(
+         bind<i>::named<a>::to(aux::shared_ptr<impl>(new impl(i1)))
+       , bind<i>::named<b>::to(aux::shared_ptr<impl>(new impl(i2)))
+    );
+
+    auto nameds_ = injector.create<nameds>();
+
+    BOOST_CHECK(nameds_.n1_ != nameds_.n2_);
+    BOOST_CHECK(dynamic_cast<impl*>(nameds_.n1_.get()));
+    BOOST_CHECK(dynamic_cast<impl*>(nameds_.n2_.get()));
+    BOOST_CHECK_EQUAL(i1, dynamic_cast<impl*>(nameds_.n1_.get())->i);
+    BOOST_CHECK_EQUAL(i2, dynamic_cast<impl*>(nameds_.n2_.get())->i);
+
+}
+
+BOOST_AUTO_TEST_CASE(named_parameters_with_shared) {
+    auto injector = make_injector(
+        shared<impl>()
+      , bind<i>::named<b>::to(aux::shared_ptr<impl>(new impl()))
+    );
+
+    auto nameds_ = injector.create<nameds>();
+    BOOST_CHECK(nameds_.n1_ != nameds_.n2_);
+
+    BOOST_CHECK(nameds_.n1_ == injector.create<aux::shared_ptr<i>>());
+    BOOST_CHECK(nameds_.n2_ != injector.create<aux::shared_ptr<i>>());
+}
+
+BOOST_AUTO_TEST_CASE(named_parameters_with_unique_scope) {
+    auto injector = make_injector(
+        unique<impl>()
+      , bind<i>::named<b>::to(aux::shared_ptr<impl>(new impl()))
+    );
+
+    auto nameds_ = injector.create<nameds>();
+    BOOST_CHECK(nameds_.n1_ != nameds_.n2_);
+
+    BOOST_CHECK(nameds_.n1_ != injector.create<aux::shared_ptr<i>>());
+    BOOST_CHECK(nameds_.n2_ != injector.create<aux::shared_ptr<i>>());
+}
+
 } // namespace di
 } // namespace boost
 

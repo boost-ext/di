@@ -1661,9 +1661,9 @@ public:
     }
 
     template<typename T>
-    static dependency<shared_type, expected, T>
+    static dependency<shared_type, expected, T, TBind>
     to(const aux::shared_ptr<T>& object) {
-        return dependency<shared_type, expected, T>(object);
+        return dependency<shared_type, expected, T, TBind>(object);
     }
 };
 
@@ -2866,7 +2866,7 @@ public:
         typename T
       , typename TCallStack
       , typename TDefault =
-            ::boost::di::bindings::dependency<
+            bindings::dependency<
                 scopes::deduce
               , typename type_traits::make_plain<T>::type
             >

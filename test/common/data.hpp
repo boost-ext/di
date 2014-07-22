@@ -37,7 +37,7 @@ struct i
 
 struct impl : public i
 {
-    BOOST_DI_INJECT(impl, int i)
+    BOOST_DI_INJECT(impl, int i = 0)
         : i(i)
     { }
 
@@ -606,6 +606,20 @@ struct functions
     function<int()> fi_;
     function<double()> fd_;
     function<long()> fl_;
+};
+
+struct nameds
+{
+    BOOST_DI_INJECT(nameds
+        , named<aux::shared_ptr<i>, a> n1
+        , named<aux::shared_ptr<i>, b> n2
+    )
+        : n1_(n1)
+        , n2_(n2)
+    { }
+
+    aux::shared_ptr<i> n1_;
+    aux::shared_ptr<i> n2_;
 };
 
 enum eid { e0 = 1 , e1 = 2 };
