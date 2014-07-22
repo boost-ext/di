@@ -47,7 +47,7 @@
 * Binding front end should be easily extensible
     * achieved with `Dependency` class, user interface for binding has to return list of `Dependency` classes
 
-and maybe the most important that `Boost.DI` shouldn't be a copy of existing frameworks for Java like [@https://github.com/google/guice Google Guice] and C# [@http://www.ninject.org Ninject] 
+and maybe the most important that `Boost.DI` shouldn't be a copy of existing frameworks like [@https://github.com/google/guice Google Guice] for `Java` and [@http://www.ninject.org Ninject] for `C#`
 and use whole potential of `C++` instead whilst not ignoring useful concepts in the same time.
 
 [h6 Design]
@@ -112,7 +112,7 @@ Approach presented above although meet all the requirements cause a lot of trick
 [h5 Constructor Parameters Deduction]
 
 # for type T
-    # for N = 1 to `BOOST_DI_CFG_CTOR_LIMIT_SIZE`
+    # for N = 1 to [link di.overview.configuration BOOST_DI_CFG_CTOR_LIMIT_SIZE]
     # if T has constructor with N parameters (which might be converted using `conversion operator`) (see `has_ctor`) then goto `2`
 # generate list of `any_type` with N elements which represents constructor parameters (notice that `any_type` is convertible to actual constructor parameter)
 
@@ -141,7 +141,7 @@ Approach presented above although meet all the requirements cause a lot of trick
 
 # for type T
     # get constructor parameters
-        # if T has `constructor` traits (set using `BOOST_DI_INJECT`)
+        # if T has `constructor` traits (set using __injections_boost_di_inject__)
             # get `constructor` parameters from traits
         # else
             # deduce `constructor` using `Constructor Parameters Deduction`
