@@ -193,7 +193,7 @@ Allows to bind compile time bool value.
 ]
 
 [heading Expression Semantics]
-    di::bind_bool<true>();
+    di::bind_bool<true>()
 
 [*Return type]: `dependency`
 
@@ -244,7 +244,7 @@ Allows to bind compile time integer value.
 ]
 
 [heading Expression Semantics]
-    di::bind_int<42>();
+    di::bind_int<42>()
 
 [*Return type]: `dependency`
 
@@ -295,7 +295,7 @@ Allows to bind compile time string value.
 ]
 
 [heading Expression Semantics]
-    di::bind_string<mpl::string<'str'>>();
+    di::bind_string<mpl::string<'str'>>()
 
 [*Return type]: `dependency`
 
