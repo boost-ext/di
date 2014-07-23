@@ -134,7 +134,7 @@ Limits default constructible types not be created unless they are explicitly bin
     class allow_type_model {
     public:
         template<typename T>
-        struct allow; // returns Boolean expression
+        struct allow; // returns boolean expression
     };
 
 [table Parameters
@@ -206,7 +206,7 @@ Limits allowed constructor parameters. By default, if used, all parameters are d
     class allow_parameter_model {
     public:
         template<typename T>
-        struct allow; // returns Boolean expression
+        struct allow; // returns boolean expression
     };
 
 [table Parameters
@@ -293,7 +293,7 @@ Limits allowed scopes to be used whilst binding. By default, if used, all scopes
     class allow_scope_model {
     public:
         template<typename T>
-        struct allow; // returns Boolean expression
+        struct allow; // returns boolean expression
     };
 
 [table Parameters
