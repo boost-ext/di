@@ -47,7 +47,7 @@
 <span class="special">};</span>
 </pre>
 <div class="table">
-<a name="di.concepts.policies.scopes_permission.parameters"></a><p class="title"><b>Table&#160;45.&#160;Parameters</b></p>
+<a name="di.concepts.policies.scopes_permission.parameters"></a><p class="title"><b>Table&#160;46.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
 <col>
@@ -109,7 +109,8 @@
                 </td>
 <td>
                   <p>
-                    Dependency scope
+                    <a class="link" href="../policies.html#di.concepts.policies.data_model">Data Model</a>
+                    type
                   </p>
                 </td>
 <td class="auto-generated">&#160;</td>
@@ -157,7 +158,7 @@
 <span class="special">};</span>
 </pre>
 <div class="table">
-<a name="di.concepts.policies.scopes_permission.parameters0"></a><p class="title"><b>Table&#160;46.&#160;Parameters</b></p>
+<a name="di.concepts.policies.scopes_permission.parameters0"></a><p class="title"><b>Table&#160;47.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
 <col>
@@ -281,7 +282,7 @@
   <span class="special">,</span> <span class="identifier">allow_scope</span><span class="special">&lt;</span><a class="link" href="../scopes/shared.html" title="shared">di::scopes::shared</a><span class="special">&lt;&gt;&gt;</span>
   <span class="special">,</span> <span class="identifier">allow_scope</span><span class="special">&lt;</span><a class="link" href="../scopes/session.html" title="session">di::scopes::session</a><span class="special">&lt;&gt;&gt;</span>
   <span class="special">,</span> <span class="identifier">allow_scope</span><span class="special">&lt;</span><a class="link" href="../scopes/external.html" title="external">di::scopes::external</a><span class="special">&lt;&gt;&gt;</span>
-<span class="special">&gt;()</span>
+<span class="special">&gt;()</span> <span class="comment">// TArgs will be verified using `or` semantic</span>
 </pre>
 <div class="note"><table border="0" summary="Note">
 <tr>

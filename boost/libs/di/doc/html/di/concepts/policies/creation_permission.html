@@ -36,16 +36,99 @@
         </p>
 <h6>
 <a name="di.concepts.policies.creation_permission.h1"></a>
+          <span class="phrase"><a name="di.concepts.policies.creation_permission.allow_type_model"></a></span><a class="link" href="creation_permission.html#di.concepts.policies.creation_permission.allow_type_model">Allow
+          Type Model</a>
+        </h6>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TValueType</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">allow_type_model</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">allow</span><span class="special">;</span> <span class="comment">// returns Boolean expression</span>
+<span class="special">};</span>
+</pre>
+<div class="table">
+<a name="di.concepts.policies.creation_permission.parameters"></a><p class="title"><b>Table&#160;42.&#160;Parameters</b></p>
+<div class="table-contents"><table class="table" summary="Parameters">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Parameter
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Requirement
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">TValueTYpe</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    None
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Type to be allowed
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">T</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    None
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../policies.html#di.concepts.policies.data_model">Data Model</a>
+                    parameter type
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><h6>
+<a name="di.concepts.policies.creation_permission.h2"></a>
           <span class="phrase"><a name="di.concepts.policies.creation_permission.synopsis"></a></span><a class="link" href="creation_permission.html#di.concepts.policies.creation_permission.synopsis">Synopsis</a>
         </h6>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">creation_permission</span> <span class="special">{</span>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">allow_type</span><span class="special">;</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">allow_type_expr</span><span class="special">;</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TArgs</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">creation_permission</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
     <span class="keyword">void</span> <span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
 <span class="special">};</span>
 </pre>
 <div class="table">
-<a name="di.concepts.policies.creation_permission.parameters"></a><p class="title"><b>Table&#160;42.&#160;Parameters</b></p>
+<a name="di.concepts.policies.creation_permission.parameters0"></a><p class="title"><b>Table&#160;43.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
 <col>
@@ -76,6 +159,25 @@
                 </th>
 </tr></thead>
 <tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">TArgs</span><span class="special">...</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="creation_permission.html#di.concepts.policies.creation_permission.allow_type_model">Allow
+                    Type Model</a> type
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Type to be allowed
+                  </p>
+                </td>
+<td class="auto-generated">&#160;</td>
+</tr>
 <tr>
 <td>
                   <p>
@@ -121,30 +223,31 @@
 </table></div>
 </div>
 <br class="table-break"><h6>
-<a name="di.concepts.policies.creation_permission.h2"></a>
+<a name="di.concepts.policies.creation_permission.h3"></a>
           <span class="phrase"><a name="di.concepts.policies.creation_permission.expression_semantics"></a></span><a class="link" href="creation_permission.html#di.concepts.policies.creation_permission.expression_semantics">Expression
           Semantics</a>
         </h6>
-<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">creation_permission</span><span class="special">&lt;...&gt;()</span>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">;</span>
+<span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">creation_permission</span><span class="special">&lt;</span><span class="identifier">TArgs</span><span class="special">...&gt;()</span> <span class="comment">// TArgs will be verified using `or` semantic</span>
 </pre>
 <p>
           <span class="bold"><strong>Result</strong></span>: static assert with <code class="computeroutput"><span class="identifier">TYPE_HAS_TO_BE_EXPLICITLY_BINDED</span></code> message
           or clean compilation.
         </p>
 <h6>
-<a name="di.concepts.policies.creation_permission.h3"></a>
+<a name="di.concepts.policies.creation_permission.h4"></a>
           <span class="phrase"><a name="di.concepts.policies.creation_permission.header"></a></span><a class="link" href="creation_permission.html#di.concepts.policies.creation_permission.header">Header</a>
         </h6>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 </pre>
 <h6>
-<a name="di.concepts.policies.creation_permission.h4"></a>
+<a name="di.concepts.policies.creation_permission.h5"></a>
           <span class="phrase"><a name="di.concepts.policies.creation_permission.namespace"></a></span><a class="link" href="creation_permission.html#di.concepts.policies.creation_permission.namespace">Namespace</a>
         </h6>
 <pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span>
 </pre>
 <h6>
-<a name="di.concepts.policies.creation_permission.h5"></a>
+<a name="di.concepts.policies.creation_permission.h6"></a>
           <span class="phrase"><a name="di.concepts.policies.creation_permission.examples"></a></span><a class="link" href="creation_permission.html#di.concepts.policies.creation_permission.examples">Examples</a>
         </h6>
 <pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">;</span>
@@ -155,13 +258,13 @@
 <a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">creation_permission</span><span class="special">&lt;</span><span class="identifier">allow_type_expr</span><span class="special">&lt;</span><span class="identifier">is_pod</span><span class="special">&lt;</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">_</span><span class="special">&gt;&gt;&gt;());</span> <span class="comment">// compile ok</span>
 </pre>
 <h6>
-<a name="di.concepts.policies.creation_permission.h6"></a>
+<a name="di.concepts.policies.creation_permission.h7"></a>
           <span class="phrase"><a name="di.concepts.policies.creation_permission.tests"></a></span><a class="link" href="creation_permission.html#di.concepts.policies.creation_permission.tests">Tests</a>
         </h6>
 <pre class="programlisting"><a href="../../../test/ut/policies/creation_permission_ut.cpp" target="_top">test/ut/policies/creation_permission_ut.cpp</a>
 </pre>
 <h6>
-<a name="di.concepts.policies.creation_permission.h7"></a>
+<a name="di.concepts.policies.creation_permission.h8"></a>
           <span class="phrase"><a name="di.concepts.policies.creation_permission.see_also"></a></span><a class="link" href="creation_permission.html#di.concepts.policies.creation_permission.see_also">See
           Also</a>
         </h6>

@@ -114,6 +114,26 @@ BOOST_AUTO_TEST_CASE(allow_type_expr_and_resolve) {
     );
 }
 
+BOOST_AUTO_TEST_CASE(allow_type_and_type_expr_not_resolve) {
+    BOOST_CHECK_NO_THROW(
+        (
+            creation_permission<allow_type<int>, allow_type_expr<is_pod<mpl::_>>>().assert_policy<
+                fake_dependency<int, mpl::false_>
+            >()
+        )
+    );
+}
+
+BOOST_AUTO_TEST_CASE(allow_type_and_type_expr_and_resolve) {
+    BOOST_CHECK_NO_THROW(
+        (
+            creation_permission<allow_type<int>, allow_type_expr<is_pod<mpl::_>>>().assert_policy<
+                fake_dependency<int, mpl::true_>
+            >()
+        )
+    );
+}
+
 } // namespace policies
 } // namespace di
 } // namespace boost

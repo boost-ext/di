@@ -10,9 +10,13 @@
 #include <boost/test/test_case_template.hpp>
 #include <boost/mpl/vector.hpp>
 
-#include "boost/di/make_injector.hpp"
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/config.hpp"
+#include "boost/di/make_injector.hpp"
+#include "boost/di/policies/circular_dependencies.hpp"
+#include "boost/di/policies/creation_permission.hpp"
+#include "boost/di/policies/parameters_permission.hpp"
+#include "boost/di/policies/scopes_permission.hpp"
 
 #include "common/fakes/fake_visitor.hpp"
 #include "common/fakes/fake_scope.hpp"
@@ -545,7 +549,42 @@ BOOST_AUTO_TEST_CASE(named_parameters_all_externals) {
     BOOST_CHECK(dynamic_cast<impl*>(nameds_.n2_.get()));
     BOOST_CHECK_EQUAL(i1, dynamic_cast<impl*>(nameds_.n1_.get())->i);
     BOOST_CHECK_EQUAL(i2, dynamic_cast<impl*>(nameds_.n2_.get())->i);
+}
 
+BOOST_AUTO_TEST_CASE(create_with_policies) {
+    using namespace di::policies;
+
+    injector<>().create<int>(
+        circular_dependencies()
+      , creation_permission<allow_type<int>>()
+      , parameters_permission<allow_copies>()
+      , scopes_permission<allow_scope<scopes::unique<>>>()
+    );
+
+    di::make_injector(di::bind_int<42>()).create<aux::shared_ptr<int>>(
+        scopes_permission<allow_scope<scopes::unique<>>, allow_scope<scopes::shared<>>>()
+      , creation_permission<>()
+      , circular_dependencies()
+      , parameters_permission<allow_smart_ptrs>()
+    );
+}
+
+BOOST_AUTO_TEST_CASE(allocate_with_policies) {
+    using namespace di::policies;
+
+    injector<>().allocate<int>(core::allocator()
+      , circular_dependencies()
+      , creation_permission<allow_type<int>>()
+      , parameters_permission<allow_copies>()
+      , scopes_permission<allow_scope<scopes::unique<>>>()
+    );
+
+    di::make_injector(di::bind_int<42>()).allocate<aux::shared_ptr<int>>(core::allocator()
+      , scopes_permission<allow_scope<scopes::unique<>>, allow_scope<scopes::shared<>>>()
+      , circular_dependencies()
+      , parameters_permission<allow_copies, allow_ptrs, allow_smart_ptrs, allow_const_refs>()
+      , creation_permission<>()
+    );
 }
 
 } // namespace di

@@ -41,7 +41,10 @@
         limit allowed behaviour. Policy has to have <code class="computeroutput"><span class="identifier">assert_policy</span></code>
         method defined. In order for <code class="computeroutput"><span class="identifier">injector</span></code>
         to verify policies they have to be passed to <code class="computeroutput"><span class="identifier">create</span></code>,
-        <code class="computeroutput"><span class="identifier">allocate</span></code> call. <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> is released with following policies.
+        <code class="computeroutput"><span class="identifier">allocate</span></code> call. Policies will
+        be verified using <code class="computeroutput"><span class="keyword">and</span></code> semantic,
+        which means that each type to be created has to meet all policies requirements.
+        <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> is released with following policies.
       </p>
 <h5>
 <a name="di.concepts.policies.h1"></a>
@@ -274,6 +277,25 @@
       </h5>
 <pre class="programlisting"><a class="link" href="../examples/custom_policy.html" title="Custom Policy">Custom Policy</a>
 </pre>
+<h5>
+<a name="di.concepts.policies.h6"></a>
+        <span class="phrase"><a name="di.concepts.policies.see_also"></a></span><a class="link" href="policies.html#di.concepts.policies.see_also">See
+        Also</a>
+      </h5>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+            <a class="link" href="policies/circular_dependencies.html" title="circular_dependencies">circular_dependencies</a>
+          </li>
+<li class="listitem">
+            <a class="link" href="policies/creation_permission.html" title="creation_permission">creation_permission</a>
+          </li>
+<li class="listitem">
+            <a class="link" href="policies/parameters_permission.html" title="parameters_permission">parameters_permission</a>
+          </li>
+<li class="listitem">
+            <a class="link" href="policies/scopes_permission.html" title="scopes_permission">scopes_permission</a>
+          </li>
+</ul></div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
