@@ -13,6 +13,7 @@
 Policies are compile time components operates on dependencies in order to limit allowed behaviour.
 Policy has to have `assert_policy` method defined.
 In order for `injector` to verify policies they have to be passed to `create`, `allocate` call.
+Policies will be verified using `and` semantic, which means that each type to be created has to meet all policies requirements.
 `Boost.DI` is released with following policies.
 
 [heading Data Model]
@@ -61,9 +62,15 @@ In order for `injector` to verify policies they have to be passed to `create`, `
     __di_make_injector__().create<int>(policy1(), policy2(), ..., policyN());
     __di_make_injector__().allocate<int>(allocator(), policy1(), policy2(), ..., policyN());
 
-
 [heading More Examples]
     ``__examples_custom_policy__``
+
+[heading See Also]
+
+* __policies_circular_dependencies__
+* __policies_creation_permission__
+* __policies_parameters_permission__
+* __policies_scopes_permission__
 
 [section circular_dependencies]
 
@@ -122,7 +129,28 @@ Verifies constructor parameters overlapping.
 [heading Description]
 Limits default constructible types not be created unless they are explicitly binded or allowed.
 
+[heading Allow Type Model]
+    template<typename TValueType>
+    class allow_type_model {
+    public:
+        template<typename T>
+        struct allow; // returns Boolean expression
+    };
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`TValueTYpe`][None][Type to be allowed]]
+    [[`T`][None][__data_model__ parameter type]]
+]
+
 [heading Synopsis]
+    template<typename>
+    struct allow_type;
+
+    template<typename>
+    struct allow_type_expr;
+
+    template<typename... TArgs>
     class creation_permission {
     public:
         template<typename T>
@@ -131,12 +159,14 @@ Limits default constructible types not be created unless they are explicitly bin
 
 [table Parameters
     [[Parameter][Requirement][Description][Throw]]
+    [[`TArgs...`][__allow_type_model__ type][Type to be allowed]]
     [[`T`][__data_model__ type][Data to be verified]]
     [[`assert_policy() const`][None][Verify policy requirements][Does not throw]]
 ]
 
 [heading Expression Semantics]
-    di::policies::creation_permission<...>()
+    using namespace di::policies;
+    di::policies::creation_permission<TArgs...>() // TArgs will be verified using `or` semantic
 
 [*Result]: static assert with `TYPE_HAS_TO_BE_EXPLICITLY_BINDED` message or clean compilation.
 
@@ -182,7 +212,7 @@ Limits allowed constructor parameters. By default, if used, all parameters are d
 [table Parameters
     [[Parameter][Requirement][Description]]
     [[`TParameter`][None][Parameter to be allowed]]
-    [[`T`][None][Dependency parameter type]]
+    [[`T`][None][__data_model__ type]]
 ]
 
 [heading Synopsis]
@@ -209,7 +239,7 @@ Limits allowed constructor parameters. By default, if used, all parameters are d
 
 [heading Expression Semantics]
     using namespace di::policies;
-    parameters_permission<allow_refs, allow_smart_ptrs, ..., allow_copies>()
+    parameters_permission<allow_refs, allow_smart_ptrs, ..., allow_copies>() // TArgs will be verified using `or` semantic
 
 [*Result]: static assert with `PARAMETER_NOT_PERMITTED` message or clean compilation.
 
@@ -269,7 +299,7 @@ Limits allowed scopes to be used whilst binding. By default, if used, all scopes
 [table Parameters
     [[Parameter][Requirement][Description][Throw]]
     [[`TScope`][__scope_model__][Scope to be allowed]]
-    [[`T`][None][Dependency scope]]
+    [[`T`][None][__data_model__ type]]
     [[`assert_policy() const`][None][Verify policy requirements][Does not throw]]
 ]
 
@@ -302,7 +332,7 @@ Limits allowed scopes to be used whilst binding. By default, if used, all scopes
       , allow_scope<__di_scopes_shared__<>>
       , allow_scope<__di_scopes_session__<>>
       , allow_scope<__di_scopes_external__<>>
-    >()
+    >() // TArgs will be verified using `or` semantic
 
 [note `allow_scope<scopes::__scopes_deduce__>` is not allowed.]
 

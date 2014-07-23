@@ -113,6 +113,7 @@
 [def __policy_model__                                   [link di.concepts.policies Policy Model]]
 [def __visitor_model__                                  [link di.concepts.injectors.injector.visitor_model Visitor Model]]
 [def __wrapper_model__                                  [link di.concepts.scopes.wrapper_model Wrapper Model]]
+[def __allow_type_model__                               [link di.concepts.policies.creation_permission.allow_type_model Allow Type Model]]
 [def __allow_parameter_model__                          [link di.concepts.policies.parameters_permission.allow_parameter_model Allow Parameter Model]]
 [def __allow_scope_model__                              [link di.concepts.policies.scopes_permission.allow_scope_model Allow Scope Model]]
 [def __data_model__                                     [link di.concepts.policies.data_model Data Model]]

@@ -89,7 +89,7 @@ Injector is a component used for creating dependencies configuration using bindi
     [[`TArgs...`][__binding_model__ type][Bindings to be used as configuration]]
     [[`TDependecies`][`mpl::vector`][List of dependencies]]
     [[`T`][None][Object to be created]]
-    [[`TPolicies...`][__policy_model__ type][Policies to be verified whilst creating objects]]
+    [[`TPolicies...`][__policy_model__ type][Policies to be verified whilst creating objects - Policies will be verified in passed order with `and` semantic]]
     [[`TAllocator`][__allocator_model__ type][Allocator to be used when creating objects]]
     [[`TVisitor`][__visitor_model__ type][Visitor to be called when visiting creating objects]]
     [[`TAction`][None][Action to be called for scopes having `call(const TAction&)` method]]
@@ -145,6 +145,8 @@ Injector is a component used for creating dependencies configuration using bindi
 * __injectors_make_injector__
 * __injectors__
 * __modules__
+* __policies__
+* __utilities_allocator__
 
 [endsect]
 
@@ -227,6 +229,8 @@ Creates `injector` type. Allows to bind dynamic values in no boilerplate manner.
 * __injectors_injector__
 * __injectors__
 * __modules__
+* __policies__
+* __utilities_allocator__
 
 [endsect]
 

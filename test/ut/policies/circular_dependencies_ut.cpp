@@ -18,7 +18,7 @@ namespace di {
 namespace policies {
 
 template<typename T>
-struct dependency
+struct fake_call_stack
 {
     typedef T call_stack;
 };
@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(no_circular_dependency, T, no_circular_dependencie
     BOOST_CHECK_NO_THROW(
         (
             circular_dependencies().assert_policy<
-                dependency<T>
+                fake_call_stack<T>
             >()
         )
     );
@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(circular_dependency, T, circular_dependencies_type
     BOOST_REQUIRE_EXCEPTION(
         (
             circular_dependencies().assert_policy<
-                dependency<T>
+                fake_call_stack<T>
             >()
         )
       , assert_exception

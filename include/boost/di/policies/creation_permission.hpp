@@ -13,6 +13,7 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/count_if.hpp>
 #include <boost/mpl/apply.hpp>
+#include <boost/mpl/bool.hpp>
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/not.hpp>
 
@@ -82,9 +83,11 @@ class creation_permission
                     , not_resolved
                   >
               >
-            , mpl::count_if<
-                  permitted_types
-                , is_type_permitted_impl<mpl::_, typename T::type>
+            , mpl::bool_<
+                  mpl::count_if<
+                      permitted_types
+                    , is_type_permitted_impl<mpl::_, typename T::type>
+                  >::value != 0
               >
           >
     { };

@@ -44,17 +44,17 @@ class scopes_permission
 {
     typedef BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(TArgs) permitted_types;
 
-    template<typename TAllow, typename T>
+    template<typename TAllow, typename TScope>
     struct is_scope_permitted_impl
-        : TAllow::template allow<T>
+        : TAllow::template allow<TScope>
     { };
 
-    template<typename T>
+    template<typename TScope>
     struct is_scope_permitted
         : mpl::bool_<
               mpl::count_if<
                   permitted_types
-                , is_scope_permitted_impl<mpl::_, T>
+                , is_scope_permitted_impl<mpl::_, TScope>
               >::value != 0
           >
     { };
@@ -63,9 +63,9 @@ public:
     template<typename T>
     void assert_policy() const {
         BOOST_DI_ASSERT_MSG(
-            is_scope_permitted<typename T::scope>::value
+            is_scope_permitted<typename T::dependency::scope>::value
           , SCOPE_NOT_PERMITTED
-          , typename T::scope
+          , typename T::dependency::scope
         );
     }
 };

@@ -9651,9 +9651,11 @@ class creation_permission
                     , not_resolved
                   >
               >
-            , mpl::count_if<
-                  permitted_types
-                , is_type_permitted_impl<mpl::_, typename T::type>
+            , mpl::bool_<
+                  mpl::count_if<
+                      permitted_types
+                    , is_type_permitted_impl<mpl::_, typename T::type>
+                  >::value != 0
               >
           >
     { };
@@ -9695,17 +9697,17 @@ class scopes_permission
 {
     typedef ::boost::mpl::vector< TArgs0 , TArgs1 , TArgs2 , TArgs3 , TArgs4 , TArgs5 , TArgs6 , TArgs7 , TArgs8 , TArgs9 , TArgs10 , TArgs11 , TArgs12 , TArgs13 , TArgs14 , TArgs15 , TArgs16 , TArgs17 , TArgs18 , TArgs19 , TArgs20 , TArgs21 , TArgs22 , TArgs23 , TArgs24 , TArgs25 , TArgs26 , TArgs27 , TArgs28 , TArgs29> permitted_types;
 
-    template<typename TAllow, typename T>
+    template<typename TAllow, typename TScope>
     struct is_scope_permitted_impl
-        : TAllow::template allow<T>
+        : TAllow::template allow<TScope>
     { };
 
-    template<typename T>
+    template<typename TScope>
     struct is_scope_permitted
         : mpl::bool_<
               mpl::count_if<
                   permitted_types
-                , is_scope_permitted_impl<mpl::_, T>
+                , is_scope_permitted_impl<mpl::_, TScope>
               >::value != 0
           >
     { };
@@ -9714,9 +9716,9 @@ public:
     template<typename T>
     void assert_policy() const {
         BOOST_DI_ASSERT_MSG(
-            is_scope_permitted<typename T::scope>::value
+            is_scope_permitted<typename T::dependency::scope>::value
           , SCOPE_NOT_PERMITTED
-          , typename T::scope
+          , typename T::dependency::scope
         );
     }
 };
