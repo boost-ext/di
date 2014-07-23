@@ -67,12 +67,29 @@
   <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TGiven</span>
   <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TBind</span>
 <span class="special">&gt;</span>
-<span class="keyword">class</span> <span class="identifier">dependency</span><span class="special">;</span>
+<span class="keyword">class</span> <span class="identifier">dependency</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">dependency</span> <span class="identifier">type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">TScope</span> <span class="identifier">scope</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">TExpected</span> <span class="identifier">expected</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">TGiven</span> <span class="identifier">given</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">TBind</span> <span class="identifier">bind</span><span class="special">;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">rebind</span><span class="special">;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">explicit</span> <span class="identifier">dependency</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;);</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">static</span> <a class="link" href="bindings.html#di.concepts.bindings.synopsis">Dependency Model</a> <span class="identifier">to</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;);</span>
+<span class="special">};</span>
 </pre>
 <div class="table">
 <a name="di.concepts.bindings.parameters"></a><p class="title"><b>Table&#160;19.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
 <colgroup>
+<col>
+<col>
 <col>
 <col>
 <col>
@@ -91,6 +108,16 @@
 <th>
                 <p>
                   Description
+                </p>
+              </th>
+<th>
+                <p>
+                  Returns
+                </p>
+              </th>
+<th>
+                <p>
+                  Throw
                 </p>
               </th>
 </tr></thead>
@@ -112,6 +139,8 @@
                   Scope to be used
                 </p>
               </td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
 </tr>
 <tr>
 <td>
@@ -129,6 +158,8 @@
                   Type to be returned
                 </p>
               </td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
 </tr>
 <tr>
 <td>
@@ -146,6 +177,8 @@
                   Type to be created
                 </p>
               </td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
 </tr>
 <tr>
 <td>
@@ -162,6 +195,61 @@
                 <p>
                   Expression to be evaluated in order o verify dependency match during
                   resolving
+                </p>
+              </td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">dependency</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  None
+                </p>
+              </td>
+<td>
+                <p>
+                  Intialize dependency from type <code class="computeroutput"><span class="identifier">T</span></code>
+                </p>
+              </td>
+<td>
+              </td>
+<td>
+                <p>
+                  Does not throw
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">to</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span></code>
+                </p>
+              </td>
+<td>
+                <p>
+                  None
+                </p>
+              </td>
+<td>
+                <p>
+                  Returns new <a class="link" href="bindings.html#di.concepts.bindings.synopsis">Dependency
+                  Model</a> with associated <code class="computeroutput"><span class="identifier">T</span></code>
+                  value
+                </p>
+              </td>
+<td>
+                <p>
+                  <a class="link" href="bindings.html#di.concepts.bindings.synopsis">Dependency Model</a>
+                </p>
+              </td>
+<td>
+                <p>
+                  Does not throw
                 </p>
               </td>
 </tr>

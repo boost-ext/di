@@ -291,7 +291,7 @@
   <span class="special">,</span> <a class="link" href="../bindings/bind/bind_int.html" title="bind_int">di::bind_int</a><span class="special">&lt;</span><span class="number">0</span><span class="special">&gt;</span>
 <span class="special">);</span>
 
-<span class="keyword">auto</span> <span class="identifier">example_</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;();</span>
+<span class="keyword">auto</span> <span class="identifier">example_</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="../injectors/injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;();</span>
 
 <span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">example_</span><span class="special">.</span><span class="identifier">i1</span><span class="special">);</span>
 <span class="identifier">assert</span><span class="special">(</span><span class="number">0</span> <span class="special">==</span> <span class="identifier">example_</span><span class="special">.</span><span class="identifier">i2</span><span class="special">);</span>
@@ -323,7 +323,7 @@
     <a class="link" href="../bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><a class="link" href="../bindings/named.html" title="named">named</a><span class="special">&lt;</span><span class="identifier">my_value2</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">2</span><span class="special">)</span>
 <span class="special">);</span>
 
-<span class="keyword">auto</span> <span class="identifier">example_</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;();</span>
+<span class="keyword">auto</span> <span class="identifier">example_</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="../injectors/injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;();</span>
 
 <span class="identifier">assert</span><span class="special">(</span><span class="number">1</span> <span class="special">==</span> <span class="identifier">example_</span><span class="special">.</span><span class="identifier">i1</span><span class="special">);</span>
 <span class="identifier">assert</span><span class="special">(</span><span class="number">2</span> <span class="special">==</span> <span class="identifier">example_</span><span class="special">.</span><span class="identifier">i2</span><span class="special">);</span>

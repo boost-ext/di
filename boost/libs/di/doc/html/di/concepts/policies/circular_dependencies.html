@@ -97,7 +97,7 @@
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span></code>
+                    <code class="computeroutput"><span class="identifier">assert_policy</span><span class="special">()</span></code>
                   </p>
                 </td>
 <td>
@@ -146,13 +146,13 @@
 <a name="di.concepts.policies.circular_dependencies.h5"></a>
           <span class="phrase"><a name="di.concepts.policies.circular_dependencies.examples"></a></span><a class="link" href="circular_dependencies.html#di.concepts.policies.circular_dependencies.examples">Examples</a>
         </h6>
-<pre class="programlisting"><a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">circular_dependencies</span><span class="special">());</span> <span class="comment">// compile ok</span>
+<pre class="programlisting"><a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">().</span><a class="link" href="../injectors/injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">circular_dependencies</span><span class="special">());</span> <span class="comment">// compile ok</span>
 
 <span class="keyword">struct</span> <span class="identifier">cd2</span><span class="special">;</span>
 <span class="keyword">struct</span> <span class="identifier">cd1</span> <span class="special">{</span> <span class="identifier">cd1</span><span class="special">(</span><span class="identifier">cd2</span><span class="special">*);</span> <span class="special">};</span>
 <span class="keyword">struct</span> <span class="identifier">cd2</span> <span class="special">{</span> <span class="identifier">cd2</span><span class="special">(</span><span class="identifier">cd1</span><span class="special">*);</span> <span class="special">};</span>
 
-<a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">cd1</span><span class="special">&gt;(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">circular_dependencies</span><span class="special">());</span> <span class="comment">// compile error</span>
+<a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">().</span><a class="link" href="../injectors/injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">cd1</span><span class="special">&gt;(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">circular_dependencies</span><span class="special">());</span> <span class="comment">// compile error</span>
 </pre>
 <div class="note"><table border="0" summary="Note">
 <tr>

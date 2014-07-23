@@ -93,7 +93,8 @@
 <pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">shared</span><span class="special">&lt;</span><a class="link" href="../bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;&gt;()</span>
 </pre>
 <p>
-            <span class="bold"><strong>Return type</strong></span>: <code class="computeroutput"><span class="identifier">dependency</span></code>
+            <span class="bold"><strong>Return type</strong></span>: <a class="link" href="../../bindings.html#di.concepts.bindings.synopsis">Dependency
+            Model</a>
           </p>
 <h6>
 <a name="di.concepts.bindings.scope.shared.h2"></a>
@@ -141,7 +142,7 @@
     <span class="special">&gt;()</span>
 <span class="special">);</span>
 
-<span class="identifier">assert</span><span class="special">(</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">&gt;&gt;()</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">&gt;&gt;());</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="identifier">injector</span><span class="special">.</span><a class="link" href="../../injectors/injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">&gt;&gt;()</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="../../injectors/injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">&gt;&gt;());</span>
 </pre>
 <h6>
 <a name="di.concepts.bindings.scope.shared.h4"></a>
@@ -169,14 +170,16 @@
                 <a class="link" href="../scope.html" title="scope">scope</a>
               </li>
 <li class="listitem">
-                <a class="link" href="deduce.html" title="deduce">deduce</a> (<a class="link" href="../../scopes/deduce.html" title="deduce (default)">deduce scope</a>)
+                <a class="link" href="deduce.html" title="deduce">deduce</a> |
+                <a class="link" href="../../scopes/deduce.html" title="deduce (default)">deduce scope</a>
               </li>
 <li class="listitem">
-                <a class="link" href="unique.html" title="unique">unique</a> (<a class="link" href="../../scopes/unique.html" title="unique">unique scope</a>)
+                <a class="link" href="unique.html" title="unique">unique</a> |
+                <a class="link" href="../../scopes/unique.html" title="unique">unique scope</a>
               </li>
 <li class="listitem">
                 <a class="link" href="session.html" title="session">unique</a>
-                (<a class="link" href="../../scopes/session.html" title="session">session scope</a>)
+                | <a class="link" href="../../scopes/session.html" title="session">session scope</a>
               </li>
 </ul></div>
 </div>

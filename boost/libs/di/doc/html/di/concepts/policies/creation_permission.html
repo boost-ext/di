@@ -75,7 +75,7 @@
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">TValueTYpe</span></code>
+                    <code class="computeroutput"><span class="identifier">TValueType</span></code>
                   </p>
                 </td>
 <td>
@@ -200,7 +200,7 @@
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span></code>
+                    <code class="computeroutput"><span class="identifier">assert_policy</span><span class="special">()</span></code>
                   </p>
                 </td>
 <td>
@@ -252,10 +252,10 @@
         </h6>
 <pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">;</span>
 
-<a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">creation_permission</span><span class="special">&lt;&gt;());</span> <span class="comment">// compile error</span>
-<a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span><a class="link" href="../bindings/bind/bind_int.html" title="bind_int">di::bind_int</a><span class="special">&lt;</span><span class="number">42</span><span class="special">&gt;()).</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">creation_permission</span><span class="special">&lt;&gt;());</span> <span class="comment">// compile ok</span>
-<a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">creation_permission</span><span class="special">&lt;</span><span class="identifier">allow_type</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;&gt;());</span> <span class="comment">// compile ok</span>
-<a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">creation_permission</span><span class="special">&lt;</span><span class="identifier">allow_type_expr</span><span class="special">&lt;</span><span class="identifier">is_pod</span><span class="special">&lt;</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">_</span><span class="special">&gt;&gt;&gt;());</span> <span class="comment">// compile ok</span>
+<a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">().</span><a class="link" href="../injectors/injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">creation_permission</span><span class="special">&lt;&gt;());</span> <span class="comment">// compile error</span>
+<a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span><a class="link" href="../bindings/bind/bind_int.html" title="bind_int">di::bind_int</a><span class="special">&lt;</span><span class="number">42</span><span class="special">&gt;()).</span><a class="link" href="../injectors/injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">creation_permission</span><span class="special">&lt;&gt;());</span> <span class="comment">// compile ok</span>
+<a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">().</span><a class="link" href="../injectors/injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">creation_permission</span><span class="special">&lt;</span><span class="identifier">allow_type</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;&gt;());</span> <span class="comment">// compile ok</span>
+<a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">().</span><a class="link" href="../injectors/injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">creation_permission</span><span class="special">&lt;</span><span class="identifier">allow_type_expr</span><span class="special">&lt;</span><span class="identifier">is_pod</span><span class="special">&lt;</span><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">_</span><span class="special">&gt;&gt;&gt;());</span> <span class="comment">// compile ok</span>
 </pre>
 <h6>
 <a name="di.concepts.policies.creation_permission.h7"></a>

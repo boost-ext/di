@@ -125,7 +125,7 @@
 <span class="keyword">class</span> <span class="identifier">parameters_permission</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
-    <span class="keyword">void</span> <span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">void</span> <span class="identifier">assert_policy</span><span class="special">();</span>
 <span class="special">};</span>
 </pre>
 <div class="table">
@@ -201,7 +201,7 @@
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span></code>
+                    <code class="computeroutput"><span class="identifier">assert_policy</span><span class="special">()</span></code>
                   </p>
                 </td>
 <td>
@@ -253,8 +253,8 @@
         </h6>
 <pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">;</span>
 
-<a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">parameters_permission</span><span class="special">&lt;&gt;());</span> <span class="comment">// compile error, no parameters are allowed</span>
-<a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">parameters_permission</span><span class="special">&lt;</span><span class="identifier">allow_copies</span><span class="special">&gt;());</span> <span class="comment">// compile ok</span>
+<a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">().</span><a class="link" href="../injectors/injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">parameters_permission</span><span class="special">&lt;&gt;());</span> <span class="comment">// compile error, no parameters are allowed</span>
+<a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">().</span><a class="link" href="../injectors/injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="identifier">parameters_permission</span><span class="special">&lt;</span><span class="identifier">allow_copies</span><span class="special">&gt;());</span> <span class="comment">// compile ok</span>
 
 <span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
     <span class="identifier">example</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">*&gt;,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;,</span> <span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;);</span>
@@ -266,7 +266,7 @@
 <span class="comment">//    * std::shared_ptr&lt;int&gt; -&gt; allow_smart_ptrs</span>
 <span class="comment">//    * const int&amp; -&gt; allow_const_refs</span>
 
-<a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;(</span>
+<a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">().</span><a class="link" href="../injectors/injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;(</span>
     <span class="identifier">parameters_permission</span><span class="special">&lt;</span><span class="identifier">allow_copies</span><span class="special">,</span> <span class="identifier">allow_ptrs</span><span class="special">,</span> <span class="identifier">allow_smart_ptrs</span><span class="special">,</span> <span class="identifier">allow_const_refs</span><span class="special">&gt;()</span>
 <span class="special">);</span> <span class="comment">// compile ok</span>
 </pre>
