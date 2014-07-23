@@ -31,11 +31,11 @@ template<
 >
 class scope
 {
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(bind)
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(given)
 
     template<typename T>
     struct is_dependency
-        : has_bind<T>
+        : has_given<T>
     { };
 
     template<typename T>
