@@ -52,15 +52,15 @@ Policies will be verified using `and` semantic, which means that each type to be
 [table Parameters
     [[Parameter][Requirement][Description][Throw]]
     [[`T`][__data_model__ type][Data to be verified]]
-    [[`assert_policy() const`][None][Verify policy requirements][Does not throw]]
+    [[`assert_policy()`][None][Verify policy requirements][Does not throw]]
 ]
 
 [heading Namespace]
     boost::di::policies
 
 [heading Examples]
-    __di_make_injector__().create<int>(policy1(), policy2(), ..., policyN());
-    __di_make_injector__().allocate<int>(allocator(), policy1(), policy2(), ..., policyN());
+    __di_make_injector__().__di_injector_create__<int>(policy1(), policy2(), ..., policyN());
+    __di_make_injector__().__di_injector_allocate__<int>(allocator(), policy1(), policy2(), ..., policyN());
 
 [heading More Examples]
     ``__examples_custom_policy__``
@@ -87,7 +87,7 @@ Verifies constructor parameters overlapping.
 [table Parameters
     [[Parameter][Requirement][Description][Throw]]
     [[`T`][__data_model__ type][Data to be verified]]
-    [[`assert_policy() const`][None][Verify policy requirements][Does not throw]]
+    [[`assert_policy()`][None][Verify policy requirements][Does not throw]]
 ]
 
 [heading Expression Semantics]
@@ -102,13 +102,13 @@ Verifies constructor parameters overlapping.
     boost::di::policies
 
 [heading Examples]
-    __di_make_injector__().create<int>(di::policies::circular_dependencies()); // compile ok
+    __di_make_injector__().__di_injector_create__<int>(di::policies::circular_dependencies()); // compile ok
 
     struct cd2;
     struct cd1 { cd1(cd2*); };
     struct cd2 { cd2(cd1*); };
 
-    __di_make_injector__().create<cd1>(di::policies::circular_dependencies()); // compile error
+    __di_make_injector__().__di_injector_create__<cd1>(di::policies::circular_dependencies()); // compile error
 
 [note Requires [link di.overview.configuration BOOST_DI_CFG_EXAMINE_CALL_STACK] to be defined.]
 
@@ -139,7 +139,7 @@ Limits default constructible types not be created unless they are explicitly bin
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TValueTYpe`][None][Type to be allowed]]
+    [[`TValueType`][None][Type to be allowed]]
     [[`T`][None][__data_model__ parameter type]]
 ]
 
@@ -161,7 +161,7 @@ Limits default constructible types not be created unless they are explicitly bin
     [[Parameter][Requirement][Description][Throw]]
     [[`TArgs...`][__allow_type_model__ type][Type to be allowed]]
     [[`T`][__data_model__ type][Data to be verified]]
-    [[`assert_policy() const`][None][Verify policy requirements][Does not throw]]
+    [[`assert_policy()`][None][Verify policy requirements][Does not throw]]
 ]
 
 [heading Expression Semantics]
@@ -179,10 +179,10 @@ Limits default constructible types not be created unless they are explicitly bin
 [heading Examples]
     using namespace di::policies;
 
-    __di_make_injector__().create<int>(creation_permission<>()); // compile error
-    __di_make_injector__(__di_bind_int__<42>()).create<int>(creation_permission<>()); // compile ok
-    __di_make_injector__().create<int>(creation_permission<allow_type<int>>()); // compile ok
-    __di_make_injector__().create<int>(creation_permission<allow_type_expr<is_pod<mpl::_>>>()); // compile ok
+    __di_make_injector__().__di_injector_create__<int>(creation_permission<>()); // compile error
+    __di_make_injector__(__di_bind_int__<42>()).__di_injector_create__<int>(creation_permission<>()); // compile ok
+    __di_make_injector__().__di_injector_create__<int>(creation_permission<allow_type<int>>()); // compile ok
+    __di_make_injector__().__di_injector_create__<int>(creation_permission<allow_type_expr<is_pod<mpl::_>>>()); // compile ok
 
 [heading Tests]
     ``[@test/ut/policies/creation_permission_ut.cpp]``
@@ -227,14 +227,14 @@ Limits allowed constructor parameters. By default, if used, all parameters are d
     class parameters_permission {
     public:
         template<typename TDependency>
-        void assert_policy() const;
+        void assert_policy();
     };
 
 [table Parameters
     [[Parameter][Requirement][Description][Throw]]
     [[`TArgs...`][__allow_parameter_model__ type][Parameters to be allowed]]
     [[`T`][__data_model__ type][Data to be verified]]
-    [[`assert_policy() const`][None][Verify policy requirements][Does not throw]]
+    [[`assert_policy()`][None][Verify policy requirements][Does not throw]]
 ]
 
 [heading Expression Semantics]
@@ -252,8 +252,8 @@ Limits allowed constructor parameters. By default, if used, all parameters are d
 [heading Examples]
     using namespace di::policies;
 
-    __di_make_injector__().create<int>(parameters_permission<>()); // compile error, no parameters are allowed
-    __di_make_injector__().create<int>(parameters_permission<allow_copies>()); // compile ok
+    __di_make_injector__().__di_injector_create__<int>(parameters_permission<>()); // compile error, no parameters are allowed
+    __di_make_injector__().__di_injector_create__<int>(parameters_permission<allow_copies>()); // compile ok
 
     struct example {
         example(std::vector<int*>, std::shared_ptr<int>, const int&);
@@ -265,7 +265,7 @@ Limits allowed constructor parameters. By default, if used, all parameters are d
     //    * std::shared_ptr<int> -> allow_smart_ptrs
     //    * const int& -> allow_const_refs
 
-    __di_make_injector__().create<example>(
+    __di_make_injector__().__di_injector_create__<example>(
         parameters_permission<allow_copies, allow_ptrs, allow_smart_ptrs, allow_const_refs>()
     ); // compile ok
 
@@ -300,7 +300,7 @@ Limits allowed scopes to be used whilst binding. By default, if used, all scopes
     [[Parameter][Requirement][Description][Throw]]
     [[`TScope`][__scope_model__][Scope to be allowed]]
     [[`T`][None][__data_model__ type]]
-    [[`assert_policy() const`][None][Verify policy requirements][Does not throw]]
+    [[`assert_policy()`][None][Verify policy requirements][Does not throw]]
 ]
 
 [heading Synopsis]
@@ -322,7 +322,7 @@ Limits allowed scopes to be used whilst binding. By default, if used, all scopes
     [[`TScope`][__scope_model__ type][Scope to be allowed]]
     [[`TArgs...`][__allow_scope_model__ type][Scopes to be allowed]]
     [[`T`][__data_model__ type][Data to be verified]]
-    [[`assert_policy() const`][None][Verify policy requirements][Does not throw]]
+    [[`assert_policy()`][None][Verify policy requirements][Does not throw]]
 ]
 
 [heading Expression Semantics]
@@ -347,15 +347,15 @@ Limits allowed scopes to be used whilst binding. By default, if used, all scopes
 [heading Examples]
     using namespace di::policies;
 
-    __di_make_injector__().create<int>(scopes_permission<>()); // compile error, no scopes are allowed
+    __di_make_injector__().__di_injector_create__<int>(scopes_permission<>()); // compile error, no scopes are allowed
 
     __di_make_injector__(
         __di_bind_unique__<int>()
-    ).create<int>(scopes_permission<allow_scope<__di_scopes_unique__<>>>()); // compile ok
+    ).__di_injector_create__<int>(scopes_permission<allow_scope<__di_scopes_unique__<>>>()); // compile ok
 
     __di_make_injector__(
         __di_bind_shared__<int>()
-    ).create<int>(scopes_permission<allow_scope<__di_scopes_unique__<>>>()); // compile error
+    ).__di_injector_create__<int>(scopes_permission<allow_scope<__di_scopes_unique__<>>>()); // compile error
 
     struct example {
         example(std::shared_ptr<int>);
@@ -363,7 +363,7 @@ Limits allowed scopes to be used whilst binding. By default, if used, all scopes
 
     __di_make_injector__(
         __di_bind_deduce__<int>()
-    ).create<example>(scopes_permission<allow_scope<__di_scopes_unique__<>>>()); // compile error
+    ).__di_injector_create__<example>(scopes_permission<allow_scope<__di_scopes_unique__<>>>()); // compile error
 
     struct example {
         example(int);
@@ -371,7 +371,7 @@ Limits allowed scopes to be used whilst binding. By default, if used, all scopes
 
     __di_make_injector__(
         __di_bind_deduce__<int>()
-    ).create<example>(scopes_permission<allow_scope<__di_scopes_unique__<>>>()); // compile ok
+    ).__di_injector_create__<example>(scopes_permission<allow_scope<__di_scopes_unique__<>>>()); // compile ok
 
 [note To read more about `scope deduction` mapping see __scopes_deduce__.]
 

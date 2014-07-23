@@ -89,7 +89,7 @@ It doesn't has to be the case when __injections_ctor_traits__ are used.
       , __di_bind_int__<0>
     );
 
-    auto example_ = injector.create<example>();
+    auto example_ = injector.__di_injector_create__<example>();
 
     assert(42 == example_.i1);
     assert(0 == example_.i2);
@@ -118,7 +118,7 @@ It doesn't has to be the case when __injections_ctor_traits__ are used.
         __di_bind__<int>::__di_bind_named__<my_value2>::to(2)
     );
 
-    auto example_ = injector.create<example>();
+    auto example_ = injector.__di_injector_create__<example>();
 
     assert(1 == example_.i1);
     assert(2 == example_.i2);

@@ -89,10 +89,10 @@ Activation of `Module` is done by passing it into injector.
         // module_cpp_14(), module_cpp_03(), module_cpp_11() // order of passed modules is not important
     );
 
-    assert(dynamic_cast<implementation*>(injector.create<unique_ptr<interface>>().get()));
-    assert(42 == injector.create<int>());
-    assert(87l == injector.create<long>());
-    assert(true == injector.create<bool>());
+    assert(dynamic_cast<implementation*>(injector.__di_injector_create__<unique_ptr<interface>>().get()));
+    assert(42 == injector.__di_injector_create__<int>());
+    assert(87l == injector.__di_injector_create__<long>());
+    assert(true == injector.__di_injector_create__<bool>());
 
 [tip `__modules__/__bindings__/Types` might be mixed whilst creating an injector, order is not important.]
 

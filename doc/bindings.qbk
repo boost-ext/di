@@ -23,14 +23,31 @@ the only thing which has to be in mind is to return list of dependencies.
       , typename TGiven
       , typename TBind
     >
-    class dependency;
+    class dependency {
+        typedef dependency type;
+        typedef TScope scope;
+        typedef TExpected expected;
+        typedef TGiven given;
+        typedef TBind bind;
+
+        template<typename>
+        struct rebind;
+
+        template<typename T>
+        explicit dependency(const T&);
+
+        template<typename T>
+        static __dependency_model__ to(const T&);
+    };
 
 [table Parameters
-    [[Parameter][Requirement][Description]]
+    [[Parameter][Requirement][Description][Returns][Throw]]
     [[`TScope`][__scope_model__ type][Scope to be used]]
     [[`TExpected`][None][Type to be returned]]
     [[`TGiven`][None][Type to be created]]
     [[`TBind`][Boolean expression][Expression to be evaluated in order o verify dependency match during resolving]]
+    [[`dependency(T)`][None][Intialize dependency from type `T`][][Does not throw]]
+    [[`to(T)`][None][Returns new __dependency_model__ with associated `T` value][__dependency_model__][Does not throw]]
 ]
 
 [heading Header]
@@ -62,28 +79,28 @@ the only thing which has to be in mind is to return list of dependencies.
 [section bind]
 
 [heading Description]
-Allows bind interface to implementation and associate value with `dependency`.
+Allows bind interface to implementation and associate value with __dependency_model__.
 
 [heading Synopsis]
     template<typename TInterface, typename TImplementation>
     struct bind {
         template<typename T>
-        static dependency to(const T&);
+        static __dependency_model__ to(const T&);
     };
 
 [table Parameters
-    [[Parameter][Requirement][Description]]
+    [[Parameter][Requirement][Description][Retruns][Throw]]
     [[`TInterface`][None][Interface type]]
     [[`TImplementation`][None][Implementation type]]
     [[`T`][`POD`/`reference_wrapper`/`shared_ptr`][Value type]]
-    [[`x.to(T)`][None][Returns new `dependency` with associated `T` value]]
+    [[`to(T)`][None][Returns new __dependency_model__ with associated `T` value][__dependency_model__][Does not throw]]
 ]
 
 [heading Expression Semantics]
     di::bind<interface, implementation>()
     di::bind<int>::to(int())
 
-[*Return type]: `dependency`
+[*Return type]: __dependency_model__
 
 [heading Header]
     #include <boost/di.hpp>
@@ -93,23 +110,23 @@ Allows bind interface to implementation and associate value with `dependency`.
     [[Binding][Description]]
     [[```di::bind<interface, implementation>())```][Bind `interface` to `implementation`]]
     [[```di::bind<implementation>())```][Bind to `implementation` with deduced `interface`]]
-    [[```di::bind<int>::to(42)```][Bind `int` to `42`]]
-    [[```di::bind<std::string>::to("text")```][Bind `std::string` to "text"]]
-    [[```di::bind<example>::to(cref(example_))```][Bind `example` to const reference instance]]
-    [[```di::bind<example>::to(ref(example_))```][Bind `example` to to reference instance]]
+    [[```di::bind<int>::to(42)```][Bind `int` parameters to `42`]]
+    [[```di::bind<std::string>::to("text")```][Bind `std::string` parameters to "text"]]
+    [[```di::bind<example>::to(cref(example_))```][Bind `example` parameters to const reference instance]]
+    [[```di::bind<example>::to(ref(example_))```][Bind `example` parameters to to reference instance]]
     [[```di::bind<interface>::to(make_shared<implementation>())```][Bind `interface` to shared_ptr instance]]
-    [[```di::bind<int>::to([]{ return 42; })```][Bind `int` to functor expression returning `42`]]
+    [[```di::bind<int>::to([]{ return 42; })```][Bind `int` parameters to lambda expression returning `42`]]
     [[```di::bind<function<int()>>::to([]{ return 42; })```][Bind `int` to lambda expression returning `42`]]
-    [[```di::bind<function<int()>>::to(boost::bind(&return_int, 42))```][Bind to functor expression returning `42`]]
-    [[```di::bind<interface, implementation>::named<my_interface>```][Bind annotated interface to implementation named with `my_interface`]]
+    [[```di::bind<function<int()>>::to(bind(&return_int, 42))```][Bind `int` to functor expression returning `42`]]
+    [[```di::bind<interface, implementation>::__di_bind_named__<my_interface>```][Bind annotated `interface` to `implementation` named with `my_interface`]]
 ]
     auto injector = __di_make_injector__(
         di::bind<interface, implementation>()
       , di::bind<int>::to(42)
     );
 
-    assert(dynamic_cast<implementation*>(injector.create<unique_ptr<interface>>().get()));
-    assert(42 == injector.create<int>());
+    assert(dynamic_cast<implementation*>(injector.__di_injector_create__<unique_ptr<interface>>().get()));
+    assert(42 == injector.__di_injector_create__<int>());
 
 [note Values bind with `bind<T>::to(T)` always have higher priority than other bindings. See `External scope` for further information.]
 
@@ -157,8 +174,8 @@ Allows to bind multiple interfaces to one instance.
         __di_bind__<di::any_of<interface1, interface2>, implementation1>()
     );
 
-    assert(dynamic_cast<implementation1*>(injector.create<unique_ptr<interface1>>().get()));
-    assert(injector.create<unique_ptr<interface1>>() == injector.create<unique_ptr<interface2>>());
+    assert(dynamic_cast<implementation1*>(injector.__di_injector_create__<unique_ptr<interface1>>().get()));
+    assert(injector.__di_injector_create__<unique_ptr<interface1>>() == injector.__di_injector_create__<unique_ptr<interface2>>());
 
 [tip The same result might be achieved with `di::bind<implementation1>()`, but list of interfaces will be deduced instead.]
 
@@ -195,7 +212,7 @@ Allows to bind compile time bool value.
 [heading Expression Semantics]
     di::bind_bool<true>()
 
-[*Return type]: `dependency`
+[*Return type]: __dependency_model__
 
 [heading Header]
     #include <boost/di.hpp>
@@ -204,14 +221,14 @@ Allows to bind compile time bool value.
 [table
     [[Binding][Description]]
     [[```di::bind_bool<true>())```][Bind `true` value to `bool` parameters]]
-    [[```di::bind_bool<true>::named<my_bool>())```][Bind `true` value to `bool` parameters named `my_bool`]]
+    [[```di::bind_bool<true>::__di_bind_named__<my_bool>())```][Bind `true` value to `bool` parameters named `my_bool`]]
 ]
 
     auto injector = __di_make_injector__(
         di::bind_bool<true>()
     );
 
-    assert(true == injector.create<bool>());
+    assert(true == injector.__di_injector_create__<bool>());
 
 [heading More Examples]
     ``__examples_binding__``
@@ -246,7 +263,7 @@ Allows to bind compile time integer value.
 [heading Expression Semantics]
     di::bind_int<42>()
 
-[*Return type]: `dependency`
+[*Return type]: __dependency_model__
 
 [heading Header]
     #include <boost/di.hpp>
@@ -255,14 +272,14 @@ Allows to bind compile time integer value.
 [table
     [[Binding][Description]]
     [[```di::bind_int<42>())```][Bind `42` to `int` parameters]]
-    [[```di::bind_int<42>::named<my_int>()```][Bind `42` value to `int` parameters named `my_int`]]
+    [[```di::bind_int<42>::__di_bind_named__<my_int>()```][Bind `42` value to `int` parameters named `my_int`]]
 ]
 
     auto injector = __di_make_injector__(
         di::bind_int<42>()
     );
 
-    assert(42 == injector.create<int>());
+    assert(42 == injector.__di_injector_create__<int>());
 
 [heading More Examples]
     ``__examples_binding__``
@@ -297,7 +314,7 @@ Allows to bind compile time string value.
 [heading Expression Semantics]
     di::bind_string<mpl::string<'str'>>()
 
-[*Return type]: `dependency`
+[*Return type]: __dependency_model__
 
 [heading Header]
     #include <boost/di.hpp>
@@ -306,14 +323,14 @@ Allows to bind compile time string value.
 [table
     [[Binding][Description]]
     [[```di::bind_string<mpl::string<'str'>>())```][Bind `str` to `std::string` parameters]]
-    [[```di::bind_string<mpl::string<'str'>>::named<my_string>()```][Bind `str` value to `std::string` parameters named `my_string`]]
+    [[```di::bind_string<mpl::string<'str'>>::__di_bind_named__<my_string>()```][Bind `str` value to `std::string` parameters named `my_string`]]
 ]
 
     auto injector = __di_make_injector__(
         di::bind_string<mpl::string<'str'>>()
     );
 
-    assert("str" == injector.create<std::string>());
+    assert("str" == injector.__di_injector_create__<std::string>());
 
 [heading More Examples]
     ``__examples_binding__``
@@ -354,7 +371,7 @@ Allows to bind other bindings to defined/custom scope. If not used `deduce` scop
 [heading Expression Semantics]
     di::scope<TScope>::bind<TArgs...>()
 
-[*Return type]: `dependency`
+[*Return type]: __dependency_model__
 
 [heading Header]
     #include <boost/di.hpp>
@@ -373,7 +390,7 @@ Allows to bind other bindings to defined/custom scope. If not used `deduce` scop
         >()
     );
 
-    assert(injector.create<shared_ptr<interface>>() != injector.create<shared_ptr<interface>>());
+    assert(injector.__di_injector_create__<shared_ptr<interface>>() != injector.__di_injector_create__<shared_ptr<interface>>());
 
 [note `external` scope can be only binded using `bind<T>::to(T)` semantic.]
 
@@ -411,7 +428,7 @@ Scoped will be deduced accordingly to constructor parameter type. See `Deduce Sc
 [heading Expression Semantics]
     di::deduce<__di_bind__<interface, implementation>>()
 
-[*Return type]: `dependency`
+[*Return type]: __dependency_model__
 
 [heading Header]
     #include <boost/di.hpp>
@@ -427,7 +444,7 @@ Scoped will be deduced accordingly to constructor parameter type. See `Deduce Sc
         di::deduce<implementation>()
     );
 
-    assert(injector.create<unique_ptr<implementation>>() != injector.create<unique_ptr<implementation>>());
+    assert(injector.__di_injector_create__<unique_ptr<implementation>>() != injector.__di_injector_create__<unique_ptr<implementation>>());
 
 [heading More Examples]
     ``__examples_deduce_scope__``
@@ -439,9 +456,9 @@ Scoped will be deduced accordingly to constructor parameter type. See `Deduce Sc
 
 * __bindings__
 * __bindings_scope__
-* __bindings_scope_unique__ (__scopes_unique__)
-* __bindings_scope_shared__ (__scopes_shared__)
-* __bindings_scope_session__ (__scopes_session__)
+* __bindings_scope_unique__ | __scopes_unique__
+* __bindings_scope_shared__ | __scopes_shared__
+* __bindings_scope_session__ | __scopes_session__
 
 [endsect]
 
@@ -464,7 +481,7 @@ Allows to bind other bindings to __scopes_unique__.
 [heading Expression Semantics]
     di::unique<__di_bind__<interface, implementation>>()
 
-[*Return type]: `dependency`
+[*Return type]: __dependency_model__
 
 [heading Header]
     #include <boost/di.hpp>
@@ -481,7 +498,7 @@ Allows to bind other bindings to __scopes_unique__.
         >()
     );
 
-    assert(injector.create<shared_ptr<implementation>>() != injector.create<shared_ptr<implementation>>());
+    assert(injector.__di_injector_create__<shared_ptr<implementation>>() != injector.__di_injector_create__<shared_ptr<implementation>>());
 
 [heading More Examples]
     ``__examples_binding__``
@@ -493,9 +510,9 @@ Allows to bind other bindings to __scopes_unique__.
 
 * __bindings__
 * __bindings_scope__
-* __bindings_scope_deduce__ (__scopes_deduce__)
-* __bindings_scope_shared__ (__scopes_shared__)
-* __bindings_scope_session__ (__scopes_session__)
+* __bindings_scope_deduce__ | __scopes_deduce__
+* __bindings_scope_shared__ | __scopes_shared__
+* __bindings_scope_session__ | __scopes_session__
 
 [endsect]
 
@@ -517,7 +534,7 @@ Allows to bind other bindings to __scopes_shared__.
 [heading Expression Semantics]
     di::shared<__di_bind__<interface, implementation>>()
 
-[*Return type]: `dependency`
+[*Return type]: __dependency_model__
 
 [heading Header]
     #include <boost/di.hpp>
@@ -534,7 +551,7 @@ Allows to bind other bindings to __scopes_shared__.
         >()
     );
 
-    assert(injector.create<shared_ptr<implementation>>() == injector.create<shared_ptr<implementation>>());
+    assert(injector.__di_injector_create__<shared_ptr<implementation>>() == injector.__di_injector_create__<shared_ptr<implementation>>());
 
 [heading More Examples]
     ``__examples_binding__``
@@ -546,9 +563,9 @@ Allows to bind other bindings to __scopes_shared__.
 
 * __bindings__
 * __bindings_scope__
-* __bindings_scope_deduce__ (__scopes_deduce__)
-* __bindings_scope_unique__ (__scopes_unique__)
-* __bindings_scope_session__ (__scopes_session__)
+* __bindings_scope_deduce__ | __scopes_deduce__
+* __bindings_scope_unique__ | __scopes_unique__
+* __bindings_scope_session__ | __scopes_session__
 
 [endsect]
 
@@ -570,7 +587,7 @@ Allows to bind other bindings to __scopes_session__.
 [heading Expression Semantics]
     di::session<__di_bind__<interface, implementation>>()
 
-[*Return type]: `dependency`
+[*Return type]: __dependency_model__
 
 [heading Header]
     #include <boost/di.hpp>
@@ -587,13 +604,13 @@ Allows to bind other bindings to __scopes_session__.
         >()
     );
 
-    assert(!injector.create<shared_ptr<implementation>>());
+    assert(!injector.__di_injector_create__<shared_ptr<implementation>>());
 
     injector.call(di::scopes::session_entry());
-    assert(injector.create<shared_ptr<implementation>>());
+    assert(injector.__di_injector_create__<shared_ptr<implementation>>());
 
     injector.call(di::scopes::session_exit());
-    assert(!injector.create<shared_ptr<implementation>>());
+    assert(!injector.__di_injector_create__<shared_ptr<implementation>>());
 
 [heading More Examples]
     ``__examples_binding__``
@@ -605,9 +622,9 @@ Allows to bind other bindings to __scopes_session__.
 
 * __bindings__
 * __bindings_scope__
-* __bindings_scope_deduce__ (__scopes_deduce__)
-* __bindings_scope_unique__ (__scopes_unique__)
-* __bindings_scope_shared__ (__scopes_shared__)
+* __bindings_scope_deduce__ | __scopes_deduce__
+* __bindings_scope_unique__ | __scopes_unique__
+* __bindings_scope_shared__ | __scopes_shared__
 
 [endsect]
 
@@ -655,8 +672,8 @@ Given value will influence how dependencies will be resolved. Current algorithm 
         int i = 0;
     };
 
-    assert(1 == injector.create<int>());
-    assert(42 == injector.create<example>().i);
+    assert(1 == injector.__di_injector_create__<int>());
+    assert(42 == injector.__di_injector_create__<example>().i);
 
 [heading Tests]
     ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
@@ -801,8 +818,8 @@ Allows to choose binding regards the contextual call stack object was created wi
         __di_bind__<interface, implementation>::__di_bind_when__<di::call_stack<c1, c2>>()
     );
 
-    assert(0 == injector.create<c1>().i);
-    assert(42 == injector.create<c1>().c.i);
+    assert(0 == injector.__di_injector_create__<c1>().i);
+    assert(42 == injector.__di_injector_create__<c1>().c.i);
 
 [note [link di.overview.configuration BOOST_DI_CFG_EXAMINE_CALL_STACK] has to be defined to enable __bindings_when_call_stack__ feature.]
 [warning Types passed to `call_stack` should reflects constructor parameters - __di_named__ is not supported.]
@@ -862,7 +879,7 @@ Allows to connect __annotations_named__ annotation parameters with binding confi
         __di_bind_int__<42>::__di_bind_named__<my_int>()
     );
 
-    assert(42 == injector.create<example>().i);
+    assert(42 == injector.__di_injector_create__<example>().i);
 
 [heading More Examples]
     ``__more_examples_named__`` | ``__examples_binding__``

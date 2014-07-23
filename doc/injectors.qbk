@@ -63,7 +63,6 @@ Injector is a component used for creating dependencies configuration using bindi
     [[`operator(const T&)`][None][Called when type `T` is created][Does not throw]]
 ]
 
-
 [heading Synopsis]
     template<typename... TArgs>
     class injector {
@@ -94,6 +93,7 @@ Injector is a component used for creating dependencies configuration using bindi
     [[`TVisitor`][__visitor_model__ type][Visitor to be called when visiting creating objects]]
     [[`TAction`][None][Action to be called for scopes having `call(const TAction&)` method]]
 
+    [[`injector(const TArgs&...))`][None][Create __injectors_injector__ with given bindings][][Does not throw]]
     [[`create<T>(const TPolicies&...))`][__policy_model__][Create object `T` with given policies][`T` instance][Does not throw]]
     [[`allocate<T>(const TAllocator&, const TPolicies&...))`][__allocator_model__, __policy_model__][Create object T with given policies using given allocator][`T` instance][Does not throw]]
     [[`visit<T>()`][__visitor_model__][call visitor `operator()(const TObject&)` for all objects created during creation of object `T`][`T` instance][Does not throw]]
@@ -103,7 +103,7 @@ Injector is a component used for creating dependencies configuration using bindi
 [warning In current version `visit` create an object due to compiler limitations - might be changed in the future that `visit` will not return.]
 
 [heading Expression Semantics]
-    di::injector<TArgs...>(args...)
+    di::injector<TArgs...>(TArgs...)
 
 [heading Header]
     #include <boost/di.hpp>
@@ -166,9 +166,9 @@ Creates `injector` type. Allows to bind dynamic values in no boilerplate manner.
 ]
 
 [heading Expression Semantics]
-    di::make_injector(args...);
+    di::make_injector(TArgs...)
 
-[*Return type]: `injector<...>`
+[*Return type]: __di_injector__<TArgs...>
 
 [heading Header]
     #include <boost/di.hpp>

@@ -114,9 +114,9 @@ There are 5 basic types of wrappers.
         >()
     );
 
-    assert(dynamic_cast<implementation1*>(injector.create<shared_ptr<interface1>>().get()));
-    assert(dynamic_cast<implementation2*>(injector.create<shared_ptr<interface2>>().get()));
-    assert(injector.create<shared_ptr<interface1>>() != injector.create<shared_ptr<interface2>>());
+    assert(dynamic_cast<implementation1*>(injector.__di_injector_create__<shared_ptr<interface1>>().get()));
+    assert(dynamic_cast<implementation2*>(injector.__di_injector_create__<shared_ptr<interface2>>().get()));
+    assert(injector.__di_injector_create__<shared_ptr<interface1>>() != injector.__di_injector_create__<shared_ptr<interface2>>());
 
 [heading More Examples]
     ``__examples_custom_scope__``
@@ -228,7 +228,7 @@ Default scope which will be converted to one of the scopes __scopes_external__ /
       , __di_bind__<interface4>::to(cref(implementation4)) // bind to external value
     );
 
-    auto example_ = injector.create<example>();
+    auto example_ = injector.__di_injector_create__<example>();
 
     assert(dynamic_cast<implementation1*>(example_->i1.get());
     assert(dynamic_cast<implementation1*>(example_->i1_.get());
@@ -322,8 +322,8 @@ will be binded using different scope as well then this binding won't be taken in
       , __di_bind__<example>::to(example_)
     );
 
-    assert(42 == injector.create<int>());
-    assert(example_ == injector.create<shared_ptr<example>>());
+    assert(42 == injector.__di_injector_create__<int>());
+    assert(example_ == injector.__di_injector_create__<shared_ptr<example>>());
 
 [heading More Examples]
     ``__more_examples_externals__``
@@ -407,10 +407,10 @@ Scope representing unique value, meaning unique value always will be passed to t
         >()
     );
 
-    assert(42 == injector.create<int>());
-    assert("txt" == injector.create<std::string>());
-    assert(dynamic_cast<implementation*>(injector.create<shared_ptr<interface>>().get()));
-    assert(injector.create<shared_ptr<interface>>() != injector.create<shared_ptr<interface>>());
+    assert(42 == injector.__di_injector_create__<int>());
+    assert("txt" == injector.__di_injector_create__<std::string>());
+    assert(dynamic_cast<implementation*>(injector.__di_injector_create__<shared_ptr<interface>>().get()));
+    assert(injector.__di_injector_create__<shared_ptr<interface>>() != injector.__di_injector_create__<shared_ptr<interface>>());
 
 [note Scope deduction has lower priority than explicit scope definition, so `shared_ptr` parameter might be forced to be unique.]
 
@@ -491,8 +491,8 @@ Scope representing shared/session value, meaning passed value will be shared bet
         >()
     );
 
-    assert(dynamic_cast<implementation*>(injector.create<shared_ptr<interface>>().get()));
-    assert(injector.create<shared_ptr<interface>>() == injector.create<shared_ptr<interface>>());
+    assert(dynamic_cast<implementation*>(injector.__di_injector_create__<shared_ptr<interface>>().get()));
+    assert(injector.__di_injector_create__<shared_ptr<interface>>() == injector.__di_injector_create__<shared_ptr<interface>>());
 
 [heading Tests]
     ``[@test/ut/scopes/shared_ut.cpp]`` | ``[@test/ut/wrappers/shared_ut.cpp]``
@@ -571,13 +571,13 @@ Scope is activated by call of `call` method with `session_entry` parameter and d
         di::session<bind<interface, implementation>>()
     );
 
-    assert(!injector.create<std::unique_ptr<interface>>())
+    assert(!injector.__di_injector_create__<std::unique_ptr<interface>>())
 
     injector.call(di::scopes::session_entry());
-    assert(injector.create<std::unique_ptr<interface>>())
+    assert(injector.__di_injector_create__<std::unique_ptr<interface>>())
 
     injector.call(di::scopes::session_exit());
-    assert(!injector.create<std::unique_ptr<interface>>())
+    assert(!injector.__di_injector_create__<std::unique_ptr<interface>>())
 
 [heading Tests]
     ``[@test/ut/scopes/session_ut.cpp]`` | ``[@test/ut/wrappers/shared_ut.cpp]``

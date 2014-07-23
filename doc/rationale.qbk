@@ -22,15 +22,15 @@
 ```
 
 ```
-        __di_make_injector__(__di_bind_deduce__<implementation>()).create<example>();
+        __di_make_injector__(__di_bind_deduce__<implementation>()).__di_injector_create__<example>();
 ```
 
 ```
-        __di_make_injector__(__di_bind__<interface, implementation>()).create<example>();
+        __di_make_injector__(__di_bind__<interface, implementation>()).__di_injector_create__<example>();
 ```
 
 ```
-        __di_make_injector__(__di_bind_shared__<__di_bind__<interface, implementation>>()).create<example>();
+        __di_make_injector__(__di_bind_shared__<__di_bind__<interface, implementation>>()).__di_injector_create__<example>();
 ```
 
 [note All above expressions create the same configuration.]
@@ -103,7 +103,7 @@ struct example {
     example(int i, int double) { }
 };
 
-injector().create<example>();
+injector().__di_injector_create__<example>();
 ```
 [note Purpose of above pseudo code is to illustrate basic idea, if you interested in the implementation details take a look into `Boost.DI` source code.]
 
