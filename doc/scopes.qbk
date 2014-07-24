@@ -10,9 +10,9 @@
 [section Scopes]
 
 [heading Description]
-Scopes are responsible for creating and maintaining life time of the dependency.
-If no scope will be given whilst binding `deduce` scope will be assumed.
-`Boost.DI` favor 5 types of scopes
+Scopes are responsible for creating and maintaining life time of dependencies.
+If no scope will be given whilst binding __scopes_deduce__ will be assumed.
+`Boost.DI` favor 5 types of scopes.
 
 * __scopes_deduce__
 * __scopes_external__
@@ -36,19 +36,19 @@ There are 5 basic types of wrappers.
 
 [table Parameters
     [[Parameter][Requirement][Description][Returns][Throws]]
-    [[`T`][None][Type to which `wrapper_model` might be converted to]]
-    [[`TValueType`][None][Object type to be stored by wrapper]]
-    [[`wrapper_model(const TValueType&)`][None][Conversion constructor - creates `wrapper_model` from `TValueType` type][][Does not throw]]
-    [[`T operator()(const type<T>&)`][None][Converts `wrapper_model` to `T` type][`T` instance][Does not throw]]
+    [[`T`][None][Type to which __wrapper_model__ might be converted to]]
+    [[`TValueType`][None][Object type to be stored by __wrapper_model__]]
+    [[`wrapper_model(const TValueType&)`][None][Conversion constructor - creates __wrapper_model__ from `TValueType` type][][Does not throw]]
+    [[`operator()(const type<T>&)`][None][Converts __wrapper_model__ to `T` type][`T` instance][Does not throw]]
 ]
 
 [table
     [[Wrapper][Description]]
-    [[copy][Conversion to lvalue/pointer/smart_ptr]]
+    [[copy][Conversion to lvalue/pointer/smart pointers]]
     [[reference][Conversion to reference]]
-    [[shared][Conversion to smart_ptr]]
-    [[universal][Conversion to any type wrappers provide and to const ref/named on top of it]]
-    [[value][Conversion to lvalue/rvalue/pointer/smart_pointer]]
+    [[shared][Conversion to smart pointers]]
+    [[universal][Conversion to all wrappers types and to const reference/__annotations_named__ on top of it]]
+    [[value][Conversion to lvalue/rvalue/pointer/smart pointers]]
 ]
 
 [heading Synopsis]
@@ -126,21 +126,23 @@ There are 5 basic types of wrappers.
 [warning Current version of `Boost.DI` doesn't support `rvalue references` with `Microsoft Visual Studio Compiler`.]
 
 [table Conversions
-    [[Type]                 [external]              [unique]    [shared]                    [session]]
-    [[T]                    [\u2714 - with lvalues]      [\u2714]         [-]                         [-]]
-    [[T*]                   [\u2714 - with lvalues]      [\u2714]         [-]                         [-]]
-    [[T&]                   [\u2714]                     [-]         [-]                         [-]]
-    [[const T&]             [\u2714]                     [-]         [-]                         [-]]
-    [[T&&]                  [\u2714 - with lvalues]      [-]         [-]                         [-]]
-    [[const T*]             [\u2714 - with lvalues]      [\u2714]         [-]                         [-]]
-    [[std::shared_ptr<T>]   [\u2714]                     [\u2714]         [\u2714]                         [\u2714]]
-    [[boost::shared_ptr<T>] [\u2714]                     [\u2714]         [\u2714]                         [\u2714]]
-    [[std::unique_ptr<T>]   [\u2714 - with lvalues]      [\u2714]         [-]                         [-]]
-    [[std::auto_ptr<T>]     [\u2714 - with lvalues]      [\u2714]         [-]                         [-]]
-    [[]                     []                      []          []                          []]
-    [[temporary const T&]   [\u2714 - with lvalues]      [\u2714]         [-]                         [-]]
-    [[named<T, name>]       [\u2714 - with lvalues]      [\u2714]         [\u2714 with T=shared_ptr<T>]    [\u2714 with T=shared_ptr<T>]]
+    [[Type]                     [external]                   [unique]    [shared]                       [session]]
+    [[T]                        [\u2714 - with lvalues]      [\u2714]    [-]                            [-]]
+    [[T*]                       [\u2714 - with lvalues]      [\u2714]    [-]                            [-]]
+    [[T&]                       [\u2714]                     [-]         [-]                            [-]]
+    [[const T&]                 [\u2714]                     [-]         [-]                            [-]]
+    [[T&&]                      [\u2714 - with lvalues]      [-]         [-]                            [-]]
+    [[const T*]                 [\u2714 - with lvalues]      [\u2714]    [-]                            [-]]
+    [[std::shared_ptr<T>]       [\u2714]                     [\u2714]    [\u2714]                       [\u2714]]
+    [[boost::shared_ptr<T>]     [\u2714]                     [\u2714]    [\u2714]                       [\u2714]]
+    [[std::unique_ptr<T>]       [\u2714 - with lvalues]      [\u2714]    [-]                            [-]]
+    [[std::auto_ptr<T>]         [\u2714 - with lvalues]      [\u2714]    [-]                            [-]]
+    [[]                         []                           []          []                             []]
+    [[temporary const T&]       [\u2714 - with lvalues]      [\u2714]    [-]                            [-]]
+    [[__di_named__<T, TName>]    [\u2714 - with lvalues]      [\u2714]    [\u2714 with T=shared_ptr<T>]  [\u2714 with T=shared_ptr<T>]]
 ]
+
+[note If expected type is `T*` or `const T*` then responsibility to delete the object is on client side. `Boost.DI` won't delete it.]
 
 [heading Tests]
     ``[@test/ut/wrappers/universal_ut.cpp]``
@@ -200,13 +202,18 @@ Default scope which will be converted to one of the scopes __scopes_external__ /
     boost::di::scopes
 
 [heading Examples]
+[table
+    [[Binding][Description]]
+    [[```__di_bind_deduce__<__di_bind__<interface, implementation>>()```][Bind `implementation` with deduced `interface` in deduce scope]]
+    [[```__di_bind_deduce__<implementation>()```][Bind `implementation` in deduce scope]]
+]
     class example {
     public:
         example(shared_ptr<interface1> i1   // deduced as shared scope
               , shared_ptr<interface1> i1_  // deduced as shared scope
-              , shared_ptr<interface2> i2   // deduce as unique scope
-              , unique_ptr<interface3> i3   // deduce as unique scope
-              , const interface4& i4)       // deduce as external scope
+              , shared_ptr<interface2> i2   // deduced as unique scope
+              , unique_ptr<interface3> i3   // deduced as unique scope
+              , interface4& i4)             // deduced as external scope
             : i1(i1)
             , i1_(i1_)
             , i2(i2)
@@ -218,14 +225,14 @@ Default scope which will be converted to one of the scopes __scopes_external__ /
         shared_ptr<interface1> i1_;
         unique_ptr<interface2> i2;
         unique_ptr<interface> i3;
-        const interface& i4;
+        interface& i4;
     };
 
     auto injector = __di_make_injector__(
         __di_bind_deduce__<implementation1>() // bind deduced interface to implementation
       , __di_bind__<interface2, implementation2>() // deduce scope by default
       , __di_bind_scope__<di::scopes::deduce>::bind<__di_bind__<interface3, implementation3>>() // long version of scope binding
-      , __di_bind__<interface4>::to(cref(implementation4)) // bind to external value
+      , __di_bind__<interface4>::to(ref(implementation4)) // bind to external value
     );
 
     auto example_ = injector.__di_injector_create__<example>();
@@ -256,10 +263,10 @@ Default scope which will be converted to one of the scopes __scopes_external__ /
 [section external]
 
 [heading Description]
-Scope representing external value (passed by user). The life time of the object depends on the user.
-`Boost.DI` is not responsible of managing life time of passed object, however values and strings will be copied
+Scope representing external values - passed by user. The life time of the object depends on the user.
+`Boost.DI` is not responsible of managing life time of passed objects, however `values` and `strings` will be copied
 and managed by the library. External scope has priority before other scopes which means that if some value/type
-will be binded using different scope as well then this binding won't be taken into account.
+will be binded using different scope as well then binding using external scope will be used.
 
 [heading Synopsis]
     template<template<typename> class TWrapper>
@@ -295,8 +302,10 @@ will be binded using different scope as well then this binding won't be taken in
     [[std::auto_ptr<T>][\u2714 - with lvalues]]
     [[][]]
     [[temporary const T&][\u2714 - with lvalues]]
-    [[named<T, name>][\u2714 - with lvalues]]
+    [[__di_named__<T, TName>][\u2714 - with lvalues]]
 ]
+
+[note If expected type is `T*` or `const T*` then responsibility to delete the object is on client side. `Boost.DI` won't delete it.]
 
 [heading Header]
     #include <boost/di.hpp>
@@ -344,8 +353,7 @@ will be binded using different scope as well then this binding won't be taken in
 [section unique]
 
 [heading Description]
-Scope representing unique value, meaning unique value always will be passed to the constructor.
-[note In case of pointers user will be responsible to take care of deleting them.]
+Scope representing per request value which means unique value always will be passed to the constructor.
 
 [heading Synopsis]
     template<template<typename> class TWrapper = wrappers::copy>
@@ -381,8 +389,10 @@ Scope representing unique value, meaning unique value always will be passed to t
     [[std::auto_ptr<T>][\u2714]]
     [[][]]
     [[temporary const T&][\u2714]]
-    [[named<T, name>][\u2714]]
+    [[__di_named__<T, TName>][\u2714]]
 ]
+
+[note If expected type is `T*` or `const T*` then responsibility to delete the object is on client side. `Boost.DI` won't delete it.]
 
 [heading Header]
     #include <boost/di.hpp>
@@ -393,7 +403,7 @@ Scope representing unique value, meaning unique value always will be passed to t
 [heading Examples]
 [table
     [[Binding][Description]]
-    [[```unique<__di_bind__<interface, implementation>>()```][Bind `interface` to `implementation` in unique scope]]
+    [[```di::unique<__di_bind__<interface, implementation>>()```][Bind `interface` to `implementation` in unique scope]]
     [[`create(const function<TExpected*()>&)`][Create wrapped type to be passed to constructor]]
 ]
 
@@ -412,7 +422,7 @@ Scope representing unique value, meaning unique value always will be passed to t
     assert(dynamic_cast<implementation*>(injector.__di_injector_create__<shared_ptr<interface>>().get()));
     assert(injector.__di_injector_create__<shared_ptr<interface>>() != injector.__di_injector_create__<shared_ptr<interface>>());
 
-[note Scope deduction has lower priority than explicit scope definition, so `shared_ptr` parameter might be forced to be unique.]
+[note Scope deduction has lower priority than explicit __bindings_scope__ definition, so `shared_ptr` parameter might be forced to be unique.]
 
 [heading Tests]
     ``[@test/ut/scopes/unique_ut.cpp]`` | ``[@test/ut/wrappers/copy_ut.cpp]``
@@ -430,11 +440,11 @@ Scope representing unique value, meaning unique value always will be passed to t
 [section shared]
 
 [heading Description]
-Scope representing shared/session value, meaning passed value will be shared between all given instances.
-`Boost.DI` to achieve that is using smart shared pointers. This scope will be deduced in case of shared ptr.
+Scope representing shared value which will be shared between all instances.
+`Boost.DI` to achieve that is using smart shared pointers. This scope will be deduced in case of `shared_ptr`.
 [note Shared scope will convert between `std::shared_ptr` and `boost::shared_ptr` if required.
  Primary smart pointer might be set by `BOOST_DI_CFG_STD_SMART_PTR` and `BOOST_DI_CFG_BOOST_SMART_PTR`.
- Only primary smart pointer will be able to be converted to weak_ptr.
+ Only primary smart pointer will be able to be converted to `weak_ptr`.
 ]
 
 [heading Synopsis]
@@ -471,7 +481,7 @@ Scope representing shared/session value, meaning passed value will be shared bet
     [[std::auto_ptr<T>][-]]
     [[][]]
     [[temporary const T&][-]]
-    [[named<T, name>][\u2714 with T=shared_ptr<T>]]
+    [[__di_named__<T, TName>][\u2714 with T=shared_ptr<T>]]
 ]
 
 [heading Header]
@@ -483,7 +493,7 @@ Scope representing shared/session value, meaning passed value will be shared bet
 [heading Examples]
 [table
     [[Binding][Description]]
-    [[```shared<__di_bind__<interface, implementation>>()```][Bind `interface` to `implementation` in shared scope]]
+    [[```di::shared<__di_bind__<interface, implementation>>()```][Bind `interface` to `implementation` in shared scope]]
 ]
     auto injector = __di_make_injector__(
         di::shared<
@@ -510,9 +520,8 @@ Scope representing shared/session value, meaning passed value will be shared bet
 [section session]
 
 [heading Description]
-Scope representing shared value, meaning passed value will be shared between all given instances
-and will be empty if it won't be in scope.
-Scope is activated by call of `call` method with `session_entry` parameter and deactivated by call of `call` method with `session_exit` parameter;
+Scope representing session value which will be shared between all instances and will be empty if it won't be in scope.
+Scope is activated by call of `call` method with `di::policies::session_entry` parameter and deactivated by call of `call` method with `di::policies::session_exit` parameter;
 
 [heading Synopsis]
     template<template<typename> class TWrapper = wrappers::shared>
@@ -552,7 +561,7 @@ Scope is activated by call of `call` method with `session_entry` parameter and d
     [[std::auto_ptr<T>][-]]
     [[][]]
     [[temporary const T&][-]]
-    [[named<T, name>][\u2714 with T=shared_ptr<T>]]
+    [[__di_named__<T, TName>][\u2714 with T=shared_ptr<T>]]
 ]
 
 [heading Header]
@@ -564,7 +573,7 @@ Scope is activated by call of `call` method with `session_entry` parameter and d
 [heading Examples]
 [table
     [[Binding][Description]]
-    [[```session<__di_bind__<interface, implementation>>()```][Bind `interface` to `implementation` in session scope]]
+    [[```di::session<__di_bind__<interface, implementation>>()```][Bind `interface` to `implementation` in session scope]]
 ]
 
     auto injector = __di_make_injector__(

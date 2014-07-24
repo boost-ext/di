@@ -12,9 +12,14 @@
 [heading Description]
 Policies are compile time components operates on dependencies in order to limit allowed behaviour.
 Policy has to have `assert_policy` method defined.
-In order for `injector` to verify policies they have to be passed to `create`, `allocate` call.
+In order for __injectors_injector__ to verify policies they have to be passed to `create`, `allocate` call.
 Policies will be verified using `and` semantic, which means that each type to be created has to meet all policies requirements.
 `Boost.DI` is released with following policies.
+
+* __policies_circular_dependencies__ - verify circular dependencies occurrence
+* __policies_creation_permission__  - verify object creation permission
+* __policies_parameters_permission__ - verify constructor parameters permission
+* __policies_scopes_permission__ - verify scopes configuration permission
 
 [heading Data Model]
     template<
@@ -34,11 +39,6 @@ Policies will be verified using `and` semantic, which means that each type to be
     [[`TCallStack`][`mpl::vector` type][Context in which type is going to be created]]
     [[`TDependency`][__dependency_model__ type][Resolved dependency]]
 ]
-
-* __policies_circular_dependencies__ - verify circular dependencies occurrence
-* __policies_creation_permission__  - verify object creation permission
-* __policies_parameters_permission__ - verify constructor parameters permission
-* __policies_scopes_permission__ - verify scopes configuration permission
 
 [note By Default `Boost.DI` has no policies enabled.]
 

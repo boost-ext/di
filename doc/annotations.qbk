@@ -10,16 +10,16 @@
 [section Annotations]
 
 [heading Description]
-Annotations are intrusive, additional informations specified along with type in order to refer to given type by annotation instead of type it self.
-Useful, when there are more than one of the same type in constructor parameters.
-`Boost.DI` provides concept of `named` parameters, which are wrapper for types with given names.
+Annotations are intrusive, additional informations specified along with the type in order to refer to given type by the annotation instead of type it self.
+Useful, when there are more than one of the same parameters type in constructor parameters.
+`Boost.DI` provides concept of __annotations_named__ parameters, which are wrapper for types with given name.
 
 [section named]
 Named parameters are useful when constructor has more parameters of the same type.
 ```
     example(int value1, int value2);
 ```
-In order to inject proper values into `value1` and `value2` they have to distinguish somehow.
+In order to inject proper values into `value1` and `value2` they have to be distinguished somehow.
 `Boost.DI` solution for that problem are `named parameters`, which are just wrappers
 for the type with automatic conversion to the based type.
 Named parameters are intrusive in a sens constructor has to be changed in order to support them.

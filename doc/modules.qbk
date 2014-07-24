@@ -10,8 +10,8 @@
 [section Modules]
 
 [heading Description]
-Modules allow to split the configurations into smaller injectors.
-Module is a type with `configure` method returning `injector` type.
+Modules allow to split the configuration into smaller injectors.
+Module is a type with `configure` method returning __injectors_injector__ type.
 Activation of `Module` is done by passing it into injector.
 
 [heading Synopsis `C++14`]

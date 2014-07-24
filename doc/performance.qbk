@@ -18,8 +18,8 @@ changes haven't influence runtime performance.
 `Boost.DI` contains a set of features improving compilation times.
 
 * Preprocessed Headers
-    * Contains `Boost.DI` library in one file after preprocessing stage
-    * Preprocessed Headers are generated for [link di.overview.configuration BOOST_DI_CFG_CTOR_LIMIT_SIZE] equals 10 and for [link di.overview.configuration BOOST_MPL_LIMIT_VECTOR_SIZE] equals 10, 20, 30, 40, 50
+    * Includes whole `Boost.DI` library in one file after preprocessing stage
+    * Preprocessed headers are generated for [link di.overview.configuration BOOST_DI_CFG_CTOR_LIMIT_SIZE] equals `10` and for [link di.overview.configuration BOOST_MPL_LIMIT_VECTOR_SIZE] equals `10`, `20`, `30`, `40`, `50`
     * To disable it [link di.overview.configuration BOOST_DI_CFG_NO_PREPROCESSED_HEADERS] has to be defined
     * Enabled by default
 
@@ -43,7 +43,7 @@ changes haven't influence runtime performance.
 
 * Examine __bindings_when_call_stack__
     * Enables context (call stack) to be used for binding
-    * This feature slow down the compilation, so it has to be turn on by defining [link di.overview.configuration BOOST_DI_CFG_EXAMINE_CALL_STACK]
+    * This feature slow down compilation times, so it has to be turn on explicitly by defining [link di.overview.configuration BOOST_DI_CFG_EXAMINE_CALL_STACK]
     * Disabled by default
 
 [h6 Runtime execution speed]

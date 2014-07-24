@@ -10,11 +10,11 @@
 [section Bindings]
 
 [heading Description]
-Bindings in `Boost.DI` are done using specially defined Domain Specific Language (DSL).
-The main purpose of binding DSL is to make easy things as easy
+Bindings in `Boost.DI` are done using [@http://en.wikipedia.org/wiki/Domain-specific_language Domain Specific Language].
+The main purpose of bindings DSL is to make easy things as easy
 as possible whilst giving possibility to accomplish solutions for more complicated problems.
-The glue between DSL and the core is `dependency`, so if you would like to write your own front end
-the only thing which has to be in mind is to return list of dependencies.
+The glue between DSL and the core is __dependency_model__, so if you would like to write your own front end
+the only thing which has to be in mind is to return `mpl::vector` of __dependency_model__.
 
 [heading Synopsis]
     template<
@@ -37,7 +37,7 @@ the only thing which has to be in mind is to return list of dependencies.
         explicit dependency(const T&);
 
         template<typename T>
-        static __dependency_model__ to(const T&);
+        static dependency to(const T&);
     };
 
 [table Parameters
@@ -56,7 +56,7 @@ the only thing which has to be in mind is to return list of dependencies.
 [heading Examples]
     template<typename TIinterface typename TImplementation>
     struct bind
-        : di::dependency<__di_scopes_deduce__, TInterface, TImplementation>
+        : __di_dependency__<__di_scopes_deduce__, TInterface, TImplementation>
     { };
 
     __di_make_injector__(
@@ -79,7 +79,7 @@ the only thing which has to be in mind is to return list of dependencies.
 [section bind]
 
 [heading Description]
-Allows bind interface to implementation and associate value with __dependency_model__.
+Allows to bind interface to implementation and associate value with __dependency_model__.
 
 [heading Synopsis]
     template<typename TInterface, typename TImplementation>
@@ -128,7 +128,7 @@ Allows bind interface to implementation and associate value with __dependency_mo
     assert(dynamic_cast<implementation*>(injector.__di_injector_create__<unique_ptr<interface>>().get()));
     assert(42 == injector.__di_injector_create__<int>());
 
-[note Values bind with `bind<T>::to(T)` always have higher priority than other bindings. See `External scope` for further information.]
+[note Values bind with `bind<T>::to(T)` always have higher priority than other bindings. See __scopes_external__ for further information.]
 
 [heading More Examples]
     ``__examples_binding__`` | ``__examples_dynamic_binding__``
@@ -153,7 +153,7 @@ Allows to bind multiple interfaces to one instance.
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TArgs`][Polymorphic types][Interfaces to be binded to one instance]]
+    [[`TArgs...`][Polymorphic types][Interfaces to be binded to one instance]]
 ]
 
 [heading Expression Semantics]
@@ -167,7 +167,7 @@ Allows to bind multiple interfaces to one instance.
 [heading Examples]
 [table
     [[Binding][Description]]
-    [[```__di_bind__<di::any_of<interface1, interface2>, implementation>())```][Bind `interface1`, `interface2` to `implementation` - one instance]]
+    [[```__di_bind__<di::any_of<interface1, interface2>, implementation>())```][Bind `interface1`, `interface2` to `implementation` using one instance]]
 ]
 
     auto injector = __di_make_injector__(
@@ -198,7 +198,7 @@ Allows to bind multiple interfaces to one instance.
 [section bind_bool]
 
 [heading Description]
-Allows to bind compile time bool value.
+Allows to bind compile time bool values.
 
 [heading Synopsis]
     template<bool Value>
@@ -249,7 +249,7 @@ Allows to bind compile time bool value.
 [section bind_int]
 
 [heading Description]
-Allows to bind compile time integer value.
+Allows to bind compile time integer values.
 
 [heading Synopsis]
     template<int N>
@@ -300,7 +300,7 @@ Allows to bind compile time integer value.
 [section bind_string]
 
 [heading Description]
-Allows to bind compile time string value.
+Allows to bind compile time string values.
 
 [heading Synopsis]
     template<typename T>
@@ -411,8 +411,8 @@ Allows to bind other bindings to defined/custom scope. If not used `deduce` scop
 [section deduce]
 
 [heading Description]
-Allows to bind other bindings to __scopes_deduce__ scope. Interface type will be deduced, if not given.
-Scoped will be deduced accordingly to constructor parameter type. See `Deduce Scope` for further information.
+Allows to bind other bindings in __scopes_deduce__. Interface type will be deduced, if not given.
+Scoped will be deduced accordingly to constructor parameter type. See __scopes_deduce__ for further information.
 
 [heading Synopsis]
     template<typename... TArgs>
@@ -465,7 +465,7 @@ Scoped will be deduced accordingly to constructor parameter type. See `Deduce Sc
 [section unique]
 
 [heading Description]
-Allows to bind other bindings to __scopes_unique__.
+Allows to bind other bindings in __scopes_unique__.
 
 [heading Synopsis]
     template<typename... TArgs>
@@ -518,7 +518,7 @@ Allows to bind other bindings to __scopes_unique__.
 
 [section shared]
 
-Allows to bind other bindings to __scopes_shared__.
+Allows to bind other bindings in __scopes_shared__.
 
 [heading Synopsis]
     template<typename... TArgs>
@@ -571,7 +571,7 @@ Allows to bind other bindings to __scopes_shared__.
 
 [section session]
 
-Allows to bind other bindings to __scopes_session__.
+Allows to bind other bindings in __scopes_session__.
 
 [heading Synopsis]
     template<typename... TArgs>
@@ -633,7 +633,7 @@ Allows to bind other bindings to __scopes_session__.
 [section when]
 
 [heading Description]
-`Boost.DI` bindings DSL allows to create context requirement, which might be applied with `when` syntax.
+`Boost.DI` bindings DSL allows to create context requirements, which might be applied with `when` syntax.
 `when` allows to apply contextual binding. To implement custom requirement `apply` class with return compile time integer value has to be defined.
 Given value will influence how dependencies will be resolved. Current algorithm might be found in __rationale_binding_resolution_algorithm__.
 
@@ -687,7 +687,7 @@ Given value will influence how dependencies will be resolved. Current algorithm 
 [section call_stack]
 
 [heading Description]
-Allows to choose binding regards the contextual call stack object was created with.
+Allows to choose binding accordingly to the call stack object was created in.
 
 [heading Synopsis]
     template<typename... TArgs>

@@ -107,7 +107,7 @@ a specific combination.
   [
     [pre* __modules__ definition harder syntax]
   ]]
-  [[`C++14`][`GCC >= 4.9`, `Clang >= 3.4`]
+  [[`C++14`][`GCC >= 4.9`, `Clang >= 3.3`]
   [
     [pre* Go for it!]
   ]]

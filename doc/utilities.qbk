@@ -12,8 +12,9 @@
 [heading Description]
 Provides common `Boost.DI` functionality to be externally implemented.
 `Boost.DI` is released with following utilities:
-* allocator
-* provider
+
+* __utilities_allocator__
+* __utilities_provider__
 
 [section allocator]
 
@@ -44,7 +45,7 @@ Allocate and create objects. By default objects are allocated on heap using `new
     [[`TExpected`][None][Result type]]
     [[`TGiven`][None][Type to be created]]
     [[`TArgs...`][None][List of types to be constructed]]
-    [[`allocate<TExpected, TGiven>()`][`TGiven` has no value and TGiven is not `mpl::string`][Returns allocated TGiven() object][`TExpected`*][Does not throw]]
+    [[`allocate<TExpected, TGiven>()`][`TGiven` has no value and TGiven is not `mpl::string`][Returns allocated TGiven object][`TExpected`*][Does not throw]]
     [[`allocate<TExpected, TGiven>()`][`TGiven` has value][Returns allocated `TGiven::value` object][`TExpected`*][Does not throw]]
     [[`allocate<TExpected, TGiven>()`][`TGiven` is `mpl::string`][Returns result of `mpl::c_str<TGiven>::value` expression][`TExpected`*][Does not throw]]
     [[`allocate<TExpected, TGiven>(TArgs&&...)`][Otherwise][Returns allocated `TGiven` constructed with `TArgs...`][`TExpected`*][Does not throw]]

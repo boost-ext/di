@@ -76,7 +76,7 @@
 
 [def __policies__                                       [link di.concepts.policies Policies]]
 [def __policies_circular_dependencies__                 [link di.concepts.policies.circular_dependencies circular_dependencies]]
-[def __policies_creation_permission__                    [link di.concepts.policies.creation_permission creation_permission]]
+[def __policies_creation_permission__                   [link di.concepts.policies.creation_permission creation_permission]]
 [def __policies_parameters_permission__                 [link di.concepts.policies.parameters_permission parameters_permission]]
 [def __policies_scopes_permission__                     [link di.concepts.policies.scopes_permission scopes_permission]]
 
@@ -139,6 +139,7 @@
 [def __di_scopes_shared__                               [link di.concepts.scopes.shared di::scopes::shared]]
 [def __di_scopes_session__                              [link di.concepts.scopes.session di::scopes::session]]
 [def __di_scopes_external__                             [link di.concepts.scopes.external di::scopes::external]]
+[def __di_dependency__                                  [link di.concepts.bindings.synopsis di::dependency]]
 
 [include introduction.qbk]
 [include motivation.qbk]
