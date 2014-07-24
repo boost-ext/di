@@ -15,7 +15,7 @@
 whilst creating the library. Library was optimised in terms of compilation times as long as
 changes haven't influence runtime performance.
 
-If compilation time is still a problem, `Boost.DI` contains a set of features to improve the situation.
+`Boost.DI` contains a set of features improving compilation times.
 
 * Preprocessed Headers
     * Contains `Boost.DI` library in one file after preprocessing stage

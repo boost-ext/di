@@ -9,10 +9,10 @@
 
 [section Rationale]
 
-`Boost.DI` design was driven by few main goals:
+`Boost.DI` design was driven by few main goals.
 
 * User interface should be compact and eliminate boilerplate code as much as possible (common things should be achieved in easy way and harder should be possible)
-    * achieved with automatic scopes deduction/automatic interface deduction
+    * achieved with [link di.concepts.scopes.deduce automatic scopes deduction]/[link di.concepts.bindings.bind automatic interface deduction]
 
 ```
     class example {
@@ -35,24 +35,22 @@
 
 [note All above expressions create the same configuration.]
 
-* Dependencies should be resolved during compilation time (no runtime exceptions that dependency can't be resolved)
+* Dependencies should be resolved during compilation time (no runtime exceptions when dependencies can't be resolved)
     * achieved with compile time dependency resolving
 
 * Constructor injection should be as less intrusive as possible
-    * see [link constructor_injection Constructor Injection]
+    * see [link di.concepts.injections.automatic Constructor Injection]
 
 * Creation overhead should be as small as possible
     * achieved with compile time dependency resolving to minimize runtime overhead
 
 * Binding front end should be easily extensible
-    * achieved with `Dependency` class, user interface for binding has to return list of `Dependency` classes
+    * achieved with [link di.concepts.bindings.synopsis dependency model] - custom user interface for binding has to return list of [link di.concepts.bindings.synopsis dependency] models
 
-and maybe the most important that `Boost.DI` shouldn't be a copy of existing frameworks like [@https://github.com/google/guice Google Guice] for `Java` and [@http://www.ninject.org Ninject] for `C#`
+and maybe the most important that `Boost.DI` shouldn't be a copy of existing frameworks like [@https://github.com/google/guice Google Guice] for `Java` or [@http://www.ninject.org Ninject] for `C#`
 and use whole potential of `C++` instead whilst not ignoring useful concepts in the same time.
 
 [h6 Design]
-Having core feature - `constructor injection` in place `Boost.DI` design presents as follows.
-
 [@images/di.png [$images/di.png [width 75%] [height 75%] ]]
 Generated with [@http://plantuml.sourceforge.net PlantUML].
 
@@ -72,8 +70,8 @@ please refer to commits history.]
 ]
 
 [#constructor_injection]
-Having above in mind, main concern was related how to make constructor injection as less intrusive as possible (avoid macros/registration/reflection).
-Problem was solved purely in `C++` with.
+Having above in mind, main concern was - how to make constructor injection as less intrusive as possible (avoid macros/registration/reflection)?.
+Problem was solved purely in `C++`.
 
 * Verifying how many arguments constructor has using `has_ctor`
 * Conversion to requested type using `type conversion operator`
@@ -107,13 +105,13 @@ injector().__di_injector_create__<example>();
 ```
 [note Purpose of above pseudo code is to illustrate basic idea, if you interested in the implementation details take a look into `Boost.DI` source code.]
 
-Approach presented above although meet all the requirements cause a lot of tricky issues as well, which are listed below.
+Approach presented above although meet all the requirements cause tricky issues as well - see [link di.overview.notes Notes] for further information.
 
 [h5 Constructor Parameters Deduction]
 
 # for type T
     # for N = 1 to [link di.overview.configuration BOOST_DI_CFG_CTOR_LIMIT_SIZE]
-    # if T has constructor with N parameters (which might be converted using `conversion operator`) (see `has_ctor`) then goto `2`
+    # if T has constructor with N parameters (which might be converted using `conversion operator` / see `has_ctor`) then goto `2`
 # generate list of `any_type` with N elements which represents constructor parameters (notice that `any_type` is convertible to actual constructor parameter)
 
 [table
@@ -123,10 +121,10 @@ Approach presented above although meet all the requirements cause a lot of trick
 [h5 Binding Resolution Algorithm]
 
 # for type T
-    # set `current_weight` to 0 and `best_dependency` to default dependency (TDefault)
+    # set `current_weight` to 0 and `best_dependency` to default dependency
     # for all given dependencies
-        # if `dependency` scope is set to `deduce` rebind it accordingly to one of non virtual scopes (using `scope traits - see deduce scope`)
-        # for all given dependency requirements (TBind) calculate weight
+        # if `dependency` scope is set to `deduce` rebind it accordingly to one of non virtual scopes (using `scope traits - see __scopes_deduce__`)
+        # for all given dependency requirements calculate weight
             # `weight` = requirement1 * 10, requirement2 * 100, ..., requirementN * (N times 10)
         # if `weight` > `current_weight`
             # set `current_weight` to `weight`
@@ -144,7 +142,7 @@ Approach presented above although meet all the requirements cause a lot of trick
         # if T has `constructor` traits (set using __injections_boost_di_inject__)
             # get `constructor` parameters from traits
         # else
-            # deduce `constructor` using `Constructor Parameters Deduction`
+            # deduce `constructor` using [link di.concepts.injections.automatic Constructor Parameters Deduction]
     # create T with `constructor` parameters T(`constructor parameters`...)
         # for all `constructor` parameters resolve best dependency using `Binding Resolution Algorithm`
             # allocate required type and pass it to `dependency` scope
