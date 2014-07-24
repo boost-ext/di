@@ -639,7 +639,7 @@ Given value will influence how dependencies will be resolved. Current algorithm 
 
 [heading Synopsis]
     struct when {
-        template<typename TDependency>
+        template<typename T>
         struct apply
             : TResult
         { };
@@ -647,7 +647,7 @@ Given value will influence how dependencies will be resolved. Current algorithm 
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TDependency`][__dependency_model__ type][Dependency type]]
+    [[`T`][__data_model__ type][Type to be verified]]
     [[`TResult`][Integral value][Represents importance of binding (highest value = more important) - see __rationale_binding_resolution_algorithm__]]
 ]
 
@@ -692,14 +692,14 @@ Allows to choose binding regards the contextual call stack object was created wi
 [heading Synopsis]
     template<typename... TArgs>
     struct call_stack {
-        template<typename TDependency>
+        template<typename T>
         struct apply;
     };
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TDependency`][__dependency_model__ type][Dependency type]]
-    [[`TArgs...`][None][Represents objection creation call stack requirement]]
+    [[`T`][__data_model__ type][Type to be verified]]
+    [[`TArgs...`][None][Represents objection creation `call stack` requirement]]
 ]
 
 [heading Expression Semantics]
@@ -793,7 +793,7 @@ Allows to choose binding regards the contextual call stack object was created wi
 [table
     [[Binding][Description]]
     [[```__di_bind_int__<42>::__di_bind_when__<di::call_stack<c1, c2>>()```][Bind `int` parameter to `42` when class was created with `..., c1, c2` context]]
-    [[```__di_bind__<interface, implementation>::__di_bind_named__<my_interface>::__d_bind_when__<di::call_stack<c1, c2>>()```][Bind `interface` to `implementation` when parameter named `my_interface` is called within `c1, c2` context]]
+    [[```__di_bind__<interface, implementation>::__di_bind_named__<my_interface>::__di_bind_when__<di::call_stack<c1, c2>>()```][Bind `interface` to `implementation` when parameter named `my_interface` is called within `c1, c2` context]]
     [[```__di_bind__<interface, implementation>::__di_bind_when__<di::call_stack<c1, c2>>::__di_bind_named__<my_interface>()```][Same as above]]
 ]
 
@@ -822,6 +822,7 @@ Allows to choose binding regards the contextual call stack object was created wi
     assert(42 == injector.__di_injector_create__<c1>().c.i);
 
 [note [link di.overview.configuration BOOST_DI_CFG_EXAMINE_CALL_STACK] has to be defined to enable __bindings_when_call_stack__ feature.]
+[note First type passed to `call_stack` should be type to be created.]
 [warning Types passed to `call_stack` should reflects constructor parameters - __di_named__ is not supported.]
 [tip __bindings_named__ and __bindings_when__ might be used alternately - order is not specified.]
 

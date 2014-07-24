@@ -622,6 +622,43 @@ struct nameds
     aux::shared_ptr<i> n2_;
 };
 
+struct call_stack_nested
+{
+    BOOST_DI_INJECT(call_stack_nested
+        , int i
+        , named<int, a> ia
+        , named<int, b> ib
+    )
+        : i_(i)
+        , ia_(ia)
+        , ib_(ib)
+    { }
+
+    int i_ = 0;
+    int ia_ = 0;
+    int ib_ = 0;
+};
+
+struct call_stack_with_shared_ptr
+{
+    BOOST_DI_INJECT(call_stack_with_shared_ptr
+        , const aux::shared_ptr<call_stack_nested>& nested
+        , int i
+        , named<int, a> ia
+        , named<int, b> ib
+    )
+        : nested_(nested)
+        , i_(i)
+        , ia_(ia)
+        , ib_(ib)
+    { }
+
+    aux::shared_ptr<call_stack_nested> nested_;
+    int i_ = 0;
+    int ia_ = 0;
+    int ib_ = 0;
+};
+
 enum eid { e0 = 1 , e1 = 2 };
 
 struct cd2;

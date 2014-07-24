@@ -9,7 +9,7 @@
 
 [section Motivation]
 
-In other words [*Dependency Injection] might be described as "set of software design principles and patterns that enable us to develop [*loosely coupled] code" [[link See11]].
+More precisely [*Dependency Injection] might be described as "set of software design principles and patterns that enable us to develop [*loosely coupled] code" [[link See11]].
 Dependency Injection allows us to separate business logic to object creation, which give possibility to write maintainable and testable code.
 There are many forms of dependency injection which you can read more about in [[link Van08]].
 

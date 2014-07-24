@@ -32,22 +32,22 @@ class call_stack
 
     template<typename TContext, typename TCallStack>
     struct equal
-      : mpl::equal<
-            mpl::iterator_range<
-                typename mpl::advance<
-                    typename mpl::begin<TCallStack>::type
-                  , typename mpl::max<
-                        mpl::int_<0>
-                      , mpl::minus<
-                            mpl::size<TCallStack>
-                          , mpl::size<TContext>
-                        >
-                    >::type
-                >::type
-              , typename mpl::end<TCallStack>::type
-            >
-          , TContext
-        >
+        : mpl::equal<
+              mpl::iterator_range<
+                  typename mpl::advance<
+                      typename mpl::begin<TCallStack>::type
+                    , typename mpl::max<
+                          mpl::int_<0>
+                        , mpl::minus<
+                              mpl::size<TCallStack>
+                            , mpl::size<TContext>
+                          >
+                      >::type
+                  >::type
+                , typename mpl::end<TCallStack>::type
+              >
+            , TContext
+          >
     { };
 
     template<typename TContext, typename TCallStack>
@@ -64,12 +64,12 @@ class call_stack
     { };
 
 public:
-    template<typename TDependency>
+    template<typename T>
     struct apply
         : apply_impl<
               context_type
             , typename mpl::transform<
-                  typename TDependency::call_stack
+                  typename T::call_stack
                 , di::type_traits::make_plain<mpl::_>
               >::type
           >::type
