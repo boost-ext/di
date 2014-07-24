@@ -9,25 +9,25 @@
 
 [section Motivation]
 
-More precisely [*Dependency Injection] might be described as "set of software design principles and patterns that enable us to develop [*loosely coupled] code" [[link See11]].
+More precisely [@http://en.wikipedia.org/wiki/Dependency_injection [*Dependency Injection]] might be described as "set of software design principles and patterns that enable us to develop [*loosely coupled] code" [[link See11]].
 Dependency Injection allows us to separate business logic to object creation, which give possibility to write maintainable and testable code.
 There are many forms of dependency injection which you can read more about in [[link Van08]].
 
-* Constructor injection
-* Interface injection
+* [link di.concepts.injections Constructor injection]
+* [link di.concepts.injections Interface injection]
 * Setter injection
 * Member injection
 
-[*Constructor injection] is the most powerful and the cleanest way of dependency injection,
+[link di.concepts.injections [*Constructor injection]] is the most powerful and the cleanest way of dependency injection,
 it's also preferable, because there is no need to worry about objects arriving in an uninitialized state.
 
 Dependency Injection doesn't really require Dependency Injection
 Framework (Dependency Injection Container/Inversion Of Control Container) or
-any sort of different patterns like Service Locator, Static Factory or Abstract
-Factory itself, but it make your life easier, which will be described in this introduction.
+any sort of different patterns like [@http://en.wikipedia.org/wiki/Service_locator_pattern Service Locator], [@http://en.wikipedia.org/wiki/Factory_method_pattern Static Factory] or [@http://en.wikipedia.org/wiki/Abstract_factory_pattern Abstract
+Factory] itself, but it make your life easier, which will be motivated in this section.
 
 [h6 Problem]
-For the purposes of this introduction we are going to implement simple application with logger dependency.
+For the purposes of this motivation we are going to implement simple application with logger dependency.
 
 [h6 Solution]
 Dependency Injection might be implemented in many different ways. Table below shows how
@@ -35,14 +35,14 @@ Dependency Injection may be realised and how it will affects the source code des
 
 [table
     [[][No Dependency Injection Framework][Dependency Injection Framework]]
-    [[[*No Dependency Injection]][Highly coupled code (Spaghetti code)][Static Factory/Abstract Factory or Service Locator (Anti pattern)]]
-    [[[*Dependency Injection]][Manual Dependency Injection (tedious/hard to maintain in large scale)][Enhanced Dependency Injection ([*Boost.DI])]]
+    [[[*No Dependency Injection]][Highly coupled code ([@http://en.wikipedia.org/wiki/Spaghetti_code Spaghetti code])][[@http://en.wikipedia.org/wiki/Factory_method_pattern Static Factory]/[@http://en.wikipedia.org/wiki/Abstract_factory_pattern Abstract Factory] or [@http://en.wikipedia.org/wiki/Service_locator_pattern Service Locator] (Anti pattern)]]
+    [[[*Dependency Injection]][Manual Dependency Injection (tedious/hard to maintain in large scale)][Enhanced Dependency Injection ([*`Boost.DI`])]]
 ]
 
-Skip other solutions and go straight away to [link boost_di Boost.DI].
+If you not interested in other solutions go straight ahead to [link boost_di Boost.DI].
 
 * [*Spaghetti code] which is highly coupled is really hard to change/maintain/test,
-therefore is not really good practice to write it.
+therefore is not really a good practice to follow.
 
 ```
     class app {
@@ -64,8 +64,8 @@ therefore is not really good practice to write it.
 
 * [*Manual Dependency] Injection requires that all dependencies will be created by
 yourself, but done right will produce loosely coupled code.
-Anyway it's a tedious/boilerplate code and sooner or later - depending on the project
-scale - project will end up with some sort of automatization.
+But it's a tedious/boilerplate code and sooner or later - depending on the project
+scale - project will end up with framework of some kind.
 
 ```
     class app {
@@ -93,16 +93,16 @@ a bit of boilerplate code over and over again.
     ...
 ```
 
-* [*Static Factory] hides the choice of implementation and instance management of a certain component, from the objects using this component.
-The drawbacks of using them are that they we have to create a lot of tedious
-factories ourselves as well as that we can't test the functionality really
-because creation is inside the component. Despite that it's hard to inject
+* [@http://en.wikipedia.org/wiki/Factory_method_pattern [*Static Factory]] hides the choice of implementation and instance management of a certain component, from the objects using this component.
+The drawbacks of using it is that we have to create a lot of tedious
+factories ourselves as well as that we can't really test the functionality
+because creation is inside of the components. Despite that it's hard to inject
 dependencies into not default constructor.
 
 ```
     class logger_factory {
     public:
-        std::unique_ptr<ilogger> static create() const {
+        std::unique_ptr<ilogger> static create() {
             return std::make_unique<logger>();
         }
     };
@@ -123,14 +123,14 @@ dependencies into not default constructor.
     }
 ```
 
-* [*Abstract Factory] solve the issues with creating of many static factories by
+* [@http://en.wikipedia.org/wiki/Abstract_factory_pattern [*Abstract Factory]] solve the issues with creating of many static factories by
 first obtaining a factory of a certain kind, and then ask that factory for
 instances. With Abstract Factories we can easily change the implementation
 of the component in runtime, but we still have the same issues as with
 Static Factories. A lot of tedious/boilerplate code to write (which is hard to
-test - have you tried test factories?), we still have creation within a
+test - have you tried to test factories?), we still have creation within a
 component and we still have problems with not default constructors. Abstract
-Factory is similar to Service Locator pattern, which is described next and
+Factory is similar to [@http://en.wikipedia.org/wiki/Service_locator_pattern Service Locator] pattern, which is described next and
 which avoid creation of many tedious code.
 
 ```
@@ -172,13 +172,13 @@ which avoid creation of many tedious code.
     }
 ```
 
-* [*Service Locator] by many (including me) is consider as anti-pattern, because it
+* [@http://en.wikipedia.org/wiki/Service_locator_pattern [*Service Locator]] by many is consider as anti-pattern, because it
 follows principle in which components asks for its dependencies instead of be
 given them. On the other hand Service Locator pattern is usually very
 intrusive, requiring components having the same constructor with Service
 Locator being passed. It force unnatural code structure and a lot of resolve
 calls. Because always whole Service Locator is passed it's harder to find out
-which dependencies are needed for the class which testing unclear and harder.
+which dependencies are needed for the class which makes testing unclear and harder.
 
 ```
     class app {
@@ -203,9 +203,9 @@ which dependencies are needed for the class which testing unclear and harder.
 
 * [*Enhanced Dependency Injection] done right still will be just a Dependency Injection
 with automation behind the scenes. Dependencies should be automatically
-resolved and it should be as less intrusive as possible, which means that if
+resolved, but automation should be as less intrusive as possible, which means that if
 framework will be changed or removed code shouldn't require any changes.
-Remember DI should "enable us to develop loosely coupled code" and this rule
+Remember `DI` should "enable us to develop loosely coupled code" and this rule
 applies to the framework itself as well. To sum up framework shouldn't affect
 the design/implementation/structure of the code except for well-defined cases
 like "composition root".
@@ -234,14 +234,14 @@ like "composition root".
     ```
     ]]
     [[
-        Notice similarities to manual dependency injection. Of course for such a small
-        example DI might be consider a bit of overhead, but it will shows its strength in
-        more complex examples. Remember though that dependency Injection Framework is not a remedy for
-        everything. Used wrong will make code highly coupled code / hard to test and
+        Notice similarities to manual dependency injection. Of course for such small
+        example `DI` might be consider as a bit overhead, but it will shows its strength in
+        more complex __examples__. Remember though that dependency Injection Framework is not a remedy for
+        everything. Used wrong will make highly coupled code / hard to test and
         maintain, which is presented below.
     ]]
 ]
-[tip Good practice: composition root is a (preferably) unique location in an application where modules are composed together]
+[tip Good practice: composition root is a (preferably) unique location in an application where modules are composed together.]
 
 * [*"Evil"] usage of Dependency Injection Framework
 [warning Presented example is just for learning purposes, please don't follow this anti-pattern approach!]
@@ -268,13 +268,13 @@ like "composition root".
 We don't need Dependency Injection Framework to apply all the "goods" of Dependency Injection, but it may make our life easier.
 Programmers should be "lazy" and shouldn't have to write tedious/boilerplate
 code. Projects should scale and the bigger projects are, the more frameworks
-will be used. So in the end all most projects will end up with some sort of
+will be used. So in the end almost all projects will end up with some sort of
 dependency injection framework. Using the library may give you additional
 advantages like modules, logging, generating diagrams, compile time checking or restrictions,
 additional conversions, etc. In general it give you full control of what and how will be injected in easy and user friendly way.
 Therefore instead of creating and configuring the objects yourself, the dependency framework does it for you.
 
-[link See11] widely explains advantages of using dependency injection, which might be sum up by:
+[link See11] widely explains advantages of using dependency injection framework, which might be sum up by:
 
 * [*Parallel Development]
     * Allows many teams to work separately on different modules
@@ -291,13 +291,13 @@ Therefore instead of creating and configuring the objects yourself, the dependen
 
 * [*Testability]
     * Possibility of passing all required parameters via constructor give the opportunity to use fakes for testing purposes
-    * We won't need to write tests for manual injection or factories
+    * There is no need to write tests for manual injection or factories
     * Integration tests might be written easily by passing fakes from framework
-    * Unit tests doesn't require framework at all to pass dependencies, but to avoid boilerplate code dependency injection framework
-      may inject fakes automatically
+    * Unit tests don't require dependency injection framework at all, but to avoid boilerplate code dependency injection framework
+      may inject fakes automatically (__examples_testing_automatic_mocks_injector__)
 
 * [*Readability]
-    * Code is easier to read due to separation between business logic and object creation as well as lack of boilerplate code just making chaos
+    * Code is easier to read due to separation between business logic and object creation as well as lack of chaos making boilerplate code
 
 [*Dependency Injection Framework] might be really useful and may make your code to be loosely coupled and easy to maintain.
 Followed by few good practices/principles will get most out of Dependency Injection Framework.
@@ -310,6 +310,13 @@ Followed by few good practices/principles will get most out of Dependency Inject
 * Follow [@http://en.wikipedia.org/wiki/Law_of_Demeter Law of Demeter] principle
 * Avoid global states and [@http://en.wikipedia.org/wiki/Singleton_pattern Singleton pattern] and [@http://en.wikipedia.org/wiki/Service_locator_pattern Service Locator] pattern
 * Apply Composition Root
+
+[heading See Also]
+* [link di.overview Overview]
+* [link di.tutorial Tutorial]
+* [link di.concepts Concepts]
+* [link di.examples Examples]
+* [link di.rationale Rationale]
 
 [endsect]
 

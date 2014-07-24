@@ -10,7 +10,7 @@
 [section Tutorial]
 
 For the purposes of this tutorial we are going to implement simple application which will print
-log "hello_world" using our logger implementation from [link di.motivation Motivation] when first command line argument is not equal 0.
+"hello_world" using our logger implementation from [link di.motivation Motivation] when first command line argument is not equal 0.
 
 [table
     [[Logger/Fake logger implementation: [@example/cpp_14/tutorial/ilogger.hpp] | [@example/cpp_14/tutorial/logger.hpp]]]
@@ -67,7 +67,7 @@ int main() {
 ```
 
 Thats all, our application should compile and don't print anything.
-'value' should be false and 'text' should be an empty string.
+`value` should be `false` and `text` should be an `empty string`.
 
 [table
     [[Full code example: [@example/cpp_14/tutorial/tutorial1.cpp]]]
@@ -81,7 +81,7 @@ is not equal 0.
 
 First step will be to configure the text and value. To demonstrate different
 between static (compile time - __bindings_bind_bind_int__) values and externals (given by user - __bindings_bind__) we set
-the value to `1` for now:
+the value to `1` for now.
 
 ```
 auto injector = __di_make_injector__(
@@ -93,7 +93,7 @@ auto injector = __di_make_injector__(
     [[Full code example: [@example/cpp_14/tutorial/tutorial2.cpp]]]
 ]
 
-So, right now we have injector configured and the output of our example application
+So, right now we have [link di.concepts.injectors.injector injector] configured and the output of our example application
 should always be "hello world".
 
 Let's continue then with our requirement that text should be displayed if first command
@@ -176,7 +176,7 @@ will be actually instantiated by `logger`. There is nothing easier, we just have
 ]
 
 Yay, everything is working again. But oh, we wanted to use mock framework for tests, but we can't to do it,
-due to unique ptr stilling our pointer :/ Well, let's say we will switch to `shared_ptr` instead for now and later in this tutorial we will solve this issue in a better way - without limiting ourselves.
+due to `unique_ptr` stilling our pointer :/ Well, let's say we will switch to `shared_ptr` instead for now and later in this tutorial we will solve this issue in a better way - without limiting ourselves.
 Our application code will looks like that:
 
 ```
@@ -189,7 +189,7 @@ std::shared_ptr<ilogger> logger_;
 
 Again, we don't have to change anything with the `Boost.DI` configuration, it will be figured out automatically for us.
 
-[note `Boost.DI` will by default deduce scope based on parameter type, therefore `shared_ptr` will be shared between many instances - see __scopes_deduce__.]
+[note `Boost.DI` will by default __scopes_deduce__ based on parameter type, therefore `shared_ptr` will be shared between many instances.]
 [warning If we pass raw pointer anywhere it always be our responsibility to delete it, `Boost.DI` will NEVER do it for us!]
 
 Finally we were able to test our example application easier :)
@@ -236,8 +236,8 @@ int main(int argc, char** argv) {
 
 But in our company we have our `string` implementation, but we still want to support `std::string` as well, how to achieve that?
 For purpose of this tutorial let's assume our `custom_string` converts to `std::string`.
-Well, we will have to add second constructor accepting custom string, but then we have 2 constructors
-taking 3 parameters, that will be ambiguous, how `Boost.DI` will be able to figure out which one to use? Short answer: it won't, we will have
+Well, we will have to add second constructor accepting custom string, but then we will have 2 constructors
+taking 3 parameters, that will be ambiguous. How `Boost.DI` will be able to figure out which one to use? Short answer - it won't, we will have
 to point which constructor we want to be used by `Boost.DI`. We do it using __injections_boost_di_inject__ macro. Let's do it!
 
 ```
@@ -263,7 +263,7 @@ private:
 };
 ```
 
-[note We don't need to specify __injections_boost_di_inject__ if there is a constructor with more parameters, `Boost.DI` will always use the constructor with longest parameter list.]
+[note We don't need to specify __injections_boost_di_inject__ if there is a constructor with more parameters, `Boost.DI` will always use the constructor with the longest parameter list.]
 
 Hmm, so what if I have two command line parameters passed by user, how to distinguish them?
 We have few options in order to do so, some of them are more intrusive and some are less. First
@@ -273,7 +273,7 @@ we can define different types for both of them. We can use __annotations_named__
     class first { };
     class second { };
 ...
-    app(__annotations_named__<int, first> value1, __annotations_named__<int, second> value2, const std::string& text, std::shared_ptr<ilogger> logger)
+    app(__di_named__<int, first> value1, __di_named__<int, second> value2, const std::string& text, std::shared_ptr<ilogger> logger)
 ```
 
 [note __annotations_named__ parameters will convert to the type there are named from, meaning - you can write: `int value = named<int, first>(42)`.]
@@ -290,7 +290,7 @@ Or in less intrusive way - when we can't change constructor signature for exampl
 
     template<>
     struct ctor_traits<app> {
-        __injections_boost_di_inject_traits__(__annotations_named__<int, first>, __annotations_named__<int, second>, const std::string&, std::shared_ptr<ilogger> logger);
+        __injections_boost_di_inject_traits__(__di_named__<int, first>, __di_named__<int, second>, const std::string&, std::shared_ptr<ilogger> logger);
     };
 
     }} //boost::di
@@ -298,13 +298,13 @@ Or in less intrusive way - when we can't change constructor signature for exampl
 
 [tip __injections_boost_di_inject_traits__ might be defined within a class as well.]
 
-Right now, if we want to bind `value1` and `value2` we just need to use named property of __bindings_bind__.
+Right now, if we want to bind `value1` and `value2` we just need to use __di_bind_named__ property of __bindings_bind__.
 
 ```
     auto configure() const {
         return __di_make_injector__(
             __di_bind_deduce__<logger>()
-          , __di_bind__<int>::__di_bind_named__<first>::to(i_) // bind int named first to i
+          , __di_bind__<int>::__di_bind_named__<first>::to(i_) // bind int named first to i_ member
           , __di_bind__<int>::__di_bind_named__<second>::to(0) // bind int named second to 0
           , __di_bind__<std::string>::to("hello world")
         );
@@ -317,11 +317,11 @@ With such configuration `value1` will be set to first `int` command line argumen
     [[Full code example: [@example/cpp_14/tutorial/tutorial6.cpp]]]
 ]
 
-That's pretty much it. Hope this tutorial helped you a bit to understand
-basics concept of dependency injection framework and that creation dependencies won't be
+That's pretty much it. Hope this tutorial helped you a bit with understanding
+basics concept of dependency injection framework and that creation of dependencies won't be
 a problem for you anymore.
 
-But oh, almost forgotten - I've promised to show how to handle `std::unique_ptr` issue with testing in a better way. So let's go back to our original example.
+But oh, almost forgotten - I've promised to show how to handle `unique_ptr` issue with testing in a better way. So let's go back to our original example.
 
 ```
     app(int value, const std::string& text, std::unique_ptr<ilogger> logger);
@@ -345,7 +345,10 @@ will generate requires mocks for us! So, we don't have to change the implementat
     [[Full code example: [@example/cpp_14/tutorial/tutorial_ut.cpp]]]
 ]
 
-This time is really the end, so right now you can move on to more in depth stuff - __concepts__ - or just straight away to __examples__ or if you interest in how it's made to __rationale__.
+[heading See Also]
+* [link di.concepts Concepts]
+* [link di.examples Examples]
+* [link di.rationale Rationale]
 
 [endsect]
 

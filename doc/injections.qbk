@@ -68,6 +68,7 @@ If the default behavior should be changed constructor should be explicitly marke
 
     assert(3 == __di_make_injector__().create<example>().params);
 
+[note Automatic constructor parameters deduction is limited to [link di.overview.configuration BOOST_DI_CFG_CTOR_LIMIT_SIZE], which by defaults is set to `10`.]
 [note `Boost.DI` is not able to distinguish between ambiguous constructors with the same (longest) amount of parameters, then __injections_boost_di_inject__ has to be used to point which constructor should be deduced.]
 [warning In `C++03` constructors with one argument might be ambiguous with copy constructors, therefore is advised to always use __injections_boost_di_inject__ for 1 argument constructors in `C++03`.]
 

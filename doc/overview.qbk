@@ -9,7 +9,7 @@
 
 [section Overview]
 
-`Boost.DI` is `C++03`/`C++11`/`C++14` header only, type safe, library providing compile time, macro free constructor dependency injection.
+`Boost.DI` is `C++03`/`C++11`/`C++14` header only, type safe, library providing compile time, macro free constructor [@http://en.wikipedia.org/wiki/Dependency_injection dependency injection].
 
 [h6 Features]
 
@@ -20,14 +20,14 @@
 * Supports `C++03`/`C++11`/`C++14` standards
 * Exception safe guaranty
 * Thread safe guaranty
-* Constructor injection (macro free)
+* [link di.concepts.injections.automatic Constructor injection] (macro free)
 * Compile time creation guaranty
-* Compile time policies (arguments permission, binding correctness, circular dependencies, creation ownership, scopes permission)
-* Dependencies life time management (scopes: deduce, external, unique, shared, session + custom scopes)
-* Scope deduction (shared\_ptr -> shared, unique\_ptr, lvalue -> unique, ...)
-* Supports copies, references, pointers, boost and std smart pointers / rvalue references(C++11)
-* Named parameters (named\<int, my\_int\>)
-* Runtime visitor throughout created objects (useful for generation dependency diagrams)
+* Compile time __policies__ (__policies_circular_dependencies__, __policies_creation_permission__, __policies_parameters_permission__, __policies_scopes_permission__)
+* Dependencies life time management (__scopes_deduce__, __scopes_external__, __scopes_unique__, __scopes_shared__, __scopes_session__ + [link di.examples.custom_scope custom scope])
+* [link di.concepts.scopes.deduce Scope deduction] (shared\_ptr -> shared, unique\_ptr, lvalue -> unique, ...)
+* Supports copies, references, pointers, boost and std smart pointers / rvalue references (`C++11`)
+* [link di.concepts.annotations.named Named parameters] (__annotations_named__\<int, my\_int\>)
+* [link di.concepts.injectors.injector Runtime visitor] throughout created objects (useful for generation [link di.examples.uml_visitor dependency diagrams])
 
 Although library supports `C++03` and `C++11`, only `C++14` shows the full potential of `Boost.DI`.
 To achieve the same behaviour with previous standards sometimes will just require a bit more hassle.
@@ -62,7 +62,7 @@ To achieve the same behaviour with previous standards sometimes will just requir
 * Darwin/Mac OS (x86-64)
    * Clang 503.0.40+ (Apple LLVM version 5.1)
 
-[note Older compilers might be supported, but weren't tested and probably can't be tested properly due to requirements of C++11 features by the tests.]
+[note Older compilers might be supported, but weren't tested and probably can't be tested properly due to requirements of C++11 features by tests.]
 
 [h6 Restrictions]
 
@@ -72,12 +72,12 @@ See [link Notes] for further information.
   [[Issue][GCC][Clang][Intel][MSVC]]
   [[Rvalue References][supported][supported][supported][not supported]]
   [[std::function/boost::function][supported][supported][supported][supported (boost::function supported when pass by const reference)]]
-  [[Arguments Permission Policy][supported][supported][supported][not supported]]
+  [[[link di.concepts.policies.parameters_permission Parameters Permission Policy]][supported][supported][supported][not supported]]
 ]
 
 [table
   [[Feature][`C++03`][`C++11`][`C++14`]]
-  [[Automatic Constructor Injection][supported, except constructor with 1 parameter][supported][supported]]
+  [[[link di.concepts.injections.automatic Automatic Constructor Injection]][supported, except constructor with 1 parameter][supported][supported]]
   [[`__injections_boost_di_inject__`/`__injections_boost_di_inject_traits__`/`__injections_ctor_traits__`][supported][supported][supported]]
 ]
 
@@ -91,23 +91,25 @@ a specific combination.
   [[Standard][Compiler][Recommendation]]
   [[`C++14`][`Microsoft Visual Studio 12.0`]
   [
-    * `Modules::configure()` harder syntax
-    * Rvalue references aren't supported
-    * Policy `arguments_permission` not supported
+    [pre
+* __modules__ definition harder syntax
+* Rvalue references aren't supported
+* Policy __policies_parameters_permission__ not supported]
   ]]
   [[`C++03`][`GCC >= 4.7`, `Clang >= 3.2`]
   [
-    * `Boost.Typeof` has to be used
-    * `Modules::configure()` harder syntax
-    * `Automatic Constructor Injection` doesn't work with 1 parameter constructors
+    [pre
+* Boost.Typeof has to be used
+* __modules__ definition harder syntax
+* [link di.concepts.injections.automatic Automatic Constructor Injection] doesn't work with 1 parameter constructors]
   ]]
   [[`C++11`][`GCC >= 4.7`, `Clang >= 3.2`]
   [
-    * `Modules::configure()` harder syntax
+    [pre* __modules__ definition harder syntax]
   ]]
   [[`C++14`][`GCC >= 4.9`, `Clang >= 3.4`]
   [
-    * Go for it!
+    [pre* Go for it!]
   ]]
 ]
 
@@ -148,6 +150,14 @@ To run examples go to `boost/di/example` directory and run.
     bjam
 ```
 
+[h6 Preprocessed headers]
+`Boost.DI` is released with preprocessed headers for `BOOST_DI_CFG_CTOR_LIMIT_SIZE` and `BOOST_MPL_LIMIT_VECTOR_SIZE`
+as well as with tool to generate them. Generation of preprocessed headers might be done with tools provided.
+
+```
+    tools/preprocessed.sh
+```
+
 [h6 Configuration]
 
 The macros listed in the table below may be used to control the behaviour of `Boost.DI`.
@@ -157,7 +167,7 @@ The macros listed in the table below may be used to control the behaviour of `Bo
   [
     [`BOOST_DI_CFG_NO_PREPROCESSED_HEADERS`]
     [
-        `Boost.DI` by default uses preprocessed headers. See `Compilation time` for further specification.
+        `Boost.DI` by default uses preprocessed headers. See [link di.rationale.performance Compilation time] for further specification.
         To explicitly disable preprocessed headers `BOOST_DI_CFG_NO_PREPROCESSED_HEADERS` has to be defined.
 
         default: `enabled`
@@ -175,7 +185,8 @@ The macros listed in the table below may be used to control the behaviour of `Bo
 * decltype
         ]
         Configuration affects `preprocessed headers`, which are generated for both configurations.
-        default: `cpp_11 when C++11 cpp_03 otherwise`
+
+        default: `cpp_11` when `C++11` `cpp_03` otherwise
     ]
   ]
 
@@ -194,7 +205,7 @@ The macros listed in the table below may be used to control the behaviour of `Bo
   [
     [`BOOST_DI_CFG_EXAMINE_CALL_STACK`]
     [
-        Context concepts (`when` syntax) have to be explicitly turned on using `BOOST_DI_CFG_EXAMINE_CALL_STACK`. Reason being
+        Context concepts (__di_bind_when__ syntax) have to be explicitly turned on using `BOOST_DI_CFG_EXAMINE_CALL_STACK`. Reason being
         much longer compilation times.
 
         default: `disabled`
@@ -204,7 +215,7 @@ The macros listed in the table below may be used to control the behaviour of `Bo
   [
     [`BOOST_DI_CFG_INJECT_VA_ARGS`]
     [
-        `__injections_boost_di_inject__(ctor, arg1, arg2, ..., argN)`
+        __injections_boost_di_inject__(ctor, arg1, arg2, ..., argN)
 
         default: `enabled when C++11`
     ]
@@ -213,7 +224,7 @@ The macros listed in the table below may be used to control the behaviour of `Bo
   [
     [`BOOST_DI_CFG_INJECT_BRACKET`]
     [
-        `__injections_boost_di_inject__(ctor, (arg1, arg2, ..., argN))`
+        __injections_boost_di_inject__[*(]ctor, (arg1, arg2, ..., argN[*)])
 
         default: `enabled when C++03`
     ]
@@ -222,21 +233,21 @@ The macros listed in the table below may be used to control the behaviour of `Bo
   [
     [`BOOST_DI_CFG_STD_SMART_PTR`]
     [
-        Default `smart pointer` type is set accordingly to compiler support, but
+        Default `smart pointer` type is set accordingly to compiler/standard library support, but
         might standard smart pointers might be forced by `BOOST_DI_CFG_STD_SMART_PTR`.
         Then `Boost.DI` internally will use standard smart pointers instead of boost smart
-        pointers. Additionally conversion to weak_ptr is only allowed from default `smart pointer type`.
+        pointers. Additionally conversion to `weak_ptr` is only allowed from default `smart pointer type`.
 
-        default: `enabled if supported by compiler`
+        default: `enabled if standard smart pointers are supported by compiler`
     ]
   ]
 
   [
     [`BOOST_DI_CFG_BOOST_SMART_PTR`]
     [
-        Analogously as `BOOST_DI_CFG_STD_SMART_PTR`, but with boost smart pointers to be chosen.
+        Same as `BOOST_DI_CFG_STD_SMART_PTR`, but with `boost smart pointers` to be chosen.
 
-        default: `enabled if std smart ptr are not supported by compiler`
+        default: `enabled if standard smart pointers are` [*not] `supported by compiler`
     ]
   ]
 
@@ -253,9 +264,9 @@ The macros listed in the table below may be used to control the behaviour of `Bo
   [
     [`BOOST_MPL_LIMIT_VECTOR_SIZE`]
     [
-        Number of allowed bindings is limited by Boost.MPL vector size.
+        Number of allowed bindings is limited by `Boost.MPL` vector size.
 
-        default: 20 (defined by Boost.MPL)
+        default: `20 (defined by Boost.MPL)`
     ]
   ]
 
@@ -455,7 +466,7 @@ The macros listed in the table below may be used to control the behaviour of `Bo
         [
             ```
                                                                                                          .
-            Support without any workarounds
+            Support without any issues
             ```
         ]
     ]
@@ -470,8 +481,8 @@ The macros listed in the table below may be used to control the behaviour of `Bo
                                                                       .
             struct example {
                 __injections_boost_di_inject__(explicit example
-                              , int = 0
-                              , double = 0.0);
+                               , int = 0
+                               , double = 0.0);
             };
             ```
         ]
@@ -484,7 +495,7 @@ The macros listed in the table below may be used to control the behaviour of `Bo
                     explicit example(int = 0, double = 0.0);
                 };
 
-                paramter_types<decltype(&example::boost_di_injector__)>::type -> mpl::vector<int, double>
+            paramter_types<decltype(&example::boost_di_injector__)>::type -> mpl::vector<int, double>
             ```
         ]
     ]
@@ -558,15 +569,7 @@ The macros listed in the table below may be used to control the behaviour of `Bo
     [[Tests: [@test/vt/compiler_support_vt.cpp]]]
 ]
 
-[warning GCC/Clang/MSVC/Intel compilers differ with the way template conversion operator is handled.]
-
-[h6 Preprocessed headers]
-`Boost.DI` is released with preprocessed headers for `BOOST_DI_CFG_CTOR_LIMIT_SIZE` and `BOOST_MPL_LIMIT_VECTOR_SIZE`
-as well as with tool to generate them. Generation of preprocessed headers might be done with tools provided.
-
-```
-    tools/preprocessed.sh
-```
+[warning GCC/Clang/MSVC/Intel compilers differ with the way template conversion operator is handled and `Boost.DI` implemented some workarounds in order to support all of them.]
 
 [h6 Similar libraries]
 
@@ -595,7 +598,7 @@ as well as with tool to generate them. Generation of preprocessed headers might 
 # Is configuration via XML supported by `Boost.DI`?
 
     * Short answer is NO. `Boost.DI` dependencies are configured in the source code using C++ features which allows compile time checking.
-    Long story short, fluent configuration you don't have to remember of changing the configuration file, compiler will take care of it for you.
+    Long story short, with fluent configuration you don't have to remember of changing the configuration file, compiler will take care of it for you.
 Usually lazy binding requires exceptions handling and is a performance killer, but obviously it depends on a projects needs.
 Although it might be hard it is possible to achieve it with `Boost.DI`.
 The question which should be asked though - how often configuration is dynamically changed via XML?
@@ -610,20 +613,26 @@ doesn't support it by default.
 
     * Singleton pattern is usually overused and makes code really hard to test. Thread safety has to be considered as well whilst using it.
 `Boost.DI` provides `shared` scope which behaves like non-multi threaded singleton.
-`Singleton` scope might be implemented using `Boost.DI` `scope` functionality.
+`Singleton` scope might be implemented using `Boost.DI` [link di.concepts.scopes scope] functionality.
 
 # How many constructors parameters are supported and how many bindings I can have?
     * `Boost.DI` by default supports up to 10 constructor parameters. Configuration might be changed by `BOOST_DI_CFG_CTOR_LIMIT_SIZE`.
 The number of allowed bindings is limited by `BOOST_MPL_LIMIT_VECTOR_SIZE` value.
 
-# How injection works since there is no registration/reflection/traits ?
-    * See __rationale_ for further explanations.
+# How automatic constructor injection works since there is no registration/reflection/traits ?
+    * See __rationale__ for further explanations.
 
 [h6 Continuous Integration]
 
 [@https://travis-ci.org/krzysztof-jusiak/di [$https://travis-ci.org/krzysztof-jusiak/di.svg?branch=master [format PNG]]]
 [@https://ci.appveyor.com/project/krzysztof-jusiak/di [$https://ci.appveyor.com/api/projects/status/1il4knxh7tq9o5ic [format PNG]]]
 [@https://coveralls.io/r/krzysztof-jusiak/di?branch=master [$https://coveralls.io/repos/krzysztof-jusiak/di/badge.png?branch=master [format PNG]]]
+
+[heading See Also]
+* [link di.tutorial Tutorial]
+* [link di.concepts Concepts]
+* [link di.examples Examples]
+* [link di.rationale Rationale]
 
 [endsect]
 
