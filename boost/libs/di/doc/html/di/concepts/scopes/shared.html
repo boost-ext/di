@@ -31,10 +31,9 @@
           <span class="phrase"><a name="di.concepts.scopes.shared.description"></a></span><a class="link" href="shared.html#di.concepts.scopes.shared.description">Description</a>
         </h6>
 <p>
-          Scope representing shared/session value, meaning passed value will be shared
-          between all given instances. <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> to
-          achieve that is using smart shared pointers. This scope will be deduced
-          in case of shared ptr.
+          Scope representing shared value which will be shared between all instances.
+          <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> to achieve that is using smart shared
+          pointers. This scope will be deduced in case of <code class="computeroutput"><span class="identifier">shared_ptr</span></code>.
         </p>
 <div class="note"><table border="0" summary="Note">
 <tr>
@@ -46,7 +45,7 @@
             and <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span></code> if required. Primary smart
             pointer might be set by <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_STD_SMART_PTR</span></code>
             and <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_BOOST_SMART_PTR</span></code>.
-            Only primary smart pointer will be able to be converted to weak_ptr.
+            Only primary smart pointer will be able to be converted to <code class="computeroutput"><span class="identifier">weak_ptr</span></code>.
           </p></td></tr>
 </table></div>
 <h6>
@@ -333,7 +332,8 @@
 <tr>
 <td>
                   <p>
-                    named&lt;T, name&gt;
+                    <a class="link" href="../annotations/named.html" title="named">di::named</a>&lt;T,
+                    TName&gt;
                   </p>
                 </td>
 <td>
@@ -380,7 +380,7 @@
 </tr></thead>
 <tbody><tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">shared</span><span class="special">&lt;</span><a class="link" href="../bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;&gt;()</span></pre>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">shared</span><span class="special">&lt;</span><a class="link" href="../bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;&gt;()</span></pre>
                 </td>
 <td>
                   <p>

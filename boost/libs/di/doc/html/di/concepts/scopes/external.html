@@ -31,13 +31,13 @@
           <span class="phrase"><a name="di.concepts.scopes.external.description"></a></span><a class="link" href="external.html#di.concepts.scopes.external.description">Description</a>
         </h6>
 <p>
-          Scope representing external value (passed by user). The life time of the
+          Scope representing external values - passed by user. The life time of the
           object depends on the user. <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> is
-          not responsible of managing life time of passed object, however values
-          and strings will be copied and managed by the library. External scope has
-          priority before other scopes which means that if some value/type will be
-          binded using different scope as well then this binding won't be taken into
-          account.
+          not responsible of managing life time of passed objects, however <code class="computeroutput"><span class="identifier">values</span></code> and <code class="computeroutput"><span class="identifier">strings</span></code>
+          will be copied and managed by the library. External scope has priority
+          before other scopes which means that if some value/type will be binded
+          using different scope as well then binding using external scope will be
+          used.
         </p>
 <h6>
 <a name="di.concepts.scopes.external.h1"></a>
@@ -323,7 +323,8 @@
 <tr>
 <td>
                   <p>
-                    named&lt;T, name&gt;
+                    <a class="link" href="../annotations/named.html" title="named">di::named</a>&lt;T,
+                    TName&gt;
                   </p>
                 </td>
 <td>
@@ -335,7 +336,18 @@
 </tbody>
 </table></div>
 </div>
-<br class="table-break"><h6>
+<br class="table-break"><div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            If expected type is <code class="computeroutput"><span class="identifier">T</span><span class="special">*</span></code> or <code class="computeroutput"><span class="keyword">const</span>
+            <span class="identifier">T</span><span class="special">*</span></code>
+            then responsibility to delete the object is on client side. <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> won't delete it.
+          </p></td></tr>
+</table></div>
+<h6>
 <a name="di.concepts.scopes.external.h2"></a>
           <span class="phrase"><a name="di.concepts.scopes.external.header"></a></span><a class="link" href="external.html#di.concepts.scopes.external.header">Header</a>
         </h6>

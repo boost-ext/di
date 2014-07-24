@@ -28,9 +28,9 @@
 </h2></div></div></div>
 <p>
       For the purposes of this tutorial we are going to implement simple application
-      which will print log "hello_world" using our logger implementation
-      from <a class="link" href="motivation.html" title="Motivation">Motivation</a> when first command line
-      argument is not equal 0.
+      which will print "hello_world" using our logger implementation from
+      <a class="link" href="motivation.html" title="Motivation">Motivation</a> when first command line argument
+      is not equal 0.
     </p>
 <div class="informaltable"><table class="table">
 <colgroup><col></colgroup>
@@ -96,8 +96,8 @@
 <span class="special">}</span>
 </pre>
 <p>
-      Thats all, our application should compile and don't print anything. 'value'
-      should be false and 'text' should be an empty string.
+      Thats all, our application should compile and don't print anything. <code class="computeroutput"><span class="identifier">value</span></code> should be <code class="computeroutput"><span class="keyword">false</span></code>
+      and <code class="computeroutput"><span class="identifier">text</span></code> should be an <code class="computeroutput"><span class="identifier">empty</span> <span class="identifier">string</span></code>.
     </p>
 <div class="informaltable"><table class="table">
 <colgroup><col></colgroup>
@@ -118,7 +118,7 @@
       First step will be to configure the text and value. To demonstrate different
       between static (compile time - <a class="link" href="concepts/bindings/bind/bind_int.html" title="bind_int">bind_int</a>)
       values and externals (given by user - <a class="link" href="concepts/bindings/bind.html" title="bind">bind</a>)
-      we set the value to <code class="computeroutput"><span class="number">1</span></code> for now:
+      we set the value to <code class="computeroutput"><span class="number">1</span></code> for now.
     </p>
 <pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
     <a class="link" href="concepts/bindings/bind/bind_int.html" title="bind_int">di::bind_int</a><span class="special">&lt;</span><span class="number">1</span><span class="special">&gt;()</span> <span class="comment">// static value</span>
@@ -134,8 +134,9 @@
             </td></tr></tbody>
 </table></div>
 <p>
-      So, right now we have injector configured and the output of our example application
-      should always be "hello world".
+      So, right now we have <a class="link" href="concepts/injectors/injector.html" title="injector">injector</a>
+      configured and the output of our example application should always be "hello
+      world".
     </p>
 <p>
       Let's continue then with our requirement that text should be displayed if first
@@ -243,8 +244,8 @@
 </table></div>
 <p>
       Yay, everything is working again. But oh, we wanted to use mock framework for
-      tests, but we can't to do it, due to unique ptr stilling our pointer :/ Well,
-      let's say we will switch to <code class="computeroutput"><span class="identifier">shared_ptr</span></code>
+      tests, but we can't to do it, due to <code class="computeroutput"><span class="identifier">unique_ptr</span></code>
+      stilling our pointer :/ Well, let's say we will switch to <code class="computeroutput"><span class="identifier">shared_ptr</span></code>
       instead for now and later in this tutorial we will solve this issue in a better
       way - without limiting ourselves. Our application code will looks like that:
     </p>
@@ -264,10 +265,9 @@
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-        <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> will by default deduce scope based on
-        parameter type, therefore <code class="computeroutput"><span class="identifier">shared_ptr</span></code>
-        will be shared between many instances - see <a class="link" href="concepts/scopes/deduce.html" title="deduce (default)">deduce
-        scope</a>.
+        <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> will by default <a class="link" href="concepts/scopes/deduce.html" title="deduce (default)">deduce
+        scope</a> based on parameter type, therefore <code class="computeroutput"><span class="identifier">shared_ptr</span></code>
+        will be shared between many instances.
       </p></td></tr>
 </table></div>
 <div class="warning"><table border="0" summary="Warning">
@@ -332,9 +332,9 @@
       as well, how to achieve that? For purpose of this tutorial let's assume our
       <code class="computeroutput"><span class="identifier">custom_string</span></code> converts to
       <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>. Well, we will have to add second
-      constructor accepting custom string, but then we have 2 constructors taking
-      3 parameters, that will be ambiguous, how <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> will
-      be able to figure out which one to use? Short answer: it won't, we will have
+      constructor accepting custom string, but then we will have 2 constructors taking
+      3 parameters, that will be ambiguous. How <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> will
+      be able to figure out which one to use? Short answer - it won't, we will have
       to point which constructor we want to be used by <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code>. We do
       it using <a class="link" href="concepts/injections/boost_di_inject.html" title="BOOST_DI_INJECT">BOOST_DI_INJECT</a>
       macro. Let's do it!
@@ -368,7 +368,7 @@
 <tr><td align="left" valign="top"><p>
         We don't need to specify <a class="link" href="concepts/injections/boost_di_inject.html" title="BOOST_DI_INJECT">BOOST_DI_INJECT</a>
         if there is a constructor with more parameters, <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> will
-        always use the constructor with longest parameter list.
+        always use the constructor with the longest parameter list.
       </p></td></tr>
 </table></div>
 <p>
@@ -381,7 +381,7 @@
 <pre class="programlisting">    <span class="keyword">class</span> <span class="identifier">first</span> <span class="special">{</span> <span class="special">};</span>
     <span class="keyword">class</span> <span class="identifier">second</span> <span class="special">{</span> <span class="special">};</span>
 <span class="special">...</span>
-    <span class="identifier">app</span><span class="special">(</span><a class="link" href="concepts/annotations/named.html" title="named">named</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">first</span><span class="special">&gt;</span> <span class="identifier">value1</span><span class="special">,</span> <a class="link" href="concepts/annotations/named.html" title="named">named</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">second</span><span class="special">&gt;</span> <span class="identifier">value2</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">text</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;</span> <span class="identifier">logger</span><span class="special">)</span>
+    <span class="identifier">app</span><span class="special">(</span><a class="link" href="concepts/annotations/named.html" title="named">di::named</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">first</span><span class="special">&gt;</span> <span class="identifier">value1</span><span class="special">,</span> <a class="link" href="concepts/annotations/named.html" title="named">di::named</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">second</span><span class="special">&gt;</span> <span class="identifier">value2</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">text</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;</span> <span class="identifier">logger</span><span class="special">)</span>
 </pre>
 <div class="note"><table border="0" summary="Note">
 <tr>
@@ -406,7 +406,7 @@
 
 <span class="keyword">template</span><span class="special">&lt;&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">ctor_traits</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;</span> <span class="special">{</span>
-    <a class="link" href="concepts/injections/boost_di_inject_traits.html" title="BOOST_DI_INJECT_TRAITS">BOOST_DI_INJECT_TRAITS</a><span class="special">(</span><a class="link" href="concepts/annotations/named.html" title="named">named</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">first</span><span class="special">&gt;,</span> <a class="link" href="concepts/annotations/named.html" title="named">named</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">second</span><span class="special">&gt;,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;</span> <span class="identifier">logger</span><span class="special">);</span>
+    <a class="link" href="concepts/injections/boost_di_inject_traits.html" title="BOOST_DI_INJECT_TRAITS">BOOST_DI_INJECT_TRAITS</a><span class="special">(</span><a class="link" href="concepts/annotations/named.html" title="named">di::named</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">first</span><span class="special">&gt;,</span> <a class="link" href="concepts/annotations/named.html" title="named">di::named</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">second</span><span class="special">&gt;,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;</span> <span class="identifier">logger</span><span class="special">);</span>
 <span class="special">};</span>
 
 <span class="special">}}</span> <span class="comment">//boost::di</span>
@@ -424,12 +424,12 @@
 <p>
       Right now, if we want to bind <code class="computeroutput"><span class="identifier">value1</span></code>
       and <code class="computeroutput"><span class="identifier">value2</span></code> we just need to
-      use named property of <a class="link" href="concepts/bindings/bind.html" title="bind">bind</a>.
+      use <a class="link" href="concepts/bindings/named.html" title="named">named</a> property of <a class="link" href="concepts/bindings/bind.html" title="bind">bind</a>.
     </p>
 <pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
     <span class="keyword">return</span> <a class="link" href="concepts/injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
         <a class="link" href="concepts/bindings/scope/deduce.html" title="deduce">di::deduce</a><span class="special">&lt;</span><span class="identifier">logger</span><span class="special">&gt;()</span>
-      <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><a class="link" href="concepts/bindings/named.html" title="named">named</a><span class="special">&lt;</span><span class="identifier">first</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">i_</span><span class="special">)</span> <span class="comment">// bind int named first to i</span>
+      <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><a class="link" href="concepts/bindings/named.html" title="named">named</a><span class="special">&lt;</span><span class="identifier">first</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">i_</span><span class="special">)</span> <span class="comment">// bind int named first to i_ member</span>
       <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;::</span><a class="link" href="concepts/bindings/named.html" title="named">named</a><span class="special">&lt;</span><span class="identifier">second</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">0</span><span class="special">)</span> <span class="comment">// bind int named second to 0</span>
       <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="string">"hello world"</span><span class="special">)</span>
     <span class="special">);</span>
@@ -450,13 +450,13 @@
             </td></tr></tbody>
 </table></div>
 <p>
-      That's pretty much it. Hope this tutorial helped you a bit to understand basics
-      concept of dependency injection framework and that creation dependencies won't
-      be a problem for you anymore.
+      That's pretty much it. Hope this tutorial helped you a bit with understanding
+      basics concept of dependency injection framework and that creation of dependencies
+      won't be a problem for you anymore.
     </p>
 <p>
-      But oh, almost forgotten - I've promised to show how to handle <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span></code>
-      issue with testing in a better way. So let's go back to our original example.
+      But oh, almost forgotten - I've promised to show how to handle <code class="computeroutput"><span class="identifier">unique_ptr</span></code> issue with testing in a better
+      way. So let's go back to our original example.
     </p>
 <pre class="programlisting"><span class="identifier">app</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">value</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">text</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;</span> <span class="identifier">logger</span><span class="special">);</span>
 </pre>
@@ -484,12 +484,22 @@
               </p>
             </td></tr></tbody>
 </table></div>
-<p>
-      This time is really the end, so right now you can move on to more in depth
-      stuff - <a class="link" href="concepts.html" title="Concepts">Concepts</a> - or just straight away
-      to <a class="link" href="examples.html" title="Examples">Examples</a> or if you interest in how it's
-      made to <a class="link" href="rationale.html" title="Rationale">Rationale</a>.
-    </p>
+<h4>
+<a name="di.tutorial.h0"></a>
+      <span class="phrase"><a name="di.tutorial.see_also"></a></span><a class="link" href="tutorial.html#di.tutorial.see_also">See
+      Also</a>
+    </h4>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          <a class="link" href="concepts.html" title="Concepts">Concepts</a>
+        </li>
+<li class="listitem">
+          <a class="link" href="examples.html" title="Examples">Examples</a>
+        </li>
+<li class="listitem">
+          <a class="link" href="rationale.html" title="Rationale">Rationale</a>
+        </li>
+</ul></div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>

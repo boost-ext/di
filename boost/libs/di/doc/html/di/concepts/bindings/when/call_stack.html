@@ -31,8 +31,8 @@
             <span class="phrase"><a name="di.concepts.bindings.when.call_stack.description"></a></span><a class="link" href="call_stack.html#di.concepts.bindings.when.call_stack.description">Description</a>
           </h6>
 <p>
-            Allows to choose binding regards the contextual call stack object was
-            created with.
+            Allows to choose binding accordingly to the call stack object was created
+            in.
           </p>
 <h6>
 <a name="di.concepts.bindings.when.call_stack.h1"></a>
@@ -40,7 +40,7 @@
           </h6>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TArgs</span><span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">call_stack</span> <span class="special">{</span>
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
     <span class="keyword">struct</span> <span class="identifier">apply</span><span class="special">;</span>
 <span class="special">};</span>
 </pre>
@@ -73,18 +73,18 @@
 <tr>
 <td>
                     <p>
-                      <code class="computeroutput"><span class="identifier">TDependency</span></code>
+                      <code class="computeroutput"><span class="identifier">T</span></code>
                     </p>
                   </td>
 <td>
                     <p>
-                      <a class="link" href="../../bindings.html#di.concepts.bindings.synopsis">Dependency Model</a>
+                      <a class="link" href="../../policies.html#di.concepts.policies.data_model">Data Model</a>
                       type
                     </p>
                   </td>
 <td>
                     <p>
-                      Dependency type
+                      Type to be verified
                     </p>
                   </td>
 </tr>
@@ -101,7 +101,8 @@
                   </td>
 <td>
                     <p>
-                      Represents objection creation call stack requirement
+                      Represents objection creation <code class="computeroutput"><span class="identifier">call</span>
+                      <span class="identifier">stack</span></code> requirement
                     </p>
                   </td>
 </tr>
@@ -250,7 +251,7 @@
 </tr>
 <tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><a class="link" href="../bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;::</span><a class="link" href="../named.html" title="named">named</a><span class="special">&lt;</span><span class="identifier">my_interface</span><span class="special">&gt;::</span><span class="identifier">__d_bind_when__</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">,</span> <span class="identifier">c2</span><span class="special">&gt;&gt;()</span></pre>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><a class="link" href="../bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;::</span><a class="link" href="../named.html" title="named">named</a><span class="special">&lt;</span><span class="identifier">my_interface</span><span class="special">&gt;::</span><a class="link" href="../when.html" title="when">when</a><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">call_stack</span><span class="special">&lt;</span><span class="identifier">c1</span><span class="special">,</span> <span class="identifier">c2</span><span class="special">&gt;&gt;()</span></pre>
                   </td>
 <td>
                     <p>
@@ -307,6 +308,16 @@
               <a class="link" href="../../../overview.html#di.overview.configuration">BOOST_DI_CFG_EXAMINE_CALL_STACK</a>
               has to be defined to enable <a class="link" href="call_stack.html" title="call_stack">call_stack</a>
               feature.
+            </p></td></tr>
+</table></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              First type passed to <code class="computeroutput"><span class="identifier">call_stack</span></code>
+              should be type to be created.
             </p></td></tr>
 </table></div>
 <div class="warning"><table border="0" summary="Warning">

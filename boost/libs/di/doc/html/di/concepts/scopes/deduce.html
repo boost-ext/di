@@ -304,13 +304,56 @@
 <a name="di.concepts.scopes.deduce.h4"></a>
           <span class="phrase"><a name="di.concepts.scopes.deduce.examples"></a></span><a class="link" href="deduce.html#di.concepts.scopes.deduce.examples">Examples</a>
         </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Binding
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><a class="link" href="../bindings/scope/deduce.html" title="deduce">di::deduce</a><span class="special">&lt;</span><a class="link" href="../bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;&gt;()</span></pre>
+                </td>
+<td>
+                  <p>
+                    Bind <code class="computeroutput"><span class="identifier">implementation</span></code>
+                    with deduced <code class="computeroutput"><span class="identifier">interface</span></code>
+                    in deduce scope
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><a class="link" href="../bindings/scope/deduce.html" title="deduce">di::deduce</a><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">&gt;()</span></pre>
+                </td>
+<td>
+                  <p>
+                    Bind <code class="computeroutput"><span class="identifier">implementation</span></code>
+                    in deduce scope
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">example</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="identifier">example</span><span class="special">(</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">interface1</span><span class="special">&gt;</span> <span class="identifier">i1</span>   <span class="comment">// deduced as shared scope</span>
           <span class="special">,</span> <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">interface1</span><span class="special">&gt;</span> <span class="identifier">i1_</span>  <span class="comment">// deduced as shared scope</span>
-          <span class="special">,</span> <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">interface2</span><span class="special">&gt;</span> <span class="identifier">i2</span>   <span class="comment">// deduce as unique scope</span>
-          <span class="special">,</span> <span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface3</span><span class="special">&gt;</span> <span class="identifier">i3</span>   <span class="comment">// deduce as unique scope</span>
-          <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">interface4</span><span class="special">&amp;</span> <span class="identifier">i4</span><span class="special">)</span>       <span class="comment">// deduce as external scope</span>
+          <span class="special">,</span> <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">interface2</span><span class="special">&gt;</span> <span class="identifier">i2</span>   <span class="comment">// deduced as unique scope</span>
+          <span class="special">,</span> <span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface3</span><span class="special">&gt;</span> <span class="identifier">i3</span>   <span class="comment">// deduced as unique scope</span>
+          <span class="special">,</span> <span class="identifier">interface4</span><span class="special">&amp;</span> <span class="identifier">i4</span><span class="special">)</span>             <span class="comment">// deduced as external scope</span>
         <span class="special">:</span> <span class="identifier">i1</span><span class="special">(</span><span class="identifier">i1</span><span class="special">)</span>
         <span class="special">,</span> <span class="identifier">i1_</span><span class="special">(</span><span class="identifier">i1_</span><span class="special">)</span>
         <span class="special">,</span> <span class="identifier">i2</span><span class="special">(</span><span class="identifier">i2</span><span class="special">)</span>
@@ -322,14 +365,14 @@
     <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">interface1</span><span class="special">&gt;</span> <span class="identifier">i1_</span><span class="special">;</span>
     <span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface2</span><span class="special">&gt;</span> <span class="identifier">i2</span><span class="special">;</span>
     <span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;</span> <span class="identifier">i3</span><span class="special">;</span>
-    <span class="keyword">const</span> <span class="identifier">interface</span><span class="special">&amp;</span> <span class="identifier">i4</span><span class="special">;</span>
+    <span class="identifier">interface</span><span class="special">&amp;</span> <span class="identifier">i4</span><span class="special">;</span>
 <span class="special">};</span>
 
 <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
     <a class="link" href="../bindings/scope/deduce.html" title="deduce">di::deduce</a><span class="special">&lt;</span><span class="identifier">implementation1</span><span class="special">&gt;()</span> <span class="comment">// bind deduced interface to implementation</span>
   <span class="special">,</span> <a class="link" href="../bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">interface2</span><span class="special">,</span> <span class="identifier">implementation2</span><span class="special">&gt;()</span> <span class="comment">// deduce scope by default</span>
   <span class="special">,</span> <a class="link" href="../bindings/scope.html" title="scope">di::scope</a><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">scopes</span><span class="special">::</span><span class="identifier">deduce</span><span class="special">&gt;::</span><span class="identifier">bind</span><span class="special">&lt;</span><a class="link" href="../bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">interface3</span><span class="special">,</span> <span class="identifier">implementation3</span><span class="special">&gt;&gt;()</span> <span class="comment">// long version of scope binding</span>
-  <span class="special">,</span> <a class="link" href="../bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">interface4</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">cref</span><span class="special">(</span><span class="identifier">implementation4</span><span class="special">))</span> <span class="comment">// bind to external value</span>
+  <span class="special">,</span> <a class="link" href="../bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">interface4</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">ref</span><span class="special">(</span><span class="identifier">implementation4</span><span class="special">))</span> <span class="comment">// bind to external value</span>
 <span class="special">);</span>
 
 <span class="keyword">auto</span> <span class="identifier">example_</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="../injectors/injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;();</span>

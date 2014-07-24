@@ -38,10 +38,10 @@
         <span class="phrase"><a name="di.concepts.scopes.description"></a></span><a class="link" href="scopes.html#di.concepts.scopes.description">Description</a>
       </h5>
 <p>
-        Scopes are responsible for creating and maintaining life time of the dependency.
-        If no scope will be given whilst binding <code class="computeroutput"><span class="identifier">deduce</span></code>
-        scope will be assumed. <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> favor
-        5 types of scopes
+        Scopes are responsible for creating and maintaining life time of dependencies.
+        If no scope will be given whilst binding <a class="link" href="scopes/deduce.html" title="deduce (default)">deduce
+        scope</a> will be assumed. <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> favor
+        5 types of scopes.
       </p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
@@ -131,8 +131,8 @@
               </td>
 <td>
                 <p>
-                  Type to which <code class="computeroutput"><span class="identifier">wrapper_model</span></code>
-                  might be converted to
+                  Type to which <a class="link" href="scopes.html#di.concepts.scopes.wrapper_model">Wrapper
+                  Model</a> might be converted to
                 </p>
               </td>
 <td class="auto-generated">&#160;</td>
@@ -151,7 +151,8 @@
               </td>
 <td>
                 <p>
-                  Object type to be stored by wrapper
+                  Object type to be stored by <a class="link" href="scopes.html#di.concepts.scopes.wrapper_model">Wrapper
+                  Model</a>
                 </p>
               </td>
 <td class="auto-generated">&#160;</td>
@@ -170,8 +171,8 @@
               </td>
 <td>
                 <p>
-                  Conversion constructor - creates <code class="computeroutput"><span class="identifier">wrapper_model</span></code>
-                  from <code class="computeroutput"><span class="identifier">TValueType</span></code>
+                  Conversion constructor - creates <a class="link" href="scopes.html#di.concepts.scopes.wrapper_model">Wrapper
+                  Model</a> from <code class="computeroutput"><span class="identifier">TValueType</span></code>
                   type
                 </p>
               </td>
@@ -186,8 +187,7 @@
 <tr>
 <td>
                 <p>
-                  <code class="computeroutput"><span class="identifier">T</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span>
-                  <span class="identifier">type</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;)</span></code>
+                  <code class="computeroutput"><span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="identifier">type</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;)</span></code>
                 </p>
               </td>
 <td>
@@ -197,8 +197,9 @@
               </td>
 <td>
                 <p>
-                  Converts <code class="computeroutput"><span class="identifier">wrapper_model</span></code>
-                  to <code class="computeroutput"><span class="identifier">T</span></code> type
+                  Converts <a class="link" href="scopes.html#di.concepts.scopes.wrapper_model">Wrapper
+                  Model</a> to <code class="computeroutput"><span class="identifier">T</span></code>
+                  type
                 </p>
               </td>
 <td>
@@ -241,7 +242,7 @@
               </td>
 <td>
                 <p>
-                  Conversion to lvalue/pointer/smart_ptr
+                  Conversion to lvalue/pointer/smart pointers
                 </p>
               </td>
 </tr>
@@ -265,7 +266,7 @@
               </td>
 <td>
                 <p>
-                  Conversion to smart_ptr
+                  Conversion to smart pointers
                 </p>
               </td>
 </tr>
@@ -277,7 +278,7 @@
               </td>
 <td>
                 <p>
-                  Conversion to any type wrappers provide and to const ref/named
+                  Conversion to all wrappers types and to const reference/<a class="link" href="annotations/named.html" title="named">named</a>
                   on top of it
                 </p>
               </td>
@@ -290,7 +291,7 @@
               </td>
 <td>
                 <p>
-                  Conversion to lvalue/rvalue/pointer/smart_pointer
+                  Conversion to lvalue/rvalue/pointer/smart pointers
                 </p>
               </td>
 </tr>
@@ -822,7 +823,8 @@
 <tr>
 <td>
                 <p>
-                  named&lt;T, name&gt;
+                  <a class="link" href="annotations/named.html" title="named">di::named</a>&lt;T,
+                  TName&gt;
                 </p>
               </td>
 <td>
@@ -849,7 +851,19 @@
 </tbody>
 </table></div>
 </div>
-<br class="table-break"><h5>
+<br class="table-break"><div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          If expected type is <code class="computeroutput"><span class="identifier">T</span><span class="special">*</span></code>
+          or <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">T</span><span class="special">*</span></code> then responsibility to delete the object
+          is on client side. <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> won't
+          delete it.
+        </p></td></tr>
+</table></div>
+<h5>
 <a name="di.concepts.scopes.h8"></a>
         <span class="phrase"><a name="di.concepts.scopes.tests"></a></span><a class="link" href="scopes.html#di.concepts.scopes.tests">Tests</a>
       </h5>

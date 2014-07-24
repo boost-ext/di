@@ -31,8 +31,8 @@
           <span class="phrase"><a name="di.concepts.injectors.make_injector.description"></a></span><a class="link" href="make_injector.html#di.concepts.injectors.make_injector.description">Description</a>
         </h6>
 <p>
-          Creates <code class="computeroutput"><span class="identifier">injector</span></code> type.
-          Allows to bind dynamic values in no boilerplate manner.
+          Creates <a class="link" href="injector.html" title="injector">injector</a>
+          type. Allows to bind dynamic values in no boilerplate manner.
         </p>
 <h6>
 <a name="di.concepts.injectors.make_injector.h1"></a>
@@ -261,9 +261,9 @@
   <span class="special">,</span> <a class="link" href="../bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">42l</span><span class="special">)</span>
 <span class="special">);</span>
 
-<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">87l</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;());</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">*&gt;(</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;&gt;().</span><span class="identifier">get</span><span class="special">()));</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87l</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;());</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">*&gt;(</span><span class="identifier">injector</span><span class="special">.</span><a class="link" href="injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;&gt;().</span><span class="identifier">get</span><span class="special">()));</span>
 </pre>
 <h6>
 <a name="di.concepts.injectors.make_injector.h6"></a>
@@ -283,9 +283,9 @@
     <span class="special">)</span>
 <span class="special">);</span>
 
-<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">87l</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;());</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">*&gt;(</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;&gt;().</span><span class="identifier">get</span><span class="special">()));</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87l</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;());</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">*&gt;(</span><span class="identifier">injector</span><span class="special">.</span><a class="link" href="injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;&gt;().</span><span class="identifier">get</span><span class="special">()));</span>
 </pre>
 <h6>
 <a name="di.concepts.injectors.make_injector.h7"></a>

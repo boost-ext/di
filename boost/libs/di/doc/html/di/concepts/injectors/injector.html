@@ -32,7 +32,7 @@
         </h6>
 <p>
           Injector is a component used for creating dependencies configuration using
-          bindings.
+          <a class="link" href="../bindings.html" title="Bindings">bindings</a>.
         </p>
 <h6>
 <a name="di.concepts.injectors.injector.h1"></a>
@@ -196,7 +196,8 @@
                 </td>
 <td>
                   <p>
-                    Bindings to be used as configuration
+                    <a class="link" href="../bindings.html" title="Bindings">Bindings</a> to be used
+                    as configuration
                   </p>
                 </td>
 <td class="auto-generated">&#160;</td>
@@ -253,9 +254,9 @@
                 </td>
 <td>
                   <p>
-                    Policies to be verified whilst creating objects - Policies will
-                    be verified in passed order with <code class="computeroutput"><span class="keyword">and</span></code>
-                    semantic
+                    <a class="link" href="../policies.html" title="Policies">Policies</a> to be verified
+                    whilst creating objects - will be verified in passed order with
+                    <code class="computeroutput"><span class="keyword">and</span></code> semantic
                   </p>
                 </td>
 <td class="auto-generated">&#160;</td>
@@ -350,7 +351,8 @@
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="keyword">const</span> <span class="identifier">TPolicies</span><span class="special">&amp;...))</span></code>
+                    <code class="computeroutput"><a class="link" href="injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="keyword">const</span>
+                    <span class="identifier">TPolicies</span><span class="special">&amp;...))</span></code>
                   </p>
                 </td>
 <td>
@@ -418,7 +420,7 @@
                 </td>
 <td>
                   <p>
-                    call visitor <code class="computeroutput"><span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span>
+                    Call visitor <code class="computeroutput"><span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span>
                     <span class="identifier">TObject</span><span class="special">&amp;)</span></code>
                     for all objects created during creation of object <code class="computeroutput"><span class="identifier">T</span></code>
                   </p>
@@ -447,7 +449,7 @@
                 </td>
 <td>
                   <p>
-                    for all scopes which have <code class="computeroutput"><span class="identifier">call</span><span class="special">(</span><span class="keyword">const</span>
+                    For all scopes which have <code class="computeroutput"><span class="identifier">call</span><span class="special">(</span><span class="keyword">const</span>
                     <span class="identifier">TAction</span><span class="special">&amp;)</span></code>
                     call it with given action
                   </p>
@@ -567,9 +569,9 @@
 
 <span class="identifier">injector_t</span> <span class="identifier">injector</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="number">87l</span><span class="special">));</span>
 
-<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">87l</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;());</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">*&gt;(</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;&gt;().</span><span class="identifier">get</span><span class="special">()));</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87l</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;());</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">*&gt;(</span><span class="identifier">injector</span><span class="special">.</span><a class="link" href="injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;&gt;().</span><span class="identifier">get</span><span class="special">()));</span>
 </pre>
 <div class="note"><table border="0" summary="Note">
 <tr>

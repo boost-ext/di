@@ -39,13 +39,31 @@
 <p>
         Policies are compile time components operates on dependencies in order to
         limit allowed behaviour. Policy has to have <code class="computeroutput"><span class="identifier">assert_policy</span></code>
-        method defined. In order for <code class="computeroutput"><span class="identifier">injector</span></code>
+        method defined. In order for <a class="link" href="injectors/injector.html" title="injector">injector</a>
         to verify policies they have to be passed to <code class="computeroutput"><span class="identifier">create</span></code>,
         <code class="computeroutput"><span class="identifier">allocate</span></code> call. Policies will
         be verified using <code class="computeroutput"><span class="keyword">and</span></code> semantic,
         which means that each type to be created has to meet all policies requirements.
         <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> is released with following policies.
       </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+            <a class="link" href="policies/circular_dependencies.html" title="circular_dependencies">circular_dependencies</a>
+            - verify circular dependencies occurrence
+          </li>
+<li class="listitem">
+            <a class="link" href="policies/creation_permission.html" title="creation_permission">creation_permission</a>
+            - verify object creation permission
+          </li>
+<li class="listitem">
+            <a class="link" href="policies/parameters_permission.html" title="parameters_permission">parameters_permission</a>
+            - verify constructor parameters permission
+          </li>
+<li class="listitem">
+            <a class="link" href="policies/scopes_permission.html" title="scopes_permission">scopes_permission</a>
+            - verify scopes configuration permission
+          </li>
+</ul></div>
 <h5>
 <a name="di.concepts.policies.h1"></a>
         <span class="phrase"><a name="di.concepts.policies.data_model"></a></span><a class="link" href="policies.html#di.concepts.policies.data_model">Data
@@ -143,25 +161,7 @@
 </tbody>
 </table></div>
 </div>
-<br class="table-break"><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem">
-            <a class="link" href="policies/circular_dependencies.html" title="circular_dependencies">circular_dependencies</a>
-            - verify circular dependencies occurrence
-          </li>
-<li class="listitem">
-            <a class="link" href="policies/creation_permission.html" title="creation_permission">creation_permission</a>
-            - verify object creation permission
-          </li>
-<li class="listitem">
-            <a class="link" href="policies/parameters_permission.html" title="parameters_permission">parameters_permission</a>
-            - verify constructor parameters permission
-          </li>
-<li class="listitem">
-            <a class="link" href="policies/scopes_permission.html" title="scopes_permission">scopes_permission</a>
-            - verify scopes configuration permission
-          </li>
-</ul></div>
-<div class="note"><table border="0" summary="Note">
+<br class="table-break"><div class="note"><table border="0" summary="Note">
 <tr>
 <td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../doc/src/images/note.png"></td>
 <th align="left">Note</th>

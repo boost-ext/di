@@ -33,7 +33,7 @@
         </h6>
 <p>
           <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> bindings DSL allows to create context
-          requirement, which might be applied with <code class="computeroutput"><span class="identifier">when</span></code>
+          requirements, which might be applied with <code class="computeroutput"><span class="identifier">when</span></code>
           syntax. <code class="computeroutput"><span class="identifier">when</span></code> allows to
           apply contextual binding. To implement custom requirement <code class="computeroutput"><span class="identifier">apply</span></code> class with return compile time
           integer value has to be defined. Given value will influence how dependencies
@@ -45,7 +45,7 @@
           <span class="phrase"><a name="di.concepts.bindings.when.synopsis"></a></span><a class="link" href="when.html#di.concepts.bindings.when.synopsis">Synopsis</a>
         </h6>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">when</span> <span class="special">{</span>
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
     <span class="keyword">struct</span> <span class="identifier">apply</span>
         <span class="special">:</span> <span class="identifier">TResult</span>
     <span class="special">{</span> <span class="special">};</span>
@@ -80,18 +80,18 @@
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">TDependency</span></code>
+                    <code class="computeroutput"><span class="identifier">T</span></code>
                   </p>
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../bindings.html#di.concepts.bindings.synopsis">Dependency Model</a>
+                    <a class="link" href="../policies.html#di.concepts.policies.data_model">Data Model</a>
                     type
                   </p>
                 </td>
 <td>
                   <p>
-                    Dependency type
+                    Type to be verified
                   </p>
                 </td>
 </tr>

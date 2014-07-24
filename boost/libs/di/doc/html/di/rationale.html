@@ -27,14 +27,16 @@
 <a name="di.rationale"></a><a class="link" href="rationale.html" title="Rationale">Rationale</a>
 </h2></div></div></div>
 <p>
-      <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> design was driven by few main goals:
+      <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> design was driven by few main goals.
     </p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
           User interface should be compact and eliminate boilerplate code as much
           as possible (common things should be achieved in easy way and harder should
           be possible)
           <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem">
-                achieved with automatic scopes deduction/automatic interface deduction
+                achieved with <a class="link" href="concepts/scopes/deduce.html" title="deduce (default)">automatic
+                scopes deduction</a>/<a class="link" href="concepts/bindings/bind.html" title="bind">automatic
+                interface deduction</a>
               </li></ul></div>
         </li></ul></div>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">example</span> <span class="special">{</span>
@@ -60,7 +62,7 @@
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
           Dependencies should be resolved during compilation time (no runtime exceptions
-          that dependency can't be resolved)
+          when dependencies can't be resolved)
           <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem">
                 achieved with compile time dependency resolving
               </li></ul></div>
@@ -68,7 +70,8 @@
 <li class="listitem">
           Constructor injection should be as less intrusive as possible
           <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem">
-                see <a class="link" href="rationale.html#constructor_injection">Constructor Injection</a>
+                see <a class="link" href="concepts/injections/automatic.html" title="automatic (default)">Constructor
+                Injection</a>
               </li></ul></div>
         </li>
 <li class="listitem">
@@ -81,15 +84,17 @@
 <li class="listitem">
           Binding front end should be easily extensible
           <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem">
-                achieved with <code class="computeroutput"><span class="identifier">Dependency</span></code>
-                class, user interface for binding has to return list of <code class="computeroutput"><span class="identifier">Dependency</span></code> classes
+                achieved with <a class="link" href="concepts/bindings.html#di.concepts.bindings.synopsis">dependency
+                model</a> - custom user interface for binding has to return list
+                of <a class="link" href="concepts/bindings.html#di.concepts.bindings.synopsis">dependency</a>
+                models
               </li></ul></div>
         </li>
 </ul></div>
 <p>
       and maybe the most important that <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> shouldn't
       be a copy of existing frameworks like <a href="https://github.com/google/guice" target="_top">Google
-      Guice</a> for <code class="computeroutput"><span class="identifier">Java</span></code> and
+      Guice</a> for <code class="computeroutput"><span class="identifier">Java</span></code> or
       <a href="http://www.ninject.org" target="_top">Ninject</a> for <code class="computeroutput"><span class="identifier">C</span><span class="special">#</span></code> and use whole potential of <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span></code> instead whilst not ignoring useful concepts
       in the same time.
     </p>
@@ -97,11 +102,6 @@
 <a name="di.rationale.h0"></a>
       <span class="phrase"><a name="di.rationale.design"></a></span><a class="link" href="rationale.html#di.rationale.design">Design</a>
     </h3>
-<p>
-      Having core feature - <code class="computeroutput"><span class="identifier">constructor</span>
-      <span class="identifier">injection</span></code> in place <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code>
-      design presents as follows.
-    </p>
 <p>
       <a href="../images/di.png" target="_top"><span class="inlinemediaobject"><img src="../images/di.png" width="75%"></span></a>
       Generated with <a href="http://plantuml.sourceforge.net" target="_top">PlantUML</a>.
@@ -203,8 +203,8 @@
 </table></div>
 <p>
       <a name="constructor_injection"></a>Having above in mind, main concern was
-      related how to make constructor injection as less intrusive as possible (avoid
-      macros/registration/reflection). Problem was solved purely in <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span></code> with.
+      - how to make constructor injection as less intrusive as possible (avoid macros/registration/reflection)?.
+      Problem was solved purely in <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span></code>.
     </p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
@@ -253,8 +253,8 @@
       </p></td></tr>
 </table></div>
 <p>
-      Approach presented above although meet all the requirements cause a lot of
-      tricky issues as well, which are listed below.
+      Approach presented above although meet all the requirements cause tricky issues
+      as well - see <a class="link" href="overview.html#di.overview.notes">Notes</a> for further information.
     </p>
 <h6>
 <a name="di.rationale.h1"></a>
@@ -270,7 +270,7 @@
               </li>
 <li class="listitem">
                 if T has constructor with N parameters (which might be converted
-                using <code class="computeroutput"><span class="identifier">conversion</span> <span class="keyword">operator</span></code>) (see <code class="computeroutput"><span class="identifier">has_ctor</span></code>)
+                using <code class="computeroutput"><span class="identifier">conversion</span> <span class="keyword">operator</span></code> / see <code class="computeroutput"><span class="identifier">has_ctor</span></code>)
                 then goto <code class="computeroutput"><span class="number">2</span></code>
               </li>
 </ol></div>
@@ -301,7 +301,7 @@
 <li class="listitem">
                 set <code class="computeroutput"><span class="identifier">current_weight</span></code>
                 to 0 and <code class="computeroutput"><span class="identifier">best_dependency</span></code>
-                to default dependency (TDefault)
+                to default dependency
               </li>
 <li class="listitem">
                 for all given dependencies
@@ -312,10 +312,10 @@
                       rebind it accordingly to one of non virtual scopes (using
                       <code class="computeroutput"><span class="identifier">scope</span> <span class="identifier">traits</span>
                       <span class="special">-</span> <span class="identifier">see</span>
-                      <span class="identifier">deduce</span> <span class="identifier">scope</span></code>)
+                      <a class="link" href="concepts/scopes/deduce.html" title="deduce (default)">deduce scope</a></code>)
                     </li>
 <li class="listitem">
-                      for all given dependency requirements (TBind) calculate weight
+                      for all given dependency requirements calculate weight
                       <div class="orderedlist"><ol class="orderedlist" type="A"><li class="listitem">
                             <code class="computeroutput"><span class="identifier">weight</span></code>
                             = requirement1 * 10, requirement2 * 100, ..., requirementN
@@ -374,8 +374,8 @@
                       else
                       <div class="orderedlist"><ol class="orderedlist" type="A"><li class="listitem">
                             deduce <code class="computeroutput"><span class="identifier">constructor</span></code>
-                            using <code class="computeroutput"><span class="identifier">Constructor</span>
-                            <span class="identifier">Parameters</span> <span class="identifier">Deduction</span></code>
+                            using <a class="link" href="concepts/injections/automatic.html" title="automatic (default)">Constructor
+                            Parameters Deduction</a>
                           </li></ol></div>
                     </li>
 </ol></div>
@@ -430,21 +430,22 @@
       runtime performance.
     </p>
 <p>
-      If compilation time is still a problem, <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> contains
-      a set of features to improve the situation.
+      <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> contains a set of features improving compilation
+      times.
     </p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
           Preprocessed Headers
           <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
 <li class="listitem">
-                Contains <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> library in one file after preprocessing
-                stage
+                Includes whole <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code>
+                library in one file after preprocessing stage
               </li>
 <li class="listitem">
-                Preprocessed Headers are generated for <a class="link" href="overview.html#di.overview.configuration">BOOST_DI_CFG_CTOR_LIMIT_SIZE</a>
-                equals 10 and for <a class="link" href="overview.html#di.overview.configuration">BOOST_MPL_LIMIT_VECTOR_SIZE</a>
-                equals 10, 20, 30, 40, 50
+                Preprocessed headers are generated for <a class="link" href="overview.html#di.overview.configuration">BOOST_DI_CFG_CTOR_LIMIT_SIZE</a>
+                equals <code class="computeroutput"><span class="number">10</span></code> and for <a class="link" href="overview.html#di.overview.configuration">BOOST_MPL_LIMIT_VECTOR_SIZE</a>
+                equals <code class="computeroutput"><span class="number">10</span></code>, <code class="computeroutput"><span class="number">20</span></code>, <code class="computeroutput"><span class="number">30</span></code>,
+                <code class="computeroutput"><span class="number">40</span></code>, <code class="computeroutput"><span class="number">50</span></code>
               </li>
 <li class="listitem">
                 To disable it <a class="link" href="overview.html#di.overview.configuration">BOOST_DI_CFG_NO_PREPROCESSED_HEADERS</a>
@@ -478,8 +479,8 @@
                 Enables context (call stack) to be used for binding
               </li>
 <li class="listitem">
-                This feature slow down the compilation, so it has to be turn on by
-                defining <a class="link" href="overview.html#di.overview.configuration">BOOST_DI_CFG_EXAMINE_CALL_STACK</a>
+                This feature slow down compilation times, so it has to be turn on
+                explicitly by defining <a class="link" href="overview.html#di.overview.configuration">BOOST_DI_CFG_EXAMINE_CALL_STACK</a>
               </li>
 <li class="listitem">
                 Disabled by default

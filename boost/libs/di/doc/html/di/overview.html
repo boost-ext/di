@@ -29,7 +29,7 @@
 <p>
       <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> is <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code>/<code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">11</span></code>/<code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">14</span></code>
       header only, type safe, library providing compile time, macro free constructor
-      dependency injection.
+      <a href="http://en.wikipedia.org/wiki/Dependency_injection" target="_top">dependency injection</a>.
     </p>
 <h3>
 <a name="di.overview.h0"></a>
@@ -59,33 +59,40 @@
           Thread safe guaranty
         </li>
 <li class="listitem">
-          Constructor injection (macro free)
+          <a class="link" href="concepts/injections/automatic.html" title="automatic (default)">Constructor injection</a>
+          (macro free)
         </li>
 <li class="listitem">
           Compile time creation guaranty
         </li>
 <li class="listitem">
-          Compile time policies (arguments permission, binding correctness, circular
-          dependencies, creation ownership, scopes permission)
+          Compile time <a class="link" href="concepts/policies.html" title="Policies">Policies</a> (<a class="link" href="concepts/policies/circular_dependencies.html" title="circular_dependencies">circular_dependencies</a>,
+          <a class="link" href="concepts/policies/creation_permission.html" title="creation_permission">creation_permission</a>,
+          <a class="link" href="concepts/policies/parameters_permission.html" title="parameters_permission">parameters_permission</a>,
+          <a class="link" href="concepts/policies/scopes_permission.html" title="scopes_permission">scopes_permission</a>)
         </li>
 <li class="listitem">
-          Dependencies life time management (scopes: deduce, external, unique, shared,
-          session + custom scopes)
+          Dependencies life time management (<a class="link" href="concepts/scopes/deduce.html" title="deduce (default)">deduce
+          scope</a>, <a class="link" href="concepts/scopes/external.html" title="external">external scope</a>,
+          <a class="link" href="concepts/scopes/unique.html" title="unique">unique scope</a>, <a class="link" href="concepts/scopes/shared.html" title="shared">shared
+          scope</a>, <a class="link" href="concepts/scopes/session.html" title="session">session scope</a>
+          + <a class="link" href="examples/custom_scope.html" title="Custom Scope">custom scope</a>)
         </li>
 <li class="listitem">
-          Scope deduction (shared_ptr -&gt; shared, unique_ptr, lvalue -&gt; unique,
-          ...)
+          <a class="link" href="concepts/scopes/deduce.html" title="deduce (default)">Scope deduction</a> (shared_ptr
+          -&gt; shared, unique_ptr, lvalue -&gt; unique, ...)
         </li>
 <li class="listitem">
           Supports copies, references, pointers, boost and std smart pointers / rvalue
-          references(C++11)
+          references (<code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">11</span></code>)
         </li>
 <li class="listitem">
-          Named parameters (named&lt;int, my_int&gt;)
+          <a class="link" href="concepts/annotations/named.html" title="named">Named parameters</a> (<a class="link" href="concepts/annotations/named.html" title="named">named</a>&lt;int, my_int&gt;)
         </li>
 <li class="listitem">
-          Runtime visitor throughout created objects (useful for generation dependency
-          diagrams)
+          <a class="link" href="concepts/injectors/injector.html" title="injector">Runtime visitor</a> throughout
+          created objects (useful for generation <a class="link" href="examples/uml_visitor.html" title="UML Visitor">dependency
+          diagrams</a>)
         </li>
 </ul></div>
 <p>
@@ -181,7 +188,7 @@
 </tr>
 <tr><td align="left" valign="top"><p>
         Older compilers might be supported, but weren't tested and probably can't
-        be tested properly due to requirements of C++11 features by the tests.
+        be tested properly due to requirements of C++11 features by tests.
       </p></td></tr>
 </table></div>
 <h3>
@@ -284,7 +291,8 @@
 <tr>
 <td>
               <p>
-                Arguments Permission Policy
+                <a class="link" href="concepts/policies/parameters_permission.html" title="parameters_permission">Parameters
+                Permission Policy</a>
               </p>
             </td>
 <td>
@@ -343,7 +351,8 @@
 <tr>
 <td>
               <p>
-                Automatic Constructor Injection
+                <a class="link" href="concepts/injections/automatic.html" title="automatic (default)">Automatic Constructor
+                Injection</a>
               </p>
             </td>
 <td>
@@ -433,10 +442,9 @@
               </p>
             </td>
 <td>
-              <p>
-                * <code class="computeroutput"><span class="identifier">Modules</span><span class="special">::</span><span class="identifier">configure</span><span class="special">()</span></code>
-                harder syntax * Rvalue references aren't supported * Policy <code class="computeroutput"><span class="identifier">arguments_permission</span></code> not supported
-              </p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">* <a class="link" href="concepts/modules.html" title="Modules">Modules</a> definition harder syntax
+* Rvalue references aren't supported
+* Policy <a class="link" href="concepts/policies/parameters_permission.html" title="parameters_permission">parameters_permission</a> not supported</pre>
             </td>
 </tr>
 <tr>
@@ -453,12 +461,9 @@
               </p>
             </td>
 <td>
-              <p>
-                * <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">Typeof</span></code> has to be used * <code class="computeroutput"><span class="identifier">Modules</span><span class="special">::</span><span class="identifier">configure</span><span class="special">()</span></code>
-                harder syntax * <code class="computeroutput"><span class="identifier">Automatic</span>
-                <span class="identifier">Constructor</span> <span class="identifier">Injection</span></code>
-                doesn't work with 1 parameter constructors
-              </p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">* Boost.Typeof has to be used
+* <a class="link" href="concepts/modules.html" title="Modules">Modules</a> definition harder syntax
+* <a class="link" href="concepts/injections/automatic.html" title="automatic (default)">Automatic Constructor Injection</a> doesn't work with 1 parameter constructors</pre>
             </td>
 </tr>
 <tr>
@@ -475,10 +480,7 @@
               </p>
             </td>
 <td>
-              <p>
-                * <code class="computeroutput"><span class="identifier">Modules</span><span class="special">::</span><span class="identifier">configure</span><span class="special">()</span></code>
-                harder syntax
-              </p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">* <a class="link" href="concepts/modules.html" title="Modules">Modules</a> definition harder syntax</pre>
             </td>
 </tr>
 <tr>
@@ -491,13 +493,11 @@
               <p>
                 <code class="computeroutput"><span class="identifier">GCC</span> <span class="special">&gt;=</span>
                 <span class="number">4.9</span></code>, <code class="computeroutput"><span class="identifier">Clang</span>
-                <span class="special">&gt;=</span> <span class="number">3.4</span></code>
+                <span class="special">&gt;=</span> <span class="number">3.3</span></code>
               </p>
             </td>
 <td>
-              <p>
-                * Go for it!
-              </p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">* Go for it!</pre>
             </td>
 </tr>
 </tbody>
@@ -564,6 +564,20 @@
 </pre>
 <h3>
 <a name="di.overview.h8"></a>
+      <span class="phrase"><a name="di.overview.preprocessed_headers"></a></span><a class="link" href="overview.html#di.overview.preprocessed_headers">Preprocessed
+      headers</a>
+    </h3>
+<p>
+      <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> is released with preprocessed headers
+      for <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_CTOR_LIMIT_SIZE</span></code>
+      and <code class="computeroutput"><span class="identifier">BOOST_MPL_LIMIT_VECTOR_SIZE</span></code>
+      as well as with tool to generate them. Generation of preprocessed headers might
+      be done with tools provided.
+    </p>
+<pre class="programlisting"><span class="identifier">tools</span><span class="special">/</span><span class="identifier">preprocessed</span><span class="special">.</span><span class="identifier">sh</span>
+</pre>
+<h3>
+<a name="di.overview.h9"></a>
       <span class="phrase"><a name="di.overview.configuration"></a></span><a class="link" href="overview.html#di.overview.configuration">Configuration</a>
     </h3>
 <p>
@@ -597,9 +611,9 @@
 <td>
               <p>
                 <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> by default uses preprocessed
-                headers. See <code class="computeroutput"><span class="identifier">Compilation</span>
-                <span class="identifier">time</span></code> for further specification.
-                To explicitly disable preprocessed headers <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_NO_PREPROCESSED_HEADERS</span></code>
+                headers. See <a class="link" href="rationale.html#di.rationale.performance">Compilation
+                time</a> for further specification. To explicitly disable preprocessed
+                headers <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_NO_PREPROCESSED_HEADERS</span></code>
                 has to be defined.
               </p>
               <p>
@@ -625,8 +639,12 @@
               <p>
                 Configuration affects <code class="computeroutput"><span class="identifier">preprocessed</span>
                 <span class="identifier">headers</span></code>, which are generated
-                for both configurations. default: <code class="computeroutput"><span class="identifier">cpp_11</span>
-                <span class="identifier">when</span> <span class="identifier">C</span><span class="special">++</span><span class="number">11</span> <span class="identifier">cpp_03</span> <span class="identifier">otherwise</span></code>
+                for both configurations.
+              </p>
+              <p>
+                default: <code class="computeroutput"><span class="identifier">cpp_11</span></code> when
+                <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">11</span></code> <code class="computeroutput"><span class="identifier">cpp_03</span></code>
+                otherwise
               </p>
             </td>
 </tr>
@@ -658,7 +676,7 @@
             </td>
 <td>
               <p>
-                Context concepts (<code class="computeroutput"><span class="identifier">when</span></code>
+                Context concepts (<a class="link" href="concepts/bindings/when.html" title="when">when</a>
                 syntax) have to be explicitly turned on using <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_EXAMINE_CALL_STACK</span></code>.
                 Reason being much longer compilation times.
               </p>
@@ -675,7 +693,8 @@
             </td>
 <td>
               <p>
-                <code class="computeroutput"><a class="link" href="concepts/injections/boost_di_inject.html" title="BOOST_DI_INJECT">BOOST_DI_INJECT</a><span class="special">(</span><span class="identifier">ctor</span><span class="special">,</span> <span class="identifier">arg1</span><span class="special">,</span> <span class="identifier">arg2</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">argN</span><span class="special">)</span></code>
+                <a class="link" href="concepts/injections/boost_di_inject.html" title="BOOST_DI_INJECT">BOOST_DI_INJECT</a>(ctor,
+                arg1, arg2, ..., argN)
               </p>
               <p>
                 default: <code class="computeroutput"><span class="identifier">enabled</span> <span class="identifier">when</span> <span class="identifier">C</span><span class="special">++</span><span class="number">11</span></code>
@@ -690,9 +709,7 @@
             </td>
 <td>
               <p>
-                <code class="computeroutput"><a class="link" href="concepts/injections/boost_di_inject.html" title="BOOST_DI_INJECT">BOOST_DI_INJECT</a><span class="special">(</span><span class="identifier">ctor</span><span class="special">,</span> <span class="special">(</span><span class="identifier">arg1</span><span class="special">,</span>
-                <span class="identifier">arg2</span><span class="special">,</span>
-                <span class="special">...,</span> <span class="identifier">argN</span><span class="special">))</span></code>
+                <a class="link" href="concepts/injections/boost_di_inject.html" title="BOOST_DI_INJECT">BOOST_DI_INJECT</a><span class="bold"><strong>(</strong></span>ctor, (arg1, arg2, ..., argN<span class="bold"><strong>)</strong></span>)
               </p>
               <p>
                 default: <code class="computeroutput"><span class="identifier">enabled</span> <span class="identifier">when</span> <span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code>
@@ -708,15 +725,18 @@
 <td>
               <p>
                 Default <code class="computeroutput"><span class="identifier">smart</span> <span class="identifier">pointer</span></code>
-                type is set accordingly to compiler support, but might standard smart
-                pointers might be forced by <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_STD_SMART_PTR</span></code>.
+                type is set accordingly to compiler/standard library support, but
+                might standard smart pointers might be forced by <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_STD_SMART_PTR</span></code>.
                 Then <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> internally will use standard
                 smart pointers instead of boost smart pointers. Additionally conversion
-                to weak_ptr is only allowed from default <code class="computeroutput"><span class="identifier">smart</span>
+                to <code class="computeroutput"><span class="identifier">weak_ptr</span></code> is only
+                allowed from default <code class="computeroutput"><span class="identifier">smart</span>
                 <span class="identifier">pointer</span> <span class="identifier">type</span></code>.
               </p>
               <p>
-                default: <code class="computeroutput"><span class="identifier">enabled</span> <span class="keyword">if</span> <span class="identifier">supported</span>
+                default: <code class="computeroutput"><span class="identifier">enabled</span> <span class="keyword">if</span> <span class="identifier">standard</span>
+                <span class="identifier">smart</span> <span class="identifier">pointers</span>
+                <span class="identifier">are</span> <span class="identifier">supported</span>
                 <span class="identifier">by</span> <span class="identifier">compiler</span></code>
               </p>
             </td>
@@ -729,14 +749,15 @@
             </td>
 <td>
               <p>
-                Analogously as <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_STD_SMART_PTR</span></code>,
-                but with boost smart pointers to be chosen.
+                Same as <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_STD_SMART_PTR</span></code>,
+                but with <code class="computeroutput"><span class="identifier">boost</span> <span class="identifier">smart</span>
+                <span class="identifier">pointers</span></code> to be chosen.
               </p>
               <p>
-                default: <code class="computeroutput"><span class="identifier">enabled</span> <span class="keyword">if</span> <span class="identifier">std</span>
-                <span class="identifier">smart</span> <span class="identifier">ptr</span>
-                <span class="identifier">are</span> <span class="keyword">not</span>
-                <span class="identifier">supported</span> <span class="identifier">by</span>
+                default: <code class="computeroutput"><span class="identifier">enabled</span> <span class="keyword">if</span> <span class="identifier">standard</span>
+                <span class="identifier">smart</span> <span class="identifier">pointers</span>
+                <span class="identifier">are</span></code> <span class="bold"><strong>not</strong></span>
+                <code class="computeroutput"><span class="identifier">supported</span> <span class="identifier">by</span>
                 <span class="identifier">compiler</span></code>
               </p>
             </td>
@@ -767,17 +788,19 @@
             </td>
 <td>
               <p>
-                Number of allowed bindings is limited by Boost.MPL vector size.
+                Number of allowed bindings is limited by <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">MPL</span></code>
+                vector size.
               </p>
               <p>
-                default: 20 (defined by Boost.MPL)
+                default: <code class="computeroutput"><span class="number">20</span> <span class="special">(</span><span class="identifier">defined</span> <span class="identifier">by</span>
+                <span class="identifier">Boost</span><span class="special">.</span><span class="identifier">MPL</span><span class="special">)</span></code>
               </p>
             </td>
 </tr>
 </tbody>
 </table></div>
 <h3>
-<a name="di.overview.h9"></a>
+<a name="di.overview.h10"></a>
       <span class="phrase"><a name="di.overview.notes"></a></span><a class="link" href="overview.html#di.overview.notes">Notes</a>
     </h3>
 <a name="Notes"></a><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
@@ -1068,7 +1091,7 @@
                 </td>
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">                                                                                             <span class="special">.</span>
-<span class="identifier">Support</span> <span class="identifier">without</span> <span class="identifier">any</span> <span class="identifier">workarounds</span>
+<span class="identifier">Support</span> <span class="identifier">without</span> <span class="identifier">any</span> <span class="identifier">issues</span>
 </pre>
                 </td>
 </tr></tbody>
@@ -1101,8 +1124,8 @@
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">                                                          <span class="special">.</span>
 <span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
     <a class="link" href="concepts/injections/boost_di_inject.html" title="BOOST_DI_INJECT">BOOST_DI_INJECT</a><span class="special">(</span><span class="keyword">explicit</span> <span class="identifier">example</span>
-                  <span class="special">,</span> <span class="keyword">int</span> <span class="special">=</span> <span class="number">0</span>
-                  <span class="special">,</span> <span class="keyword">double</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">);</span>
+                   <span class="special">,</span> <span class="keyword">int</span> <span class="special">=</span> <span class="number">0</span>
+                   <span class="special">,</span> <span class="keyword">double</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">);</span>
 <span class="special">};</span>
 </pre>
                 </td>
@@ -1114,7 +1137,7 @@
         <span class="keyword">explicit</span> <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span> <span class="special">=</span> <span class="number">0</span><span class="special">,</span> <span class="keyword">double</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">);</span>
     <span class="special">};</span>
 
-    <span class="identifier">paramter_types</span><span class="special">&lt;</span><span class="keyword">decltype</span><span class="special">(&amp;</span><span class="identifier">example</span><span class="special">::</span><span class="identifier">boost_di_injector__</span><span class="special">)&gt;::</span><span class="identifier">type</span> <span class="special">-&gt;</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">&gt;</span>
+<span class="identifier">paramter_types</span><span class="special">&lt;</span><span class="keyword">decltype</span><span class="special">(&amp;</span><span class="identifier">example</span><span class="special">::</span><span class="identifier">boost_di_injector__</span><span class="special">)&gt;::</span><span class="identifier">type</span> <span class="special">-&gt;</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">&gt;</span>
 </pre>
                 </td>
 </tr></tbody>
@@ -1233,23 +1256,10 @@
 </tr>
 <tr><td align="left" valign="top"><p>
         GCC/Clang/MSVC/Intel compilers differ with the way template conversion operator
-        is handled.
+        is handled and <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> implemented some workarounds in order
+        to support all of them.
       </p></td></tr>
 </table></div>
-<h3>
-<a name="di.overview.h10"></a>
-      <span class="phrase"><a name="di.overview.preprocessed_headers"></a></span><a class="link" href="overview.html#di.overview.preprocessed_headers">Preprocessed
-      headers</a>
-    </h3>
-<p>
-      <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> is released with preprocessed headers
-      for <code class="computeroutput"><span class="identifier">BOOST_DI_CFG_CTOR_LIMIT_SIZE</span></code>
-      and <code class="computeroutput"><span class="identifier">BOOST_MPL_LIMIT_VECTOR_SIZE</span></code>
-      as well as with tool to generate them. Generation of preprocessed headers might
-      be done with tools provided.
-    </p>
-<pre class="programlisting"><span class="identifier">tools</span><span class="special">/</span><span class="identifier">preprocessed</span><span class="special">.</span><span class="identifier">sh</span>
-</pre>
 <h3>
 <a name="di.overview.h11"></a>
       <span class="phrase"><a name="di.overview.similar_libraries"></a></span><a class="link" href="overview.html#di.overview.similar_libraries">Similar
@@ -1322,14 +1332,14 @@
           <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
                 Short answer is NO. <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code>
                 dependencies are configured in the source code using C++ features
-                which allows compile time checking. Long story short, fluent configuration
-                you don't have to remember of changing the configuration file, compiler
-                will take care of it for you. Usually lazy binding requires exceptions
-                handling and is a performance killer, but obviously it depends on
-                a projects needs. Although it might be hard it is possible to achieve
-                it with <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code>. The question which should be
-                asked though - how often configuration is dynamically changed via
-                XML?
+                which allows compile time checking. Long story short, with fluent
+                configuration you don't have to remember of changing the configuration
+                file, compiler will take care of it for you. Usually lazy binding
+                requires exceptions handling and is a performance killer, but obviously
+                it depends on a projects needs. Although it might be hard it is possible
+                to achieve it with <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code>.
+                The question which should be asked though - how often configuration
+                is dynamically changed via XML?
               </li></ul></div>
         </li>
 <li class="listitem">
@@ -1350,7 +1360,7 @@
                 to test. Thread safety has to be considered as well whilst using
                 it. <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> provides <code class="computeroutput"><span class="identifier">shared</span></code>
                 scope which behaves like non-multi threaded singleton. <code class="computeroutput"><span class="identifier">Singleton</span></code> scope might be implemented
-                using <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> <code class="computeroutput"><span class="identifier">scope</span></code>
+                using <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> <a class="link" href="concepts/scopes.html" title="Scopes">scope</a>
                 functionality.
               </li></ul></div>
         </li>
@@ -1365,9 +1375,10 @@
               </li></ul></div>
         </li>
 <li class="listitem">
-          How injection works since there is no registration/reflection/traits ?
+          How automatic constructor injection works since there is no registration/reflection/traits
+          ?
           <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
-                See __rationale_ for further explanations.
+                See <a class="link" href="rationale.html" title="Rationale">Rationale</a> for further explanations.
               </li></ul></div>
         </li>
 </ol></div>
@@ -1381,6 +1392,25 @@
       <a href="https://ci.appveyor.com/project/krzysztof-jusiak/di" target="_top"><span class="inlinemediaobject"><img src="https://ci.appveyor.com/api/projects/status/1il4knxh7tq9o5ic"></span></a>
       <a href="https://coveralls.io/r/krzysztof-jusiak/di?branch=master" target="_top"><span class="inlinemediaobject"><img src="https://coveralls.io/repos/krzysztof-jusiak/di/badge.png?branch=master"></span></a>
     </p>
+<h4>
+<a name="di.overview.h14"></a>
+      <span class="phrase"><a name="di.overview.see_also"></a></span><a class="link" href="overview.html#di.overview.see_also">See
+      Also</a>
+    </h4>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          <a class="link" href="tutorial.html" title="Tutorial">Tutorial</a>
+        </li>
+<li class="listitem">
+          <a class="link" href="concepts.html" title="Concepts">Concepts</a>
+        </li>
+<li class="listitem">
+          <a class="link" href="examples.html" title="Examples">Examples</a>
+        </li>
+<li class="listitem">
+          <a class="link" href="rationale.html" title="Rationale">Rationale</a>
+        </li>
+</ul></div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>

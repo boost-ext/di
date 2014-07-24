@@ -50,12 +50,13 @@
         <span class="phrase"><a name="di.concepts.bindings.description"></a></span><a class="link" href="bindings.html#di.concepts.bindings.description">Description</a>
       </h5>
 <p>
-        Bindings in <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> are done using specially defined Domain
-        Specific Language (DSL). The main purpose of binding DSL is to make easy
+        Bindings in <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> are done using <a href="http://en.wikipedia.org/wiki/Domain-specific_language" target="_top">Domain
+        Specific Language</a>. The main purpose of bindings DSL is to make easy
         things as easy as possible whilst giving possibility to accomplish solutions
-        for more complicated problems. The glue between DSL and the core is <code class="computeroutput"><span class="identifier">dependency</span></code>, so if you would like to write
-        your own front end the only thing which has to be in mind is to return list
-        of dependencies.
+        for more complicated problems. The glue between DSL and the core is <a class="link" href="bindings.html#di.concepts.bindings.synopsis">Dependency Model</a>, so if you
+        would like to write your own front end the only thing which has to be in
+        mind is to return <code class="computeroutput"><span class="identifier">mpl</span><span class="special">::</span><span class="identifier">vector</span></code> of <a class="link" href="bindings.html#di.concepts.bindings.synopsis">Dependency
+        Model</a>.
       </p>
 <h5>
 <a name="di.concepts.bindings.h1"></a>
@@ -81,7 +82,7 @@
     <span class="keyword">explicit</span> <span class="identifier">dependency</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;);</span>
 
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
-    <span class="keyword">static</span> <a class="link" href="bindings.html#di.concepts.bindings.synopsis">Dependency Model</a> <span class="identifier">to</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;);</span>
+    <span class="keyword">static</span> <span class="identifier">dependency</span> <span class="identifier">to</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;);</span>
 <span class="special">};</span>
 </pre>
 <div class="table">
@@ -268,7 +269,7 @@
       </h5>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TIinterface</span> <span class="keyword">typename</span> <span class="identifier">TImplementation</span><span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">bind</span>
-    <span class="special">:</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">dependency</span><span class="special">&lt;</span><a class="link" href="scopes/deduce.html" title="deduce (default)">di::scopes::deduce</a><span class="special">,</span> <span class="identifier">TInterface</span><span class="special">,</span> <span class="identifier">TImplementation</span><span class="special">&gt;</span>
+    <span class="special">:</span> <a class="link" href="bindings.html#di.concepts.bindings.synopsis">di::dependency</a><span class="special">&lt;</span><a class="link" href="scopes/deduce.html" title="deduce (default)">di::scopes::deduce</a><span class="special">,</span> <span class="identifier">TInterface</span><span class="special">,</span> <span class="identifier">TImplementation</span><span class="special">&gt;</span>
 <span class="special">{</span> <span class="special">};</span>
 
 <a class="link" href="injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>

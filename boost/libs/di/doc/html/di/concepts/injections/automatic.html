@@ -32,10 +32,10 @@
         </h6>
 <p>
           <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> will deduce the best available constructor
-          to be used for injection - unique constructor with longest parameter list.
-          See <a class="link" href="../../rationale.html#di.rationale.constructor_parameters_deduction">Constructor
+          to be used for injection - unique constructor with the longest parameter
+          list - see <a class="link" href="../../rationale.html#di.rationale.constructor_parameters_deduction">Constructor
           Parameters Deduction</a> for further reading. If the default behavior
-          should be changed constructor should be explicitly marked with <a class="link" href="boost_di_inject.html" title="BOOST_DI_INJECT">BOOST_DI_INJECT</a>
+          should be changed constructor have to be explicitly marked with <a class="link" href="boost_di_inject.html" title="BOOST_DI_INJECT">BOOST_DI_INJECT</a>
           or <a class="link" href="boost_di_inject_traits.html" title="BOOST_DI_INJECT_TRAITS">BOOST_DI_INJECT_TRAITS</a>.
         </p>
 <h6>
@@ -118,6 +118,16 @@
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
+            Automatic constructor parameters deduction is limited to <a class="link" href="../../overview.html#di.overview.configuration">BOOST_DI_CFG_CTOR_LIMIT_SIZE</a>,
+            which by defaults is set to <code class="computeroutput"><span class="number">10</span></code>.
+          </p></td></tr>
+</table></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
             <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> is not able to distinguish between
             ambiguous constructors with the same (longest) amount of parameters,
             then <a class="link" href="boost_di_inject.html" title="BOOST_DI_INJECT">BOOST_DI_INJECT</a>
@@ -131,7 +141,7 @@
 </tr>
 <tr><td align="left" valign="top"><p>
             In <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code> constructors with one argument might
-            be ambiguous with copy constructors, therefore is advised to always use
+            be ambiguous with copy constructor, therefore is advised to always use
             <a class="link" href="boost_di_inject.html" title="BOOST_DI_INJECT">BOOST_DI_INJECT</a>
             for 1 argument constructors in <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code>.
           </p></td></tr>

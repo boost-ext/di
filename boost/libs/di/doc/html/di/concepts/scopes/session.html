@@ -31,13 +31,11 @@
           <span class="phrase"><a name="di.concepts.scopes.session.description"></a></span><a class="link" href="session.html#di.concepts.scopes.session.description">Description</a>
         </h6>
 <p>
-          Scope representing shared value, meaning passed value will be shared between
-          all given instances and will be empty if it won't be in scope. Scope is
-          activated by call of <code class="computeroutput"><span class="identifier">call</span></code>
-          method with <code class="computeroutput"><span class="identifier">session_entry</span></code>
-          parameter and deactivated by call of <code class="computeroutput"><span class="identifier">call</span></code>
-          method with <code class="computeroutput"><span class="identifier">session_exit</span></code>
-          parameter;
+          Scope representing session value which will be shared between all instances
+          and will be empty if it won't be in scope. Scope is activated by call of
+          <code class="computeroutput"><span class="identifier">call</span></code> method with <code class="computeroutput"><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">session_entry</span></code> parameter and deactivated
+          by call of <code class="computeroutput"><span class="identifier">call</span></code> method
+          with <code class="computeroutput"><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">session_exit</span></code> parameter;
         </p>
 <h6>
 <a name="di.concepts.scopes.session.h1"></a>
@@ -373,7 +371,8 @@
 <tr>
 <td>
                   <p>
-                    named&lt;T, name&gt;
+                    <a class="link" href="../annotations/named.html" title="named">di::named</a>&lt;T,
+                    TName&gt;
                   </p>
                 </td>
 <td>
@@ -420,7 +419,7 @@
 </tr></thead>
 <tbody><tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">session</span><span class="special">&lt;</span><a class="link" href="../bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;&gt;()</span></pre>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">session</span><span class="special">&lt;</span><a class="link" href="../bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;&gt;()</span></pre>
                 </td>
 <td>
                   <p>
