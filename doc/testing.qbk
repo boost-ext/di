@@ -63,7 +63,6 @@ int main() {
 
 [endsect]
 
-
 [section Unit Tests]
 
 For Unit Tests Dependency Injection Framework is not really needed.
