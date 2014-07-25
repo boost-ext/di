@@ -113,22 +113,45 @@
     <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">);</span>
     <span class="identifier">example</span><span class="special">(</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">int</span><span class="special">);</span>
 <span class="special">};</span>
+
+<a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">().</span><a class="link" href="../injectors/injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;();</span> <span class="comment">// compile clean</span>
 </pre>
 <h6>
 <a name="di.concepts.injections.boost_di_inject_traits.h5"></a>
+          <span class="phrase"><a name="di.concepts.injections.boost_di_inject_traits.example_default_value"></a></span><a class="link" href="boost_di_inject_traits.html#di.concepts.injections.boost_di_inject_traits.example_default_value">Example
+          - default value</a>
+        </h6>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">example</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">BOOST_DI_INJECT_TRAITS</span><span class="special">(</span><span class="keyword">int</span><span class="special">);</span>
+    <span class="keyword">explicit</span> <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">d</span> <span class="special">=</span> <span class="number">42.0</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">i</span><span class="special">(</span><span class="identifier">i</span><span class="special">)</span>
+        <span class="special">,</span> <span class="identifier">d</span><span class="special">(</span><span class="identifier">d</span><span class="special">)</span>
+    <span class="special">{</span> <span class="special">}</span>
+
+    <span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">double</span> <span class="identifier">d</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">auto</span> <span class="identifier">example_</span> <span class="special">=</span> <a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">().</span><a class="link" href="../injectors/injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">0</span> <span class="special">==</span> <span class="identifier">example_</span><span class="special">.</span><span class="identifier">i_</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42.0</span> <span class="special">==</span> <span class="identifier">example_</span><span class="special">.</span><span class="identifier">d_</span><span class="special">)</span>
+</pre>
+<h6>
+<a name="di.concepts.injections.boost_di_inject_traits.h6"></a>
           <span class="phrase"><a name="di.concepts.injections.boost_di_inject_traits.more_examples"></a></span><a class="link" href="boost_di_inject_traits.html#di.concepts.injections.boost_di_inject_traits.more_examples">More
           Examples</a>
         </h6>
 <pre class="programlisting"><a class="link" href="../../examples/constructor_injection.html" title="Constructor Injection">Constructor Injection</a>
 </pre>
 <h6>
-<a name="di.concepts.injections.boost_di_inject_traits.h6"></a>
+<a name="di.concepts.injections.boost_di_inject_traits.h7"></a>
           <span class="phrase"><a name="di.concepts.injections.boost_di_inject_traits.tests"></a></span><a class="link" href="boost_di_inject_traits.html#di.concepts.injections.boost_di_inject_traits.tests">Tests</a>
         </h6>
 <pre class="programlisting"><a href="../../../test/ut/inject_va_args_ut.cpp" target="_top">test/ut/inject_va_args_ut.cpp</a> <span class="special">|</span> <a href="../../../test/ut/inject_bracket_ut.cpp" target="_top">test/ut/inject_bracket_ut.cpp</a>
 </pre>
 <h6>
-<a name="di.concepts.injections.boost_di_inject_traits.h7"></a>
+<a name="di.concepts.injections.boost_di_inject_traits.h8"></a>
           <span class="phrase"><a name="di.concepts.injections.boost_di_inject_traits.see_also"></a></span><a class="link" href="boost_di_inject_traits.html#di.concepts.injections.boost_di_inject_traits.see_also">See Also</a>
         </h6>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">

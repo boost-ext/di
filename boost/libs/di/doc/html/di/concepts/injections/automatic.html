@@ -32,8 +32,8 @@
         </h6>
 <p>
           <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> will deduce the best available constructor
-          to be used for injection - unique constructor with the longest parameter
-          list - see <a class="link" href="../../rationale.html#di.rationale.constructor_parameters_deduction">Constructor
+          to be used for injection - unique constructor with <span class="bold"><strong>the
+          longest parameter list</strong></span> - see <a class="link" href="../../rationale.html#di.rationale.constructor_parameters_deduction">Constructor
           Parameters Deduction</a> for further reading. If the default behavior
           should be changed constructor have to be explicitly marked with <a class="link" href="boost_di_inject.html" title="BOOST_DI_INJECT">BOOST_DI_INJECT</a>
           or <a class="link" href="boost_di_inject_traits.html" title="BOOST_DI_INJECT_TRAITS">BOOST_DI_INJECT_TRAITS</a>.
@@ -110,7 +110,7 @@
     <span class="keyword">int</span> <span class="identifier">params</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">};</span>
 
-<span class="identifier">assert</span><span class="special">(</span><span class="number">3</span> <span class="special">==</span> <a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;().</span><span class="identifier">params</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">3</span> <span class="special">==</span> <a class="link" href="../injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">().</span><a class="link" href="../injectors/injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;().</span><span class="identifier">params</span><span class="special">);</span>
 </pre>
 <div class="note"><table border="0" summary="Note">
 <tr>
@@ -129,8 +129,8 @@
 </tr>
 <tr><td align="left" valign="top"><p>
             <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> is not able to distinguish between
-            ambiguous constructors with the same (longest) amount of parameters,
-            then <a class="link" href="boost_di_inject.html" title="BOOST_DI_INJECT">BOOST_DI_INJECT</a>
+            ambiguous constructors with the same (<span class="bold"><strong>longest</strong></span>)
+            amount of parameters, then <a class="link" href="boost_di_inject.html" title="BOOST_DI_INJECT">BOOST_DI_INJECT</a>
             has to be used to point which constructor should be deduced.
           </p></td></tr>
 </table></div>

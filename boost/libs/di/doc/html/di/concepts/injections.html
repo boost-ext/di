@@ -41,6 +41,8 @@
       </p>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">example</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">example</span><span class="special">()</span> <span class="special">{</span> <span class="special">}</span>
+    <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">i</span><span class="special">(</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
     <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">d</span><span class="special">)</span> <span class="comment">// will be deduced by `Boost.DI` and int, double will be injected</span>
         <span class="special">:</span> <span class="identifier">i</span><span class="special">(</span><span class="identifier">i</span><span class="special">),</span> <span class="identifier">d</span><span class="special">(</span><span class="identifier">d</span><span class="special">)</span>
     <span class="special">{</span> <span class="special">}</span>
@@ -49,7 +51,7 @@
     <span class="keyword">double</span> <span class="identifier">d</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
 <span class="special">};</span>
 
-<span class="keyword">auto</span> <span class="identifier">example_</span> <span class="special">=</span> <a class="link" href="injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;();</span>
+<span class="keyword">auto</span> <span class="identifier">example_</span> <span class="special">=</span> <a class="link" href="injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">().</span><a class="link" href="injectors/injector.html#di.concepts.injectors.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;();</span>
 <span class="identifier">assert</span><span class="special">(</span><span class="number">0</span> <span class="special">==</span> <span class="identifier">example_</span><span class="special">.</span><span class="identifier">i</span><span class="special">);</span>
 <span class="identifier">assert</span><span class="special">(</span><span class="number">0.0</span> <span class="special">==</span> <span class="identifier">example_</span><span class="special">.</span><span class="identifier">d</span><span class="special">);</span>
 </pre>
