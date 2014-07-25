@@ -60,27 +60,22 @@ int main() {
 }
 ```
 
-## Key features
+## features
 * Type safe
-* Compile time approach - no exceptions - if application compiles all dependencies will be be created accurately
-* Macro free - by default no need to specify constructor traits or register anything (less intrusive)
-* Scopes deduction - scopes are deduced based on type semantic
-* Automatic conversion between std/boost smart pointers
-* Compile time policies - ex. to detect circular dependencies or limit supported types only to specified
-* Supports C++03/C++11/C++14 standards
-
-## Other features
 * Header only library
+* Supports C++03/C++11/C++14 standards
 * Architecture independent (tested on x86/x86-64)
 * Supports all POSIX and Windows operating systems (tested on Linux 3.8/Windows 7/8)
 * Exception safe guaranty
 * Thread safe guaranty
-* Constructor injection (macro free)
-* Compile time creation guaranty
+* Compile time creation guaranty - no exceptions - if application compiles all dependencies will be be created accurately
+* Macro free - by default no need to specify constructor traits or register anything (less intrusive)
+* Scopes deduction - scopes are deduced based on type semantic
 * Dependencies life time management (scopes: deduce, external, unique, shared, session + custom scopes)
-* Scope deduction (shared\_ptr -> shared, unique\_ptr, lvalue -> unique, ...)
+* Automatic conversion between std/boost smart pointers
+* Compile time policies - ex. to detect circular dependencies or limit supported types only to specified
 * Supports copies, references, pointers, boost and std smart pointers / rvalue references(C++11)
-* Named parameters (named\<int, my\_int\>)
+* Supports annotations (di::named\<int, my\_int\>)
 * Runtime visitor throughout created objects (useful for generation dependency diagrams)
 
 ## Tested compilers (100% test code coverage)
