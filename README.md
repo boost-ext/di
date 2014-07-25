@@ -71,8 +71,8 @@ int main() {
 * Compile time creation guaranty - no exceptions - if application compiles all dependencies will be be created accurately
 * Macro free - by default no need to specify constructor traits or register anything (less intrusive)
 * Scopes deduction - scopes are deduced based on type semantic
-* Dependencies life time management (scopes: deduce, external, unique, shared, session + custom scopes)
 * Automatic conversion between std/boost smart pointers
+* Dependencies life time management (scopes: deduce, external, unique, shared, session + custom scopes)
 * Compile time policies - ex. to detect circular dependencies or limit supported types only to specified
 * Supports copies, references, pointers, boost and std smart pointers / rvalue references(C++11)
 * Supports annotations (di::named\<int, my\_int\>)
