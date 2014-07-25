@@ -659,6 +659,21 @@ struct call_stack_with_shared_ptr
     int ib_ = 0;
 };
 
+struct default_values
+{
+    BOOST_DI_INJECT_TRAITS(int);
+
+    default_values(int i, float f = 42.0, double d = 87.0)
+        : i_(i)
+        , f_(f)
+        , d_(d)
+    { }
+
+    int i_ = 0;
+    float f_ = 0.0;
+    double d_ = 0.0;
+};
+
 enum eid { e0 = 1 , e1 = 2 };
 
 struct cd2;

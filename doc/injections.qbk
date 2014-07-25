@@ -15,6 +15,8 @@ It guarantees initialized state of data members. `Boost.DI` [link di.concepts.in
 ```
     class example {
     public:
+        example() { }
+        example(int i) : i(i) { }
         example(int i, double d) // will be deduced by `Boost.DI` and int, double will be injected
             : i(i), d(d)
         { }
@@ -23,7 +25,7 @@ It guarantees initialized state of data members. `Boost.DI` [link di.concepts.in
         double d = 0.0;
     };
 
-    auto example_ = __di_make_injector__().create<example>();
+    auto example_ = __di_make_injector__().__di_injector_create__<example>();
     assert(0 == example_.i);
     assert(0.0 == example_.d);
 ```
@@ -38,7 +40,7 @@ It guarantees initialized state of data members. `Boost.DI` [link di.concepts.in
 [section:automatic automatic (default)]
 
 [heading Description]
-`Boost.DI` will deduce the best available constructor to be used for injection - unique constructor with the longest parameter list - see __rationale_constructor_parameters_deduction__ for further reading.
+`Boost.DI` will deduce the best available constructor to be used for injection - unique constructor with [*the longest parameter list] - see __rationale_constructor_parameters_deduction__ for further reading.
 If the default behavior should be changed constructor have to be explicitly marked with __injections_boost_di_inject__ or __injections_boost_di_inject_traits__.
 
 [heading Synopsis]
@@ -65,10 +67,10 @@ If the default behavior should be changed constructor have to be explicitly mark
         int params = 0;
     };
 
-    assert(3 == __di_make_injector__().create<example>().params);
+    assert(3 == __di_make_injector__().__di_injector_create__<example>().params);
 
 [note Automatic constructor parameters deduction is limited to [link di.overview.configuration BOOST_DI_CFG_CTOR_LIMIT_SIZE], which by defaults is set to `10`.]
-[note `Boost.DI` is not able to distinguish between ambiguous constructors with the same (longest) amount of parameters, then __injections_boost_di_inject__ has to be used to point which constructor should be deduced.]
+[note `Boost.DI` is not able to distinguish between ambiguous constructors with the same ([*longest]) amount of parameters, then __injections_boost_di_inject__ has to be used to point which constructor should be deduced.]
 [warning In `C++03` constructors with one argument might be ambiguous with copy constructor, therefore is advised to always use __injections_boost_di_inject__ for 1 argument constructors in `C++03`.]
 
 [heading More Examples]
@@ -92,7 +94,7 @@ If the default behavior should be changed constructor have to be explicitly mark
 [heading Description]
 `BOOST_DI_INJECT` is a macro definition used to explicitly say `Boost.DI` which constructor should be used.
 When class has more than one constructor `Boost.DI` will by default choose the one with
-the longest parameter list. In case of constructors ambiguity `Boost.DI` is not able to choose the best one.
+[*the longest parameter list]. In case of constructors ambiguity `Boost.DI` is not able to choose the best one.
 Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
 
 [heading Synopsis]
@@ -126,7 +128,7 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
         example(int, double, float);
     };
 
-    assert(__di_make_injector__().create<example>());
+    __di_make_injector__().__di_injector_create__<example>(); // compile clean
 
 [note In `C++03` additional brackets are needed: `BOOST_DI_INJECT(example, (int, double))`.]
 [tip Requirement of brackets in `BOOST_DI_INJECT` might be switched with [link di.overview.configuration BOOST_DI_CFG_INJECT_VA_ARGS] and [link di.overview.configuration BOOST_DI_CFG_INJECT_BRACKET].]
@@ -179,6 +181,25 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
         example(double, int);
     };
 
+    __di_make_injector__().__di_injector_create__<example>(); // compile clean
+
+[heading Example - default value]
+    class example {
+    public:
+        BOOST_DI_INJECT_TRAITS(int);
+        explicit example(int i, double d = 42.0)
+            : i(i)
+            , d(d)
+        { }
+
+        int i = 0;
+        double d = 0.0;
+    };
+
+    auto example_ = __di_make_injector__().__di_injector_create__<example>();
+    assert(0 == example_.i_);
+    assert(42.0 == example_.d_)
+
 [heading More Examples]
     ``__examples_constructor_injection__``
 
@@ -229,6 +250,8 @@ might be defined in order to point which constructor should be used by `Boost.DI
     };
 
     }} // boost::di
+
+    __di_make_injector__().__di_injector_create__<example>(); // compile clean
 
 [heading More Examples]
     ``__examples_constructor_injection__`` | ``__examples_constructor_traits_generator__``

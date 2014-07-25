@@ -82,6 +82,7 @@ int main() {
 * [Documentation](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html)
 * [Todo/Issues] (https://github.com/krzysztof-jusiak/di/issues?state=open)
 * [Boost Library Incubator - DI](http://rrsd.com/blincubator.com/bi_library/di-dependency-injection-2)
+* [Boost Library Proposal](http://boost.2283326.n4.nabble.com/Is-there-any-interest-in-a-dependency-injection-library-td4665526.html)
 
 ## Tested compilers (100% test code coverage)
 * Linux (x86/x86-64)
