@@ -60,7 +60,7 @@ int main() {
 }
 ```
 
-## features
+## Features
 * Type safe
 * Header only library
 * Supports C++03/C++11/C++14 standards
