@@ -122,9 +122,16 @@
           configuration)
         </li>
 <li class="listitem">
-          <span class="bold"><strong>Reduce testing effort</strong></span> (automatic mocks
-          injection - see <a class="link" href="examples/testing/automatic_mocks_injector.html" title="Automatic Mocks Injector">Automatic
+          <span class="bold"><strong>Reduce testing effort</strong></span> (<a class="link" href="examples/testing/automatic_mocks_injector.html" title="Automatic Mocks Injector">Automatic
           Mocks Injector</a>)
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Give better control of what and how is created</strong></span>
+          (<a class="link" href="concepts/policies.html" title="Policies">Policies</a>)
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Give better understanding about objects hierarchy</strong></span>
+          (<a class="link" href="examples/uml_visitor.html" title="UML Visitor">UML Visitor</a>)
         </li>
 </ul></div>
 <div class="informaltable"><table class="table">
@@ -171,7 +178,7 @@
           <span class="bold"><strong>Type safe</strong></span>
         </li>
 <li class="listitem">
-          <span class="bold"><strong>Compile time</strong></span> approach - no exceptions
+          <span class="bold"><strong>Compile time</strong></span> creation guaranty - no exceptions
           - if application compiles all dependencies will be be created accurately
         </li>
 <li class="listitem">
@@ -188,9 +195,10 @@
           smart pointers</a>
         </li>
 <li class="listitem">
-          Compile time <a class="link" href="concepts/policies.html" title="Policies">Policies</a> - ex.
-          to detect <a class="link" href="concepts/policies/circular_dependencies.html" title="circular_dependencies">circular
-          dependencies</a> or limit supported types only to specified
+          Compile time <a class="link" href="concepts/policies.html" title="Policies">Policies</a> - to
+          detect <a class="link" href="concepts/policies/circular_dependencies.html" title="circular_dependencies">circular
+          dependencies</a> or [limit link di.concepts.policies.parameters_permission
+          supported types] only to specified
         </li>
 <li class="listitem">
           Supports <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code>/<code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">11</span></code>/<code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">14</span></code>
