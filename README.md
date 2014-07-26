@@ -1,10 +1,10 @@
-# C++ Dependency Injection
+### C++ Dependency Injection
 > "Don't call us, we'll call you", Hollywood principle
 
-## Disclaimers
+### Disclaimers
 This is not an official Boost library yet and there is no guarantee it will ever be!
 
-## Introduction
+### Introduction
 Boost.DI is C++03/C++11/C++14 header only library providing type safe, compile time, macro free constructor dependency injection.
 
 * [Documentation](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html)
@@ -75,7 +75,7 @@ void test_hello_world_when_run_with_value_true_then_log_and_do_it() {
 }
 ```
 
-## Features
+### Features
 * Type safe
 * Header only
 * Supports C++03/C++11/C++14 standards
@@ -93,7 +93,7 @@ void test_hello_world_when_run_with_value_true_then_log_and_do_it() {
 * Supports annotations (di::named\<int, my\_int\>)
 * Runtime visitor throughout created objects (useful for generation dependency diagrams)
 
-## Tested compilers (100% test code coverage)
+### Tested compilers (100% test code coverage)
 * Linux (x86/x86-64)
    * Clang 3.2/3.3/3.4.2+ (clean with Clang Static Analyzer and Valgrind)
    * GCC 4.7.3/4.8.2/4.9.0+ (clean with Valgrind)
@@ -106,12 +106,12 @@ void test_hello_world_when_run_with_value_true_then_log_and_do_it() {
 * Darwin/Mac OS (x86-64)
    * Clang 503.0.40+ (Apple LLVM version 5.1)
 
-## Continuous integration
+### Continuous integration
 [![Build Status](https://travis-ci.org/krzysztof-jusiak/di.png?branch=master)](https://travis-ci.org/krzysztof-jusiak/di)
 [![Build Status](https://ci.appveyor.com/api/projects/status/1il4knxh7tq9o5ic)](https://ci.appveyor.com/project/krzysztof-jusiak/di)
 [![Coverage Status](https://coveralls.io/repos/krzysztof-jusiak/di/badge.png?branch=master)](https://coveralls.io/r/krzysztof-jusiak/di?branch=master)
 
-## Other Dependency Injection Frameworks for C++
+### Other Dependency Injection Frameworks for C++
  * [https://bitbucket.org/cheez/dicpp](https://bitbucket.org/cheez/dicpp)
  * [https://code.google.com/p/infectorpp](https://code.google.com/p/infectorpp)
  * [https://github.com/phs/sauce](https://github.com/phs/sauce)
@@ -129,6 +129,6 @@ void test_hello_world_when_run_with_value_true_then_log_and_do_it() {
  * [http://codebros.github.io/DiLite](http://codebros.github.io/DiLite)
  * [https://code.google.com/p/kindi](https://code.google.com/p/kindi)
 
-## License
+### License
 Distributed under the [Boost Software License, Version 1.0](http://www.boost.org/LICENSE_1_0.txt).
 
