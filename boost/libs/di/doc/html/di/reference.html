@@ -37,35 +37,35 @@
       is defined appropriate preprocessed file will be used instead.
     </p>
 <pre class="programlisting"><span class="comment">// inject</span>
-<span class="preprocessor">#include</span> <span class="string">"boost/di/inject.hpp"</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><a class="link" href="reference.html#di.reference.di_inject_hpp">boost/di/inject.hpp</a><span class="special">&gt;</span>
 
 <span class="comment">// concepts</span>
-<span class="preprocessor">#include</span> <span class="string">"boost/di/concepts.hpp"</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><a class="link" href="reference.html#di.reference.di_concepts_hpp">boost/di/concepts.hpp</a><span class="special">&gt;</span>
 
 <span class="comment">// scopes</span>
-<span class="preprocessor">#include</span> <span class="string">"boost/di/scopes/deduce.hpp"</span>
-<span class="preprocessor">#include</span> <span class="string">"boost/di/scopes/external.hpp"</span>
-<span class="preprocessor">#include</span> <span class="string">"boost/di/scopes/session.hpp"</span>
-<span class="preprocessor">#include</span> <span class="string">"boost/di/scopes/shared.hpp"</span>
-<span class="preprocessor">#include</span> <span class="string">"boost/di/scopes/unique.hpp"</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><a class="link" href="reference.html#di.reference.di_scopes_deduce_hpp">boost/di/scopes/deduce.hpp</a><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><a class="link" href="reference.html#di.reference.di_scopes_external_hpp">boost/di/scopes/external.hpp</a><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><a class="link" href="reference.html#di.reference.di_scopes_session_hpp">boost/di/scopes/session.hpp</a><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><a class="link" href="reference.html#di.reference.di_scopes_shared_hpp">boost/di/scopes/shared.hpp</a><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><a class="link" href="reference.html#di.reference.di_scopes_unique_hpp">boost/di/scopes/unique.hpp</a><span class="special">&gt;</span>
 
 <span class="comment">// injector</span>
-<span class="preprocessor">#include</span> <span class="string">"boost/di/injector.hpp"</span>
-<span class="preprocessor">#include</span> <span class="string">"boost/di/make_injector.hpp"</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><a class="link" href="reference.html#di.reference.di_injector_hpp">boost/di/injector.hpp</a><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><a class="link" href="reference.html#di.reference.di_make_injector_hpp">boost/di/make_injector.hpp</a><span class="special">&gt;</span>
 
 <span class="comment">// utilities</span>
-<span class="preprocessor">#include</span> <span class="string">"boost/di/named.hpp"</span>
-<span class="preprocessor">#include</span> <span class="string">"boost/di/provider.hpp"</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><a class="link" href="reference.html#di.reference.di_named_hpp">boost/di/named.hpp</a><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><a class="link" href="reference.html#di.reference.di_provider_hpp">boost/di/provider.hpp</a><span class="special">&gt;</span>
 
 <span class="comment">// policies</span>
-<span class="preprocessor">#include</span> <span class="string">"boost/di/policies/parameters_permission.hpp"</span>
-<span class="preprocessor">#include</span> <span class="string">"boost/di/policies/circular_dependencies.hpp"</span>
-<span class="preprocessor">#include</span> <span class="string">"boost/di/policies/creation_ownership.hpp"</span>
-<span class="preprocessor">#include</span> <span class="string">"boost/di/policies/scopes_permission.hpp"</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><a class="link" href="reference.html#di.reference.di_policies_parameters_permission_hpp">boost/di/policies/parameters_permission.hpp</a><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><a class="link" href="reference.html#di.reference.di_policies_circular_dependencies_hpp">boost/di/policies/circular_dependencies.hpp</a><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><a class="link" href="reference.html#di.reference.di_policies_creation_ownership_hpp">boost/di/policies/creation_ownership.hpp</a><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><a class="link" href="reference.html#di.reference.di_policies_scopes_permission_hpp">boost/di/policies/scopes_permission.hpp</a><span class="special">&gt;</span>
 </pre>
 <h4>
 <a name="di.reference.h1"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_inject_hpp"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_inject_hpp">Header
+      <span class="phrase"><a name="di.reference.di_inject_hpp"></a></span><a class="link" href="reference.html#di.reference.di_inject_hpp">Header
       &lt;boost/di/inject.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="preprocessor">#define</span> <a class="link" href="concepts/injections/boost_di_inject_traits.html" title="BOOST_DI_INJECT_TRAITS">BOOST_DI_INJECT_TRAITS</a><span class="special">(...)</span>
@@ -82,7 +82,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h2"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_injector_hpp"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_injector_hpp">Header
+      <span class="phrase"><a name="di.reference.di_injector_hpp"></a></span><a class="link" href="reference.html#di.reference.di_injector_hpp">Header
       &lt;boost/di/injector.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -123,7 +123,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h3"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_injectors_make_i"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_injectors_make_i">Header
+      <span class="phrase"><a name="di.reference.di_make_injector_hpp"></a></span><a class="link" href="reference.html#di.reference.di_make_injector_hpp">Header
       &lt;boost/di/make_injector.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -146,7 +146,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h4"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_named_hpp"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_named_hpp">Header
+      <span class="phrase"><a name="di.reference.di_named_hpp"></a></span><a class="link" href="reference.html#di.reference.di_named_hpp">Header
       &lt;boost/di/named.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -267,7 +267,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h5"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_provider_hpp"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_provider_hpp">Header
+      <span class="phrase"><a name="di.reference.di_provider_hpp"></a></span><a class="link" href="reference.html#di.reference.di_provider_hpp">Header
       &lt;boost/di/provider.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -285,7 +285,7 @@
 </pre>
 <h4>
 <a name="di.reference.h6"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_aux_config_hpp"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_aux_config_hpp">Header
+      <span class="phrase"><a name="di.reference.di_aux_config_hpp"></a></span><a class="link" href="reference.html#di.reference.di_aux_config_hpp">Header
       &lt;boost/di/aux_/config.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_INJECTOR</span> <span class="comment">// boost_di_injector__</span>
@@ -314,7 +314,7 @@
 </pre>
 <h4>
 <a name="di.reference.h7"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_aux_memory_hpp"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_aux_memory_hpp">Header
+      <span class="phrase"><a name="di.reference.di_aux_memory_hpp"></a></span><a class="link" href="reference.html#di.reference.di_aux_memory_hpp">Header
       &lt;boost/di/aux_/memory.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -337,7 +337,7 @@
 </pre>
 <h4>
 <a name="di.reference.h8"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_aux_config_cpp_0"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_aux_config_cpp_0">Header
+      <span class="phrase"><a name="di.reference.di_aux_config_cpp_03_hpp"></a></span><a class="link" href="reference.html#di.reference.di_aux_config_cpp_03_hpp">Header
       &lt;boost/di/aux_/config/cpp_03.hpp&gt;</a>
     </h4>
 <p>
@@ -363,7 +363,7 @@
 </pre>
 <h4>
 <a name="di.reference.h9"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_aux_config_cpp_1"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_aux_config_cpp_1">Header
+      <span class="phrase"><a name="di.reference.di_aux_config_cpp_11_hpp"></a></span><a class="link" href="reference.html#di.reference.di_aux_config_cpp_11_hpp">Header
       &lt;boost/di/aux_/config/cpp_11.hpp&gt;</a>
     </h4>
 <p>
@@ -389,7 +389,7 @@
 </pre>
 <h4>
 <a name="di.reference.h10"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_core_allocator_h"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_core_allocator_h">Header
+      <span class="phrase"><a name="di.reference.di_core_allocator_hpp"></a></span><a class="link" href="reference.html#di.reference.di_core_allocator_hpp">Header
       &lt;boost/di/core/allocator.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -434,8 +434,8 @@
 </table></div>
 <h4>
 <a name="di.reference.h11"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_core_any_type_hp"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_core_any_type_hp">Header
-      &lt;boost/di/core/any_type.hpp&gt;</a>
+      <span class="phrase"><a name="di.reference.di_core_any_type_hpp"></a></span><a class="link" href="reference.html#di.reference.di_core_any_type_hpp">Header
+      &lt;boost_di_core_any_type_hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
 <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">{</span>
@@ -515,7 +515,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h12"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_core_binder_hpp"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_core_binder_hpp">Header
+      <span class="phrase"><a name="di.reference.di_core_binder_hpp"></a></span><a class="link" href="reference.html#di.reference.di_core_binder_hpp">Header
       &lt;boost/di/core/binder.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -551,7 +551,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h13"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_core_creator_hpp"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_core_creator_hpp">Header
+      <span class="phrase"><a name="di.reference.di_core_creator_hpp"></a></span><a class="link" href="reference.html#di.reference.di_core_creator_hpp">Header
       &lt;boost/di/core/creator.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -638,7 +638,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h14"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_core_module_hpp"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_core_module_hpp">Header
+      <span class="phrase"><a name="di.reference.di_core_module_hpp"></a></span><a class="link" href="reference.html#di.reference.di_core_module_hpp">Header
       &lt;boost/di/core/module.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -703,7 +703,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h15"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_core_pool_hpp"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_core_pool_hpp">Header
+      <span class="phrase"><a name="di.reference.di_core_pool_hpp"></a></span><a class="link" href="reference.html#di.reference.di_core_pool_hpp">Header
       &lt;boost/di/core/pool.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -747,7 +747,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h16"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_concepts_hpp"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_concepts_hpp">Header
+      <span class="phrase"><a name="di.reference.di_concepts_hpp"></a></span><a class="link" href="reference.html#di.reference.di_concepts_hpp">Header
       &lt;boost/di/concepts.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -796,7 +796,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h17"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_concepts_bind_hp"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_concepts_bind_hp">Header
+      <span class="phrase"><a name="di.reference.di_concepts_bind_hpp"></a></span><a class="link" href="reference.html#di.reference.di_concepts_bind_hpp">Header
       &lt;boost/di/concepts/bind.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -833,7 +833,7 @@
 </pre>
 <h4>
 <a name="di.reference.h18"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_concepts_call_st"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_concepts_call_st">Header
+      <span class="phrase"><a name="di.reference.di_concepts_call_stack_hpp"></a></span><a class="link" href="reference.html#di.reference.di_concepts_call_stack_hpp">Header
       &lt;boost/di/concepts/call_stack.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -861,7 +861,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h19"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_concepts_depende"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_concepts_depende">Header
+      <span class="phrase"><a name="di.reference.di_concepts_dependency_hpp"></a></span><a class="link" href="reference.html#di.reference.di_concepts_dependency_hpp">Header
       &lt;boost/di/concepts/dependency.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -931,7 +931,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h20"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_concepts_scope_h"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_concepts_scope_h">Header
+      <span class="phrase"><a name="di.reference.di_concepts_scope_hpp"></a></span><a class="link" href="reference.html#di.reference.di_concepts_scope_hpp">Header
       &lt;boost/di/concepts/scope.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -959,7 +959,7 @@
 </pre>
 <h4>
 <a name="di.reference.h21"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_concepts_detail_"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_concepts_detail_">Header
+      <span class="phrase"><a name="di.reference.di_concepts_detail_requires_hpp"></a></span><a class="link" href="reference.html#di.reference.di_concepts_detail_requires_hpp">Header
       &lt;boost/di/concepts/detail/requires.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -992,7 +992,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h22"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_concepts_detail0"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_concepts_detail0">Header
+      <span class="phrase"><a name="di.reference.di_concepts_detail_when_hpp"></a></span><a class="link" href="reference.html#di.reference.di_concepts_detail_when_hpp">Header
       &lt;boost/di/concepts/detail/when.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -1022,7 +1022,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h23"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_concepts_type_tr"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_concepts_type_tr">Header
+      <span class="phrase"><a name="di.reference.di_concepts_type_traits_is_required_name_hpp"></a></span><a class="link" href="reference.html#di.reference.di_concepts_type_traits_is_required_name_hpp">Header
       &lt;boost/di/concepts/type_traits/is_required_name.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -1052,7 +1052,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h24"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_concepts_type_t0"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_concepts_type_t0">Header
+      <span class="phrase"><a name="di.reference.di_concepts_type_traits_is_required_priority_hpp"></a></span><a class="link" href="reference.html#di.reference.di_concepts_type_traits_is_required_priority_hpp">Header
       &lt;boost/di/concepts/type_traits/is_required_priority.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -1080,7 +1080,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h25"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_concepts_type_t1"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_concepts_type_t1">Header
+      <span class="phrase"><a name="di.reference.di_concepts_type_traits_is_required_type_hpp"></a></span><a class="link" href="reference.html#di.reference.di_concepts_type_traits_is_required_type_hpp">Header
       &lt;boost/di/concepts/type_traits/is_required_type.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -1115,7 +1115,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h26"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_scopes_deduce_hp"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_scopes_deduce_hp">Header
+      <span class="phrase"><a name="di.reference.di_scopes_deduce_hpp"></a></span><a class="link" href="reference.html#di.reference.di_scopes_deduce_hpp">Header
       &lt;boost/di/scopes/deduce.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -1147,7 +1147,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h27"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_scopes_external_"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_scopes_external_">Header
+      <span class="phrase"><a name="di.reference.di_scopes_external_hpp"></a></span><a class="link" href="reference.html#di.reference.di_scopes_external_hpp">Header
       &lt;boost/di/scopes/external.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -1196,7 +1196,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h28"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_scopes_session_h"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_scopes_session_h">Header
+      <span class="phrase"><a name="di.reference.di_scopes_session_hpp"></a></span><a class="link" href="reference.html#di.reference.di_scopes_session_hpp">Header
       &lt;boost/di/scopes/session.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -1237,7 +1237,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h29"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_scopes_shared_hp"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_scopes_shared_hp">Header
+      <span class="phrase"><a name="di.reference.di_scopes_shared_hpp"></a></span><a class="link" href="reference.html#di.reference.di_scopes_shared_hpp">Header
       &lt;boost/di/scopes/shared.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -1272,7 +1272,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h30"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_scopes_unique_hp"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_scopes_unique_hp">Header
+      <span class="phrase"><a name="di.reference.di_scopes_unique_hpp"></a></span><a class="link" href="reference.html#di.reference.di_scopes_unique_hpp">Header
       &lt;boost/di/scopes/unique.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -1307,7 +1307,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h31"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_policies_circula"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_policies_circula">Header
+      <span class="phrase"><a name="di.reference.di_policies_circular_dependencies_hpp"></a></span><a class="link" href="reference.html#di.reference.di_policies_circular_dependencies_hpp">Header
       &lt;boost/di/policies/circular_dependencies.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -1334,7 +1334,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h32"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_policies_creatio"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_policies_creatio">Header
+      <span class="phrase"><a name="di.reference.di_policies_creation_ownership_hpp"></a></span><a class="link" href="reference.html#di.reference.di_policies_creation_ownership_hpp">Header
       &lt;boost/di/policies/creation_ownership.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -1366,7 +1366,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h33"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_policies_paramet"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_policies_paramet">Header
+      <span class="phrase"><a name="di.reference.di_policies_parameters_permission_hpp"></a></span><a class="link" href="reference.html#di.reference.di_policies_parameters_permission_hpp">Header
       &lt;boost/di/policies/parameters_permission.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -1401,7 +1401,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h34"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_policies_scopes_"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_policies_scopes_">Header
+      <span class="phrase"><a name="di.reference.di_policies_scopes_permission_hpp"></a></span><a class="link" href="reference.html#di.reference.di_policies_scopes_permission_hpp">Header
       &lt;boost/di/policies/scopes_permission.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -1435,7 +1435,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h35"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_wrappers_copy_hp"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_wrappers_copy_hp">Header
+      <span class="phrase"><a name="di.reference.di_wrappers_copy_hpp"></a></span><a class="link" href="reference.html#di.reference.di_wrappers_copy_hpp">Header
       &lt;boost/di/wrappers/copy.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -1484,7 +1484,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h36"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_wrappers_referen"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_wrappers_referen">Header
+      <span class="phrase"><a name="di.reference.di_wrappers_reference_hpp"></a></span><a class="link" href="reference.html#di.reference.di_wrappers_reference_hpp">Header
       &lt;boost/di/wrappers/reference.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -1512,7 +1512,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h37"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_wrappers_shared_"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_wrappers_shared_">Header
+      <span class="phrase"><a name="di.reference.di_wrappers_shared_hpp"></a></span><a class="link" href="reference.html#di.reference.di_wrappers_shared_hpp">Header
       &lt;boost/di/wrappers/shared.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -1552,7 +1552,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h38"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_wrappers_univers"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_wrappers_univers">Header
+      <span class="phrase"><a name="di.reference.di_wrappers_universal_hpp"></a></span><a class="link" href="reference.html#di.reference.di_wrappers_universal_hpp">Header
       &lt;boost/di/wrappers/universal.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -1651,7 +1651,7 @@
 </table></div>
 <h4>
 <a name="di.reference.h39"></a>
-      <span class="phrase"><a name="di.reference.header_boost_di_wrappers_value_h"></a></span><a class="link" href="reference.html#di.reference.header_boost_di_wrappers_value_h">Header
+      <span class="phrase"><a name="di.reference.di_wrappers_value_hpp"></a></span><a class="link" href="reference.html#di.reference.di_wrappers_value_hpp">Header
       &lt;boost/di/wrappers/value.hpp&gt;</a>
     </h4>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
