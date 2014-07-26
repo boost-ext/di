@@ -19,44 +19,54 @@ Boost.DI is C++03/C++11/C++14 header only library providing type safe, compile t
 
 namespace di = boost::di;
 
-struct hello {
-    hello(const std::shared_ptr<i>& sp
-        , std::unique_ptr<int> up
-        , boost::function<int()> f)
-        : sp(sp)
-    {
-        assert(dynamic_cast<impl*>(sp.get()));
-        assert(*up == 0);
-        assert(f.empty());
+class hello_world {
+public:
+    hello_world(std::shared_ptr<ilogger> logger, std::shared_ptr<ilogic> logic, bool value)
+        : logger_(logger), logic_(logic), value_(value)
+    { }
+
+    int run() const {
+        if (value_) {
+            logger_->log("hello world");
+            return logic_->do_it();
+        }
     }
 
-    std::shared_ptr<int> sp;
-};
-
-struct world {
-    world(hello copy
-        , boost::shared_ptr<i> sp
-        , const std::string& str
-        , int i)
-    {
-        assert(dynamic_cast<impl*>(sp.get()));
-        assert(copy.sp.get() == sp.get());
-        assert(str == "");
-        assert(i == 0);
-    }
-};
-
-struct app {
-    app(hello, world);
-    int run();
+    std::shared_ptr<ilogger> logger_;
+    std::shared_ptr<ilogic> logic_;
+    bool value_ = 0;
 };
 
 int main() {
+    // dependency injection configuration
     auto injector = di::make_injector(
-        di::bind<i, impl>() // scope deduction -> di::shared<di::bind<i, impl>>
+        di::bind<ilogger, logger>()
+      , di::bind<ilogic, logic>()
+      , di::bind<bool>::to(true)
     );
 
-    return injector.create<app>().run();
+    // composition root
+    return injector.create<hello_world>().run();
+}
+```
+
+### Tests with [Automatic Mocks Injector](https://github.com/krzysztof-jusiak/mocks_injector)
+
+```cpp
+#include <mocks_injector.hpp>
+
+void test_hello_world_when_run_with_value_false_then_nothing() {
+    auto mi = di::make_mocks_injector(di::bind<bool>::to(false));
+    mi.create<hello_world>()->run();
+}
+
+void test_hello_world_when_run_with_value_true_then_log_and_do_it() {
+    auto mi = di::make_mocks_injector(di::bind<bool>::to(true));
+
+    EXPECT_CALL(mi, ilogic::do_it);
+    EXPECT_CALL(mi, ilogger::log).With("hello world");
+
+    mi.create<hello_world>()->run();
 }
 ```
 
