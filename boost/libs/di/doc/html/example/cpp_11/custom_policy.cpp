@@ -28,6 +28,7 @@ struct example {
 class allow_only_smart_ptr_policy {
     BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 
+    /*<let's assume smart pointers require to only have `has_element` type>*/
     template<typename TDependency>
     struct is_creation_by_smart_ptr
         : has_element_type<

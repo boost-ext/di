@@ -39,6 +39,7 @@
 <span class="keyword">class</span> <span class="identifier">allow_only_smart_ptr_policy</span> <span class="special">{</span>
     <span class="identifier">BOOST_MPL_HAS_XXX_TRAIT_DEF</span><span class="special">(</span><span class="identifier">element_type</span><span class="special">)</span>
 
+    <a class="co" name="di.examples.custom_policy.c2" href="custom_policy.html#di.examples.custom_policy.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
     <span class="keyword">struct</span> <span class="identifier">is_creation_by_smart_ptr</span>
         <span class="special">:</span> <span class="identifier">has_element_type</span><span class="special">&lt;</span>
@@ -47,11 +48,11 @@
     <span class="special">{</span> <span class="special">};</span>
 
 <span class="keyword">public</span><span class="special">:</span>
-    <a class="co" name="di.examples.custom_policy.c2" href="custom_policy.html#di.examples.custom_policy.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
+    <a class="co" name="di.examples.custom_policy.c4" href="custom_policy.html#di.examples.custom_policy.c5"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
     <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">enable_if</span><span class="special">&lt;</span><span class="identifier">is_creation_by_smart_ptr</span><span class="special">&lt;</span><span class="identifier">TDependency</span><span class="special">&gt;&gt;::</span><span class="identifier">type</span>
     <span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span> <span class="special">}</span>
 
-    <a class="co" name="di.examples.custom_policy.c4" href="custom_policy.html#di.examples.custom_policy.c5"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
+    <a class="co" name="di.examples.custom_policy.c6" href="custom_policy.html#di.examples.custom_policy.c7"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TDependency</span><span class="special">&gt;</span>
     <span class="keyword">typename</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">disable_if</span><span class="special">&lt;</span><span class="identifier">is_creation_by_smart_ptr</span><span class="special">&lt;</span><span class="identifier">TDependency</span><span class="special">&gt;&gt;::</span><span class="identifier">type</span>
     <span class="identifier">assert_policy</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
         <span class="identifier">BOOST_MPL_ASSERT_MSG</span><span class="special">(</span>
@@ -63,9 +64,9 @@
 <span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <a class="co" name="di.examples.custom_policy.c6" href="custom_policy.html#di.examples.custom_policy.c7"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;&gt;(</span><span class="identifier">allow_only_smart_ptr_policy</span><span class="special">());</span>
+    <a class="co" name="di.examples.custom_policy.c8" href="custom_policy.html#di.examples.custom_policy.c9"><img src="../../../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;&gt;(</span><span class="identifier">allow_only_smart_ptr_policy</span><span class="special">());</span>
 
-    <a class="co" name="di.examples.custom_policy.c8" href="custom_policy.html#di.examples.custom_policy.c9"><img src="../../../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a><span class="comment">//di::make_injector().create&lt;example&gt;(allow_only_smart_ptr_policy());</span>
+    <a class="co" name="di.examples.custom_policy.c10" href="custom_policy.html#di.examples.custom_policy.c11"><img src="../../../../../../doc/src/images/callouts/6.png" alt="6" border="0"></a><span class="comment">//di::make_injector().create&lt;example&gt;(allow_only_smart_ptr_policy());</span>
 
     <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
@@ -80,19 +81,26 @@
 <tr>
 <td width="5%" valign="top" align="left"><p><a name="di.examples.custom_policy.c3"></a><a href="#di.examples.custom_policy.c2"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
-            define <code class="computeroutput"><span class="identifier">assert_policy</span></code>
-            requirement - version when type is smart pointer
+            let's assume smart pointers require to only have <code class="computeroutput"><span class="identifier">has_element</span></code>
+            type
           </p></td>
 </tr>
 <tr>
 <td width="5%" valign="top" align="left"><p><a name="di.examples.custom_policy.c5"></a><a href="#di.examples.custom_policy.c4"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
             define <code class="computeroutput"><span class="identifier">assert_policy</span></code>
-            requirement - version when type is not smart pointer
+            requirement - version when type is smart pointer
           </p></td>
 </tr>
 <tr>
 <td width="5%" valign="top" align="left"><p><a name="di.examples.custom_policy.c7"></a><a href="#di.examples.custom_policy.c6"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+            define <code class="computeroutput"><span class="identifier">assert_policy</span></code>
+            requirement - version when type is not smart pointer
+          </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="di.examples.custom_policy.c9"></a><a href="#di.examples.custom_policy.c8"><img src="../../../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
             create shared_ptr <code class="computeroutput"><span class="identifier">example</span></code>
             with <code class="computeroutput"><span class="identifier">allow_only_smart_ptr_policy</span></code>
@@ -100,7 +108,7 @@
           </p></td>
 </tr>
 <tr>
-<td width="5%" valign="top" align="left"><p><a name="di.examples.custom_policy.c9"></a><a href="#di.examples.custom_policy.c8"><img src="../../../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a> </p></td>
+<td width="5%" valign="top" align="left"><p><a name="di.examples.custom_policy.c11"></a><a href="#di.examples.custom_policy.c10"><img src="../../../../../../doc/src/images/callouts/6.png" alt="6" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
             create lvalue <code class="computeroutput"><span class="identifier">example</span></code>
             with <code class="computeroutput"><span class="identifier">allow_only_smart_ptr_policy</span></code>

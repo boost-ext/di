@@ -39,16 +39,16 @@
     </p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
-          <span class="bold"><strong>Provide loosely coupled code</strong></span> (separation
+          <span class="bold"><strong>Provide loosely coupled code</strong></span> (Separation
           of business logic and object creation)
         </li>
 <li class="listitem">
-          <span class="bold"><strong>Provide easier to maintain code</strong></span> (new objects
-          might be injected)
+          <span class="bold"><strong>Provide easier to maintain code</strong></span> (Different
+          objects might be easily injected)
         </li>
 <li class="listitem">
-          <span class="bold"><strong>Provide easier to test code</strong></span> (fakes might
-          be injected)
+          <span class="bold"><strong>Provide easier to test code</strong></span> (Fakes objects
+          might be injected)
         </li>
 </ul></div>
 <div class="informaltable"><table class="table">
@@ -113,12 +113,12 @@
     </p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
-          <span class="bold"><strong>Reduce boilerplate code</strong></span> (no factories,
+          <span class="bold"><strong>Reduce boilerplate code</strong></span> (No factories,
           no objects creation)
         </li>
 <li class="listitem">
-          <span class="bold"><strong>Reduce cost of maintenance effort</strong></span> (constructor
-          signature change won't affect <code class="computeroutput"><span class="identifier">di</span></code>
+          <span class="bold"><strong>Reduce cost of maintenance effort</strong></span> (<a class="link" href="examples/constructor_signature.html" title="Constructor Signature">Constructor signature</a>
+          change won't affect <code class="computeroutput"><span class="identifier">di</span></code>
           configuration)
         </li>
 <li class="listitem">
@@ -178,6 +178,9 @@
           <span class="bold"><strong>Type safe</strong></span>
         </li>
 <li class="listitem">
+          <span class="bold"><strong>Header only</strong></span>
+        </li>
+<li class="listitem">
           <span class="bold"><strong>Compile time</strong></span> creation guaranty - no exceptions
           - if application compiles all dependencies will be be created accurately
         </li>
@@ -187,22 +190,22 @@
           or register anything (less intrusive)
         </li>
 <li class="listitem">
-          <a class="link" href="concepts/scopes.html" title="Scopes">Scopes</a> deduction - scopes are
-          deduced based on type semantic
+          <span class="bold"><strong><a class="link" href="concepts/scopes/deduce.html" title="deduce (default)">Scopes
+          deduction</a></strong></span> - <a class="link" href="concepts/scopes.html" title="Scopes">scopes</a>
+          are deduced based on type semantic
         </li>
 <li class="listitem">
           Automatic conversion between <a class="link" href="concepts/scopes/shared.html" title="shared">std/boost
           smart pointers</a>
         </li>
 <li class="listitem">
-          Compile time <a class="link" href="concepts/policies.html" title="Policies">Policies</a> - to
+          Compile time <a class="link" href="concepts/policies.html" title="Policies">policies</a> - to
           detect <a class="link" href="concepts/policies/circular_dependencies.html" title="circular_dependencies">circular
           dependencies</a> or limit <a class="link" href="concepts/policies/parameters_permission.html" title="parameters_permission">supported
           types</a> only to specified
         </li>
 <li class="listitem">
           Supports <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code>/<code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">11</span></code>/<code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">14</span></code>
-          standards
         </li>
 </ul></div>
 <h4>
