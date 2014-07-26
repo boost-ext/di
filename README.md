@@ -12,9 +12,10 @@ Boost.DI is C++03/C++11/C++14 header only library providing type safe, compile t
 * [Boost Library Incubator](http://rrsd.com/blincubator.com/bi_library/di-dependency-injection-2)
 * [Boost Library Proposal](http://boost.2283326.n4.nabble.com/Is-there-any-interest-in-a-dependency-injection-library-td4665526.html)
 
-## Hello World
+**Hello World**
 
 ```cpp
+#include <memory>
 #include <boost/di.hpp>
 
 namespace di = boost::di;
@@ -54,7 +55,7 @@ int main() {
 }
 ```
 
-## Tests with [Automatic Mocks Injector](https://github.com/krzysztof-jusiak/mocks_injector)
+**Tests with [Automatic Mocks Injector](https://github.com/krzysztof-jusiak/mocks_injector)**
 
 ```cpp
 #include <mocks_injector.hpp>
