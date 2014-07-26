@@ -14,33 +14,33 @@ This header exists simply as a convenience to the user, including all of the hea
 In case when [link di.overview.configuration BOOST_DI_CFG_NO_PREPROCESSED_HEADERS] is defined appropriate preprocessed file will be used instead.
 
     // inject
-    #include "boost/di/inject.hpp"
+    #include <``[link di.reference.di_inject_hpp boost/di/inject.hpp]``>
 
     // concepts
-    #include "boost/di/concepts.hpp"
+    #include <``[link di.reference.di_concepts_hpp boost/di/concepts.hpp]``>
 
     // scopes
-    #include "boost/di/scopes/deduce.hpp"
-    #include "boost/di/scopes/external.hpp"
-    #include "boost/di/scopes/session.hpp"
-    #include "boost/di/scopes/shared.hpp"
-    #include "boost/di/scopes/unique.hpp"
+    #include <``[link di.reference.di_scopes_deduce_hpp boost/di/scopes/deduce.hpp]``>
+    #include <``[link di.reference.di_scopes_external_hpp boost/di/scopes/external.hpp]``>
+    #include <``[link di.reference.di_scopes_session_hpp boost/di/scopes/session.hpp]``>
+    #include <``[link di.reference.di_scopes_shared_hpp boost/di/scopes/shared.hpp]``>
+    #include <``[link di.reference.di_scopes_unique_hpp boost/di/scopes/unique.hpp]``>
 
     // injector
-    #include "boost/di/injector.hpp"
-    #include "boost/di/make_injector.hpp"
+    #include <``[link di.reference.di_injector_hpp boost/di/injector.hpp]``>
+    #include <``[link di.reference.di_make_injector_hpp boost/di/make_injector.hpp]``>
 
     // utilities
-    #include "boost/di/named.hpp"
-    #include "boost/di/provider.hpp"
+    #include <``[link di.reference.di_named_hpp boost/di/named.hpp]``>
+    #include <``[link di.reference.di_provider_hpp boost/di/provider.hpp]``>
 
     // policies
-    #include "boost/di/policies/parameters_permission.hpp"
-    #include "boost/di/policies/circular_dependencies.hpp"
-    #include "boost/di/policies/creation_ownership.hpp"
-    #include "boost/di/policies/scopes_permission.hpp"
+    #include <``[link di.reference.di_policies_parameters_permission_hpp boost/di/policies/parameters_permission.hpp]``>
+    #include <``[link di.reference.di_policies_circular_dependencies_hpp boost/di/policies/circular_dependencies.hpp]``>
+    #include <``[link di.reference.di_policies_creation_ownership_hpp boost/di/policies/creation_ownership.hpp]``>
+    #include <``[link di.reference.di_policies_scopes_permission_hpp boost/di/policies/scopes_permission.hpp]``>
 
-[heading Header <boost/di/inject.hpp>]
+[heading:di_inject_hpp Header <boost/di/inject.hpp>]
 ```
 #define __injections_boost_di_inject_traits__(...)
 #define __injections_boost_di_inject__(type, ...)
@@ -49,7 +49,7 @@ In case when [link di.overview.configuration BOOST_DI_CFG_NO_PREPROCESSED_HEADER
     [[Tests: [@test/ut/inject_va_args_ut.cpp] | [@test/ut/inject_bracket_ut.cpp]]]
 ]
 
-[heading Header <boost/di/injector.hpp>]
+[heading:di_injector_hpp Header <boost/di/injector.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -82,7 +82,7 @@ public:
     [[Tests: [@test/ut/injector_ut.cpp] | [@test/mt/injector_mt.cpp]]]
 ]
 
-[heading Header <boost/di/__injectors_make_injector__.hpp>]
+[heading:di_make_injector_hpp Header <boost/di/make_injector.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -98,7 +98,7 @@ inline __injectors_make_injector__(const TArgs&...);
     [[Tests: [@test/mt/make_injector_mt.cpp]]]
 ]
 
-[heading Header <boost/di/named.hpp>]
+[heading:di_named_hpp Header <boost/di/named.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -212,7 +212,7 @@ public:
     [[Tests: [@test/ut/named_ut.cpp]]]
 ]
 
-[heading Header <boost/di/provider.hpp>]
+[heading:di_provider_hpp Header <boost/di/provider.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -228,7 +228,7 @@ public:
 } // namespace boost
 ```
 
-[heading Header <boost/di/aux_/config.hpp>]
+[heading:di_aux_config_hpp Header <boost/di/aux_/config.hpp>]
 ```
 #define BOOST_DI_INJECTOR // boost_di_injector__
 #define BOOST_DI_CFG_CTOR_LIMIT_SIZE // 10
@@ -255,7 +255,7 @@ public:
 #define BOOST_DI_ASSERT_MSG(c, msg, type)
 ```
 
-[heading Header <boost/di/aux_/memory.hpp>]
+[heading:di_aux_memory_hpp Header <boost/di/aux_/memory.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -276,7 +276,7 @@ using ::boost::shared_ptr;
 } // namespace di
 ```
 
-[heading Header <boost/di/aux_/config/cpp_03.hpp>]
+[heading:di_aux_config_cpp_03_hpp Header <boost/di/aux_/config/cpp_03.hpp>]
 This header contains configuration when `c++ 03` standard will be used.
 
 ```
@@ -298,7 +298,7 @@ This header contains configuration when `c++ 03` standard will be used.
 #define BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)
 ```
 
-[heading Header <boost/di/aux_/config/cpp_11.hpp>]
+[heading:di_aux_config_cpp_11_hpp Header <boost/di/aux_/config/cpp_11.hpp>]
 This header contains configuration when `c++ 11` standard will be used.
 
 ```
@@ -320,7 +320,7 @@ This header contains configuration when `c++ 11` standard will be used.
 #define BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)
 ```
 
-[heading Header <boost/di/core/allocator.hpp>]
+[heading:di_core_allocator_hpp Header <boost/di/core/allocator.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -358,7 +358,7 @@ public:
     [[Tests: [@test/ut/core/allocator_ut.cpp]]]
 ]
 
-[heading Header <boost/di/core/any_type.hpp>]
+[heading:di_core_any_type_hpp Header <boost_di_core_any_type_hpp>]
 ```
 namespace boost {
 namespace di {
@@ -432,7 +432,7 @@ public:
     [[Tests: [@test/ut/core/any_type_ut.cpp]]]
 ]
 
-[heading Header <boost/di/core/binder.hpp>]
+[heading:di_core_binder_hpp Header <boost/di/core/binder.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -461,7 +461,7 @@ public:
     [[Tests: [@test/ut/core/binder_ut.cpp]]]
 ]
 
-[heading Header <boost/di/core/creator.hpp>]
+[heading:di_core_creator_hpp Header <boost/di/core/creator.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -541,7 +541,7 @@ public:
     [[Tests: [@test/ut/core/creator_ut.cpp]]]
 ]
 
-[heading Header <boost/di/core/module.hpp>]
+[heading:di_core_module_hpp Header <boost/di/core/module.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -599,7 +599,7 @@ public:
     [[Tests: [@test/mt/core/module_mt.cpp]]]
 ]
 
-[heading Header <boost/di/core/pool.hpp>]
+[heading:di_core_pool_hpp Header <boost/di/core/pool.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -637,7 +637,7 @@ public:
 ]
 
 
-[heading Header <boost/di/concepts.hpp>]
+[heading:di_concepts_hpp Header <boost/di/concepts.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -679,7 +679,7 @@ struct any_of;
     [[Tests: [@test/ut/concepts_ut.cpp]]]
 ]
 
-[heading Header <boost/di/concepts/bind.hpp>]
+[heading:di_concepts_bind_hpp Header <boost/di/concepts/bind.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -714,7 +714,7 @@ struct bind {
 } // namespace boost
 ```
 
-[heading Header <boost/di/concepts/call_stack.hpp>]
+[heading:di_concepts_call_stack_hpp Header <boost/di/concepts/call_stack.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -735,7 +735,7 @@ public:
     [[Tests: [@test/ut/concepts/call_stack_ut.cpp]]]
 ]
 
-[heading Header <boost/di/concepts/dependency.hpp>]
+[heading:di_concepts_dependency_hpp Header <boost/di/concepts/dependency.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -798,7 +798,7 @@ public:
     [[Tests: [@test/ut/concepts/dependency_ut.cpp]]]
 ]
 
-[heading Header <boost/di/concepts/scope.hpp>]
+[heading:di_concepts_scope_hpp Header <boost/di/concepts/scope.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -824,7 +824,7 @@ public:
 } // namespace boost
 ```
 
-[heading Header <boost/di/concepts/detail/requires.hpp>]
+[heading:di_concepts_detail_requires_hpp Header <boost/di/concepts/detail/requires.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -850,7 +850,7 @@ public:
     [[Tests: [@test/ut/concepts/detail/requires_ut.cpp]]]
 ]
 
-[heading Header <boost/di/concepts/detail/when.hpp>]
+[heading:di_concepts_detail_when_hpp Header <boost/di/concepts/detail/when.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -873,7 +873,7 @@ public:
     [[Tests: [@test/ut/concepts/detail/when_ut.cpp]]]
 ]
 
-[heading Header <boost/di/concepts/type_traits/is_required_name.hpp>]
+[heading:di_concepts_type_traits_is_required_name_hpp Header <boost/di/concepts/type_traits/is_required_name.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -896,7 +896,7 @@ public:
     [[Tests: [@test/ut/concepts/type_traits/is_required_name_ut.cpp]]]
 ]
 
-[heading Header <boost/di/concepts/type_traits/is_required_priority.hpp>]
+[heading:di_concepts_type_traits_is_required_priority_hpp Header <boost/di/concepts/type_traits/is_required_priority.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -917,7 +917,7 @@ struct is_required_priority {
     [[Tests: [@test/ut/concepts/type_traits/is_required_priority_ut.cpp]]]
 ]
 
-[heading Header <boost/di/concepts/type_traits/is_required_type.hpp>]
+[heading:di_concepts_type_traits_is_required_type_hpp Header <boost/di/concepts/type_traits/is_required_type.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -945,7 +945,7 @@ struct is_required_type<TValueType, typename enable_if<mpl::is_sequence<TValueTy
     [[Tests: [@test/ut/concepts/type_traits/is_required_type_ut.cpp]]]
 ]
 
-[heading Header <boost/di/scopes/deduce.hpp>]
+[heading:di_scopes_deduce_hpp Header <boost/di/scopes/deduce.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -970,7 +970,7 @@ public:
     [[Tests: [@test/ut/scopes/deduce_ut.cpp]]]
 ]
 
-[heading Header <boost/di/scopes/external.hpp>]
+[heading:di_scopes_external_hpp Header <boost/di/scopes/external.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -1012,7 +1012,7 @@ public:
     [[Tests: [@test/ut/scopes/external_ut.cpp]]]
 ]
 
-[heading Header <boost/di/scopes/session.hpp>]
+[heading:di_scopes_session_hpp Header <boost/di/scopes/session.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -1046,7 +1046,7 @@ public:
     [[Tests: [@test/ut/scopes/session_ut.cpp]]]
 ]
 
-[heading Header <boost/di/scopes/shared.hpp>]
+[heading:di_scopes_shared_hpp Header <boost/di/scopes/shared.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -1074,7 +1074,7 @@ public:
     [[Tests: [@test/ut/scopes/shared_ut.cpp]]]
 ]
 
-[heading Header <boost/di/scopes/unique.hpp>]
+[heading:di_scopes_unique_hpp Header <boost/di/scopes/unique.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -1102,7 +1102,7 @@ public:
     [[Tests: [@test/ut/scopes/unique_ut.cpp]]]
 ]
 
-[heading Header <boost/di/policies/circular_dependencies.hpp>]
+[heading:di_policies_circular_dependencies_hpp Header <boost/di/policies/circular_dependencies.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -1122,7 +1122,7 @@ public:
     [[Tests: [@test/ut/policies/circular_dependencies_ut.cpp]]]
 ]
 
-[heading Header <boost/di/policies/creation_ownership.hpp>]
+[heading:di_policies_creation_ownership_hpp Header <boost/di/policies/creation_ownership.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -1147,7 +1147,7 @@ public:
     [[Tests: [@test/ut/policies/creation_ownership_ut.cpp]]]
 ]
 
-[heading Header <boost/di/policies/parameters_permission.hpp>]
+[heading:di_policies_parameters_permission_hpp Header <boost/di/policies/parameters_permission.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -1175,7 +1175,7 @@ public:
     [[Tests: [@test/ut/policies/parameters_permission_ut.cpp]]]
 ]
 
-[heading Header <boost/di/policies/scopes_permission.hpp>]
+[heading:di_policies_scopes_permission_hpp Header <boost/di/policies/scopes_permission.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -1202,7 +1202,7 @@ public:
     [[Tests: [@test/ut/policies/scopes_permission_ut.cpp]]]
 ]
 
-[heading Header <boost/di/wrappers/copy.hpp>]
+[heading:di_wrappers_copy_hpp Header <boost/di/wrappers/copy.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -1244,7 +1244,7 @@ public:
     [[Tests: [@test/ut/wrappers/copy_ut.cpp]]]
 ]
 
-[heading Header <boost/di/wrappers/reference.hpp>]
+[heading:di_wrappers_reference_hpp Header <boost/di/wrappers/reference.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -1265,7 +1265,7 @@ public:
     [[Tests: [@test/ut/reference_ut.cpp]]]
 ]
 
-[heading Header <boost/di/wrappers/shared.hpp>]
+[heading:di_wrappers_shared_hpp Header <boost/di/wrappers/shared.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -1298,7 +1298,7 @@ public:
     [[Tests: [@test/ut/wrappers/shared_ut.cpp]]]
 ]
 
-[heading Header <boost/di/wrappers/universal.hpp>]
+[heading:di_wrappers_universal_hpp Header <boost/di/wrappers/universal.hpp>]
 ```
 namespace boost {
 namespace di {
@@ -1390,7 +1390,7 @@ public:
     [[Tests: [@test/ut/wrappers/universal_ut.cpp]]]
 ]
 
-[heading Header <boost/di/wrappers/value.hpp>]
+[heading:di_wrappers_value_hpp Header <boost/di/wrappers/value.hpp>]
 ```
 namespace boost {
 namespace di {
