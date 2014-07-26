@@ -89,6 +89,7 @@
 [def __examples_binding__                               [link di.examples.binding Binding]]
 [def __examples_dynamic_binding__                       [link di.examples.dynamic_binding Dynamic Binding]]
 [def __examples_constructor_injection__                 [link di.examples.constructor_injection Constructor Injection]]
+[def __examples_constructor_signature__                 [link di.examples.constructor_signature Constructor Signature]]
 [def __examples_modules__                               [link di.examples.modules Modules]]
 [def __examples_custom_allocator__                      [link di.examples.custom_allocator Custom Allocator]]
 [def __examples_constructor_traits_generator__          [link di.examples.constructor_traits_generator Constructor Traits Generator]]

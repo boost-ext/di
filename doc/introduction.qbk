@@ -15,9 +15,9 @@
 [*[@http://en.wikipedia.org/wiki/Dependency_injection Dependency injection]] is a programming practice providing required objects to an object.
 Following this approach has many advantages.
 
-* [*Provide loosely coupled code] (separation of business logic and object creation)
-* [*Provide easier to maintain code] (new objects might be injected)
-* [*Provide easier to test code] (fakes might be injected)
+* [*Provide loosely coupled code] (Separation of business logic and object creation)
+* [*Provide easier to maintain code] (Different objects might be easily injected)
+* [*Provide easier to test code] (Fakes objects might be injected)
 
 [table
 [[No Dependency Injection][Dependency Injection]]
@@ -61,8 +61,8 @@ Following this approach has many advantages.
 `Boost.DI` is a `Dependency Injection library` improving `manual dependency injection` by simplifying object instantiation with automatic dependencies injection.
 Using `Boost.DI` has many advantages over `manual dependency injection`.
 
-* [*Reduce boilerplate code] (no factories, no objects creation)
-* [*Reduce cost of maintenance effort] (constructor signature change won't affect `di` configuration)
+* [*Reduce boilerplate code] (No factories, no objects creation)
+* [*Reduce cost of maintenance effort] ([link di.examples.constructor_signature Constructor signature] change won't affect `di` configuration)
 * [*Reduce testing effort] (__examples_testing_automatic_mocks_injector__)
 * [*Give better control of what and how is created] (__policies__)
 * [*Give better understanding about objects hierarchy] (__examples_uml_visitor__)
@@ -94,12 +94,13 @@ Using `Boost.DI` has many advantages over `manual dependency injection`.
 `Boost.DI` [*key] features.
 
 * [*Type safe]
+* [*Header only]
 * [*Compile time] creation guaranty - no exceptions - if application compiles all dependencies will be be created accurately
 * [*[link di.concepts.injections.automatic Macro free]] - by default - no need to specify constructor traits or register anything (less intrusive)
-* __scopes__ deduction - scopes are deduced based on type semantic
+* [*[link di.concepts.scopes.deduce Scopes deduction]] - [link di.concepts.scopes scopes] are deduced based on type semantic
 * Automatic conversion between [link di.concepts.scopes.shared std/boost smart pointers]
-* Compile time __policies__ - to detect [link di.concepts.policies.circular_dependencies circular dependencies] or limit [link di.concepts.policies.parameters_permission supported types] only to specified
-* Supports `C++03`/`C++11`/`C++14` standards
+* Compile time [link di.concepts.policies policies] - to detect [link di.concepts.policies.circular_dependencies circular dependencies] or limit [link di.concepts.policies.parameters_permission supported types] only to specified
+* Supports `C++03`/`C++11`/`C++14`
 
 [heading See Also]
 * [link di.motivation Motivation]

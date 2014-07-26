@@ -25,6 +25,14 @@
 ]
 [endsect]
 
+[section Constructor Signature]
+[import ../example/cpp_11/constructor_signature.cpp]
+[constructor_signature_cpp_11]
+[table
+    [[Full code example: [@example/cpp_11/constructor_signature.cpp]]]
+]
+[endsect]
+
 [section Binding]
 [import ../example/cpp_11/binding.cpp]
 [binding_cpp_11]

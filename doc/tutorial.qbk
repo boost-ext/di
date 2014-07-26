@@ -278,7 +278,7 @@ we can define different types for both of them. We can use __annotations_named__
 
 [note __annotations_named__ parameters will convert to the type there are named from, meaning - you can write: `int value = named<int, first>(42)`.]
 
-Or in less intrusive way - when we can't change constructor signature for example - by using __injections_ctor_traits__ to achieve __annotations_named__ parameters.
+Or in less intrusive way - when we can't change [link di.examples.constructor_signature constructor signature] for example - by using __injections_ctor_traits__ to achieve __annotations_named__ parameters.
 
 ```
     app(int value1, int value2, const std::string& text, std::shared_ptr<ilogger> logger)

@@ -287,7 +287,7 @@ Therefore instead of creating and configuring the objects yourself, the dependen
     * Separation between object creation and business logic make code easy to maintain
     * Reduce `Dependency Carrying` - passing dependencies which aren't used directly and passed further as well as
       Singletons which weren't passed by constructor because they would have to be passed everywhere
-        * changing constructor signature may not require any changes in dependencies configuration (if such dependency might be deduced or is already used)
+        * changing [link di.examples.constructor_signature constructor signature] may not require any changes in dependencies configuration (if such dependency might be deduced or is already used)
 
 * [*Testability]
     * Possibility of passing all required parameters via constructor give the opportunity to use fakes for testing purposes

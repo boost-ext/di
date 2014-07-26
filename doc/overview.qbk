@@ -17,7 +17,7 @@
 * Header only library
 * Architecture independent (tested on x86/x86-64)
 * Supports all POSIX and Windows operating systems (tested on Linux/Windows/Mac/Darwin)
-* Supports `C++03`/`C++11`/`C++14` standards
+* Supports `C++03`/`C++11`/`C++14`
 * Exception safe guaranty
 * Thread safe guaranty
 * [link di.concepts.injections.automatic Constructor injection] (macro free)

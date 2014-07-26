@@ -62,19 +62,31 @@ If the default behavior should be changed constructor have to be explicitly mark
     public:
         example(int) : params(1) { }
         example(int, double) : params(2) { }
-        example(int, double, float); : params(3) { } // will be deduced by Boost.DI
+        example(int, double, float) : params(3) { } // will be deduced by Boost.DI
 
         int params = 0;
     };
 
-    assert(3 == __di_make_injector__().__di_injector_create__<example>().params);
+    class example_with_different_constructor_signature {
+    public:
+        example_with_different_constructor_signature(int) : params(1) { }
+        example_with_different_constructor_signature(int, double) : params(2) { }
+        example_with_different_constructor_signature(float, double, int) : params(3) { } // will be deduced by Boost.DI
+
+        int params = 0;
+    };
+
+    auto injector = __di_make_injector__(); // use the same configuration to create different `example` objects
+
+    assert(3 == injector.__di_injector_create__<example>().params);
+    assert(3 == injector.__di_injector_create__<example_with_different_constructor_signature>().params);
 
 [note Automatic constructor parameters deduction is limited to [link di.overview.configuration BOOST_DI_CFG_CTOR_LIMIT_SIZE], which by defaults is set to `10`.]
 [note `Boost.DI` is not able to distinguish between ambiguous constructors with the same ([*longest]) amount of parameters, then __injections_boost_di_inject__ has to be used to point which constructor should be deduced.]
 [warning In `C++03` constructors with one argument might be ambiguous with copy constructor, therefore is advised to always use __injections_boost_di_inject__ for 1 argument constructors in `C++03`.]
 
 [heading More Examples]
-    ``__examples_constructor_injection__``
+    ``__examples_constructor_injection__`` | ``__examples_constructor_signature__``
 
 [heading Tests]
     ``[@test/vt/compiler_support_vt.cpp]``
