@@ -11,6 +11,8 @@
 #include <boost/test/test_case_template.hpp>
 #include <boost/mpl/pair.hpp>
 
+#include "boost/di/scopes/deduce.hpp"
+
 #include "common/fakes/fake_dependency.hpp"
 #include "common/fakes/fake_scope.hpp"
 #include "common/contains_all.hpp"
@@ -341,6 +343,34 @@ BOOST_AUTO_TEST_CASE(scope_with_call_stack) {
           , mpl::vector<
                 fake_dependency<fake_scope<>, i, impl, no_name, mpl::vector<call_stack<c0, c1>>>::type
             >
+        >::value
+    ));
+}
+
+BOOST_AUTO_TEST_CASE(bind_deduce_with_deduced_interface) {
+    typedef typename fake_dependency<scopes::deduce, impl, impl>::type expected;
+
+    BOOST_CHECK((
+        contains_all<
+            mpl::vector<
+                bind<impl>::type
+              , bind<impl, impl>::type
+            >
+          , mpl::vector<expected, expected>
+        >::value
+    ));
+
+    BOOST_CHECK((
+        contains_all<
+            deduce<impl>::type
+          , mpl::vector<expected>
+        >::value
+    ));
+
+    BOOST_CHECK((
+        contains_all<
+            deduce<bind<impl>>::type
+          , mpl::vector<expected>
         >::value
     ));
 }
