@@ -124,7 +124,7 @@ a specific combination.
 `Boost.DI` is header only library and doesn't require building.
 To start using library just include `Boost.DI` header.
 ```
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 ```
 
 [h6 Tests]

@@ -127,7 +127,7 @@ Python script based on lib clang generating constructor traits. Useful for third
     #define DI_CTOR_TRAITS_HPP
 
     #include <boost/di/ctor.hpp>
-    #include "given/ctors.hpp"
+    #include <__di_hpp__>
 
     namespace boost {
     namespace di {

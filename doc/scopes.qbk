@@ -74,7 +74,7 @@ There are 5 basic types of wrappers.
 ]
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Namespace]
     boost::di::scopes
@@ -196,7 +196,7 @@ Default scope which will be converted to one of the scopes __scopes_external__ /
 ]
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Namespace]
     boost::di::scopes
@@ -308,7 +308,7 @@ will be binded using different scope as well then binding using external scope w
 [note If expected type is `T*` or `const T*` then responsibility to delete the object is on client side. `Boost.DI` won't delete it.]
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Namespace]
     boost::di::scopes
@@ -395,7 +395,7 @@ Scope representing per request value which means unique value always will be pas
 [note If expected type is `T*` or `const T*` then responsibility to delete the object is on client side. `Boost.DI` won't delete it.]
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Namespace]
     boost::di::scopes
@@ -485,7 +485,7 @@ Scope representing shared value which will be shared between all instances.
 ]
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Namespace]
     boost::di::scopes
@@ -565,7 +565,7 @@ Scope is activated by call of `call` method with `di::policies::session_entry` p
 ]
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Namespace]
     boost::di::scopes

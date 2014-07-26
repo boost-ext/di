@@ -51,7 +51,7 @@ Activation of `Module` is done by passing it into injector.
 [*Return type]: `__di_injector__<...>`
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Examples]
     class module_cpp_14 {

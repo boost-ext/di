@@ -106,7 +106,7 @@ Injector is a component used for creating dependencies configuration using [link
     di::injector<TArgs...>(TArgs...)
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Examples]
 
@@ -171,7 +171,7 @@ Creates [link di.concepts.injectors.injector injector] type. Allows to bind dyna
 [*Return type]: __di_injector__<TArgs...>
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Examples]
 [table
@@ -200,7 +200,7 @@ Creates [link di.concepts.injectors.injector injector] type. Allows to bind dyna
     assert(dynamic_cast<implementation*>(injector.__di_injector_create__<unique_ptr<interface>>().get()));
 
 [heading Examples `C++03`]
-    #include <boost/typeof/typeof.hpp>
+    #include <__di_hpp__>
 
     BOOST_AUTO(injector_empty, (di::make_injector());
 

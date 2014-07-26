@@ -56,7 +56,7 @@ It doesn't has to be the case when __injections_ctor_traits__ are used.
     di::named<int, mpl::string<'int'>>()
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Examples]
 [table

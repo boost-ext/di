@@ -96,7 +96,7 @@ Verifies constructor parameters overlapping.
 [*Result]: static assert with `CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED` message or clean compilation.
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Namespace]
     boost::di::policies
@@ -171,7 +171,7 @@ Limits default constructible types not be created unless they are explicitly bin
 [*Result]: static assert with `TYPE_HAS_TO_BE_EXPLICITLY_BINDED` message or clean compilation.
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Namespace]
     boost::di::policies
@@ -244,7 +244,7 @@ Limits allowed constructor parameters. By default, if used, all parameters are d
 [*Result]: static assert with `PARAMETER_NOT_PERMITTED` message or clean compilation.
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Namespace]
     boost::di::policies
@@ -339,7 +339,7 @@ Limits allowed scopes to be used whilst binding. By default, if used, all scopes
 [*Result]: static assert with `SCOPE_NOT_PERMITTED` message or clean compilation.
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Namespace]
     boost::di::policies

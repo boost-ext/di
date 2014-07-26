@@ -51,7 +51,7 @@ the only thing which has to be in mind is to return `mpl::vector` of __dependenc
 ]
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Examples]
     template<typename TIinterface typename TImplementation>
@@ -103,7 +103,7 @@ Allows to bind interface to implementation and associate value with __dependency
 [*Return type]: __dependency_model__
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Examples]
 [table
@@ -162,7 +162,7 @@ Allows to bind multiple interfaces to one instance.
 [*Return type]: `mpl::vector`
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Examples]
 [table
@@ -215,7 +215,7 @@ Allows to bind compile time bool values.
 [*Return type]: __dependency_model__
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Examples]
 [table
@@ -266,7 +266,7 @@ Allows to bind compile time integer values.
 [*Return type]: __dependency_model__
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Examples]
 [table
@@ -317,7 +317,7 @@ Allows to bind compile time string values.
 [*Return type]: __dependency_model__
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Examples]
 [table
@@ -374,7 +374,7 @@ Allows to bind other bindings to defined/custom scope. If not used `deduce` scop
 [*Return type]: __dependency_model__
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Examples]
 [table
@@ -431,7 +431,7 @@ Scoped will be deduced accordingly to constructor parameter type. See __scopes_d
 [*Return type]: __dependency_model__
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Examples]
 [table
@@ -484,7 +484,7 @@ Allows to bind other bindings in __scopes_unique__.
 [*Return type]: __dependency_model__
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Examples]
 [table
@@ -537,7 +537,7 @@ Allows to bind other bindings in __scopes_shared__.
 [*Return type]: __dependency_model__
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Examples]
 [table
@@ -590,7 +590,7 @@ Allows to bind other bindings in __scopes_session__.
 [*Return type]: __dependency_model__
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Examples]
 [table
@@ -652,7 +652,7 @@ Given value will influence how dependencies will be resolved. Current algorithm 
 ]
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Examples]
     struct longer_call_stack_first {
@@ -710,7 +710,7 @@ Allows to choose binding accordingly to the call stack object was created in.
 [*Return type]: `mpl::vector`
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Examples]
 [table
@@ -856,7 +856,7 @@ Allows to connect __annotations_named__ annotation parameters with binding confi
 ]
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Examples]
 

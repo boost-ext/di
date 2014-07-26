@@ -47,7 +47,7 @@ We are going to apply composition root in our example application and run the ap
 
 Remember to include `Boost.DI` header and alias the `di` namespace for convenience.
 ```
-#include <boost/di.hpp>
+#include <__di_hpp__>
 
 namespace di = boost::di;
 ```

@@ -55,7 +55,7 @@ If the default behavior should be changed constructor have to be explicitly mark
 ]
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Example]
     class example {
@@ -130,7 +130,7 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
 ```
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Example]
     class example {
@@ -183,7 +183,7 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
 ```
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Example]
     class example {
@@ -246,7 +246,7 @@ might be defined in order to point which constructor should be used by `Boost.DI
 ]
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Example]
     class example {

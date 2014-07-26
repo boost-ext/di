@@ -28,7 +28,7 @@ In order to support dependency injection, few changes to Boost.MSM were made.
 With that changes in mind `Boost.DI` could have been used without more changes required.
 
 ```
-#include <boost/di.hpp>
+#include <__di_hpp__>
 
 struct event : euml_event<event> { };
 

@@ -52,7 +52,7 @@ Allocate and create objects. By default objects are allocated on heap using `new
 ]
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Examples]
     class allocator {
@@ -99,7 +99,7 @@ They create a new value whenever get() method is invoked.
 ]
 
 [heading Header]
-    #include <boost/di.hpp>
+    #include <__di_hpp__>
 
 [heading Example]
     class provider : iprovider<int> {
