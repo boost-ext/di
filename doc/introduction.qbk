@@ -64,7 +64,7 @@ Using `Boost.DI` has many advantages over `manual dependency injection`.
 * [*Reduce boilerplate code] (No factories, no objects creation)
 * [*Reduce cost of maintenance effort] ([link di.examples.constructor_signature Constructor signature] change won't affect `di` configuration)
 * [*Reduce testing effort] (__examples_testing_automatic_mocks_injector__)
-* [*Give better control of what and how is created] (__policies__)
+* [*Give better control of what and how is created] (__policies__, __utilities_allocator__)
 * [*Give better understanding about objects hierarchy] (__examples_uml_visitor__)
 
 [table

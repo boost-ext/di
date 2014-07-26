@@ -62,7 +62,7 @@ int main() {
 
 ## Features
 * Type safe
-* Header only library
+* Header only
 * Supports C++03/C++11/C++14 standards
 * Architecture independent (tested on x86/x86-64)
 * Supports all POSIX and Windows operating systems (tested on Linux 3.8/Windows 7/8)
@@ -96,7 +96,7 @@ int main() {
 [![Build Status](https://ci.appveyor.com/api/projects/status/1il4knxh7tq9o5ic)](https://ci.appveyor.com/project/krzysztof-jusiak/di)
 [![Coverage Status](https://coveralls.io/repos/krzysztof-jusiak/di/badge.png?branch=master)](https://coveralls.io/r/krzysztof-jusiak/di?branch=master)
 
-## Other Dependency Injection Frameworks for C++:
+## Other Dependency Injection Frameworks for C++
  * [https://bitbucket.org/cheez/dicpp](https://bitbucket.org/cheez/dicpp)
  * [https://code.google.com/p/infectorpp](https://code.google.com/p/infectorpp)
  * [https://github.com/phs/sauce](https://github.com/phs/sauce)
