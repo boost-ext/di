@@ -32,7 +32,7 @@ before_install:
 
 script:
   - pushd .
-  - if [ "$CXX" == "g++" ]; then cd libs/di/example && ../../../b2 -j2 -q di cpp_03 cpp_11 ; fi
+  - if [ "$CXX" == "g++" ]; then cd libs/di/example && ../../../b2 -j2 -q cpp_03 cpp_11 ; fi
   - if [ "$CXX" == "clang++" ]; then cd libs/di/example && ../../../b2 -j2 -q cxxflags="-Wno-c99-extensions -Wno-variadic-macros" ; fi
   - popd
   - pushd .
