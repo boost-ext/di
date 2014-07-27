@@ -13,12 +13,12 @@
 [import ../example/cpp_11/hello_world.cpp]
 [hello_world_cpp_11]
 [table
-    [[Full code example: [@example/hello_world_cpp_11.cpp]]]
+    [[Full code example: [@example/cpp_11/hello_world.cpp]]]
 ]
 [import ../example/cpp_03/hello_world.cpp]
 [hello_world_cpp_03]
 [table
-    [[Full code example: [@example/hello_world_cpp_03.cpp]]]
+    [[Full code example: [@example/cpp_03/hello_world.cpp]]]
 ]
 [endsect]
 
