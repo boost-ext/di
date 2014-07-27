@@ -74,7 +74,7 @@
 [main_cpp_cpp_11]
 
 [table
-    [[Full code example: [@example/cpp_11/modules]]]
+    [[Full code example: [@example/cpp_11/modules/data.hpp] | [@example/cpp_11/modules/app.hpp] | [@example/cpp_11/modules/app.cpp] | [@example/cpp_11/modules/module1.hpp] | [@example/cpp_11/modules/module1.cpp] | [@example/cpp_11/modules/module2.hpp] | [@example/cpp_11/modules/module2.cpp] | [@example/cpp_11/modules/main.cpp]]]
 ]
 
 [endsect]
