@@ -54,7 +54,7 @@ public:
         assert(42 == i);
     }
 
-    std::shared_ptr<interface1> up_; // in order to delete pointer - Boost.DI always pass ownership to user in case of pointers
+    std::shared_ptr<interface1> up_; // in order to delete pointer - Boost.DI always transfer ownership to user in case of pointers
 };
 
 int main() {

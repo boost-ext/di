@@ -26,81 +26,151 @@
 <div class="titlepage"><div><div><h3 class="title">
 <a name="di.examples.hello_world"></a><a class="link" href="hello_world.html" title="Hello World">Hello World</a>
 </h3></div></div></div>
-<pre class="programlisting"><span class="identifier">C</span><span class="special">++</span><span class="number">98</span><span class="special">/</span><span class="number">03</span><span class="special">/</span><span class="number">11</span><span class="special">/</span><span class="number">14</span></pre>
+<pre class="programlisting"><span class="identifier">C</span><span class="special">++</span><span class="number">11</span></pre>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
 <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
 
 <a class="co" name="di.examples.hello_world.c0" href="hello_world.html#di.examples.hello_world.c1"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a>
-<span class="keyword">struct</span> <span class="identifier">hello</span> <span class="special">{</span>
-    <span class="identifier">hello</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;&amp;</span> <span class="identifier">sp</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">auto_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">ap</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">()&gt;&amp;</span> <span class="identifier">f</span><span class="special">)</span>
-        <span class="special">:</span> <span class="identifier">sp</span><span class="special">(</span><span class="identifier">sp</span><span class="special">)</span>
-    <span class="special">{</span>
-        <span class="identifier">assert</span><span class="special">(*</span><span class="identifier">sp</span> <span class="special">==</span> <span class="number">0.0</span><span class="special">);</span> <span class="comment">// value initialized with 0</span>
-        <span class="identifier">assert</span><span class="special">(*</span><span class="identifier">ap</span> <span class="special">==</span> <span class="number">0</span><span class="special">);</span> <span class="comment">// value initialized with 0</span>
-        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">f</span><span class="special">.</span><span class="identifier">empty</span><span class="special">());</span> <span class="comment">// empty function</span>
+<span class="keyword">class</span> <span class="identifier">hello_world</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">hello_world</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;</span> <span class="identifier">logger</span>
+              <span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogic</span><span class="special">&gt;</span> <span class="identifier">logic</span>
+              <span class="special">,</span> <span class="keyword">bool</span> <span class="identifier">value</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">logger_</span><span class="special">(</span><span class="identifier">logger</span><span class="special">)</span>
+        <span class="special">,</span> <span class="identifier">logic_</span><span class="special">(</span><span class="identifier">logic</span><span class="special">)</span>
+        <span class="special">,</span> <span class="identifier">value_</span><span class="special">(</span><span class="identifier">value</span><span class="special">)</span>
+    <span class="special">{</span> <span class="special">}</span>
+
+    <span class="keyword">int</span> <span class="identifier">run</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">value_</span><span class="special">)</span> <span class="special">{</span>
+            <span class="identifier">logger_</span><span class="special">-&gt;</span><span class="identifier">log</span><span class="special">(</span><span class="string">"hello world"</span><span class="special">);</span>
+            <span class="identifier">logic_</span><span class="special">-&gt;</span><span class="identifier">do_it</span><span class="special">();</span>
+        <span class="special">}</span>
+        <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
     <span class="special">}</span>
 
-    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">sp</span><span class="special">;</span>
-<span class="special">};</span>
-
-<a class="co" name="di.examples.hello_world.c2" href="hello_world.html#di.examples.hello_world.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a>
-<span class="keyword">struct</span> <span class="identifier">world</span> <span class="special">{</span>
-    <span class="identifier">world</span><span class="special">(</span><span class="identifier">hello</span> <span class="identifier">copy</span>
-        <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">sp</span>
-        <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">str</span>
-        <span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span>
-    <span class="special">{</span>
-        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">copy</span><span class="special">.</span><span class="identifier">sp</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">sp</span><span class="special">.</span><span class="identifier">get</span><span class="special">());</span> <span class="comment">// the same shared_ptr (scope deduction)</span>
-        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">str</span> <span class="special">==</span> <span class="string">""</span><span class="special">);</span> <span class="comment">// value initialized with empty string</span>
-        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i</span> <span class="special">==</span> <span class="number">0</span><span class="special">);</span> <span class="comment">// value initialized with 0</span>
-    <span class="special">}</span>
-<span class="special">};</span>
-
-<a class="co" name="di.examples.hello_world.c4" href="hello_world.html#di.examples.hello_world.c5"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a>
-<span class="keyword">struct</span> <span class="identifier">app</span> <span class="special">{</span>
-    <span class="identifier">app</span><span class="special">(</span><span class="identifier">hello</span><span class="special">,</span> <span class="identifier">world</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;</span> <span class="identifier">logger_</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogic</span><span class="special">&gt;</span> <span class="identifier">logic_</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="identifier">value_</span><span class="special">;</span>
 <span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <a class="co" name="di.examples.hello_world.c6" href="hello_world.html#di.examples.hello_world.c7"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">().</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;();</span>
+    <a class="co" name="di.examples.hello_world.c2" href="hello_world.html#di.examples.hello_world.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">,</span> <span class="identifier">logger</span><span class="special">&gt;()</span> <span class="comment">// or di::deduce&lt;logger&gt;()</span>
+      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ilogic</span><span class="special">,</span> <span class="identifier">logic</span><span class="special">&gt;()</span>   <span class="comment">// or di::deduce&lt;logic&gt;()</span>
+      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>    <span class="comment">// or di::bind_bool&lt;true&gt;()</span>
+    <span class="special">);</span>
 
-    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+    <a class="co" name="di.examples.hello_world.c4" href="hello_world.html#di.examples.hello_world.c5"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a><span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">hello_world</span><span class="special">&gt;().</span><span class="identifier">run</span><span class="special">();</span>
 <span class="special">}</span>
 </pre>
 <div class="calloutlist"><table border="0" summary="Callout list">
 <tr>
 <td width="5%" valign="top" align="left"><p><a name="di.examples.hello_world.c1"></a><a href="#di.examples.hello_world.c0"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
-            define <code class="computeroutput"><span class="identifier">hello</span></code> class as
-            usual
+            define <code class="computeroutput"><span class="identifier">hello_world</span></code> class
+            as usual
           </p></td>
 </tr>
 <tr>
 <td width="5%" valign="top" align="left"><p><a name="di.examples.hello_world.c3"></a><a href="#di.examples.hello_world.c2"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
-            define <code class="computeroutput"><span class="identifier">world</span></code> class as
-            usual
+            make injector configuration
           </p></td>
 </tr>
 <tr>
 <td width="5%" valign="top" align="left"><p><a name="di.examples.hello_world.c5"></a><a href="#di.examples.hello_world.c4"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a> </p></td>
-<td valign="top" align="left"><p>
-            define <code class="computeroutput"><span class="identifier">app</span></code> class as usual
-          </p></td>
-</tr>
-<tr>
-<td width="5%" valign="top" align="left"><p><a name="di.examples.hello_world.c7"></a><a href="#di.examples.hello_world.c6"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a> </p></td>
-<td valign="top" align="left"><p>
-            make injector with empty configuration and create <code class="computeroutput"><span class="identifier">app</span></code>
-          </p></td>
+<td valign="top" align="left">
+<p>
+            create <code class="computeroutput"><span class="identifier">hello_world</span></code> and
+            run
+          </p>
+<pre class="programlisting">        hello world
+    </pre>
+</td>
 </tr>
 </table></div>
 <div class="informaltable"><table class="table">
 <colgroup><col></colgroup>
 <tbody><tr><td>
                 <p>
-                  Full code example: <a href="../../example/hello_world.cpp" target="_top">example/hello_world.cpp</a>
+                  Full code example: <a href="../../example/hello_world_cpp_11.cpp" target="_top">example/hello_world_cpp_11.cpp</a>
+                </p>
+              </td></tr></tbody>
+</table></div>
+<pre class="programlisting"><span class="identifier">C</span><span class="special">++</span><span class="number">98</span><span class="special">/</span><span class="number">03</span></pre>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
+
+<a class="co" name="di.examples.hello_world.c6" href="hello_world.html#di.examples.hello_world.c7"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a>
+<span class="keyword">class</span> <span class="identifier">hello_world</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">hello_world</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;</span> <span class="identifier">logger</span>
+              <span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogic</span><span class="special">&gt;</span> <span class="identifier">logic</span>
+              <span class="special">,</span> <span class="keyword">bool</span> <span class="identifier">value</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">logger_</span><span class="special">(</span><span class="identifier">logger</span><span class="special">)</span>
+        <span class="special">,</span> <span class="identifier">logic_</span><span class="special">(</span><span class="identifier">logic</span><span class="special">)</span>
+        <span class="special">,</span> <span class="identifier">value_</span><span class="special">(</span><span class="identifier">value</span><span class="special">)</span>
+    <span class="special">{</span> <span class="special">}</span>
+
+    <span class="keyword">int</span> <span class="identifier">run</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">value_</span><span class="special">)</span> <span class="special">{</span>
+            <span class="identifier">logger_</span><span class="special">-&gt;</span><span class="identifier">log</span><span class="special">(</span><span class="string">"hello world"</span><span class="special">);</span>
+            <span class="identifier">logic_</span><span class="special">-&gt;</span><span class="identifier">do_it</span><span class="special">();</span>
+        <span class="special">}</span>
+        <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+    <span class="special">}</span>
+
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;</span> <span class="identifier">logger_</span><span class="special">;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogic</span><span class="special">&gt;</span> <span class="identifier">logic_</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="identifier">value_</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <a class="co" name="di.examples.hello_world.c8" href="hello_world.html#di.examples.hello_world.c9"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">injector</span><span class="special">,</span> <span class="special">(</span>
+        <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+            <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">,</span> <span class="identifier">logger</span><span class="special">&gt;()</span> <span class="comment">// or di::deduce&lt;logger&gt;()</span>
+          <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ilogic</span><span class="special">,</span> <span class="identifier">logic</span><span class="special">&gt;()</span>   <span class="comment">// or di::deduce&lt;logic&gt;()</span>
+          <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">&gt;::</span><span class="identifier">to</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>    <span class="comment">// or di::bind_bool&lt;true&gt;()</span>
+        <span class="special">)</span>
+    <span class="special">));</span>
+
+    <a class="co" name="di.examples.hello_world.c10" href="hello_world.html#di.examples.hello_world.c11"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a><span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">hello_world</span><span class="special">&gt;().</span><span class="identifier">run</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<div class="calloutlist"><table border="0" summary="Callout list">
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="di.examples.hello_world.c7"></a><a href="#di.examples.hello_world.c6"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+            define <code class="computeroutput"><span class="identifier">hello_world</span></code> class
+            as usual
+          </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="di.examples.hello_world.c9"></a><a href="#di.examples.hello_world.c8"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+            make injector configuration
+          </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="di.examples.hello_world.c11"></a><a href="#di.examples.hello_world.c10"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a> </p></td>
+<td valign="top" align="left">
+<p>
+            create <code class="computeroutput"><span class="identifier">hello_world</span></code> and
+            run
+          </p>
+<pre class="programlisting">        hello world
+    </pre>
+</td>
+</tr>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup><col></colgroup>
+<tbody><tr><td>
+                <p>
+                  Full code example: <a href="../../example/hello_world_cpp_03.cpp" target="_top">example/hello_world_cpp_03.cpp</a>
                 </p>
               </td></tr></tbody>
 </table></div>

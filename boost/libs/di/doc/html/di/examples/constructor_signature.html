@@ -64,7 +64,7 @@
         <span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">i</span><span class="special">);</span>
     <span class="special">}</span>
 
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">interface1</span><span class="special">&gt;</span> <span class="identifier">up_</span><span class="special">;</span> <span class="comment">// in order to delete pointer - Boost.DI always pass ownership to user in case of pointers</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">interface1</span><span class="special">&gt;</span> <span class="identifier">up_</span><span class="special">;</span> <span class="comment">// in order to delete pointer - Boost.DI always transfer ownership to user in case of pointers</span>
 <span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>

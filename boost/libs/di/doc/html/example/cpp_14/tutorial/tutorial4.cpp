@@ -20,7 +20,7 @@ public:
         : value_(value), text_(text), logger_(std::move(logger))
     { }
 
-    void run() {
+    void run() const {
         if (value_) {
             logger_->log(text_);
         }

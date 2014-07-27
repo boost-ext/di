@@ -348,7 +348,7 @@ BOOST_AUTO_TEST_CASE(scope_with_call_stack) {
 }
 
 BOOST_AUTO_TEST_CASE(bind_deduce_with_deduced_interface) {
-    typedef typename fake_dependency<scopes::deduce, impl, impl>::type expected;
+    typedef fake_dependency<scopes::deduce, impl, impl>::type expected;
 
     BOOST_CHECK((
         contains_all<

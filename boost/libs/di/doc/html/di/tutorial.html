@@ -58,7 +58,7 @@
         <span class="special">:</span> <span class="identifier">text_</span><span class="special">(</span><span class="identifier">text</span><span class="special">),</span> <span class="identifier">value_</span><span class="special">(</span><span class="identifier">value</span><span class="special">)</span>
     <span class="special">{</span> <span class="special">}</span>
 
-    <span class="keyword">void</span> <span class="identifier">run</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">void</span> <span class="identifier">run</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
         <span class="keyword">if</span> <span class="special">(</span><span class="identifier">value_</span><span class="special">)</span> <span class="special">{</span>
             <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">text_</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
         <span class="special">}</span>
@@ -190,7 +190,7 @@
         <span class="special">:</span> <span class="identifier">value_</span><span class="special">(</span><span class="identifier">value</span><span class="special">),</span> <span class="identifier">text_</span><span class="special">(</span><span class="identifier">text</span><span class="special">),</span> <span class="identifier">logger_</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(</span><span class="identifier">logger</span><span class="special">))</span>
     <span class="special">{</span> <span class="special">}</span>
 
-    <span class="keyword">void</span> <span class="identifier">run</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">void</span> <span class="identifier">run</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
         <span class="keyword">if</span> <span class="special">(</span><span class="identifier">value_</span><span class="special">)</span> <span class="special">{</span>
             <span class="identifier">logger_</span><span class="special">-&gt;</span><span class="identifier">log</span><span class="special">(</span><span class="identifier">text_</span><span class="special">);</span>
         <span class="special">}</span>
@@ -349,7 +349,7 @@
         <span class="special">:</span> <span class="identifier">value_</span><span class="special">(</span><span class="identifier">value</span><span class="special">),</span> <span class="identifier">text_</span><span class="special">(</span><span class="identifier">text</span><span class="special">),</span> <span class="identifier">logger_</span><span class="special">(</span><span class="identifier">logger</span><span class="special">)</span>
     <span class="special">{</span> <span class="special">}</span>
 
-    <span class="keyword">void</span> <span class="identifier">run</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">void</span> <span class="identifier">run</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
         <span class="keyword">if</span> <span class="special">(</span><span class="identifier">value_</span><span class="special">)</span> <span class="special">{</span>
             <span class="identifier">logger_</span><span class="special">-&gt;</span><span class="identifier">log</span><span class="special">(</span><span class="identifier">text_</span><span class="special">);</span>
         <span class="special">}</span>
