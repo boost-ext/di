@@ -7,7 +7,11 @@
 #ifndef APP_HPP
 #define APP_HPP
 
+//[app_hpp_cpp_11
+//````app.hpp```
+//<-
 #include <memory>
+//->
 
 class interface1;
 class interface2;
@@ -122,5 +126,9 @@ private:
     int value_ = false;
 };
 
+//<-
 #endif
+//->
+
+//]
 

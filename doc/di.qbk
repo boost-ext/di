@@ -106,6 +106,7 @@
 [def __more_examples_externals__                        [link di.examples.more_examples.externals Externals]]
 [def __more_examples_multiple_interfaces__              [link di.examples.more_examples.multiple_interfaces Multiple Interfaces]]
 [def __more_examples_text_visitor__                     [link di.examples.more_examples.text_visitor Text Visitor]]
+[def __more_examples_modules_hpp_cpp__                  [link di.examples.more_examples.modules_hpp_cpp Modules (hpp/cpp)]]
 
 [def __binding_model__                                  [link di.concepts.bindings.synopsis Binding Model]]
 [def __dependency_model__                               [link di.concepts.bindings.synopsis Dependency Model]]
@@ -113,6 +114,7 @@
 [def __allocator_model__                                [link di.concepts.utilities.allocator Allocator Model]]
 [def __policy_model__                                   [link di.concepts.policies Policy Model]]
 [def __visitor_model__                                  [link di.concepts.injectors.injector.visitor_model Visitor Model]]
+[def __type_model__                                     [link di.concepts.injectors.injector.type_model Type Model]]
 [def __wrapper_model__                                  [link di.concepts.scopes.wrapper_model Wrapper Model]]
 [def __allow_type_model__                               [link di.concepts.policies.creation_permission.allow_type_model Allow Type Model]]
 [def __allow_parameter_model__                          [link di.concepts.policies.parameters_permission.allow_parameter_model Allow Parameter Model]]

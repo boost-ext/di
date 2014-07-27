@@ -139,7 +139,7 @@ There are 5 basic types of wrappers.
     [[std::auto_ptr<T>]         [\u2714 - with lvalues]      [\u2714]    [-]                            [-]]
     [[]                         []                           []          []                             []]
     [[temporary const T&]       [\u2714 - with lvalues]      [\u2714]    [-]                            [-]]
-    [[__di_named__<T, TName>]    [\u2714 - with lvalues]      [\u2714]    [\u2714 with T=shared_ptr<T>]  [\u2714 with T=shared_ptr<T>]]
+    [[__di_named__<T, TName>]   [\u2714 - with lvalues]      [\u2714]    [\u2714 with T=shared_ptr<T>]  [\u2714 with T=shared_ptr<T>]]
 ]
 
 [note If expected type is `T*` or `const T*` then responsibility to delete the object is on client side. `Boost.DI` won't delete it.]

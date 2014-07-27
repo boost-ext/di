@@ -94,13 +94,33 @@ Injector is a component used for creating dependencies configuration using [link
     [[`TAction`][None][Action to be called for scopes having `call(const TAction&)` method]]
 
     [[`injector(const TArgs&...))`][None][Create __injectors_injector__ with given bindings][][Does not throw]]
-    [[`__di_injector_create__<T>(const TPolicies&...))`][__policy_model__][Create object `T` with given policies][`T` instance][Does not throw]]
-    [[`allocate<T>(const TAllocator&, const TPolicies&...))`][__allocator_model__, __policy_model__][Create object T with given policies using given allocator][`T` instance][Does not throw]]
-    [[`visit<T>()`][__visitor_model__][Call visitor `operator()(const TObject&)` for all objects created during creation of object `T`][`T` instance][Does not throw]]
+    [[`create<T>(const TPolicies&...))`][__type_model__, __policy_model__][Create object `T` with given policies][`T` instance][Does not throw]]
+    [[`allocate<T>(const TAllocator&, const TPolicies&...))`][__type_model__, __allocator_model__, __policy_model__][Create object T with given policies using given allocator][`T` instance][Does not throw]]
+    [[`visit<T>()`][__type_model__, __visitor_model__][Call visitor `operator()(const TObject&)` for all objects created during creation of object `T`][`T` instance][Does not throw]]
     [[`call(const TAction&)`][None][For all scopes which have `call(const TAction&)` call it with given action][][Does not throw]]
 ]
 
 [warning In current version `visit` create an object due to compiler limitations - might be changed in the future that `visit` will not return.]
+
+[heading Type Model]
+[table
+    [[Type]                     [Allowance]]
+    [[T]                        [\u2714]]
+    [[T*]                       [\u2714]]
+    [[T&]                       [-]]
+    [[const T&]                 [-]]
+    [[T&&]                      [-]]
+    [[const T*]                 [\u2714]]
+    [[std::shared_ptr<T>]       [\u2714]]
+    [[boost::shared_ptr<T>]     [\u2714]]
+    [[std::unique_ptr<T>]       [\u2714]]
+    [[std::auto_ptr<T>]         [\u2714]]
+    [[]                         []]
+    [[temporary const T&]       [\u2714]]
+    [[__di_named__<T, TName>]   [\u2714]]
+]
+
+[note If expected type is `T*` or `const T*` then responsibility to delete the object is on client side. `Boost.DI` won't delete it.]
 
 [heading Expression Semantics]
     di::injector<TArgs...>(TArgs...)

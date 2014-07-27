@@ -14,6 +14,7 @@
 * __more_examples_externals__
 * __more_examples_multiple_interfaces__
 * __more_examples_text_visitor__
+* __more_examples_modules_hpp_cpp__
 
 [h6 Named Parameters]
 [import ../example/cpp_11/named.cpp]
@@ -48,6 +49,32 @@
 [text_visitor_cpp_11]
 [table
     [[Full code example: [@example/cpp_11/text_visitor.cpp]]]
+]
+
+[h6:modules_hpp_cpp Modules - hpp/cpp]
+[import ../example/cpp_11/modules/app.hpp]
+[app_hpp_cpp_11]
+
+[import ../example/cpp_11/modules/app.cpp]
+[app_cpp_cpp_11]
+
+[import ../example/cpp_11/modules/module1.hpp]
+[module1_hpp_cpp_11]
+
+[import ../example/cpp_11/modules/module1.cpp]
+[module1_cpp_cpp_11]
+
+[import ../example/cpp_11/modules/module2.hpp]
+[module2_hpp_cpp_11]
+
+[import ../example/cpp_11/modules/module2.cpp]
+[module2_cpp_cpp_11]
+
+[import ../example/cpp_11/modules/main.cpp]
+[main_cpp_cpp_11]
+
+[table
+    [[Full code example: [@example/cpp_11/modules]]]
 ]
 
 [endsect]

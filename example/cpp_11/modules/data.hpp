@@ -7,6 +7,9 @@
 #ifndef DATA_HPP
 #define DATA_HPP
 
+//[data_hpp_cpp_11
+//````data.hpp```
+
 class interface1 { public: virtual ~interface1() { } virtual void dummy() = 0; };
 class interface2 { public: virtual ~interface2() { } virtual void dummy() = 0; };
 class interface3 { public: virtual ~interface3() { } virtual void dummy() = 0; };
@@ -89,5 +92,9 @@ class implementation38 : public interface38 { void dummy() override { } };
 class implementation39 : public interface39 { void dummy() override { } };
 class implementation40 : public interface40 { void dummy() override { } };
 
+//<-
 #endif
+//->
+
+//]
 

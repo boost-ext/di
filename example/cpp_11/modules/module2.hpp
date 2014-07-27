@@ -4,6 +4,9 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+
+//[module2_hpp_cpp_11
+//````module2.hpp```
 #include <boost/di.hpp>
 
 namespace di = boost::di;
@@ -65,4 +68,6 @@ public:
 private:
     int value_ = 0;
 };
+
+//]
 

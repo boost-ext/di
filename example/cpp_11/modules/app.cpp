@@ -4,7 +4,12 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+
+//[app_cpp_cpp_11
+//````app.cpp```
+//<-
 #include <cassert>
+//->
 #include "app.hpp"
 #include "data.hpp"
 
@@ -118,4 +123,6 @@ app::app(std::shared_ptr<app1> a1
 int app::run() const {
     return !flag_ ? value_ : 0;
 }
+
+//]
 

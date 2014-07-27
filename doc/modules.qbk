@@ -97,7 +97,7 @@ Activation of `Module` is done by passing it into injector.
 [tip `__modules__/__bindings__/Types` might be mixed whilst creating an injector, order is not important.]
 
 [heading More Examples]
-    ``__examples_modules__``
+    ``__examples_modules__`` | ``__more_examples_modules_hpp_cpp__``
 
 [heading Tests]
     ``[@test/mt/injector_mt.cpp]`` | ``[@test/mt/make_injector_mt.cpp]``
