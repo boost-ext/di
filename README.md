@@ -39,7 +39,7 @@ public:
 
     std::shared_ptr<ilogger> logger_;
     std::shared_ptr<ilogic> logic_;
-    bool value_ = 0;
+    bool value_ = false;
 };
 
 int main() {

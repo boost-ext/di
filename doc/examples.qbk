@@ -10,10 +10,15 @@
 [section Examples]
 
 [section Hello World]
-[import ../example/hello_world.cpp]
-[hello_world]
+[import ../example/cpp_11/hello_world.cpp]
+[hello_world_cpp_11]
 [table
-    [[Full code example: [@example/hello_world.cpp]]]
+    [[Full code example: [@example/hello_world_cpp_11.cpp]]]
+]
+[import ../example/cpp_03/hello_world.cpp]
+[hello_world_cpp_03]
+[table
+    [[Full code example: [@example/hello_world_cpp_03.cpp]]]
 ]
 [endsect]
 

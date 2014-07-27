@@ -8,8 +8,6 @@
 #define BOOST_DI_AUX_CONFIG_HPP
 
 #include <boost/config.hpp>
-#include <boost/preprocessor/cat.hpp>
-#include <boost/preprocessor/stringize.hpp>
 #include <boost/mpl/limits/vector.hpp>
 
 #if !defined(BOOST_DI_INJECTOR)
@@ -18,6 +16,19 @@
 
 #if !defined(BOOST_DI_CFG_CTOR_LIMIT_SIZE)
     #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
+#endif
+
+#if (BOOST_DI_CFG_CTOR_LIMIT_SIZE != 10) ||                     \
+    (BOOST_MPL_LIMIT_VECTOR_SIZE > 50) ||                       \
+    (BOOST_MPL_LIMIT_VECTOR_SIZE % 10 != 0)
+    #define BOOST_DI_CFG_NO_PREPROCESSED_HEADERS
+#endif
+
+#if (BOOST_MPL_LIMIT_VECTOR_SIZE > 20) &&                       \
+    (BOOST_MPL_LIMIT_VECTOR_SIZE <= 50)
+    #if !defined(BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS)
+        #define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
+    #endif
 #endif
 
 #if !defined(BOOST_DI_CFG_STD) &&                               \
@@ -32,13 +43,30 @@
     #define BOOST_DI_CFG_STD cpp_03
 #endif
 
-#if defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS) || \
-    (BOOST_DI_CFG_CTOR_LIMIT_SIZE % 10) ||           \
-    (BOOST_MPL_LIMIT_VECTOR_SIZE % 10)
+#if defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS)
+    #include <boost/preprocessor/cat.hpp>
+    #include <boost/preprocessor/stringize.hpp>
 
     #define BOOST_DI_CFG_FILE boost/di/aux_/config/BOOST_DI_CFG_STD.hpp
     #include BOOST_PP_STRINGIZE(BOOST_DI_CFG_FILE)
     #undef BOOST_DI_CFG_FILE
+
+    #if (BOOST_MPL_LIMIT_VECTOR_SIZE > 50)
+        #include <boost/preprocessor/iteration/iterate.hpp>
+        #include <boost/mpl/vector/vector50.hpp>
+
+        namespace boost {
+        namespace mpl {
+            #define BOOST_PP_FILENAME_1 <boost/mpl/vector/aux_/numbered.hpp>
+            #define BOOST_PP_ITERATION_LIMITS (51, BOOST_MPL_LIMIT_VECTOR_SIZE)
+            #include BOOST_PP_ITERATE()
+        } // namespace mpl
+        } // namespace boost
+
+        #define BOOST_MPL_PREPROCESSING_MODE
+        #include <boost/mpl/vector.hpp>
+        #undef BOOST_MPL_PREPROCESSING_MODE
+    #endif
 
 #endif
 

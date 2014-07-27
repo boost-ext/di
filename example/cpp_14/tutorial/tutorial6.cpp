@@ -25,7 +25,7 @@ public:
         : value1_(value1), value2_(value2) , text_(text), logger_(logger)
     { }
 
-    void run() {
+    void run() const {
         if (value1_ || value2_) {
             logger_->log(text_);
         }

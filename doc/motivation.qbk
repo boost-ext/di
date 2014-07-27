@@ -53,7 +53,7 @@ therefore is not really a good practice to follow.
         }
 
         void init(std::unique_ptr<ilogger>);
-        int run();
+        int run() const;
     };
 
     int main() {
@@ -71,7 +71,7 @@ scale - project will end up with framework of some kind.
     class app {
     public:
         app(std::unique_ptr<ilogger>);
-        int run();
+        int run() const;
     };
 
     int main() {
@@ -219,7 +219,7 @@ like "composition root".
         class app {
         public:
             app(std::unique_ptr<ilogger>);
-            int run();
+            int run() const;
         };
 
         int main() {

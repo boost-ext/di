@@ -34,17 +34,16 @@ To achieve the same behaviour with previous standards sometimes will just requir
 
 [h6 Dependencies]
 
-* Boost.Bind
-* Boost.Config
-* Boost.Detail
-* Boost.Function
-* Boost.MPL
-* Boost.Preprocessor
-* Boost.Ref
-* Boost.Smart_Ptr
-* Boost.Typeof
-* Boost.Type_Traits
-* Boost.Utility
+* [@http://www.boost.org/doc/libs/1_55_0/libs/bind Boost.Bind]
+* [@http://www.boost.org/doc/libs/1_55_0/libs/config Boost.Config]
+* [@http://www.boost.org/doc/libs/1_55_0/libs/function Boost.Function]
+* [@http://www.boost.org/doc/libs/1_55_0/libs/mpl Boost.MPL]
+* [@http://www.boost.org/doc/libs/1_55_0/libs/preprocessor Boost.Preprocessor]
+* [@http://www.boost.org/doc/libs/1_55_0/doc/html/ref.html Boost.Ref]
+* [@http://www.boost.org/doc/libs/1_55_0/libs/smart_ptr Boost.Smart_Ptr]
+* [@http://www.boost.org/doc/libs/1_55_0/libs/typeof Boost.Typeof]
+* [@http://www.boost.org/doc/libs/1_55_0/libs/type_traits Boost.Type_Traits]
+* [@http://www.boost.org/doc/libs/1_55_0/libs/utility Boost.Utility]
 
 [h6 Supported Compilers - 100% test code coverage]
 

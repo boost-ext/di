@@ -31,10 +31,10 @@ Following this approach has many advantages.
                         , logger_(logger_factory::create())
                     { }
 
-                    int run();
+                    int run() const;
 
-                    std::unique_ptr<logic> logic_;
-                    std::shared_ptr<logger> logger_;
+                    shared_ptr<logic> logic_;
+                    shared_ptr<logger> logger_;
                 };
             ```
         ]
@@ -43,15 +43,15 @@ Following this approach has many advantages.
                 class example {
                 public:
                     // dependencies are passed via constructor
-                    example(std::unique_ptr<logic> logic, std::shared_ptr<logger> logger)
+                    example(shared_ptr<logic> logic, shared_ptr<logger> logger)
                         : logic_(logic), logger_(logger)
                     { }
 
-                    int run();
+                    int run() const;
 
                 private:
-                    std::unique_ptr<logic> logic_;
-                    std::shared_ptr<logger> logger_;
+                    shared_ptr<logic> logic_;
+                    shared_ptr<logger> logger_;
                 };
             ```
         ]
@@ -74,8 +74,8 @@ Using `Boost.DI` has many advantages over `manual dependency injection`.
             ```
                 int main() {
                     // boilerplate code
-                    auto logic = std::make_unique<logic>();
-                    auto logger = std::make_shared<logger>();
+                    auto logic = make_shared<logic>();
+                    auto logger = make_shared<logger>();
 
                     return example(logic, logger).run();
                 }

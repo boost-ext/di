@@ -15,7 +15,7 @@ public:
         : value_(value), text_(text)
     { }
 
-    void run() {
+    void run() const {
         if (value_) {
             std::cout << text_ << std::endl;
         }

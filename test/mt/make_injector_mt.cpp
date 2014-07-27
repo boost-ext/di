@@ -411,7 +411,7 @@ BOOST_AUTO_TEST_CASE(create_with_default_values) {
     const int i = 42;
 
     auto injector = make_injector(
-        di::bind_int<42>()
+        di::bind_int<i>()
     );
 
     auto default_values_ = injector.create<default_values>();
