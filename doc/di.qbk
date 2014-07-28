@@ -145,6 +145,7 @@
 [def __di_dependency__                                  [link di.concepts.bindings.synopsis di::dependency]]
 
 [def __di_hpp__                                         [link di.reference.di_hpp boost/di.hpp]]
+[def __di_inject_hpp__                                  [link di.reference.di_inject_hpp boost/di/inject.hpp]]
 
 [include introduction.qbk]
 [include motivation.qbk]

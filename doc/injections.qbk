@@ -130,7 +130,7 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
 ```
 
 [heading Header]
-    #include <__di_hpp__>
+    #include <__di_inject_hpp__>
 
 [heading Example]
     class example {
@@ -183,7 +183,7 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
 ```
 
 [heading Header]
-    #include <__di_hpp__>
+    #include <__di_inject_hpp__>
 
 [heading Example]
     class example {
