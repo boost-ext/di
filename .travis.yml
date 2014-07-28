@@ -24,8 +24,8 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get update -qq; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get -qq install valgrind; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then sudo apt-get install -qq g++-4.8; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 90; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then sudo apt-get install -qq g++-4.9; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 90; fi
   - if [ "$CXX" == "g++" ]; then ./bootstrap.sh --with-toolset=gcc; fi
   - if [ "$CXX" == "clang++" ]; then ./bootstrap.sh --with-toolset=clang; fi
   - ./b2 headers
@@ -42,7 +42,7 @@ script:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then find bin.v2/libs/di -type f -executable | xargs -i% valgrind --quiet --error-exitcode=-1 % >/dev/null; fi
 
 after_success:
-  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then gcov-coveralls.sh "/usr/bin/gcov-4.8" "libs/di/test" "bin.v2/libs/di/test" "boost/di/" "L0bLvIumNdzR0XiKdKJSHgKopNnnO9mul" ; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then gcov-coveralls.sh "/usr/bin/gcov-4.9" "libs/di/test" "bin.v2/libs/di/test" "boost/di/" "L0bLvIumNdzR0XiKdKJSHgKopNnnO9mul" ; fi
 
 branches:
   only:
