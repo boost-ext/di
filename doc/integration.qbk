@@ -15,77 +15,160 @@ Usually doesn't require anything! Unless constructor can't be deduced due to amb
 [section Boost Meta State Machine]
 
 [@http://www.boost.org/doc/libs/1_55_0/libs/msm/doc/HTML/index.html Boost Meta State Machine] is a library allowing you to easily and quickly define state machines of very high performance.
-`Boost.MSM is a great library, unfortunately `Service Locator` pattern is used to accomplish actions/guards execution.
+`Boost.MSM` is a great library, unfortunately `actions`/`guards` have to have empty constructor and whole logic has to be handled via Finite State Machine.
 Such approach is hard to maintain and test. Would be great to have possibility to
-implement action/guards without FSM dependency and with proper dependency injection instead.
+implement `action`/`guards` without FSM dependency and with proper dependency injection instead.
 Such functionality might be achieved with `Boost.DI` and it's presented below.
 
-In order to support dependency injection, few changes to Boost.MSM were made.
-
-* actions/guards list was generated from transition table
-* generated list was passed into state machine constructor
-
-With that changes in mind `Boost.DI` could have been used without more changes required.
-
+For example purposes let's assume we have two states, event and data ready.
 ```
-#include <__di_hpp__>
+    struct event : euml_event<event> { };
 
-struct event : euml_event<event> { };
-
-class guard : public euml_action<guard>
-{
-public:
-    guard() { } // for euml
-
-    guard(shared_ptr<int> i)
-        : i(i)
-    { }
-
-    bool operator()(const event&) const {
-        return *i != 0;
-    }
-
-private:
-    shared_ptr<int> i;
-};
-
-class action : public euml_action<action>
-{
-public:
-    action() { } // for euml
-
-    action(shared_ptr<int> i)
-        : i(i)
-    { }
-
-    void operator()(const event&) {
-        (*i)++;
-    }
-
-private:
-    shared_ptr<int> i;
-};
-
-class state_machine_ : state_machine_def<state_machine_>
-{
     struct state1 : state<>, euml_state<state1> { };
     struct state2 : state<>, euml_state<state2> { };
 
-public:
-    typedef state1 initial_state;
-
-    BOOST_MSM_EUML_DECLARE_TRANSITION_TABLE((
-        state1() + event() [guard] / action == state2()
-    ), transition_table)
-};
-
-int main() {
-    auto sm = __di_make_injector__().create<state_machine<state_machine_>>();
-    sm.process_event(event());
-
-    return 0;
-}
+    struct data {
+        bool flag = false;
+    };
 ```
+
+Below table presents comparison between simple state machine - Boost.MSM-eUML without usage of `actions`/`guards` dependency injection and with dependency injection.
+Without dependency injection all logic has to published by `FSM` itself, which makes it really hard to test. FSM has to be tested itself due to public
+methods, `actions`/`guards` tests require FSM fake in order to unit test them properly. Such approach breaks [@http://en.wikipedia.org/wiki/Law_of_Demeter Law of Demeter] principle as well.
+Most of the time `source` and `target` states are not very useful, because we don't want them to keep common data. With dependency injection we have
+easier life - `actions`/`guards` can be easily tested in separation. `FSM` doesn't have to be tested at all, due to lack of any logic - despite declarative transition table definition.
+`Actions`/`guards` constructor signature change may not break the compilation as well. Imagine that one action requires to to send a message, so let's say
+`message_sender` dependency was passed into it. If any other `guard` or `action` will require it as well, the only thing which has to be done is to change the constructor signature of the `action` or `guard`.
+
+[table
+    [[`Boost.MSM eUML`][`Boost.MSM eUML with Boost.DI`]][
+    [
+    ```
+        class guard : public euml_action<guard> {
+        public:
+            template<
+                typename TFsm
+              , typename TEvent
+              , typename TSourceState // not used
+              , typename TTargetState // not used
+            >
+            bool operator()(const TEvent&, TFsm& fsm, TSourceState&, TTargetState&) const {
+                return fsm.get_data()->flag; // data has to be taken from FSM (breaks law of demeter)
+            }
+        };
+
+        class action : public euml_action<action> {
+        public:
+            template<
+                typename TFsm
+              , typename TEvent
+              , typename TSourceState // not used
+              , typename TTargetState // not used
+            >
+            void operator()(const TEvent&, TFsm& fsm, TSourceState&, TTargetState&) {
+                fsm.get_data()->flag = true; // data has to be taken from FSM (breaks law of demeter)
+            }
+        };
+
+        class state_machine_ : public state_machine_def<state_machine_> {
+        public:
+            using initial_state = state1;
+
+            state_machine_()
+                : data_(new data())
+            { }
+
+            BOOST_MSM_EUML_DECLARE_TRANSITION_TABLE((
+                state1() + event() / action()
+              , state1() + event() [guard()] == state2()
+            ), transition_table)
+
+            shared_ptr<data> get_data() const { return data_; } // public method to get data
+
+        private:
+            shared_ptr<data> data_;
+        };
+
+        using state_machine = back::state_machine<state_machine_>;
+
+        int main() {
+            state_machine sm;
+            sm.process_event(event());
+            assert(0 == *sm.current_state());
+            sm.process_event(event());
+            assert(1 == *sm.current_state());
+
+            return 0;
+        }
+    ```
+    ]
+    [
+    ```
+        class guard : public euml_action<guard> {
+        public:
+            explicit guard(shared_ptr<data> data = nullptr) // default constructor is required by eUML
+                : data(data)
+            { }
+
+            template<typename TEvent>
+            bool operator()(const TEvent&) const {
+                return data->flag;
+            }
+
+        private:
+            shared_ptr<data> data;
+        };
+
+        class action : public euml_action<action> {
+        public:
+            explicit action(shared_ptr<data> data = nullptr) // default constructor is required by eUML
+                : data(data)
+            { }
+
+            template<typename TEvent>
+            void operator()(const TEvent&) {
+                data->flag = true;
+            }
+
+        private:
+            shared_ptr<data> data;
+        };
+
+        class state_machine_ : public state_machine_def<state_machine_> {
+        public:
+            using initial_state = state1;
+
+            BOOST_MSM_EUML_DECLARE_TRANSITION_TABLE((
+                state1() + event() / action()
+              , state1() + event() [guard()] == state2()
+            ), transition_table)
+        };
+
+        using state_machine = back::state_machine<
+            state_machine_
+          , back::use_dependency_injection // Boost.DI dependency injection policy
+        >;
+
+        int main() {
+            auto sm = di::make_injector().create<state_machine>();
+            sm.process_event(event());
+            assert(0 == *sm.current_state());
+            sm.process_event(event());
+            assert(1 == *sm.current_state());
+
+            return 0;
+        }
+    ```
+    ]
+]]
+
+In order to support dependency injection, few changes to `Boost.MSM` were made.
+
+* List of `actions`/`guards` was generated from transition table
+* Generated list was passed into state machine constructor
+* Policy `use_dependency_injection` was added
+
+[note Only `Boost.MSM-eUML` front end was tested and adopted to this approach.]
 
 Full example and implementation might be found in [@https://github.com/krzysztof-jusiak/msm Boost Meta State Machine with Dependency Injection].
 
@@ -93,10 +176,9 @@ Full example and implementation might be found in [@https://github.com/krzysztof
 
 Simple Match-3 game is an example of `Boost Dependency Injection` and `Boost Meta State Machine` used together.
 
-* [@https://github.com/krzysztof-jusiak/match3/blob/master/include/config.hpp Dependency Injection Configuration]
 * [@https://github.com/krzysztof-jusiak/match3/blob/master/include/controller.hpp Meta State Machine Definition]
-* [@https://github.com/krzysztof-jusiak/match3/blob/master/include/actions.hpp Actions]
-* [@https://github.com/krzysztof-jusiak/match3/blob/master/include/guards.hpp Guards]
+* [@https://github.com/krzysztof-jusiak/match3/blob/master/include/config.hpp Dependency Injection Configuration]
+* [@https://github.com/krzysztof-jusiak/match3/blob/master/include/actions.hpp Actions] / [@https://github.com/krzysztof-jusiak/match3/blob/master/include/guards.hpp Guards]
 
 [endsect]
 
