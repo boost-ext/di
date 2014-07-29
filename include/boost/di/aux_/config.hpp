@@ -18,26 +18,26 @@
     #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
 #endif
 
-#if (BOOST_DI_CFG_CTOR_LIMIT_SIZE != 10) ||                     \
-    (BOOST_MPL_LIMIT_VECTOR_SIZE > 50) ||                       \
-    (BOOST_MPL_LIMIT_VECTOR_SIZE % 10 != 0)
+#if !defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS) &&           \
+            (BOOST_DI_CFG_CTOR_LIMIT_SIZE != 10) ||             \
+            (BOOST_MPL_LIMIT_VECTOR_SIZE > 50) ||               \
+            (BOOST_MPL_LIMIT_VECTOR_SIZE % 10 != 0)
     #define BOOST_DI_CFG_NO_PREPROCESSED_HEADERS
 #endif
 
-#if (BOOST_MPL_LIMIT_VECTOR_SIZE > 20) &&                       \
-    (BOOST_MPL_LIMIT_VECTOR_SIZE <= 50)
-    #if !defined(BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS)
-        #define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
-    #endif
+#if !defined(BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS) &&          \
+            (BOOST_MPL_LIMIT_VECTOR_SIZE > 20) &&               \
+            (BOOST_MPL_LIMIT_VECTOR_SIZE <= 50)
+    #define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
 #endif
 
 #if !defined(BOOST_DI_CFG_STD) &&                               \
-    (__cplusplus >= 201100L) &&                                 \
     !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) &&              \
     !defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS) &&  \
     !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) &&               \
     !defined(BOOST_NO_CXX11_DECLTYPE) &&                        \
-    !defined(BOOST_INTEL)
+    !defined(BOOST_INTEL) &&                                    \
+    (__cplusplus >= 201100L)
     #define BOOST_DI_CFG_STD cpp_11
 #else
     #define BOOST_DI_CFG_STD cpp_03
