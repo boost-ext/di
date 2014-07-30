@@ -35,13 +35,13 @@ struct get_value
 template<typename T>
 struct get_longest_ctor
     : mpl::fold<
-        mpl::range_c<int, 1, BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>
-      , mpl::int_<0>
-      , mpl::if_<
-            type_traits::has_ctor<T, get_value<mpl::_2> >
-          , mpl::_2
-          , mpl::_1
-        >
+          mpl::range_c<int, 1, BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>
+        , mpl::int_<0>
+        , mpl::if_<
+              type_traits::has_ctor<T, get_value<mpl::_2> >
+            , mpl::_2
+            , mpl::_1
+          >
       >::type
 { };
 
