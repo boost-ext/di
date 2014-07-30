@@ -128,6 +128,7 @@ void test_hello_world_when_run_with_value_true_then_log_and_do_it() {
  * [https://code.google.com/p/ffead-cpp](https://code.google.com/p/ffead-cpp)
  * [http://codebros.github.io/DiLite](http://codebros.github.io/DiLite)
  * [https://code.google.com/p/kindi](https://code.google.com/p/kindi)
+ * [https://www.leapmotion.com/blog/hello-world-meet-autowiring-c](https://www.leapmotion.com/blog/hello-world-meet-autowiring-c)
 
 ### License
 Distributed under the [Boost Software License, Version 1.0](http://www.boost.org/LICENSE_1_0.txt).
