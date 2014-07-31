@@ -198,14 +198,6 @@
             );
         }
 
-        template < class T, class R >
-        struct normalize;
-
-        template < class... TTypes, class X >
-        struct normalize< mpl::x11::vector< TTypes... >, X >
-           : mpl::x11::vector< TTypes..., X >
-        { };
-
         template<
             typename T
           , typename TDependency

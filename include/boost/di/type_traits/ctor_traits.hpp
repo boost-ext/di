@@ -25,36 +25,35 @@
 
 namespace boost {
 namespace di {
-namespace detail {
+
+        template < class T, class R >
+        struct normalize;
+
+        template < class... TTypes, class X >
+        struct normalize< mpl::x11::vector< TTypes... >, X >
+           : mpl::x11::vector< TTypes..., X >
+        { };
+
 
 template<typename T>
-struct get_value
-    : mpl::int_<T::value>
-{ };
+class ctor_traits
+{
+    template<typename T>
+    struct generate_parameters
+        : 
+    { };
 
-template<typename T>
-struct get_longest_ctor
-    : mpl::x11::fold<
-          mpl::x11::range_c<int, 1, BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>
-        , mpl::x11::int_<0>
-        , mpl::x11::if_<
-              type_traits::has_ctor<T, get_value<mpl::x11::arg<1>> >
-            , mpl::x11::arg<1>
-            , mpl::x11::arg<0>
-          >
-      >::type
-{ };
-
-} // detail
-
-template<typename T>
-struct ctor_traits
-   : mpl::x11::fold<
-          mpl::x11::range_c<int, 0, detail::get_longest_ctor<T>::value>
-        , mpl::x11::vector<>
-        , mpl::x11::push_back<mpl::x11::arg<0>, core::any_type<> >
-      >
-{ };
+public:
+    typedef typename mpl::x11::fold<
+        mpl::x11::range_c<int, 1, BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>
+      , mpl::x11::vector<core::any_type<> >
+      , mpl::x11::if_<
+            type_traits::has_ctor<T, mpl::x11::arg<0> >
+          , mpl::x11::arg<0>
+          , mpl::x11::push_back<mpl::x11::arg<0>, mpl::x11::arg<1> >
+        >
+    >::type type;
+};
 
 template<typename T>
 struct ctor_traits<std::basic_string<T> > // basic_string ctors are ambiguous
