@@ -153,7 +153,7 @@ Allows to bind multiple interfaces to one instance.
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TArgs...`][Polymorphic types][Interfaces to be binded to one instance]]
+    [[`TArgs...`][Polymorphic types][Interfaces to be bound to one instance]]
 ]
 
 [heading Expression Semantics]
@@ -206,7 +206,7 @@ Allows to bind compile time bool values.
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`Value`][Boolean value][Value to be binded to `bool` parameters]]
+    [[`Value`][Boolean value][Value to be bound to `bool` parameters]]
 ]
 
 [heading Expression Semantics]
@@ -257,7 +257,7 @@ Allows to bind compile time integer values.
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`N`][Integer number][Value to be binded to `int` parameters]]
+    [[`N`][Integer number][Value to be bound to `int` parameters]]
 ]
 
 [heading Expression Semantics]
@@ -308,7 +308,7 @@ Allows to bind compile time string values.
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`T`][`mpl::string` type][Value to be binded to `std::string` parameters]]
+    [[`T`][`mpl::string` type][Value to be bound to `std::string` parameters]]
 ]
 
 [heading Expression Semantics]
@@ -364,8 +364,8 @@ Allows to bind other bindings to defined/custom scope. If not used `deduce` scop
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TScope`][__scope_model__ type][scope to be binded]]
-    [[`TArgs...`][__binding_model__ type][types to be binded in `TScope`]]
+    [[`TScope`][__scope_model__ type][scope to be bound]]
+    [[`TArgs...`][__binding_model__ type][types to be bound in `TScope`]]
 ]
 
 [heading Expression Semantics]
@@ -392,7 +392,7 @@ Allows to bind other bindings to defined/custom scope. If not used `deduce` scop
 
     assert(injector.__di_injector_create__<shared_ptr<interface>>() != injector.__di_injector_create__<shared_ptr<interface>>());
 
-[note `external` scope can be only binded using `bind<T>::to(T)` semantic.]
+[note `external` scope can be only bound using `bind<T>::to(T)` semantic.]
 
 [heading More Examples]
     ``__examples_binding__``
@@ -422,7 +422,7 @@ Scoped will be deduced accordingly to constructor parameter type. See __scopes_d
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TArgs...`][__binding_model__ type][Bindings to be binded in `deduce` scope]]
+    [[`TArgs...`][__binding_model__ type][Bindings to be bound in `deduce` scope]]
 ]
 
 [heading Expression Semantics]
@@ -581,7 +581,7 @@ Allows to bind other bindings in __scopes_session__.
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TArgs...`][__binding_model__ type][Bindings to be binded in __scopes_session__]]
+    [[`TArgs...`][__binding_model__ type][Bindings to be bound in __scopes_session__]]
 ]
 
 [heading Expression Semantics]

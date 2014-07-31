@@ -127,7 +127,7 @@ Verifies constructor parameters overlapping.
 [section creation_permission]
 
 [heading Description]
-Limits default constructible types not be created unless they are explicitly binded or allowed.
+Limits default constructible types not be created unless they are explicitly bound or allowed.
 
 [heading Allow Type Model]
     template<typename TValueType>

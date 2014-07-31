@@ -192,7 +192,7 @@ Default scope which will be converted to one of the scopes __scopes_external__ /
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`T`][None][Type to be re-binded accordingly to [link di.concepts.scopes.deduce.scope_traits Scope Traits]]]
+    [[`T`][None][Type to be re-bound accordingly to [link di.concepts.scopes.deduce.scope_traits Scope Traits]]]
 ]
 
 [heading Header]
@@ -266,7 +266,7 @@ Default scope which will be converted to one of the scopes __scopes_external__ /
 Scope representing external values - passed by user. The life time of the object depends on the user.
 `Boost.DI` is not responsible of managing life time of passed objects, however `values` and `strings` will be copied
 and managed by the library. External scope has priority before other scopes which means that if some value/type
-will be binded using different scope as well then binding using external scope will be used.
+will be bound using different scope as well then binding using external scope will be used.
 
 [heading Synopsis]
     template<template<typename> class TWrapper>
