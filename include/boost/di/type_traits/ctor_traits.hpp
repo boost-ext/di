@@ -18,6 +18,7 @@
 #include <boost/preprocessor/cat.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/x11/fold.hpp>
+#include <boost/mpl/x11/pair.hpp>
 #include <boost/mpl/x11/range_c.hpp>
 #include <boost/mpl/x11/if.hpp>
 #include <boost/mpl/int.hpp>
@@ -26,34 +27,44 @@
 namespace boost {
 namespace di {
 
-        template < class T, class R >
-        struct normalize;
+template < class T, class R >
+struct normalize;
 
-        template < class... TTypes, class X >
-        struct normalize< mpl::x11::vector< TTypes... >, X >
-           : mpl::x11::vector< TTypes..., X >
-        { };
+template < class... TTypes, class X >
+struct normalize< mpl::x11::vector< TTypes... >, X >
+   : mpl::x11::vector< TTypes..., X >
+{ };
 
+template<typename TSeq>
+struct normalize_vector
+    : mpl::x11::fold<
+          TSeq
+        , mpl::x11::vector<>
+        , normalize<mpl::x11::arg<0>, mpl::x11::arg<1> >
+      >::type
+{ };
 
 template<typename T>
-class ctor_traits
-{
-    template<typename T>
-    struct generate_parameters
-        : 
-    { };
-
-public:
-    typedef typename mpl::x11::fold<
-        mpl::x11::range_c<int, 1, BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>
-      , mpl::x11::vector<core::any_type<> >
-      , mpl::x11::if_<
-            type_traits::has_ctor<T, mpl::x11::arg<0> >
-          , mpl::x11::arg<0>
-          , mpl::x11::push_back<mpl::x11::arg<0>, mpl::x11::arg<1> >
-        >
-    >::type type;
-};
+struct ctor_traits
+          : mpl::x11::second<typename mpl::x11::fold<
+              mpl::x11::range_c<int, 0, BOOST_DI_CFG_CTOR_LIMIT_SIZE>
+            , mpl::x11::pair<
+                  mpl::x11::vector<core::any_type<T> >
+                , mpl::x11::vector<>
+              >
+            , mpl::x11::if_<
+                  type_traits::has_ctor<T, normalize_vector<mpl::x11::first<mpl::x11::arg<0> > > >
+                , mpl::x11::pair<
+                      mpl::x11::push_back<mpl::x11::first<mpl::x11::arg<0> >, core::any_type<T> >
+                    , mpl::x11::first<mpl::x11::arg<0> >
+                  >
+                , mpl::x11::pair<
+                      mpl::x11::push_back<mpl::x11::first<mpl::x11::arg<0> >, core::any_type<T> >
+                    , mpl::x11::second<mpl::x11::arg<0> >
+                  >
+              >
+          >::type >
+{ };
 
 template<typename T>
 struct ctor_traits<std::basic_string<T> > // basic_string ctors are ambiguous

@@ -104,7 +104,7 @@
           , typename TPolicies
         >
         typename enable_if<
-            is_same<T, TAnyType<> >
+            is_same<T, TAnyType<T> >
           , TAnyType<
                 TParent
               , TCallStack
@@ -143,7 +143,7 @@
           , typename TVisitor
           , typename TPolicies
         >
-        typename disable_if<is_same<T, TAnyType<> >, wrappers::universal<T> >::type
+        typename disable_if<is_same<T, TAnyType<T> >, wrappers::universal<T> >::type
         create(const TAllocator& allocator
              , TDeps& deps
              , TRefs& refs
@@ -216,10 +216,8 @@
                   , TRefs& refs
                   , const TVisitor& visitor
                   , const TPolicies& policies) {
-            typedef typename mpl::x11::fold<
+            typedef typename normalize_vector<
                 type_traits::ctor_traits<typename TDependency::given>
-              , mpl::x11::vector<>
-              , normalize<mpl::x11::arg<0>, mpl::x11::arg<1> >
             >::type ctor_type;
 
             return wrappers::universal<T>(

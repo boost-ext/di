@@ -26,7 +26,7 @@
     class has_ctor;
 
     #define BOOST_PP_FILENAME_1 "boost/di/type_traits/has_ctor.hpp"
-    #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM(2)
+    #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM_FORCE(2)
     #include BOOST_PP_ITERATE()
 
     } // namespace type_traits
@@ -48,8 +48,6 @@
         static mpl::aux::no_tag test(...);
 
     public:
-        typedef has_ctor type;
-
         BOOST_STATIC_CONSTANT(
             bool
           , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
