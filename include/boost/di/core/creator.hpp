@@ -27,8 +27,9 @@
     #include <boost/type_traits/is_base_of.hpp>
     #include <boost/utility/enable_if.hpp>
     #include <boost/mpl/vector.hpp>
+    #include <boost/mpl/x11/vector.hpp>
     #include <boost/mpl/at.hpp>
-    #include <boost/mpl/size.hpp>
+    #include <boost/mpl/x11/size.hpp>
     #include <boost/mpl/empty.hpp>
     #include <boost/mpl/push_back.hpp>
 
@@ -170,7 +171,7 @@
 
     private:
         #define BOOST_PP_FILENAME_1 "boost/di/core/creator.hpp"
-        #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM(0)
+        #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM_FORCE(0)
         #include BOOST_PP_ITERATE()
 
         template<
@@ -184,7 +185,7 @@
           , typename TPolicies
         >
         typename enable_if_c<
-            !mpl::size<scope_create<TDependency> >::value
+            !mpl::x11::size<scope_create<TDependency> >::value
           , wrappers::universal<T>
         >::type
         create_impl(const TAllocator&
@@ -197,6 +198,14 @@
             );
         }
 
+        template < class T, class R >
+        struct normalize;
+
+        template < class... TTypes, class X >
+        struct normalize< mpl::x11::vector< TTypes... >, X >
+           : mpl::x11::vector< TTypes..., X >
+        { };
+
         template<
             typename T
           , typename TDependency
@@ -208,38 +217,40 @@
           , typename TPolicies
         >
         typename disable_if_c<
-            !mpl::size<scope_create<TDependency> >::value
+            !mpl::x11::size<scope_create<TDependency> >::value
           , wrappers::universal<T> >::type
         create_impl(const TAllocator& allocator
                   , TDeps& deps
                   , TRefs& refs
                   , const TVisitor& visitor
                   , const TPolicies& policies) {
-            typedef typename type_traits::ctor_traits<
-                typename TDependency::given
+            typedef typename mpl::x11::fold<
+                type_traits::ctor_traits<typename TDependency::given>
+              , mpl::x11::vector<>
+              , normalize<mpl::x11::arg<0>, mpl::x11::arg<1> >
             >::type ctor_type;
 
             return wrappers::universal<T>(
                 refs
               , acquire<TDependency>(deps).create(
                     boost::bind(
-                        &creator::create_impl<
-                            T
-                          , TDependency
-                          , ctor_type
-                          , TCallStack
-                          , TAllocator
-                          , TDeps
-                          , TRefs
-                          , TVisitor
-                          , TPolicies
-                        >
+                        static_cast<
+                            typename TDependency::expected*(creator::*)(
+                                const TAllocator&
+                              , TDeps&
+                              , TRefs&
+                              , const TVisitor&
+                              , const TPolicies&
+                              , const ctor_type&
+                            )
+                        >(&creator::create_impl<T, TDependency, TCallStack>)
                       , this
-                      , boost::cref(allocator)
-                      , boost::ref(deps)
-                      , boost::ref(refs)
-                      , boost::cref(visitor)
-                      , boost::cref(policies)
+                      , allocator
+                      , deps
+                      , refs
+                      , visitor
+                      , policies
+                      , ctor_type()
                     )
                 )
             );
@@ -291,47 +302,26 @@
     template<
         typename T
       , typename TDependency
-      , typename TCtor
       , typename TCallStack
       , typename TAllocator
       , typename TDeps
       , typename TRefs
       , typename TVisitor
       , typename TPolicies
+      , BOOST_DI_TYPES(TArgs)
     >
-    typename enable_if_c<
-        mpl::size<TCtor>::value == BOOST_PP_ITERATION()
-      , typename TDependency::expected*
-    >::type
+    typename TDependency::expected*
     create_impl(const TAllocator& allocator
               , TDeps& deps
               , TRefs& refs
               , const TVisitor& visitor
-              , const TPolicies& policies) {
-        (void)deps;
-        (void)refs;
-        (void)visitor;
-        (void)policies;
-
-        #define BOOST_DI_CREATOR_CREATE(_, n, create)   \
-            BOOST_PP_COMMA_IF(n)                        \
-            create<                                     \
-                typename mpl::at_c<TCtor, n>::type      \
-              , T                                       \
-              , TCallStack                              \
-            >(allocator, deps, refs, visitor, policies)
-
+              , const TPolicies& policies
+              , const mpl::x11::vector<BOOST_DI_TYPES_PASS(TArgs)>&) {
         return allocator.template
             allocate<typename TDependency::expected, typename TDependency::given>(
-                BOOST_PP_REPEAT(
-                    BOOST_PP_ITERATION()
-                  , BOOST_DI_CREATOR_CREATE
-                  , create
-                )
-            );
-
-        #undef BOOST_DI_CREATOR_CREATE
-      }
+                create<TArgs, T, TCallStack>(allocator, deps, refs, visitor, policies)...
+        );
+    }
 
 #endif
 

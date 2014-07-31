@@ -17,11 +17,11 @@
 #include <string>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/mpl/fold.hpp>
-#include <boost/mpl/range_c.hpp>
-#include <boost/mpl/if.hpp>
+#include <boost/mpl/x11/fold.hpp>
+#include <boost/mpl/x11/range_c.hpp>
+#include <boost/mpl/x11/if.hpp>
 #include <boost/mpl/int.hpp>
-#include <boost/mpl/push_back.hpp>
+#include <boost/mpl/x11/push_pop.hpp> // wknd
 
 namespace boost {
 namespace di {
@@ -34,13 +34,13 @@ struct get_value
 
 template<typename T>
 struct get_longest_ctor
-    : mpl::fold<
-          mpl::range_c<int, 1, BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>
-        , mpl::int_<0>
-        , mpl::if_<
-              type_traits::has_ctor<T, get_value<mpl::_2> >
-            , mpl::_2
-            , mpl::_1
+    : mpl::x11::fold<
+          mpl::x11::range_c<int, 1, BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>
+        , mpl::x11::int_<0>
+        , mpl::x11::if_<
+              type_traits::has_ctor<T, get_value<mpl::x11::arg<1>> >
+            , mpl::x11::arg<1>
+            , mpl::x11::arg<0>
           >
       >::type
 { };
@@ -49,10 +49,10 @@ struct get_longest_ctor
 
 template<typename T>
 struct ctor_traits
-    : mpl::fold<
-          mpl::range_c<int, 0, detail::get_longest_ctor<T>::value>
-        , mpl::vector0<>
-        , mpl::push_back<mpl::_1, core::any_type<> >
+   : mpl::x11::fold<
+          mpl::x11::range_c<int, 0, detail::get_longest_ctor<T>::value>
+        , mpl::x11::vector<>
+        , mpl::x11::push_back<mpl::x11::arg<0>, core::any_type<> >
       >
 { };
 
