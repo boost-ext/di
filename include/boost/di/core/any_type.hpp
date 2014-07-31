@@ -45,6 +45,7 @@ class any_type
     { };
 
 public:
+    typedef void any;
     any_type() { }
 
     any_type(TCreator& creator

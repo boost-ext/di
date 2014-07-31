@@ -37,6 +37,8 @@
     namespace di {
     namespace core {
 
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(any)
+
     template<
         typename TDependecies = mpl::vector0<>
       , template<typename> class TBinder = binder
@@ -104,7 +106,7 @@
           , typename TPolicies
         >
         typename enable_if<
-            is_same<T, TAnyType<T> >
+            has_any<T>
           , TAnyType<
                 TParent
               , TCallStack
@@ -143,7 +145,7 @@
           , typename TVisitor
           , typename TPolicies
         >
-        typename disable_if<is_same<T, TAnyType<T> >, wrappers::universal<T> >::type
+        typename disable_if<has_any<T>, wrappers::universal<T> >::type
         create(const TAllocator& allocator
              , TDeps& deps
              , TRefs& refs
