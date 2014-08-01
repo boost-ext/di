@@ -181,7 +181,7 @@
           , typename TPolicies
         >
         typename enable_if_c<
-            !aux::mpl::x11::size<scope_create<TDependency> >::value
+            !aux::mpl::size<scope_create<TDependency> >::value
           , wrappers::universal<T>
         >::type
         create_impl(const TAllocator&
@@ -205,7 +205,7 @@
           , typename TPolicies
         >
         typename disable_if_c<
-            !aux::mpl::x11::size<scope_create<TDependency> >::value
+            !aux::mpl::size<scope_create<TDependency> >::value
           , wrappers::universal<T> >::type
         create_impl(const TAllocator& allocator
                   , TDeps& deps
@@ -302,7 +302,7 @@
               , TRefs& refs
               , const TVisitor& visitor
               , const TPolicies& policies
-              , const aux::mpl::x11::vector<BOOST_DI_TYPES_PASS(TArgs)>&) {
+              , const aux::mpl::vector<BOOST_DI_TYPES_PASS(TArgs)>&) {
         return allocator.template
             allocate<typename TDependency::expected, typename TDependency::given>(
                 create<TArgs, T, TCallStack>(allocator, deps, refs, visitor, policies)...

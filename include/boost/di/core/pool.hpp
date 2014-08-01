@@ -39,8 +39,8 @@
     { };
 
     template<
-        typename TSeq = aux::mpl::x11::vector<>
-      , typename TIgnore = never<aux::mpl::x11::arg<0> >
+        typename TSeq = aux::mpl::vector<>
+      , typename TIgnore = never<aux::mpl::arg<0> >
       , typename = void
     >
     class pool;
@@ -57,12 +57,12 @@
 
 #else
     template<typename TIgnore, typename... TArgs>
-    class pool<aux::mpl::x11::vector<TArgs...>, TIgnore> : public TArgs...
+    class pool<aux::mpl::vector<TArgs...>, TIgnore> : public TArgs...
     {
         template<typename T, typename = void>
         struct pool_type
         {
-            typedef aux::mpl::x11::vector<T> type;
+            typedef aux::mpl::vector<T> type;
         };
 
         template<typename T>
@@ -73,7 +73,7 @@
 
         template<typename T>
         struct pool_type<T, typename enable_if<
-            typename aux::mpl::x11::apply<TIgnore, T>::type>::type>
+            typename aux::mpl::apply<TIgnore, T>::type>::type>
         {
             typedef void type; // ignore type
         };
@@ -82,12 +82,12 @@
         typedef pool type;
 
         struct types
-            : aux::mpl::x11::fold<
-                  aux::mpl::x11::vector<TArgs...>
-                , aux::mpl::x11::vector<>
-                , aux::mpl::x11::copy<
-                      pool_type<aux::mpl::x11::arg<1> >
-                    , aux::mpl::x11::back_inserter<aux::mpl::x11::arg<0>>
+            : aux::mpl::fold<
+                  aux::mpl::vector<TArgs...>
+                , aux::mpl::vector<>
+                , aux::mpl::copy<
+                      pool_type<aux::mpl::arg<1> >
+                    , aux::mpl::back_inserter<aux::mpl::arg<0>>
                   >
               >::type
         { };
@@ -109,7 +109,7 @@
 
     private:
         template<typename I, typename T, typename... TQ>
-        pool(const pool<T, I>& p, const aux::mpl::x11::vector<TQ...>&, const init&)
+        pool(const pool<T, I>& p, const aux::mpl::vector<TQ...>&, const init&)
             : TQ(p.template get<TQ>())...
         { }
     };

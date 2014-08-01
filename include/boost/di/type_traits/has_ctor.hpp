@@ -36,7 +36,7 @@
 #else
 
     template<typename T, BOOST_DI_TYPES(TArgs)>
-    class has_ctor<T, aux::mpl::x11::vector<BOOST_DI_TYPES_PASS(TArgs)> >
+    class has_ctor<T, aux::mpl::vector<BOOST_DI_TYPES_PASS(TArgs)> >
     {
     public:
         template<typename U>
