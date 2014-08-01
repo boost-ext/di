@@ -10,8 +10,6 @@
 #include <memory>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_base_of.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/equal.hpp>
 
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/scopes/deduce.hpp"

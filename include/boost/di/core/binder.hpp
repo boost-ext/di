@@ -12,10 +12,6 @@
 #include "boost/di/bindings/dependency.hpp"
 #include "boost/di/scopes/deduce.hpp"
 
-#include <boost/mpl/if.hpp>
-#include <boost/mpl/deref.hpp>
-#include <boost/mpl/pair.hpp>
-#include <boost/mpl/greater.hpp>
 
 namespace boost {
 namespace di {

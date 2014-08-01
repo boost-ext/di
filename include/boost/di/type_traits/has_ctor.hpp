@@ -15,8 +15,6 @@
 
     #include <boost/preprocessor/repetition/enum_params.hpp>
     #include <boost/preprocessor/facilities/intercept.hpp>
-    #include <boost/mpl/aux_/yes_no.hpp>
-    #include <boost/mpl/x11/vector.hpp>
 
     namespace boost {
     namespace di {

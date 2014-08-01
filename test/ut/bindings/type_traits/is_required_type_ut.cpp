@@ -8,7 +8,6 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <boost/mpl/vector.hpp>
 
 namespace boost {
 namespace di {

@@ -7,7 +7,6 @@
 #include "boost/di/bindings/call_stack.hpp"
 
 #include <boost/test/unit_test.hpp>
-#include <boost/mpl/vector.hpp>
 
 #include "common/fakes/fake_data.hpp"
 #include "common/fakes/fake_scope.hpp"

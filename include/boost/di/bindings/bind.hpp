@@ -15,9 +15,6 @@
 #include "boost/di/bindings/type_traits/is_required_type.hpp"
 #include "boost/di/scopes/deduce.hpp"
 
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/is_sequence.hpp>
-#include <boost/mpl/if.hpp>
 
 namespace boost {
 namespace di {

@@ -17,13 +17,6 @@
     #include <boost/preprocessor/repetition/enum_params.hpp>
     #include <boost/preprocessor/repetition/enum_binary_params.hpp>
     #include <boost/utility/enable_if.hpp>
-    #include <boost/mpl/bool.hpp>
-    #include <boost/mpl/x11/vector.hpp>
-    #include <boost/mpl/x11/apply.hpp>
-    #include <boost/mpl/x11/fold.hpp>
-    #include <boost/mpl/x11/copy.hpp>
-    //#include <boost/mpl/x11/back_inserter.hpp>
-    #include <boost/mpl/has_xxx.hpp>
     #include <boost/config.hpp>
 
     #include "boost/di/type_traits/ctor_traits.hpp"

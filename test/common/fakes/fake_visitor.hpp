@@ -12,12 +12,6 @@
 #include <vector>
 #include <string>
 #include <boost/utility/enable_if.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/empty.hpp>
-#include <boost/mpl/pop_front.hpp>
-#include <boost/mpl/front.hpp>
-#include <boost/mpl/size.hpp>
-#include <boost/mpl/has_xxx.hpp>
 
 #include <iostream>
 #include <boost/units/detail/utility.hpp>

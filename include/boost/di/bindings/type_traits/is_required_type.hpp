@@ -11,8 +11,6 @@
 #include "boost/di/type_traits/is_same_base_of.hpp"
 
 #include <boost/utility/enable_if.hpp>
-#include <boost/mpl/is_sequence.hpp>
-#include <boost/mpl/count_if.hpp>
 
 namespace boost {
 namespace di {

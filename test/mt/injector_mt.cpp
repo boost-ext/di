@@ -8,7 +8,6 @@
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
-#include <boost/mpl/vector.hpp>
 
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/config.hpp"

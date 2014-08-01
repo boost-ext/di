@@ -10,7 +10,6 @@
 #include "boost/di/type_traits/remove_accessors.hpp"
 
 #include <boost/utility/enable_if.hpp>
-#include <boost/mpl/has_xxx.hpp>
 
 namespace boost {
 namespace di {

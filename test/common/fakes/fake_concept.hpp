@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_FAKE_CONCEPT_HPP
 #define BOOST_DI_FAKE_CONCEPT_HPP
 
-#include <boost/mpl/int.hpp>
 
 namespace boost {
 namespace di {

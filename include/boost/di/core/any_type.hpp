@@ -12,8 +12,6 @@
 #include "boost/di/type_traits/is_same_base_of.hpp"
 
 #include <boost/none_t.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_integral.hpp>
 

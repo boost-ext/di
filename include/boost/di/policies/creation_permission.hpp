@@ -10,12 +10,6 @@
 #include "boost/di/aux_/config.hpp"
 
 #include <boost/type_traits/is_same.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/count_if.hpp>
-#include <boost/mpl/apply.hpp>
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/or.hpp>
-#include <boost/mpl/not.hpp>
 
 namespace boost {
 namespace di {

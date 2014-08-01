@@ -8,8 +8,6 @@
 
 #include "boost/di/aux_/memory.hpp"
 #include <boost/test/unit_test.hpp>
-#include <boost/mpl/x11/vector.hpp>
-#include <boost/mpl/x11/equal.hpp>
 
 namespace boost {
 namespace di {

@@ -8,8 +8,6 @@
 
 #include <boost/test/unit_test.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/equal.hpp>
 
 namespace boost {
 namespace di {

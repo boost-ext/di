@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_FAKE_POOL_HPP
 #define BOOST_DI_FAKE_POOL_HPP
 
-#include <boost/mpl/vector.hpp>
 
 namespace boost {
 namespace di {

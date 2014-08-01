@@ -11,7 +11,6 @@
 
     #include "boost/di/aux_/config.hpp"
 
-    #include <boost/mpl/x11/vector.hpp>
 
     namespace boost {
     namespace di {

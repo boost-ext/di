@@ -18,13 +18,6 @@
 
     #include <vector>
     #include <boost/utility/enable_if.hpp>
-    #include <boost/mpl/vector.hpp>
-    #include <boost/mpl/and.hpp>
-    #include <boost/mpl/not.hpp>
-    #include <boost/mpl/or.hpp>
-    #include <boost/mpl/pop_front.hpp>
-    #include <boost/mpl/front.hpp>
-    #include <boost/mpl/contains.hpp>
 
     namespace boost {
     namespace di {

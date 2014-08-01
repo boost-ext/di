@@ -17,7 +17,6 @@
 #define BOOST_DI_WKND_MSVC(...) __VA_ARGS__
 
 #include <boost/test/unit_test.hpp>
-#include <boost/mpl/identity.hpp>
 
 #include "common/data.hpp"
 

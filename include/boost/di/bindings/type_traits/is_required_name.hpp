@@ -11,8 +11,6 @@
 
 #include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/mpl/has_xxx.hpp>
-#include <boost/mpl/times.hpp>
 
 namespace boost {
 namespace di {

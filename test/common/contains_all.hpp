@@ -8,15 +8,6 @@
 #define BOOST_DI_CONTAINS_ALL_HPP
 
 #include <boost/utility/enable_if.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/contains.hpp>
-#include <boost/mpl/not_equal_to.hpp>
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/fold.hpp>
-#include <boost/mpl/size.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/mpl/empty.hpp>
-#include <boost/mpl/push_back.hpp>
 
 namespace boost {
 namespace di {

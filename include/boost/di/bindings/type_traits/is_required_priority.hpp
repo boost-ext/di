@@ -7,8 +7,6 @@
 #ifndef BOOST_DI_BINDINGS_TYPE_TRAITS_IS_REQUIRED_PRIORITY_HPP
 #define BOOST_DI_BINDINGS_TYPE_TRAITS_IS_REQUIRED_PRIORITY_HPP
 
-#include <boost/mpl/placeholders.hpp>
-#include <boost/mpl/plus.hpp>
 
 namespace boost {
 namespace di {

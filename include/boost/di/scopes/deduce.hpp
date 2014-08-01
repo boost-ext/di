@@ -9,7 +9,6 @@
 
 #include "boost/di/type_traits/scope_traits.hpp"
 
-#include <boost/mpl/int.hpp>
 
 namespace boost {
 namespace di {

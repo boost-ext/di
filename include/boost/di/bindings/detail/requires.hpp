@@ -9,11 +9,6 @@
 
 #include "boost/di/aux_/config.hpp"
 
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/fold.hpp>
-#include <boost/mpl/pair.hpp>
-#include <boost/mpl/times.hpp>
-#include <boost/mpl/integral_c.hpp>
 
 namespace boost {
 namespace di {

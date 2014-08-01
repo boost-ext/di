@@ -11,8 +11,6 @@
 
 #include <boost/non_type.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/aux_/yes_no.hpp>
 
 namespace boost {
 namespace di {

@@ -12,7 +12,6 @@
 
 #include <boost/type.hpp>
 #include <boost/non_type.hpp>
-#include <boost/mpl/aux_/yes_no.hpp>
 
 namespace boost {
 namespace di {

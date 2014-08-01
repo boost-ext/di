@@ -7,12 +7,6 @@
 #ifndef BOOST_DI_BINDINGS_DETAIL_WHEN_HPP
 #define BOOST_DI_BINDINGS_DETAIL_WHEN_HPP
 
-#include <boost/mpl/int.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/mpl/deref.hpp>
-#include <boost/mpl/transform_view.hpp>
-#include <boost/mpl/max_element.hpp>
-#include <boost/mpl/empty.hpp>
 
 namespace boost {
 namespace di {

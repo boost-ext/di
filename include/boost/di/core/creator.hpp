@@ -26,12 +26,6 @@
     #include <boost/bind.hpp>
     #include <boost/type_traits/is_base_of.hpp>
     #include <boost/utility/enable_if.hpp>
-    #include <boost/mpl/vector.hpp>
-    #include <boost/mpl/x11/vector.hpp>
-    #include <boost/mpl/at.hpp>
-    #include <boost/mpl/x11/size.hpp>
-    #include <boost/mpl/empty.hpp>
-    #include <boost/mpl/push_back.hpp>
 
     namespace boost {
     namespace di {

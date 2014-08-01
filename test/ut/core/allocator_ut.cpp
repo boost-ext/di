@@ -9,8 +9,6 @@
 #include <memory>
 #include <utility>
 #include <boost/test/unit_test.hpp>
-#include <boost/mpl/int.hpp>
-#include <boost/mpl/string.hpp>
 
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/inject.hpp"

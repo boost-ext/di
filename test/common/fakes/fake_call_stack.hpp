@@ -7,18 +7,6 @@
 #ifndef BOOST_DI_FAKE_CALL_STACK_HPP
 #define BOOST_DI_FAKE_CALL_STACK_HPP
 
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/fold.hpp>
-#include <boost/mpl/int.hpp>
-#include <boost/mpl/size.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/max.hpp>
-#include <boost/mpl/begin_end.hpp>
-#include <boost/mpl/iterator_range.hpp>
-#include <boost/mpl/advance.hpp>
-#include <boost/mpl/equal.hpp>
-#include <boost/mpl/empty.hpp>
 
 namespace boost {
 namespace di {

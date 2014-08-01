@@ -8,10 +8,6 @@
 
 #include <memory>
 #include <boost/test/unit_test.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/int.hpp>
-#include <boost/mpl/string.hpp>
-#include <boost/mpl/pair.hpp>
 
 #include "boost/di/scopes/unique.hpp"
 #include "boost/di/scopes/shared.hpp"

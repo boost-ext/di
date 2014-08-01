@@ -7,7 +7,6 @@
 #include "boost/di/aux_/config.hpp"
 
 #include <memory>
-#include <boost/mpl/aux_/yes_no.hpp>
 #include <boost/test/unit_test.hpp>
 
 namespace boost {

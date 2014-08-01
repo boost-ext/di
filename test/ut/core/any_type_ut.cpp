@@ -7,7 +7,6 @@
 #include "boost/di/core/any_type.hpp"
 
 #include <boost/test/unit_test.hpp>
-#include <boost/mpl/vector.hpp>
 
 #include "common/fakes/fake_creator.hpp"
 #include "common/fakes/fake_allocator.hpp"

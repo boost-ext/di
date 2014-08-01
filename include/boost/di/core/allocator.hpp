@@ -14,9 +14,6 @@
 
     #include <boost/utility/enable_if.hpp>
     #include <boost/type_traits/is_same.hpp>
-    #include <boost/mpl/bool.hpp>
-    #include <boost/mpl/or.hpp>
-    #include <boost/mpl/has_xxx.hpp>
 
     namespace boost {
 

@@ -13,7 +13,6 @@
 #include <vector>
 #include <boost/function.hpp>
 #include <boost/noncopyable.hpp>
-#include <boost/mpl/string.hpp>
 
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/inject.hpp"

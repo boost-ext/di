@@ -8,7 +8,6 @@
 #define BOOST_DI_AUX_CONFIG_HPP
 
 #include <boost/config.hpp>
-#include <boost/mpl/limits/vector.hpp>
 
 #if !defined(BOOST_DI_INJECTOR)
     #define BOOST_DI_INJECTOR boost_di_injector__
@@ -53,7 +52,6 @@
 
     #if (BOOST_MPL_LIMIT_VECTOR_SIZE > 50)
         #include <boost/preprocessor/iteration/iterate.hpp>
-        #include <boost/mpl/vector/vector50.hpp>
 
         namespace boost {
         namespace mpl {
@@ -64,7 +62,6 @@
         } // namespace boost
 
         #define BOOST_MPL_PREPROCESSING_MODE
-        #include <boost/mpl/vector.hpp>
         #undef BOOST_MPL_PREPROCESSING_MODE
     #endif
 
@@ -135,7 +132,6 @@
 #endif
 
 #if !defined(BOOST_DI_ASSERT_MSG)
-    #include <boost/mpl/assert.hpp>
     #define BOOST_DI_ASSERT_MSG(c, msg, type)   \
         BOOST_MPL_ASSERT_MSG(c, msg, (type))
 #endif

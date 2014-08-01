@@ -18,9 +18,6 @@
 #include "boost/di/scopes/unique.hpp"
 
 #include <string>
-#include <boost/mpl/int.hpp>
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/vector.hpp>
 
 namespace boost {
 namespace di {

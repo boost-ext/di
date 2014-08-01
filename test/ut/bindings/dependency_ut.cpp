@@ -11,8 +11,6 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/make_shared.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/int.hpp>
 #include <boost/type_traits/is_same.hpp>
 
 #include "boost/di/aux_/config.hpp"

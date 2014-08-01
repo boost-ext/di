@@ -11,9 +11,6 @@
 #include "boost/di/scopes/deduce.hpp"
 
 #include <boost/type_traits/is_same.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/count_if.hpp>
-#include <boost/mpl/bool.hpp>
 
 namespace boost {
 namespace di {

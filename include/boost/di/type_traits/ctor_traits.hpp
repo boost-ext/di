@@ -17,12 +17,6 @@
 #include <string>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/mpl/x11/fold.hpp>
-#include <boost/mpl/x11/pair.hpp>
-#include <boost/mpl/x11/range_c.hpp>
-#include <boost/mpl/x11/if.hpp>
-#include <boost/mpl/int.hpp>
-#include <boost/mpl/x11/push_pop.hpp> // wknd
 
 namespace boost {
 namespace di {

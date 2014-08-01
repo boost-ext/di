@@ -21,16 +21,6 @@
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/preprocessor/punctuation/comma_if.hpp>
     #include <boost/utility/enable_if.hpp>
-    #include <boost/mpl/vector.hpp>
-    #include <boost/mpl/joint_view.hpp>
-    #include <boost/mpl/fold.hpp>
-    #include <boost/mpl/copy.hpp>
-    #include <boost/mpl/if.hpp>
-    #include <boost/mpl/or.hpp>
-    #include <boost/mpl/back_inserter.hpp>
-    #include <boost/mpl/is_sequence.hpp>
-    #include <boost/mpl/placeholders.hpp>
-    #include <boost/mpl/has_xxx.hpp>
 
     namespace boost {
     namespace di {

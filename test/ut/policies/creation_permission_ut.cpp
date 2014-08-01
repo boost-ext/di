@@ -11,8 +11,6 @@
 #include <boost/test/test_case_template.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/type_traits/is_pod.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/bool.hpp>
 
 namespace boost {
 namespace di {

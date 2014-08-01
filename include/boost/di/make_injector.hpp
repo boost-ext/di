@@ -12,8 +12,6 @@
     #include "boost/di/aux_/config.hpp"
     #include "boost/di/injector.hpp"
 
-    #include <boost/mpl/if.hpp>
-    #include <boost/mpl/has_xxx.hpp>
 
     namespace boost {
     namespace di {

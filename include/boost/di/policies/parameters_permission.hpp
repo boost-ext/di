@@ -16,12 +16,6 @@
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/is_rvalue_reference.hpp>
 #include <boost/type_traits/is_pointer.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/count_if.hpp>
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/and.hpp>
-#include <boost/mpl/not.hpp>
-#include <boost/mpl/has_xxx.hpp>
 
 namespace boost {
 namespace di {

@@ -10,7 +10,6 @@
 #include "boost/di/wrappers/shared.hpp"
 
 #include <boost/function.hpp>
-#include <boost/mpl/int.hpp>
 
 namespace boost {
 namespace di {

@@ -8,9 +8,6 @@
 
 #include <boost/test/unit_test.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include <boost/mpl/x11/vector.hpp>
-#include <boost/mpl/x11/equal.hpp>
-#include <boost/mpl/x11/string.hpp>
 #include <boost/config.hpp>
 
 #include "boost/di/aux_/memory.hpp"

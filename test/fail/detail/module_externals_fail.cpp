@@ -7,7 +7,6 @@
 #include "boost/di/core/module.hpp"
 
 #include <boost/test/unit_test.hpp>
-#include <boost/mpl/vector.hpp>
 
 #include "boost/di/bindings/dependency.hpp"
 #include "boost/di/scopes/external.hpp"

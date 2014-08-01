@@ -9,13 +9,6 @@
 
 #include "boost/di/aux_/config.hpp"
 
-#include <boost/mpl/count.hpp>
-#include <boost/mpl/int.hpp>
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/plus.hpp>
-#include <boost/mpl/accumulate.hpp>
-#include <boost/mpl/transform.hpp>
-#include <boost/mpl/size.hpp>
 
 namespace boost {
 namespace di {

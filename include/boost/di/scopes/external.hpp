@@ -12,7 +12,6 @@
 
 #include <boost/ref.hpp>
 #include <boost/function.hpp>
-#include <boost/mpl/if.hpp>
 #include <boost/utility/enable_if.hpp>
 
 BOOST_DI_FEATURE(CPP_11_FUNCTIONAL)(

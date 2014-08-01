@@ -12,9 +12,6 @@
 #include "boost/di/bindings/type_traits/is_required_type.hpp"
 #include "boost/di/bindings/type_traits/is_required_priority.hpp"
 
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/fold.hpp>
-#include <boost/mpl/has_xxx.hpp>
 
 namespace boost {
 namespace di {
