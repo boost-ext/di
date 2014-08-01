@@ -30,8 +30,8 @@ class fake_visitor
             : type(type), scope(scope)
         { }
 
-        const std::type_info* type;
-        const std::type_info* scope;
+        const std::type_info* type = nullptr;
+        const std::type_info* scope = nullptr;
     };
 
     typedef std::vector<element> visits_type;
@@ -55,7 +55,7 @@ private:
     void verify(typename enable_if<aux::mpl::empty<Seq>>::type* = 0) { }
 
     template<typename Seq>
-    void verify( typename disable_if<aux::mpl::empty<Seq>>::type* = 0) {
+    void verify(typename disable_if<aux::mpl::empty<Seq>>::type* = 0) {
         typedef typename aux::mpl::front<Seq>::type type;
         verify_impl<type>();
         verify<typename aux::mpl::pop_front<Seq>::type>();

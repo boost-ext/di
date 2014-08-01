@@ -231,11 +231,11 @@
                             )
                         >(&creator::create_impl<T, TDependency, TCallStack>)
                       , this
-                      , allocator
-                      , deps
-                      , refs
-                      , visitor
-                      , policies
+                      , boost::cref(allocator)
+                      , boost::ref(deps)
+                      , boost::ref(refs)
+                      , boost::cref(visitor)
+                      , boost::cref(policies)
                       , ctor_type()
                     )
                 )
