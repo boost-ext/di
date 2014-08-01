@@ -57,7 +57,8 @@
 
 #else
     template<typename TIgnore, typename... TArgs>
-    class pool<aux::mpl::vector<TArgs...>, TIgnore> : public TArgs...
+    class pool<aux::mpl::vector<TArgs...>, TIgnore>
+        : public TArgs...
     {
         template<typename T, typename = void>
         struct pool_type
