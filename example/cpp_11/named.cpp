@@ -21,7 +21,7 @@ namespace di = boost::di;
 class named {
 public:
     /*<<Constructor with named parameters of the same `int` type>>*/
-    named(di::named<int, aux::mpl::string<'1'> > i1, di::named<int, aux::mpl::string<'2'> > i2)
+    named(di::named<int, mpl::string<'1'> > i1, di::named<int, mpl::string<'2'> > i2)
         : i1(i1), i2(i2)
     {
         assert(i1 == 42);
@@ -36,8 +36,8 @@ private:
 int main() {
     /*<<make injector and bind named parameters>>*/
     auto injector = di::make_injector(
-        di::bind_int<42>::named<aux::mpl::string<'1'> >()
-      , di::bind_int<87>::named<aux::mpl::string<'2'> >()
+        di::bind_int<42>::named<mpl::string<'1'> >()
+      , di::bind_int<87>::named<mpl::string<'2'> >()
     );
 
     /*<<create `named`>>*/

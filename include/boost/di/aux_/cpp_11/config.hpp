@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_AUX_CONFIG_CPP_11_HPP
-#define BOOST_DI_AUX_CONFIG_CPP_11_HPP
+#ifndef BOOST_DI_AUX_CPP_11_HPP
+#define BOOST_DI_AUX_CPP_11_HPP
 
 #include <boost/preprocessor/iteration/iterate.hpp>
 

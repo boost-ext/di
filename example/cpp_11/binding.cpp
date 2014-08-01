@@ -32,7 +32,7 @@ struct service {
           , bool b
           , std::unique_ptr<int> up
           , boost::function<int()> f
-          , const di::named<int, aux::mpl::string<'i'>> i)
+          , const di::named<int, mpl::string<'i'>> i)
         : sp(sp)
     {
         assert(dynamic_cast<implementation1*>(sp.get()));
@@ -86,7 +86,7 @@ int main() {
       , di::bind<float>::to(boost::ref(f))
       , di::bind<double>::to(std::cref(d))
       , di::bind<boost::function<int()>>::to([]{return 87;})
-      , di::bind<int>::named<aux::mpl::string<'i'>>::when<di::call_stack<app, service>>::to(123)
+      , di::bind<int>::named<mpl::string<'i'>>::when<di::call_stack<app, service>>::to(123)
     );
 
     /*<<create `service_app`>>*/

@@ -9,7 +9,6 @@
 
 #include "boost/di/aux_/config.hpp"
 
-
 namespace boost {
 namespace di {
 namespace bindings {

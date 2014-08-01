@@ -79,8 +79,8 @@ genereate_files() {
 }
 
 generate_name() {
-    echo "BOOST_DI_CFG_CTOR_LIMIT_SIZE BOOST_MPL_LIMIT_VECTOR_SIZE STD" > $tmp_dir/name.hpp
-    $CXX -E -P $@ $tmp_dir/name.hpp | tr ' ' '_' | xargs -i% echo di_%_c.hpp
+    echo " BOOST_DI_CFG_CTOR_LIMIT_SIZE BOOST_MPL_LIMIT_VECTOR_SIZE STD" > $tmp_dir/name.hpp
+    $CXX -E -P $@ $tmp_dir/name.hpp | tr ' ' '_' | xargs -i% echo di%_c.hpp
 }
 
 generate_preprocessed() {
@@ -114,9 +114,12 @@ generate_pph() {
     echo "done -> boost/di/preprocessed/$name"
 }
 
-generate() {
-    generate_pph `readlink -f $PWD`/boost/di/aux_/config/cpp_11.hpp -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=$1 -DBOOST_MPL_LIMIT_VECTOR_SIZE=$2 -DBOOST_DI_INJECTOR=boost_di_injector__ -DSTD=cpp_11
-    generate_pph `readlink -f $PWD`/boost/di/aux_/config/cpp_03.hpp -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=$1 -DBOOST_MPL_LIMIT_VECTOR_SIZE=$2 -DBOOST_DI_INJECTOR=boost_di_injector__ -DSTD=cpp_03
+generate_cpp_11() {
+    generate_pph `readlink -f $PWD`/boost/di/aux_/cpp_11/config.hpp -DBOOST_DI_CFG_CTOR_LIMIT_SIZE='' -DBOOST_MPL_LIMIT_VECTOR_SIZE='' -DBOOST_DI_INJECTOR=boost_di_injector__ -DSTD=cpp_11
+}
+
+generate_cpp_03() {
+    generate_pph `readlink -f $PWD`/boost/di/aux_/cpp_03/config.hpp -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=$1 -DBOOST_MPL_LIMIT_VECTOR_SIZE=$2 -DBOOST_DI_INJECTOR=boost_di_injector__ -DSTD=cpp_03
 }
 
 cleanup() {
@@ -128,11 +131,12 @@ cd $dir/../include
 
 genereate_files "boost/di.hpp" | cat -n | sort -uk2 | sort -nk1 | cut -f2- > $tmp_dir/files.hpp
 
-generate 10 10
-generate 10 20
-generate 10 30
-generate 10 40
-generate 10 50
+generate_cpp_11
+#generate_cpp_03 10 10
+#generate_cpp_03 10 20
+#generate_cpp_03 10 30
+#generate_cpp_03 10 40
+#generate_cpp_03 10 50
 
 cleanup
 

@@ -38,7 +38,7 @@ public:
         return new TGiven(std::forward<TArgs>(args)...);
     }
 
-    /*<to support `bind_int<interface>()`, `bind_string<"s">()` allocate needs support types with `value` or when `aux::mpl::string`>*/
+    /*<to support `bind_int<interface>()`, `bind_string<"s">()` allocate needs support types with `value` or when `mpl::string`>*/
 };
 
 int main() {

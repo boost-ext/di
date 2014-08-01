@@ -17,19 +17,6 @@
     #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
 #endif
 
-#if !defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS) &&           \
-            (BOOST_DI_CFG_CTOR_LIMIT_SIZE != 10) ||             \
-            (BOOST_MPL_LIMIT_VECTOR_SIZE > 50) ||               \
-            (BOOST_MPL_LIMIT_VECTOR_SIZE % 10 != 0)
-    #define BOOST_DI_CFG_NO_PREPROCESSED_HEADERS
-#endif
-
-#if !defined(BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS) &&          \
-            (BOOST_MPL_LIMIT_VECTOR_SIZE > 20) &&               \
-            (BOOST_MPL_LIMIT_VECTOR_SIZE <= 50)
-    #define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
-#endif
-
 #if !defined(BOOST_DI_CFG_STD) &&                               \
     !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) &&              \
     !defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS) &&  \
@@ -38,35 +25,50 @@
     !defined(BOOST_INTEL) &&                                    \
     (__cplusplus >= 201100L)
     #define BOOST_DI_CFG_STD cpp_11
-    #include "boost/di/aux_/config/cpp_11/mpl.hpp" //wknd
+    #define BOOST_DI_CFG_STD_ 11
+    #include "boost/di/aux_/cpp_11/mpl.hpp" //wknd
 #else
+    #define BOOST_DI_CFG_STD_ 3
     #define BOOST_DI_CFG_STD cpp_03
 #endif
 
-#if defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS)
-    #include <boost/preprocessor/cat.hpp>
-    #include <boost/preprocessor/stringize.hpp>
+/*#if !defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS) &&           \*/
+            //(BOOST_DI_CFG_CTOR_LIMIT_SIZE != 10) ||             \
+            //(BOOST_MPL_LIMIT_VECTOR_SIZE > 50) ||               \
+            //(BOOST_MPL_LIMIT_VECTOR_SIZE % 10 != 0)
+    //#define BOOST_DI_CFG_NO_PREPROCESSED_HEADERS
+//#endif
 
-    #define BOOST_DI_CFG_FILE boost/di/aux_/config/BOOST_DI_CFG_STD.hpp
-    #include BOOST_PP_STRINGIZE(BOOST_DI_CFG_FILE)
-    #undef BOOST_DI_CFG_FILE
+//#if !defined(BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS) &&          \
+            //(BOOST_MPL_LIMIT_VECTOR_SIZE > 20) &&               \
+            //(BOOST_MPL_LIMIT_VECTOR_SIZE <= 50)
+    //#define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
+//#endif
 
-    #if (BOOST_MPL_LIMIT_VECTOR_SIZE > 50)
-        #include <boost/preprocessor/iteration/iterate.hpp>
+//#if defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS)
+    //#include <boost/preprocessor/cat.hpp>
+    //#include <boost/preprocessor/stringize.hpp>
 
-        namespace boost {
-        namespace mpl {
-            #define BOOST_PP_FILENAME_1 <boost/mpl/vector/aux_/numbered.hpp>
-            #define BOOST_PP_ITERATION_LIMITS (51, BOOST_MPL_LIMIT_VECTOR_SIZE)
-            #include BOOST_PP_ITERATE()
-        } // namespace mpl
-        } // namespace boost
+    //#define BOOST_DI_CFG_FILE boost/di/aux_/BOOST_DI_CFG_STD/config.hpp
+    //#include BOOST_PP_STRINGIZE(BOOST_DI_CFG_FILE)
+    //#undef BOOST_DI_CFG_FILE
 
-        #define BOOST_MPL_PREPROCESSING_MODE
-        #undef BOOST_MPL_PREPROCESSING_MODE
-    #endif
+    //#if (BOOST_MPL_LIMIT_VECTOR_SIZE > 50)
+        //#include <boost/preprocessor/iteration/iterate.hpp>
 
-#endif
+        //namespace boost {
+        //namespace mpl {
+            //#define BOOST_PP_FILENAME_1 <boost/mpl/vector/aux_/numbered.hpp>
+            //#define BOOST_PP_ITERATION_LIMITS (51, BOOST_MPL_LIMIT_VECTOR_SIZE)
+            //#include BOOST_PP_ITERATE()
+        //} // namespace mpl
+        //} // namespace boost
+
+        //#define BOOST_MPL_PREPROCESSING_MODE
+        //#undef BOOST_MPL_PREPROCESSING_MODE
+    //#endif
+
+/*#endif*/
 
 #if defined(BOOST_GCC) || defined(BOOST_CLANG)
     #pragma GCC system_header
