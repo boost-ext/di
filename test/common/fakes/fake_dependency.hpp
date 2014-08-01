@@ -31,7 +31,7 @@ struct get_bind
 { };
 
 template<typename T, typename TName>
-struct get_bind<T, TName, aux::mpl::vector0<>>
+struct get_bind<T, TName, aux::mpl::vector<>>
     : bindings::detail::requires_<
           bindings::type_traits::is_required_priority
         , bindings::type_traits::is_required_type<T>
@@ -49,7 +49,7 @@ struct get_bind<T, no_name, TCallStack>
 { };
 
 template<typename T>
-struct get_bind<T, no_name, aux::mpl::vector0<>>
+struct get_bind<T, no_name, aux::mpl::vector<>>
     : bindings::detail::requires_<
           bindings::type_traits::is_required_priority
         , bindings::type_traits::is_required_type<T>
@@ -61,7 +61,7 @@ template<
   , typename TExpected
   , typename TGiven = TExpected
   , typename TName = no_name
-  , typename TContext = aux::mpl::vector0<>
+  , typename TContext = aux::mpl::vector<>
   , typename TBind = typename get_bind<TExpected, TName, TContext>::type
 >
 struct fake_dependency

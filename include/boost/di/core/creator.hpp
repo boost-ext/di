@@ -34,7 +34,7 @@
     BOOST_MPL_HAS_XXX_TRAIT_DEF(any)
 
     template<
-        typename TDependecies = aux::mpl::vector0<>
+        typename TDependecies = aux::mpl::vector<>
       , template<typename> class TBinder = binder
       , template<
             typename = ::boost::none_t

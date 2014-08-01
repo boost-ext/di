@@ -16,7 +16,7 @@ namespace di {
 namespace bindings {
 
 BOOST_AUTO_TEST_CASE(empty_call_stack) {
-    BOOST_CHECK_EQUAL(0, (call_stack<>::apply<fake_data<int, aux::mpl::vector0<>, fake_scope<>>>::type::value));
+    BOOST_CHECK_EQUAL(0, (call_stack<>::apply<fake_data<int, aux::mpl::vector<>, fake_scope<>>>::type::value));
 }
 
 BOOST_AUTO_TEST_CASE(equal_call_stack) {

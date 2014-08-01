@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE(create_pod) {
 
     BOOST_CHECK_EQUAL(i, (
         creator<aux::mpl::vector<dependency_type>>().create<
-            int, int, aux::mpl::vector0<>
+            int, int, aux::mpl::vector<>
         >(allocator, deps, refs, fake_visitor<aux::mpl::vector<int>>(), fake_pool<>())
     ));
 }

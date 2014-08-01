@@ -41,7 +41,7 @@
             class = ::boost::di::core::any_type
         > class TCreator = creator
       , template<
-            typename = ::boost::aux::mpl::vector0<>
+            typename = ::boost::aux::mpl::vector<>
           , typename = ::boost::di::core::never< ::boost::aux::mpl::_1 >
           , typename = void
         > class TPool = pool
@@ -91,7 +91,7 @@
 
         template<typename T>
         T create() {
-            typedef aux::mpl::vector0<> call_stack;
+            typedef aux::mpl::vector<> call_stack;
             std::vector<aux::shared_ptr<void> > refs_;
 
             return creator_.template create<T, T, call_stack>(
@@ -105,7 +105,7 @@
 
         template<typename T, typename TAllocator>
         T allocate(const TAllocator& allocator) {
-            typedef aux::mpl::vector0<> call_stack;
+            typedef aux::mpl::vector<> call_stack;
             std::vector<aux::shared_ptr<void> > refs_;
 
             return creator_.template create<T, T, call_stack>(
@@ -119,7 +119,7 @@
 
         template<typename T, typename TVisitor>
         T visit(const TVisitor& visitor) {
-            typedef aux::mpl::vector0<> call_stack;
+            typedef aux::mpl::vector<> call_stack;
             std::vector<aux::shared_ptr<void> > refs_;
 
             return creator_.template create<T, T, call_stack>(
@@ -196,7 +196,7 @@
 
     template<typename T, BOOST_DI_TYPES(TPolicies)>
     T create(BOOST_DI_ARGS(TPolicies, policies)) {
-        typedef aux::mpl::vector0<> call_stack;
+        typedef aux::mpl::vector<> call_stack;
         TPool<BOOST_DI_MPL_VECTOR_TYPES_PASS(TPolicies)> policies_(BOOST_DI_ARGS_PASS(policies));
         std::vector<aux::shared_ptr<void> > refs_;
 
@@ -211,7 +211,7 @@
 
     template<typename T, typename TAllocator, BOOST_DI_TYPES(TPolicies)>
     T allocate(const TAllocator& allocator, BOOST_DI_ARGS(TPolicies, policies)) {
-        typedef aux::mpl::vector0<> call_stack;
+        typedef aux::mpl::vector<> call_stack;
         TPool<BOOST_DI_MPL_VECTOR_TYPES_PASS(TPolicies)> policies_(BOOST_DI_ARGS_PASS(policies));
         std::vector<aux::shared_ptr<void> > refs_;
 

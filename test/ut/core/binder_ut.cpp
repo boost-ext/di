@@ -39,8 +39,8 @@ BOOST_AUTO_TEST_CASE(empty) {
             fake_dependency<fake_scope<>, int>::type
           , binder_resolve<
                 int
-              , aux::mpl::vector0<>
-              , aux::mpl::vector0<>
+              , aux::mpl::vector<>
+              , aux::mpl::vector<>
               , fake_dependency<fake_scope<>, int>::type
             >::type
         >::value
@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE(one) {
             fake_dependency<fake_scope<>, int>::type
           , binder_resolve<
                 int
-              , aux::mpl::vector0<>
+              , aux::mpl::vector<>
               , aux::mpl::vector<
                     fake_dependency<fake_scope<>, int>::type
                 >
@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE(found) {
             fake_dependency<fake_scope<>, float>::type
           , binder_resolve<
                 float
-              , aux::mpl::vector0<>
+              , aux::mpl::vector<>
               , aux::mpl::vector<
                     fake_dependency<fake_scope<>, int>::type
                   , fake_dependency<fake_scope<>, float>::type
@@ -87,7 +87,7 @@ BOOST_AUTO_TEST_CASE(found_many) {
             fake_dependency<fake_scope<>, float>::type
           , binder_resolve<
                 float
-              , aux::mpl::vector0<>
+              , aux::mpl::vector<>
               , aux::mpl::vector<
                     fake_dependency<fake_scope<>, int>::type
                   , fake_dependency<fake_scope<>, float>::type
@@ -105,7 +105,7 @@ BOOST_AUTO_TEST_CASE(not_found) {
             fake_dependency<fake_scope<>, double>::type
           , binder_resolve<
                 double
-              , aux::mpl::vector0<>
+              , aux::mpl::vector<>
               , aux::mpl::vector<
                     fake_dependency<fake_scope<>, int>::type
                   , fake_dependency<fake_scope<>, float>::type
@@ -123,7 +123,7 @@ BOOST_AUTO_TEST_CASE(if_base) {
             fake_dependency<fake_scope<>, if0, c0if0>::type
           , binder_resolve<
                 if0
-              , aux::mpl::vector0<>
+              , aux::mpl::vector<>
               , aux::mpl::vector<
                     fake_dependency<fake_scope<>, if0, c0if0>
                 >
@@ -139,7 +139,7 @@ BOOST_AUTO_TEST_CASE(if_external) {
             fake_dependency<fake_scope<>, if0, if0>::type
           , binder_resolve<
                 if0
-              , aux::mpl::vector0<>
+              , aux::mpl::vector<>
               , aux::mpl::vector<
                     fake_dependency<fake_scope<>, if0, if0>::type
                 >
@@ -412,7 +412,7 @@ BOOST_AUTO_TEST_CASE(base_of_fail) {
             fake_dependency<fake_scope<>, i>::type
           , binder_resolve<
                 i
-              , aux::mpl::vector0<>
+              , aux::mpl::vector<>
               , aux::mpl::vector<
                     fake_dependency<fake_scope<>, a>::type
                 >
@@ -428,7 +428,7 @@ BOOST_AUTO_TEST_CASE(base_of_successful) {
             fake_dependency<fake_scope<>, impl>::type
           , binder_resolve<
                 i
-              , aux::mpl::vector0<>
+              , aux::mpl::vector<>
               , aux::mpl::vector<
                     fake_dependency<fake_scope<>, impl>::type
                 >
@@ -444,7 +444,7 @@ BOOST_AUTO_TEST_CASE(complex_type) {
             fake_dependency<fake_scope<>, int>::type
           , binder_resolve<
                 aux::shared_ptr<int>
-              , aux::mpl::vector0<>
+              , aux::mpl::vector<>
               , aux::mpl::vector<
                     fake_dependency<fake_scope<>, int>::type
                 >
@@ -460,8 +460,8 @@ BOOST_AUTO_TEST_CASE(named_int_type) {
             fake_dependency<fake_scope<>, named<int, aux::mpl::_1>, int>::type
           , binder_resolve<
                 named<aux::shared_ptr<int>, aux::mpl::_1>
-              , aux::mpl::vector0<>
-              , aux::mpl::vector0<>
+              , aux::mpl::vector<>
+              , aux::mpl::vector<>
               , fake_dependency<fake_scope<>, named<int, aux::mpl::_1>, int>::type
             >::type
         >::value

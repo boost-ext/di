@@ -21,7 +21,7 @@ struct contains_all
     : aux::mpl::empty<
           typename aux::mpl::fold<
               TSrc
-            , aux::mpl::vector0<>
+            , aux::mpl::vector<>
             , aux::mpl::if_<
                   aux::mpl::contains<TDst, aux::mpl::_2>
                 , aux::mpl::_1

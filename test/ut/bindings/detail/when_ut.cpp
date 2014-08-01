@@ -18,7 +18,7 @@ namespace bindings {
 namespace detail {
 
 BOOST_AUTO_TEST_CASE(empty_context) {
-    BOOST_CHECK_EQUAL(1, (when_<aux::mpl::vector0<>>::apply<fake_data<void, aux::mpl::vector0<>, fake_scope<>>>::type::value));
+    BOOST_CHECK_EQUAL(1, (when_<aux::mpl::vector<>>::apply<fake_data<void, aux::mpl::vector<>, fake_scope<>>>::type::value));
 }
 
 BOOST_AUTO_TEST_CASE(one_concept_fail) {
@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_CASE(one_concept_fail) {
             aux::mpl::vector<
                 fake_concept<0>
             >
-        >::apply<fake_data<void, aux::mpl::vector0<>, fake_scope<>>>::type::value)
+        >::apply<fake_data<void, aux::mpl::vector<>, fake_scope<>>>::type::value)
     );
 }
 
@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE(one_concept_pass) {
             aux::mpl::vector<
                 fake_concept<1>
             >
-        >::apply<fake_data<void, aux::mpl::vector0<>, fake_scope<>>>::type::value)
+        >::apply<fake_data<void, aux::mpl::vector<>, fake_scope<>>>::type::value)
     );
 }
 
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE(many_bindings_max_element) {
               , fake_concept<1>
               , fake_concept<3>
             >
-        >::apply<fake_data<void, aux::mpl::vector0<>, fake_scope<>>>::type::value)
+        >::apply<fake_data<void, aux::mpl::vector<>, fake_scope<>>>::type::value)
     );
 }
 

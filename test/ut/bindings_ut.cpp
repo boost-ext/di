@@ -267,7 +267,7 @@ BOOST_AUTO_TEST_CASE(bind_any_of) {
                   , cif0if1
                   , cif0if1
                   , no_name
-                  , aux::mpl::vector0<>
+                  , aux::mpl::vector<>
                   , bindings::detail::requires_<
                         bindings::type_traits::is_required_priority
                       , bindings::type_traits::is_required_type<any_of<if0, if1>>

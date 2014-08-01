@@ -71,7 +71,7 @@ class creation_permission
                   is_same<
                       typename T::binder::template resolve<
                           typename T::type
-                        , aux::mpl::vector0<>
+                        , aux::mpl::vector<>
                         , not_resolved
                       >::type
                     , not_resolved

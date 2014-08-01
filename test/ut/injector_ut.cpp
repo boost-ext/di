@@ -118,7 +118,7 @@ BOOST_AUTO_TEST_CASE(empty) {
 
     BOOST_CHECK((
         contains_all<
-            aux::mpl::vector0<>
+            aux::mpl::vector<>
           , injector_type::deps
         >::value
     ));
@@ -540,7 +540,7 @@ BOOST_AUTO_TEST_CASE(empty_injector) {
 
     BOOST_CHECK((
         contains_all<
-            aux::mpl::vector0<>
+            aux::mpl::vector<>
           , injector_t::deps
         >::value
     ));

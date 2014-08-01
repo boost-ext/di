@@ -75,7 +75,7 @@
     struct concepts
         : aux::mpl::fold<
               TSeq
-            , aux::mpl::vector0<>
+            , aux::mpl::vector<>
             , aux::mpl::copy<
                   aux::mpl::if_<
                       aux::mpl::is_sequence<aux::mpl::_2>
@@ -101,7 +101,7 @@
               >::type
           >
     {
-        template<typename TSeq = aux::mpl::vector0<> >
+        template<typename TSeq = aux::mpl::vector<> >
         struct joint_concepts
             : detail::concepts<
                   aux::mpl::joint_view<

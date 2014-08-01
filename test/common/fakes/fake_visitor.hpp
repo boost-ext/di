@@ -19,7 +19,7 @@
 namespace boost {
 namespace di {
 
-template<typename TSeq = aux::mpl::vector0<>>
+template<typename TSeq = aux::mpl::vector<>>
 class fake_visitor
 {
     BOOST_MPL_HAS_XXX_TRAIT_DEF(first)

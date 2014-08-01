@@ -58,7 +58,7 @@ public:
     struct bind
         : aux::mpl::fold<
               BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)
-            , aux::mpl::vector0<>
+            , aux::mpl::vector<>
             , aux::mpl::push_back<
                   aux::mpl::_1
                 , aux::mpl::if_<
