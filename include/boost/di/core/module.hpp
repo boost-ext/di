@@ -31,7 +31,7 @@
     namespace core {
 
     template<
-        typename TDependecies = mpl::vector0<>
+        typename TDependecies = mpl::vector<>
       , template<
             typename
           , template<typename> class = ::boost::di::core::binder

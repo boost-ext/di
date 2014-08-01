@@ -17,15 +17,16 @@
     #include <boost/preprocessor/repetition/enum_params.hpp>
     #include <boost/preprocessor/repetition/enum_binary_params.hpp>
     #include <boost/utility/enable_if.hpp>
-    #include <boost/mpl/vector.hpp>
-    #include <boost/mpl/apply.hpp>
-    #include <boost/mpl/fold.hpp>
-    #include <boost/mpl/copy.hpp>
-    #include <boost/mpl/back_inserter.hpp>
-    #include <boost/mpl/at.hpp>
-    #include <boost/mpl/size.hpp>
+    #include <boost/mpl/bool.hpp>
+    #include <boost/mpl/x11/vector.hpp>
+    #include <boost/mpl/x11/apply.hpp>
+    #include <boost/mpl/x11/fold.hpp>
+    #include <boost/mpl/x11/copy.hpp>
+    //#include <boost/mpl/x11/back_inserter.hpp>
     #include <boost/mpl/has_xxx.hpp>
     #include <boost/config.hpp>
+
+    #include "boost/di/type_traits/ctor_traits.hpp"
 
     #if defined(BOOST_GCC) || defined(BOOST_CLANG)
         #pragma GCC diagnostic ignored "-Wreorder"
@@ -45,30 +46,14 @@
     { };
 
     template<
-        typename TSeq = mpl::vector0<>
-      , typename TIgnore = never<mpl::_1>
+        typename TSeq = mpl::x11::vector<>
+      , typename TIgnore = never<mpl::x11::arg<0> >
       , typename = void
     >
-    class pool
-    {
-    public:
-        typedef pool type;
-        typedef TSeq types;
-
-        pool() { }
-
-        template<typename T>
-        explicit pool(const pool<T>&, const init&)
-        { }
-
-        template<typename T>
-        const T& get() const {
-            return static_cast<const T&>(*this);
-        }
-    };
+    class pool;
 
     #define BOOST_PP_FILENAME_1 "boost/di/core/pool.hpp"
-    #define BOOST_PP_ITERATION_LIMITS BOOST_DI_TYPES_MPL_LIMIT_FROM_FORCE(1)
+    #define BOOST_PP_ITERATION_LIMITS BOOST_DI_TYPES_MPL_LIMIT_FROM(1)
     #include BOOST_PP_ITERATE()
 
     } // namespace core
@@ -78,23 +63,13 @@
     #endif
 
 #else
-    #define n BOOST_PP_ITERATION()
-
-    #define BOOST_DI_DERIVES_IMPL(_, n, types) \
-        BOOST_PP_COMMA_IF(n) public mpl::at_c<types, n>::type
-
-    template<typename TSeq, typename TIgnore>
-    class pool<TSeq, TIgnore, typename enable_if_c<mpl::size<TSeq>::value == n>::type>
-        : BOOST_PP_REPEAT(
-              n
-            , BOOST_DI_DERIVES_IMPL
-            , TSeq
-          )
+    template<typename TIgnore, typename... TArgs>
+    class pool<mpl::x11::vector<TArgs...>, TIgnore> : public TArgs...
     {
         template<typename T, typename = void>
         struct pool_type
         {
-            typedef mpl::vector<T> type;
+            typedef mpl::x11::vector<T> type;
         };
 
         template<typename T>
@@ -105,7 +80,7 @@
 
         template<typename T>
         struct pool_type<T, typename enable_if<
-            typename mpl::apply<TIgnore, T>::type>::type>
+            typename mpl::x11::apply<TIgnore, T>::type>::type>
         {
             typedef void type; // ignore type
         };
@@ -114,78 +89,37 @@
         typedef pool type;
 
         struct types
-            : mpl::fold<
-                  TSeq
-                , mpl::vector0<>
-                , mpl::copy<
-                      pool_type<mpl::_2>
-                    , mpl::back_inserter<mpl::_1>
+            : mpl::x11::fold<
+                  mpl::x11::vector<TArgs...>
+                , mpl::x11::vector<>
+                , mpl::x11::copy<
+                      pool_type<mpl::x11::arg<1> >
+                    , mpl::x11::back_inserter<mpl::x11::arg<0>>
                   >
               >::type
         { };
 
-        pool() { }
-
-        #define BOOST_DI_INJECT_INITLIST_IMPL(_, n, na)                         \
-            BOOST_PP_COMMA_IF(n) Args##n(args##n)
-
-        #define BOOST_PP_LOCAL_MACRO(n)                                         \
-            template<BOOST_PP_ENUM_PARAMS(n, typename Args)>                    \
-            explicit pool(BOOST_PP_ENUM_BINARY_PARAMS(n, const Args, &args))    \
-                : BOOST_PP_REPEAT(n, BOOST_DI_INJECT_INITLIST_IMPL, ~)          \
-            { }
-
-        #define BOOST_PP_LOCAL_LIMITS (1, n)
-        #include BOOST_PP_LOCAL_ITERATE()
-        #undef BOOST_DI_INJECT_INITLIST_IMPL
-
-        #define BOOST_DI_INJECT_INITLIST_IMPL(_, n, na)                         \
-            BOOST_PP_COMMA_IF(n)                                                \
-            mpl::at_c<typename pool<T, I>::types, n>::type(                     \
-                p.template get<                                                 \
-                    typename mpl::at_c<                                         \
-                        typename pool<T, I>::types                              \
-                      , n                                                       \
-                    >::type                                                     \
-                >()                                                             \
-            )
-
-        template<typename T, typename I>
-        explicit pool(
-            const pool<T, I>&
-          , const init&
-          , typename enable_if_c<
-                mpl::size<typename pool<T, I>::types>::value == 0
-            >::type* = 0)
+        template<typename... TQ>
+        explicit pool(const TQ&... args)
+            : TQ(args)...
         { }
 
-        #define BOOST_PP_LOCAL_MACRO(n)                                         \
-            template<typename T, typename I>                                    \
-            explicit pool(                                                      \
-                const pool<T, I>& p                                             \
-              , const init&                                                     \
-              , typename enable_if_c<                                           \
-                    mpl::size<typename pool<T, I>::types>::value == n           \
-                >::type* = 0)                                                   \
-                : BOOST_PP_REPEAT(                                              \
-                      n                                                         \
-                    , BOOST_DI_INJECT_INITLIST_IMPL                             \
-                    , ~                                                         \
-                  )                                                             \
-            { }
-
-        #define BOOST_PP_LOCAL_LIMITS (1, n)
-        #include BOOST_PP_LOCAL_ITERATE()
-        #undef BOOST_DI_INJECT_INITLIST_IMPL
+        template<typename I, typename T>
+        pool(const pool<T, I>& p, const init&)
+            : pool(p, typename normalize_vector<typename pool<T, I>::types>::type(), init())
+        { }
 
         template<typename T>
         const T& get() const {
             return static_cast<const T&>(*this);
         }
-    };
 
-    #undef BOOST_DI_DERIVES_IMPL
-    #undef n
+    private:
+        template<typename I, typename T, typename... TQ>
+        pool(const pool<T, I>& p, const mpl::x11::vector<TQ...>&, const init&)
+            : TQ(p.template get<TQ>())...
+        { }
+    };
 
 #endif
 

@@ -8,8 +8,8 @@
 
 #include "boost/di/aux_/memory.hpp"
 #include <boost/test/unit_test.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/equal.hpp>
+#include <boost/mpl/x11/vector.hpp>
+#include <boost/mpl/x11/equal.hpp>
 
 namespace boost {
 namespace di {
@@ -62,13 +62,13 @@ struct custom_ctor_other
 };
 
 BOOST_AUTO_TEST_CASE(empty) {
-    typedef pool<mpl::vector0<>> pool_type;
+    typedef pool<mpl::x11::vector<>> pool_type;
 
     pool_type pool_;
 
     BOOST_CHECK((
-        mpl::equal<
-            mpl::vector0<>
+        mpl::x11::equal<
+            mpl::x11::vector<>
           , pool_type::types
         >::value
     ));
@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(empty) {
 
 BOOST_AUTO_TEST_CASE(ctor_order) {
     typedef pool<
-        mpl::vector<
+        mpl::x11::vector<
             trivial_ctor
           , default_ctor
         >
@@ -90,8 +90,8 @@ BOOST_AUTO_TEST_CASE(ctor_order) {
     pool_type pool_(default_ctor_, trivial_ctor_);
 
     BOOST_CHECK((
-        mpl::equal<
-            mpl::vector<
+        mpl::x11::equal<
+            mpl::x11::vector<
                 trivial_ctor
               , default_ctor
             >
@@ -104,7 +104,7 @@ BOOST_AUTO_TEST_CASE(ctor_order) {
 
 BOOST_AUTO_TEST_CASE(ctor_order_reverse) {
     typedef pool<
-        mpl::vector<
+        mpl::x11::vector<
             trivial_ctor
           , default_ctor
         >
@@ -116,8 +116,8 @@ BOOST_AUTO_TEST_CASE(ctor_order_reverse) {
     pool_type pool_(trivial_ctor_, default_ctor_);
 
     BOOST_CHECK((
-        mpl::equal<
-            mpl::vector<
+        mpl::x11::equal<
+            mpl::x11::vector<
                 trivial_ctor
               , default_ctor
             >
@@ -130,7 +130,7 @@ BOOST_AUTO_TEST_CASE(ctor_order_reverse) {
 
 BOOST_AUTO_TEST_CASE(default_ctor_base) {
     typedef pool<
-        mpl::vector<
+        mpl::x11::vector<
             trivial_ctor
           , default_ctor
         >
@@ -139,8 +139,8 @@ BOOST_AUTO_TEST_CASE(default_ctor_base) {
     pool_type pool_;
 
     BOOST_CHECK((
-        mpl::equal<
-            mpl::vector<
+        mpl::x11::equal<
+            mpl::x11::vector<
                 trivial_ctor
               , default_ctor
             >
@@ -156,7 +156,7 @@ BOOST_AUTO_TEST_CASE(get) {
     typedef allocator<trivial_ctor> trivial_ctor_type;
     typedef allocator<default_ctor> default_ctor_type;
     typedef pool<
-        mpl::vector<
+        mpl::x11::vector<
             trivial_ctor_type
           , default_ctor_type
           , custom_ctor_type
@@ -186,9 +186,9 @@ BOOST_AUTO_TEST_CASE(get) {
 BOOST_AUTO_TEST_CASE(pool_of_pools) {
     typedef allocator<trivial_ctor> trivial_ctor_type;
     typedef allocator<default_ctor> default_ctor_type;
-    typedef pool<mpl::vector<default_ctor_type>> pool_1_type;
-    typedef pool<mpl::vector<trivial_ctor_type>> pool_2_type;
-    typedef pool<mpl::vector<pool_1_type, pool_2_type>> pool_type;
+    typedef pool<mpl::x11::vector<default_ctor_type>> pool_1_type;
+    typedef pool<mpl::x11::vector<trivial_ctor_type>> pool_2_type;
+    typedef pool<mpl::x11::vector<pool_1_type, pool_2_type>> pool_type;
     default_ctor_type default_ctor_(new default_ctor);
     trivial_ctor_type trivial_ctor_(new trivial_ctor);
 
@@ -198,8 +198,8 @@ BOOST_AUTO_TEST_CASE(pool_of_pools) {
     pool_type pool_(pool_1_, pool_2_);
 
     BOOST_CHECK((
-        mpl::equal<
-            mpl::vector<
+        mpl::x11::equal<
+            mpl::x11::vector<
                 default_ctor_type
               , trivial_ctor_type
             >
@@ -217,15 +217,15 @@ BOOST_AUTO_TEST_CASE(pool_of_pools) {
 }
 
 BOOST_AUTO_TEST_CASE(init_pool_from_other_empty_pool) {
-    pool<mpl::vector<>> pool_empty_;
-    pool<mpl::vector<default_ctor>> pool_(pool_empty_, init());
+    pool<mpl::x11::vector<>> pool_empty_;
+    pool<mpl::x11::vector<default_ctor>> pool_(pool_empty_, init());
 
     BOOST_CHECK_EQUAL(0, pool_.get<default_ctor>().i);
 }
 
 BOOST_AUTO_TEST_CASE(init_pool_from_other_subset_pool) {
     typedef pool<
-        mpl::vector<
+        mpl::x11::vector<
             trivial_ctor
           , default_ctor
           , custom_ctor
@@ -233,7 +233,7 @@ BOOST_AUTO_TEST_CASE(init_pool_from_other_subset_pool) {
     > pool_all_type;
 
     typedef pool<
-        mpl::vector<
+        mpl::x11::vector<
             trivial_ctor
           , custom_ctor
         >
@@ -270,7 +270,7 @@ BOOST_MPL_HAS_XXX_TRAIT_DEF(ignore)
 
 BOOST_AUTO_TEST_CASE(init_pool_from_other_subset_pool_with_ignore) {
     typedef pool<
-        mpl::vector<
+        mpl::x11::vector<
             trivial_ctor
           , default_ctor
           , custom_ctor
@@ -278,12 +278,12 @@ BOOST_AUTO_TEST_CASE(init_pool_from_other_subset_pool_with_ignore) {
     > pool_all_type;
 
     typedef pool<
-        mpl::vector<
+        mpl::x11::vector<
             trivial_ctor
           , custom_ctor
           , ignored
         >
-      , has_ignore<mpl::_1>
+      , has_ignore<mpl::x11::arg<0>>
     > pool_subset_type;
 
     pool_subset_type pool_subset_(trivial_ctor(), custom_ctor(0), ignored());
@@ -291,8 +291,8 @@ BOOST_AUTO_TEST_CASE(init_pool_from_other_subset_pool_with_ignore) {
 }
 
 BOOST_AUTO_TEST_CASE(pool_from_pool_of_pools) {
-    typedef pool<mpl::vector<custom_ctor>> pool_type;
-    typedef pool<mpl::vector<pool_type>> pool_pool_type;
+    typedef pool<mpl::x11::vector<custom_ctor>> pool_type;
+    typedef pool<mpl::x11::vector<pool_type>> pool_pool_type;
     const int i = 42;
 
     custom_ctor ctor(i);
@@ -303,8 +303,8 @@ BOOST_AUTO_TEST_CASE(pool_from_pool_of_pools) {
 }
 
 BOOST_AUTO_TEST_CASE(pool_from_pool_of_pools_many) {
-    typedef pool<mpl::vector<custom_ctor, default_ctor>> pool_type;
-    typedef pool<mpl::vector<pool_type>> pool_pool_type;
+    typedef pool<mpl::x11::vector<custom_ctor, default_ctor>> pool_type;
+    typedef pool<mpl::x11::vector<pool_type>> pool_pool_type;
     const int i = 42;
 
     custom_ctor c(i);
@@ -320,12 +320,12 @@ template<typename T1, typename T2>
 class base : public T1, public T2
 {
 public:
-    typedef mpl::vector<T1, T2> types;
+    typedef mpl::x11::vector<T1, T2> types;
 };
 
 BOOST_AUTO_TEST_CASE(pool_flatten) {
-    typedef pool<mpl::vector<trivial_ctor, custom_ctor, default_ctor>> pool_flatten_type;
-    typedef pool<mpl::vector<custom_ctor, base<trivial_ctor, default_ctor>>> pool_type;
+    typedef pool<mpl::x11::vector<trivial_ctor, custom_ctor, default_ctor>> pool_flatten_type;
+    typedef pool<mpl::x11::vector<custom_ctor, base<trivial_ctor, default_ctor>>> pool_type;
     const int i = 42;
 
     custom_ctor c(i);
