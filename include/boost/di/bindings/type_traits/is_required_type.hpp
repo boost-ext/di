@@ -32,15 +32,15 @@ struct is_required_type
 };
 
 template<typename TValueType>
-struct is_required_type<TValueType, typename enable_if<mpl::is_sequence<TValueType> >::type>
+struct is_required_type<TValueType, typename enable_if<aux::mpl::is_sequence<TValueType> >::type>
 {
     template<typename T>
     struct apply
-        : mpl::count_if<
+        : aux::mpl::count_if<
               TValueType
             , di::type_traits::is_same_base_of<
                   typename di::type_traits::make_plain<typename T::type>::type
-                , mpl::_
+                , aux::mpl::_
               >
           >
     { };

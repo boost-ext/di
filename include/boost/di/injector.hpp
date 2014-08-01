@@ -46,7 +46,7 @@
 
     template<typename T>
     struct is_module
-        : mpl::or_<
+        : aux::mpl::or_<
               has_deps<T>
             , type_traits::has_configure<T>
           >
@@ -80,23 +80,23 @@
 
     template<
         typename TSeq
-      , typename TDefaultScope = default_scope<mpl::_2>
+      , typename TDefaultScope = default_scope<aux::mpl::_2>
     >
     struct concepts
-        : mpl::fold<
+        : aux::mpl::fold<
               TSeq
-            , mpl::vector0<>
-            , mpl::copy<
-                  mpl::if_<
-                      mpl::is_sequence<mpl::_2>
-                    , mpl::_2
-                    , mpl::if_<
-                          is_module<mpl::_2>
-                        , get_deps<mpl::_2>
+            , aux::mpl::vector0<>
+            , aux::mpl::copy<
+                  aux::mpl::if_<
+                      aux::mpl::is_sequence<aux::mpl::_2>
+                    , aux::mpl::_2
+                    , aux::mpl::if_<
+                          is_module<aux::mpl::_2>
+                        , get_deps<aux::mpl::_2>
                         , TDefaultScope
                       >
                   >
-                , mpl::back_inserter<mpl::_1>
+                , aux::mpl::back_inserter<aux::mpl::_1>
               >
           >::type
     { };
@@ -111,10 +111,10 @@
               >::type
           >
     {
-        template<typename TSeq = mpl::vector0<> >
+        template<typename TSeq = aux::mpl::vector0<> >
         struct joint_concepts
             : detail::concepts<
-                  mpl::joint_view<
+                  aux::mpl::joint_view<
                       BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)
                     , TSeq
                   >

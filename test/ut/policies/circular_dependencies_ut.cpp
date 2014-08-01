@@ -23,13 +23,13 @@ struct fake_call_stack
     typedef T call_stack;
 };
 
-using no_circular_dependencies_types = mpl::vector<
-    mpl::vector<>
-  , mpl::vector<int>
-  , mpl::vector<int, double>
-  , mpl::vector<c1>
-  , mpl::vector<c1, c2>
-  , mpl::vector<c1, c2, c3>
+using no_circular_dependencies_types = aux::mpl::vector<
+    aux::mpl::vector<>
+  , aux::mpl::vector<int>
+  , aux::mpl::vector<int, double>
+  , aux::mpl::vector<c1>
+  , aux::mpl::vector<c1, c2>
+  , aux::mpl::vector<c1, c2, c3>
 >;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(no_circular_dependency, T, no_circular_dependencies_types) {
@@ -42,10 +42,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(no_circular_dependency, T, no_circular_dependencie
     );
 }
 
-using circular_dependencies_types = mpl::vector<
-    mpl::vector<c1, c2, c1>
-  , mpl::vector<c1, c2, c3, c2>
-  , mpl::vector<c1, c1>
+using circular_dependencies_types = aux::mpl::vector<
+    aux::mpl::vector<c1, c2, c1>
+  , aux::mpl::vector<c1, c2, c3, c2>
+  , aux::mpl::vector<c1, c1>
 >;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(circular_dependency, T, circular_dependencies_types) {

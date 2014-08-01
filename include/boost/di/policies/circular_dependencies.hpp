@@ -37,16 +37,16 @@ class circular_dependencies
 {
     template<typename TCallStack>
     struct is_unique_call_stack
-        : mpl::bool_<
-              static_cast<std::size_t>(mpl::accumulate<
-                  typename mpl::transform<
+        : aux::mpl::bool_<
+              static_cast<std::size_t>(aux::mpl::accumulate<
+                  typename aux::mpl::transform<
                       TCallStack
-                    , mpl::count<TCallStack, mpl::_>
+                    , aux::mpl::count<TCallStack, aux::mpl::_>
                   >::type
-                , mpl::int_<0>
-                , mpl::plus<mpl::_1, mpl::_2>
+                , aux::mpl::int_<0>
+                , aux::mpl::plus<aux::mpl::_1, aux::mpl::_2>
               >::type::value
-            ) == mpl::size<TCallStack>::value
+            ) == aux::mpl::size<TCallStack>::value
           >
     { };
 

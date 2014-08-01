@@ -24,7 +24,7 @@ bool verify_assert_exception(const assert_exception& e) {
            e.get_type() == typeid(T);
 }
 
-template<typename T, typename TResolve = mpl::false_>
+template<typename T, typename TResolve = aux::mpl::false_>
 struct fake_dependency
 {
     typedef T type;
@@ -47,7 +47,7 @@ struct fake_dependency
           , typename TDefault
         >
         struct resolve
-            : mpl::if_<TResolve, resolved, TDefault>::type
+            : aux::mpl::if_<TResolve, resolved, TDefault>::type
         { };
     };
 };
@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_CASE(resolve) {
     BOOST_CHECK_NO_THROW(
         (
             creation_permission<>().assert_policy<
-                fake_dependency<int, mpl::true_>
+                fake_dependency<int, aux::mpl::true_>
             >()
         )
     );
@@ -88,7 +88,7 @@ BOOST_AUTO_TEST_CASE(allow_type_and_resolve) {
     BOOST_CHECK_NO_THROW(
         (
             creation_permission<allow_type<int>>().assert_policy<
-                fake_dependency<int, mpl::true_>
+                fake_dependency<int, aux::mpl::true_>
             >()
         )
     );
@@ -97,7 +97,7 @@ BOOST_AUTO_TEST_CASE(allow_type_and_resolve) {
 BOOST_AUTO_TEST_CASE(allow_type_expr_not_resolve) {
     BOOST_CHECK_NO_THROW(
         (
-            creation_permission<allow_type_expr<is_pod<mpl::_>>>().assert_policy<
+            creation_permission<allow_type_expr<is_pod<aux::mpl::_>>>().assert_policy<
                 fake_dependency<int>
             >()
         )
@@ -107,8 +107,8 @@ BOOST_AUTO_TEST_CASE(allow_type_expr_not_resolve) {
 BOOST_AUTO_TEST_CASE(allow_type_expr_and_resolve) {
     BOOST_CHECK_NO_THROW(
         (
-            creation_permission<allow_type_expr<is_pod<mpl::_>>>().assert_policy<
-                fake_dependency<int, mpl::true_>
+            creation_permission<allow_type_expr<is_pod<aux::mpl::_>>>().assert_policy<
+                fake_dependency<int, aux::mpl::true_>
             >()
         )
     );
@@ -117,8 +117,8 @@ BOOST_AUTO_TEST_CASE(allow_type_expr_and_resolve) {
 BOOST_AUTO_TEST_CASE(allow_type_and_type_expr_not_resolve) {
     BOOST_CHECK_NO_THROW(
         (
-            creation_permission<allow_type<int>, allow_type_expr<is_pod<mpl::_>>>().assert_policy<
-                fake_dependency<int, mpl::false_>
+            creation_permission<allow_type<int>, allow_type_expr<is_pod<aux::mpl::_>>>().assert_policy<
+                fake_dependency<int, aux::mpl::false_>
             >()
         )
     );
@@ -127,8 +127,8 @@ BOOST_AUTO_TEST_CASE(allow_type_and_type_expr_not_resolve) {
 BOOST_AUTO_TEST_CASE(allow_type_and_type_expr_and_resolve) {
     BOOST_CHECK_NO_THROW(
         (
-            creation_permission<allow_type<int>, allow_type_expr<is_pod<mpl::_>>>().assert_policy<
-                fake_dependency<int, mpl::true_>
+            creation_permission<allow_type<int>, allow_type_expr<is_pod<aux::mpl::_>>>().assert_policy<
+                fake_dependency<int, aux::mpl::true_>
             >()
         )
     );

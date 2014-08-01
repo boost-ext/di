@@ -27,17 +27,17 @@ template<
 class is_convertible
 {
     template<typename U>
-    static mpl::aux::yes_tag test(non_type<TSignature, &U::operator()>*);
+    static aux::mpl::aux::yes_tag test(non_type<TSignature, &U::operator()>*);
 
     template<typename>
-    static mpl::aux::no_tag test(...);
+    static aux::mpl::aux::no_tag test(...);
 
 public:
     typedef is_convertible type;
 
     BOOST_STATIC_CONSTANT(
         bool
-      , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
+      , value = sizeof(test<T>(0)) == sizeof(aux::mpl::aux::yes_tag)
     );
 };
 

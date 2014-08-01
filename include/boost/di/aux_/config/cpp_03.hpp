@@ -36,7 +36,7 @@
 
 #define BOOST_DI_MPL_VECTOR_TYPES_PASS(T)           \
     BOOST_PP_CAT(                                   \
-        ::boost::mpl::vector                        \
+        ::boost::aux::mpl::vector                        \
      ,  BOOST_PP_ITERATION()                        \
     )<BOOST_PP_ENUM_PARAMS(                         \
         BOOST_PP_ITERATION()                        \
@@ -89,7 +89,7 @@
      BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(           \
          BOOST_MPL_LIMIT_VECTOR_SIZE                \
        , typename T                                 \
-       , ::boost::mpl::na                           \
+       , ::boost::aux::mpl::na                           \
      )
 
 #define BOOST_DI_TYPES_MPL(T)                       \
@@ -105,7 +105,7 @@
      )
 
 #define BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)       \
-    ::boost::mpl::vector<BOOST_PP_ENUM_PARAMS(      \
+    ::boost::aux::mpl::vector<BOOST_PP_ENUM_PARAMS(      \
         BOOST_MPL_LIMIT_VECTOR_SIZE                 \
       , T                                           \
     )>

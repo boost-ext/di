@@ -39,16 +39,16 @@ struct any_type {
 template<typename T>
 struct ctor {
     template<typename U>
-    static mpl::aux::yes_tag test(BOOST_DI_FEATURE_DECLTYPE(
+    static aux::mpl::aux::yes_tag test(BOOST_DI_FEATURE_DECLTYPE(
         U(any_type(), any_type(), any_type(), any_type(), any_type(), any_type()))*
     );
 
     template<typename>
-    static mpl::aux::no_tag test(...);
+    static aux::mpl::aux::no_tag test(...);
 
     BOOST_STATIC_CONSTANT(
         bool
-      , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
+      , value = sizeof(test<T>(0)) == sizeof(aux::mpl::aux::yes_tag)
     );
 };
 

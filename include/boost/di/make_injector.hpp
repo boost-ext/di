@@ -41,10 +41,10 @@
         return injector<
             typename detail::concepts<
                 BOOST_DI_MPL_VECTOR_TYPES_PASS(TArgs)
-              , mpl::if_<
-                    has_scope<mpl::_2>
-                  , detail::default_scope<mpl::_2>
-                  , mpl::_2 // argument not supported
+              , aux::mpl::if_<
+                    has_scope<aux::mpl::_2>
+                  , detail::default_scope<aux::mpl::_2>
+                  , aux::mpl::_2 // argument not supported
                 >
             >::type
         >(BOOST_DI_ARGS_PASS(args));

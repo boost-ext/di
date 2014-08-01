@@ -19,8 +19,8 @@ struct is_required_priority
 {
     template<typename T>
     struct apply
-        : mpl::plus<
-              mpl::int_<1>
+        : aux::mpl::plus<
+              aux::mpl::int_<1>
             , typename T::dependency::scope::priority // lowest = 0, highest = N
           >
     { };

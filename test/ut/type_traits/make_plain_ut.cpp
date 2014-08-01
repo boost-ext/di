@@ -20,7 +20,7 @@ namespace boost {
 namespace di {
 namespace type_traits {
 
-typedef mpl::vector<int, a> make_plain_t;
+typedef aux::mpl::vector<int, a> make_plain_t;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(types, T, make_plain_t) {
     BOOST_CHECK((is_same<T, typename make_plain<T>::type>::value));
@@ -33,12 +33,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(types, T, make_plain_t) {
     BOOST_CHECK((is_same<T, typename make_plain<const aux::shared_ptr<T>&>::type>::value));
     BOOST_CHECK((is_same<T, typename make_plain<aux::shared_ptr<T>&>::type>::value));
     BOOST_CHECK((is_same<T, typename make_plain<volatile T>::type>::value));
-    BOOST_CHECK((is_same<T, typename make_plain<const named<T, mpl::_1>&>::type>::value));
-    BOOST_CHECK((is_same<T, typename make_plain<named<T, mpl::_1>>::type>::value));
-    BOOST_CHECK((is_same<T, typename make_plain<named<aux::shared_ptr<T>, mpl::_1>>::type>::value));
-    BOOST_CHECK((is_same<T, typename make_plain<named<const aux::shared_ptr<T>&, mpl::_1>>::type>::value));
-    BOOST_CHECK((is_same<T, typename make_plain<aux::shared_ptr<named<const aux::shared_ptr<T>&, mpl::_1>>>::type>::value));
-    BOOST_CHECK((is_same<T, typename make_plain<const aux::shared_ptr<named<const aux::shared_ptr<T>&, mpl::_1>>&>::type>::value));
+    BOOST_CHECK((is_same<T, typename make_plain<const named<T, aux::mpl::_1>&>::type>::value));
+    BOOST_CHECK((is_same<T, typename make_plain<named<T, aux::mpl::_1>>::type>::value));
+    BOOST_CHECK((is_same<T, typename make_plain<named<aux::shared_ptr<T>, aux::mpl::_1>>::type>::value));
+    BOOST_CHECK((is_same<T, typename make_plain<named<const aux::shared_ptr<T>&, aux::mpl::_1>>::type>::value));
+    BOOST_CHECK((is_same<T, typename make_plain<aux::shared_ptr<named<const aux::shared_ptr<T>&, aux::mpl::_1>>>::type>::value));
+    BOOST_CHECK((is_same<T, typename make_plain<const aux::shared_ptr<named<const aux::shared_ptr<T>&, aux::mpl::_1>>&>::type>::value));
 }
 
 #if defined(BOOST_HAS_RVALUE_REFERENCES)

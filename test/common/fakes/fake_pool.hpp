@@ -15,7 +15,7 @@ namespace di {
 template<typename... T>
 struct fake_pool : T...
 {
-    typedef mpl::vector<T...> types;
+    typedef aux::mpl::vector<T...> types;
 };
 
 } // namespace di

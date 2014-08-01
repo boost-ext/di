@@ -40,7 +40,7 @@
     BOOST_MPL_HAS_XXX_TRAIT_DEF(any)
 
     template<
-        typename TDependecies = mpl::vector0<>
+        typename TDependecies = aux::mpl::vector0<>
       , template<typename> class TBinder = binder
       , template<
             typename = ::boost::none_t
@@ -155,7 +155,7 @@
                 resolve<T, TCallStack>::type dependency_type;
 
             BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
-                typedef typename mpl::push_back<TCallStack, T>::type call_stack_type;
+                typedef typename aux::mpl::push_back<TCallStack, T>::type call_stack_type;
             )
 
             BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
@@ -187,7 +187,7 @@
           , typename TPolicies
         >
         typename enable_if_c<
-            !mpl::x11::size<scope_create<TDependency> >::value
+            !aux::mpl::x11::size<scope_create<TDependency> >::value
           , wrappers::universal<T>
         >::type
         create_impl(const TAllocator&
@@ -211,7 +211,7 @@
           , typename TPolicies
         >
         typename disable_if_c<
-            !mpl::x11::size<scope_create<TDependency> >::value
+            !aux::mpl::x11::size<scope_create<TDependency> >::value
           , wrappers::universal<T> >::type
         create_impl(const TAllocator& allocator
                   , TDeps& deps
@@ -249,15 +249,15 @@
         }
 
         template<typename TSeq, typename, typename TPolicies>
-        static typename enable_if<mpl::empty<TSeq> >::type
+        static typename enable_if<aux::mpl::empty<TSeq> >::type
         assert_policies(const TPolicies&) { }
 
         template<typename TSeq, typename T, typename TPolicies>
-        static typename disable_if<mpl::empty<TSeq> >::type
+        static typename disable_if<aux::mpl::empty<TSeq> >::type
         assert_policies(const TPolicies& policies) {
-            typedef typename mpl::front<TSeq>::type policy;
+            typedef typename aux::mpl::front<TSeq>::type policy;
             static_cast<const policy&>(policies).template assert_policy<T>();
-            assert_policies<typename mpl::pop_front<TSeq>::type, T>(policies);
+            assert_policies<typename aux::mpl::pop_front<TSeq>::type, T>(policies);
         }
 
         template<typename TDependency, typename TDeps>
@@ -308,7 +308,7 @@
               , TRefs& refs
               , const TVisitor& visitor
               , const TPolicies& policies
-              , const mpl::x11::vector<BOOST_DI_TYPES_PASS(TArgs)>&) {
+              , const aux::mpl::x11::vector<BOOST_DI_TYPES_PASS(TArgs)>&) {
         return allocator.template
             allocate<typename TDependency::expected, typename TDependency::given>(
                 create<TArgs, T, TCallStack>(allocator, deps, refs, visitor, policies)...

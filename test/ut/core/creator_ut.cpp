@@ -28,15 +28,15 @@ namespace core {
 BOOST_AUTO_TEST_CASE(create_pod) {
     const int i = 42;
 
-    typedef fake_dependency<scopes::unique<>, int, mpl::int_<i>>::type dependency_type;
+    typedef fake_dependency<scopes::unique<>, int, aux::mpl::int_<i>>::type dependency_type;
     fake_allocator allocator;
     fake_pool<dependency_type> deps;
     std::vector<aux::shared_ptr<void>> refs;
 
     BOOST_CHECK_EQUAL(i, (
-        creator<mpl::vector<dependency_type>>().create<
-            int, int, mpl::vector0<>
-        >(allocator, deps, refs, fake_visitor<mpl::vector<int>>(), fake_pool<>())
+        creator<aux::mpl::vector<dependency_type>>().create<
+            int, int, aux::mpl::vector0<>
+        >(allocator, deps, refs, fake_visitor<aux::mpl::vector<int>>(), fake_pool<>())
     ));
 }
 

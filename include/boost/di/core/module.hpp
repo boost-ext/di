@@ -31,7 +31,7 @@
     namespace core {
 
     template<
-        typename TDependecies = mpl::vector<>
+        typename TDependecies = aux::mpl::vector<>
       , template<
             typename
           , template<typename> class = ::boost::di::core::binder
@@ -48,8 +48,8 @@
             class = ::boost::di::core::any_type
         > class TCreator = creator
       , template<
-            typename = ::boost::mpl::vector0<>
-          , typename = ::boost::di::core::never< ::boost::mpl::_1 >
+            typename = ::boost::aux::mpl::vector0<>
+          , typename = ::boost::di::core::never< ::boost::aux::mpl::_1 >
           , typename = void
         > class TPool = pool
       , typename TDefaultAllocator = allocator
@@ -98,7 +98,7 @@
 
         template<typename T>
         T create() {
-            typedef mpl::vector0<> call_stack;
+            typedef aux::mpl::vector0<> call_stack;
             std::vector<aux::shared_ptr<void> > refs_;
 
             return creator_.template create<T, T, call_stack>(
@@ -112,7 +112,7 @@
 
         template<typename T, typename TAllocator>
         T allocate(const TAllocator& allocator) {
-            typedef mpl::vector0<> call_stack;
+            typedef aux::mpl::vector0<> call_stack;
             std::vector<aux::shared_ptr<void> > refs_;
 
             return creator_.template create<T, T, call_stack>(
@@ -126,7 +126,7 @@
 
         template<typename T, typename TVisitor>
         T visit(const TVisitor& visitor) {
-            typedef mpl::vector0<> call_stack;
+            typedef aux::mpl::vector0<> call_stack;
             std::vector<aux::shared_ptr<void> > refs_;
 
             return creator_.template create<T, T, call_stack>(
@@ -145,29 +145,29 @@
 
     private:
         template<typename TSeq, typename T, typename TAction>
-        typename enable_if<mpl::empty<TSeq> >::type call_impl(T&, const TAction&) { }
+        typename enable_if<aux::mpl::empty<TSeq> >::type call_impl(T&, const TAction&) { }
 
         template<typename TSeq, typename T, typename TAction>
         typename enable_if<
-            mpl::and_<
-                mpl::not_<mpl::empty<TSeq> >
-              , type_traits::has_call<typename mpl::front<TSeq>::type, TAction>
+            aux::mpl::and_<
+                aux::mpl::not_<aux::mpl::empty<TSeq> >
+              , type_traits::has_call<typename aux::mpl::front<TSeq>::type, TAction>
             >
         >::type
         call_impl(T& deps, const TAction& action) {
-            static_cast<typename mpl::front<TSeq>::type&>(deps).call(action);
-            call_impl<typename mpl::pop_front<TSeq>::type>(deps, action);
+            static_cast<typename aux::mpl::front<TSeq>::type&>(deps).call(action);
+            call_impl<typename aux::mpl::pop_front<TSeq>::type>(deps, action);
         }
 
         template<typename TSeq, typename T, typename TAction>
         typename disable_if<
-            mpl::or_<
-                mpl::empty<TSeq>
-              , type_traits::has_call<typename mpl::front<TSeq>::type, TAction>
+            aux::mpl::or_<
+                aux::mpl::empty<TSeq>
+              , type_traits::has_call<typename aux::mpl::front<TSeq>::type, TAction>
             >
         >::type
         call_impl(T& deps, const TAction& action) {
-            call_impl<typename mpl::pop_front<TSeq>::type>(deps, action);
+            call_impl<typename aux::mpl::pop_front<TSeq>::type>(deps, action);
         }
 
         TCreator<TDependecies> creator_;
@@ -190,10 +190,10 @@
         : TPool<deps>(
               TPool<
                   BOOST_DI_MPL_VECTOR_TYPES_PASS(TArgs)
-                , mpl::not_<
-                      mpl::or_<
-                          mpl::contains<deps, mpl::_>
-                        , has_types<mpl::_>
+                , aux::mpl::not_<
+                      aux::mpl::or_<
+                          aux::mpl::contains<deps, aux::mpl::_>
+                        , has_types<aux::mpl::_>
                       >
                   >
               >(BOOST_DI_ARGS_PASS(args))
@@ -203,7 +203,7 @@
 
     template<typename T, BOOST_DI_TYPES(TPolicies)>
     T create(BOOST_DI_ARGS(TPolicies, policies)) {
-        typedef mpl::vector0<> call_stack;
+        typedef aux::mpl::vector0<> call_stack;
         TPool<BOOST_DI_MPL_VECTOR_TYPES_PASS(TPolicies)> policies_(BOOST_DI_ARGS_PASS(policies));
         std::vector<aux::shared_ptr<void> > refs_;
 
@@ -218,7 +218,7 @@
 
     template<typename T, typename TAllocator, BOOST_DI_TYPES(TPolicies)>
     T allocate(const TAllocator& allocator, BOOST_DI_ARGS(TPolicies, policies)) {
-        typedef mpl::vector0<> call_stack;
+        typedef aux::mpl::vector0<> call_stack;
         TPool<BOOST_DI_MPL_VECTOR_TYPES_PASS(TPolicies)> policies_(BOOST_DI_ARGS_PASS(policies));
         std::vector<aux::shared_ptr<void> > refs_;
 

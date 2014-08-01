@@ -32,12 +32,12 @@ struct bind
 
 template<bool V>
 struct bind_bool
-    : bind<bool, mpl::bool_<V> >
+    : bind<bool, aux::mpl::bool_<V> >
 { };
 
 template<int N>
 struct bind_int
-    : bind<int, mpl::int_<N> >
+    : bind<int, aux::mpl::int_<N> >
 { };
 
 template<typename T>

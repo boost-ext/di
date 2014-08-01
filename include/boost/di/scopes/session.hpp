@@ -23,7 +23,7 @@ template<template<typename> class TWrapper = wrappers::shared>
 class session
 {
 public:
-    typedef mpl::int_<0> priority;
+    typedef aux::mpl::int_<0> priority;
 
     template<typename TExpected>
     class scope

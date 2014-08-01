@@ -44,12 +44,12 @@ BOOST_AUTO_TEST_CASE(create_ctor) {
 }
 
 BOOST_AUTO_TEST_CASE(create_int_value) {
-    aux::unique_ptr<int> i(allocator().allocate<int, mpl::int_<42>>());
+    aux::unique_ptr<int> i(allocator().allocate<int, aux::mpl::int_<42>>());
     BOOST_CHECK_EQUAL(42, *i);
 }
 
 BOOST_AUTO_TEST_CASE(create_string_value) {
-    aux::unique_ptr<std::string> s(allocator().allocate<std::string, mpl::string<'s'>>());
+    aux::unique_ptr<std::string> s(allocator().allocate<std::string, aux::mpl::string<'s'>>());
     BOOST_CHECK_EQUAL("s", *s);
 }
 

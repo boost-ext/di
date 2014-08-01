@@ -32,17 +32,17 @@
 
     template<typename, typename = void>
     struct is_mpl_string
-        : mpl::false_
+        : aux::mpl::false_
     { };
 
     template<typename T>
     struct is_mpl_string<T, typename enable_if<has_tag<T> >::type>
-        : is_same<mpl::string_tag, typename T::tag>
+        : is_same<aux::mpl::string_tag, typename T::tag>
     { };
 
     template<typename T>
     struct is_explicit
-        : mpl::or_<
+        : aux::mpl::or_<
               type_traits::has_value<T>
             , is_mpl_string<T>
           >
@@ -66,7 +66,7 @@
         template<typename TExpected, typename TGiven>
         typename enable_if<is_mpl_string<TGiven>, TExpected*>::type
         allocate() const {
-            return new TExpected(mpl::c_str<TGiven>::value);
+            return new TExpected(aux::mpl::c_str<TGiven>::value);
         }
 
         #define BOOST_PP_FILENAME_1 "boost/di/core/allocator.hpp"

@@ -51,10 +51,10 @@ class scopes_permission
 
     template<typename TScope>
     struct is_scope_permitted
-        : mpl::bool_<
-              mpl::count_if<
+        : aux::mpl::bool_<
+              aux::mpl::count_if<
                   permitted_types
-                , is_scope_permitted_impl<mpl::_, TScope>
+                , is_scope_permitted_impl<aux::mpl::_, TScope>
               >::value != 0
           >
     { };

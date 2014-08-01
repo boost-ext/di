@@ -27,14 +27,14 @@ template<
   , typename = void
 >
 struct contains_all
-    : mpl::empty<
-          typename mpl::fold<
+    : aux::mpl::empty<
+          typename aux::mpl::fold<
               TSrc
-            , mpl::vector0<>
-            , mpl::if_<
-                  mpl::contains<TDst, mpl::_2>
-                , mpl::_1
-                , mpl::push_back<mpl::_1, mpl::_2>
+            , aux::mpl::vector0<>
+            , aux::mpl::if_<
+                  aux::mpl::contains<TDst, aux::mpl::_2>
+                , aux::mpl::_1
+                , aux::mpl::push_back<aux::mpl::_1, aux::mpl::_2>
               >
           >::type
       >
@@ -45,13 +45,13 @@ struct contains_all<
     TSrc
   , TDst
   , typename enable_if<
-        mpl::not_equal_to<
-            mpl::size<TSrc>
-          , mpl::size<TDst>
+        aux::mpl::not_equal_to<
+            aux::mpl::size<TSrc>
+          , aux::mpl::size<TDst>
         >
     >::type
 >
-    : mpl::false_
+    : aux::mpl::false_
 { };
 
 } // namespace di

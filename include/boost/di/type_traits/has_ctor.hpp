@@ -38,19 +38,19 @@
 #else
 
     template<typename T, BOOST_DI_TYPES(TArgs)>
-    class has_ctor<T, mpl::x11::vector<BOOST_DI_TYPES_PASS(TArgs)> >
+    class has_ctor<T, aux::mpl::x11::vector<BOOST_DI_TYPES_PASS(TArgs)> >
     {
     public:
         template<typename U>
-        static mpl::aux::yes_tag test(BOOST_DI_FEATURE_DECLTYPE(U(TArgs()...))*);
+        static aux::mpl::aux::yes_tag test(BOOST_DI_FEATURE_DECLTYPE(U(TArgs()...))*);
 
         template<typename>
-        static mpl::aux::no_tag test(...);
+        static aux::mpl::aux::no_tag test(...);
 
     public:
         BOOST_STATIC_CONSTANT(
             bool
-          , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
+          , value = sizeof(test<T>(0)) == sizeof(aux::mpl::aux::yes_tag)
         );
     };
 

@@ -22,7 +22,7 @@ namespace scopes {
 class deduce
 {
 public:
-    typedef mpl::int_<0> priority;
+    typedef aux::mpl::int_<0> priority;
 
     template<typename>
     struct scope

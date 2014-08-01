@@ -47,13 +47,13 @@ BOOST_AUTO_TEST_CASE(rebind_scope) {
                 fake_scope<1>
               , int
               , int
-              , detail::requires_<is_same<mpl::_1, int>>
+              , detail::requires_<is_same<aux::mpl::_1, int>>
             >
           , dependency<
                 scopes::deduce
               , int
               , int
-              , detail::requires_<is_same<mpl::_1, int>>
+              , detail::requires_<is_same<aux::mpl::_1, int>>
             >::rebind<fake_scope<1>>::other
         >::value
     ));

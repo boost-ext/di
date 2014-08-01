@@ -56,22 +56,22 @@ public:
             >
     >
     struct resolve
-        : mpl::deref<
-              mpl::second<
-                  typename mpl::fold<
+        : aux::mpl::deref<
+              aux::mpl::second<
+                  typename aux::mpl::fold<
                       TDependecies
-                    , mpl::pair<mpl::int_<0>, TDefault>
-                    , mpl::if_<
-                          mpl::greater<
+                    , aux::mpl::pair<aux::mpl::int_<0>, TDefault>
+                    , aux::mpl::if_<
+                          aux::mpl::greater<
                               apply<
-                                  mpl::_2
+                                  aux::mpl::_2
                                 , T
                                 , TCallStack
                               >
-                            , mpl::first<mpl::_1>
+                            , aux::mpl::first<aux::mpl::_1>
                           >
-                        , mpl::pair<apply<mpl::_2, T, TCallStack>, mpl::_2>
-                        , mpl::_1
+                        , aux::mpl::pair<apply<aux::mpl::_2, T, TCallStack>, aux::mpl::_2>
+                        , aux::mpl::_1
                       >
                   >::type
               >

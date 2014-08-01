@@ -24,7 +24,7 @@ struct fake_scope_exit { };
 template<int Priority = 0>
 struct fake_scope
 {
-    typedef mpl::int_<Priority> priority;
+    typedef aux::mpl::int_<Priority> priority;
 
     template<typename T>
     class wrapper

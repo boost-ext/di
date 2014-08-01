@@ -27,8 +27,8 @@ namespace detail {
 
 template<typename TExpected, typename TGiven>
 struct get_expected
-    : mpl::if_<
-          mpl::is_sequence<TExpected>
+    : aux::mpl::if_<
+          aux::mpl::is_sequence<TExpected>
         , TGiven
         , TExpected
       >

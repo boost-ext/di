@@ -17,7 +17,7 @@ struct fake_concept
 {
     template<typename>
     struct apply
-        : mpl::int_<Value>
+        : aux::mpl::int_<Value>
     { };
 };
 

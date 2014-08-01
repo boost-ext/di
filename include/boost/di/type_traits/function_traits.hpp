@@ -24,7 +24,7 @@
     struct function_traits<R(*)()>
     {
         typedef R result_type;
-        typedef mpl::x11::vector<> type;
+        typedef aux::mpl::x11::vector<> type;
     };
 
     template<typename R, typename T>
@@ -32,7 +32,7 @@
     {
         typedef R result_type;
         typedef T base_type;
-        typedef mpl::x11::vector<> type;
+        typedef aux::mpl::x11::vector<> type;
     };
 
     template<typename R, typename T>
@@ -40,7 +40,7 @@
     {
         typedef R result_type;
         typedef T base_type;
-        typedef mpl::x11::vector<> type;
+        typedef aux::mpl::x11::vector<> type;
     };
 
     #define BOOST_PP_FILENAME_1 "boost/di/type_traits/function_traits.hpp"
@@ -59,7 +59,7 @@
     struct function_traits<R(*)(BOOST_DI_TYPES_PASS(Args))>             \
     {                                                                   \
         typedef R result_type;                                          \
-        typedef mpl::x11::vector<BOOST_DI_TYPES_PASS(Args)> type;       \
+        typedef aux::mpl::x11::vector<BOOST_DI_TYPES_PASS(Args)> type;       \
     };
 
     template<typename R, typename T, BOOST_DI_TYPES(Args)>              \
@@ -67,7 +67,7 @@
     {                                                                   \
         typedef R result_type;                                          \
         typedef T base_type;                                            \
-        typedef mpl::x11::vector<BOOST_DI_TYPES_PASS(Args)> type;       \
+        typedef aux::mpl::x11::vector<BOOST_DI_TYPES_PASS(Args)> type;       \
     };
 
     template<typename R, typename T, BOOST_DI_TYPES(Args)>              \
@@ -75,7 +75,7 @@
     {                                                                   \
         typedef R result_type;                                          \
         typedef T base_type;                                            \
-        typedef mpl::x11::vector<BOOST_DI_TYPES_PASS(Args)> type;       \
+        typedef aux::mpl::x11::vector<BOOST_DI_TYPES_PASS(Args)> type;       \
     };
 
 #endif

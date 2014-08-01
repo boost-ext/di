@@ -26,23 +26,23 @@ namespace di {
 template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
 struct fake_call_stack
 {
-    typedef mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> context_type;
+    typedef aux::mpl::vector<BOOST_DI_TYPES_PASS_MPL(T)> context_type;
 
     template<typename TContext, typename TCallStack>
     struct equal
-      : mpl::equal<
-            mpl::iterator_range<
-                typename mpl::advance<
-                    typename mpl::begin<TCallStack>::type
-                  , typename mpl::max<
-                        mpl::int_<0>
-                      , mpl::minus<
-                            mpl::size<TCallStack>
-                          , mpl::size<TContext>
+      : aux::mpl::equal<
+            aux::mpl::iterator_range<
+                typename aux::mpl::advance<
+                    typename aux::mpl::begin<TCallStack>::type
+                  , typename aux::mpl::max<
+                        aux::mpl::int_<0>
+                      , aux::mpl::minus<
+                            aux::mpl::size<TCallStack>
+                          , aux::mpl::size<TContext>
                         >
                     >::type
                 >::type
-              , typename mpl::end<TCallStack>::type
+              , typename aux::mpl::end<TCallStack>::type
             >
           , TContext
         >
@@ -50,13 +50,13 @@ struct fake_call_stack
 
     template<typename TContext, typename TCallStack>
     struct apply_impl
-        : mpl::if_<
-              mpl::empty<TCallStack>
-            , mpl::int_<0>
-            , mpl::if_<
+        : aux::mpl::if_<
+              aux::mpl::empty<TCallStack>
+            , aux::mpl::int_<0>
+            , aux::mpl::if_<
                   equal<TContext, TCallStack>
-                , mpl::size<TContext>
-                , mpl::int_<0>
+                , aux::mpl::size<TContext>
+                , aux::mpl::int_<0>
               >
           >
     { };

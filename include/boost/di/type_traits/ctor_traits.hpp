@@ -31,36 +31,36 @@ template < class T, class R >
 struct normalize;
 
 template < class... TTypes, class X >
-struct normalize< mpl::x11::vector< TTypes... >, X >
-   : mpl::x11::vector< TTypes..., X >
+struct normalize< aux::mpl::x11::vector< TTypes... >, X >
+   : aux::mpl::x11::vector< TTypes..., X >
 { };
 
 template<typename TSeq>
 struct normalize_vector
-    : mpl::x11::fold<
+    : aux::mpl::x11::fold<
           TSeq
-        , mpl::x11::vector<>
-        , normalize<mpl::x11::arg<0>, mpl::x11::arg<1> >
+        , aux::mpl::x11::vector<>
+        , normalize<aux::mpl::x11::arg<0>, aux::mpl::x11::arg<1> >
       >::type
 { };
 
 template<typename T>
 struct ctor_traits
-          : mpl::x11::second<typename mpl::x11::fold<
-              mpl::x11::range_c<int, 0, BOOST_DI_CFG_CTOR_LIMIT_SIZE>
-            , mpl::x11::pair<
-                  mpl::x11::vector<core::any_type<T> >
-                , mpl::x11::vector<>
+          : aux::mpl::x11::second<typename aux::mpl::x11::fold<
+              aux::mpl::x11::range_c<int, 0, BOOST_DI_CFG_CTOR_LIMIT_SIZE>
+            , aux::mpl::x11::pair<
+                  aux::mpl::x11::vector<core::any_type<T> >
+                , aux::mpl::x11::vector<>
               >
-            , mpl::x11::if_<
-                  type_traits::has_ctor<T, normalize_vector<mpl::x11::first<mpl::x11::arg<0> > > >
-                , mpl::x11::pair<
-                      mpl::x11::push_back<mpl::x11::first<mpl::x11::arg<0> >, core::any_type<T> >
-                    , mpl::x11::first<mpl::x11::arg<0> >
+            , aux::mpl::x11::if_<
+                  type_traits::has_ctor<T, normalize_vector<aux::mpl::x11::first<aux::mpl::x11::arg<0> > > >
+                , aux::mpl::x11::pair<
+                      aux::mpl::x11::push_back<aux::mpl::x11::first<aux::mpl::x11::arg<0> >, core::any_type<T> >
+                    , aux::mpl::x11::first<aux::mpl::x11::arg<0> >
                   >
-                , mpl::x11::pair<
-                      mpl::x11::push_back<mpl::x11::first<mpl::x11::arg<0> >, core::any_type<T> >
-                    , mpl::x11::second<mpl::x11::arg<0> >
+                , aux::mpl::x11::pair<
+                      aux::mpl::x11::push_back<aux::mpl::x11::first<aux::mpl::x11::arg<0> >, core::any_type<T> >
+                    , aux::mpl::x11::second<aux::mpl::x11::arg<0> >
                   >
               >
           >::type >

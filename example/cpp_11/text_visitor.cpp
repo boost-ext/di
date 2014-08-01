@@ -35,7 +35,7 @@ public:
     /*<<Definition of the visitor call operator requirement>>*/
     template<typename T>
     void operator()(const T&) const {
-        int size = mpl::size<typename T::call_stack>::value;
+        int size = aux::mpl::size<typename T::call_stack>::value;
         while(--size) {
             std::cout << "\t";
         }

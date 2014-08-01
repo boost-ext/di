@@ -37,13 +37,13 @@ BOOST_AUTO_TEST_CASE(types) {
 }
 
 BOOST_AUTO_TEST_CASE(sequence_type) {
-    BOOST_CHECK((!is_required_type<mpl::vector<int, double> >::apply<fake_data<void>>::type::value));
+    BOOST_CHECK((!is_required_type<aux::mpl::vector<int, double> >::apply<fake_data<void>>::type::value));
 
-    BOOST_CHECK((is_required_type<mpl::vector<int, double> >::apply<fake_data<int>>::type::value));
-    BOOST_CHECK((is_required_type<mpl::vector<int, double> >::apply<fake_data<double>>::type::value));
-    BOOST_CHECK((is_required_type<mpl::vector<i1, i2> >::apply<fake_data<impl>>::type::value));
-    BOOST_CHECK((is_required_type<mpl::vector<i1> >::apply<fake_data<impl>>::type::value));
-    BOOST_CHECK((is_required_type<mpl::vector<int, i2> >::apply<fake_data<impl>>::type::value));
+    BOOST_CHECK((is_required_type<aux::mpl::vector<int, double> >::apply<fake_data<int>>::type::value));
+    BOOST_CHECK((is_required_type<aux::mpl::vector<int, double> >::apply<fake_data<double>>::type::value));
+    BOOST_CHECK((is_required_type<aux::mpl::vector<i1, i2> >::apply<fake_data<impl>>::type::value));
+    BOOST_CHECK((is_required_type<aux::mpl::vector<i1> >::apply<fake_data<impl>>::type::value));
+    BOOST_CHECK((is_required_type<aux::mpl::vector<int, i2> >::apply<fake_data<impl>>::type::value));
 }
 
 } // namespace type_traits

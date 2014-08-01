@@ -37,7 +37,7 @@ class any_type
 
     template<typename TValueType, typename TRefType>
     struct ref_type
-        : mpl::if_<
+        : aux::mpl::if_<
               is_same<TValueType, none_t>
             , TValueType
             , TRefType
@@ -173,7 +173,7 @@ struct is_integral<
       , TVisitor
       , TPolicies
    >
-> : mpl::true_ { };
+> : aux::mpl::true_ { };
 
 } // namespace boost
 
@@ -201,7 +201,7 @@ BOOST_DI_FEATURE(CPP_11_TYPE_TRAITS)(
           , TVisitor
           , TPolicies
         >
-    > : ::boost::mpl::true_ { };
+    > : ::boost::aux::mpl::true_ { };
 
     } // namespace std
 )

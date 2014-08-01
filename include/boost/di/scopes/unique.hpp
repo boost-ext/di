@@ -20,7 +20,7 @@ template<template<typename> class TWrapper = wrappers::copy>
 class unique
 {
 public:
-    typedef mpl::int_<0> priority;
+    typedef aux::mpl::int_<0> priority;
 
     template<typename TExpected>
     class scope

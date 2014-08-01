@@ -33,14 +33,14 @@ class when_
 public:
     template<typename T>
     struct apply
-        : mpl::if_<
-              mpl::empty<TContext>
-            , mpl::int_<1>
-            , typename mpl::deref<
-                  mpl::max_element<
-                      mpl::transform_view<
+        : aux::mpl::if_<
+              aux::mpl::empty<TContext>
+            , aux::mpl::int_<1>
+            , typename aux::mpl::deref<
+                  aux::mpl::max_element<
+                      aux::mpl::transform_view<
                           TContext
-                        , apply_bind<mpl::_1, T>
+                        , apply_bind<aux::mpl::_1, T>
                       >
                   >
               >::type

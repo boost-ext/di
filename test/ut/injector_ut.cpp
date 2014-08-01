@@ -74,13 +74,13 @@ BOOST_AUTO_TEST_CASE(visit) {
         : injector<
               unique<
                   transaction_provider
-                , mpl::int_<0>
+                , aux::mpl::int_<0>
               >
           >
     { } injector_;
 
     fake_visitor<
-        mpl::vector<
+        aux::mpl::vector<
             transaction_usage
           , aux::shared_ptr<provider<aux::shared_ptr<transaction>>>
           , aux::shared_ptr<c3>
@@ -120,7 +120,7 @@ BOOST_AUTO_TEST_CASE(empty) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector0<>
+            aux::mpl::vector0<>
           , injector_type::deps
         >::value
     ));
@@ -133,7 +133,7 @@ BOOST_AUTO_TEST_CASE(default_scope_deduce) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
+            aux::mpl::vector<
                 fake_dependency<scopes::deduce, c1, c1>::type
             >
           , injector_type::deps
@@ -148,7 +148,7 @@ BOOST_AUTO_TEST_CASE(default_scope_many) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
+            aux::mpl::vector<
                 fake_dependency<scopes::deduce, c1, c1>::type
               , fake_dependency<scopes::deduce, c2, c2>::type
               , fake_dependency<scopes::deduce, c3, c3>::type
@@ -170,11 +170,11 @@ BOOST_AUTO_TEST_CASE(default_scope_bind) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
+            aux::mpl::vector<
                 fake_dependency<scopes::deduce, if0, c0if0>::type
               , fake_dependency<scopes::deduce, c1, c1>::type
               , fake_dependency<scopes::deduce, c2, c2, int>::type
-              , fake_dependency<scopes::deduce, c3, c3, no_name, mpl::vector<call_stack<c4, c5>>>::type
+              , fake_dependency<scopes::deduce, c3, c3, no_name, aux::mpl::vector<call_stack<c4, c5>>>::type
             >
           , injector_type::deps
         >::value
@@ -192,7 +192,7 @@ BOOST_AUTO_TEST_CASE(custom_scope) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
+            aux::mpl::vector<
                 fake_dependency<fake_scope<>, c0if0, c0if0>::type
             >
           , injector_type::deps
@@ -211,7 +211,7 @@ BOOST_AUTO_TEST_CASE(one_scope) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
+            aux::mpl::vector<
                 fake_dependency<scopes::shared<>, c0if0, c0if0>::type
             >
           , injector_type::deps
@@ -230,7 +230,7 @@ BOOST_AUTO_TEST_CASE(one_scope_alias) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
+            aux::mpl::vector<
                 fake_dependency<scopes::shared<>, c0if0, c0if0>::type
             >
           , injector_type::deps
@@ -247,7 +247,7 @@ BOOST_AUTO_TEST_CASE(one_scope_direct) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
+            aux::mpl::vector<
                 fake_dependency<scopes::shared<>, c0if0, c0if0>::type
             >
           , injector_type::deps
@@ -266,7 +266,7 @@ BOOST_AUTO_TEST_CASE(many_shared) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
+            aux::mpl::vector<
                 fake_dependency<scopes::shared<>, c1, c1>::type
               , fake_dependency<scopes::shared<>, c2, c2>::type
               , fake_dependency<scopes::shared<>, c3, c3>::type
@@ -290,7 +290,7 @@ BOOST_AUTO_TEST_CASE(many_scopes) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
+            aux::mpl::vector<
                 fake_dependency<scopes::shared<>, c1, c1>::type
               , fake_dependency<scopes::shared<>, c2, c2>::type
               , fake_dependency<scopes::unique<>, c3, c3>::type
@@ -310,8 +310,8 @@ BOOST_AUTO_TEST_CASE(when) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
-                fake_dependency<scopes::unique<>, c1, c1, no_name, mpl::vector<call_stack<c2>>>::type
+            aux::mpl::vector<
+                fake_dependency<scopes::unique<>, c1, c1, no_name, aux::mpl::vector<call_stack<c2>>>::type
             >
           , injector_type::deps
         >::value
@@ -327,7 +327,7 @@ BOOST_AUTO_TEST_CASE(named_type) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
+            aux::mpl::vector<
                 fake_dependency<scopes::shared<>, c1, c1, int>::type
             >
           , injector_type::deps
@@ -347,9 +347,9 @@ BOOST_AUTO_TEST_CASE(named_context) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
-                fake_dependency<scopes::shared<>, c1, c1, int, mpl::vector<call_stack<double>>>::type
-              , fake_dependency<scopes::shared<>, c2, c2, double, mpl::vector<call_stack<int>>>::type
+            aux::mpl::vector<
+                fake_dependency<scopes::shared<>, c1, c1, int, aux::mpl::vector<call_stack<double>>>::type
+              , fake_dependency<scopes::shared<>, c2, c2, double, aux::mpl::vector<call_stack<int>>>::type
             >,
             injector_type::deps
         >::value
@@ -368,9 +368,9 @@ BOOST_AUTO_TEST_CASE(when_named) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
-                fake_dependency<scopes::shared<>, c1, c1, int, mpl::vector<call_stack<double>>>::type
-              , fake_dependency<scopes::shared<>, c2, c2, double, mpl::vector<call_stack<int>>>::type
+            aux::mpl::vector<
+                fake_dependency<scopes::shared<>, c1, c1, int, aux::mpl::vector<call_stack<double>>>::type
+              , fake_dependency<scopes::shared<>, c2, c2, double, aux::mpl::vector<call_stack<int>>>::type
             >
           , injector_type::deps
         >::value
@@ -388,7 +388,7 @@ BOOST_AUTO_TEST_CASE(bind_if) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
+            aux::mpl::vector<
                 fake_dependency<scopes::shared<>, if0, c0if0>::type
             >
           , injector_type::deps
@@ -414,13 +414,13 @@ BOOST_AUTO_TEST_CASE(mix) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
+            aux::mpl::vector<
                 fake_dependency<scopes::shared<>, if0, c0if0>::type
               , fake_dependency<scopes::shared<>, c1, c1>::type
               , fake_dependency<scopes::shared<>, c2, c2, int>::type
-              , fake_dependency<scopes::shared<>, c3, c3, no_name, mpl::vector<call_stack<c4, c5>>>::type
+              , fake_dependency<scopes::shared<>, c3, c3, no_name, aux::mpl::vector<call_stack<c4, c5>>>::type
               , fake_dependency<scopes::unique<>, c6, c6>::type
-              , fake_dependency<scopes::shared<>, c7, c7, double, mpl::vector<call_stack<c1>>>::type
+              , fake_dependency<scopes::shared<>, c7, c7, double, aux::mpl::vector<call_stack<c1>>>::type
             >
           , injector_type::deps
         >::value
@@ -431,19 +431,19 @@ BOOST_AUTO_TEST_CASE(named_when_complex) {
     struct injector_type
         : injector<
               unique<
-                  bind<int, mpl::int_<1>>
-                , bind<int, mpl::int_<4>>::named<mpl::string<'2'>>::when<call_stack<c7, c6, c4>>
-                , bind<int, mpl::int_<5>>::when<call_stack<c2>>
+                  bind<int, aux::mpl::int_<1>>
+                , bind<int, aux::mpl::int_<4>>::named<aux::mpl::string<'2'>>::when<call_stack<c7, c6, c4>>
+                , bind<int, aux::mpl::int_<5>>::when<call_stack<c2>>
               >
           >
     { };
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
-                fake_dependency<scopes::unique<>, int, mpl::int_<1>>::type
-              , fake_dependency<scopes::unique<>, int, mpl::int_<4>, mpl::string<'2'>, mpl::vector<call_stack<c7, c6, c4>>>::type
-              , fake_dependency<scopes::unique<>, int, mpl::int_<5>, no_name, mpl::vector<call_stack<c2>>>::type
+            aux::mpl::vector<
+                fake_dependency<scopes::unique<>, int, aux::mpl::int_<1>>::type
+              , fake_dependency<scopes::unique<>, int, aux::mpl::int_<4>, aux::mpl::string<'2'>, aux::mpl::vector<call_stack<c7, c6, c4>>>::type
+              , fake_dependency<scopes::unique<>, int, aux::mpl::int_<5>, no_name, aux::mpl::vector<call_stack<c2>>>::type
             >
           , injector_type::deps
         >::value
@@ -462,9 +462,9 @@ BOOST_AUTO_TEST_CASE(multiple_calls) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
-                fake_dependency<scopes::shared<>, c0, c0, no_name, mpl::vector<call_stack<c1>, call_stack<c2, c3>, call_stack<c4>>>::type
-              , fake_dependency<scopes::deduce, c5, c5, no_name, mpl::vector<call_stack<int>, call_stack<double>>>::type
+            aux::mpl::vector<
+                fake_dependency<scopes::shared<>, c0, c0, no_name, aux::mpl::vector<call_stack<c1>, call_stack<c2, c3>, call_stack<c4>>>::type
+              , fake_dependency<scopes::deduce, c5, c5, no_name, aux::mpl::vector<call_stack<int>, call_stack<double>>>::type
             >
           , injector_type::deps
         >::value
@@ -500,12 +500,12 @@ BOOST_AUTO_TEST_CASE(visit_injector) {
     auto injector_ = injector<
         unique<
             transaction_provider
-          , mpl::int_<0>
+          , aux::mpl::int_<0>
         >
     >();
 
     fake_visitor<
-        mpl::vector<
+        aux::mpl::vector<
             transaction_usage
           , aux::shared_ptr<provider<aux::shared_ptr<transaction>>>
           , aux::shared_ptr<c3>
@@ -542,7 +542,7 @@ BOOST_AUTO_TEST_CASE(empty_injector) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector0<>
+            aux::mpl::vector0<>
           , injector_t::deps
         >::value
     ));
@@ -559,10 +559,10 @@ BOOST_AUTO_TEST_CASE(default_scope_bind_injector) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
+            aux::mpl::vector<
                 fake_dependency<scopes::deduce, if0, c0if0>::type
               , fake_dependency<scopes::deduce, c2, c2, int>::type
-              , fake_dependency<scopes::deduce, c3, c3, no_name, mpl::vector<call_stack<c4, c5>>>::type
+              , fake_dependency<scopes::deduce, c3, c3, no_name, aux::mpl::vector<call_stack<c4, c5>>>::type
             >
           , injector_t::deps
         >::value
@@ -580,7 +580,7 @@ BOOST_AUTO_TEST_CASE(one_scope_injector) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
+            aux::mpl::vector<
                 fake_dependency<scopes::shared<>, c0if0, c0if0>::type
             >
           , injector_t::deps
@@ -599,7 +599,7 @@ BOOST_AUTO_TEST_CASE(one_scope_alias_injector) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
+            aux::mpl::vector<
                 fake_dependency<scopes::shared<>, c0if0, c0if0>::type
             >
           , injector_t::deps
@@ -616,7 +616,7 @@ BOOST_AUTO_TEST_CASE(one_scope_direct_injector) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
+            aux::mpl::vector<
                 fake_dependency<scopes::shared<>, c0if0, c0if0>::type
             >
           , injector_t::deps
@@ -633,7 +633,7 @@ BOOST_AUTO_TEST_CASE(custom_scope_injector) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
+            aux::mpl::vector<
                 fake_dependency<fake_scope<>, c0if0, c0if0>::type
             >
           , injector_t::deps
@@ -652,7 +652,7 @@ BOOST_AUTO_TEST_CASE(many_shared_injector) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
+            aux::mpl::vector<
                 fake_dependency<scopes::shared<>, c1, c1>::type
               , fake_dependency<scopes::shared<>, c2, c2>::type
               , fake_dependency<scopes::shared<>, c3, c3>::type
@@ -676,7 +676,7 @@ BOOST_AUTO_TEST_CASE(many_scopes_injector) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
+            aux::mpl::vector<
                 fake_dependency<scopes::shared<>, c1, c1>::type
               , fake_dependency<scopes::shared<>, c2, c2>::type
               , fake_dependency<scopes::unique<>, c3, c3>::type
@@ -696,8 +696,8 @@ BOOST_AUTO_TEST_CASE(when_injector) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
-                fake_dependency<scopes::unique<>, c1, c1, no_name, mpl::vector<call_stack<c2>>>::type
+            aux::mpl::vector<
+                fake_dependency<scopes::unique<>, c1, c1, no_name, aux::mpl::vector<call_stack<c2>>>::type
             >
           , injector_t::deps
         >::value
@@ -713,7 +713,7 @@ BOOST_AUTO_TEST_CASE(named_injector) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
+            aux::mpl::vector<
                 fake_dependency<scopes::shared<>, c1, c1, int>::type
             >
           , injector_t::deps
@@ -733,9 +733,9 @@ BOOST_AUTO_TEST_CASE(named_when) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
-                fake_dependency<scopes::shared<>, c1, c1, int, mpl::vector<call_stack<double>>>::type
-              , fake_dependency<scopes::shared<>, c2, c2, double, mpl::vector<call_stack<int>>>::type
+            aux::mpl::vector<
+                fake_dependency<scopes::shared<>, c1, c1, int, aux::mpl::vector<call_stack<double>>>::type
+              , fake_dependency<scopes::shared<>, c2, c2, double, aux::mpl::vector<call_stack<int>>>::type
             >,
             injector_t::deps
         >::value
@@ -754,9 +754,9 @@ BOOST_AUTO_TEST_CASE(when_named_injector) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
-                fake_dependency<scopes::shared<>, c1, c1, int, mpl::vector<call_stack<double>>>::type
-              , fake_dependency<scopes::shared<>, c2, c2, double, mpl::vector<call_stack<int>>>::type
+            aux::mpl::vector<
+                fake_dependency<scopes::shared<>, c1, c1, int, aux::mpl::vector<call_stack<double>>>::type
+              , fake_dependency<scopes::shared<>, c2, c2, double, aux::mpl::vector<call_stack<int>>>::type
             >
           , injector_t::deps
         >::value
@@ -774,7 +774,7 @@ BOOST_AUTO_TEST_CASE(bind_if_injector) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
+            aux::mpl::vector<
                 fake_dependency<scopes::shared<>, if0, c0if0>::type
             >
           , injector_t::deps
@@ -800,13 +800,13 @@ BOOST_AUTO_TEST_CASE(mix_injector) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
+            aux::mpl::vector<
                 fake_dependency<scopes::shared<>, if0, c0if0>::type
               , fake_dependency<scopes::shared<>, c1, c1>::type
               , fake_dependency<scopes::shared<>, c2, c2, int>::type
-              , fake_dependency<scopes::shared<>, c3, c3, no_name, mpl::vector<call_stack<c4, c5>>>::type
+              , fake_dependency<scopes::shared<>, c3, c3, no_name, aux::mpl::vector<call_stack<c4, c5>>>::type
               , fake_dependency<scopes::unique<>, c6, c6>::type
-              , fake_dependency<scopes::shared<>, c7, c7, double, mpl::vector<call_stack<c1>>>::type
+              , fake_dependency<scopes::shared<>, c7, c7, double, aux::mpl::vector<call_stack<c1>>>::type
             >
           , injector_t::deps
         >::value
@@ -816,9 +816,9 @@ BOOST_AUTO_TEST_CASE(mix_injector) {
 BOOST_AUTO_TEST_CASE(named_when_injector) {
     auto injector_ = injector<
         unique<
-            bind<int, mpl::int_<1>>
-          , bind<int, mpl::int_<4>>::named<mpl::string<'2'>>::when<call_stack<c7, c6, c4>>
-          , bind<int, mpl::int_<5>>::when<call_stack<c2>>
+            bind<int, aux::mpl::int_<1>>
+          , bind<int, aux::mpl::int_<4>>::named<aux::mpl::string<'2'>>::when<call_stack<c7, c6, c4>>
+          , bind<int, aux::mpl::int_<5>>::when<call_stack<c2>>
         >
     >();
 
@@ -826,10 +826,10 @@ BOOST_AUTO_TEST_CASE(named_when_injector) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
-                fake_dependency<scopes::unique<>, int, mpl::int_<1>>::type
-              , fake_dependency<scopes::unique<>, int, mpl::int_<4>, mpl::string<'2'>, mpl::vector<call_stack<c7, c6, c4>>>::type
-              , fake_dependency<scopes::unique<>, int, mpl::int_<5>, no_name, mpl::vector<call_stack<c2>>>::type
+            aux::mpl::vector<
+                fake_dependency<scopes::unique<>, int, aux::mpl::int_<1>>::type
+              , fake_dependency<scopes::unique<>, int, aux::mpl::int_<4>, aux::mpl::string<'2'>, aux::mpl::vector<call_stack<c7, c6, c4>>>::type
+              , fake_dependency<scopes::unique<>, int, aux::mpl::int_<5>, no_name, aux::mpl::vector<call_stack<c2>>>::type
             >
           , injector_t::deps
         >::value
@@ -848,9 +848,9 @@ BOOST_AUTO_TEST_CASE(multiple_calls_injector) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
-                fake_dependency<scopes::shared<>, c0, c0, no_name, mpl::vector<call_stack<c1>, call_stack<c2, c3>, call_stack<c4>>>::type
-              , fake_dependency<scopes::deduce, c5, c5, no_name, mpl::vector<call_stack<int>, call_stack<double>>>::type
+            aux::mpl::vector<
+                fake_dependency<scopes::shared<>, c0, c0, no_name, aux::mpl::vector<call_stack<c1>, call_stack<c2, c3>, call_stack<c4>>>::type
+              , fake_dependency<scopes::deduce, c5, c5, no_name, aux::mpl::vector<call_stack<int>, call_stack<double>>>::type
             >
           , injector_t::deps
         >::value
@@ -882,13 +882,13 @@ BOOST_AUTO_TEST_CASE(to_named) {
     const int i2 = 87;
 
     using injector_t = injector<
-        decltype(bind<int>::named<mpl::string<'1'>>::to(int()))
-      , decltype(bind<int>::named<mpl::string<'2'>>::to(int()))
+        decltype(bind<int>::named<aux::mpl::string<'1'>>::to(int()))
+      , decltype(bind<int>::named<aux::mpl::string<'2'>>::to(int()))
     >;
 
     auto injector_ = injector_t(
-        bind<int>::named<mpl::string<'1'>>::to(i1)
-      , bind<int>::named<mpl::string<'2'>>::to(i2)
+        bind<int>::named<aux::mpl::string<'1'>>::to(i1)
+      , bind<int>::named<aux::mpl::string<'2'>>::to(i2)
     );
 
     auto c10_ = injector_.create<c10>();
@@ -920,14 +920,14 @@ BOOST_AUTO_TEST_CASE(to_when_named) {
     const int i2 = 87;
 
     using injector_t = injector<
-        decltype(bind<int>::when<call_stack<c4>>::named<mpl::string<'1'>>::to(int()))
-      , decltype(bind<int>::when<call_stack<c4>>::named<mpl::string<'2'>>::to(int()))
+        decltype(bind<int>::when<call_stack<c4>>::named<aux::mpl::string<'1'>>::to(int()))
+      , decltype(bind<int>::when<call_stack<c4>>::named<aux::mpl::string<'2'>>::to(int()))
       , decltype(bind<c0if0>())
     >;
 
     auto injector_ = injector_t(
-        bind<int>::when<call_stack<c4>>::named<mpl::string<'1'>>::to(i1)
-      , bind<int>::when<call_stack<c4>>::named<mpl::string<'2'>>::to(i2)
+        bind<int>::when<call_stack<c4>>::named<aux::mpl::string<'1'>>::to(i1)
+      , bind<int>::when<call_stack<c4>>::named<aux::mpl::string<'2'>>::to(i2)
       , bind<c0if0>()
     );
 
@@ -942,14 +942,14 @@ BOOST_AUTO_TEST_CASE(to_named_when) {
     const int i2 = 87;
 
     using injector_t = injector<
-        decltype(bind<int>::named<mpl::string<'1'>>::when<call_stack<c4>>::to(int()))
-      , decltype(bind<int>::named<mpl::string<'2'>>::when<call_stack<c4>>::to(int()))
+        decltype(bind<int>::named<aux::mpl::string<'1'>>::when<call_stack<c4>>::to(int()))
+      , decltype(bind<int>::named<aux::mpl::string<'2'>>::when<call_stack<c4>>::to(int()))
       , decltype(bind<c0if0>())
     >;
 
     auto injector_ = injector_t(
-        bind<int>::named<mpl::string<'1'>>::when<call_stack<c4>>::to(i1)
-      , bind<int>::named<mpl::string<'2'>>::when<call_stack<c4>>::to(i2)
+        bind<int>::named<aux::mpl::string<'1'>>::when<call_stack<c4>>::to(i1)
+      , bind<int>::named<aux::mpl::string<'2'>>::when<call_stack<c4>>::to(i2)
       , bind<c0if0>()
     );
 
@@ -1095,7 +1095,7 @@ BOOST_AUTO_TEST_CASE(modules) {
 
     BOOST_CHECK((
         contains_all<
-            mpl::vector<
+            aux::mpl::vector<
                 fake_dependency<scopes::deduce, if0, c0if0>::type
             >
           , injector_t::deps

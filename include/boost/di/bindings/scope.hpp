@@ -59,15 +59,15 @@ class scope
 public:
     template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
     struct bind
-        : mpl::fold<
+        : aux::mpl::fold<
               BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)
-            , mpl::vector0<>
-            , mpl::push_back<
-                  mpl::_1
-                , mpl::if_<
-                      is_dependency<mpl::_2>
-                    , rebind<mpl::_2, TScope>
-                    , dependency<mpl::_2>
+            , aux::mpl::vector0<>
+            , aux::mpl::push_back<
+                  aux::mpl::_1
+                , aux::mpl::if_<
+                      is_dependency<aux::mpl::_2>
+                    , rebind<aux::mpl::_2, TScope>
+                    , dependency<aux::mpl::_2>
                   >
               >
           >::type

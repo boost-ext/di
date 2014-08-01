@@ -39,63 +39,63 @@ struct many_complex { many_complex(const int&, double, float*, aux::shared_ptr<v
 #endif
 
 BOOST_AUTO_TEST_CASE(fundamental_types) {
-    BOOST_CHECK((!has_ctor<int, mpl::int_<1> >::value));
-    BOOST_CHECK((!has_ctor<char, mpl::int_<1> >::value));
-    BOOST_CHECK((!has_ctor<float, mpl::int_<1> >::value));
-    BOOST_CHECK((!has_ctor<double, mpl::int_<1> >::value));
-    BOOST_CHECK((!has_ctor<e, mpl::int_<1> >::value));
+    BOOST_CHECK((!has_ctor<int, aux::mpl::int_<1> >::value));
+    BOOST_CHECK((!has_ctor<char, aux::mpl::int_<1> >::value));
+    BOOST_CHECK((!has_ctor<float, aux::mpl::int_<1> >::value));
+    BOOST_CHECK((!has_ctor<double, aux::mpl::int_<1> >::value));
+    BOOST_CHECK((!has_ctor<e, aux::mpl::int_<1> >::value));
 }
 
 BOOST_AUTO_TEST_CASE(copy_ctors) {
-    BOOST_CHECK((!has_ctor<trivial_ctor, mpl::int_<1> >::value));
-    BOOST_CHECK((!has_ctor<copy_ctor, mpl::int_<1> >::value));
+    BOOST_CHECK((!has_ctor<trivial_ctor, aux::mpl::int_<1> >::value));
+    BOOST_CHECK((!has_ctor<copy_ctor, aux::mpl::int_<1> >::value));
 
 #if (__cplusplus >= 201100L) || defined(BOOST_MSVC)
-    BOOST_CHECK((has_ctor<default_ctor, mpl::int_<1> >::value));
-    BOOST_CHECK((has_ctor<explicit_ctor, mpl::int_<1> >::value));
-    BOOST_CHECK((has_ctor<copy_ctor_and_int, mpl::int_<1> >::value));
-    BOOST_CHECK((has_ctor<ctor_auto_ptr, mpl::int_<1> >::value));
-    BOOST_CHECK((has_ctor<ctor_shared_ptr, mpl::int_<1> >::value));
+    BOOST_CHECK((has_ctor<default_ctor, aux::mpl::int_<1> >::value));
+    BOOST_CHECK((has_ctor<explicit_ctor, aux::mpl::int_<1> >::value));
+    BOOST_CHECK((has_ctor<copy_ctor_and_int, aux::mpl::int_<1> >::value));
+    BOOST_CHECK((has_ctor<ctor_auto_ptr, aux::mpl::int_<1> >::value));
+    BOOST_CHECK((has_ctor<ctor_shared_ptr, aux::mpl::int_<1> >::value));
 #else
-    BOOST_CHECK((!has_ctor<default_ctor, mpl::int_<1> >::value));
-    BOOST_CHECK((!has_ctor<explicit_ctor, mpl::int_<1> >::value));
-    BOOST_CHECK((!has_ctor<copy_ctor_and_int, mpl::int_<1> >::value));
-    BOOST_CHECK((!has_ctor<ctor_auto_ptr, mpl::int_<1> >::value));
-    BOOST_CHECK((!has_ctor<ctor_shared_ptr, mpl::int_<1> >::value));
+    BOOST_CHECK((!has_ctor<default_ctor, aux::mpl::int_<1> >::value));
+    BOOST_CHECK((!has_ctor<explicit_ctor, aux::mpl::int_<1> >::value));
+    BOOST_CHECK((!has_ctor<copy_ctor_and_int, aux::mpl::int_<1> >::value));
+    BOOST_CHECK((!has_ctor<ctor_auto_ptr, aux::mpl::int_<1> >::value));
+    BOOST_CHECK((!has_ctor<ctor_shared_ptr, aux::mpl::int_<1> >::value));
 #endif
 
 #if (__cplusplus >= 201100L) && !defined(BOOST_MSVC)
-    BOOST_CHECK((has_ctor<rvalue1, mpl::int_<1> >::value));
+    BOOST_CHECK((has_ctor<rvalue1, aux::mpl::int_<1> >::value));
 #endif
 }
 
 BOOST_AUTO_TEST_CASE(many_arguments) {
-    BOOST_CHECK((!has_ctor<copy_ctor_and_many, mpl::int_<1> >::value));
-    BOOST_CHECK((has_ctor<copy_ctor_and_many, mpl::int_<2> >::value));
-    BOOST_CHECK((!has_ctor<copy_ctor_and_many, mpl::int_<3> >::value));
+    BOOST_CHECK((!has_ctor<copy_ctor_and_many, aux::mpl::int_<1> >::value));
+    BOOST_CHECK((has_ctor<copy_ctor_and_many, aux::mpl::int_<2> >::value));
+    BOOST_CHECK((!has_ctor<copy_ctor_and_many, aux::mpl::int_<3> >::value));
 
-    BOOST_CHECK((!has_ctor<many, mpl::int_<1> >::value));
-    BOOST_CHECK((!has_ctor<many, mpl::int_<2> >::value));
-    BOOST_CHECK((has_ctor<many, mpl::int_<3> >::value));
+    BOOST_CHECK((!has_ctor<many, aux::mpl::int_<1> >::value));
+    BOOST_CHECK((!has_ctor<many, aux::mpl::int_<2> >::value));
+    BOOST_CHECK((has_ctor<many, aux::mpl::int_<3> >::value));
 
-    BOOST_CHECK((!has_ctor<many_2_3, mpl::int_<1> >::value));
-    BOOST_CHECK((has_ctor<many_2_3, mpl::int_<2> >::value));
-    BOOST_CHECK((has_ctor<many_2_3, mpl::int_<3> >::value));
+    BOOST_CHECK((!has_ctor<many_2_3, aux::mpl::int_<1> >::value));
+    BOOST_CHECK((has_ctor<many_2_3, aux::mpl::int_<2> >::value));
+    BOOST_CHECK((has_ctor<many_2_3, aux::mpl::int_<3> >::value));
 
-    BOOST_CHECK((!has_ctor<many_sp, mpl::int_<1> >::value));
-    BOOST_CHECK((has_ctor<many_sp, mpl::int_<2> >::value));
-    BOOST_CHECK((!has_ctor<many_sp, mpl::int_<3> >::value));
+    BOOST_CHECK((!has_ctor<many_sp, aux::mpl::int_<1> >::value));
+    BOOST_CHECK((has_ctor<many_sp, aux::mpl::int_<2> >::value));
+    BOOST_CHECK((!has_ctor<many_sp, aux::mpl::int_<3> >::value));
 
-    BOOST_CHECK((!has_ctor<many_ref, mpl::int_<1> >::value));
-    BOOST_CHECK((has_ctor<many_ref, mpl::int_<2> >::value));
-    BOOST_CHECK((!has_ctor<many_ref, mpl::int_<3> >::value));
+    BOOST_CHECK((!has_ctor<many_ref, aux::mpl::int_<1> >::value));
+    BOOST_CHECK((has_ctor<many_ref, aux::mpl::int_<2> >::value));
+    BOOST_CHECK((!has_ctor<many_ref, aux::mpl::int_<3> >::value));
 
-    BOOST_CHECK((!has_ctor<many_complex, mpl::int_<5> >::value));
-    BOOST_CHECK((has_ctor<many_complex, mpl::int_<6> >::value));
-    BOOST_CHECK((!has_ctor<many_complex, mpl::int_<7> >::value));
+    BOOST_CHECK((!has_ctor<many_complex, aux::mpl::int_<5> >::value));
+    BOOST_CHECK((has_ctor<many_complex, aux::mpl::int_<6> >::value));
+    BOOST_CHECK((!has_ctor<many_complex, aux::mpl::int_<7> >::value));
 
 #if (__cplusplus >= 201100L) && !defined(BOOST_MSVC)
-    BOOST_CHECK((has_ctor<rvalue2, mpl::int_<2> >::value));
+    BOOST_CHECK((has_ctor<rvalue2, aux::mpl::int_<2> >::value));
 #endif
 }
 
@@ -108,8 +108,8 @@ BOOST_AUTO_TEST_CASE(inheriting_ctors) {
     struct c0 { c0(int, double) { } };
     struct c1 : public c0 { using c0::c0; };
 
-    BOOST_CHECK((has_ctor<c0, mpl::int_<2> >::value));
-    BOOST_CHECK((has_ctor<c1, mpl::int_<2> >::value));
+    BOOST_CHECK((has_ctor<c0, aux::mpl::int_<2> >::value));
+    BOOST_CHECK((has_ctor<c1, aux::mpl::int_<2> >::value));
 }
 #endif
 

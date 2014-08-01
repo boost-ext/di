@@ -36,22 +36,22 @@ public:
 
     template<
         typename T
-      , typename TMultiplicationFactor = mpl::integral_c<long, 10>
+      , typename TMultiplicationFactor = aux::mpl::integral_c<long, 10>
     >
     struct apply
-        : mpl::second<
-              typename mpl::fold<
+        : aux::mpl::second<
+              typename aux::mpl::fold<
                   BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)
-                , mpl::pair<mpl::integral_c<long, 1>, mpl::integral_c<long, 1> >
-                , mpl::pair<
-                      mpl::times<
-                          mpl::first<mpl::_1>
+                , aux::mpl::pair<aux::mpl::integral_c<long, 1>, aux::mpl::integral_c<long, 1> >
+                , aux::mpl::pair<
+                      aux::mpl::times<
+                          aux::mpl::first<aux::mpl::_1>
                         , TMultiplicationFactor
                       >
-                    , mpl::times<
-                          mpl::first<mpl::_1>
-                        , mpl::second<mpl::_1>
-                        , apply_bind<mpl::_2, T>
+                    , aux::mpl::times<
+                          aux::mpl::first<aux::mpl::_1>
+                        , aux::mpl::second<aux::mpl::_1>
+                        , apply_bind<aux::mpl::_2, T>
                       >
                   >
               >::type

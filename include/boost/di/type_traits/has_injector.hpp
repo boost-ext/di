@@ -26,23 +26,23 @@ class BOOST_PP_CAT(has_, BOOST_DI_INJECTOR)
     struct base_impl { void BOOST_DI_INJECTOR(...) { } };
     struct base
         : base_impl
-        , mpl::if_<is_class<T>, T, mpl::void_>::type
+        , aux::mpl::if_<is_class<T>, T, aux::mpl::void_>::type
     { base() { } };
 
     template<typename U>
-    static mpl::aux::no_tag test(
+    static aux::mpl::aux::no_tag test(
         U*
-      , non_type<void (base_impl::*)(...), &U::BOOST_DI_INJECTOR>* = 0
+      , non_type<void (base_iaux::mpl::*)(...), &U::BOOST_DI_INJECTOR>* = 0
     );
 
-    static mpl::aux::yes_tag test(...);
+    static aux::mpl::aux::yes_tag test(...);
 
 public:
     typedef BOOST_PP_CAT(has_, BOOST_DI_INJECTOR) type;
 
     BOOST_STATIC_CONSTANT(
         bool
-      , value = sizeof(test((base*)0)) == sizeof(mpl::aux::yes_tag)
+      , value = sizeof(test((base*)0)) == sizeof(aux::mpl::aux::yes_tag)
     );
 };
 
