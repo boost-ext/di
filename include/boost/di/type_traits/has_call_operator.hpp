@@ -28,7 +28,7 @@ class has_call_operator
     template<typename U>
     static aux::mpl::aux::no_tag test(
         U*
-      , non_type<void (base_iaux::mpl::*)(...), &U::operator()>* = 0
+      , non_type<void (base_impl::*)(...), &U::operator()>* = 0
     );
 
     static aux::mpl::aux::yes_tag test(...);

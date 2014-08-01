@@ -10,6 +10,7 @@
 #include <boost/mpl/if.hpp>
 //#include <boost/mpl/x11/accumulate.hpp>
 #include <boost/mpl/x11/advance.hpp>
+#include <boost/mpl/x11/range_c.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/x11/apply.hpp>
 #include <boost/mpl/assert.hpp>
@@ -34,8 +35,8 @@
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/x11/is_sequence.hpp>
 #include <boost/mpl/x11/iterator_range.hpp>
-//#include <boost/mpl/x11/joint_view.hpp>
-#include <boost/mpl/max_element.hpp>
+#include <boost/mpl/x11/joint_view.hpp>
+#include <boost/mpl/x11/min_max_element.hpp>
 #include <boost/mpl/max.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/or.hpp>
@@ -52,11 +53,20 @@
 
 namespace boost {
 namespace mpl {
+
+struct string_tag;
+template<typename> struct c_str;
+
 namespace x11 {
     typedef arg<0> _1;
     typedef arg<1> _2;
+    typedef arg<-1> _;
     using ::boost::mpl::true_;
     using ::boost::mpl::false_;
+    using ::boost::mpl::integral_c;
+    using ::boost::mpl::string_tag;
+    using ::boost::mpl::c_str;
+
     namespace aux {
         using ::boost::mpl::aux::yes_tag;
         using ::boost::mpl::aux::no_tag;

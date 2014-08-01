@@ -28,7 +28,7 @@ class has_call<T, void>
     template<typename U>
     static aux::mpl::aux::no_tag test(
         U*
-      , non_type<void (base_iaux::mpl::*)(), &U::call>* = 0
+      , non_type<void (base_impl::*)(), &U::call>* = 0
     );
 
     template<typename>

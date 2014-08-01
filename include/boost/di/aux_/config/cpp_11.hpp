@@ -22,7 +22,7 @@
     T...
 
 #define BOOST_DI_MPL_VECTOR_TYPES_PASS(T)           \
-    ::boost::aux::mpl::vector<T...>
+    ::boost::di::aux::mpl::vector<T...>
 
 #define BOOST_DI_ARGS(T, arg)                       \
     const T&... arg
@@ -55,7 +55,7 @@
     T##_MPL...
 
 #define BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)       \
-    ::boost::aux::mpl::vector<T##_MPL...>
+    ::boost::di::aux::mpl::vector<T##_MPL...>
 
 #endif
 

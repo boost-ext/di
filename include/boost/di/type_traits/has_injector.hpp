@@ -29,7 +29,7 @@ class BOOST_PP_CAT(has_, BOOST_DI_INJECTOR)
     template<typename U>
     static aux::mpl::aux::no_tag test(
         U*
-      , non_type<void (base_iaux::mpl::*)(...), &U::BOOST_DI_INJECTOR>* = 0
+      , non_type<void (base_impl::*)(...), &U::BOOST_DI_INJECTOR>* = 0
     );
 
     static aux::mpl::aux::yes_tag test(...);

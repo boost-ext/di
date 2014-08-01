@@ -19,7 +19,7 @@ BOOST_DI_FEATURE(CPP_11_FUNCTIONAL)(
 
     template<typename T>
     class is_reference_wrapper< ::std::reference_wrapper<T> >
-        : public aux::mpl::true_
+        : public ::boost::di::aux::mpl::true_
     { };
 
     template<typename T>

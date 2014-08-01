@@ -16,12 +16,6 @@
     #include <boost/type_traits/is_same.hpp>
 
     namespace boost {
-
-    namespace mpl {
-        struct string_tag;
-        template<typename> struct c_str;
-    } // namespace mpl
-
     namespace di {
     namespace core {
 

@@ -14,6 +14,7 @@
 #include <boost/function.hpp>
 #include <boost/noncopyable.hpp>
 
+#include <boost/mpl/string.hpp>
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/inject.hpp"
 #include "boost/di/named.hpp"
@@ -138,8 +139,8 @@ struct c4
 {
     BOOST_DI_INJECT(c4
         , aux::shared_ptr<c3> c3_
-        , named<int, aux::mpl::string<'1'>> i1
-        , named<int, aux::mpl::string<'2'>> i2
+        , named<int, mpl::string<'1'>> i1
+        , named<int, mpl::string<'2'>> i2
     )
         : c3_(c3_), i1(i1), i2(i2)
     { }
@@ -227,8 +228,8 @@ struct c9 : c2
 struct c10
 {
     BOOST_DI_INJECT_TRAITS(
-        named<int, aux::mpl::string<'1'>>
-      , named<int, aux::mpl::string<'2'>>
+        named<int, mpl::string<'1'>>
+      , named<int, mpl::string<'2'>>
     );
 
     c10(int i1, int i2)
@@ -242,7 +243,7 @@ struct c10
 struct c11
 {
     BOOST_DI_INJECT(c11
-        , named<aux::shared_ptr<int>, aux::mpl::string<'1'>> i
+        , named<aux::shared_ptr<int>, mpl::string<'1'>> i
     )
         : i(i)
     { }
@@ -253,8 +254,8 @@ struct c11
 struct c12
 {
     BOOST_DI_INJECT(c12
-        , named<aux::shared_ptr<if0>, aux::mpl::string<'1'>> if0_
-        , named<aux::shared_ptr<c2>, aux::mpl::string<'2'>> c2_
+        , named<aux::shared_ptr<if0>, mpl::string<'1'>> if0_
+        , named<aux::shared_ptr<c2>, mpl::string<'2'>> c2_
     )
         : if0_(if0_), c2_(c2_)
     { }
@@ -373,7 +374,7 @@ struct c21
 struct c22
 {
     BOOST_DI_INJECT(c22
-        , const named<aux::shared_ptr<int>, aux::mpl::string<'1'>>& i
+        , const named<aux::shared_ptr<int>, mpl::string<'1'>>& i
         , aux::shared_ptr<c11> c11_
     )
         : i(i), c11_(c11_)

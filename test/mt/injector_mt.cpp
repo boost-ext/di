@@ -21,6 +21,8 @@
 #include "common/fakes/fake_scope.hpp"
 #include "common/data.hpp"
 
+#include <boost/mpl/vector.hpp>
+
 namespace boost {
 namespace di {
 
@@ -34,8 +36,8 @@ using injector_1_t = injector<
       , bind<c2if0>::when<call_stack<c7>>
       , bind_int<1>
       , bind_int<2>::when<call_stack<c8>>
-      , bind_int<3>::named<aux::mpl::string<'1'>>::when<call_stack<c7, c6, c4>>
-      , bind_int<4>::named<aux::mpl::string<'2'>>::when<call_stack<c7, c6, c4>>
+      , bind_int<3>::named<mpl::string<'1'>>::when<call_stack<c7, c6, c4>>
+      , bind_int<4>::named<mpl::string<'2'>>::when<call_stack<c7, c6, c4>>
       , bind_int<5>::when<call_stack<c2>>
       , bind_bool<true>
     >
@@ -46,7 +48,7 @@ using injector_2_t = injector<
         c3
     >
   , scope<scopes::unique<>>::bind<
-        bind_int<0>::named<aux::mpl::string<'1'>>
+        bind_int<0>::named<mpl::string<'1'>>
       , bind_int<1>
       , bind_bool<true>
     >
@@ -58,7 +60,7 @@ using injector_3_t = injector<
     >
   , unique<
         bind_int<2>::when<call_stack<c8>>
-      , bind_int<3>::named<aux::mpl::string<'2'>>
+      , bind_int<3>::named<mpl::string<'2'>>
     >
 >;
 
@@ -89,8 +91,8 @@ auto injector_1 = make_injector(
       , bind<c2if0>::when<call_stack<c7>>
       , bind_int<1>
       , bind_int<2>::when<call_stack<c8>>
-      , bind_int<3>::named<aux::mpl::string<'1'>>::when<call_stack<c7, c6, c4>>
-      , bind_int<4>::named<aux::mpl::string<'2'>>::when<call_stack<c7, c6, c4>>
+      , bind_int<3>::named<mpl::string<'1'>>::when<call_stack<c7, c6, c4>>
+      , bind_int<4>::named<mpl::string<'2'>>::when<call_stack<c7, c6, c4>>
       , bind_int<5>::when<call_stack<c2>>
       , bind_bool<true>
     >()
@@ -102,7 +104,7 @@ auto injector_2 = make_injector(
     >()
   , unique<
         bind_int<2>::when<call_stack<c8>>
-      , bind_int<3>::named<aux::mpl::string<'2'>>
+      , bind_int<3>::named<mpl::string<'2'>>
     >()
 );
 
@@ -111,7 +113,7 @@ auto injector_3 = make_injector(
         c3
     >()
   , unique<
-        bind_int<0>::named<aux::mpl::string<'1'>>
+        bind_int<0>::named<mpl::string<'1'>>
       , bind_int<1>
       , bind_bool<true>
     >()
@@ -130,13 +132,13 @@ auto injector_provider = make_injector(
 auto injector_externals = make_injector(
     bind<double>::to(7.0)
   , bind<if0>::to(aux::shared_ptr<c3if0>(new c3if0(67, 78.0)))
-  , bind<int>::named<aux::mpl::string<'1'>>::when<call_stack<c7, c6, c4>>::to(3)
+  , bind<int>::named<mpl::string<'1'>>::when<call_stack<c7, c6, c4>>::to(3)
   , bind<int>::when<call_stack<c8>>::to(4)
 );
 
 auto injector_externals_1 = make_injector(
     bind<if0>::to(aux::shared_ptr<c3if0>(new c3if0(67, 78.0)))
-  , bind<int>::named<aux::mpl::string<'1'>>::when<call_stack<c7, c6, c4>>::to(3)
+  , bind<int>::named<mpl::string<'1'>>::when<call_stack<c7, c6, c4>>::to(3)
   , bind<int>::when<call_stack<c8>>::to(4)
 );
 
@@ -188,7 +190,7 @@ void check(const aux::shared_ptr<c8>& c8_) {
     BOOST_CHECK_EQUAL(true, c8_->c7_->c6_->c5_.c2_->b);
 }
 
-using one_injector_types = aux::mpl::vector<
+using one_injector_types = mpl::vector<
     injector<injector_1_t>
   , injector<decltype(injector_1)>
 >;
@@ -198,7 +200,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(one_injector, TInjector, one_injector_types) {
     check(injector.template create<c8>());
 }
 
-using multiple_injectors_types = aux::mpl::vector<
+using multiple_injectors_types = mpl::vector<
     injector<injector_2_t, injector_3_t>
   , injector<injector_3_t, injector_2_t>
   , injector<decltype(injector_2), decltype(injector_3)>
@@ -210,7 +212,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(multiple_injectors, TInjector, multiple_injectors_
     check(injector.template create<aux::shared_ptr<c8>>());
 }
 
-using mix_injectors_types = aux::mpl::vector<
+using mix_injectors_types = mpl::vector<
     injector<injector_2_t, decltype(injector_2)>
   , injector<decltype(injector_2), injector_2_t>
 >;
@@ -220,7 +222,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(mix_injectors, TInjector, mix_injectors_types) {
     check(injector.template create<aux::shared_ptr<c8>>());
 }
 
-using basic_provider_types = aux::mpl::vector<
+using basic_provider_types = mpl::vector<
     injector<injector_provider_t>
   , injector<decltype(injector_provider)>
 >;
@@ -231,7 +233,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(basic_provider, TInjector, basic_provider_types) {
     BOOST_CHECK(obj.p->get().get() != obj.p->get().get());
 }
 
-using basic_visitor_types = aux::mpl::vector<
+using basic_visitor_types = mpl::vector<
     injector<injector_provider_t>
   , injector<decltype(injector_provider)>
 >;
@@ -251,7 +253,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(basic_visitor, TInjector, basic_visitor_types) {
     injector.template visit<transaction_usage>(visitor);
 }
 
-using basic_call_types = aux::mpl::vector<
+using basic_call_types = mpl::vector<
     injector<injector_custom_scope_t>
   , injector<decltype(injector_custom_scope)>
 >;
@@ -361,7 +363,7 @@ BOOST_AUTO_TEST_CASE(scope_deduction_named_shared_ptr) {
     BOOST_CHECK(c22_->i == c22_->c11_->i);
 }
 
-using deduce_injectors_types = aux::mpl::vector<
+using deduce_injectors_types = mpl::vector<
     injector<injector_c0if0_t>
   , injector<decltype(injector_c0if0)>
 >;
@@ -383,7 +385,7 @@ BOOST_AUTO_TEST_CASE(smart_ptr_weak_ptr) {
     BOOST_CHECK(nullptr != c25_.w1_.lock());
 }
 
-using creation_special_cases_types = aux::mpl::vector<
+using creation_special_cases_types = mpl::vector<
     noncopyable_const_ref
 #if !defined(BOOST_MSVC)
   , rvalue
@@ -408,7 +410,7 @@ BOOST_AUTO_TEST_CASE(smart_ptr_auto_ptr) {
     BOOST_CHECK_EQUAL(i, *auto_ptr_int_->i_);
 }
 
-using bind_multiple_interfaces_to_the_same_impl_types = aux::mpl::vector<
+using bind_multiple_interfaces_to_the_same_impl_types = mpl::vector<
     cif0if1
   , bind<any_of<if0, if1>, cif0if1>
   , deduce<cif0if1>

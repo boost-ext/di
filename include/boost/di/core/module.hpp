@@ -41,14 +41,14 @@
             class = ::boost::di::core::any_type
         > class TCreator = creator
       , template<
-            typename = ::boost::aux::mpl::vector<>
-          , typename = ::boost::di::core::never< ::boost::aux::mpl::_1 >
+            typename = ::boost::di::aux::mpl::vector<>
+          , typename = ::boost::di::core::never< ::boost::di::aux::mpl::_1 >
           , typename = void
         > class TPool = pool
       , typename TDefaultAllocator = allocator
     >
     class module
-        : public TPool<TDependecies>
+        : public TPool<typename normalize_vector<TDependecies>::type>
     {
         template<
             typename
@@ -79,7 +79,7 @@
         };
 
     public:
-        typedef TDependecies deps;
+        typedef typename normalize_vector<TDependecies>::type deps;
 
         explicit module(const TCreator<TDependecies>& creator = TCreator<TDependecies>())
             : creator_(creator)
@@ -182,7 +182,7 @@
     explicit module(BOOST_DI_ARGS(TArgs, args))
         : TPool<deps>(
               TPool<
-                  BOOST_DI_MPL_VECTOR_TYPES_PASS(TArgs)
+                  typename normalize_vector<BOOST_DI_MPL_VECTOR_TYPES_PASS(TArgs)>::type
                 , aux::mpl::not_<
                       aux::mpl::or_<
                           aux::mpl::contains<deps, aux::mpl::_>

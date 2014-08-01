@@ -28,7 +28,7 @@ class has_configure
     template<typename U>
     static aux::mpl::aux::no_tag test(
         U*
-      , non_type<void (base_iaux::mpl::*)(), &U::configure>* = 0
+      , non_type<void (base_impl::*)(), &U::configure>* = 0
     );
 
     template<typename>
