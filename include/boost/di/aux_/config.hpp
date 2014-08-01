@@ -38,6 +38,7 @@
     !defined(BOOST_INTEL) &&                                    \
     (__cplusplus >= 201100L)
     #define BOOST_DI_CFG_STD cpp_11
+    #include "boost/di/aux_/config/cpp_11/mpl.hpp" //wknd
 #else
     #define BOOST_DI_CFG_STD cpp_03
 #endif

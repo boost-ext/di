@@ -171,7 +171,7 @@ struct is_integral<
       , TVisitor
       , TPolicies
    >
-> : aux::mpl::true_ { };
+> : ::boost::di::aux::mpl::true_ { };
 
 } // namespace boost
 
@@ -199,7 +199,7 @@ BOOST_DI_FEATURE(CPP_11_TYPE_TRAITS)(
           , TVisitor
           , TPolicies
         >
-    > : ::boost::aux::mpl::true_ { };
+    > : ::boost::di::aux::mpl::true_ { };
 
     } // namespace std
 )
