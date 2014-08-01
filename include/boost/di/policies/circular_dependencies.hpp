@@ -40,7 +40,7 @@ class circular_dependencies
                 //, aux::mpl::plus<aux::mpl::_1, aux::mpl::_2>
               //>::type::value
             //) == aux::mpl::size<TCallStack>::value
-          false
+          true
           >
     { };
 

@@ -28,7 +28,7 @@ class has_value
     template<typename U>
     static aux::mpl::aux::no_tag test(
         U*
-      , non_type<int base_impl::mpl::*, &U::value>* = 0
+      , non_type<int base_impl::*, &U::value>* = 0
     );
 
     static aux::mpl::aux::yes_tag test(...);

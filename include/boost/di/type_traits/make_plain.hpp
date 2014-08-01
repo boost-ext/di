@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_TYPE_TRAITS_MAKE_PLAIN_HPP
 #define BOOST_DI_TYPE_TRAITS_MAKE_PLAIN_HPP
 
+#include "boost/di/aux_/config.hpp"
 #include "boost/di/type_traits/remove_accessors.hpp"
 
 #include <boost/utility/enable_if.hpp>

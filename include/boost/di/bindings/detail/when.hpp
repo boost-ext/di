@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_BINDINGS_DETAIL_WHEN_HPP
 #define BOOST_DI_BINDINGS_DETAIL_WHEN_HPP
 
-
 namespace boost {
 namespace di {
 namespace bindings {
