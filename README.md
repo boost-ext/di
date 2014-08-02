@@ -95,16 +95,16 @@ void test_hello_world_when_run_with_value_true_then_log_and_do_it() {
 
 ### Tested compilers (100% test code coverage)
 * Linux (x86/x86-64)
-   * Clang 3.2/3.3/3.4.2+ (clean with Clang Static Analyzer and Valgrind)
-   * GCC 4.7.3/4.8.2/4.9.0+ (clean with Valgrind)
-   * Intel C++ 14.0.3+ (clean with Valgrind)
+   * Clang 3.2/3.3/3.4/3.5/3.6+ (clean with Clang Static Analyzer and Valgrind)
+   * GCC 4.7/4.8/4.9+ (clean with Valgrind)
+   * Intel C++ 14.0+ (clean with Valgrind)
 
 * Windows (x86/x86-64)
-   * MinGW 4.7.3/4.8.2+
+   * MinGW 4.7/4.8+
    * Visual Studio 2013+ (clean with DrMemory)
 
 * Darwin/Mac OS (x86-64)
-   * Clang 503.0.40+ (Apple LLVM version 5.1)
+   * Clang 3.5+
 
 ### Continuous integration
 [![Build Status](https://travis-ci.org/krzysztof-jusiak/di.png?branch=master)](https://travis-ci.org/krzysztof-jusiak/di)

@@ -50,16 +50,16 @@ To achieve the same behaviour with previous standards sometimes will just requir
 `Boost.DI` was successfully test on following compilers.
 
 * Linux (x86/x86-64)
-   * Clang 3.2/3.3/3.4/3.4.2+ (clean with Clang Static Analyzer and Valgrind)
-   * GCC 4.7.3/4.8.2/4.9.0+ (clean with Valgrind)
-   * Intel C++ 14.0.3+ (clean with Valgrind)
+   * Clang 3.2/3.3/3.4/3.5/3.6+ (clean with Clang Static Analyzer and Valgrind)
+   * GCC 4.7/4.8/4.9+ (clean with Valgrind)
+   * Intel C++ 14.0+ (clean with Valgrind)
 
 * Windows (x86/x86-64)
-   * MinGW 4.7.3/4.8.2+
+   * MinGW 4.7/4.8+
    * Microsoft Visual Studio 2013+ (clean with DrMemory)
 
 * Darwin/Mac OS (x86-64)
-   * Clang 503.0.40+ (Apple LLVM version 5.1)
+   * Clang 3.5+
 
 [note Older compilers might be supported, but weren't tested and probably can't be tested properly due to requirements of C++11 features by tests.]
 
