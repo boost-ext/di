@@ -20,13 +20,9 @@
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include <boost/type_traits/is_rvalue_reference.hpp>
-#include <boost/type_traits/is_reference.hpp>
 #include <boost/type_traits/is_polymorphic.hpp>
-#include <boost/type_traits/is_pointer.hpp>
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/type_traits/is_copy_constructible.hpp>
-#include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_class.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/type.hpp>
@@ -962,7 +958,10 @@ class is_required_name
 public:
     template<typename T>
     struct apply
-        : aux::mpl::integral_c<long, is_same<typename get_name<typename T::type>::type, TName>::value>
+        : aux::mpl::integral_c<
+              long
+            , is_same<typename get_name<typename T::type>::type, TName>::value
+          >
     { };
 };
 
@@ -1549,330 +1548,6 @@ struct any_of
 } // namespace boost
 
 
-namespace boost {
-namespace di {
-namespace core {
-
-template<
-    typename T = none_t
-  , typename TCallStack = none_t
-  , typename TCreator = none_t
-  , typename TAllocator = none_t
-  , typename TDeps = none_t
-  , typename TRefs = none_t
-  , typename TVisitor = none_t
-  , typename TPolicies = none_t
->
-class any_type
-{
-    any_type& operator=(const any_type&);
-
-    template<typename TValueType, typename TRefType>
-    struct ref_type
-        : aux::mpl::if_<
-              is_same<TValueType, none_t>
-            , TValueType
-            , TRefType
-          >
-    { };
-
-public:
-    typedef void any;
-    any_type() { }
-
-    any_type(TCreator& creator
-           , const TAllocator& allocator
-           , TDeps& deps
-           , TRefs& refs
-           , const TVisitor& visitor
-           , const TPolicies& policies)
-        : creator_(creator)
-        , allocator_(allocator)
-        , deps_(deps)
-        , refs_(refs)
-        , visitor_(visitor)
-        , policies_(policies)
-    { }
-
-    any_type(const any_type& other)
-        : creator_(other.creator_)
-        , allocator_(other.allocator_)
-        , deps_(other.deps_)
-        , refs_(other.refs_)
-        , visitor_(other.visitor_)
-        , policies_(other.policies_)
-    { }
-
-    template<
-        typename U
-        BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-            , typename = typename disable_if<
-                type_traits::is_same_base_of<
-                    typename type_traits::make_plain<U>::type
-                  , typename type_traits::make_plain<T>::type
-                >
-            >::type
-        )
-    >
-    operator const U&() const {
-        return creator_.template create<const U&, none_t, TCallStack>(
-            allocator_, deps_, refs_, visitor_, policies_
-        );
-    }
-
-    template<
-        typename U
-        BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-            , typename = typename disable_if<
-                type_traits::is_same_base_of<
-                    typename type_traits::make_plain<U>::type
-                  , typename type_traits::make_plain<T>::type
-                >
-            >::type
-        )
-    >
-    operator U&() const {
-        return creator_.template create<U&, none_t, TCallStack>(
-            allocator_, deps_, refs_, visitor_, policies_
-        );
-    }
-
-    template<typename U>
-    operator aux::auto_ptr<U>&() {
-        return creator_.template create<aux::auto_ptr<U>, none_t, TCallStack>(
-            allocator_, deps_, refs_, visitor_, policies_
-        );
-    }
-
-    BOOST_DI_WKND(MSVC)(
-        template<typename U>
-        operator aux::unique_ptr<U>() {
-            return creator_.template create<aux::unique_ptr<U>, none_t, TCallStack>(
-                allocator_, deps_, refs_, visitor_, policies_
-            );
-        }
-    )
-
-    BOOST_DI_WKND(NO_MSVC)(
-        template<
-            typename U
-            BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-                , typename = typename disable_if<
-                    type_traits::is_same_base_of<
-                        typename type_traits::make_plain<U>::type
-                      , typename type_traits::make_plain<T>::type
-                    >
-                >::type
-            )
-        >
-        operator U() {
-            return creator_.template create<U, none_t, TCallStack>(
-                allocator_, deps_, refs_, visitor_, policies_
-            );
-        }
-    )
-
-private:
-    typename ref_type<TCreator, TCreator&>::type creator_;
-    typename ref_type<TAllocator, const TAllocator&>::type allocator_;
-    typename ref_type<TDeps, TDeps&>::type deps_;
-    typename ref_type<TRefs, TRefs&>::type refs_;
-    typename ref_type<TVisitor, const TVisitor&>::type visitor_;
-    typename ref_type<TPolicies, const TPolicies&>::type policies_;
-};
-
-} // namespace core
-} // namespace di
-
-template<
-    typename T
-  , typename TCallStack
-  , typename TCreator
-  , typename TAllocator
-  , typename TDeps
-  , typename TRefs
-  , typename TVisitor
-  , typename TPolicies
->
-struct is_integral<
-    di::core::any_type<
-        T
-      , TCallStack
-      , TCreator
-      , TAllocator
-      , TDeps
-      , TRefs
-      , TVisitor
-      , TPolicies
-   >
-> : ::boost::di::aux::mpl::true_ { };
-
-} // namespace boost
-
-BOOST_DI_FEATURE(CPP_11_TYPE_TRAITS)(
-    namespace std {
-
-    template<
-        typename T
-      , typename TCallStack
-      , typename TCreator
-      , typename TAllocator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TPolicies
-    >
-    struct is_integral<
-        boost::di::core::any_type<
-            T
-          , TCallStack
-          , TCreator
-          , TAllocator
-          , TDeps
-          , TRefs
-          , TVisitor
-          , TPolicies
-        >
-    > : ::boost::di::aux::mpl::true_ { };
-
-    } // namespace std
-)
-
-
-    namespace boost {
-    namespace di {
-    namespace type_traits {
-
-    template<typename, typename>
-    class has_ctor;
-
-    template<typename T, typename... TArgs>
-    class has_ctor<T, aux::mpl::vector<TArgs...> >
-    {
-    public:
-        template<typename U>
-        static aux::mpl::aux::yes_tag test(BOOST_DI_FEATURE_DECLTYPE(U(TArgs()...))*);
-
-        template<typename>
-        static aux::mpl::aux::no_tag test(...);
-
-    public:
-        BOOST_STATIC_CONSTANT(
-            bool
-          , value = sizeof(test<T>(0)) == sizeof(aux::mpl::aux::yes_tag)
-        );
-    };
-
-    } // namespace type_traits
-    } // namespace di
-    } // namespace boost
-
-
-namespace boost {
-namespace di {
-namespace type_traits {
-
-template<typename T>
-class has_boost_di_injector__
-{
-    struct base_impl { void boost_di_injector__(...) { } };
-    struct base
-        : base_impl
-        , aux::mpl::if_<is_class<T>, T, aux::mpl::void_>::type
-    { base() { } };
-
-    template<typename U>
-    static aux::mpl::aux::no_tag test(
-        U*
-      , non_type<void (base_impl::*)(...), &U::boost_di_injector__>* = 0
-    );
-
-    static aux::mpl::aux::yes_tag test(...);
-
-public:
-    typedef has_boost_di_injector__ type;
-
-    BOOST_STATIC_CONSTANT(
-        bool
-      , value = sizeof(test((base*)0)) == sizeof(aux::mpl::aux::yes_tag)
-    );
-};
-
-} // namespace type_traits
-} // namespace di
-} // namespace boost
-
-
-namespace boost {
-namespace di {
-
-template < class T, class R >
-struct normalize;
-
-template < class... TTypes, class X >
-struct normalize< aux::mpl::vector< TTypes... >, X >
-   : aux::mpl::vector< TTypes..., X >
-{ };
-
-template<typename TSeq>
-struct normalize_vector
-    : aux::mpl::fold<
-          TSeq
-        , aux::mpl::vector<>
-        , normalize<aux::mpl::arg<0>, aux::mpl::arg<1> >
-      >::type
-{ };
-
-template<typename T>
-struct ctor_traits
-          : aux::mpl::second<typename aux::mpl::fold<
-              aux::mpl::range_c<int, 0, BOOST_DI_CFG_CTOR_LIMIT_SIZE>
-            , aux::mpl::pair<
-                  aux::mpl::vector<core::any_type<T> >
-                , aux::mpl::vector<>
-              >
-            , aux::mpl::if_<
-                  type_traits::has_ctor<T, normalize_vector<aux::mpl::first<aux::mpl::arg<0> > > >
-                , aux::mpl::pair<
-                      aux::mpl::push_back<aux::mpl::first<aux::mpl::arg<0> >, core::any_type<T> >
-                    , aux::mpl::first<aux::mpl::arg<0> >
-                  >
-                , aux::mpl::pair<
-                      aux::mpl::push_back<aux::mpl::first<aux::mpl::arg<0> >, core::any_type<T> >
-                    , aux::mpl::second<aux::mpl::arg<0> >
-                  >
-              >
-          >::type >
-{ };
-
-template<typename T>
-struct ctor_traits<std::basic_string<T> > // basic_string ctors are ambiguous
-{
-    static void boost_di_injector__();
-};
-
-namespace type_traits {
-
-template<typename T, typename = void>
-struct ctor_traits
-    : di::ctor_traits<T>::type
-{ };
-
-template<typename T>
-struct ctor_traits<T, typename enable_if<has_boost_di_injector__<di::ctor_traits<T> > >::type>
-    : function_traits<BOOST_DI_FEATURE_DECLTYPE(&di::ctor_traits<T>::boost_di_injector__)>::type
-{ };
-
-template<typename T>
-struct ctor_traits<T, typename enable_if<has_boost_di_injector__<T> >::type>
-    : function_traits<BOOST_DI_FEATURE_DECLTYPE(&T::boost_di_injector__)>::type
-{ };
-
-} // namespace type_traits
-} // namespace di
-} // namespace boost
-
-
     namespace boost {
     namespace di {
     namespace core {
@@ -1887,14 +1562,15 @@ struct ctor_traits<T, typename enable_if<has_boost_di_injector__<T> >::type>
     { };
 
     template<
-        typename TSeq = aux::mpl::vector<>
-      , typename TIgnore = never<aux::mpl::arg<0> >
+        typename = aux::mpl::vector<>
+      , typename = never<aux::mpl::_1>
       , typename = void
     >
     class pool;
 
     template<typename TIgnore, typename... TArgs>
-    class pool<aux::mpl::vector<TArgs...>, TIgnore> : public TArgs...
+    class pool<aux::mpl::vector<TArgs...>, TIgnore>
+        : public TArgs...
     {
         template<typename T, typename = void>
         struct pool_type
@@ -1923,20 +1599,20 @@ struct ctor_traits<T, typename enable_if<has_boost_di_injector__<T> >::type>
                   aux::mpl::vector<TArgs...>
                 , aux::mpl::vector<>
                 , aux::mpl::copy<
-                      pool_type<aux::mpl::arg<1> >
-                    , aux::mpl::back_inserter<aux::mpl::arg<0>>
+                      pool_type<aux::mpl::_2>
+                    , aux::mpl::back_inserter<aux::mpl::_1>
                   >
               >::type
         { };
 
-        template<typename... TQ>
-        explicit pool(const TQ&... args)
-            : TQ(args)...
+        template<typename... T>
+        explicit pool(const T&... args)
+            : T(args)...
         { }
 
-        template<typename I, typename T>
-        pool(const pool<T, I>& p, const init&)
-            : pool(p, typename normalize_vector<typename pool<T, I>::types>::type(), init())
+        template<typename TPool>
+        pool(const TPool& p, const init&)
+            : pool(p, typename aux::mpl::normalize_vector<typename TPool::types>::type(), init())
         { }
 
         template<typename T>
@@ -1945,9 +1621,9 @@ struct ctor_traits<T, typename enable_if<has_boost_di_injector__<T> >::type>
         }
 
     private:
-        template<typename I, typename T, typename... TQ>
-        pool(const pool<T, I>& p, const aux::mpl::vector<TQ...>&, const init&)
-            : TQ(p.template get<TQ>())...
+        template<typename TPool, typename... T>
+        pool(const TPool& p, const aux::mpl::vector<T...>&, const init&)
+            : T(p.template get<T>())...
         { }
     };
 
@@ -2236,7 +1912,9 @@ class binder
       , typename TCallStack
     >
     struct apply
-        : TDependency::bind::template apply<data<T, TCallStack, TDependency> >::type
+        : TDependency::bind::template apply<
+              data<T, TCallStack, TDependency>
+          >::type
     { };
 
 public:
@@ -2275,6 +1953,318 @@ public:
 };
 
 } // namespace core
+} // namespace di
+} // namespace boost
+
+
+namespace boost {
+namespace di {
+namespace core {
+
+template<
+    typename T = none_t
+  , typename TCallStack = none_t
+  , typename TCreator = none_t
+  , typename TAllocator = none_t
+  , typename TDeps = none_t
+  , typename TRefs = none_t
+  , typename TVisitor = none_t
+  , typename TPolicies = none_t
+>
+class any_type
+{
+    any_type& operator=(const any_type&);
+
+    template<typename TValueType, typename TRefType>
+    struct ref_type
+        : aux::mpl::if_<
+              is_same<TValueType, none_t>
+            , TValueType
+            , TRefType
+          >
+    { };
+
+public:
+    typedef void any;
+    any_type() { }
+
+    any_type(TCreator& creator
+           , const TAllocator& allocator
+           , TDeps& deps
+           , TRefs& refs
+           , const TVisitor& visitor
+           , const TPolicies& policies)
+        : creator_(creator)
+        , allocator_(allocator)
+        , deps_(deps)
+        , refs_(refs)
+        , visitor_(visitor)
+        , policies_(policies)
+    { }
+
+    any_type(const any_type& other)
+        : creator_(other.creator_)
+        , allocator_(other.allocator_)
+        , deps_(other.deps_)
+        , refs_(other.refs_)
+        , visitor_(other.visitor_)
+        , policies_(other.policies_)
+    { }
+
+    template<
+        typename U
+        BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+            , typename = typename disable_if<
+                type_traits::is_same_base_of<
+                    typename type_traits::make_plain<U>::type
+                  , typename type_traits::make_plain<T>::type
+                >
+            >::type
+        )
+    >
+    operator const U&() const {
+        return creator_.template create<const U&, none_t, TCallStack>(
+            allocator_, deps_, refs_, visitor_, policies_
+        );
+    }
+
+    template<
+        typename U
+        BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+            , typename = typename disable_if<
+                type_traits::is_same_base_of<
+                    typename type_traits::make_plain<U>::type
+                  , typename type_traits::make_plain<T>::type
+                >
+            >::type
+        )
+    >
+    operator U&() const {
+        return creator_.template create<U&, none_t, TCallStack>(
+            allocator_, deps_, refs_, visitor_, policies_
+        );
+    }
+
+    template<typename U>
+    operator aux::auto_ptr<U>&() {
+        return creator_.template create<aux::auto_ptr<U>, none_t, TCallStack>(
+            allocator_, deps_, refs_, visitor_, policies_
+        );
+    }
+
+    BOOST_DI_WKND(MSVC)(
+        template<typename U>
+        operator aux::unique_ptr<U>() {
+            return creator_.template create<aux::unique_ptr<U>, none_t, TCallStack>(
+                allocator_, deps_, refs_, visitor_, policies_
+            );
+        }
+    )
+
+    BOOST_DI_WKND(NO_MSVC)(
+        template<
+            typename U
+            BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
+                , typename = typename disable_if<
+                    type_traits::is_same_base_of<
+                        typename type_traits::make_plain<U>::type
+                      , typename type_traits::make_plain<T>::type
+                    >
+                >::type
+            )
+        >
+        operator U() {
+            return creator_.template create<U, none_t, TCallStack>(
+                allocator_, deps_, refs_, visitor_, policies_
+            );
+        }
+    )
+
+private:
+    typename ref_type<TCreator, TCreator&>::type creator_;
+    typename ref_type<TAllocator, const TAllocator&>::type allocator_;
+    typename ref_type<TDeps, TDeps&>::type deps_;
+    typename ref_type<TRefs, TRefs&>::type refs_;
+    typename ref_type<TVisitor, const TVisitor&>::type visitor_;
+    typename ref_type<TPolicies, const TPolicies&>::type policies_;
+};
+
+} // namespace core
+} // namespace di
+
+template<
+    typename T
+  , typename TCallStack
+  , typename TCreator
+  , typename TAllocator
+  , typename TDeps
+  , typename TRefs
+  , typename TVisitor
+  , typename TPolicies
+>
+struct is_integral<
+    di::core::any_type<
+        T
+      , TCallStack
+      , TCreator
+      , TAllocator
+      , TDeps
+      , TRefs
+      , TVisitor
+      , TPolicies
+   >
+> : ::boost::di::aux::mpl::true_ { };
+
+} // namespace boost
+
+BOOST_DI_FEATURE(CPP_11_TYPE_TRAITS)(
+    namespace std {
+
+    template<
+        typename T
+      , typename TCallStack
+      , typename TCreator
+      , typename TAllocator
+      , typename TDeps
+      , typename TRefs
+      , typename TVisitor
+      , typename TPolicies
+    >
+    struct is_integral<
+        boost::di::core::any_type<
+            T
+          , TCallStack
+          , TCreator
+          , TAllocator
+          , TDeps
+          , TRefs
+          , TVisitor
+          , TPolicies
+        >
+    > : ::boost::di::aux::mpl::true_ { };
+
+    } // namespace std
+)
+
+
+    namespace boost {
+    namespace di {
+    namespace type_traits {
+
+    template<typename, typename>
+    class has_ctor;
+
+    template<typename T, typename... TArgs>
+    class has_ctor<T, aux::mpl::vector<TArgs...> >
+    {
+    public:
+        template<typename U>
+        static aux::mpl::aux::yes_tag test(BOOST_DI_FEATURE_DECLTYPE(U(TArgs()...))*);
+
+        template<typename>
+        static aux::mpl::aux::no_tag test(...);
+
+    public:
+        BOOST_STATIC_CONSTANT(
+            bool
+          , value = sizeof(test<T>(0)) == sizeof(aux::mpl::aux::yes_tag)
+        );
+    };
+
+    } // namespace type_traits
+    } // namespace di
+    } // namespace boost
+
+
+namespace boost {
+namespace di {
+namespace type_traits {
+
+template<typename T>
+class has_boost_di_injector__
+{
+    struct base_impl { void boost_di_injector__(...) { } };
+    struct base
+        : base_impl
+        , aux::mpl::if_<is_class<T>, T, aux::mpl::void_>::type
+    { base() { } };
+
+    template<typename U>
+    static aux::mpl::aux::no_tag test(
+        U*
+      , non_type<void (base_impl::*)(...), &U::boost_di_injector__>* = 0
+    );
+
+    static aux::mpl::aux::yes_tag test(...);
+
+public:
+    typedef has_boost_di_injector__ type;
+
+    BOOST_STATIC_CONSTANT(
+        bool
+      , value = sizeof(test((base*)0)) == sizeof(aux::mpl::aux::yes_tag)
+    );
+};
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+
+
+namespace boost {
+namespace di {
+
+template<typename T>
+struct ctor_traits
+    : aux::mpl::second<
+          typename aux::mpl::fold<
+              aux::mpl::range_c<int, 0, BOOST_DI_CFG_CTOR_LIMIT_SIZE>
+            , aux::mpl::pair<
+                  aux::mpl::vector<core::any_type<T> >
+                , aux::mpl::vector<>
+              >
+            , aux::mpl::if_<
+                  type_traits::has_ctor<
+                      T
+                    , aux::mpl::normalize_vector<aux::mpl::first<aux::mpl::_1> >
+                  >
+                , aux::mpl::pair<
+                      aux::mpl::push_back<aux::mpl::first<aux::mpl::_1>, core::any_type<T> >
+                    , aux::mpl::first<aux::mpl::_1>
+                  >
+                , aux::mpl::pair<
+                      aux::mpl::push_back<aux::mpl::first<aux::mpl::_1>, core::any_type<T> >
+                    , aux::mpl::second<aux::mpl::_1>
+                  >
+              >
+          >::type
+      >
+{ };
+
+template<typename T>
+struct ctor_traits<std::basic_string<T> > // basic_string ctors are ambiguous
+{
+    static void boost_di_injector__();
+};
+
+namespace type_traits {
+
+template<typename T, typename = void>
+struct ctor_traits
+    : di::ctor_traits<T>::type
+{ };
+
+template<typename T>
+struct ctor_traits<T, typename enable_if<has_boost_di_injector__<di::ctor_traits<T> > >::type>
+    : function_traits<BOOST_DI_FEATURE_DECLTYPE(&di::ctor_traits<T>::boost_di_injector__)>::type
+{ };
+
+template<typename T>
+struct ctor_traits<T, typename enable_if<has_boost_di_injector__<T> >::type>
+    : function_traits<BOOST_DI_FEATURE_DECLTYPE(&T::boost_di_injector__)>::type
+{ };
+
+} // namespace type_traits
 } // namespace di
 } // namespace boost
 
@@ -2485,7 +2475,7 @@ public:
                   , TRefs& refs
                   , const TVisitor& visitor
                   , const TPolicies& policies) {
-            typedef typename normalize_vector<
+            typedef typename aux::mpl::normalize_vector<
                 type_traits::ctor_traits<typename TDependency::given>
             >::type ctor_type;
 
@@ -2750,7 +2740,7 @@ public :
       , typename TDefaultAllocator = allocator
     >
     class module
-        : public TPool<typename normalize_vector<TDependecies>::type>
+        : public TPool<typename aux::mpl::normalize_vector<TDependecies>::type>
     {
         template<
             typename
@@ -2781,7 +2771,7 @@ public :
         };
 
     public:
-        typedef typename normalize_vector<TDependecies>::type deps;
+        typedef typename aux::mpl::normalize_vector<TDependecies>::type deps;
 
         explicit module(const TCreator<TDependecies>& creator = TCreator<TDependecies>())
             : creator_(creator)
@@ -2795,7 +2785,7 @@ public :
     explicit module(const TArgs&... args)
         : TPool<deps>(
               TPool<
-                  typename normalize_vector< ::boost::di::aux::mpl::vector<TArgs...> >::type
+                  typename aux::mpl::normalize_vector< ::boost::di::aux::mpl::vector<TArgs...> >::type
                 , aux::mpl::not_<
                       aux::mpl::or_<
                           aux::mpl::contains<deps, aux::mpl::_>
@@ -3111,322 +3101,6 @@ public:
     virtual T get() const = 0;
 };
 
-} // namespace di
-} // namespace boost
-
-
-namespace boost {
-namespace di {
-namespace policies {
-
-BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
-BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
-
-struct allow_smart_ptrs
-{
-    template<typename T>
-    struct allow
-        : has_element_type<typename type_traits::remove_accessors<T>::type>
-    { };
-};
-
-struct allow_refs
-{
-    template<typename T>
-    struct allow
-        : aux::mpl::and_<
-              aux::mpl::not_<is_const<typename remove_reference<T>::type> >
-            , is_reference<T>
-            , aux::mpl::not_<
-                  has_element_type<typename type_traits::remove_accessors<T>::type>
-              >
-          >
-    { };
-};
-
-struct allow_const_refs
-{
-    template<typename T>
-    struct allow
-        : aux::mpl::and_<
-              is_const<typename remove_reference<T>::type>
-            , is_reference<T>
-            , aux::mpl::not_<
-                  has_element_type<typename type_traits::remove_accessors<T>::type>
-              >
-          >
-    { };
-};
-
-struct allow_rvalue_refs
-{
-    template<typename T>
-    struct allow
-        : is_rvalue_reference<T>
-    { };
-};
-
-struct allow_ptrs
-{
-    template<typename T>
-    struct allow
-        : is_pointer<T>
-    { };
-};
-
-struct allow_copies
-{
-    template<typename T>
-    struct allow
-        : aux::mpl::and_<
-               aux::mpl::not_<is_reference<T> >
-             , aux::mpl::not_<is_pointer<T> >
-             , aux::mpl::not_<is_rvalue_reference<T> >
-             , aux::mpl::not_<has_element_type<typename type_traits::remove_accessors<T>::type> >
-          >
-    { };
-};
-
-BOOST_DI_WKND(NO_MSVC)(
-    template<typename... TArgs_MPL>
-    class parameters_permission
-    {
-        typedef ::boost::di::aux::mpl::vector<TArgs_MPL...> allow_types;
-
-        template<typename T>
-        struct value_type
-        {
-            typedef typename T::value_type type;
-        };
-
-        template<typename TAllow, typename T>
-        struct is_parameter_permitted_impl
-            : TAllow::template allow<T>
-        { };
-
-        template<typename, typename, typename = void>
-        struct is_parameter_permitted_nested_impl
-            : aux::mpl::true_
-        { };
-
-        template<typename TAllow, typename T>
-        struct is_parameter_permitted_nested_impl<
-            TAllow
-          , T
-          , typename enable_if<has_value_type<T> >::type
-        >
-            : TAllow::template allow<typename value_type<T>::type>
-        { };
-
-        template<typename T>
-        struct is_parameter_permitted_nested
-            : aux::mpl::bool_<
-                  aux::mpl::count_if<
-                      allow_types
-                    , is_parameter_permitted_nested_impl<
-                          aux::mpl::_
-                        , typename type_traits::remove_accessors<T>::type
-                      >
-                  >::value != 0
-              >
-        { };
-
-        template<typename T>
-        struct is_parameter_permitted
-            : aux::mpl::bool_<
-                  aux::mpl::count_if< allow_types
-                    , aux::mpl::and_<
-                          is_parameter_permitted_impl<aux::mpl::_, T>
-                        , is_parameter_permitted_nested<T>
-                      >
-                  >::value != 0
-              >
-        { };
-
-    public:
-        template<typename T>
-        void assert_policy() const {
-            BOOST_DI_ASSERT_MSG(
-                is_parameter_permitted<typename T::type>::value
-              , PARAMETER_NOT_PERMITTED
-              , typename T::type
-            );
-        }
-    };
-)
-
-} // namespace policies
-} // namespace di
-} // namespace boost
-
-
-namespace boost {
-namespace di {
-namespace policies {
-
-class circular_dependencies
-{
-    template<typename TCallStack>
-    struct is_unique_call_stack
-        : aux::mpl::bool_<
-              //static_cast<std::size_t>(aux::mpl::accumulate<
-                  //typename aux::mpl::transform<
-                      //TCallStack
-                    //, aux::mpl::count<TCallStack, aux::mpl::_>
-                  //>::type
-                //, aux::mpl::int_<0>
-                //, aux::mpl::plus<aux::mpl::_1, aux::mpl::_2>
-              //>::type::value
-            //) == aux::mpl::size<TCallStack>::value
-          true
-          >
-    { };
-
-public:
-    template<typename T>
-    void assert_policy() const {
-       BOOST_DI_ASSERT_MSG(
-            is_unique_call_stack<typename T::call_stack>::value
-          , CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED
-          , typename T::call_stack
-        );
-    }
-};
-
-} // namespace policies
-} // namespace di
-} // namespace boost
-
-
-namespace boost {
-namespace di {
-namespace policies {
-
-template<typename TValueType>
-struct allow_type
-{
-    template<typename T>
-    struct allow
-        : is_same<T, TValueType>
-    { };
-};
-
-template<typename TExpr>
-struct allow_type_expr
-{
-    template<typename T>
-    struct allow
-        : aux::mpl::apply<TExpr, T>::type
-    { };
-};
-
-template<typename... TArgs_MPL>
-class creation_permission
-{
-    typedef ::boost::di::aux::mpl::vector<TArgs_MPL...> permitted_types;
-
-    struct not_resolved
-    {
-        typedef not_resolved type;
-
-        template<typename>
-        struct rebind
-        {
-            typedef not_resolved other;
-        };
-    };
-
-    template<typename TAllow, typename T>
-    struct is_type_permitted_impl
-        : TAllow::template allow<T>
-    { };
-
-    template<typename T>
-    struct is_type_permitted
-        : aux::mpl::or_<
-              aux::mpl::not_<
-                  is_same<
-                      typename T::binder::template resolve<
-                          typename T::type
-                        , aux::mpl::vector<>
-                        , not_resolved
-                      >::type
-                    , not_resolved
-                  >
-              >
-            , aux::mpl::bool_<
-                  aux::mpl::count_if<
-                      permitted_types
-                    , is_type_permitted_impl<aux::mpl::_, typename T::type>
-                  >::value != 0
-              >
-          >
-    { };
-
-public:
-    template<typename T>
-    void assert_policy() const {
-       BOOST_DI_ASSERT_MSG(
-            is_type_permitted<T>::value
-          , TYPE_HAS_TO_BE_EXPLICITLY_BINDED
-          , typename T::type
-        );
-    }
-};
-
-} // namespace policies
-} // namespace di
-} // namespace boost
-
-
-namespace boost {
-namespace di {
-namespace policies {
-
-template<typename TScope>
-struct allow_scope
-{
-    template<typename T>
-    struct allow
-        : is_same<T, TScope>
-    { };
-};
-
-template<>
-struct allow_scope<scopes::deduce>; // disabled
-
-template<typename... TArgs_MPL>
-class scopes_permission
-{
-    typedef ::boost::di::aux::mpl::vector<TArgs_MPL...> permitted_types;
-
-    template<typename TAllow, typename TScope>
-    struct is_scope_permitted_impl
-        : TAllow::template allow<TScope>
-    { };
-
-    template<typename TScope>
-    struct is_scope_permitted
-        : aux::mpl::bool_<
-              aux::mpl::count_if<
-                  permitted_types
-                , is_scope_permitted_impl<aux::mpl::_, TScope>
-              >::value != 0
-          >
-    { };
-
-public:
-    template<typename T>
-    void assert_policy() const {
-        BOOST_DI_ASSERT_MSG(
-            is_scope_permitted<typename T::dependency::scope>::value
-          , SCOPE_NOT_PERMITTED
-          , typename T::dependency::scope
-        );
-    }
-};
-
-} // namespace policies
 } // namespace di
 } // namespace boost
 

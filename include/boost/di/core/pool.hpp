@@ -19,8 +19,6 @@
     #include <boost/utility/enable_if.hpp>
     #include <boost/config.hpp>
 
-    #include "boost/di/type_traits/ctor_traits.hpp"
-
     #if defined(BOOST_GCC) || defined(BOOST_CLANG)
         #pragma GCC diagnostic ignored "-Wreorder"
     #endif
@@ -39,8 +37,8 @@
     { };
 
     template<
-        typename TSeq = aux::mpl::vector<>
-      , typename TIgnore = never<aux::mpl::arg<0> >
+        typename = aux::mpl::vector<>
+      , typename = never<aux::mpl::_1>
       , typename = void
     >
     class pool;
@@ -87,20 +85,20 @@
                   aux::mpl::vector<TArgs...>
                 , aux::mpl::vector<>
                 , aux::mpl::copy<
-                      pool_type<aux::mpl::arg<1> >
-                    , aux::mpl::back_inserter<aux::mpl::arg<0>>
+                      pool_type<aux::mpl::_2>
+                    , aux::mpl::back_inserter<aux::mpl::_1>
                   >
               >::type
         { };
 
-        template<typename... TQ>
-        explicit pool(const TQ&... args)
-            : TQ(args)...
+        template<typename... T>
+        explicit pool(const T&... args)
+            : T(args)...
         { }
 
-        template<typename I, typename T>
-        pool(const pool<T, I>& p, const init&)
-            : pool(p, typename normalize_vector<typename pool<T, I>::types>::type(), init())
+        template<typename TPool>
+        pool(const TPool& p, const init&)
+            : pool(p, typename aux::mpl::normalize_vector<typename TPool::types>::type(), init())
         { }
 
         template<typename T>
@@ -109,9 +107,9 @@
         }
 
     private:
-        template<typename I, typename T, typename... TQ>
-        pool(const pool<T, I>& p, const aux::mpl::vector<TQ...>&, const init&)
-            : TQ(p.template get<TQ>())...
+        template<typename TPool, typename... T>
+        pool(const TPool& p, const aux::mpl::vector<T...>&, const init&)
+            : T(p.template get<T>())...
         { }
     };
 
