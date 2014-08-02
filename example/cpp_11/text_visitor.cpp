@@ -35,11 +35,11 @@ public:
     /*<<Definition of the visitor call operator requirement>>*/
     template<typename T>
     void operator()(const T&) const {
-        int size = mpl::size<typename T::call_stack>::value;
+        auto size = mpl::size<typename T::call_stack>::value;
         while(--size) {
-            std::cout << "\t";
+            std::clog << "\t";
         }
-        std::cout << utils::demangle(typeid(typename T::type).name()) << std::endl;
+        std::clog << utils::demangle(typeid(typename T::type).name()) << std::endl;
     }
 };
 
