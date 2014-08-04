@@ -55,7 +55,7 @@ To achieve the same behaviour with previous standards sometimes will just requir
    * Intel C++ 14.0+ (clean with Valgrind)
 
 * Windows (x86/x86-64)
-   * MinGW 4.7/4.8+
+   * MinGW 4.7/4.8/4.9+
    * Microsoft Visual Studio 2013+ (clean with DrMemory)
 
 * Darwin/Mac OS (x86-64)

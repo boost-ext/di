@@ -100,7 +100,7 @@ void test_hello_world_when_run_with_value_true_then_log_and_do_it() {
    * Intel C++ 14.0+ (clean with Valgrind)
 
 * Windows (x86/x86-64)
-   * MinGW 4.7/4.8+
+   * MinGW 4.7/4.8/4.9+
    * Visual Studio 2013+ (clean with DrMemory)
 
 * Darwin/Mac OS (x86-64)
