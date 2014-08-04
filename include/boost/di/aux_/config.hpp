@@ -45,6 +45,7 @@
             (BOOST_MPL_LIMIT_VECTOR_SIZE <= 50)
     #define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
 #endif
+*/
 
 #if defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS)
     #include <boost/preprocessor/cat.hpp>
@@ -54,6 +55,7 @@
     #include BOOST_PP_STRINGIZE(BOOST_DI_CFG_FILE)
     #undef BOOST_DI_CFG_FILE
 
+/*
     #if (BOOST_MPL_LIMIT_VECTOR_SIZE > 50)
         #include <boost/preprocessor/iteration/iterate.hpp>
 
@@ -62,12 +64,13 @@
             #define BOOST_PP_FILENAME_1 <boost/mpl/vector/aux_/numbered.hpp>
             #define BOOST_PP_ITERATION_LIMITS (51, BOOST_MPL_LIMIT_VECTOR_SIZE)
             #include BOOST_PP_ITERATE()
-        } // namespace mpl
-        } // namespace boost
+        } namespace mpl
+        } namespace boost
 
         #define BOOST_MPL_PREPROCESSING_MODE
         #undef BOOST_MPL_PREPROCESSING_MODE
     #endif
+*/
 
 #endif
 
@@ -75,7 +78,6 @@
     #pragma GCC system_header
     #pragma GCC diagnostic ignored "-Wvariadic-macros"
 #endif
-*/
 
 #define BOOST_DI_FEATURE(feature) \
     BOOST_DI_FEATURE_##feature

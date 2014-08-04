@@ -48,7 +48,7 @@
       , typename TDefaultAllocator = allocator
     >
     class module
-        : public TPool<typename normalize_vector<TDependecies>::type>
+        : public TPool<typename aux::mpl::normalize_vector<TDependecies>::type>
     {
         template<
             typename
@@ -79,7 +79,7 @@
         };
 
     public:
-        typedef typename normalize_vector<TDependecies>::type deps;
+        typedef typename aux::mpl::normalize_vector<TDependecies>::type deps;
 
         explicit module(const TCreator<TDependecies>& creator = TCreator<TDependecies>())
             : creator_(creator)
@@ -182,7 +182,7 @@
     explicit module(BOOST_DI_ARGS(TArgs, args))
         : TPool<deps>(
               TPool<
-                  typename normalize_vector<BOOST_DI_MPL_VECTOR_TYPES_PASS(TArgs)>::type
+                  typename aux::mpl::normalize_vector<BOOST_DI_MPL_VECTOR_TYPES_PASS(TArgs)>::type
                 , aux::mpl::not_<
                       aux::mpl::or_<
                           aux::mpl::contains<deps, aux::mpl::_>

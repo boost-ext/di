@@ -53,17 +53,33 @@ namespace x11 {
     typedef false_type false_;
     typedef true_type true_;
 
-
     template <typename T, T v>
     using integral_c = integral_constant<T, v>;
 
     using ::boost::mpl::string_tag;
     using ::boost::mpl::c_str;
+    template < class T, class R >
+    struct normalize;
+
+    template < class... TTypes, class X >
+    struct normalize< vector< TTypes... >, X >
+       : vector< TTypes..., X >
+    { };
+
+    template<typename TSeq>
+    struct normalize_vector
+        : fold<
+              TSeq
+            , vector<>
+            , normalize<_1, _2>
+          >::type
+    { };
 
     namespace aux {
         using ::boost::mpl::aux::yes_tag;
         using ::boost::mpl::aux::no_tag;
-    }
+    } // namespace aux
+
 }}}
 
 namespace boost {

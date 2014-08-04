@@ -212,7 +212,7 @@
                   , TRefs& refs
                   , const TVisitor& visitor
                   , const TPolicies& policies) {
-            typedef typename normalize_vector<
+            typedef typename aux::mpl::normalize_vector<
                 type_traits::ctor_traits<typename TDependency::given>
             >::type ctor_type;
 

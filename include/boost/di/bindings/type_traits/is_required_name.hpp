@@ -40,7 +40,10 @@ class is_required_name
 public:
     template<typename T>
     struct apply
-        : aux::mpl::integral_c<long, is_same<typename get_name<typename T::type>::type, TName>::value>
+        : aux::mpl::integral_c<
+              long
+            , is_same<typename get_name<typename T::type>::type, TName>::value
+          >
     { };
 };
 

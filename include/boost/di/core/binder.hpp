@@ -38,7 +38,9 @@ class binder
       , typename TCallStack
     >
     struct apply
-        : TDependency::bind::template apply<data<T, TCallStack, TDependency> >::type
+        : TDependency::bind::template apply<
+              data<T, TCallStack, TDependency>
+          >::type
     { };
 
 public:

@@ -12,7 +12,7 @@
 #include "data.hpp"
 #include "app.hpp"
 
-int main(int argc, char** argv) {
+int main(int argc, char**) {
     auto injector = boost::di::make_injector(module1(argc > 0), module2(argc));
     return injector.create<app>().run();
 }
