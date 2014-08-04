@@ -59,7 +59,7 @@ To achieve the same behaviour with previous standards sometimes will just requir
    * Microsoft Visual Studio 2013+ (clean with DrMemory)
 
 * Darwin/Mac OS (x86-64)
-   * Clang 3.5+
+   * Clang 503+
 
 [note Older compilers might be supported, but weren't tested and probably can't be tested properly due to requirements of C++11 features by tests.]
 
