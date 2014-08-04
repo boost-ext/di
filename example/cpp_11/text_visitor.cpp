@@ -37,9 +37,9 @@ public:
     void operator()(const T&) const {
         auto size = di::aux::mpl::size<typename T::call_stack>::value;
         while(--size) {
-            std::cout << "\t";
+            std::clog << "\t";
         }
-        std::cout << utils::demangle(typeid(typename T::type).name()) << std::endl;
+        std::clog << utils::demangle(typeid(typename T::type).name()) << std::endl;
     }
 };
 

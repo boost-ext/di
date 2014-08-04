@@ -105,7 +105,7 @@ public:
             )
         );
 
-        std::size_t context_size = context_.size();
+        auto context_size = context_.size();
 
         if (context_size > 1 && context_size > (call_stack_size - 2)) {
             this->on_call(
@@ -127,7 +127,7 @@ int main() {
     /*<<iterate through created objects with `uml_visitor`>>*/
     std::stringstream stream;
     injector.visit<c3>(uml_visitor<plant_uml>(stream));
-    std::cout << stream.str();
+    std::clog << stream.str();
 
     /*<<output [@images/uml_visitor.png [$images/uml_visitor.png [width 75%] [height 75%] ]]>>*/
     return 0;
