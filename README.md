@@ -104,7 +104,7 @@ void test_hello_world_when_run_with_value_true_then_log_and_do_it() {
    * Visual Studio 2013+ (clean with DrMemory)
 
 * Darwin/Mac OS (x86-64)
-   * Clang 3.5+
+   * Clang 503+
 
 ### Continuous integration
 [![Build Status](https://travis-ci.org/krzysztof-jusiak/di.png?branch=master)](https://travis-ci.org/krzysztof-jusiak/di)
