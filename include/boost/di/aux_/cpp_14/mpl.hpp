@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_AUX_CPP_14_MPL_HPP
 #define BOOST_DI_AUX_CPP_14_MPL_HPP
 
+#include <boost/hana/ext/std/integral_constant.hpp>
 #include <boost/hana.hpp>
 
 
