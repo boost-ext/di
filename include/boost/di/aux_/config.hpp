@@ -14,22 +14,29 @@
 #endif
 
 #if !defined(BOOST_DI_CFG_CTOR_LIMIT_SIZE)
-    #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
+    #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 5
 #endif
 
-#if !defined(BOOST_DI_CFG_STD) &&                               \
-    !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) &&              \
-    !defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS) &&  \
-    !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) &&               \
-    !defined(BOOST_NO_CXX11_DECLTYPE) &&                        \
-    !defined(BOOST_INTEL) &&                                    \
-    (__cplusplus >= 201100L)
-    #define BOOST_DI_CFG_STD cpp_11
-    #define BOOST_DI_CFG_STD_ 11
-    #include "boost/di/aux_/cpp_11/mpl.hpp" //wknd
-#else
-    #define BOOST_DI_CFG_STD_ 3
-    #define BOOST_DI_CFG_STD cpp_03
+#if !defined(BOOST_DI_CFG_STD)
+
+    #if (__cplusplus >= 201400L)
+        #define BOOST_DI_CFG_STD cpp_14
+        #define BOOST_DI_CFG_STD_ 14
+        #include "boost/di/aux_/cpp_14/mpl.hpp" //wknd
+    #elif (__cplusplus >= 201100L) &&                               \
+        !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) &&              \
+        !defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS) &&  \
+        !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) &&               \
+        !defined(BOOST_NO_CXX11_DECLTYPE) &&                        \
+        !defined(BOOST_INTEL)
+        #define BOOST_DI_CFG_STD cpp_11
+        #define BOOST_DI_CFG_STD_ 11
+        #include "boost/di/aux_/cpp_11/mpl.hpp" //wknd
+    #else
+        #define BOOST_DI_CFG_STD_ 3
+        #define BOOST_DI_CFG_STD cpp_03
+    #endif
+
 #endif
 
 /*

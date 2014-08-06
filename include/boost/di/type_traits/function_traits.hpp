@@ -22,24 +22,24 @@
     template<typename R>
     struct function_traits<R(*)()>
     {
-        typedef R result_type;
-        typedef aux::mpl::vector<> type;
+        using result_type = R;
+        static constexpr auto type = hana::type_list<>;
     };
 
     template<typename R, typename T>
     struct function_traits<R(T::*)()>
     {
-        typedef R result_type;
-        typedef T base_type;
-        typedef aux::mpl::vector<> type;
+        using result_type = R;
+        using base_type = T;
+        static constexpr auto type = hana::type_list<>;
     };
 
     template<typename R, typename T>
     struct function_traits<R(T::*)() const>
     {
-        typedef R result_type;
-        typedef T base_type;
-        typedef aux::mpl::vector<> type;
+        using result_type = R;
+        using base_type = T;
+        static constexpr auto type = hana::type_list<>;
     };
 
     #define BOOST_PP_FILENAME_1 "boost/di/type_traits/function_traits.hpp"
@@ -54,27 +54,27 @@
 
 #else
 
-    template<typename R, BOOST_DI_TYPES(Args)>                          \
-    struct function_traits<R(*)(BOOST_DI_TYPES_PASS(Args))>             \
-    {                                                                   \
-        typedef R result_type;                                          \
-        typedef aux::mpl::vector<BOOST_DI_TYPES_PASS(Args)> type;       \
+    template<typename R, BOOST_DI_TYPES(Args)>                              \
+    struct function_traits<R(*)(BOOST_DI_TYPES_PASS(Args))>                 \
+    {                                                                       \
+        using result_type = R;                                              \
+        static constexpr auto type = hana::type_list<BOOST_DI_TYPES_PASS(Args)>;   \
     };
 
-    template<typename R, typename T, BOOST_DI_TYPES(Args)>              \
-    struct function_traits<R(T::*)(BOOST_DI_TYPES_PASS(Args))>          \
-    {                                                                   \
-        typedef R result_type;                                          \
-        typedef T base_type;                                            \
-        typedef aux::mpl::vector<BOOST_DI_TYPES_PASS(Args)> type;       \
+    template<typename R, typename T, BOOST_DI_TYPES(Args)>                  \
+    struct function_traits<R(T::*)(BOOST_DI_TYPES_PASS(Args))>              \
+    {                                                                       \
+        using result_type = R;                                              \
+        using base_type = T;                                                \
+        static constexpr auto type = hana::type_list<BOOST_DI_TYPES_PASS(Args)>;   \
     };
 
-    template<typename R, typename T, BOOST_DI_TYPES(Args)>              \
-    struct function_traits<R(T::*)(BOOST_DI_TYPES_PASS(Args)) const>    \
-    {                                                                   \
-        typedef R result_type;                                          \
-        typedef T base_type;                                            \
-        typedef aux::mpl::vector<BOOST_DI_TYPES_PASS(Args)> type;       \
+    template<typename R, typename T, BOOST_DI_TYPES(Args)>                  \
+    struct function_traits<R(T::*)(BOOST_DI_TYPES_PASS(Args)) const>        \
+    {                                                                       \
+        using result_type = R;                                              \
+        using base_type = T;                                                \
+        static constexpr auto type = hana::type_list<BOOST_DI_TYPES_PASS(Args)>;   \
     };
 
 #endif

@@ -10,43 +10,43 @@
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/inject.hpp"
 #include "boost/di/core/any_type.hpp"
-#include "boost/di/type_traits/has_ctor.hpp"
 #include "boost/di/type_traits/has_injector.hpp"
 #include "boost/di/type_traits/function_traits.hpp"
 
 #include <string>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <type_traits>
 
 namespace boost {
 namespace di {
 
 template<typename T>
-struct ctor_traits
-    : aux::mpl::second<
-          typename aux::mpl::fold<
-              aux::mpl::range_c<int, 0, BOOST_DI_CFG_CTOR_LIMIT_SIZE>
-            , aux::mpl::pair<
-                  aux::mpl::vector<core::any_type<T> >
-                , aux::mpl::vector<>
-              >
-            , aux::mpl::if_<
-                  type_traits::has_ctor<
-                      T
-                    , aux::mpl::normalize_vector<aux::mpl::first<aux::mpl::_1> >
-                  >
-                , aux::mpl::pair<
-                      aux::mpl::push_back<aux::mpl::first<aux::mpl::_1>, core::any_type<T> >
-                    , aux::mpl::first<aux::mpl::_1>
-                  >
-                , aux::mpl::pair<
-                      aux::mpl::push_back<aux::mpl::first<aux::mpl::_1>, core::any_type<T> >
-                    , aux::mpl::second<aux::mpl::_1>
-                  >
-              >
-          >::type
-      >
-{ };
+struct ctor_traits {
+    using type = decltype(
+        hana::second(
+            hana::foldl(
+                hana::range_c<int, 1, BOOST_DI_CFG_CTOR_LIMIT_SIZE>
+              , hana::pair(hana::type_list<core::any_type<T>>, hana::type_list<>)
+              , [](auto result, auto) {
+                    auto is_construcrible =
+                        hana::partial(hana::flip(hana::unpack), hana::trait<std::is_constructible>);
+
+                    auto which = hana::if_(
+                        is_construcrible(hana::cons(hana::type<T>, hana::first(result)))
+                      , hana::first
+                      , hana::second
+                    );
+
+                    return hana::pair(
+                        hana::snoc(hana::first(result), hana::type<core::any_type<T>>)
+                      , which(result)
+                    );
+                }
+            )
+        )
+    );
+};
 
 template<typename T>
 struct ctor_traits<std::basic_string<T> > // basic_string ctors are ambiguous
