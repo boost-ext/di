@@ -830,7 +830,7 @@ Allows to choose binding accordingly to the call stack object was created in.
     ``__examples_binding__``
 
 [heading Tests]
-    ``test/ut/concepts/call_stack_ut.cpp`` | ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
+    ``[@test/ut/concepts/call_stack_ut.cpp]`` | ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
 
 [heading See Also]
 
