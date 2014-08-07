@@ -573,6 +573,7 @@ The macros listed in the table below may be used to control the behaviour of `Bo
 [h6 Similar libraries]
 
 * [@https://bitbucket.org/cheez/dicpp dicpp]
+* [@https://github.com/google/fruit fruit]
 * [@https://code.google.com/p/infectorpp infectorpp]
 * [@https://github.com/phs/sauce sauce]
 * [@https://code.google.com/p/wallaroo wallaroo]
