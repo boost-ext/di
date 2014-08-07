@@ -14,7 +14,6 @@ Dependency Injection allows us to separate business logic to object creation, wh
 There are many forms of dependency injection which you can read more about in [[link Van08]].
 
 * [link di.concepts.injections Constructor injection]
-* [link di.concepts.injections Interface injection]
 * Setter injection
 * Member injection
 
