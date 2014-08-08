@@ -14,8 +14,8 @@ install:
   - appveyor DownloadFile http://www2.cs.uidaho.edu/~jeffery/win32/unzip.exe
   - appveyor DownloadFile http://downloads.sourceforge.net/project/unxutils/unxutils/current/UnxUtils.zip
   - unzip.exe -qq UnxUtils.zip
-  - appveyor DownloadFile http://boost.cowic.de/rc/boost_1_56_0_rc3.zip
-  - unzip.exe -qq boost_1_56_0_rc3.zip
+  - appveyor DownloadFile http://downloads.sourceforge.net/project/boost/boost/1.56.0/boost_1_56_0.zip
+  - unzip.exe -qq boost_1_56.zip
   - mkdir boost_1_56_0\libs\di
   - usr\local\wbin\cp.exe -r doc example include test boost_1_56_0\libs\di
   - cd boost_1_56_0
