@@ -24,7 +24,6 @@
     #include <boost/preprocessor/punctuation/comma_if.hpp>
     #include <boost/ref.hpp>
     #include <boost/none_t.hpp>
-    #include <boost/bind.hpp>
     #include <boost/type_traits/is_base_of.hpp>
     #include <boost/utility/enable_if.hpp>
 

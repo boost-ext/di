@@ -29,12 +29,10 @@
 #include <boost/ref.hpp>
 #include <boost/non_type.hpp>
 #include <boost/none_t.hpp>
-#include <boost/function.hpp>
 #include "boost/di/inject.hpp"
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/config.hpp"
 #include <boost/config.hpp>
-#include <boost/bind.hpp>
 
 namespace boost {
 namespace di {

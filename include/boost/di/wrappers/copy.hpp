@@ -10,7 +10,7 @@
 #include "boost/di/aux_/memory.hpp"
 
 #include <boost/type.hpp>
-#include <boost/function.hpp>
+#include <functional>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_polymorphic.hpp>
 
@@ -21,7 +21,7 @@ namespace wrappers {
 template<typename T>
 class copy
 {
-    typedef function<T*()> value_t;
+    typedef std::function<T*()> value_t;
 
     template<typename I>
     class scoped_ptr

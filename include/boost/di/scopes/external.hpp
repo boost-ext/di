@@ -11,7 +11,6 @@
 #include "boost/di/type_traits/has_call_operator.hpp"
 
 #include <boost/ref.hpp>
-#include <boost/function.hpp>
 #include <boost/utility/enable_if.hpp>
 
 BOOST_DI_FEATURE(CPP_11_FUNCTIONAL)(
@@ -66,7 +65,7 @@ public:
         };
 
         template<typename TValueType, typename T>
-        typename disable_if<type_traits::has_call_operator<TValueType>, function<result_type()> >::type
+        typename disable_if<type_traits::has_call_operator<TValueType>, std::function<result_type()> >::type
         convert_when_function(const T& object) {
             return object;
         }
@@ -101,7 +100,7 @@ public:
         }
 
     private:
-        function<result_type()> object_;
+        std::function<result_type()> object_;
     };
 };
 

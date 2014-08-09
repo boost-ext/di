@@ -9,8 +9,6 @@
 
 #include "boost/di/wrappers/copy.hpp"
 
-#include <boost/function.hpp>
-
 namespace boost {
 namespace di {
 namespace scopes {
@@ -27,7 +25,7 @@ public:
     public:
         typedef TWrapper<TExpected> result_type;
 
-        result_type create(const function<TExpected*()>& f) {
+        result_type create(const std::function<TExpected*()>& f) {
             return f;
         }
     };

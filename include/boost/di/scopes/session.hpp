@@ -9,8 +9,6 @@
 
 #include "boost/di/wrappers/shared.hpp"
 
-#include <boost/function.hpp>
-
 namespace boost {
 namespace di {
 namespace scopes {
@@ -43,7 +41,7 @@ public:
             object_.reset();
         }
 
-        result_type create(const function<TExpected*()>& f) {
+        result_type create(const std::function<TExpected*()>& f) {
             if (in_scope_ && !object_) {
                 object_.reset(f());
             }
