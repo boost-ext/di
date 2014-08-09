@@ -12,7 +12,7 @@ namespace di {
 namespace bindings {
 namespace detail {
 
-template<typename TContext>
+template<typename... Ts>
 class when_
 {
     template<
@@ -27,12 +27,12 @@ public:
     template<typename T>
     struct apply
         : aux::mpl::if_<
-              aux::mpl::empty<TContext>
+              aux::mpl::empty<aux::mpl::vector<Ts...>>
             , aux::mpl::int_<1>
             , typename aux::mpl::deref<
                   aux::mpl::max_element<
                       aux::mpl::transform_view<
-                          TContext
+                          aux::mpl::vector<Ts...>
                         , apply_bind<aux::mpl::_1, T>
                       >
                   >

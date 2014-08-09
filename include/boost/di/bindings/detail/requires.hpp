@@ -26,8 +26,6 @@ class requires_
     { };
 
 public:
-    typedef requires_ type;
-
     template<
         typename T
       , typename TMultiplicationFactor = aux::mpl::integral_c<long, 10>

@@ -30,27 +30,21 @@ class scope
     BOOST_MPL_HAS_XXX_TRAIT_DEF(given)
 
     template<typename T>
-    struct is_dependency
-        : has_given<T>
-    { };
+    using is_dependency = has_given<T>;
 
     template<typename T>
-    struct dependency
-        : TDependency<
-              TScope
-            , T
-            , T
-            , detail::requires_<
-                  type_traits::is_required_priority
-                , type_traits::is_required_type<T>
-              >
+    using dependency = TDependency<
+          TScope
+        , T
+        , T
+        , detail::requires_<
+              type_traits::is_required_priority
+            , type_traits::is_required_type<T>
           >
-    { };
+      >;
 
     template<typename T, typename U>
-    struct rebind
-        : T::template rebind<U>::other
-    { };
+    using rebind = typename T::template rebind<U>::other;
 
     template<typename T, typename = void>
     struct bind_impl

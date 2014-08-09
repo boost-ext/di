@@ -54,7 +54,7 @@ struct bind
           >
       >
 {
-    template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
+    template<typename... Ts>
     struct when
         : TDependency<
               scopes::deduce
@@ -63,7 +63,7 @@ struct bind
             , detail::requires_<
                   type_traits::is_required_priority
                 , type_traits::is_required_type<TExpected>
-                , detail::when_<BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)>
+                , detail::when_<Ts...>
               >
           >
     {
@@ -77,7 +77,7 @@ struct bind
                       type_traits::is_required_priority
                     , type_traits::is_required_type<TExpected>
                     , type_traits::is_required_name<TName>
-                    , detail::when_<BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)>
+                    , detail::when_<Ts...>
                   >
               >
         { };
@@ -96,7 +96,7 @@ struct bind
               >
           >
     {
-        template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
+        template<typename... Ts>
         struct when
             : TDependency<
                   scopes::deduce
@@ -106,7 +106,7 @@ struct bind
                       type_traits::is_required_priority
                     , type_traits::is_required_type<TExpected>
                     , type_traits::is_required_name<TName>
-                    , detail::when_<BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)>
+                    , detail::when_<Ts...>
                   >
               >
         { };
