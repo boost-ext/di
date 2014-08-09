@@ -21,32 +21,15 @@
 namespace boost {
 namespace di {
 
+template<typename T, unsigned... Args>
+struct ctor_traits_impl<T, seq<Args...>>
+    : longest<typename genn<T, core::any_type<T>, Args>::type...>
+{ };
+
 template<typename T>
-struct ctor_traits {
-    using type = decltype(
-        hana::second(
-            hana::foldl(
-                hana::range_c<int, 1, BOOST_DI_CFG_CTOR_LIMIT_SIZE>
-              , hana::pair(hana::type_list<core::any_type<T>>, hana::type_list<>)
-              , [](auto result, auto) {
-                    auto is_construcrible =
-                        hana::partial(hana::flip(hana::unpack), hana::trait<std::is_constructible>);
-
-                    auto which = hana::if_(
-                        is_construcrible(hana::cons(hana::type<T>, hana::first(result)))
-                      , hana::first
-                      , hana::second
-                    );
-
-                    return hana::pair(
-                        hana::snoc(hana::first(result), hana::type<core::any_type<T>>)
-                      , which(result)
-                    );
-                }
-            )
-        )
-    );
-};
+struct ctor_traits
+    : ctor_traits_impl<T, typename gen_seq<BOOST_DI_CFG_CTOR_LIMIT_SIZE>::type>
+{ };
 
 template<typename T>
 struct ctor_traits<std::basic_string<T> > // basic_string ctors are ambiguous

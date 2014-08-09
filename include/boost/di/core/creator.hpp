@@ -18,6 +18,7 @@
     #include "boost/di/wrappers/universal.hpp"
 
     #include <typeinfo>
+    #include <functional>
     #include <map>
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/preprocessor/punctuation/comma_if.hpp>
@@ -52,11 +53,10 @@
     {
         template<typename TDependency>
         struct scope_create
-        {
-            static constexpr auto type = type_traits::function_traits<
+            : type_traits::function_traits<
                   BOOST_DI_FEATURE_DECLTYPE(&TDependency::create)
-              >::type;
-        };
+              >::type
+        { };
 
         class type_comparator
         {
@@ -182,7 +182,7 @@
           , typename TPolicies
         >
         typename std::enable_if<
-            !decltype(hana::length(scope_create<TDependency>::type))::value
+            !size<typename scope_create<TDependency>::type>::value
           , wrappers::universal<T>
         >::type
         create_impl(const TAllocator&
@@ -206,7 +206,7 @@
           , typename TPolicies
         >
         typename std::enable_if<
-            decltype(hana::length(scope_create<TDependency>::type))::value
+            size<typename scope_create<TDependency>::type>::value
           , wrappers::universal<T> >::type
         create_impl(const TAllocator& allocator
                   , TDeps& deps
@@ -214,36 +214,32 @@
                   , const TVisitor& visitor
                   , const TPolicies& policies) {
 
-            using ctor_type = typename type_traits::ctor_traits<typename TDependency::given>::type;
-            //typedef typename aux::mpl::normalize_vector<
-                //type_traits::ctor_traits<typename TDependency::given>
-            //>::type ctor_type;
+            typedef typename type_traits::ctor_traits<typename TDependency::given>::type ctor_type;
 
-            throw 0;
-/*            return wrappers::universal<T>(*/
-                //refs
-              //, acquire<TDependency>(deps).create(
-                    //boost::bind(
-                        //static_cast<
-                            //typename TDependency::expected*(creator::*)(
-                                //const TAllocator&
-                              //, TDeps&
-                              //, TRefs&
-                              //, const TVisitor&
-                              //, const TPolicies&
-                              //, const ctor_type&
-                            //)
-                        //>(&creator::create_impl<T, TDependency, TCallStack>)
-                      //, this
-                      //, boost::cref(allocator)
-                      //, boost::ref(deps)
-                      //, boost::ref(refs)
-                      //, boost::cref(visitor)
-                      //, boost::cref(policies)
-                      //, ctor_type()
-                    //)
-                //)
-            /*);*/
+            return wrappers::universal<T>(
+                refs
+              , acquire<TDependency>(deps).create(
+                    std::bind(
+                        static_cast<
+                            typename TDependency::expected*(creator::*)(
+                                const TAllocator&
+                              , TDeps&
+                              , TRefs&
+                              , const TVisitor&
+                              , const TPolicies&
+                              , const ctor_type&
+                            )
+                        >(&creator::create_impl<T, TDependency, TCallStack>)
+                      , this
+                      , std::cref(allocator)
+                      , std::ref(deps)
+                      , std::ref(refs)
+                      , std::cref(visitor)
+                      , std::cref(policies)
+                      , ctor_type()
+                    )
+                )
+            );
         }
 
         template<typename TSeq, typename, typename TPolicies>
@@ -306,7 +302,7 @@
               , TRefs& refs
               , const TVisitor& visitor
               , const TPolicies& policies
-              , const aux::mpl::vector<BOOST_DI_TYPES_PASS(TArgs)>&) {
+              , const type_list<BOOST_DI_TYPES_PASS(TArgs)>&) {
         return allocator.template
             allocate<typename TDependency::expected, typename TDependency::given>(
                 create<TArgs, T, TCallStack>(allocator, deps, refs, visitor, policies)...

@@ -11,7 +11,6 @@
 
     #include "boost/di/aux_/config.hpp"
 
-
     namespace boost {
     namespace di {
     namespace type_traits {
@@ -23,7 +22,7 @@
     struct function_traits<R(*)()>
     {
         using result_type = R;
-        static constexpr auto type = hana::type_list<>;
+        using type = type_list<>;
     };
 
     template<typename R, typename T>
@@ -31,7 +30,7 @@
     {
         using result_type = R;
         using base_type = T;
-        static constexpr auto type = hana::type_list<>;
+        using type = type_list<>;
     };
 
     template<typename R, typename T>
@@ -39,7 +38,7 @@
     {
         using result_type = R;
         using base_type = T;
-        static constexpr auto type = hana::type_list<>;
+        using type = type_list<>;
     };
 
     #define BOOST_PP_FILENAME_1 "boost/di/type_traits/function_traits.hpp"
@@ -58,7 +57,7 @@
     struct function_traits<R(*)(BOOST_DI_TYPES_PASS(Args))>                 \
     {                                                                       \
         using result_type = R;                                              \
-        static constexpr auto type = hana::type_list<BOOST_DI_TYPES_PASS(Args)>;   \
+        using type = type_list<BOOST_DI_TYPES_PASS(Args)>;                  \
     };
 
     template<typename R, typename T, BOOST_DI_TYPES(Args)>                  \
@@ -66,7 +65,7 @@
     {                                                                       \
         using result_type = R;                                              \
         using base_type = T;                                                \
-        static constexpr auto type = hana::type_list<BOOST_DI_TYPES_PASS(Args)>;   \
+        using type = type_list<BOOST_DI_TYPES_PASS(Args)>;                  \
     };
 
     template<typename R, typename T, BOOST_DI_TYPES(Args)>                  \
@@ -74,7 +73,7 @@
     {                                                                       \
         using result_type = R;                                              \
         using base_type = T;                                                \
-        static constexpr auto type = hana::type_list<BOOST_DI_TYPES_PASS(Args)>;   \
+        using type = type_list<BOOST_DI_TYPES_PASS(Args)>;                  \
     };
 
 #endif

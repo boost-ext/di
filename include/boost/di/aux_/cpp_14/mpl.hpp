@@ -7,8 +7,94 @@
 #ifndef BOOST_DI_AUX_CPP_14_MPL_HPP
 #define BOOST_DI_AUX_CPP_14_MPL_HPP
 
-#include <boost/hana/ext/std/integral_constant.hpp>
-#include <boost/hana.hpp>
+namespace boost {
+namespace di {
+
+template<unsigned...> struct seq{ using type = seq; };
+
+template<class T> using Invoke = typename T::type;
+
+template<class S1, class S2> struct concat;
+
+template<unsigned... I1, unsigned... I2>
+struct concat<seq<I1...>, seq<I2...>>
+  : seq<I1..., (sizeof...(I1)+I2)...>
+{ };
+
+template<unsigned N> struct gen_seq;
+
+template<unsigned N>
+struct gen_seq
+    : Invoke<concat<Invoke<gen_seq<N/2>>, Invoke<gen_seq<N - N/2>>>>{};
+
+template<> struct gen_seq<0> : seq<>{};
+template<> struct gen_seq<1> : seq<1>{};
+
+template<typename T, typename Q>
+struct ctor_traits_impl;
+
+template<typename...>
+struct type_list
+{
+    using type = type_list;
+};
+
+template<typename T, typename... TArgs>
+struct is_constructible
+{
+    using type = typename std::conditional<std::is_constructible<T, TArgs...>::value, type_list<TArgs...>, type_list<>>::type;
+};
+
+template<typename T, int>
+struct type_
+{
+    using type = T;
+};
+
+template<typename, typename T, typename>
+struct gen_type;
+
+template<typename R, typename T, unsigned... TArgs>
+struct gen_type<R, T, seq<TArgs...>>
+    : is_constructible<R, typename type_<T, TArgs>::type...>
+{ };
+
+template<typename R, typename T, int N>
+struct genn
+    : gen_type<R, T, typename gen_seq<N>::type>
+{
+};
+
+template<typename>
+struct size;
+
+template<typename... T>
+struct size<type_list<T...>>
+{
+    static const bool value = sizeof...(T);
+};
+
+template<typename, int I, typename... Ts>
+struct longest_impl;
+
+template<typename R, typename T, typename... Ts>
+struct longest_impl<R, 0, T, Ts...>
+{
+    using type = R;
+};
+
+template<typename R, int I, typename T, typename... Ts>
+struct longest_impl<R, I, T, Ts...>
+{
+    using type = typename std::conditional<(size<R>::value > size<T>::value), typename longest_impl<R, I - 1, Ts...>::type, typename longest_impl<T, I-1, Ts...>::type>::type;
+};
+
+template<typename... Ts>
+struct longest
+    : longest_impl<type_list<>, sizeof...(Ts) - 1, Ts...>
+{ };
+
+}}
 
 
 //TO BE REMOVED
