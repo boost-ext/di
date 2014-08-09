@@ -12,7 +12,6 @@
 #include "boost/di/bindings/type_traits/is_required_type.hpp"
 #include "boost/di/bindings/type_traits/is_required_priority.hpp"
 
-
 namespace boost {
 namespace di {
 namespace bindings {
@@ -53,22 +52,19 @@ class scope
         : T::template rebind<U>::other
     { };
 
-public:
-    template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-    struct bind
-        : aux::mpl::fold<
-              BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)
-            , aux::mpl::vector<>
-            , aux::mpl::push_back<
-                  aux::mpl::_1
-                , aux::mpl::if_<
-                      is_dependency<aux::mpl::_2>
-                    , rebind<aux::mpl::_2, TScope>
-                    , dependency<aux::mpl::_2>
-                  >
-              >
-          >::type
+    template<typename T, typename = void>
+    struct bind_impl
+        : dependency<T>
     { };
+
+    template<typename T>
+    struct bind_impl<T, typename std::enable_if<is_dependency<T>::value>::type>
+        : rebind<T, TScope>
+    { };
+
+public:
+    template<typename... Ts>
+    using bind = aux::mpl::vector<typename bind_impl<Ts>::type...>;
 };
 
 } // namespace bindings

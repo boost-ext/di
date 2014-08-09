@@ -23,59 +23,37 @@ namespace boost {
 namespace di {
 
 template<typename TExpected, typename TGiven = TExpected>
-struct bind
-    : bindings::bind<TExpected, TGiven, bindings::dependency>
-{ };
+using bind = bindings::bind<TExpected, TGiven, bindings::dependency>;
 
 template<bool V>
-struct bind_bool
-    : bind<bool, aux::mpl::bool_<V> >
-{ };
+using bind_bool = bind<bool, aux::mpl::bool_<V>>;
 
 template<int N>
-struct bind_int
-    : bind<int, aux::mpl::int_<N> >
-{ };
+using bind_int = bind<int, aux::mpl::int_<N>>;
 
 template<typename T>
-struct bind_string
-    : bind<std::string, T>
-{ };
+using bind_string = bind<std::string, T>;
 
 template<typename TScope>
-struct scope
-    : bindings::scope<TScope, bindings::dependency>
-{ };
+using scope = bindings::scope<TScope, bindings::dependency>;
 
-template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-struct deduce
-    : scope<scopes::deduce>::bind<BOOST_DI_TYPES_PASS_MPL(T)>
-{ };
+template<typename... Ts>
+using deduce = scope<scopes::deduce>::bind<Ts...>;
 
-template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-struct unique
-    : scope<scopes::unique<> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
-{ };
+template<typename... Ts>
+using unique = scope<scopes::unique<>>::bind<Ts...>;
 
-template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-struct shared
-    : scope<scopes::shared<> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
-{ };
+template<typename... Ts>
+using shared = scope<scopes::shared<>>::bind<Ts...>;
 
-template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-struct session
-    : scope<scopes::session<> >::bind<BOOST_DI_TYPES_PASS_MPL(T)>
-{ };
+template<typename... Ts>
+using session = scope<scopes::session<>>::bind<Ts...>;
 
-template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-struct call_stack
-    : bindings::call_stack<BOOST_DI_TYPES_PASS_MPL(T)>
-{ };
+template<typename... Ts>
+using call_stack = bindings::call_stack<Ts...>;
 
-template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
-struct any_of
-    : BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)
-{ };
+template<typename... Ts>
+using any_of = type_list<Ts...>;
 
 } // namespace di
 } // namespace boost

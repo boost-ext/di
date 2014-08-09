@@ -7,6 +7,8 @@
 #ifndef BOOST_DI_AUX_CPP_14_MPL_HPP
 #define BOOST_DI_AUX_CPP_14_MPL_HPP
 
+#include <type_traits>
+
 namespace boost {
 namespace di {
 
@@ -60,10 +62,7 @@ struct gen_type<R, T, seq<TArgs...>>
 { };
 
 template<typename R, typename T, int N>
-struct genn
-    : gen_type<R, T, typename gen_seq<N>::type>
-{
-};
+using genn = gen_type<R, T, typename gen_seq<N>::type>;
 
 template<typename>
 struct size;
@@ -90,9 +89,7 @@ struct longest_impl<R, I, T, Ts...>
 };
 
 template<typename... Ts>
-struct longest
-    : longest_impl<type_list<>, sizeof...(Ts) - 1, Ts...>
-{ };
+using longest = longest_impl<type_list<>, sizeof...(Ts) - 1, Ts...>;
 
 }}
 
