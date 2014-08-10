@@ -5,6 +5,10 @@ configuration:
   - Debug
   - Release
 
+branches:
+  only:
+    - master
+
 install:
   - c:\"Program Files (x86)"\"Microsoft Visual Studio 12.0"\VC\vcvarsall.bat
   - appveyor DownloadFile http://www2.cs.uidaho.edu/~jeffery/win32/unzip.exe
