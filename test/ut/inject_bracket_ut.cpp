@@ -49,6 +49,18 @@ BOOST_AUTO_TEST_CASE(explicit_with_default) {
     BOOST_CHECK_EQUAL(static_cast<int>(c::DEFAULT), c_.i);
 }
 
+BOOST_AUTO_TEST_CASE(set_to_default) {
+    struct c
+    {
+        BOOST_DI_INJECT(c, ()) = default;
+        int i = 0;
+    };
+
+    c c_;
+
+    BOOST_CHECK_EQUAL(0, c_.i);
+}
+
 BOOST_AUTO_TEST_CASE(params) {
     const int i = 1;
     const double d = 2.0;

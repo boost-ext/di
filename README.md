@@ -113,6 +113,7 @@ void test_hello_world_when_run_with_value_true_then_log_and_do_it() {
 
 ### Other Dependency Injection Frameworks for C++
  * [https://bitbucket.org/cheez/dicpp](https://bitbucket.org/cheez/dicpp)
+ * [https://github.com/google/fruit](https://github.com/google/fruit)
  * [https://code.google.com/p/infectorpp](https://code.google.com/p/infectorpp)
  * [https://github.com/phs/sauce](https://github.com/phs/sauce)
  * [https://code.google.com/p/wallaroo](https://code.google.com/p/wallaroo)
