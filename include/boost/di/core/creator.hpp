@@ -8,6 +8,8 @@
 
     #ifndef BOOST_DI_CORE_CREATOR_HPP
     #define BOOST_DI_CORE_CREATOR_HPP
+#include <iostream>
+#include <boost/units/detail/utility.hpp>
 
     #include "boost/di/aux_/config.hpp"
     #include "boost/di/aux_/memory.hpp"
@@ -18,7 +20,6 @@
     #include "boost/di/wrappers/universal.hpp"
 
     #include <typeinfo>
-    #include <functional>
     #include <map>
     #include <boost/preprocessor/repetition/repeat.hpp>
     #include <boost/preprocessor/punctuation/comma_if.hpp>
@@ -148,19 +149,11 @@
             typedef typename TBinder<TDependecies>::template
                 resolve<T, TCallStack>::type dependency_type;
 
-            BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
-                typedef typename aux::mpl::push_back<TCallStack, T>::type call_stack_type;
-            )
+            //typedef data<T, call_stack_type, dependency_type> data_type;
+            //assert_policies<typename TPolicies::types, data_type>(policies);
+            //(visitor)(data_type());
 
-            BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
-                typedef TCallStack call_stack_type;
-            )
-
-            typedef data<T, call_stack_type, dependency_type> data_type;
-            assert_policies<typename TPolicies::types, data_type>(policies);
-            (visitor)(data_type());
-
-            return create_impl<T, dependency_type, call_stack_type>(
+            return create_impl<T, dependency_type, TCallStack>(
                 allocator, deps, refs, visitor, policies
             );
         }
@@ -213,30 +206,21 @@
                   , const TVisitor& visitor
                   , const TPolicies& policies) {
 
-            typedef typename type_traits::ctor_traits<typename TDependency::given>::type ctor_type;
-
             return wrappers::universal<T>(
                 refs
               , acquire<TDependency>(deps).create(
-                    std::bind(
-                        static_cast<
-                            typename TDependency::expected*(creator::*)(
-                                const TAllocator&
-                              , TDeps&
-                              , TRefs&
-                              , const TVisitor&
-                              , const TPolicies&
-                              , const ctor_type&
-                            )
-                        >(&creator::create_impl<T, TDependency, TCallStack>)
-                      , this
-                      , std::cref(allocator)
-                      , std::ref(deps)
-                      , std::ref(refs)
-                      , std::cref(visitor)
-                      , std::cref(policies)
-                      , ctor_type()
+                  [&] {
+                    typedef typename type_traits::ctor_traits<typename TDependency::given>::type ctor_type;
+
+                    BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
+                        typedef typename aux::mpl::push_back<TCallStack, T>::type call_stack_type;
                     )
+
+                    BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
+                        typedef TCallStack call_stack_type;
+                    )
+
+                    return create_impl<T, TDependency, call_stack_type>(allocator, deps, refs, visitor, policies, ctor_type());}
                 )
             );
         }
@@ -302,6 +286,7 @@
               , const TVisitor& visitor
               , const TPolicies& policies
               , const type_list<BOOST_DI_TYPES_PASS(TArgs)>&) {
+            std::cout << units::detail::demangle(typeid(T).name()) << " - " << units::detail::demangle(typeid(TCallStack).name()) << std::endl;
         return allocator.template
             allocate<typename TDependency::expected, typename TDependency::given>(
                 create<TArgs, T, TCallStack>(allocator, deps, refs, visitor, policies)...

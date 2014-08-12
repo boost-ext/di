@@ -14,7 +14,7 @@ namespace di {
 namespace bindings {
 namespace detail {
 
-template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
+template<typename... Ts>
 class requires_
 {
     template<
@@ -33,7 +33,7 @@ public:
     struct apply
         : aux::mpl::second<
               typename aux::mpl::fold<
-                  BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)
+                  aux::mpl::vector<Ts...>
                 , aux::mpl::pair<aux::mpl::integral_c<long, 1>, aux::mpl::integral_c<long, 1> >
                 , aux::mpl::pair<
                       aux::mpl::times<
