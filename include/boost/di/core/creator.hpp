@@ -50,6 +50,8 @@
     >
     class creator
     {
+        using deps_t = typename aux::mpl::normalize_type_list<TDependecies>::type;
+
         template<typename TDependency>
         struct scope_create
             : type_traits::function_traits<
@@ -81,11 +83,11 @@
             typedef T type;
             typedef TCallStack call_stack;
             typedef TDependency dependency;
-            typedef TBinder<TDependecies> binder;
+            typedef TBinder<deps_t> binder;
         };
 
     public:
-        explicit creator(const TBinder<TDependecies>& binder = TBinder<TDependecies>())
+        explicit creator(const TBinder<deps_t>& binder = TBinder<deps_t>())
             : binder_(binder)
         { }
 
@@ -145,7 +147,7 @@
              , TRefs& refs
              , const TVisitor& visitor
              , const TPolicies& policies) {
-            typedef typename TBinder<TDependecies>::template
+            typedef typename TBinder<deps_t>::template
                 resolve<T, TCallStack>::type dependency_type;
 
             BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
@@ -272,7 +274,7 @@
             return *dependency;
         }
 
-        TBinder<TDependecies> binder_;
+        TBinder<deps_t> binder_;
         scopes_type scopes_;
     };
 
