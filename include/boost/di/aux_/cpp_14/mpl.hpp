@@ -120,8 +120,14 @@ struct greatest_impl<R, I, T, Ts...>
 };
 
 template<typename T, typename... Ts>
-using greatest = greatest_impl<T, sizeof...(Ts) - 1, Ts...>;
+struct greatest
+    : greatest_impl<T, sizeof...(Ts) - 1, Ts...>
+{ };
 
+template<typename T>
+struct greatest<T>
+    : T::first
+{ };
 
 }}
 

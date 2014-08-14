@@ -8,8 +8,6 @@
 
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
-//#include "boost/di/type_traits/remove_accessors.hpp"
-//#include "boost/di/wrappers/universal.hpp"
 #include "boost/di/bindings/dependency.hpp"
 #include "boost/di/scopes/deduce.hpp"
 
@@ -34,9 +32,8 @@ template<
   , typename T
   , typename TCallStack
 >
-using apply = typename TDependency::bind::template apply<
-          data<T, TCallStack, TDependency>
-      >::type;
+using apply = typename TDependency::bind::template
+    apply<data<T, TCallStack, TDependency>>::type;
 
 template<typename T, typename TCallStack, typename _>
 using calculate = pair<_, typename apply<_, T, TCallStack>::type>;
