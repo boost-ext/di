@@ -18,12 +18,8 @@
 #include "boost/di/policies/circular_dependencies.hpp"
 
 #include "common/fakes/fake_allocator.hpp"
-#include "common/fakes/fake_dependency.hpp"
-#include "common/fakes/fake_scope.hpp"
 #include "common/data.hpp"
 
-#include <iostream>
-#include <boost/units/detail/utility.hpp>
 namespace boost {
 namespace di {
 
@@ -412,34 +408,17 @@ namespace di {
 //}
 
 BOOST_AUTO_TEST_CASE(create_with_default_values) {
-    //const int i = 42;
+    const int i = 42;
 
-    typedef fake_dependency<fake_scope<>, int>::type dep;
-    typedef fake_dependency<fake_scope<>, double, mpl::int_<42> >::type dep2;
+    auto injector = make_injector(
+        di::bind_int<i>()
+    );
 
-    typedef core::binder<typename aux::mpl::normalize_type_list<aux::mpl::vector<dep, dep2>>::type>::resolve<int, aux::mpl::vector<>>::type t;
-    std::cout << units::detail::demangle(typeid(t).name()) << std::endl;
+    auto default_values_ = injector.create<default_values>();
 
-    assert(false);
-
-      //, binder_resolve<
-            //int
-          //, aux::mpl::vector<>
-          //, aux::mpl::vector<
-                //fake_dependency<fake_scope<>, int>::type
-            //>
-          //, fake_dependency<fake_scope<>, int>::type
-        //>::type
-
-    //auto injector = make_injector(
-        //di::bind_int<i>()
-    //);
-
-   //auto default_values_ = injector.create<default_values>();
-
-    //BOOST_CHECK_EQUAL(i, default_values_.i_);
-    //BOOST_CHECK_EQUAL(42.0, default_values_.f_);
-    /*BOOST_CHECK_EQUAL(87.0, default_values_.d_);*/
+    BOOST_CHECK_EQUAL(i, default_values_.i_);
+    BOOST_CHECK_EQUAL(42.0, default_values_.f_);
+    BOOST_CHECK_EQUAL(87.0, default_values_.d_);
 }
 
 } // namespace di

@@ -27,16 +27,8 @@ struct data
     typedef TDependency dependency;
 };
 
-template<
-    typename TDependency
-  , typename T
-  , typename TCallStack
->
-using apply = typename TDependency::bind::template
-    apply<data<T, TCallStack, TDependency>>::type;
-
 template<typename T, typename TCallStack, typename _>
-using calculate = pair<_, typename apply<_, T, TCallStack>::type>;
+using calculate = pair<_, typename _::bind::template apply<data<T, TCallStack, _>>::type>;
 
 template<typename>
 class binder;

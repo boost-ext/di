@@ -27,8 +27,6 @@
     #include <boost/type_traits/is_base_of.hpp>
     #include <boost/utility/enable_if.hpp>
 
-#include <iostream>
-#include <boost/units/detail/utility.hpp>
     namespace boost {
     namespace di {
     namespace core {
@@ -152,8 +150,6 @@
             typedef typename TBinder<deps_t>::template
                 resolve<T, TCallStack>::type dependency_type;
 
-            std::cout << units::detail::demangle(typeid(dependency_type).name()) << std::endl;
-
             BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
                 typedef typename aux::mpl::push_back<TCallStack, T>::type call_stack_type;
             )
@@ -169,7 +165,6 @@
             return create_impl<T, dependency_type, call_stack_type>(
                 allocator, deps, refs, visitor, policies
             );
-            throw 0;
         }
 
     private:
